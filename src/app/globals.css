@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* === Hermione brand === */
+  --color-hermione-violet: #1C0328;  /* primary — deep violet */
+  --color-hermione-orange: #F4AB34;  /* secondary accent — warm gold/orange */
+  --color-hermione-beige:  #E8E8DE;  /* secondary neutral — warm off-white */
+
+  /* === Derived violet scale (from #1c0328) === */
+  --color-violet-50:  #FAF7F8;
+  --color-violet-100: #EEE5EA;
+  --color-violet-200: #D9C2CE;
+  --color-violet-300: #B891A8;
+  --color-violet-400: #905B7C;
+  --color-violet-500: #66345B;
+  --color-violet-600: #41143E;
+  --color-violet-700: #2C0832;
+  --color-violet-800: #1C0328;
+  --color-violet-900: #11011A;
+  --color-violet-950: #08000D;
+
+  /* === Derived orange scale (from #f4ab34) === */
+  --color-orange-50:  #FFF8EC;
+  --color-orange-100: #FCEACC;
+  --color-orange-200: #F9D69A;
+  --color-orange-300: #F6BF65;
+  --color-orange-400: #F4AB34;
+  --color-orange-500: #DC8E14;
+  --color-orange-600: #B67310;
+  --color-orange-700: #8C580E;
+  --color-orange-800: #5F3D0A;
+  --color-orange-900: #3A2607;
+
+  /* === Beige scale === */
+  --color-beige-50:  #FBFAF6;
+  --color-beige-100: #F4F2E9;
+  --color-beige-200: #E8E8DE;
+  --color-beige-300: #D6D5C7;
+  --color-beige-400: #B7B5A4;
+  --color-beige-500: #8E8C7A;
+
+  /* === Semantic brand === */
+  --color-primary:       var(--color-hermione-violet);
+  --color-primary-deep:  var(--color-violet-900);
+  --color-primary-soft:  var(--color-violet-100);
+  --color-primary-fg:    #FAF7F8;
+  --color-accent:        var(--color-hermione-orange);
+  --color-accent-soft:   var(--color-orange-100);
+  --color-accent-deep:   var(--color-orange-600);
+
+  /* States */
+  --color-success:   #2D9B6A;
+  --color-warning:   var(--color-orange-500);
+  --color-danger:    #C7384A;
+  --color-easy:      #4FB48A;
+  --color-very-easy: #7CC8A4;
+
+  /* === Light surfaces === */
+  --color-ink:           #1C0328;
+  --color-ink-soft:      #5C4856;
+  --color-ink-muted:     #9A8E96;
+  --color-surface:       #FFFFFF;
+  --color-surface-soft:  #FAFAFA;          /* clean neutral page bg */
+  --color-surface-sunken:var(--color-beige-200);  /* beige reserved for accent surfaces */
+  --color-border:        #E5E2DD;
+  --color-border-strong: #C5BFB7;
+
+  /* === Typography === */
+  --font-sans: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument-serif), 'Hoefler Text', Georgia, serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+
+  --tracking-tightest: -0.04em;
+  --tracking-display:  -0.025em;
+  --tracking-eyebrow:   0.18em;
+
+  /* === Radii === */
+  --radius-card:    1.25rem;
+  --radius-card-lg: 1.75rem;
+  --radius-button:  0.75rem;
+  --radius-lg:      1.5rem;
+  --radius-pill:    9999px;
+
+  /* === Premium shadow stack === */
+  --shadow-xs:     0 1px 2px rgba(28, 3, 40, 0.06);
+  --shadow-soft:   0 1px 2px rgba(28, 3, 40, 0.05), 0 8px 22px -6px rgba(28, 3, 40, 0.10);
+  --shadow-lifted: 0 1px 2px rgba(28, 3, 40, 0.05), 0 14px 36px -10px rgba(28, 3, 40, 0.22), 0 4px 14px rgba(28, 3, 40, 0.08);
+  --shadow-glow:   0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --shadow-glow-accent: 0 0 0 1px color-mix(in srgb, var(--color-accent) 28%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  --shadow-inset-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.55);
+
+  --easing-soft:     cubic-bezier(0.22, 1, 0.36, 1);
+  --easing-emphatic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark {
+  /* Primary in dark: mid-bright violet so it stays visible as both button bg and text accent */
+  --color-primary:       #B591D9;  /* readable on dark surfaces */
+  --color-primary-deep:  #D9C2EC;  /* lighter for stronger emphasis */
+  --color-primary-soft:  #2C0E40;
+  --color-primary-fg:    #1C0328;  /* dark text on light primary button */
+  --color-accent:        #F4AB34;
+  --color-accent-soft:   #4A2E0A;
+  --color-accent-deep:   #F6BF65;
+
+  --color-success: #4ADE80;
+  --color-warning: #F4AB34;
+  --color-danger:  #F08896;
+
+  --color-ink:            #F4F1E8;
+  --color-ink-soft:       #C2B7C8;
+  --color-ink-muted:      #847490;
+  --color-surface:        #1F0830;
+  --color-surface-soft:   #11041C;
+  --color-surface-sunken: #0A0114;
+  --color-border:         #382150;
+  --color-border-strong:  #5B3D78;
+
+  --shadow-xs:     0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-soft:   0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lifted: 0 1px 2px rgba(0, 0, 0, 0.45), 0 24px 48px -12px rgba(181, 145, 217, 0.20), 0 8px 24px rgba(0, 0, 0, 0.40);
+  --shadow-glow:   0 0 0 1px color-mix(in srgb, var(--color-primary) 35%, transparent), 0 18px 44px -8px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --shadow-glow-accent: 0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent), 0 18px 44px -8px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  --shadow-inset-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+html, body {
+  background-color: var(--color-surface-soft);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-ink-muted) 14%, transparent) 1px, transparent 0);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 100% 70% at 50% 40%, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 70% at 50% 40%, black, transparent 80%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 65%),
+    radial-gradient(ellipse 70% 50% at 100% 110%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 60%);
+}
+
+.dark body::before {
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, #ffffff 4%, transparent) 1px, transparent 0);
+}
+.dark body::after {
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--color-primary) 30%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 60%);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  color: var(--color-primary);
+}
+
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-duration: 220ms;
+  transition-timing-function: var(--easing-soft);
+}
+
+@layer components {
+  .surface-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft), var(--shadow-inset-top);
+    padding: 1.5rem;
+  }
+  .surface-card-lg {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card-lg);
+    box-shadow: var(--shadow-lifted), var(--shadow-inset-top);
+    padding: 2rem;
+  }
+  .surface-card-bare {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+  }
+  .surface-glass {
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    backdrop-filter: saturate(160%) blur(20px);
+    border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  }
+  .surface-sunken {
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+
+  .focus-ring { outline: none; }
+  .focus-ring:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  .hairline {
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-border-strong) 100%, transparent), transparent);
+    height: 1px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+  .dark .eyebrow { color: var(--color-accent); }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: var(--tracking-display);
+    line-height: 1.02;
+  }
+  .display em, .display .italic { font-style: italic; }
+
+  .gradient-text {
+    background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-violet-500) 50%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  .grad-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .grad-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 70%, transparent), color-mix(in srgb, var(--color-accent) 60%, transparent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@keyframes float-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
