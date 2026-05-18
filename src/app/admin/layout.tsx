@@ -6,9 +6,9 @@ export const metadata = { title: 'Administration' };
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { profile } = await requireAdmin();
   return (
-    <div className="min-h-screen flex">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <AdminSidebar profile={profile} />
-      <div className="flex-1 min-w-0 bg-(--color-surface-soft)">{children}</div>
+      <div className="min-w-0 flex-1 bg-(--color-surface-soft)">{children}</div>
     </div>
   );
 }

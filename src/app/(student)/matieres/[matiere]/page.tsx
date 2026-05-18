@@ -3,7 +3,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -17,9 +17,8 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     .maybeSingle();
 
   if (!m || !m.semestres) notFound();
-  const facId = m.semestres.faculte_id;
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessFaculte(scope, facId)) redirect('/facultes');
+  if (!canAccessCollege(scope, m.id)) redirect('/facultes');
 
   const { data: cours } = await supabase
     .from('cours')
@@ -50,7 +49,6 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   for (const r of reviews ?? []) coursFlashHit.add(r.flashcards.cours_id);
 
   const Icon = iconFromKey(m.icon_key);
-  const facNom = m.semestres.facultes?.nom ?? '';
 
   const rows: IndexRow[] = (cours ?? []).map((c, idx) => {
     const p = c.course_progress?.[0];
@@ -77,14 +75,10 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   return (
     <>
-      <IndexHeader
-        context={`${facNom} · ${m.semestres.label}`}
-        title={m.nom}
-        meta={`${rows.length} cours`}
-      />
-      <div className="mx-auto flex w-full max-w-4xl items-center gap-3 px-4 pt-6 lg:px-10">
+      <IndexHeader context="Collège EDN" title={m.nom} meta={`${rows.length} item${rows.length > 1 ? 's' : ''}`} />
+      <div className="flex w-full items-center gap-3 px-5 pt-6 lg:px-10">
         <RowIcon Icon={Icon} color={m.color_hex ?? undefined} />
-        <p className="text-sm text-(--color-ink-muted)">Sélectionnez un cours pour ouvrir la console d’étude.</p>
+        <p className="text-sm text-(--color-ink-muted)">Sélectionnez un item pour ouvrir la console d’étude.</p>
       </div>
       <IndexList rows={rows} />
     </>

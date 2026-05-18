@@ -26,12 +26,12 @@ const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
 export function StudentsTable({
   students,
-  facMap,
-  facultes,
+  collegeMap,
+  colleges,
 }: {
   students: Student[];
-  facMap: Record<string, string>;
-  facultes: { id: string; nom: string }[];
+  collegeMap: Record<string, string>;
+  colleges: { id: string; nom: string }[];
 }) {
   const [q, setQ] = useState('');
   const [promo, setPromo] = useState<string>('all');
@@ -114,15 +114,15 @@ export function StudentsTable({
                       <Badge variant="primary">Toute l’offre</Badge>
                     ) : (
                       <div className="flex flex-wrap gap-1">
-                        {scope.faculties.map((f) => (
-                          <Badge key={f} variant="muted">{facMap[f] ?? f}</Badge>
+                        {scope.colleges.map((c) => (
+                          <Badge key={c} variant="muted">{collegeMap[c] ?? c}</Badge>
                         ))}
                       </div>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1.5">
-                      <EditStudentDialog student={s} facultes={facultes} />
+                      <EditStudentDialog student={s} colleges={colleges} />
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}

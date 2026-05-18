@@ -8,10 +8,10 @@ import type { Difficulty } from '@/types/domain';
  * muted/desaturated so it sits on the dark violet background without clashing.
  */
 const buttons: { key: Difficulty; label: string; subtitle: string; color: string; textOn: string }[] = [
-  { key: 'tres_facile',    label: 'Très facile',    subtitle: 'Je connais',         color: '#0F6E4E', textOn: '#FFFFFF' }, // deep emerald
-  { key: 'facile',         label: 'Facile',         subtitle: 'À revoir un peu',    color: '#15B8A6', textOn: '#04211F' }, // medical teal
-  { key: 'difficile',      label: 'Difficile',      subtitle: 'À revoir bientôt',   color: '#C2810A', textOn: '#FFFFFF' }, // clinical amber
   { key: 'tres_difficile', label: 'Très difficile', subtitle: 'À réviser souvent',  color: '#C0442F', textOn: '#FFFFFF' }, // clinical red
+  { key: 'difficile',      label: 'Difficile',      subtitle: 'À revoir bientôt',   color: '#C2810A', textOn: '#FFFFFF' }, // clinical amber
+  { key: 'facile',         label: 'Facile',         subtitle: 'À revoir un peu',    color: '#15B8A6', textOn: '#04211F' }, // medical teal
+  { key: 'tres_facile',    label: 'Très facile',    subtitle: 'Je connais',         color: '#0F6E4E', textOn: '#FFFFFF' }, // deep emerald
 ];
 
 export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty) => void; disabled?: boolean }) {

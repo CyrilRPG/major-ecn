@@ -1,43 +1,25 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
 import type { Profile } from '@/lib/auth/get-profile';
+
+export const EDN_FACULTE_ID = 'major-ecn';
 
 export type NavCours = {
   id: string;
   titre: string;
   progress: number; // 0..100 (video + fiche coarse)
 };
-export type NavMatiere = {
+export type NavCollege = {
   id: string;
   nom: string;
   iconKey: string | null;
   colorHex: string | null;
   cours: NavCours[];
 };
-export type NavSemestre = {
-  id: string;
-  numero: number;
-  label: string;
-  facId: string;
-  matieres: NavMatiere[];
-};
-export type NavFaculte = {
-  id: string;
-  nom: string;
-  ville: string;
-  semestres: NavSemestre[];
-};
 
 type Row = {
-  id: string;
-  nom: string;
-  ville: string;
   semestres:
     | {
-        id: string;
-        numero: number;
-        label: string;
         matieres:
           | {
               id: string;
@@ -60,57 +42,37 @@ type Row = {
 };
 
 /**
- * Aggregated hierarchy used by the persistent navigator. Reuses the same
- * nested-select pattern as the drill-down pages; course_progress is scoped to
- * the current user by RLS, exactly like matieres/[matiere]/page.tsx.
+ * Flat Collège → Item hierarchy for the persistent navigator.
+ * Scoped to the EDN programme faculté; course_progress is RLS-scoped to the user.
  */
-export async function getNavigatorTree(profile: Profile): Promise<NavFaculte[]> {
-  const scope = parseScope(profile.permission_scope);
+export async function getNavigatorTree(_profile: Profile): Promise<NavCollege[]> {
   const supabase = await createClient();
 
   const { data } = await supabase
     .from('facultes')
     .select(
-      `id, nom, ville,
-       semestres(id, numero, label,
-         matieres(id, nom, icon_key, color_hex, order_index,
-           cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
+      `semestres(matieres(id, nom, icon_key, color_hex, order_index,
+         cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
     )
-    .order('nom');
+    .eq('id', EDN_FACULTE_ID)
+    .maybeSingle();
 
-  const rows = (data ?? []) as unknown as Row[];
+  const row = data as unknown as Row | null;
+  const colleges = (row?.semestres ?? []).flatMap((s) => s.matieres ?? []);
 
-  return rows
-    .filter((f) => canAccessFaculte(scope, f.id))
-    .map((f) => ({
-      id: f.id,
-      nom: f.nom,
-      ville: f.ville,
-      semestres: [...(f.semestres ?? [])]
-        .sort((a, b) => a.numero - b.numero)
-        .map((s) => ({
-          id: s.id,
-          numero: s.numero,
-          label: s.label,
-          facId: f.id,
-          matieres: [...(s.matieres ?? [])]
-            .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-            .map((m) => {
-              const cours = [...(m.cours ?? [])].sort(
-                (a, b) => (a.order_index ?? 0) - (b.order_index ?? 0),
-              );
-              return {
-                id: m.id,
-                nom: m.nom,
-                iconKey: m.icon_key,
-                colorHex: m.color_hex,
-                cours: cours.map((c) => {
-                  const cp = c.course_progress?.[0];
-                  const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
-                  return { id: c.id, titre: c.titre, progress: Math.round((done / 2) * 100) };
-                }),
-              };
-            }),
-        })),
+  return colleges
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    .map((m) => ({
+      id: m.id,
+      nom: m.nom,
+      iconKey: m.icon_key,
+      colorHex: m.color_hex,
+      cours: [...(m.cours ?? [])]
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((c) => {
+          const cp = c.course_progress?.[0];
+          const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
+          return { id: c.id, titre: c.titre, progress: Math.round((done / 2) * 100) };
+        }),
     }));
 }

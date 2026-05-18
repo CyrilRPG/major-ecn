@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudyConsole } from '@/components/student/study-console';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursLayout({
   children,
@@ -18,8 +18,8 @@ export default async function CoursLayout({
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre,
-      matieres(nom, semestres(label, faculte_id)),
+      id, titre, matiere_id,
+      matieres(nom, semestres(label)),
       videos(storage_path),
       fiches(storage_path),
       qcm_series(type),
@@ -30,8 +30,7 @@ export default async function CoursLayout({
     .maybeSingle();
 
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const availability = {
     video: (c.videos ?? []).some((v) => !!v.storage_path),

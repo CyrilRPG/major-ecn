@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { QcmSession } from '@/components/qcm/qcm-session';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function AnnaleRunPage({ params }: { params: Promise<{ cours: string; annee: string }> }) {
   const { cours: coursId, annee: serieId } = await params;
@@ -15,8 +15,7 @@ export default async function AnnaleRunPage({ params }: { params: Promise<{ cour
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const { data: serie } = await supabase
     .from('qcm_series')

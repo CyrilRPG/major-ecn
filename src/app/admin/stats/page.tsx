@@ -107,13 +107,11 @@ export default async function AdminStatsPage() {
     .slice(0, 10);
 
   return (
-    <main className="px-6 lg:px-10 py-12 max-w-7xl mx-auto">
-      <header className="mb-10">
-        <p className="eyebrow">Administration · Cohorte</p>
-        <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-[1.05]">
-          <em className="display italic text-(--color-primary)">Statistiques</em> globales
-        </h1>
-        <p className="mt-3 text-(--color-ink-soft)">Activité, réussite et engagement de la promotion en temps réel.</p>
+    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+      <header className="mb-8 border-b border-(--color-border) pb-5">
+        <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
+        <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Statistiques globales</h1>
+        <p className="mt-0.5 text-sm text-(--color-ink-soft)">Activité, réussite et engagement en temps réel.</p>
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

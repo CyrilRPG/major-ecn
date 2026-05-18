@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { QcmResults } from '@/components/qcm/qcm-results';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function ResultsPage({
   params,
@@ -27,8 +27,7 @@ export default async function ResultsPage({
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const { data: attempts } = await supabase
     .from('qcm_attempts')
