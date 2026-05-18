@@ -17,11 +17,11 @@ export function FaculteCard({ faculte }: { faculte: FaculteCardData }) {
   const inner = (
     <div
       className={cn(
-        'relative overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft) h-64',
-        'group transition will-change-transform',
+        'relative overflow-hidden rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft) h-64',
+        'group transition-colors',
         faculte.locked
           ? 'saturate-50'
-          : 'hover:-translate-y-1 hover:shadow-(--shadow-glow) hover:border-(--color-primary)',
+          : 'hover:border-(--color-accent)',
       )}
     >
       <div className="absolute inset-0 -z-10 opacity-80 group-hover:opacity-100 transition">

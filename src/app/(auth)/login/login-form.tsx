@@ -45,7 +45,7 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Adresse email</Label>
-        <Input id="email" type="email" autoComplete="email" placeholder="alice@hermione-demo.co" {...register('email')} />
+        <Input id="email" type="email" autoComplete="email" placeholder="alice@major-ecn-demo.fr" {...register('email')} />
         {errors.email && <p className="text-xs text-(--color-danger)">{errors.email.message}</p>}
       </div>
       <div className="space-y-1.5">
@@ -67,7 +67,7 @@ export function LoginForm() {
       </Button>
 
       <p className="text-xs text-center text-(--color-ink-soft) mt-6">
-        Identifiants démo : <span className="font-mono text-(--color-primary-deep)">admin@hermione-demo.co</span> · <span className="font-mono text-(--color-primary-deep)">alice@hermione-demo.co</span> · <span className="font-mono text-(--color-primary-deep)">bob@hermione-demo.co</span> · mdp <span className="font-mono">Demo2026!</span>
+        Identifiants démo : <span className="font-mono text-(--color-primary-deep)">admin@major-ecn-demo.fr</span> · <span className="font-mono text-(--color-primary-deep)">alice@major-ecn-demo.fr</span> · <span className="font-mono text-(--color-primary-deep)">bob@major-ecn-demo.fr</span> · mdp <span className="font-mono">Demo2026!</span>
       </p>
     </form>
   );

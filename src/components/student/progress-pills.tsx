@@ -9,9 +9,9 @@ export type ProgressPillsState = {
 };
 
 const steps = [
-  { key: 'videoWatched',       label: 'Vidéo',      Icon: PlayCircle },
+  { key: 'videoWatched',       label: 'Cours',      Icon: PlayCircle },
   { key: 'ficheRead',          label: 'Fiche',      Icon: FileText },
-  { key: 'qcmAttempted',       label: 'QCM',        Icon: ClipboardList },
+  { key: 'qcmAttempted',       label: 'DP / QI',    Icon: ClipboardList },
   { key: 'flashcardsReviewed', label: 'Flashcards', Icon: Layers3 },
 ] as const;
 
@@ -24,9 +24,9 @@ export function ProgressPills({ state }: { state: ProgressPillsState }) {
           <span
             key={key}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium',
+              'inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium',
               done
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300'
+                ? 'border-(--color-primary) bg-(--color-primary-soft) text-(--color-primary-deep)'
                 : 'border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-soft)',
             )}
           >

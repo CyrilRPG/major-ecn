@@ -22,29 +22,28 @@ export function MatiereCard({
       href={`/matieres/${id}`}
       className="group relative block focus-ring rounded-(--radius-card)"
     >
-      <article className="relative overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-xs) p-7 flex flex-col gap-5 h-full transition hover:-translate-y-1 hover:border-(--color-primary)/50 hover:shadow-(--shadow-glow)">
+      <article className="relative overflow-hidden rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-xs) p-6 flex flex-col gap-5 h-full transition-colors hover:border-(--color-accent)">
         <span
           aria-hidden
-          className="absolute -top-16 -right-16 h-40 w-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{ background: `radial-gradient(circle, color-mix(in srgb, ${colorHex} 35%, transparent), transparent 70%)` }}
+          className="absolute inset-x-0 top-0 h-1"
+          style={{ background: colorHex }}
         />
         <div className="relative flex items-start justify-between">
           <div
-            className="flex h-14 w-14 items-center justify-center rounded-2xl"
+            className="flex h-12 w-12 items-center justify-center rounded-lg"
             style={{
-              background: `linear-gradient(135deg, color-mix(in srgb, ${colorHex} 22%, var(--color-surface)) 0%, color-mix(in srgb, ${colorHex} 8%, var(--color-surface)) 100%)`,
+              background: `color-mix(in srgb, ${colorHex} 14%, var(--color-surface))`,
               color: colorHex,
-              border: `1px solid color-mix(in srgb, ${colorHex} 30%, transparent)`,
             }}
           >
-            <Icon className="h-7 w-7" />
+            <Icon className="h-6 w-6" />
           </div>
           <span className="text-xs font-medium text-(--color-ink-soft) bg-(--color-surface-soft) rounded-full px-3 py-1 border border-(--color-border)">
             {coursCount} cours
           </span>
         </div>
         <div className="relative">
-          <h3 className="text-lg font-semibold tracking-tight text-(--color-ink) group-hover:text-(--color-primary-deep) transition text-balance">
+          <h3 className="text-lg font-semibold tracking-tight text-(--color-ink) group-hover:text-(--color-accent-deep) transition-colors text-balance">
             {nom}
           </h3>
         </div>
@@ -55,7 +54,7 @@ export function MatiereCard({
           </div>
           <Progress value={progress} />
         </div>
-        <div className="relative flex items-center gap-1 text-xs font-medium text-(--color-primary-deep) opacity-0 group-hover:opacity-100 transition">
+        <div className="relative flex items-center gap-1 text-xs font-medium text-(--color-accent-deep) opacity-0 group-hover:opacity-100 transition-opacity">
           Ouvrir
           <ArrowUpRight className="h-3.5 w-3.5" />
         </div>

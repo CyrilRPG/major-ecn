@@ -22,7 +22,7 @@ export type Student = {
   permission_scope: unknown;
 };
 
-const PROMOS = ['Terminale', 'PASS', 'LAS1', 'LAS2', 'Redoublant'];
+const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
 export function StudentsTable({
   students,

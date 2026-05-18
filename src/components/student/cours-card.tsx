@@ -19,13 +19,13 @@ export function CoursCard({ cours }: { cours: CoursCardData }) {
       href={`/cours/${cours.id}`}
       className="group relative block focus-ring rounded-(--radius-card)"
     >
-      <article className="relative overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-xs) transition hover:-translate-y-0.5 hover:border-(--color-primary)/40 hover:shadow-(--shadow-glow)">
+      <article className="relative overflow-hidden rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-xs) transition-colors hover:border-(--color-accent)">
         <span
           aria-hidden
-          className="absolute inset-y-4 left-0 w-1 rounded-r-full bg-gradient-to-b from-(--color-primary) to-(--color-accent) opacity-0 group-hover:opacity-100 transition"
+          className="absolute inset-y-0 left-0 w-1.5 bg-(--color-accent) opacity-0 group-hover:opacity-100 transition-opacity"
         />
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 p-7 md:p-8">
-          <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-(--color-primary-soft) text-(--color-primary-deep) font-mono font-semibold text-lg">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 p-6 md:p-7">
+          <div className="hidden md:flex h-11 w-11 items-center justify-center rounded-lg bg-(--color-primary) text-white font-mono font-semibold">
             {String(cours.orderIndex).padStart(2, '0')}
           </div>
           <div className="min-w-0 space-y-3">
@@ -50,7 +50,7 @@ export function CoursCard({ cours }: { cours: CoursCardData }) {
               <ProgressPills state={cours.state} />
             </div>
           </div>
-          <ArrowRight className="h-5 w-5 text-(--color-ink-muted) group-hover:text-(--color-primary) group-hover:translate-x-1 transition shrink-0" />
+          <ArrowRight className="h-5 w-5 text-(--color-ink-muted) group-hover:text-(--color-accent) transition-colors shrink-0" />
         </div>
       </article>
     </Link>

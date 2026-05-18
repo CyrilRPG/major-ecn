@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckCircle2, ClipboardList, FileText, Layers3, Lock, PlayCircle, type LucideIcon } from 'lucide-react';
+import { Check, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -24,101 +24,169 @@ export function ParcoursTimeline({
   const steps: Step[] = [
     {
       key: 'video',
-      label: 'Vidéo du cours',
-      description: hasVideo ? 'Le cours filmé par un référent, à ton rythme.' : 'La vidéo arrive bientôt. Tu peux déjà attaquer la fiche.',
-      Icon: PlayCircle,
+      label: 'Cours vidéo',
+      description: hasVideo
+        ? 'Le cours filmé par un médecin référent, aligné sur les recommandations HAS.'
+        : 'La vidéo arrive bientôt. Vous pouvez déjà attaquer la fiche de synthèse.',
+      Icon: MonitorPlay,
       status: videoDone ? 'done' : 'recommended',
       href: `/cours/${coursId}/video`,
     },
     {
       key: 'fiche',
-      label: 'Fiche de cours',
-      description: hasFiche ? 'Le résumé synthétique des notions clés à mémoriser.' : 'La fiche est en cours de préparation.',
+      label: 'Fiche de synthèse',
+      description: hasFiche
+        ? 'Le résumé hiérarchisé rang A / rang B, structuré pour la mémorisation active.'
+        : 'La fiche de synthèse est en cours de préparation.',
       Icon: FileText,
       status: ficheDone ? 'done' : videoDone ? 'recommended' : 'optional',
       href: `/cours/${coursId}/fiche`,
     },
     {
       key: 'training',
-      label: 'Entraînement',
-      description: 'QCM minutés, annales par année et flashcards pondérées.',
-      Icon: ClipboardList,
+      label: 'Entraînement format EDN',
+      description: 'Dossiers progressifs, annales EDN et flashcards pondérées par difficulté.',
+      Icon: ClipboardCheck,
       status: videoDone && ficheDone ? 'recommended' : 'optional',
       subActions: [
-        { label: 'QCM',         href: `/cours/${coursId}/qcm`,         Icon: ClipboardList, description: '3 séries d’entraînement, corrigé question par question.', hint: hasQcm ? undefined : 'Bientôt' },
-        { label: 'Annales',     href: `/cours/${coursId}/annales`,     Icon: FileText,      description: 'Les sujets des années précédentes.', hint: hasAnnales ? undefined : 'Bientôt' },
-        { label: 'Flashcards',  href: `/cours/${coursId}/flashcards`,  Icon: Layers3,       description: 'Mémorisation espacée pondérée par difficulté.', hint: hasFlashcards ? undefined : 'Bientôt' },
+        { label: 'Dossiers progressifs & QI', href: `/cours/${coursId}/qcm`, Icon: ClipboardCheck, description: 'Séries au format EDN, corrigées et justifiées proposition par proposition.', hint: hasQcm ? undefined : 'Bientôt' },
+        { label: 'Annales EDN', href: `/cours/${coursId}/annales`, Icon: FileText, description: 'Les sujets tombés les années précédentes, en conditions concours.', hint: hasAnnales ? undefined : 'Bientôt' },
+        { label: 'Flashcards', href: `/cours/${coursId}/flashcards`, Icon: Layers3, description: 'Révision espacée pondérée : ce qui résiste revient plus souvent.', hint: hasFlashcards ? undefined : 'Bientôt' },
       ],
     },
   ];
 
-  return (
-    <ol className="relative space-y-6">
-      <div aria-hidden className="absolute left-7 top-3 bottom-3 w-px bg-gradient-to-b from-(--color-primary)/60 via-(--color-border) to-transparent" />
-      {steps.map((step, i) => (
-        <motion.li
-          key={step.key}
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="relative pl-16"
-        >
-          <div
-            className={cn(
-              'absolute left-0 top-2 flex h-14 w-14 items-center justify-center rounded-2xl border',
-              step.status === 'done'
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-700/40 dark:bg-emerald-900/30 dark:text-emerald-300'
-                : step.status === 'recommended'
-                ? 'border-(--color-primary) bg-(--color-primary) text-(--color-primary-fg) shadow-(--shadow-glow)'
-                : 'border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-soft)',
-            )}
-          >
-            {step.status === 'done' ? <CheckCircle2 className="h-6 w-6" /> : <step.Icon className="h-6 w-6" />}
-          </div>
+  const total = steps.length;
+  const doneCount = steps.filter((s) => s.status === 'done').length;
 
-          <div className="surface-card p-5">
-            <div className="flex items-start justify-between gap-3 flex-wrap">
-              <div>
-                <h3 className="font-semibold text-(--color-ink)">{step.label}</h3>
-                <p className="mt-1 text-sm text-(--color-ink-soft) leading-relaxed">{step.description}</p>
-                {step.status === 'optional' && (
-                  <p className="mt-1 text-xs text-(--color-primary-deep)">Recommandé après la vidéo et la fiche</p>
+  return (
+    <div>
+      {/* En-tête de progression segmentée — style indicateur clinique */}
+      <div className="mb-8 rounded-2xl border border-(--color-border) bg-(--color-surface) px-5 py-4">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-medium uppercase tracking-[0.16em] text-(--color-ink-muted)">Protocole de l’item</span>
+          <span className="font-mono text-(--color-ink-soft)">{doneCount}/{total} validé{doneCount > 1 ? 's' : ''}</span>
+        </div>
+        <div className="mt-3 flex gap-1.5">
+          {steps.map((s) => (
+            <span
+              key={s.key}
+              className={cn(
+                'h-1.5 flex-1 rounded-full',
+                s.status === 'done'
+                  ? 'bg-(--color-success)'
+                  : s.status === 'recommended'
+                  ? 'bg-(--color-primary)'
+                  : 'bg-(--color-border)',
+              )}
+            />
+          ))}
+        </div>
+      </div>
+
+      <ol className="space-y-4">
+        {steps.map((step, i) => (
+          <motion.li
+            key={step.key}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <article
+              className={cn(
+                'relative overflow-hidden rounded-2xl border bg-(--color-surface)',
+                step.status === 'recommended'
+                  ? 'border-(--color-primary)'
+                  : 'border-(--color-border)',
+              )}
+            >
+              {/* rail vertical d'état à gauche */}
+              <span
+                aria-hidden
+                className={cn(
+                  'absolute inset-y-0 left-0 w-1.5',
+                  step.status === 'done'
+                    ? 'bg-(--color-success)'
+                    : step.status === 'recommended'
+                    ? 'bg-(--color-primary)'
+                    : 'bg-(--color-border)',
+                )}
+              />
+              <div className="p-6 pl-8">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div className="flex items-start gap-4">
+                    <span className="font-mono text-sm text-(--color-ink-muted) pt-1 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span
+                      className={cn(
+                        'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
+                        step.status === 'done'
+                          ? 'bg-(--color-primary-soft) text-(--color-success)'
+                          : 'bg-(--color-primary-soft) text-(--color-primary)',
+                      )}
+                    >
+                      {step.status === 'done' ? <Check className="h-5 w-5" /> : <step.Icon className="h-5 w-5" />}
+                    </span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-(--color-ink)">{step.label}</h3>
+                        {step.status === 'recommended' && (
+                          <span className="rounded-full bg-(--color-primary-soft) px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-(--color-primary-deep)">
+                            À faire
+                          </span>
+                        )}
+                        {step.status === 'done' && (
+                          <span className="rounded-full bg-(--color-primary-soft) px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-(--color-success)">
+                            Validé
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-sm text-(--color-ink-soft) leading-relaxed max-w-xl">{step.description}</p>
+                      {step.status === 'optional' && !step.subActions && (
+                        <p className="mt-1 text-xs text-(--color-ink-muted)">Recommandé après le cours vidéo et la fiche</p>
+                      )}
+                    </div>
+                  </div>
+                  {step.href && (
+                    <Link
+                      href={step.href}
+                      className="inline-flex items-center gap-2 rounded-(--radius-button) px-4 h-10 bg-(--color-primary) text-white text-sm font-medium hover:bg-(--color-primary-deep) focus-ring shadow-(--shadow-soft)"
+                    >
+                      {step.status === 'done' ? 'Revoir' : 'Commencer'}
+                    </Link>
+                  )}
+                </div>
+
+                {step.subActions && (
+                  <div className="mt-5 grid sm:grid-cols-3 gap-3">
+                    {step.subActions.map((sa) => (
+                      <Link
+                        key={sa.label}
+                        href={sa.href}
+                        className={cn(
+                          'group rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4 transition-colors focus-ring',
+                          sa.hint ? 'opacity-60 hover:opacity-100' : 'hover:border-(--color-accent)',
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-(--color-surface) text-(--color-accent-deep)">
+                            <sa.Icon className="h-4 w-4" />
+                          </span>
+                          {sa.hint && <Lock className="h-3.5 w-3.5 text-(--color-ink-muted)" />}
+                        </div>
+                        <p className="mt-3 font-medium text-(--color-ink) text-sm">{sa.label}</p>
+                        <p className="mt-0.5 text-xs text-(--color-ink-soft) leading-relaxed">{sa.description}</p>
+                        {sa.hint && <p className="mt-2 text-[10px] uppercase tracking-wider text-(--color-ink-muted)">{sa.hint}</p>}
+                      </Link>
+                    ))}
+                  </div>
                 )}
               </div>
-              {step.href && (
-                <Link
-                  href={step.href}
-                  className="inline-flex items-center gap-2 rounded-(--radius-button) px-4 h-10 bg-(--color-primary) text-(--color-primary-fg) text-sm font-medium hover:bg-(--color-primary-deep) focus-ring shadow-(--shadow-soft)"
-                >
-                  {step.status === 'done' ? 'Revoir' : 'Commencer'}
-                </Link>
-              )}
-            </div>
-            {step.subActions && (
-              <div className="mt-4 grid sm:grid-cols-3 gap-3">
-                {step.subActions.map((sa) => (
-                  <Link
-                    key={sa.label}
-                    href={sa.href}
-                    className={cn(
-                      'group rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4 transition focus-ring',
-                      sa.hint ? 'opacity-60 hover:opacity-100' : 'hover:border-(--color-primary) hover:-translate-y-0.5',
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <sa.Icon className="h-5 w-5 text-(--color-primary-deep)" />
-                      {sa.hint && <Lock className="h-3.5 w-3.5 text-(--color-ink-soft)" />}
-                    </div>
-                    <p className="mt-2 font-medium text-(--color-ink)">{sa.label}</p>
-                    <p className="text-xs text-(--color-ink-soft) leading-relaxed">{sa.description}</p>
-                    {sa.hint && <p className="mt-1 text-[10px] uppercase tracking-wider text-(--color-ink-soft)">{sa.hint}</p>}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </motion.li>
-      ))}
-    </ol>
+            </article>
+          </motion.li>
+        ))}
+      </ol>
+    </div>
   );
 }

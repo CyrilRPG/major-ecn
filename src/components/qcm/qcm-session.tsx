@@ -207,7 +207,7 @@ export function QcmSession({
               <div>
                 <p className="font-semibold text-amber-700 dark:text-amber-300">À retravailler</p>
                 <p className="mt-1 text-sm text-amber-700/80 dark:text-amber-300/80">
-                  Au moins un item ne correspond pas à la correction (logique 0 ou 5/5 du PASS).
+                  Au moins un item ne correspond pas à la correction (notation EDN, sans demi-point par item).
                 </p>
               </div>
             </>

@@ -2,7 +2,7 @@ export type PermissionScope =
   | { type: 'all' }
   | { type: 'faculty'; faculties: string[] };
 
-export type Promotion = 'Terminale' | 'PASS' | 'LAS1' | 'LAS2' | 'Redoublant';
+export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';
 
 export type Difficulty = 'tres_facile' | 'facile' | 'difficile' | 'tres_difficile';
 
