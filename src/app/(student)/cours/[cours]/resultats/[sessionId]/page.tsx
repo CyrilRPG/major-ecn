@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { AppHeader } from '@/components/app-header';
 import { QcmResults } from '@/components/qcm/qcm-results';
 import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
 
@@ -59,33 +58,19 @@ export default async function ResultsPage({
   const previous = beforeCurrent.length > 0 ? beforeCurrent[beforeCurrent.length - 1] : null;
 
   const isAnnale = session.qcm_series.type === 'annale';
-  const backHref = isAnnale ? `/cours/${coursId}/annales` : `/cours/${coursId}/qcm`;
   const retryHref = `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${session.serie_id}`;
 
   return (
-    <>
-      <AppHeader
-        profile={profile}
-        crumbs={[
-          { label: 'Facultés', href: '/facultes' },
-          { label: c.matieres.nom, href: `/matieres/${c.matiere_id}` },
-          { label: c.titre, href: `/cours/${coursId}` },
-          { label: isAnnale ? 'Annales' : 'QCM', href: backHref },
-          { label: session.qcm_series.label, href: retryHref },
-          { label: 'Résultats' },
-        ]}
-      />
-      <QcmResults
-        scoreCorrect={session.score_correct}
-        scoreTotal={session.score_total}
-        totalSeconds={totalSeconds}
-        questionsCount={attempts?.length ?? 0}
-        previous={previous}
-        history={history}
-        failed={failed}
-        coursHref={`/cours/${coursId}`}
-        retryHref={retryHref}
-      />
-    </>
+    <QcmResults
+      scoreCorrect={session.score_correct}
+      scoreTotal={session.score_total}
+      totalSeconds={totalSeconds}
+      questionsCount={attempts?.length ?? 0}
+      previous={previous}
+      history={history}
+      failed={failed}
+      coursHref={`/cours/${coursId}`}
+      retryHref={retryHref}
+    />
   );
 }
