@@ -3,74 +3,74 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* === Hermione brand === */
-  --color-hermione-violet: #1C0328;  /* primary — deep violet */
-  --color-hermione-orange: #F4AB34;  /* secondary accent — warm gold/orange */
-  --color-hermione-beige:  #E8E8DE;  /* secondary neutral — warm off-white */
+  /* === Major ECN brand === */
+  --color-brand-emerald: #0F6E4E;  /* primary — clinical emerald */
+  --color-brand-teal:    #15B8A6;  /* accent — medical teal */
+  --color-brand-sand:    #E6EDE9;  /* secondary neutral — cool off-white */
 
-  /* === Derived violet scale (from #1c0328) === */
-  --color-violet-50:  #FAF7F8;
-  --color-violet-100: #EEE5EA;
-  --color-violet-200: #D9C2CE;
-  --color-violet-300: #B891A8;
-  --color-violet-400: #905B7C;
-  --color-violet-500: #66345B;
-  --color-violet-600: #41143E;
-  --color-violet-700: #2C0832;
-  --color-violet-800: #1C0328;
-  --color-violet-900: #11011A;
-  --color-violet-950: #08000D;
+  /* === Emerald scale (from #0F6E4E) === */
+  --color-emerald-50:  #ECFBF4;
+  --color-emerald-100: #D2F4E4;
+  --color-emerald-200: #A6E7CB;
+  --color-emerald-300: #6FD4AC;
+  --color-emerald-400: #38B98A;
+  --color-emerald-500: #1A9B6E;
+  --color-emerald-600: #0F6E4E;
+  --color-emerald-700: #0C573E;
+  --color-emerald-800: #0A4632;
+  --color-emerald-900: #073425;
+  --color-emerald-950: #04211F;
 
-  /* === Derived orange scale (from #f4ab34) === */
-  --color-orange-50:  #FFF8EC;
-  --color-orange-100: #FCEACC;
-  --color-orange-200: #F9D69A;
-  --color-orange-300: #F6BF65;
-  --color-orange-400: #F4AB34;
-  --color-orange-500: #DC8E14;
-  --color-orange-600: #B67310;
-  --color-orange-700: #8C580E;
-  --color-orange-800: #5F3D0A;
-  --color-orange-900: #3A2607;
+  /* === Teal scale (from #15B8A6) === */
+  --color-teal-50:  #E8FBF8;
+  --color-teal-100: #C7F4ED;
+  --color-teal-200: #93E8DC;
+  --color-teal-300: #58D6C6;
+  --color-teal-400: #2BC2B0;
+  --color-teal-500: #15B8A6;
+  --color-teal-600: #0E9183;
+  --color-teal-700: #0C6F66;
+  --color-teal-800: #0A5750;
+  --color-teal-900: #08423D;
 
-  /* === Beige scale === */
-  --color-beige-50:  #FBFAF6;
-  --color-beige-100: #F4F2E9;
-  --color-beige-200: #E8E8DE;
-  --color-beige-300: #D6D5C7;
-  --color-beige-400: #B7B5A4;
-  --color-beige-500: #8E8C7A;
+  /* === Sand scale (cool warm-neutral) === */
+  --color-sand-50:  #FAFBF9;
+  --color-sand-100: #F1F5F2;
+  --color-sand-200: #E6EDE9;
+  --color-sand-300: #D6E0DB;
+  --color-sand-400: #B8C7C0;
+  --color-sand-500: #8FA39A;
 
   /* === Semantic brand === */
-  --color-primary:       var(--color-hermione-violet);
-  --color-primary-deep:  var(--color-violet-900);
-  --color-primary-soft:  var(--color-violet-100);
-  --color-primary-fg:    #FAF7F8;
-  --color-accent:        var(--color-hermione-orange);
-  --color-accent-soft:   var(--color-orange-100);
-  --color-accent-deep:   var(--color-orange-600);
+  --color-primary:       var(--color-brand-emerald);
+  --color-primary-deep:  var(--color-emerald-800);
+  --color-primary-soft:  var(--color-emerald-100);
+  --color-primary-fg:    #FFFFFF;
+  --color-accent:        var(--color-brand-teal);
+  --color-accent-soft:   var(--color-teal-100);
+  --color-accent-deep:   var(--color-teal-700);
 
   /* States */
-  --color-success:   #2D9B6A;
-  --color-warning:   var(--color-orange-500);
-  --color-danger:    #C7384A;
-  --color-easy:      #4FB48A;
-  --color-very-easy: #7CC8A4;
+  --color-success:   #0E9F6E;
+  --color-warning:   #C2810A;
+  --color-danger:    #C0442F;
+  --color-easy:      #38B98A;
+  --color-very-easy: #6FD4AC;
 
   /* === Light surfaces === */
-  --color-ink:           #1C0328;
-  --color-ink-soft:      #5C4856;
-  --color-ink-muted:     #9A8E96;
+  --color-ink:           #0F2A22;
+  --color-ink-soft:      #4A625B;
+  --color-ink-muted:     #7E938C;
   --color-surface:       #FFFFFF;
-  --color-surface-soft:  #FAFAFA;          /* clean neutral page bg */
-  --color-surface-sunken:var(--color-beige-200);  /* beige reserved for accent surfaces */
-  --color-border:        #E5E2DD;
-  --color-border-strong: #C5BFB7;
+  --color-surface-soft:  #F5F8F6;          /* clean clinical page bg */
+  --color-surface-sunken:var(--color-sand-200);
+  --color-border:        #DCE8E2;
+  --color-border-strong: #C2D4CC;
 
   /* === Typography === */
-  --font-sans: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-instrument-serif), 'Hoefler Text', Georgia, serif;
-  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
 
   --tracking-tightest: -0.04em;
   --tracking-display:  -0.025em;
@@ -84,9 +84,9 @@
   --radius-pill:    9999px;
 
   /* === Premium shadow stack === */
-  --shadow-xs:     0 1px 2px rgba(28, 3, 40, 0.06);
-  --shadow-soft:   0 1px 2px rgba(28, 3, 40, 0.05), 0 8px 22px -6px rgba(28, 3, 40, 0.10);
-  --shadow-lifted: 0 1px 2px rgba(28, 3, 40, 0.05), 0 14px 36px -10px rgba(28, 3, 40, 0.22), 0 4px 14px rgba(28, 3, 40, 0.08);
+  --shadow-xs:     0 1px 2px rgba(15, 42, 34, 0.06);
+  --shadow-soft:   0 1px 2px rgba(15, 42, 34, 0.05), 0 8px 22px -6px rgba(15, 42, 34, 0.10);
+  --shadow-lifted: 0 1px 2px rgba(15, 42, 34, 0.05), 0 14px 36px -10px rgba(15, 42, 34, 0.20), 0 4px 14px rgba(15, 42, 34, 0.08);
   --shadow-glow:   0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-primary) 28%, transparent);
   --shadow-glow-accent: 0 0 0 1px color-mix(in srgb, var(--color-accent) 28%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-accent) 30%, transparent);
   --shadow-inset-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.55);
@@ -96,31 +96,31 @@
 }
 
 .dark {
-  /* Primary in dark: mid-bright violet so it stays visible as both button bg and text accent */
-  --color-primary:       #B591D9;  /* readable on dark surfaces */
-  --color-primary-deep:  #D9C2EC;  /* lighter for stronger emphasis */
-  --color-primary-soft:  #2C0E40;
-  --color-primary-fg:    #1C0328;  /* dark text on light primary button */
-  --color-accent:        #F4AB34;
-  --color-accent-soft:   #4A2E0A;
-  --color-accent-deep:   #F6BF65;
+  /* Dark tokens kept for coherence; light theme is forced in layout.tsx */
+  --color-primary:       #38B98A;  /* readable on dark surfaces */
+  --color-primary-deep:  #6FD4AC;  /* lighter for stronger emphasis */
+  --color-primary-soft:  #0A4632;
+  --color-primary-fg:    #04211F;  /* dark text on light primary button */
+  --color-accent:        #2BC2B0;
+  --color-accent-soft:   #0A5750;
+  --color-accent-deep:   #58D6C6;
 
-  --color-success: #4ADE80;
-  --color-warning: #F4AB34;
-  --color-danger:  #F08896;
+  --color-success: #34D399;
+  --color-warning: #E0A92E;
+  --color-danger:  #F0907C;
 
-  --color-ink:            #F4F1E8;
-  --color-ink-soft:       #C2B7C8;
-  --color-ink-muted:      #847490;
-  --color-surface:        #1F0830;
-  --color-surface-soft:   #11041C;
-  --color-surface-sunken: #0A0114;
-  --color-border:         #382150;
-  --color-border-strong:  #5B3D78;
+  --color-ink:            #E8F1ED;
+  --color-ink-soft:       #A9BFB7;
+  --color-ink-muted:      #6E857D;
+  --color-surface:        #0C2018;
+  --color-surface-soft:   #07140F;
+  --color-surface-sunken: #04100B;
+  --color-border:         #1E3A30;
+  --color-border-strong:  #305247;
 
   --shadow-xs:     0 1px 2px rgba(0, 0, 0, 0.40);
   --shadow-soft:   0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lifted: 0 1px 2px rgba(0, 0, 0, 0.45), 0 24px 48px -12px rgba(181, 145, 217, 0.20), 0 8px 24px rgba(0, 0, 0, 0.40);
+  --shadow-lifted: 0 1px 2px rgba(0, 0, 0, 0.45), 0 24px 48px -12px rgba(21, 184, 166, 0.18), 0 8px 24px rgba(0, 0, 0, 0.40);
   --shadow-glow:   0 0 0 1px color-mix(in srgb, var(--color-primary) 35%, transparent), 0 18px 44px -8px color-mix(in srgb, var(--color-primary) 28%, transparent);
   --shadow-glow-accent: 0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent), 0 18px 44px -8px color-mix(in srgb, var(--color-accent) 30%, transparent);
   --shadow-inset-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
@@ -148,10 +148,11 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background-image:
-    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-ink-muted) 14%, transparent) 1px, transparent 0);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse 100% 70% at 50% 40%, black, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 70% at 50% 40%, black, transparent 80%);
+    linear-gradient(color-mix(in srgb, var(--color-ink-muted) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-ink-muted) 7%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 100% 65% at 50% 35%, black, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 65% at 50% 35%, black, transparent 78%);
 }
 
 body::after {
@@ -167,7 +168,8 @@ body::after {
 
 .dark body::before {
   background-image:
-    radial-gradient(circle at 1px 1px, color-mix(in srgb, #ffffff 4%, transparent) 1px, transparent 0);
+    linear-gradient(color-mix(in srgb, #ffffff 3%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, #ffffff 3%, transparent) 1px, transparent 1px);
 }
 .dark body::after {
   background:
@@ -244,7 +246,7 @@ body::after {
   .display em, .display .italic { font-style: italic; }
 
   .gradient-text {
-    background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-violet-500) 50%, var(--color-accent) 100%);
+    background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-emerald-500) 45%, var(--color-accent) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

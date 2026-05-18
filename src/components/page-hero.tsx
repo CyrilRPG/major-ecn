@@ -28,7 +28,12 @@ export function PageHero({
       align === 'center' && 'text-center mx-auto max-w-3xl',
       className,
     )}>
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+      {eyebrow && (
+        <p className="eyebrow flex items-center gap-2">
+          <span aria-hidden className="inline-block h-3 w-1 rounded-full bg-(--color-accent)" />
+          {eyebrow}
+        </p>
+      )}
       <h1 className={cn(
         'mt-2 font-semibold tracking-tight text-(--color-ink) text-balance leading-[1.05]',
         SIZES[size],

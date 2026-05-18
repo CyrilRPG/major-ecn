@@ -8,10 +8,10 @@ import type { Difficulty } from '@/types/domain';
  * muted/desaturated so it sits on the dark violet background without clashing.
  */
 const buttons: { key: Difficulty; label: string; subtitle: string; color: string; textOn: string }[] = [
-  { key: 'tres_facile',    label: 'Très facile',    subtitle: 'Je connais',         color: '#86C99A', textOn: '#1C0328' }, // muted sage green
-  { key: 'facile',         label: 'Facile',         subtitle: 'À revoir un peu',    color: '#C0CC7E', textOn: '#1C0328' }, // warm yellow-green
-  { key: 'difficile',      label: 'Difficile',      subtitle: 'À revoir bientôt',   color: '#F4AB34', textOn: '#1C0328' }, // Hermione orange
-  { key: 'tres_difficile', label: 'Très difficile', subtitle: 'À réviser souvent',  color: '#DC6E83', textOn: '#1C0328' }, // muted coral red
+  { key: 'tres_facile',    label: 'Très facile',    subtitle: 'Je connais',         color: '#0F6E4E', textOn: '#FFFFFF' }, // deep emerald
+  { key: 'facile',         label: 'Facile',         subtitle: 'À revoir un peu',    color: '#15B8A6', textOn: '#04211F' }, // medical teal
+  { key: 'difficile',      label: 'Difficile',      subtitle: 'À revoir bientôt',   color: '#C2810A', textOn: '#FFFFFF' }, // clinical amber
+  { key: 'tres_difficile', label: 'Très difficile', subtitle: 'À réviser souvent',  color: '#C0442F', textOn: '#FFFFFF' }, // clinical red
 ];
 
 export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty) => void; disabled?: boolean }) {
@@ -34,7 +34,7 @@ export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty
             boxShadow: `0 1px 2px rgba(0,0,0,0.25), 0 10px 24px -10px ${b.color}80`,
           }}
         >
-          <span aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-100 transition" style={{ background: `linear-gradient(135deg, ${b.color}, color-mix(in srgb, ${b.color} 70%, #1C0328 30%))` }} />
+          <span aria-hidden className="absolute inset-0 opacity-0 group-hover:opacity-100 transition" style={{ background: `linear-gradient(135deg, ${b.color}, color-mix(in srgb, ${b.color} 70%, #04211F 30%))` }} />
           <p className="relative font-semibold" style={{ color: b.textOn }}>{b.label}</p>
           <p className="relative text-xs mt-0.5 opacity-75" style={{ color: b.textOn }}>{b.subtitle}</p>
         </button>

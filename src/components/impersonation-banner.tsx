@@ -16,11 +16,11 @@ export function ImpersonationBanner({ targetName }: { targetName?: string }) {
     });
   };
   return (
-    <div className="sticky top-0 z-50 w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+    <div className="sticky top-0 z-50 w-full text-white" style={{ background: 'linear-gradient(90deg, var(--color-primary), var(--color-accent-deep))' }}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm">
           <Eye className="h-4 w-4" />
-          <span className="font-semibold">Tu es connecté en tant que</span>
+          <span className="font-semibold">Vous êtes connecté en tant que</span>
           <span>{targetName ?? 'un élève'}</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleReturn} disabled={pending} className="text-white hover:bg-white/15 hover:text-white">

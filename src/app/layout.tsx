@@ -1,27 +1,33 @@
 import type { Metadata } from 'next';
-import { Inter, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
+import { Manrope, Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-const display = Instrument_Serif({
+const sans = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
+const display = Fraunces({
   subsets: ['latin'],
-  weight: '400',
   style: ['normal', 'italic'],
-  variable: '--font-instrument-serif',
+  variable: '--font-fraunces',
   display: 'swap',
 });
-const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' });
+const mono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-ibm-plex-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: { default: 'Hermione Médecine', template: '%s · Hermione Médecine' },
-  description: 'La prépa qui structure ton année de PASS ou de LAS, du premier cours au concours.',
+  title: { default: 'Major ECN — Prépa EDN & EVC', template: '%s · Major ECN' },
+  description:
+    "La prépa de référence aux EDN et EVC : cours en vidéo, dossiers progressifs, ECOS et coaching pour D2, D3, D4 et PAE.",
   openGraph: {
-    title: 'Hermione Médecine',
-    description: 'La prépa qui structure ton année de PASS ou de LAS, du premier cours au concours.',
-    images: ['/hermione-logo.jpg'],
+    title: 'Major ECN — Prépa EDN & EVC',
+    description:
+      "La prépa de référence aux EDN et EVC : cours en vidéo, dossiers progressifs, ECOS et coaching pour D2, D3, D4 et PAE.",
+    images: ['/major-ecn-logo.svg'],
     type: 'website',
     locale: 'fr_FR',
   },
@@ -29,9 +35,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`dark ${inter.variable} ${display.variable} ${jetbrains.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
-        <ThemeProvider attribute="class" forcedTheme="dark" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" forcedTheme="light" defaultTheme="light" enableSystem={false}>
           <QueryProvider>
             <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
           </QueryProvider>

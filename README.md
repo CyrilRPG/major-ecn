@@ -1,6 +1,7 @@
-# Hermione Médecine — Plateforme E-learning PASS/LAS
+# Major ECN — Plateforme E-learning EDN/EVC
 
-Plateforme de préparation aux études de médecine pour Hermione Médecine — Sorbonne Paris Nord.
+Plateforme de préparation aux Épreuves Dématérialisées Nationales (EDN) et aux Épreuves de
+Vérification des Connaissances (EVC) pour Major ECN — D2, D3, D4 et PAE.
 Démo de qualité commerciale 2026.
 
 ## Stack technique
@@ -15,9 +16,9 @@ Démo de qualité commerciale 2026.
 
 | Rôle | Email | Mot de passe | Accès |
 |------|-------|--------------|-------|
-| Admin | `admin@hermione-demo.co` | `Demo2026!` | Tout |
-| Étudiante full access | `alice@hermione-demo.co` | `Demo2026!` | Toutes facultés |
-| Étudiant restreint | `bob@hermione-demo.co` | `Demo2026!` | Sorbonne Paris Nord uniquement |
+| Admin | `admin@major-ecn-demo.fr` | `Demo2026!` | Tout |
+| Étudiante full access | `alice@major-ecn-demo.fr` | `Demo2026!` | Toutes facultés |
+| Étudiant restreint | `bob@major-ecn-demo.fr` | `Demo2026!` | Sorbonne Paris Nord uniquement |
 
 ## Mise en route locale
 
@@ -93,7 +94,7 @@ src/
 │   └── api/admin/               # create-student / impersonate / stop-impersonation
 ├── components/
 │   ├── ui/                      # Primitives custom (button, card, dialog, table…)
-│   ├── brand/                   # Logo + fond géométrique violet
+│   ├── brand/                   # Logo Major ECN + fond géométrique émeraude/teal
 │   ├── student/                 # faculte-card, matiere-card, parcours-timeline, video-player, pdf-viewer
 │   ├── qcm/                     # session, item, results
 │   ├── flashcards/              # flashcard 3D flip, difficulty buttons
@@ -113,12 +114,12 @@ src/
 
 ## Tests fonctionnels (parcours démo)
 
-1. `admin@hermione-demo.co` → onglet **Élèves** → table avec Alice + Bob, filtres et recherche fonctionnent.
-2. Bouton **« Se connecter en tant que »** sur Alice → bandeau orange d’impersonation, navigue vers `/facultes` : les **deux** facultés sont accessibles.
+1. `admin@major-ecn-demo.fr` → onglet **Élèves** → table avec Alice + Bob, filtres et recherche fonctionnent.
+2. Bouton **« Se connecter en tant que »** sur Alice → bandeau d’impersonation, navigue vers `/facultes` : les **deux** facultés sont accessibles.
 3. Bouton **« Revenir au panel admin »** → retour `/admin/eleves` sans relogin.
 4. **« Se connecter en tant que »** Bob → seule **Sorbonne Paris Nord** est cliquable, **Paris Cité** est verrouillée avec tooltip.
 5. En tant que Bob : Sorbonne Paris Nord → S1 → Biochimie → cours 1 « Acides aminés ». La timeline affiche les 4 étapes. La **fiche PDF** s’ouvre (`Marquer comme lue` → check vert). La **vidéo** indique « Vidéo bientôt disponible » + CTA fiche.
-6. Lance **QCM → Série exercices 1** : 5 questions, validation question par question avec couleurs vert/rouge et justifications slide-down. Logique 0 ou 5/5.
+6. Lance **Dossiers progressifs → Série 1** : 5 questions, validation question par question avec couleurs vert/rouge et justifications slide-down. Notation EDN.
 7. Page **Résultats** : score animé, cercle de progression, comparaison avec session précédente, historique Recharts, bouton « Refaire uniquement les erreurs ».
 8. **Flashcards** : 15 cartes, flip 3D, 4 boutons de difficulté. Une seconde session privilégie les cartes notées « difficile » / « très difficile ».
 9. Admin → **Contenu** → choisir un cours → onglets vidéo (drag & drop MP4) / fiche (drag & drop PDF) / QCM / flashcards (ajout inline). Toggle thème en bas de la sidebar.
@@ -132,7 +133,7 @@ src/
 
 ## Identité visuelle
 
-Palette construite autour du violet signature Hermione (`#7C3AED`). Tokens dans `src/app/globals.css` via `@theme`. Mode sombre via `next-themes` (surfaces inversées, primary légèrement plus clair). Coins généreux, ombres stratifiées, animations Framer Motion subtiles, aucun gradient criard ni emoji dans l’UI.
+Palette « émeraude clinique » construite autour du vert médical Major ECN (`#0F6E4E`) et d’un accent teal (`#15B8A6`). Tokens dans `src/app/globals.css` via `@theme`. Thème clair forcé via `next-themes`. Typographies Fraunces (titres) + Manrope (corps) + IBM Plex Mono. Ombres stratifiées teintées vert, animations Framer Motion subtiles, aucun gradient criard ni emoji dans l’UI.
 
 ## Commandes utiles
 

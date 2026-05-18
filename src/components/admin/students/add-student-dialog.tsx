@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { AddStudentSchema, type AddStudentInput } from '@/lib/schemas/student';
 
-const PROMOTIONS: AddStudentInput['promotion'][] = ['Terminale', 'PASS', 'LAS1', 'LAS2', 'Redoublant'];
+const PROMOTIONS: AddStudentInput['promotion'][] = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
 export function AddStudentDialog({ facultes }: { facultes: { id: string; nom: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -39,7 +39,7 @@ export function AddStudentDialog({ facultes }: { facultes: { id: string; nom: st
     formState: { errors },
   } = useForm<AddStudentInput>({
     resolver: zodResolver(AddStudentSchema),
-    defaultValues: { permission_type: 'all', promotion: 'PASS', faculties: [] },
+    defaultValues: { permission_type: 'all', promotion: 'D2', faculties: [] },
   });
 
   const permissionType = watch('permission_type');

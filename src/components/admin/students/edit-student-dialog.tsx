@@ -23,7 +23,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { UpdateStudentSchema, type UpdateStudentInput } from '@/lib/schemas/student';
 import { parseScope } from '@/lib/auth/permissions';
 
-const PROMOTIONS: UpdateStudentInput['promotion'][] = ['Terminale', 'PASS', 'LAS1', 'LAS2', 'Redoublant'];
+const PROMOTIONS: UpdateStudentInput['promotion'][] = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
 export type EditStudentTarget = {
   id: string;
@@ -50,7 +50,7 @@ export function EditStudentDialog({
   const initialScope = parseScope(student.permission_scope);
   const defaultPromotion = (PROMOTIONS as string[]).includes(student.promotion ?? '')
     ? (student.promotion as UpdateStudentInput['promotion'])
-    : 'PASS';
+    : 'D2';
 
   const {
     register,

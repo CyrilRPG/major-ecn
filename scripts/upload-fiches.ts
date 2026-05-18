@@ -1,6 +1,6 @@
 /**
  * Upload des 3 PDFs de Biochimie générés vers Supabase Storage (bucket `fiches`).
- * Authentifie d’abord l’admin Hermione, puis upload via l’anon key (RLS storage autorise admin role).
+ * Authentifie d’abord l’admin Major ECN, puis upload via l’anon key (RLS storage autorise admin role).
  *
  * Usage : pnpm tsx scripts/upload-fiches.ts
  */
@@ -34,7 +34,7 @@ const TARGETS = [
 async function main() {
   const supabase = createClient(URL!, ANON!);
   const { error: signInErr } = await supabase.auth.signInWithPassword({
-    email: 'admin@hermione-demo.co',
+    email: 'admin@major-ecn-demo.fr',
     password: 'Demo2026!',
   });
   if (signInErr) {
