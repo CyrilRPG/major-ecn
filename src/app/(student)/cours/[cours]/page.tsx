@@ -1,12 +1,14 @@
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import { ArrowRight, ClipboardCheck, FileText, History, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { AppHeader } from '@/components/app-header';
-import { ParcoursTimeline } from '@/components/student/parcours-timeline';
 import { ContentRefreshDialog } from '@/components/student/content-refresh-dialog';
 import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
 
-export default async function CoursParcoursPage({ params }: { params: Promise<{ cours: string }> }) {
+type Action = { href: string; label: string; desc: string; Icon: LucideIcon; available: boolean };
+
+export default async function CoursApercuPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
   const { user, profile } = await requireUser();
   const supabase = await createClient();
@@ -15,11 +17,8 @@ export default async function CoursParcoursPage({ params }: { params: Promise<{ 
     .from('cours')
     .select(`
       id, titre, description, matiere_id,
-      matieres(id, nom, color_hex, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
-      videos(id, storage_path),
-      fiches(id, storage_path),
-      qcm_series(id, type),
-      flashcards(id),
+      matieres(nom, semestres(faculte_id)),
+      videos(storage_path), fiches(storage_path), qcm_series(type), flashcards(id),
       course_progress(video_watched, fiche_read)
     `)
     .eq('id', coursId)
@@ -27,10 +26,8 @@ export default async function CoursParcoursPage({ params }: { params: Promise<{ 
 
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
   const facId = c.matieres.semestres.faculte_id;
-  const scope = parseScope(profile.permission_scope);
-  if (!canAccessFaculte(scope, facId)) redirect('/facultes');
+  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
 
-  // Mark last_seen_at
   await supabase
     .from('course_progress')
     .upsert(
@@ -38,59 +35,49 @@ export default async function CoursParcoursPage({ params }: { params: Promise<{ 
       { onConflict: 'user_id,cours_id', ignoreDuplicates: false },
     );
 
-  const progress = c.course_progress?.[0];
-  const hasVideo = (c.videos ?? []).some((v) => !!v.storage_path);
-  const hasFiche = (c.fiches ?? []).some((f) => !!f.storage_path);
-  const hasQcm = (c.qcm_series ?? []).some((s) => s.type === 'qcm');
-  const hasAnnales = (c.qcm_series ?? []).some((s) => s.type === 'annale');
-  const hasFlashcards = (c.flashcards?.length ?? 0) > 0;
+  const actions: Action[] = [
+    { href: `/cours/${coursId}/video`, label: 'Cours vidéo', desc: 'Le cours filmé, aligné sur les recommandations HAS.', Icon: MonitorPlay, available: (c.videos ?? []).some((v) => !!v.storage_path) },
+    { href: `/cours/${coursId}/fiche`, label: 'Fiche de synthèse', desc: 'Le résumé hiérarchisé rang A / rang B.', Icon: FileText, available: (c.fiches ?? []).some((f) => !!f.storage_path) },
+    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EDN, corrigé justifié.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
+    { href: `/cours/${coursId}/annales`, label: 'Annales EDN', desc: 'Les sujets des sessions précédentes.', Icon: History, available: (c.qcm_series ?? []).some((s) => s.type === 'annale') },
+    { href: `/cours/${coursId}/flashcards`, label: 'Flashcards', desc: 'Révision espacée pondérée par difficulté.', Icon: Layers3, available: (c.flashcards?.length ?? 0) > 0 },
+  ];
 
   return (
-    <>
-      <AppHeader
-        profile={profile}
-        crumbs={[
-          { label: 'Facultés', href: '/facultes' },
-          { label: c.matieres.semestres.facultes?.nom ?? '', href: `/facultes/${facId}` },
-          { label: c.matieres.semestres.label, href: `/facultes/${facId}/${c.matieres.semestre_id}` },
-          { label: c.matieres.nom, href: `/matieres/${c.matiere_id}` },
-          { label: c.titre },
-        ]}
-      />
-      <main className="mx-auto w-full max-w-3xl px-6 lg:px-8 py-14">
-        <header className="mb-12">
-          <p className="eyebrow">{c.matieres.nom} · {c.matieres.semestres.label}</p>
-          <h1 className="mt-2 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-balance leading-[1.05]">
-            {c.titre}
-          </h1>
-          {c.description && (
-            <p className="mt-4 max-w-2xl text-(--color-ink-soft) leading-relaxed text-pretty text-base md:text-lg">
-              {c.description}
-            </p>
-          )}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-3 rounded-full border border-(--color-border) bg-(--color-surface) px-4 py-1.5 text-xs text-(--color-ink-soft)">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-(--color-accent) opacity-60 animate-[pulse-soft_2s_ease-in-out_infinite]" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-(--color-accent)" />
-              </span>
-              Parcours en 3 étapes : vidéo, fiche, entraînement
-            </div>
-            <ContentRefreshDialog coursId={coursId} coursTitre={c.titre} />
-          </div>
-        </header>
+    <div className="mx-auto w-full max-w-3xl px-4 py-8 lg:px-8">
+      {c.description && (
+        <p className="text-(--color-ink-soft) leading-relaxed text-pretty">{c.description}</p>
+      )}
 
-        <ParcoursTimeline
-          coursId={coursId}
-          videoDone={!!progress?.video_watched}
-          ficheDone={!!progress?.fiche_read}
-          hasVideo={hasVideo}
-          hasFiche={hasFiche}
-          hasQcm={hasQcm}
-          hasAnnales={hasAnnales}
-          hasFlashcards={hasFlashcards}
-        />
-      </main>
-    </>
+      <div className="mt-6">
+        <ContentRefreshDialog coursId={coursId} coursTitre={c.titre} />
+      </div>
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        {actions.map((a) => (
+          <Link
+            key={a.href}
+            href={a.href}
+            className="group flex items-start gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-4 transition-colors hover:border-(--color-accent) focus-ring"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
+              <a.Icon className="h-4.5 w-4.5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 font-medium text-(--color-ink)">
+                {a.label}
+                {!a.available && (
+                  <span className="rounded-full bg-(--color-sand-200) px-2 py-0.5 text-[10px] uppercase tracking-wide text-(--color-ink-muted)">
+                    Bientôt
+                  </span>
+                )}
+              </span>
+              <span className="mt-0.5 block text-xs text-(--color-ink-soft)">{a.desc}</span>
+            </span>
+            <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

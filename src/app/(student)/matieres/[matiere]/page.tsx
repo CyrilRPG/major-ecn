@@ -1,9 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { AppHeader } from '@/components/app-header';
-import { StaggerList } from '@/components/stagger-list';
-import { CoursCard } from '@/components/student/cours-card';
+import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
 import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
 
@@ -36,7 +34,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
         .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id))')
         .eq('user_id', user.id)
         .in('qcm_questions.qcm_series.cours_id', coursIds)
-    : { data: [] as unknown as { question_id: string; qcm_questions: { qcm_series: { cours_id: string } } }[] };
+    : { data: [] as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }[] };
 
   const { data: reviews } = coursIds.length
     ? await supabase
@@ -54,70 +52,41 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   const Icon = iconFromKey(m.icon_key);
   const facNom = m.semestres.facultes?.nom ?? '';
 
+  const rows: IndexRow[] = (cours ?? []).map((c, idx) => {
+    const p = c.course_progress?.[0];
+    const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
+    const steps =
+      (p?.video_watched ? 1 : 0) +
+      (p?.fiche_read ? 1 : 0) +
+      (coursQcmHit.has(c.id) ? 1 : 0) +
+      (coursFlashHit.has(c.id) ? 1 : 0);
+    return {
+      id: c.id,
+      href: `/cours/${c.id}`,
+      title: c.titre,
+      subtitle: c.description ?? undefined,
+      leading: (
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary) font-mono text-xs font-semibold text-white">
+          {String(idx + 1).padStart(2, '0')}
+        </span>
+      ),
+      badge: hasContent && !p ? 'Nouveau' : undefined,
+      progress: Math.round((steps / 4) * 100),
+    };
+  });
+
   return (
     <>
-      <AppHeader
-        profile={profile}
-        crumbs={[
-          { label: 'Facultés', href: '/facultes' },
-          { label: facNom, href: `/facultes/${facId}` },
-          { label: m.semestres.label, href: `/facultes/${facId}/${m.semestre_id}` },
-          { label: m.nom },
-        ]}
+      <IndexHeader
+        context={`${facNom} · ${m.semestres.label}`}
+        title={m.nom}
+        meta={`${rows.length} cours`}
       />
-      <main className="mx-auto w-full max-w-5xl px-6 lg:px-8 py-14">
-        <header className="mb-12 flex items-end gap-6 flex-wrap">
-          <div className="flex items-center gap-6">
-            <div
-              className="relative flex h-20 w-20 items-center justify-center rounded-3xl shrink-0 shadow-(--shadow-soft)"
-              style={{
-                background: `linear-gradient(135deg, color-mix(in srgb, ${m.color_hex} 28%, var(--color-surface)) 0%, color-mix(in srgb, ${m.color_hex} 10%, var(--color-surface)) 100%)`,
-                color: m.color_hex,
-                border: `1px solid color-mix(in srgb, ${m.color_hex} 35%, transparent)`,
-              }}
-            >
-              <Icon className="h-10 w-10" />
-            </div>
-            <div>
-              <p className="eyebrow">Matière</p>
-              <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-[1.05]">
-                {m.nom}
-              </h1>
-              <p className="mt-2 text-sm text-(--color-ink-soft)">
-                {(cours ?? []).length} cours dans cette matière.
-              </p>
-            </div>
-          </div>
-        </header>
-
-        <StaggerList className="space-y-4">
-          {(cours ?? []).map((c, idx) => {
-            const progress = c.course_progress?.[0];
-            const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
-            const isNew = hasContent && !progress;
-            const state = {
-              videoWatched: !!progress?.video_watched,
-              ficheRead: !!progress?.fiche_read,
-              qcmAttempted: coursQcmHit.has(c.id),
-              flashcardsReviewed: coursFlashHit.has(c.id),
-            };
-            return (
-              <CoursCard
-                key={c.id}
-                cours={{
-                  id: c.id,
-                  titre: c.titre,
-                  description: c.description,
-                  orderIndex: idx + 1,
-                  state,
-                  hasContent,
-                  isNew,
-                }}
-              />
-            );
-          })}
-        </StaggerList>
-      </main>
+      <div className="mx-auto flex w-full max-w-4xl items-center gap-3 px-4 pt-6 lg:px-10">
+        <RowIcon Icon={Icon} color={m.color_hex ?? undefined} />
+        <p className="text-sm text-(--color-ink-muted)">Sélectionnez un cours pour ouvrir la console d’étude.</p>
+      </div>
+      <IndexList rows={rows} />
     </>
   );
 }

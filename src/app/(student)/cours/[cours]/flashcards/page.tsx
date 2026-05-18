@@ -2,7 +2,6 @@ import { notFound, redirect } from 'next/navigation';
 import { Layers3 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { AppHeader } from '@/components/app-header';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
@@ -49,30 +48,19 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     lastWeight: lastWeightMap.get(c.id) ?? null,
   }));
 
-  return (
-    <>
-      <AppHeader
-        profile={profile}
-        crumbs={[
-          { label: 'Facultés', href: '/facultes' },
-          { label: c.matieres.nom, href: `/matieres/${c.matiere_id}` },
-          { label: c.titre, href: `/cours/${coursId}` },
-          { label: 'Flashcards' },
-        ]}
-      />
-      {input.length === 0 ? (
-        <main className="mx-auto max-w-2xl px-6 py-12">
-          <div className="surface-card">
-            <EmptyState
-              icon={Layers3}
-              title="Pas encore de flashcards"
-              description="Les flashcards arrivent dès que l’équipe pédagogique les a finalisées pour ce cours."
-            />
-          </div>
-        </main>
-      ) : (
-        <FlashcardSession cards={input} coursId={coursId} backHref={`/cours/${coursId}`} />
-      )}
-    </>
-  );
+  if (input.length === 0) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-6">
+        <div className="rounded-xl border border-(--color-border) bg-(--color-surface)">
+          <EmptyState
+            icon={Layers3}
+            title="Pas encore de flashcards"
+            description="Les flashcards arrivent dès que l’équipe pédagogique les a finalisées pour ce cours."
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return <FlashcardSession cards={input} coursId={coursId} backHref={`/cours/${coursId}`} />;
 }

@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { AppHeader } from '@/components/app-header';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
 
@@ -53,26 +52,13 @@ export default async function AnnaleRunPage({ params }: { params: Promise<{ cour
   if (!session) notFound();
 
   return (
-    <>
-      <AppHeader
-        profile={profile}
-        crumbs={[
-          { label: 'Facultés', href: '/facultes' },
-          { label: c.matieres.semestres.facultes?.nom ?? '', href: `/facultes/${facId}` },
-          { label: c.matieres.nom, href: `/matieres/${c.matiere_id}` },
-          { label: c.titre, href: `/cours/${coursId}` },
-          { label: 'Annales', href: `/cours/${coursId}/annales` },
-          { label: serie.label },
-        ]}
-      />
-      <QcmSession
-        sessionId={session.id}
-        coursId={coursId}
-        serieLabel={`Annale ${serie.label}`}
-        serieKind="annale"
-        questions={enrichedQuestions}
-        backHref={`/cours/${coursId}/annales`}
-      />
-    </>
+    <QcmSession
+      sessionId={session.id}
+      coursId={coursId}
+      serieLabel={`Annale ${serie.label}`}
+      serieKind="annale"
+      questions={enrichedQuestions}
+      backHref={`/cours/${coursId}/annales`}
+    />
   );
 }
