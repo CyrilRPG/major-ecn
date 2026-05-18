@@ -37,10 +37,10 @@ export type EditStudentTarget = {
 
 export function EditStudentDialog({
   student,
-  facultes,
+  colleges,
 }: {
   student: EditStudentTarget;
-  facultes: { id: string; nom: string }[];
+  colleges: { id: string; nom: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export function EditStudentDialog({
       phone: student.phone ?? '',
       promotion: defaultPromotion,
       permission_type: initialScope.type,
-      faculties: initialScope.type === 'faculty' ? initialScope.faculties : [],
+      colleges: initialScope.type === 'college' ? initialScope.colleges : [],
     },
   });
 
@@ -170,36 +170,36 @@ export function EditStudentDialog({
                 <RadioGroup value={field.value} onValueChange={field.onChange}>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
                     <RadioGroupItem value="all" />
-                    <span className="text-sm">Toute l’offre (toutes les facultés)</span>
+                    <span className="text-sm">Toute l’offre (tous les collèges)</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
-                    <RadioGroupItem value="faculty" />
-                    <span className="text-sm">Facultés spécifiques</span>
+                    <RadioGroupItem value="college" />
+                    <span className="text-sm">Collèges spécifiques</span>
                   </label>
                 </RadioGroup>
               )}
             />
-            {permissionType === 'faculty' && (
-              <div className="ml-1 space-y-2 mt-2">
+            {permissionType === 'college' && (
+              <div className="ml-1 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <Controller
-                  name="faculties"
+                  name="colleges"
                   control={control}
                   render={({ field }) => (
                     <>
-                      {facultes.map((f) => {
-                        const checked = field.value?.includes(f.id) ?? false;
+                      {colleges.map((c) => {
+                        const checked = field.value?.includes(c.id) ?? false;
                         return (
-                          <label key={f.id} className="flex items-center gap-2 text-sm">
+                          <label key={c.id} className="flex items-center gap-2 text-sm">
                             <Checkbox
                               checked={checked}
                               onCheckedChange={(v) => {
                                 const set = new Set(field.value ?? []);
-                                if (v) set.add(f.id);
-                                else set.delete(f.id);
+                                if (v) set.add(c.id);
+                                else set.delete(c.id);
                                 field.onChange(Array.from(set));
                               }}
                             />
-                            {f.nom}
+                            {c.nom}
                           </label>
                         );
                       })}

@@ -5,7 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursAnnalesListPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -18,8 +18,7 @@ export default async function CoursAnnalesListPage({ params }: { params: Promise
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const { data: annales } = await supabase
     .from('qcm_series')

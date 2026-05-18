@@ -1,6 +1,6 @@
 export type PermissionScope =
   | { type: 'all' }
-  | { type: 'faculty'; faculties: string[] };
+  | { type: 'college'; colleges: string[] };
 
 export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';
 

@@ -13,7 +13,7 @@ function Ring({ value }: { value: number }) {
   const c = 2 * Math.PI * r;
   return (
     <svg viewBox="0 0 18 18" className="h-4 w-4 shrink-0 -rotate-90" aria-hidden>
-      <circle cx="9" cy="9" r={r} fill="none" stroke="var(--color-border)" strokeWidth="2.5" />
+      <circle cx="9" cy="9" r={r} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="2.5" />
       <circle
         cx="9"
         cy="9"
@@ -53,12 +53,12 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
     });
 
   return (
-    <nav aria-label="Collèges et items" className="space-y-0.5 px-2 pb-8">
-      <p className="px-3 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted)">
+    <nav aria-label="Collèges et items" className="space-y-0.5 px-2 pb-8 text-[15px]">
+      <p className="px-3 pb-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
         Collèges EDN
       </p>
       {tree.length === 0 && (
-        <p className="px-3 py-6 text-xs text-(--color-ink-muted)">Aucun contenu accessible.</p>
+        <p className="px-3 py-6 text-sm text-white/50">Aucun contenu accessible.</p>
       )}
       {tree.map((col) => {
         const Icon = iconFromKey(col.iconKey ?? undefined);
@@ -68,14 +68,14 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
             <button
               type="button"
               onClick={() => toggle(col.id)}
-              className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-medium text-(--color-ink) transition-colors hover:bg-(--color-sand-100)"
+              className="group flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
             >
               <ChevronRight
-                className={cn('h-3.5 w-3.5 shrink-0 text-(--color-ink-muted) transition-transform', o && 'rotate-90')}
+                className={cn('h-4 w-4 shrink-0 text-white/45 transition-transform', o && 'rotate-90')}
               />
-              <Icon className="h-4 w-4 shrink-0" style={{ color: col.colorHex ?? 'var(--color-accent)' }} />
+              <Icon className="h-[18px] w-[18px] shrink-0" style={{ color: col.colorHex ?? 'var(--color-accent)' }} />
               <span className="flex-1 truncate">{col.nom}</span>
-              <span className="text-[10px] tabular-nums text-(--color-ink-muted)">{col.cours.length}</span>
+              <span className="text-[11px] tabular-nums text-white/40">{col.cours.length}</span>
             </button>
             {o &&
               col.cours.map((c) => (
@@ -83,10 +83,10 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
                   key={c.id}
                   href={`/cours/${c.id}`}
                   className={cn(
-                    'flex items-center gap-2 rounded-md py-1.5 pl-9 pr-2 text-sm transition-colors',
+                    'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                     c.id === activeCoursId
-                      ? 'bg-(--color-primary) font-medium text-white'
-                      : 'text-(--color-ink-soft) hover:bg-(--color-sand-100) hover:text-(--color-ink)',
+                      ? 'bg-(--color-accent) font-medium text-[#04211F]'
+                      : 'text-white/65 hover:bg-white/10 hover:text-white',
                   )}
                 >
                   <span className="flex-1 truncate">{c.titre}</span>

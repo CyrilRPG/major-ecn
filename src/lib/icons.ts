@@ -1,15 +1,17 @@
 import {
-  Apple, Atom, Baby, BarChart3, Bone, Dna, FlaskConical,
-  GraduationCap, HelpCircle, Layers, Microscope, Pill, Users, Waves,
+  Apple, Atom, Baby, BarChart3, Bone, Brain, Bug, Dna, Droplets, FlaskConical,
+  GraduationCap, HeartPulse, HelpCircle, Layers, Microscope, Pill, Stethoscope,
+  Syringe, Users, Waves, Wind,
   type LucideIcon,
 } from 'lucide-react';
 
 const map: Record<string, LucideIcon> = {
-  Apple, Atom, Baby, BarChart3, Bone, Dna, FlaskConical, GraduationCap,
-  Layers, Microscope, Pill, Users, Waves,
+  Apple, Atom, Baby, BarChart3, Bone, Brain, Bug, Dna, Droplets, FlaskConical,
+  GraduationCap, HeartPulse, Layers, Microscope, Pill, Stethoscope, Syringe,
+  Users, Waves, Wind,
 };
 
 export function iconFromKey(key: string | null | undefined): LucideIcon {
-  if (!key) return HelpCircle;
-  return map[key] ?? HelpCircle;
+  if (!key) return Stethoscope;
+  return map[key] ?? Stethoscope;
 }

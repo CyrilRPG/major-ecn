@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
+const SIDEBAR_BG = 'linear-gradient(180deg, #0A4632 0%, #04211F 100%)';
+
 export function AppShell({
   profile,
   tree,
@@ -26,19 +28,14 @@ export function AppShell({
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('shell:collapsed');
-    if (stored === '1') setCollapsed(true);
+    if (localStorage.getItem('shell:collapsed') === '1') setCollapsed(true);
   }, []);
   useEffect(() => {
     localStorage.setItem('shell:collapsed', collapsed ? '1' : '0');
   }, [collapsed]);
-
-  // Close mobile drawer on navigation.
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
-
-  // Global ⌘K / Ctrl-K + Esc.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -53,17 +50,17 @@ export function AppShell({
   }, []);
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-(--color-surface)">
-      <div className="flex h-14 items-center gap-2.5 border-b border-(--color-border) px-4">
-        <BrandMark className="h-7 w-7" />
-        <span className="text-sm font-semibold uppercase tracking-[0.12em] text-(--color-ink)">
+    <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
+      <div className="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
+        <BrandMark className="h-7 w-7 ring-1 ring-white/20" />
+        <span className="text-base font-semibold uppercase tracking-[0.12em]">
           Major<span className="text-(--color-accent)"> ECN</span>
         </span>
         <button
           type="button"
           onClick={() => setMobileOpen(false)}
           aria-label="Fermer"
-          className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) lg:hidden"
+          className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 lg:hidden"
         >
           <X className="h-4 w-4" />
         </button>
@@ -75,31 +72,21 @@ export function AppShell({
   );
 
   return (
-    <div
-      className="grid h-full w-full overflow-hidden"
-      style={{ gridTemplateColumns: collapsed ? '0px 1fr' : 'minmax(240px, 280px) 1fr' }}
-    >
+    <div className="flex h-full w-full overflow-hidden">
       {/* Desktop sidebar */}
-      <aside
-        className={cn(
-          'hidden lg:block h-screen overflow-hidden border-r border-(--color-border) transition-[width]',
-          collapsed && 'lg:hidden',
-        )}
-      >
-        {sidebar}
-      </aside>
+      {!collapsed && (
+        <aside className="hidden w-[260px] shrink-0 lg:block">{sidebar}</aside>
+      )}
 
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-[280px] border-r border-(--color-border) shadow-(--shadow-lifted)">
-            {sidebar}
-          </div>
+          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-y-0 left-0 w-[280px] shadow-(--shadow-lifted)">{sidebar}</div>
         </div>
       )}
 
-      <div className="flex min-w-0 flex-col" style={{ gridColumn: collapsed ? '1 / -1' : '2' }}>
+      <div className="flex min-w-0 flex-1 flex-col">
         <TopBar
           profile={profile}
           onOpenPalette={() => setPaletteOpen(true)}
@@ -109,7 +96,15 @@ export function AppShell({
               : setMobileOpen((v) => !v)
           }
         />
-        <main className="flex-1 overflow-y-auto bg-(--color-surface-soft)">{children}</main>
+        <main
+          className={cn(
+            'min-h-0 flex-1 overflow-y-auto',
+            'bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,color-mix(in_srgb,var(--color-primary)_10%,transparent),transparent_60%),radial-gradient(ellipse_60%_50%_at_100%_100%,color-mix(in_srgb,var(--color-accent)_8%,transparent),transparent_55%)]',
+            'bg-(--color-surface-soft)',
+          )}
+        >
+          {children}
+        </main>
       </div>
 
       <CommandPalette tree={tree} open={paletteOpen} onOpenChange={setPaletteOpen} />

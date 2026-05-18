@@ -3,8 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, FileText, History, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { ContentRefreshDialog } from '@/components/student/content-refresh-dialog';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 type Action = { href: string; label: string; desc: string; Icon: LucideIcon; available: boolean };
 
@@ -17,16 +16,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .from('cours')
     .select(`
       id, titre, description, matiere_id,
-      matieres(nom, semestres(faculte_id)),
-      videos(storage_path), fiches(storage_path), qcm_series(type), flashcards(id),
-      course_progress(video_watched, fiche_read)
+      matieres(nom),
+      videos(storage_path), fiches(storage_path), qcm_series(type), flashcards(id)
     `)
     .eq('id', coursId)
     .maybeSingle();
 
-  if (!c || !c.matieres || !c.matieres.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!c || !c.matieres) notFound();
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   await supabase
     .from('course_progress')
@@ -38,43 +35,51 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const actions: Action[] = [
     { href: `/cours/${coursId}/video`, label: 'Cours vidéo', desc: 'Le cours filmé, aligné sur les recommandations HAS.', Icon: MonitorPlay, available: (c.videos ?? []).some((v) => !!v.storage_path) },
     { href: `/cours/${coursId}/fiche`, label: 'Fiche de synthèse', desc: 'Le résumé hiérarchisé rang A / rang B.', Icon: FileText, available: (c.fiches ?? []).some((f) => !!f.storage_path) },
-    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EDN, corrigé justifié.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
-    { href: `/cours/${coursId}/annales`, label: 'Annales EDN', desc: 'Les sujets des sessions précédentes.', Icon: History, available: (c.qcm_series ?? []).some((s) => s.type === 'annale') },
-    { href: `/cours/${coursId}/flashcards`, label: 'Flashcards', desc: 'Révision espacée pondérée par difficulté.', Icon: Layers3, available: (c.flashcards?.length ?? 0) > 0 },
+    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EDN, corrigé et justifié item par item.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
+    { href: `/cours/${coursId}/annales`, label: 'Annales EDN', desc: 'Les sujets des sessions précédentes, en conditions concours.', Icon: History, available: (c.qcm_series ?? []).some((s) => s.type === 'annale') },
+    { href: `/cours/${coursId}/flashcards`, label: 'Flashcards', desc: 'Révision espacée pondérée par votre niveau de difficulté.', Icon: Layers3, available: (c.flashcards?.length ?? 0) > 0 },
   ];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-8 lg:px-8">
+    <div className="mx-auto w-full max-w-5xl px-5 py-8 lg:px-10">
       {c.description && (
-        <p className="text-(--color-ink-soft) leading-relaxed text-pretty">{c.description}</p>
+        <div className="mb-8 rounded-2xl border border-(--color-border) bg-gradient-to-br from-(--color-primary-soft) to-transparent p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)">
+            {c.matieres.nom}
+          </p>
+          <p className="mt-2 leading-relaxed text-pretty text-(--color-ink)">{c.description}</p>
+        </div>
       )}
 
-      <div className="mt-6">
-        <ContentRefreshDialog coursId={coursId} coursTitre={c.titre} />
-      </div>
-
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {actions.map((a) => (
           <Link
             key={a.href}
             href={a.href}
-            className="group flex items-start gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-4 transition-colors hover:border-(--color-accent) focus-ring"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted) focus-ring"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
-              <a.Icon className="h-4.5 w-4.5" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="flex items-center gap-2 font-medium text-(--color-ink)">
-                {a.label}
-                {!a.available && (
-                  <span className="rounded-full bg-(--color-sand-200) px-2 py-0.5 text-[10px] uppercase tracking-wide text-(--color-ink-muted)">
-                    Bientôt
-                  </span>
-                )}
+            <span
+              aria-hidden
+              className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-(--color-primary) to-(--color-accent) transition-transform duration-300 group-hover:scale-x-100"
+            />
+            <div className="flex items-start justify-between">
+              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary) transition-colors group-hover:bg-(--color-primary) group-hover:text-white">
+                <a.Icon className="h-7 w-7" />
               </span>
-              <span className="mt-0.5 block text-xs text-(--color-ink-soft)">{a.desc}</span>
+              {!a.available && (
+                <span className="rounded-full bg-(--color-sand-200) px-2.5 py-0.5 text-[10px] uppercase tracking-wide text-(--color-ink-muted)">
+                  Bientôt
+                </span>
+              )}
+            </div>
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-(--color-ink)">{a.label}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{a.desc}</p>
+            </div>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-accent-deep)">
+              Ouvrir
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
           </Link>
         ))}
       </div>

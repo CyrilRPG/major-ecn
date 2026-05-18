@@ -4,11 +4,13 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { iconFromKey } from '@/lib/icons';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export const metadata = { title: 'Collèges EDN' };
 
 export default async function CollegesPage() {
-  await requireUser();
+  const { profile } = await requireUser();
+  const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -25,7 +27,10 @@ export default async function CollegesPage() {
       id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number | null;
       cours?: { course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
     }[] }[] } | null)?.semestres ?? [])
-  ).flatMap((s) => s.matieres ?? []).sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+  )
+    .flatMap((s) => s.matieres ?? [])
+    .filter((m) => canAccessCollege(scope, m.id))
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   return (
     <div className="px-5 py-7 lg:px-10">

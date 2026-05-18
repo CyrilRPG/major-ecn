@@ -3,7 +3,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -17,9 +17,8 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     .maybeSingle();
 
   if (!m || !m.semestres) notFound();
-  const facId = m.semestres.faculte_id;
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessFaculte(scope, facId)) redirect('/facultes');
+  if (!canAccessCollege(scope, m.id)) redirect('/facultes');
 
   const { data: cours } = await supabase
     .from('cours')

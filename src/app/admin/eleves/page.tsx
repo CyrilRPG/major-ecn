@@ -2,6 +2,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
+import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 
 export const metadata = { title: 'Élèves' };
 
@@ -9,16 +10,28 @@ export default async function ElevesPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  const [{ data: students }, { data: facultes }] = await Promise.all([
+  const [{ data: students }, { data: fac }] = await Promise.all([
     supabase
       .from('profiles')
       .select('id, first_name, last_name, email, phone, promotion, permission_scope, role')
       .eq('role', 'student')
       .order('last_name'),
-    supabase.from('facultes').select('id, nom').order('nom'),
+    supabase
+      .from('facultes')
+      .select('semestres(matieres(id, nom, order_index))')
+      .eq('id', EDN_FACULTE_ID)
+      .maybeSingle(),
   ]);
 
-  const facMap = Object.fromEntries((facultes ?? []).map((f) => [f.id, f.nom]));
+  const colleges = (
+    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null }[] }[] } | null)
+      ?.semestres ?? [])
+  )
+    .flatMap((s) => s.matieres ?? [])
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    .map((m) => ({ id: m.id, nom: m.nom }));
+
+  const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
@@ -30,10 +43,10 @@ export default async function ElevesPage() {
             {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
           </p>
         </div>
-        <AddStudentDialog facultes={facultes ?? []} />
+        <AddStudentDialog colleges={colleges} />
       </header>
 
-      <StudentsTable students={students ?? []} facMap={facMap} facultes={facultes ?? []} />
+      <StudentsTable students={students ?? []} collegeMap={collegeMap} colleges={colleges} />
     </main>
   );
 }

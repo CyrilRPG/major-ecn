@@ -4,7 +4,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { PdfViewer } from '@/components/student/pdf-viewer';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursFichePage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -22,8 +22,7 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const fiche = c.fiches?.[0];
   let signedUrl: string | null = null;

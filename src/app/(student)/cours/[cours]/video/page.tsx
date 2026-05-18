@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { VideoPlayer } from '@/components/student/video-player';
-import { canAccessFaculte, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursVideoPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -23,8 +23,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  const facId = c.matieres.semestres.faculte_id;
-  if (!canAccessFaculte(parseScope(profile.permission_scope), facId)) redirect('/facultes');
+  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const video = c.videos?.[0];
   let signedUrl: string | null = null;

@@ -16,11 +16,11 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, promotion, permission_type, faculties } = parsed.data;
+  const { id, first_name, last_name, phone, promotion, permission_type, colleges } = parsed.data;
   const permission_scope =
     permission_type === 'all'
       ? { type: 'all' as const }
-      : { type: 'faculty' as const, faculties: faculties ?? [] };
+      : { type: 'college' as const, colleges: colleges ?? [] };
 
   const { error } = await supabase
     .from('profiles')
