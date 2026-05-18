@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ClipboardCheck, FileText, History, Layers3, MessageCircle,
-  MonitorPlay, PanelRight, Telescope, X, type LucideIcon,
+  MonitorPlay, Telescope, X, type LucideIcon,
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { cn } from '@/lib/utils';
@@ -21,25 +21,25 @@ export type Availability = {
 type Tab = { key: string; label: string; seg: string; Icon: LucideIcon; available: boolean };
 
 function MasteryGauge({ value }: { value: number }) {
-  const r = 26;
+  const r = 22;
   const c = 2 * Math.PI * r;
   return (
-    <div className="relative h-16 w-16 shrink-0">
-      <svg viewBox="0 0 64 64" className="h-16 w-16 -rotate-90">
-        <circle cx="32" cy="32" r={r} fill="none" stroke="var(--color-sand-200)" strokeWidth="6" />
+    <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
+      <svg viewBox="0 0 56 56" className="h-full w-full -rotate-90">
+        <circle cx="28" cy="28" r={r} fill="none" stroke="var(--color-sand-200)" strokeWidth="5" />
         <circle
-          cx="32"
-          cy="32"
+          cx="28"
+          cy="28"
           r={r}
           fill="none"
           stroke="var(--color-accent)"
-          strokeWidth="6"
+          strokeWidth="5"
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c - (c * Math.min(100, Math.max(0, value))) / 100}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold tabular-nums text-(--color-ink)">
+      <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold tabular-nums text-(--color-ink) sm:text-sm">
         {value}%
       </span>
     </div>
@@ -78,27 +78,31 @@ export function StudyConsole({
   ];
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      {/* Console header */}
-      <div className="border-b border-(--color-border) bg-(--color-surface) px-4 py-4 lg:px-8">
-        <div className="flex items-center gap-4">
+    <div className="relative">
+      {/* Console header — sticky, page scrolls underneath (so QCM/long content scrolls) */}
+      <div className="sticky top-0 z-20 border-b border-(--color-border) bg-(--color-surface)/95 px-4 py-3 backdrop-blur lg:px-8">
+        <div className="flex items-center gap-3">
           <MasteryGauge value={mastery} />
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-(--color-ink-muted)">{context}</p>
-            <h1 className="truncate text-lg font-semibold tracking-tight text-(--color-ink)">{titre}</h1>
+            <p className="truncate text-xs font-medium text-(--color-ink-muted)">{context}</p>
+            <h1 className="truncate text-base font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
           <button
             type="button"
-            onClick={() => setAssistantOpen(true)}
-            className="flex h-9 items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface-soft) px-3 text-sm text-(--color-ink-soft) hover:border-(--color-border-strong) focus-ring"
+            onClick={() => setAssistantOpen((v) => !v)}
+            className={cn(
+              'flex h-9 items-center gap-2 rounded-lg border px-3 text-sm transition-colors focus-ring',
+              assistantOpen
+                ? 'border-(--color-accent) bg-(--color-primary-soft) text-(--color-primary-deep)'
+                : 'border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-soft) hover:border-(--color-border-strong)',
+            )}
           >
             <MessageCircle className="h-4 w-4" />
             <span className="hidden sm:inline">Assistant</span>
           </button>
         </div>
 
-        {/* Activity switcher */}
-        <div className="mt-4 flex gap-1 overflow-x-auto">
+        <div className="mt-3 flex gap-1 overflow-x-auto pb-0.5">
           {tabs.map((t) => {
             const active = activeSeg === t.seg;
             return (
@@ -116,10 +120,7 @@ export function StudyConsole({
                 {t.label}
                 {!t.available && t.seg && (
                   <span
-                    className={cn(
-                      'h-1.5 w-1.5 rounded-full',
-                      active ? 'bg-white/60' : 'bg-(--color-ink-muted)',
-                    )}
+                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-white/60' : 'bg-(--color-ink-muted)')}
                     title="Bientôt disponible"
                   />
                 )}
@@ -129,33 +130,34 @@ export function StudyConsole({
         </div>
       </div>
 
-      {/* Viewer pane */}
-      <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+      {/* Viewer — when assistant is docked, leave room on large screens */}
+      <div className={cn('transition-[padding]', assistantOpen && 'lg:pr-[380px]')}>{children}</div>
 
-      {/* Assistant slide-over */}
+      {/* Non-modal assistant dock: no backdrop, platform stays usable */}
       {assistantOpen && (
-        <div className="fixed inset-0 z-[55]">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setAssistantOpen(false)} />
-          <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted)">
-            <div className="flex items-center justify-between border-b border-(--color-border) px-4 py-3">
-              <span className="flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
-                <PanelRight className="h-4 w-4 text-(--color-accent)" />
-                Assistant du cours
-              </span>
-              <button
-                type="button"
-                onClick={() => setAssistantOpen(false)}
-                aria-label="Fermer l’assistant"
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) focus-ring"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="min-h-0 flex-1">
-              <CourseChatbot coursId={coursId} coursTitre={titre} />
-            </div>
-          </aside>
-        </div>
+        <aside
+          className={cn(
+            'fixed z-40 flex flex-col border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted)',
+            // mobile: bottom sheet · desktop: right dock
+            'inset-x-0 bottom-0 h-[70vh] rounded-t-2xl border-t',
+            'lg:inset-y-0 lg:left-auto lg:right-0 lg:h-auto lg:w-[380px] lg:rounded-none lg:border-l lg:border-t-0',
+          )}
+        >
+          <div className="flex items-center justify-between border-b border-(--color-border) px-4 py-3">
+            <span className="text-sm font-semibold text-(--color-ink)">Assistant du cours</span>
+            <button
+              type="button"
+              onClick={() => setAssistantOpen(false)}
+              aria-label="Fermer l’assistant"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) focus-ring"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="min-h-0 flex-1">
+            <CourseChatbot coursId={coursId} coursTitre={titre} />
+          </div>
+        </aside>
       )}
     </div>
   );

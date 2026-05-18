@@ -50,7 +50,6 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   for (const r of reviews ?? []) coursFlashHit.add(r.flashcards.cours_id);
 
   const Icon = iconFromKey(m.icon_key);
-  const facNom = m.semestres.facultes?.nom ?? '';
 
   const rows: IndexRow[] = (cours ?? []).map((c, idx) => {
     const p = c.course_progress?.[0];
@@ -77,14 +76,10 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   return (
     <>
-      <IndexHeader
-        context={`${facNom} · ${m.semestres.label}`}
-        title={m.nom}
-        meta={`${rows.length} cours`}
-      />
-      <div className="mx-auto flex w-full max-w-4xl items-center gap-3 px-4 pt-6 lg:px-10">
+      <IndexHeader context="Collège EDN" title={m.nom} meta={`${rows.length} item${rows.length > 1 ? 's' : ''}`} />
+      <div className="flex w-full items-center gap-3 px-5 pt-6 lg:px-10">
         <RowIcon Icon={Icon} color={m.color_hex ?? undefined} />
-        <p className="text-sm text-(--color-ink-muted)">Sélectionnez un cours pour ouvrir la console d’étude.</p>
+        <p className="text-sm text-(--color-ink-muted)">Sélectionnez un item pour ouvrir la console d’étude.</p>
       </div>
       <IndexList rows={rows} />
     </>

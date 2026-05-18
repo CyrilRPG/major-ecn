@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
-import type { NavFaculte } from '@/lib/data/navigator';
+import type { NavCollege } from '@/lib/data/navigator';
 
 function Ring({ value }: { value: number }) {
   const r = 7;
@@ -29,163 +29,73 @@ function Ring({ value }: { value: number }) {
   );
 }
 
-function Node({
-  label,
-  depth,
-  open,
-  onToggle,
-  hasChildren,
-  active,
-  href,
-  trailing,
-  icon,
-}: {
-  label: string;
-  depth: number;
-  open?: boolean;
-  onToggle?: () => void;
-  hasChildren?: boolean;
-  active?: boolean;
-  href?: string;
-  trailing?: React.ReactNode;
-  icon?: React.ReactNode;
-}) {
-  const pad = { paddingLeft: `${0.5 + depth * 0.75}rem` };
-  const inner = (
-    <>
-      {hasChildren ? (
-        <ChevronRight
-          className={cn('h-3.5 w-3.5 shrink-0 text-(--color-ink-muted) transition-transform', open && 'rotate-90')}
-        />
-      ) : (
-        <span className="w-3.5 shrink-0" />
-      )}
-      {icon}
-      <span className="truncate flex-1">{label}</span>
-      {trailing}
-    </>
-  );
-  const base =
-    'group flex w-full items-center gap-2 rounded-md py-1.5 pr-2 text-sm transition-colors text-left';
-  if (href) {
-    return (
-      <Link
-        href={href}
-        style={pad}
-        className={cn(
-          base,
-          active
-            ? 'bg-(--color-primary) text-white font-medium'
-            : 'text-(--color-ink-soft) hover:bg-(--color-sand-100) hover:text-(--color-ink)',
-        )}
-      >
-        {inner}
-      </Link>
-    );
-  }
-  return (
-    <button type="button" onClick={onToggle} style={pad} className={cn(base, 'text-(--color-ink) hover:bg-(--color-sand-100)')}>
-      {inner}
-    </button>
-  );
-}
-
-export function Navigator({ tree }: { tree: NavFaculte[] }) {
+export function Navigator({ tree }: { tree: NavCollege[] }) {
   const pathname = usePathname();
-
   const activeCoursId = pathname.startsWith('/cours/') ? pathname.split('/')[2] : null;
-  const activeMatiereId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
+  const activeCollegeId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
 
-  // Resolve ancestors of the active course for auto-expansion.
-  const ancestors = useMemo(() => {
+  const expanded = useMemo(() => {
     const set = new Set<string>();
-    for (const f of tree) {
-      for (const s of f.semestres) {
-        for (const m of s.matieres) {
-          const isActiveM = m.id === activeMatiereId;
-          const hasActiveC = m.cours.some((c) => c.id === activeCoursId);
-          if (isActiveM || hasActiveC) {
-            set.add(f.id);
-            set.add(s.id);
-            set.add(m.id);
-          }
-        }
-      }
+    for (const col of tree) {
+      if (col.id === activeCollegeId || col.cours.some((c) => c.id === activeCoursId)) set.add(col.id);
     }
     return set;
-  }, [tree, activeCoursId, activeMatiereId]);
+  }, [tree, activeCollegeId, activeCoursId]);
 
-  const [open, setOpen] = useState<Set<string>>(ancestors);
-  const isOpen = (id: string) => open.has(id) || ancestors.has(id);
+  const [open, setOpen] = useState<Set<string>>(expanded);
+  const isOpen = (id: string) => open.has(id) || expanded.has(id);
   const toggle = (id: string) =>
     setOpen((prev) => {
       const n = new Set(prev);
-      const currentlyOpen = n.has(id) || ancestors.has(id);
-      if (currentlyOpen) n.delete(id);
+      if (n.has(id) || expanded.has(id)) n.delete(id);
       else n.add(id);
       return n;
     });
 
   return (
-    <nav aria-label="Arborescence des cours" className="space-y-0.5 px-2 pb-8">
+    <nav aria-label="Collèges et items" className="space-y-0.5 px-2 pb-8">
+      <p className="px-3 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted)">
+        Collèges EDN
+      </p>
       {tree.length === 0 && (
         <p className="px-3 py-6 text-xs text-(--color-ink-muted)">Aucun contenu accessible.</p>
       )}
-      {tree.map((f) => (
-        <div key={f.id}>
-          <Node
-            label={f.nom}
-            depth={0}
-            hasChildren
-            open={isOpen(f.id)}
-            onToggle={() => toggle(f.id)}
-          />
-          {isOpen(f.id) &&
-            f.semestres.map((s) => (
-              <div key={s.id}>
-                <Node
-                  label={s.label}
-                  depth={1}
-                  hasChildren
-                  open={isOpen(s.id)}
-                  onToggle={() => toggle(s.id)}
-                />
-                {isOpen(s.id) &&
-                  s.matieres.map((m) => {
-                    const Icon = iconFromKey(m.iconKey ?? undefined);
-                    return (
-                      <div key={m.id}>
-                        <Node
-                          label={m.nom}
-                          depth={2}
-                          hasChildren={m.cours.length > 0}
-                          open={isOpen(m.id)}
-                          onToggle={() => toggle(m.id)}
-                          icon={
-                            <Icon
-                              className="h-3.5 w-3.5 shrink-0"
-                              style={{ color: m.colorHex ?? 'var(--color-accent)' }}
-                            />
-                          }
-                        />
-                        {isOpen(m.id) &&
-                          m.cours.map((c) => (
-                            <Node
-                              key={c.id}
-                              label={c.titre}
-                              depth={3}
-                              href={`/cours/${c.id}`}
-                              active={c.id === activeCoursId}
-                              trailing={<Ring value={c.progress} />}
-                            />
-                          ))}
-                      </div>
-                    );
-                  })}
-              </div>
-            ))}
-        </div>
-      ))}
+      {tree.map((col) => {
+        const Icon = iconFromKey(col.iconKey ?? undefined);
+        const o = isOpen(col.id);
+        return (
+          <div key={col.id}>
+            <button
+              type="button"
+              onClick={() => toggle(col.id)}
+              className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-medium text-(--color-ink) transition-colors hover:bg-(--color-sand-100)"
+            >
+              <ChevronRight
+                className={cn('h-3.5 w-3.5 shrink-0 text-(--color-ink-muted) transition-transform', o && 'rotate-90')}
+              />
+              <Icon className="h-4 w-4 shrink-0" style={{ color: col.colorHex ?? 'var(--color-accent)' }} />
+              <span className="flex-1 truncate">{col.nom}</span>
+              <span className="text-[10px] tabular-nums text-(--color-ink-muted)">{col.cours.length}</span>
+            </button>
+            {o &&
+              col.cours.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/cours/${c.id}`}
+                  className={cn(
+                    'flex items-center gap-2 rounded-md py-1.5 pl-9 pr-2 text-sm transition-colors',
+                    c.id === activeCoursId
+                      ? 'bg-(--color-primary) font-medium text-white'
+                      : 'text-(--color-ink-soft) hover:bg-(--color-sand-100) hover:text-(--color-ink)',
+                  )}
+                >
+                  <span className="flex-1 truncate">{c.titre}</span>
+                  <Ring value={c.progress} />
+                </Link>
+              ))}
+          </div>
+        );
+      })}
     </nav>
   );
 }

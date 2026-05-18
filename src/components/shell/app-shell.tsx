@@ -8,7 +8,7 @@ import { Navigator } from './navigator';
 import { TopBar } from './top-bar';
 import { CommandPalette } from './command-palette';
 import { cn } from '@/lib/utils';
-import type { NavFaculte } from '@/lib/data/navigator';
+import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
 export function AppShell({
@@ -17,7 +17,7 @@ export function AppShell({
   children,
 }: {
   profile: Profile;
-  tree: NavFaculte[];
+  tree: NavCollege[];
   children: React.ReactNode;
 }) {
   const pathname = usePathname();

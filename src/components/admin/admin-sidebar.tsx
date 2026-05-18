@@ -9,85 +9,81 @@ import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
 
 const items = [
-  { href: '/admin/eleves',  label: 'Élèves',  Icon: Users },
+  { href: '/admin/eleves', label: 'Élèves', Icon: Users },
   { href: '/admin/contenu', label: 'Contenu', Icon: Library },
-  { href: '/admin/stats',   label: 'Stats',   Icon: BarChart3 },
+  { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
 ];
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
-  return (
-    <aside
-      className="hidden lg:flex flex-col w-64 shrink-0 border-r"
-      style={{
-        background: 'linear-gradient(180deg, #0A4632 0%, #04211F 100%)',
-        borderColor: 'rgba(21, 184, 166, 0.14)',
-        color: '#E8F1ED',
-      }}
-    >
-      <div className="px-6 py-5 flex items-center gap-2.5 border-b" style={{ borderColor: 'rgba(21, 184, 166, 0.16)' }}>
-        <BrandMark className="h-8 w-8" />
-        <div className="flex items-baseline gap-1.5 font-semibold tracking-tight">
-          <span className="text-xl uppercase" style={{ color: '#E8F1ED' }}>Major</span>
-          <span className="text-xl uppercase" style={{ color: '#2BC2B0' }}>ECN</span>
-        </div>
-      </div>
+  const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
-      <div className="px-3 py-4">
-        <p
-          className="px-3 text-[10px] font-semibold uppercase tracking-[0.18em] mb-2"
-          style={{ color: '#2BC2B0' }}
-        >
+  return (
+    <>
+      {/* Desktop: left rail */}
+      <aside className="hidden w-60 shrink-0 flex-col border-r border-(--color-border) bg-(--color-surface) lg:flex">
+        <div className="flex h-14 items-center gap-2.5 border-b border-(--color-border) px-4">
+          <BrandMark className="h-7 w-7" />
+          <span className="text-sm font-semibold uppercase tracking-[0.12em] text-(--color-ink)">
+            Major<span className="text-(--color-accent)"> ECN</span>
+          </span>
+        </div>
+        <p className="px-5 pb-2 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted)">
           Administration
         </p>
-        <nav className="space-y-1">
-          {items.map((it) => {
-            const active = path === it.href || path.startsWith(it.href + '/');
-            return (
-              <Link
-                key={it.href}
-                href={it.href}
-                className={cn(
-                  'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition focus-ring',
-                )}
-                style={
-                  active
-                    ? { background: '#15B8A6', color: '#04211F', boxShadow: '0 8px 22px -6px rgba(21, 184, 166, 0.45)' }
-                    : { color: 'rgba(232, 241, 237, 0.78)' }
-                }
-                onMouseEnter={(e) => {
-                  if (!active) (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(21, 184, 166, 0.12)';
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) (e.currentTarget as HTMLAnchorElement).style.background = '';
-                }}
-              >
-                <it.Icon className="h-4 w-4" />
-                {it.label}
-              </Link>
-            );
-          })}
+        <nav className="space-y-0.5 px-2">
+          {items.map((it) => (
+            <Link
+              key={it.href}
+              href={it.href}
+              className={cn(
+                'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-ring',
+                isActive(it.href)
+                  ? 'bg-(--color-primary) text-white'
+                  : 'text-(--color-ink-soft) hover:bg-(--color-sand-100) hover:text-(--color-ink)',
+              )}
+            >
+              <it.Icon className="h-4 w-4" />
+              {it.label}
+            </Link>
+          ))}
         </nav>
-      </div>
-
-      <div
-        className="mt-auto border-t px-3 py-3 space-y-2"
-        style={{ borderColor: 'rgba(21, 184, 166, 0.16)' }}
-      >
-        <Link
-          href="/app"
-          className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition"
-          style={{ color: 'rgba(232, 241, 237, 0.70)' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(21, 184, 166, 0.12)'; (e.currentTarget as HTMLAnchorElement).style.color = '#2BC2B0'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = ''; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(232, 241, 237, 0.70)'; }}
-        >
-          <GraduationCap className="h-4 w-4" />
-          Vue étudiant
-        </Link>
-        <div className="flex items-center justify-end px-2 pt-1">
-          <UserMenu profile={profile} />
+        <div className="mt-auto space-y-1 border-t border-(--color-border) p-3">
+          <Link
+            href="/app"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-(--color-ink-soft) transition-colors hover:bg-(--color-sand-100) hover:text-(--color-ink)"
+          >
+            <GraduationCap className="h-4 w-4" />
+            Vue étudiant
+          </Link>
+          <div className="flex justify-end px-1 pt-1">
+            <UserMenu profile={profile} />
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+
+      {/* Mobile: top bar */}
+      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-(--color-border) bg-(--color-surface) px-4 py-2.5 lg:hidden">
+        <BrandMark className="h-7 w-7" />
+        <nav className="flex flex-1 gap-1 overflow-x-auto">
+          {items.map((it) => (
+            <Link
+              key={it.href}
+              href={it.href}
+              className={cn(
+                'flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                isActive(it.href)
+                  ? 'bg-(--color-primary) text-white'
+                  : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)',
+              )}
+            >
+              <it.Icon className="h-4 w-4" />
+              {it.label}
+            </Link>
+          ))}
+        </nav>
+        <UserMenu profile={profile} />
+      </header>
+    </>
   );
 }

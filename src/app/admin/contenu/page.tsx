@@ -20,14 +20,12 @@ export default async function AdminContenuPage() {
     .order('order_index');
 
   return (
-    <main className="px-6 lg:px-10 py-12 max-w-7xl mx-auto">
-      <header className="mb-10">
-        <p className="eyebrow">Administration · Bibliothèque</p>
-        <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-[1.05]">
-          Contenu <em className="display italic text-(--color-primary)">pédagogique</em>
-        </h1>
-        <p className="mt-3 text-(--color-ink-soft) max-w-2xl text-pretty">
-          Sélectionne un cours pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
+    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+      <header className="mb-8 border-b border-(--color-border) pb-5">
+        <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
+        <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Contenu pédagogique</h1>
+        <p className="mt-0.5 text-sm text-(--color-ink-soft)">
+          Sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
         </p>
       </header>
 

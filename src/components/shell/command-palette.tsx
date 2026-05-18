@@ -3,15 +3,15 @@
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
-import { BookOpen, GraduationCap, Layers3, Search } from 'lucide-react';
-import type { NavFaculte } from '@/lib/data/navigator';
+import { BookOpen, Layers3, Search } from 'lucide-react';
+import type { NavCollege } from '@/lib/data/navigator';
 
 type Flat = {
   id: string;
   href: string;
   label: string;
   hint: string;
-  kind: 'faculte' | 'matiere' | 'cours';
+  kind: 'college' | 'cours';
 };
 
 export function CommandPalette({
@@ -19,7 +19,7 @@ export function CommandPalette({
   open,
   onOpenChange,
 }: {
-  tree: NavFaculte[];
+  tree: NavCollege[];
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
@@ -27,27 +27,10 @@ export function CommandPalette({
 
   const items = useMemo<Flat[]>(() => {
     const out: Flat[] = [];
-    for (const f of tree) {
-      out.push({ id: f.id, href: `/facultes/${f.id}`, label: f.nom, hint: f.ville, kind: 'faculte' });
-      for (const s of f.semestres) {
-        for (const m of s.matieres) {
-          out.push({
-            id: m.id,
-            href: `/matieres/${m.id}`,
-            label: m.nom,
-            hint: `${f.nom} · ${s.label}`,
-            kind: 'matiere',
-          });
-          for (const c of m.cours) {
-            out.push({
-              id: c.id,
-              href: `/cours/${c.id}`,
-              label: c.titre,
-              hint: `${m.nom} · ${s.label}`,
-              kind: 'cours',
-            });
-          }
-        }
+    for (const col of tree) {
+      out.push({ id: col.id, href: `/matieres/${col.id}`, label: col.nom, hint: 'Collège', kind: 'college' });
+      for (const c of col.cours) {
+        out.push({ id: c.id, href: `/cours/${c.id}`, label: c.titre, hint: col.nom, kind: 'cours' });
       }
     }
     return out;
@@ -58,11 +41,7 @@ export function CommandPalette({
     router.push(href);
   };
 
-  const ICON = {
-    faculte: GraduationCap,
-    matiere: BookOpen,
-    cours: Layers3,
-  } as const;
+  const ICON = { college: BookOpen, cours: Layers3 } as const;
 
   if (!open) return null;
 
@@ -81,10 +60,10 @@ export function CommandPalette({
           <Search className="h-4 w-4 text-(--color-ink-muted)" />
           <Command.Input
             autoFocus
-            placeholder="Rechercher une faculté, une matière, un cours…"
+            placeholder="Rechercher un collège, un item…"
             className="h-12 w-full bg-transparent text-sm text-(--color-ink) outline-none placeholder:text-(--color-ink-muted)"
           />
-          <kbd className="hidden sm:block rounded border border-(--color-border) px-1.5 py-0.5 text-[10px] text-(--color-ink-muted)">
+          <kbd className="hidden rounded border border-(--color-border) px-1.5 py-0.5 text-[10px] text-(--color-ink-muted) sm:block">
             Esc
           </kbd>
         </div>
@@ -92,11 +71,11 @@ export function CommandPalette({
           <Command.Empty className="px-3 py-8 text-center text-sm text-(--color-ink-muted)">
             Aucun résultat.
           </Command.Empty>
-          {(['cours', 'matiere', 'faculte'] as const).map((kind) => {
+          {(['cours', 'college'] as const).map((kind) => {
             const group = items.filter((i) => i.kind === kind);
             if (group.length === 0) return null;
             const Icon = ICON[kind];
-            const heading = kind === 'cours' ? 'Cours' : kind === 'matiere' ? 'Matières' : 'Facultés';
+            const heading = kind === 'cours' ? 'Items' : 'Collèges';
             return (
               <Command.Group
                 key={kind}

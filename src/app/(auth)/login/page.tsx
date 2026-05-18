@@ -49,12 +49,12 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Integrated auth block */}
-            <div className="w-full max-w-sm justify-self-end rounded-2xl border border-white/12 bg-white/[0.06] p-7 backdrop-blur-sm">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-white/80">
+            {/* Integrated auth block — solid light card for readability */}
+            <div className="w-full max-w-sm justify-self-end rounded-2xl border border-(--color-border) bg-(--color-surface) p-7 text-(--color-ink) shadow-(--shadow-lifted)">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-(--color-ink-soft)">
                 Accès à la console
               </h2>
-              <div className="mt-6 [&_label]:text-white/70 [&_input]:bg-white/10 [&_input]:border-white/15 [&_input]:text-white [&_input]:placeholder:text-white/40">
+              <div className="mt-6">
                 <Suspense
                   fallback={
                     <div className="space-y-4">

@@ -21,15 +21,13 @@ export default async function ElevesPage() {
   const facMap = Object.fromEntries((facultes ?? []).map((f) => [f.id, f.nom]));
 
   return (
-    <main className="px-6 lg:px-10 py-12 max-w-7xl mx-auto">
-      <header className="flex flex-wrap items-end justify-between gap-6 mb-10">
+    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+      <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-(--color-border) pb-5">
         <div>
-          <p className="eyebrow">Administration · Cohorte</p>
-          <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-[1.05]">
-            <em className="display italic text-(--color-primary)">Élèves</em>
-          </h1>
-          <p className="mt-3 text-(--color-ink-soft)">
-            {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''} dans la promotion en cours.
+          <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
+          <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Élèves</h1>
+          <p className="mt-0.5 text-sm text-(--color-ink-soft)">
+            {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
           </p>
         </div>
         <AddStudentDialog facultes={facultes ?? []} />

@@ -50,7 +50,7 @@ function Bar({ value }: { value: number }) {
 
 export function IndexList({ rows }: { rows: IndexRow[] }) {
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-10">
+    <div className="w-full px-5 py-6 lg:px-10">
       <ul className="divide-y divide-(--color-border) overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface)">
         {rows.map((r) => {
           const body = (
@@ -79,7 +79,7 @@ export function IndexList({ rows }: { rows: IndexRow[] }) {
             return (
               <li
                 key={r.id}
-                className="flex items-center gap-4 px-4 py-3.5 opacity-55"
+                className="flex items-center gap-4 px-5 py-4 opacity-55"
                 aria-disabled
               >
                 {body}
@@ -90,7 +90,7 @@ export function IndexList({ rows }: { rows: IndexRow[] }) {
             <li key={r.id}>
               <Link
                 href={r.href}
-                className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-(--color-sand-100) focus-ring"
+                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-(--color-sand-100) focus-ring"
               >
                 {body}
               </Link>
