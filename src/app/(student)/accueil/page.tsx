@@ -4,7 +4,6 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { CollegesGrid } from '@/components/student/colleges-grid';
 import { ActivityArea, ActivityDonut } from '@/components/admin/stats/charts';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 
@@ -26,7 +25,7 @@ type CollegeRow = { id: string; nom: string; cours?: { course_progress: { video_
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) ${className}`}>
+    <div className={`rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft) ${className}`}>
       {children}
     </div>
   );
@@ -193,88 +192,86 @@ export default async function AccueilPage() {
   const barColor = (v: number) => (v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E');
 
   return (
-    <div className="px-5 py-7 lg:px-10">
+    <div className="flex flex-col gap-3 px-4 py-3 lg:h-full lg:overflow-hidden lg:px-6">
       {/* Greeting */}
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-(--color-ink) sm:text-3xl">
-          Bonjour, {firstName} 👋
+      <div className="flex items-baseline justify-between gap-3">
+        <h1 className="text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
+          Bonjour, {firstName} 👋{' '}
+          <span className="text-sm font-normal text-(--color-ink-soft)">Prêt(e) à cartonner aujourd’hui ? 💪</span>
         </h1>
-        <p className="mt-1 text-sm text-(--color-ink-soft)">Prêt(e) à cartonner aujourd’hui ? 💪</p>
-      </header>
+      </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {kpis.map((k) => (
           <Card key={k.label}>
             <div className="flex items-center gap-2 text-(--color-ink-muted)">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
-                <k.Icon className="h-4 w-4" />
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
+                <k.Icon className="h-3.5 w-3.5" />
               </span>
-              <span className="text-sm">{k.label}</span>
+              <span className="text-xs">{k.label}</span>
             </div>
-            <p className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink)">{k.value}</p>
-            <p className="mt-1 text-xs font-medium text-(--color-success)">{k.delta}</p>
+            <div className="mt-1.5 flex items-baseline gap-2">
+              <p className="text-2xl font-bold tracking-tight text-(--color-ink)">{k.value}</p>
+              <p className="text-[11px] font-medium text-(--color-success)">{k.delta}</p>
+            </div>
           </Card>
         ))}
       </div>
 
-      {/* Row 1 */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <div className="mb-2 flex items-center justify-between">
-            <div>
-              <h2 className="font-semibold text-(--color-ink)">Évolution de ta performance</h2>
-              <p className="text-xs text-(--color-ink-muted)">Questions tentées par jour.</p>
-            </div>
-            <span className="rounded-lg border border-(--color-border) px-2.5 py-1 text-xs text-(--color-ink-soft)">
-              30 derniers jours
+      {/* Main grid — fills remaining height, no scroll */}
+      <div className="grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-3">
+        {/* Performance */}
+        <Card className="flex min-h-0 flex-col lg:col-span-2">
+          <div className="mb-1 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-(--color-ink)">Évolution de ta performance</h2>
+            <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">
+              30 j
             </span>
           </div>
-          <ActivityArea data={days} />
+          <div className="min-h-0 flex-1">
+            <ActivityArea data={days} height={150} />
+          </div>
         </Card>
 
-        <Card>
-          <h2 className="font-semibold text-(--color-ink)">Matières à prioriser</h2>
-          <p className="mb-4 text-xs text-(--color-ink-muted)">Basé sur tes performances.</p>
+        {/* Matières à prioriser */}
+        <Card className="flex min-h-0 flex-col">
+          <h2 className="text-sm font-semibold text-(--color-ink)">Matières à prioriser</h2>
           {matieres.length > 0 ? (
-            <ul className="space-y-3">
-              {matieres.slice(0, 6).map((m) => (
+            <ul className="mt-2 space-y-2">
+              {matieres.slice(0, 5).map((m) => (
                 <li key={m.id}>
-                  <div className="mb-1 flex items-center justify-between text-sm">
+                  <div className="mb-0.5 flex items-center justify-between text-xs">
                     <span className="truncate text-(--color-ink)">{m.nom}</span>
                     <span className="font-semibold tabular-nums text-(--color-ink-soft)">{m.value}%</span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-(--color-sand-200)">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-(--color-sand-200)">
                     <div className="h-full rounded-full" style={{ width: `${m.value}%`, background: barColor(m.value) }} />
                   </div>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="py-8 text-center text-sm text-(--color-ink-muted)">Lancez vos premiers QCM.</p>
+            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Lancez vos premiers QCM.</p>
           )}
         </Card>
-      </div>
 
-      {/* Row 2 */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <h2 className="font-semibold text-(--color-ink)">Activité récente</h2>
-          <p className="mb-3 text-xs text-(--color-ink-muted)">Vos dernières sessions de travail.</p>
+        {/* Activité récente */}
+        <Card className="flex min-h-0 flex-col lg:col-span-2">
+          <h2 className="text-sm font-semibold text-(--color-ink)">Activité récente</h2>
           {recent.length > 0 ? (
-            <ul className="divide-y divide-(--color-border)">
-              {recent.map((r, i) => (
-                <li key={i} className="flex items-center gap-3 py-2.5">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-primary)">
-                    {r.kind === 'Flashcards' ? <Layers3 className="h-4 w-4" /> : r.kind === 'Annale' ? <History className="h-4 w-4" /> : <ClipboardCheck className="h-4 w-4" />}
+            <ul className="mt-1 divide-y divide-(--color-border)">
+              {recent.slice(0, 5).map((r, i) => (
+                <li key={i} className="flex items-center gap-2.5 py-1.5">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-primary)">
+                    {r.kind === 'Flashcards' ? <Layers3 className="h-3.5 w-3.5" /> : r.kind === 'Annale' ? <History className="h-3.5 w-3.5" /> : <ClipboardCheck className="h-3.5 w-3.5" />}
                   </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-(--color-ink)">{r.kind} — {r.college}</span>
-                    <span className="block truncate text-xs text-(--color-ink-muted)">{r.label}</span>
+                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-(--color-ink)">
+                    {r.kind} — {r.college}
                   </span>
-                  <span className="shrink-0 text-xs text-(--color-ink-muted)">{ago(r.when)}</span>
+                  <span className="shrink-0 text-[11px] text-(--color-ink-muted)">{ago(r.when)}</span>
                   {r.score && (
-                    <span className="shrink-0 rounded-full bg-(--color-primary-soft) px-2 py-0.5 text-xs font-semibold text-(--color-primary-deep)">
+                    <span className="shrink-0 rounded-full bg-(--color-primary-soft) px-1.5 py-0.5 text-[11px] font-semibold text-(--color-primary-deep)">
                       {r.score}
                     </span>
                   )}
@@ -282,65 +279,56 @@ export default async function AccueilPage() {
               ))}
             </ul>
           ) : (
-            <p className="py-8 text-center text-sm text-(--color-ink-muted)">Aucune activité pour le moment.</p>
+            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Aucune activité.</p>
           )}
         </Card>
 
-        <Card>
-          <h2 className="font-semibold text-(--color-ink)">Répartition par type d’activité</h2>
-          <p className="mb-4 text-xs text-(--color-ink-muted)">Sur l’ensemble de votre travail.</p>
+        {/* Répartition */}
+        <Card className="flex min-h-0 flex-col">
+          <h2 className="text-sm font-semibold text-(--color-ink)">Répartition</h2>
           {repartition.length > 0 ? (
-            <ActivityDonut data={repartition} />
+            <div className="flex flex-1 items-center">
+              <ActivityDonut data={repartition} size={120} />
+            </div>
           ) : (
-            <p className="py-8 text-center text-sm text-(--color-ink-muted)">Pas encore de données.</p>
+            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Pas encore de données.</p>
           )}
         </Card>
-      </div>
 
-      {/* À réviser */}
-      {toReview.length > 0 && (
-        <Card className="mt-4">
-          <h2 className="font-semibold text-(--color-ink)">À réviser en priorité</h2>
-          <p className="mb-3 text-xs text-(--color-ink-muted)">Collèges où votre réussite est inférieure à 70 %.</p>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {toReview.map((m) => (
+        {/* À réviser + collèges (compact strip) */}
+        <Card className="lg:col-span-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-(--color-ink)">
+              {toReview.length > 0 ? 'À réviser en priorité' : 'Vos collèges'}
+            </h2>
+            <Link href="/facultes" className="inline-flex items-center gap-1 text-xs text-(--color-accent-deep) hover:underline">
+              Tous les collèges <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {(toReview.length > 0 ? toReview : matieres).slice(0, 8).map((m) => (
               <Link
                 key={m.id}
                 href={`/matieres/${m.id}`}
-                className="group flex items-center justify-between rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3.5 py-3 transition-colors hover:border-(--color-accent)"
+                className="group inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface-soft) py-1.5 pl-3 pr-2 text-xs transition-colors hover:border-(--color-accent)"
               >
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-(--color-ink)">{m.nom}</span>
-                  <span
-                    className="mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                    style={
-                      m.value < 50
-                        ? { background: '#FDE7E9', color: '#C0001F' }
-                        : { background: '#FEF3E2', color: '#B26A00' }
-                    }
-                  >
-                    {m.value < 50 ? 'Priorité haute' : 'Priorité moyenne'}
-                  </span>
-                </span>
-                <span className="flex items-center gap-1 text-sm font-semibold text-(--color-ink-soft)">
+                <span className="font-medium text-(--color-ink)">{m.nom}</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+                  style={
+                    m.value < 50
+                      ? { background: '#FDE7E9', color: '#C0001F' }
+                      : m.value < 75
+                        ? { background: '#FEF3E2', color: '#B26A00' }
+                        : { background: '#E7F6EC', color: '#16793C' }
+                  }
+                >
                   {m.value}%
-                  <ArrowRight className="h-3.5 w-3.5 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
                 </span>
               </Link>
             ))}
           </div>
         </Card>
-      )}
-
-      {/* Colleges */}
-      <div className="mt-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold tracking-tight text-(--color-ink)">Vos collèges</h2>
-          <Link href="/facultes" className="inline-flex items-center gap-1 text-sm text-(--color-accent-deep) hover:underline">
-            Tout voir <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        <CollegesGrid scope={scope} />
       </div>
     </div>
   );

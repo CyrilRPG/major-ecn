@@ -17,9 +17,9 @@ const TOOLTIP = {
   background: 'var(--color-surface)',
 } as const;
 
-export function ActivityArea({ data }: { data: DataPoint[] }) {
+export function ActivityArea({ data, height = 256 }: { data: DataPoint[]; height?: number }) {
   return (
-    <div className="h-64 -mx-1">
+    <div className="-mx-1" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>
           <defs>
@@ -71,11 +71,11 @@ export function SuccessRateBar({ data }: { data: DataPoint[] }) {
   );
 }
 
-export function ActivityDonut({ data }: { data: Slice[] }) {
+export function ActivityDonut({ data, size = 176 }: { data: Slice[]; size?: number }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   return (
-    <div className="flex items-center gap-5">
-      <div className="h-44 w-44 shrink-0">
+    <div className="flex items-center gap-4">
+      <div className="shrink-0" style={{ height: size, width: size }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
