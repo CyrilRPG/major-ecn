@@ -9,7 +9,6 @@ import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '
 
 export const metadata = { title: 'Accueil' };
 
-const WEEK = 7 * 86400_000;
 
 type AttemptRow = {
   is_correct: boolean;
@@ -77,22 +76,13 @@ export default async function AccueilPage() {
   const correct = attempts.filter((a) => a.is_correct).length;
   const successRate = totalAttempts > 0 ? Math.round((correct / totalAttempts) * 100) : 0;
 
-  // Week-over-week
-  const wk = (ts: string) => now - new Date(ts).getTime();
-  const aThis = attempts.filter((a) => wk(a.attempted_at) <= WEEK);
-  const aPrev = attempts.filter((a) => wk(a.attempted_at) > WEEK && wk(a.attempted_at) <= 2 * WEEK);
-  const rate = (arr: AttemptRow[]) => (arr.length ? Math.round((arr.filter((x) => x.is_correct).length / arr.length) * 100) : 0);
-  const successDelta = rate(aThis) - rate(aPrev);
-  const sessionsThisWeek = sessions.filter((s) => s.finished_at && wk(s.finished_at) <= WEEK).length;
-  const reviewsThisWeek = reviews.filter((r) => wk(r.reviewed_at) <= WEEK).length;
-
   // Progression
   const colleges = (
     ((edn as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
     .filter((m) => canAccessCollege(scope, m.id));
-  let stepsDone = 0, stepsTotal = 0, coursSeen7d = 0;
+  let stepsDone = 0, stepsTotal = 0;
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
       const cp = c.course_progress?.[0];
@@ -101,7 +91,6 @@ export default async function AccueilPage() {
     }
   }
   const globalProgress = stepsTotal > 0 ? Math.round((stepsDone / stepsTotal) * 100) : 0;
-  coursSeen7d = sessionsThisWeek; // proxy: items travaillés via sessions cette semaine
 
   // Flashcards mastered (cumulative score per card, EDN scope)
   const { data: fr2 } = await supabase
@@ -180,13 +169,11 @@ export default async function AccueilPage() {
     const d = Math.round(h / 24);
     return d === 1 ? 'hier' : `il y a ${d} j`;
   };
-  const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
-
   const kpis = [
-    { Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%`, delta: `${sign(coursSeen7d)} cette semaine` },
-    { Icon: Target, label: 'Taux de réussite', value: `${successRate}%`, delta: `${sign(successDelta)} pts cette semaine` },
-    { Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length, delta: `${sign(sessionsThisWeek)} cette semaine` },
-    { Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered}/${flashcardsTotal ?? 0}`, delta: `${sign(reviewsThisWeek)} révisées` },
+    { Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%` },
+    { Icon: Target, label: 'Taux de réussite', value: `${successRate}%` },
+    { Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length },
+    { Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered}/${flashcardsTotal ?? 0}` },
   ];
 
   const barColor = (v: number) => (v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E');
@@ -211,10 +198,7 @@ export default async function AccueilPage() {
               </span>
               <span className="text-xs">{k.label}</span>
             </div>
-            <div className="mt-1.5 flex items-baseline gap-2">
-              <p className="text-2xl font-bold tracking-tight text-(--color-ink)">{k.value}</p>
-              <p className="text-[11px] font-medium text-(--color-success)">{k.delta}</p>
-            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-(--color-ink)">{k.value}</p>
           </Card>
         ))}
       </div>
