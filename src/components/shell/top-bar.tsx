@@ -17,6 +17,7 @@ function contextLabel(pathname: string): string {
   }
   if (pathname.startsWith('/matieres/')) return 'Collège';
   if (pathname.startsWith('/facultes')) return 'Collèges EDN';
+  if (pathname.startsWith('/accueil')) return 'Accueil';
   return 'Mon espace';
 }
 

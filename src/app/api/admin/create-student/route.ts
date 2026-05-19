@@ -15,11 +15,11 @@ export async function POST(req: Request) {
   const parsed = AddStudentSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
 
-  const { first_name, last_name, email, phone, promotion, permission_type, colleges } = parsed.data;
+  const { first_name, last_name, email, phone, promotion, offer, permission_type, colleges } = parsed.data;
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const }
-      : { type: 'college' as const, colleges: colleges ?? [] };
+      ? { type: 'all' as const, offer }
+      : { type: 'college' as const, colleges: colleges ?? [], offer };
 
   let admin;
   try {

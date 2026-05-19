@@ -110,15 +110,18 @@ export function StudentsTable({
                     {s.promotion && <Badge variant="outline">{s.promotion}</Badge>}
                   </TableCell>
                   <TableCell>
-                    {scope.type === 'all' ? (
-                      <Badge variant="primary">Toute l’offre</Badge>
-                    ) : (
-                      <div className="flex flex-wrap gap-1">
-                        {scope.colleges.map((c) => (
+                    <div className="flex flex-wrap items-center gap-1">
+                      <Badge variant={scope.offer === 'premium' ? 'primary' : 'outline'}>
+                        {scope.offer === 'premium' ? 'Premium' : 'Basic'}
+                      </Badge>
+                      {scope.type === 'all' ? (
+                        <Badge variant="muted">Tous collèges</Badge>
+                      ) : (
+                        scope.colleges.map((c) => (
                           <Badge key={c} variant="muted">{collegeMap[c] ?? c}</Badge>
-                        ))}
-                      </div>
-                    )}
+                        ))
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1.5">

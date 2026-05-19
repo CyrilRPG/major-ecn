@@ -6,6 +6,7 @@ export const AddStudentSchema = z.object({
   email: z.string().email('Email invalide'),
   phone: z.string().optional(),
   promotion: z.enum(['D2', 'D3', 'D4', 'PAE', 'Autre']),
+  offer: z.enum(['basic', 'premium']),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
 });
@@ -16,6 +17,7 @@ export const UpdateStudentSchema = z.object({
   last_name: z.string().min(1, 'Nom requis'),
   phone: z.string().optional().nullable(),
   promotion: z.enum(['D2', 'D3', 'D4', 'PAE', 'Autre']),
+  offer: z.enum(['basic', 'premium']),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
 });

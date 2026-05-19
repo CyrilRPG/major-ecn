@@ -67,6 +67,7 @@ export function EditStudentDialog({
       last_name: student.last_name ?? '',
       phone: student.phone ?? '',
       promotion: defaultPromotion,
+      offer: initialScope.offer,
       permission_type: initialScope.type,
       colleges: initialScope.type === 'college' ? initialScope.colleges : [],
     },
@@ -162,7 +163,30 @@ export function EditStudentDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Permissions</Label>
+            <Label>Formule souscrite</Label>
+            <p className="text-xs text-(--color-ink-soft)">
+              Quel type d’offre l’élève a-t-il souscrit&nbsp;?
+            </p>
+            <Controller
+              name="offer"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup value={field.value} onValueChange={field.onChange}>
+                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
+                    <RadioGroupItem value="basic" />
+                    <span className="text-sm">Basic — accès aux cours et entraînements de base</span>
+                  </label>
+                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
+                    <RadioGroupItem value="premium" />
+                    <span className="text-sm">Premium — accès complet (annales, ECOS, suivi avancé)</span>
+                  </label>
+                </RadioGroup>
+              )}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Accès aux collèges</Label>
             <Controller
               name="permission_type"
               control={control}

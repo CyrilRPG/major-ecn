@@ -39,7 +39,7 @@ export function AddStudentDialog({ colleges }: { colleges: { id: string; nom: st
     formState: { errors },
   } = useForm<AddStudentInput>({
     resolver: zodResolver(AddStudentSchema),
-    defaultValues: { permission_type: 'all', promotion: 'D2', colleges: [] },
+    defaultValues: { permission_type: 'all', promotion: 'D2', offer: 'basic', colleges: [] },
   });
 
   const permissionType = watch('permission_type');
@@ -125,7 +125,30 @@ export function AddStudentDialog({ colleges }: { colleges: { id: string; nom: st
           </div>
 
           <div className="space-y-2">
-            <Label>Permissions</Label>
+            <Label>Formule souscrite</Label>
+            <p className="text-xs text-(--color-ink-soft)">
+              Quel type d’offre l’élève a-t-il souscrit&nbsp;?
+            </p>
+            <Controller
+              name="offer"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup value={field.value} onValueChange={field.onChange}>
+                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
+                    <RadioGroupItem value="basic" />
+                    <span className="text-sm">Basic — accès aux cours et entraînements de base</span>
+                  </label>
+                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
+                    <RadioGroupItem value="premium" />
+                    <span className="text-sm">Premium — accès complet (annales, ECOS, suivi avancé)</span>
+                  </label>
+                </RadioGroup>
+              )}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Accès aux collèges</Label>
             <Controller
               name="permission_type"
               control={control}
