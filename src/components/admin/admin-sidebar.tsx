@@ -14,7 +14,7 @@ const items = [
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
 ];
 
-const BG = 'linear-gradient(180deg, #56080E 0%, #2C0407 100%)';
+const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
@@ -33,7 +33,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
             Major<span className="text-(--color-accent)"> ECN</span>
           </span>
         </div>
-        <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
+        <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
           Administration
         </p>
         <nav className="space-y-1 px-2">

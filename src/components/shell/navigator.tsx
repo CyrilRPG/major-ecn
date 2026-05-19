@@ -73,7 +73,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
         Accueil
       </Link>
 
-      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
+      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
         Collèges EDN
       </p>
       {tree.length === 0 && (

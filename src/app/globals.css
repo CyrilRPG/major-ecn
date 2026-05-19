@@ -3,47 +3,47 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* === Major ECN brand (Paris Cité-inspired red) === */
-  --color-brand-emerald: #C1121F;  /* primary — academic red */
-  --color-brand-teal:    #E2231A;  /* accent — bright red */
-  --color-brand-sand:    #ECE2E2;  /* secondary neutral — warm off-white */
+  /* === Major ECN brand (maquette designer) === */
+  --color-brand-emerald: #E4002B;  /* primary — vivid red */
+  --color-brand-teal:    #E4002B;  /* accent — same red */
+  --color-brand-sand:    #E9EBEF;  /* secondary neutral — cool light */
 
   /* === Primary red scale (kept under -emerald- names to avoid churn) === */
-  --color-emerald-50:  #FDF2F2;
-  --color-emerald-100: #FBE0E1;
-  --color-emerald-200: #F5B9BC;
-  --color-emerald-300: #EC8B90;
-  --color-emerald-400: #E15A62;
-  --color-emerald-500: #D22F38;
-  --color-emerald-600: #C1121F;
-  --color-emerald-700: #9E0E1A;
-  --color-emerald-800: #7A0B14;
-  --color-emerald-900: #56080E;
-  --color-emerald-950: #2C0407;
+  --color-emerald-50:  #FFF1F3;
+  --color-emerald-100: #FDE7E9;
+  --color-emerald-200: #FBC4CB;
+  --color-emerald-300: #F593A0;
+  --color-emerald-400: #F25C70;
+  --color-emerald-500: #ED2A45;
+  --color-emerald-600: #E4002B;
+  --color-emerald-700: #C0001F;
+  --color-emerald-800: #990019;
+  --color-emerald-900: #6E0012;
+  --color-emerald-950: #3D0009;
 
   /* === Accent red scale (kept under -teal- names) === */
-  --color-teal-50:  #FFF3F1;
-  --color-teal-100: #FFE1DC;
-  --color-teal-200: #FFC0B4;
-  --color-teal-300: #FB9B89;
-  --color-teal-400: #F27059;
-  --color-teal-500: #E2231A;
-  --color-teal-600: #C21610;
-  --color-teal-700: #9A120D;
-  --color-teal-800: #74100C;
-  --color-teal-900: #54100C;
+  --color-teal-50:  #FFF1F3;
+  --color-teal-100: #FDE7E9;
+  --color-teal-200: #FBC4CB;
+  --color-teal-300: #F593A0;
+  --color-teal-400: #F25C70;
+  --color-teal-500: #E4002B;
+  --color-teal-600: #C0001F;
+  --color-teal-700: #C0001F;
+  --color-teal-800: #990019;
+  --color-teal-900: #6E0012;
 
-  /* === Sand scale (warm neutral) === */
-  --color-sand-50:  #FBF8F8;
-  --color-sand-100: #F4EFEF;
-  --color-sand-200: #ECE2E2;
-  --color-sand-300: #DDD0D0;
-  --color-sand-400: #BCAAAA;
-  --color-sand-500: #8E7E7E;
+  /* === Sand scale (cool neutral) === */
+  --color-sand-50:  #FAFBFC;
+  --color-sand-100: #F2F3F5;
+  --color-sand-200: #E9EBEF;
+  --color-sand-300: #DDE1E7;
+  --color-sand-400: #BBC2CE;
+  --color-sand-500: #8A93A6;
 
   /* === Semantic brand === */
   --color-primary:       var(--color-brand-emerald);
-  --color-primary-deep:  var(--color-emerald-800);
+  --color-primary-deep:  var(--color-emerald-700);
   --color-primary-soft:  var(--color-emerald-100);
   --color-primary-fg:    #FFFFFF;
   --color-accent:        var(--color-brand-teal);
@@ -51,21 +51,26 @@
   --color-accent-deep:   var(--color-teal-700);
 
   /* States */
-  --color-success:   #1F8A53;
-  --color-warning:   #C2810A;
-  --color-danger:    #B0121B;
-  --color-easy:      #3FB27A;
-  --color-very-easy: #79CEA4;
+  --color-success:   #16A34A;
+  --color-warning:   #F59E0B;
+  --color-danger:    #E4002B;
+  --color-easy:      #22C55E;
+  --color-very-easy: #4ADE80;
 
   /* === Light surfaces === */
-  --color-ink:           #261015;
-  --color-ink-soft:      #6B5358;
-  --color-ink-muted:     #9A868A;
+  --color-ink:           #1A2233;
+  --color-ink-soft:      #6B7280;
+  --color-ink-muted:     #9AA1AE;
   --color-surface:       #FFFFFF;
-  --color-surface-soft:  #FAF6F6;          /* sober warm paper */
+  --color-surface-soft:  #F6F7F9;          /* light content bg (maquette) */
   --color-surface-sunken:var(--color-sand-200);
-  --color-border:        #EADFDF;
-  --color-border-strong: #D6C6C6;
+  --color-border:        #ECEEF1;
+  --color-border-strong: #DDE1E7;
+
+  /* === Sidebar (navy, maquette) === */
+  --color-sidebar:        #0E1626;
+  --color-sidebar-deep:   #0A111E;
+  --color-sidebar-active: #E4002B;
 
   /* === Typography === */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -84,9 +89,9 @@
   --radius-pill:    9999px;
 
   /* === Premium shadow stack === */
-  --shadow-xs:     0 1px 2px rgba(56, 8, 14, 0.06);
-  --shadow-soft:   0 1px 2px rgba(56, 8, 14, 0.05), 0 8px 22px -6px rgba(56, 8, 14, 0.10);
-  --shadow-lifted: 0 1px 2px rgba(56, 8, 14, 0.05), 0 14px 36px -10px rgba(56, 8, 14, 0.18), 0 4px 14px rgba(56, 8, 14, 0.08);
+  --shadow-xs:     0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-soft:   0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px -12px rgba(16, 24, 40, 0.10);
+  --shadow-lifted: 0 1px 2px rgba(16, 24, 40, 0.05), 0 16px 40px -12px rgba(16, 24, 40, 0.14), 0 4px 14px rgba(16, 24, 40, 0.06);
   --shadow-glow:   0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-primary) 28%, transparent);
   --shadow-glow-accent: 0 0 0 1px color-mix(in srgb, var(--color-accent) 28%, transparent), 0 14px 40px -8px color-mix(in srgb, var(--color-accent) 30%, transparent);
   --shadow-inset-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.55);
