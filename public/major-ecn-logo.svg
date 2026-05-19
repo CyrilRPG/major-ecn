@@ -1,8 +1,8 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Major ECN">
   <defs>
     <linearGradient id="me-g" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0F6E4E"/>
-      <stop offset="1" stop-color="#15B8A6"/>
+      <stop stop-color="#C1121F"/>
+      <stop offset="1" stop-color="#E2231A"/>
     </linearGradient>
   </defs>
   <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#me-g)"/>

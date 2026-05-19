@@ -1,7 +1,7 @@
 import { type LucideIcon } from 'lucide-react';
 
 export function KpiCard({
-  Icon, label, value, accent = '#0F6E4E', hint,
+  Icon, label, value, accent = '#C1121F', hint,
 }: {
   Icon: LucideIcon; label: string; value: string | number; accent?: string; hint?: string;
 }) {

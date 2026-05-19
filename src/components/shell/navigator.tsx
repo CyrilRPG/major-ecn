@@ -85,7 +85,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
                   className={cn(
                     'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                     c.id === activeCoursId
-                      ? 'bg-(--color-accent) font-medium text-[#04211F]'
+                      ? 'bg-(--color-accent) font-medium text-white'
                       : 'text-white/65 hover:bg-white/10 hover:text-white',
                   )}
                 >

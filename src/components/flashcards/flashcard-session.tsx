@@ -1,63 +1,69 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Flashcard } from './flashcard';
 import { DifficultyButtons } from './difficulty-buttons';
-import { weightedSample, type SampleInput } from '@/lib/flashcards/weighted-sampler';
-import { DIFFICULTY_WEIGHT, type Difficulty } from '@/types/domain';
+import {
+  DIFFICULTY_SCORE,
+  DIFFICULTY_WEIGHT,
+  FLASHCARD_MASTERY_THRESHOLD,
+  type Difficulty,
+} from '@/types/domain';
 import { createClient } from '@/lib/supabase/client';
 
 export type FlashcardInput = {
   id: string;
   recto: string;
   verso: string;
-  lastWeight: number | null;
+  score: number;
 };
 
 export function FlashcardSession({
   cards,
-  coursId,
+  total,
   backHref,
 }: {
   cards: FlashcardInput[];
+  total: number;
   coursId: string;
   backHref: string;
 }) {
-  const ordered = useMemo(() => {
-    const inputs: SampleInput<FlashcardInput>[] = cards.map((c) => ({ id: c.id, card: c, lastWeight: c.lastWeight }));
-    return weightedSample(inputs);
-  }, [cards]);
-
-  const [index, setIndex] = useState(0);
+  // Lowest score first so the hardest cards come back sooner.
+  const [queue, setQueue] = useState<FlashcardInput[]>(() =>
+    [...cards].sort((a, b) => a.score - b.score),
+  );
+  const [mastered, setMastered] = useState(total - cards.length);
   const [flipped, setFlipped] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const router = useRouter();
 
-  const total = ordered.length;
-  const card = ordered[index];
+  const card = queue[0];
 
   if (!card) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-20 text-center">
-        <div className="mx-auto h-16 w-16 rounded-2xl bg-(--color-primary-soft) text-(--color-accent) flex items-center justify-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-(--color-primary-soft) text-(--color-accent)">
           <CheckCircle2 className="h-8 w-8" />
         </div>
-        <h2 className="mt-5 text-3xl font-semibold tracking-tight text-balance">Session terminée</h2>
-        <p className="mt-2 text-(--color-ink-soft)">Tu as parcouru toutes les cartes de ce deck.</p>
+        <h2 className="mt-5 text-2xl font-semibold tracking-tight">Deck acquis</h2>
+        <p className="mt-2 text-(--color-ink-soft)">
+          {total > 0
+            ? 'Toutes les cartes ont atteint le score de maîtrise. Revenez plus tard pour les revoir.'
+            : 'Aucune carte à réviser pour le moment.'}
+        </p>
         <Button asChild className="mt-6">
-          <Link href={backHref}>Retour au cours</Link>
+          <Link href={backHref}>Retour à l’item</Link>
         </Button>
       </div>
     );
   }
 
   const onDifficulty = async (d: Difficulty) => {
+    if (submitting) return;
     setSubmitting(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -69,20 +75,26 @@ export function FlashcardSession({
         weight: DIFFICULTY_WEIGHT[d],
       });
     }
-    if (index === total - 1) {
-      router.push(backHref);
-      return;
-    }
-    setIndex((i) => i + 1);
+
+    const newScore = card.score + DIFFICULTY_SCORE[d];
     setFlipped(false);
     setSubmitting(false);
+
+    setQueue((prev) => {
+      const [, ...rest] = prev;
+      if (newScore >= FLASHCARD_MASTERY_THRESHOLD) {
+        setMastered((m) => m + 1);
+        return rest;
+      }
+      return [...rest, { ...card, score: newScore }];
+    });
   };
 
-  const pct = (index / total) * 100;
+  const pct = total === 0 ? 100 : (mastered / total) * 100;
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-6 lg:px-8 pt-10 pb-16 flex flex-col items-center">
-      <div className="w-full flex items-center justify-between gap-4 mb-6">
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-4 py-5 sm:px-6">
+      <div className="mb-4 flex w-full items-center justify-between gap-4">
         <Button asChild variant="ghost" size="sm">
           <Link href={backHref}>
             <ArrowLeft />
@@ -90,26 +102,32 @@ export function FlashcardSession({
           </Link>
         </Button>
         <p className="text-sm text-(--color-ink-soft)">
-          Carte <span className="font-semibold text-(--color-ink)">{index + 1}</span> / {total}
+          <span className="font-semibold text-(--color-ink)">{mastered}</span> / {total} acquise{mastered > 1 ? 's' : ''}
         </p>
       </div>
-      <Progress value={pct} className="mb-10 w-full" />
+      <Progress value={pct} className="mb-2 w-full" />
+      <p className="mb-6 w-full text-center text-xs text-(--color-ink-muted)">
+        Score de la carte : <span className="font-mono font-semibold text-(--color-ink)">{card.score}</span>
+        {' '}· objectif {FLASHCARD_MASTERY_THRESHOLD} pour l’acquérir
+      </p>
 
       <motion.div
-        key={card.id}
-        initial={{ opacity: 0, y: 16 }}
+        key={`${card.id}-${card.score}`}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full flex justify-center"
+        transition={{ duration: 0.3 }}
+        className="flex w-full justify-center"
       >
         <Flashcard recto={card.recto} verso={card.verso} flipped={flipped} onFlip={() => setFlipped((f) => !f)} />
       </motion.div>
 
-      <div className="mt-8 min-h-[100px] w-full flex justify-center">
+      <div className="mt-8 flex min-h-[100px] w-full justify-center">
         {flipped ? (
           <DifficultyButtons onPick={onDifficulty} disabled={submitting} />
         ) : (
-          <p className="text-center text-sm text-(--color-ink-soft)">Clique sur la carte pour révéler la réponse.</p>
+          <p className="text-center text-sm text-(--color-ink-soft)">
+            Cliquez sur la carte pour révéler la réponse.
+          </p>
         )}
       </div>
     </div>

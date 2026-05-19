@@ -14,7 +14,7 @@ const items = [
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
 ];
 
-const BG = 'linear-gradient(180deg, #0A4632 0%, #04211F 100%)';
+const BG = 'linear-gradient(180deg, #56080E 0%, #2C0407 100%)';
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
@@ -44,7 +44,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors focus-ring',
                 isActive(it.href)
-                  ? 'bg-(--color-accent) text-[#04211F]'
+                  ? 'bg-(--color-accent) text-white'
                   : 'text-white/75 hover:bg-white/10 hover:text-white',
               )}
             >
@@ -81,7 +81,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
                 isActive(it.href)
-                  ? 'bg-(--color-accent) text-[#04211F]'
+                  ? 'bg-(--color-accent) text-white'
                   : 'text-white/75 hover:bg-white/10',
               )}
             >

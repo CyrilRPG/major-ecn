@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
-const SIDEBAR_BG = 'linear-gradient(180deg, #0A4632 0%, #04211F 100%)';
+const SIDEBAR_BG = 'linear-gradient(180deg, #56080E 0%, #2C0407 100%)';
 
 export function AppShell({
   profile,

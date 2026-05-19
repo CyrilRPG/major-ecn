@@ -34,7 +34,7 @@ export function QcmItem({
         onClick={onToggle}
         disabled={disabled}
         className={cn(
-          'group w-full text-left flex items-start gap-4 rounded-2xl border-2 px-5 py-4 focus-ring transition',
+          'group w-full text-left flex items-start gap-3 rounded-xl border px-3.5 py-2.5 focus-ring transition',
           outcome === null && !selected && 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)/40 hover:bg-(--color-primary-soft)/40',
           outcome === null && selected && 'border-(--color-primary) bg-(--color-primary-soft)',
           outcome === 'correct' && 'border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800/50',
@@ -44,7 +44,7 @@ export function QcmItem({
       >
         <span
           className={cn(
-            'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono font-semibold',
+            'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-semibold',
             outcome === null && !selected && 'bg-(--color-surface-soft) text-(--color-ink-soft) group-hover:bg-(--color-primary)/15 group-hover:text-(--color-primary-deep)',
             outcome === null && selected && 'bg-(--color-primary) text-(--color-primary-fg)',
             outcome === 'correct' && 'bg-emerald-500 text-white',
@@ -53,13 +53,13 @@ export function QcmItem({
         >
           {item.lettre}
         </span>
-        <span className="flex-1 leading-relaxed text-(--color-ink)">{item.enonce}</span>
+        <span className="flex-1 text-sm leading-snug text-(--color-ink)">{item.enonce}</span>
         {outcome && (
-          <span className="shrink-0 mt-1">
+          <span className="shrink-0">
             {outcome === 'correct' ? (
-              <Check className="h-5 w-5 text-emerald-600" strokeWidth={3} />
+              <Check className="h-4 w-4 text-emerald-600" strokeWidth={3} />
             ) : (
-              <X className="h-5 w-5 text-red-600" strokeWidth={3} />
+              <X className="h-4 w-4 text-red-600" strokeWidth={3} />
             )}
           </span>
         )}
@@ -67,17 +67,17 @@ export function QcmItem({
       <AnimatePresence initial={false}>
         {outcome && item.justification && (
           <motion.div
-            initial={{ opacity: 0, height: 0, y: -4 }}
-            animate={{ opacity: 1, height: 'auto', y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -4 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <div className="ml-13 mt-2 pl-5 border-l-2 border-(--color-primary-soft) py-1 pr-3">
-              <p className="text-xs uppercase tracking-wider text-(--color-primary-deep) font-medium mb-1">
+            <div className="ml-10 mt-1 border-l-2 border-(--color-primary-soft) py-0.5 pl-4 pr-2">
+              <p className="text-[10px] uppercase tracking-wider text-(--color-primary-deep) font-medium">
                 {isCorrect ? 'Réponse correcte' : 'À retravailler'}
               </p>
-              <p className="text-sm text-(--color-ink-soft) leading-relaxed">{item.justification}</p>
+              <p className="mt-0.5 text-xs text-(--color-ink-soft) leading-snug">{item.justification}</p>
             </div>
           </motion.div>
         )}

@@ -115,10 +115,10 @@ export default async function AdminStatsPage() {
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <KpiCard Icon={Users}          label="Élèves inscrits"          value={studentsCount ?? 0} accent="#0F6E4E" />
-        <KpiCard Icon={Activity}       label="Actifs (7 j)"             value={activeUsers7d.size} accent="#15B8A6" hint="QCM, flashcards ou progression" />
-        <KpiCard Icon={ClipboardCheck} label="Sessions QCM (7 j)"        value={sessions7d ?? 0} accent="#41143E" />
-        <KpiCard Icon={Target}         label="Taux de réussite moyen"    value={`${successRate}%`} accent="#B67310" />
+        <KpiCard Icon={Users}          label="Élèves inscrits"          value={studentsCount ?? 0} accent="#C1121F" />
+        <KpiCard Icon={Activity}       label="Actifs (7 j)"             value={activeUsers7d.size} accent="#E2231A" hint="QCM, flashcards ou progression" />
+        <KpiCard Icon={ClipboardCheck} label="Sessions QCM (7 j)"        value={sessions7d ?? 0} accent="#7A0B14" />
+        <KpiCard Icon={Target}         label="Taux de réussite moyen"    value={`${successRate}%`} accent="#C2810A" />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
