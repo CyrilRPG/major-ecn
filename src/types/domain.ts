@@ -1,6 +1,8 @@
-export type PermissionScope =
-  | { type: 'all' }
-  | { type: 'college'; colleges: string[] };
+export type Offer = 'basic' | 'premium';
+
+export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[] }) & {
+  offer: Offer;
+};
 
 export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';
 

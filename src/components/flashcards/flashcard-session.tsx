@@ -80,13 +80,24 @@ export function FlashcardSession({
     setFlipped(false);
     setSubmitting(false);
 
+    // Reapparition spacing: how many other cards before this one comes back.
+    const REAPPEAR_AFTER: Record<Difficulty, number> = {
+      tres_difficile: 3,
+      difficile: 5,
+      facile: 8,
+      tres_facile: 12,
+    };
+
     setQueue((prev) => {
       const [, ...rest] = prev;
       if (newScore >= FLASHCARD_MASTERY_THRESHOLD) {
         setMastered((m) => m + 1);
         return rest;
       }
-      return [...rest, { ...card, score: newScore }];
+      const pos = Math.min(REAPPEAR_AFTER[d], rest.length);
+      const next = [...rest];
+      next.splice(pos, 0, { ...card, score: newScore });
+      return next;
     });
   };
 

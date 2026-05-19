@@ -3,29 +3,33 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Home } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 
-function Ring({ value }: { value: number }) {
-  const r = 7;
+function ProgressDot({ value }: { value: number }) {
+  const v = Math.min(100, Math.max(0, value));
+  const r = 8;
   const c = 2 * Math.PI * r;
   return (
-    <svg viewBox="0 0 18 18" className="h-4 w-4 shrink-0 -rotate-90" aria-hidden>
-      <circle cx="9" cy="9" r={r} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="2.5" />
-      <circle
-        cx="9"
-        cy="9"
-        r={r}
-        fill="none"
-        stroke="var(--color-accent)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={c - (c * Math.min(100, Math.max(0, value))) / 100}
-      />
-    </svg>
+    <span className="flex shrink-0 items-center gap-1.5">
+      <span className="w-7 text-right text-[11px] font-medium tabular-nums text-white/55">{v}%</span>
+      <svg viewBox="0 0 22 22" className="h-5 w-5 -rotate-90" aria-hidden>
+        <circle cx="11" cy="11" r={r} fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="3" />
+        <circle
+          cx="11"
+          cy="11"
+          r={r}
+          fill="none"
+          stroke="#FF8A7A"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c - (c * v) / 100}
+        />
+      </svg>
+    </span>
   );
 }
 
@@ -52,9 +56,24 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
       return n;
     });
 
+  const homeActive = pathname === '/accueil';
+
   return (
-    <nav aria-label="Collèges et items" className="space-y-0.5 px-2 pb-8 text-[15px]">
-      <p className="px-3 pb-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
+    <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
+      <Link
+        href="/accueil"
+        className={cn(
+          'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
+          homeActive
+            ? 'bg-(--color-accent) text-white'
+            : 'text-white/85 hover:bg-white/10 hover:text-white',
+        )}
+      >
+        <Home className="h-[18px] w-[18px] shrink-0" />
+        Accueil
+      </Link>
+
+      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
         Collèges EDN
       </p>
       {tree.length === 0 && (
@@ -90,7 +109,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
                   )}
                 >
                   <span className="flex-1 truncate">{c.titre}</span>
-                  <Ring value={c.progress} />
+                  <ProgressDot value={c.progress} />
                 </Link>
               ))}
           </div>
