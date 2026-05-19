@@ -82,9 +82,11 @@ export function ActivityDonut({ data, size = 176 }: { data: Slice[]; size?: numb
               data={data}
               dataKey="value"
               nameKey="label"
-              innerRadius={52}
-              outerRadius={78}
-              paddingAngle={2}
+              cx="50%"
+              cy="50%"
+              innerRadius="60%"
+              outerRadius="92%"
+              paddingAngle={1.5}
               stroke="none"
             >
               {data.map((d) => (

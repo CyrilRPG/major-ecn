@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight, Home, Target } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
@@ -57,6 +57,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
     });
 
   const homeActive = pathname === '/accueil';
+  const trainActive = pathname.startsWith('/entrainement');
 
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
@@ -71,6 +72,19 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
       >
         <Home className="h-[18px] w-[18px] shrink-0" />
         Accueil
+      </Link>
+
+      <Link
+        href="/entrainement"
+        className={cn(
+          'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
+          trainActive
+            ? 'bg-(--color-accent) text-white'
+            : 'text-white/85 hover:bg-white/10 hover:text-white',
+        )}
+      >
+        <Target className="h-[18px] w-[18px] shrink-0" />
+        Entraînement ciblé
       </Link>
 
       <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
