@@ -7,50 +7,37 @@ export const metadata = { title: 'Se connecter' };
 
 export default function LoginPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-(--color-primary) text-white">
-      {/* Ambient editorial backdrop */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute -right-40 -top-40 h-[680px] w-[680px] rounded-full opacity-25 blur-3xl"
-          style={{ background: 'radial-gradient(circle, var(--color-accent), transparent 62%)' }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage:
-              'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
-        />
-      </div>
+    <main className="relative min-h-screen bg-(--color-surface-soft) text-(--color-ink)">
+      {/* Sober editorial accent: a single thin red rule */}
+      <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-(--color-primary)" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-12">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-12">
         <div className="flex items-center gap-2.5">
-          <BrandMark className="h-9 w-9 ring-1 ring-white/20" />
+          <BrandMark className="h-9 w-9" />
           <span className="text-lg font-semibold uppercase tracking-[0.14em]">
-            Major<span className="text-(--color-accent)"> ECN</span>
+            Major<span className="text-(--color-primary)"> ECN</span>
           </span>
         </div>
 
         <div className="flex flex-1 items-center py-16">
-          <div className="grid w-full items-end gap-x-16 gap-y-12 lg:grid-cols-[1.3fr_1fr]">
+          <div className="grid w-full items-center gap-x-16 gap-y-12 lg:grid-cols-[1.25fr_1fr]">
             {/* Editorial statement */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.22em] text-(--color-accent)">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-ink-muted)">
                 Préparation EDN · EVC
               </p>
               <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
                 Le rang utile se prépare,{' '}
-                <span className="italic text-(--color-accent)">item par item</span>.
+                <span className="italic text-(--color-primary)">item par item</span>.
               </h1>
-              <p className="mt-8 max-w-md text-base leading-relaxed text-white/65">
+              <p className="mt-8 max-w-md text-base leading-relaxed text-(--color-ink-soft)">
                 Cours, dossiers progressifs, ECOS et Dernier Tour réunis dans une seule console de
                 travail. Reprenez exactement là où vous vous êtes arrêté.
               </p>
             </div>
 
-            {/* Integrated auth block — solid light card for readability */}
-            <div className="w-full max-w-sm justify-self-end rounded-2xl border border-(--color-border) bg-(--color-surface) p-7 text-(--color-ink) shadow-(--shadow-lifted)">
+            {/* Auth block */}
+            <div className="w-full max-w-sm justify-self-end rounded-2xl border border-(--color-border) bg-(--color-surface) p-7 shadow-(--shadow-soft)">
               <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-(--color-ink-soft)">
                 Accès à la console
               </h2>
@@ -71,7 +58,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-xs text-white/40">© {new Date().getFullYear()} Major ECN — Préparation EDN &amp; EVC</p>
+        <p className="text-xs text-(--color-ink-muted)">
+          © {new Date().getFullYear()} Major ECN — Préparation EDN &amp; EVC
+        </p>
       </div>
     </main>
   );

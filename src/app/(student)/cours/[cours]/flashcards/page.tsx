@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -25,29 +26,24 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     .eq('cours_id', coursId)
     .order('order_index');
 
-  const cardIds = (cards ?? []).map((c) => c.id);
+  const allCards = cards ?? [];
+  const cardIds = allCards.map((c) => c.id);
   const { data: reviews } = cardIds.length
     ? await supabase
         .from('flashcard_reviews')
-        .select('flashcard_id, weight, reviewed_at')
+        .select('flashcard_id, difficulty')
         .eq('user_id', user.id)
         .in('flashcard_id', cardIds)
-        .order('reviewed_at', { ascending: false })
-    : { data: [] as { flashcard_id: string; weight: number }[] };
+    : { data: [] as { flashcard_id: string; difficulty: Difficulty }[] };
 
-  const lastWeightMap = new Map<string, number>();
+  // Cumulative mastery score per card (très facile +5, facile +3, difficile -3, très difficile -5).
+  const scoreMap = new Map<string, number>();
   for (const r of reviews ?? []) {
-    if (!lastWeightMap.has(r.flashcard_id)) lastWeightMap.set(r.flashcard_id, r.weight);
+    const delta = DIFFICULTY_SCORE[r.difficulty as Difficulty] ?? 0;
+    scoreMap.set(r.flashcard_id, (scoreMap.get(r.flashcard_id) ?? 0) + delta);
   }
 
-  const input = (cards ?? []).map((c) => ({
-    id: c.id,
-    recto: c.recto,
-    verso: c.verso,
-    lastWeight: lastWeightMap.get(c.id) ?? null,
-  }));
-
-  if (input.length === 0) {
+  if (allCards.length === 0) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-6">
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface)">
@@ -61,5 +57,17 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     );
   }
 
-  return <FlashcardSession cards={input} coursId={coursId} backHref={`/cours/${coursId}`} />;
+  // Only cards not yet mastered (score < threshold) enter the session.
+  const input = allCards
+    .map((c) => ({ id: c.id, recto: c.recto, verso: c.verso, score: scoreMap.get(c.id) ?? 0 }))
+    .filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD);
+
+  return (
+    <FlashcardSession
+      cards={input}
+      total={allCards.length}
+      coursId={coursId}
+      backHref={`/cours/${coursId}`}
+    />
+  );
 }

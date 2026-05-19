@@ -11,17 +11,17 @@ export function GeometricBackground({ className, seed = 0 }: { className?: strin
     >
       <defs>
         <linearGradient id={`${gid}-grad`} x1="0" y1="0" x2="400" y2="240" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#0A4632" />
-          <stop offset="1" stopColor="#073425" />
+          <stop stopColor="#56080E" />
+          <stop offset="1" stopColor="#2C0407" />
         </linearGradient>
         <linearGradient id={`${gid}-line`} x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#15B8A6" stopOpacity="0" />
-          <stop offset="0.5" stopColor="#15B8A6" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#15B8A6" stopOpacity="0" />
+          <stop stopColor="#E2231A" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#E2231A" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#E2231A" stopOpacity="0" />
         </linearGradient>
         <radialGradient id={`${gid}-glow`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#38B98A" stopOpacity="0.22" />
-          <stop offset="1" stopColor="#38B98A" stopOpacity="0" />
+          <stop offset="0" stopColor="#E15A62" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#E15A62" stopOpacity="0" />
         </radialGradient>
       </defs>
       <rect width="400" height="240" fill={`url(#${gid}-grad)`} />
