@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Target } from 'lucide-react';
+import { ArrowRight, Play, Target, AlertTriangle } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
@@ -8,106 +8,125 @@ import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 export const metadata = { title: 'Entraînement ciblé' };
 
 type AttemptRow = {
+  question_id: string;
   is_correct: boolean;
-  qcm_questions: { qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } } };
+  qcm_questions: { qcm_series: { cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } } };
 };
-type CollegeRow = { id: string; nom: string; order_index: number | null; cours?: { id: string }[] | null };
 
 export default async function EntrainementPage() {
   const { user, profile } = await requireUser();
   const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
-  const [{ data: attemptsRaw }, { data: edn }] = await Promise.all([
-    supabase
-      .from('qcm_attempts')
-      .select('is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, semestres!inner(faculte_id)))))')
-      .eq('user_id', user.id),
-    supabase
-      .from('facultes')
-      .select('semestres(matieres(id, nom, order_index, cours(id)))')
-      .eq('id', EDN_FACULTE_ID)
-      .maybeSingle(),
-  ]);
+  const { data: attemptsRaw } = await supabase
+    .from('qcm_attempts')
+    .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
+    .eq('user_id', user.id);
 
-  const perCollege = new Map<string, { total: number; correct: number }>();
+  const perCollege = new Map<string, { nom: string; fails: number; total: number }>();
+  const failedQuestions = new Set<string>();
   for (const a of ((attemptsRaw ?? []) as unknown as AttemptRow[])) {
     const m = a.qcm_questions.qcm_series.cours.matieres;
-    if (m.semestres.faculte_id !== EDN_FACULTE_ID) continue;
-    const e = perCollege.get(m.id) ?? { total: 0, correct: 0 };
+    if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
+    const e = perCollege.get(m.id) ?? { nom: m.nom, fails: 0, total: 0 };
     e.total++;
-    if (a.is_correct) e.correct++;
+    if (!a.is_correct) {
+      e.fails++;
+      failedQuestions.add(a.question_id);
+    }
     perCollege.set(m.id, e);
   }
 
-  const colleges = (
-    ((edn as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
-  )
-    .flatMap((s) => s.matieres ?? [])
-    .filter((m) => canAccessCollege(scope, m.id) && (m.cours?.length ?? 0) > 0)
-    .map((m) => {
-      const p = perCollege.get(m.id);
-      const rate = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : null;
-      return { id: m.id, nom: m.nom, items: m.cours?.length ?? 0, rate };
-    })
-    .sort((a, b) => {
-      const ra = a.rate ?? -1;
-      const rb = b.rate ?? -1;
-      return ra - rb; // jamais travaillé en premier, puis du plus faible au plus fort
-    });
+  const weak = [...perCollege.values()]
+    .filter((c) => c.fails > 0)
+    .sort((a, b) => b.fails - a.fails)
+    .slice(0, 5);
 
-  const barColor = (v: number | null) =>
-    v === null ? 'var(--color-sand-300)' : v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E';
+  const totalToReview = failedQuestions.size;
+  const hasData = totalToReview > 0;
 
   return (
-    <div className="px-4 py-5 lg:px-8">
-      <header className="mb-5 flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
-          <Target className="h-5 w-5" />
-        </span>
-        <div>
-          <h1 className="text-xl font-bold tracking-tight text-(--color-ink)">Entraînement ciblé</h1>
-          <p className="text-sm text-(--color-ink-soft)">
-            Priorise les collèges où tu es le plus faible, du moins maîtrisé au plus maîtrisé.
+    <div className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-8">
+      {/* Hero CTA */}
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-(--color-primary) to-(--color-accent) p-7 text-white shadow-(--shadow-lifted) sm:p-9">
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.1]"
+          style={{
+            backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)',
+            backgroundSize: '36px 36px',
+          }}
+        />
+        <div className="relative">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
+            <Target className="h-3.5 w-3.5" /> Entraînement ciblé
+          </span>
+          <h1 className="mt-4 font-display text-3xl leading-tight sm:text-4xl">
+            Travaille en priorité ce que tu rates le plus.
+          </h1>
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80">
+            On rassemble les QCM des collèges où tu fais le plus d’erreurs et on te
+            represente d’abord les questions échouées le plus souvent — correction et
+            justification à chaque item.
           </p>
-        </div>
-      </header>
 
-      <ul className="space-y-2.5">
-        {colleges.map((c) => (
-          <li key={c.id}>
-            <Link
-              href={`/matieres/${c.id}`}
-              className="group flex items-center gap-4 rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) transition-colors hover:border-(--color-accent)"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="truncate font-semibold text-(--color-ink)">{c.nom}</span>
-                  <span className="shrink-0 text-sm font-semibold tabular-nums text-(--color-ink-soft)">
-                    {c.rate === null ? 'Non travaillé' : `${c.rate}%`}
-                  </span>
-                </div>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-(--color-sand-200)">
-                  <div
-                    className="h-full rounded-full"
-                    style={{ width: `${c.rate ?? 6}%`, background: barColor(c.rate) }}
-                  />
-                </div>
-                <p className="mt-1.5 text-xs text-(--color-ink-muted)">{c.items} item{c.items > 1 ? 's' : ''}</p>
-              </div>
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-(--color-primary) px-3.5 py-2 text-sm font-medium text-white">
-                S’entraîner
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          </li>
-        ))}
-        {colleges.length === 0 && (
-          <li className="rounded-xl border border-(--color-border) bg-(--color-surface) p-8 text-center text-sm text-(--color-ink-muted)">
-            Aucun collège accessible pour le moment.
-          </li>
+          <Link
+            href="/entrainement/session"
+            className="mt-6 inline-flex items-center gap-2.5 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-(--color-primary) shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+          >
+            <Play className="h-5 w-5 fill-current" />
+            Lancer l’entraînement ciblé
+          </Link>
+        </div>
+      </section>
+
+      {/* Preview */}
+      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
+          <p className="text-2xl font-bold text-(--color-ink)">{Math.min(totalToReview, 12) || '—'}</p>
+          <p className="mt-0.5 text-xs text-(--color-ink-muted)">questions dans la session</p>
+        </div>
+        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
+          <p className="text-2xl font-bold text-(--color-ink)">{totalToReview}</p>
+          <p className="mt-0.5 text-xs text-(--color-ink-muted)">questions ratées à revoir</p>
+        </div>
+        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
+          <p className="text-2xl font-bold text-(--color-ink)">{weak.length}</p>
+          <p className="mt-0.5 text-xs text-(--color-ink-muted)">collèges à renforcer</p>
+        </div>
+      </div>
+
+      {/* Aperçu du contenu */}
+      <div className="mt-5 rounded-xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
+          <AlertTriangle className="h-4 w-4 text-(--color-primary)" />
+          Aperçu de ta session
+        </h2>
+        {hasData ? (
+          <ul className="mt-3 space-y-2">
+            {weak.map((c) => (
+              <li
+                key={c.nom}
+                className="flex items-center justify-between rounded-lg border border-(--color-border) bg-(--color-surface-soft) px-3.5 py-2.5"
+              >
+                <span className="truncate text-sm font-medium text-(--color-ink)">{c.nom}</span>
+                <span className="shrink-0 rounded-full bg-(--color-primary-soft) px-2.5 py-0.5 text-xs font-semibold text-(--color-primary-deep)">
+                  {c.fails} erreur{c.fails > 1 ? 's' : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-3 text-sm text-(--color-ink-soft)">
+            Pas encore d’erreurs enregistrées : la session te proposera un échantillon de
+            questions pour démarrer. Plus tu t’entraînes, plus elle cible tes points faibles.
+          </p>
         )}
-      </ul>
+        <p className="mt-4 flex items-center gap-1.5 text-xs text-(--color-ink-muted)">
+          Priorité aux questions échouées le plus souvent
+          <ArrowRight className="h-3.5 w-3.5" />
+        </p>
+      </div>
     </div>
   );
 }
