@@ -120,7 +120,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
               <ChevronRight
                 className={cn('h-4 w-4 shrink-0 text-white/45 transition-transform', o && 'rotate-90')}
               />
-              <Icon className="h-[18px] w-[18px] shrink-0" style={{ color: col.colorHex ?? 'var(--color-accent)' }} />
+              <Icon className="h-[18px] w-[18px] shrink-0 text-white" />
               <span className="flex-1 truncate">{col.nom}</span>
               <span className="text-[11px] tabular-nums text-white/40">{col.cours.length}</span>
             </button>

@@ -51,10 +51,7 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
             className="group flex flex-col justify-between rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted) focus-ring"
           >
             <div className="flex items-start justify-between">
-              <span
-                className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-sand-100)"
-                style={{ color: m.color_hex ?? 'var(--color-accent)' }}
-              >
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary) text-white">
                 <Icon className="h-6 w-6" />
               </span>
               <ArrowRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />

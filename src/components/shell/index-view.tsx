@@ -107,12 +107,9 @@ export function IndexList({ rows }: { rows: IndexRow[] }) {
   );
 }
 
-export function RowIcon({ Icon, color }: { Icon: LucideIcon; color?: string }) {
+export function RowIcon({ Icon }: { Icon: LucideIcon; color?: string }) {
   return (
-    <span
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-sand-100)"
-      style={color ? { color } : undefined}
-    >
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary) text-white">
       <Icon className="h-4.5 w-4.5" />
     </span>
   );
