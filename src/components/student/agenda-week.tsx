@@ -46,8 +46,8 @@ export function AgendaWeek() {
   const [selected, setSelected] = useState<(Ev & { date: Date }) | null>(null);
 
   return (
-    <div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:min-h-0 lg:grid-cols-7">
         {dates.map((date, i) => {
           const dayNum = i + 1;
           const evs = EVENTS.filter((e) => e.day === dayNum);
@@ -55,37 +55,53 @@ export function AgendaWeek() {
           return (
             <div
               key={i}
-              className={`flex flex-col rounded-xl border bg-(--color-surface) p-3 shadow-(--shadow-soft) ${
-                isToday ? 'border-(--color-primary)' : 'border-(--color-border)'
+              className={`flex flex-col overflow-hidden rounded-2xl border bg-(--color-surface) shadow-(--shadow-soft) ${
+                isToday ? 'border-(--color-primary) ring-1 ring-(--color-primary)/30' : 'border-(--color-border)'
               }`}
             >
-              <div className="mb-2 flex items-baseline justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-soft)">
+              <div
+                className={`flex items-baseline justify-between px-4 py-3 ${
+                  isToday ? 'bg-(--color-primary) text-white' : 'bg-(--color-surface-soft)'
+                }`}
+              >
+                <span className={`text-sm font-semibold ${isToday ? 'text-white' : 'text-(--color-ink)'}`}>
                   {DAYS[i]}
                 </span>
-                <span className={`text-xs tabular-nums ${isToday ? 'font-bold text-(--color-primary)' : 'text-(--color-ink-muted)'}`}>
+                <span
+                  className={`text-xs tabular-nums ${
+                    isToday ? 'text-white/80' : 'text-(--color-ink-muted)'
+                  }`}
+                >
                   {date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
                 </span>
               </div>
-              <div className="flex flex-1 flex-col gap-2">
+              <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-3">
                 {evs.length === 0 && (
-                  <p className="py-4 text-center text-[11px] text-(--color-ink-muted)">—</p>
+                  <div className="flex flex-1 items-center justify-center">
+                    <span className="text-xs text-(--color-ink-muted)">Aucun cours</span>
+                  </div>
                 )}
                 {evs.map((e, j) => (
                   <button
                     key={j}
                     type="button"
                     onClick={() => setSelected({ ...e, date })}
-                    className="group rounded-lg border border-(--color-border) bg-(--color-primary-soft) p-2.5 text-left transition-colors hover:border-(--color-primary) focus-ring"
+                    className="group flex flex-col rounded-xl border border-(--color-border) bg-(--color-primary-soft) p-4 text-left transition-all hover:-translate-y-0.5 hover:border-(--color-primary) hover:shadow-(--shadow-soft) focus-ring"
                   >
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-(--color-primary-deep)">
-                      <Clock className="h-3 w-3" />
-                      {e.start}–{e.end}
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-(--color-primary-deep)">
+                      <Clock className="h-3.5 w-3.5" />
+                      {e.start} – {e.end}
                     </span>
-                    <span className="mt-1 block text-xs font-semibold leading-snug text-(--color-ink)">
+                    <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink)">
                       {e.titre}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-(--color-ink-muted)">{e.college}</span>
+                    <span className="mt-1.5 inline-flex w-fit items-center rounded-full bg-(--color-surface) px-2 py-0.5 text-[11px] font-medium text-(--color-ink-soft)">
+                      {e.college}
+                    </span>
+                    <span className="mt-2 flex items-center gap-1 text-[11px] text-(--color-ink-muted)">
+                      <Video className="h-3 w-3" />
+                      Cours en visio
+                    </span>
                   </button>
                 ))}
               </div>
