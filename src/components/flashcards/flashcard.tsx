@@ -18,7 +18,7 @@ export function Flashcard({
     <button
       type="button"
       onClick={onFlip}
-      className="relative w-full max-w-xl aspect-[3/2] mx-auto focus-ring rounded-3xl"
+      className="relative mx-auto aspect-[16/9] max-h-[44vh] w-full max-w-lg focus-ring rounded-2xl"
       style={{ perspective: '1500px' }}
       aria-label={flipped ? 'Retourner la carte côté recto' : 'Retourner la carte côté verso'}
     >
@@ -29,9 +29,9 @@ export function Flashcard({
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <Face className="bg-(--color-surface) text-(--color-ink) shadow-(--shadow-lifted)">
-          <span className="text-xs uppercase tracking-wider text-(--color-primary-deep) font-medium">Recto</span>
-          <p className="mt-4 text-2xl md:text-3xl font-semibold tracking-tight leading-snug">{recto}</p>
-          <span className="mt-auto text-xs text-(--color-ink-soft)">Clique pour retourner</span>
+          <span className="text-[11px] uppercase tracking-wider text-(--color-primary-deep) font-medium">Recto</span>
+          <p className="mt-2 text-lg md:text-xl font-semibold tracking-tight leading-snug">{recto}</p>
+          <span className="mt-auto text-[11px] text-(--color-ink-soft)">Clique pour retourner</span>
         </Face>
         <Face
           className={cn(
@@ -39,9 +39,9 @@ export function Flashcard({
           )}
           style={{ transform: 'rotateY(180deg)' }}
         >
-          <span className="text-xs uppercase tracking-wider opacity-80 font-medium">Verso</span>
-          <p className="mt-4 text-lg md:text-xl font-medium leading-relaxed">{verso}</p>
-          <span className="mt-auto text-xs opacity-80">Évalue ta difficulté ci-dessous</span>
+          <span className="text-[11px] uppercase tracking-wider opacity-80 font-medium">Verso</span>
+          <p className="mt-2 text-base md:text-lg font-medium leading-relaxed">{verso}</p>
+          <span className="mt-auto text-[11px] opacity-80">Évalue ta difficulté ci-dessous</span>
         </Face>
       </motion.div>
     </button>
@@ -60,7 +60,7 @@ function Face({
   return (
     <div
       className={cn(
-        'absolute inset-0 rounded-3xl p-8 flex flex-col items-start text-left',
+        'absolute inset-0 rounded-2xl p-5 flex flex-col items-start text-left',
         className,
       )}
       style={{ backfaceVisibility: 'hidden', ...style }}
