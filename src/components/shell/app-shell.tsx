@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import { BrandMark } from '@/components/brand/brand-logo';
 import { Navigator } from './navigator';
 import { TopBar } from './top-bar';
@@ -12,6 +13,39 @@ import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
 const SIDEBAR_BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
+
+function SidebarProgress({ tree }: { tree: NavCollege[] }) {
+  const cours = tree.flatMap((c) => c.cours);
+  const total = cours.length;
+  const revus = cours.filter((c) => c.progress >= 50).length;
+  const pct = total > 0 ? Math.round((revus / total) * 100) : 0;
+  const r = 15;
+  const circ = 2 * Math.PI * r;
+  return (
+    <Link
+      href="/accueil"
+      className="m-3 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 transition-colors hover:bg-white/10"
+    >
+      <span className="relative h-11 w-11 shrink-0">
+        <svg viewBox="0 0 40 40" className="h-11 w-11 -rotate-90">
+          <circle cx="20" cy="20" r={r} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="4" />
+          <circle
+            cx="20" cy="20" r={r} fill="none" stroke="var(--color-accent)" strokeWidth="4"
+            strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ - (circ * pct) / 100}
+          />
+        </svg>
+        <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">
+          {pct}%
+        </span>
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-medium text-white">Progression globale</span>
+        <span className="block text-[11px] text-white/55">{revus} / {total} items revus</span>
+      </span>
+      <ChevronRight className="h-4 w-4 shrink-0 text-white/40" />
+    </Link>
+  );
+}
 
 export function AppShell({
   profile,
@@ -68,6 +102,7 @@ export function AppShell({
       <div className="flex-1 overflow-y-auto pt-3">
         <Navigator tree={tree} />
       </div>
+      <SidebarProgress tree={tree} />
     </div>
   );
 
