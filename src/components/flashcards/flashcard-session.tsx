@@ -41,9 +41,11 @@ export function FlashcardSession({
   backHref: string;
 }) {
   const [queue, setQueue] = useState<FlashcardInput[]>(() =>
-    [...cards].sort((a, b) => a.score - b.score),
+    cards.filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD).sort((a, b) => a.score - b.score),
   );
-  const [mastered, setMastered] = useState(total - cards.length);
+  const [mastered, setMastered] = useState(
+    () => cards.filter((c) => c.score >= FLASHCARD_MASTERY_THRESHOLD).length,
+  );
   const [flipped, setFlipped] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -104,8 +106,8 @@ export function FlashcardSession({
 
   if (!card) {
     const restart = () => {
-      setQueue(cards.map((c) => ({ ...c, score: 0 })).sort((a, b) => a.score - b.score));
-      setMastered(total - cards.length);
+      setQueue(cards.map((c) => ({ ...c, score: 0 })));
+      setMastered(0);
       setFlipped(false);
     };
     return (
