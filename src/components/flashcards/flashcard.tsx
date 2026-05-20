@@ -9,17 +9,23 @@ function Face({
   index,
   total,
   onFlip,
+  back = false,
 }: {
   side: 'recto' | 'verso';
   text: string;
   index: number;
   total: number;
   onFlip: () => void;
+  back?: boolean;
 }) {
   return (
     <div
       className="absolute inset-0 flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted)"
-      style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+      style={{
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        transform: back ? 'rotateY(180deg)' : undefined,
+      }}
     >
       <div className="flex items-center justify-between px-6 pt-5">
         <span className="text-xs font-bold uppercase tracking-[0.16em] text-(--color-primary)">
@@ -91,9 +97,7 @@ export function Flashcard({
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
         <Face side="recto" text={recto} index={index} total={total} onFlip={onFlip} />
-        <div className="absolute inset-0" style={{ transform: 'rotateY(180deg)' }}>
-          <Face side="verso" text={verso} index={index} total={total} onFlip={onFlip} />
-        </div>
+        <Face side="verso" text={verso} index={index} total={total} onFlip={onFlip} back />
       </motion.div>
     </div>
   );
