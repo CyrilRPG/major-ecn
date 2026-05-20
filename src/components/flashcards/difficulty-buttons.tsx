@@ -19,7 +19,7 @@ export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="grid w-full max-w-3xl grid-cols-2 gap-3 md:grid-cols-4"
+      className="grid w-full max-w-5xl grid-cols-2 gap-3 md:grid-cols-4"
     >
       {buttons.map((b, i) => (
         <button

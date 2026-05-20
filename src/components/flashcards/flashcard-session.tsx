@@ -124,7 +124,7 @@ export function FlashcardSession({
   const pct = total === 0 ? 100 : (mastered / total) * 100;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col items-center px-4 py-3 sm:px-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 py-2 sm:px-6">
       <div className="mb-3 flex w-full items-center justify-between gap-4">
         <Button asChild variant="ghost" size="sm">
           <Link href={backHref}>
