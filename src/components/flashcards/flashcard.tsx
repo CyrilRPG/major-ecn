@@ -36,7 +36,7 @@ function Face({
         </span>
       </div>
       <div className="flex flex-1 items-center justify-center px-8 py-6">
-        <p className="text-center text-3xl font-semibold leading-snug tracking-tight text-(--color-ink) text-balance md:text-4xl">
+        <p className="text-center text-2xl font-semibold leading-snug tracking-tight text-(--color-ink) text-balance md:text-3xl">
           {text}
         </p>
       </div>
@@ -91,7 +91,7 @@ export function Flashcard({
       style={{ perspective: '1600px' }}
     >
       <motion.div
-        className="relative h-[clamp(360px,62vh,680px)] w-full"
+        className="relative h-[clamp(240px,40vh,440px)] w-full"
         style={{ transformStyle: 'preserve-3d' }}
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
