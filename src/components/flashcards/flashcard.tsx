@@ -91,7 +91,7 @@ export function Flashcard({
       style={{ perspective: '1600px' }}
     >
       <motion.div
-        className="relative h-[clamp(240px,40vh,440px)] w-full"
+        className="relative h-[clamp(280px,48vh,520px)] w-full"
         style={{ transformStyle: 'preserve-3d' }}
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

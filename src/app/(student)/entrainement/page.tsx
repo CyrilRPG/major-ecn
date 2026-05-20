@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Play, Target, AlertTriangle } from 'lucide-react';
+import { ArrowRight, ListChecks, Play, Target, TrendingDown } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
@@ -23,109 +23,133 @@ export default async function EntrainementPage() {
     .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
     .eq('user_id', user.id);
 
-  const perCollege = new Map<string, { nom: string; fails: number; total: number }>();
+  const perCollege = new Map<string, { nom: string; fails: number }>();
   const failedQuestions = new Set<string>();
   for (const a of ((attemptsRaw ?? []) as unknown as AttemptRow[])) {
     const m = a.qcm_questions.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
-    const e = perCollege.get(m.id) ?? { nom: m.nom, fails: 0, total: 0 };
-    e.total++;
     if (!a.is_correct) {
+      const e = perCollege.get(m.id) ?? { nom: m.nom, fails: 0 };
       e.fails++;
+      perCollege.set(m.id, e);
       failedQuestions.add(a.question_id);
     }
-    perCollege.set(m.id, e);
   }
 
-  const weak = [...perCollege.values()]
-    .filter((c) => c.fails > 0)
-    .sort((a, b) => b.fails - a.fails)
-    .slice(0, 5);
-
+  const weak = [...perCollege.values()].sort((a, b) => b.fails - a.fails).slice(0, 6);
+  const maxFails = Math.max(1, ...weak.map((w) => w.fails));
   const totalToReview = failedQuestions.size;
-  const hasData = totalToReview > 0;
+  const sessionSize = Math.min(totalToReview || 12, 12);
+
+  const stats = [
+    { value: sessionSize, label: 'questions dans la session' },
+    { value: totalToReview, label: 'questions ratées à revoir' },
+    { value: weak.length, label: 'collèges à renforcer' },
+  ];
+  const steps = [
+    { Icon: TrendingDown, t: 'On repère tes erreurs', d: 'Analyse de tes QCM passés, collège par collège.' },
+    { Icon: ListChecks, t: 'On regroupe les bonnes questions', d: 'Les QCM des collèges où tu te trompes le plus.' },
+    { Icon: Target, t: 'On priorise', d: 'D’abord les questions échouées le plus souvent.' },
+  ];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-8">
-      {/* Hero CTA */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-(--color-primary) to-(--color-accent) p-7 text-white shadow-(--shadow-lifted) sm:p-9">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.1]"
-          style={{
-            backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)',
-            backgroundSize: '36px 36px',
-          }}
-        />
-        <div className="relative">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
-            <Target className="h-3.5 w-3.5" /> Entraînement ciblé
+    <div className="mx-auto w-full max-w-6xl px-5 py-7 lg:px-8">
+      {/* Hero — large, sobre */}
+      <section className="grid items-center gap-6 rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) lg:grid-cols-[1.5fr_1fr] lg:p-8">
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-(--color-primary-soft) px-3 py-1 text-xs font-semibold text-(--color-primary-deep)">
+            <Target className="h-3.5 w-3.5" />
+            Entraînement ciblé
           </span>
-          <h1 className="mt-4 font-display text-3xl leading-tight sm:text-4xl">
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-(--color-ink) sm:text-3xl">
             Travaille en priorité ce que tu rates le plus.
           </h1>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80">
-            On rassemble les QCM des collèges où tu fais le plus d’erreurs et on te
-            represente d’abord les questions échouées le plus souvent — correction et
-            justification à chaque item.
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--color-ink-soft)">
+            Une session sur-mesure : les QCM des collèges où tu fais le plus d’erreurs, en
+            commençant par les questions échouées le plus souvent. Correction et justification
+            à chaque item.
           </p>
-
           <Link
             href="/entrainement/session"
-            className="mt-6 inline-flex items-center gap-2.5 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-(--color-primary) shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+            className="mt-5 inline-flex items-center gap-2.5 rounded-xl bg-(--color-primary) px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
           >
             <Play className="h-5 w-5 fill-current" />
             Lancer l’entraînement ciblé
           </Link>
         </div>
+
+        <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-4 py-3 text-center lg:flex lg:items-center lg:gap-3 lg:text-left"
+            >
+              <p className="text-2xl font-bold tabular-nums text-(--color-primary)">{s.value}</p>
+              <p className="mt-0.5 text-xs leading-tight text-(--color-ink-muted) lg:mt-0">{s.label}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* Preview */}
-      <div className="mt-5 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
-          <p className="text-2xl font-bold text-(--color-ink)">{Math.min(totalToReview, 12) || '—'}</p>
-          <p className="mt-0.5 text-xs text-(--color-ink-muted)">questions dans la session</p>
-        </div>
-        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
-          <p className="text-2xl font-bold text-(--color-ink)">{totalToReview}</p>
-          <p className="mt-0.5 text-xs text-(--color-ink-muted)">questions ratées à revoir</p>
-        </div>
-        <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
-          <p className="text-2xl font-bold text-(--color-ink)">{weak.length}</p>
-          <p className="mt-0.5 text-xs text-(--color-ink-muted)">collèges à renforcer</p>
-        </div>
-      </div>
+      {/* Body — 2 colonnes */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
+          <h2 className="text-sm font-semibold text-(--color-ink)">Collèges à renforcer</h2>
+          <p className="mb-4 text-xs text-(--color-ink-muted)">Classés par nombre d’erreurs.</p>
+          {weak.length > 0 ? (
+            <ul className="space-y-3">
+              {weak.map((c) => (
+                <li key={c.nom}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="truncate text-(--color-ink)">{c.nom}</span>
+                    <span className="shrink-0 font-semibold tabular-nums text-(--color-ink-soft)">
+                      {c.fails} erreur{c.fails > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-(--color-sand-200)">
+                    <div
+                      className="h-full rounded-full bg-(--color-primary)"
+                      style={{ width: `${Math.round((c.fails / maxFails) * 100)}%` }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-6 text-sm text-(--color-ink-soft)">
+              Pas encore d’erreurs enregistrées — la première session te proposera un échantillon
+              de questions pour démarrer.
+            </p>
+          )}
+        </section>
 
-      {/* Aperçu du contenu */}
-      <div className="mt-5 rounded-xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
-          <AlertTriangle className="h-4 w-4 text-(--color-primary)" />
-          Aperçu de ta session
-        </h2>
-        {hasData ? (
-          <ul className="mt-3 space-y-2">
-            {weak.map((c) => (
-              <li
-                key={c.nom}
-                className="flex items-center justify-between rounded-lg border border-(--color-border) bg-(--color-surface-soft) px-3.5 py-2.5"
-              >
-                <span className="truncate text-sm font-medium text-(--color-ink)">{c.nom}</span>
-                <span className="shrink-0 rounded-full bg-(--color-primary-soft) px-2.5 py-0.5 text-xs font-semibold text-(--color-primary-deep)">
-                  {c.fails} erreur{c.fails > 1 ? 's' : ''}
+        <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
+          <h2 className="text-sm font-semibold text-(--color-ink)">Comment fonctionne ta session</h2>
+          <p className="mb-4 text-xs text-(--color-ink-muted)">Trois étapes, automatiquement.</p>
+          <ol className="space-y-3">
+            {steps.map((s, i) => (
+              <li key={s.t} className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
+                  <s.Icon className="h-4.5 w-4.5" />
                 </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-(--color-ink)">
+                    <span className="mr-1.5 text-(--color-ink-muted)">{i + 1}.</span>
+                    {s.t}
+                  </p>
+                  <p className="text-xs text-(--color-ink-soft)">{s.d}</p>
+                </div>
               </li>
             ))}
-          </ul>
-        ) : (
-          <p className="mt-3 text-sm text-(--color-ink-soft)">
-            Pas encore d’erreurs enregistrées : la session te proposera un échantillon de
-            questions pour démarrer. Plus tu t’entraînes, plus elle cible tes points faibles.
-          </p>
-        )}
-        <p className="mt-4 flex items-center gap-1.5 text-xs text-(--color-ink-muted)">
-          Priorité aux questions échouées le plus souvent
-          <ArrowRight className="h-3.5 w-3.5" />
-        </p>
+          </ol>
+          <Link
+            href="/entrainement/session"
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-primary)"
+          >
+            Démarrer maintenant
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </section>
       </div>
     </div>
   );
