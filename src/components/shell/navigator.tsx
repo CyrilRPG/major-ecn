@@ -22,7 +22,7 @@ function ProgressDot({ value }: { value: number }) {
           cy="11"
           r={r}
           fill="none"
-          stroke="#FF8A7A"
+          stroke="#FB7193"
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray={c}

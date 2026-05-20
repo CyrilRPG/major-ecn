@@ -4,34 +4,34 @@
 
 @theme {
   /* === Major ECN brand (maquette designer) === */
-  --color-brand-emerald: #E4002B;  /* primary — vivid red */
-  --color-brand-teal:    #E4002B;  /* accent — same red */
+  --color-brand-emerald: #E11D48;  /* primary — vivid red */
+  --color-brand-teal:    #E11D48;  /* accent — same red */
   --color-brand-sand:    #E9EBEF;  /* secondary neutral — cool light */
 
   /* === Primary red scale (kept under -emerald- names to avoid churn) === */
   --color-emerald-50:  #FFF1F3;
-  --color-emerald-100: #FDE7E9;
-  --color-emerald-200: #FBC4CB;
-  --color-emerald-300: #F593A0;
-  --color-emerald-400: #F25C70;
-  --color-emerald-500: #ED2A45;
-  --color-emerald-600: #E4002B;
-  --color-emerald-700: #C0001F;
-  --color-emerald-800: #990019;
-  --color-emerald-900: #6E0012;
-  --color-emerald-950: #3D0009;
+  --color-emerald-100: #FFE4E9;
+  --color-emerald-200: #FECDD6;
+  --color-emerald-300: #FDA4B8;
+  --color-emerald-400: #FB7193;
+  --color-emerald-500: #F43F6B;
+  --color-emerald-600: #E11D48;
+  --color-emerald-700: #BE123C;
+  --color-emerald-800: #9F1239;
+  --color-emerald-900: #881337;
+  --color-emerald-950: #4C0519;
 
   /* === Accent red scale (kept under -teal- names) === */
   --color-teal-50:  #FFF1F3;
-  --color-teal-100: #FDE7E9;
-  --color-teal-200: #FBC4CB;
-  --color-teal-300: #F593A0;
-  --color-teal-400: #F25C70;
-  --color-teal-500: #E4002B;
-  --color-teal-600: #C0001F;
-  --color-teal-700: #C0001F;
-  --color-teal-800: #990019;
-  --color-teal-900: #6E0012;
+  --color-teal-100: #FFE4E9;
+  --color-teal-200: #FECDD6;
+  --color-teal-300: #FDA4B8;
+  --color-teal-400: #FB7193;
+  --color-teal-500: #E11D48;
+  --color-teal-600: #BE123C;
+  --color-teal-700: #BE123C;
+  --color-teal-800: #9F1239;
+  --color-teal-900: #881337;
 
   /* === Sand scale (cool neutral) === */
   --color-sand-50:  #FAFBFC;
@@ -53,7 +53,7 @@
   /* States */
   --color-success:   #16A34A;
   --color-warning:   #F59E0B;
-  --color-danger:    #E4002B;
+  --color-danger:    #E11D48;
   --color-easy:      #22C55E;
   --color-very-easy: #4ADE80;
 
@@ -70,7 +70,7 @@
   /* === Sidebar (navy, maquette) === */
   --color-sidebar:        #0E1626;
   --color-sidebar-deep:   #0A111E;
-  --color-sidebar-active: #E4002B;
+  --color-sidebar-active: #E11D48;
 
   /* === Typography === */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
