@@ -102,7 +102,7 @@ export function StudyConsole({
           </button>
         </div>
 
-        <div className="mt-3 flex gap-1 overflow-x-auto pb-0.5">
+        <div className="mt-3 flex gap-1 overflow-x-auto border-b border-(--color-border)">
           {tabs.map((t) => {
             const active = activeSeg === t.seg;
             return (
@@ -110,17 +110,17 @@ export function StudyConsole({
                 key={t.key}
                 href={`${base}${t.seg ? `/${t.seg}` : ''}`}
                 className={cn(
-                  'flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm transition-colors focus-ring',
+                  'flex items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors focus-ring',
                   active
-                    ? 'bg-(--color-primary) text-white'
-                    : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)',
+                    ? 'border-(--color-primary) text-(--color-primary)'
+                    : 'border-transparent text-(--color-ink-soft) hover:text-(--color-ink)',
                 )}
               >
                 <t.Icon className="h-4 w-4" />
                 {t.label}
                 {!t.available && t.seg && (
                   <span
-                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-white/60' : 'bg-(--color-ink-muted)')}
+                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-(--color-primary)' : 'bg-(--color-ink-muted)')}
                     title="Bientôt disponible"
                   />
                 )}

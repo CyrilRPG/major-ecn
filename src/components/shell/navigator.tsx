@@ -8,27 +8,20 @@ import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 
-function ProgressDot({ value }: { value: number }) {
+function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   const v = Math.min(100, Math.max(0, value));
-  const r = 8;
-  const c = 2 * Math.PI * r;
+  const fill = active ? '#FFFFFF' : 'var(--color-accent)';
+  const track = active ? 'rgba(255,255,255,0.30)' : 'rgba(255,255,255,0.16)';
   return (
     <span className="flex shrink-0 items-center gap-1.5">
-      <span className="w-7 text-right text-[11px] font-medium tabular-nums text-white/55">{v}%</span>
-      <svg viewBox="0 0 22 22" className="h-5 w-5 -rotate-90" aria-hidden>
-        <circle cx="11" cy="11" r={r} fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="3" />
-        <circle
-          cx="11"
-          cy="11"
-          r={r}
-          fill="none"
-          stroke="#FB7193"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c - (c * v) / 100}
-        />
-      </svg>
+      <span className={active ? 'w-7 text-right text-[11px] font-semibold tabular-nums text-white' : 'w-7 text-right text-[11px] font-medium tabular-nums text-white/55'}>
+        {v}%
+      </span>
+      <span
+        className="h-4 w-4 shrink-0 rounded-full ring-1 ring-white/25"
+        style={{ background: `conic-gradient(${fill} ${v * 3.6}deg, ${track} 0)` }}
+        aria-hidden
+      />
     </span>
   );
 }
@@ -137,7 +130,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
                   )}
                 >
                   <span className="flex-1 truncate">{c.titre}</span>
-                  <ProgressDot value={c.progress} />
+                  <ProgressDot value={c.progress} active={c.id === activeCoursId} />
                 </Link>
               ))}
           </div>
