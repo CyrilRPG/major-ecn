@@ -19,7 +19,18 @@ export function Flashcard({
   total: number;
 }) {
   return (
-    <div className="flex w-full max-w-3xl flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted)">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onFlip}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onFlip();
+        }
+      }}
+      className="flex w-full max-w-3xl cursor-pointer flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted) transition-colors hover:border-(--color-primary)/40 focus-ring"
+    >
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-5">
         <span className="text-xs font-bold uppercase tracking-[0.16em] text-(--color-primary)">
@@ -51,7 +62,10 @@ export function Flashcard({
         </span>
         <button
           type="button"
-          onClick={onFlip}
+          onClick={(e) => {
+            e.stopPropagation();
+            onFlip();
+          }}
           className="inline-flex items-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-4 py-2 text-sm font-medium text-(--color-ink) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-ring"
         >
           <RefreshCw className="h-4 w-4" />
