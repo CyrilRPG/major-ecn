@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
+import { DIFFICULTY_SCORE, type Difficulty } from '@/types/domain';
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -57,10 +57,13 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     );
   }
 
-  // Only cards not yet mastered (score < threshold) enter the session.
-  const input = allCards
-    .map((c) => ({ id: c.id, recto: c.recto, verso: c.verso, score: scoreMap.get(c.id) ?? 0 }))
-    .filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD);
+  // Toutes les flashcards avec leur score cumulé (la session gère le filtrage).
+  const input = allCards.map((c) => ({
+    id: c.id,
+    recto: c.recto,
+    verso: c.verso,
+    score: scoreMap.get(c.id) ?? 0,
+  }));
 
   return (
     <FlashcardSession
