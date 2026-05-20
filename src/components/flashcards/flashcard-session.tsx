@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Flashcard } from './flashcard';
@@ -103,6 +103,11 @@ export function FlashcardSession({
   }, [card, flipped, onDifficulty]);
 
   if (!card) {
+    const restart = () => {
+      setQueue(cards.map((c) => ({ ...c, score: 0 })).sort((a, b) => a.score - b.score));
+      setMastered(total - cards.length);
+      setFlipped(false);
+    };
     return (
       <div className="mx-auto max-w-2xl px-6 py-20 text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-(--color-primary-soft) text-(--color-primary)">
@@ -114,9 +119,17 @@ export function FlashcardSession({
             ? 'Toutes les cartes ont atteint le score de maîtrise. Revenez plus tard pour les revoir.'
             : 'Aucune carte à réviser pour le moment.'}
         </p>
-        <Button asChild className="mt-6">
-          <Link href={backHref}>Retour à l’item</Link>
-        </Button>
+        <div className="mx-auto mt-6 flex w-full max-w-xs flex-col gap-2.5">
+          <Button asChild>
+            <Link href={backHref}>Retour à l’item</Link>
+          </Button>
+          {cards.length > 0 && (
+            <Button variant="outline" onClick={restart}>
+              <RotateCcw />
+              Recommencer les flashcards
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
