@@ -13,7 +13,7 @@ export default function LoginPage() {
 
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-12">
         <div className="inline-flex w-fit items-center rounded-xl bg-(--color-sidebar) px-3.5 py-2.5">
-          <BrandLogo className="h-[72px] w-auto" />
+          <BrandLogo className="h-12 w-auto" />
         </div>
 
         <div className="flex flex-1 items-center py-16">

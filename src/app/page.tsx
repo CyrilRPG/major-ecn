@@ -228,9 +228,9 @@ export default function LandingPage() {
 function Nav() {
   return (
     <header className="sticky top-0 z-30 surface-glass border-b border-(--color-border)">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 h-24 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 h-20 flex items-center justify-between">
         <div className="inline-flex items-center rounded-xl bg-(--color-sidebar) px-3 py-2">
-          <BrandLogo className="h-[72px] w-auto" />
+          <BrandLogo className="h-12 w-auto" />
         </div>
         <div className="hidden md:flex items-center gap-7 text-sm text-(--color-ink-soft)">
           <a href="#methode" className="hover:text-(--color-ink) transition">Méthode</a>
