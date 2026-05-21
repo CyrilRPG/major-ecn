@@ -28,7 +28,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         style={{ background: BG }}
       >
         <div className="flex h-20 items-center justify-center border-b border-white/10 px-4">
-          <BrandLogo className="h-14 w-auto" />
+          <BrandLogo className="h-16 w-auto" />
         </div>
         <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
           Administration
