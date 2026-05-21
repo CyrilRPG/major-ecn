@@ -85,8 +85,8 @@ export function AppShell({
 
   const sidebar = (
     <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
-      <div className="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
-        <BrandLogo className="h-9 w-auto" />
+      <div className="flex h-20 items-center gap-2.5 border-b border-white/10 px-4">
+        <BrandLogo className="h-[72px] w-auto" />
         <button
           type="button"
           onClick={() => setMobileOpen(false)}
