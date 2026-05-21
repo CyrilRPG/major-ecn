@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: 'Major ECN — Prépa EDN & EVC',
     description:
       "La prépa de référence aux EDN et EVC : cours en vidéo, dossiers progressifs, ECOS et coaching pour D2, D3, D4 et PAE.",
-    images: ['/major-ecn-logo.svg'],
+    images: ['/major-ecn-logo.png'],
     type: 'website',
     locale: 'fr_FR',
   },

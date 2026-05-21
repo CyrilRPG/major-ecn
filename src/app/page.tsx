@@ -4,7 +4,7 @@ import {
   ShieldCheck, Stethoscope, Target, Users, Layers3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { BrandLogo, BrandMark } from '@/components/brand/brand-logo';
+import { BrandLogo } from '@/components/brand/brand-logo';
 
 const CONTACT = 'contact@major-ecn.fr';
 
@@ -229,9 +229,8 @@ function Nav() {
   return (
     <header className="sticky top-0 z-30 surface-glass border-b border-(--color-border)">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <BrandMark />
-          <BrandLogo />
+        <div className="inline-flex items-center rounded-xl bg-(--color-sidebar) px-3 py-2">
+          <BrandLogo className="h-9 w-auto" />
         </div>
         <div className="hidden md:flex items-center gap-7 text-sm text-(--color-ink-soft)">
           <a href="#methode" className="hover:text-(--color-ink) transition">Méthode</a>
@@ -250,8 +249,10 @@ function Footer() {
   return (
     <footer className="border-t border-(--color-border) mt-16 bg-(--color-surface)">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-(--color-ink-muted)">
-        <div className="flex items-center gap-2.5">
-          <BrandMark className="h-6 w-6" />
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center rounded-lg bg-(--color-sidebar) px-2.5 py-1.5">
+            <BrandLogo className="h-6 w-auto" />
+          </span>
           <span>Major ECN — Préparation EDN &amp; EVC · Paris &amp; en ligne</span>
         </div>
         <div className="flex items-center gap-5">

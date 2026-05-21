@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight, X } from 'lucide-react';
-import { BrandMark } from '@/components/brand/brand-logo';
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { Navigator } from './navigator';
 import { TopBar } from './top-bar';
 import { CommandPalette } from './command-palette';
@@ -86,10 +86,7 @@ export function AppShell({
   const sidebar = (
     <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
       <div className="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
-        <BrandMark className="h-7 w-7 ring-1 ring-white/20" />
-        <span className="text-base font-semibold uppercase tracking-[0.12em]">
-          Major<span className="text-(--color-accent)"> ECN</span>
-        </span>
+        <BrandLogo className="h-9 w-auto" />
         <button
           type="button"
           onClick={() => setMobileOpen(false)}

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { LoginForm } from './login-form';
-import { BrandMark } from '@/components/brand/brand-logo';
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata = { title: 'Se connecter' };
@@ -12,11 +12,8 @@ export default function LoginPage() {
       <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-(--color-primary)" />
 
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-12">
-        <div className="flex items-center gap-2.5">
-          <BrandMark className="h-9 w-9" />
-          <span className="text-lg font-semibold uppercase tracking-[0.14em]">
-            Major<span className="text-(--color-primary)"> ECN</span>
-          </span>
+        <div className="inline-flex w-fit items-center rounded-xl bg-(--color-sidebar) px-3.5 py-2.5">
+          <BrandLogo className="h-9 w-auto" />
         </div>
 
         <div className="flex flex-1 items-center py-16">
