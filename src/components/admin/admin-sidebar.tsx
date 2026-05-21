@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BarChart3, GraduationCap, Library, Users } from 'lucide-react';
-import { BrandMark } from '@/components/brand/brand-logo';
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
@@ -27,11 +27,8 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         className="hidden w-60 shrink-0 flex-col text-white lg:flex"
         style={{ background: BG }}
       >
-        <div className="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
-          <BrandMark className="h-7 w-7 ring-1 ring-white/20" />
-          <span className="text-base font-semibold uppercase tracking-[0.12em]">
-            Major<span className="text-(--color-accent)"> ECN</span>
-          </span>
+        <div className="flex h-14 items-center border-b border-white/10 px-4">
+          <BrandLogo className="h-9 w-auto" />
         </div>
         <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
           Administration
@@ -72,7 +69,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         className="sticky top-0 z-30 flex items-center gap-3 px-4 py-2.5 text-white lg:hidden"
         style={{ background: BG }}
       >
-        <BrandMark className="h-7 w-7 ring-1 ring-white/20" />
+        <BrandLogo className="h-8 w-auto shrink-0" />
         <nav className="flex flex-1 gap-1 overflow-x-auto">
           {items.map((it) => (
             <Link
