@@ -27,8 +27,8 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         className="hidden w-60 shrink-0 flex-col text-white lg:flex"
         style={{ background: BG }}
       >
-        <div className="flex h-20 items-center border-b border-white/10 px-4">
-          <BrandLogo className="h-[72px] w-auto" />
+        <div className="flex h-20 items-center justify-center border-b border-white/10 px-4">
+          <BrandLogo className="h-14 w-auto" />
         </div>
         <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
           Administration
@@ -69,7 +69,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         className="sticky top-0 z-30 flex items-center gap-3 px-4 py-2.5 text-white lg:hidden"
         style={{ background: BG }}
       >
-        <BrandLogo className="h-16 w-auto shrink-0" />
+        <BrandLogo className="h-10 w-auto shrink-0" />
         <nav className="flex flex-1 gap-1 overflow-x-auto">
           {items.map((it) => (
             <Link

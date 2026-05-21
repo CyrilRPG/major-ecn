@@ -85,13 +85,13 @@ export function AppShell({
 
   const sidebar = (
     <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
-      <div className="flex h-20 items-center gap-2.5 border-b border-white/10 px-4">
-        <BrandLogo className="h-[72px] w-auto" />
+      <div className="relative flex h-20 items-center justify-center border-b border-white/10 px-4">
+        <BrandLogo className="h-14 w-auto" />
         <button
           type="button"
           onClick={() => setMobileOpen(false)}
           aria-label="Fermer"
-          className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 lg:hidden"
+          className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 lg:hidden"
         >
           <X className="h-4 w-4" />
         </button>
