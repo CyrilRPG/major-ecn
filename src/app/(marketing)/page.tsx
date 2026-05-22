@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  ArrowRight, CalendarDays, GraduationCap, HeartHandshake, LineChart,
-  LogIn, Quote, Sparkles, Star, Target, Users,
+  ArrowRight, ArrowUpRight, CalendarDays, ClipboardCheck, GraduationCap,
+  HeartHandshake, LineChart, LogIn, Quote, Sparkles, Star, Target, Users,
 } from 'lucide-react';
 
 export const metadata = {
@@ -12,23 +12,34 @@ export const metadata = {
 };
 
 const IMG = {
-  hero: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?q=80&w=1600&auto=format&fit=crop',
+  hero: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?q=80&w=1400&auto=format&fit=crop',
   reform: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop',
 };
 
-const FORMULES = [
-  { code: 'D2', titre: 'Formule D2', desc: 'DFASM1 — pose des bases méthodologiques solides dès la première année du 2e cycle.' },
-  { code: 'D3', titre: 'Formule D3', desc: 'DFASM2 — l’année décisive : formules First et Premium, en petits groupes ou sur-mesure.' },
-  { code: 'DT', titre: 'EDN — Dernier Tour', desc: 'Préparation intensive de fin de parcours pour arriver au pic de forme le jour J.' },
-  { code: 'ECOS', titre: 'Formule ECOS', desc: 'Stations simulées et coaching par des enseignants ayant noté les ECOS nationaux.' },
+const SPECIALITES = [
+  'Cardiologie', 'Radiologie', 'Pédiatrie', 'Neurologie',
+  'Ophtalmologie', 'Chirurgie', 'Gynécologie', 'Psychiatrie',
 ];
 
 const RAISONS = [
-  { Icon: GraduationCap, titre: 'Nos enseignants', desc: 'Des médecins et spécialistes en lien avec le métier, disponibles tous les jours.' },
-  { Icon: Users, titre: 'Petits groupes', desc: 'Apprentissage facilité et personnalisé — 5 élèves en moyenne.' },
-  { Icon: Target, titre: 'Coaching personnalisé', desc: 'Conseils d’organisation et de stratégie pour maintenir la motivation.' },
-  { Icon: LineChart, titre: 'Suivi sur-mesure', desc: 'Rythme de travail adapté, soutien moral et gestion du stress.' },
-  { Icon: HeartHandshake, titre: 'Formule sur-mesure', desc: 'Un savoir-faire fondé sur une solide expérience des concours médicaux.' },
+  { Icon: GraduationCap, titre: 'Enseignants experts', desc: 'Des médecins et spécialistes en lien direct avec le métier, sélectionnés parmi les meilleurs classés à l’EDN.' },
+  { Icon: Users, titre: 'Petits groupes', desc: 'Un apprentissage facilité et personnalisé — 5 élèves en moyenne par groupe.' },
+  { Icon: Target, titre: 'Coaching personnalisé', desc: 'Des conseils d’organisation et de stratégie pour maintenir la motivation jusqu’au jour J.' },
+  { Icon: LineChart, titre: 'Suivi sur-mesure', desc: 'Un rythme de travail adapté, un soutien moral et une gestion du stress au quotidien.' },
+  { Icon: HeartHandshake, titre: 'Formule sur-mesure', desc: 'Un savoir-faire fondé sur plus de 15 ans d’expérience des concours médicaux.' },
+];
+
+const FORMULES = [
+  { code: 'D2', titre: 'Formule D2', desc: 'DFASM1 — posez des bases méthodologiques solides dès l’entrée dans le 2e cycle.' },
+  { code: 'D3', titre: 'Formule D3', desc: 'DFASM2 — l’année décisive : formules First et Premium, en petits groupes ou sur-mesure.' },
+  { code: 'DT', titre: 'EDN — Dernier Tour', desc: 'Une révision intensive de fin de parcours pour arriver au pic de forme le jour J.' },
+  { code: 'ECOS', titre: 'Formule ECOS', desc: 'Stations simulées et coaching par des enseignants ayant noté les ECOS nationaux.' },
+];
+
+const METHODE = [
+  { n: '01', t: 'Bilan & objectifs', d: 'Nous évaluons votre niveau, vos points faibles et la spécialité visée pour bâtir un plan de travail sur-mesure.' },
+  { n: '02', t: 'Cours & méthodologie', d: 'Cours en petits groupes ou en individuel : méthodologie DP, QI, LCA et ECOS, fiches de révision ciblées.' },
+  { n: '03', t: 'Entraînement & coaching', d: 'Tests réguliers, examens blancs, suivi de progression et soutien moral jusqu’au jour du concours.' },
 ];
 
 const TEMOIGNAGES = [
@@ -47,75 +58,158 @@ const EDN_DATES = [
 export default function HomePage() {
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-(--color-sidebar) text-white">
-        <Image
-          src={IMG.hero}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-(--color-sidebar) via-(--color-sidebar)/85 to-(--color-sidebar)/55" />
-        <div className="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/80">
-            <Sparkles className="h-3.5 w-3.5 text-(--color-accent)" />
-            Prépa de référence aux EDN &amp; EVC — depuis plus de 15 ans
-          </span>
-          <h1 className="mt-6 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-            Votre prépa EDN de médecine{' '}
-            <span className="italic text-(--color-accent)">d’excellence</span>.
-          </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-            La réussite aux Épreuves Dématérialisées Nationales est une étape cruciale.
-            Grâce à une méthodologie éprouvée et des outils innovants, Major ECN vous donne
-            toutes les clés pour exceller — à Paris et en ligne.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/inscription"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-7 py-4 text-base font-semibold text-white shadow-(--shadow-lifted) transition-transform hover:scale-[1.03]"
-            >
-              Inscrivez-vous maintenant
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-7 py-4 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
-            >
-              <LogIn className="h-5 w-5" />
-              Se connecter à mon espace
-            </Link>
+      {/* ============ HERO ============ */}
+      <section className="hero-navy relative isolate overflow-hidden text-white">
+        <div aria-hidden className="hero-grid absolute inset-0 -z-10" />
+        <div aria-hidden className="absolute -left-32 top-1/3 -z-10 h-80 w-80 rounded-full bg-(--color-primary)/20 blur-[120px]" />
+
+        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:pb-24 lg:pt-24">
+          {/* LEFT — content */}
+          <div className="animate-rise">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.06] py-1.5 pl-3 pr-4 backdrop-blur">
+              <span className="flex items-center gap-0.5 text-(--color-accent)">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                ))}
+              </span>
+              <span className="text-xs font-medium text-white/75">
+                Recommandé par les lauréats EDN &amp; EVC
+              </span>
+            </div>
+
+            <h1 className="mt-7 font-display text-4xl leading-[1.04] tracking-tight sm:text-5xl lg:text-[3.65rem]">
+              Votre prépa EDN de médecine{' '}
+              <span className="relative inline-block whitespace-nowrap italic text-(--color-accent)">
+                d’excellence
+                <svg
+                  aria-hidden
+                  viewBox="0 0 240 14"
+                  className="absolute -bottom-1.5 left-0 h-3 w-full"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M3 8.5C48 3.5 150 2.5 237 6.5"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+              .
+            </h1>
+
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+              La réussite aux Épreuves Dématérialisées Nationales est une étape cruciale.
+              Méthodologie éprouvée, enseignants experts et coaching personnalisé —
+              pour exceller à votre rythme, à Paris comme en ligne.
+            </p>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row" style={{ animationDelay: '90ms' }}>
+              <Link
+                href="/inscription"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-7 py-4 text-base font-semibold text-white shadow-(--shadow-lifted) transition-transform hover:scale-[1.025]"
+              >
+                Inscrivez-vous maintenant
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/18 bg-white/[0.06] px-7 py-4 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/15"
+              >
+                <LogIn className="h-5 w-5" />
+                Se connecter à mon espace
+              </Link>
+            </div>
+
+            <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-5 border-t border-white/10 pt-7">
+              {[
+                { v: '15 ans', l: 'd’expérience EVC / PAE' },
+                { v: '≈ 5', l: 'élèves par groupe' },
+                { v: '96 %', l: 'obtiennent leur spécialité' },
+              ].map((s) => (
+                <div key={s.l}>
+                  <dt className="font-display text-2xl tracking-tight text-white sm:text-3xl">{s.v}</dt>
+                  <dd className="mt-0.5 text-xs text-white/50">{s.l}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <dl className="mt-14 grid max-w-2xl grid-cols-3 gap-6">
-            {[
-              { v: '15 ans', l: 'd’expérience EVC / PAE' },
-              { v: '≈ 5', l: 'élèves par groupe' },
-              { v: 'Paris + ligne', l: 'présentiel ou à distance' },
-            ].map((s) => (
-              <div key={s.l}>
-                <dt className="font-display text-2xl text-white sm:text-3xl">{s.v}</dt>
-                <dd className="mt-1 text-xs text-white/55">{s.l}</dd>
+
+          {/* RIGHT — image composition */}
+          <div className="relative animate-rise" style={{ animationDelay: '140ms' }}>
+            <div aria-hidden className="absolute -right-6 -top-6 -z-10 h-44 w-44 rounded-full bg-(--color-primary)/25 blur-3xl" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] ring-1 ring-white/12 shadow-[0_40px_80px_-24px_rgba(0,0,0,0.6)]">
+              <Image
+                src={IMG.hero}
+                alt="Étudiants en médecine en préparation aux EDN"
+                fill
+                priority
+                sizes="(max-width:1024px) 100vw, 45vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-(--color-sidebar)/55 via-transparent to-transparent" />
+            </div>
+
+            {/* floating credibility card */}
+            <div className="absolute -bottom-7 -left-5 hidden items-center gap-3.5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-lifted) sm:flex">
+              <svg viewBox="0 0 64 64" className="h-14 w-14 -rotate-90">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--color-primary-soft)" strokeWidth="9" />
+                <circle
+                  cx="32" cy="32" r="26" fill="none" stroke="var(--color-primary)" strokeWidth="9"
+                  strokeLinecap="round" strokeDasharray="163.4" strokeDashoffset="6.5"
+                />
+              </svg>
+              <div>
+                <p className="font-display text-xl tracking-tight text-(--color-ink)">96 %</p>
+                <p className="max-w-[9rem] text-xs leading-snug text-(--color-ink-soft)">
+                  obtiennent la spécialité de leur choix
+                </p>
               </div>
+            </div>
+
+            {/* floating session chip */}
+            <div className="absolute -right-4 top-7 hidden items-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface) px-3.5 py-2.5 shadow-(--shadow-lifted) sm:flex">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
+                <CalendarDays className="h-4 w-4" />
+              </span>
+              <div className="leading-tight">
+                <p className="text-[11px] font-medium text-(--color-ink-muted)">Session EDN</p>
+                <p className="text-xs font-semibold text-(--color-ink)">20–23 oct. 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* specialties strip */}
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-7 gap-y-2 px-5 py-5 lg:px-8">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent)">
+              Toutes les spécialités
+            </span>
+            {SPECIALITES.map((s) => (
+              <span key={s} className="text-sm text-white/45">{s}</span>
             ))}
-          </dl>
+          </div>
         </div>
       </section>
 
-      {/* 5 RAISONS */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="mb-10 max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Pourquoi Major ECN</p>
+      {/* ============ POURQUOI ============ */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+        <div className="mb-11 max-w-2xl">
+          <p className="eyebrow">Pourquoi Major ECN</p>
           <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
-            Les 5 bonnes raisons de nous choisir
+            Les bonnes raisons de nous choisir
           </h2>
+          <p className="mt-3 text-base leading-relaxed text-(--color-ink-soft)">
+            Un accompagnement humain et exigeant, pensé pour transformer vos efforts en résultats.
+          </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {RAISONS.map((r) => (
             <div
               key={r.titre}
-              className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-1 hover:shadow-(--shadow-lifted)"
+              className="card-lift rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) hover:border-(--color-border-strong) hover:shadow-(--shadow-lifted)"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
                 <r.Icon className="h-6 w-6" />
@@ -124,28 +218,39 @@ export default function HomePage() {
               <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{r.desc}</p>
             </div>
           ))}
-          <div className="flex flex-col justify-center rounded-2xl bg-(--color-primary) p-6 text-white">
-            <p className="font-display text-xl">Votre spécialité, notre priorité.</p>
-            <p className="mt-2 text-sm text-white/80">À vos côtés pour réussir dans les meilleures conditions.</p>
-            <Link href="/inscription" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
-              Découvrir nos formules <ArrowRight className="h-4 w-4" />
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-(--color-sidebar) p-6 text-white">
+            <div aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-(--color-primary)/30 blur-2xl" />
+            <div className="relative">
+              <Sparkles className="h-6 w-6 text-(--color-accent)" />
+              <p className="mt-4 font-display text-xl tracking-tight">Votre spécialité, notre priorité.</p>
+              <p className="mt-2 text-sm text-white/65">
+                À vos côtés pour réussir dans les meilleures conditions.
+              </p>
+            </div>
+            <Link href="/formules" className="relative mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+              Découvrir nos formules
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* FORMULES */}
-      <section className="bg-(--color-surface-soft) py-20">
+      {/* ============ FORMULES ============ */}
+      <section className="border-y border-(--color-border) bg-(--color-surface-soft) py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-11 flex flex-wrap items-end justify-between gap-5">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Nos formules</p>
+              <p className="eyebrow">Nos formules</p>
               <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
                 Un accompagnement pour chaque étape
               </h2>
             </div>
-            <Link href="/formules" className="inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
-              Toutes les formules <ArrowRight className="h-4 w-4" />
+            <Link
+              href="/formules"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border-strong) bg-(--color-surface) px-4 py-2.5 text-sm font-semibold text-(--color-ink) transition-colors hover:border-(--color-primary)"
+            >
+              Toutes les formules
+              <ArrowRight className="h-4 w-4 text-(--color-primary)" />
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -153,16 +258,16 @@ export default function HomePage() {
               <Link
                 key={f.code}
                 href="/formules"
-                className="group flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-1 hover:border-(--color-accent) hover:shadow-(--shadow-lifted)"
+                className="card-lift group flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) hover:border-(--color-primary) hover:shadow-(--shadow-lifted)"
               >
                 <span className="inline-flex w-fit rounded-lg bg-(--color-primary-soft) px-3 py-1 font-display text-sm font-semibold text-(--color-primary-deep)">
                   {f.code}
                 </span>
                 <h3 className="mt-4 text-lg font-semibold text-(--color-ink)">{f.titre}</h3>
                 <p className="mt-1.5 flex-1 text-sm leading-relaxed text-(--color-ink-soft)">{f.desc}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-accent-deep)">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
                   Voir le programme
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </Link>
             ))}
@@ -170,14 +275,43 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* RÉFORME / EN SAVOIR PLUS */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-(--color-sidebar)">
-            <Image src={IMG.reform} alt="Préparation aux EDN" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
+      {/* ============ MÉTHODE ============ */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+        <div className="mb-11 max-w-2xl">
+          <p className="eyebrow">Notre méthode</p>
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
+            Une préparation structurée, du bilan au jour J
+          </h2>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {METHODE.map((m, i) => (
+            <div
+              key={m.n}
+              className="relative rounded-2xl border border-(--color-border) bg-(--color-surface) p-7 shadow-(--shadow-soft)"
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="font-display text-4xl tracking-tight text-(--color-primary-soft)">{m.n}</span>
+                {i < METHODE.length - 1 && (
+                  <ArrowRight className="h-5 w-5 text-(--color-border-strong)" />
+                )}
+              </div>
+              <h3 className="mt-3 text-lg font-semibold text-(--color-ink)">{m.t}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{m.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ============ RÉFORME EDN 2026 ============ */}
+      <section className="border-y border-(--color-border) bg-(--color-surface-soft) py-20 lg:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
+          <div className="relative">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-(--color-sidebar) shadow-(--shadow-lifted)">
+              <Image src={IMG.reform} alt="Préparation aux EDN" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
+            </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">EDN 2026</p>
+            <p className="eyebrow">EDN 2026</p>
             <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
               Comprendre la réforme, anticiper l’examen
             </h2>
@@ -185,7 +319,7 @@ export default function HomePage() {
               Les Épreuves Dématérialisées Nationales regroupent, pour la première session,
               quatre épreuves de trois heures. La première session aura lieu du 20 au 23 octobre 2026.
             </p>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-6 space-y-2.5">
               {EDN_DATES.map((d) => (
                 <li key={d.t} className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-3">
                   <CalendarDays className="h-4 w-4 shrink-0 text-(--color-primary)" />
@@ -195,46 +329,58 @@ export default function HomePage() {
               ))}
             </ul>
             <Link href="/en-savoir-plus" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
-              Tout savoir sur les EDN &amp; ECOS <ArrowRight className="h-4 w-4" />
+              Tout savoir sur les EDN &amp; ECOS
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* TÉMOIGNAGES */}
-      <section className="bg-(--color-surface-soft) py-20">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mb-10 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Vos témoignages</p>
+      {/* ============ TÉMOIGNAGES ============ */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
+        <div className="mb-11 flex flex-wrap items-end justify-between gap-5">
+          <div className="max-w-2xl">
+            <p className="eyebrow">Vos témoignages</p>
             <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
               Ils sont venus chez Major ECN, ils en parlent
             </h2>
           </div>
-          <div className="grid gap-4 lg:grid-cols-3">
-            {TEMOIGNAGES.map((t) => (
-              <figure key={t.nom} className="flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft)">
-                <Quote className="h-7 w-7 text-(--color-accent)" />
-                <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-(--color-ink)">{t.texte}</blockquote>
-                <div className="mt-5 flex items-center gap-1 text-(--color-accent)">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
-                </div>
-                <figcaption className="mt-3 border-t border-(--color-border) pt-3">
-                  <p className="text-sm font-semibold text-(--color-ink)">{t.nom}</p>
-                  <p className="text-xs text-(--color-ink-muted)">{t.role}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <Link href="/temoignages" className="inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
+            Tous les témoignages
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {TEMOIGNAGES.map((t) => (
+            <figure
+              key={t.nom}
+              className="card-lift flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) hover:shadow-(--shadow-lifted)"
+            >
+              <Quote className="h-7 w-7 text-(--color-accent)" />
+              <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-(--color-ink)">{t.texte}</blockquote>
+              <div className="mt-5 flex items-center gap-1 text-(--color-accent)">
+                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
+              </div>
+              <figcaption className="mt-3 border-t border-(--color-border) pt-3">
+                <p className="text-sm font-semibold text-(--color-ink)">{t.nom}</p>
+                <p className="text-xs text-(--color-ink-muted)">{t.role}</p>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
-      {/* RÉDUCTION IMPÔTS + CTA */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="overflow-hidden rounded-3xl bg-(--color-primary) text-white">
-          <div className="grid gap-8 p-9 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-12">
+      {/* ============ CTA RÉDUCTION IMPÔTS ============ */}
+      <section className="mx-auto max-w-7xl px-5 pb-24 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl bg-(--color-primary) text-white">
+          <div aria-hidden className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
+          <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-black/10 blur-2xl" />
+          <div className="relative grid gap-8 p-9 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-12">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Avantage fiscal</p>
-              <h2 className="mt-3 font-display text-3xl tracking-tight sm:text-4xl">
+              <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
+                <ClipboardCheck className="h-3.5 w-3.5" /> Avantage fiscal
+              </p>
+              <h2 className="mt-4 font-display text-3xl tracking-tight sm:text-4xl">
                 Jusqu’à 50 % de réduction d’impôts
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80">

@@ -22,6 +22,7 @@ export function MarketingFooter() {
             <li><Link href="/enseignants" className="hover:text-white">Nos enseignants</Link></li>
             <li><Link href="/qui-sommes-nous" className="hover:text-white">Qui sommes-nous</Link></li>
             <li><Link href="/en-savoir-plus" className="hover:text-white">En savoir plus</Link></li>
+            <li><Link href="/temoignages" className="hover:text-white">Témoignages</Link></li>
             <li><Link href="/inscription" className="hover:text-white">Inscription</Link></li>
           </ul>
         </div>

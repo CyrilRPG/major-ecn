@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen, Check, Clock, Crown, Layers, Stethoscope, Target 
 
 export const metadata = {
   title: 'Formules',
-  description: 'Formules D2, D3 (First & Premium), EDN Dernier Tour et ECOS — un accompagnement sur-mesure pour chaque étape du 2e cycle.',
+  description: 'Formules D2, D3 (First & Premium), EDN Dernier Tour, ECOS et EVC / PAE — un accompagnement sur-mesure pour chaque étape du 2e cycle.',
 };
 
 const FORMULES = [
@@ -76,28 +76,48 @@ const FORMULES = [
   },
 ];
 
+const TARIFS = [
+  { t: 'Frais d’inscription', v: '95 €', d: 'avant réduction d’impôt' },
+  { t: 'Cours particuliers', v: 'dès 25 €/h', d: 'selon niveau, lieu et volume' },
+  { t: 'Cours en groupe', v: '8 élèves max', d: 'formation sur 9 mois' },
+  { t: 'Avantage fiscal', v: '50 %', d: 'réduction ou crédit d’impôt' },
+];
+
 export default function FormulesPage() {
   return (
     <>
-      <section className="border-b border-(--color-border) bg-(--color-surface-soft)">
+      {/* HERO */}
+      <section className="hero-navy relative isolate overflow-hidden text-white">
+        <div aria-hidden className="hero-grid absolute inset-0 -z-10" />
         <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Nos formules</p>
-          <h1 className="mt-3 max-w-3xl font-display text-4xl tracking-tight text-(--color-ink) sm:text-5xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-accent)">Nos formules</p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.06] tracking-tight sm:text-5xl">
             Une formule adaptée à chaque étape de votre préparation
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-(--color-ink-soft)">
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65">
             De la D2 au Dernier Tour, en passant par les ECOS et les concours EVC / PAE,
             Major ECN conçoit des parcours personnalisés — en présentiel à Paris ou en ligne.
           </p>
+          <div className="mt-7 flex flex-wrap gap-2">
+            {FORMULES.map((f) => (
+              <span
+                key={f.code}
+                className="rounded-full border border-white/12 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/75 backdrop-blur"
+              >
+                {f.code}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      {/* FORMULES */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24">
         <div className="grid gap-6 lg:grid-cols-2">
           {FORMULES.map((f) => (
             <article
               key={f.code}
-              className="flex flex-col rounded-3xl border border-(--color-border) bg-(--color-surface) p-7 shadow-(--shadow-soft)"
+              className="card-lift flex flex-col rounded-3xl border border-(--color-border) bg-(--color-surface) p-7 shadow-(--shadow-soft) hover:border-(--color-border-strong) hover:shadow-(--shadow-lifted)"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary) text-white">
@@ -119,43 +139,39 @@ export default function FormulesPage() {
               </ul>
               <Link
                 href="/inscription"
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
+                className="group mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
               >
                 S’inscrire à cette formule
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </article>
           ))}
         </div>
 
         {/* Tarifs & financement */}
-        <div className="mt-10 rounded-3xl border border-(--color-border) bg-(--color-surface-soft) p-7 lg:p-9">
+        <div className="mt-12 overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface-soft) p-7 lg:p-9">
           <div className="flex items-center gap-2 text-(--color-primary)">
             <Clock className="h-5 w-5" />
             <h2 className="font-display text-2xl tracking-tight text-(--color-ink)">Tarifs &amp; financement</h2>
           </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { t: 'Frais d’inscription', v: '95 €', d: 'avant réduction d’impôt' },
-              { t: 'Cours particuliers', v: 'dès 25 €/h', d: 'selon niveau, lieu et volume' },
-              { t: 'Cours en groupe', v: '8 élèves max', d: 'formation sur 9 mois' },
-              { t: 'Avantage fiscal', v: '50 %', d: 'réduction ou crédit d’impôt' },
-            ].map((x) => (
-              <div key={x.t} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {TARIFS.map((x) => (
+              <div key={x.t} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5">
                 <p className="text-xs font-medium uppercase tracking-wide text-(--color-ink-muted)">{x.t}</p>
-                <p className="mt-1 font-display text-2xl text-(--color-primary)">{x.v}</p>
+                <p className="mt-1.5 font-display text-2xl tracking-tight text-(--color-primary)">{x.v}</p>
                 <p className="mt-0.5 text-xs text-(--color-ink-soft)">{x.d}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs leading-relaxed text-(--color-ink-muted)">
+          <p className="mt-5 text-xs leading-relaxed text-(--color-ink-muted)">
             Au titre de l’emploi d’un salarié à domicile (article 199 sexdecies du CGI), vous
             bénéficiez de 50 % de réduction d’impôt si vous êtes imposable, ou de 50 % de crédit
             d’impôt si vous ne l’êtes pas — sur les heures de cours et les frais d’inscription.
             Paiement en plusieurs fois possible.
           </p>
           <Link href="/contact" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
-            Demander un programme et un devis détaillés <ArrowRight className="h-4 w-4" />
+            Demander un programme et un devis détaillés
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>

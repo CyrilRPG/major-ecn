@@ -141,6 +141,10 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
   min-height: 100vh;
@@ -258,6 +262,39 @@ body::after {
   }
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
+
+  /* Entrance animation — staggered via inline animation-delay */
+  .animate-rise {
+    animation: float-up 0.8s var(--easing-soft) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rise { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* Layered navy background for marketing heroes */
+  .hero-navy {
+    background-color: var(--color-sidebar);
+    background-image:
+      radial-gradient(ellipse 55% 45% at 12% -5%, color-mix(in srgb, var(--color-primary) 26%, transparent), transparent 72%),
+      radial-gradient(ellipse 50% 55% at 102% 105%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 66%);
+  }
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 54px 54px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 28% 28%, black, transparent 78%);
+            mask-image: radial-gradient(ellipse 75% 65% at 28% 28%, black, transparent 78%);
+  }
+
+  /* Marketing card with refined lift on hover */
+  .card-lift {
+    transition: transform 280ms var(--easing-soft), box-shadow 280ms var(--easing-soft), border-color 280ms var(--easing-soft);
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+  }
 
   .grad-border {
     position: relative;
