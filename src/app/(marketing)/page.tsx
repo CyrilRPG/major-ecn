@@ -1,9 +1,10 @@
 import {
   ArrowRight, BookOpen, Brain, Check, CheckCircle2, ChevronRight,
-  ClipboardCheck, Globe, GraduationCap, Heart, LineChart, MailCheck,
+  ClipboardCheck, Globe, GraduationCap, Heart, LineChart,
   Quote, Shield, Sparkles, Star, Target, TrendingUp, Users, Zap,
 } from 'lucide-react';
 import { Reveal } from '@/components/marketing/reveal';
+import { InscriptionForm } from '@/components/marketing/inscription-form';
 
 export const metadata = {
   title: 'Major ECN — Préparez les EVC avec excellence',
@@ -547,50 +548,7 @@ export default function HomePage() {
               Accès immédiat à la plateforme, 7 jours d’essai gratuit, sans engagement.
             </p>
 
-            <form
-              action={`mailto:${CONTACT}?subject=Inscription%20Major%20ECN`}
-              method="post"
-              encType="text/plain"
-              className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2"
-            >
-              <FormField label="Prénom" name="prenom" />
-              <FormField label="Nom" name="nom" />
-              <FormField label="Email" name="email" type="email" className="sm:col-span-2" />
-              <FormField label="Téléphone" name="telephone" type="tel" />
-              <FormField label="Promo (ex. 2026)" name="promo" />
-              <div className="sm:col-span-2 space-y-1.5">
-                <label htmlFor="formule" className="text-xs font-semibold text-(--color-ink)">Formule souhaitée</label>
-                <select
-                  id="formule"
-                  name="formule"
-                  required
-                  defaultValue="Essentiel"
-                  className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-                >
-                  <option value="Essentiel">Essentiel — 49 €/mois · accès immédiat</option>
-                  <option value="Premium">Premium — 89 €/mois · accès immédiat</option>
-                  <option value="Intensif">Intensif — 149 €/mois · rappel par l’équipe</option>
-                </select>
-              </div>
-              <div className="sm:col-span-2 space-y-1.5">
-                <label htmlFor="colleges" className="text-xs font-semibold text-(--color-ink)">
-                  Collèges visés <span className="font-normal text-(--color-ink-muted)">(laisser vide si tous)</span>
-                </label>
-                <input
-                  id="colleges"
-                  name="colleges"
-                  placeholder="ex. Cardiologie, Pédiatrie — ou laisser vide pour tous"
-                  className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-                />
-              </div>
-              <button
-                type="submit"
-                className="sm:col-span-2 mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-(--color-primary)/25 transition-transform hover:scale-[1.02]"
-              >
-                <MailCheck className="h-4 w-4" />
-                Envoyer ma demande d’inscription
-              </button>
-            </form>
+            <InscriptionForm />
 
             <p className="mt-4 text-xs text-(--color-ink-muted)">
               ✓ Essai gratuit 7 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
@@ -617,24 +575,6 @@ export default function HomePage() {
         </div>
       </section>
     </>
-  );
-}
-
-/* ============ Form field helper ============ */
-function FormField({
-  label, name, type = 'text', className = '',
-}: { label: string; name: string; type?: string; className?: string }) {
-  return (
-    <div className={'space-y-1.5 ' + className}>
-      <label htmlFor={name} className="text-xs font-semibold text-(--color-ink)">{label}</label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={type === 'email' || name === 'prenom' || name === 'nom'}
-        className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-      />
-    </div>
   );
 }
 
