@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight, Award, Brain, BookOpen, CalendarDays, CheckCircle2, ClipboardCheck,
-  Compass, Globe, GraduationCap, Heart, LineChart, Layers3, MessagesSquare, Quote,
-  ShieldCheck, Sparkles, Target, TrendingUp, Users, Zap,
+  ArrowRight, Award, Brain, BookOpen, CalendarDays, ChevronLeft, ChevronRight,
+  CheckCircle2, ClipboardCheck, Compass, Globe, GraduationCap, Heart, Layers3,
+  LineChart, MessagesSquare, Quote, ShieldCheck, Sparkles, Target, TrendingUp,
+  Users, Zap,
 } from 'lucide-react';
 
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
@@ -97,17 +99,50 @@ export function MethodeSection() {
 }
 
 // ============================================================================
-// EXPÉRIENCE COMPLÈTE — captures réelles de la plateforme pédagogique
-// Flashcards + Assistant IA mis en avant en feature card large
+// EXPÉRIENCE COMPLÈTE — carousel d'images flottantes avec flèches & dots
 // ============================================================================
-const SCREENSHOTS = [
-  { src: '/cours.png',        Icon: BookOpen,       label: 'Page cours · vidéo, fiche, QCM, annales' },
-  { src: '/entrainement.png', Icon: Target,         label: 'Entraînement ciblé sur vos erreurs' },
-  { src: '/agenda.png',       Icon: CalendarDays,   label: 'Agenda hebdomadaire des sessions' },
-  { src: '/annales.png',      Icon: ClipboardCheck, label: 'Annales en conditions réelles' },
+const SLIDES = [
+  { src: '/flashcards-ia.png', Icon: Layers3,         title: 'Flashcards + Assistant IA',  caption: 'Système d’oubli intelligent + prof IA borné aux contenus du cours.' },
+  { src: '/accueil.png',       Icon: LineChart,       title: 'Dashboard accueil',          caption: 'Vos KPIs, votre progression et vos priorités d’un coup d’œil.' },
+  { src: '/cours.png',         Icon: BookOpen,        title: 'Page cours complète',        caption: 'Vidéo, fiche, QCM, annales — tout l’item dans un seul écran.' },
+  { src: '/entrainement.png',  Icon: Target,          title: 'Entraînement ciblé',         caption: 'L’IA priorise les QCM des collèges où vous échouez le plus.' },
+  { src: '/agenda.png',        Icon: CalendarDays,    title: 'Agenda hebdomadaire',        caption: 'Vos cours, créneaux Zoom et révisions sur 7 jours.' },
+  { src: '/annales.png',       Icon: ClipboardCheck,  title: 'Annales conditions réelles', caption: 'Mode entraînement chrono + corrigé détaillé après coup.' },
 ];
 
 export function ExperienceSection() {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState<1 | -1>(1);
+
+  // Auto-play toutes les 6 s — pause au hover.
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => {
+      setDir(1);
+      setIdx((i) => (i + 1) % SLIDES.length);
+    }, 6000);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  const go = (d: 1 | -1) => {
+    setDir(d);
+    setIdx((i) => (i + d + SLIDES.length) % SLIDES.length);
+  };
+  const goTo = (i: number) => {
+    setDir(i > idx ? 1 : -1);
+    setIdx(i);
+  };
+
+  const slide = SLIDES[idx];
+  const ActiveIcon = slide.Icon;
+
+  const slideVariants = {
+    enter:  (d: number) => ({ opacity: 0, x:  d * 120, scale: 0.9, rotate:  d * 2 }),
+    center: { opacity: 1, x: 0, scale: 1, rotate: 0 },
+    exit:   (d: number) => ({ opacity: 0, x: -d * 120, scale: 0.9, rotate: -d * 2 }),
+  };
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
       <motion.div
@@ -122,8 +157,14 @@ export function ExperienceSection() {
         animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.08, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
       />
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#6B1A2A]/15 via-[#8B2A3A]/8 to-transparent blur-3xl"
+        animate={{ opacity: [0.3, 0.55, 0.3], scale: [1, 1.05, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+      />
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -140,119 +181,140 @@ export function ExperienceSection() {
             <span className={'block ' + TRI}>complète.</span>
           </h2>
           <p className="mx-auto max-w-2xl text-base text-[#4A5568] sm:text-lg" style={{ fontFamily: MANROPE }}>
-            Dashboards réels. QCM adaptatifs. Progression visible. Suivi en temps réel — captures
-            issues de la plateforme.
+            Faites défiler — chaque écran de la plateforme, en taille réelle.
           </p>
         </motion.div>
 
-        {/* ⭐ Feature card — Flashcards + Assistant IA mis en avant++ */}
-        <motion.div
-          initial={{ opacity: 0, y: 60, scale: 0.95 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="relative mt-16"
+        {/* CAROUSEL FLOTTANT */}
+        <div
+          className="relative mt-16 sm:mt-20"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          <span
-            className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] px-5 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-lg sm:text-xs"
-            style={{ fontFamily: MANROPE }}
-          >
-            <Sparkles className="-mt-0.5 mr-1 inline h-3 w-3" />
-            Notre signature
-          </span>
-          <div className="overflow-hidden rounded-3xl border border-[#E8E7E3] bg-white shadow-[0_40px_100px_-30px_rgba(107,26,42,0.35)]">
-            <div className="grid items-stretch gap-0 lg:grid-cols-[1fr_1.2fr]">
-              <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-                <span
-                  className="inline-flex w-fit items-center gap-2 rounded-full bg-gradient-to-r from-[#F9F0F2] to-[#F0F9FB] px-3 py-1 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]"
-                  style={{ fontFamily: MANROPE }}
-                >
-                  <Layers3 className="h-3.5 w-3.5" />
-                  Flashcards + Assistant IA
-                </span>
-                <h3
-                  className="mt-4 text-3xl font-black leading-[1.05] sm:text-4xl lg:text-[2.6rem]"
-                  style={{ fontFamily: JAKARTA, letterSpacing: '-0.03em' }}
-                >
-                  <span className="block text-[#2D2D2D]">Apprenez plus vite,</span>
-                  <span className={'block ' + TRI}>avec un prof IA dédié.</span>
-                </h3>
-                <p
-                  className="mt-4 text-sm leading-relaxed text-[#4A5568] sm:text-base"
-                  style={{ fontFamily: MANROPE }}
-                >
-                  Flashcards à intervalle adaptatif (système de score, oublis programmés) avec un
-                  assistant IA <strong className="text-[#2D2D2D]">borné aux contenus du cours</strong> —
-                  il ne raconte rien hors-sujet et vous pouvez appeler un vrai professeur en un clic
-                  si la réponse ne suffit pas.
-                </p>
-                <ul className="mt-5 flex flex-col gap-2.5 text-sm" style={{ fontFamily: MANROPE }}>
-                  {[
-                    'Système d’oubli intelligent : +5 / +3 / -3 / -5 par carte',
-                    'Assistant IA conscient de la fiche, du QCM et des annales du cours',
-                    'Bouton « Appeler un professeur » après chaque réponse',
-                  ].map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-[#2D2D2D]">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#14B8A6]" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+          {/* Stage */}
+          <div className="relative mx-auto aspect-[16/9] w-full max-w-5xl overflow-visible">
+            <AnimatePresence initial={false} custom={dir} mode="popLayout">
               <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 1, delay: 0.2 }}
-                className="relative bg-[#FAFAF8] p-6 sm:p-8 lg:p-10"
+                key={idx}
+                custom={dir}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0"
               >
-                <div className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-2xl">
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                  className="relative h-full w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_40px_120px_-30px_rgba(107,26,42,0.45)] sm:rounded-3xl"
+                >
                   <Image
-                    src="/flashcards-ia.png"
-                    alt="Flashcards Major ECN avec l'assistant IA ouvert sur le côté"
-                    width={2400}
-                    height={1200}
-                    className="h-auto w-full"
+                    src={slide.src}
+                    alt={slide.title}
+                    fill
+                    sizes="(max-width:768px) 100vw, 1280px"
+                    className="object-cover object-top"
+                    priority={idx === 0}
                   />
-                </div>
+                  {/* Vignette gradient en bas pour lisibilité de la légende */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                  {/* Légende */}
+                  <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 p-5 sm:p-7">
+                    <div className="min-w-0 flex-1">
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A] backdrop-blur"
+                        style={{ fontFamily: MANROPE }}
+                      >
+                        <ActiveIcon className="h-3.5 w-3.5" />
+                        {slide.title}
+                      </span>
+                      <p
+                        className="mt-2 max-w-xl text-sm font-bold text-white drop-shadow-sm sm:text-base"
+                        style={{ fontFamily: JAKARTA }}
+                      >
+                        {slide.caption}
+                      </p>
+                    </div>
+                    <span
+                      className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-black text-[#2D2D2D] backdrop-blur"
+                      style={{ fontFamily: JAKARTA }}
+                    >
+                      {idx + 1} / {SLIDES.length}
+                    </span>
+                  </div>
+                </motion.div>
               </motion.div>
+            </AnimatePresence>
+
+            {/* Peek prev / next — petites tuiles à gauche / droite (desktop) */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -left-24 top-1/2 hidden h-[60%] w-44 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-50 shadow-2xl xl:block"
+              style={{ transform: 'translateY(-50%) rotate(-3deg)' }}
+            >
+              <Image
+                src={SLIDES[(idx - 1 + SLIDES.length) % SLIDES.length].src}
+                alt=""
+                fill
+                sizes="200px"
+                className="object-cover object-top"
+              />
+            </div>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 top-1/2 hidden h-[60%] w-44 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-50 shadow-2xl xl:block"
+              style={{ transform: 'translateY(-50%) rotate(3deg)' }}
+            >
+              <Image
+                src={SLIDES[(idx + 1) % SLIDES.length].src}
+                alt=""
+                fill
+                sizes="200px"
+                className="object-cover object-top"
+              />
             </div>
           </div>
-        </motion.div>
 
-        {/* Grille des 4 autres captures */}
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:gap-6">
-          {SCREENSHOTS.map((s, i) => (
-            <motion.figure
-              key={s.src}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="group overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-            >
-              <div className="relative overflow-hidden bg-[#FAFAF8]">
-                <Image
-                  src={s.src}
-                  alt={s.label}
-                  width={1920}
-                  height={1080}
-                  className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-              </div>
-              <figcaption className="flex items-center gap-2.5 border-t border-[#E8E7E3] px-5 py-4">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#6B1A2A] to-[#8B2A3A] text-white">
-                  <s.Icon className="h-4 w-4" />
-                </span>
-                <p className="text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{s.label}</p>
-              </figcaption>
-            </motion.figure>
-          ))}
+          {/* Flèches navigation */}
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label="Image précédente"
+            className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#E8E7E3] bg-white text-[#2D2D2D] shadow-2xl backdrop-blur transition-all hover:scale-110 hover:border-[#6B1A2A] hover:text-[#6B1A2A] sm:left-4 sm:h-14 sm:w-14 lg:-left-6"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label="Image suivante"
+            className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] text-white shadow-2xl transition-all hover:scale-110 hover:from-[#8B2A3A] hover:to-[#6B1A2A] sm:right-4 sm:h-14 sm:w-14 lg:-right-6"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+
+          {/* Dots */}
+          <div className="mt-8 flex items-center justify-center gap-2.5">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`Aller à l’image ${i + 1}`}
+                className={
+                  'h-2 rounded-full transition-all duration-300 ' +
+                  (i === idx
+                    ? 'w-10 bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6]'
+                    : 'w-2 bg-[#E8E7E3] hover:bg-[#6B1A2A]/40')
+                }
+              />
+            ))}
+          </div>
         </div>
 
         {/* Features highlight */}
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { Icon: Brain,      t: 'Apprentissage adaptatif', d: 'L’IA ajuste les QCM à votre niveau.' },
             { Icon: LineChart,  t: 'Analytics avancés',       d: 'Performance par spé, par thème.' },

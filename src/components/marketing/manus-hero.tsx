@@ -58,8 +58,8 @@ export function ManusHero() {
       />
 
       {/* === Content === */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12">
           {/* LEFT — copy */}
           <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -201,41 +201,42 @@ export function ManusHero() {
             </motion.p>
           </motion.div>
 
-          {/* RIGHT — vraie capture du dashboard /accueil avec badges flottants */}
+          {/* RIGHT — capture dashboard /accueil agrandie pour un hero qui tape */}
           <motion.div
             initial={{ opacity: 0, x: 80, scale: 0.94 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1.3, ease: 'easeOut', delay: 0.2 }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:block lg:-mr-12 xl:-mr-24"
           >
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_30px_80px_-20px_rgba(107,26,42,0.25)]"
+              className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(107,26,42,0.45)] ring-1 ring-black/5"
             >
               <Image
                 src="/accueil.png"
                 alt="Dashboard Major ECN — accueil étudiant avec progression et activité"
-                width={1920}
-                height={1080}
+                width={2400}
+                height={1500}
                 priority
+                sizes="(max-width:1024px) 100vw, 65vw"
                 className="h-auto w-full"
               />
             </motion.div>
             <motion.span
               aria-hidden
-              animate={{ y: [0, -10, 0] }}
+              animate={{ y: [0, -12, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -right-4 top-6 inline-flex items-center gap-2 rounded-full border border-[#E8E7E3] bg-white px-4 py-2.5 text-xs font-bold text-[#6B1A2A] shadow-2xl"
+              className="absolute -right-5 top-8 inline-flex items-center gap-2 rounded-full border border-[#E8E7E3] bg-white px-4 py-2.5 text-sm font-bold text-[#6B1A2A] shadow-2xl"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <TrendingUp className="h-4 w-4" /> 87 % réussite
             </motion.span>
             <motion.span
               aria-hidden
-              animate={{ y: [0, 10, 0] }}
+              animate={{ y: [0, 12, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute -bottom-4 -left-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-4 py-2.5 text-xs font-bold text-white shadow-2xl"
+              className="absolute -bottom-5 -left-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-4 py-2.5 text-sm font-bold text-white shadow-2xl"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <BookOpen className="h-4 w-4" /> 4 200+ QCM
