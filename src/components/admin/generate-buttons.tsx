@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, ClipboardList, Layers3, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, ClipboardList, FileWarning, Layers3, Loader2, Sparkles } from 'lucide-react';
 import { generateFlashcardsAction, generateQcmAction } from '@/app/admin/contenu/[cours]/actions';
 
 type Kind = 'flashcards' | 'qcm';
@@ -26,17 +26,21 @@ export function GenerateButton({ coursId, kind }: { coursId: string; kind: Kind 
   const router = useRouter();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [needsFiche, setNeedsFiche] = useState(false);
   const [done, setDone] = useState<string | null>(null);
   const m = META[kind];
   const Icon = m.Icon;
 
   const onClick = () => {
     if (!confirm(`Lancer "${m.label}" pour ce cours ?\n\nFacturation : ${m.price}.\nL'opération peut prendre 30 à 90 secondes.`)) return;
-    setError(null); setDone(null);
+    setError(null); setNeedsFiche(false); setDone(null);
     start(async () => {
       const action = kind === 'flashcards' ? generateFlashcardsAction : generateQcmAction;
       const res = await action(coursId);
-      if ('error' in res) setError(res.error);
+      if ('error' in res) {
+        setError(res.error);
+        if (res.needsFiche) setNeedsFiche(true);
+      }
       else {
         setDone(`${res.count} ${kind === 'flashcards' ? 'cartes' : 'questions'} générées.`);
         router.refresh();
@@ -71,11 +75,26 @@ export function GenerateButton({ coursId, kind }: { coursId: string; kind: Kind 
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
         {pending ? 'Génération en cours…' : m.label}
       </button>
-      {error && (
+      {error && !needsFiche && (
         <p className="mt-3 flex items-start gap-1.5 text-xs text-(--color-danger)">
           <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           {error}
         </p>
+      )}
+      {needsFiche && (
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-(--color-warning)/35 bg-[color-mix(in_srgb,var(--color-warning)_10%,var(--color-surface))] px-3 py-2.5 text-xs text-(--color-ink)">
+          <FileWarning className="mt-0.5 h-4 w-4 shrink-0 text-(--color-warning)" />
+          <div>
+            <p className="font-semibold">Fiche manquante</p>
+            <p className="mt-0.5 text-(--color-ink-soft)">
+              {error}
+            </p>
+            <p className="mt-1.5 text-(--color-ink-soft)">
+              👉 Va dans l’onglet <span className="font-semibold text-(--color-ink)">Fiche</span> juste au-dessus
+              pour téléverser un PDF, puis relance la génération.
+            </p>
+          </div>
+        </div>
       )}
       {done && (
         <p className="mt-3 text-xs font-semibold text-[#1F6B43]">✓ {done}</p>

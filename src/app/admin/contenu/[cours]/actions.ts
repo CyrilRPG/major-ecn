@@ -7,21 +7,31 @@ import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
 import { usageToUsd, PRICE_EUR } from '@/lib/ai/cost';
 
-type GenResult = { ok: true; count: number; cost_usd: number } | { error: string };
+type GenResult =
+  | { ok: true; count: number; cost_usd: number }
+  | { error: string; needsFiche?: boolean };
 
-async function loadCourseContext(coursId: string): Promise<string | null> {
+type CourseCtx = { titre: string; matiere: string; description: string | null; hasFiche: boolean };
+
+async function loadCourseContext(coursId: string): Promise<CourseCtx | null> {
   const supabase = createAdminClient();
   const { data } = await supabase
     .from('cours')
-    .select('id, titre, description, matieres(nom, semestres(label, facultes(nom)))')
+    .select('id, titre, description, matieres(nom), fiches(storage_path)')
     .eq('id', coursId)
     .maybeSingle();
   if (!data) return null;
   const matiere = (data as { matieres?: { nom?: string } | null }).matieres?.nom ?? '';
+  const fiches = (data as { fiches?: { storage_path: string | null }[] | null }).fiches ?? [];
+  const hasFiche = fiches.some((f) => !!f.storage_path);
+  return { titre: data.titre, matiere, description: data.description, hasFiche };
+}
+
+function contextToText(ctx: CourseCtx): string {
   return [
-    `Titre du cours : ${data.titre}`,
-    matiere ? `Collège / matière : ${matiere}` : '',
-    data.description ? `Description / résumé : ${data.description}` : '',
+    `Titre du cours : ${ctx.titre}`,
+    ctx.matiere ? `Collège / matière : ${ctx.matiere}` : '',
+    ctx.description ? `Description / résumé : ${ctx.description}` : '',
   ].filter(Boolean).join('\n');
 }
 
@@ -48,10 +58,16 @@ export async function generateFlashcardsAction(coursId: string): Promise<GenResu
   const { profile } = await requireAdmin();
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
-  const cours_titre = ctx.split('\n')[0].replace('Titre du cours : ', '');
+  if (!ctx.hasFiche) {
+    return {
+      error: 'Aucune fiche n’est encore associée à ce cours. Téléversez d’abord la fiche PDF dans l’onglet « Fiche » pour que l’IA puisse générer des flashcards pertinentes.',
+      needsFiche: true,
+    };
+  }
+  const cours_titre = ctx.titre;
   const admin = createAdminClient();
 
-  const { system, user } = flashcardsPrompt(ctx);
+  const { system, user } = flashcardsPrompt(contextToText(ctx));
   let result;
   try {
     result = await callClaude({ system, user, maxTokens: 12000, temperature: 0.4 });
@@ -139,10 +155,16 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
   const { profile } = await requireAdmin();
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
-  const cours_titre = ctx.split('\n')[0].replace('Titre du cours : ', '');
+  if (!ctx.hasFiche) {
+    return {
+      error: 'Aucune fiche n’est encore associée à ce cours. Téléversez d’abord la fiche PDF dans l’onglet « Fiche » pour que l’IA puisse générer des QCM pertinents.',
+      needsFiche: true,
+    };
+  }
+  const cours_titre = ctx.titre;
   const admin = createAdminClient();
 
-  const { system, user } = qcmPrompt(ctx);
+  const { system, user } = qcmPrompt(contextToText(ctx));
   let result;
   try {
     result = await callClaude({ system, user, maxTokens: 14000, temperature: 0.4 });

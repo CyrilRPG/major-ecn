@@ -65,7 +65,7 @@ export default function SetupPasswordPage() {
   };
 
   return (
-    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-(--color-surface-soft) px-4 py-10">
+    <div className="theme-manus relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-(--color-surface-soft) px-4 py-10 font-sans text-(--color-ink)">
       <div aria-hidden className="absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-(--color-primary)/12 blur-[120px]" />
       <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[480px] bg-gradient-to-b from-(--color-surface-soft) via-white to-transparent" />
 

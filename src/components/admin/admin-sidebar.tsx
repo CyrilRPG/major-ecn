@@ -12,6 +12,7 @@ type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean }
 
 const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
+  { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
   { href: '/admin/contenu', label: 'Contenu', Icon: Library },
   { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },

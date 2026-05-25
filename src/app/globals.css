@@ -3,35 +3,35 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* === Major ECN brand (maquette designer) === */
-  --color-brand-emerald: #E11D48;  /* primary — vivid red */
-  --color-brand-teal:    #E11D48;  /* accent — same red */
+  /* === Major ECN brand — bordeaux unifié vitrine + plateforme === */
+  --color-brand-emerald: #6B1A2A;  /* primary — bordeaux profond */
+  --color-brand-teal:    #6B1A2A;  /* accent — même bordeaux */
   --color-brand-sand:    #E9EBEF;  /* secondary neutral — cool light */
 
-  /* === Primary red scale (kept under -emerald- names to avoid churn) === */
-  --color-emerald-50:  #FFF1F3;
-  --color-emerald-100: #FFE4E9;
-  --color-emerald-200: #FECDD6;
-  --color-emerald-300: #FDA4B8;
-  --color-emerald-400: #FB7193;
-  --color-emerald-500: #F43F6B;
-  --color-emerald-600: #E11D48;
-  --color-emerald-700: #BE123C;
-  --color-emerald-800: #9F1239;
-  --color-emerald-900: #881337;
-  --color-emerald-950: #4C0519;
+  /* === Primary bordeaux scale (kept under -emerald- names to avoid churn) === */
+  --color-emerald-50:  #FBF1F3;
+  --color-emerald-100: #F9F0F2;
+  --color-emerald-200: #F2D5DA;
+  --color-emerald-300: #E5ABB6;
+  --color-emerald-400: #C84A5A;
+  --color-emerald-500: #A83A4A;
+  --color-emerald-600: #6B1A2A;
+  --color-emerald-700: #4D121E;
+  --color-emerald-800: #3A0E17;
+  --color-emerald-900: #2A0911;
+  --color-emerald-950: #1B060A;
 
-  /* === Accent red scale (kept under -teal- names) === */
-  --color-teal-50:  #FFF1F3;
-  --color-teal-100: #FFE4E9;
-  --color-teal-200: #FECDD6;
-  --color-teal-300: #FDA4B8;
-  --color-teal-400: #FB7193;
-  --color-teal-500: #E11D48;
-  --color-teal-600: #BE123C;
-  --color-teal-700: #BE123C;
-  --color-teal-800: #9F1239;
-  --color-teal-900: #881337;
+  /* === Accent bordeaux scale (kept under -teal- names) === */
+  --color-teal-50:  #FBF1F3;
+  --color-teal-100: #F9F0F2;
+  --color-teal-200: #F2D5DA;
+  --color-teal-300: #E5ABB6;
+  --color-teal-400: #C84A5A;
+  --color-teal-500: #6B1A2A;
+  --color-teal-600: #4D121E;
+  --color-teal-700: #4D121E;
+  --color-teal-800: #3A0E17;
+  --color-teal-900: #2A0911;
 
   /* === Sand scale (cool neutral) === */
   --color-sand-50:  #FAFBFC;
@@ -53,7 +53,7 @@
   /* States */
   --color-success:   #16A34A;
   --color-warning:   #F59E0B;
-  --color-danger:    #E11D48;
+  --color-danger:    #C84A5A;
   --color-easy:      #22C55E;
   --color-very-easy: #4ADE80;
 
@@ -62,15 +62,15 @@
   --color-ink-soft:      #6B7280;
   --color-ink-muted:     #9AA1AE;
   --color-surface:       #FFFFFF;
-  --color-surface-soft:  #F6F7F9;          /* light content bg (maquette) */
+  --color-surface-soft:  #F6F7F9;
   --color-surface-sunken:var(--color-sand-200);
   --color-border:        #ECEEF1;
   --color-border-strong: #DDE1E7;
 
-  /* === Sidebar (navy, maquette) === */
+  /* === Sidebar (navy) === */
   --color-sidebar:        #0E1626;
   --color-sidebar-deep:   #0A111E;
-  --color-sidebar-active: #E11D48;
+  --color-sidebar-active: #6B1A2A;
 
   /* === Typography === */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
