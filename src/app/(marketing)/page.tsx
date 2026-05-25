@@ -3,6 +3,7 @@ import {
   ClipboardCheck, Globe, GraduationCap, Heart, LineChart, MailCheck,
   Quote, Shield, Sparkles, Star, Target, TrendingUp, Users, Zap,
 } from 'lucide-react';
+import { Reveal } from '@/components/marketing/reveal';
 
 export const metadata = {
   title: 'Major ECN — Préparez les EVC avec excellence',
@@ -121,7 +122,7 @@ export default function HomePage() {
 
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:pb-24 lg:pt-20">
           {/* LEFT */}
-          <div>
+          <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-white/80 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-(--color-primary) shadow-sm backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-(--color-primary)" />
               La plateforme leader des EVC
@@ -171,10 +172,10 @@ export default function HomePage() {
                 </div>
               ))}
             </dl>
-          </div>
+          </Reveal>
 
           {/* RIGHT — Mock dashboard */}
-          <div className="relative">
+          <Reveal delay={0.15} className="relative">
             <DashboardMock />
             <span className="absolute -top-3 right-3 hidden items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-(--color-primary) shadow-lg ring-1 ring-(--color-border) sm:inline-flex">
               <TrendingUp className="h-3.5 w-3.5" /> 87 % réussite
@@ -182,33 +183,30 @@ export default function HomePage() {
             <span className="absolute -bottom-3 -left-3 hidden items-center gap-1.5 rounded-full bg-(--color-primary) px-3 py-1.5 text-xs font-semibold text-white shadow-lg sm:inline-flex">
               <BookOpen className="h-3.5 w-3.5" /> 4 200+ QCM
             </span>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* =================== MÉTHODE — 3 features =================== */}
       <section id="methode" className="border-t border-(--color-border) bg-(--color-surface-soft) py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">La méthode</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
               Diagnostic précis. Structure progressive.
               <br className="hidden sm:block" />
               Suivi intelligent. Réussite garantie.
             </h2>
-          </div>
+          </Reveal>
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f) => (
-              <div
-                key={f.t}
-                className="card-lift group rounded-2xl border border-(--color-border) bg-white p-7 shadow-sm hover:border-(--color-primary)/40 hover:shadow-lg"
-              >
+            {FEATURES.map((f, i) => (
+              <Reveal key={f.t} delay={i * 0.08} className="card-lift group rounded-2xl border border-(--color-border) bg-white p-7 shadow-sm hover:border-(--color-primary)/40 hover:shadow-lg">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary) transition-colors group-hover:bg-(--color-primary) group-hover:text-white">
                   <f.Icon className="h-6 w-6" strokeWidth={1.8} />
                 </span>
                 <h3 className="mt-5 text-lg font-bold text-(--color-ink)">{f.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{f.d}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -217,7 +215,7 @@ export default function HomePage() {
       {/* =================== EXPÉRIENCE — Device mockups =================== */}
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">L’expérience complète</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
               Dashboards réels. QCM adaptatifs.
@@ -227,7 +225,7 @@ export default function HomePage() {
             <p className="mt-4 text-base text-(--color-ink-soft)">
               Sur ordinateur, tablette ou téléphone — la plateforme s’adapte à votre rythme.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-14 grid items-end gap-6 lg:grid-cols-[1.6fr_0.5fr_1fr]">
             <DeviceFrame label="Dashboard Desktop" sub="Analytics temps réel · Inclus" variant="desktop" />
@@ -255,7 +253,7 @@ export default function HomePage() {
       {/* =================== TÉMOIGNAGES =================== */}
       <section id="temoignages" className="bg-(--color-surface-soft) py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Témoignages</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
               2 400+ médecins ont réussi
@@ -265,15 +263,16 @@ export default function HomePage() {
             <p className="mt-4 text-base text-(--color-ink-soft)">
               Écoutez comment ils ont transformé leur parcours EVC.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-14 grid gap-5 sm:grid-cols-2">
-            {TEMOIGNAGES.map((t) => (
-              <figure
+            {TEMOIGNAGES.map((t, i) => (
+              <Reveal
                 key={t.nom}
+                delay={i * 0.08}
                 className="card-lift relative flex flex-col rounded-2xl border border-(--color-border) bg-white p-7 shadow-sm hover:shadow-lg"
               >
-                <Quote className="h-7 w-7 text-(--color-primary)/30" />
+                <Quote className="h-7 w-7 text-(--color-primary)/30" aria-hidden />
                 <blockquote className="mt-3 font-display text-lg font-semibold leading-snug text-(--color-ink) sm:text-xl">
                   « {t.citation} »
                 </blockquote>
@@ -289,7 +288,7 @@ export default function HomePage() {
                     <CheckCircle2 className="h-3.5 w-3.5" /> {t.stat}
                   </span>
                 </figcaption>
-              </figure>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -298,14 +297,14 @@ export default function HomePage() {
       {/* =================== TRANSFORMATION TIMELINE =================== */}
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Votre transformation</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
               De l’isolement à la confiance.
               <br className="hidden sm:block" />
               De la confusion à la structure.
             </h2>
-          </div>
+          </Reveal>
 
           {/* Before / After chips */}
           <div className="mt-12 grid gap-5 lg:grid-cols-2">
@@ -355,12 +354,12 @@ export default function HomePage() {
       {/* =================== STATS / RÉSULTATS =================== */}
       <section className="bg-(--color-surface-soft) py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Résultats &amp; crédibilité</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl">
               Des chiffres qui parlent d’eux-mêmes
             </h2>
-          </div>
+          </Reveal>
           <dl className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {STATS.map((s) => (
               <div key={s.l} className="rounded-2xl border border-(--color-border) bg-white p-5 text-center">
@@ -389,12 +388,12 @@ export default function HomePage() {
       {/* =================== AUDIENCE =================== */}
       <section className="bg-white py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">À qui s’adresse Major ECN ?</p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl">
               Une plateforme pensée pour vous
             </h2>
-          </div>
+          </Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {AUDIENCES.map((a) => (
               <div key={a.t} className="rounded-2xl border border-(--color-border) bg-(--color-surface-soft) p-7">
@@ -413,7 +412,7 @@ export default function HomePage() {
       <section id="tarifs" className="relative isolate overflow-hidden bg-(--color-primary-deep) py-20 text-white lg:py-28">
         <div aria-hidden className="absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-(--color-primary)/40 blur-[120px]" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] backdrop-blur">
               <Sparkles className="h-3 w-3" /> Inscriptions ouvertes — Session 2025
             </span>
@@ -423,14 +422,15 @@ export default function HomePage() {
             <p className="mt-4 text-base text-white/70 sm:text-lg">
               Choisissez la formule adaptée à vos objectifs. 7 jours d’essai gratuit, sans engagement.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-14 grid gap-5 md:grid-cols-3">
-            {PLANS.map((p) => {
+            {PLANS.map((p, idx) => {
               const hi = p.highlighted;
               return (
-                <article
+                <Reveal
                   key={p.name}
+                  delay={idx * 0.1}
                   className={
                     'relative flex flex-col gap-5 rounded-2xl p-7 transition-transform ' +
                     (hi
@@ -479,7 +479,7 @@ export default function HomePage() {
                     {p.cta}
                     <ArrowRight className="h-4 w-4" />
                   </a>
-                </article>
+                </Reveal>
               );
             })}
           </div>
@@ -548,29 +548,53 @@ export default function HomePage() {
             </p>
 
             <form
-              action={`mailto:${CONTACT}`}
+              action={`mailto:${CONTACT}?subject=Inscription%20Major%20ECN`}
               method="post"
               encType="text/plain"
-              className="mx-auto mt-7 flex max-w-md flex-col gap-2 sm:flex-row"
+              className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2"
             >
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="Votre email professionnel"
-                className="flex-1 rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-              />
+              <FormField label="Prénom" name="prenom" />
+              <FormField label="Nom" name="nom" />
+              <FormField label="Email" name="email" type="email" className="sm:col-span-2" />
+              <FormField label="Téléphone" name="telephone" type="tel" />
+              <FormField label="Promo (ex. 2026)" name="promo" />
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="formule" className="text-xs font-semibold text-(--color-ink)">Formule souhaitée</label>
+                <select
+                  id="formule"
+                  name="formule"
+                  required
+                  defaultValue="Essentiel"
+                  className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+                >
+                  <option value="Essentiel">Essentiel — 49 €/mois · accès immédiat</option>
+                  <option value="Premium">Premium — 89 €/mois · accès immédiat</option>
+                  <option value="Intensif">Intensif — 149 €/mois · rappel par l’équipe</option>
+                </select>
+              </div>
+              <div className="sm:col-span-2 space-y-1.5">
+                <label htmlFor="colleges" className="text-xs font-semibold text-(--color-ink)">
+                  Collèges visés <span className="font-normal text-(--color-ink-muted)">(laisser vide si tous)</span>
+                </label>
+                <input
+                  id="colleges"
+                  name="colleges"
+                  placeholder="ex. Cardiologie, Pédiatrie — ou laisser vide pour tous"
+                  className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+                />
+              </div>
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-6 py-3 text-sm font-bold text-white shadow-lg shadow-(--color-primary)/20 transition-transform hover:scale-[1.025]"
+                className="sm:col-span-2 mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-(--color-primary)/25 transition-transform hover:scale-[1.02]"
               >
                 <MailCheck className="h-4 w-4" />
-                Commencer
+                Envoyer ma demande d’inscription
               </button>
             </form>
 
             <p className="mt-4 text-xs text-(--color-ink-muted)">
-              ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement
+              ✓ Essai gratuit 7 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
+              Intensif : un conseiller vous rappelle sous 24 h.
             </p>
           </div>
 
@@ -593,6 +617,24 @@ export default function HomePage() {
         </div>
       </section>
     </>
+  );
+}
+
+/* ============ Form field helper ============ */
+function FormField({
+  label, name, type = 'text', className = '',
+}: { label: string; name: string; type?: string; className?: string }) {
+  return (
+    <div className={'space-y-1.5 ' + className}>
+      <label htmlFor={name} className="text-xs font-semibold text-(--color-ink)">{label}</label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        required={type === 'email' || name === 'prenom' || name === 'nom'}
+        className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+      />
+    </div>
   );
 }
 
