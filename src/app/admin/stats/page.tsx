@@ -107,7 +107,7 @@ export default async function AdminStatsPage() {
     .slice(0, 10);
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="mb-8 border-b border-(--color-border) pb-5">
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Statistiques globales</h1>

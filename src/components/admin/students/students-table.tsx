@@ -77,17 +77,17 @@ export function StudentsTable({
         <TableHeader>
           <TableRow>
             <TableHead>Élève</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Téléphone</TableHead>
-            <TableHead>Promotion</TableHead>
-            <TableHead>Accès</TableHead>
+            <TableHead className="hidden md:table-cell">Email</TableHead>
+            <TableHead className="hidden lg:table-cell">Téléphone</TableHead>
+            <TableHead className="hidden sm:table-cell">Promotion</TableHead>
+            <TableHead className="hidden md:table-cell">Accès</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="py-12 text-center text-(--color-ink-soft)">
+              <TableCell colSpan={6} className="py-10 text-center text-(--color-ink-soft)">
                 Aucun élève ne correspond à ces filtres.
               </TableCell>
             </TableRow>
@@ -97,19 +97,30 @@ export function StudentsTable({
               return (
                 <TableRow key={s.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Avatar className="h-9 w-9 shrink-0">
                         <AvatarFallback>{initials(s.first_name, s.last_name)}</AvatarFallback>
                       </Avatar>
-                      <span className="font-medium">{s.first_name} {s.last_name}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium">{s.first_name} {s.last_name}</p>
+                        <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">
+                          {s.email}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-1 sm:hidden">
+                          {s.promotion && <Badge variant="outline">{s.promotion}</Badge>}
+                          <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>
+                            {offerLabel(scope.offer)}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-(--color-ink-soft) font-mono text-xs">{s.email}</TableCell>
-                  <TableCell className="text-(--color-ink-soft)">{s.phone ?? 'Non renseigné'}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden font-mono text-xs text-(--color-ink-soft) md:table-cell">{s.email}</TableCell>
+                  <TableCell className="hidden text-(--color-ink-soft) lg:table-cell">{s.phone ?? 'Non renseigné'}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     {s.promotion && <Badge variant="outline">{s.promotion}</Badge>}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <div className="flex flex-wrap items-center gap-1">
                       <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>
                         {offerLabel(scope.offer)}

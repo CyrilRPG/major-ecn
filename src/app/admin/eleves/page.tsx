@@ -34,7 +34,7 @@ export default async function ElevesPage() {
   const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-(--color-border) pb-5">
         <div>
           <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
