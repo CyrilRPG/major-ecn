@@ -86,7 +86,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       </div>
 
       <div className="mt-8">
-        <UpgradeBanner context="cours" />
+        <UpgradeBanner context="cours" profile={profile} />
       </div>
     </div>
   );

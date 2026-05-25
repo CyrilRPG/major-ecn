@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { PublicSignupSchema } from '@/lib/schemas/public-signup';
 import { generatePseudo, uniquePseudo } from '@/lib/auth/pseudo';
+import { trialUntilForNewSignup } from '@/lib/auth/trial';
 
 const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
 
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
 
   const permission_scope = { type: 'all' as const, offer };
 
-  // `pseudo` was just added by migration; cast until types are regenerated.
+  // `pseudo` and `trial_until` are recent columns; cast until types are regenerated.
   const profileUpdate: Record<string, unknown> = {
     first_name,
     last_name,
@@ -82,6 +83,7 @@ export async function POST(req: Request) {
     permission_scope,
     pseudo,
     role: 'student',
+    trial_until: trialUntilForNewSignup(7),
   };
   const { error: profileErr } = await admin
     .from('profiles')

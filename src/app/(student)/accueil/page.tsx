@@ -316,9 +316,9 @@ export default async function AccueilPage() {
         </Card>
       </div>
 
-      {/* CTA passage à l'abonnement (visible en version essai gratuit) */}
+      {/* CTA passage à l'abonnement (caché pour les abonnés) */}
       <div className="mt-8">
-        <UpgradeBanner context="default" />
+        <UpgradeBanner context="default" profile={profile} />
       </div>
     </div>
   );

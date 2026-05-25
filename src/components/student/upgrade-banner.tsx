@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Mail, Sparkles } from 'lucide-react';
+import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
+import type { Profile } from '@/lib/auth/get-profile';
 
 const INSCRIPTION_EMAIL = 'inscriptionmajorecn@gmail.com';
 const SUBJECT = encodeURIComponent('Passage à l’abonnement Major ECN');
@@ -33,13 +35,20 @@ export function UpgradeBanner({
   variant = 'banner',
   context = 'default',
   className,
+  profile,
 }: {
   variant?: Variant;
   context?: 'default' | 'cours' | 'fin';
   className?: string;
+  profile?: Pick<Profile, 'trial_until'> | null;
 }) {
+  // Caché pour les abonnés (trial_until null).
+  if (profile && isSubscriber(profile)) return null;
+
   const c = COPY[context];
   const mailHref = `mailto:${INSCRIPTION_EMAIL}?subject=${SUBJECT}`;
+  const expired = !!profile && isTrialExpired(profile);
+  const daysLeft = profile ? trialDaysLeft(profile) : 0;
 
   if (variant === 'inline') {
     return (
@@ -71,7 +80,12 @@ export function UpgradeBanner({
       <div className="relative grid items-center gap-5 lg:grid-cols-[1.5fr_1fr]">
         <div>
           <p className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary) px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
-            <Sparkles className="h-3 w-3" /> {c.eyebrow}
+            <Sparkles className="h-3 w-3" />
+            {expired
+              ? 'Essai expiré'
+              : daysLeft > 0
+              ? `Essai gratuit · ${daysLeft} j restant${daysLeft > 1 ? 's' : ''}`
+              : c.eyebrow}
           </p>
           <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-(--color-ink) sm:text-2xl">
             {c.titre}
