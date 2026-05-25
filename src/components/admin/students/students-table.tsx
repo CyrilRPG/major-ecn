@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { ImpersonateAction } from './impersonate-action';
 import { EditStudentDialog } from './edit-student-dialog';
 import { initials } from '@/lib/utils';
-import { parseScope } from '@/lib/auth/permissions';
+import { parseScope, offerLabel } from '@/lib/auth/permissions';
 
 export type Student = {
   id: string;
@@ -111,8 +111,8 @@ export function StudentsTable({
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap items-center gap-1">
-                      <Badge variant={scope.offer === 'premium' ? 'primary' : 'outline'}>
-                        {scope.offer === 'premium' ? 'Premium' : 'Basic'}
+                      <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>
+                        {offerLabel(scope.offer)}
                       </Badge>
                       {scope.type === 'all' ? (
                         <Badge variant="muted">Tous collèges</Badge>

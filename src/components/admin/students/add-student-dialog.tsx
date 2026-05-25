@@ -39,7 +39,7 @@ export function AddStudentDialog({ colleges }: { colleges: { id: string; nom: st
     formState: { errors },
   } = useForm<AddStudentInput>({
     resolver: zodResolver(AddStudentSchema),
-    defaultValues: { permission_type: 'all', promotion: 'D2', offer: 'basic', colleges: [] },
+    defaultValues: { permission_type: 'all', promotion: 'D2', offer: 'essentiel', colleges: [] },
   });
 
   const permissionType = watch('permission_type');
@@ -135,12 +135,16 @@ export function AddStudentDialog({ colleges }: { colleges: { id: string; nom: st
               render={({ field }) => (
                 <RadioGroup value={field.value} onValueChange={field.onChange}>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="basic" />
-                    <span className="text-sm">Basic — accès aux cours et entraînements de base</span>
+                    <RadioGroupItem value="essentiel" />
+                    <span className="text-sm">Essentiel — 49 €/mois · accès aux QCM, flashcards et suivi de base</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
                     <RadioGroupItem value="premium" />
-                    <span className="text-sm">Premium — accès complet (annales, ECOS, suivi avancé)</span>
+                    <span className="text-sm">Premium — 89 €/mois · IA pédagogique, examens blancs, tuteur dédié</span>
+                  </label>
+                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
+                    <RadioGroupItem value="intensif" />
+                    <span className="text-sm">Intensif — 149 €/mois · sessions 1:1, plan sur-mesure, garantie</span>
                   </label>
                 </RadioGroup>
               )}

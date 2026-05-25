@@ -3,6 +3,7 @@ import { ArrowRight, ClipboardCheck, GraduationCap, History, Layers3, Target } f
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
+import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ActivityArea, ActivityDonut } from '@/components/admin/stats/charts';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
@@ -313,6 +314,11 @@ export default async function AccueilPage() {
             ))}
           </div>
         </Card>
+      </div>
+
+      {/* CTA passage à l'abonnement (visible en version essai gratuit) */}
+      <div className="mt-8">
+        <UpgradeBanner context="default" />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { ArrowRight, ClipboardCheck, FileText, History, Layers3, MonitorPlay, ty
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { UpgradeBanner } from '@/components/student/upgrade-banner';
 
 type Action = { href: string; label: string; desc: string; Icon: LucideIcon; available: boolean };
 
@@ -82,6 +83,10 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             </span>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <UpgradeBanner context="cours" />
       </div>
     </div>
   );
