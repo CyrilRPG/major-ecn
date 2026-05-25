@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, GraduationCap, Library, Mail, Receipt, Users } from 'lucide-react';
+import { BarChart3, GraduationCap, Library, Mail, MessagesSquare, Receipt, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
 
-const items = [
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean };
+
+const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
   { href: '/admin/contenu', label: 'Contenu', Icon: Library },
+  { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
   { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
@@ -21,6 +24,8 @@ const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
+  // Professors only see Q&R; admins see everything.
+  const items = profile.role === 'professor' ? ALL_ITEMS.filter((i) => i.staff) : ALL_ITEMS;
 
   return (
     <>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, ChevronRight, Home, Target } from 'lucide-react';
+import { CalendarDays, ChevronRight, Home, MessagesSquare, Target } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
@@ -52,6 +52,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const homeActive = pathname === '/accueil';
   const trainActive = pathname.startsWith('/entrainement');
   const agendaActive = pathname.startsWith('/agenda');
+  const forumActive = pathname.startsWith('/forum');
 
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
@@ -136,6 +137,22 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
           </div>
         );
       })}
+
+      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+        Communauté
+      </p>
+      <Link
+        href="/forum"
+        className={cn(
+          'flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
+          forumActive
+            ? 'bg-(--color-accent) text-white'
+            : 'text-white/85 hover:bg-white/10 hover:text-white',
+        )}
+      >
+        <MessagesSquare className="h-[18px] w-[18px] shrink-0" />
+        Forum Q&amp;R
+      </Link>
     </nav>
   );
 }

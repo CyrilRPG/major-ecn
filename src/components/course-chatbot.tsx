@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { ArrowUp, Bot, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AskTeacherButton } from '@/components/student/ask-teacher-button';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -83,20 +84,38 @@ export function CourseChatbot({
       </header>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
-        {messages.map((m, i) => (
-          <div key={i} className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}>
-            <div
-              className={cn(
-                'max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
-                m.role === 'user'
-                  ? 'bg-(--color-primary) text-(--color-primary-fg)'
-                  : 'bg-(--color-surface-soft) border border-(--color-border) text-(--color-ink)',
+        {messages.map((m, i) => {
+          const isAssistant = m.role === 'assistant';
+          const isFirst = i === 0;
+          const lastAssistantIdx = (() => {
+            for (let k = messages.length - 1; k >= 0; k--) if (messages[k].role === 'assistant') return k;
+            return -1;
+          })();
+          const isLastAssistant = isAssistant && i === lastAssistantIdx;
+          const conversationContext = messages
+            .slice(0, i + 1)
+            .map((mm) => `${mm.role === 'user' ? 'Étudiant' : 'IA'} : ${mm.content}`)
+            .join('\n\n');
+          return (
+            <div key={i} className={cn('flex flex-col', m.role === 'user' ? 'items-end' : 'items-start')}>
+              <div
+                className={cn(
+                  'max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
+                  m.role === 'user'
+                    ? 'bg-(--color-primary) text-(--color-primary-fg)'
+                    : 'bg-(--color-surface-soft) border border-(--color-border) text-(--color-ink)',
+                )}
+              >
+                {m.content}
+              </div>
+              {isAssistant && !isFirst && isLastAssistant && !loading && (
+                <div className="mt-1.5 max-w-[85%]">
+                  <AskTeacherButton coursId={coursId} aiContext={conversationContext} />
+                </div>
               )}
-            >
-              {m.content}
             </div>
-          </div>
-        ))}
+          );
+        })}
         {loading && (
           <div className="flex justify-start">
             <div className="rounded-2xl bg-(--color-surface-soft) border border-(--color-border) px-3.5 py-2.5">
