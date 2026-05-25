@@ -101,10 +101,10 @@ export function MethodeSection() {
 // Flashcards + Assistant IA mis en avant en feature card large
 // ============================================================================
 const SCREENSHOTS = [
-  { src: '/screenshots/cours.png',        Icon: BookOpen,       label: 'Page cours · vidéo, fiche, QCM, annales' },
-  { src: '/screenshots/entrainement.png', Icon: Target,         label: 'Entraînement ciblé sur vos erreurs' },
-  { src: '/screenshots/agenda.png',       Icon: CalendarDays,   label: 'Agenda hebdomadaire des sessions' },
-  { src: '/screenshots/annales.png',      Icon: ClipboardCheck, label: 'Annales en conditions réelles' },
+  { src: '/cours.png',        Icon: BookOpen,       label: 'Page cours · vidéo, fiche, QCM, annales' },
+  { src: '/entrainement.png', Icon: Target,         label: 'Entraînement ciblé sur vos erreurs' },
+  { src: '/agenda.png',       Icon: CalendarDays,   label: 'Agenda hebdomadaire des sessions' },
+  { src: '/annales.png',      Icon: ClipboardCheck, label: 'Annales en conditions réelles' },
 ];
 
 export function ExperienceSection() {
@@ -209,7 +209,7 @@ export function ExperienceSection() {
               >
                 <div className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-2xl">
                   <Image
-                    src="/screenshots/flashcards-ia.png"
+                    src="/flashcards-ia.png"
                     alt="Flashcards Major ECN avec l'assistant IA ouvert sur le côté"
                     width={2400}
                     height={1200}
