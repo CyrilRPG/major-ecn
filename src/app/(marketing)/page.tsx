@@ -223,7 +223,7 @@ export default function HomePage() {
 
       {/* =================== FINAL CTA =================== */}
       <section id="cta" className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="relative overflow-hidden rounded-3xl border border-(--color-border) bg-gradient-to-br from-white to-(--color-surface-soft) p-9 text-center shadow-sm sm:p-12">
             <div aria-hidden className="absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-(--color-primary)/12 blur-[100px]" />
             <span className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-primary)">

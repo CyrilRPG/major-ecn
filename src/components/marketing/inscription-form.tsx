@@ -62,7 +62,7 @@ export function InscriptionForm() {
         initial={{ opacity: 0, y: 30, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="relative mx-auto mt-8 max-w-2xl overflow-hidden rounded-3xl border-2 border-[#14B8A6]/30 bg-gradient-to-br from-white via-[#F0FBF7]/60 to-[#F0F9FB]/40 p-8 text-left shadow-[0_20px_70px_-20px_rgba(20,184,166,0.35)] sm:p-10"
+        className="relative mx-auto mt-8 max-w-4xl overflow-hidden rounded-3xl border-2 border-[#14B8A6]/30 bg-gradient-to-br from-white via-[#F0FBF7]/60 to-[#F0F9FB]/40 p-8 text-left shadow-[0_20px_70px_-20px_rgba(20,184,166,0.35)] sm:p-10 lg:p-12"
       >
         <div aria-hidden className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#14B8A6]/20 blur-3xl" />
         <div aria-hidden className="absolute -bottom-12 -left-12 h-44 w-44 rounded-full bg-[#3B82F6]/15 blur-3xl" />
@@ -105,7 +105,7 @@ export function InscriptionForm() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8 }}
-      className="relative mx-auto mt-8 w-full max-w-2xl overflow-hidden rounded-3xl border-2 border-[#E8E7E3] bg-white p-6 text-left shadow-[0_25px_70px_-25px_rgba(107,26,42,0.25)] sm:p-8 lg:p-10"
+      className="relative mx-auto mt-8 w-full max-w-4xl overflow-hidden rounded-3xl border-2 border-[#E8E7E3] bg-white p-6 text-left shadow-[0_25px_70px_-25px_rgba(107,26,42,0.25)] sm:p-10 lg:p-12"
     >
       {/* Halos décoratifs */}
       <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#6B1A2A]/12 blur-3xl" />
