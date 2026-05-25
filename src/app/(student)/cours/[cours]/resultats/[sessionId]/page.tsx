@@ -58,6 +58,7 @@ export default async function ResultsPage({
 
   const isAnnale = session.qcm_series.type === 'annale';
   const retryHref = `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${session.serie_id}`;
+  const reviewBase = `/cours/${coursId}/resultats/${sessionId}/revoir`;
 
   return (
     <QcmResults
@@ -70,6 +71,8 @@ export default async function ResultsPage({
       failed={failed}
       coursHref={`/cours/${coursId}`}
       retryHref={retryHref}
+      reviewWrongHref={isAnnale ? `${reviewBase}?filter=wrong` : undefined}
+      reviewAllHref={isAnnale ? `${reviewBase}?filter=all` : undefined}
     />
   );
 }

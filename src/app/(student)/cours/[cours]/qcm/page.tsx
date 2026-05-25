@@ -42,7 +42,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-8">
       <p className="mb-4 text-sm text-(--color-ink-soft)">
-        Chaque proposition est corrigée et justifiée immédiatement, au format EDN.
+        Chaque proposition est corrigée et justifiée immédiatement, au format EVC.
       </p>
 
       {!series || series.length === 0 ? (

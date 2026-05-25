@@ -75,7 +75,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   return (
     <>
-      <IndexHeader context="Collège EDN" title={m.nom} meta={`${rows.length} item${rows.length > 1 ? 's' : ''}`} />
+      <IndexHeader context="Collège EVC" title={m.nom} meta={`${rows.length} item${rows.length > 1 ? 's' : ''}`} />
       <div className="flex w-full items-center gap-3 px-5 pt-6 lg:px-10">
         <RowIcon Icon={Icon} color={m.color_hex ?? undefined} />
         <p className="text-sm text-(--color-ink-muted)">Sélectionnez un item pour ouvrir la console d’étude.</p>

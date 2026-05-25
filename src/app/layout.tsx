@@ -26,13 +26,13 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: 'Major ECN — Prépa EDN & EVC', template: '%s · Major ECN' },
+  title: { default: 'Major ECN — Préparez les EVC avec excellence', template: '%s · Major ECN' },
   description:
-    "La prépa de référence aux EDN et EVC : cours en vidéo, dossiers progressifs, ECOS et coaching pour D2, D3, D4 et PAE.",
+    "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
   openGraph: {
-    title: 'Major ECN — Prépa EDN & EVC',
+    title: 'Major ECN — Préparez les EVC avec excellence',
     description:
-      "La prépa de référence aux EDN et EVC : cours en vidéo, dossiers progressifs, ECOS et coaching pour D2, D3, D4 et PAE.",
+      "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
     images: ['/major-ecn-logo.png'],
     type: 'website',
     locale: 'fr_FR',

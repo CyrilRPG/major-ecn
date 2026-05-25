@@ -57,6 +57,13 @@ function Face({
           Retourner la carte
         </button>
       </div>
+      {/* Discreet brand mark — never overlaps content */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 select-none text-[9px] font-bold uppercase tracking-[0.18em] text-(--color-ink-muted)/40"
+      >
+        Major <span className="text-(--color-primary)/55">ECN</span>
+      </span>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default function LoginPage() {
             {/* Editorial statement */}
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-ink-muted)">
-                Préparation EDN · EVC
+                Préparation EVC
               </p>
               <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
                 Le rang utile se prépare,{' '}

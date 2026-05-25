@@ -23,6 +23,8 @@ export function QcmResults({
   failed,
   coursHref,
   retryHref,
+  reviewWrongHref,
+  reviewAllHref,
 }: {
   scoreCorrect: number;
   scoreTotal: number;
@@ -33,6 +35,8 @@ export function QcmResults({
   failed: FailedQuestion[];
   coursHref: string;
   retryHref: string;
+  reviewWrongHref?: string;
+  reviewAllHref?: string;
 }) {
   const ratio = scoreTotal > 0 ? scoreCorrect / scoreTotal : 0;
   const pct = Math.round(ratio * 100);
@@ -139,6 +143,36 @@ export function QcmResults({
                   <Line type="monotone" dataKey="pct" stroke="#E11D48" strokeWidth={2.5} dot={{ r: 4, fill: '#BE123C' }} activeDot={{ r: 6, fill: '#E11D48' }} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {(reviewWrongHref || reviewAllHref) && (
+        <Card className="mt-6">
+          <CardContent>
+            <p className="text-xs uppercase tracking-wider text-(--color-ink-soft) font-medium">Consulter le corrigé</p>
+            <h2 className="text-lg font-semibold mt-0.5">Revoir les questions une à une</h2>
+            <p className="mt-1 text-sm text-(--color-ink-soft)">
+              Le corrigé s’affiche question par question, comme une session — avec les bonnes réponses et les justifications.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {reviewWrongHref && failed.length > 0 && (
+                <Button asChild variant="primary" size="sm">
+                  <Link href={reviewWrongHref}>
+                    Revoir mes erreurs ({failed.length})
+                    <ArrowRight />
+                  </Link>
+                </Button>
+              )}
+              {reviewAllHref && (
+                <Button asChild variant="outline" size="sm">
+                  <Link href={reviewAllHref}>
+                    Revoir toutes les questions
+                    <ArrowRight />
+                  </Link>
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
