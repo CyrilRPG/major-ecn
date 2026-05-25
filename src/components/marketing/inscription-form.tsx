@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertCircle, ArrowRight, CheckCircle2, Loader2, MailCheck, PhoneCall } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { AlertCircle, ArrowRight, CheckCircle2, GraduationCap, Loader2, Mail, MailCheck, PhoneCall, Sparkles, User } from 'lucide-react';
 import type { PublicSignupInput } from '@/lib/schemas/public-signup';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 type FlowResult = 'invite_sent' | 'callback' | undefined;
 
 const PROMOTIONS: PublicSignupInput['promotion'][] = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
+const JAKARTA = "'Plus Jakarta Sans', sans-serif";
+const MANROPE = "'Manrope', sans-serif";
 
 export function InscriptionForm() {
   const [status, setStatus] = useState<Status>('idle');
@@ -55,106 +58,192 @@ export function InscriptionForm() {
   if (status === 'success') {
     const isCallback = flow === 'callback';
     return (
-      <div className="mx-auto mt-8 max-w-2xl rounded-2xl border border-(--color-primary)/30 bg-(--color-primary-soft) p-7 text-left sm:p-9">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary) text-white">
-          {isCallback ? <PhoneCall className="h-6 w-6" /> : <MailCheck className="h-6 w-6" />}
-        </span>
-        <h3 className="mt-5 font-display text-xl font-extrabold tracking-tight text-(--color-ink) sm:text-2xl">
-          {isCallback ? 'Demande envoyée — un conseiller va vous rappeler' : 'Bienvenue chez Major ECN'}
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="relative mx-auto mt-8 max-w-2xl overflow-hidden rounded-3xl border-2 border-[#14B8A6]/30 bg-gradient-to-br from-white via-[#F0FBF7]/60 to-[#F0F9FB]/40 p-8 text-left shadow-[0_20px_70px_-20px_rgba(20,184,166,0.35)] sm:p-10"
+      >
+        <div aria-hidden className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#14B8A6]/20 blur-3xl" />
+        <div aria-hidden className="absolute -bottom-12 -left-12 h-44 w-44 rounded-full bg-[#3B82F6]/15 blur-3xl" />
+
+        <motion.span
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.2, duration: 0.6, type: 'spring' }}
+          className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#14B8A6] to-[#0F766E] text-white shadow-lg"
+        >
+          {isCallback ? <PhoneCall className="h-7 w-7" /> : <MailCheck className="h-7 w-7" />}
+        </motion.span>
+        <h3
+          className="relative mt-5 text-2xl font-black leading-tight sm:text-3xl"
+          style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
+        >
+          <span className="block text-[#2D2D2D]">
+            {isCallback ? 'Demande envoyée' : 'Bienvenue chez Major ECN'}
+          </span>
+          <span className="block bg-gradient-to-r from-[#14B8A6] via-[#22D3EE] to-[#3B82F6] bg-clip-text text-transparent">
+            {isCallback ? 'On vous rappelle sous 24 h' : 'Vérifiez votre boîte mail'}
+          </span>
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{serverMsg}</p>
+        <p className="relative mt-3 text-sm leading-relaxed text-[#4A5568] sm:text-base" style={{ fontFamily: MANROPE }}>
+          {serverMsg}
+        </p>
         {!isCallback && (
-          <p className="mt-3 text-xs text-(--color-ink-muted)">
-            Vérifiez votre boîte mail (et le dossier indésirables). Le lien d’activation expire après 24 h.
+          <p className="relative mt-3 text-xs text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
+            Pensez à regarder vos spams. Le lien d’activation expire dans 24 h.
           </p>
         )}
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <form
+    <motion.form
       onSubmit={onSubmit}
-      className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.8 }}
+      className="relative mx-auto mt-8 w-full max-w-2xl overflow-hidden rounded-3xl border-2 border-[#E8E7E3] bg-white p-6 text-left shadow-[0_25px_70px_-25px_rgba(107,26,42,0.25)] sm:p-8 lg:p-10"
     >
-      <Field label="Prénom" name="first_name" />
-      <Field label="Nom" name="last_name" />
-      <Field label="Email" name="email" type="email" className="sm:col-span-2" />
-      <Field label="Téléphone" name="phone" type="tel" required={false} />
-      <div className="space-y-1.5">
-        <label htmlFor="promotion" className="text-xs font-semibold text-(--color-ink)">Promotion</label>
-        <select
-          id="promotion"
-          name="promotion"
-          defaultValue="D2"
-          required
-          className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+      {/* Halos décoratifs */}
+      <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#6B1A2A]/12 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-16 -left-16 h-44 w-44 rounded-full bg-[#3B82F6]/10 blur-3xl" />
+
+      {/* Header form */}
+      <div className="relative mb-6">
+        <motion.span
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] px-3.5 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-white"
+          style={{ fontFamily: MANROPE }}
         >
-          {PROMOTIONS.map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-      </div>
-      <div className="space-y-1.5 sm:col-span-2">
-        <label htmlFor="offer" className="text-xs font-semibold text-(--color-ink)">Formule souhaitée</label>
-        <select
-          id="offer"
-          name="offer"
-          required
-          defaultValue="essentiel"
-          className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+          <Sparkles className="h-3 w-3" />
+          7 jours gratuits · sans carte
+        </motion.span>
+        <h3
+          className="mt-4 text-2xl font-black leading-tight sm:text-3xl"
+          style={{ fontFamily: JAKARTA, letterSpacing: '-0.025em' }}
         >
-          <option value="essentiel">Essentiel — 49 €/mois · accès immédiat en ligne</option>
-          <option value="premium">Premium — 89 €/mois · accès immédiat en ligne</option>
-          <option value="intensif">Intensif — 149 €/mois · rappel par un conseiller</option>
-        </select>
+          <span className="block text-[#2D2D2D]">Créez votre compte</span>
+          <span className="block bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent">
+            en 30 secondes.
+          </span>
+        </h3>
       </div>
-      <div className="space-y-1.5 sm:col-span-2">
-        <label htmlFor="colleges_wish" className="text-xs font-semibold text-(--color-ink)">
-          Collèges visés <span className="font-normal text-(--color-ink-muted)">(laisser vide si tous)</span>
-        </label>
-        <input
-          id="colleges_wish"
-          name="colleges_wish"
-          placeholder="ex. Cardiologie, Pédiatrie — ou laisser vide pour tous"
-          className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-        />
+
+      {/* Champs */}
+      <div className="relative grid gap-3 sm:grid-cols-2">
+        <Field label="Prénom" name="first_name" icon={<User className="h-3.5 w-3.5" />} />
+        <Field label="Nom" name="last_name" icon={<User className="h-3.5 w-3.5" />} />
+        <Field label="Email" name="email" type="email" icon={<Mail className="h-3.5 w-3.5" />} className="sm:col-span-2" />
+        <Field label="Téléphone" name="phone" type="tel" icon={<PhoneCall className="h-3.5 w-3.5" />} required={false} />
+        <div className="relative space-y-1.5">
+          <label htmlFor="promotion" className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
+            <GraduationCap className="h-3.5 w-3.5" />
+            Promotion
+          </label>
+          <select
+            id="promotion"
+            name="promotion"
+            defaultValue="D2"
+            required
+            className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm font-medium text-[#2D2D2D] outline-none transition-all duration-200 focus:border-[#6B1A2A] focus:shadow-[0_0_0_4px_rgba(107,26,42,0.1)]"
+            style={{ fontFamily: MANROPE }}
+          >
+            {PROMOTIONS.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+        <div className="relative space-y-1.5 sm:col-span-2">
+          <label htmlFor="offer" className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
+            <Sparkles className="h-3.5 w-3.5" />
+            Formule souhaitée
+          </label>
+          <select
+            id="offer"
+            name="offer"
+            required
+            defaultValue="essentiel"
+            className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm font-medium text-[#2D2D2D] outline-none transition-all duration-200 focus:border-[#6B1A2A] focus:shadow-[0_0_0_4px_rgba(107,26,42,0.1)]"
+            style={{ fontFamily: MANROPE }}
+          >
+            <option value="essentiel">Essentiel — 49 €/mois · accès immédiat</option>
+            <option value="premium">Premium — 89 €/mois · accès immédiat</option>
+            <option value="intensif">Intensif — 149 €/mois · rappel par un conseiller</option>
+          </select>
+        </div>
+        <div className="relative space-y-1.5 sm:col-span-2">
+          <label htmlFor="colleges_wish" className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            Collèges visés <span className="font-medium normal-case text-[#7A7A7A]">(laisser vide si tous)</span>
+          </label>
+          <input
+            id="colleges_wish"
+            name="colleges_wish"
+            placeholder="ex. Cardiologie, Pédiatrie — ou vide pour tous"
+            className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm font-medium text-[#2D2D2D] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#A8A8A8] focus:border-[#6B1A2A] focus:shadow-[0_0_0_4px_rgba(107,26,42,0.1)]"
+            style={{ fontFamily: MANROPE }}
+          />
+        </div>
       </div>
 
       {status === 'error' && (
-        <p className="sm:col-span-2 flex items-start gap-2 rounded-xl border border-(--color-danger)/30 bg-[color-mix(in_srgb,var(--color-danger)_8%,var(--color-surface))] px-3 py-2 text-sm text-(--color-danger)">
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative mt-4 flex items-start gap-2 rounded-xl border-2 border-[#C84A5A]/30 bg-[#FBF1F3] px-3.5 py-2.5 text-sm font-medium text-[#6B1A2A]"
+          style={{ fontFamily: MANROPE }}
+        >
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           {serverMsg}
-        </p>
+        </motion.p>
       )}
 
-      <button
+      <motion.button
         type="submit"
+        whileHover={{ scale: status === 'submitting' ? 1 : 1.02, y: status === 'submitting' ? 0 : -2 }}
+        whileTap={{ scale: 0.98 }}
         disabled={status === 'submitting'}
-        className="sm:col-span-2 mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-(--color-primary)/25 transition-transform hover:scale-[1.02] disabled:opacity-60"
+        className="relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#6B1A2A] via-[#8B2A3A] to-[#C84A5A] px-6 py-4 text-sm font-black text-white shadow-[0_15px_40px_-10px_rgba(107,26,42,0.6)] transition-shadow disabled:opacity-60 sm:text-base"
+        style={{ fontFamily: JAKARTA }}
       >
-        {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-        S’inscrire à Major ECN
-        <ArrowRight className="h-4 w-4" />
-      </button>
-    </form>
+        {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
+        {status === 'submitting' ? 'Création de votre compte…' : 'Démarrer mes 7 jours gratuits'}
+        {status !== 'submitting' && <ArrowRight className="h-5 w-5" />}
+      </motion.button>
+
+      <p className="relative mt-3 text-center text-[11px] text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
+        ✓ Aucune carte bancaire · ✓ Sans engagement · ✓ Annulation instantanée
+      </p>
+    </motion.form>
   );
 }
 
 function Field({
-  label, name, type = 'text', className = '', required = true,
+  label, name, type = 'text', className = '', required = true, icon,
 }: {
   label: string; name: string; type?: string; className?: string; required?: boolean;
+  icon?: React.ReactNode;
 }) {
   return (
-    <div className={'space-y-1.5 ' + className}>
-      <label htmlFor={name} className="text-xs font-semibold text-(--color-ink)">{label}</label>
+    <div className={'relative space-y-1.5 ' + className}>
+      <label
+        htmlFor={name}
+        className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]"
+        style={{ fontFamily: MANROPE }}
+      >
+        {icon}
+        {label}
+      </label>
       <input
         id={name}
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+        className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm font-medium text-[#2D2D2D] outline-none transition-all duration-200 focus:border-[#6B1A2A] focus:shadow-[0_0_0_4px_rgba(107,26,42,0.1)]"
+        style={{ fontFamily: MANROPE }}
       />
     </div>
   );
