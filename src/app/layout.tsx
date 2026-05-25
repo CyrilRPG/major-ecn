@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Manrope, Fraunces, IBM_Plex_Mono } from 'next/font/google';
+import { Manrope, Fraunces, IBM_Plex_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -10,6 +10,12 @@ const display = Fraunces({
   subsets: ['latin'],
   style: ['normal', 'italic'],
   variable: '--font-fraunces',
+  display: 'swap',
+});
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-jakarta',
   display: 'swap',
 });
 const mono = IBM_Plex_Mono({
@@ -35,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${jakarta.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
         <ThemeProvider attribute="class" forcedTheme="light" defaultTheme="light" enableSystem={false}>
           <QueryProvider>

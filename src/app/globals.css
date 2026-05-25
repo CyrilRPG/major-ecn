@@ -296,6 +296,34 @@ body::after {
     transform: translateY(-4px);
   }
 
+  /* ============================================================
+     Scoped marketing theme (Manus charter) — bordeaux + cream.
+     Applied via .theme-manus on the (marketing) layout root only,
+     so the pedagogical platform keeps its own tokens untouched.
+     ============================================================ */
+  .theme-manus {
+    --color-primary:       #6B1A2A;
+    --color-primary-deep:  #4D121E;
+    --color-primary-soft:  #F9F0F2;
+    --color-primary-fg:    #FFFFFF;
+    --color-accent:        #6B1A2A;
+    --color-accent-soft:   #F9F0F2;
+    --color-accent-deep:   #4D121E;
+    --color-ink:           #2D2D2D;
+    --color-ink-soft:      #5A5A5A;
+    --color-ink-muted:     #7A7A7A;
+    --color-surface:       #FFFFFF;
+    --color-surface-soft:  #FAFAF8;
+    --color-surface-sunken: #F5F4F0;
+    --color-border:        #E8E7E3;
+    --color-border-strong: #D5D3CC;
+    --font-display:        var(--font-jakarta), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+    --font-sans:           var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Hide the global body grid/glow inside the Manus theme (lighter, cleaner). */
+  body:has(.theme-manus)::before,
+  body:has(.theme-manus)::after { display: none; }
+
   .grad-border {
     position: relative;
     isolation: isolate;
