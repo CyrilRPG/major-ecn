@@ -9,7 +9,7 @@ import { ManusHero } from '@/components/marketing/manus-hero';
 import {
   MethodeSection, ExperienceSection, TemoignagesSection,
   TransformationSection, StatsSection, AudienceSection,
-  FAQSection, TrustBanner,
+  FAQSection, TrustBanner, FreeTrialBanner,
 } from '@/components/marketing/manus-sections';
 
 export const metadata = {
@@ -129,6 +129,7 @@ export default function HomePage() {
       <ExperienceSection />
       <TemoignagesSection />
       <TransformationSection />
+      <FreeTrialBanner />
       <TrustBanner />
       <StatsSection />
       <AudienceSection />

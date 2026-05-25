@@ -172,10 +172,11 @@ export function ManusHero() {
                 href="#cta"
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-7 py-3.5 text-sm font-black text-white shadow-[0_10px_30px_-10px_rgba(107,26,42,0.6)] sm:text-base"
+                className="relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-xl bg-gradient-to-r from-[#6B1A2A] via-[#8B2A3A] to-[#C84A5A] px-7 py-3.5 text-sm font-black text-white shadow-[0_10px_40px_-10px_rgba(107,26,42,0.7)] sm:text-base"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
-                Commencer votre transformation
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
+                Commencer 7 jours gratuits
                 <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </motion.a>
               <motion.a
