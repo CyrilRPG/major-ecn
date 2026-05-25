@@ -6,13 +6,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight, Award, Brain, BookOpen, CalendarDays, ChevronLeft, ChevronRight,
   CheckCircle2, ClipboardCheck, Compass, Globe, GraduationCap, Heart, Layers3,
-  LineChart, MessagesSquare, Quote, ShieldCheck, Sparkles, Target, TrendingUp,
-  Users, Zap,
+  LineChart, MessagesSquare, Play, Quote, ShieldCheck, Sparkles, Star, Target,
+  TrendingUp, Users, Zap,
 } from 'lucide-react';
 
+// Dégradés volontairement saturés et étendus pour des titres qui claquent.
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
-const TEAL_AMBER = 'bg-gradient-to-r from-[#14B8A6] to-[#F59E0B] bg-clip-text text-transparent';
-const BORD_BLUE = 'bg-gradient-to-r from-[#6B1A2A] to-[#3B82F6] bg-clip-text text-transparent';
+const TRI_RICH = 'bg-gradient-to-r from-[#6B1A2A] via-[#C84A5A] via-[#3B82F6] via-[#14B8A6] to-[#F59E0B] bg-clip-text text-transparent';
+const TEAL_AMBER = 'bg-gradient-to-r from-[#14B8A6] via-[#22D3EE] to-[#F59E0B] bg-clip-text text-transparent';
+const BORD_BLUE = 'bg-gradient-to-r from-[#6B1A2A] via-[#A83A4A] to-[#3B82F6] bg-clip-text text-transparent';
+const VIVID_BORD = 'bg-gradient-to-r from-[#6B1A2A] via-[#C84A5A] to-[#FB7193] bg-clip-text text-transparent';
 const JAKARTA = "'Plus Jakarta Sans', sans-serif";
 const MANROPE = "'Manrope', sans-serif";
 
@@ -20,12 +23,13 @@ const EYEBROW =
   'inline-block px-5 py-2.5 rounded-full bg-gradient-to-r from-[#F9F0F2]/80 to-[#F0F9FB]/80 border border-[#E8E7E3] text-xs sm:text-sm font-black text-[#6B1A2A] mb-6';
 
 // ============================================================================
-// MÉTHODE — 3 piliers (cards reliés par flèches)
+// MÉTHODE — 4 piliers numérotés et colorés (rouge / bleu / vert / orange)
 // ============================================================================
 const PILIERS = [
-  { Icon: Compass,   t: 'Diagnostic précis',     d: 'L’IA évalue votre niveau initial par spécialité, identifie vos lacunes et bâtit votre plan personnalisé.' },
-  { Icon: Brain,     t: 'Structure progressive', d: 'Un parcours en 12 semaines avec fondamentaux puis approfondissement, calé sur le programme officiel des EVC.' },
-  { Icon: LineChart, t: 'Suivi intelligent',     d: 'Analytics temps réel par spécialité, recommandations ciblées, IA pédagogique qui ajuste la difficulté.' },
+  { n: '01', Icon: Compass,    color: '#6B1A2A', title: 'Diagnostic',  desc: 'Évaluation complète de votre niveau initial, identification des lacunes par spécialité.' },
+  { n: '02', Icon: Zap,        color: '#3B82F6', title: 'Structure',   desc: 'Roadmap personnalisée et progressive en 12 semaines calée sur le programme EVC.' },
+  { n: '03', Icon: TrendingUp, color: '#14B8A6', title: 'Progression', desc: 'Suivi en temps réel, IA pédagogique qui adapte la difficulté à votre niveau.' },
+  { n: '04', Icon: Award,      color: '#F59E0B', title: 'Réussite',    desc: 'Accompagnement humain et coaching jusqu’aux EVC — 87 % de réussite prouvée.' },
 ];
 
 export function MethodeSection() {
@@ -50,49 +54,103 @@ export function MethodeSection() {
         >
           <span className={EYEBROW} style={{ fontFamily: MANROPE }}>La méthode</span>
           <h2
-            className="mb-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
-            <span className="block text-[#2D2D2D]">Diagnostic précis. Structure progressive.</span>
-            <span className={'block ' + BORD_BLUE}>Suivi intelligent.</span>
+            <span className="block text-[#2D2D2D]">La méthode</span>
+            <span className={'block ' + TRI_RICH}>qui change les vies.</span>
           </h2>
           <p className="mx-auto max-w-2xl text-base text-[#4A5568] sm:text-lg" style={{ fontFamily: MANROPE }}>
-            Trois piliers conçus pour transformer vos efforts en résultats — calqués sur la rigueur
-            des concours médicaux.
+            Diagnostic précis. Structure progressive. Suivi intelligent. Réussite garantie.
           </p>
         </motion.div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3 md:gap-6 lg:gap-10">
+        {/* 4 piliers numérotés couleur */}
+        <div className="relative mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {PILIERS.map((p, i) => (
             <motion.div
-              key={p.t}
+              key={p.n}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: i * 0.15 }}
-              className="relative flex h-full flex-col rounded-2xl border-2 border-[#E8E7E3] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#6B1A2A]/30 hover:shadow-2xl sm:p-10"
+              transition={{ duration: 0.7, delay: i * 0.12 }}
+              className="relative flex flex-col rounded-3xl border-2 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:p-9"
+              style={{ borderColor: `${p.color}30` }}
             >
-              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[#6B1A2A] to-[#8B2A3A] text-white">
-                <p.Icon className="h-6 w-6" />
+              {/* Number ghosted huge in background */}
+              <span
+                className="mb-6 text-6xl font-black"
+                style={{ color: p.color, opacity: 0.15, fontFamily: JAKARTA }}
+              >
+                {p.n}
               </span>
-              <p className="mt-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
-                Étape {i + 1}
+              <motion.span
+                animate={{ scale: [1, 1.12, 1] }}
+                transition={{ duration: 4, repeat: Infinity, delay: i * 0.3 }}
+                className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-xl"
+                style={{ backgroundColor: `${p.color}18`, color: p.color }}
+              >
+                <p.Icon className="h-7 w-7" strokeWidth={1.8} />
+              </motion.span>
+              <p
+                className="text-2xl font-black leading-tight"
+                style={{ color: p.color, fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
+              >
+                {p.title}
               </p>
-              <h3 className="mt-2 text-xl font-black tracking-tight text-[#2D2D2D] sm:text-2xl" style={{ fontFamily: JAKARTA }}>
-                {p.t}
-              </h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-[#4A5568]" style={{ fontFamily: MANROPE }}>
-                {p.d}
+                {p.desc}
               </p>
               {i < PILIERS.length - 1 && (
-                <ArrowRight
+                <motion.span
                   aria-hidden
-                  className="absolute -right-4 top-1/2 hidden h-7 w-7 -translate-y-1/2 text-[#6B1A2A] md:block"
-                />
+                  animate={{ x: [0, 6, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -right-6 top-1/2 hidden -translate-y-1/2 text-2xl font-black lg:block"
+                  style={{ color: p.color, opacity: 0.5 }}
+                >
+                  →
+                </motion.span>
               )}
             </motion.div>
           ))}
         </div>
+
+        {/* Rangée inférieure — 3 sub-features */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.9, delay: 0.4 }}
+          className="mt-16 rounded-3xl border border-[#E8E7E3] bg-white/70 p-8 backdrop-blur-lg sm:p-10 lg:p-12"
+          style={{ boxShadow: '0 0 80px rgba(107, 26, 42, 0.1), 0 0 150px rgba(59, 130, 246, 0.05)' }}
+        >
+          <div className="grid gap-10 md:grid-cols-3">
+            {[
+              { title: 'QCM Intelligents', desc: 'Adaptés à votre niveau' },
+              { title: 'IA Pédagogique',   desc: 'Apprentissage personnalisé' },
+              { title: 'Suivi Temps Réel', desc: 'Analytics détaillés' },
+            ].map((s, i) => (
+              <motion.div
+                key={s.title}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
+              >
+                <p
+                  className="text-lg font-black text-[#2D2D2D]"
+                  style={{ fontFamily: JAKARTA, letterSpacing: '-0.01em' }}
+                >
+                  {s.title}
+                </p>
+                <p className="mt-1 text-sm text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
+                  {s.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -341,32 +399,39 @@ export function ExperienceSection() {
 }
 
 // ============================================================================
-// TÉMOIGNAGES — Cœur émotionnel
+// TÉMOIGNAGES — Avec lecteurs vidéo (placeholders)
 // ============================================================================
 const TEMOIGNAGES = [
   {
+    nom: 'Dr. Amina Diallo', role: 'Chirurgie générale', specColor: '#14B8A6',
     citation: 'J’étais perdue. Maintenant je suis confiante.',
-    arc: 'De la confusion à la clarté',
-    nom: 'Dr. Marwa B.', role: 'Chirurgie générale', stat: '87 % de réussite',
+    arc: 'De la confusion à la clarté', stat: '87 % de réussite', duration: '8:42',
+    videoSrc: '/temoignages/amina-diallo.mp4',
   },
   {
+    nom: 'Dr. Karim Benali', role: 'Médecine interne', specColor: '#3B82F6',
+    citation: 'La structure que j’attendais enfin.',
+    arc: 'De l’isolement à la communauté', stat: '3 mois de préparation', duration: '6:15',
+    videoSrc: '/temoignages/karim-benali.mp4',
+  },
+  {
+    nom: 'Dr. Leila Mansouri', role: 'Pédiatrie', specColor: '#F59E0B',
     citation: 'Major ECN a changé ma vie professionnelle.',
-    arc: 'De l’isolement à la communauté',
-    nom: 'Dr. Yacine R.', role: 'Médecine interne', stat: '3 mois de préparation',
+    arc: 'De l’incertitude à la réussite', stat: 'Reçue en 1ʳᵉ session', duration: '7:28',
+    videoSrc: '/temoignages/leila-mansouri.mp4',
   },
   {
+    nom: 'Dr. Hassan Okafor', role: 'Cardiologie', specColor: '#C84A5A',
     citation: 'Enfin une plateforme à la hauteur de mes ambitions.',
-    arc: 'De l’incertitude à la réussite',
-    nom: 'Dr. Hala K.', role: 'Admise à l’EVC', stat: 'Reçue en 1ʳᵉ session',
-  },
-  {
-    citation: 'Tout est structuré, je n’ai plus à improviser.',
-    arc: 'De la frustration à l’accomplissement',
-    nom: 'Dr. Karim S.', role: 'Premier à l’EVC', stat: 'Major de promo',
+    arc: 'De la frustration à l’accomplissement', stat: 'Major de promo', duration: '9:05',
+    videoSrc: '/temoignages/hassan-okafor.mp4',
   },
 ];
 
 export function TemoignagesSection() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const featured = TEMOIGNAGES[activeIdx];
+
   return (
     <section
       id="temoignages"
@@ -398,8 +463,8 @@ export function TemoignagesSection() {
             Cœur émotionnel du site
           </span>
           <h2
-            className="mb-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
             <span className="block text-[#2D2D2D]">Les vraies histoires</span>
             <span className={'block ' + TEAL_AMBER}>de médecins qui ont réussi.</span>
@@ -409,39 +474,59 @@ export function TemoignagesSection() {
           </p>
         </motion.div>
 
-        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:gap-6">
+        {/* Featured video player */}
+        <motion.figure
+          key={featured.nom}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7 }}
+          className="mt-14"
+        >
+          <VideoPlayer
+            src={featured.videoSrc}
+            name={featured.nom}
+            role={featured.role}
+            spec={featured.role}
+            specColor={featured.specColor}
+            citation={featured.citation}
+            arc={featured.arc}
+            stat={featured.stat}
+            duration={featured.duration}
+            featured
+          />
+        </motion.figure>
+
+        {/* Sélecteur — 4 mini cards cliquables */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {TEMOIGNAGES.map((t, i) => (
-            <motion.figure
+            <motion.button
               key={t.nom}
-              initial={{ opacity: 0, y: 40 }}
+              type="button"
+              onClick={() => setActiveIdx(i)}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="relative flex flex-col rounded-3xl border border-[#E8E7E3] bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:p-9"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className={
+                'group overflow-hidden rounded-2xl border-2 bg-white text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ' +
+                (i === activeIdx ? 'border-[#14B8A6] shadow-lg' : 'border-[#E8E7E3]')
+              }
             >
-              <Quote className="h-8 w-8 text-[#6B1A2A]/25" />
-              <blockquote
-                className="mt-3 text-xl font-black leading-[1.2] text-[#2D2D2D] sm:text-2xl"
-                style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
-              >
-                « {t.citation} »
-              </blockquote>
-              <p
-                className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-[#F9F0F2] to-[#F0F9FB] px-3.5 py-1 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]"
-                style={{ fontFamily: MANROPE }}
-              >
-                <Sparkles className="h-3 w-3" /> {t.arc}
-              </p>
-              <figcaption className="mt-6 flex flex-wrap items-end justify-between gap-3 border-t border-[#E8E7E3] pt-4">
-                <div>
-                  <p className="text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{t.nom}</p>
-                  <p className="text-xs text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>{t.role}</p>
+              <VideoThumb name={t.nom} duration={t.duration} small />
+              <div className="p-4">
+                <p className="text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{t.nom}</p>
+                <p className="text-xs text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>{t.role}</p>
+                <p className="mt-2 text-xs italic leading-relaxed text-[#4A5568]" style={{ fontFamily: MANROPE }}>
+                  « {t.citation} »
+                </p>
+                <div className="mt-2 flex items-center gap-1 text-[#F59E0B]">
+                  {Array.from({ length: 5 }).map((_, k) => (
+                    <Star key={k} className="h-3 w-3 fill-current" />
+                  ))}
                 </div>
-                <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
-                  <CheckCircle2 className="h-3.5 w-3.5" /> {t.stat}
-                </span>
-              </figcaption>
-            </motion.figure>
+              </div>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -449,15 +534,145 @@ export function TemoignagesSection() {
   );
 }
 
+function VideoPlayer({
+  src, name, role, citation, arc, stat, duration, specColor, featured = false,
+}: {
+  src: string; name: string; role: string; spec: string; specColor: string;
+  citation: string; arc: string; stat: string; duration: string; featured?: boolean;
+}) {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <div className="overflow-hidden rounded-3xl border border-[#E8E7E3] bg-black shadow-2xl">
+      <div className="relative aspect-video w-full bg-gradient-to-br from-[#2D2D2D] via-[#1C1C1E] to-[#0F0F10]">
+        {/* Quand on aura les vraies vidéos, remplacer ce div par <video src={src} controls /> */}
+        {/* Placeholder visuel : initiales géantes + bouton play */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/60" />
+          <span
+            className="select-none text-9xl font-black opacity-[0.08] sm:text-[12rem]"
+            style={{ color: specColor, fontFamily: JAKARTA }}
+          >
+            {initialsOf(name)}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPlaying((v) => !v)}
+            aria-label={playing ? 'Pause' : 'Lecture'}
+            className="group relative flex h-20 w-20 items-center justify-center rounded-full bg-white/95 shadow-2xl backdrop-blur transition-all hover:scale-110 sm:h-24 sm:w-24"
+          >
+            <span className="absolute inset-0 animate-ping rounded-full bg-white/40" />
+            <Play className="relative h-7 w-7 fill-[#2D2D2D] text-[#2D2D2D] sm:h-9 sm:w-9" />
+          </button>
+        </div>
+        {/* Duration badge */}
+        <span
+          className="absolute bottom-4 right-4 rounded-md bg-black/70 px-2 py-1 text-xs font-bold text-white backdrop-blur"
+          style={{ fontFamily: MANROPE }}
+        >
+          {duration}
+        </span>
+      </div>
+
+      {featured && (
+        <div className="grid gap-6 bg-[#0F0F10] p-6 text-white sm:grid-cols-[1.4fr_1fr] sm:p-8 lg:p-10">
+          <div>
+            <p className="text-xl font-black sm:text-2xl" style={{ fontFamily: JAKARTA }}>{name}</p>
+            <p className="text-sm font-medium" style={{ color: specColor, fontFamily: MANROPE }}>{role}</p>
+            <div className="mt-3 flex items-center gap-1 text-[#F59E0B]">
+              {Array.from({ length: 5 }).map((_, k) => (<Star key={k} className="h-4 w-4 fill-current" />))}
+            </div>
+            <blockquote
+              className="mt-5 text-xl font-black leading-tight sm:text-2xl"
+              style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
+            >
+              « {citation} »
+            </blockquote>
+          </div>
+          <div className="flex flex-col gap-3">
+            <span
+              className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-white backdrop-blur"
+              style={{ fontFamily: MANROPE }}
+            >
+              <Heart className="h-3.5 w-3.5" /> {arc}
+            </span>
+            <span
+              className="inline-flex items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-xs font-bold"
+              style={{ fontFamily: MANROPE, backgroundColor: `${specColor}25`, color: specColor }}
+            >
+              <TrendingUp className="h-3.5 w-3.5" /> {stat}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VideoThumb({ name, duration, small = false }: { name: string; duration: string; small?: boolean }) {
+  return (
+    <div className={'relative w-full overflow-hidden ' + (small ? 'aspect-video' : 'aspect-video')}>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#2D2D2D] via-[#1C1C1E] to-[#0F0F10]">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span
+            className="select-none text-6xl font-black opacity-10"
+            style={{ color: '#FFFFFF', fontFamily: JAKARTA }}
+          >
+            {initialsOf(name)}
+          </span>
+          <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-transform group-hover:scale-110">
+            <Play className="h-5 w-5 fill-[#2D2D2D] text-[#2D2D2D]" />
+          </span>
+        </div>
+        <span
+          className="absolute bottom-2 right-2 rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white"
+          style={{ fontFamily: MANROPE }}
+        >
+          {duration}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function initialsOf(name: string): string {
+  return name
+    .replace(/^Dr\.?\s+/i, '')
+    .split(/\s+/)
+    .map((s) => s[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
 // ============================================================================
-// TRANSFORMATION — Story + timeline
+// TRANSFORMATION — 3 cards (Avant / Pendant / Après) avec emojis
 // ============================================================================
-const TIMELINE = [
-  { n: 'Semaine 1',  t: 'Diagnostic',       d: 'Évaluation, plan personnalisé.' },
-  { n: 'Semaine 4',  t: 'Fondamentaux',     d: 'Bases solides dans chaque spé.' },
-  { n: 'Semaine 8',  t: 'Progression',      d: 'Approfondissement, examens blancs.' },
-  { n: 'Semaine 10', t: 'Perfectionnement', d: 'Cas cliniques, gestion du stress.' },
-  { n: 'Semaine 12', t: 'Réussite',         d: 'Pic de forme, jour J en confiance.' },
+const PHASES = [
+  {
+    eyebrow: 'Avant', eyebrowColor: '#6B1A2A', emoji: '😰', cardBg: 'from-[#F9F0F2]/60 to-[#FAFAF8]',
+    Icon: Compass, iconBg: '#6B1A2A',
+    title: 'La confusion', titleColor: '#6B1A2A',
+    desc: 'Perdu, stressé, sans méthode',
+    bullets: ['Isolé', 'Désorganisé', 'Incertain'],
+    bulletColor: '#6B1A2A',
+  },
+  {
+    eyebrow: 'Pendant', eyebrowColor: '#3B82F6', emoji: '🚀', cardBg: 'from-[#F0F9FB]/60 to-[#FAFAF8]',
+    Icon: Zap, iconBg: '#3B82F6',
+    title: 'La progression', titleColor: '#3B82F6',
+    desc: 'Structuré, accompagné, guidé',
+    bullets: ['Organisé', 'Motivé', 'Progressif'],
+    bulletColor: '#3B82F6',
+  },
+  {
+    eyebrow: 'Après', eyebrowColor: '#14B8A6', emoji: '🎉', cardBg: 'from-[#F0FBF7]/60 to-[#FAFAF8]',
+    Icon: CheckCircle2, iconBg: '#14B8A6',
+    title: 'La réussite', titleColor: '#14B8A6',
+    desc: 'Confiant, performant, réussi',
+    bullets: ['Admis', 'Confiant', 'Réussi'],
+    bulletColor: '#14B8A6',
+  },
 ];
 
 export function TransformationSection() {
@@ -486,95 +701,88 @@ export function TransformationSection() {
         >
           <span className={EYEBROW} style={{ fontFamily: MANROPE }}>Votre transformation</span>
           <h2
-            className="mb-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
-            <span className="block text-[#2D2D2D]">De la confusion</span>
-            <span className={'block ' + TRI}>à la réussite.</span>
+            <span className="block text-[#2D2D2D]">Votre transformation</span>
+            <span className={'block ' + BORD_BLUE}>commence maintenant.</span>
           </h2>
           <p className="mx-auto max-w-2xl text-base text-[#4A5568] sm:text-lg" style={{ fontFamily: MANROPE }}>
             De l’isolement à la confiance. De la confusion à la structure. De l’incertitude à la réussite.
           </p>
         </motion.div>
 
-        {/* Avant / Après */}
-        <div className="mt-14 grid gap-5 lg:grid-cols-2">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.8 }}
-            className="rounded-3xl border border-[#E8E7E3] bg-[#F5F4F0] p-7"
-          >
-            <p className="text-xs font-black uppercase tracking-wide text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
-              Avant
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {['Désorganisé', 'Perdu', 'Stressé', 'Sans méthode', 'Incertain'].map((w) => (
-                <span
-                  key={w}
-                  className="rounded-full border border-[#E8E7E3] bg-white px-3 py-1 text-xs font-bold text-[#7A7A7A]"
-                  style={{ fontFamily: MANROPE }}
-                >
-                  {w}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.8 }}
-            className="rounded-3xl border border-[#6B1A2A]/30 bg-gradient-to-br from-[#F9F0F2] via-white to-[#F0F9FB] p-7"
-          >
-            <p className="text-xs font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
-              Après
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {['Motivé', 'Structuré', 'Progressif', 'Confiant', 'Réussi'].map((w) => (
-                <span
-                  key={w}
-                  className="rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-3 py-1 text-xs font-black text-white"
-                  style={{ fontFamily: MANROPE }}
-                >
-                  {w}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Timeline */}
-        <div className="mt-16">
-          <h3 className="text-xl font-black tracking-tight text-[#2D2D2D] sm:text-2xl" style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}>
-            Votre parcours avec Major ECN
-          </h3>
-          <ol className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {TIMELINE.map((s, i) => (
-              <motion.li
-                key={s.n}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="relative rounded-2xl border border-[#E8E7E3] bg-white p-5 shadow-sm"
+        {/* 3 cards Avant / Pendant / Après */}
+        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+          {PHASES.map((p, i) => (
+            <motion.div
+              key={p.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.7, delay: i * 0.15 }}
+              className={
+                'relative flex flex-col rounded-3xl border-2 bg-gradient-to-br p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:p-9 ' +
+                p.cardBg
+              }
+              style={{ borderColor: `${p.eyebrowColor}25` }}
+            >
+              {/* Eyebrow chip flottant */}
+              <span
+                className="absolute -top-3 left-6 inline-flex items-center rounded-full bg-white px-3 py-1 text-[11px] font-black uppercase tracking-wide shadow-sm"
+                style={{ color: p.eyebrowColor, fontFamily: MANROPE, border: `1.5px solid ${p.eyebrowColor}40` }}
               >
-                <p className="text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
-                  {s.n}
-                </p>
-                <p className="mt-2 text-lg font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>
-                  {s.t}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-[#4A5568]" style={{ fontFamily: MANROPE }}>
-                  {s.d}
-                </p>
-                <span className="absolute -top-3 left-5 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] text-[11px] font-black text-white shadow-md">
-                  {i + 1}
-                </span>
-              </motion.li>
-            ))}
-          </ol>
+                {p.eyebrow}
+              </span>
+
+              {/* Emoji géant flottant */}
+              <motion.span
+                animate={{ y: [0, -8, 0], rotate: [0, 5, 0] }}
+                transition={{ duration: 4 + i * 0.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="mt-2 text-6xl"
+                aria-hidden
+              >
+                {p.emoji}
+              </motion.span>
+
+              {/* Icon dans une pastille */}
+              <span
+                className="mt-5 inline-flex h-11 w-11 items-center justify-center rounded-xl"
+                style={{ backgroundColor: `${p.iconBg}18`, color: p.iconBg }}
+              >
+                <p.Icon className="h-5 w-5" />
+              </span>
+
+              <p
+                className="mt-5 text-2xl font-black sm:text-3xl"
+                style={{ color: p.titleColor, fontFamily: JAKARTA, letterSpacing: '-0.025em' }}
+              >
+                {p.title}
+              </p>
+              <p
+                className="mt-2 text-sm font-medium text-[#4A5568] sm:text-base"
+                style={{ fontFamily: MANROPE }}
+              >
+                {p.desc}
+              </p>
+
+              <ul className="mt-6 space-y-2.5 border-t border-[#E8E7E3]/50 pt-5">
+                {p.bullets.map((b) => (
+                  <li
+                    key={b}
+                    className="flex items-center gap-2.5 text-sm font-bold text-[#2D2D2D]"
+                    style={{ fontFamily: MANROPE }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: p.bulletColor }}
+                    />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -582,15 +790,15 @@ export function TransformationSection() {
 }
 
 // ============================================================================
-// STATS — Résultats & crédibilité (charcoal)
+// STATS — Charcoal Manus : nombres blancs géants, "+" / "%" en bordeaux
 // ============================================================================
 const STATS = [
-  { v: '2 400+', l: 'Médecins formés' },
-  { v: '87 %',   l: 'Taux de réussite' },
-  { v: '4 200+', l: 'QCM disponibles' },
-  { v: '16',     l: 'Spécialités couvertes' },
-  { v: '25+',    l: 'Nationalités représentées' },
-  { v: '12 sem.',l: 'Préparation structurée' },
+  { n: '2 400', suf: '+', l: 'Médecins formés',     sub: 'depuis 2020' },
+  { n: '87',    suf: '%', l: 'Taux de réussite',    sub: 'aux EVC' },
+  { n: '4 200', suf: '+', l: 'QCM disponibles',     sub: 'mis à jour trimestriellement' },
+  { n: '16',    suf: '',  l: 'Spécialités',         sub: 'couvertes intégralement' },
+  { n: '40',    suf: '+', l: 'Nationalités',        sub: 'représentées' },
+  { n: '12',    suf: '',  l: 'Semaines',            sub: 'de préparation structurée' },
 ];
 
 export function StatsSection() {
@@ -618,21 +826,22 @@ export function StatsSection() {
           className="text-center"
         >
           <span
-            className="inline-flex items-center gap-2 rounded-full border border-[rgba(107,26,42,0.5)] bg-[rgba(107,26,42,0.15)] px-4 py-2 text-xs font-black text-[#E5ABB6] sm:text-sm"
+            className="inline-flex items-center gap-2 rounded-full border border-[rgba(200,74,90,0.4)] bg-[rgba(107,26,42,0.18)] px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-[#FB7193]"
             style={{ fontFamily: MANROPE }}
           >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#C84A5A]" />
             Résultats &amp; crédibilité
           </span>
           <h2
-            className="mt-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+            className="mt-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
-            <span className="block">Des chiffres qui</span>
-            <span className={'block ' + TRI}>parlent d’eux-mêmes.</span>
+            <span className="block text-white">Une plateforme</span>
+            <span className={'block ' + TRI_RICH}>qui prouve sa valeur.</span>
           </h2>
         </motion.div>
 
+        {/* Grille 2×3 / 3×2 — bordures internes, chiffres BLANCS géants, "+" / "%" rouge */}
         <div className="mt-14 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 md:grid-cols-3">
           {STATS.map((s, i) => (
             <motion.div
@@ -641,27 +850,31 @@ export function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="flex flex-col gap-1 border-b border-r border-white/10 p-7 last:border-r-0 sm:p-8"
+              className="flex flex-col gap-2 border-b border-r border-white/10 p-7 last:border-r-0 sm:p-8 [&:nth-child(3n)]:md:border-r-0"
             >
               <p
-                className={'text-3xl font-black sm:text-4xl ' + TRI}
-                style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
+                className="text-5xl font-black leading-none text-white sm:text-6xl"
+                style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
               >
-                {s.v}
+                {s.n}
+                {s.suf && (
+                  <span className="ml-0.5 text-[#C84A5A]">{s.suf}</span>
+                )}
               </p>
-              <p className="text-sm text-white/55" style={{ fontFamily: MANROPE }}>{s.l}</p>
+              <p className="text-sm font-bold text-white" style={{ fontFamily: JAKARTA }}>{s.l}</p>
+              <p className="text-xs text-white/50" style={{ fontFamily: MANROPE }}>{s.sub}</p>
             </motion.div>
           ))}
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:gap-8">
           {[
-            'Contenu rédigé par des médecins spécialistes',
-            'Mis à jour chaque trimestre',
-            'Accompagnement par un tuteur dédié',
+            'Contenu rédigé par des médecins spécialistes français',
+            'Mis à jour chaque trimestre selon le programme officiel',
+            'Accompagnement personnalisé par un tuteur dédié',
           ].map((p) => (
             <span key={p} className="inline-flex items-center gap-2 text-xs text-white/55 sm:text-sm" style={{ fontFamily: MANROPE }}>
-              <CheckCircle2 className="h-4 w-4 text-[#14B8A6]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#C84A5A]" />
               {p}
             </span>
           ))}
@@ -817,6 +1030,106 @@ export function FAQSection() {
             ))}
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// FREE TRIAL CTA — bannière mise en avant de l'essai 7 jours
+// ============================================================================
+export function FreeTrialBanner() {
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-16 sm:py-20 lg:py-24">
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[700px] w-[1100px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6B1A2A]/15 via-[#3B82F6]/12 to-[#14B8A6]/15 blur-3xl"
+        animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.05, 1] }}
+        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.96 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.9 }}
+          className="relative overflow-hidden rounded-3xl border-2 border-[#6B1A2A]/15 bg-gradient-to-br from-white via-[#FAFAF8] to-[#F9F0F2]/40 p-8 shadow-[0_30px_90px_-20px_rgba(107,26,42,0.25)] sm:p-12 lg:p-16"
+        >
+          {/* Halos colorés intérieurs */}
+          <div aria-hidden className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[#6B1A2A]/15 blur-3xl" />
+          <div aria-hidden className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[#3B82F6]/12 blur-3xl" />
+          <div aria-hidden className="absolute right-1/3 bottom-0 h-40 w-40 rounded-full bg-[#14B8A6]/12 blur-3xl" />
+
+          <div className="relative grid items-center gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-12">
+            <div>
+              <motion.span
+                animate={{ scale: [1, 1.06, 1] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-lg sm:text-xs"
+                style={{ fontFamily: MANROPE }}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Sans carte bancaire · sans engagement
+              </motion.span>
+
+              <h2
+                className="mt-5 text-4xl font-black leading-[1.02] sm:text-5xl lg:text-6xl"
+                style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
+              >
+                <span className="block text-[#2D2D2D]">Testez Major ECN</span>
+                <span className={'block ' + TRI_RICH}>7 jours gratuitement.</span>
+              </h2>
+
+              <p
+                className="mt-5 max-w-xl text-base text-[#4A5568] sm:text-lg"
+                style={{ fontFamily: MANROPE }}
+              >
+                Créez votre compte en 30 secondes et accédez immédiatement à un échantillon de QCM,
+                flashcards et à l’IA pédagogique. Aucune CB demandée, aucun engagement —
+                vous décidez librement de passer en Essentiel, Premium ou Intensif après votre essai.
+              </p>
+
+              <ul className="mt-6 grid gap-2.5 text-sm sm:grid-cols-2" style={{ fontFamily: MANROPE }}>
+                {[
+                  'Accès immédiat dès activation par email',
+                  'QCM, flashcards et IA inclus',
+                  'Aucun renouvellement automatique',
+                  'Arrêt en un clic à tout moment',
+                ].map((b) => (
+                  <li key={b} className="flex items-start gap-2 text-[#2D2D2D]">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#14B8A6]" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <motion.a
+                href="#cta"
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#6B1A2A] via-[#8B2A3A] to-[#C84A5A] px-7 py-5 text-base font-black text-white shadow-[0_15px_40px_-10px_rgba(107,26,42,0.7)] sm:text-lg"
+                style={{ fontFamily: JAKARTA }}
+              >
+                <Sparkles className="h-5 w-5" />
+                Démarrer mon essai gratuit
+                <ArrowRight className="h-5 w-5" />
+              </motion.a>
+              <a
+                href="#tarifs"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#E8E7E3] bg-white px-7 py-4 text-sm font-bold text-[#2D2D2D] transition-colors hover:border-[#6B1A2A]/40"
+                style={{ fontFamily: JAKARTA }}
+              >
+                Voir d’abord les tarifs
+              </a>
+              <p className="text-center text-[11px] text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
+                ✓ Email d’activation reçu en moins de 2 min
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
