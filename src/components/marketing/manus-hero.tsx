@@ -14,7 +14,7 @@ import { ArrowRight, BookOpen, Heart, Sparkles, TrendingUp } from 'lucide-react'
 export function ManusHero() {
   return (
     <section
-      className="relative isolate flex min-h-[92vh] items-center overflow-hidden pt-24 pb-24 sm:pt-32 sm:pb-32 lg:pt-40 lg:pb-40"
+      className="relative isolate flex items-center overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24"
       style={{ backgroundColor: '#FAFAF8' }}
     >
       {/* === Layer 1 : animated base gradient === */}
@@ -70,7 +70,7 @@ export function ManusHero() {
               initial={{ opacity: 0, y: 40, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: 0.2, duration: 1 }}
-              className="mb-12 inline-flex items-center gap-3 rounded-full border border-[#E8E7E3] bg-gradient-to-r from-[#F5F4F0]/95 to-[#F9F0F2]/95 px-6 py-3 shadow-2xl backdrop-blur-xl sm:px-8 sm:py-4"
+              className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#E8E7E3] bg-gradient-to-r from-[#F5F4F0]/95 to-[#F9F0F2]/95 px-5 py-2.5 shadow-2xl backdrop-blur-xl sm:gap-3 sm:px-6 sm:py-3"
               style={{
                 boxShadow:
                   '0 0 60px rgba(107, 26, 42, 0.2), 0 0 120px rgba(59, 130, 246, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
@@ -91,12 +91,12 @@ export function ManusHero() {
               </span>
             </motion.div>
 
-            {/* H1 — text-7xl/8xl, tricolore */}
+            {/* H1 — tricolore */}
             <motion.h1
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 1.2 }}
-              className="mb-10 text-5xl font-black leading-[1.02] sm:text-6xl md:text-7xl lg:text-8xl"
+              className="mb-5 text-[2.5rem] font-black leading-[1.02] sm:text-5xl md:text-6xl lg:text-[4.5rem]"
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 letterSpacing: '-0.05em',
@@ -118,7 +118,7 @@ export function ManusHero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 1.1 }}
-              className="mb-14 max-w-2xl text-lg font-medium leading-relaxed text-[#4A5568] sm:text-xl"
+              className="mb-7 max-w-2xl text-base font-medium leading-relaxed text-[#4A5568] sm:text-lg"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Une plateforme structurée. Un accompagnement humain. Une vraie chance de réussite.
@@ -129,7 +129,7 @@ export function ManusHero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 1 }}
-              className="mb-12 flex flex-wrap items-end gap-10 sm:gap-12"
+              className="mb-7 flex flex-wrap items-end gap-8 sm:gap-10"
             >
               {[
                 { value: '87%', label: 'Taux de réussite prouvé' },
@@ -142,7 +142,7 @@ export function ManusHero() {
                   transition={{ delay: 0.8 + i * 0.1, duration: 0.8 }}
                 >
                   <p
-                    className="text-4xl font-black text-[#6B1A2A] sm:text-5xl"
+                    className="text-3xl font-black text-[#6B1A2A] sm:text-4xl"
                     style={{
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       letterSpacing: '-0.02em',
@@ -151,7 +151,7 @@ export function ManusHero() {
                     {s.value}
                   </p>
                   <span
-                    className="text-xs font-bold text-[#7A7A7A] sm:text-sm"
+                    className="text-xs font-bold text-[#7A7A7A]"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {s.label}
@@ -165,25 +165,25 @@ export function ManusHero() {
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 1 }}
-              className="mb-10 flex flex-col gap-4 sm:flex-row sm:gap-6"
+              className="mb-5 flex flex-col gap-3 sm:flex-row sm:gap-4"
             >
               <motion.a
                 href="#cta"
-                whileHover={{ scale: 1.05, y: -3 }}
+                whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-9 py-5 text-base font-black text-white shadow-[0_10px_30px_-10px_rgba(107,26,42,0.6)] sm:text-lg"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-7 py-3.5 text-sm font-black text-white shadow-[0_10px_30px_-10px_rgba(107,26,42,0.6)] sm:text-base"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
                 Commencer votre transformation
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </motion.a>
               <motion.a
                 href="#temoignages"
                 whileHover={{ scale: 1.03 }}
-                className="inline-flex items-center justify-center gap-3 rounded-xl border-2 border-[#E8E7E3] bg-white/70 px-9 py-5 text-base font-bold text-[#2D2D2D] backdrop-blur-xl sm:text-lg"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl border-2 border-[#E8E7E3] bg-white/70 px-7 py-3.5 text-sm font-bold text-[#2D2D2D] backdrop-blur-xl sm:text-base"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
-                <Heart className="h-5 w-5 text-[#6B1A2A]" />
+                <Heart className="h-4 w-4 text-[#6B1A2A] sm:h-5 sm:w-5" />
                 Écouter les réussites
               </motion.a>
             </motion.div>

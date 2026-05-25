@@ -340,9 +340,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* =================== TARIFS — dark bordeaux =================== */}
-      <section id="tarifs" className="relative isolate overflow-hidden bg-(--color-primary-deep) py-20 text-white lg:py-28">
-        <div aria-hidden className="absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-(--color-primary)/40 blur-[120px]" />
+      {/* =================== TARIFS — dark charcoal Manus =================== */}
+      <section id="tarifs" className="relative isolate overflow-hidden bg-[#1C1C1E] py-20 text-white lg:py-28">
+        <div aria-hidden className="absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[#6B1A2A]/40 blur-[120px]" />
+        <div aria-hidden className="absolute -bottom-32 right-1/4 -z-10 h-[380px] w-[600px] rounded-full bg-[#3B82F6]/12 blur-[120px]" />
+        <div aria-hidden className="absolute -left-32 top-1/3 -z-10 h-[320px] w-[520px] rounded-full bg-[#14B8A6]/10 blur-[120px]" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] backdrop-blur">
@@ -366,8 +368,8 @@ export default function HomePage() {
                   className={
                     'relative flex flex-col gap-5 rounded-2xl p-7 transition-transform ' +
                     (hi
-                      ? 'bg-white text-(--color-ink) ring-2 ring-white shadow-2xl shadow-black/30 lg:scale-[1.03]'
-                      : 'bg-white/[0.04] text-white ring-1 ring-white/12 hover:ring-white/25')
+                      ? 'bg-white text-[#2D2D2D] ring-2 ring-white shadow-2xl shadow-black/40 lg:scale-[1.03]'
+                      : 'bg-[rgba(255,255,255,0.04)] text-white ring-1 ring-[rgba(255,255,255,0.12)] hover:ring-[rgba(255,255,255,0.25)]')
                   }
                 >
                   {p.badge && (
