@@ -1,4 +1,10 @@
-export type Offer = 'basic' | 'premium';
+export type Offer = 'essentiel' | 'premium' | 'intensif';
+export const OFFERS: Offer[] = ['essentiel', 'premium', 'intensif'];
+export const OFFER_LABEL: Record<Offer, string> = {
+  essentiel: 'Essentiel',
+  premium: 'Premium',
+  intensif: 'Intensif',
+};
 
 export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[] }) & {
   offer: Offer;

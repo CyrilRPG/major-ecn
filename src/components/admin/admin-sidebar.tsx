@@ -2,15 +2,21 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, GraduationCap, Library, Users } from 'lucide-react';
+import { BarChart3, GraduationCap, Library, Mail, MessagesSquare, Receipt, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
 
-const items = [
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean };
+
+const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
+  { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
   { href: '/admin/contenu', label: 'Contenu', Icon: Library },
+  { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
+  { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
+  { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
 ];
 
@@ -19,6 +25,8 @@ const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
+  // Professors only see Q&R; admins see everything.
+  const items = profile.role === 'professor' ? ALL_ITEMS.filter((i) => i.staff) : ALL_ITEMS;
 
   return (
     <>
@@ -66,24 +74,25 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
 
       {/* Mobile: dark top bar */}
       <header
-        className="sticky top-0 z-30 flex items-center gap-3 px-4 py-2.5 text-white lg:hidden"
+        className="sticky top-0 z-30 flex items-center gap-2 px-3 py-2 text-white sm:gap-3 sm:px-4 sm:py-2.5 lg:hidden"
         style={{ background: BG }}
       >
-        <BrandLogo className="h-10 w-auto shrink-0" />
-        <nav className="flex flex-1 gap-1 overflow-x-auto">
+        <BrandLogo className="h-9 w-auto shrink-0 sm:h-10" />
+        <nav className="flex flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {items.map((it) => (
             <Link
               key={it.href}
               href={it.href}
               className={cn(
-                'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm',
                 isActive(it.href)
                   ? 'bg-(--color-accent) text-white'
                   : 'text-white/75 hover:bg-white/10',
               )}
+              aria-label={it.label}
             >
-              <it.Icon className="h-4 w-4" />
-              {it.label}
+              <it.Icon className="h-4 w-4 shrink-0" />
+              <span className="hidden xs:inline sm:inline">{it.label}</span>
             </Link>
           ))}
         </nav>

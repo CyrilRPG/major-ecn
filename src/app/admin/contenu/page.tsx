@@ -45,12 +45,12 @@ export default async function AdminContenuPage() {
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-8 lg:px-10">
+    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="mb-8 border-b border-(--color-border) pb-5">
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Contenu pédagogique</h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Collèges EDN — sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
+          Collèges EVC — sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
         </p>
       </header>
 
@@ -71,7 +71,7 @@ export default async function AdminContenuPage() {
                 </div>
                 <div>
                   <h2 className="text-base font-semibold tracking-tight text-(--color-ink)">{m.nom}</h2>
-                  <p className="text-xs text-(--color-ink-muted)">Collège EDN · {(m.cours ?? []).length} items</p>
+                  <p className="text-xs text-(--color-ink-muted)">Collège EVC · {(m.cours ?? []).length} items</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">

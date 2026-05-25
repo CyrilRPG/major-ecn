@@ -1,8 +1,14 @@
 import type { Offer, PermissionScope } from '@/types/domain';
 
 function parseOffer(raw: unknown): Offer {
-  if (raw && typeof raw === 'object' && (raw as { offer?: unknown }).offer === 'premium') return 'premium';
-  return 'basic';
+  if (raw && typeof raw === 'object') {
+    const o = (raw as { offer?: unknown }).offer;
+    if (o === 'premium') return 'premium';
+    if (o === 'intensif') return 'intensif';
+    // 'basic' is the legacy value — treated as 'essentiel'.
+    if (o === 'essentiel' || o === 'basic') return 'essentiel';
+  }
+  return 'essentiel';
 }
 
 export function parseScope(raw: unknown): PermissionScope {
@@ -15,7 +21,7 @@ export function parseScope(raw: unknown): PermissionScope {
       const list = Array.isArray(cs) ? cs.filter((x): x is string => typeof x === 'string') : [];
       return { type: 'college', colleges: list, offer };
     }
-    // Legacy faculty-scoped accounts → full access (single EDN faculté now).
+    // Legacy faculty-scoped accounts → full access (single EVC faculté now).
     if (t === 'faculty') return { type: 'all', offer };
   }
   return { type: 'all', offer };
@@ -26,13 +32,15 @@ export function canAccessCollege(scope: PermissionScope, collegeId: string): boo
   return scope.colleges.includes(collegeId);
 }
 
-/** Legacy faculté gate kept for unreferenced faculté routes; no-op under the EDN model. */
+/** Legacy faculté gate kept for unreferenced faculté routes; no-op under the EVC model. */
 export function canAccessFaculte(scope: PermissionScope, _faculteId: string): boolean {
   return scope.type === 'all' || scope.type === 'college';
 }
 
 export function offerLabel(offer: Offer): string {
-  return offer === 'premium' ? 'Premium' : 'Basic';
+  if (offer === 'premium') return 'Premium';
+  if (offer === 'intensif') return 'Intensif';
+  return 'Essentiel';
 }
 
 export function describeScope(scope: PermissionScope): string {

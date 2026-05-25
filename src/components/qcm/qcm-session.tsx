@@ -26,6 +26,7 @@ export function QcmSession({
   serieKind,
   questions,
   backHref,
+  mode = 'live',
 }: {
   sessionId: string;
   coursId: string;
@@ -33,7 +34,9 @@ export function QcmSession({
   serieKind: 'qcm' | 'annale';
   questions: Question[];
   backHref: string;
+  mode?: 'live' | 'training';
 }) {
+  const isTraining = mode === 'training';
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, Set<string>>>({});
@@ -161,7 +164,7 @@ export function QcmSession({
             key={it.id}
             item={it}
             selected={sel.has(it.lettre)}
-            outcome={outcomes?.[i] ?? null}
+            outcome={isTraining ? null : outcomes?.[i] ?? null}
             disabled={isValidated}
             isCorrect={it.is_correct}
             onToggle={() => toggle(it.lettre)}
@@ -169,7 +172,7 @@ export function QcmSession({
         ))}
       </div>
 
-      {isValidated && (
+      {isValidated && !isTraining && (
         <div
           className={cn(
             'mt-3 flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm',
@@ -180,8 +183,14 @@ export function QcmSession({
         >
           {qOk ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
           <span className="font-medium">
-            {qOk ? 'Question juste — toutes les coches correspondent.' : 'À retravailler — au moins un item ne correspond pas (notation EDN).'}
+            {qOk ? 'Question juste — toutes les coches correspondent.' : 'À retravailler — au moins un item ne correspond pas (notation EVC).'}
           </span>
+        </div>
+      )}
+      {isValidated && isTraining && (
+        <div className="mt-3 flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3.5 py-2.5 text-sm text-(--color-ink-soft)">
+          <Clock className="h-4 w-4 shrink-0 text-(--color-primary)" />
+          <span className="font-medium">Réponse enregistrée. Vous verrez le corrigé à la fin de l’épreuve.</span>
         </div>
       )}
 

@@ -1,42 +1,44 @@
 import { Suspense } from 'react';
 import { LoginForm } from './login-form';
-import { BrandLogo } from '@/components/brand/brand-logo';
 import { Skeleton } from '@/components/ui/skeleton';
+import { MarketingHeader } from '@/components/marketing/marketing-header';
+import { MarketingFooter } from '@/components/marketing/marketing-footer';
 
 export const metadata = { title: 'Se connecter' };
 
 export default function LoginPage() {
   return (
-    <main className="relative min-h-screen bg-(--color-surface-soft) text-(--color-ink)">
-      {/* Sober editorial accent: a single thin red rule */}
-      <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-(--color-primary)" />
+    <div className="theme-manus relative isolate flex min-h-screen flex-col bg-(--color-surface) font-sans text-(--color-ink)">
+      <MarketingHeader />
 
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-12">
-        <div className="inline-flex w-fit items-center rounded-xl bg-(--color-sidebar) px-3.5 py-2.5">
-          <BrandLogo className="h-14 w-auto" />
-        </div>
+      <main className="relative flex-1">
+        <div aria-hidden className="absolute -right-32 -top-32 -z-10 h-[420px] w-[420px] rounded-full bg-(--color-primary)/12 blur-[120px]" />
+        <div aria-hidden className="absolute -left-24 top-1/3 -z-10 h-[280px] w-[280px] rounded-full bg-[#3B82F6]/10 blur-[100px]" />
 
-        <div className="flex flex-1 items-center py-16">
+        <div className="mx-auto flex max-w-6xl flex-col px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
           <div className="grid w-full items-center gap-x-16 gap-y-12 lg:grid-cols-[1.25fr_1fr]">
             {/* Editorial statement */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-ink-muted)">
-                Préparation EDN · EVC
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-(--color-primary)">
+                Préparation EVC
               </p>
-              <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
-                Le rang utile se prépare,{' '}
-                <span className="italic text-(--color-primary)">item par item</span>.
+              <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-balance text-(--color-ink) sm:text-5xl lg:text-6xl">
+                Reprenez exactement{' '}
+                <span className="bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent">
+                  là où vous vous êtes arrêté
+                </span>
+                .
               </h1>
-              <p className="mt-8 max-w-md text-base leading-relaxed text-(--color-ink-soft)">
-                Cours, dossiers progressifs, ECOS et Dernier Tour réunis dans une seule console de
-                travail. Reprenez exactement là où vous vous êtes arrêté.
+              <p className="mt-6 max-w-md text-base leading-relaxed text-(--color-ink-soft)">
+                Cours, QCM, flashcards, annales et coaching réunis dans une seule console de
+                travail.
               </p>
             </div>
 
             {/* Auth block */}
             <div className="w-full max-w-sm justify-self-end rounded-2xl border border-(--color-border) bg-(--color-surface) p-7 shadow-(--shadow-soft)">
               <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-(--color-ink-soft)">
-                Accès à la console
+                Accès à la plateforme
               </h2>
               <div className="mt-6">
                 <Suspense
@@ -54,11 +56,9 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+      </main>
 
-        <p className="text-xs text-(--color-ink-muted)">
-          © {new Date().getFullYear()} Major ECN — Préparation EDN &amp; EVC
-        </p>
-      </div>
-    </main>
+      <MarketingFooter />
+    </div>
   );
 }

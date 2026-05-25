@@ -2,7 +2,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { parseScope } from '@/lib/auth/permissions';
 import { CollegesGrid } from '@/components/student/colleges-grid';
 
-export const metadata = { title: 'Collèges EDN' };
+export const metadata = { title: 'Collèges EVC' };
 
 export default async function CollegesPage() {
   const { profile } = await requireUser();

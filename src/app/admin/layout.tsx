@@ -1,10 +1,10 @@
-import { requireAdmin } from '@/lib/auth/require-role';
+import { requireStaff } from '@/lib/auth/require-role';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 
 export const metadata = { title: 'Administration' };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { profile } = await requireAdmin();
+  const { profile } = await requireStaff();
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
       <AdminSidebar profile={profile} />

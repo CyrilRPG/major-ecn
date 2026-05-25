@@ -4,6 +4,7 @@ import { ArrowRight, ClipboardCheck, FileText, History, Layers3, MonitorPlay, ty
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { UpgradeBanner } from '@/components/student/upgrade-banner';
 
 type Action = { href: string; label: string; desc: string; Icon: LucideIcon; available: boolean };
 
@@ -35,8 +36,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const actions: Action[] = [
     { href: `/cours/${coursId}/video`, label: 'Cours vidéo', desc: 'Le cours filmé, aligné sur les recommandations HAS.', Icon: MonitorPlay, available: (c.videos ?? []).some((v) => !!v.storage_path) },
     { href: `/cours/${coursId}/fiche`, label: 'Fiche de synthèse', desc: 'Le résumé hiérarchisé rang A / rang B.', Icon: FileText, available: (c.fiches ?? []).some((f) => !!f.storage_path) },
-    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EDN, corrigé et justifié item par item.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
-    { href: `/cours/${coursId}/annales`, label: 'Annales EDN', desc: 'Les sujets des sessions précédentes, en conditions concours.', Icon: History, available: (c.qcm_series ?? []).some((s) => s.type === 'annale') },
+    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EVC, corrigé et justifié item par item.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
+    { href: `/cours/${coursId}/annales`, label: 'Annales EVC', desc: 'Les sujets des sessions précédentes, en conditions concours.', Icon: History, available: (c.qcm_series ?? []).some((s) => s.type === 'annale') },
     { href: `/cours/${coursId}/flashcards`, label: 'Flashcards', desc: 'Révision espacée pondérée par votre niveau de difficulté.', Icon: Layers3, available: (c.flashcards?.length ?? 0) > 0 },
   ];
 
@@ -82,6 +83,10 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             </span>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <UpgradeBanner context="cours" profile={profile} />
       </div>
     </div>
   );

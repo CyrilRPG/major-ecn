@@ -1,265 +1,372 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import {
-  ArrowRight, CalendarDays, GraduationCap, HeartHandshake, LineChart,
-  LogIn, Quote, Sparkles, Star, Target, Users,
+  ArrowRight, BookOpen, Brain, Check, CheckCircle2, ChevronRight,
+  ClipboardCheck, Globe, GraduationCap, Heart, LineChart,
+  Quote, Shield, Sparkles, Star, Target, TrendingUp, Users, Zap,
 } from 'lucide-react';
+import { Reveal } from '@/components/marketing/reveal';
+import { InscriptionForm } from '@/components/marketing/inscription-form';
+import { ManusHero } from '@/components/marketing/manus-hero';
+import {
+  MethodeSection, ExperienceSection, TemoignagesSection,
+  TransformationSection, StatsSection, AudienceSection,
+  FAQSection, TrustBanner,
+} from '@/components/marketing/manus-sections';
 
 export const metadata = {
-  title: 'Major ECN — Votre prépa EDN & EVC de médecine d’excellence',
+  title: 'Major ECN — Préparez les EVC avec excellence',
   description:
-    'La prépa de référence aux EDN et aux EVC : enseignants experts, petits groupes, coaching personnalisé. À Paris et en ligne.',
+    'La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger. Méthode structurée, IA pédagogique, accompagnement humain.',
 };
 
-const IMG = {
-  hero: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?q=80&w=1600&auto=format&fit=crop',
-  reform: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop',
-};
+const CONTACT = 'contact@majorecn.fr';
 
-const FORMULES = [
-  { code: 'D2', titre: 'Formule D2', desc: 'DFASM1 — pose des bases méthodologiques solides dès la première année du 2e cycle.' },
-  { code: 'D3', titre: 'Formule D3', desc: 'DFASM2 — l’année décisive : formules First et Premium, en petits groupes ou sur-mesure.' },
-  { code: 'DT', titre: 'EDN — Dernier Tour', desc: 'Préparation intensive de fin de parcours pour arriver au pic de forme le jour J.' },
-  { code: 'ECOS', titre: 'Formule ECOS', desc: 'Stations simulées et coaching par des enseignants ayant noté les ECOS nationaux.' },
+const FEATURES = [
+  { Icon: Target,    t: 'QCM Intelligents',   d: 'Adaptés à votre niveau, générés à partir des annales et du programme officiel des EVC.' },
+  { Icon: Brain,     t: 'IA Pédagogique',     d: 'Apprentissage personnalisé : l’IA détecte vos lacunes et ajuste vos révisions en temps réel.' },
+  { Icon: LineChart, t: 'Suivi Temps Réel',   d: 'Analytics détaillés par spécialité, progression visible, recommandations claires.' },
 ];
 
-const RAISONS = [
-  { Icon: GraduationCap, titre: 'Nos enseignants', desc: 'Des médecins et spécialistes en lien avec le métier, disponibles tous les jours.' },
-  { Icon: Users, titre: 'Petits groupes', desc: 'Apprentissage facilité et personnalisé — 5 élèves en moyenne.' },
-  { Icon: Target, titre: 'Coaching personnalisé', desc: 'Conseils d’organisation et de stratégie pour maintenir la motivation.' },
-  { Icon: LineChart, titre: 'Suivi sur-mesure', desc: 'Rythme de travail adapté, soutien moral et gestion du stress.' },
-  { Icon: HeartHandshake, titre: 'Formule sur-mesure', desc: 'Un savoir-faire fondé sur une solide expérience des concours médicaux.' },
+const TIMELINE = [
+  { n: 'Semaine 1',   t: 'Diagnostic',        d: 'Évaluation de votre niveau, identification des lacunes, plan personnalisé.' },
+  { n: 'Semaine 4',   t: 'Fondamentaux',      d: 'Maîtrise des bases dans chaque spécialité, méthode QCM.' },
+  { n: 'Semaine 8',   t: 'Progression',       d: 'Approfondissement, examens blancs, ajustements par l’IA.' },
+  { n: 'Semaine 10',  t: 'Perfectionnement',  d: 'Cas cliniques, points difficiles, gestion du stress.' },
+  { n: 'Semaine 12',  t: 'Réussite',          d: 'Pic de forme : conditions d’examen, dernière revue, confiance.' },
 ];
 
 const TEMOIGNAGES = [
-  { nom: 'Dr. Imene Deneche', role: 'Lauréate des EVC — Médecine générale', texte: 'J’ai été classée 2ᵉ en médecine générale. Sans cette préparation, je n’aurais pas visé aussi haut — et mes collègues aussi ont réussi, classés 3ᵉ, 4ᵉ, 6ᵉ.' },
-  { nom: 'Dr. Sandrine Linda Sa’a Talla', role: 'Lauréate des EVC — Médecine générale', texte: 'Le jour J, j’ai obtenu 15,5 de moyenne. L’encadrement bienveillant et la disponibilité de l’équipe ont fait toute la différence : on ne se sent jamais seul.' },
-  { nom: 'Dr. Monica Waitzfelder', role: 'Lauréate des EVC — Psychiatrie', texte: 'La formation m’a fait progresser sur tous les plans : méthodologie, connaissances ciblées et confiance en moi. Merci à toute l’équipe — vous êtes redoutables.' },
+  {
+    citation: 'J’étais perdue. Maintenant je suis confiante.',
+    arc: 'De la confusion à la clarté',
+    nom: 'Dr. Marwa B.',
+    role: 'Chirurgie générale',
+    stat: '87% de réussite',
+  },
+  {
+    citation: 'Major ECN a changé ma vie professionnelle.',
+    arc: 'De l’isolement à la communauté',
+    nom: 'Dr. Yacine R.',
+    role: 'Médecine interne',
+    stat: '3 mois de préparation',
+  },
+  {
+    citation: 'Enfin une plateforme à la hauteur de mes ambitions.',
+    arc: 'De l’incertitude à la réussite',
+    nom: 'Dr. Hala K.',
+    role: 'Admise à l’EVC',
+    stat: 'Reçue en 1ʳᵉ session',
+  },
+  {
+    citation: 'Tout est structuré, je n’ai plus à improviser.',
+    arc: 'De la frustration à l’accomplissement',
+    nom: 'Dr. Karim S.',
+    role: 'Premier à l’EVC',
+    stat: 'Major de promo',
+  },
 ];
 
-const EDN_DATES = [
-  { j: 'Lundi après-midi', h: '14 h 30 – 17 h 30', t: '1ʳᵉ unité de composition' },
-  { j: 'Mardi matin', h: '9 h – 12 h', t: '2ᵉ unité de composition' },
-  { j: 'Mardi après-midi', h: '14 h 30 – 17 h 30', t: '3ᵉ unité de composition' },
-  { j: 'Mercredi matin', h: '9 h – 12 h', t: 'Lecture critique d’articles (LCA)' },
+const STATS = [
+  { v: '2 400+', l: 'Médecins formés' },
+  { v: '87 %',   l: 'Taux de réussite' },
+  { v: '4 200+', l: 'QCM disponibles', sub: 'mis à jour trimestriellement' },
+  { v: '16',     l: 'Spécialités', sub: 'couvertes intégralement' },
+  { v: '25+',    l: 'Nationalités', sub: 'représentées' },
+  { v: '12 sem.',l: 'Préparation structurée' },
+];
+
+const AUDIENCES = [
+  { Icon: GraduationCap, t: 'Médecins à diplôme étranger', d: 'Vous avez obtenu votre diplôme hors UE et vous voulez exercer en France.' },
+  { Icon: TrendingUp,    t: 'Repreneurs après un échec',   d: 'Vous avez déjà tenté les EVC : on reprend la méthode, en mieux ciblée.' },
+  { Icon: Globe,         t: 'Préparation à distance',       d: 'Vous travaillez en parallèle ? La plateforme s’adapte à vos disponibilités.' },
+];
+
+const FAQ = [
+  { q: 'À qui s’adresse Major ECN ?',
+    a: 'Major ECN est destiné aux médecins titulaires d’un diplôme étranger (hors UE) souhaitant exercer en France. Que vous soyez en phase de préparation initiale ou en reprise après un échec, notre plateforme s’adapte à votre niveau et à vos besoins spécifiques.' },
+  { q: 'Quelle est la durée recommandée de préparation ?',
+    a: 'Notre parcours standard est de 12 semaines. Cependant, la plateforme s’adapte à votre emploi du temps et à votre niveau initial. Certains candidats préparent en 8 semaines intensives, d’autres en 6 mois à temps partiel. L’IA génère un plan personnalisé dès votre inscription.' },
+  { q: 'Les QCM sont-ils conformes au programme officiel des EVC ?',
+    a: 'Oui, absolument. Tous nos QCM sont rédigés par des médecins spécialistes français et mis à jour chaque trimestre selon le programme officiel des Épreuves de Vérification des Connaissances. Nous couvrons intégralement les 16 spécialités du programme.' },
+  { q: 'Comment fonctionne l’IA pédagogique ?',
+    a: 'Notre IA analyse vos réponses en temps réel, identifie vos erreurs récurrentes et vos lacunes par spécialité. Elle génère des explications personnalisées, ajuste la difficulté des QCM et vous propose des révisions ciblées au bon moment. C’est comme avoir un tuteur médical disponible 24h/24.' },
+  { q: 'Puis-je accéder à la plateforme depuis mon téléphone ?',
+    a: 'Oui. Major ECN est entièrement responsive et fonctionne sur tous les appareils (ordinateur, tablette, smartphone). Une application mobile est également disponible sur iOS et Android, avec un mode hors ligne pour réviser sans connexion.' },
+  { q: 'Y a-t-il un engagement minimum ?',
+    a: 'Non. Tous nos abonnements sont sans engagement et résiliables à tout moment. Vous commencez avec 7 jours d’essai gratuit pour tester la plateforme sans risque. Si vous n’êtes pas satisfait, vous ne payez rien.' },
+  { q: 'Proposez-vous un accompagnement humain ?',
+    a: 'Oui. Les formules Premium et Intensif incluent un tuteur dédié — un médecin ou un professionnel de santé qui vous accompagne tout au long de votre préparation. Des sessions de questions-réponses en groupe sont également organisées chaque semaine.' },
+];
+
+const PLANS = [
+  {
+    name: 'Essentiel', price: '49', period: '/mois',
+    desc: 'Pour démarrer votre préparation.',
+    features: ['Accès à tous les QCM', 'Flashcards & révision', 'Suivi de progression', 'Communauté étudiants'],
+    cta: 'Commencer', highlighted: false,
+  },
+  {
+    name: 'Premium', price: '89', period: '/mois',
+    desc: 'La préparation complète recommandée.',
+    features: ['Tout Essentiel +', 'IA pédagogique avancée', 'Analytics détaillés', 'Examens blancs illimités', 'Tuteur dédié', 'Mode concours'],
+    cta: 'Choisir Premium', highlighted: true, badge: 'Le plus populaire',
+  },
+  {
+    name: 'Intensif', price: '149', period: '/mois',
+    desc: 'Accompagnement personnalisé maximal.',
+    features: ['Tout Premium +', 'Sessions 1:1 avec un médecin', 'Plan d’étude sur mesure', 'Accès prioritaire au support', 'Garantie satisfaction'],
+    cta: 'Contacter l’équipe', highlighted: false,
+  },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-(--color-sidebar) text-white">
-        <Image
-          src={IMG.hero}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-(--color-sidebar) via-(--color-sidebar)/85 to-(--color-sidebar)/55" />
-        <div className="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/80">
-            <Sparkles className="h-3.5 w-3.5 text-(--color-accent)" />
-            Prépa de référence aux EDN &amp; EVC — depuis plus de 15 ans
-          </span>
-          <h1 className="mt-6 max-w-3xl font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-            Votre prépa EDN de médecine{' '}
-            <span className="italic text-(--color-accent)">d’excellence</span>.
-          </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-            La réussite aux Épreuves Dématérialisées Nationales est une étape cruciale.
-            Grâce à une méthodologie éprouvée et des outils innovants, Major ECN vous donne
-            toutes les clés pour exceller — à Paris et en ligne.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/inscription"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-7 py-4 text-base font-semibold text-white shadow-(--shadow-lifted) transition-transform hover:scale-[1.03]"
-            >
-              Inscrivez-vous maintenant
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-7 py-4 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
-            >
-              <LogIn className="h-5 w-5" />
-              Se connecter à mon espace
-            </Link>
-          </div>
-          <dl className="mt-14 grid max-w-2xl grid-cols-3 gap-6">
-            {[
-              { v: '15 ans', l: 'd’expérience EVC / PAE' },
-              { v: '≈ 5', l: 'élèves par groupe' },
-              { v: 'Paris + ligne', l: 'présentiel ou à distance' },
-            ].map((s) => (
-              <div key={s.l}>
-                <dt className="font-display text-2xl text-white sm:text-3xl">{s.v}</dt>
-                <dd className="mt-1 text-xs text-white/55">{s.l}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      {/* =================== HERO — Manus arc-en-ciel =================== */}
+      <ManusHero />
 
-      {/* 5 RAISONS */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="mb-10 max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Pourquoi Major ECN</p>
-          <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
-            Les 5 bonnes raisons de nous choisir
-          </h2>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {RAISONS.map((r) => (
-            <div
-              key={r.titre}
-              className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-1 hover:shadow-(--shadow-lifted)"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
-                <r.Icon className="h-6 w-6" />
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-(--color-ink)">{r.titre}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{r.desc}</p>
-            </div>
-          ))}
-          <div className="flex flex-col justify-center rounded-2xl bg-(--color-primary) p-6 text-white">
-            <p className="font-display text-xl">Votre spécialité, notre priorité.</p>
-            <p className="mt-2 text-sm text-white/80">À vos côtés pour réussir dans les meilleures conditions.</p>
-            <Link href="/inscription" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
-              Découvrir nos formules <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* === Manus sections (identiques au site Manus du designer) === */}
+      <MethodeSection />
+      <ExperienceSection />
+      <TemoignagesSection />
+      <TransformationSection />
+      <TrustBanner />
+      <StatsSection />
+      <AudienceSection />
 
-      {/* FORMULES */}
-      <section className="bg-(--color-surface-soft) py-20">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Nos formules</p>
-              <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
-                Un accompagnement pour chaque étape
-              </h2>
-            </div>
-            <Link href="/formules" className="inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
-              Toutes les formules <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {FORMULES.map((f) => (
-              <Link
-                key={f.code}
-                href="/formules"
-                className="group flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-1 hover:border-(--color-accent) hover:shadow-(--shadow-lifted)"
-              >
-                <span className="inline-flex w-fit rounded-lg bg-(--color-primary-soft) px-3 py-1 font-display text-sm font-semibold text-(--color-primary-deep)">
-                  {f.code}
-                </span>
-                <h3 className="mt-4 text-lg font-semibold text-(--color-ink)">{f.titre}</h3>
-                <p className="mt-1.5 flex-1 text-sm leading-relaxed text-(--color-ink-soft)">{f.desc}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-accent-deep)">
-                  Voir le programme
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* RÉFORME / EN SAVOIR PLUS */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-(--color-sidebar)">
-            <Image src={IMG.reform} alt="Préparation aux EDN" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">EDN 2026</p>
-            <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
-              Comprendre la réforme, anticiper l’examen
+      {/* =================== TARIFS — dark charcoal Manus =================== */}
+      <section id="tarifs" className="relative isolate overflow-hidden bg-[#1C1C1E] py-20 text-white lg:py-28">
+        <div aria-hidden className="absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[#6B1A2A]/40 blur-[120px]" />
+        <div aria-hidden className="absolute -bottom-32 right-1/4 -z-10 h-[380px] w-[600px] rounded-full bg-[#3B82F6]/12 blur-[120px]" />
+        <div aria-hidden className="absolute -left-32 top-1/3 -z-10 h-[320px] w-[520px] rounded-full bg-[#14B8A6]/10 blur-[120px]" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] backdrop-blur">
+              <Sparkles className="h-3 w-3" /> Inscriptions ouvertes — Session 2025
+            </span>
+            <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+              Votre réussite aux EVC commence ici
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-(--color-ink-soft)">
-              Les Épreuves Dématérialisées Nationales regroupent, pour la première session,
-              quatre épreuves de trois heures. La première session aura lieu du 20 au 23 octobre 2026.
+            <p className="mt-4 text-base text-white/70 sm:text-lg">
+              Choisissez la formule adaptée à vos objectifs. 7 jours d’essai gratuit, sans engagement.
             </p>
-            <ul className="mt-5 space-y-2.5">
-              {EDN_DATES.map((d) => (
-                <li key={d.t} className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-3">
-                  <CalendarDays className="h-4 w-4 shrink-0 text-(--color-primary)" />
-                  <span className="flex-1 text-sm font-medium text-(--color-ink)">{d.t}</span>
-                  <span className="text-xs text-(--color-ink-muted)">{d.j} · {d.h}</span>
-                </li>
-              ))}
-            </ul>
-            <Link href="/en-savoir-plus" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-primary)">
-              Tout savoir sur les EDN &amp; ECOS <ArrowRight className="h-4 w-4" />
-            </Link>
+          </Reveal>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {PLANS.map((p, idx) => {
+              const hi = p.highlighted;
+              return (
+                <Reveal
+                  key={p.name}
+                  delay={idx * 0.1}
+                  className={
+                    'relative flex flex-col gap-5 rounded-2xl p-7 transition-transform ' +
+                    (hi
+                      ? 'bg-white text-[#2D2D2D] ring-2 ring-white shadow-2xl shadow-black/40 lg:scale-[1.03]'
+                      : 'bg-[rgba(255,255,255,0.04)] text-white ring-1 ring-[rgba(255,255,255,0.12)] hover:ring-[rgba(255,255,255,0.25)]')
+                  }
+                >
+                  {p.badge && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-(--color-primary) px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                      {p.badge}
+                    </span>
+                  )}
+                  <div>
+                    <p className={'text-[11px] font-bold uppercase tracking-[0.14em] ' + (hi ? 'text-(--color-primary)' : 'text-white/50')}>
+                      {p.name}
+                    </p>
+                    <div className="mt-3 flex items-end gap-1">
+                      <span className={'font-display text-5xl font-extrabold tracking-tight ' + (hi ? 'text-(--color-ink)' : 'text-white')}>
+                        {p.price} €
+                      </span>
+                      <span className={'mb-1.5 text-sm font-medium ' + (hi ? 'text-(--color-ink-muted)' : 'text-white/60')}>
+                        {p.period}
+                      </span>
+                    </div>
+                    <p className={'mt-2 text-sm ' + (hi ? 'text-(--color-ink-soft)' : 'text-white/70')}>{p.desc}</p>
+                  </div>
+
+                  <ul className="space-y-2.5">
+                    {p.features.map((f) => (
+                      <li key={f} className={'flex items-start gap-2.5 text-sm ' + (hi ? 'text-(--color-ink)' : 'text-white/85')}>
+                        <Check className={'mt-0.5 h-4 w-4 shrink-0 ' + (hi ? 'text-(--color-primary)' : 'text-white')} />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href={p.name === 'Intensif' ? `mailto:${CONTACT}` : '#cta'}
+                    className={
+                      'mt-auto inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform hover:scale-[1.02] ' +
+                      (hi
+                        ? 'bg-(--color-primary) text-white shadow-lg shadow-(--color-primary)/25'
+                        : 'bg-white text-(--color-primary-deep)')
+                    }
+                  >
+                    {p.cta}
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                </Reveal>
+              );
+            })}
           </div>
+
+          <p className="mt-10 text-center text-xs text-white/55">
+            ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement · Annulation instantanée
+          </p>
         </div>
       </section>
 
-      {/* TÉMOIGNAGES */}
-      <section className="bg-(--color-surface-soft) py-20">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mb-10 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-primary)">Vos témoignages</p>
-            <h2 className="mt-3 font-display text-3xl tracking-tight text-(--color-ink) sm:text-4xl">
-              Ils sont venus chez Major ECN, ils en parlent
+      {/* =================== FAQ — Manus =================== */}
+      <FAQSection />
+
+      {/* =================== FINAL CTA =================== */}
+      <section id="cta" className="bg-white py-20 lg:py-28">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-(--color-border) bg-gradient-to-br from-white to-(--color-surface-soft) p-9 text-center shadow-sm sm:p-12">
+            <div aria-hidden className="absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-(--color-primary)/12 blur-[100px]" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-primary)">
+              <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
+            </span>
+            <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
+              Rejoignez 2 400+ médecins
+              <br className="hidden sm:block" />
+              qui ont réussi avec Major ECN
             </h2>
-          </div>
-          <div className="grid gap-4 lg:grid-cols-3">
-            {TEMOIGNAGES.map((t) => (
-              <figure key={t.nom} className="flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft)">
-                <Quote className="h-7 w-7 text-(--color-accent)" />
-                <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-(--color-ink)">{t.texte}</blockquote>
-                <div className="mt-5 flex items-center gap-1 text-(--color-accent)">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
-                </div>
-                <figcaption className="mt-3 border-t border-(--color-border) pt-3">
-                  <p className="text-sm font-semibold text-(--color-ink)">{t.nom}</p>
-                  <p className="text-xs text-(--color-ink-muted)">{t.role}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+            <p className="mx-auto mt-4 max-w-xl text-base text-(--color-ink-soft)">
+              Accès immédiat à la plateforme, 7 jours d’essai gratuit, sans engagement.
+            </p>
 
-      {/* RÉDUCTION IMPÔTS + CTA */}
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="overflow-hidden rounded-3xl bg-(--color-primary) text-white">
-          <div className="grid gap-8 p-9 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-12">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Avantage fiscal</p>
-              <h2 className="mt-3 font-display text-3xl tracking-tight sm:text-4xl">
-                Jusqu’à 50 % de réduction d’impôts
-              </h2>
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80">
-                Une nouvelle étape vers votre avenir médical commence. Notre équipe vous explique
-                comment bénéficier de l’avantage fiscal et vous accompagne dès l’inscription.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3">
-              <Link
-                href="/inscription"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-(--color-primary) transition-transform hover:scale-[1.03]"
-              >
-                Inscrivez-vous maintenant
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-xl border border-white/25 px-6 py-3.5 text-base font-medium text-white hover:bg-white/10"
-              >
-                Une question ? Nous contacter
-              </Link>
-            </div>
+            <InscriptionForm />
+
+            <p className="mt-4 text-xs text-(--color-ink-muted)">
+              ✓ Essai gratuit 7 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
+              Intensif : un conseiller vous rappelle sous 24 h.
+            </p>
           </div>
+
+          {/* Trust badges */}
+          <ul className="mt-10 grid grid-cols-2 gap-3 text-center text-[11px] font-semibold text-(--color-ink-soft) sm:grid-cols-3 lg:grid-cols-6">
+            {[
+              { Icon: Shield,        t: 'Contenu certifié par des spécialistes' },
+              { Icon: TrendingUp,    t: '87 % de taux de réussite' },
+              { Icon: Zap,           t: 'Accès 24h/24, 7j/7' },
+              { Icon: BookOpen,      t: '4 200+ QCM disponibles' },
+              { Icon: Users,         t: '2 400+ médecins formés' },
+              { Icon: ClipboardCheck,t: 'Mis à jour chaque trimestre' },
+            ].map((b) => (
+              <li key={b.t} className="flex flex-col items-center gap-1.5 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4">
+                <b.Icon className="h-4 w-4 text-(--color-primary)" />
+                {b.t}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </>
+  );
+}
+
+/* ============ CSS-drawn dashboard mockup (no image dependency) ============ */
+function DashboardMock() {
+  return (
+    <div className="relative rounded-2xl border border-(--color-border) bg-white shadow-2xl shadow-black/10">
+      {/* browser bar */}
+      <div className="flex items-center gap-1.5 border-b border-(--color-border) px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+        <span className="ml-3 truncate text-[11px] text-(--color-ink-muted)">app.majorecn.fr / dashboard</span>
+      </div>
+      <div className="grid grid-cols-[120px_1fr] gap-3 p-4 sm:p-5">
+        {/* sidebar */}
+        <aside className="hidden flex-col gap-1.5 rounded-xl bg-(--color-surface-soft) p-2.5 sm:flex">
+          {['Dashboard', 'QCM', 'Flashcards', 'Examens', 'Statistiques'].map((l, i) => (
+            <span
+              key={l}
+              className={
+                'rounded-lg px-2.5 py-1.5 text-[11px] font-semibold ' +
+                (i === 0 ? 'bg-white text-(--color-primary) shadow-sm' : 'text-(--color-ink-soft)')
+              }
+            >
+              {l}
+            </span>
+          ))}
+        </aside>
+
+        {/* content */}
+        <div className="min-w-0 space-y-3 sm:col-start-2 sm:col-end-3">
+          <div>
+            <p className="text-xs font-semibold text-(--color-ink-muted)">Bonjour, Dr. Benyamina 👋</p>
+            <p className="font-display text-sm font-bold text-(--color-ink)">Voici votre progression</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { t: 'Progression', v: '68%' },
+              { t: 'QCM',         v: '1 245' },
+              { t: 'Réussite',    v: '74%' },
+            ].map((k) => (
+              <div key={k.t} className="rounded-lg border border-(--color-border) bg-white p-2.5">
+                <p className="text-[9px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">{k.t}</p>
+                <p className="mt-0.5 font-display text-base font-extrabold text-(--color-ink)">{k.v}</p>
+              </div>
+            ))}
+          </div>
+          {/* chart */}
+          <div className="rounded-lg border border-(--color-border) bg-(--color-surface-soft) p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">Progression — 6 mois</p>
+            <svg viewBox="0 0 220 70" className="mt-1.5 h-16 w-full">
+              <defs>
+                <linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#6B1A2A" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#6B1A2A" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M0,60 L18,55 L38,50 L60,42 L82,38 L106,30 L130,28 L156,20 L182,16 L210,12 L220,10 L220,70 L0,70 Z" fill="url(#ga)" />
+              <path d="M0,60 L18,55 L38,50 L60,42 L82,38 L106,30 L130,28 L156,20 L182,16 L210,12" stroke="#6B1A2A" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="210" cy="12" r="3" fill="#6B1A2A" />
+            </svg>
+          </div>
+          <div className="flex items-center gap-2 rounded-lg bg-(--color-primary-soft) px-3 py-2">
+            <Star className="h-3.5 w-3.5 text-(--color-primary)" />
+            <p className="text-[11px] font-semibold text-(--color-primary)">+12 % depuis la semaine dernière</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============ Device frames for the "expérience complète" section ============ */
+function DeviceFrame({
+  label, sub, variant,
+}: { label: string; sub: string; variant: 'desktop' | 'mobile' | 'tablet' }) {
+  const w =
+    variant === 'desktop' ? 'aspect-[16/10]' :
+    variant === 'tablet'  ? 'aspect-[4/5]'   :
+                            'aspect-[9/16]';
+  return (
+    <figure>
+      <div className={`relative ${w} overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface-soft) shadow-lg`}>
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-white via-(--color-surface-soft) to-(--color-primary-soft)/40">
+          <div className="w-[78%] space-y-2">
+            <div className="h-1.5 w-12 rounded-full bg-(--color-primary)" />
+            <div className="h-2 w-3/4 rounded-full bg-(--color-ink)/85" />
+            <div className="h-1.5 w-full rounded-full bg-(--color-ink)/15" />
+            <div className="h-1.5 w-5/6 rounded-full bg-(--color-ink)/15" />
+            <div className="mt-3 grid grid-cols-3 gap-1.5">
+              <div className="h-7 rounded-md bg-(--color-primary)/15" />
+              <div className="h-7 rounded-md bg-(--color-primary)/25" />
+              <div className="h-7 rounded-md bg-(--color-primary)/10" />
+            </div>
+            <div className="mt-2 h-12 rounded-md border border-(--color-border) bg-white" />
+          </div>
+        </div>
+      </div>
+      <figcaption className="mt-4 px-1">
+        <p className="text-sm font-bold text-(--color-ink)">{label}</p>
+        <p className="text-xs text-(--color-ink-muted)">{sub}</p>
+      </figcaption>
+    </figure>
   );
 }

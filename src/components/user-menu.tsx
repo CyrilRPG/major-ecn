@@ -53,6 +53,12 @@ export function UserMenu({ profile }: { profile: Profile }) {
             Mon espace
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/profil">
+            <UserRound />
+            Mon profil
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="text-(--color-danger) data-[highlighted]:bg-red-50 dark:data-[highlighted]:bg-red-900/20 data-[highlighted]:text-(--color-danger)">
           <LogOut />
