@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Reveal } from '@/components/marketing/reveal';
 import { InscriptionForm } from '@/components/marketing/inscription-form';
+import { ManusHero } from '@/components/marketing/manus-hero';
 
 export const metadata = {
   title: 'Major ECN — Préparez les EVC avec excellence',
@@ -115,78 +116,8 @@ const PLANS = [
 export default function HomePage() {
   return (
     <>
-      {/* =================== HERO =================== */}
-      <section className="relative isolate overflow-hidden">
-        <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[680px] bg-gradient-to-b from-(--color-surface-soft) via-white to-white" />
-        <div aria-hidden className="absolute -right-32 -top-32 -z-10 h-[420px] w-[420px] rounded-full bg-(--color-primary)/12 blur-[120px]" />
-        <div aria-hidden className="absolute -left-24 top-72 -z-10 h-[280px] w-[280px] rounded-full bg-(--color-primary)/8 blur-[100px]" />
-
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:pb-24 lg:pt-20">
-          {/* LEFT */}
-          <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-white/80 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-(--color-primary) shadow-sm backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-(--color-primary)" />
-              La plateforme leader des EVC
-            </span>
-            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.04] tracking-tight text-(--color-ink) sm:text-5xl lg:text-[3.75rem]">
-              Préparez les EVC,{' '}
-              <span className="bg-gradient-to-r from-(--color-primary) to-[#A83A4A] bg-clip-text text-transparent">
-                construisez votre réussite
-              </span>
-              .
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-(--color-ink-soft) sm:text-lg">
-              Une plateforme structurée. Un accompagnement humain. Une vraie chance de réussite —
-              pour les médecins à diplôme étranger qui veulent exercer en France.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#tarifs"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-(--color-primary)/20 transition-transform hover:scale-[1.025]"
-              >
-                Commencer gratuitement
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-              </a>
-              <a
-                href="#temoignages"
-                className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-base font-semibold text-(--color-ink) transition-colors hover:text-(--color-primary)"
-              >
-                <Heart className="h-5 w-5 text-(--color-primary)" />
-                Écouter les réussites
-              </a>
-            </div>
-
-            <p className="mt-5 text-xs text-(--color-ink-muted)">
-              ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement · Annulation instantanée
-            </p>
-
-            <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-(--color-border) pt-7">
-              {[
-                { v: '2 400+', l: 'Médecins formés' },
-                { v: '87 %',   l: 'Taux de réussite' },
-                { v: '4 200+', l: 'QCM' },
-              ].map((s) => (
-                <div key={s.l}>
-                  <dt className="font-display text-2xl font-bold tracking-tight text-(--color-ink) sm:text-3xl">{s.v}</dt>
-                  <dd className="mt-0.5 text-xs text-(--color-ink-muted) sm:text-sm">{s.l}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          {/* RIGHT — Mock dashboard */}
-          <Reveal delay={0.15} className="relative">
-            <DashboardMock />
-            <span className="absolute -top-3 right-3 hidden items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-(--color-primary) shadow-lg ring-1 ring-(--color-border) sm:inline-flex">
-              <TrendingUp className="h-3.5 w-3.5" /> 87 % réussite
-            </span>
-            <span className="absolute -bottom-3 -left-3 hidden items-center gap-1.5 rounded-full bg-(--color-primary) px-3 py-1.5 text-xs font-semibold text-white shadow-lg sm:inline-flex">
-              <BookOpen className="h-3.5 w-3.5" /> 4 200+ QCM
-            </span>
-          </Reveal>
-        </div>
-      </section>
+      {/* =================== HERO — Manus arc-en-ciel =================== */}
+      <ManusHero />
 
       {/* =================== MÉTHODE — 3 features =================== */}
       <section id="methode" className="border-t border-(--color-border) bg-(--color-surface-soft) py-20 lg:py-28">

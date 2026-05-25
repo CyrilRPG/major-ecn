@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { PublicSignupSchema } from '@/lib/schemas/public-signup';
 import { generatePseudo, uniquePseudo } from '@/lib/auth/pseudo';
 import { trialUntilForNewSignup } from '@/lib/auth/trial';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { welcomeEmail } from '@/lib/email/templates';
 
 const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
 
@@ -55,17 +57,20 @@ export async function POST(req: Request) {
     return !!data;
   });
 
-  const redirectTo = `${origin(req)}/auth/setup-password`;
+  const base = process.env.NEXT_PUBLIC_SITE_URL ? siteUrl() : origin(req);
+  const redirectTo = `${base}/auth/setup-password`;
 
-  const { data: created, error: inviteErr } = await admin.auth.admin.inviteUserByEmail(email, {
-    data: { first_name, last_name, promotion, offer },
-    redirectTo,
+  // 1) Création du user sans envoi automatique d'email (createUser + email_confirm=false).
+  //    On générera ensuite un magic-link et on enverra NOTRE propre email branded.
+  const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    email,
+    email_confirm: false,
+    user_metadata: { first_name, last_name, promotion, offer },
   });
 
-  if (inviteErr || !created?.user) {
-    const msg = inviteErr?.message ?? 'Échec de l’inscription.';
-    // Most common case: email already used.
-    const friendly = /already|exist/i.test(msg)
+  if (createErr || !created?.user) {
+    const msg = createErr?.message ?? 'Échec de l’inscription.';
+    const friendly = /already|exist|duplicate/i.test(msg)
       ? `Un compte existe déjà avec cet email. Connectez-vous, ou écrivez à ${CONTACT_EMAIL}.`
       : msg;
     return NextResponse.json({ error: friendly }, { status: 400 });
@@ -100,6 +105,42 @@ export async function POST(req: Request) {
     await admin.auth.admin.updateUserById(created.user.id, {
       user_metadata: { colleges_wish, offer_at_signup: offer },
     });
+  }
+
+  // 2) Génère un magic-link d'invitation (pas envoyé par Supabase — on l'envoie nous-mêmes).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
+    type: 'invite',
+    email,
+    options: { redirectTo },
+  });
+  if (linkErr || !link?.properties?.action_link) {
+    return NextResponse.json({ error: linkErr?.message ?? 'Lien d’activation indisponible.' }, { status: 500 });
+  }
+
+  // 3) Envoie NOTRE email branded via Resend (avec fallback Supabase si pas de clé).
+  const { subject, html, text } = welcomeEmail({
+    firstName: first_name,
+    setupUrl: link.properties.action_link as string,
+    role: 'student',
+  });
+  const sent = await sendEmail({ to: email, subject, html, text });
+  if (!sent.ok) {
+    // Fallback : si Resend pas configuré, on retombe sur l'invite Supabase classique
+    // pour ne pas bloquer l'inscription en prod.
+    if (sent.error.includes('RESEND_API_KEY non configurée')) {
+      await admin.auth.admin.inviteUserByEmail(email, {
+        data: { first_name, last_name, promotion, offer },
+        redirectTo,
+      });
+      return NextResponse.json({
+        ok: true,
+        flow: 'invite_sent',
+        message: `Email d'activation envoyé à ${email}.`,
+        warning: 'RESEND_API_KEY non configurée — fallback email Supabase utilisé.',
+      });
+    }
+    return NextResponse.json({ error: `Email non envoyé : ${sent.error}` }, { status: 500 });
   }
 
   return NextResponse.json({

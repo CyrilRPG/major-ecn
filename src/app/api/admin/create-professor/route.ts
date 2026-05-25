@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AddProfessorSchema, CONTENT_TYPES } from '@/lib/schemas/professor';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { welcomeEmail } from '@/lib/email/templates';
 
 function origin(req: Request): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL;
@@ -55,14 +57,17 @@ export async function POST(req: Request) {
     );
   }
 
-  const redirectTo = `${origin(req)}/auth/setup-password`;
-  const { data: created, error } = await admin.auth.admin.inviteUserByEmail(email, {
-    data: { first_name, last_name, role: 'professor' },
-    redirectTo,
+  const base = process.env.NEXT_PUBLIC_SITE_URL ? siteUrl() : origin(req);
+  const redirectTo = `${base}/auth/setup-password`;
+
+  const { data: created, error } = await admin.auth.admin.createUser({
+    email,
+    email_confirm: false,
+    user_metadata: { first_name, last_name, role: 'professor' },
   });
   if (error || !created?.user) {
     const msg = error?.message ?? 'Échec de la création';
-    const friendly = /already|exist/i.test(msg)
+    const friendly = /already|exist|duplicate/i.test(msg)
       ? 'Un compte existe déjà avec cet email.'
       : msg;
     return NextResponse.json({ error: friendly }, { status: 400 });
@@ -82,6 +87,23 @@ export async function POST(req: Request) {
     .eq('id', created.user.id);
 
   if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+
+  // Magic-link + email branded (Resend) avec fallback Supabase si pas de clé.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: link } = await (admin as any).auth.admin.generateLink({
+    type: 'invite',
+    email,
+    options: { redirectTo },
+  });
+  const setupUrl = (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
+  const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
+  const sent = await sendEmail({ to: email, subject, html, text });
+  if (!sent.ok && sent.error.includes('RESEND_API_KEY non configurée')) {
+    await admin.auth.admin.inviteUserByEmail(email, {
+      data: { first_name, last_name, role: 'professor' },
+      redirectTo,
+    });
+  }
 
   return NextResponse.json({ ok: true, id: created.user.id });
 }
