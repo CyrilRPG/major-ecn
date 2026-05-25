@@ -143,6 +143,27 @@ html, body {
 
 html {
   scroll-behavior: smooth;
+  /* anchor scroll offset to clear the sticky header */
+  scroll-padding-top: 80px;
+}
+
+/* Optimisation fluidité : promotion GPU sur les éléments très animés du marketing */
+@media (prefers-reduced-motion: no-preference) {
+  .theme-manus [class*="blur-3xl"],
+  .theme-manus [class*="animate-"] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 body {

@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { LogIn, Menu, X } from 'lucide-react';
+import { LogIn, Menu, Sparkles, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { href: '#methode', label: 'La méthode' },
-  { href: '#temoignages', label: 'Témoignages' },
-  { href: '#tarifs', label: 'Tarifs' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '#methode',        label: 'Méthode' },
+  { href: '#plateforme',     label: 'Plateforme' },
+  { href: '#temoignages',    label: 'Témoignages' },
+  { href: '#transformation', label: 'Parcours' },
+  { href: '#resultats',      label: 'Résultats' },
+  { href: '#tarifs',         label: 'Tarifs' },
+  { href: '#faq',            label: 'FAQ' },
 ];
 
 export function MarketingHeader() {
@@ -33,8 +36,8 @@ export function MarketingHeader() {
           : 'border-b border-transparent bg-white/0',
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6 lg:h-[72px] lg:gap-6 lg:px-8">
-        <Link href="/" className="-ml-1 inline-flex items-center gap-2.5 focus-ring">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-[72px] lg:gap-4 lg:px-8">
+        <Link href="/" className="-ml-1 inline-flex shrink-0 items-center gap-2.5 focus-ring">
           <span className="inline-flex items-center justify-center rounded-xl bg-(--color-sidebar) px-2.5 py-1.5 shadow-sm">
             <BrandLogo className="h-8 w-auto" />
           </span>
@@ -43,19 +46,32 @@ export function MarketingHeader() {
           </span>
         </Link>
 
-        <nav className="ml-4 hidden items-center gap-1 lg:flex">
+        <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
           {NAV.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+              className="rounded-lg px-2.5 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
             >
               {n.label}
             </a>
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        {/* Nav réduite pour lg (sans xl) — colonne plus serrée */}
+        <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
+          {NAV.slice(0, 4).map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              className="rounded-lg px-2 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <Link
             href="/login"
             className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) transition-colors hover:text-(--color-ink) sm:inline-flex"
@@ -64,10 +80,12 @@ export function MarketingHeader() {
             Se connecter
           </Link>
           <a
-            href="#tarifs"
-            className="inline-flex items-center rounded-lg bg-(--color-primary) px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.03]"
+            href="#essai"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
           >
-            Commencer
+            <Sparkles className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Essai gratuit</span>
+            <span className="sm:hidden">Essai</span>
           </a>
           <button
             type="button"

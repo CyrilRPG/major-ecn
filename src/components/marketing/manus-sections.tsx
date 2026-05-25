@@ -54,7 +54,7 @@ export function MethodeSection() {
         >
           <span className={EYEBROW} style={{ fontFamily: MANROPE }}>La méthode</span>
           <h2
-            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            className="mb-6 text-5xl font-black leading-[1.1] sm:text-6xl lg:text-7xl"
             style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
             <span className="block text-[#2D2D2D]">La méthode</span>
@@ -202,7 +202,7 @@ export function ExperienceSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
+    <section id="plateforme" className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -top-32 -left-32 -z-10 h-[1100px] w-[1100px] rounded-full bg-gradient-to-br from-[#3B82F6]/25 via-[#60A5FA]/12 to-transparent blur-3xl"
@@ -463,7 +463,7 @@ export function TemoignagesSection() {
             Cœur émotionnel du site
           </span>
           <h2
-            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            className="mb-6 text-5xl font-black leading-[1.1] sm:text-6xl lg:text-7xl"
             style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
             <span className="block text-[#2D2D2D]">Les vraies histoires</span>
@@ -677,7 +677,7 @@ const PHASES = [
 
 export function TransformationSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#FAFAF8] to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
+    <section id="transformation" className="relative overflow-hidden bg-gradient-to-b from-white via-[#FAFAF8] to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute top-0 left-1/4 -z-10 h-[1100px] w-[1100px] rounded-full bg-gradient-to-br from-[#6B1A2A]/20 via-[#8B2A3A]/10 to-transparent blur-3xl"
@@ -701,7 +701,7 @@ export function TransformationSection() {
         >
           <span className={EYEBROW} style={{ fontFamily: MANROPE }}>Votre transformation</span>
           <h2
-            className="mb-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            className="mb-6 text-5xl font-black leading-[1.1] sm:text-6xl lg:text-7xl"
             style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
             <span className="block text-[#2D2D2D]">Votre transformation</span>
@@ -803,7 +803,7 @@ const STATS = [
 
 export function StatsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#1C1C1E] py-24 sm:py-32 lg:py-36 text-white">
+    <section id="resultats" className="relative overflow-hidden bg-[#1C1C1E] py-24 sm:py-32 lg:py-36 text-white">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute top-0 left-1/2 -z-0 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[#6B1A2A]/35 blur-[120px]"
@@ -833,7 +833,7 @@ export function StatsSection() {
             Résultats &amp; crédibilité
           </span>
           <h2
-            className="mt-6 text-5xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+            className="mt-6 text-5xl font-black leading-[1.1] sm:text-6xl lg:text-7xl"
             style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
           >
             <span className="block text-white">Une plateforme</span>
@@ -895,7 +895,7 @@ const AUDIENCES = [
 
 export function AudienceSection() {
   return (
-    <section className="relative bg-white py-20 sm:py-24 lg:py-28">
+    <section id="audience" className="relative bg-white py-20 sm:py-24 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1040,7 +1040,7 @@ export function FAQSection() {
 // ============================================================================
 export function FreeTrialBanner() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-16 sm:py-20 lg:py-24">
+    <section id="essai" className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-16 sm:py-20 lg:py-24">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[700px] w-[1100px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6B1A2A]/15 via-[#3B82F6]/12 to-[#14B8A6]/15 blur-3xl"
@@ -1074,7 +1074,7 @@ export function FreeTrialBanner() {
               </motion.span>
 
               <h2
-                className="mt-5 text-4xl font-black leading-[1.02] sm:text-5xl lg:text-6xl"
+                className="mt-5 text-4xl font-black leading-[1.1] sm:text-5xl lg:text-6xl"
                 style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
               >
                 <span className="block text-[#2D2D2D]">Testez Major ECN</span>

@@ -97,7 +97,7 @@ export function ManusHero() {
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 1.2 }}
-              className="mb-5 text-[2.5rem] font-black leading-[1.02] sm:text-5xl md:text-6xl lg:text-[4.5rem]"
+              className="mb-5 text-[2.5rem] font-black leading-[1.1] sm:text-5xl md:text-6xl lg:text-[4.5rem]"
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 letterSpacing: '-0.05em',
