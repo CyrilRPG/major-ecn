@@ -6,6 +6,11 @@ import {
 import { Reveal } from '@/components/marketing/reveal';
 import { InscriptionForm } from '@/components/marketing/inscription-form';
 import { ManusHero } from '@/components/marketing/manus-hero';
+import {
+  MethodeSection, ExperienceSection, TemoignagesSection,
+  TransformationSection, StatsSection, AudienceSection,
+  FAQSection, TrustBanner,
+} from '@/components/marketing/manus-sections';
 
 export const metadata = {
   title: 'Major ECN — Préparez les EVC avec excellence',
@@ -119,226 +124,14 @@ export default function HomePage() {
       {/* =================== HERO — Manus arc-en-ciel =================== */}
       <ManusHero />
 
-      {/* =================== MÉTHODE — 3 features =================== */}
-      <section id="methode" className="border-t border-(--color-border) bg-(--color-surface-soft) py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">La méthode</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
-              Diagnostic précis. Structure progressive.
-              <br className="hidden sm:block" />
-              Suivi intelligent. Réussite garantie.
-            </h2>
-          </Reveal>
-          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.t} delay={i * 0.08} className="card-lift group rounded-2xl border border-(--color-border) bg-white p-7 shadow-sm hover:border-(--color-primary)/40 hover:shadow-lg">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary) transition-colors group-hover:bg-(--color-primary) group-hover:text-white">
-                  <f.Icon className="h-6 w-6" strokeWidth={1.8} />
-                </span>
-                <h3 className="mt-5 text-lg font-bold text-(--color-ink)">{f.t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">{f.d}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =================== EXPÉRIENCE — Device mockups =================== */}
-      <section className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">L’expérience complète</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
-              Dashboards réels. QCM adaptatifs.
-              <br className="hidden sm:block" />
-              Progression visible.
-            </h2>
-            <p className="mt-4 text-base text-(--color-ink-soft)">
-              Sur ordinateur, tablette ou téléphone — la plateforme s’adapte à votre rythme.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 grid items-end gap-6 lg:grid-cols-[1.6fr_0.5fr_1fr]">
-            <DeviceFrame label="Dashboard Desktop" sub="Analytics temps réel · Inclus" variant="desktop" />
-            <DeviceFrame label="Mobile Premium" sub="Progression en direct" variant="mobile" />
-            <DeviceFrame label="Tablet Complet" sub="Analytics complets" variant="tablet" />
-          </div>
-
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { Icon: Brain,       t: 'Apprentissage adaptatif', d: 'L’IA ajuste les QCM selon vos résultats.' },
-              { Icon: LineChart,   t: 'Analytics avancés',       d: 'Performance par spécialité, par thème.' },
-              { Icon: TrendingUp,  t: 'Suivi de progression',    d: 'Vous voyez exactement où vous en êtes.' },
-              { Icon: Zap,         t: 'Performance premium',     d: 'Vitesse et fluidité exceptionnelles.' },
-            ].map((x) => (
-              <div key={x.t} className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-5">
-                <x.Icon className="h-5 w-5 text-(--color-primary)" strokeWidth={1.8} />
-                <p className="mt-3 text-sm font-bold text-(--color-ink)">{x.t}</p>
-                <p className="mt-1 text-xs leading-relaxed text-(--color-ink-soft)">{x.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =================== TÉMOIGNAGES =================== */}
-      <section id="temoignages" className="bg-(--color-surface-soft) py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Témoignages</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
-              2 400+ médecins ont réussi
-              <br className="hidden sm:block" />
-              les EVC avec Major ECN
-            </h2>
-            <p className="mt-4 text-base text-(--color-ink-soft)">
-              Écoutez comment ils ont transformé leur parcours EVC.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-5 sm:grid-cols-2">
-            {TEMOIGNAGES.map((t, i) => (
-              <Reveal
-                key={t.nom}
-                delay={i * 0.08}
-                className="card-lift relative flex flex-col rounded-2xl border border-(--color-border) bg-white p-7 shadow-sm hover:shadow-lg"
-              >
-                <Quote className="h-7 w-7 text-(--color-primary)/30" aria-hidden />
-                <blockquote className="mt-3 font-display text-lg font-semibold leading-snug text-(--color-ink) sm:text-xl">
-                  « {t.citation} »
-                </blockquote>
-                <p className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-(--color-primary-soft) px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-(--color-primary)">
-                  <Sparkles className="h-3 w-3" /> {t.arc}
-                </p>
-                <figcaption className="mt-6 flex flex-wrap items-end justify-between gap-3 border-t border-(--color-border) pt-4">
-                  <div>
-                    <p className="text-sm font-bold text-(--color-ink)">{t.nom}</p>
-                    <p className="text-xs text-(--color-ink-muted)">{t.role}</p>
-                  </div>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-(--color-primary)">
-                    <CheckCircle2 className="h-3.5 w-3.5" /> {t.stat}
-                  </span>
-                </figcaption>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =================== TRANSFORMATION TIMELINE =================== */}
-      <section className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Votre transformation</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl">
-              De l’isolement à la confiance.
-              <br className="hidden sm:block" />
-              De la confusion à la structure.
-            </h2>
-          </Reveal>
-
-          {/* Before / After chips */}
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
-            <div className="rounded-2xl border border-(--color-border) bg-(--color-surface-soft) p-6">
-              <p className="text-xs font-bold uppercase tracking-wide text-(--color-ink-muted)">Avant</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {['Désorganisé', 'Perdu', 'Stressé', 'Sans méthode', 'Incertain'].map((w) => (
-                  <span key={w} className="rounded-full border border-(--color-border) bg-white px-3 py-1 text-xs font-medium text-(--color-ink-soft)">
-                    {w}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-2xl border border-(--color-primary)/30 bg-(--color-primary-soft) p-6">
-              <p className="text-xs font-bold uppercase tracking-wide text-(--color-primary)">Après</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {['Motivé', 'Structuré', 'Progressif', 'Confiant', 'Réussi'].map((w) => (
-                  <span key={w} className="rounded-full bg-(--color-primary) px-3 py-1 text-xs font-semibold text-white">
-                    {w}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Timeline */}
-          <div className="mt-14">
-            <h3 className="font-display text-xl font-bold tracking-tight text-(--color-ink) sm:text-2xl">
-              Votre parcours avec Major ECN
-            </h3>
-            <ol className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {TIMELINE.map((s, i) => (
-                <li key={s.n} className="relative rounded-2xl border border-(--color-border) bg-(--color-surface-soft) p-5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-(--color-primary)">{s.n}</p>
-                  <p className="mt-2 font-display text-lg font-bold text-(--color-ink)">{s.t}</p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-(--color-ink-soft)">{s.d}</p>
-                  <span className="absolute -top-3 left-5 flex h-7 w-7 items-center justify-center rounded-full bg-(--color-primary) text-[11px] font-bold text-white shadow-sm">
-                    {i + 1}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* =================== STATS / RÉSULTATS =================== */}
-      <section className="bg-(--color-surface-soft) py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">Résultats &amp; crédibilité</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl">
-              Des chiffres qui parlent d’eux-mêmes
-            </h2>
-          </Reveal>
-          <dl className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {STATS.map((s) => (
-              <div key={s.l} className="rounded-2xl border border-(--color-border) bg-white p-5 text-center">
-                <dt className="font-display text-2xl font-extrabold tracking-tight text-(--color-primary) sm:text-3xl">{s.v}</dt>
-                <dd className="mt-2 text-xs font-semibold text-(--color-ink)">{s.l}</dd>
-                {s.sub && <dd className="mt-0.5 text-[11px] text-(--color-ink-muted)">{s.sub}</dd>}
-              </div>
-            ))}
-          </dl>
-
-          <ul className="mx-auto mt-10 flex max-w-3xl flex-col gap-3 text-sm text-(--color-ink-soft) sm:flex-row sm:flex-wrap sm:justify-center">
-            {[
-              'Contenu rédigé par des médecins spécialistes français',
-              'Mis à jour chaque trimestre selon le programme officiel',
-              'Accompagnement personnalisé par un tuteur dédié',
-            ].map((p) => (
-              <li key={p} className="inline-flex items-center gap-2">
-                <Check className="h-4 w-4 shrink-0 text-(--color-primary)" />
-                {p}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* =================== AUDIENCE =================== */}
-      <section className="bg-white py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">À qui s’adresse Major ECN ?</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl">
-              Une plateforme pensée pour vous
-            </h2>
-          </Reveal>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {AUDIENCES.map((a) => (
-              <div key={a.t} className="rounded-2xl border border-(--color-border) bg-(--color-surface-soft) p-7">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
-                  <a.Icon className="h-5 w-5" strokeWidth={1.8} />
-                </span>
-                <h3 className="mt-4 text-base font-bold text-(--color-ink)">{a.t}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{a.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* === Manus sections (identiques au site Manus du designer) === */}
+      <MethodeSection />
+      <ExperienceSection />
+      <TemoignagesSection />
+      <TransformationSection />
+      <TrustBanner />
+      <StatsSection />
+      <AudienceSection />
 
       {/* =================== TARIFS — dark charcoal Manus =================== */}
       <section id="tarifs" className="relative isolate overflow-hidden bg-[#1C1C1E] py-20 text-white lg:py-28">
@@ -424,45 +217,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* =================== FAQ =================== */}
-      <section id="faq" className="bg-(--color-surface-soft) py-20 lg:py-28">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-(--color-primary)">FAQ</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-(--color-ink) sm:text-4xl">
-              Questions fréquentes
-            </h2>
-          </div>
-          <div className="mt-10 space-y-3">
-            {FAQ.map((f) => (
-              <details
-                key={f.q}
-                className="group rounded-2xl border border-(--color-border) bg-white p-5 shadow-sm transition-colors open:border-(--color-primary)/30"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-bold text-(--color-ink) marker:hidden sm:text-base">
-                  {f.q}
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-primary-soft) text-(--color-primary)">
-                    <ChevronRight className="h-4 w-4 transition-transform group-open:rotate-90" />
-                  </span>
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-(--color-ink-soft)">{f.a}</p>
-              </details>
-            ))}
-          </div>
-
-          <div className="mt-10 rounded-2xl border border-(--color-border) bg-white p-6 text-center">
-            <p className="text-sm font-medium text-(--color-ink)">
-              Une question non listée ? Notre équipe répond en moins de 24 h.
-            </p>
-            <a
-              href={`mailto:${CONTACT}`}
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-(--color-primary) hover:underline"
-            >
-              Contacter l’équipe <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* =================== FAQ — Manus =================== */}
+      <FAQSection />
 
       {/* =================== FINAL CTA =================== */}
       <section id="cta" className="bg-white py-20 lg:py-28">

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Heart, Sparkles, TrendingUp } from 'lucide-react';
 
@@ -200,14 +201,27 @@ export function ManusHero() {
             </motion.p>
           </motion.div>
 
-          {/* RIGHT — animated card mock with floating badges */}
+          {/* RIGHT — vraie capture du dashboard /accueil avec badges flottants */}
           <motion.div
-            initial={{ opacity: 0, x: 100, scale: 0.9 }}
+            initial={{ opacity: 0, x: 80, scale: 0.94 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1.3, ease: 'easeOut', delay: 0.2 }}
             className="relative hidden lg:block"
           >
-            <DashboardMockManus />
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_30px_80px_-20px_rgba(107,26,42,0.25)]"
+            >
+              <Image
+                src="/screenshots/accueil.png"
+                alt="Dashboard Major ECN — accueil étudiant avec progression et activité"
+                width={1920}
+                height={1080}
+                priority
+                className="h-auto w-full"
+              />
+            </motion.div>
             <motion.span
               aria-hidden
               animate={{ y: [0, -10, 0] }}
