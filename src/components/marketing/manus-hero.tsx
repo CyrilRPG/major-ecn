@@ -214,7 +214,7 @@ export function ManusHero() {
               className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_30px_80px_-20px_rgba(107,26,42,0.25)]"
             >
               <Image
-                src="/screenshots/accueil.png"
+                src="/accueil.png"
                 alt="Dashboard Major ECN — accueil étudiant avec progression et activité"
                 width={1920}
                 height={1080}
