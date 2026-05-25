@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDropzone } from '@/components/admin/content/file-dropzone';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
+import { GenerateButton } from '@/components/admin/generate-buttons';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -148,9 +149,13 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
               </CardContent>
             </Card>
           </div>
+          <div className="mt-4">
+            <GenerateButton coursId={coursId} kind="qcm" />
+          </div>
+
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Ajouter du contenu QCM</CardTitle>
+              <CardTitle>Ajouter du contenu QCM manuellement</CardTitle>
               <CardDescription>
                 L’éditeur question par question et l’import CSV/Excel (template <code>serie, question_order, enonce, item_lettre, item_enonce, is_correct, justification</code>) sont accessibles via l’onglet de chaque série côté Supabase Studio dans cette version de la démo.
               </CardDescription>
@@ -159,6 +164,9 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
         </TabsContent>
 
         <TabsContent value="flashcards">
+          <div className="mb-4">
+            <GenerateButton coursId={coursId} kind="flashcards" />
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Flashcards</CardTitle>
