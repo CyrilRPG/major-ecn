@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { satisfactionSubmittedEmail } from '@/lib/email/templates';
 import type { FormField } from '@/lib/schemas/satisfaction';
 
 export async function submitSatisfactionAction(
@@ -16,7 +18,7 @@ export async function submitSatisfactionAction(
 
   const { data: form } = await supabase
     .from('satisfaction_forms')
-    .select('id, fields, active')
+    .select('id, title, fields, active')
     .eq('id', formId)
     .maybeSingle();
   if (!form || !form.active) return { error: 'Formulaire introuvable.' };
@@ -48,8 +50,33 @@ export async function submitSatisfactionAction(
     );
   if (error) return { error: error.message };
 
+  // Notification admin (best-effort)
+  notifyAdminsOfSubmission({ formId, formTitle: form.title, userId: user.id }).catch(() => null);
+
   revalidatePath('/accueil');
   return { ok: true };
+}
+
+async function notifyAdminsOfSubmission(args: { formId: string; formTitle: string; userId: string }) {
+  const admin = createAdminClient();
+  const [{ data: student }, { data: admins }] = await Promise.all([
+    admin.from('profiles').select('first_name, last_name, email').eq('id', args.userId).maybeSingle(),
+    admin.from('profiles').select('email').eq('role', 'admin'),
+  ]);
+  if (!admins?.length) return;
+  const studentName = `${student?.first_name ?? ''} ${student?.last_name ?? ''}`.trim() || 'Étudiant';
+  const responsesUrl = `${siteUrl()}/admin/formulaires/${args.formId}`;
+  const { subject, html, text } = satisfactionSubmittedEmail({
+    formTitle: args.formTitle,
+    studentName,
+    studentEmail: student?.email ?? null,
+    responsesUrl,
+  });
+  await Promise.all(
+    admins
+      .filter((a): a is { email: string } => !!a.email)
+      .map((a) => sendEmail({ to: a.email, subject, html, text }).catch(() => null)),
+  );
 }
 
 export async function skipSatisfactionAction(formId: string): Promise<{ ok: true } | { error: string }> {

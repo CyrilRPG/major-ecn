@@ -4,7 +4,7 @@ import { PublicSignupSchema } from '@/lib/schemas/public-signup';
 import { generatePseudo, uniquePseudo } from '@/lib/auth/pseudo';
 import { trialUntilForNewSignup } from '@/lib/auth/trial';
 import { sendEmail, siteUrl } from '@/lib/email/send';
-import { welcomeEmail } from '@/lib/email/templates';
+import { welcomeEmail, adminSignupNotificationEmail } from '@/lib/email/templates';
 
 const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
 
@@ -143,9 +143,43 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Email non envoyé : ${sent.error}` }, { status: 500 });
   }
 
+  // Notif admin (best-effort) — récupère les admins, envoie le récap.
+  notifyAdminsOfSignup({
+    email,
+    first_name,
+    last_name,
+    promotion: promotion ?? null,
+    colleges_wish: colleges_wish ?? null,
+  }).catch(() => null);
+
   return NextResponse.json({
     ok: true,
     flow: 'invite_sent',
     message: `Email d'activation envoyé à ${email}. Cliquez sur le lien pour choisir votre mot de passe.`,
   });
+}
+
+async function notifyAdminsOfSignup(args: {
+  email: string;
+  first_name: string;
+  last_name: string;
+  promotion: string | null;
+  colleges_wish: string | null;
+}) {
+  const admin = createAdminClient();
+  const { data: admins } = await admin.from('profiles').select('email').eq('role', 'admin');
+  if (!admins?.length) return;
+  const { subject, html, text } = adminSignupNotificationEmail({
+    firstName: args.first_name,
+    lastName: args.last_name,
+    email: args.email,
+    promotion: args.promotion,
+    collegesWish: args.colleges_wish,
+    adminUrl: `${siteUrl()}/admin/eleves`,
+  });
+  await Promise.all(
+    admins
+      .filter((a): a is { email: string } => !!a.email)
+      .map((a) => sendEmail({ to: a.email, subject, html, text }).catch(() => null)),
+  );
 }

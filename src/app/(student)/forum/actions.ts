@@ -3,7 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { generatePseudo } from '@/lib/auth/pseudo';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { forumNewQuestionEmail } from '@/lib/email/templates';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -58,6 +62,61 @@ export async function askQuestionAction(input: {
     .single();
   if (error || !data) return { error: error?.message ?? 'Impossible d’envoyer la question.' };
 
+  // Notification email aux professeurs ayant accès à ce collège (best-effort).
+  notifyProfessorsOfNewQuestion({
+    questionId: data.id,
+    matiereId,
+    studentPseudo: pseudo,
+    coursTitre,
+    matiereNom,
+    body,
+  }).catch(() => { /* best-effort, ne bloque jamais la création */ });
+
   revalidatePath('/admin/qa');
   return { ok: true, id: data.id };
+}
+
+/**
+ * Envoie un email à chaque professeur ayant accès au collège concerné.
+ * Si pas de collège (question hors-cours), on alerte tous les professeurs.
+ */
+async function notifyProfessorsOfNewQuestion(args: {
+  questionId: string;
+  matiereId: string | null;
+  studentPseudo: string;
+  coursTitre: string | null;
+  matiereNom: string | null;
+  body: string;
+}) {
+  const admin = createAdminClient();
+  const { data: profs } = await admin
+    .from('profiles')
+    .select('id, first_name, email, permission_scope')
+    .eq('role', 'professor');
+
+  if (!profs?.length) return;
+
+  const targets = profs.filter((p) => {
+    if (!p.email) return false;
+    if (!args.matiereId) return true; // question sans cours → tous les profs
+    const scope = parseScope(p.permission_scope);
+    return canAccessCollege(scope, args.matiereId);
+  });
+
+  if (targets.length === 0) return;
+
+  const qaUrl = `${siteUrl()}/admin/qa`;
+  await Promise.all(
+    targets.map(async (p) => {
+      const { subject, html, text } = forumNewQuestionEmail({
+        professorFirstName: p.first_name ?? '',
+        studentPseudo: args.studentPseudo,
+        coursTitre: args.coursTitre,
+        matiereNom: args.matiereNom,
+        questionBody: args.body,
+        qaUrl,
+      });
+      await sendEmail({ to: p.email!, subject, html, text }).catch(() => null);
+    }),
+  );
 }
