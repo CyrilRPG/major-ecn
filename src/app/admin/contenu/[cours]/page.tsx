@@ -11,6 +11,7 @@ import { FileDropzone } from '@/components/admin/content/file-dropzone';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
+import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -129,9 +130,12 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
               </CardContent>
             </Card>
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><History className="h-4 w-4" /> Annales</CardTitle>
-                <CardDescription>{annales.length} annale{annales.length > 1 ? 's' : ''}</CardDescription>
+              <CardHeader className="flex flex-row items-start justify-between gap-3">
+                <div>
+                  <CardTitle className="flex items-center gap-2"><History className="h-4 w-4" /> Annales</CardTitle>
+                  <CardDescription>{annales.length} annale{annales.length > 1 ? 's' : ''}</CardDescription>
+                </div>
+                <AddAnnaleDialog coursId={coursId} />
               </CardHeader>
               <CardContent>
                 {annales.length === 0 ? (

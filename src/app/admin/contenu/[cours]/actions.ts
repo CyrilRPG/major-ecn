@@ -7,6 +7,45 @@ import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
 import { usageToUsd, PRICE_EUR } from '@/lib/ai/cost';
 
+export async function addAnnaleAction(input: {
+  coursId: string;
+  label: string;
+  annee: number | null;
+  duration_minutes: number | null;
+}): Promise<{ ok: true; id: string } | { error: string }> {
+  await requireAdmin();
+  if (!input.label?.trim()) return { error: 'Intitulé requis.' };
+  const admin = createAdminClient();
+
+  // determine next order_index for annales of this cours
+  const { data: existing } = await admin
+    .from('qcm_series')
+    .select('order_index')
+    .eq('cours_id', input.coursId)
+    .eq('type', 'annale')
+    .order('order_index', { ascending: false })
+    .limit(1);
+  const nextIdx = (existing?.[0]?.order_index ?? -1) + 1;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin as any)
+    .from('qcm_series')
+    .insert({
+      cours_id: input.coursId,
+      label: input.label.trim(),
+      type: 'annale',
+      annee: input.annee,
+      duration_minutes: input.duration_minutes,
+      order_index: nextIdx,
+    })
+    .select('id')
+    .single();
+  if (error || !data) return { error: error?.message ?? 'Échec de la création.' };
+
+  revalidatePath(`/admin/contenu/${input.coursId}`);
+  return { ok: true, id: data.id };
+}
+
 type GenResult =
   | { ok: true; count: number; cost_usd: number }
   | { error: string; needsFiche?: boolean };

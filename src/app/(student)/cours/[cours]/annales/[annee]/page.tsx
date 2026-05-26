@@ -31,12 +31,14 @@ export default async function AnnalePage({
 
   const { data: serie } = await supabase
     .from('qcm_series')
-    .select('id, label, type, cours_id, qcm_questions(id)')
+    // cast nécessaire : duration_minutes vient d'une migration récente non encore dans les types générés
+    .select('id, label, type, cours_id, qcm_questions(id)' + ', duration_minutes' as 'id, label, type, cours_id, qcm_questions(id)')
     .eq('id', serieId)
     .eq('cours_id', coursId)
     .eq('type', 'annale')
     .maybeSingle();
   if (!serie) notFound();
+  const durationMinutes = (serie as unknown as { duration_minutes?: number | null }).duration_minutes ?? null;
 
   const questionCount = serie.qcm_questions?.length ?? 0;
 
@@ -76,6 +78,7 @@ export default async function AnnalePage({
         serieLabel={`Annale ${serie.label}`}
         serieKind="annale"
         mode={mode}
+        durationMinutes={mode === 'training' ? durationMinutes : null}
         questions={enrichedQuestions}
         backHref={`/cours/${coursId}/annales`}
       />
@@ -100,9 +103,17 @@ export default async function AnnalePage({
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-(--color-ink)">
             {serie.label}
           </h1>
-          <p className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-(--color-ink-soft)">
-            <FileText className="h-4 w-4" />
-            {questionCount} questions · format concours
+          <p className="mt-1.5 inline-flex items-center gap-3 text-sm text-(--color-ink-soft)">
+            <span className="inline-flex items-center gap-1.5">
+              <FileText className="h-4 w-4" />
+              {questionCount} questions · format concours
+            </span>
+            {durationMinutes && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary-soft) px-2.5 py-0.5 text-xs font-semibold text-(--color-primary)">
+                <Timer className="h-3.5 w-3.5" />
+                {durationMinutes} min en mode conditions réelles
+              </span>
+            )}
           </p>
         </div>
 

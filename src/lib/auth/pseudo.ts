@@ -1,39 +1,54 @@
 /**
- * Pseudo auto-généré à partir du prénom, du nom et de la promotion.
- * Format : `prenom.nom.promo` (slugifié, en minuscules, sans accents).
- * L'utilisateur pourra le modifier depuis son profil.
+ * Pseudo auto-généré — discret, ne révèle pas le prénom/nom en clair.
+ * Format : `{initiales}-{promo}-{base36}` (ex. `jd-D2-7k3` pour Jean Dupont D2).
+ * Les initiales (1–3 lettres), la promo et un suffixe court garantissent
+ * l'unicité tout en restant énigmatiques (pas de prénom ou nom lisible).
  */
 
-function slug(s: string): string {
+function normalize(s: string): string {
   return s
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // accents
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
-    .replace(/['’]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^a-z]/g, '');
+}
+
+function initialsOf(firstName: string, lastName: string): string {
+  const fi = normalize(firstName).slice(0, 1);
+  const li = normalize(lastName).slice(0, 1);
+  const li2 = normalize(lastName).slice(1, 2); // 2ᵉ lettre du nom pour densifier
+  return (fi + li + li2) || 'm';
+}
+
+function randSuffix(len = 3): string {
+  // base36 court (lettres + chiffres), évite les ambigus 0/o/1/l
+  const chars = '23456789abcdefghijkmnpqrstuvwxyz';
+  let s = '';
+  for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
 }
 
 export function generatePseudo(firstName: string, lastName: string, promotion: string | null | undefined): string {
-  const p = slug(firstName);
-  const n = slug(lastName);
-  const promo = (promotion ?? 'X').replace(/[^A-Za-z0-9]/g, '');
-  const base = [p, n].filter(Boolean).join('.');
-  return base ? `${base}.${promo}` : `eleve.${promo}.${Math.floor(Math.random() * 9000 + 1000)}`;
+  const ini = initialsOf(firstName, lastName);
+  const promo = (promotion ?? 'X').replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'X';
+  return `${ini}-${promo}-${randSuffix(3)}`;
 }
 
 /**
  * Returns a pseudo guaranteed unique against the supplied checker.
- * Appends -2, -3, … if a collision is detected.
+ * Regénère un suffixe différent jusqu'à en trouver un libre.
  */
 export async function uniquePseudo(
   base: string,
   exists: (candidate: string) => Promise<boolean>,
 ): Promise<string> {
   if (!(await exists(base))) return base;
-  for (let i = 2; i < 200; i++) {
-    const c = `${base}-${i}`;
+  // Replace just the suffix and retry — keep initials/promo stable.
+  const root = base.replace(/-[^-]+$/, '');
+  for (let i = 0; i < 200; i++) {
+    const c = `${root}-${randSuffix(3)}`;
     if (!(await exists(c))) return c;
   }
-  return `${base}-${Date.now().toString(36)}`;
+  return `${root}-${Date.now().toString(36)}`;
 }
+

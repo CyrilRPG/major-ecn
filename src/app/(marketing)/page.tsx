@@ -3,6 +3,7 @@ import {
   ClipboardCheck, Globe, GraduationCap, Heart, LineChart,
   Quote, Shield, Sparkles, Star, Target, TrendingUp, Users, Zap,
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
 import { Reveal } from '@/components/marketing/reveal';
 import { InscriptionForm } from '@/components/marketing/inscription-form';
 import { ManusHero } from '@/components/marketing/manus-hero';
@@ -118,7 +119,14 @@ const PLANS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: collegesRaw } = await supabase
+    .from('matieres')
+    .select('id, nom')
+    .order('nom');
+  const colleges = collegesRaw ?? [];
+
   return (
     <>
       {/* =================== HERO — Manus arc-en-ciel =================== */}
@@ -238,7 +246,7 @@ export default function HomePage() {
               Accès immédiat à la plateforme, 7 jours d’essai gratuit, sans engagement.
             </p>
 
-            <InscriptionForm />
+            <InscriptionForm colleges={colleges} />
 
             <p className="mt-4 text-xs text-(--color-ink-muted)">
               ✓ Essai gratuit 7 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.

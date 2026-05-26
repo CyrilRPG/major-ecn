@@ -20,9 +20,14 @@ type QRow = {
   qcm_series: { cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
 
-export default async function TargetedSessionPage() {
+export default async function TargetedSessionPage({
+  searchParams,
+}: { searchParams: Promise<{ colleges?: string }> }) {
   const { user, profile } = await requireUser();
   const scope = parseScope(profile.permission_scope);
+  const sp = await searchParams;
+  const selected = sp.colleges?.split(',').filter(Boolean) ?? [];
+  const collegeFilter: Set<string> | null = selected.length > 0 ? new Set(selected) : null;
   const supabase = await createClient();
 
   // 1. Fail counts per question (EDN scope)
@@ -35,6 +40,7 @@ export default async function TargetedSessionPage() {
   for (const a of ((attemptsRaw ?? []) as unknown as AttemptRow[])) {
     const m = a.qcm_questions.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
+    if (collegeFilter && !collegeFilter.has(m.id)) continue;
     if (!a.is_correct) failCount.set(a.question_id, (failCount.get(a.question_id) ?? 0) + 1);
   }
 
@@ -48,7 +54,8 @@ export default async function TargetedSessionPage() {
 
   const allQ = ((allQRaw ?? []) as unknown as QRow[]).filter(
     (q) => q.qcm_series.cours.matieres.semestres.faculte_id === EDN_FACULTE_ID
-      && canAccessCollege(scope, q.qcm_series.cours.matieres.id),
+      && canAccessCollege(scope, q.qcm_series.cours.matieres.id)
+      && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id)),
   );
 
   const byId = new Map(allQ.map((q) => [q.id, q]));

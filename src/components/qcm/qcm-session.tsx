@@ -27,6 +27,7 @@ export function QcmSession({
   questions,
   backHref,
   mode = 'live',
+  durationMinutes = null,
 }: {
   sessionId: string;
   coursId: string;
@@ -35,8 +36,11 @@ export function QcmSession({
   questions: Question[];
   backHref: string;
   mode?: 'live' | 'training';
+  /** Si fourni en mode training, déclenche un compte à rebours ; à 0 la session est validée. */
+  durationMinutes?: number | null;
 }) {
   const isTraining = mode === 'training';
+  const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, Set<string>>>({});
@@ -50,6 +54,24 @@ export function QcmSession({
     const t = setInterval(() => setElapsed((s) => s + 1), 1000);
     return () => clearInterval(t);
   }, []);
+
+  // Auto-finish quand le chrono atteint 0 (mode conditions réelles avec durée).
+  useEffect(() => {
+    if (!totalSeconds) return;
+    if (elapsed < totalSeconds) return;
+    // time's up : terminer la session
+    const finish = async () => {
+      const correctCount = Object.values(questionCorrect).filter(Boolean).length;
+      const supabase = createClient();
+      await supabase
+        .from('qcm_sessions')
+        .update({ finished_at: new Date().toISOString(), score_correct: correctCount, score_total: total })
+        .eq('id', sessionId);
+      router.push(`/cours/${coursId}/resultats/${sessionId}`);
+    };
+    finish();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elapsed, totalSeconds]);
 
   useEffect(() => setPerQuestionStart(Date.now()), [index]);
 
@@ -129,9 +151,21 @@ export function QcmSession({
             Quitter
           </Link>
         </Button>
-        <div className="inline-flex items-center gap-1.5 text-xs text-(--color-ink-soft)">
+        <div
+          className={cn(
+            'inline-flex items-center gap-1.5 text-xs',
+            totalSeconds && totalSeconds - elapsed <= 60
+              ? 'rounded-full bg-(--color-danger)/12 px-2 py-1 font-semibold text-(--color-danger)'
+              : totalSeconds && totalSeconds - elapsed <= 300
+              ? 'rounded-full bg-(--color-warning)/15 px-2 py-1 font-semibold text-(--color-warning)'
+              : 'text-(--color-ink-soft)',
+          )}
+        >
           <Clock className="h-3.5 w-3.5" />
-          <span className="font-mono">{formatDuration(elapsed)}</span>
+          <span className="font-mono">
+            {totalSeconds ? formatDuration(Math.max(0, totalSeconds - elapsed)) : formatDuration(elapsed)}
+          </span>
+          {totalSeconds && <span className="text-(--color-ink-muted)">/ {durationMinutes} min</span>}
         </div>
       </div>
 

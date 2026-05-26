@@ -29,7 +29,7 @@ export default async function AdminEmailsPage({
   const promoF = sp.promo && (PROMOS as readonly string[]).includes(sp.promo) ? sp.promo : 'all';
   const offerF: 'all' | Offer = (OFFER_OPTIONS as string[]).includes(sp.offer ?? '')
     ? (sp.offer as Offer) : 'all';
-  const scopeF = sp.scope === 'all-access' || sp.scope === 'specific' ? sp.scope : 'all';
+  // Champ "college" unifié : '' = tous · 'all-access' = toute l'offre · uuid = ce collège uniquement
   const collegeF = sp.college ?? '';
 
   const { data: students } = await supabase
@@ -51,10 +51,10 @@ export default async function AdminEmailsPage({
     const scope = parseScope(s.permission_scope);
     if (offerF !== 'all' && scope.offer !== offerF) return false;
 
-    if (scopeF === 'all-access' && scope.type !== 'all') return false;
-    if (scopeF === 'specific') {
-      if (scope.type !== 'college') return false;
-      if (collegeF && !scope.colleges.includes(collegeF)) return false;
+    if (collegeF === 'all-access' && scope.type !== 'all') return false;
+    if (collegeF && collegeF !== 'all-access') {
+      // restreint à un collège précis : scope doit le contenir (ou être 'all')
+      if (scope.type === 'college' && !scope.colleges.includes(collegeF)) return false;
     }
     return true;
   });
@@ -62,8 +62,7 @@ export default async function AdminEmailsPage({
   const emails = filtered.map((s) => s.email).filter((e): e is string => !!e);
   const emailsBlock = emails.join(', ');
 
-  const filterApplied =
-    promoF !== 'all' || offerF !== 'all' || scopeF !== 'all' || !!collegeF;
+  const filterApplied = promoF !== 'all' || offerF !== 'all' || !!collegeF;
 
   return (
     <div className="mx-auto w-full max-w-5xl p-4 sm:p-6 lg:p-8">
@@ -110,23 +109,19 @@ export default async function AdminEmailsPage({
             </select>
           </Field>
 
-          <Field label="Accès collèges">
-            <select name="scope" defaultValue={scopeF} className={selectClass}>
-              <option value="all">Tout type d’accès</option>
-              <option value="all-access">Toute l’offre (tous collèges)</option>
-              <option value="specific">Accès restreint à des collèges</option>
-            </select>
-          </Field>
-
-          <Field label="Collège spécifique">
+          <Field label="Collège ciblé">
             <select name="college" defaultValue={collegeF} className={selectClass}>
-              <option value="">Tous les collèges</option>
-              {collegeOptions.map((c) => (
-                <option key={c.id} value={c.id}>{c.nom}</option>
-              ))}
+              <option value="">Tous les élèves</option>
+              <option value="all-access">Toute l’offre uniquement</option>
+              <optgroup label="Élèves ayant accès au collège">
+                {collegeOptions.map((c) => (
+                  <option key={c.id} value={c.id}>{c.nom}</option>
+                ))}
+              </optgroup>
             </select>
             <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-              N’a d’effet que si « Accès restreint » est sélectionné.
+              Un seul critère collège : « Toute l’offre » filtre les abonnés full-access ;
+              choisissez une matière pour ne garder que ceux qui y ont accès.
             </p>
           </Field>
         </div>

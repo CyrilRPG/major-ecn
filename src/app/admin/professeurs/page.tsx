@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { initials } from '@/lib/utils';
 import { AddProfessorDialog } from '@/components/admin/professors/add-professor-dialog';
+import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { CONTENT_TYPE_LABEL, type ContentType } from '@/lib/schemas/professor';
 
@@ -100,6 +101,10 @@ export default async function ProfessorsPage() {
                   </div>
                   <div className="flex shrink-0 flex-wrap items-center gap-1 max-w-full">
                     <Badge variant="primary">Professeur</Badge>
+                    <DeleteAccountButton
+                      userId={p.id}
+                      displayName={`${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || p.email || 'professeur'}
+                    />
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1 border-t border-(--color-border) pt-3">

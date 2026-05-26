@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { ArrowRight, ListChecks, Play, Target, TrendingDown } from 'lucide-react';
+import { ArrowRight, ListChecks, Target, TrendingDown } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { CollegesChooser } from '@/components/student/colleges-chooser';
 
 export const metadata = { title: 'Entraînement ciblé' };
 
@@ -23,13 +24,13 @@ export default async function EntrainementPage() {
     .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
     .eq('user_id', user.id);
 
-  const perCollege = new Map<string, { nom: string; fails: number }>();
+  const perCollege = new Map<string, { id: string; nom: string; fails: number }>();
   const failedQuestions = new Set<string>();
   for (const a of ((attemptsRaw ?? []) as unknown as AttemptRow[])) {
     const m = a.qcm_questions.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
     if (!a.is_correct) {
-      const e = perCollege.get(m.id) ?? { nom: m.nom, fails: 0 };
+      const e = perCollege.get(m.id) ?? { id: m.id, nom: m.nom, fails: 0 };
       e.fails++;
       perCollege.set(m.id, e);
       failedQuestions.add(a.question_id);
@@ -38,6 +39,7 @@ export default async function EntrainementPage() {
 
   const weak = [...perCollege.values()].sort((a, b) => b.fails - a.fails).slice(0, 6);
   const maxFails = Math.max(1, ...weak.map((w) => w.fails));
+  const weakIds = weak.map((w) => w.id);
   const totalToReview = failedQuestions.size;
   const sessionSize = Math.min(totalToReview || 12, 12);
 
@@ -69,13 +71,9 @@ export default async function EntrainementPage() {
             commençant par les questions échouées le plus souvent. Correction et justification
             à chaque item.
           </p>
-          <Link
-            href="/entrainement/session"
-            className="mt-5 inline-flex items-center gap-2.5 rounded-xl bg-(--color-primary) px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-          >
-            <Play className="h-5 w-5 fill-current" />
-            Lancer l’entraînement ciblé
-          </Link>
+          <div className="mt-5">
+            <CollegesChooser options={weak} defaultSelected={weakIds} />
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
@@ -142,13 +140,9 @@ export default async function EntrainementPage() {
               </li>
             ))}
           </ol>
-          <Link
-            href="/entrainement/session"
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-primary)"
-          >
-            Démarrer maintenant
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <p className="mt-5 text-xs text-(--color-ink-muted)">
+            👉 Sélectionnez les collèges à inclure dans le bloc à gauche, puis lancez la session.
+          </p>
         </section>
       </div>
     </div>
