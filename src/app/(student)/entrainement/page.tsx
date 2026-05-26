@@ -19,10 +19,15 @@ export default async function EntrainementPage() {
   const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
-  const { data: attemptsRaw } = await supabase
-    .from('qcm_attempts')
-    .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
-    .eq('user_id', user.id);
+  const [{ data: attemptsRaw }, { data: questionsRaw }] = await Promise.all([
+    supabase
+      .from('qcm_attempts')
+      .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
+      .eq('user_id', user.id),
+    supabase
+      .from('qcm_questions')
+      .select('id, qcm_series!inner(cours!inner(matieres!inner(id, semestres!inner(faculte_id))))'),
+  ]);
 
   const perCollege = new Map<string, { id: string; nom: string; fails: number }>();
   const failedQuestions = new Set<string>();
@@ -37,11 +42,23 @@ export default async function EntrainementPage() {
     }
   }
 
+  // Nombre de questions disponibles par collège (périmètre EDN + accès)
+  type QRow = { id: string; qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } } };
+  const questionsByCollege = new Map<string, number>();
+  for (const q of ((questionsRaw ?? []) as unknown as QRow[])) {
+    const m = q.qcm_series.cours.matieres;
+    if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
+    questionsByCollege.set(m.id, (questionsByCollege.get(m.id) ?? 0) + 1);
+  }
+
+  const MAX_Q = 12;
   const weak = [...perCollege.values()].sort((a, b) => b.fails - a.fails).slice(0, 6);
   const maxFails = Math.max(1, ...weak.map((w) => w.fails));
   const weakIds = weak.map((w) => w.id);
   const totalToReview = failedQuestions.size;
-  const sessionSize = Math.min(totalToReview || 12, 12);
+  // Taille par défaut affichée : nombre de questions des collèges faibles présélectionnés, capé.
+  const defaultAvailable = weak.reduce((sum, c) => sum + (questionsByCollege.get(c.id) ?? 0), 0);
+  const sessionSize = Math.min(defaultAvailable || MAX_Q, MAX_Q);
 
   const stats = [
     { value: sessionSize, label: 'questions dans la session' },
@@ -72,7 +89,11 @@ export default async function EntrainementPage() {
             à chaque item.
           </p>
           <div className="mt-5">
-            <CollegesChooser options={weak} defaultSelected={weakIds} />
+            <CollegesChooser
+              options={weak.map((c) => ({ ...c, available: questionsByCollege.get(c.id) ?? 0 }))}
+              defaultSelected={weakIds}
+              maxQuestions={MAX_Q}
+            />
           </div>
         </div>
 

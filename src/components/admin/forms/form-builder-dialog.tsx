@@ -76,14 +76,18 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
     if (fields.length === 0) return setError('Ajoutez au moins un champ.');
     for (const f of fields) {
       if (!f.label.trim()) return setError('Tous les champs doivent avoir un libellé.');
-      if (f.type === 'select' && (!f.options || f.options.length === 0)) {
-        return setError(`Le champ « ${f.label} » doit avoir des options.`);
+      if (f.type === 'select') {
+        const opts = (f.options ?? []).map((o) => o.trim()).filter(Boolean);
+        if (opts.length < 2) {
+          return setError(`Le champ « ${f.label} » doit avoir au moins 2 options.`);
+        }
       }
     }
-    // Normaliser les clés (uniques, slugifiées sur le label)
+    // Normaliser les clés (uniques, slugifiées sur le label) + nettoyer les options
     const normalized = fields.map((f, i) => ({
       ...f,
       key: makeKey(f.label, `champ_${i + 1}`) + '_' + i,
+      options: f.type === 'select' ? (f.options ?? []).map((o) => o.trim()).filter(Boolean) : undefined,
     }));
 
     start(async () => {
@@ -250,16 +254,47 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
                     </button>
                   </div>
                   {f.type === 'select' && (
-                    <div className="mt-2 ml-6">
-                      <Label className="text-xs">Options (une par ligne)</Label>
-                      <textarea
-                        value={(f.options ?? []).join('\n')}
-                        onChange={(e) =>
-                          updateField(i, { options: e.target.value.split('\n').map((s) => s.trim()).filter(Boolean) })
-                        }
-                        rows={3}
-                        className="mt-1 w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-2 text-sm"
-                      />
+                    <div className="mt-3 ml-6 space-y-1.5">
+                      <Label className="text-xs">Options proposées</Label>
+                      <ul className="space-y-1.5">
+                        {(f.options ?? []).map((opt, oi) => (
+                          <li key={oi} className="flex items-center gap-2">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-(--color-surface-soft) text-[11px] font-semibold text-(--color-ink-soft)">
+                              {oi + 1}
+                            </span>
+                            <Input
+                              value={opt}
+                              onChange={(e) => {
+                                const next = [...(f.options ?? [])];
+                                next[oi] = e.target.value;
+                                updateField(i, { options: next });
+                              }}
+                              placeholder={`Option ${oi + 1}`}
+                              className="flex-1"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const next = (f.options ?? []).filter((_, idx) => idx !== oi);
+                                updateField(i, { options: next });
+                              }}
+                              className="rounded-md p-1.5 text-(--color-ink-muted) hover:bg-(--color-danger)/10 hover:text-(--color-danger)"
+                              aria-label="Supprimer cette option"
+                              disabled={(f.options ?? []).length <= 1}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        type="button"
+                        onClick={() => updateField(i, { options: [...(f.options ?? []), ''] })}
+                        className="ml-9 inline-flex items-center gap-1 rounded-md border border-dashed border-(--color-border) px-2 py-1 text-xs text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-primary)"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Ajouter une option
+                      </button>
                     </div>
                   )}
                 </li>

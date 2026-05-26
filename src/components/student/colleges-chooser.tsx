@@ -11,9 +11,11 @@ import { Play } from 'lucide-react';
 export function CollegesChooser({
   options,
   defaultSelected,
+  maxQuestions = 12,
 }: {
-  options: { id: string; nom: string; fails: number }[];
+  options: { id: string; nom: string; fails: number; available: number }[];
   defaultSelected: string[];
+  maxQuestions?: number;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set(defaultSelected));
@@ -45,6 +47,11 @@ export function CollegesChooser({
     );
   }
 
+  const selectedTotal = options
+    .filter((o) => selected.has(o.id))
+    .reduce((sum, o) => sum + (o.available ?? 0), 0);
+  const sessionCount = Math.min(selectedTotal, maxQuestions);
+
   return (
     <div className="space-y-3">
       <p className="text-xs font-medium text-(--color-ink-soft)">
@@ -68,14 +75,20 @@ export function CollegesChooser({
                   </svg>
                 </span>
                 <span className="min-w-0 flex-1 text-sm text-(--color-ink)">{c.nom}</span>
-                <span className="shrink-0 text-xs font-semibold tabular-nums text-(--color-ink-muted)">
-                  {c.fails} erreur{c.fails > 1 ? 's' : ''}
+                <span className="shrink-0 text-xs tabular-nums text-(--color-ink-muted)">
+                  {c.available} QCM · {c.fails} erreur{c.fails > 1 ? 's' : ''}
                 </span>
               </label>
             </li>
           );
         })}
       </ul>
+      {selected.size > 0 && (
+        <p className="rounded-lg bg-(--color-primary-soft)/60 px-3 py-2 text-xs font-medium text-(--color-primary-deep)">
+          Session prévue : <span className="font-bold tabular-nums">{sessionCount}</span> question{sessionCount > 1 ? 's' : ''}
+          {selectedTotal > maxQuestions && ` (sur ${selectedTotal} disponibles, plafonnée à ${maxQuestions})`}
+        </p>
+      )}
       <button
         type="button"
         onClick={onLaunch}
@@ -83,7 +96,7 @@ export function CollegesChooser({
         className="inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-(--color-primary) px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02] disabled:opacity-50"
       >
         <Play className="h-5 w-5 fill-current" />
-        Lancer l’entraînement ({selected.size} collège{selected.size > 1 ? 's' : ''})
+        Lancer l’entraînement ({sessionCount} question{sessionCount > 1 ? 's' : ''})
       </button>
     </div>
   );
