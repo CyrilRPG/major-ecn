@@ -10,7 +10,7 @@ type Slice = { label: string; value: number; color: string };
 
 const AXIS = '#9AA1AE';
 const GRID = 'rgba(148,163,184,0.18)';
-const RED = '#E11D48';
+const RED = '#E4002B';
 const TOOLTIP = {
   borderRadius: 12,
   border: '1px solid var(--color-border)',

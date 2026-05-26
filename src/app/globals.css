@@ -3,35 +3,35 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* === Major ECN brand — bordeaux unifié vitrine + plateforme === */
-  --color-brand-emerald: #6B1A2A;  /* primary — bordeaux profond */
-  --color-brand-teal:    #6B1A2A;  /* accent — même bordeaux */
+  /* === Major ECN brand — rouge vif maquette designer === */
+  --color-brand-emerald: #E4002B;  /* primary — rouge vif */
+  --color-brand-teal:    #E4002B;  /* accent — même rouge */
   --color-brand-sand:    #E9EBEF;  /* secondary neutral — cool light */
 
-  /* === Primary bordeaux scale (kept under -emerald- names to avoid churn) === */
-  --color-emerald-50:  #FBF1F3;
-  --color-emerald-100: #F9F0F2;
-  --color-emerald-200: #F2D5DA;
-  --color-emerald-300: #E5ABB6;
-  --color-emerald-400: #C84A5A;
-  --color-emerald-500: #A83A4A;
-  --color-emerald-600: #6B1A2A;
-  --color-emerald-700: #4D121E;
-  --color-emerald-800: #3A0E17;
-  --color-emerald-900: #2A0911;
-  --color-emerald-950: #1B060A;
+  /* === Primary red scale (kept under -emerald- names to avoid churn) === */
+  --color-emerald-50:  #FFF5F6;
+  --color-emerald-100: #FDE7E9;
+  --color-emerald-200: #FBC9CE;
+  --color-emerald-300: #F89BA3;
+  --color-emerald-400: #F25667;
+  --color-emerald-500: #EE2A41;
+  --color-emerald-600: #E4002B;
+  --color-emerald-700: #C0001F;
+  --color-emerald-800: #990019;
+  --color-emerald-900: #6F0012;
+  --color-emerald-950: #45000B;
 
-  /* === Accent bordeaux scale (kept under -teal- names) === */
-  --color-teal-50:  #FBF1F3;
-  --color-teal-100: #F9F0F2;
-  --color-teal-200: #F2D5DA;
-  --color-teal-300: #E5ABB6;
-  --color-teal-400: #C84A5A;
-  --color-teal-500: #6B1A2A;
-  --color-teal-600: #4D121E;
-  --color-teal-700: #4D121E;
-  --color-teal-800: #3A0E17;
-  --color-teal-900: #2A0911;
+  /* === Accent red scale (kept under -teal- names) === */
+  --color-teal-50:  #FFF5F6;
+  --color-teal-100: #FDE7E9;
+  --color-teal-200: #FBC9CE;
+  --color-teal-300: #F89BA3;
+  --color-teal-400: #F25667;
+  --color-teal-500: #E4002B;
+  --color-teal-600: #C0001F;
+  --color-teal-700: #C0001F;
+  --color-teal-800: #990019;
+  --color-teal-900: #6F0012;
 
   /* === Sand scale (cool neutral) === */
   --color-sand-50:  #FAFBFC;
@@ -53,7 +53,7 @@
   /* States */
   --color-success:   #16A34A;
   --color-warning:   #F59E0B;
-  --color-danger:    #C84A5A;
+  --color-danger:    #E4002B;
   --color-easy:      #22C55E;
   --color-very-easy: #4ADE80;
 
@@ -70,7 +70,7 @@
   /* === Sidebar (navy) === */
   --color-sidebar:        #0E1626;
   --color-sidebar-deep:   #0A111E;
-  --color-sidebar-active: #6B1A2A;
+  --color-sidebar-active: #E4002B;
 
   /* === Typography === */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -102,24 +102,24 @@
 
 .dark {
   /* Dark tokens kept for coherence; light theme is forced in layout.tsx */
-  --color-primary:       #F2745A;  /* readable on dark surfaces */
-  --color-primary-deep:  #FB9B89;  /* lighter for stronger emphasis */
-  --color-primary-soft:  #7A0B14;
-  --color-primary-fg:    #2C0407;  /* dark text on light primary button */
-  --color-accent:        #F27059;
-  --color-accent-soft:   #74100C;
-  --color-accent-deep:   #FB9B89;
+  --color-primary:       #F25667;  /* readable on dark surfaces */
+  --color-primary-deep:  #F89BA3;  /* lighter for stronger emphasis */
+  --color-primary-soft:  #6F0012;
+  --color-primary-fg:    #1B0006;  /* dark text on light primary button */
+  --color-accent:        #F25667;
+  --color-accent-soft:   #6F0012;
+  --color-accent-deep:   #F89BA3;
 
   --color-success: #34D399;
   --color-warning: #E0A92E;
-  --color-danger:  #F0907C;
+  --color-danger:  #F25667;
 
-  --color-ink:            #F4E9E9;
-  --color-ink-soft:       #C9B3B3;
-  --color-ink-muted:      #8E7878;
-  --color-surface:        #241015;
-  --color-surface-soft:   #170A0D;
-  --color-surface-sunken: #0F0608;
+  --color-ink:            #F4E9EA;
+  --color-ink-soft:       #C9B3B5;
+  --color-ink-muted:      #8E7879;
+  --color-surface:        #1A0F12;
+  --color-surface-soft:   #120A0D;
+  --color-surface-sunken: #0B0608;
   --color-border:         #3A1E22;
   --color-border-strong:  #523034;
 
