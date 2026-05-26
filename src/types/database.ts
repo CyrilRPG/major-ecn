@@ -94,6 +94,18 @@ export type Database = {
         Update: { finished_at?: string | null; id?: string; score_correct?: number; score_total?: number; serie_id?: string; started_at?: string; user_id?: string };
         Relationships: [{ foreignKeyName: 'qcm_sessions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
+      satisfaction_forms: {
+        Row: { active: boolean; allow_file_upload: boolean; created_at: string; created_by: string | null; fields: Json; file_upload_label: string | null; id: string; intro_text: string | null; mandatory: boolean; target_college: string | null; target_offer: string | null; target_promo: string | null; title: string };
+        Insert: { active?: boolean; allow_file_upload?: boolean; created_at?: string; created_by?: string | null; fields?: Json; file_upload_label?: string | null; id?: string; intro_text?: string | null; mandatory?: boolean; target_college?: string | null; target_offer?: string | null; target_promo?: string | null; title: string };
+        Update: { active?: boolean; allow_file_upload?: boolean; created_at?: string; created_by?: string | null; fields?: Json; file_upload_label?: string | null; id?: string; intro_text?: string | null; mandatory?: boolean; target_college?: string | null; target_offer?: string | null; target_promo?: string | null; title?: string };
+        Relationships: [];
+      };
+      satisfaction_responses: {
+        Row: { answers: Json; file_path: string | null; form_id: string; id: string; skipped: boolean; submitted_at: string; user_id: string };
+        Insert: { answers?: Json; file_path?: string | null; form_id: string; id?: string; skipped?: boolean; submitted_at?: string; user_id: string };
+        Update: { answers?: Json; file_path?: string | null; form_id?: string; id?: string; skipped?: boolean; submitted_at?: string; user_id?: string };
+        Relationships: [{ foreignKeyName: 'satisfaction_responses_form_id_fkey'; columns: ['form_id']; isOneToOne: false; referencedRelation: 'satisfaction_forms'; referencedColumns: ['id'] }];
+      };
       semestres: {
         Row: { created_at: string; faculte_id: string; id: string; label: string; numero: number };
         Insert: { created_at?: string; faculte_id: string; id: string; label: string; numero: number };
