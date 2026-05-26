@@ -100,6 +100,18 @@ export type Database = {
         Update: { active?: boolean; allow_file_upload?: boolean; created_at?: string; created_by?: string | null; fields?: Json; file_upload_label?: string | null; id?: string; intro_text?: string | null; mandatory?: boolean; target_college?: string | null; target_offer?: string | null; target_promo?: string | null; title?: string };
         Relationships: [];
       };
+      cours_chunks: {
+        Row: { id: string; cours_id: string; source: string; source_id: string | null; chunk_index: number; content: string; token_count: number; embedding: string | null; created_at: string };
+        Insert: { id?: string; cours_id: string; source: string; source_id?: string | null; chunk_index?: number; content: string; token_count?: number; embedding?: string | null; created_at?: string };
+        Update: { id?: string; cours_id?: string; source?: string; source_id?: string | null; chunk_index?: number; content?: string; token_count?: number; embedding?: string | null; created_at?: string };
+        Relationships: [];
+      };
+      qa_cache: {
+        Row: { id: string; cours_id: string; question: string; question_embedding: string; answer: string; sources_count: number; model: string; hit_count: number; created_at: string };
+        Insert: { id?: string; cours_id: string; question: string; question_embedding: string; answer: string; sources_count?: number; model: string; hit_count?: number; created_at?: string };
+        Update: { id?: string; cours_id?: string; question?: string; question_embedding?: string; answer?: string; sources_count?: number; model?: string; hit_count?: number; created_at?: string };
+        Relationships: [];
+      };
       satisfaction_responses: {
         Row: { answers: Json; file_path: string | null; form_id: string; id: string; skipped: boolean; submitted_at: string; user_id: string };
         Insert: { answers?: Json; file_path?: string | null; form_id: string; id?: string; skipped?: boolean; submitted_at?: string; user_id: string };

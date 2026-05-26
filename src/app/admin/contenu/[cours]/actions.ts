@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { assertCanWrite, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
+import { embed, toPgVector } from '@/lib/ai/embeddings';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
 import { usageToUsd, PRICE_EUR } from '@/lib/ai/cost';
 
@@ -45,6 +46,87 @@ export async function addAnnaleAction(input: {
 
   revalidatePath(`/admin/contenu/${input.coursId}`);
   return { ok: true, id: data.id };
+}
+
+/**
+ * Réindexe les chunks RAG du cours (flashcards + items QCM) pour le moteur
+ * Q&R. Idempotent : purge puis ré-insère. Ne couvre pas encore le PDF de fiche
+ * (à venir : parsing PDF).
+ */
+export async function reindexCoursAction(coursId: string): Promise<
+  | { ok: true; chunks: number; tokens: number }
+  | { error: string }
+> {
+  const { scope } = await requireContentEditor();
+  try {
+    assertCanWrite(scope, 'flashcards');
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
+  if (!process.env.VOYAGE_API_KEY) {
+    return { error: 'VOYAGE_API_KEY non configurée — impossible de calculer les embeddings.' };
+  }
+
+  const admin = createAdminClient();
+  const [{ data: cours }, { data: flashcards }, { data: items }] = await Promise.all([
+    admin.from('cours').select('id, titre').eq('id', coursId).maybeSingle(),
+    admin.from('flashcards').select('id, recto, verso').eq('cours_id', coursId),
+    admin
+      .from('qcm_items')
+      .select('id, enonce, justification, qcm_questions!inner(enonce, qcm_series!inner(cours_id))')
+      .eq('qcm_questions.qcm_series.cours_id', coursId),
+  ]);
+  if (!cours) return { error: 'Cours introuvable.' };
+
+  type Row = { source: 'flashcard' | 'qcm'; source_id: string; content: string };
+  const rows: Row[] = [];
+  for (const f of flashcards ?? []) {
+    rows.push({ source: 'flashcard', source_id: f.id, content: `${f.recto.trim()} — ${f.verso.trim()}` });
+  }
+  for (const it of (items ?? []) as Array<{
+    id: string; enonce: string; justification: string;
+    qcm_questions: { enonce: string };
+  }>) {
+    const justif = (it.justification ?? '').trim();
+    if (justif.length < 8) continue;
+    const content = `Q : ${it.qcm_questions.enonce}\nItem ${it.enonce}\nJustification : ${justif}`;
+    rows.push({ source: 'qcm', source_id: it.id, content });
+  }
+
+  if (rows.length === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin as any).from('cours_chunks').delete().eq('cours_id', coursId);
+    return { ok: true, chunks: 0, tokens: 0 };
+  }
+
+  // Embed par batchs de 64
+  let totalTokens = 0;
+  const enriched: (Row & { embedding: number[] })[] = [];
+  for (let i = 0; i < rows.length; i += 64) {
+    const batch = rows.slice(i, i + 64);
+    const { embeddings, total_tokens } = await embed(batch.map((r) => r.content), 'document');
+    totalTokens += total_tokens;
+    batch.forEach((r, k) => enriched.push({ ...r, embedding: embeddings[k] }));
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (admin as any).from('cours_chunks').delete().eq('cours_id', coursId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error: insErr } = await (admin as any).from('cours_chunks').insert(
+    enriched.map((r, idx) => ({
+      cours_id: coursId,
+      source: r.source,
+      source_id: r.source_id,
+      chunk_index: idx,
+      content: r.content,
+      token_count: Math.ceil(r.content.length / 4),
+      embedding: toPgVector(r.embedding),
+    })),
+  );
+  if (insErr) return { error: insErr.message };
+
+  revalidatePath(`/admin/contenu/${coursId}`);
+  return { ok: true, chunks: enriched.length, tokens: totalTokens };
 }
 
 type GenResult =

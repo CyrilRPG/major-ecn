@@ -13,6 +13,7 @@ import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
 import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
+import { ReindexButton } from '@/components/admin/reindex-button';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -209,8 +210,9 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
         {can.flashcards.read && (
           <TabsContent value="flashcards">
             {can.flashcards.write && (
-              <div className="mb-4">
+              <div className="mb-4 space-y-3">
                 <GenerateButton coursId={coursId} kind="flashcards" />
+                <ReindexButton coursId={coursId} />
               </div>
             )}
             <Card>
