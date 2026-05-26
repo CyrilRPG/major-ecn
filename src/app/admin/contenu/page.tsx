@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { requireAdmin } from '@/lib/auth/require-role';
+import { requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { iconFromKey } from '@/lib/icons';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,7 @@ type College = {
 };
 
 export default async function AdminContenuPage() {
-  await requireAdmin();
+  await requireContentEditor();
   const supabase = await createClient();
   const { data } = await supabase
     .from('facultes')

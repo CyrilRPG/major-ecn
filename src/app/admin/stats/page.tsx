@@ -1,4 +1,4 @@
-import { Activity, ClipboardCheck, Target, Users } from 'lucide-react';
+import { Activity, AlertTriangle, ClipboardCheck, Target, Users } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,9 @@ export default async function AdminStatsPage() {
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400_000);
+  // Seuil hebdomadaire d'engagement : 30 min / semaine (objectif minimal réaliste pour
+  // un étudiant en préparation EVC). En dessous, on alerte l'admin.
+  const WEEKLY_MIN_SECONDS = 30 * 60;
 
   const [
     { count: studentsCount },
@@ -26,6 +29,8 @@ export default async function AdminStatsPage() {
     { data: attempts },
     { data: sessions30 },
     { data: profiles },
+    { data: attempts7d },
+    { data: reviews7d },
   ] = await Promise.all([
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
     supabase.from('qcm_sessions').select('id', { count: 'exact', head: true }).gte('started_at', sevenDaysAgo),
@@ -33,7 +38,9 @@ export default async function AdminStatsPage() {
       .from('qcm_attempts')
       .select('id, user_id, is_correct, attempted_at, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, cours!inner(id, titre, matieres!inner(id, nom))))'),
     supabase.from('qcm_sessions').select('id, user_id, started_at').gte('started_at', thirtyDaysAgo.toISOString()),
-    supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope').eq('role', 'student'),
+    supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope, email').eq('role', 'student'),
+    supabase.from('qcm_attempts').select('user_id, time_spent_seconds').gte('attempted_at', sevenDaysAgo),
+    supabase.from('flashcard_reviews').select('user_id').gte('reviewed_at', sevenDaysAgo),
   ]);
 
   const activeUsers7d = new Set<string>();
@@ -92,6 +99,29 @@ export default async function AdminStatsPage() {
     .sort((a, b) => (b.correct / Math.max(1, b.total)) - (a.correct / Math.max(1, a.total)))
     .map((m) => ({ label: m.nom, value: m.total > 0 ? (m.correct / m.total) * 100 : 0 }));
 
+  // Temps d'activité hebdomadaire par élève (QCM time_spent + 10s/flashcard)
+  const FLASHCARD_SECONDS = 10;
+  const weeklySeconds = new Map<string, number>();
+  for (const a of (attempts7d ?? []) as { user_id: string; time_spent_seconds: number | null }[]) {
+    weeklySeconds.set(a.user_id, (weeklySeconds.get(a.user_id) ?? 0) + (a.time_spent_seconds ?? 0));
+  }
+  for (const r of (reviews7d ?? []) as { user_id: string }[]) {
+    weeklySeconds.set(r.user_id, (weeklySeconds.get(r.user_id) ?? 0) + FLASHCARD_SECONDS);
+  }
+  const lowActivity = (profiles ?? [])
+    .map((p) => {
+      const sec = weeklySeconds.get(p.id) ?? 0;
+      return {
+        id: p.id,
+        name: `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || 'Sans nom',
+        email: p.email as string | null,
+        promotion: p.promotion as string | null,
+        minutes: Math.round(sec / 60),
+      };
+    })
+    .filter((u) => u.minutes < WEEKLY_MIN_SECONDS / 60)
+    .sort((a, b) => a.minutes - b.minutes);
+
   const leaderboard = [...userStats.entries()]
     .map(([userId, s]) => {
       const p = (profiles ?? []).find((pr) => pr.id === userId);
@@ -144,6 +174,58 @@ export default async function AdminStatsPage() {
           <CardDescription>Moyenne sur l’ensemble des tentatives.</CardDescription>
         </CardHeader>
         <CardContent><SuccessRateBar data={successByMatiere} /></CardContent>
+      </Card>
+
+      <Card className="mt-4">
+        <CardHeader>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-(--color-warning)" />
+                Élèves peu actifs cette semaine
+              </CardTitle>
+              <CardDescription>
+                Moins de {Math.round(WEEKLY_MIN_SECONDS / 60)} min de travail (QCM + flashcards) sur les 7 derniers jours.
+              </CardDescription>
+            </div>
+            <span className="shrink-0 rounded-full bg-(--color-warning)/15 px-2.5 py-1 text-xs font-semibold text-(--color-warning)">
+              {lowActivity.length} élève{lowActivity.length > 1 ? 's' : ''}
+            </span>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {lowActivity.length === 0 ? (
+            <p className="text-sm text-(--color-ink-soft)">Tous tes élèves sont au-dessus du seuil. 🎉</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Élève</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Promo</TableHead>
+                  <TableHead className="text-right">Activité (min/sem)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {lowActivity.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2.5">
+                        <Avatar className="h-8 w-8"><AvatarFallback>{initials(u.name.split(' ')[0], u.name.split(' ').slice(-1)[0])}</AvatarFallback></Avatar>
+                        <span className="font-medium">{u.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-(--color-ink-soft)">{u.email ?? '—'}</TableCell>
+                    <TableCell>{u.promotion && <Badge variant="outline">{u.promotion}</Badge>}</TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant={u.minutes === 0 ? 'danger' : 'warning'}>{u.minutes} min</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
       </Card>
 
       <Card className="mt-4">

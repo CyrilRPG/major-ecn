@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@/lib/auth/require-role';
+import { assertCanWrite, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
@@ -13,7 +13,8 @@ export async function addAnnaleAction(input: {
   annee: number | null;
   duration_minutes: number | null;
 }): Promise<{ ok: true; id: string } | { error: string }> {
-  await requireAdmin();
+  const { scope } = await requireContentEditor();
+  try { assertCanWrite(scope, 'annale'); } catch (e) { return { error: (e as Error).message }; }
   if (!input.label?.trim()) return { error: 'Intitulé requis.' };
   const admin = createAdminClient();
 
@@ -94,7 +95,8 @@ async function logGeneration(args: {
 }
 
 export async function generateFlashcardsAction(coursId: string): Promise<GenResult> {
-  const { profile } = await requireAdmin();
+  const { profile, scope } = await requireContentEditor();
+  try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
   if (!ctx.hasFiche) {
@@ -191,7 +193,8 @@ type QcmGenShape = {
 };
 
 export async function generateQcmAction(coursId: string): Promise<GenResult> {
-  const { profile } = await requireAdmin();
+  const { profile, scope } = await requireContentEditor();
+  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
   if (!ctx.hasFiche) {
