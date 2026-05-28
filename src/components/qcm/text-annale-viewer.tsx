@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ChevronDown, ChevronUp, ClipboardList, Stethoscope } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle2, ChevronDown, ChevronUp, ClipboardList, Stethoscope } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 type TextQuestion = {
   id: string;
@@ -27,6 +27,46 @@ export function TextAnnaleViewer({
   isDP: boolean;
 }) {
   const [expandedVignette, setExpandedVignette] = useState(true);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const answeredCount = Object.values(answers).filter((v) => v.trim().length > 0).length;
+  const allAnswered = answeredCount === questions.length;
+
+  const verify = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      // Persiste les brouillons dans qcm_attempts.text_answer (sans is_correct,
+      // qui sera défini ultérieurement quand la correction sera ajoutée).
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await Promise.all(
+          questions.map((q) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (supabase as any).from('qcm_attempts').insert({
+              user_id: user.id,
+              session_id: null,
+              question_id: q.id,
+              selected_items: [],
+              is_correct: false, // correction manuelle à venir
+              time_spent_seconds: 0,
+              text_answer: answers[q.id]?.trim() ?? '',
+            }),
+          ),
+        );
+      }
+    } catch {
+      /* best-effort */
+    } finally {
+      setSubmitting(false);
+      setSubmitted(true);
+      // Remonte en haut pour voir le bandeau de confirmation
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col px-4 py-4 sm:px-6">
@@ -43,9 +83,29 @@ export function TextAnnaleViewer({
         </span>
       </div>
 
-      <div className="mb-1.5 text-xs text-(--color-ink-soft)">
-        <span className="font-semibold text-(--color-ink)">Annale</span> · {serieLabel}
+      <div className="mb-3 flex items-center justify-between gap-3 text-xs text-(--color-ink-soft)">
+        <span>
+          <span className="font-semibold text-(--color-ink)">Annale</span> · {serieLabel}
+        </span>
+        {!submitted && (
+          <span className="rounded-full bg-(--color-surface-soft) px-2.5 py-0.5 font-semibold tabular-nums text-(--color-ink)">
+            {answeredCount}/{questions.length} répondues
+          </span>
+        )}
       </div>
+
+      {submitted && (
+        <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#2E8B57]/40 bg-[color-mix(in_srgb,#2E8B57_10%,var(--color-surface))] px-4 py-3 text-sm text-[#1F6B43]">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold">Réponses enregistrées ({answeredCount}/{questions.length})</p>
+            <p className="mt-0.5 text-xs">
+              La correction détaillée sera disponible prochainement. En attendant, consultez vos cours
+              pour confirmer vos réponses.
+            </p>
+          </div>
+        </div>
+      )}
 
       {isDP && vignette && (
         <motion.div
@@ -107,18 +167,35 @@ export function TextAnnaleViewer({
                 Question {q.order_index + 1}
               </span>
             </div>
-            <div className="whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+            <div className="mb-3 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
               {q.enonce}
             </div>
+            <label htmlFor={`answer-${q.id}`} className="block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+              Votre réponse
+            </label>
+            <textarea
+              id={`answer-${q.id}`}
+              value={answers[q.id] ?? ''}
+              onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+              disabled={submitted}
+              rows={4}
+              placeholder="Rédigez ici votre réponse…"
+              className="mt-1 w-full resize-y rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm leading-relaxed text-(--color-ink) outline-none transition-colors focus:border-(--color-primary) disabled:bg-(--color-surface-soft) disabled:opacity-80"
+            />
           </motion.div>
         ))}
       </div>
 
-      <div className="mt-6 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4 text-center text-sm text-(--color-ink-soft)">
-        <p className="font-medium">Sujet d'examen officiel — {questions.length} questions</p>
-        <p className="mt-1 text-xs">
-          Entraînez-vous en rédigeant vos réponses, puis consultez vos cours pour vérifier.
-        </p>
+      <div className="sticky bottom-3 mt-6 flex items-center justify-end gap-3 rounded-xl border border-(--color-border) bg-(--color-surface)/95 px-4 py-3 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-(--color-surface)/85">
+        <span className="hidden text-xs text-(--color-ink-soft) sm:inline">
+          {submitted
+            ? 'Réponses enregistrées.'
+            : `${answeredCount}/${questions.length} répondues${allAnswered ? ' — prêt à vérifier' : ''}`}
+        </span>
+        <Button onClick={verify} disabled={submitted || submitting || answeredCount === 0}>
+          <CheckCircle2 />
+          {submitted ? 'Envoyées' : submitting ? 'Enregistrement…' : 'Vérifier'}
+        </Button>
       </div>
     </div>
   );

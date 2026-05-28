@@ -65,11 +65,15 @@ export function AddProfessorDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      const j = (await res.json().catch(() => ({}))) as { error?: string; warning?: string };
       if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
         setSubmitError(j.error ?? 'Erreur à la création.');
         return;
       }
+      // Profil créé mais avec un avertissement (typiquement : email Resend en échec).
+      // On ferme quand même la dialog mais on remonte le warning via alert pour que
+      // l'admin sache que l'email d'activation n'est pas parti.
+      if (j.warning) alert(`Professeur créé.\n\n⚠ ${j.warning}`);
       reset();
       setOpen(false);
       router.refresh();
