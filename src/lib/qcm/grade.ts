@@ -18,3 +18,34 @@ export function gradeQuestion(items: GradeItem[]) {
   }
   return { perItem, isQuestionCorrect: allMatch };
 }
+
+/* ─── QROC grading ─── */
+
+/**
+ * Normalize a string for QROC comparison:
+ * - lowercase
+ * - strip all whitespace
+ * - strip accents (diacritics)
+ * - strip common punctuation
+ */
+export function normalizeQroc(s: string): string {
+  return s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')   // remove accents
+    .toLowerCase()
+    .replace(/[\s\-_.,;:!?'"()]/g, '') // remove whitespace + punctuation
+    .trim();
+}
+
+/**
+ * Grade a QROC answer against the expected answer(s).
+ * `reponseAttendue` can contain multiple accepted answers separated by " | ".
+ * Returns true if any normalized variant matches.
+ */
+export function gradeQroc(userAnswer: string, reponseAttendue: string): boolean {
+  const normalizedUser = normalizeQroc(userAnswer);
+  if (!normalizedUser) return false;
+
+  const acceptedAnswers = reponseAttendue.split('|').map((a) => normalizeQroc(a));
+  return acceptedAnswers.some((accepted) => accepted === normalizedUser);
+}
