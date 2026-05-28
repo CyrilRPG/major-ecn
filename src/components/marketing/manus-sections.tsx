@@ -866,10 +866,10 @@ export function StatsSection() {
                   <p className="text-sm font-bold text-white" style={{ fontFamily: JAKARTA }}>{s.l}</p>
                 </>
               ) : (
-                /* Tuiles sans chiffre (Suivi structuré, Méthodologie EVC)
-                   → le libellé devient lui-même un gros titre tricolore. */
+                /* Tuiles sans chiffre (Suivi structuré, Méthodologie EVC) :
+                   le libellé devient un gros titre blanc plein. */
                 <p
-                  className="bg-gradient-to-r from-[#C84A5A] via-[#FB7193] to-[#F59E0B] bg-clip-text text-3xl font-black leading-tight text-transparent sm:text-4xl"
+                  className="text-3xl font-black leading-tight text-white sm:text-4xl"
                   style={{ fontFamily: JAKARTA, letterSpacing: '-0.025em' }}
                 >
                   {s.l}

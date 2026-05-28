@@ -285,12 +285,12 @@ body::after {
   /* === Palette de dégradés Manus, posée à la main sur les gros titres
         de chaque section (variété + cohérence visuelle). Les h3/h4 et les
         sous-titres gardent leur couleur d'origine. === */
-  .gradient-tri      { background-image: linear-gradient(120deg, #6B1A2A 0%, #3B82F6 55%, #14B8A6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-  .gradient-tri-rev  { background-image: linear-gradient(120deg, #14B8A6 0%, #3B82F6 50%, #6B1A2A 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-  .gradient-bord-blue{ background-image: linear-gradient(120deg, #6B1A2A 0%, #A83A4A 45%, #3B82F6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-  .gradient-teal     { background-image: linear-gradient(120deg, #14B8A6 0%, #22D3EE 55%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-  .gradient-vivid    { background-image: linear-gradient(120deg, #6B1A2A 0%, #C84A5A 50%, #FB7193 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-  .gradient-bord-amber{ background-image: linear-gradient(120deg, #6B1A2A 0%, #C84A5A 50%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+  .gradient-tri      { background-image: linear-gradient(120deg, #6B1A2A 0%, #3B82F6 55%, #14B8A6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
+  .gradient-tri-rev  { background-image: linear-gradient(120deg, #14B8A6 0%, #3B82F6 50%, #6B1A2A 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
+  .gradient-bord-blue{ background-image: linear-gradient(120deg, #6B1A2A 0%, #A83A4A 45%, #3B82F6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
+  .gradient-teal     { background-image: linear-gradient(120deg, #14B8A6 0%, #22D3EE 55%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
+  .gradient-vivid    { background-image: linear-gradient(120deg, #6B1A2A 0%, #C84A5A 50%, #FB7193 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
+  .gradient-bord-amber{ background-image: linear-gradient(120deg, #6B1A2A 0%, #C84A5A 50%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.15; padding-bottom: 0.15em; }
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
 

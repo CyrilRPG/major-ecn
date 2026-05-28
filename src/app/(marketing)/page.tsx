@@ -67,7 +67,7 @@ export default async function HomePage() {
               <Sparkles className="h-3 w-3" />
               Pourquoi Major ECN
             </span>
-            <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight gradient-teal sm:text-4xl lg:text-5xl">
               Tout ce qu’il faut pour réussir les EVC
             </h2>
           </Reveal>
@@ -130,7 +130,7 @@ export default async function HomePage() {
       <section className="bg-[#FAFAF8] py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-4xl">
+            <h2 className="font-display text-3xl font-extrabold tracking-tight gradient-bord-amber sm:text-4xl">
               Découvrez Major ECN en détail
             </h2>
             <p className="mt-3 text-base text-[#5A5A5A]">

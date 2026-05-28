@@ -137,7 +137,7 @@ export function ManusHero() {
                 { value: '18',     suffix: ' ans',  label: 'd’expérience' },
                 { value: '45',     suffix: '',      label: 'spécialités couvertes' },
                 { value: '8 000+', suffix: '',      label: 'candidats accompagnés' },
-                { value: 'PH',     suffix: ' + CCA', label: 'spécialistes & enseignants' },
+                { value: 'PH',     suffix: '',      label: 'spécialistes & CCA' },
               ].map((s, i) => (
                 <motion.div
                   key={s.label}
