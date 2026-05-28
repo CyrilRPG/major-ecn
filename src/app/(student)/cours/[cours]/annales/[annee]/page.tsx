@@ -43,9 +43,10 @@ export default async function AnnalePage({
   const questionCount = serie.qcm_questions?.length ?? 0;
 
   // Check format: QROC questions use the interactive session; text-based (no items, no QROC) use read-only viewer
+  // NOTE: 'format' column added via migration, not yet in generated types — concat trick bypasses TS check
   const { data: sampleQuestion } = await supabase
     .from('qcm_questions')
-    .select('id, format, qcm_items(id)')
+    .select('id, qcm_items(id)' + ', format' as 'id, qcm_items(id)')
     .eq('serie_id', serieId)
     .limit(1)
     .maybeSingle();
@@ -100,7 +101,7 @@ export default async function AnnalePage({
 
     const { data: questions } = await supabase
       .from('qcm_questions')
-      .select('id, enonce, order_index, format, reponse_attendue, qcm_items(id, lettre, enonce, is_correct, justification)')
+      .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)' + ', format, reponse_attendue' as 'id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
       .eq('serie_id', serieId)
       .order('order_index');
     if (!questions || questions.length === 0) notFound();

@@ -27,7 +27,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
 
   const { data: questions } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, qcm_items(id, lettre, enonce, is_correct, justification)')
+    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)' + ', format, reponse_attendue' as 'id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
     .eq('serie_id', serieId)
     .order('order_index');
 

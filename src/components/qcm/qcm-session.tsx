@@ -116,15 +116,16 @@ export function QcmSession({
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
       if (user) {
+        // text_answer column added via migration, not in generated types
         await supabase.from('qcm_attempts').insert({
           user_id: user.id,
           session_id: sessionId,
           question_id: q.id,
           selected_items: [],
-          text_answer: userAnswer,
           is_correct: isCorrect,
           time_spent_seconds: timeSpent,
-        });
+          text_answer: userAnswer,
+        } as any);
       }
     } else {
       // ─── QCM grading ───
