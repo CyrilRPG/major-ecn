@@ -1,12 +1,17 @@
-// Génère 12 PDFs Major ECN brandés pour les annales code 71 (Médecine générale)
-// dans data/medgen-annales/. Ces fichiers sont commités au repo et servis via
-// la route /api/medgen-annales/[id]/pdf qui applique le watermark utilisateur.
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+// Génère des PDFs Major ECN brandés pour les annales code 71 (Médecine générale).
+// Sortie dans data/medgen-annales/. Charge le contenu via parse_annale_doc.py
+// (extraction structurée : sujets → questions → choix proposés).
+import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 
-const OUT_DIR = path.resolve('data/medgen-annales');
+const ROOT = path.resolve('.');
+const OUT_DIR = path.join(ROOT, 'data/medgen-annales');
+const FONT_DIR = path.join(ROOT, 'data/fonts');
+const LOGO_PATH = path.join(ROOT, 'public/major-ecn-logo.png');
+
 if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 
 const FILES = [
@@ -24,154 +29,351 @@ const FILES = [
   { annee: 2019, type: 'EVCF', src: '/tmp/medgen_pdfs/2019_EVCF_raw.doc' },
 ];
 
-function extract(src) {
-  return execSync(`python3 /tmp/extract_doc.py "${src}"`, { encoding: 'utf-8' });
-}
+// Palette Major ECN (cohérente avec les fiches)
+const NAVY = rgb(0x0E / 255, 0x16 / 255, 0x26 / 255);
+const BORDEAUX = rgb(0x6B / 255, 0x1A / 255, 0x2A / 255);
+const BORDEAUX_DEEP = rgb(0x4D / 255, 0x12 / 255, 0x1E / 255);
+const BORDEAUX_SOFT = rgb(0xF9 / 255, 0xF0 / 255, 0xF2 / 255);
+const INK = rgb(0x2D / 255, 0x2D / 255, 0x2D / 255);
+const INK_SOFT = rgb(0x4A / 255, 0x4A / 255, 0x4A / 255);
+const MUTED = rgb(0x7A / 255, 0x7A / 255, 0x7A / 255);
+const BORDER = rgb(0xE8 / 255, 0xE7 / 255, 0xE3 / 255);
+const BLUE = rgb(0x3B / 255, 0x82 / 255, 0xF6 / 255);
+const TEAL = rgb(0x14 / 255, 0xB8 / 255, 0xA6 / 255);
+const AMBER = rgb(0xF5 / 255, 0x9E / 255, 0x0B / 255);
 
-function clean(raw) {
-  // Élimine les caractères de contrôle ET les caractères hors WinAnsi
-  // (pdf-lib utilise WinAnsiEncoding pour les polices standard).
-  return raw
-    .split('\n')
-    .map(l => l
-      .replace(/[\x00-\x1f]+/g, ' ')          // contrôles dont \t
-      .replace(/[‘’]/g, "'")         // ' ' typo
-      .replace(/[“”]/g, '"')         // " " typo
-      .replace(/–|—/g, '-')           // tirets
-      .replace(/…/g, '...')                // …
-      .replace(/ /g, ' ')                  // nbsp
-      .replace(/[•‣◦]/g, '·')    // puces
-      .replace(/[^\x09\x0a\x0d\x20-\x7e\xa0-\xff]/g, '') // hors WinAnsi
-      .trim())
-    .filter(l => l.length >= 3 && !/^\W{4,}$/.test(l))
-    .join('\n');
-}
+const PAGE_W = 595, PAGE_H = 842;
+const MARGIN_X = 56, MARGIN_TOP = 96, MARGIN_BOTTOM = 70;
+const CONTENT_W = PAGE_W - MARGIN_X * 2;
 
-function splitParagraphs(text) {
-  // Détecte les énoncés "N) " (questions numérotées) pour structurer
-  const out = [];
-  for (const block of text.split(/\n/)) {
-    const t = block.trim();
-    if (!t) continue;
-    out.push(t);
-  }
-  return out;
+function nettoieTexte(s) {
+  if (!s) return '';
+  return s
+    .replace(/\s+/g, ' ')
+    .replace(/[\x00-\x08\x0b-\x1f]+/g, ' ')
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/–|—/g, '-')
+    .replace(/…/g, '...')
+    .trim();
 }
 
 function wrap(font, size, text, maxWidth) {
   const words = text.split(/(\s+)/);
-  const lines = []; let line = '';
+  const lines = [];
+  let line = '';
   for (const w of words) {
     if (font.widthOfTextAtSize(line + w, size) > maxWidth && line.length > 0) {
-      lines.push(line.trimEnd()); line = w.trimStart();
-    } else line += w;
+      lines.push(line.trimEnd());
+      line = w.trimStart();
+    } else {
+      line += w;
+    }
   }
   if (line.trim()) lines.push(line.trimEnd());
   return lines;
 }
 
-async function generatePdf({ annee, type }, content) {
+function extract(srcPath, year, type) {
+  const json = execSync(`python3 ${ROOT}/scripts/parse_annale_doc.py "${srcPath}" ${year} ${type}`, {
+    encoding: 'utf-8',
+    maxBuffer: 20 * 1024 * 1024,
+  });
+  return JSON.parse(json);
+}
+
+async function generatePdf({ annee, type }, data) {
   const pdf = await PDFDocument.create();
-  const font = await pdf.embedFont(StandardFonts.Helvetica);
-  const fontB = await pdf.embedFont(StandardFonts.HelveticaBold);
+  pdf.registerFontkit(fontkit);
 
-  const MARGIN = 56;
-  const PAGE_W = 595, PAGE_H = 842;
-  const CONTENT_W = PAGE_W - MARGIN * 2;
+  const fontRegular = await pdf.embedFont(readFileSync(path.join(FONT_DIR, 'PlusJakartaSans-Regular.ttf')));
+  const fontBold = await pdf.embedFont(readFileSync(path.join(FONT_DIR, 'PlusJakartaSans-Bold.ttf')));
+  const fontExtraBold = await pdf.embedFont(readFileSync(path.join(FONT_DIR, 'PlusJakartaSans-ExtraBold.ttf')));
 
-  // Couleurs Major ECN (charte fiches)
-  const NAVY = rgb(0x0E / 255, 0x16 / 255, 0x26 / 255);
-  const BORDEAUX = rgb(0x6B / 255, 0x1A / 255, 0x2A / 255);
-  const BORDEAUX_DEEP = rgb(0x4D / 255, 0x12 / 255, 0x1E / 255);
-  const INK = rgb(0x2D / 255, 0x2D / 255, 0x2D / 255);
-  const MUTED = rgb(0x7A / 255, 0x7A / 255, 0x7A / 255);
+  // Logo Major ECN pour le fond
+  let logoImage = null;
+  try {
+    if (existsSync(LOGO_PATH)) logoImage = await pdf.embedPng(readFileSync(LOGO_PATH));
+  } catch {/* ignore */}
 
-  let page = pdf.addPage([PAGE_W, PAGE_H]);
-  let cursorY = PAGE_H - MARGIN;
-  let pageNum = 1;
-
-  const drawHeader = () => {
-    // Bande navy avec wordmark
-    page.drawRectangle({ x: 0, y: PAGE_H - 36, width: PAGE_W, height: 36, color: NAVY });
-    page.drawText('Major', { x: MARGIN, y: PAGE_H - 25, size: 14, font: fontB, color: rgb(1, 1, 1) });
-    page.drawText('ECN', { x: MARGIN + 42, y: PAGE_H - 25, size: 14, font: fontB, color: rgb(0xC8 / 255, 0x4A / 255, 0x5A / 255) });
-    page.drawText(`${type} ${annee} · Médecine générale`, {
-      x: PAGE_W - MARGIN - font.widthOfTextAtSize(`${type} ${annee} · Médecine générale`, 10),
-      y: PAGE_H - 23, size: 10, font, color: rgb(0.85, 0.85, 0.85),
+  const drawLogoBackground = (page) => {
+    if (!logoImage) return;
+    const targetW = PAGE_W * 0.55;
+    const scale = targetW / logoImage.width;
+    const w = logoImage.width * scale;
+    const h = logoImage.height * scale;
+    page.drawImage(logoImage, {
+      x: (PAGE_W - w) / 2,
+      y: (PAGE_H - h) / 2,
+      width: w,
+      height: h,
+      opacity: 0.04,
     });
-    // Bande tricolore fine
-    const stripe = (x, w, c) => page.drawRectangle({ x, y: PAGE_H - 39, width: w, height: 3, color: c });
-    stripe(0, PAGE_W / 3, BORDEAUX);
-    stripe(PAGE_W / 3, PAGE_W / 3, rgb(0x3B / 255, 0x82 / 255, 0xF6 / 255));
-    stripe((PAGE_W / 3) * 2, PAGE_W / 3, rgb(0x14 / 255, 0xB8 / 255, 0xA6 / 255));
   };
 
-  const drawFooter = () => {
-    page.drawRectangle({ x: MARGIN, y: 32, width: CONTENT_W, height: 0.5, color: MUTED });
-    page.drawText(`Annales EVC · Médecine générale (code 71) · ${annee}`, { x: MARGIN, y: 18, size: 8, font, color: MUTED });
-    const txt = `Page ${pageNum}`;
-    page.drawText(txt, { x: PAGE_W - MARGIN - font.widthOfTextAtSize(txt, 8), y: 18, size: 8, font, color: MUTED });
+  const drawHeader = (page, pageNum, totalPages) => {
+    // Bande navy en haut
+    page.drawRectangle({ x: 0, y: PAGE_H - 44, width: PAGE_W, height: 44, color: NAVY });
+    // Wordmark
+    page.drawText('Major', { x: MARGIN_X, y: PAGE_H - 28, size: 15, font: fontExtraBold, color: rgb(1, 1, 1) });
+    const majorW = fontExtraBold.widthOfTextAtSize('Major', 15);
+    page.drawText('ECN', { x: MARGIN_X + majorW + 4, y: PAGE_H - 28, size: 15, font: fontExtraBold, color: rgb(0xC8 / 255, 0x4A / 255, 0x5A / 255) });
+    // Référence à droite
+    const ref = `${type} ${annee} · Médecine générale`;
+    const refW = fontRegular.widthOfTextAtSize(ref, 10);
+    page.drawText(ref, { x: PAGE_W - MARGIN_X - refW, y: PAGE_H - 25, size: 10, font: fontRegular, color: rgb(0.85, 0.85, 0.85) });
+    // Bande tricolore
+    page.drawRectangle({ x: 0, y: PAGE_H - 48, width: PAGE_W / 3, height: 4, color: BORDEAUX });
+    page.drawRectangle({ x: PAGE_W / 3, y: PAGE_H - 48, width: PAGE_W / 3, height: 4, color: BLUE });
+    page.drawRectangle({ x: (PAGE_W / 3) * 2, y: PAGE_H - 48, width: PAGE_W / 3, height: 4, color: TEAL });
   };
 
-  drawHeader();
-  cursorY = PAGE_H - 60;
+  const drawFooter = (page, pageNum, totalPages) => {
+    // Ligne fine
+    page.drawRectangle({ x: MARGIN_X, y: 42, width: CONTENT_W, height: 0.5, color: BORDER });
+    // Mention gauche
+    page.drawText('Annales officielles EVC · Médecine générale', { x: MARGIN_X, y: 25, size: 8, font: fontRegular, color: MUTED });
+    // Page N / Total
+    const txt = `Page ${pageNum}${totalPages ? ` / ${totalPages}` : ''}`;
+    const txtW = fontRegular.widthOfTextAtSize(txt, 8);
+    page.drawText(txt, { x: PAGE_W - MARGIN_X - txtW, y: 25, size: 8, font: fontRegular, color: MUTED });
+  };
 
-  // Titre principal
-  page.drawText(`${type} — ${annee}`, { x: MARGIN, y: cursorY, size: 28, font: fontB, color: BORDEAUX_DEEP });
-  cursorY -= 22;
-  page.drawText('Annales officielles EVC', { x: MARGIN, y: cursorY, size: 12, font, color: MUTED });
-  cursorY -= 14;
-  page.drawText('Médecine générale', { x: MARGIN, y: cursorY, size: 12, font: fontB, color: INK });
-  cursorY -= 28;
+  // ============== PAGE DE GARDE ==============
+  const cover = pdf.addPage([PAGE_W, PAGE_H]);
+  // Fond crème
+  cover.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: rgb(0xFA / 255, 0xFA / 255, 0xF8 / 255) });
+  drawHeader(cover, 1, 0);
+  // Logo central (gros, transparent)
+  if (logoImage) {
+    const targetW = PAGE_W * 0.7;
+    const scale = targetW / logoImage.width;
+    const w = logoImage.width * scale;
+    const h = logoImage.height * scale;
+    cover.drawImage(logoImage, {
+      x: (PAGE_W - w) / 2,
+      y: PAGE_H / 2 - 60,
+      width: w,
+      height: h,
+      opacity: 0.08,
+    });
+  }
+  // Eyebrow
+  const eyebrow = 'ANNALES OFFICIELLES';
+  cover.drawText(eyebrow, {
+    x: (PAGE_W - fontBold.widthOfTextAtSize(eyebrow, 13)) / 2,
+    y: PAGE_H * 0.62,
+    size: 13,
+    font: fontBold,
+    color: BORDEAUX,
+  });
+  // Titre principal (énorme)
+  const titre = `${type} ${annee}`;
+  const titreSize = 72;
+  cover.drawText(titre, {
+    x: (PAGE_W - fontExtraBold.widthOfTextAtSize(titre, titreSize)) / 2,
+    y: PAGE_H * 0.50,
+    size: titreSize,
+    font: fontExtraBold,
+    color: BORDEAUX_DEEP,
+  });
+  // Sous-titre
+  const sub = type === 'EVCF' ? 'Connaissances fondamentales' : 'Connaissances pratiques';
+  cover.drawText(sub, {
+    x: (PAGE_W - fontRegular.widthOfTextAtSize(sub, 18)) / 2,
+    y: PAGE_H * 0.43,
+    size: 18,
+    font: fontRegular,
+    color: INK_SOFT,
+  });
+  // Discipline
+  const discipline = 'Médecine générale';
+  cover.drawText(discipline, {
+    x: (PAGE_W - fontBold.widthOfTextAtSize(discipline, 22)) / 2,
+    y: PAGE_H * 0.36,
+    size: 22,
+    font: fontBold,
+    color: INK,
+  });
+  // Encart info bas de page
+  const nbSujets = data.sujets.length;
+  const nbQ = data.sujets.reduce((s, sj) => s + sj.questions.length, 0);
+  cover.drawRectangle({ x: MARGIN_X, y: 100, width: CONTENT_W, height: 70, color: BORDEAUX_SOFT });
+  cover.drawRectangle({ x: MARGIN_X, y: 165, width: 4, height: 5, color: BORDEAUX });
+  cover.drawRectangle({ x: MARGIN_X, y: 100, width: CONTENT_W, height: 4, color: BORDEAUX });
+  cover.drawText('Cette annale contient', { x: MARGIN_X + 24, y: 145, size: 11, font: fontRegular, color: MUTED });
+  cover.drawText(`${nbSujets} sujet${nbSujets > 1 ? 's' : ''} · ${nbQ} question${nbQ > 1 ? 's' : ''}`, {
+    x: MARGIN_X + 24, y: 118, size: 18, font: fontBold, color: BORDEAUX_DEEP,
+  });
+  drawFooter(cover, 1, 0);
 
-  const paragraphs = splitParagraphs(content);
-  const sizeBody = 11, lineH = 14.5;
+  // ============== PAGES CONTENU ==============
+  let page = pdf.addPage([PAGE_W, PAGE_H]);
+  let cursorY = PAGE_H - MARGIN_TOP;
+  let pageNum = 2;
+  drawHeader(page, pageNum, 0);
+  drawLogoBackground(page);
 
   const newPage = () => {
-    drawFooter();
+    drawFooter(page, pageNum, 0);
     pageNum += 1;
     page = pdf.addPage([PAGE_W, PAGE_H]);
-    drawHeader();
-    cursorY = PAGE_H - 60;
+    drawHeader(page, pageNum, 0);
+    drawLogoBackground(page);
+    cursorY = PAGE_H - MARGIN_TOP;
   };
 
-  for (const para of paragraphs) {
-    // Détecte type de paragraphe : sujet/question/item
-    const isSujet = /^Sujet\s*\d|^MEDECINE GENERALE|^Epreuve de v/i.test(para);
-    const isQuestion = /^\d+\s*[\)\.]/.test(para);
-    const f = isSujet ? fontB : font;
-    const sz = isSujet ? 13 : sizeBody;
-    const col = isSujet ? BORDEAUX_DEEP : INK;
+  const ensureSpace = (need) => {
+    if (cursorY - need < MARGIN_BOTTOM) newPage();
+  };
 
-    if (isSujet) cursorY -= 6;
-
-    const lines = wrap(f, sz, para, CONTENT_W);
+  const drawWrappedText = (text, options) => {
+    const { size, font, color, lineHeight, maxWidth = CONTENT_W, x = MARGIN_X } = options;
+    const lines = wrap(font, size, text, maxWidth);
     for (const ln of lines) {
-      if (cursorY < 50) newPage();
-      // Pour les énoncés Q : petite barre bordeaux à gauche
-      if (isQuestion && ln === lines[0]) {
-        page.drawRectangle({ x: MARGIN - 6, y: cursorY - 2, width: 3, height: 11, color: BORDEAUX });
-      }
-      page.drawText(ln, { x: MARGIN, y: cursorY, size: sz, font: f, color: col, maxWidth: CONTENT_W });
-      cursorY -= sz === 13 ? 17 : lineH;
+      ensureSpace(lineHeight);
+      page.drawText(ln, { x, y: cursorY, size, font, color });
+      cursorY -= lineHeight;
     }
-    cursorY -= isSujet ? 4 : 2;
+  };
+
+  for (let si = 0; si < data.sujets.length; si++) {
+    const sujet = data.sujets[si];
+
+    // Titre du sujet (gros, bordeaux)
+    ensureSpace(60);
+    if (si > 0) cursorY -= 12;
+    // Numéro en pastille
+    page.drawRectangle({ x: MARGIN_X, y: cursorY - 4, width: 40, height: 30, color: BORDEAUX });
+    const num = String(si + 1).padStart(2, '0');
+    const numW = fontExtraBold.widthOfTextAtSize(num, 16);
+    page.drawText(num, {
+      x: MARGIN_X + (40 - numW) / 2,
+      y: cursorY + 4,
+      size: 16,
+      font: fontExtraBold,
+      color: rgb(1, 1, 1),
+    });
+    // Label "DOSSIER" ou "SUJET"
+    page.drawText(sujet.label.toUpperCase(), {
+      x: MARGIN_X + 52,
+      y: cursorY + 8,
+      size: 18,
+      font: fontExtraBold,
+      color: BORDEAUX_DEEP,
+    });
+    cursorY -= 38;
+
+    // Bloc vignette clinique (fond bordeaux clair, bord gauche bordeaux)
+    if (sujet.enonce && sujet.enonce.length > 20) {
+      const enonceClean = nettoieTexte(sujet.enonce);
+      const enonceLines = wrap(fontRegular, 11, enonceClean, CONTENT_W - 28);
+      const blockH = enonceLines.length * 15 + 28;
+      ensureSpace(blockH + 14);
+      // Fond
+      page.drawRectangle({
+        x: MARGIN_X, y: cursorY - blockH + 8,
+        width: CONTENT_W, height: blockH,
+        color: BORDEAUX_SOFT,
+      });
+      // Bord gauche bordeaux (4px)
+      page.drawRectangle({
+        x: MARGIN_X, y: cursorY - blockH + 8,
+        width: 4, height: blockH,
+        color: BORDEAUX,
+      });
+      // Eyebrow
+      page.drawText('VIGNETTE CLINIQUE', {
+        x: MARGIN_X + 16, y: cursorY - 4,
+        size: 8.5, font: fontExtraBold, color: BORDEAUX_DEEP,
+      });
+      let y = cursorY - 20;
+      for (const ln of enonceLines) {
+        page.drawText(ln, { x: MARGIN_X + 16, y, size: 11, font: fontRegular, color: INK });
+        y -= 15;
+      }
+      cursorY -= blockH + 14;
+    }
+
+    // Questions
+    for (const q of sujet.questions) {
+      const qText = nettoieTexte(q.text);
+      if (!qText) continue;
+
+      const choicesClean = q.choices_text ? nettoieTexte(q.choices_text) : '';
+
+      // Pré-calcule la hauteur du bloc question pour décider d'un saut de page propre
+      const qLines = wrap(fontBold, 12, qText, CONTENT_W - 50);
+      const cLines = choicesClean ? wrap(fontRegular, 10.5, choicesClean, CONTENT_W - 50) : [];
+      const totalH = 36 + qLines.length * 16 + (cLines.length ? 10 + cLines.length * 14 : 0) + 16;
+      if (cursorY - totalH < MARGIN_BOTTOM) newPage();
+
+      // Pastille numéro à gauche
+      page.drawCircle({
+        x: MARGIN_X + 14, y: cursorY - 7,
+        size: 12,
+        color: BORDEAUX,
+      });
+      const qN = String(q.num);
+      const qNW = fontExtraBold.widthOfTextAtSize(qN, 11);
+      page.drawText(qN, {
+        x: MARGIN_X + 14 - qNW / 2,
+        y: cursorY - 11,
+        size: 11,
+        font: fontExtraBold,
+        color: rgb(1, 1, 1),
+      });
+      // Label QUESTION
+      page.drawText('QUESTION', {
+        x: MARGIN_X + 36, y: cursorY,
+        size: 9, font: fontBold, color: MUTED,
+      });
+      cursorY -= 18;
+
+      // Texte de la question
+      for (const ln of qLines) {
+        ensureSpace(16);
+        page.drawText(ln, { x: MARGIN_X + 36, y: cursorY, size: 12, font: fontBold, color: INK });
+        cursorY -= 16;
+      }
+
+      // Réponses proposées
+      if (cLines.length) {
+        cursorY -= 6;
+        ensureSpace(14 * cLines.length + 14);
+        page.drawText('Réponses proposées :', {
+          x: MARGIN_X + 36, y: cursorY,
+          size: 8.5, font: fontBold, color: BLUE,
+        });
+        cursorY -= 12;
+        for (const ln of cLines) {
+          ensureSpace(14);
+          page.drawText(ln, { x: MARGIN_X + 36, y: cursorY, size: 10.5, font: fontRegular, color: INK_SOFT });
+          cursorY -= 14;
+        }
+      }
+
+      cursorY -= 14;
+    }
   }
-  drawFooter();
+
+  drawFooter(page, pageNum, 0);
+
   return await pdf.save();
 }
 
 (async () => {
   for (const f of FILES) {
     try {
-      const raw = extract(f.src);
-      const cleanText = clean(raw);
-      const bytes = await generatePdf(f, cleanText);
+      const data = extract(f.src, f.annee, f.type);
+      const bytes = await generatePdf(f, data);
       const filename = `${f.annee}_${f.type}.pdf`;
       writeFileSync(path.join(OUT_DIR, filename), bytes);
-      console.log('OK', filename, bytes.length, 'bytes');
+      const nbS = data.sujets.length;
+      const nbQ = data.sujets.reduce((s, sj) => s + sj.questions.length, 0);
+      console.log(`OK ${filename} — ${nbS} sujets, ${nbQ} questions, ${bytes.length} bytes`);
     } catch (e) {
-      console.error('FAIL', f.annee, f.type, e.message);
+      console.error(`FAIL ${f.annee} ${f.type}: ${e.message}`);
     }
   }
 })();

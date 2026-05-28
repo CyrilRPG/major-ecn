@@ -47,7 +47,7 @@ export default async function AnnaleDetailPage({
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--color-primary)">
             Session {row.annee}
           </p>
-          <h1 className="mt-1 inline-flex items-center gap-2 font-display text-2xl font-semibold tracking-tight text-(--color-ink)">
+          <h1 className="mt-1 inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-(--color-ink)">
             {row.type === 'EVCF' ? <BookOpen className="h-5 w-5 text-(--color-primary)" /> : <ClipboardCheck className="h-5 w-5 text-(--color-primary)" />}
             {row.label}
           </h1>
