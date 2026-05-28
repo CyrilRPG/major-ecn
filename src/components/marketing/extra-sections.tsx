@@ -70,7 +70,7 @@ export function PreparationProcessSection() {
             <Sparkles className="h-3 w-3" />
             Méthode
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-blue sm:text-5xl">
             Comment nous préparons les candidats
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -135,7 +135,7 @@ export function MethodologySection() {
               <BrainCircuit className="h-3 w-3" />
               Méthodologie EVC
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri sm:text-5xl">
               Une méthodologie pensée pour les EVC
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -217,7 +217,7 @@ export function EcosystemSection() {
             <Activity className="h-3 w-3" />
             Plateforme vivante
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-teal sm:text-5xl">
             Une plateforme vivante et active
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -278,7 +278,7 @@ export function SpecialtiesSection() {
             <Stethoscope className="h-3 w-3" />
             Disciplines
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-amber sm:text-5xl">
             20 spécialités couvertes
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -329,7 +329,7 @@ export function MethodProofSection() {
             <ShieldCheck className="h-3 w-3" />
             La preuve
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-vivid sm:text-5xl">
             La preuve par la méthode
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -380,7 +380,7 @@ export function QCMPreviewSection() {
               <ClipboardCheck className="h-3 w-3" />
               Banque QCM
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri sm:text-5xl">
               QCM corrigés et justifiés
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -518,7 +518,7 @@ export function DashboardPreviewSection() {
               <LineChart className="h-3 w-3" />
               Suivi de progression
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri-rev sm:text-5xl">
               Tableau de bord en temps réel
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -567,7 +567,7 @@ export function PedagogicalTeamSection() {
             <Users className="h-3 w-3" />
             Équipe pédagogique
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-blue sm:text-5xl">
             Une expertise clinique et pédagogique reconnue
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -629,7 +629,7 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
           >
             <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
           </span>
-          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-4xl lg:text-5xl">
+          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight gradient-vivid sm:text-4xl lg:text-5xl">
             Rejoignez les candidats
             <br className="hidden sm:block" />
             qui ont réussi avec Major ECN

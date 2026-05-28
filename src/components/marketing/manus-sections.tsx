@@ -852,16 +852,29 @@ export function StatsSection() {
               transition={{ duration: 0.6, delay: i * 0.05 }}
               className="flex flex-col gap-2 border-b border-r border-white/10 p-7 last:border-r-0 sm:p-8 [&:nth-child(3n)]:md:border-r-0"
             >
-              <p
-                className="text-5xl font-black leading-none text-white sm:text-6xl"
-                style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
-              >
-                {s.n}
-                {s.suf && (
-                  <span className="ml-0.5 text-[#C84A5A]">{s.suf}</span>
-                )}
-              </p>
-              <p className="text-sm font-bold text-white" style={{ fontFamily: JAKARTA }}>{s.l}</p>
+              {s.n ? (
+                <>
+                  <p
+                    className="text-5xl font-black leading-none text-white sm:text-6xl"
+                    style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+                  >
+                    {s.n}
+                    {s.suf && (
+                      <span className="ml-0.5 text-[#C84A5A]">{s.suf}</span>
+                    )}
+                  </p>
+                  <p className="text-sm font-bold text-white" style={{ fontFamily: JAKARTA }}>{s.l}</p>
+                </>
+              ) : (
+                /* Tuiles sans chiffre (Suivi structuré, Méthodologie EVC)
+                   → le libellé devient lui-même un gros titre tricolore. */
+                <p
+                  className="bg-gradient-to-r from-[#C84A5A] via-[#FB7193] to-[#F59E0B] bg-clip-text text-3xl font-black leading-tight text-transparent sm:text-4xl"
+                  style={{ fontFamily: JAKARTA, letterSpacing: '-0.025em' }}
+                >
+                  {s.l}
+                </p>
+              )}
               <p className="text-xs text-white/50" style={{ fontFamily: MANROPE }}>{s.sub}</p>
             </motion.div>
           ))}

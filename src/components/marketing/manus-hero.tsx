@@ -111,14 +111,7 @@ export function ManusHero() {
               >
                 Votre réussite
               </motion.span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.55, duration: 1 }}
-                className="block bg-gradient-to-r from-[#14B8A6] via-[#3B82F6] to-[#6B1A2A] bg-clip-text text-transparent"
-              >
-                commence ici.
-              </motion.span>
+              <span className="block text-[#2D2D2D]">commence ici.</span>
             </motion.h1>
 
             {/* Sous-titre */}
@@ -153,7 +146,7 @@ export function ManusHero() {
                   transition={{ delay: 0.8 + i * 0.08, duration: 0.7 }}
                 >
                   <p
-                    className="bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-2xl font-black text-transparent sm:text-3xl"
+                    className="whitespace-nowrap text-2xl font-black text-[#6B1A2A] sm:text-3xl"
                     style={{
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       letterSpacing: '-0.02em',
