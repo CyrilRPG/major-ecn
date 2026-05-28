@@ -50,7 +50,7 @@ export default async function AdminContenuPage() {
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Contenu pédagogique</h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Collèges EVC — sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
+          Médecine — sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
         </p>
       </header>
 
