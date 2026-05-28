@@ -50,13 +50,35 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
   }
 
   const bytes = readFileSync(absPath);
-  const pdf = await PDFDocument.load(bytes);
+
+  // Charge le PDF source. Si pdf-lib échoue, on renvoie le PDF brut sans
+  // watermark plutôt qu'un écran blanc → l'élève voit au moins le sujet.
+  let pdf: PDFDocument;
+  try {
+    pdf = await PDFDocument.load(bytes);
+  } catch (e) {
+    console.error('[medgen-annales] pdf-lib load failed, fallback brut :', (e as Error).message);
+    return new NextResponse(Buffer.from(bytes) as unknown as BodyInit, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="annale.pdf"',
+        'Cache-Control': 'private, no-store',
+      },
+    });
+  }
   const font = await pdf.embedFont(StandardFonts.HelveticaBold);
 
   const firstName = profile?.first_name?.trim() || '';
   const lastName = profile?.last_name?.trim() || '';
   const email = profile?.email?.trim() || user.email || '';
-  const nom = `${firstName} ${lastName}`.trim() || email;
+  // Sanitize : pdf-lib (WinAnsi) ne supporte pas certains caractères
+  const safe = (s: string) => s
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[–—]/g, '-')
+    .replace(/[^\x09\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
+  const nom = safe(`${firstName} ${lastName}`.trim() || email);
+  const emailSafe = safe(email);
 
   // Charge le logo Major ECN pour le filigrane de fond (PNG)
   let logoImage = null;
@@ -90,9 +112,9 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
       rotate: degrees(28),
     });
 
-    if (email) {
-      const tw2 = font.widthOfTextAtSize(email, sizeSmall);
-      page.drawText(email, {
+    if (emailSafe) {
+      const tw2 = font.widthOfTextAtSize(emailSafe, sizeSmall);
+      page.drawText(emailSafe, {
         x: cx - (tw2 / 2) * Math.cos(Math.PI / 6.43),
         y: cy - sizeBig * 0.6,
         size: sizeSmall,
@@ -127,12 +149,28 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     drawWatermark(page, width, height, 1 / 3);
   }
 
-  const out = await pdf.save();
-  return new NextResponse(out as unknown as BodyInit, {
+  let out: Uint8Array;
+  try {
+    out = await pdf.save();
+  } catch (e) {
+    console.error('[medgen-annales] pdf-lib save failed, fallback brut :', (e as Error).message);
+    return new NextResponse(Buffer.from(bytes) as unknown as BodyInit, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="annale.pdf"',
+        'Cache-Control': 'private, no-store',
+      },
+    });
+  }
+  // ASCII-safe filename pour Content-Disposition (RFC 6266 strict)
+  const asciiName = row.label.replace(/[^\x20-\x7e]/g, '_');
+  return new NextResponse(Buffer.from(out) as unknown as BodyInit, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="${row.label}.pdf"`,
+      'Content-Length': String(out.byteLength),
+      'Content-Disposition': `inline; filename="${asciiName}.pdf"`,
       'Cache-Control': 'private, no-store',
+      'X-Content-Type-Options': 'nosniff',
     },
   });
 }
