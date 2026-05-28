@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, FileText, Sparkles, Timer } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { QcmSession } from '@/components/qcm/qcm-session';
+import { TextAnnaleViewer } from '@/components/qcm/text-annale-viewer';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { startAnnaleAction } from './actions';
 
@@ -31,7 +32,6 @@ export default async function AnnalePage({
 
   const { data: serie } = await supabase
     .from('qcm_series')
-    // cast nécessaire : duration_minutes vient d'une migration récente non encore dans les types générés
     .select('id, label, type, cours_id, qcm_questions(id)' + ', duration_minutes' as 'id, label, type, cours_id, qcm_questions(id)')
     .eq('id', serieId)
     .eq('cours_id', coursId)
@@ -42,7 +42,53 @@ export default async function AnnalePage({
 
   const questionCount = serie.qcm_questions?.length ?? 0;
 
-  // ============ RUN MODE — session in URL ============
+  // Check format: QROC questions use the interactive session; text-based (no items, no QROC) use read-only viewer
+  const { data: sampleQuestion } = await supabase
+    .from('qcm_questions')
+    .select('id, format, qcm_items(id)')
+    .eq('serie_id', serieId)
+    .limit(1)
+    .maybeSingle();
+
+  const qFormat = (sampleQuestion as unknown as { format?: string })?.format ?? 'qcm';
+  const hasItems = sampleQuestion?.qcm_items && sampleQuestion.qcm_items.length > 0;
+  const isTextBased = sampleQuestion && !hasItems && qFormat !== 'qroc';
+
+  // ============ TEXT-BASED ANNALE — read-only viewer ============
+  if (isTextBased) {
+    const { data: questions } = await supabase
+      .from('qcm_questions')
+      .select('id, enonce, order_index')
+      .eq('serie_id', serieId)
+      .order('order_index');
+
+    if (!questions || questions.length === 0) notFound();
+
+    const label = serie.label;
+    const isDP = /evcp|dossier|dp\b/i.test(label);
+
+    let vignette: string | null = null;
+    let displayQuestions = questions;
+
+    if (isDP && questions.length > 1 && questions[0].order_index === 0) {
+      vignette = questions[0].enonce;
+      displayQuestions = questions.slice(1);
+    }
+
+    return (
+      <TextAnnaleViewer
+        serieLabel={label}
+        vignette={vignette}
+        questions={displayQuestions}
+        backHref={`/cours/${coursId}/annales`}
+        isDP={isDP}
+      />
+    );
+  }
+
+  // ============ QCM-BASED ANNALE — interactive session ============
+
+  // RUN MODE — session in URL
   if (sp.session) {
     const { data: sessionRow } = await supabase
       .from('qcm_sessions')
@@ -50,12 +96,11 @@ export default async function AnnalePage({
       .eq('id', sp.session)
       .maybeSingle();
     if (!sessionRow || sessionRow.user_id !== user.id) notFound();
-    // If already finished, jump straight to results
     if (sessionRow.finished_at) redirect(`/cours/${coursId}/resultats/${sp.session}`);
 
     const { data: questions } = await supabase
       .from('qcm_questions')
-      .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
+      .select('id, enonce, order_index, format, reponse_attendue, qcm_items(id, lettre, enonce, is_correct, justification)')
       .eq('serie_id', serieId)
       .order('order_index');
     if (!questions || questions.length === 0) notFound();
@@ -64,6 +109,8 @@ export default async function AnnalePage({
       id: q.id,
       enonce: q.enonce,
       order_index: q.order_index,
+      format: (q as unknown as { format: string }).format as 'qcm' | 'qroc',
+      reponse_attendue: (q as unknown as { reponse_attendue: string | null }).reponse_attendue,
       items: (q.qcm_items ?? [])
         .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
         .sort((a, b) => a.lettre.localeCompare(b.lettre)),
@@ -85,7 +132,7 @@ export default async function AnnalePage({
     );
   }
 
-  // ============ LAUNCH SCREEN ============
+  // ============ LAUNCH SCREEN (QCM-based only) ============
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 lg:px-8 lg:py-12">
       <Link
@@ -97,7 +144,6 @@ export default async function AnnalePage({
       </Link>
 
       <div className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
-        {/* Header */}
         <div className="border-b border-(--color-border) bg-(--color-surface-soft) px-6 py-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--color-primary)">Annale</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-(--color-ink)">
@@ -117,15 +163,14 @@ export default async function AnnalePage({
           </p>
         </div>
 
-        {/* Form */}
         <form action={startAnnaleAction} className="px-6 py-6">
           <input type="hidden" name="coursId" value={coursId} />
           <input type="hidden" name="serieId" value={serieId} />
 
           <fieldset>
-            <legend className="text-sm font-semibold text-(--color-ink)">Mode de l’épreuve</legend>
+            <legend className="text-sm font-semibold text-(--color-ink)">Mode de l'épreuve</legend>
             <p className="mt-1 text-sm text-(--color-ink-soft)">
-              Choisissez si vous souhaitez les corrections immédiates ou les conditions d’examen.
+              Choisissez si vous souhaitez les corrections immédiates ou les conditions d'examen.
             </p>
 
             <label className="mt-4 flex cursor-pointer items-start gap-4 rounded-xl border border-(--color-border) bg-(--color-surface) p-4 transition-colors hover:border-(--color-primary)/40 has-[:checked]:border-(--color-primary) has-[:checked]:bg-(--color-primary-soft)">
@@ -146,7 +191,7 @@ export default async function AnnalePage({
                   Entraînement en conditions réelles
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-(--color-ink-soft)">
-                  Aucune correction pendant l’épreuve. Vous obtenez votre note à la fin, puis vous
+                  Aucune correction pendant l'épreuve. Vous obtenez votre note à la fin, puis vous
                   pouvez revoir le corrigé (toutes les questions ou uniquement vos erreurs).
                 </span>
               </span>
@@ -164,7 +209,7 @@ export default async function AnnalePage({
             type="submit"
             className="group mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.01]"
           >
-            Commencer l’annale
+            Commencer l'annale
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
           </button>
         </form>

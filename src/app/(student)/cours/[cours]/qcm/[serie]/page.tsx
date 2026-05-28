@@ -27,7 +27,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
 
   const { data: questions } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
+    .select('id, enonce, order_index, format, reponse_attendue, qcm_items(id, lettre, enonce, is_correct, justification)')
     .eq('serie_id', serieId)
     .order('order_index');
 
@@ -37,6 +37,8 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
     id: q.id,
     enonce: q.enonce,
     order_index: q.order_index,
+    format: (q as unknown as { format: string }).format as 'qcm' | 'qroc',
+    reponse_attendue: (q as unknown as { reponse_attendue: string | null }).reponse_attendue,
     items: (q.qcm_items ?? [])
       .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
