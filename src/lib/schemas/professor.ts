@@ -22,7 +22,7 @@ export const PERMISSION_LEVEL_LABEL: Record<PermissionLevel, string> = {
   rw: 'Lecture + écriture',
 };
 
-/** Création d'un professeur — accès granulaires (collèges + permissions par type de contenu). */
+/** Création d'un professeur — accès granulaires (collèges + cours + permissions par type de contenu). */
 export const AddProfessorSchema = z.object({
   first_name: z.string().min(1, 'Prénom requis'),
   last_name: z.string().min(1, 'Nom requis'),
@@ -30,6 +30,9 @@ export const AddProfessorSchema = z.object({
   phone: z.string().optional(),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
+  /** Restriction supplémentaire à un sous-ensemble de cours (items) au sein des collèges
+   *  sélectionnés. Vide = tous les cours des collèges. */
+  cours: z.array(z.string()).optional(),
   content_permissions: z.record(z.enum(CONTENT_TYPES), z.enum(PERMISSION_LEVELS)).optional(),
 });
 
@@ -40,6 +43,8 @@ export type ProfessorScope = {
   role: 'professor';
   type: 'all' | 'college';
   colleges: string[];
+  /** Restriction à un sous-ensemble de cours (UUID) parmi ceux du/des collège(s). Vide = tous. */
+  cours?: string[];
   /** Permission par type de contenu. Absent ou 'none' = pas d'accès. */
   content_permissions: Partial<Record<ContentType, PermissionLevel>>;
 };

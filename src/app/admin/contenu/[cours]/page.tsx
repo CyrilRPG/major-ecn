@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { ArrowLeft, ClipboardList, FileText, History, Layers3, PlayCircle } from 'lucide-react';
-import { requireContentEditor } from '@/lib/auth/require-role';
+import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     .maybeSingle();
 
   if (!c) notFound();
+  if (!profCanAccessCours(scope, c.matiere_id, c.id)) redirect('/admin/contenu');
 
   const video = c.videos?.[0];
   const fiche = c.fiches?.[0];

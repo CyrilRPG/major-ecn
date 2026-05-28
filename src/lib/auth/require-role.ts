@@ -40,10 +40,12 @@ export function getProfessorScope(scope: unknown): ProfessorScope | null {
   if (!s.content_permissions && Array.isArray(s.content_types)) {
     content_permissions = Object.fromEntries(s.content_types.map((t) => [t, 'rw' as const]));
   }
+  const cours = Array.isArray(s.cours) ? s.cours.filter((x): x is string => typeof x === 'string') : undefined;
   return {
     role: 'professor',
     type: s.type ?? 'all',
     colleges: Array.isArray(s.colleges) ? s.colleges : [],
+    ...(cours && cours.length > 0 ? { cours } : {}),
     content_permissions,
   };
 }
@@ -79,4 +81,13 @@ export function assertCanRead(scope: ProfessorScope | null, type: ContentType) {
   if (!canRead(scope, type)) {
     throw new Error(`Permission insuffisante pour consulter le contenu de type "${type}".`);
   }
+}
+
+/** Vérifie qu'un prof a accès au cours (et à son collège). Renvoie true/false. */
+export function profCanAccessCours(scope: ProfessorScope | null, collegeId: string, coursId: string): boolean {
+  if (scope === null) return true; // admin
+  if (scope.type === 'all') return true;
+  if (!scope.colleges.includes(collegeId)) return false;
+  if (scope.cours && scope.cours.length > 0) return scope.cours.includes(coursId);
+  return true;
 }

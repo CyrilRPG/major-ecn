@@ -184,16 +184,27 @@ export function QcmSession({
       <Progress value={progressPct} className="mb-3" />
 
       {/* Vignette clinique commune à toutes les questions (DP / annale) —
-          encadré distinct, sticky-like en haut. */}
+          <details> natif ouvert par défaut : visible sur tous les écrans
+          (y compris mobile), repliable après lecture pour gagner de la
+          place quand l'élève enchaîne les questions du DP. */}
       {vignette && (
-        <div className="mb-3 rounded-xl border-l-4 border-(--color-primary) bg-(--color-primary-soft)/30 p-3.5 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
-            Contexte clinique
-          </p>
-          <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+        <details
+          open
+          className="group mb-3 block rounded-xl border border-(--color-primary)/30 border-l-4 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5 shadow-sm open:bg-(--color-primary-soft)/30"
+        >
+          <summary className="flex cursor-pointer items-center justify-between gap-2 list-none [&::-webkit-details-marker]:hidden">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
+              Contexte clinique du dossier
+            </span>
+            <span className="text-[11px] font-medium text-(--color-primary-deep) underline-offset-2 group-open:no-underline group-[:not([open])]:underline">
+              <span className="group-open:hidden">Afficher</span>
+              <span className="hidden group-open:inline">Réduire</span>
+            </span>
+          </summary>
+          <p className="mt-2 whitespace-pre-line break-words text-sm leading-relaxed text-(--color-ink)">
             {vignette}
           </p>
-        </div>
+        </details>
       )}
 
       <motion.div

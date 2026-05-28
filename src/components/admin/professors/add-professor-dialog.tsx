@@ -20,7 +20,13 @@ import {
   PERMISSION_LEVELS, PERMISSION_LEVEL_LABEL, type PermissionLevel,
 } from '@/lib/schemas/professor';
 
-export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: string }[] }) {
+export function AddProfessorDialog({
+  colleges,
+  coursByCollege,
+}: {
+  colleges: { id: string; nom: string }[];
+  coursByCollege: Record<string, { id: string; titre: string }[]>;
+}) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
@@ -38,6 +44,7 @@ export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: 
   });
 
   const permissionType = watch('permission_type');
+  const selectedColleges = watch('colleges') ?? [];
 
   const onSubmit = (data: AddProfessorInput) => {
     setSubmitError(null);
@@ -151,6 +158,76 @@ export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: 
               </div>
             )}
           </div>
+
+          {/* Cours spécifiques au sein du / des collège(s) sélectionné(s) */}
+          {permissionType === 'college' && selectedColleges.length > 0 && (
+            <div className="space-y-2">
+              <Label>Cours accessibles dans ce collège</Label>
+              <p className="text-xs text-(--color-ink-soft)">
+                Laissez tout coché pour donner accès à tous les cours du collège, ou sélectionnez
+                uniquement les items que ce professeur doit pouvoir consulter / modifier.
+              </p>
+              <Controller
+                name="cours"
+                control={control}
+                render={({ field }) => {
+                  const value = field.value ?? [];
+                  return (
+                    <div className="space-y-3">
+                      {selectedColleges.map((collegeId) => {
+                        const college = colleges.find((c) => c.id === collegeId);
+                        const courses = coursByCollege[collegeId] ?? [];
+                        if (!college) return null;
+                        const collegeCoursIds = courses.map((c) => c.id);
+                        const allChecked = courses.length > 0 && collegeCoursIds.every((id) => value.includes(id));
+                        return (
+                          <div key={collegeId} className="rounded-xl border border-(--color-border) p-3">
+                            <div className="mb-2 flex items-center justify-between gap-2">
+                              <p className="text-sm font-semibold text-(--color-ink)">{college.nom}</p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const set = new Set(value);
+                                  if (allChecked) collegeCoursIds.forEach((id) => set.delete(id));
+                                  else collegeCoursIds.forEach((id) => set.add(id));
+                                  field.onChange(Array.from(set));
+                                }}
+                                className="text-xs font-medium text-(--color-primary) hover:underline"
+                              >
+                                {allChecked ? 'Tout décocher' : 'Tout cocher'}
+                              </button>
+                            </div>
+                            {courses.length === 0 ? (
+                              <p className="text-xs text-(--color-ink-muted)">Aucun cours dans ce collège.</p>
+                            ) : (
+                              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                                {courses.map((c) => {
+                                  const checked = value.includes(c.id);
+                                  return (
+                                    <label key={c.id} className="flex items-center gap-2 text-xs">
+                                      <Checkbox
+                                        checked={checked}
+                                        onCheckedChange={(v) => {
+                                          const set = new Set(value);
+                                          if (v) set.add(c.id); else set.delete(c.id);
+                                          field.onChange(Array.from(set));
+                                        }}
+                                      />
+                                      <span className="truncate">{c.titre}</span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                }}
+              />
+            </div>
+          )}
 
           {/* Permissions par type de contenu */}
           <div className="space-y-2">

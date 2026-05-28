@@ -6,7 +6,7 @@ export const OFFER_LABEL: Record<Offer, string> = {
   intensif: 'Intensif',
 };
 
-export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[] }) & {
+export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[]; /** Optionnel : liste d'IDs de cours auxquels l'accès est restreint au sein des collèges sélectionnés. Vide ou absent = tous les cours du/des collège(s). */ cours?: string[] }) & {
   offer: Offer;
 };
 

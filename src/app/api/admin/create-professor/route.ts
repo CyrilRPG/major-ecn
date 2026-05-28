@@ -32,9 +32,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const { first_name, last_name, email, phone, permission_type, colleges, content_permissions } = parsed.data;
+  const { first_name, last_name, email, phone, permission_type, colleges, cours, content_permissions } = parsed.data;
 
   const cleanedColleges = permission_type === 'college' ? (colleges ?? []) : [];
+  const cleanedCours = permission_type === 'college' ? (cours ?? []).filter((c) => typeof c === 'string') : [];
   const cleanedPermissions: Partial<Record<ContentType, PermissionLevel>> = {};
   for (const t of CONTENT_TYPES) {
     const lvl = content_permissions?.[t];
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
     role: 'professor',
     type: permission_type,
     colleges: cleanedColleges,
+    ...(cleanedCours.length > 0 ? { cours: cleanedCours } : {}),
     content_permissions: cleanedPermissions,
   };
 
