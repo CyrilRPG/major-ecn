@@ -54,7 +54,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         style={{ background: BG }}
       >
         <div className="flex h-20 items-center justify-center border-b border-white/10 px-4">
-          <BrandLogo className="h-16 w-auto" />
+          <BrandLogo className="h-16 w-auto [filter:brightness(0)_invert(1)]" />
         </div>
         <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
           Administration
@@ -95,7 +95,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         className="sticky top-0 z-30 flex items-center gap-2 px-3 py-2 text-white sm:gap-3 sm:px-4 sm:py-2.5 lg:hidden"
         style={{ background: BG }}
       >
-        <BrandLogo className="h-9 w-auto shrink-0 sm:h-10" />
+        <BrandLogo className="h-9 w-auto shrink-0 sm:h-10 [filter:brightness(0)_invert(1)]" />
         <nav className="flex flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {items.map((it) => (
             <Link
