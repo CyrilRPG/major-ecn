@@ -34,10 +34,10 @@ export function MarketingHeader() {
           : 'border-b border-transparent bg-white/0',
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-[72px] lg:gap-4 lg:px-8">
-        <Link href="/" className="-ml-1 inline-flex shrink-0 items-center gap-2.5 focus-ring">
-          <BrandLogo className="h-10 w-auto" />
-          <span className="font-display text-base font-bold tracking-tight text-(--color-ink) sm:text-lg">
+      <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
+        <Link href="/" className="-ml-1 inline-flex shrink-0 items-center gap-3 focus-ring">
+          <BrandLogo className="h-14 w-auto sm:h-16 lg:h-20" />
+          <span className="font-display text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl lg:text-2xl">
             Major <span className="text-(--color-primary)">ECN</span>
           </span>
         </Link>
