@@ -36,9 +36,7 @@ export function MarketingFooter() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:px-8">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center rounded-xl bg-(--color-sidebar) px-3 py-1.5 shadow-sm">
-              <BrandLogo className="h-9 w-auto" />
-            </span>
+            <BrandLogo className="h-11 w-auto" />
             <span className="font-display text-lg font-bold tracking-tight text-(--color-ink)">
               Major <span className="text-(--color-primary)">ECN</span>
             </span>
