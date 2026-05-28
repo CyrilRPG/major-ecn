@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,11 +32,13 @@ export function AddProfessorDialog({
   const router = useRouter();
   const [pending, start] = useTransition();
 
-  const { register, control, handleSubmit, watch, reset, formState: { errors } } = useForm<AddProfessorInput>({
+  const singleCollegeMode = colleges.length === 1;
+
+  const { register, control, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm<AddProfessorInput>({
     resolver: zodResolver(AddProfessorSchema),
     defaultValues: {
-      permission_type: 'all',
-      colleges: [],
+      permission_type: singleCollegeMode ? 'college' : 'all',
+      colleges: singleCollegeMode ? [colleges[0].id] : [],
       content_permissions: Object.fromEntries(
         CONTENT_TYPES.map((t) => [t, 'rw' as PermissionLevel]),
       ),
@@ -45,6 +47,15 @@ export function AddProfessorDialog({
 
   const permissionType = watch('permission_type');
   const selectedColleges = watch('colleges') ?? [];
+
+  // Quand on n'a qu'un seul collège (Médecine générale aujourd'hui),
+  // on force le mode 'college' et on pré-sélectionne ce collège.
+  useEffect(() => {
+    if (!singleCollegeMode) return;
+    setValue('permission_type', 'college');
+    setValue('colleges', [colleges[0].id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleCollegeMode]);
 
   const onSubmit = (data: AddProfessorInput) => {
     setSubmitError(null);
@@ -111,61 +122,78 @@ export function AddProfessorDialog({
           </div>
 
           {/* Collèges */}
-          <div className="space-y-2">
-            <Label>Accès aux collèges</Label>
-            <Controller
-              name="permission_type"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="all" />
-                    <span className="text-sm">Toute l’offre (tous les collèges)</span>
-                  </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="college" />
-                    <span className="text-sm">Collèges spécifiques</span>
-                  </label>
-                </RadioGroup>
+          {colleges.length > 1 ? (
+            <div className="space-y-2">
+              <Label>Accès aux collèges</Label>
+              <Controller
+                name="permission_type"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup value={field.value} onValueChange={field.onChange}>
+                    <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
+                      <RadioGroupItem value="all" />
+                      <span className="text-sm">Toute l’offre (tous les collèges)</span>
+                    </label>
+                    <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
+                      <RadioGroupItem value="college" />
+                      <span className="text-sm">Collèges spécifiques</span>
+                    </label>
+                  </RadioGroup>
+                )}
+              />
+              {permissionType === 'college' && (
+                <div className="ml-1 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <Controller
+                    name="colleges"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        {colleges.map((c) => {
+                          const checked = field.value?.includes(c.id) ?? false;
+                          return (
+                            <label key={c.id} className="flex items-center gap-2 text-sm">
+                              <Checkbox
+                                checked={checked}
+                                onCheckedChange={(v) => {
+                                  const set = new Set(field.value ?? []);
+                                  if (v) set.add(c.id); else set.delete(c.id);
+                                  field.onChange(Array.from(set));
+                                }}
+                              />
+                              {c.nom}
+                            </label>
+                          );
+                        })}
+                      </>
+                    )}
+                  />
+                </div>
               )}
-            />
-            {permissionType === 'college' && (
-              <div className="ml-1 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <Controller
-                  name="colleges"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      {colleges.map((c) => {
-                        const checked = field.value?.includes(c.id) ?? false;
-                        return (
-                          <label key={c.id} className="flex items-center gap-2 text-sm">
-                            <Checkbox
-                              checked={checked}
-                              onCheckedChange={(v) => {
-                                const set = new Set(field.value ?? []);
-                                if (v) set.add(c.id); else set.delete(c.id);
-                                field.onChange(Array.from(set));
-                              }}
-                            />
-                            {c.nom}
-                          </label>
-                        );
-                      })}
-                    </>
-                  )}
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : colleges.length === 1 ? (
+            /* Cas spécifique : un seul collège (Médecine générale aujourd'hui).
+               Mode 'college' forcé + collège pré-sélectionné via useEffect ;
+               on enchaîne directement sur le sélecteur d'items ci-dessous. */
+            <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3 text-sm">
+              <span className="font-semibold text-(--color-ink)">Collège :</span>{' '}
+              <span className="text-(--color-ink-soft)">{colleges[0].nom}</span>
+              <p className="mt-1 text-xs text-(--color-ink-muted)">
+                Sélectionnez ci-dessous les items que ce professeur peut consulter et modifier.
+              </p>
+            </div>
+          ) : (
+            <p className="text-xs text-(--color-ink-muted)">
+              Aucun collège disponible. Créez d’abord du contenu pédagogique.
+            </p>
+          )}
 
-          {/* Cours spécifiques au sein du / des collège(s) sélectionné(s) */}
+          {/* Items du / des collège(s) — toujours affiché si on est en mode 'college' */}
           {permissionType === 'college' && selectedColleges.length > 0 && (
             <div className="space-y-2">
-              <Label>Cours accessibles dans ce collège</Label>
+              <Label>Items accessibles {colleges.length === 1 ? `dans ${colleges[0].nom}` : 'dans ce collège'}</Label>
               <p className="text-xs text-(--color-ink-soft)">
-                Laissez tout coché pour donner accès à tous les cours du collège, ou sélectionnez
-                uniquement les items que ce professeur doit pouvoir consulter / modifier.
+                Cochez les items à autoriser. Tout décocher = aucun item (le professeur n’aura
+                aucun accès). Tout coché ou rien coché ⇒ tous les items du collège accessibles.
               </p>
               <Controller
                 name="cours"
