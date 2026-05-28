@@ -281,6 +281,42 @@ body::after {
     background-clip: text;
     color: transparent;
   }
+
+  /* === Titres vitrine — dégradé tricolore Manus (bordeaux → bleu → turquoise) === */
+  .theme-manus h1,
+  .theme-manus h2,
+  .theme-manus h3,
+  .theme-manus h4 {
+    background-image: linear-gradient(120deg, #6B1A2A 0%, #3B82F6 55%, #14B8A6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Fallback couleur quand le navigateur ne supporte pas background-clip */
+    -webkit-text-fill-color: transparent;
+  }
+  /* Échappe ce dégradé sur les éléments où le designer voulait une autre couleur
+     (titres dans les CTA dark charcoal, blocs blancs, etc.) en ajoutant la classe
+     `no-gradient` ou en ciblant les fonds sombres. */
+  .theme-manus .no-gradient,
+  .theme-manus h1.no-gradient,
+  .theme-manus h2.no-gradient,
+  .theme-manus h3.no-gradient,
+  .theme-manus h4.no-gradient {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: inherit;
+  }
+  /* Titres sur fond sombre (#1C1C1E / #0E1626 / etc.) — pas de dégradé pour rester lisibles. */
+  .theme-manus [class*="bg-[#1C1C1E]"] h1,
+  .theme-manus [class*="bg-[#1C1C1E]"] h2,
+  .theme-manus [class*="bg-[#1C1C1E]"] h3,
+  .theme-manus [class*="bg-[#0E1626]"] h1,
+  .theme-manus [class*="bg-[#0E1626]"] h2,
+  .theme-manus [class*="bg-[#0E1626]"] h3 {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: inherit;
+  }
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
 

@@ -381,7 +381,7 @@ export function QCMPreviewSection() {
               Banque QCM
             </span>
             <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
-              4 200+ QCM corrigés et justifiés
+              QCM corrigés et justifiés
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
               Chaque item est accompagné d’une justification médicale détaillée. Filtrage par
@@ -630,7 +630,7 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
             <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
           </span>
           <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-4xl lg:text-5xl">
-            Rejoignez 2 400+ médecins
+            Rejoignez les candidats
             <br className="hidden sm:block" />
             qui ont réussi avec Major ECN
           </h2>
@@ -649,10 +649,10 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
         <ul className="mt-10 grid grid-cols-2 gap-3 text-center text-[11px] font-semibold text-[#5A5A5A] sm:grid-cols-3 lg:grid-cols-6">
           {[
             { Icon: ShieldCheck,    t: 'Contenu certifié par des spécialistes' },
-            { Icon: TrendingUp,     t: '87 % de taux de réussite' },
+            { Icon: TrendingUp,     t: 'Progression · Suivi structuré' },
             { Icon: Activity,       t: 'Accès 24h/24, 7j/7' },
-            { Icon: BookOpen,       t: '4 200+ QCM disponibles' },
-            { Icon: Users,          t: '2 400+ médecins formés' },
+            { Icon: BookOpen,       t: 'Méthodologie · Approche EVC' },
+            { Icon: Users,          t: 'PH spécialistes & CCA' },
             { Icon: ClipboardCheck, t: 'Mis à jour chaque trimestre' },
           ].map((b) => (
             <li key={b.t} className="flex flex-col items-center gap-1.5 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4">
@@ -703,7 +703,7 @@ export function TarifsBlock() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] backdrop-blur">
             <Sparkles className="h-3 w-3" /> Inscriptions ouvertes — Session 2025
           </span>
-          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+          <h2 className="no-gradient mt-5 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Votre réussite aux EVC commence ici
           </h2>
           <p className="mt-4 text-base text-white/70 sm:text-lg">

@@ -111,7 +111,14 @@ export function ManusHero() {
               >
                 Votre réussite
               </motion.span>
-              <span className="block text-[#2D2D2D]">commence ici.</span>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.55, duration: 1 }}
+                className="block bg-gradient-to-r from-[#14B8A6] via-[#3B82F6] to-[#6B1A2A] bg-clip-text text-transparent"
+              >
+                commence ici.
+              </motion.span>
             </motion.h1>
 
             {/* Sous-titre */}
@@ -125,34 +132,38 @@ export function ManusHero() {
               Une plateforme structurée. Un accompagnement humain. Une vraie chance de réussite.
             </motion.p>
 
-            {/* Stats */}
+            {/* Stats — 4 vignettes inspirées de la maquette Manus
+                (18 ans / 45 spécialités / 8 000+ candidats / PH + CCA) */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 1 }}
-              className="mb-7 flex flex-wrap items-end gap-8 sm:gap-10"
+              className="mb-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 sm:gap-x-8"
             >
               {[
-                { value: '87%', label: 'Taux de réussite prouvé' },
-                { value: '2 400+', label: 'Médecins accompagnés' },
+                { value: '18',     suffix: ' ans',  label: 'd’expérience' },
+                { value: '45',     suffix: '',      label: 'spécialités couvertes' },
+                { value: '8 000+', suffix: '',      label: 'candidats accompagnés' },
+                { value: 'PH',     suffix: ' + CCA', label: 'spécialistes & enseignants' },
               ].map((s, i) => (
                 <motion.div
                   key={s.label}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 + i * 0.1, duration: 0.8 }}
+                  transition={{ delay: 0.8 + i * 0.08, duration: 0.7 }}
                 >
                   <p
-                    className="text-3xl font-black text-[#6B1A2A] sm:text-4xl"
+                    className="bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-2xl font-black text-transparent sm:text-3xl"
                     style={{
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       letterSpacing: '-0.02em',
                     }}
                   >
                     {s.value}
+                    {s.suffix}
                   </p>
                   <span
-                    className="text-xs font-bold text-[#7A7A7A]"
+                    className="text-[11px] font-bold uppercase tracking-wide text-[#7A7A7A] sm:text-xs"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {s.label}
@@ -231,7 +242,7 @@ export function ManusHero() {
               className="absolute -right-5 top-8 inline-flex items-center gap-2 rounded-full border border-[#E8E7E3] bg-white px-4 py-2.5 text-sm font-bold text-[#6B1A2A] shadow-2xl"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              <TrendingUp className="h-4 w-4" /> 87 % réussite
+              <TrendingUp className="h-4 w-4" /> Suivi structuré
             </motion.span>
             <motion.span
               aria-hidden
@@ -240,7 +251,7 @@ export function ManusHero() {
               className="absolute -bottom-5 -left-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] px-4 py-2.5 text-sm font-bold text-white shadow-2xl"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              <BookOpen className="h-4 w-4" /> 4 200+ QCM
+              <BookOpen className="h-4 w-4" /> Méthodologie EVC
             </motion.span>
           </motion.div>
         </div>

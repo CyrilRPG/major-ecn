@@ -29,7 +29,7 @@ const PILIERS = [
   { n: '01', Icon: Compass,    color: '#6B1A2A', title: 'Diagnostic',  desc: 'Évaluation complète de votre niveau initial, identification des lacunes par spécialité.' },
   { n: '02', Icon: Zap,        color: '#3B82F6', title: 'Structure',   desc: 'Roadmap personnalisée et progressive en 12 semaines calée sur le programme EVC.' },
   { n: '03', Icon: TrendingUp, color: '#14B8A6', title: 'Progression', desc: 'Suivi en temps réel, IA pédagogique qui adapte la difficulté à votre niveau.' },
-  { n: '04', Icon: Award,      color: '#F59E0B', title: 'Réussite',    desc: 'Accompagnement humain et coaching jusqu’aux EVC — 87 % de réussite prouvée.' },
+  { n: '04', Icon: Award,      color: '#F59E0B', title: 'Réussite',    desc: 'Accompagnement humain et coaching jusqu’aux EVC — méthode éprouvée par 18 ans d’expérience.' },
 ];
 
 export function MethodeSection() {
@@ -405,7 +405,7 @@ const TEMOIGNAGES = [
   {
     nom: 'Dr. Amina Diallo', role: 'Chirurgie générale', specColor: '#14B8A6',
     citation: 'J’étais perdue. Maintenant je suis confiante.',
-    arc: 'De la confusion à la clarté', stat: '87 % de réussite', duration: '8:42',
+    arc: 'De la confusion à la clarté', stat: 'Méthodologie EVC', duration: '8:42',
     videoSrc: '/temoignages/amina-diallo.mp4',
   },
   {
@@ -793,12 +793,12 @@ export function TransformationSection() {
 // STATS — Charcoal Manus : nombres blancs géants, "+" / "%" en bordeaux
 // ============================================================================
 const STATS = [
-  { n: '2 400', suf: '+', l: 'Médecins formés',     sub: 'depuis 2020' },
-  { n: '87',    suf: '%', l: 'Taux de réussite',    sub: 'aux EVC' },
-  { n: '4 200', suf: '+', l: 'QCM disponibles',     sub: 'mis à jour trimestriellement' },
-  { n: '16',    suf: '',  l: 'Spécialités',         sub: 'couvertes intégralement' },
-  { n: '40',    suf: '+', l: 'Nationalités',        sub: 'représentées' },
-  { n: '12',    suf: '',  l: 'Semaines',            sub: 'de préparation structurée' },
+  { n: '18',     suf: '',  l: 'Ans d’expérience',         sub: 'auprès des candidats EVC' },
+  { n: '8 000',  suf: '+', l: 'Candidats accompagnés',    sub: 'sur le programme' },
+  { n: '45',     suf: '',  l: 'Spécialités couvertes',    sub: 'l’intégralité du programme' },
+  { n: 'PH',     suf: '',  l: 'Spécialistes & CCA',       sub: 'praticiens hospitaliers + chefs de clinique' },
+  { n: '',       suf: '',  l: 'Suivi structuré',          sub: 'progression mesurée à chaque session' },
+  { n: '',       suf: '',  l: 'Méthodologie EVC',         sub: 'raisonnement clinique au cœur de la prépa' },
 ];
 
 export function StatsSection() {
@@ -1141,12 +1141,12 @@ export function FreeTrialBanner() {
 export function TrustBanner() {
   const items = [
     { Icon: ShieldCheck,    t: 'Contenu certifié par des spécialistes' },
-    { Icon: TrendingUp,     t: '87 % de taux de réussite' },
+    { Icon: TrendingUp,     t: 'Progression · Suivi structuré' },
     { Icon: Zap,            t: 'Accès 24h/24, 7j/7' },
-    { Icon: BookOpen,       t: '4 200+ QCM disponibles' },
-    { Icon: Users,          t: '2 400+ médecins formés' },
+    { Icon: BookOpen,       t: 'Méthodologie · Approche EVC' },
+    { Icon: Users,          t: 'PH spécialistes & CCA' },
     { Icon: ClipboardCheck, t: 'Mis à jour chaque trimestre' },
-    { Icon: Award,          t: 'Méthode éprouvée 12 semaines' },
+    { Icon: Award,          t: '18 ans d’expérience EVC' },
     { Icon: MessagesSquare, t: 'Tuteur dédié sur demande' },
   ];
   // Loop the list twice so the marquee feels seamless
