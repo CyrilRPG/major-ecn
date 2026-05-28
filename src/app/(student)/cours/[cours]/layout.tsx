@@ -36,7 +36,6 @@ export default async function CoursLayout({
     video: (c.videos ?? []).some((v) => !!v.storage_path),
     fiche: (c.fiches ?? []).some((f) => !!f.storage_path),
     qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
-    annales: (c.qcm_series ?? []).some((s) => s.type === 'annale'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
   };
 

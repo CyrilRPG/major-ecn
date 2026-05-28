@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, ChevronRight, Home, MessagesSquare, Target } from 'lucide-react';
+import { CalendarDays, ChevronRight, FileText, Home, MessagesSquare, Target } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
@@ -30,14 +30,25 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const pathname = usePathname();
   const activeCoursId = pathname.startsWith('/cours/') ? pathname.split('/')[2] : null;
   const activeCollegeId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
+  // On est sur /matieres/<col>/annales/...
+  const activeAnnaleCollege =
+    pathname.startsWith('/matieres/') && pathname.split('/')[3] === 'annales'
+      ? pathname.split('/')[2]
+      : null;
 
   const expanded = useMemo(() => {
     const set = new Set<string>();
     for (const col of tree) {
-      if (col.id === activeCollegeId || col.cours.some((c) => c.id === activeCoursId)) set.add(col.id);
+      if (
+        col.id === activeCollegeId ||
+        col.id === activeAnnaleCollege ||
+        col.cours.some((c) => c.id === activeCoursId)
+      ) {
+        set.add(col.id);
+      }
     }
     return set;
-  }, [tree, activeCollegeId, activeCoursId]);
+  }, [tree, activeCollegeId, activeCoursId, activeAnnaleCollege]);
 
   const [open, setOpen] = useState<Set<string>>(expanded);
   const isOpen = (id: string) => open.has(id) || expanded.has(id);
@@ -118,22 +129,54 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
               <span className="flex-1 truncate">{col.nom}</span>
               <span className="text-[11px] tabular-nums text-white/40">{col.cours.length}</span>
             </button>
-            {o &&
-              col.cours.map((c) => (
+            {o && (
+              <>
+                {/* Annales EVC en tête, avant les items du collège */}
                 <Link
-                  key={c.id}
-                  href={`/cours/${c.id}`}
+                  href={`/matieres/${col.id}/annales`}
                   className={cn(
                     'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
-                    c.id === activeCoursId
+                    col.id === activeAnnaleCollege
                       ? 'bg-(--color-accent) font-medium text-white'
-                      : 'text-white/65 hover:bg-white/10 hover:text-white',
+                      : 'text-white/75 hover:bg-white/10 hover:text-white',
                   )}
                 >
-                  <span className="flex-1 truncate">{c.titre}</span>
-                  <ProgressDot value={c.progress} active={c.id === activeCoursId} />
+                  <FileText
+                    className={cn(
+                      'h-3.5 w-3.5 shrink-0',
+                      col.id === activeAnnaleCollege ? 'text-white' : 'text-white/55',
+                    )}
+                  />
+                  <span className="flex-1 truncate">Annales EVC</span>
+                  <span
+                    className={cn(
+                      'rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider',
+                      col.id === activeAnnaleCollege
+                        ? 'bg-white/15 text-white'
+                        : 'bg-white/10 text-white/60',
+                    )}
+                  >
+                    Officiel
+                  </span>
                 </Link>
-              ))}
+
+                {col.cours.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/cours/${c.id}`}
+                    className={cn(
+                      'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
+                      c.id === activeCoursId
+                        ? 'bg-(--color-accent) font-medium text-white'
+                        : 'text-white/65 hover:bg-white/10 hover:text-white',
+                    )}
+                  >
+                    <span className="flex-1 truncate">{c.titre}</span>
+                    <ProgressDot value={c.progress} active={c.id === activeCoursId} />
+                  </Link>
+                ))}
+              </>
+            )}
           </div>
         );
       })}

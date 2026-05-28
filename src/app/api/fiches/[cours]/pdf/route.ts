@@ -45,46 +45,53 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const firstName = profile?.first_name?.trim() || '';
   const lastName = profile?.last_name?.trim() || '';
   const email = profile?.email?.trim() || user.email || '';
-  const line1 = `${firstName} ${lastName}`.trim();
-  const line2 = email;
+  const nom = `${firstName} ${lastName}`.trim();
 
-  // Quelques URL sont signées : on annote chaque page avec un watermark diagonal.
+  /** Dessine un watermark à 2 lignes (nom prénom au-dessus, email en-dessous)
+   *  centré horizontalement à la hauteur yRatio (de 0 à 1, depuis le bas). */
+  const drawWatermark = (
+    page: ReturnType<typeof pdf.getPages>[number],
+    width: number,
+    height: number,
+    yRatio: number,
+  ) => {
+    const sizeBig = Math.max(28, Math.min(width, height) * 0.06);
+    const sizeSmall = sizeBig * 0.7;
+    const cx = width / 2;
+    const cy = height * yRatio;
+
+    // Ligne 1 : Prénom Nom (taille gros)
+    const tw1 = font.widthOfTextAtSize(nom || 'Major ECN', sizeBig);
+    page.drawText(nom || 'Major ECN', {
+      x: cx - (tw1 / 2) * Math.cos(Math.PI / 6.43),
+      y: cy + 8,
+      size: sizeBig,
+      font,
+      color: rgb(0.45, 0.45, 0.45),
+      opacity: 0.22,
+      rotate: degrees(28),
+    });
+
+    // Ligne 2 : email (plus petit, juste en dessous)
+    if (email) {
+      const tw2 = font.widthOfTextAtSize(email, sizeSmall);
+      page.drawText(email, {
+        x: cx - (tw2 / 2) * Math.cos(Math.PI / 6.43),
+        y: cy - sizeBig * 0.6,
+        size: sizeSmall,
+        font,
+        color: rgb(0.45, 0.45, 0.45),
+        opacity: 0.22,
+        rotate: degrees(28),
+      });
+    }
+  };
+
+  // 2 watermarks par page : un à 1/3 et un à 2/3 de la hauteur.
   for (const page of pdf.getPages()) {
     const { width, height } = page.getSize();
-    const fontSize = Math.max(36, Math.min(width, height) * 0.075);
-    const text = line1 && line2 ? `${line1}  ·  ${line2}` : line1 || line2 || 'Major ECN';
-
-    // Watermark principal (diagonale, gris transparent)
-    const textWidth = font.widthOfTextAtSize(text, fontSize);
-    page.drawText(text, {
-      x: (width - textWidth * Math.cos(Math.PI / 6)) / 2,
-      y: height / 2 - fontSize / 2,
-      size: fontSize,
-      font,
-      color: rgb(0.5, 0.5, 0.5),
-      opacity: 0.18,
-      rotate: degrees(30),
-    });
-
-    // Deux watermarks secondaires (haut-droite + bas-gauche) pour densifier
-    const small = fontSize * 0.45;
-    const textWidthSmall = font.widthOfTextAtSize(text, small);
-    page.drawText(text, {
-      x: width - textWidthSmall - 24,
-      y: height - small - 18,
-      size: small,
-      font,
-      color: rgb(0.55, 0.55, 0.55),
-      opacity: 0.22,
-    });
-    page.drawText(text, {
-      x: 24,
-      y: 18,
-      size: small,
-      font,
-      color: rgb(0.55, 0.55, 0.55),
-      opacity: 0.22,
-    });
+    drawWatermark(page, width, height, 2 / 3); // tiers supérieur
+    drawWatermark(page, width, height, 1 / 3); // tiers inférieur
   }
 
   const out = await pdf.save();

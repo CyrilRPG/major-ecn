@@ -56,6 +56,43 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     }
   } catch {/* ignore */}
 
+  /** Dessine un watermark 2 lignes (nom prénom + email) centré au yRatio donné. */
+  const drawWatermark = (
+    page: ReturnType<typeof pdf.getPages>[number],
+    width: number,
+    height: number,
+    yRatio: number,
+  ) => {
+    const sizeBig = Math.max(28, Math.min(width, height) * 0.06);
+    const sizeSmall = sizeBig * 0.7;
+    const cx = width / 2;
+    const cy = height * yRatio;
+
+    const tw1 = font.widthOfTextAtSize(nom || 'Major ECN', sizeBig);
+    page.drawText(nom || 'Major ECN', {
+      x: cx - (tw1 / 2) * Math.cos(Math.PI / 6.43),
+      y: cy + 8,
+      size: sizeBig,
+      font,
+      color: rgb(0.45, 0.45, 0.45),
+      opacity: 0.22,
+      rotate: degrees(28),
+    });
+
+    if (email) {
+      const tw2 = font.widthOfTextAtSize(email, sizeSmall);
+      page.drawText(email, {
+        x: cx - (tw2 / 2) * Math.cos(Math.PI / 6.43),
+        y: cy - sizeBig * 0.6,
+        size: sizeSmall,
+        font,
+        color: rgb(0.45, 0.45, 0.45),
+        opacity: 0.22,
+        rotate: degrees(28),
+      });
+    }
+  };
+
   for (const page of pdf.getPages()) {
     const { width, height } = page.getSize();
 
@@ -74,32 +111,9 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
       });
     }
 
-    // 2. Nom prénom + email en diagonale au milieu (gris transparent)
-    const size = Math.max(28, Math.min(width, height) * 0.06);
-    const tw1 = font.widthOfTextAtSize(nom, size);
-    const tw2 = font.widthOfTextAtSize(email, size * 0.7);
-    const cx = width / 2;
-    const cy = height / 2;
-    // Ligne 1 (nom prénom)
-    page.drawText(nom, {
-      x: cx - tw1 / 2 * Math.cos(Math.PI / 6),
-      y: cy + 8,
-      size,
-      font,
-      color: rgb(0.45, 0.45, 0.45),
-      opacity: 0.22,
-      rotate: degrees(28),
-    });
-    // Ligne 2 (email) — sous le nom, même rotation
-    page.drawText(email, {
-      x: cx - tw2 / 2 * Math.cos(Math.PI / 6),
-      y: cy - size * 0.6,
-      size: size * 0.7,
-      font,
-      color: rgb(0.45, 0.45, 0.45),
-      opacity: 0.22,
-      rotate: degrees(28),
-    });
+    // 2. Deux watermarks identité — à 1/3 et 2/3 de la hauteur, en diagonale
+    drawWatermark(page, width, height, 2 / 3);
+    drawWatermark(page, width, height, 1 / 3);
   }
 
   const out = await pdf.save();
