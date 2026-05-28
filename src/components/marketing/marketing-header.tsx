@@ -35,11 +35,8 @@ export function MarketingHeader() {
       )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
-        <Link href="/" className="-ml-1 inline-flex shrink-0 items-center gap-3 focus-ring">
+        <Link href="/" aria-label="Major ECN — Accueil" className="-ml-1 inline-flex shrink-0 items-center focus-ring">
           <BrandLogo className="h-14 w-auto sm:h-16 lg:h-20" />
-          <span className="font-display text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl lg:text-2xl">
-            Major <span className="text-(--color-primary)">ECN</span>
-          </span>
         </Link>
 
         <nav className="ml-2 hidden items-center gap-0.5 xl:flex">

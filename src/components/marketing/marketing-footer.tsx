@@ -35,11 +35,8 @@ export function MarketingFooter() {
     <footer className="border-t border-(--color-border) bg-(--color-surface-soft)">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:px-8">
         <div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <BrandLogo className="h-16 w-auto sm:h-20" />
-            <span className="font-display text-xl font-bold tracking-tight text-(--color-ink) sm:text-2xl">
-              Major <span className="text-(--color-primary)">ECN</span>
-            </span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-(--color-ink-soft)">
             La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger
