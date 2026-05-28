@@ -202,7 +202,7 @@ const ECOSYSTEM_BLOCKS = [
   { Icon: Video,         t: 'Webinars live',          d: 'Sessions hebdomadaires de méthodologie et cas cliniques.', tag: 'Chaque mardi 20h' },
   { Icon: CalendarClock, t: 'Événements',             d: 'Concours blancs, conférences avec des experts EVC.',       tag: '1× par mois' },
   { Icon: GraduationCap, t: 'Sessions méthodologie',  d: 'Ateliers en petit groupe sur le raisonnement clinique.',   tag: 'À la demande' },
-  { Icon: Activity,      t: 'Activité continue',      d: 'Nouveau contenu chaque semaine, mises à jour 2024.',       tag: 'Programme vivant' },
+  { Icon: Activity,      t: 'Activité continue',      d: 'Nouveau contenu chaque semaine, mises à jour 2026.',       tag: 'Programme vivant' },
 ];
 
 export function EcosystemSection() {
@@ -353,10 +353,6 @@ export function MethodProofSection() {
                       {p.t}
                     </h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-[#5A5A5A]">{p.d}</p>
-                    <p className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#6B1A2A]">
-                      Exemples détaillés sur la plateforme
-                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
-                    </p>
                   </div>
                 </div>
               </article>

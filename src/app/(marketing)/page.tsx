@@ -3,10 +3,10 @@ import { ArrowRight, Brain, LineChart, Quote, Sparkles, Target } from 'lucide-re
 import { createClient } from '@/lib/supabase/server';
 import { Reveal } from '@/components/marketing/reveal';
 import { ManusHero } from '@/components/marketing/manus-hero';
-import { FreeTrialBanner } from '@/components/marketing/manus-sections';
+import { ExperienceSection, FreeTrialBanner, StatsSection } from '@/components/marketing/manus-sections';
 import {
   EcosystemSection, QCMPreviewSection, DashboardPreviewSection,
-  TarifsBlock, FinalCtaBlock,
+  FinalCtaBlock,
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
@@ -31,13 +31,6 @@ const FEATURES = [
     t: 'Suivi temps réel',
     d: 'Analytics par spécialité, progression visible, recommandations claires.',
   },
-];
-
-const KEY_NUMBERS = [
-  { v: '87 %',    l: 'Taux de réussite' },
-  { v: '2 400+',  l: 'Médecins formés' },
-  { v: '4 200+',  l: 'QCM corrigés' },
-  { v: '20',      l: 'Spécialités' },
 ];
 
 const QUICK_LINKS = [
@@ -98,24 +91,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Key numbers — 4 stats fortes */}
-      <section className="bg-[#FAFAF8] py-16 lg:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-[#E8E7E3] bg-[#E8E7E3] sm:grid-cols-4">
-              {KEY_NUMBERS.map((k) => (
-                <div key={k.l} className="bg-white p-7 text-center">
-                  <p className="font-display text-4xl font-extrabold tracking-tight text-[#6B1A2A] sm:text-5xl">
-                    {k.v}
-                  </p>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-wider text-[#7A7A7A]">{k.l}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       {/* Mini-témoignage — preuve sociale rapide */}
       <section className="bg-white py-16 lg:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -142,16 +117,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Bannière essai gratuit (sticky on-page) */}
-      <FreeTrialBanner />
-
-      {/* PLATEFORME — Ecosystem + QCM preview + Dashboard preview */}
+      {/* PLATEFORME — Carousel d'images cliquables + écosystème + previews */}
+      <ExperienceSection />
       <EcosystemSection />
       <QCMPreviewSection />
       <DashboardPreviewSection />
 
-      {/* TARIFS — 3 formules dark charcoal */}
-      <TarifsBlock />
+      {/* PREUVE — « Une plateforme qui prouve sa valeur » (stats détaillées) */}
+      <StatsSection />
 
       {/* Liens rapides — explorer le site */}
       <section className="bg-[#FAFAF8] py-20 lg:py-24">
@@ -186,6 +159,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Bannière essai gratuit — juste avant l'inscription */}
+      <FreeTrialBanner />
 
       {/* CTA final — inscription */}
       <FinalCtaBlock colleges={colleges} />
