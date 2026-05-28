@@ -62,16 +62,16 @@ Format EDN strict :
 - Pour chaque item, justification courte (1–2 phrases) qui explique pourquoi il est juste ou faux,
   avec les mots-clés essentiels (rang A/B, recommandation HAS si applicable)
 
-Tu dois produire EXACTEMENT 4 séries de 5 QCM (20 questions au total) réparties ainsi :
+Tu dois produire EXACTEMENT 8 séries de 5 QCM (40 questions au total) réparties ainsi :
 
-  ▸ Série 1 — Cours · 5 questions isolées de connaissance pure
-    label : « Cours — Série 1 · <sous-thème du cours> »
-  ▸ Série 2 — Cours · 5 questions isolées de connaissance pure
-    label : « Cours — Série 2 · <autre sous-thème> »
-  ▸ Série 3 — Dossier progressif (DP) 1 · 5 questions enchaînées
-    label : « DP 1 · <titre court du cas clinique> »
-  ▸ Série 4 — Dossier progressif (DP) 2 · 5 questions enchaînées
-    label : « DP 2 · <titre court du cas clinique> »
+  ▸ Séries 1 à 4 — Cours · 5 questions isolées de connaissance pure chacune
+    labels : « Cours — Série 1 · <sous-thème> » à « Cours — Série 4 · <sous-thème> »
+    (les 4 séries Cours doivent couvrir des sous-thèmes complémentaires
+     du cours, sans chevauchement)
+  ▸ Séries 5 à 8 — Dossiers progressifs (DP) · 5 questions enchaînées chacun
+    labels : « DP 1 · <titre court du cas> » à « DP 4 · <titre court du cas> »
+    (4 cas cliniques distincts, couvrant les situations cliniques classiques
+     hypertombables du cours)
 
 Spécification des dossiers progressifs :
 - Chaque DP s'appuie sur une VIGNETTE CLINIQUE unique (8 à 15 lignes : patient,
@@ -96,28 +96,14 @@ Spécification des séries de Cours :
 Réponds UNIQUEMENT par un JSON valide de cette forme exacte :
 {
   "series": [
-    {
-      "label": "Cours — Série 1 · ...",
-      "kind": "cours",
-      "questions": [ ...5 questions... ]
-    },
-    {
-      "label": "Cours — Série 2 · ...",
-      "kind": "cours",
-      "questions": [ ...5 questions... ]
-    },
-    {
-      "label": "DP 1 · ...",
-      "kind": "dp",
-      "vignette": "...vignette clinique commune...",
-      "questions": [ ...5 questions, chacune commence par la vignette + question spécifique... ]
-    },
-    {
-      "label": "DP 2 · ...",
-      "kind": "dp",
-      "vignette": "...autre vignette clinique...",
-      "questions": [ ...5 questions... ]
-    }
+    { "label": "Cours — Série 1 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "Cours — Série 2 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "Cours — Série 3 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "Cours — Série 4 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "DP 1 · ...", "kind": "dp", "vignette": "...vignette commune...", "questions": [ ...5 questions, énoncé spécifique uniquement (vignette gérée à part)... ] },
+    { "label": "DP 2 · ...", "kind": "dp", "vignette": "...", "questions": [ ...5 questions... ] },
+    { "label": "DP 3 · ...", "kind": "dp", "vignette": "...", "questions": [ ...5 questions... ] },
+    { "label": "DP 4 · ...", "kind": "dp", "vignette": "...", "questions": [ ...5 questions... ] }
   ]
 }
 Chaque question = { "enonce": "...", "items": [5 items A-E avec is_correct et justification] }.
@@ -127,6 +113,6 @@ Pas de texte avant ou après le JSON, pas de fence markdown.`;
 
 ${courseContext}
 
-Génère les 4 séries : 2 séries de Cours (10 questions isolées) + 2 DP (10 questions enchaînées).`;
+Génère les 8 séries : 4 séries de Cours (20 questions isolées) + 4 DP (20 questions enchaînées sur 4 cas cliniques distincts).`;
   return { system, user };
 }

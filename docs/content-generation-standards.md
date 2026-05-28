@@ -6,37 +6,42 @@
 
 ---
 
-## QCM — 20 par cours, ventilés en 4 séries de 5
+## QCM — 40 par cours, ventilés en 8 séries de 5
 
-À chaque demande « génère 20 QCM pour le cours X » :
+À chaque demande « génère des QCM pour le cours X » :
 
 ### Découpage obligatoire
 
 | Série | Type | Format | Nb questions |
 |---|---|---|---|
-| Série 1 — Cours | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| Série 2 — Cours | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| Série 3 — DP 1 | Dossier progressif | Énoncé clinique commun, 5 questions liées | 5 |
-| Série 4 — DP 2 | Dossier progressif | Énoncé clinique commun, 5 questions liées | 5 |
+| Cours — Série 1 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
+| Cours — Série 2 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
+| Cours — Série 3 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
+| Cours — Série 4 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
+| DP 1 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
+| DP 2 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
+| DP 3 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
+| DP 4 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
 
-**Total : 20 QCM, 4 séries.**
+**Total : 40 QCM, 8 séries.**
 
 ### Nomenclature des séries (champ `label` dans `qcm_series`)
 
-- Séries de cours : `Cours — Série 1`, `Cours — Série 2`
-- Dossiers progressifs : `DP 1 — <titre court du cas>`, `DP 2 — <titre court>`
-  (ex. `DP 1 — Pneumonie de la femme âgée`)
+- Séries de cours : `Cours — Série 1 · <sous-thème>` à `Cours — Série 4 · …`
+  Les 4 sous-thèmes doivent être complémentaires et non chevauchants.
+- Dossiers progressifs : `DP 1 · <titre court du cas>` à `DP 4 · …`
+  (ex. `DP 1 · Pneumonie de la femme âgée`)
 
 ### Style des questions
 
-**Cours** (Séries 1 & 2) : 10 questions au total — questions de connaissances
+**Cours** (Séries 1 à 4) : 20 questions au total — questions de connaissances
 isolées sur des points hypertombables, format EVC :
 - énoncé court, factuel
 - 5 items A à E
 - 1 à 4 bonnes réponses possibles
 - justification médicale par item (validée par la fiche ou les annales)
 
-**Dossiers progressifs** (Séries 3 & 4) : 2 DP × 5 questions chacun, en
+**Dossiers progressifs** (DP 1 à DP 4) : 4 DP × 5 questions chacun, en
 conditions réelles annales :
 - énoncé clinique unique en tête (vignette de 8-15 lignes : patient, motif,
   examen, première para-clinique)
@@ -125,8 +130,8 @@ Quand l'utilisateur demande une génération :
    (`qcm_series.type = 'annale'` + `qcm_questions` + `qcm_items`).
 3. **Générer le contenu** strictement à partir des deux sources ci-dessus.
 4. **Insérer en DB** via Supabase (`apply_migration` ou `execute_sql`) :
-   - `qcm_series` : créer 4 lignes (2 type='qcm' label='Cours — Série N',
-     2 type='qcm' label='DP N · …'). Pour les DP : remplir
+   - `qcm_series` : créer 8 lignes (4 type='qcm' label='Cours — Série N · …',
+     4 type='qcm' label='DP N · …'). Pour les DP : remplir
      `qcm_series.vignette` avec la vignette clinique commune.
    - `qcm_questions` : 5 lignes par série. **Pour les DP : `enonce` ne
      contient que la question spécifique (sans la vignette).**

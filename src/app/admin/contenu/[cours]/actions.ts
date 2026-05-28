@@ -336,7 +336,7 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
   const { system, user } = qcmPrompt(contextToText(ctx));
   let result;
   try {
-    result = await callClaude({ system, user, maxTokens: 14000, temperature: 0.4 });
+    result = await callClaude({ system, user, maxTokens: 28000, temperature: 0.4 });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Échec de l’IA';
     await logGeneration({
@@ -375,7 +375,7 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
   let coursSeen = 0;
   let dpSeen = 0;
 
-  for (const s of parsed.series.slice(0, 4)) {
+  for (const s of parsed.series.slice(0, 8)) {
     const kind: 'cours' | 'dp' = s.kind === 'dp' || /^DP\s*\d/i.test(s.label ?? '') ? 'dp' : 'cours';
     let label: string;
     if (kind === 'cours') {
@@ -436,7 +436,7 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
     kind: 'qcm', items_count: totalQuestions,
     input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
     cost_usd, price_eur: PRICE_EUR.qcm,
-    status: totalQuestions === 20 ? 'success' : 'partial',
+    status: totalQuestions === 40 ? 'success' : 'partial',
     error_message: null, model: result.model,
   });
 

@@ -25,5 +25,5 @@ export function usageToUsd(usage: AnthropicUsage, model: string): number {
 /** Prix facturé à l'étudiant / centre, en €. */
 export const PRICE_EUR = {
   flashcards: 5,
-  qcm: 2,
+  qcm: 3,
 } as const;

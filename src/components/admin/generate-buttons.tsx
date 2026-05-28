@@ -15,9 +15,9 @@ const META: Record<Kind, { label: string; price: string; sub: string; Icon: type
     Icon: Layers3,
   },
   qcm: {
-    label: 'Générer 20 QCM (2 séries Cours + 2 DP)',
-    price: '2 €',
-    sub: '4 séries de 5 questions : 2 séries de Cours (questions isolées) + 2 dossiers progressifs (vignette + 5 questions enchaînées, style annales). Format EDN.',
+    label: 'Générer 40 QCM (4 séries Cours + 4 DP)',
+    price: '3 €',
+    sub: '8 séries de 5 questions : 4 séries de Cours (sous-thèmes complémentaires) + 4 dossiers progressifs (4 cas cliniques distincts, vignette + 5 questions enchaînées, style annales). Format EDN.',
     Icon: ClipboardList,
   },
 };
