@@ -40,3 +40,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Annales DOC sources are large binary blobs — not needed in repo
+Annales/

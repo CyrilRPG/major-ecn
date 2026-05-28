@@ -94,6 +94,18 @@ export type Database = {
         Update: { finished_at?: string | null; id?: string; score_correct?: number; score_total?: number; serie_id?: string; started_at?: string; user_id?: string };
         Relationships: [{ foreignKeyName: 'qcm_sessions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
+      medgen_annales: {
+        Row: { id: string; annee: number; type: string; label: string; sujet_path: string; corrige_path: string | null; ordre: number; created_at: string };
+        Insert: { id?: string; annee: number; type: string; label: string; sujet_path: string; corrige_path?: string | null; ordre?: number; created_at?: string };
+        Update: { id?: string; annee?: number; type?: string; label?: string; sujet_path?: string; corrige_path?: string | null; ordre?: number; created_at?: string };
+        Relationships: [];
+      };
+      archived_qcm_series: {
+        Row: { id: string; cours_id: string | null; cours_titre: string | null; label: string; type: string; annee: number | null; order_index: number | null; duration_minutes: number | null; vignette: string | null; questions: Json; archived_at: string; reason: string | null };
+        Insert: { id: string; cours_id?: string | null; cours_titre?: string | null; label: string; type: string; annee?: number | null; order_index?: number | null; duration_minutes?: number | null; vignette?: string | null; questions?: Json; archived_at?: string; reason?: string | null };
+        Update: { id?: string; cours_id?: string | null; cours_titre?: string | null; label?: string; type?: string; annee?: number | null; order_index?: number | null; duration_minutes?: number | null; vignette?: string | null; questions?: Json; archived_at?: string; reason?: string | null };
+        Relationships: [];
+      };
       satisfaction_forms: {
         Row: { active: boolean; allow_file_upload: boolean; created_at: string; created_by: string | null; fields: Json; file_upload_label: string | null; id: string; intro_text: string | null; mandatory: boolean; target_college: string | null; target_offer: string | null; target_promo: string | null; title: string };
         Insert: { active?: boolean; allow_file_upload?: boolean; created_at?: string; created_by?: string | null; fields?: Json; file_upload_label?: string | null; id?: string; intro_text?: string | null; mandatory?: boolean; target_college?: string | null; target_offer?: string | null; target_promo?: string | null; title: string };

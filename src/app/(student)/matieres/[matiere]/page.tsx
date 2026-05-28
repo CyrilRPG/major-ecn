@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
+import { History } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
@@ -50,7 +51,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   const Icon = iconFromKey(m.icon_key);
 
-  const rows: IndexRow[] = (cours ?? []).map((c, idx) => {
+  const coursRows: IndexRow[] = (cours ?? []).map((c, idx) => {
     const p = c.course_progress?.[0];
     const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
     const steps =
@@ -72,6 +73,17 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
       progress: Math.round((steps / 4) * 100),
     };
   });
+
+  // Sous-onglet « Annales » en tête de Médecine générale.
+  const annaleRow: IndexRow = {
+    id: '__annales__',
+    href: `/matieres/${matiere}/annales`,
+    title: 'Annales EVC',
+    subtitle: 'Tous les sujets officiels 2009 → 2019, accessibles par année.',
+    leading: <RowIcon Icon={History} color="#6B1A2A" />,
+    badge: 'Officiel',
+  };
+  const rows = [annaleRow, ...coursRows];
 
   return (
     <>
