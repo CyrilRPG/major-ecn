@@ -1,6 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, BookOpen, ClipboardCheck, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PdfViewer } from '@/components/student/pdf-viewer';
@@ -31,32 +30,17 @@ export default async function AnnaleDetailPage({
 
   const sujetUrl = `/api/medgen-annales/${row.id}/pdf?type=sujet`;
   const corrigeUrl = row.corrige_path ? `/api/medgen-annales/${row.id}/pdf?type=corrige` : null;
+  const context = `${m.nom} · ${row.type === 'EVCF' ? 'Connaissances fondamentales' : 'Connaissances pratiques'} · Session ${row.annee}`;
 
   return (
-    <AnnaleAssistantPanel annaleId={row.id} annaleTitre={row.label}>
+    <AnnaleAssistantPanel
+      annaleId={row.id}
+      annaleTitre={row.label}
+      context={context}
+      backHref={`/matieres/${matiere}/annales`}
+      backLabel="Annales"
+    >
       <div className="mx-auto w-full max-w-5xl px-4 py-6 lg:px-8">
-        <Link
-          href={`/matieres/${matiere}/annales`}
-          className="mb-4 inline-flex items-center gap-1.5 text-sm text-(--color-ink-soft) hover:text-(--color-ink)"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Toutes les annales
-        </Link>
-
-        <header className="mb-5 border-b border-(--color-border) pb-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--color-primary)">
-            Session {row.annee}
-          </p>
-          <h1 className="mt-1 inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-(--color-ink)">
-            {row.type === 'EVCF' ? <BookOpen className="h-5 w-5 text-(--color-primary)" /> : <ClipboardCheck className="h-5 w-5 text-(--color-primary)" />}
-            {row.label}
-          </h1>
-          <p className="mt-1 text-sm text-(--color-ink-soft)">
-            {row.type === 'EVCF' ? 'Connaissances fondamentales' : 'Connaissances pratiques'} ·
-            {' '}votre identité s’affiche en filigrane sur chaque page.
-          </p>
-        </header>
-
         <div className="mb-4 inline-flex rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-1">
           <span className="rounded-lg bg-(--color-surface) px-3 py-1.5 text-sm font-semibold text-(--color-ink) shadow-sm">
             <FileText className="mr-1.5 inline-block h-3.5 w-3.5 -translate-y-px" />

@@ -112,12 +112,18 @@ def parse_structure(segments):
             block = full[block_start:end].strip()
             sujets.append((f'Sujet {num}', block))
 
+    def norm_ws(s):
+        """Normalise tabs/retours-ligne/résidus en espaces simples + supprime
+        les ' \n ' qu'on a injectés comme séparateurs de segments."""
+        s = re.sub(r'[\r\n\t\x0b\x0c]+', ' ', s)
+        s = re.sub(r'\s+', ' ', s)
+        return s.strip()
+
     # Pour chaque sujet, sépare l'énoncé (vignette) des questions
-    parsed_sujets = []
+    raw_sujets = []
     for label, body in sujets:
         # NE PAS collapser les espaces avant matching : le format "N  Lettre"
-        # (digit + 2+ espaces + capitale) dépend des espaces multiples. On
-        # collapsera après extraction, sur chaque fragment.
+        # (digit + 2+ espaces + capitale) dépend des espaces multiples.
 
         valid_matches = list(QUESTION_RE.finditer(' ' + body))
 
@@ -126,38 +132,35 @@ def parse_structure(segments):
         else:
             enonce = body.strip()
 
-        # Découpe les questions
         questions = []
         for i, m in enumerate(valid_matches):
             captured = m.group(1) or m.group(2) or m.group(3)
-            q_num = int(captured) if captured else (i + 1)  # auto-numérote si absent
-            q_start = m.end() - 1  # -1 pour l'espace ajouté
+            q_num = int(captured) if captured else (i + 1)
+            q_start = m.end() - 1
             q_end = valid_matches[i + 1].start() - 1 if i + 1 < len(valid_matches) else len(body)
-            q_text = body[q_start:q_end].strip()
+            q_text = norm_ws(body[q_start:q_end])
             if not q_text:
                 continue
+            questions.append({'num': q_num, 'text': q_text})
 
-            # Sépare la question des réponses proposées (présentées comme un bloc).
-            # On ne tente PAS de splitter les items un par un car l'extraction
-            # binaire perd les retours-ligne — fragments mal coupés.
-            main = q_text
-            choices_text = ''
-            if '?' in q_text:
-                qpos = q_text.index('?')
-                main = q_text[:qpos + 1].strip()
-                choices_text = q_text[qpos + 1:].strip()
-
-            questions.append({
-                'num': q_num,
-                'text': main.strip(),
-                'choices_text': choices_text,
-            })
-
-        parsed_sujets.append({
+        raw_sujets.append({
             'label': label,
-            'enonce': enonce.strip(),
+            'enonce': norm_ws(enonce),
             'questions': questions,
         })
+
+    # Filtre les sujets « creux » (en-têtes du type 'PARTIE 2' ou 'Sujet 1'
+    # juste avant un autre marqueur — pas de questions et pas de vignette).
+    # On les supprime puis on renumérote séquentiellement.
+    parsed_sujets = []
+    for s in raw_sujets:
+        if not s['questions'] and len(s['enonce']) < 60:
+            continue
+        parsed_sujets.append(s)
+    # Renumérote les labels de façon séquentielle pour l'affichage
+    for i, s in enumerate(parsed_sujets):
+        s['label'] = f'Sujet {i + 1}'
+
     return parsed_sujets
 
 def main():

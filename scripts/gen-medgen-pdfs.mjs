@@ -143,26 +143,31 @@ async function generatePdf({ annee, type }, data) {
   const cover = pdf.addPage([PAGE_W, PAGE_H]);
   // Fond crème
   cover.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: rgb(0xFA / 255, 0xFA / 255, 0xF8 / 255) });
-  drawHeader(cover, 1, 0);
-  // Logo central (gros, transparent)
+  // Bande tricolore fine en haut (signature visuelle, sans wordmark)
+  cover.drawRectangle({ x: 0, y: PAGE_H - 6, width: PAGE_W / 3, height: 6, color: BORDEAUX });
+  cover.drawRectangle({ x: PAGE_W / 3, y: PAGE_H - 6, width: PAGE_W / 3, height: 6, color: BLUE });
+  cover.drawRectangle({ x: (PAGE_W / 3) * 2, y: PAGE_H - 6, width: PAGE_W / 3, height: 6, color: TEAL });
+
+  // Logo Major ECN — placé en haut, taille modérée, opacité élevée
   if (logoImage) {
-    const targetW = PAGE_W * 0.7;
+    const targetW = PAGE_W * 0.32;
     const scale = targetW / logoImage.width;
     const w = logoImage.width * scale;
     const h = logoImage.height * scale;
     cover.drawImage(logoImage, {
       x: (PAGE_W - w) / 2,
-      y: PAGE_H / 2 - 60,
+      y: PAGE_H - h - 70,
       width: w,
       height: h,
-      opacity: 0.08,
+      opacity: 1,
     });
   }
+
   // Eyebrow
   const eyebrow = 'ANNALES OFFICIELLES';
   cover.drawText(eyebrow, {
     x: (PAGE_W - fontBold.widthOfTextAtSize(eyebrow, 13)) / 2,
-    y: PAGE_H * 0.62,
+    y: PAGE_H * 0.50,
     size: 13,
     font: fontBold,
     color: BORDEAUX,
@@ -172,7 +177,7 @@ async function generatePdf({ annee, type }, data) {
   const titreSize = 72;
   cover.drawText(titre, {
     x: (PAGE_W - fontExtraBold.widthOfTextAtSize(titre, titreSize)) / 2,
-    y: PAGE_H * 0.50,
+    y: PAGE_H * 0.40,
     size: titreSize,
     font: fontExtraBold,
     color: BORDEAUX_DEEP,
@@ -181,7 +186,7 @@ async function generatePdf({ annee, type }, data) {
   const sub = type === 'EVCF' ? 'Connaissances fondamentales' : 'Connaissances pratiques';
   cover.drawText(sub, {
     x: (PAGE_W - fontRegular.widthOfTextAtSize(sub, 18)) / 2,
-    y: PAGE_H * 0.43,
+    y: PAGE_H * 0.34,
     size: 18,
     font: fontRegular,
     color: INK_SOFT,
@@ -190,7 +195,7 @@ async function generatePdf({ annee, type }, data) {
   const discipline = 'Médecine générale';
   cover.drawText(discipline, {
     x: (PAGE_W - fontBold.widthOfTextAtSize(discipline, 22)) / 2,
-    y: PAGE_H * 0.36,
+    y: PAGE_H * 0.28,
     size: 22,
     font: fontBold,
     color: INK,
@@ -199,7 +204,6 @@ async function generatePdf({ annee, type }, data) {
   const nbSujets = data.sujets.length;
   const nbQ = data.sujets.reduce((s, sj) => s + sj.questions.length, 0);
   cover.drawRectangle({ x: MARGIN_X, y: 100, width: CONTENT_W, height: 70, color: BORDEAUX_SOFT });
-  cover.drawRectangle({ x: MARGIN_X, y: 165, width: 4, height: 5, color: BORDEAUX });
   cover.drawRectangle({ x: MARGIN_X, y: 100, width: CONTENT_W, height: 4, color: BORDEAUX });
   cover.drawText('Cette annale contient', { x: MARGIN_X + 24, y: 145, size: 11, font: fontRegular, color: MUTED });
   cover.drawText(`${nbSujets} sujet${nbSujets > 1 ? 's' : ''} · ${nbQ} question${nbQ > 1 ? 's' : ''}`, {
@@ -300,57 +304,38 @@ async function generatePdf({ annee, type }, data) {
       const qText = nettoieTexte(q.text);
       if (!qText) continue;
 
-      const choicesClean = q.choices_text ? nettoieTexte(q.choices_text) : '';
-
-      // Pré-calcule la hauteur du bloc question pour décider d'un saut de page propre
-      const qLines = wrap(fontBold, 12, qText, CONTENT_W - 50);
-      const cLines = choicesClean ? wrap(fontRegular, 10.5, choicesClean, CONTENT_W - 50) : [];
-      const totalH = 36 + qLines.length * 16 + (cLines.length ? 10 + cLines.length * 14 : 0) + 16;
+      // Pré-calcule la hauteur du bloc question pour un saut de page propre
+      const qLines = wrap(fontRegular, 11.5, qText, CONTENT_W - 50);
+      const totalH = 30 + qLines.length * 16 + 14;
       if (cursorY - totalH < MARGIN_BOTTOM) newPage();
 
       // Pastille numéro à gauche
       page.drawCircle({
-        x: MARGIN_X + 14, y: cursorY - 7,
-        size: 12,
+        x: MARGIN_X + 14, y: cursorY - 8,
+        size: 13,
         color: BORDEAUX,
       });
       const qN = String(q.num);
-      const qNW = fontExtraBold.widthOfTextAtSize(qN, 11);
+      const qNW = fontExtraBold.widthOfTextAtSize(qN, 12);
       page.drawText(qN, {
         x: MARGIN_X + 14 - qNW / 2,
-        y: cursorY - 11,
-        size: 11,
+        y: cursorY - 12,
+        size: 12,
         font: fontExtraBold,
         color: rgb(1, 1, 1),
       });
-      // Label QUESTION
-      page.drawText('QUESTION', {
-        x: MARGIN_X + 36, y: cursorY,
+      // Label QUESTION (gras, petit, gris)
+      page.drawText(`QUESTION ${q.num}`, {
+        x: MARGIN_X + 36, y: cursorY - 2,
         size: 9, font: fontBold, color: MUTED,
       });
-      cursorY -= 18;
+      cursorY -= 20;
 
-      // Texte de la question
+      // Texte de la question — police régulière (pas tout en gras)
       for (const ln of qLines) {
         ensureSpace(16);
-        page.drawText(ln, { x: MARGIN_X + 36, y: cursorY, size: 12, font: fontBold, color: INK });
+        page.drawText(ln, { x: MARGIN_X + 36, y: cursorY, size: 11.5, font: fontRegular, color: INK });
         cursorY -= 16;
-      }
-
-      // Réponses proposées
-      if (cLines.length) {
-        cursorY -= 6;
-        ensureSpace(14 * cLines.length + 14);
-        page.drawText('Réponses proposées :', {
-          x: MARGIN_X + 36, y: cursorY,
-          size: 8.5, font: fontBold, color: BLUE,
-        });
-        cursorY -= 12;
-        for (const ln of cLines) {
-          ensureSpace(14);
-          page.drawText(ln, { x: MARGIN_X + 36, y: cursorY, size: 10.5, font: fontRegular, color: INK_SOFT });
-          cursorY -= 14;
-        }
       }
 
       cursorY -= 14;
