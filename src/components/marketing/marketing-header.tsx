@@ -7,13 +7,11 @@ import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { href: '#methode',        label: 'Méthode' },
-  { href: '#plateforme',     label: 'Plateforme' },
-  { href: '#temoignages',    label: 'Témoignages' },
-  { href: '#transformation', label: 'Parcours' },
-  { href: '#resultats',      label: 'Résultats' },
-  { href: '#tarifs',         label: 'Tarifs' },
-  { href: '#faq',            label: 'FAQ' },
+  { href: '/methode',     label: 'Méthode' },
+  { href: '/tarifs',      label: 'Tarifs' },
+  { href: '/equipe',      label: 'Équipe' },
+  { href: '/temoignages', label: 'Témoignages' },
+  { href: '/faq',         label: 'FAQ' },
 ];
 
 export function MarketingHeader() {
@@ -48,26 +46,26 @@ export function MarketingHeader() {
 
         <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
           {NAV.map((n) => (
-            <a
+            <Link
               key={n.href}
               href={n.href}
               className="rounded-lg px-2.5 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
             >
               {n.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Nav réduite pour lg (sans xl) — colonne plus serrée */}
         <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
-          {NAV.slice(0, 4).map((n) => (
-            <a
+          {NAV.slice(0, 5).map((n) => (
+            <Link
               key={n.href}
               href={n.href}
               className="rounded-lg px-2 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
             >
               {n.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -79,14 +77,14 @@ export function MarketingHeader() {
             <LogIn className="h-4 w-4" />
             Se connecter
           </Link>
-          <a
-            href="#essai"
+          <Link
+            href="/inscription"
             className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
           >
             <Sparkles className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Essai gratuit</span>
             <span className="sm:hidden">Essai</span>
-          </a>
+          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -101,15 +99,22 @@ export function MarketingHeader() {
       {open && (
         <nav className="border-t border-(--color-border) bg-white px-4 py-3 lg:hidden">
           {NAV.map((n) => (
-            <a
+            <Link
               key={n.href}
               href={n.href}
               onClick={() => setOpen(false)}
               className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
             >
               {n.label}
-            </a>
+            </Link>
           ))}
+          <Link
+            href="/inscription"
+            onClick={() => setOpen(false)}
+            className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-primary)"
+          >
+            Essai gratuit
+          </Link>
           <Link
             href="/login"
             onClick={() => setOpen(false)}

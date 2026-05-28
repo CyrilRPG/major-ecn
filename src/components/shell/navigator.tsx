@@ -96,7 +96,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
       </Link>
 
       <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
-        Collèges EVC
+        Médecine
       </p>
       {tree.length === 0 && (
         <p className="px-3 py-6 text-sm text-white/50">Aucun contenu accessible.</p>

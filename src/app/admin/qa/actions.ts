@@ -3,6 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { requireStaff } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { forumNewAnswerEmail } from '@/lib/email/templates';
 
 type Result = { ok: true } | { error: string };
 
@@ -44,9 +47,31 @@ export async function answerQuestionAction(input: {
     })
     .eq('id', input.questionId);
 
+  // Notif élève (best-effort, ne bloque pas la réponse).
+  notifyStudentOfAnswer({ questionId: input.questionId, professorName: name, body }).catch(() => null);
+
   revalidatePath('/admin/qa');
   revalidatePath('/forum');
   return { ok: true };
+}
+
+async function notifyStudentOfAnswer(args: { questionId: string; professorName: string; body: string }) {
+  const admin = createAdminClient();
+  const { data: q } = await admin
+    .from('forum_questions')
+    .select('student_id, cours_titre, profiles:student_id(first_name, email)')
+    .eq('id', args.questionId)
+    .maybeSingle();
+  const profile = (q as unknown as { profiles?: { first_name: string | null; email: string | null } } | null)?.profiles;
+  if (!profile?.email) return;
+  const { subject, html, text } = forumNewAnswerEmail({
+    studentFirstName: profile.first_name ?? '',
+    professorName: args.professorName,
+    coursTitre: (q as { cours_titre?: string | null } | null)?.cours_titre ?? null,
+    answerBody: args.body,
+    forumUrl: `${siteUrl()}/forum`,
+  });
+  await sendEmail({ to: profile.email, subject, html, text }).catch(() => null);
 }
 
 export async function togglePublicAction(input: { questionId: string; isPublic: boolean }): Promise<Result> {

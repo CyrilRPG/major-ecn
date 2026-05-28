@@ -136,7 +136,7 @@ export default async function AccueilPage() {
   const qcmCount = attempts.filter((a) => a.qcm_questions.qcm_series.type === 'qcm').length;
   const annaleCount = attempts.filter((a) => a.qcm_questions.qcm_series.type === 'annale').length;
   const repartition = [
-    { label: 'QCM', value: qcmCount, color: '#E11D48' },
+    { label: 'QCM', value: qcmCount, color: '#E4002B' },
     { label: 'Annales', value: annaleCount, color: '#8B5CF6' },
     { label: 'Flashcards', value: reviews.length, color: '#F59E0B' },
     { label: 'Items vus', value: stepsDone, color: '#5B8DEF' },
@@ -177,7 +177,7 @@ export default async function AccueilPage() {
     { Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered}/${flashcardsTotal ?? 0}` },
   ];
 
-  const barColor = (v: number) => (v < 50 ? '#E11D48' : v < 75 ? '#F59E0B' : '#22C55E');
+  const barColor = (v: number) => (v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E');
 
   return (
     <div className="flex flex-col gap-3 px-4 py-3 lg:h-full lg:overflow-hidden lg:px-6">
@@ -302,7 +302,7 @@ export default async function AccueilPage() {
                   className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
                   style={
                     m.value < 50
-                      ? { background: '#FFE4E9', color: '#BE123C' }
+                      ? { background: '#FDE7E9', color: '#C0001F' }
                       : m.value < 75
                         ? { background: '#FEF3E2', color: '#B26A00' }
                         : { background: '#E7F6EC', color: '#16793C' }

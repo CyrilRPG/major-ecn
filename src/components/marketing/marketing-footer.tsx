@@ -7,24 +7,24 @@ const COLS = [
   {
     titre: 'Plateforme',
     links: [
-      { label: 'Fonctionnalités', href: '#methode' },
-      { label: 'Tarifs', href: '#tarifs' },
-      { label: 'Témoignages', href: '#temoignages' },
+      { label: 'Méthode', href: '/methode' },
+      { label: 'Plateforme', href: '/plateforme' },
+      { label: 'Tarifs', href: '/tarifs' },
     ],
   },
   {
-    titre: 'Ressources',
+    titre: 'À découvrir',
     links: [
-      { label: 'Blog médical', href: '#' },
-      { label: 'Guide EVC', href: '#' },
-      { label: 'Webinaires gratuits', href: '#' },
+      { label: 'Équipe pédagogique', href: '/equipe' },
+      { label: 'Témoignages', href: '/temoignages' },
+      { label: 'FAQ', href: '/faq' },
     ],
   },
   {
     titre: 'Entreprise',
     links: [
-      { label: 'À propos', href: '#' },
-      { label: 'Équipe', href: '#' },
+      { label: 'Essai gratuit', href: '/inscription' },
+      { label: 'Se connecter', href: '/login' },
       { label: 'Contact', href: `mailto:${CONTACT}` },
     ],
   },

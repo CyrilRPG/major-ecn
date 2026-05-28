@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { AddProfessorSchema, CONTENT_TYPES } from '@/lib/schemas/professor';
+import { AddProfessorSchema, CONTENT_TYPES, PERMISSION_LEVELS, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { welcomeEmail } from '@/lib/email/templates';
 
@@ -32,19 +32,22 @@ export async function POST(req: Request) {
     );
   }
 
-  const { first_name, last_name, email, phone, permission_type, colleges, content_scope, content_types } = parsed.data;
+  const { first_name, last_name, email, phone, permission_type, colleges, content_permissions } = parsed.data;
 
   const cleanedColleges = permission_type === 'college' ? (colleges ?? []) : [];
-  const cleanedContentTypes =
-    content_scope === 'specific'
-      ? (content_types ?? []).filter((t) => (CONTENT_TYPES as readonly string[]).includes(t))
-      : [];
+  const cleanedPermissions: Partial<Record<ContentType, PermissionLevel>> = {};
+  for (const t of CONTENT_TYPES) {
+    const lvl = content_permissions?.[t];
+    if (lvl && (PERMISSION_LEVELS as readonly string[]).includes(lvl) && lvl !== 'none') {
+      cleanedPermissions[t] = lvl;
+    }
+  }
 
   const permission_scope = {
     role: 'professor',
     type: permission_type,
     colleges: cleanedColleges,
-    content_types: cleanedContentTypes,
+    content_permissions: cleanedPermissions,
   };
 
   let admin;

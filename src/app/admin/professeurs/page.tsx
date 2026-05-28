@@ -5,8 +5,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { initials } from '@/lib/utils';
 import { AddProfessorDialog } from '@/components/admin/professors/add-professor-dialog';
+import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { CONTENT_TYPE_LABEL, type ContentType } from '@/lib/schemas/professor';
+import { CONTENT_TYPE_LABEL, CONTENT_TYPES, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 
 export const metadata = { title: 'Professeurs' };
 
@@ -14,17 +15,40 @@ type ProfScope = {
   role?: 'professor';
   type?: 'all' | 'college';
   colleges?: string[];
+  /** Nouveau format : permission par type. */
+  content_permissions?: Partial<Record<ContentType, PermissionLevel>>;
+  /** Ancien format (rétrocompat) : liste de types accessibles (équivalent rw). */
   content_types?: ContentType[];
 };
 
-function describeScope(scope: ProfScope, collegeMap: Record<string, string>) {
-  const tags: string[] = [];
-  if (!scope.type || scope.type === 'all') tags.push('Tous les collèges');
-  else if (scope.colleges?.length) tags.push(...scope.colleges.map((id) => collegeMap[id] ?? id));
-  else tags.push('Aucun collège');
+const LEVEL_SHORT: Record<PermissionLevel, string> = {
+  none: '—',
+  read: 'lecture',
+  write: 'écriture',
+  rw: 'lecture+écriture',
+};
 
-  if (!scope.content_types || scope.content_types.length === 0) tags.push('Tous contenus');
-  else tags.push(...scope.content_types.map((t) => CONTENT_TYPE_LABEL[t]));
+function describeScope(scope: ProfScope, collegeMap: Record<string, string>): { label: string; tone: 'muted' | 'primary' }[] {
+  const tags: { label: string; tone: 'muted' | 'primary' }[] = [];
+  if (!scope.type || scope.type === 'all') tags.push({ label: 'Tous les collèges', tone: 'primary' });
+  else if (scope.colleges?.length) {
+    for (const id of scope.colleges) tags.push({ label: collegeMap[id] ?? id, tone: 'muted' });
+  } else tags.push({ label: 'Aucun collège', tone: 'muted' });
+
+  // Permissions par type (nouveau format prioritaire)
+  if (scope.content_permissions) {
+    for (const t of CONTENT_TYPES) {
+      const lvl = scope.content_permissions[t];
+      if (lvl && lvl !== 'none') {
+        tags.push({ label: `${CONTENT_TYPE_LABEL[t]} · ${LEVEL_SHORT[lvl]}`, tone: 'muted' });
+      }
+    }
+  } else if (scope.content_types?.length) {
+    // Ancien format : rétrocompat (équivalent rw)
+    for (const t of scope.content_types) tags.push({ label: `${CONTENT_TYPE_LABEL[t]} · lecture+écriture`, tone: 'muted' });
+  } else {
+    tags.push({ label: 'Tous contenus', tone: 'muted' });
+  }
   return tags;
 }
 
@@ -100,11 +124,15 @@ export default async function ProfessorsPage() {
                   </div>
                   <div className="flex shrink-0 flex-wrap items-center gap-1 max-w-full">
                     <Badge variant="primary">Professeur</Badge>
+                    <DeleteAccountButton
+                      userId={p.id}
+                      displayName={`${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || p.email || 'professeur'}
+                    />
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1 border-t border-(--color-border) pt-3">
                   {tags.map((t, i) => (
-                    <Badge key={i} variant="muted">{t}</Badge>
+                    <Badge key={i} variant={t.tone}>{t.label}</Badge>
                   ))}
                 </div>
               </li>

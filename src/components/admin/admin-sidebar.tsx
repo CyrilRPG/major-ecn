@@ -2,31 +2,49 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, GraduationCap, Library, Mail, MessagesSquare, Receipt, Users } from 'lucide-react';
+import { BarChart3, ClipboardList, GraduationCap, Library, Mail, MessagesSquare, Receipt, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
+import { hasAnyContentAccess, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 
-type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean };
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean };
 
 const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
   { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
-  { href: '/admin/contenu', label: 'Contenu', Icon: Library },
+  { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
   { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
+  { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
   { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
 ];
+
+type ProfScopeRaw = {
+  role?: 'professor';
+  content_permissions?: Partial<Record<ContentType, PermissionLevel>>;
+  content_types?: ContentType[];
+};
+function readProfContentAccess(scope: unknown): boolean {
+  if (!scope || typeof scope !== 'object') return false;
+  const s = scope as ProfScopeRaw;
+  if (s.content_permissions && Object.values(s.content_permissions).some((p) => p && p !== 'none')) return true;
+  if (s.content_types && s.content_types.length > 0) return true;
+  return hasAnyContentAccess(s as never);
+}
 
 const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
-  // Professors only see Q&R; admins see everything.
-  const items = profile.role === 'professor' ? ALL_ITEMS.filter((i) => i.staff) : ALL_ITEMS;
+  // Profs see Q&R + Contenu (s'ils ont au moins un type accessible) ; admins voient tout.
+  const profHasContent = profile.role === 'professor' && readProfContentAccess(profile.permission_scope);
+  const items = profile.role === 'professor'
+    ? ALL_ITEMS.filter((i) => i.staff || (i.profContent && profHasContent))
+    : ALL_ITEMS;
 
   return (
     <>

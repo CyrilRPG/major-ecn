@@ -12,14 +12,27 @@ const PROMOTIONS: PublicSignupInput['promotion'][] = ['D2', 'D3', 'D4', 'PAE', '
 const JAKARTA = "'Plus Jakarta Sans', sans-serif";
 const MANROPE = "'Manrope', sans-serif";
 
-export function InscriptionForm() {
+export function InscriptionForm({ colleges = [] }: { colleges?: { id: string; nom: string }[] }) {
   const [status, setStatus] = useState<Status>('idle');
   const [flow, setFlow] = useState<FlowResult>(undefined);
   const [serverMsg, setServerMsg] = useState('');
+  const [pickedColleges, setPickedColleges] = useState<Set<string>>(new Set());
+  const [allColleges, setAllColleges] = useState(true);
+
+  const toggleCollege = (nom: string) =>
+    setPickedColleges((prev) => {
+      const n = new Set(prev);
+      if (n.has(nom)) n.delete(nom);
+      else n.add(nom);
+      return n;
+    });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const collegesValue = allColleges || pickedColleges.size === 0
+      ? ''
+      : Array.from(pickedColleges).join(', ');
     const payload = {
       first_name: String(fd.get('first_name') ?? '').trim(),
       last_name: String(fd.get('last_name') ?? '').trim(),
@@ -27,7 +40,7 @@ export function InscriptionForm() {
       phone: String(fd.get('phone') ?? '').trim(),
       promotion: String(fd.get('promotion') ?? 'D2'),
       offer: String(fd.get('offer') ?? 'essentiel'),
-      colleges_wish: String(fd.get('colleges_wish') ?? '').trim(),
+      colleges_wish: collegesValue,
     };
     setStatus('submitting');
     setServerMsg('');
@@ -174,18 +187,55 @@ export function InscriptionForm() {
             <option value="intensif">Intensif — 149 €/mois · rappel par un conseiller</option>
           </select>
         </div>
-        <div className="relative space-y-1.5 sm:col-span-2">
-          <label htmlFor="colleges_wish" className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
+        <div className="relative space-y-2 sm:col-span-2">
+          <label className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A]" style={{ fontFamily: MANROPE }}>
             <CheckCircle2 className="h-3.5 w-3.5" />
-            Collèges visés <span className="font-medium normal-case text-[#7A7A7A]">(laisser vide si tous)</span>
+            Collèges qui vous intéressent
           </label>
-          <input
-            id="colleges_wish"
-            name="colleges_wish"
-            placeholder="ex. Cardiologie, Pédiatrie — ou vide pour tous"
-            className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm font-medium text-[#2D2D2D] outline-none transition-all duration-200 placeholder:font-normal placeholder:text-[#A8A8A8] focus:border-[#6B1A2A] focus:shadow-[0_0_0_4px_rgba(107,26,42,0.1)]"
-            style={{ fontFamily: MANROPE }}
-          />
+          <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-2.5 has-[:checked]:border-[#6B1A2A] has-[:checked]:bg-[#F9F0F2]/60">
+            <input
+              type="checkbox"
+              checked={allColleges}
+              onChange={(e) => setAllColleges(e.target.checked)}
+              className="peer sr-only"
+            />
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-[#E8E7E3] peer-checked:border-[#6B1A2A] peer-checked:bg-[#6B1A2A]">
+              {allColleges && (
+                <svg viewBox="0 0 16 16" className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 8.5l3.5 3.5L13 4.5" />
+                </svg>
+              )}
+            </span>
+            <span className="text-sm font-bold text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>
+              Toute l’offre — tous les collèges EVC
+            </span>
+          </label>
+          {!allColleges && colleges.length > 0 && (
+            <div className="grid grid-cols-2 gap-2 rounded-xl border-2 border-dashed border-[#E8E7E3] bg-[#FAFAF8] p-3 sm:grid-cols-3">
+              {colleges.map((c) => {
+                const checked = pickedColleges.has(c.nom);
+                return (
+                  <label key={c.id} className="flex cursor-pointer items-center gap-2 text-xs has-[:checked]:font-bold has-[:checked]:text-[#6B1A2A]">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleCollege(c.nom)}
+                      className="h-4 w-4 rounded border-[#E8E7E3] text-[#6B1A2A] focus:ring-[#6B1A2A]"
+                    />
+                    <span className="truncate" style={{ fontFamily: MANROPE }}>{c.nom}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
+          {!allColleges && colleges.length === 0 && (
+            <input
+              name="colleges_wish_fallback"
+              placeholder="ex. Cardiologie, Pédiatrie"
+              className="w-full rounded-xl border-2 border-[#E8E7E3] bg-white px-4 py-3 text-sm text-[#2D2D2D] outline-none focus:border-[#6B1A2A]"
+              style={{ fontFamily: MANROPE }}
+            />
+          )}
         </div>
       </div>
 

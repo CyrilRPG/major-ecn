@@ -140,7 +140,7 @@ export function QcmResults({
                     formatter={(v) => [`${Math.round(Number(v) || 0)}%`, 'Score']}
                     contentStyle={{ borderRadius: 12, border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}
                   />
-                  <Line type="monotone" dataKey="pct" stroke="#E11D48" strokeWidth={2.5} dot={{ r: 4, fill: '#BE123C' }} activeDot={{ r: 6, fill: '#E11D48' }} />
+                  <Line type="monotone" dataKey="pct" stroke="#E4002B" strokeWidth={2.5} dot={{ r: 4, fill: '#C0001F' }} activeDot={{ r: 6, fill: '#E4002B' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

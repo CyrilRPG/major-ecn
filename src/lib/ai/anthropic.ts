@@ -3,11 +3,16 @@ import 'server-only';
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 
-export const DEFAULT_MODEL = 'claude-sonnet-4-5';
+/** Génération admin (qualité prioritaire) — Sonnet 4.6. */
+export const DEFAULT_MODEL = 'claude-sonnet-4-6';
+/** Q&R étudiant, RAG, vérifications — Haiku 4.5 (10× moins cher). */
+export const FAST_MODEL = 'claude-haiku-4-5';
 
 export type AnthropicUsage = {
   input_tokens: number;
   output_tokens: number;
+  cache_creation_input_tokens?: number;
+  cache_read_input_tokens?: number;
 };
 
 export type AnthropicResult = {
@@ -16,21 +21,34 @@ export type AnthropicResult = {
   model: string;
 };
 
+type CachedTextBlock = { type: 'text'; text: string; cache_control?: { type: 'ephemeral' } };
+
 export async function callClaude({
   system,
   user,
   model = DEFAULT_MODEL,
   maxTokens = 8000,
   temperature = 0.4,
+  cacheSystem = false,
 }: {
-  system: string;
-  user: string;
+  system: string | CachedTextBlock[];
+  user: string | CachedTextBlock[];
   model?: string;
   maxTokens?: number;
   temperature?: number;
+  cacheSystem?: boolean;
 }): Promise<AnthropicResult> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error('ANTHROPIC_API_KEY non configurée côté serveur.');
+
+  // System : string → block + (optionnel) cache_control ; sinon utilise les blocks fournis
+  const systemBlocks: CachedTextBlock[] = typeof system === 'string'
+    ? [{ type: 'text', text: system, ...(cacheSystem ? { cache_control: { type: 'ephemeral' as const } } : {}) }]
+    : system;
+
+  const userContent = typeof user === 'string'
+    ? user
+    : user;
 
   const res = await fetch(ANTHROPIC_URL, {
     method: 'POST',
@@ -43,8 +61,8 @@ export async function callClaude({
       model,
       max_tokens: maxTokens,
       temperature,
-      system,
-      messages: [{ role: 'user', content: user }],
+      system: systemBlocks,
+      messages: [{ role: 'user', content: userContent }],
     }),
   });
 

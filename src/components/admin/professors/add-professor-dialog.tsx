@@ -16,7 +16,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   AddProfessorSchema, type AddProfessorInput,
-  CONTENT_TYPES, CONTENT_TYPE_LABEL, type ContentType,
+  CONTENT_TYPES, CONTENT_TYPE_LABEL,
+  PERMISSION_LEVELS, PERMISSION_LEVEL_LABEL, type PermissionLevel,
 } from '@/lib/schemas/professor';
 
 export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: string }[] }) {
@@ -30,13 +31,13 @@ export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: 
     defaultValues: {
       permission_type: 'all',
       colleges: [],
-      content_scope: 'all',
-      content_types: [],
+      content_permissions: Object.fromEntries(
+        CONTENT_TYPES.map((t) => [t, 'rw' as PermissionLevel]),
+      ),
     },
   });
 
   const permissionType = watch('permission_type');
-  const contentScope = watch('content_scope');
 
   const onSubmit = (data: AddProfessorInput) => {
     setSubmitError(null);
@@ -151,56 +152,40 @@ export function AddProfessorDialog({ colleges }: { colleges: { id: string; nom: 
             )}
           </div>
 
-          {/* Types de contenu */}
+          {/* Permissions par type de contenu */}
           <div className="space-y-2">
-            <Label>Types de contenu accessibles</Label>
+            <Label>Permissions par type de contenu</Label>
             <p className="text-xs text-(--color-ink-soft)">
-              Les professeurs sont des prestataires externes : limitez leur accès au minimum nécessaire.
+              Choisissez précisément ce que le professeur peut consulter ou modifier.
             </p>
             <Controller
-              name="content_scope"
+              name="content_permissions"
               control={control}
-              render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="all" />
-                    <span className="text-sm">Tous les contenus (QCM, fiches, vidéos, annales, flashcards)</span>
-                  </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="specific" />
-                    <span className="text-sm">Types de contenus spécifiques</span>
-                  </label>
-                </RadioGroup>
-              )}
+              render={({ field }) => {
+                const value = (field.value ?? {}) as Partial<Record<typeof CONTENT_TYPES[number], PermissionLevel>>;
+                return (
+                  <div className="overflow-hidden rounded-xl border border-(--color-border)">
+                    {CONTENT_TYPES.map((t, i) => (
+                      <div
+                        key={t}
+                        className={`flex items-center justify-between gap-3 px-3 py-2.5 ${i > 0 ? 'border-t border-(--color-border)' : ''}`}
+                      >
+                        <span className="text-sm font-medium text-(--color-ink)">{CONTENT_TYPE_LABEL[t]}</span>
+                        <select
+                          value={value[t] ?? 'none'}
+                          onChange={(e) => field.onChange({ ...value, [t]: e.target.value as PermissionLevel })}
+                          className="rounded-md border border-(--color-border) bg-(--color-surface) px-2 py-1 text-xs"
+                        >
+                          {PERMISSION_LEVELS.map((lvl) => (
+                            <option key={lvl} value={lvl}>{PERMISSION_LEVEL_LABEL[lvl]}</option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }}
             />
-            {contentScope === 'specific' && (
-              <div className="ml-1 mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                <Controller
-                  name="content_types"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      {CONTENT_TYPES.map((t) => {
-                        const checked = (field.value as ContentType[] | undefined)?.includes(t) ?? false;
-                        return (
-                          <label key={t} className="flex items-center gap-2 text-sm">
-                            <Checkbox
-                              checked={checked}
-                              onCheckedChange={(v) => {
-                                const set = new Set(field.value ?? []);
-                                if (v) set.add(t); else set.delete(t);
-                                field.onChange(Array.from(set));
-                              }}
-                            />
-                            {CONTENT_TYPE_LABEL[t]}
-                          </label>
-                        );
-                      })}
-                    </>
-                  )}
-                />
-              </div>
-            )}
           </div>
 
           {submitError && (

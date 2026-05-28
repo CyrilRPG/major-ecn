@@ -11,6 +11,7 @@ import { ImpersonateAction } from './impersonate-action';
 import { EditStudentDialog } from './edit-student-dialog';
 import { initials } from '@/lib/utils';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
+import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 
 export type Student = {
   id: string;
@@ -140,6 +141,10 @@ export function StudentsTable({
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                      />
+                      <DeleteAccountButton
+                        userId={s.id}
+                        displayName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
                       />
                     </div>
                   </TableCell>
