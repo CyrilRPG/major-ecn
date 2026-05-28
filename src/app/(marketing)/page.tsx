@@ -4,7 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 import { Reveal } from '@/components/marketing/reveal';
 import { ManusHero } from '@/components/marketing/manus-hero';
 import { FreeTrialBanner } from '@/components/marketing/manus-sections';
-import { FinalCtaBlock } from '@/components/marketing/extra-sections';
+import {
+  EcosystemSection, QCMPreviewSection, DashboardPreviewSection,
+  TarifsBlock, FinalCtaBlock,
+} from '@/components/marketing/extra-sections';
 
 export const metadata = {
   title: 'Major ECN — Préparez les EVC avec excellence',
@@ -39,9 +42,9 @@ const KEY_NUMBERS = [
 
 const QUICK_LINKS = [
   { href: '/methode',     label: 'Notre méthode',         desc: '6 étapes structurées' },
-  { href: '/plateforme',  label: 'La plateforme',         desc: 'QCM, dashboard, lives' },
   { href: '/equipe',      label: 'L’équipe pédagogique',  desc: '25+ enseignants' },
   { href: '/temoignages', label: 'Témoignages',           desc: 'Médecins reçus aux EVC' },
+  { href: '/faq',         label: 'Questions fréquentes',  desc: 'Toutes les réponses' },
 ];
 
 const MINI_TEMOIGNAGE = {
@@ -142,6 +145,14 @@ export default async function HomePage() {
       {/* Bannière essai gratuit (sticky on-page) */}
       <FreeTrialBanner />
 
+      {/* PLATEFORME — Ecosystem + QCM preview + Dashboard preview */}
+      <EcosystemSection />
+      <QCMPreviewSection />
+      <DashboardPreviewSection />
+
+      {/* TARIFS — 3 formules dark charcoal */}
+      <TarifsBlock />
+
       {/* Liens rapides — explorer le site */}
       <section className="bg-[#FAFAF8] py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -150,7 +161,7 @@ export default async function HomePage() {
               Découvrez Major ECN en détail
             </h2>
             <p className="mt-3 text-base text-[#5A5A5A]">
-              Plongez dans la méthode, l’écosystème pédagogique ou rencontrez l’équipe.
+              Plongez dans la méthode, rencontrez l’équipe ou parcourez la FAQ.
             </p>
           </Reveal>
 

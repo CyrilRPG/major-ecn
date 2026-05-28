@@ -7,7 +7,7 @@
 import {
   Activity, ArrowRight, Award, BookOpen, BrainCircuit, CalendarClock, Check,
   CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap,
-  Layers3, LineChart, Microscope, ShieldCheck, Sparkles, Stethoscope,
+  LineChart, Microscope, ShieldCheck, Sparkles, Stethoscope,
   Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
 import { Reveal } from './reveal';
@@ -471,35 +471,44 @@ export function DashboardPreviewSection() {
               <div aria-hidden className="absolute -inset-4 -z-10 rounded-3xl opacity-50 blur-2xl"
                 style={{ background: 'radial-gradient(circle at 30% 30%, rgba(107,26,42,0.25), transparent 70%)' }}
               />
-              <div className="overflow-hidden rounded-3xl border border-[#E8E7E3] bg-white p-6 shadow-2xl">
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { Icon: GraduationCap, k: 'Progression', v: '68%', c: '#6B1A2A' },
-                    { Icon: Target,        k: 'Réussite',    v: '76%', c: '#16A34A' },
-                    { Icon: ClipboardCheck,k: 'QCM faits',   v: '247', c: '#3B82F6' },
-                    { Icon: Layers3,       k: 'Flashcards',  v: '189', c: '#F59E0B' },
-                  ].map((s) => (
-                    <div key={s.k} className="rounded-2xl border border-[#E8E7E3] bg-[#FAFAF8] p-4">
-                      <s.Icon className="h-4 w-4" style={{ color: s.c }} />
-                      <p className="mt-2 font-display text-2xl font-extrabold tracking-tight text-[#2D2D2D]">
-                        {s.v}
-                      </p>
-                      <p className="mt-0.5 text-[11px] font-medium text-[#7A7A7A]">{s.k}</p>
-                    </div>
-                  ))}
+              {/* Fenêtre macOS-style avec image du vrai dashboard étudiant,
+                  zoomée et rognée sur les KPI + le graphique de progression. */}
+              <div className="overflow-hidden rounded-3xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(107,26,42,0.45)] ring-1 ring-black/5">
+                <div className="flex items-center gap-1.5 border-b border-[#E8E7E3] bg-[#FAFAF8] px-4 py-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+                  <span className="ml-3 truncate text-[11px] text-[#7A7A7A]">
+                    app.majorecn.fr / accueil
+                  </span>
                 </div>
-                <div className="mt-4 rounded-2xl border border-[#E8E7E3] bg-[#FAFAF8] p-4">
-                  <p className="text-xs font-semibold text-[#2D2D2D]">Évolution de la performance</p>
-                  <svg viewBox="0 0 320 80" className="mt-2 h-16 w-full">
-                    <defs>
-                      <linearGradient id="dashGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#6B1A2A" stopOpacity="0.35" />
-                        <stop offset="100%" stopColor="#6B1A2A" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M0,60 C40,55 60,40 100,35 C140,30 170,38 200,28 C230,18 270,22 320,12 L320,80 L0,80 Z" fill="url(#dashGrad)" />
-                    <path d="M0,60 C40,55 60,40 100,35 C140,30 170,38 200,28 C230,18 270,22 320,12" stroke="#6B1A2A" strokeWidth="2.5" fill="none" />
-                  </svg>
+                <div
+                  className="relative aspect-[16/10] w-full overflow-hidden bg-white"
+                  aria-hidden
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/accueil.png"
+                    alt=""
+                    className="absolute left-0 top-0 h-auto w-[200%] -translate-x-[8%] -translate-y-[6%] max-w-none object-cover sm:w-[185%]"
+                  />
+                  {/* Badges flottants — chiffres clés mis en avant */}
+                  <div className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-[#E8E7E3] bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#16793C] shadow-lg backdrop-blur sm:right-5 sm:top-5">
+                    <TrendingUp className="h-3 w-3" />
+                    +12 % cette semaine
+                  </div>
+                  <div className="pointer-events-none absolute -bottom-3 -left-3 inline-flex items-center gap-2 rounded-2xl border border-[#E8E7E3] bg-white px-4 py-2.5 shadow-xl sm:bottom-4 sm:left-4">
+                    <span
+                      className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
+                      style={{ background: `linear-gradient(135deg, ${BORDEAUX}, ${BORDEAUX_DEEP})` }}
+                    >
+                      <Target className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-[#7A7A7A]">Réussite</p>
+                      <p className="font-display text-base font-extrabold text-[#2D2D2D]">76 %</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
