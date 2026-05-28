@@ -33,9 +33,20 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     return NextResponse.json({ error: 'Corrigé à venir — pas encore disponible.' }, { status: 404 });
   }
 
-  const absPath = path.join(process.cwd(), 'data', 'medgen-annales', filePath);
-  if (!existsSync(absPath)) {
-    return NextResponse.json({ error: 'Fichier PDF manquant sur le serveur.' }, { status: 500 });
+  // En prod Vercel, process.cwd() peut différer du root du projet. On essaie
+  // plusieurs emplacements possibles et on remonte une erreur lisible.
+  const candidates = [
+    path.join(process.cwd(), 'data', 'medgen-annales', filePath),
+    path.join(process.cwd(), '.next', 'standalone', 'data', 'medgen-annales', filePath),
+    path.join('/var/task/data/medgen-annales', filePath),
+  ];
+  const absPath = candidates.find((p) => existsSync(p));
+  if (!absPath) {
+    console.error('[medgen-annales] PDF introuvable. Candidats testés :', candidates);
+    return NextResponse.json(
+      { error: 'Fichier PDF manquant sur le serveur — vérifiez le bundle de la fonction (outputFileTracingIncludes).' },
+      { status: 500 },
+    );
   }
 
   const bytes = readFileSync(absPath);

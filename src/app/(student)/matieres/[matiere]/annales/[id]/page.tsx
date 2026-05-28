@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, ClipboardCheck, FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PdfViewer } from '@/components/student/pdf-viewer';
+import { AnnaleAssistantPanel } from '@/components/student/annale-assistant-panel';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export const metadata = { title: 'Annale EVC' };
@@ -42,7 +43,7 @@ export default async function AnnaleDetailPage({
       </Link>
 
       <header className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-(--color-border) pb-4">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--color-primary)">
             Session {row.annee}
           </p>
@@ -55,6 +56,7 @@ export default async function AnnaleDetailPage({
             {' '}votre identité s’affiche en filigrane sur chaque page.
           </p>
         </div>
+        <AnnaleAssistantPanel annaleId={row.id} annaleTitre={row.label} />
       </header>
 
       <div className="mb-4 inline-flex rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-1">

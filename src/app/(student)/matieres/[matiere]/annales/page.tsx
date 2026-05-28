@@ -40,9 +40,7 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
         </p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight text-(--color-ink)">Annales EVC</h1>
         <p className="mt-1 max-w-2xl text-sm text-(--color-ink-soft)">
-          Tous les sujets officiels {years.length > 0 ? `${years[years.length - 1][0]} → ${years[0][0]}` : ''}.
-          Sujet en PDF avec votre identité en filigrane (logo Major ECN en fond).
-          Les corrigés détaillés seront publiés progressivement.
+          Retrouvez l’ensemble des annales pour vous entraîner en conditions réelles.
         </p>
       </header>
 
