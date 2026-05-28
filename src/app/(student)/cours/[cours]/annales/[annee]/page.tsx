@@ -31,14 +31,15 @@ export default async function AnnalePage({
 
   const { data: serie } = await supabase
     .from('qcm_series')
-    // cast nécessaire : duration_minutes vient d'une migration récente non encore dans les types générés
-    .select('id, label, type, cours_id, qcm_questions(id)' + ', duration_minutes' as 'id, label, type, cours_id, qcm_questions(id)')
+    // cast : duration_minutes + vignette ajoutés par migrations récentes
+    .select('id, label, type, cours_id, qcm_questions(id), duration_minutes, vignette' as 'id, label, type, cours_id, qcm_questions(id)')
     .eq('id', serieId)
     .eq('cours_id', coursId)
     .eq('type', 'annale')
     .maybeSingle();
   if (!serie) notFound();
   const durationMinutes = (serie as unknown as { duration_minutes?: number | null }).duration_minutes ?? null;
+  const vignette = (serie as unknown as { vignette?: string | null }).vignette ?? null;
 
   const questionCount = serie.qcm_questions?.length ?? 0;
 
@@ -77,6 +78,7 @@ export default async function AnnalePage({
         coursId={coursId}
         serieLabel={`Annale ${serie.label}`}
         serieKind="annale"
+        vignette={vignette}
         mode={mode}
         durationMinutes={mode === 'training' ? durationMinutes : null}
         questions={enrichedQuestions}

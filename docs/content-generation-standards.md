@@ -40,6 +40,12 @@ isolées sur des points hypertombables, format EVC :
 conditions réelles annales :
 - énoncé clinique unique en tête (vignette de 8-15 lignes : patient, motif,
   examen, première para-clinique)
+- **La vignette est stockée dans `qcm_series.vignette` (colonne dédiée)
+  PAS dans le `enonce` des questions.** Le composant `QcmSession` l'affiche
+  automatiquement dans un encadré séparé bordé bordeaux au-dessus de chaque
+  question. Ne JAMAIS la dupliquer dans `qcm_questions.enonce`.
+- chaque `qcm_questions.enonce` contient uniquement la question spécifique
+  (sans la vignette)
 - 5 questions qui suivent le raisonnement clinique : diagnostic → para-clinique
   complémentaire → diagnostic différentiel → thérapeutique → suivi/complication
 - **inspiration directe des annales du cours** : style, longueur, niveau de
@@ -47,6 +53,10 @@ conditions réelles annales :
 - **pas trop faciles** : viser le niveau réel des EVC, pas un exercice scolaire
 - pièges classiques attendus : item piège « toutes les réponses ci-dessus »,
   faux amis pharmaco, contre-indications souvent oubliées
+
+Idem pour les **annales** (`qcm_series.type = 'annale'`) qui ont une vignette
+commune : on remplit `qcm_series.vignette` et les `qcm_questions.enonce` ne
+contiennent que la question.
 
 ### Sources
 
@@ -116,8 +126,10 @@ Quand l'utilisateur demande une génération :
 3. **Générer le contenu** strictement à partir des deux sources ci-dessus.
 4. **Insérer en DB** via Supabase (`apply_migration` ou `execute_sql`) :
    - `qcm_series` : créer 4 lignes (2 type='qcm' label='Cours — Série N',
-     2 type='qcm' label='DP N — …')
-   - `qcm_questions` : 5 lignes par série
+     2 type='qcm' label='DP N · …'). Pour les DP : remplir
+     `qcm_series.vignette` avec la vignette clinique commune.
+   - `qcm_questions` : 5 lignes par série. **Pour les DP : `enonce` ne
+     contient que la question spécifique (sans la vignette).**
    - `qcm_items` : 5 items A-E par question avec `is_correct` et `justification`
    - `flashcards` : 50-200 lignes
 5. **Déclencher la réindexation RAG** (`reindexCoursAction`) après insertion

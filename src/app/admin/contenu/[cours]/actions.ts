@@ -388,27 +388,29 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
       if (!/^dp\s*\d/i.test(label)) label = `DP ${dpSeen} · ${label}`;
     }
 
-    const { data: serieRow, error: serieErr } = await admin
+    const vignette = kind === 'dp' && s.vignette?.trim() ? s.vignette.trim() : null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: serieRow, error: serieErr } = await (admin as any)
       .from('qcm_series')
       .insert({
         cours_id: coursId,
         label,
         type: 'qcm',
         order_index: serieIdx++,
+        vignette, // stockée séparément, affichée dans un encadré au-dessus de chaque question
       })
       .select('id').single();
     if (serieErr || !serieRow) continue;
 
-    const vignette = kind === 'dp' && s.vignette?.trim() ? s.vignette.trim() : null;
     const questions = (s.questions ?? []).slice(0, 5);
     for (let qi = 0; qi < questions.length; qi++) {
       const q = questions[qi];
-      // Pour les DP, on préfixe la vignette à chaque énoncé pour que l'élève
-      // la relise à chaque question (la vignette est dans s.vignette, et
-      // chaque question n'a que la question spécifique).
-      const enonce = vignette && !q.enonce.includes(vignette.slice(0, 40))
-        ? `${vignette}\n\n${q.enonce}`
-        : q.enonce;
+      // Si l'IA a quand même préfixé la vignette dans l'énoncé, on la retire :
+      // la vignette est désormais gérée séparément côté UI.
+      let enonce = q.enonce;
+      if (vignette && enonce.includes(vignette.slice(0, 40))) {
+        enonce = enonce.replace(vignette, '').replace(/^[\s\n]+/, '').trim();
+      }
 
       const { data: qRow, error: qErr } = await admin
         .from('qcm_questions')

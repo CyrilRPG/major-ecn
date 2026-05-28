@@ -24,6 +24,7 @@ export function QcmSession({
   coursId,
   serieLabel,
   serieKind,
+  vignette = null,
   questions,
   backHref,
   mode = 'live',
@@ -33,6 +34,9 @@ export function QcmSession({
   coursId: string;
   serieLabel: string;
   serieKind: 'qcm' | 'annale';
+  /** Vignette clinique commune à toutes les questions (DP / annale).
+   *  Affichée dans un encadré séparé au-dessus de chaque question. */
+  vignette?: string | null;
   questions: Question[];
   backHref: string;
   mode?: 'live' | 'training';
@@ -179,6 +183,19 @@ export function QcmSession({
       </div>
       <Progress value={progressPct} className="mb-3" />
 
+      {/* Vignette clinique commune à toutes les questions (DP / annale) —
+          encadré distinct, sticky-like en haut. */}
+      {vignette && (
+        <div className="mb-3 rounded-xl border-l-4 border-(--color-primary) bg-(--color-primary-soft)/30 p-3.5 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
+            Contexte clinique
+          </p>
+          <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+            {vignette}
+          </p>
+        </div>
+      )}
+
       <motion.div
         key={q.id}
         initial={{ opacity: 0 }}
@@ -186,7 +203,9 @@ export function QcmSession({
         transition={{ duration: 0.2 }}
         className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+          {vignette ? `Question ${index + 1}` : 'Énoncé'}
+        </p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           {q.enonce}
         </h2>

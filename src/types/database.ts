@@ -83,9 +83,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'qcm_questions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
       qcm_series: {
-        Row: { annee: number | null; cours_id: string; created_at: string; id: string; label: string; order_index: number; type: string };
-        Insert: { annee?: number | null; cours_id: string; created_at?: string; id?: string; label: string; order_index?: number; type: string };
-        Update: { annee?: number | null; cours_id?: string; created_at?: string; id?: string; label?: string; order_index?: number; type?: string };
+        Row: { annee: number | null; cours_id: string; created_at: string; duration_minutes: number | null; vignette: string | null; id: string; label: string; order_index: number; type: string };
+        Insert: { annee?: number | null; cours_id: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label: string; order_index?: number; type: string };
+        Update: { annee?: number | null; cours_id?: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label?: string; order_index?: number; type?: string };
         Relationships: [{ foreignKeyName: 'qcm_series_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       qcm_sessions: {
