@@ -18,11 +18,19 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
-  const [{ data: profile }, { data: fiche }] = await Promise.all([
+  const [{ data: profile }, { data: fiches }] = await Promise.all([
     supabase.from('profiles').select('first_name, last_name, email').eq('id', user.id).maybeSingle(),
-    supabase.from('fiches').select('storage_path').eq('cours_id', coursId).maybeSingle(),
+    // Tolère plusieurs lignes éventuelles : on prend celle qui a un storage_path.
+    supabase
+      .from('fiches')
+      .select('storage_path')
+      .eq('cours_id', coursId)
+      .not('storage_path', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(1),
   ]);
 
+  const fiche = fiches?.[0];
   if (!fiche?.storage_path) return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
 
   // Téléchargement du PDF original via service role (bypass RLS storage)
