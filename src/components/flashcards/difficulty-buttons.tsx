@@ -11,19 +11,19 @@ type Btn = {
   key: Difficulty;
   label: string;
   subtitle: string;
-  accent: string;   // couleur du contour / icône
+  accent: string;   // couleur de l'icône et du contour du cercle
   bg: string;       // fond pastel de la carte
-  border: string;   // bord visible
   Icon: LucideIcon;
 };
 
-// Couleurs pastel reprises pixel par pixel de la maquette client :
-// fond très clair, bord net dans la teinte, icône stroke pleine teinte.
+// Couleurs pixel-perfect alignées sur la maquette client (carte rounded
+// pastel, cercle blanc bordé colore avec l'icône à l'intérieur, label
+// gras + sous-titre gris). Pas de bord externe sur la carte.
 const buttons: Btn[] = [
-  { key: 'tres_difficile', label: 'À revoir',  subtitle: 'Je ne la savais pas', accent: '#E4002B', bg: '#FDEAEC', border: '#F5B9BF', Icon: X },
-  { key: 'difficile',      label: 'Difficile', subtitle: 'J’hésite encore', accent: '#D97706', bg: '#FEF1E0', border: '#F4D49E', Icon: Minus },
-  { key: 'facile',         label: 'Bien',      subtitle: 'Je la savais',         accent: '#2563EB', bg: '#E5EFFE', border: '#BDD2FA', Icon: Check },
-  { key: 'tres_facile',    label: 'Parfait',   subtitle: 'Connaissance solide',  accent: '#16A34A', bg: '#E5F4EA', border: '#B7DFC4', Icon: CheckCheck },
+  { key: 'tres_difficile', label: 'À revoir',  subtitle: 'Je ne la savais pas',  accent: '#E4002B', bg: '#FCE7EA', Icon: X },
+  { key: 'difficile',      label: 'Difficile', subtitle: 'J’hésite encore',      accent: '#D97706', bg: '#FEF1DD', Icon: Minus },
+  { key: 'facile',         label: 'Bien',      subtitle: 'Je la savais',         accent: '#2563EB', bg: '#E6EEFE', Icon: Check },
+  { key: 'tres_facile',    label: 'Parfait',   subtitle: 'Connaissance solide',  accent: '#16A34A', bg: '#E5F4E9', Icon: CheckCheck },
 ];
 
 export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty) => void; disabled?: boolean }) {
@@ -32,7 +32,7 @@ export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="grid w-full max-w-5xl grid-cols-2 gap-3 md:grid-cols-4"
+      className="grid w-full max-w-5xl grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4"
     >
       {buttons.map((b) => (
         <button
@@ -40,19 +40,23 @@ export function DifficultyButtons({ onPick, disabled }: { onPick: (d: Difficulty
           type="button"
           onClick={() => onPick(b.key)}
           disabled={disabled}
-          className="group relative overflow-hidden rounded-2xl border px-4 py-3 text-left shadow-(--shadow-soft) transition focus-ring hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ background: b.bg, borderColor: b.border }}
+          className="group flex flex-col items-start gap-1.5 rounded-2xl px-3.5 py-3 text-left transition hover:-translate-y-0.5 focus-ring disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3.5"
+          style={{ background: b.bg }}
         >
-          <span className="flex items-center gap-2.5">
+          <span className="flex items-center gap-2.5 sm:gap-3">
             <span
-              className="flex h-9 w-9 items-center justify-center rounded-full border bg-white"
-              style={{ borderColor: b.border, color: b.accent }}
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white sm:h-10 sm:w-10"
+              style={{ borderColor: b.accent, color: b.accent }}
             >
-              <b.Icon className="h-4.5 w-4.5" strokeWidth={2.5} />
+              <b.Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.5} />
             </span>
-            <span className="font-semibold text-(--color-ink)">{b.label}</span>
+            <span className="text-sm font-bold text-(--color-ink) sm:text-base" style={{ color: b.accent }}>
+              {b.label}
+            </span>
           </span>
-          <p className="mt-1 pl-12 text-xs text-(--color-ink-soft)">{b.subtitle}</p>
+          <p className="pl-[44px] text-[11px] text-(--color-ink-soft) sm:pl-[52px] sm:text-xs">
+            {b.subtitle}
+          </p>
         </button>
       ))}
     </motion.div>

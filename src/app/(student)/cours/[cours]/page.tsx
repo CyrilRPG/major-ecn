@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, FileText, History, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, FileText, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
@@ -43,8 +43,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       { onConflict: 'user_id,cours_id', ignoreDuplicates: false },
     );
 
-  // 5 cartes du parcours pédagogique : vidéo, fiche, DP&QI, annales, flashcards.
-  // Chaque carte porte sa propre couleur (alignée sur la maquette).
+  // 4 cartes du parcours pédagogique : vidéo, fiche, DP&QI, flashcards.
+  // Les annales EVC restent accessibles via la sidebar (entrée transversale
+  // sous chaque collège) — pas de carte dédiée ici.
   const actions: Action[] = [
     {
       href: `/cours/${coursId}/video`, label: 'Cours vidéo',
@@ -63,12 +64,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
       Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
       available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
-    },
-    {
-      href: `/matieres/${c.matiere_id}/annales`, label: 'Annales EVC',
-      desc: 'Les sujets des sessions précédentes, en conditions concours.',
-      Icon: History, accent: '#2563EB', bg: '#E5F1FF',
-      available: (c.qcm_series ?? []).some((s) => s.type === 'annale'),
     },
     {
       href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
