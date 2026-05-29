@@ -33,7 +33,14 @@ function Face({
       style={{
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
-        transform: back ? 'rotateY(180deg)' : undefined,
+        // iOS Safari ne masque correctement la face arrière QUE si chaque
+        // face porte SON PROPRE transform 3D (translateZ force la création
+        // d'un contexte 3D, qui active la back-face culling). Sans cela,
+        // les deux faces apparaissent superposées en transparence sur
+        // mobile (recto + verso mirroré).
+        transform: back
+          ? 'rotateY(180deg) translateZ(1px)'
+          : 'rotateY(0deg) translateZ(1px)',
         // Fond pastel doux dégradant depuis la teinte du thème vers
         // blanc — la carte reste lisible mais porte l'identité du cours.
         background: `linear-gradient(135deg, ${theme.bg} 0%, #FFFFFF 60%)`,
@@ -152,12 +159,19 @@ export function Flashcard({
       tabIndex={-1}
       onClick={onFlip}
       className="w-full max-w-5xl cursor-pointer rounded-2xl focus-ring"
-      style={{ perspective: '1600px' }}
+      style={{
+        perspective: '1600px',
+        // Force le contexte 3D côté parent pour iOS Safari.
+        WebkitPerspective: 1600,
+      }}
     >
       {/* Hauteur fluide : 240 px mini (mobile) → 48 vh idéal → 520 px maxi. */}
       <motion.div
         className="relative h-[clamp(240px,46vh,520px)] w-full"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{
+          transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
+        }}
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >

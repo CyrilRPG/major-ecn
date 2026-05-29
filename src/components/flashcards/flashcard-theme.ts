@@ -11,10 +11,10 @@ import {
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import {
-  LungsArt, HeartArt, KidneyArt, StomachArt, BloodCellsArt, SkinLayerArt,
+  LungsArt, HeartArt, KidneyArt, StomachArt, BloodCellsArt,
   EarArt, EyeArt, BrainArt, UterusArt, PregnantWomanArt, ChildArt,
-  ElderlyArt, HeartbeatArt, VirusArt, ThyroidArt, JointArt, PollenArt,
-  HumanBodyArt, RibbonArt, PillArt, StethoscopeArt,
+  ElderlyArt, HeartbeatArt, VirusArt, ThyroidArt, JointArt,
+  HumanBodyArt, PillArt, StethoscopeArt,
 } from './organ-illustrations';
 
 /** Type icône compatible Lucide + nos illustrations anatomiques custom. */
@@ -40,11 +40,10 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Gastro-entérologie':     { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
   'Gastroentérologie':      { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
   'Hépato-gastro':          { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
+  'Hépato-gastro-entérologie': { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
   'Hématologie':            { bg: '#FBE6E6', accent: '#9F1F1F', Icon: BloodCellsArt },
-  'Dermatologie':           { bg: '#E0F2EF', accent: '#0F6F66', Icon: SkinLayerArt },
   'ORL':                    { bg: '#FFEAD9', accent: '#A24F00', Icon: EarArt },
   'Ophtalmologie':          { bg: '#E0F2EF', accent: '#0F6F66', Icon: EyeArt },
-  'Allergologie':           { bg: '#FFF7DC', accent: '#A65500', Icon: PollenArt },
   'Gériatrie':              { bg: '#EEF6E2', accent: '#3E6F1A', Icon: ElderlyArt },
   'Gynécologie':            { bg: '#FBE4F0', accent: '#8C1A55', Icon: UterusArt },
   'Obstétrique':            { bg: '#FCE7F1', accent: '#8C1A55', Icon: PregnantWomanArt },
@@ -59,10 +58,10 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Neurologie':             { bg: '#EDE6F8', accent: '#4C2A8A', Icon: BrainArt },
   'Psychiatrie':            { bg: '#F0E8F8', accent: '#5A2B8E', Icon: BrainArt },
   'Rhumatologie':           { bg: '#F0EDE5', accent: '#6B5B43', Icon: JointArt },
-  // Urgences : tracé ECG sur moniteur — seul cours où c'est juste.
-  'Urgences':               { bg: '#FFEED5', accent: '#A65500', Icon: HeartbeatArt },
-  'Cancérologie':           { bg: '#F3E8F8', accent: '#7A2A8E', Icon: RibbonArt },
-  'Oncologie':              { bg: '#F3E8F8', accent: '#7A2A8E', Icon: RibbonArt },
+  // Réanimation : ambiance moniteur ECG + rouge marque (intensité, urgence vitale).
+  'Réanimation':            { bg: '#FDE7E9', accent: '#C0001F', Icon: HeartbeatArt },
+  'Reanimation':            { bg: '#FDE7E9', accent: '#C0001F', Icon: HeartbeatArt },
+  // Pharmacologie : pastille ambrée + gélule (PillArt).
   'Pharmacologie':          { bg: '#FCEDD9', accent: '#A85F00', Icon: PillArt },
 };
 
