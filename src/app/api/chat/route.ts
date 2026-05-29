@@ -143,10 +143,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Cours introuvable.' }, { status: 404 });
   }
 
-  // Pas de clé Claude → on indique simplement l'indisponibilité.
+  // Pas de clé Claude côté serveur (variable d'environnement Vercel
+  // ANTHROPIC_API_KEY manquante) → message explicite pour l'admin, pas
+  // une fausse abstention pédagogique.
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({
-      reply: ABSTENTION,
+      reply:
+        "⚙️ Configuration incomplète : la clé d'API Claude n'est pas " +
+        "définie sur le serveur (ANTHROPIC_API_KEY). Préviens l'équipe " +
+        'technique pour qu\'elle l\'ajoute dans les variables ' +
+        'd\'environnement Vercel.',
       mode: 'no_api_key',
     });
   }
