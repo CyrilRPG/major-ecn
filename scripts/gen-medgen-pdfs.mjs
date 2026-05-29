@@ -404,7 +404,58 @@ async function generatePdf({ annee, type }, data) {
         page.drawText(ln, { x: MARGIN_X + innerLeft - 8, y: ly, size: sz, font: fontRegular, color: INK });
         ly -= lh;
       }
-      cursorY = ly - 8;
+      cursorY = ly - 4;
+
+      // Propositions (vrai/faux) — rendues en liste avec case à cocher
+      if (q.propositions && q.propositions.length) {
+        cursorY -= 6;
+        // Eyebrow « Propositions »
+        if (cursorY < CONTENT_BOTTOM + 30) newContentPage();
+        page.drawText('PROPOSITIONS · cochez VRAI ou FAUX', {
+          x: MARGIN_X + innerLeft - 8, y: cursorY,
+          size: 8, font: fontBold, color: BORDEAUX,
+        });
+        cursorY -= 14;
+        for (let pi = 0; pi < q.propositions.length; pi++) {
+          const pText = nettoieTexte(q.propositions[pi]);
+          if (!pText) continue;
+          const propLines = wrap(fontRegular, 10.5, pText, CONTENT_W - innerLeft - 60);
+          const pBlockH = propLines.length * 14 + 4;
+          if (cursorY - pBlockH < CONTENT_BOTTOM) newContentPage();
+          // Cases ☐ V / ☐ F
+          const boxY = cursorY - 9;
+          const boxSize = 9;
+          // V
+          page.drawRectangle({
+            x: MARGIN_X + innerLeft - 8, y: boxY, width: boxSize, height: boxSize,
+            borderColor: INK_SOFT, borderWidth: 0.6,
+          });
+          page.drawText('V', {
+            x: MARGIN_X + innerLeft - 8 + boxSize + 3, y: boxY + 1,
+            size: 7.5, font: fontBold, color: INK_SOFT,
+          });
+          // F
+          page.drawRectangle({
+            x: MARGIN_X + innerLeft - 8 + boxSize + 14, y: boxY, width: boxSize, height: boxSize,
+            borderColor: INK_SOFT, borderWidth: 0.6,
+          });
+          page.drawText('F', {
+            x: MARGIN_X + innerLeft - 8 + boxSize * 2 + 17, y: boxY + 1,
+            size: 7.5, font: fontBold, color: INK_SOFT,
+          });
+          // Texte de la proposition
+          let py = cursorY;
+          const txOffset = innerLeft - 8 + boxSize * 2 + 30;
+          for (const ln of propLines) {
+            if (py < CONTENT_BOTTOM + 14) newContentPage();
+            page.drawText(ln, { x: MARGIN_X + txOffset, y: py, size: 10.5, font: fontRegular, color: INK });
+            py -= 14;
+          }
+          cursorY = py - 2;
+        }
+      }
+
+      cursorY -= 10;
     }
   }
 

@@ -94,6 +94,36 @@ def strip_inline_garbage(s: str) -> str:
     s = re.sub(r'\bMacro\s*Button\b.*?(?=[A-ZÉ]|$)', '', s, flags=re.IGNORECASE)
     return s
 
+# Marqueurs de queue de document Word — quand on les rencontre, on tronque.
+DOC_TRAILER_RE = re.compile(
+    r'(?i)(?:'
+    r'Page\s*:\s*PAGE\b'           # "Page : PAGE NUMPAGES"
+    r'|\bNUMPAGES\b'
+    r'|\bMSWordDoc\b'
+    r'|Document\s+Microsoft\s+Word'
+    r'|\bODONTOLOGIE\b'
+    r'|\bRoot\s+Entry\b'
+    r'|Prodiser'
+    r')'
+)
+
+# Détection « fin du contenu utile » : ≥ 8 caractères consécutifs ni alphabétiques
+# ni ponctuation française courante. C'est le signal qu'on entre dans le binaire.
+GARBAGE_TAIL_RE = re.compile(r'[^\sA-Za-zÀ-ÿ0-9.,;:!?\'"()\-/«»°²³µ%·]{6,}')
+
+def truncate_at_garbage(s: str) -> str:
+    """Coupe le texte au premier marqueur de trailer Word ou bloc de bruit
+    binaire détecté en queue. Préserve tout le texte utile avant."""
+    # 1) trailer explicite
+    m = DOC_TRAILER_RE.search(s)
+    if m:
+        s = s[:m.start()].rstrip()
+    # 2) bloc de caractères non-lisibles
+    m = GARBAGE_TAIL_RE.search(s)
+    if m:
+        s = s[:m.start()].rstrip()
+    return s
+
 # ---------- Extraction & filtrage --------------------------------------------
 
 def extract_raw(path: str) -> list[str]:
@@ -109,10 +139,15 @@ def filter_segments(segments: list[str]) -> list[str]:
         s = s.strip()
         if is_garbage(s):
             continue
-        key = s.lower()[:200]
-        if key in seen:
-            continue
-        seen.add(key)
+        # Dédup uniquement les segments substantiels (≥ 30 chars).
+        # Les fragments courts (« vrai », « faux », chiffres) peuvent légitimement
+        # apparaître plusieurs fois (propositions vrai/faux dans plusieurs
+        # questions).
+        if len(s) >= 30:
+            key = s.lower()[:200]
+            if key in seen:
+                continue
+            seen.add(key)
         out.append(s)
     return out
 
@@ -171,6 +206,7 @@ def norm_ws(s: str) -> str:
     """Collapse retours/tabs/résidus, supprime les ' \n ' injectés, recolle les
     apostrophes orphelines (« L \n examen » → « L'examen »)."""
     s = strip_inline_garbage(s)
+    s = truncate_at_garbage(s)
     # Recolle les coupures du type « L \n suivi » → « L'suivi » (perte de
     # caractère smart-quote pendant l'extraction binaire).
     s = re.sub(r'\b([A-Za-z])\s*\n\s*([a-zàâäéèêëîïôöùûüç]{2,})', r"\1'\2", s)
@@ -180,6 +216,34 @@ def norm_ws(s: str) -> str:
     s = re.sub(r'\s+([,;.])', r'\1', s)
     s = re.sub(r'\s+([?!:])', r' \1', s)
     return s.strip()
+
+# Items vrai/faux dans une question : on les transforme en propositions
+# listables (la générateur PDF rend ensuite chaque proposition sur sa propre
+# ligne avec un petit bullet ☐).
+VRAI_FAUX_PAIR_RE = re.compile(
+    r'\b(?:vrai\s+faux|faux\s+vrai|Vrai\s+Faux|VRAI\s+FAUX)\b',
+    re.IGNORECASE,
+)
+
+def split_propositions(text: str) -> tuple[str, list[str]]:
+    """Détecte les questions du type « cochez la bonne réponse, vrai faux X
+    vrai faux Y » et retourne (énoncé, [propositions]). Si le pattern n'est
+    pas détecté, renvoie (text, [])."""
+    # Repère toutes les occurrences de « vrai faux »
+    pairs = list(VRAI_FAUX_PAIR_RE.finditer(text))
+    if len(pairs) < 2:
+        return text, []
+    # L'énoncé = tout ce qui précède la première paire "vrai faux"
+    head = text[:pairs[0].start()].rstrip(' ,.:;')
+    # Chaque proposition = texte entre une paire et la suivante
+    propositions = []
+    for i, m in enumerate(pairs):
+        start = m.end()
+        end = pairs[i + 1].start() if i + 1 < len(pairs) else len(text)
+        prop = text[start:end].strip(' ,.:;')
+        if prop:
+            propositions.append(prop)
+    return head, propositions
 
 # ---------- Parse principal --------------------------------------------------
 
@@ -228,10 +292,39 @@ def parse_structure(segments: list[str]) -> list[dict]:
             q_num = int(groups[0]) if groups else (i + 1)
             q_start = m.end() - 1
             q_end = valid_matches[i + 1].start() - 1 if i + 1 < len(valid_matches) else len(body)
-            q_text = norm_ws(body[q_start:q_end])
+            raw_q = body[q_start:q_end]
+            q_text = norm_ws(raw_q)
             if not q_text or len(q_text) < 3:
                 continue
-            questions.append({'num': q_num, 'text': q_text})
+            # Détection « cochez la bonne réponse » → liste de propositions.
+            # On utilise le texte BRUT (avant collapse) et on découpe sur les
+            # séparateurs de segments (\n injecté par le joiner) en filtrant
+            # les en-têtes de colonne « vrai » / « faux ».
+            propositions = []
+            head = q_text
+            if re.search(r'(?i)cochez\s+la\s+bonne\s+r[ée]ponse', raw_q):
+                parts = [p.strip(' ,.:;\t') for p in raw_q.split('\n')]
+                parts = [p for p in parts if p]
+                # Question stem = jusqu'au premier « vrai » exclu
+                stem_parts = []
+                items = []
+                in_items = False
+                for p in parts:
+                    if re.fullmatch(r'(?i)v?rai|faux|vrai\s+faux|faux\s+vrai', p):
+                        in_items = True
+                        continue
+                    if not in_items:
+                        stem_parts.append(p)
+                    else:
+                        if len(p) >= 6:  # ignore les fragments trop courts
+                            items.append(p)
+                if items:
+                    head = norm_ws(' '.join(stem_parts))
+                    propositions = [norm_ws(it) for it in items if norm_ws(it)]
+            entry = {'num': q_num, 'text': head}
+            if propositions:
+                entry['propositions'] = propositions
+            questions.append(entry)
 
         raw_sujets.append({
             'label': label,
