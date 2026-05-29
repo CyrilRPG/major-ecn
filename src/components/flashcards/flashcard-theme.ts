@@ -7,14 +7,17 @@
 // Néphrologie etc. seront créées, l'ambiance sera automatiquement appliquée.
 
 import {
-  Heart, Brain, Eye, Ear, Bone, Droplet, Baby,
-  Stethoscope, ShieldAlert, Layers3, FlaskConical, Microscope,
-  Sparkles, Pill, Activity, type LucideProps,
+  Layers3, type LucideProps,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
-import { Lungs, Kidney, Stomach, Uterus } from './organ-icons';
+import {
+  LungsArt, HeartArt, KidneyArt, StomachArt, BloodCellsArt, SkinLayerArt,
+  EarArt, EyeArt, BrainArt, UterusArt, PregnantWomanArt, ChildArt,
+  ElderlyArt, HeartbeatArt, VirusArt, ThyroidArt, JointArt, PollenArt,
+  HumanBodyArt, RibbonArt, PillArt, StethoscopeArt,
+} from './organ-illustrations';
 
-/** Type icône compatible Lucide + nos icônes d'organes custom. */
+/** Type icône compatible Lucide + nos illustrations anatomiques custom. */
 type IconComponent = ComponentType<LucideProps>;
 
 export type FlashcardTheme = {
@@ -27,47 +30,46 @@ export type FlashcardTheme = {
 };
 
 const THEMES: Record<string, FlashcardTheme> = {
-  // Mapping cours → ambiance. L'icône doit correspondre à l'organe ou
-  // au symbole médical canonique : poumons pour Pneumologie, cœur pour
-  // Cardio, etc. — pas d'ECG pour Pneumo (Activity réservé aux Urgences).
-  'Cardiologie':            { bg: '#FDE7E9', accent: '#C0001F', Icon: Heart },
-  'Pneumologie':            { bg: '#E5F1FF', accent: '#1E4D8B', Icon: Lungs },
-  'Néphrologie':            { bg: '#F1E8FD', accent: '#5B2BB8', Icon: Kidney },
-  'Urologie':               { bg: '#E5F0FA', accent: '#1F4F88', Icon: Kidney },
-  'Gastro-entérologie':     { bg: '#E7F6EC', accent: '#16793C', Icon: Stomach },
-  'Gastroentérologie':      { bg: '#E7F6EC', accent: '#16793C', Icon: Stomach },
-  'Hépato-gastro':          { bg: '#E7F6EC', accent: '#16793C', Icon: Stomach },
-  'Hématologie':            { bg: '#FBE6E6', accent: '#9F1F1F', Icon: Droplet },
-  'Dermatologie':           { bg: '#E0F2EF', accent: '#0F6F66', Icon: Sparkles },
-  'ORL':                    { bg: '#FFEAD9', accent: '#A24F00', Icon: Ear },
-  'Ophtalmologie':          { bg: '#E0F2EF', accent: '#0F6F66', Icon: Eye },
-  'Allergologie':           { bg: '#FFF7DC', accent: '#A65500', Icon: ShieldAlert },
-  'Gériatrie':              { bg: '#EEF6E2', accent: '#3E6F1A', Icon: Stethoscope },
-  'Gynécologie':            { bg: '#FBE4F0', accent: '#8C1A55', Icon: Uterus },
-  'Obstétrique':            { bg: '#FCE7F1', accent: '#8C1A55', Icon: Baby },
-  'Médecine interne':       { bg: '#E4ECF8', accent: '#244C8C', Icon: Stethoscope },
-  // « Médecine générale » : matière conteneur, on garde une entrée pour
-  // tous les cas où le nom apparaîtrait (fallback rouge sinon).
-  'Médecine générale':      { bg: '#FFF1E6', accent: '#B35900', Icon: Stethoscope },
-  // Infectiologie & Maladies infectieuses partagent le même thème vert.
-  'Infectiologie':          { bg: '#E7F6EC', accent: '#16793C', Icon: Microscope },
-  'Maladies infectieuses':  { bg: '#E7F6EC', accent: '#16793C', Icon: Microscope },
-  'Pédiatrie':              { bg: '#E7F4F8', accent: '#0E5A75', Icon: Baby },
-  'Endocrinologie':         { bg: '#F1E8FD', accent: '#5B2BB8', Icon: FlaskConical },
-  'Neurologie':             { bg: '#EDE6F8', accent: '#4C2A8A', Icon: Brain },
-  'Psychiatrie':            { bg: '#F0E8F8', accent: '#5A2B8E', Icon: Brain },
-  'Rhumatologie':           { bg: '#F0EDE5', accent: '#6B5B43', Icon: Bone },
-  // Urgences : ECG (Activity) — seul cours où c'est anatomiquement juste.
-  'Urgences':               { bg: '#FFEED5', accent: '#A65500', Icon: Activity },
-  'Cancérologie':           { bg: '#F3E8F8', accent: '#7A2A8E', Icon: Microscope },
-  'Oncologie':              { bg: '#F3E8F8', accent: '#7A2A8E', Icon: Microscope },
-  'Pharmacologie':          { bg: '#FCEDD9', accent: '#A85F00', Icon: Pill },
+  // Mapping cours → illustration anatomique détaillée.
+  // Chaque cours a SA propre illustration multi-paths (organe ou symbole
+  // médical canonique) — beaucoup plus fouillé que des icônes Lucide.
+  'Cardiologie':            { bg: '#FDE7E9', accent: '#C0001F', Icon: HeartArt },
+  'Pneumologie':            { bg: '#E5F1FF', accent: '#1E4D8B', Icon: LungsArt },
+  'Néphrologie':            { bg: '#F1E8FD', accent: '#5B2BB8', Icon: KidneyArt },
+  'Urologie':               { bg: '#E5F0FA', accent: '#1F4F88', Icon: KidneyArt },
+  'Gastro-entérologie':     { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
+  'Gastroentérologie':      { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
+  'Hépato-gastro':          { bg: '#E7F6EC', accent: '#16793C', Icon: StomachArt },
+  'Hématologie':            { bg: '#FBE6E6', accent: '#9F1F1F', Icon: BloodCellsArt },
+  'Dermatologie':           { bg: '#E0F2EF', accent: '#0F6F66', Icon: SkinLayerArt },
+  'ORL':                    { bg: '#FFEAD9', accent: '#A24F00', Icon: EarArt },
+  'Ophtalmologie':          { bg: '#E0F2EF', accent: '#0F6F66', Icon: EyeArt },
+  'Allergologie':           { bg: '#FFF7DC', accent: '#A65500', Icon: PollenArt },
+  'Gériatrie':              { bg: '#EEF6E2', accent: '#3E6F1A', Icon: ElderlyArt },
+  'Gynécologie':            { bg: '#FBE4F0', accent: '#8C1A55', Icon: UterusArt },
+  'Obstétrique':            { bg: '#FCE7F1', accent: '#8C1A55', Icon: PregnantWomanArt },
+  'Médecine interne':       { bg: '#E4ECF8', accent: '#244C8C', Icon: HumanBodyArt },
+  // « Médecine générale » : matière conteneur, fallback stéthoscope.
+  'Médecine générale':      { bg: '#FFF1E6', accent: '#B35900', Icon: StethoscopeArt },
+  // Infectiologie & Maladies infectieuses : virus cluster.
+  'Infectiologie':          { bg: '#E7F6EC', accent: '#16793C', Icon: VirusArt },
+  'Maladies infectieuses':  { bg: '#E7F6EC', accent: '#16793C', Icon: VirusArt },
+  'Pédiatrie':              { bg: '#E7F4F8', accent: '#0E5A75', Icon: ChildArt },
+  'Endocrinologie':         { bg: '#F1E8FD', accent: '#5B2BB8', Icon: ThyroidArt },
+  'Neurologie':             { bg: '#EDE6F8', accent: '#4C2A8A', Icon: BrainArt },
+  'Psychiatrie':            { bg: '#F0E8F8', accent: '#5A2B8E', Icon: BrainArt },
+  'Rhumatologie':           { bg: '#F0EDE5', accent: '#6B5B43', Icon: JointArt },
+  // Urgences : tracé ECG sur moniteur — seul cours où c'est juste.
+  'Urgences':               { bg: '#FFEED5', accent: '#A65500', Icon: HeartbeatArt },
+  'Cancérologie':           { bg: '#F3E8F8', accent: '#7A2A8E', Icon: RibbonArt },
+  'Oncologie':              { bg: '#F3E8F8', accent: '#7A2A8E', Icon: RibbonArt },
+  'Pharmacologie':          { bg: '#FCEDD9', accent: '#A85F00', Icon: PillArt },
 };
 
 const DEFAULT_THEME: FlashcardTheme = {
   bg: '#FDE7E9',
   accent: '#C0001F',
-  Icon: Layers3,
+  Icon: Layers3 as unknown as IconComponent,
 };
 
 export function themeFor(collegeName: string | null | undefined): FlashcardTheme {

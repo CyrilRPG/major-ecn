@@ -11,17 +11,52 @@ import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '
 export const metadata = { title: 'Accueil' };
 
 
+// Le « cours » (Pédiatrie, Pneumologie…) est l'unité de progression
+// affichée à l'utilisateur. La matière (« Médecine générale ») n'est
+// qu'un conteneur — on ne l'utilise plus pour agréger sur le dashboard.
+type CoursRef = { id: string; titre: string };
 type AttemptRow = {
   is_correct: boolean;
   attempted_at: string;
-  qcm_questions: { qcm_series: { type: string; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } } };
+  qcm_questions: {
+    qcm_series: {
+      type: string;
+      cours: CoursRef & {
+        matieres: { id: string; nom: string; semestres: { faculte_id: string } };
+      };
+    };
+  };
 };
 type SessionRow = {
-  score_correct: number; score_total: number; finished_at: string | null;
-  qcm_series: { label: string; type: string; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
+  score_correct: number;
+  score_total: number;
+  finished_at: string | null;
+  qcm_series: {
+    label: string;
+    type: string;
+    cours: CoursRef & {
+      matieres: { id: string; nom: string; semestres: { faculte_id: string } };
+    };
+  };
 };
-type ReviewRow = { difficulty: string; reviewed_at: string; flashcards: { cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } } };
-type CollegeRow = { id: string; nom: string; cours?: { course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null };
+type ReviewRow = {
+  difficulty: string;
+  reviewed_at: string;
+  flashcards: {
+    cours: CoursRef & {
+      matieres: { id: string; nom: string; semestres: { faculte_id: string } };
+    };
+  };
+};
+type CollegeRow = {
+  id: string;
+  nom: string;
+  cours?: {
+    id: string;
+    titre: string;
+    course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
+  }[] | null;
+};
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
@@ -40,22 +75,22 @@ export default async function AccueilPage() {
     await Promise.all([
       supabase
         .from('qcm_attempts')
-        .select('is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(type, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
+        .select('is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
         .eq('user_id', user.id),
       supabase
         .from('qcm_sessions')
-        .select('score_correct, score_total, finished_at, qcm_series!inner(label, type, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+        .select('score_correct, score_total, finished_at, qcm_series!inner(label, type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
         .eq('user_id', user.id)
         .not('finished_at', 'is', null)
         .order('finished_at', { ascending: false }),
       supabase
         .from('flashcard_reviews')
-        .select('difficulty, reviewed_at, flashcards!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+        .select('difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
         .eq('user_id', user.id)
         .order('reviewed_at', { ascending: false }),
       supabase
         .from('facultes')
-        .select('semestres(matieres(id, nom, order_index, cours(id, course_progress(video_watched, fiche_read))))')
+        .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index, course_progress(video_watched, fiche_read))))')
         .eq('id', EDN_FACULTE_ID)
         .maybeSingle(),
       supabase.from('flashcards').select('id', { count: 'exact', head: true }),
@@ -106,18 +141,52 @@ export default async function AccueilPage() {
   let fcMastered = 0;
   for (const v of scoreByCard.values()) if (v >= FLASHCARD_MASTERY_THRESHOLD) fcMastered++;
 
-  // Per-college success
-  const perCollege = new Map<string, { nom: string; total: number; correct: number }>();
-  for (const a of attempts) {
-    const m = a.qcm_questions.qcm_series.cours.matieres;
-    const e = perCollege.get(m.id) ?? { nom: m.nom, total: 0, correct: 0 };
-    e.total++; if (a.is_correct) e.correct++;
-    perCollege.set(m.id, e);
+  // Progression PAR COURS (Pédiatrie, Pneumologie…) — pas par matière.
+  // Chaque cours est l'unité visible côté élève sur la sidebar.
+  // Combine taux de réussite QCM + couverture vidéo/fiche pour donner
+  // un % unifié par item.
+  type CoursStats = {
+    id: string; titre: string; matiereNom: string;
+    attempts: number; correct: number;
+    videoDone: boolean; ficheDone: boolean;
+  };
+  const perCours = new Map<string, CoursStats>();
+
+  // Pré-remplit avec TOUS les cours accessibles (mêmes ceux sans attempt),
+  // pour qu'ils apparaissent à 0 % au lieu d'être absents.
+  for (const m of colleges) {
+    for (const c of m.cours ?? []) {
+      const cp = c.course_progress?.[0];
+      perCours.set(c.id, {
+        id: c.id, titre: c.titre, matiereNom: m.nom,
+        attempts: 0, correct: 0,
+        videoDone: !!cp?.video_watched,
+        ficheDone: !!cp?.fiche_read,
+      });
+    }
   }
-  const matieres = [...perCollege.entries()]
-    .map(([id, c]) => ({ id, nom: c.nom, value: Math.round((c.correct / c.total) * 100) }))
+  for (const a of attempts) {
+    const c = a.qcm_questions.qcm_series.cours;
+    const e = perCours.get(c.id);
+    if (!e) continue;
+    e.attempts++;
+    if (a.is_correct) e.correct++;
+  }
+
+  // Score par item = moyenne pondérée : 50 % taux de réussite QCM,
+  // 25 % vidéo vue, 25 % fiche lue. Si pas encore de QCM, on prend la
+  // couverture vidéo+fiche seule.
+  const matieres = [...perCours.values()]
+    .map((c) => {
+      const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
+      const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0)) / 2 * 100;
+      const value = c.attempts > 0
+        ? Math.round(successPct * 0.5 + coverage * 0.5)
+        : Math.round(coverage);
+      return { id: c.id, nom: c.titre, value, matiereNom: c.matiereNom };
+    })
     .sort((a, b) => a.value - b.value);
-  const toReview = matieres.filter((m) => m.value < 70).slice(0, 4);
+  const toReview = matieres.filter((m) => m.value < 70).slice(0, 5);
 
   // Performance area (30 days, attempts/day)
   const days: { label: string; value: number }[] = [];
@@ -148,14 +217,14 @@ export default async function AccueilPage() {
     ...sessions.slice(0, 6).map((s) => ({
       kind: s.qcm_series.type === 'annale' ? 'Annale' : 'QCM',
       label: s.qcm_series.label,
-      college: s.qcm_series.cours.matieres.nom,
+      college: s.qcm_series.cours.titre,
       when: s.finished_at ? new Date(s.finished_at).getTime() : 0,
       score: `${s.score_correct}/${s.score_total}`,
     })),
     ...reviews.slice(0, 4).map((r) => ({
       kind: 'Flashcards',
       label: 'Révision',
-      college: r.flashcards.cours.matieres.nom,
+      college: r.flashcards.cours.titre,
       when: new Date(r.reviewed_at).getTime(),
     })),
   ]
@@ -220,7 +289,7 @@ export default async function AccueilPage() {
             className="relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)"
           >
             <div
-              className="absolute inset-x-0 top-0 h-1"
+              className="absolute inset-x-0 top-0 h-[3px]"
               style={{ background: k.accent }}
               aria-hidden
             />
@@ -340,7 +409,7 @@ export default async function AccueilPage() {
             {(toReview.length > 0 ? toReview : matieres).slice(0, 8).map((m) => (
               <Link
                 key={m.id}
-                href={`/matieres/${m.id}`}
+                href={`/cours/${m.id}`}
                 className="group inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface-soft) py-1.5 pl-3 pr-2 text-xs transition-colors hover:border-(--color-accent)"
               >
                 <span className="font-medium text-(--color-ink)">{m.nom}</span>

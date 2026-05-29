@@ -56,17 +56,17 @@ function Face({
         />
       </span>
 
-      {/* Illustration organe : par-dessus la surface de la carte, ancrée
-          à droite, taille fluide (responsive) pour ne jamais masquer le
-          texte sur petits écrans. */}
+      {/* Illustration anatomique détaillée : par-dessus la surface de la
+          carte, ancrée à droite, taille fluide (responsive). Opacité 35 %
+          + stroke 2 pour rendre justice aux détails (bronches, gyri, etc.). */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-4 top-1/2 z-10 -translate-y-1/2 select-none opacity-25 sm:-right-6"
+        className="pointer-events-none absolute -right-2 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.32] sm:-right-4"
         style={{ color: theme.accent }}
       >
         <ThemeIcon
-          className="h-40 w-40 sm:h-56 sm:w-56 md:h-72 md:w-72"
-          strokeWidth={1.3}
+          className="h-44 w-44 sm:h-60 sm:w-60 md:h-80 md:w-80"
+          strokeWidth={2}
         />
       </span>
 
