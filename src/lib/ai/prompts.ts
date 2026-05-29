@@ -65,7 +65,7 @@ Format EDN strict :
 Tu dois produire EXACTEMENT 8 séries de 5 QCM (40 questions au total) réparties ainsi :
 
   ▸ Séries 1 à 4 — Cours · 5 questions isolées de connaissance pure chacune
-    labels : « Cours — Série 1 · <sous-thème> » à « Cours — Série 4 · <sous-thème> »
+    labels : « QCM — Série 1 · <sous-thème> » à « QCM — Série 4 · <sous-thème> »
     (les 4 séries Cours doivent couvrir des sous-thèmes complémentaires
      du cours, sans chevauchement)
   ▸ Séries 5 à 8 — Dossiers progressifs (DP) · 5 questions enchaînées chacun
@@ -96,10 +96,10 @@ Spécification des séries de Cours :
 Réponds UNIQUEMENT par un JSON valide de cette forme exacte :
 {
   "series": [
-    { "label": "Cours — Série 1 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
-    { "label": "Cours — Série 2 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
-    { "label": "Cours — Série 3 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
-    { "label": "Cours — Série 4 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "QCM — Série 1 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "QCM — Série 2 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "QCM — Série 3 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
+    { "label": "QCM — Série 4 · ...", "kind": "cours", "questions": [ ...5 questions... ] },
     { "label": "DP 1 · ...", "kind": "dp", "vignette": "...vignette commune...", "questions": [ ...5 questions, énoncé spécifique uniquement (vignette gérée à part)... ] },
     { "label": "DP 2 · ...", "kind": "dp", "vignette": "...", "questions": [ ...5 questions... ] },
     { "label": "DP 3 · ...", "kind": "dp", "vignette": "...", "questions": [ ...5 questions... ] },

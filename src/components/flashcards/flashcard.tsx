@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Info, RefreshCw, type LucideIcon } from 'lucide-react';
 import { Layers3 } from 'lucide-react';
@@ -27,13 +28,32 @@ function Face({
   const ThemeIcon = theme.Icon;
   return (
     <div
-      className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-lifted)"
+      className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border shadow-(--shadow-lifted)"
       style={{
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
         transform: back ? 'rotateY(180deg)' : undefined,
+        // Fond pastel doux dégradant depuis la teinte du thème vers
+        // blanc — la carte reste lisible mais porte l'identité du cours.
+        background: `linear-gradient(135deg, ${theme.bg} 0%, #FFFFFF 60%)`,
+        borderColor: theme.accent + '33',
       }}
     >
+      {/* Watermark logo Major ECN, ultra discret, centré derrière le texte. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.05]"
+      >
+        <Image
+          src="/major-ecn-logo.png"
+          alt=""
+          width={420}
+          height={420}
+          className="object-contain"
+          priority={false}
+        />
+      </span>
+
       {/* Illustration organe : par-dessus la surface de la carte, semi-
           transparente, ancrée à droite pour ne pas masquer le texte. */}
       <span

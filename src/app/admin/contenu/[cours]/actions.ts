@@ -380,8 +380,10 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
     let label: string;
     if (kind === 'cours') {
       coursSeen += 1;
-      label = s.label?.trim() || `Cours — Série ${coursSeen}`;
-      if (!/^cours/i.test(label)) label = `Cours — ${label}`;
+      label = s.label?.trim() || `QCM — Série ${coursSeen}`;
+      // Conversion des anciens libellés « Cours — … » + ajout du préfixe.
+      label = label.replace(/^cours\b/i, 'QCM');
+      if (!/^qcm/i.test(label)) label = `QCM — ${label}`;
     } else {
       dpSeen += 1;
       label = s.label?.trim() || `DP ${dpSeen}`;

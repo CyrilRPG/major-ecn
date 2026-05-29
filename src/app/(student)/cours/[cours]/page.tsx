@@ -131,7 +131,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               )}
             </div>
             <div className="relative mt-5">
-              <h3 className="text-lg font-semibold text-(--color-ink)">{a.label}</h3>
+              <h3 className="text-lg font-bold text-(--color-ink)">{a.label}</h3>
               <p className="mt-1.5 max-w-[80%] text-sm leading-relaxed text-(--color-ink-soft)">{a.desc}</p>
             </div>
             <span

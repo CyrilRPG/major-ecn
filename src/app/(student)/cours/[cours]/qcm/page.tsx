@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
@@ -36,17 +35,34 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const lastBySerie = new Map<string, { score_correct: number; score_total: number }>();
   for (const s of sessions ?? []) {
     if (!s.finished_at) continue;
-    if (!lastBySerie.has(s.serie_id)) lastBySerie.set(s.serie_id, { score_correct: s.score_correct, score_total: s.score_total });
+    if (!lastBySerie.has(s.serie_id))
+      lastBySerie.set(s.serie_id, { score_correct: s.score_correct, score_total: s.score_total });
   }
 
+  const isDp = (label: string) => /^dp\s*\d/i.test(label);
+
+  // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
+  const scoreTheme = (correct: number, total: number) => {
+    const r = total > 0 ? correct / total : 0;
+    if (r < 0.5) return { bg: '#FDE7E9', fg: '#C0001F' };
+    if (r < 0.8) return { bg: '#FEF3E2', fg: '#B26A00' };
+    return { bg: '#E7F6EC', fg: '#16793C' };
+  };
+
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-8">
-      <p className="mb-4 text-sm text-(--color-ink-soft)">
-        Chaque proposition est corrigée et justifiée immédiatement, au format EVC.
-      </p>
+    <div className="mx-auto w-full max-w-4xl px-4 py-5 lg:px-8">
+      {/* Bandeau d'info : ampoule + tagline EVC. */}
+      <div className="mb-4 flex items-center gap-3 rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3 shadow-(--shadow-soft)">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FEF3E2] text-[#B26A00]">
+          <Lightbulb className="h-4.5 w-4.5" />
+        </span>
+        <p className="text-sm text-(--color-ink-soft)">
+          Chaque proposition est corrigée et justifiée immédiatement, au format EVC.
+        </p>
+      </div>
 
       {!series || series.length === 0 ? (
-        <div className="rounded-xl border border-(--color-border) bg-(--color-surface)">
+        <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
           <EmptyState
             icon={ClipboardCheck}
             title="Pas encore de dossiers progressifs"
@@ -54,26 +70,61 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           />
         </div>
       ) : (
-        <ul className="divide-y divide-(--color-border) overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface)">
+        <ul className="space-y-2.5">
           {series.map((s, idx) => {
             const lr = lastBySerie.get(s.id);
             const qCount = s.qcm_questions?.length ?? 0;
+            const dp = isDp(s.label);
+            // Bleu pour QCM (Cours), rouge pour DP.
+            const theme = dp
+              ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList, kindLabel: 'DP' }
+              : { bar: '#2563EB', bg: '#E5F1FF', fg: '#1E4D8B', Icon: GraduationCap, kindLabel: 'QCM' };
+            const scoreT = lr ? scoreTheme(lr.score_correct, lr.score_total) : null;
             return (
               <li key={s.id}>
                 <Link
                   href={`/cours/${coursId}/qcm/${s.id}`}
-                  className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-(--color-sand-100) focus-ring"
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3.5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) font-mono text-xs font-semibold text-(--color-primary)">
+                  {/* Barre verticale colorée à gauche selon le type. */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-y-0 left-0 w-1.5"
+                    style={{ background: theme.bar }}
+                  />
+                  <span
+                    className="ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                    style={{ background: theme.bg, color: theme.fg }}
+                  >
+                    <theme.Icon className="h-5 w-5" />
+                  </span>
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold"
+                    style={{ background: theme.bg, color: theme.fg }}
+                  >
                     {String(idx + 1).padStart(2, '0')}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-(--color-ink)">{s.label}</p>
+                    <p className="truncate text-[15px] font-semibold text-(--color-ink)">{s.label}</p>
                     <p className="text-xs text-(--color-ink-muted)">
                       {qCount} questions · environ {Math.max(5, qCount * 2)} min
                     </p>
                   </div>
-                  {lr && <Badge variant="success">{lr.score_correct} / {lr.score_total}</Badge>}
+                  {scoreT ? (
+                    <span
+                      className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums"
+                      style={{ background: scoreT.bg, color: scoreT.fg }}
+                    >
+                      {lr!.score_correct} / {lr!.score_total}
+                    </span>
+                  ) : (
+                    <span
+                      className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
+                      style={{ background: theme.bg, color: theme.fg }}
+                    >
+                      {theme.kindLabel}
+                    </span>
+                  )}
                   <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </li>

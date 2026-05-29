@@ -8,13 +8,24 @@ import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 
+/** Active pill : dégradé rouge → orange identique sur tous les items
+ *  (top-level et sub-items). Reflète la maquette du client. */
+const ACTIVE_GRADIENT =
+  'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]';
+
 function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   const v = Math.min(100, Math.max(0, value));
-  const fill = active ? '#FFFFFF' : 'var(--color-accent)';
-  const track = active ? 'rgba(255,255,255,0.30)' : 'rgba(255,255,255,0.16)';
+  const fill = active ? '#FFFFFF' : '#E4002B';
+  const track = active ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)';
   return (
     <span className="flex shrink-0 items-center gap-1.5">
-      <span className={active ? 'w-7 text-right text-[11px] font-semibold tabular-nums text-white' : 'w-7 text-right text-[11px] font-medium tabular-nums text-white/55'}>
+      <span
+        className={
+          active
+            ? 'w-7 text-right text-[11px] font-semibold tabular-nums text-white'
+            : 'w-7 text-right text-[11px] font-medium tabular-nums text-white/55'
+        }
+      >
         {v}%
       </span>
       <span
@@ -30,7 +41,8 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const pathname = usePathname();
   const activeCoursId = pathname.startsWith('/cours/') ? pathname.split('/')[2] : null;
   const activeCollegeId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
-  // On est sur /matieres/<col>/annales/...
+  // Détection de /matieres/<col>/annales — pour surligner « Annales EVC »
+  // dans le sous-menu du bon collège.
   const activeAnnaleCollege =
     pathname.startsWith('/matieres/') && pathname.split('/')[3] === 'annales'
       ? pathname.split('/')[2]
@@ -65,48 +77,30 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const agendaActive = pathname.startsWith('/agenda');
   const forumActive = pathname.startsWith('/forum');
 
+  const topLevelClass = (active: boolean) =>
+    cn(
+      'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
+      active ? ACTIVE_GRADIENT : 'text-white/85 hover:bg-white/10 hover:text-white',
+    );
+
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
-      <Link
-        href="/accueil"
-        className={cn(
-          'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
-          homeActive
-            ? 'bg-(--color-accent) text-white'
-            : 'text-white/85 hover:bg-white/10 hover:text-white',
-        )}
-      >
+      <Link href="/accueil" className={topLevelClass(homeActive)}>
         <Home className="h-[18px] w-[18px] shrink-0" />
         Accueil
       </Link>
 
-      <Link
-        href="/entrainement"
-        className={cn(
-          'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
-          trainActive
-            ? 'bg-(--color-accent) text-white'
-            : 'text-white/85 hover:bg-white/10 hover:text-white',
-        )}
-      >
+      <Link href="/entrainement" className={topLevelClass(trainActive)}>
         <Target className="h-[18px] w-[18px] shrink-0" />
         Entraînement ciblé
       </Link>
 
-      <Link
-        href="/agenda"
-        className={cn(
-          'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
-          agendaActive
-            ? 'bg-(--color-accent) text-white'
-            : 'text-white/85 hover:bg-white/10 hover:text-white',
-        )}
-      >
+      <Link href="/agenda" className={topLevelClass(agendaActive)}>
         <CalendarDays className="h-[18px] w-[18px] shrink-0" />
         Agenda
       </Link>
 
-      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
         Médecine
       </p>
       {tree.length === 0 && (
@@ -123,21 +117,27 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
               className="group flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
             >
               <ChevronRight
-                className={cn('h-4 w-4 shrink-0 text-white/45 transition-transform', o && 'rotate-90')}
+                className={cn(
+                  'h-4 w-4 shrink-0 text-white/45 transition-transform',
+                  o && 'rotate-90',
+                )}
               />
               <Icon className="h-[18px] w-[18px] shrink-0 text-white" />
               <span className="flex-1 truncate">{col.nom}</span>
-              <span className="text-[11px] tabular-nums text-white/40">{col.cours.length}</span>
+              <span className="rounded-full bg-white/10 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white/70">
+                {col.cours.length}
+              </span>
             </button>
             {o && (
               <>
-                {/* Annales EVC en tête, avant les items du collège */}
+                {/* Annales EVC : entrée transversale, en tête du sous-menu
+                    du collège. Cliquable, surlignée quand on est dessus. */}
                 <Link
                   href={`/matieres/${col.id}/annales`}
                   className={cn(
                     'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                     col.id === activeAnnaleCollege
-                      ? 'bg-(--color-accent) font-medium text-white'
+                      ? `${ACTIVE_GRADIENT} font-medium`
                       : 'text-white/75 hover:bg-white/10 hover:text-white',
                   )}
                 >
@@ -167,8 +167,8 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
                     className={cn(
                       'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                       c.id === activeCoursId
-                        ? 'bg-(--color-accent) font-medium text-white'
-                        : 'text-white/65 hover:bg-white/10 hover:text-white',
+                        ? `${ACTIVE_GRADIENT} font-medium`
+                        : 'text-white/70 hover:bg-white/10 hover:text-white',
                     )}
                   >
                     <span className="flex-1 truncate">{c.titre}</span>
@@ -181,18 +181,10 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
         );
       })}
 
-      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
         Communauté
       </p>
-      <Link
-        href="/forum"
-        className={cn(
-          'flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
-          forumActive
-            ? 'bg-(--color-accent) text-white'
-            : 'text-white/85 hover:bg-white/10 hover:text-white',
-        )}
-      >
+      <Link href="/forum" className={topLevelClass(forumActive)}>
         <MessagesSquare className="h-[18px] w-[18px] shrink-0" />
         Forum Q&amp;R
       </Link>

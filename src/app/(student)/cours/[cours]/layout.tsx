@@ -64,7 +64,7 @@ export default async function CoursLayout({
     <StudyConsole
       coursId={coursId}
       titre={c.titre}
-      context={`${c.matieres.nom} · ${c.matieres.semestres.label}`}
+      context={`${c.matieres.nom} · Programme EDN`}
       availability={availability}
       mastery={mastery}
     >
