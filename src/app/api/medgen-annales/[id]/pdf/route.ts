@@ -89,48 +89,45 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     }
   } catch {/* ignore */}
 
-  /** Dessine UN seul watermark identité (nom + email) en diagonale centré.
-   * Géométrie corrigée : on calcule la position du coin bas-gauche du texte
-   * pour que son CENTRE GÉOMÉTRIQUE tombe au centre de la page, en
-   * compensant la rotation. */
-  const drawCenteredWatermark = (
+  /** Dessine un watermark identité (nom + email) en diagonale, centré
+   *  horizontalement, à la hauteur yRatio (0 = bas, 1 = haut). Appelé deux
+   *  fois par page pour matérialiser le marquage au tiers supérieur ET
+   *  inférieur (le logo Major ECN reste au centre). */
+  const drawIdentityWatermark = (
     page: ReturnType<typeof pdf.getPages>[number],
     width: number,
     height: number,
+    yRatio: number,
   ) => {
-    const angleDeg = 30;
+    const angleDeg = 28;
     const a = (angleDeg * Math.PI) / 180;
-    const sizeBig = Math.max(26, Math.min(width, height) * 0.05);
-    const sizeSmall = sizeBig * 0.55;
+    const sizeBig = Math.max(24, Math.min(width, height) * 0.045);
+    const sizeSmall = sizeBig * 0.6;
     const cx = width / 2;
-    const cy = height / 2;
+    const cy = height * yRatio;
 
     const drawAtCenter = (text: string, size: number, offsetY: number) => {
       if (!text) return;
       const tw = font.widthOfTextAtSize(text, size);
-      // Le centre du texte (avant rotation, autour de (x,y) bas-gauche) est
-      // à (x + tw/2, y + size/2). Après rotation a autour de (x,y), il se
-      // retrouve à (x + (tw/2)·cos a − (size/2)·sin a,
-      //              y + (tw/2)·sin a + (size/2)·cos a). On veut que ça
-      // tombe sur (cx, cy + offsetY).
+      // Compense la rotation pour que le CENTRE du texte tombe en (cx, cy+offset).
       const x = cx - (tw / 2) * Math.cos(a) + (size / 2) * Math.sin(a) - offsetY * Math.sin(a);
       const y = cy - (tw / 2) * Math.sin(a) - (size / 2) * Math.cos(a) + offsetY * Math.cos(a);
       page.drawText(text, {
         x, y, size, font,
         color: rgb(0.55, 0.55, 0.6),
-        opacity: 0.16,
+        opacity: 0.09,
         rotate: degrees(angleDeg),
       });
     };
 
-    drawAtCenter(nom || 'Major ECN', sizeBig, sizeBig * 0.4);
+    drawAtCenter(nom || 'Major ECN', sizeBig, sizeBig * 0.45);
     if (emailSafe) drawAtCenter(emailSafe, sizeSmall, -sizeBig * 0.55);
   };
 
   for (const page of pdf.getPages()) {
     const { width, height } = page.getSize();
 
-    // 1. Logo Major ECN en filigrane de fond (centré, très transparent)
+    // 1. Logo Major ECN en filigrane de fond (centré, très transparent) — inchangé.
     if (logoImage) {
       const targetW = Math.min(width, height) * 0.5;
       const scale = targetW / logoImage.width;
@@ -145,8 +142,11 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
       });
     }
 
-    // 2. Un seul watermark identité, en diagonale centrée
-    drawCenteredWatermark(page, width, height);
+    // 2. Deux watermarks identité, au tiers supérieur (yRatio = 2/3) et au
+    //    tiers inférieur (yRatio = 1/3). Le logo Major ECN reste au centre,
+    //    encadré par les deux marquages.
+    drawIdentityWatermark(page, width, height, 2 / 3);
+    drawIdentityWatermark(page, width, height, 1 / 3);
   }
 
   let out: Uint8Array;

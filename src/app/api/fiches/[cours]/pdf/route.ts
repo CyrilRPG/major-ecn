@@ -68,7 +68,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
       size: sizeBig,
       font,
       color: rgb(0.45, 0.45, 0.45),
-      opacity: 0.22,
+      opacity: 0.09,
       rotate: degrees(28),
     });
 
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
         size: sizeSmall,
         font,
         color: rgb(0.45, 0.45, 0.45),
-        opacity: 0.22,
+        opacity: 0.09,
         rotate: degrees(28),
       });
     }
