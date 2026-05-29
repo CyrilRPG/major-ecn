@@ -151,7 +151,13 @@ export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:min-h-0 lg:grid-cols-7">
         {dates.map((date, i) => {
           const dayNum = i + 1;
-          const platformEvs = PLATFORM_EVENTS.filter((e) => e.day === dayNum);
+          // Les évènements plateforme ne s'affichent QUE sur la semaine
+          // courante (offset 0). Les semaines passées/futures restent
+          // exclusivement personnelles : on n'imprime pas un calendrier
+          // de cours qui n'aura pas lieu.
+          const platformEvs = weekOffset === 0
+            ? PLATFORM_EVENTS.filter((e) => e.day === dayNum)
+            : [];
           const dayUserEvs = userEvents
             .filter((e) => e.date === dateKey(date))
             .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));

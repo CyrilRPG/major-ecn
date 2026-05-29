@@ -90,16 +90,13 @@ export function FlashcardSession({
     [card, submitting],
   );
 
-  // Keyboard: Espace = retourner ; ←/→ + 1-4 = difficulté (carte retournée).
+  // Keyboard: plus de raccourci pour retourner la carte (Espace/Entrée
+  // désactivés sur demande, pour éviter les flips accidentels). Seuls
+  // ←/→ et 1-4 restent actifs, et UNIQUEMENT côté verso pour noter la
+  // difficulté.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!card) return;
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        setFlipped((f) => !f);
-        return;
-      }
-      if (!flipped) return;
+      if (!card || !flipped) return;
       if (e.key === 'ArrowLeft') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[0]); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[3]); }
       else if (e.key >= '1' && e.key <= '4') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[Number(e.key) - 1]); }
@@ -201,10 +198,7 @@ export function FlashcardSession({
           </>
         ) : (
           <p className="text-center text-xs text-(--color-ink-soft) sm:text-sm">
-            <span className="sm:hidden">Tape ou clique sur la carte pour la retourner.</span>
-            <span className="hidden sm:inline">
-              Retourne la carte (clic ou <kbd className="rounded border border-(--color-border) bg-(--color-surface) px-1.5 py-0.5">Espace</kbd>) pour révéler la réponse.
-            </span>
+            Clique sur la carte pour la retourner et révéler la réponse.
           </p>
         )}
       </div>

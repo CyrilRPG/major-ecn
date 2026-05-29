@@ -143,17 +143,14 @@ export function Flashcard({
   total: number;
   theme?: ThemeShape;
 }) {
+  // Carte cliquable uniquement (clic / tap). Plus de raccourci Espace ni
+  // Entrée pour le flip — c'était demandé pour éviter les flips
+  // accidentels quand l'élève tape dans un champ ou navigue au clavier.
   return (
     <div
       role="button"
-      tabIndex={0}
+      tabIndex={-1}
       onClick={onFlip}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onFlip();
-        }
-      }}
       className="w-full max-w-5xl cursor-pointer rounded-2xl focus-ring"
       style={{ perspective: '1600px' }}
     >
