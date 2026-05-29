@@ -89,41 +89,42 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
     }
   } catch {/* ignore */}
 
-  /** Dessine un watermark 2 lignes (nom prénom + email) centré au yRatio donné. */
-  const drawWatermark = (
+  /** Dessine UN seul watermark identité (nom + email) en diagonale centré.
+   * Géométrie corrigée : on calcule la position du coin bas-gauche du texte
+   * pour que son CENTRE GÉOMÉTRIQUE tombe au centre de la page, en
+   * compensant la rotation. */
+  const drawCenteredWatermark = (
     page: ReturnType<typeof pdf.getPages>[number],
     width: number,
     height: number,
-    yRatio: number,
   ) => {
-    const sizeBig = Math.max(28, Math.min(width, height) * 0.06);
-    const sizeSmall = sizeBig * 0.7;
+    const angleDeg = 30;
+    const a = (angleDeg * Math.PI) / 180;
+    const sizeBig = Math.max(26, Math.min(width, height) * 0.05);
+    const sizeSmall = sizeBig * 0.55;
     const cx = width / 2;
-    const cy = height * yRatio;
+    const cy = height / 2;
 
-    const tw1 = font.widthOfTextAtSize(nom || 'Major ECN', sizeBig);
-    page.drawText(nom || 'Major ECN', {
-      x: cx - (tw1 / 2) * Math.cos(Math.PI / 6.43),
-      y: cy + 8,
-      size: sizeBig,
-      font,
-      color: rgb(0.45, 0.45, 0.45),
-      opacity: 0.22,
-      rotate: degrees(28),
-    });
-
-    if (emailSafe) {
-      const tw2 = font.widthOfTextAtSize(emailSafe, sizeSmall);
-      page.drawText(emailSafe, {
-        x: cx - (tw2 / 2) * Math.cos(Math.PI / 6.43),
-        y: cy - sizeBig * 0.6,
-        size: sizeSmall,
-        font,
-        color: rgb(0.45, 0.45, 0.45),
-        opacity: 0.22,
-        rotate: degrees(28),
+    const drawAtCenter = (text: string, size: number, offsetY: number) => {
+      if (!text) return;
+      const tw = font.widthOfTextAtSize(text, size);
+      // Le centre du texte (avant rotation, autour de (x,y) bas-gauche) est
+      // à (x + tw/2, y + size/2). Après rotation a autour de (x,y), il se
+      // retrouve à (x + (tw/2)·cos a − (size/2)·sin a,
+      //              y + (tw/2)·sin a + (size/2)·cos a). On veut que ça
+      // tombe sur (cx, cy + offsetY).
+      const x = cx - (tw / 2) * Math.cos(a) + (size / 2) * Math.sin(a) - offsetY * Math.sin(a);
+      const y = cy - (tw / 2) * Math.sin(a) - (size / 2) * Math.cos(a) + offsetY * Math.cos(a);
+      page.drawText(text, {
+        x, y, size, font,
+        color: rgb(0.55, 0.55, 0.6),
+        opacity: 0.16,
+        rotate: degrees(angleDeg),
       });
-    }
+    };
+
+    drawAtCenter(nom || 'Major ECN', sizeBig, sizeBig * 0.4);
+    if (emailSafe) drawAtCenter(emailSafe, sizeSmall, -sizeBig * 0.55);
   };
 
   for (const page of pdf.getPages()) {
@@ -131,7 +132,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
 
     // 1. Logo Major ECN en filigrane de fond (centré, très transparent)
     if (logoImage) {
-      const targetW = Math.min(width, height) * 0.62;
+      const targetW = Math.min(width, height) * 0.5;
       const scale = targetW / logoImage.width;
       const w = logoImage.width * scale;
       const h = logoImage.height * scale;
@@ -140,13 +141,12 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
         y: (height - h) / 2,
         width: w,
         height: h,
-        opacity: 0.06,
+        opacity: 0.035,
       });
     }
 
-    // 2. Deux watermarks identité — à 1/3 et 2/3 de la hauteur, en diagonale
-    drawWatermark(page, width, height, 2 / 3);
-    drawWatermark(page, width, height, 1 / 3);
+    // 2. Un seul watermark identité, en diagonale centrée
+    drawCenteredWatermark(page, width, height);
   }
 
   let out: Uint8Array;
