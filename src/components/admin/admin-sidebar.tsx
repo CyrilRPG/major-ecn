@@ -35,7 +35,7 @@ function readProfContentAccess(scope: unknown): boolean {
   return hasAnyContentAccess(s as never);
 }
 
-const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
+const BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();

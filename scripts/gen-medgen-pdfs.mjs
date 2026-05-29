@@ -146,7 +146,7 @@ async function generatePdf({ annee, type }, data) {
   const drawPageFooter = (page, pageNum) => {
     // Filet + pagination + signature discrète
     page.drawRectangle({ x: MARGIN_X, y: FOOTER_H + 8, width: CONTENT_W, height: 0.4, color: BORDER });
-    page.drawText('Annales officielles EVC · Médecine générale (code 71)', {
+    page.drawText('Annales officielles EVC · Médecine générale', {
       x: MARGIN_X, y: FOOTER_H - 10,
       size: 8, font: fontRegular, color: MUTED,
     });
@@ -205,7 +205,7 @@ async function generatePdf({ annee, type }, data) {
     size: 12, font: fontRegular, color: INK_SOFT,
   });
   // Discipline
-  const discipline = 'Médecine générale (code 71)';
+  const discipline = 'Médecine générale';
   cover.drawText(discipline, {
     x: (PAGE_W - fontBold.widthOfTextAtSize(discipline, 16)) / 2,
     y: centerY - 36,

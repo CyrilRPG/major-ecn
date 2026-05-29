@@ -171,13 +171,35 @@ export default async function AccueilPage() {
     return d === 1 ? 'hier' : `il y a ${d} j`;
   };
   const kpis = [
-    { Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%` },
-    { Icon: Target, label: 'Taux de réussite', value: `${successRate}%` },
-    { Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length },
-    { Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered}/${flashcardsTotal ?? 0}` },
+    {
+      Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%`,
+      hint: `${stepsDone} / ${stepsTotal} items revus`,
+      accent: '#5B8DEF', // bleu
+    },
+    {
+      Icon: Target, label: 'Taux de réussite', value: `${successRate}%`,
+      hint: `${correct} / ${totalAttempts} QCM réussis`,
+      accent: '#22C55E', // vert
+    },
+    {
+      Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length,
+      hint: `sur ${Math.max(totalAttempts, 0)} QCM`,
+      accent: '#E4002B', // rouge
+    },
+    {
+      Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered} / ${flashcardsTotal ?? 0}`,
+      hint: flashcardsTotal ? `${Math.round((fcMastered / flashcardsTotal) * 100)}% du deck étudié` : '—',
+      accent: '#8B5CF6', // violet
+    },
   ];
 
   const barColor = (v: number) => (v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E');
+
+  const priorityPill = (v: number) => {
+    if (v < 50) return { label: 'Urgent', bg: '#FDE7E9', fg: '#C0001F' };
+    if (v < 75) return { label: 'À revoir', bg: '#FEF3E2', fg: '#B26A00' };
+    return { label: 'En progrès', bg: '#E7F6EC', fg: '#16793C' };
+  };
 
   return (
     <div className="flex flex-col gap-3 px-4 py-3 lg:h-full lg:overflow-hidden lg:px-6">
@@ -189,18 +211,31 @@ export default async function AccueilPage() {
         </h1>
       </div>
 
-      {/* KPI row */}
+      {/* KPI row — chaque carte a un trait coloré en haut + une pastille
+          d'icône assortie. */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {kpis.map((k) => (
-          <Card key={k.label}>
+          <div
+            key={k.label}
+            className="relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)"
+          >
+            <div
+              className="absolute inset-x-0 top-0 h-1"
+              style={{ background: k.accent }}
+              aria-hidden
+            />
             <div className="flex items-center gap-2 text-(--color-ink-muted)">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
-                <k.Icon className="h-3.5 w-3.5" />
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ background: `${k.accent}1A`, color: k.accent }}
+              >
+                <k.Icon className="h-4 w-4" />
               </span>
-              <span className="text-xs">{k.label}</span>
+              <span className="text-xs font-medium">{k.label}</span>
             </div>
-            <p className="mt-2 text-2xl font-bold tracking-tight text-(--color-ink)">{k.value}</p>
-          </Card>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-(--color-ink) lg:text-3xl">{k.value}</p>
+            <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">{k.hint}</p>
+          </div>
         ))}
       </div>
 
@@ -219,22 +254,33 @@ export default async function AccueilPage() {
           </div>
         </Card>
 
-        {/* Matières à prioriser */}
+        {/* Matières à prioriser — barres + pill statut Urgent/À revoir/En progrès */}
         <Card className="flex min-h-0 flex-col">
           <h2 className="text-sm font-semibold text-(--color-ink)">Matières à prioriser</h2>
           {matieres.length > 0 ? (
-            <ul className="mt-2 space-y-2">
-              {matieres.slice(0, 5).map((m) => (
-                <li key={m.id}>
-                  <div className="mb-0.5 flex items-center justify-between text-xs">
-                    <span className="truncate text-(--color-ink)">{m.nom}</span>
-                    <span className="font-semibold tabular-nums text-(--color-ink-soft)">{m.value}%</span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-(--color-sand-200)">
-                    <div className="h-full rounded-full" style={{ width: `${m.value}%`, background: barColor(m.value) }} />
-                  </div>
-                </li>
-              ))}
+            <ul className="mt-2 space-y-2.5">
+              {matieres.slice(0, 5).map((m) => {
+                const pill = priorityPill(m.value);
+                return (
+                  <li key={m.id}>
+                    <div className="mb-1 flex items-center justify-between gap-2 text-xs">
+                      <span className="truncate text-(--color-ink)">{m.nom}</span>
+                      <span className="flex items-center gap-1.5">
+                        <span className="font-semibold tabular-nums text-(--color-ink-soft)">{m.value}%</span>
+                        <span
+                          className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
+                          style={{ background: pill.bg, color: pill.fg }}
+                        >
+                          {pill.label}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-(--color-sand-200)">
+                      <div className="h-full rounded-full" style={{ width: `${m.value}%`, background: barColor(m.value) }} />
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p className="py-6 text-center text-xs text-(--color-ink-muted)">Lancez vos premiers QCM.</p>

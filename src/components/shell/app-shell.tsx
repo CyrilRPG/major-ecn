@@ -12,7 +12,10 @@ import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
-const SIDEBAR_BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
+// Dégradé navy → indigo profond → bordeaux sombre (de haut en bas).
+// Apporte de la chaleur tout en gardant le côté sérieux du navy.
+const SIDEBAR_BG =
+  'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 function SidebarProgress({ tree }: { tree: NavCollege[] }) {
   const cours = tree.flatMap((c) => c.cours);
@@ -131,8 +134,9 @@ export function AppShell({
         <main
           className={cn(
             'min-h-0 flex-1 overflow-y-auto',
-            'bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,color-mix(in_srgb,var(--color-primary)_10%,transparent),transparent_60%),radial-gradient(ellipse_60%_50%_at_100%_100%,color-mix(in_srgb,var(--color-accent)_8%,transparent),transparent_55%)]',
-            'bg-(--color-surface-soft)',
+            // Dégradé blanc → rouge très clair, appliqué sur toute la zone
+            // de contenu (étudiant + admin).
+            'bg-[linear-gradient(180deg,#FFFFFF_0%,#FFFBFC_45%,#FDF1F3_100%)]',
           )}
         >
           {children}

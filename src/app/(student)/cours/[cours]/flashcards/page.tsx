@@ -71,6 +71,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
       total={allCards.length}
       coursId={coursId}
       backHref={`/cours/${coursId}`}
+      collegeName={c.matieres?.nom}
     />
   );
 }
