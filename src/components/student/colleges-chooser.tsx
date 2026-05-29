@@ -39,7 +39,7 @@ export function CollegesChooser({
     return (
       <a
         href="/entrainement/session"
-        className="inline-flex items-center gap-2.5 rounded-xl bg-(--color-primary) px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+        className="inline-flex items-center gap-2.5 rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-6 py-3.5 text-base font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
       >
         <Play className="h-5 w-5 fill-current" />
         Lancer l’entraînement ciblé

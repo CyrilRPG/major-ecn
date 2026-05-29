@@ -6,7 +6,17 @@ import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 
-type Action = { href: string; label: string; desc: string; Icon: LucideIcon; available: boolean };
+type Action = {
+  href: string;
+  label: string;
+  desc: string;
+  Icon: LucideIcon;
+  available: boolean;
+  /** Couleur primaire de la carte (accent + icône). */
+  accent: string;
+  /** Fond pastel doux pour le conteneur d'icône. */
+  bg: string;
+};
 
 export default async function CoursApercuPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -33,20 +43,45 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       { onConflict: 'user_id,cours_id', ignoreDuplicates: false },
     );
 
-  // Parcours pédagogique : vidéo · fiche · QCM/DP · flashcards.
-  // Les annales EVC sont désormais une section transverse (sous Médecine
-  // générale, pas sous chaque item) → routes /matieres/[matiere]/annales.
+  // 5 cartes du parcours pédagogique : vidéo, fiche, DP&QI, annales, flashcards.
+  // Chaque carte porte sa propre couleur (alignée sur la maquette).
   const actions: Action[] = [
-    { href: `/cours/${coursId}/video`, label: 'Cours vidéo', desc: 'Le cours filmé, aligné sur les recommandations HAS.', Icon: MonitorPlay, available: (c.videos ?? []).some((v) => !!v.storage_path) },
-    { href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive', desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.', Icon: FileText, available: (c.fiches ?? []).some((f) => !!f.storage_path) },
-    { href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI', desc: 'Entraînement au format EVC, corrigé et justifié item par item.', Icon: ClipboardCheck, available: (c.qcm_series ?? []).some((s) => s.type === 'qcm') },
-    { href: `/cours/${coursId}/flashcards`, label: 'Flashcards', desc: 'Révision espacée pondérée par votre niveau de difficulté.', Icon: Layers3, available: (c.flashcards?.length ?? 0) > 0 },
+    {
+      href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+      desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+      Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+      available: (c.videos ?? []).some((v) => !!v.storage_path),
+    },
+    {
+      href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+      desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
+      Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
+      available: (c.fiches ?? []).some((f) => !!f.storage_path),
+    },
+    {
+      href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+      desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+      Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+      available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+    },
+    {
+      href: `/matieres/${c.matiere_id}/annales`, label: 'Annales EVC',
+      desc: 'Les sujets des sessions précédentes, en conditions concours.',
+      Icon: History, accent: '#2563EB', bg: '#E5F1FF',
+      available: (c.qcm_series ?? []).some((s) => s.type === 'annale'),
+    },
+    {
+      href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
+      desc: 'Révisez et mémorisez les points clés du programme.',
+      Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+      available: (c.flashcards?.length ?? 0) > 0,
+    },
   ];
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-5 py-8 lg:px-10">
+    <div className="mx-auto w-full max-w-6xl px-5 py-6 lg:px-8">
       {c.description && (
-        <div className="mb-8 rounded-2xl border border-(--color-border) bg-gradient-to-br from-(--color-primary-soft) to-transparent p-6">
+        <div className="mb-6 rounded-2xl border border-(--color-border) bg-gradient-to-br from-(--color-primary-soft) to-transparent p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)">
             {c.matieres.nom}
           </p>
@@ -59,27 +94,50 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           <Link
             key={a.href}
             href={a.href}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted) focus-ring"
+            aria-disabled={!a.available || undefined}
+            className="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
           >
+            {/* Halo pastel doux dégradant depuis la droite — couleur du
+                thème, jamais opaque sur le texte. */}
             <span
               aria-hidden
-              className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-(--color-primary) to-(--color-accent) transition-transform duration-300 group-hover:scale-x-100"
+              className="pointer-events-none absolute inset-0 opacity-60"
+              style={{ background: `linear-gradient(135deg, transparent 55%, ${a.bg} 100%)` }}
             />
-            <div className="flex items-start justify-between">
-              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary) transition-colors group-hover:bg-(--color-primary) group-hover:text-white">
-                <a.Icon className="h-7 w-7" />
+
+            {/* Icône organe géante en watermark à droite. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-6 bottom-0 select-none opacity-[0.10]"
+              style={{ color: a.accent }}
+            >
+              <a.Icon className="h-44 w-44" strokeWidth={1.4} />
+            </span>
+
+            <div className="relative flex items-start justify-between">
+              <span
+                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: a.bg, color: a.accent }}
+              >
+                <a.Icon className="h-6 w-6" />
               </span>
               {!a.available && (
-                <span className="rounded-full bg-(--color-sand-200) px-2.5 py-0.5 text-[10px] uppercase tracking-wide text-(--color-ink-muted)">
+                <span
+                  className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em]"
+                  style={{ background: a.bg, color: a.accent }}
+                >
                   Bientôt
                 </span>
               )}
             </div>
-            <div className="mt-6">
+            <div className="relative mt-5">
               <h3 className="text-lg font-semibold text-(--color-ink)">{a.label}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{a.desc}</p>
+              <p className="mt-1.5 max-w-[80%] text-sm leading-relaxed text-(--color-ink-soft)">{a.desc}</p>
             </div>
-            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-accent-deep)">
+            <span
+              className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold"
+              style={{ color: a.accent }}
+            >
               Ouvrir
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>

@@ -44,7 +44,6 @@ export function FlashcardSession({
   collegeName?: string;
 }) {
   const theme = themeFor(collegeName);
-  const ThemeIcon = theme.Icon;
   const [queue, setQueue] = useState<FlashcardInput[]>(() =>
     cards.filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD).sort((a, b) => a.score - b.score),
   );
@@ -144,21 +143,8 @@ export function FlashcardSession({
   const pct = total === 0 ? 100 : (mastered / total) * 100;
 
   return (
-    <div
-      className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 py-2 sm:px-6"
-      style={{ background: `linear-gradient(135deg, ${theme.bg} 0%, transparent 65%)` }}
-    >
-      {/* Icône organe floue en arrière-plan (à droite). Décorative, n'inter-
-          fère pas avec le contenu. */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 select-none opacity-[0.10] blur-[1px]"
-        style={{ color: theme.accent }}
-      >
-        <ThemeIcon className="h-72 w-72" strokeWidth={1.2} />
-      </span>
-
-      <div className="relative mb-3 flex w-full items-center justify-between gap-4">
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 py-2 sm:px-6">
+      <div className="mb-3 flex w-full items-center justify-between gap-4">
         <Button asChild variant="ghost" size="sm">
           <Link href={backHref}>
             <ArrowLeft />
@@ -177,7 +163,7 @@ export function FlashcardSession({
           <span className="font-semibold text-(--color-ink)">{mastered}</span> / {total} acquise{mastered > 1 ? 's' : ''}
         </p>
       </div>
-      <Progress value={pct} className="relative mb-4 w-full" />
+      <Progress value={pct} className="mb-4 w-full" />
 
       <motion.div
         key={`${card.id}-${card.score}`}
@@ -193,6 +179,7 @@ export function FlashcardSession({
           onFlip={() => setFlipped((f) => !f)}
           index={mastered}
           total={total}
+          theme={theme}
         />
       </motion.div>
 

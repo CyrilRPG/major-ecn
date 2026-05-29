@@ -22,21 +22,29 @@ export type FlashcardTheme = {
 };
 
 const THEMES: Record<string, FlashcardTheme> = {
+  // Disciplines médicales (= cours dans la matière « Médecine générale »).
+  // Couleurs alignées sur la maquette de référence.
   'Cardiologie':            { bg: '#FDE7E9', accent: '#C0001F', Icon: Heart },
   'Pneumologie':            { bg: '#E5F1FF', accent: '#1E4D8B', Icon: Activity },
   'Néphrologie':            { bg: '#F1E8FD', accent: '#5B2BB8', Icon: Droplet },
   'Gastro-entérologie':     { bg: '#E7F6EC', accent: '#16793C', Icon: Pill },
+  'Gastroentérologie':      { bg: '#E7F6EC', accent: '#16793C', Icon: Pill },
+  'Hépato-gastro':          { bg: '#E7F6EC', accent: '#16793C', Icon: Pill },
   'Hématologie':            { bg: '#FBE6E6', accent: '#9F1F1F', Icon: Droplet },
-  'Dermatologie':           { bg: '#EDE8E2', accent: '#6B5B43', Icon: Sparkles },
+  'Dermatologie':           { bg: '#E0F2EF', accent: '#0F6F66', Icon: Sparkles },
   'ORL':                    { bg: '#FFEAD9', accent: '#A24F00', Icon: Ear },
   'Ophtalmologie':          { bg: '#E0F2EF', accent: '#0F6F66', Icon: Eye },
-  'Allergologie':           { bg: '#FFEED5', accent: '#A65500', Icon: ShieldAlert },
+  'Allergologie':           { bg: '#FFF7DC', accent: '#A65500', Icon: ShieldAlert },
   'Gériatrie':              { bg: '#EEF6E2', accent: '#3E6F1A', Icon: Stethoscope },
   'Gynécologie':            { bg: '#FBE4F0', accent: '#8C1A55', Icon: Sparkles },
   'Obstétrique':            { bg: '#FCE7F1', accent: '#8C1A55', Icon: Baby },
   'Urologie':               { bg: '#E5F0FA', accent: '#1F4F88', Icon: Stethoscope },
   'Médecine interne':       { bg: '#E4ECF8', accent: '#244C8C', Icon: Stethoscope },
+  // « Médecine générale » apparaît en tant que matière conteneur :
+  // pas de cours portant ce nom — on garde une entrée pour cohérence.
   'Médecine générale':      { bg: '#FFF1E6', accent: '#B35900', Icon: Stethoscope },
+  // Maladies infectieuses & Infectiologie partagent le même thème vert.
+  'Infectiologie':          { bg: '#E7F6EC', accent: '#16793C', Icon: Microscope },
   'Maladies infectieuses':  { bg: '#E7F6EC', accent: '#16793C', Icon: Microscope },
   'Pédiatrie':              { bg: '#E7F4F8', accent: '#0E5A75', Icon: Baby },
   'Endocrinologie':         { bg: '#F1E8FD', accent: '#5B2BB8', Icon: FlaskConical },
