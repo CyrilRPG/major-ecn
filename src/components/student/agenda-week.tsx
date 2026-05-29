@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { CalendarDays, Clock, ExternalLink, Plus, Star, Trash2, User, Video } from 'lucide-react';
+import { CalendarDays, ChevronLeft, ChevronRight, Clock, ExternalLink, Plus, Star, Trash2, User, Video } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -68,12 +68,16 @@ const COLORS: Record<ColorKey, { bg: string; fg: string; tag: string; label: str
 /* ────────────────────────────────────────────────────────────────────────── */
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
-function weekDates(): Date[] {
+/**
+ * Renvoie les 7 jours (lundi → dimanche) de la semaine courante décalée
+ * de `offset` semaines (négatif = passé, positif = futur).
+ */
+function weekDates(offset = 0): Date[] {
   const now = new Date();
-  const dow = (now.getDay() + 6) % 7; // 0 = Monday
+  const dow = (now.getDay() + 6) % 7; // 0 = lundi
   const monday = new Date(now);
   monday.setHours(0, 0, 0, 0);
-  monday.setDate(now.getDate() - dow);
+  monday.setDate(now.getDate() - dow + offset * 7);
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
@@ -85,15 +89,65 @@ const dateKey = (d: Date) => d.toISOString().slice(0, 10);
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
-  const dates = weekDates();
+  // Décalage en semaines par rapport à la semaine courante (0 = cette
+  // semaine, -1 = semaine précédente, +1 = semaine prochaine…).
+  const [weekOffset, setWeekOffset] = useState(0);
+  const dates = weekDates(weekOffset);
   const todayKey = new Date().toDateString();
   const [selectedPlatform, setSelectedPlatform] = useState<(PlatformEv & { date: Date }) | null>(null);
   const [selectedPersonal, setSelectedPersonal] = useState<UserEvent | null>(null);
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<UserEvent | null>(null);
 
+  // Libellé de la semaine en cours (ex. « 27 mai → 2 juin 2026 »).
+  const weekLabel = (() => {
+    const first = dates[0];
+    const last = dates[6];
+    const sameMonth = first.getMonth() === last.getMonth();
+    const fmtDay = new Intl.DateTimeFormat('fr-FR', { day: 'numeric' });
+    const fmtFull = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' });
+    const year = last.getFullYear();
+    return sameMonth
+      ? `${fmtDay.format(first)} → ${fmtFull.format(last)} ${year}`
+      : `${fmtFull.format(first)} → ${fmtFull.format(last)} ${year}`;
+  })();
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {/* Barre de navigation semaine */}
+      <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2 shadow-(--shadow-soft)">
+        <button
+          type="button"
+          onClick={() => setWeekOffset((o) => o - 1)}
+          aria-label="Semaine précédente"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) transition-colors hover:bg-(--color-sand-100) hover:text-(--color-ink)"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <div className="flex flex-1 items-center justify-center gap-2">
+          <p className="text-sm font-semibold text-(--color-ink) first-letter:uppercase">
+            {weekLabel}
+          </p>
+          {weekOffset !== 0 && (
+            <button
+              type="button"
+              onClick={() => setWeekOffset(0)}
+              className="rounded-full bg-(--color-primary-soft) px-2.5 py-0.5 text-[11px] font-semibold text-(--color-primary-deep) hover:bg-(--color-primary)/15"
+            >
+              Aujourd’hui
+            </button>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => setWeekOffset((o) => o + 1)}
+          aria-label="Semaine suivante"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) transition-colors hover:bg-(--color-sand-100) hover:text-(--color-ink)"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:min-h-0 lg:grid-cols-7">
         {dates.map((date, i) => {
           const dayNum = i + 1;

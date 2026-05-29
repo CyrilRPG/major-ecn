@@ -19,23 +19,46 @@ import { embedOne, toPgVector } from '@/lib/ai/embeddings';
  * par mots-clés sur flashcards/QCM, comme l'ancien comportement.
  */
 
+// Phrase d'abstention : naturelle, sans jargon de RAG ni mention « contenus ».
 const ABSTENTION =
-  'Cette information ne figure pas dans les contenus du cours. ' +
-  'Pose ta question à un professeur via le forum pour une réponse fiable.';
+  "Je n'ai pas cette réponse précise pour ce cours — passe par le forum " +
+  "pour qu'un prof te confirme.";
 
-const SYSTEM_PROMPT = `Tu es un assistant pédagogique pour le concours EVC.
-Tu réponds UNIQUEMENT à partir des extraits de cours fournis.
+// Prompt système : on positionne Claude comme un médecin-enseignant qui
+// répond à un externe. La fiche est la SOURCE PRIORITAIRE quand elle existe,
+// mais Claude ne doit jamais le mentionner (« d'après la fiche… », « le QCM
+// indique… » → interdits). L'élève doit avoir l'impression d'avoir un prof
+// en face de lui, pas un système RAG.
+const SYSTEM_PROMPT = `Tu es un médecin enseignant qui aide un étudiant en
+médecine à réviser pour les EVC. Tu lui réponds comme tu le ferais face à un
+externe : direct, clair, pédagogique.
 
-Règles strictes :
-1. Si l'information demandée ne figure pas explicitement dans les extraits,
-   réponds EXACTEMENT : "${ABSTENTION}"
-   Aucune extrapolation, aucune connaissance externe, aucune supposition.
-2. Ne JAMAIS recommander de posologie, diagnostic ou conduite à tenir en
-   dehors de ce qui est textuellement présent dans les extraits.
-3. Si la question demande un avis médical sur un cas réel, refuse et rappelle
-   qu'il s'agit d'un outil de révision.
-4. Format de réponse : 3 à 6 lignes maximum, structuré en puces si plus d'un
-   point. Tu peux citer la source en fin (Flashcard / QCM).`;
+Extraits du cours
+─────────────────
+On te fournit des extraits issus de la fiche de cours, des QCM et parfois des
+annales de ce cours précis. Sers-toi en pour bâtir ta réponse, en privilégiant
+TOUJOURS la fiche de cours comme source de référence quand elle est présente
+(les autres sources viennent compléter ou nuancer).
+
+Règles de style
+───────────────
+1. Ne mentionne JAMAIS d'où vient l'information. Pas de « d'après la fiche »,
+   « le QCM précise », « selon les extraits », « les sources indiquent ».
+   Tu formules la réponse comme si elle venait de ta propre expertise.
+2. Pas de méta-langage du type « voici ce que je sais », « je peux te dire
+   que ». Tu rentres direct dans le sujet.
+3. Format : 3 à 8 lignes selon la complexité, structuré en puces si plusieurs
+   points distincts à hiérarchiser. Vocabulaire médical assumé (terminologie
+   EVC, items, rangs A/B), ton confraternel.
+4. Pas d'extrapolation au-delà des extraits fournis. Pas d'avis médical sur
+   un cas réel ; rappelle que c'est un outil de révision si l'élève évoque
+   un patient.
+
+Quand abstention
+────────────────
+Si l'information demandée n'est tout simplement pas couverte par les extraits,
+réponds EXACTEMENT : "${ABSTENTION}"
+Aucune autre formulation. Pas de tentative de réponse partielle.`;
 
 function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
@@ -123,7 +146,10 @@ async function keywordFallback(
   }).filter((s) => s.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
 
   if (scored.length === 0) return ABSTENTION;
-  return `D’après les contenus de « ${coursTitre} » :\n\n${scored.map((s, i) => `${i + 1}. ${s.p.text.trim()}`).join('\n\n')}\n\n— Sources : flashcards et QCM du cours.`;
+  // Fallback : on reformule directement sans citer la source (cohérent avec
+  // le ton du prompt principal).
+  return scored.map((s) => s.p.text.trim().replace(/\s+/g, ' ')).join('\n\n');
+  void coursTitre;
 }
 
 export async function POST(req: Request) {
@@ -185,9 +211,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply: ABSTENTION, mode: 'abstention_low_similarity' });
   }
 
-  // 3) Appel Haiku 4.5 avec prompt strict
-  const contextBlock = hits
-    .map((h, i) => `[Extrait ${i + 1} — ${h.source}, similarité ${h.similarity.toFixed(2)}]\n${h.content}`)
+  // 3) Appel Haiku 4.5. On TRIE pour mettre la fiche en tête : c'est la
+  // source de référence du cours. Les extraits sont anonymisés (« Extrait
+  // pédagogique N ») pour que Claude n'ait pas envie de les citer.
+  const ranked = [...hits].sort((a, b) => {
+    const af = /^fiche/i.test(a.source) ? 0 : 1;
+    const bf = /^fiche/i.test(b.source) ? 0 : 1;
+    if (af !== bf) return af - bf;
+    return b.similarity - a.similarity;
+  });
+  const contextBlock = ranked
+    .map((h, i) => `[Extrait pédagogique ${i + 1}]\n${h.content}`)
     .join('\n\n');
 
   let result;

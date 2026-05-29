@@ -186,7 +186,9 @@ export default async function AccueilPage() {
       return { id: c.id, nom: c.titre, value, matiereNom: c.matiereNom };
     })
     .sort((a, b) => a.value - b.value);
-  const toReview = matieres.filter((m) => m.value < 70).slice(0, 5);
+  // Tous les cours sous 70 % de maîtrise (sans cap arbitraire — l'élève
+  // doit voir l'intégralité de ce qu'il a à réviser).
+  const toReview = matieres.filter((m) => m.value < 70);
 
   // Performance area (30 days, attempts/day)
   const days: { label: string; value: number }[] = [];
@@ -323,12 +325,13 @@ export default async function AccueilPage() {
           </div>
         </Card>
 
-        {/* Matières à prioriser — barres + pill statut Urgent/À revoir/En progrès */}
+        {/* Matières à prioriser — TOUS les cours, ordonnés du % le plus
+            bas au plus haut. Scroll vertical interne si débordement. */}
         <Card className="flex min-h-0 flex-col">
           <h2 className="text-sm font-semibold text-(--color-ink)">Matières à prioriser</h2>
           {matieres.length > 0 ? (
-            <ul className="mt-2 space-y-2.5">
-              {matieres.slice(0, 5).map((m) => {
+            <ul className="mt-2 space-y-2.5 overflow-y-auto pr-1">
+              {matieres.map((m) => {
                 const pill = priorityPill(m.value);
                 return (
                   <li key={m.id}>
@@ -406,7 +409,7 @@ export default async function AccueilPage() {
             </Link>
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
-            {(toReview.length > 0 ? toReview : matieres).slice(0, 8).map((m) => (
+            {(toReview.length > 0 ? toReview : matieres).map((m) => (
               <Link
                 key={m.id}
                 href={`/cours/${m.id}`}

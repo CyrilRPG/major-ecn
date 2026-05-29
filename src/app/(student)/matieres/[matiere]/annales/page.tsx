@@ -34,18 +34,18 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
   const totalAnnees = years.length;
   const latestYear = years[0]?.[0];
 
-  // Couleur subtilement différente par tranche d'années (plus récente
-  // = plus saturée), pour donner du rythme visuel à la liste.
+  // Une seule couleur (rouge marque) pour TOUTES les sessions, qu'on
+  // décline en luminosité décroissante avec l'ancienneté (récente = vive,
+  // ancienne = plus sage) — moins kaléidoscope, plus posé.
   const yearTheme = (idx: number) => {
-    const palettes = [
-      { ribbon: 'linear-gradient(180deg,#E4002B 0%,#F97316 100%)', tile: '#FDE7E9', text: '#C0001F', dot: '#E4002B' },
-      { ribbon: 'linear-gradient(180deg,#7C3AED 0%,#A855F7 100%)', tile: '#F1E8FD', text: '#5B2BB8', dot: '#7C3AED' },
-      { ribbon: 'linear-gradient(180deg,#2563EB 0%,#06B6D4 100%)', tile: '#E5F1FF', text: '#1E4D8B', dot: '#2563EB' },
-      { ribbon: 'linear-gradient(180deg,#16A34A 0%,#84CC16 100%)', tile: '#E7F6EC', text: '#16793C', dot: '#16A34A' },
-      { ribbon: 'linear-gradient(180deg,#D97706 0%,#F59E0B 100%)', tile: '#FEF3E2', text: '#B26A00', dot: '#D97706' },
-      { ribbon: 'linear-gradient(180deg,#0EA5E9 0%,#3B82F6 100%)', tile: '#E0F2FE', text: '#0369A1', dot: '#0EA5E9' },
-    ];
-    return palettes[idx % palettes.length];
+    const intensity = Math.max(0.6, 1 - idx * 0.08); // 1 → 0.6
+    return {
+      ribbon: `linear-gradient(180deg,#E4002B ${100 - 50 * (1 - intensity)}%,#F97316 100%)`,
+      tile: '#FDE7E9',
+      text: '#C0001F',
+      dot: '#E4002B',
+      intensity,
+    };
   };
 
   const typeTheme = (type: 'EVCF' | 'EVCP') =>
@@ -59,14 +59,15 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
       <section
         className="relative overflow-hidden rounded-3xl border border-(--color-border) p-7 shadow-(--shadow-soft) sm:p-9"
         style={{
+          // Dégradé doux à 2 tons (blanc + blush rouge) — on garde la
+          // couleur de la marque mais sans cocktail violet/bleu.
           background:
-            'linear-gradient(135deg, #FFFFFF 0%, #FFF3F4 40%, #F0EAFF 75%, #E3EFFF 100%)',
+            'linear-gradient(135deg, #FFFFFF 0%, #FFF7F8 50%, #FCEAEC 100%)',
         }}
       >
-        {/* Décorations : cercles flous colorés pour donner de la profondeur. */}
-        <span aria-hidden className="pointer-events-none absolute -right-16 -top-12 h-56 w-56 rounded-full bg-[#E4002B] opacity-[0.08] blur-3xl" />
-        <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-[#7C3AED] opacity-[0.08] blur-3xl" />
-        <span aria-hidden className="pointer-events-none absolute bottom-10 right-20 h-32 w-32 rounded-full bg-[#0EA5E9] opacity-[0.10] blur-2xl" />
+        {/* Une seule décoration : halo rouge marque, discret. */}
+        <span aria-hidden className="pointer-events-none absolute -right-16 -top-12 h-56 w-56 rounded-full bg-[#E4002B] opacity-[0.06] blur-3xl" />
+        <span aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-[#F97316] opacity-[0.05] blur-3xl" />
 
         <div className="relative grid gap-6 lg:grid-cols-[1.6fr_1fr] lg:items-center">
           <div>
@@ -94,12 +95,13 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
             </div>
           </div>
 
-          {/* Stats à droite — 3 mini KPIs dans des cartes blanches floues. */}
+          {/* Stats à droite — 3 mini KPIs, palette restreinte à la marque
+              + 1 neutre pour ne pas faire arc-en-ciel. */}
           <div className="grid grid-cols-3 gap-2.5 sm:gap-3 lg:grid-cols-1">
             {[
               { Icon: Calendar, value: totalAnnees, label: 'années couvertes', accent: '#E4002B', bg: '#FDE7E9' },
-              { Icon: FileText, value: totalSujets, label: 'sujets disponibles', accent: '#7C3AED', bg: '#F1E8FD' },
-              { Icon: Award,    value: latestYear ?? '—', label: 'session la plus récente', accent: '#16A34A', bg: '#E7F6EC' },
+              { Icon: FileText, value: totalSujets, label: 'sujets disponibles', accent: '#D97706', bg: '#FEF3E2' },
+              { Icon: Award,    value: latestYear ?? '—', label: 'session la plus récente', accent: '#475569', bg: '#F1F5F9' },
             ].map((s) => (
               <div
                 key={s.label}
