@@ -4,6 +4,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
+import { CollegesGrid } from '@/components/student/colleges-grid';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ActivityArea, ActivityDonut } from '@/components/admin/stats/charts';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
@@ -108,9 +109,27 @@ export default async function AccueilPage() {
   );
 
   const now = Date.now();
+  const weekAgo = now - 7 * 86400_000;
+  const twoWeeksAgo = now - 14 * 86400_000;
   const totalAttempts = attempts.length;
   const correct = attempts.filter((a) => a.is_correct).length;
   const successRate = totalAttempts > 0 ? Math.round((correct / totalAttempts) * 100) : 0;
+
+  // Deltas hebdo (semaine S vs S-1)
+  const inWindow = (t: string | null, from: number, to: number) => {
+    if (!t) return false;
+    const v = new Date(t).getTime();
+    return v >= from && v < to;
+  };
+  const attemptsThisWeek = attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now)).length;
+  const attemptsPrevWeek = attempts.filter((a) => inWindow(a.attempted_at, twoWeeksAgo, weekAgo)).length;
+  const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
+  const reviewsThisWeek = reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length;
+  const correctThisWeek = attempts.filter((a) => a.is_correct && inWindow(a.attempted_at, weekAgo, now)).length;
+  const successThisWeek = attemptsThisWeek > 0 ? Math.round((correctThisWeek / attemptsThisWeek) * 100) : 0;
+  const correctPrevWeek = attempts.filter((a) => a.is_correct && inWindow(a.attempted_at, twoWeeksAgo, weekAgo)).length;
+  const successPrevWeek = attemptsPrevWeek > 0 ? Math.round((correctPrevWeek / attemptsPrevWeek) * 100) : 0;
+  const successDelta = successThisWeek - successPrevWeek;
 
   // Progression
   const colleges = (
@@ -245,22 +264,26 @@ export default async function AccueilPage() {
     {
       Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%`,
       hint: `${stepsDone} / ${stepsTotal} items revus`,
-      accent: '#5B8DEF', // bleu
+      delta: null as null | string,
+      accent: '#5B8DEF',
     },
     {
       Icon: Target, label: 'Taux de réussite', value: `${successRate}%`,
       hint: `${correct} / ${totalAttempts} QCM réussis`,
-      accent: '#22C55E', // vert
+      delta: successDelta !== 0 ? `${successDelta > 0 ? '+' : ''}${successDelta} pts cette semaine` : null,
+      accent: '#22C55E',
     },
     {
       Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length,
       hint: `sur ${Math.max(totalAttempts, 0)} QCM`,
-      accent: '#E4002B', // rouge
+      delta: sessionsThisWeek > 0 ? `+${sessionsThisWeek} cette semaine` : null,
+      accent: '#E4002B',
     },
     {
       Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered} / ${flashcardsTotal ?? 0}`,
       hint: flashcardsTotal ? `${Math.round((fcMastered / flashcardsTotal) * 100)}% du deck étudié` : '—',
-      accent: '#8B5CF6', // violet
+      delta: reviewsThisWeek > 0 ? `+${reviewsThisWeek} révisions cette semaine` : null,
+      accent: '#8B5CF6',
     },
   ];
 
@@ -273,7 +296,7 @@ export default async function AccueilPage() {
   };
 
   return (
-    <div className="flex flex-col gap-3 px-4 py-3 lg:h-full lg:overflow-hidden lg:px-6">
+    <div className="flex flex-col gap-3 px-4 py-3 lg:px-6 lg:py-4">
       {/* Greeting */}
       <div className="flex items-baseline justify-between gap-3">
         <h1 className="text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
@@ -306,12 +329,15 @@ export default async function AccueilPage() {
             </div>
             <p className="mt-2 text-2xl font-bold tracking-tight text-(--color-ink) lg:text-3xl">{k.value}</p>
             <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">{k.hint}</p>
+            {k.delta && (
+              <p className="mt-1 text-[11px] font-semibold text-[#16793C]">{k.delta}</p>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Main grid — fills remaining height, no scroll */}
-      <div className="grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-3">
+      {/* Main grid */}
+      <div className="grid gap-3 lg:grid-cols-3">
         {/* Performance */}
         <Card className="flex min-h-0 flex-col lg:col-span-2">
           <div className="mb-1 flex items-center justify-between">
@@ -433,6 +459,20 @@ export default async function AccueilPage() {
           </div>
         </Card>
       </div>
+
+      {/* Vos collèges — grille complète (toutes les matières EDN accessibles) */}
+      <section className="mt-2">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-(--color-ink)">Vos collèges</h2>
+          <Link
+            href="/facultes"
+            className="inline-flex items-center gap-1 text-xs text-(--color-accent-deep) hover:underline"
+          >
+            Tout voir <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+        <CollegesGrid scope={scope} />
+      </section>
 
       {/* CTA passage à l'abonnement (caché pour les abonnés) */}
       <div className="mt-8">
