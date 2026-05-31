@@ -35,7 +35,7 @@ function readProfContentAccess(scope: unknown): boolean {
   return hasAnyContentAccess(s as never);
 }
 
-const BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
+const BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
   const path = usePathname();
@@ -56,7 +56,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         <div className="flex h-20 items-center justify-center border-b border-white/10 px-4">
           <BrandLogo className="h-16 w-auto [filter:brightness(0)_invert(1)]" />
         </div>
-        <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+        <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
           Administration
         </p>
         <nav className="space-y-1 px-2">
@@ -67,8 +67,8 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors focus-ring',
                 isActive(it.href)
-                  ? 'bg-[#E4002B] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]'
-                  : 'text-[#AEB6C5] hover:bg-white/10 hover:text-white',
+                  ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]'
+                  : 'text-white/75 hover:bg-white/10 hover:text-white',
               )}
             >
               <it.Icon className="h-[18px] w-[18px]" />
@@ -104,7 +104,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm',
                 isActive(it.href)
-                  ? 'bg-[#E4002B] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]'
+                  ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]'
                   : 'text-white/75 hover:bg-white/10',
               )}
               aria-label={it.label}

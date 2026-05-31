@@ -8,14 +8,15 @@ import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 
-/** Active pill : rouge plein de la maquette designer. */
+/** Active pill : dégradé rouge → orange identique sur tous les items
+ *  (top-level et sub-items). Reflète la maquette du client. */
 const ACTIVE_GRADIENT =
-  'bg-[#E4002B] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]';
+  'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]';
 
 function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   const v = Math.min(100, Math.max(0, value));
-  const fill = active ? '#FFFFFF' : '#FF5A6E';
-  const track = active ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.22)';
+  const fill = active ? '#FFFFFF' : '#E4002B';
+  const track = active ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)';
   return (
     <span className="flex shrink-0 items-center gap-1.5">
       <span
@@ -79,7 +80,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const topLevelClass = (active: boolean) =>
     cn(
       'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
-      active ? ACTIVE_GRADIENT : 'text-[#AEB6C5] hover:bg-white/10 hover:text-white',
+      active ? ACTIVE_GRADIENT : 'text-white/85 hover:bg-white/10 hover:text-white',
     );
 
   return (
@@ -99,7 +100,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
         Agenda
       </Link>
 
-      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+      <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
         Médecine
       </p>
       {tree.length === 0 && (
@@ -180,7 +181,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
         );
       })}
 
-      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5A6478]">
+      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
         Communauté
       </p>
       <Link href="/forum" className={topLevelClass(forumActive)}>

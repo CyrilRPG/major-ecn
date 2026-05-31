@@ -205,9 +205,22 @@ export default async function AccueilPage() {
       return { id: c.id, nom: c.titre, value, matiereNom: c.matiereNom };
     })
     .sort((a, b) => a.value - b.value);
-  // Tous les cours sous 70 % de maîtrise (sans cap arbitraire — l'élève
-  // doit voir l'intégralité de ce qu'il a à réviser).
-  const toReview = matieres.filter((m) => m.value < 70);
+  // Regroupement par collège pour le panneau « Progression cours par cours »
+  // (ordre alphabétique du collège, cours triés du plus faible au plus fort).
+  type Group = { matiereNom: string; cours: typeof matieres; avg: number };
+  const byMatiere = new Map<string, typeof matieres>();
+  for (const c of matieres) {
+    const arr = byMatiere.get(c.matiereNom) ?? [];
+    arr.push(c);
+    byMatiere.set(c.matiereNom, arr);
+  }
+  const coursByMatiere: Group[] = [...byMatiere.entries()]
+    .map(([matiereNom, list]) => ({
+      matiereNom,
+      cours: [...list].sort((a, b) => a.value - b.value),
+      avg: Math.round(list.reduce((s, c) => s + c.value, 0) / list.length),
+    }))
+    .sort((a, b) => a.matiereNom.localeCompare(b.matiereNom, 'fr'));
 
   // Performance area (30 days, attempts/day)
   const days: { label: string; value: number }[] = [];
@@ -351,42 +364,106 @@ export default async function AccueilPage() {
           </div>
         </Card>
 
-        {/* Matières à prioriser — TOUS les cours, ordonnés du % le plus
-            bas au plus haut. Scroll vertical interne si débordement. */}
+        {/* Répartition */}
         <Card className="flex min-h-0 flex-col">
-          <h2 className="text-sm font-semibold text-(--color-ink)">Matières à prioriser</h2>
-          {matieres.length > 0 ? (
-            <ul className="mt-2 space-y-2.5 overflow-y-auto pr-1">
-              {matieres.map((m) => {
-                const pill = priorityPill(m.value);
-                return (
-                  <li key={m.id}>
-                    <div className="mb-1 flex items-center justify-between gap-2 text-xs">
-                      <span className="truncate text-(--color-ink)">{m.nom}</span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="font-semibold tabular-nums text-(--color-ink-soft)">{m.value}%</span>
-                        <span
-                          className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-                          style={{ background: pill.bg, color: pill.fg }}
-                        >
-                          {pill.label}
+          <h2 className="text-sm font-semibold text-(--color-ink)">Répartition</h2>
+          {repartition.length > 0 ? (
+            <div className="flex flex-1 items-center">
+              <ActivityDonut data={repartition} size={120} />
+            </div>
+          ) : (
+            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Pas encore de données.</p>
+          )}
+        </Card>
+
+        {/* Progression cours par cours — panneau scrollable groupé par collège.
+            Tout est visible d'un coup d'œil, on défile à la souris pour voir l'ensemble. */}
+        <Card className="lg:col-span-3">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold text-(--color-ink)">Progression cours par cours</h2>
+              <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">
+                {matieres.length} cours · groupés par collège · faites défiler pour tout voir
+              </p>
+            </div>
+            <Link href="/facultes" className="inline-flex shrink-0 items-center gap-1 text-xs text-(--color-accent-deep) hover:underline">
+              Tous les collèges <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {matieres.length === 0 ? (
+            <p className="py-8 text-center text-xs text-(--color-ink-muted)">
+              Lancez vos premiers QCM ou ouvrez un cours pour voir votre progression apparaître ici.
+            </p>
+          ) : (
+            <div
+              className="max-h-[460px] overflow-y-auto pr-2"
+              style={{ scrollbarWidth: 'thin' }}
+            >
+              <div className="space-y-4">
+                {coursByMatiere.map((group) => (
+                  <section key={group.matiereNom}>
+                    <header className="sticky top-0 z-10 -mx-1 mb-2 flex items-center gap-2 bg-(--color-surface) px-1 py-1.5">
+                      <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-ink-soft)">
+                        {group.matiereNom}
+                      </h3>
+                      <span className="text-[11px] text-(--color-ink-muted)">·</span>
+                      <span className="text-[11px] tabular-nums text-(--color-ink-muted)">
+                        {group.cours.length} cours
+                      </span>
+                      <span className="ml-auto flex items-center gap-2">
+                        <span className="text-[11px] font-semibold tabular-nums text-(--color-ink-soft)">
+                          {group.avg}%
+                        </span>
+                        <span className="h-1.5 w-24 overflow-hidden rounded-full bg-(--color-sand-200)">
+                          <span
+                            className="block h-full rounded-full"
+                            style={{ width: `${group.avg}%`, background: barColor(group.avg) }}
+                          />
                         </span>
                       </span>
-                    </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-(--color-sand-200)">
-                      <div className="h-full rounded-full" style={{ width: `${m.value}%`, background: barColor(m.value) }} />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Lancez vos premiers QCM.</p>
+                    </header>
+                    <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                      {group.cours.map((c) => {
+                        const pill = priorityPill(c.value);
+                        return (
+                          <li key={c.id}>
+                            <Link
+                              href={`/cours/${c.id}`}
+                              className="group flex items-center gap-2.5 rounded-lg border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-(--color-accent) hover:bg-(--color-primary-soft)/40"
+                            >
+                              <span className="min-w-0 flex-1 truncate text-xs font-medium text-(--color-ink)">
+                                {c.nom}
+                              </span>
+                              <span className="hidden h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-(--color-sand-200) sm:block">
+                                <span
+                                  className="block h-full rounded-full"
+                                  style={{ width: `${c.value}%`, background: barColor(c.value) }}
+                                />
+                              </span>
+                              <span className="w-9 shrink-0 text-right text-xs font-semibold tabular-nums text-(--color-ink)">
+                                {c.value}%
+                              </span>
+                              <span
+                                className="hidden shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold sm:inline"
+                                style={{ background: pill.bg, color: pill.fg }}
+                              >
+                                {pill.label}
+                              </span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </div>
           )}
         </Card>
 
         {/* Activité récente */}
-        <Card className="flex min-h-0 flex-col lg:col-span-2">
+        <Card className="flex min-h-0 flex-col lg:col-span-3">
           <h2 className="text-sm font-semibold text-(--color-ink)">Activité récente</h2>
           {recent.length > 0 ? (
             <ul className="mt-1 divide-y divide-(--color-border)">
@@ -410,53 +487,6 @@ export default async function AccueilPage() {
           ) : (
             <p className="py-6 text-center text-xs text-(--color-ink-muted)">Aucune activité.</p>
           )}
-        </Card>
-
-        {/* Répartition */}
-        <Card className="flex min-h-0 flex-col">
-          <h2 className="text-sm font-semibold text-(--color-ink)">Répartition</h2>
-          {repartition.length > 0 ? (
-            <div className="flex flex-1 items-center">
-              <ActivityDonut data={repartition} size={120} />
-            </div>
-          ) : (
-            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Pas encore de données.</p>
-          )}
-        </Card>
-
-        {/* À réviser + collèges (compact strip) */}
-        <Card className="lg:col-span-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-(--color-ink)">
-              {toReview.length > 0 ? 'À réviser en priorité' : 'Vos collèges'}
-            </h2>
-            <Link href="/facultes" className="inline-flex items-center gap-1 text-xs text-(--color-accent-deep) hover:underline">
-              Tous les collèges <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {(toReview.length > 0 ? toReview : matieres).map((m) => (
-              <Link
-                key={m.id}
-                href={`/cours/${m.id}`}
-                className="group inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface-soft) py-1.5 pl-3 pr-2 text-xs transition-colors hover:border-(--color-accent)"
-              >
-                <span className="font-medium text-(--color-ink)">{m.nom}</span>
-                <span
-                  className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
-                  style={
-                    m.value < 50
-                      ? { background: '#FDE7E9', color: '#C0001F' }
-                      : m.value < 75
-                        ? { background: '#FEF3E2', color: '#B26A00' }
-                        : { background: '#E7F6EC', color: '#16793C' }
-                  }
-                >
-                  {m.value}%
-                </span>
-              </Link>
-            ))}
-          </div>
         </Card>
       </div>
 

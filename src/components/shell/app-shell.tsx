@@ -12,8 +12,10 @@ import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 
-// Bleu nuit homogène (maquette designer) : top -> bottom.
-const SIDEBAR_BG = 'linear-gradient(180deg, #0E1626 0%, #0A111E 100%)';
+// Dégradé navy → indigo profond → bordeaux sombre (de haut en bas).
+// Apporte de la chaleur tout en gardant le côté sérieux du navy.
+const SIDEBAR_BG =
+  'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 function SidebarProgress({ tree }: { tree: NavCollege[] }) {
   const cours = tree.flatMap((c) => c.cours);
