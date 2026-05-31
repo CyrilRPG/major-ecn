@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { Markdown } from '@/components/ui/markdown';
 
 export const metadata = { title: 'Forum questions / réponses' };
 
@@ -279,9 +280,9 @@ export default async function ForumPage({
                             {ago(a.created_at)}
                           </span>
                         </div>
-                        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-(--color-ink)">
+                        <Markdown className="mt-2 text-sm text-(--color-ink)">
                           {a.body}
-                        </p>
+                        </Markdown>
                       </div>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { ArrowUp, Bot, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AskTeacherButton } from '@/components/student/ask-teacher-button';
+import { Markdown } from '@/components/ui/markdown';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -102,11 +103,11 @@ export function CourseChatbot({
                 className={cn(
                   'max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
                   m.role === 'user'
-                    ? 'bg-(--color-primary) text-(--color-primary-fg)'
+                    ? 'bg-(--color-primary) text-(--color-primary-fg) whitespace-pre-wrap'
                     : 'bg-(--color-surface-soft) border border-(--color-border) text-(--color-ink)',
                 )}
               >
-                {m.content}
+                {m.role === 'assistant' ? <Markdown>{m.content}</Markdown> : m.content}
               </div>
               {isAssistant && !isFirst && isLastAssistant && !loading && (
                 <div className="mt-1.5 max-w-[85%]">
