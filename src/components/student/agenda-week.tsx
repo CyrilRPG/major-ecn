@@ -26,7 +26,7 @@ const PLATFORM_EVENTS: PlatformEv[] = [
   { day: 3, start: '18:30', end: '20:30', titre: 'Infections urinaires — item 161',   college: 'Maladies infectieuses', intervenant: 'Dr. M. Haddad (infectiologue)',    zoom: 'https://zoom.us/j/7785512094' },
   { day: 4, start: '18:00', end: '20:00', titre: 'ECOS blanc — stations cardio-pneumo', college: 'ECOS',                intervenant: 'Équipe Major ECN',                 zoom: 'https://zoom.us/j/6650091123' },
   { day: 5, start: '19:00', end: '20:30', titre: 'Dernier Tour — Néphrologie',        college: 'Néphrologie',           intervenant: 'Dr. S. Roux (néphrologue)',        zoom: 'https://zoom.us/j/5540982217' },
-  { day: 6, start: '10:00', end: '12:30', titre: 'Concours blanc EDN — DP & QI',      college: 'Transversal',           intervenant: 'Équipe Major ECN',                 zoom: 'https://zoom.us/j/3398120475' },
+  { day: 6, start: '10:00', end: '12:30', titre: 'Concours blanc EVC — DP & QI',      college: 'Transversal',           intervenant: 'Équipe Major ECN',                 zoom: 'https://zoom.us/j/3398120475' },
 ];
 
 /** Palette pour les évènements plateforme (par collège). */

@@ -77,19 +77,21 @@ export function StudyConsole({
 
   return (
     <div className="relative">
-      {/* Console header — sticky, page scrolls underneath (so QCM/long content scrolls) */}
-      <div className="sticky top-0 z-20 border-b border-(--color-border) bg-(--color-surface)/95 px-4 py-3 backdrop-blur lg:px-8">
-        <div className="flex items-center gap-3">
+      {/* Console header — sticky, page scrolls underneath (so QCM/long content scrolls).
+          Mobile : padding réduit, gauge compacte, titre 1 ligne tronqué. */}
+      <div className="sticky top-0 z-20 border-b border-(--color-border) bg-(--color-surface)/95 px-3 py-2 backdrop-blur sm:px-4 sm:py-3 lg:px-8">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <MasteryGauge value={mastery} />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-medium text-(--color-ink-muted)">{context}</p>
-            <h1 className="truncate text-base font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
+            <p className="truncate text-[11px] font-medium text-(--color-ink-muted) sm:text-xs">{context}</p>
+            <h1 className="truncate text-sm font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
           <button
             type="button"
             onClick={() => setAssistantOpen((v) => !v)}
+            aria-label="Assistant du cours"
             className={cn(
-              'flex h-9 items-center gap-2 rounded-lg border px-3 text-sm transition-colors focus-ring',
+              'flex h-9 shrink-0 items-center gap-2 rounded-lg border px-2.5 text-sm transition-colors focus-ring sm:px-3',
               assistantOpen
                 ? 'border-(--color-accent) bg-(--color-primary-soft) text-(--color-primary-deep)'
                 : 'border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-soft) hover:border-(--color-border-strong)',
@@ -100,7 +102,8 @@ export function StudyConsole({
           </button>
         </div>
 
-        <div className="mt-3 flex gap-1 overflow-x-auto border-b border-(--color-border)">
+        {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
+        <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((t) => {
             const active = activeSeg === t.seg;
             return (
@@ -108,13 +111,13 @@ export function StudyConsole({
                 key={t.key}
                 href={`${base}${t.seg ? `/${t.seg}` : ''}`}
                 className={cn(
-                  'flex items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors focus-ring',
+                  'flex items-center gap-1.5 whitespace-nowrap border-b-2 px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
                   active
                     ? 'border-(--color-primary) text-(--color-primary)'
                     : 'border-transparent text-(--color-ink-soft) hover:text-(--color-ink)',
                 )}
               >
-                <t.Icon className="h-4 w-4" />
+                <t.Icon className="h-4 w-4 shrink-0" />
                 {t.label}
                 {!t.available && t.seg && (
                   <span

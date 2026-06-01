@@ -133,8 +133,10 @@ export function AppShell({
         />
         <main
           className={cn(
-            'min-h-0 flex-1 overflow-y-auto',
+            'min-h-0 flex-1 overflow-y-auto overscroll-contain',
             'bg-(--color-surface-soft)',
+            // Safe area iPhone : évite que le contenu termine sous la barre Home
+            'pb-[env(safe-area-inset-bottom)]',
           )}
         >
           {children}

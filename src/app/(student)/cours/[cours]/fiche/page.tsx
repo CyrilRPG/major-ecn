@@ -32,9 +32,9 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-6 lg:px-8">
+    <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
       {fiche?.pages && (
-        <p className="mb-3 text-sm text-(--color-ink-soft)">{fiche.pages} pages</p>
+        <p className="mb-2 text-xs text-(--color-ink-soft) sm:mb-3 sm:text-sm">{fiche.pages} pages</p>
       )}
       {pdfUrl ? (
         <PdfViewer src={pdfUrl} coursId={coursId} initiallyRead={initiallyRead} />

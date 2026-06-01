@@ -309,22 +309,24 @@ export default async function AccueilPage() {
   };
 
   return (
-    <div className="flex flex-col gap-3 px-4 py-3 lg:px-6 lg:py-4">
-      {/* Greeting */}
-      <div className="flex items-baseline justify-between gap-3">
-        <h1 className="text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
-          Bonjour, {firstName} 👋{' '}
-          <span className="text-sm font-normal text-(--color-ink-soft)">Prêt(e) à cartonner aujourd’hui ? 💪</span>
+    <div className="flex flex-col gap-3 px-3 py-3 sm:px-4 lg:px-6 lg:py-4">
+      {/* Greeting — sur mobile, l'encouragement passe sur une 2e ligne pour rester lisible */}
+      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
+        <h1 className="text-base font-bold tracking-tight text-(--color-ink) sm:text-xl">
+          Bonjour, {firstName} <span aria-hidden>👋</span>
         </h1>
+        <p className="text-xs font-normal text-(--color-ink-soft) sm:text-sm">
+          Prêt(e) à cartonner aujourd’hui ? <span aria-hidden>💪</span>
+        </p>
       </div>
 
       {/* KPI row — chaque carte a un trait coloré en haut + une pastille
           d'icône assortie. */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
         {kpis.map((k) => (
           <div
             key={k.label}
-            className="relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)"
+            className="relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) p-3 shadow-(--shadow-soft) sm:p-4"
           >
             <div
               className="absolute inset-x-0 top-0 h-[3px]"
@@ -333,14 +335,14 @@ export default async function AccueilPage() {
             />
             <div className="flex items-center gap-2 text-(--color-ink-muted)">
               <span
-                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8"
                 style={{ background: `${k.accent}1A`, color: k.accent }}
               >
                 <k.Icon className="h-4 w-4" />
               </span>
-              <span className="text-xs font-medium">{k.label}</span>
+              <span className="text-[11px] font-medium leading-tight sm:text-xs">{k.label}</span>
             </div>
-            <p className="mt-2 text-2xl font-bold tracking-tight text-(--color-ink) lg:text-3xl">{k.value}</p>
+            <p className="mt-1.5 text-xl font-bold tracking-tight text-(--color-ink) sm:mt-2 sm:text-2xl lg:text-3xl">{k.value}</p>
             <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">{k.hint}</p>
             {k.delta && (
               <p className="mt-1 text-[11px] font-semibold text-[#16793C]">{k.delta}</p>
