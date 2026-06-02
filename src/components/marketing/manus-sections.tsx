@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight, Award, Brain, BookOpen, CalendarDays, ChevronLeft, ChevronRight,
-  CheckCircle2, ClipboardCheck, Clock, Compass, Globe, GraduationCap, Heart, Layers3,
-  LineChart, Lock, Mail, MessagesSquare, Play, Quote, ShieldCheck, Sparkles, Star, Target,
-  TrendingUp, Users, Zap,
+  ArrowRight, Award, Brain, BookOpen, Calendar, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
+  CheckCircle2, ClipboardCheck, Clock, Compass, Eye, FileText, Globe, GraduationCap, Headphones,
+  Heart, HelpCircle, Layers3, LineChart, Lock, Mail, MessagesSquare, Monitor, Play, Quote,
+  ShieldCheck, Sparkles, Star, Target, TrendingUp, User, Users, Zap,
 } from 'lucide-react';
 
 // Dégradés volontairement saturés et étendus pour des titres qui claquent.
@@ -959,90 +959,177 @@ export function AudienceSection() {
 // FAQ — light bg
 // ============================================================================
 const FAQ = [
-  { q: 'À qui s’adresse Major ECN ?', a: 'Major ECN est destiné aux médecins titulaires d’un diplôme étranger (hors UE) souhaitant exercer en France. Que vous soyez en phase de préparation initiale ou en reprise après un échec, notre plateforme s’adapte à votre niveau.' },
-  { q: 'Quelle est la durée recommandée de préparation ?', a: 'Notre parcours standard est de 12 semaines. La plateforme s’adapte à votre emploi du temps et à votre niveau initial. Certains candidats préparent en 8 semaines intensives, d’autres en 6 mois à temps partiel.' },
-  { q: 'Les QCM sont-ils conformes au programme officiel des EVC ?', a: 'Oui, absolument. Tous nos QCM sont rédigés par des médecins spécialistes français et mis à jour chaque trimestre selon le programme officiel des EVC. Nous couvrons les 16 spécialités du programme.' },
-  { q: 'Comment fonctionne l’IA pédagogique ?', a: 'L’IA analyse vos réponses en temps réel, identifie vos erreurs récurrentes par spécialité, ajuste la difficulté et propose des révisions ciblées au bon moment.' },
-  { q: 'Puis-je accéder à la plateforme depuis mon téléphone ?', a: 'Oui. Major ECN est entièrement responsive — ordinateur, tablette, smartphone. Une application iOS/Android avec mode hors ligne est également disponible.' },
-  { q: 'Y a-t-il un engagement minimum ?', a: 'Non. Tous nos abonnements sont sans engagement et résiliables à tout moment. Vous commencez avec 7 jours d’essai gratuit.' },
-  { q: 'Proposez-vous un accompagnement humain ?', a: 'Oui. Les formules Premium et Intensif incluent un tuteur dédié — un médecin qui vous accompagne tout au long de votre préparation. Sessions Q/R hebdomadaires en groupe.' },
+  { Icon: User, q: 'À qui s’adresse la préparation EVC Major ECN ?', a: 'Major ECN s’adresse aux médecins titulaires d’un diplôme étranger (PADHUE) qui préparent les Épreuves de Vérification des Connaissances dans le cadre de la Procédure d’Autorisation d’Exercice (PAE), quelle que soit leur spécialité.' },
+  { Icon: FileText, q: 'Qu’est-ce que les Épreuves de Vérification des Connaissances (EVC) ?', a: 'Les EVC sont des épreuves nationales qui évaluent les connaissances médicales des praticiens à diplôme étranger souhaitant exercer en France. Elles constituent une étape clé de la Procédure d’Autorisation d’Exercice (PAE).' },
+  { Icon: Target, q: 'Pourquoi suivre une préparation EVC ?', a: 'Les EVC sont sélectives et exigent une méthodologie précise. Une préparation structurée vous permet de cibler les attentes des jurys, de combler vos lacunes par spécialité et de maximiser vos chances de réussite.' },
+  { Icon: Monitor, q: 'Qu’est-ce qui différencie la plateforme Major ECN des autres préparations EVC ?', a: 'Des contenus conçus et relus par des praticiens hospitaliers et CCA, une méthodologie dédiée aux attentes des jurys EVC, un entraînement complet (QCM, cas cliniques, fiches, flashcards) et un suivi de progression personnalisé.' },
+  { Icon: Eye, q: 'Puis-je découvrir la plateforme avant de m’inscrire ?', a: 'Oui. Vous pouvez tester Major ECN gratuitement pendant 7 jours, sans carte bancaire ni engagement, et accéder immédiatement à un aperçu de l’ensemble de nos contenus et de notre méthode.' },
+  { Icon: ShieldCheck, q: 'Pourquoi choisir Major ECN pour préparer les EVC ?', a: 'Depuis plus de 18 ans, nous accompagnons les médecins étrangers vers la réussite des EVC. Plus de 9 000 médecins accompagnés, 45 spécialités couvertes et des enseignants experts connaissant parfaitement les attentes des jurys.' },
 ];
+
+/* Sidebar « Major ECN — Votre partenaire pour réussir les EVC » */
+const FAQ_SIDE_ROWS = [
+  { Icon: Calendar,      t: '18 ans d’expérience',                 d: 'au service de votre réussite' },
+  { Icon: Users,         t: 'Plus de 9 000 médecins\naccompagnés', d: 'depuis 2006' },
+  { Icon: ShieldCheck,   t: 'Plus de 45 spécialités couvertes',    d: 'médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique' },
+  { Icon: GraduationCap, t: 'Des enseignants experts',             d: 'connaissant les attentes des jurys EVC' },
+  { Icon: BookOpen,      t: 'Une méthodologie dédiée aux EVC',     d: 'pour maximiser vos chances de réussite' },
+];
+
+/* Palette FAQ — pixel-perfect maquette : navy + crimson, sidebar bleu nuit */
+const FQ_NAVY = '#14254E';
+const FQ_RED = '#C4112E';
+const FQ_RED_BG = '#FCE9EC';
+const FQ_BLUE = '#1E3A8A';
+const FQ_BLUE_BG = '#EEF2FB';
+const FQ_INK_SOFT = '#5B6478';
 
 export function FAQSection() {
   return (
-    <section id="faq" className="relative bg-[#FAFAF8] py-24 sm:py-28 lg:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9 }}
-          className="text-center"
-        >
-          <span className={EYEBROW} style={{ fontFamily: MANROPE }}>FAQ</span>
-          <h2
-            className="mb-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
-          >
-            <span className="block text-[#2D2D2D]">Questions</span>
-            <span className={'block ' + BORD_BLUE}>fréquentes.</span>
-          </h2>
-        </motion.div>
+    <section id="faq" className="relative bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.65fr_1fr] lg:gap-12">
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-5 lg:gap-16">
-          {/* Left column — contact */}
-          <motion.aside
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-2"
-          >
-            <p className="text-base text-[#4A5568]" style={{ fontFamily: MANROPE }}>
-              Une question non listée ?
-              <br className="hidden sm:block" />
-              Notre équipe répond en moins de 24 h.
-            </p>
-            <a
-              href="mailto:inscriptionmajorecn@gmail.com"
-              className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#6B1A2A] transition-colors hover:text-[#8B2A3A]"
-              style={{ fontFamily: MANROPE }}
+          {/* ============ COLONNE PRINCIPALE ============ */}
+          <div>
+            {/* Badge + titre */}
+            <span
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-bold"
+              style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.2)', color: FQ_RED }}
             >
-              Contacter l’équipe →
-            </a>
-          </motion.aside>
+              <HelpCircle className="h-4 w-4" />
+              FAQ
+            </span>
+            <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+              <span style={{ color: FQ_NAVY }}>Questions </span>
+              <span style={{ color: FQ_RED }}>fréquentes</span>
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+              Retrouvez les réponses aux questions les plus courantes<br className="hidden sm:block" />
+              concernant les EVC, la PAE, les PADHUE et la préparation Major ECN.
+            </p>
 
-          {/* Right column — accordion */}
-          <div className="flex flex-col gap-2 lg:col-span-3">
-            {FAQ.map((f, i) => (
-              <motion.details
-                key={f.q}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="group rounded-2xl border border-[#E8E7E3] bg-white transition-colors open:border-[#6B1A2A]/30 open:shadow-sm"
+            {/* Accordéons */}
+            <div className="mt-8 flex flex-col gap-3.5">
+              {FAQ.map((f) => (
+                <details
+                  key={f.q}
+                  className="group rounded-2xl border bg-white transition-all open:shadow-[0_8px_24px_-12px_rgba(15,27,61,0.18)]"
+                  style={{ borderColor: '#ECECEF' }}
+                >
+                  <summary
+                    className="flex cursor-pointer list-none items-center gap-4 p-4 text-left marker:hidden sm:p-5"
+                  >
+                    <span
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: FQ_RED_BG, color: FQ_RED }}
+                    >
+                      <f.Icon className="h-5 w-5" />
+                    </span>
+                    <span className="min-w-0 flex-1 text-[15px] font-bold sm:text-base" style={{ color: FQ_NAVY }}>
+                      {f.q}
+                    </span>
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[#9AA1AE] transition-transform group-open:rotate-180" />
+                  </summary>
+                  <p className="px-4 pb-5 pl-[4.25rem] text-sm leading-relaxed sm:px-5 sm:pl-[4.75rem]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+                    {f.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+
+            {/* Bouton « Voir toutes les questions » */}
+            <a
+              href="/faq"
+              className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15px] font-bold transition-colors hover:brightness-95"
+              style={{ background: FQ_BLUE_BG, color: FQ_NAVY }}
+            >
+              Voir toutes les questions fréquentes (21)
+              <ArrowRight className="h-4 w-4" />
+            </a>
+
+            {/* Carte contact pink */}
+            <div
+              className="mt-5 flex flex-col items-start gap-4 rounded-2xl px-5 py-5 sm:flex-row sm:items-center sm:gap-5"
+              style={{ background: FQ_RED_BG }}
+            >
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white"
+                style={{ color: FQ_RED }}
               >
-                <summary
-                  className="flex cursor-pointer list-none items-center justify-between p-5 text-left text-sm font-black text-[#2D2D2D] marker:hidden sm:text-base"
-                  style={{ fontFamily: JAKARTA }}
-                >
-                  {f.q}
-                  <span className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F9F0F2] text-[#6B1A2A] transition-transform group-open:rotate-45">
-                    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <path d="M8 3v10M3 8h10" />
-                    </svg>
-                  </span>
-                </summary>
-                <p
-                  className="px-5 pb-5 text-sm leading-relaxed text-[#6B6B6B]"
-                  style={{ fontFamily: MANROPE }}
-                >
-                  {f.a}
+                <Headphones className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-base font-bold" style={{ color: FQ_RED }}>
+                  Vous ne trouvez pas la réponse à votre question ?
                 </p>
-              </motion.details>
-            ))}
+                <p className="mt-1 text-sm leading-relaxed" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+                  Notre équipe est à votre disposition pour vous accompagner
+                  dans votre projet de préparation aux EVC.
+                </p>
+              </div>
+              <a
+                href="/contact"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl border bg-white px-5 py-3 text-sm font-bold transition-colors hover:bg-[#FBEEEF]"
+                style={{ borderColor: FQ_RED, color: FQ_RED }}
+              >
+                Nous contacter
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
+
+          {/* ============ SIDEBAR ============ */}
+          <aside>
+            <div className="rounded-2xl border bg-white p-6 shadow-[0_20px_60px_-30px_rgba(15,27,61,0.25)] sm:p-7" style={{ borderColor: '#ECECEF' }}>
+              <p className="text-xl font-black" style={{ color: FQ_NAVY }}>Major ECN</p>
+              <p className="mt-1 text-lg font-bold" style={{ color: FQ_RED }}>
+                Votre partenaire pour réussir les EVC
+              </p>
+              <span className="mt-3 block h-[3px] w-12 rounded-full" style={{ background: FQ_RED }} />
+
+              <ul className="mt-6 space-y-5">
+                {FAQ_SIDE_ROWS.map((r) => (
+                  <li key={r.t} className="flex items-start gap-3.5">
+                    <span
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: FQ_BLUE_BG, color: FQ_BLUE }}
+                    >
+                      <r.Icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="whitespace-pre-line text-[15px] font-bold leading-tight" style={{ color: FQ_NAVY }}>{r.t}</p>
+                      <p className="mt-0.5 text-[13px] leading-relaxed" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>{r.d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="/plateforme"
+                className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] font-bold text-white transition-transform hover:scale-[1.01]"
+                style={{ background: FQ_BLUE }}
+              >
+                Découvrir la plateforme
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="/inscription"
+                className="mt-3 flex w-full items-center gap-3 rounded-xl border bg-white px-4 py-3 transition-colors hover:bg-[#F7F9FE]"
+                style={{ borderColor: FQ_BLUE }}
+              >
+                <Calendar className="h-5 w-5 shrink-0" style={{ color: FQ_BLUE }} />
+                <span className="min-w-0 flex-1 text-left">
+                  <span className="block text-sm font-bold leading-tight" style={{ color: FQ_NAVY }}>
+                    Tester Major ECN pendant 7 jours
+                  </span>
+                  <span className="block text-xs" style={{ color: FQ_INK_SOFT }}>
+                    Accès immédiat – Sans engagement
+                  </span>
+                </span>
+              </a>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
