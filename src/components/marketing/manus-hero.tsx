@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, BadgeCheck, BookOpen, Calendar, Heart, Sparkles, Stethoscope, Users,
+  ArrowRight, BadgeCheck, BookOpen, FileText, Sparkles, Stethoscope, Trophy, Users,
 } from 'lucide-react';
 
 /**
@@ -20,10 +20,10 @@ const INK_SOFT = '#4B5563';
 const TITLE_GRADIENT = 'linear-gradient(105deg, #B11226 0%, #6D28D9 50%, #2563EB 100%)';
 
 const STATS = [
-  { Icon: Calendar,    big: '18 ANS',   sub: 'D’EXPÉRIENCE' },
-  { Icon: BookOpen,    big: '45',       sub: 'SPÉCIALITÉS COUVERTES' },
-  { Icon: Users,       big: '9 000+',   sub: 'MÉDECINS ACCOMPAGNÉS' },
-  { Icon: Stethoscope, big: 'PH SPÉCIALISTES & CCA', sub: 'ÉQUIPE PÉDAGOGIQUE', small: true },
+  { Icon: BookOpen,    big: '45',                                  sub: 'SPÉCIALITÉS COUVERTES' },
+  { Icon: Users,       big: 'PH SPÉCIALISTES & CCA',               sub: 'ÉQUIPE PÉDAGOGIQUE', small: true },
+  { Icon: FileText,    big: 'QCM, CAS CLINIQUES & FICHES',         sub: 'ENTRAÎNEMENT COMPLET', small: true },
+  { Icon: BadgeCheck,  big: 'MÉTHODOLOGIE DÉDIÉE AUX EVC',         sub: 'MÉTHODE ÉPROUVÉE ET ADAPTÉE AUX JURYS', small: true },
 ];
 
 
@@ -64,10 +64,10 @@ export function ManusHero() {
             <span className="mt-6 block h-1 w-16 rounded-full" style={{ background: RED }} />
 
             <p className="mt-6 max-w-xl text-base leading-relaxed sm:text-lg" style={{ color: INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-              <span className="font-bold" style={{ color: RED }}>45 spécialités</span> couvertes, plus de{' '}
-              <span className="font-bold" style={{ color: RED }}>9 000</span> médecins accompagnés et une méthode
-              éprouvée construite au contact des candidats aux EVC depuis{' '}
-              <span className="font-bold" style={{ color: RED }}>18 ans</span>.
+              Plateforme de préparation aux Épreuves de Vérification des Connaissances{' '}
+              <span className="font-bold" style={{ color: RED }}>(EVC)</span> destinée aux médecins
+              étrangers préparant les EVC dans le cadre de la Procédure d&rsquo;Autorisation
+              d&rsquo;Exercice <span className="font-bold" style={{ color: RED }}>(PAE)</span>.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
@@ -97,8 +97,8 @@ export function ManusHero() {
                 className="inline-flex items-center justify-center gap-2.5 rounded-xl border-2 px-7 py-4 text-base font-bold transition-colors hover:bg-[#FBEEEF]"
                 style={{ borderColor: '#E7C9CD', color: NAVY }}
               >
-                <Heart className="h-5 w-5" style={{ color: RED }} />
-                Découvrir les réussites
+                <Trophy className="h-5 w-5" style={{ color: RED }} />
+                Découvrir leurs témoignages
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
