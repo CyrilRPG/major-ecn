@@ -51,7 +51,9 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const nom = [firstName, lastName].filter(Boolean).join('   ');
 
   /** Dessine un watermark à 2 lignes (nom prénom au-dessus, email en-dessous)
-   *  centré horizontalement à la hauteur yRatio (de 0 à 1, depuis le bas). */
+   *  centré horizontalement à la hauteur yRatio (de 0 à 1, depuis le bas).
+   *  Les 2 lignes sont écartées d'environ 1.4× la hauteur du nom pour
+   *  éviter tout chevauchement (notamment avec l'inclinaison à 28°). */
   const drawWatermark = (
     page: ReturnType<typeof pdf.getPages>[number],
     width: number,
@@ -62,12 +64,20 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     const sizeSmall = sizeBig * 0.7;
     const cx = width / 2;
     const cy = height * yRatio;
+    // Offset vertical des baselines : garantit un blanc lisible entre nom
+    // et email, même après rotation. Tenir compte de l'inclinaison sin(28°)
+    // pour décaler aussi horizontalement l'email vers la droite afin que les
+    // deux lignes restent alignées perpendiculairement au texte.
+    const gap = sizeBig * 1.4;
+    const angle = Math.PI / 6.43; // ≈ 28°
+    const tilt = Math.cos(angle);
+    const slide = Math.sin(angle);
 
-    // Ligne 1 : Prénom Nom (taille gros)
+    // Ligne 1 : Prénom Nom (taille gros), au-dessus du centre
     const tw1 = font.widthOfTextAtSize(nom || 'Major ECN', sizeBig);
     page.drawText(nom || 'Major ECN', {
-      x: cx - (tw1 / 2) * Math.cos(Math.PI / 6.43),
-      y: cy + 8,
+      x: cx - (tw1 / 2) * tilt,
+      y: cy + gap / 2,
       size: sizeBig,
       font,
       color: rgb(0.45, 0.45, 0.45),
@@ -75,12 +85,12 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
       rotate: degrees(28),
     });
 
-    // Ligne 2 : email (plus petit, juste en dessous)
+    // Ligne 2 : email (plus petit), espacé d'un cran complet sous le nom
     if (email) {
       const tw2 = font.widthOfTextAtSize(email, sizeSmall);
       page.drawText(email, {
-        x: cx - (tw2 / 2) * Math.cos(Math.PI / 6.43),
-        y: cy - sizeBig * 0.6,
+        x: cx - (tw2 / 2) * tilt + gap * slide,
+        y: cy - gap / 2,
         size: sizeSmall,
         font,
         color: rgb(0.45, 0.45, 0.45),
