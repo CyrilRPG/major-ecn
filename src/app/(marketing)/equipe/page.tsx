@@ -7,7 +7,7 @@ import { AudienceSection, TrustBanner } from '@/components/marketing/manus-secti
 export const metadata = {
   title: 'Équipe pédagogique — Major ECN',
   description:
-    'Une équipe de praticiens hospitaliers, PU-PH et CCA expérimentés couvrant les 20 spécialités du programme EVC.',
+    'Une équipe de praticiens hospitaliers, PU-PH et CCA expérimentés couvrant les 45 spécialités du programme EVC.',
 };
 
 export default async function EquipePage() {

@@ -11,13 +11,13 @@ const META: Record<Kind, { label: string; price: string; sub: string; Icon: type
   flashcards: {
     label: 'Générer flashcards exhaustifs',
     price: '5 €',
-    sub: '30 à 200 cartes, calquées EDN, justifiées, sans contenu hors-sujet',
+    sub: '30 à 200 cartes, calquées EVC, justifiées, sans contenu hors-sujet',
     Icon: Layers3,
   },
   qcm: {
-    label: 'Générer 4 séries de 5 QCM',
-    price: '2 €',
-    sub: '20 questions, 5 items A–E avec justifications, format EDN',
+    label: 'Générer 40 QCM (4 séries Cours + 4 DP)',
+    price: '3 €',
+    sub: '8 séries de 5 questions : 4 séries de Cours (sous-thèmes complémentaires) + 4 dossiers progressifs (4 cas cliniques distincts, vignette + 5 questions enchaînées, style annales). Format EVC.',
     Icon: ClipboardList,
   },
 };

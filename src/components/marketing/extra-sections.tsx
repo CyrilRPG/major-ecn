@@ -5,11 +5,12 @@
  * cohérentes avec les composants existants dans manus-sections.tsx.
  */
 import {
-  Activity, ArrowRight, Award, BookOpen, BrainCircuit, CalendarClock, Check,
-  CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap,
-  LineChart, Microscope, ShieldCheck, Sparkles, Stethoscope,
-  Target, TrendingUp, Trophy, UserCheck, Users, Video,
+  Activity, ArrowRight, Award, Baby, BarChart3, BookOpen, Brain, BrainCircuit, Calendar, CalendarDays,
+  CalendarClock, Check, CheckCircle2, ClipboardCheck, Clock, FileText, Folder, GraduationCap, Heart,
+  Layers3, LineChart, ListChecks, MessageCircle, Microscope, Pill, Quote, Radio, Scissors, ShieldCheck,
+  Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
+import Link from 'next/link';
 import { Reveal } from './reveal';
 import { InscriptionForm } from './inscription-form';
 
@@ -70,7 +71,7 @@ export function PreparationProcessSection() {
             <Sparkles className="h-3 w-3" />
             Méthode
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-blue sm:text-5xl">
             Comment nous préparons les candidats
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -135,7 +136,7 @@ export function MethodologySection() {
               <BrainCircuit className="h-3 w-3" />
               Méthodologie EVC
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri sm:text-5xl">
               Une méthodologie pensée pour les EVC
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -217,7 +218,7 @@ export function EcosystemSection() {
             <Activity className="h-3 w-3" />
             Plateforme vivante
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-teal sm:text-5xl">
             Une plateforme vivante et active
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -258,49 +259,181 @@ export function EcosystemSection() {
 /* ============================================================
    4. SpecialtiesSection — Les disciplines couvertes
    ============================================================ */
-const SPECIALTIES = [
-  'Cardiologie', 'Pneumologie', 'Neurologie', 'Pédiatrie',
-  'Gériatrie', 'Urologie', 'Médecine interne', 'Infectiologie',
-  'Néphrologie', 'Endocrinologie', 'Rhumatologie', 'Hématologie',
-  'Oncologie', 'ORL', 'Ophtalmologie', 'Allergologie',
-  'Gynécologie', 'Psychiatrie', 'Urgences', 'Dermatologie',
+/* SpecialtiesSection — pixel-perfect maquette designer
+   Header navy + red · 6 catégories + panneau expandé · 3 footer cards + CTA */
+
+const NAVY = '#0F1B3D';
+const RED = '#A91D2C';
+const RED_BG = '#FDEEEF';
+
+const CATEGORIES = [
+  { Icon: Stethoscope, label: 'Médecine Générale',         desc: 'Préparation dédiée aux EVC de médecine générale (PAE).',                  tint: '#FDEEEF', stroke: '#A91D2C', active: false },
+  { Icon: Heart,       label: 'Spécialités Médicales',     desc: '20+ spécialités EVC',                                                     tint: '#FDEEEF', stroke: '#A91D2C', active: true },
+  { Icon: Scissors,    label: 'Spécialités Chirurgicales', desc: 'Préparation adaptée aux EVC de toutes les spécialités chirurgicales.',  tint: '#E5F0FA', stroke: '#1F4F88', active: false },
+  { Icon: Smile,       label: 'Odontologie',               desc: 'Préparation spécifique aux EVC en odontologie.',                          tint: '#E7F6EC', stroke: '#16793C', active: false },
+  { Icon: Pill,        label: 'Pharmacie',                 desc: 'Accompagnement adapté aux épreuves EVC de pharmacie.',                    tint: '#F1E8FD', stroke: '#5B2BB8', active: false },
+  { Icon: Baby,        label: 'Maïeutique',                desc: 'Préparation dédiée aux EVC de maïeutique.',                               tint: '#FFEAD9', stroke: '#B45B00', active: false },
+];
+
+const MEDICAL_COLS = [
+  ['Gériatrie', 'Médecine d’Urgence', 'Radiologie', 'Anesthésie-Réanimation', 'Pédiatrie'],
+  ['Cardiologie', 'Neurologie', 'Pneumologie', 'Néphrologie', 'Endocrinologie'],
+  ['Gastro-entérologie', 'Hématologie', 'Oncologie', 'Médecine interne', 'Rhumatologie'],
+  ['Psychiatrie', 'Médecine physique et réadaptation', 'Maladies infectieuses'],
+];
+
+const FOOTER_BADGES = [
+  { Icon: Users,        title: '45 spécialités EVC couvertes',                desc: 'De la médecine générale aux spécialités les plus pointues.' },
+  { Icon: BookOpen,     title: 'Ressources dédiées EVC (PAE)',                desc: 'Des contenus spécifiques à chaque discipline.' },
+  { Icon: Target,       title: 'Préparation EVC adaptée aux attentes des jurys', desc: 'Méthodologie, entraînements et cas cliniques ciblés.' },
 ];
 
 export function SpecialtiesSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-28 lg:py-36">
+    <section
+      className="bg-white py-20 lg:py-28"
+      style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        {/* Header */}
+        <Reveal className="mx-auto max-w-4xl text-center">
           <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em]"
-            style={{ background: 'rgba(107,26,42,0.06)', borderColor: 'rgba(107,26,42,0.2)', color: BORDEAUX }}
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: RED_BG, color: RED }}
           >
-            <Stethoscope className="h-3 w-3" />
-            Disciplines
+            <ShieldCheck className="h-3.5 w-3.5" />
+            45 spécialités EVC couvertes
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
-            20 spécialités couvertes
+          <h2 className="mt-5 text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]" style={{ color: NAVY }}>
+            Préparation <span style={{ color: RED }}>EVC (PAE)</span> adaptée<br className="hidden sm:block" />
+            <span> à votre spécialité</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
-            L’intégralité du programme EVC en médecine générale, traitée item par item avec
-            vidéos, fiches, QCM, annales et flashcards.
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-[#4B5563] sm:text-lg">
+            Préparez les <span className="font-semibold" style={{ color: RED }}>Épreuves de Vérification des Connaissances (EVC)</span> dans
+            le cadre de la <span className="font-semibold" style={{ color: RED }}>Procédure d’Autorisation d’Exercice (PAE)</span> grâce à des
+            contenus, des cas cliniques et une méthodologie adaptés aux attentes des jurys.
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {SPECIALTIES.map((s, i) => (
-            <Reveal key={s} delay={Math.min(i * 0.03, 0.4)}>
-              <div className="group flex items-center gap-3 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] px-4 py-3 transition-all hover:border-[#6B1A2A]/30 hover:bg-white hover:shadow-sm">
+        {/* 6 catégories */}
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {CATEGORIES.map((c) => (
+            <article
+              key={c.label}
+              className="relative flex flex-col items-center rounded-2xl border bg-white p-5 text-center transition-all hover:shadow-lg"
+              style={{
+                borderColor: c.active ? RED : '#E5E7EB',
+                borderWidth: c.active ? 2 : 1,
+                boxShadow: c.active ? '0 8px 24px -10px rgba(169,29,44,0.25)' : undefined,
+              }}
+            >
+              <span
+                className="flex h-14 w-14 items-center justify-center rounded-full"
+                style={{ background: c.tint, color: c.stroke }}
+              >
+                <c.Icon className="h-6 w-6" strokeWidth={2.2} />
+              </span>
+              <h3 className="mt-4 text-base font-extrabold leading-tight" style={{ color: NAVY }}>
+                {c.label}
+              </h3>
+              {c.active ? (
+                <>
+                  <span className="mt-3 block h-[3px] w-8 rounded-full" style={{ background: RED }} />
+                  <span
+                    className="mt-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-bold"
+                    style={{ background: RED_BG, color: RED }}
+                  >
+                    {c.desc}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="mt-3 block h-[2px] w-8 rounded-full bg-[#E5E7EB]" />
+                  <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">{c.desc}</p>
+                </>
+              )}
+              {c.active && (
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white transition-transform group-hover:scale-110"
-                  style={{ background: `linear-gradient(135deg, ${BORDEAUX}, ${BORDEAUX_DEEP})` }}
-                >
-                  <Stethoscope className="h-3.5 w-3.5" />
-                </span>
-                <span className="text-sm font-semibold text-[#2D2D2D]">{s}</span>
-              </div>
-            </Reveal>
+                  aria-hidden
+                  className="absolute -bottom-3 left-1/2 h-6 w-6 -translate-x-1/2 rotate-45 rounded-sm"
+                  style={{ background: 'white', borderRight: `2px solid ${RED}`, borderBottom: `2px solid ${RED}` }}
+                />
+              )}
+            </article>
           ))}
+        </div>
+
+        {/* Panneau expandé sous « Spécialités Médicales » */}
+        <div
+          className="mt-10 grid gap-8 rounded-2xl border bg-[#FBFBFB] p-6 sm:p-8 lg:grid-cols-[0.85fr_2.4fr] lg:gap-10"
+          style={{ borderColor: '#E5E7EB' }}
+        >
+          <div>
+            <h3 className="text-xl font-extrabold leading-tight" style={{ color: RED }}>
+              Préparation EVC par<br />spécialité médicale
+            </h3>
+            <p className="mt-4 text-sm leading-relaxed text-[#4B5563]">
+              Un programme complet<br />
+              pour réussir les EVC (PAE)<br />
+              dans votre spécialité.
+            </p>
+            <Link
+              href="/preparations"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors hover:bg-[#FBEEEF]"
+              style={{ borderColor: RED, color: RED }}
+            >
+              Voir toutes les spécialités EVC
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div>
+            <ul className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+              {MEDICAL_COLS.flat().map((s) => (
+                <li key={s} className="flex items-center gap-2 text-sm" style={{ color: NAVY }}>
+                  <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: RED }} />
+                  <span>{s}</span>
+                </li>
+              ))}
+              <li className="col-span-full mt-2 text-sm font-bold" style={{ color: RED }}>
+                + 10 autres spécialités EVC
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* 3 footer cards */}
+        <div className="mt-10 grid gap-4 rounded-2xl bg-[#F7F7F7] p-5 sm:grid-cols-3 sm:p-7">
+          {FOOTER_BADGES.map((b) => (
+            <div key={b.title} className="flex items-start gap-3">
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                style={{ background: RED_BG, color: RED }}
+              >
+                <b.Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-extrabold leading-tight" style={{ color: NAVY }}>{b.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-[#6B7280]">{b.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA principal */}
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <Link
+            href="/preparations"
+            className="inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-base font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
+            style={{ background: RED }}
+          >
+            Découvrir toutes les préparations EVC
+            <ArrowRight className="h-5 w-5" />
+          </Link>
+          <p className="flex items-center gap-2 text-sm text-[#6B7280]">
+            <ShieldCheck className="h-4 w-4" style={{ color: RED }} />
+            Une préparation complète et reconnue pour réussir les EVC (PAE), quelle que soit votre spécialité.
+          </p>
         </div>
       </div>
     </section>
@@ -329,7 +462,7 @@ export function MethodProofSection() {
             <ShieldCheck className="h-3 w-3" />
             La preuve
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-vivid sm:text-5xl">
             La preuve par la méthode
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -380,8 +513,8 @@ export function QCMPreviewSection() {
               <ClipboardCheck className="h-3 w-3" />
               Banque QCM
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
-              4 200+ QCM corrigés et justifiés
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri sm:text-5xl">
+              QCM corrigés et justifiés
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
               Chaque item est accompagné d’une justification médicale détaillée. Filtrage par
@@ -518,7 +651,7 @@ export function DashboardPreviewSection() {
               <LineChart className="h-3 w-3" />
               Suivi de progression
             </span>
-            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
+            <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-tri-rev sm:text-5xl">
               Tableau de bord en temps réel
             </h2>
             <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
@@ -546,65 +679,154 @@ export function DashboardPreviewSection() {
 }
 
 /* ============================================================
-   8. PedagogicalTeamSection — « Une équipe d'experts »
+   8. PedagogicalTeamSection — pixel-perfect maquette designer
+   « Une équipe qui connaît les attentes des EVC »
    ============================================================ */
-const TEAM_PROFILES = [
-  { Icon: Stethoscope, role: 'Praticiens hospitaliers', count: '12', desc: 'CHU Pitié-Salpêtrière, Saint-Antoine, Necker, Bichat.' },
-  { Icon: Microscope,  role: 'PU-PH & enseignants',     count: '5',  desc: 'Membres de jurys EVC depuis plusieurs sessions.' },
-  { Icon: UserCheck,   role: 'CCA expérimentés',        count: '8',  desc: 'Chefs de clinique anciens majors du concours.' },
-  { Icon: Users,       role: 'Spécialistes par discipline', count: '20+', desc: 'Un référent identifié pour chaque collège.' },
+const TM_NAVY = '#14254E';
+const TM_RED = '#A91D2C';
+const TM_RED_BG = '#FCEAEC';
+const TM_INK_SOFT = '#5B6478';
+
+const TEAM_BENEFITS = [
+  'Une expérience terrain au cœur des hôpitaux universitaires',
+  'Une connaissance précise des programmes et des attentes jurys',
+  'Des contenus conçus, relus et actualisés en continu',
 ];
+
+const TEAM_CARDS = [
+  { Icon: Users,      t: 'Comprendre ce qu’attend le jury',          d: 'Nos enseignants connaissent les critères d’évaluation, les pièges classiques et les points clés particulièrement surveillés lors des EVC.' },
+  { Icon: BookOpen,   t: 'Maîtriser les contenus essentiels',         d: 'Chaque spécialité dispose de contenus ciblés sur les connaissances réellement attendues : QCM, cas cliniques, fiches, entraînements.' },
+  { Icon: Target,     t: 'Acquérir la bonne méthodologie',            d: 'Raisonnement clinique, gestion du temps, analyse des questions, méthode de réponse : des techniques clés pour performer le jour J.' },
+  { Icon: TrendingUp, t: 'Une expérience au service de votre réussite', d: 'Plus de 9 000 médecins accompagnés dans de nombreuses spécialités. Une expérience concrète qui nous permet d’anticiper vos difficultés et d’y répondre.' },
+];
+
+const TEAM_STATS = [
+  { Icon: Calendar,    big: '18',                   label: 'ans d’expérience',      sub: 'au service de votre réussite' },
+  { Icon: Users,       big: '9 000+',               label: 'médecins accompagnés',  sub: 'depuis 2006' },
+  { Icon: Stethoscope, big: '45',                   label: 'spécialités couvertes', sub: 'toutes les disciplines EVC' },
+  { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
+];
+
+/** Collage de 4 cadres inclinés (placeholder générique N&B, prêt à recevoir
+ *  de vraies photos de l'équipe). */
+function TeamPhotoCollage() {
+  return (
+    <div className="flex h-full items-center justify-center gap-1.5">
+      {[0, 1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="relative h-56 w-20 shrink-0 overflow-hidden sm:w-24"
+          style={{
+            transform: 'skewX(-9deg)',
+            background: 'linear-gradient(160deg, #E7E9EE 0%, #C9CDD6 55%, #AEB3BF 100%)',
+            boxShadow: '0 12px 30px -16px rgba(15,27,61,0.4)',
+          }}
+        >
+          {/* silhouette praticien (générique, en niveaux de gris) */}
+          <span
+            className="absolute inset-0 flex items-end justify-center"
+            style={{ transform: 'skewX(9deg)' }}
+            aria-hidden
+          >
+            <UserCheck className="mb-3 h-16 w-16 text-white/60" strokeWidth={1.2} />
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function PedagogicalTeamSection() {
   return (
-    <section className="relative overflow-hidden py-24 lg:py-32" style={{ backgroundColor: '#FAFAF8' }}>
+    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        {/* Header centré */}
+        <Reveal className="mx-auto max-w-4xl text-center">
           <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em]"
-            style={{ background: 'rgba(107,26,42,0.06)', borderColor: 'rgba(107,26,42,0.2)', color: BORDEAUX }}
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: 'white', borderColor: 'rgba(169,29,44,0.3)', color: TM_RED }}
           >
-            <Users className="h-3 w-3" />
+            <Users className="h-3.5 w-3.5" />
             Équipe pédagogique
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-5xl">
-            Une expertise clinique et pédagogique reconnue
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+            <span style={{ color: TM_NAVY }}>Une équipe qui connaît les </span>
+            <span style={{ color: TM_RED }}>attentes des EVC</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
-            Plus de 25 médecins enseignants — praticiens hospitaliers, PU-PH, anciens majors du
-            concours — encadrent personnellement nos candidats.
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TM_INK_SOFT }}>
+            Depuis plus de 18 ans, nos enseignants accompagnent des médecins dans la préparation des EVC.
+            Ils maîtrisent les exigences des jurys, les contenus essentiels à connaître
+            et la méthodologie de réponse qui fait la différence le jour J.
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAM_PROFILES.map((p, i) => (
-            <Reveal key={p.role} delay={i * 0.06}>
-              <article className="group relative h-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white p-7 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-baseline justify-between">
-                  <span
-                    className="flex h-12 w-12 items-center justify-center rounded-xl text-white"
-                    style={{ background: `linear-gradient(135deg, ${BORDEAUX}, ${BORDEAUX_DEEP})` }}
-                  >
-                    <p.Icon className="h-5 w-5" />
-                  </span>
-                  <span className="font-display text-3xl font-black tracking-tight text-[#6B1A2A]">
-                    {p.count}
-                  </span>
+        {/* Corps : gauche (carte praticiens + citation) · droite (4 cartes) */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.15fr]">
+          {/* --- Colonne gauche --- */}
+          <div className="flex flex-col gap-6">
+            <div className="rounded-2xl border bg-white p-6 sm:p-7" style={{ borderColor: '#ECECEF' }}>
+              <div className="grid gap-5 sm:grid-cols-[1.1fr_1fr] sm:items-center">
+                <div>
+                  <h3 className="text-xl font-extrabold leading-tight" style={{ color: TM_NAVY }}>
+                    Des praticiens hospitaliers et enseignants expérimentés
+                  </h3>
+                  <ul className="mt-5 space-y-4">
+                    {TEAM_BENEFITS.map((b) => (
+                      <li key={b} className="flex items-start gap-2.5">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </span>
+                        <span className="text-sm leading-relaxed" style={{ color: TM_INK_SOFT }}>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="mt-5 font-display text-base font-bold tracking-tight text-[#2D2D2D]">
-                  {p.role}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#5A5A5A]">{p.desc}</p>
+                <TeamPhotoCollage />
+              </div>
+            </div>
+
+            {/* Citation */}
+            <div className="rounded-2xl border bg-white p-6 sm:p-7" style={{ borderColor: '#ECECEF' }}>
+              <Quote className="h-7 w-7" style={{ color: TM_RED }} fill="currentColor" />
+              <p className="mt-3 text-lg font-medium leading-relaxed" style={{ color: TM_NAVY }}>
+                Notre mission : vous donner toutes les clés pour comprendre,
+                apprendre efficacement et <span className="font-bold" style={{ color: TM_RED }}>réussir le jour J.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* --- Colonne droite : 4 cartes --- */}
+          <div className="grid gap-5 sm:grid-cols-2">
+            {TEAM_CARDS.map((c) => (
+              <article key={c.t} className="flex flex-col rounded-2xl border bg-white p-6 transition-all hover:shadow-lg" style={{ borderColor: '#ECECEF' }}>
+                <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                  <c.Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 text-base font-extrabold leading-tight" style={{ color: TM_RED }}>{c.t}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: TM_INK_SOFT }}>{c.d}</p>
+                <span className="mt-4 block h-[3px] w-8 rounded-full" style={{ background: TM_RED }} />
               </article>
-            </Reveal>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <Reveal delay={0.3} className="mt-14 text-center">
-          <p className="text-sm font-medium text-[#7A7A7A]">
-            Des médecins nous font confiance pour préparer leurs collègues étrangers en France.
-          </p>
-        </Reveal>
+        {/* Bandeau stats */}
+        <div className="mt-8 grid gap-5 rounded-2xl bg-[#F7F7F8] p-6 sm:grid-cols-2 lg:grid-cols-4 sm:p-8">
+          {TEAM_STATS.map((s) => (
+            <div key={s.label} className="flex items-start gap-3.5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                <s.Icon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="leading-tight" style={{ color: TM_NAVY }}>
+                  {s.big && <span className="text-2xl font-black tracking-tight">{s.big} </span>}
+                  <span className="text-sm font-bold">{s.label}</span>
+                </p>
+                <p className="mt-0.5 text-xs leading-relaxed" style={{ color: TM_INK_SOFT }}>{s.sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -629,8 +851,8 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
           >
             <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
           </span>
-          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[#2D2D2D] sm:text-4xl lg:text-5xl">
-            Rejoignez 2 400+ médecins
+          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight gradient-vivid sm:text-4xl lg:text-5xl">
+            Rejoignez les candidats
             <br className="hidden sm:block" />
             qui ont réussi avec Major ECN
           </h2>
@@ -649,10 +871,10 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
         <ul className="mt-10 grid grid-cols-2 gap-3 text-center text-[11px] font-semibold text-[#5A5A5A] sm:grid-cols-3 lg:grid-cols-6">
           {[
             { Icon: ShieldCheck,    t: 'Contenu certifié par des spécialistes' },
-            { Icon: TrendingUp,     t: '87 % de taux de réussite' },
+            { Icon: TrendingUp,     t: 'Progression · Suivi structuré' },
             { Icon: Activity,       t: 'Accès 24h/24, 7j/7' },
-            { Icon: BookOpen,       t: '4 200+ QCM disponibles' },
-            { Icon: Users,          t: '2 400+ médecins formés' },
+            { Icon: BookOpen,       t: 'Méthodologie · Approche EVC' },
+            { Icon: Users,          t: 'PH spécialistes & CCA' },
             { Icon: ClipboardCheck, t: 'Mis à jour chaque trimestre' },
           ].map((b) => (
             <li key={b.t} className="flex flex-col items-center gap-1.5 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4">
@@ -703,7 +925,7 @@ export function TarifsBlock() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] backdrop-blur">
             <Sparkles className="h-3 w-3" /> Inscriptions ouvertes — Session 2025
           </span>
-          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+          <h2 className="no-gradient mt-5 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Votre réussite aux EVC commence ici
           </h2>
           <p className="mt-4 text-base text-white/70 sm:text-lg">
@@ -774,6 +996,285 @@ export function TarifsBlock() {
         <p className="mt-10 text-center text-xs text-white/55">
           ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement · Annulation instantanée
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   10. BeyondPlatformSection — « Bien plus qu'une plateforme de cours »
+   ============================================================ */
+const BP_NAVY = '#14254E';
+const BP_PURPLE = '#6D28D9';
+const BP_RED = '#C0112E';
+const BP_INK_SOFT = '#5B6478';
+
+const BP_CARDS = [
+  { Icon: Radio,       t: 'Webinars en direct',            d: 'Sessions régulières avec notre équipe pédagogique pour approfondir les points clés du programme et répondre aux questions des candidats.', bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: CalendarDays, t: 'Masterclass & ateliers',        d: 'Des rendez-vous dédiés à la méthodologie, au raisonnement clinique et aux stratégies de réussite aux EVC.',                              bg: '#EAF1FB', fg: '#1E40AF' },
+  { Icon: Target,      t: 'Méthodologie EVC',              d: 'Une approche structurée développée au fil de 18 années d’expérience auprès des candidats aux EVC.',                                     bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: TrendingUp,  t: 'Nouveaux contenus chaque semaine', d: 'Une plateforme enrichie en continu avec de nouvelles ressources pédagogiques, entraînements et supports de révision.',                  bg: '#F1E8FD', fg: '#6D28D9' },
+];
+
+export function BeyondPlatformSection() {
+  return (
+    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em]"
+            style={{ background: '#F3EDFB', color: BP_PURPLE }}
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Méthode • Accompagnement • Entraînement
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: BP_NAVY }}>Bien </span>
+            <span style={{ color: BP_PURPLE }}>plus qu’une plateforme</span>
+            <span style={{ color: BP_NAVY }}> de cours</span>
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Depuis <span className="font-semibold" style={{ color: BP_RED }}>18 ans</span>, nous construisons un
+            environnement de préparation complet associant expertise pédagogique, méthodologie,
+            entraînement et accompagnement des candidats aux EVC.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {BP_CARDS.map((c, i) => (
+            <Reveal key={c.t} delay={i * 0.06}>
+              <article className="flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+                <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: c.bg, color: c.fg }}>
+                  <c.Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 text-lg font-extrabold leading-tight" style={{ color: BP_NAVY }}>{c.t}</h3>
+                <span className="mt-2 block h-[3px] w-8 rounded-full" style={{ background: c.fg }} />
+                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>{c.d}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2} className="mt-12">
+          <div className="flex flex-col items-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#F3EDFB', color: BP_PURPLE }}>
+              <GraduationCap className="h-5 w-5" />
+            </span>
+            <div className="mt-4 h-px w-full max-w-3xl bg-[#ECECEF]" />
+            <p className="mt-4 max-w-2xl text-center text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+              Une préparation exigeante, complète et évolutive pour mettre toutes les chances de votre côté.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   11. ToolsGridSection — « Tous les outils pour structurer votre progression »
+   ============================================================ */
+const TG_NAVY = '#14254E';
+const TG_BLUE = '#2563EB';
+const TG_INK_SOFT = '#5B6478';
+
+function MiniBar({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="w-28 shrink-0 truncate text-[11px]" style={{ color: TG_NAVY }}>{label}</span>
+      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]">
+        <span className="block h-full rounded-full" style={{ width: `${value}%`, background: color }} />
+      </span>
+      <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>{value}%</span>
+    </div>
+  );
+}
+
+export function ToolsGridSection() {
+  const cardCls = 'flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:shadow-lg sm:p-7';
+  const border = { borderColor: '#ECECEF' };
+  const titleCls = 'text-xl font-extrabold leading-tight';
+  const descCls = 'mt-3 text-sm leading-relaxed';
+  const descStyle = { color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" } as const;
+  const widget = 'mt-5 rounded-xl border p-4';
+  const widgetStyle = { borderColor: '#EEF0F4', background: '#FBFBFC' } as const;
+
+  return (
+    <section className="bg-[#FAFBFD] py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] sm:text-[11px]"
+            style={{ background: '#EEF2FB', color: TG_NAVY }}
+          >
+            Une méthode structurée • Des outils concrets • Une progression mesurable
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: TG_NAVY }}>Tous les outils pour structurer votre progression </span>
+            <span style={{ color: TG_BLUE }}>aux EVC</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Chaque fonctionnalité a été conçue pour répondre à un objectif simple :
+            vous aider à réviser avec méthode, gagner du temps et progresser efficacement jusqu’aux EVC.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {/* 1 — Visualisez votre progression */}
+          <Reveal>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#EAF1FB', color: '#1E40AF' }}><BarChart3 className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Visualisez<br />votre progression</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Suivez vos résultats par spécialité, thématique et type d’épreuve pour identifier rapidement vos priorités de révision.</p>
+              <div className={widget} style={widgetStyle}>
+                <p className="mb-2 text-[11px] font-bold" style={{ color: TG_NAVY }}>Spécialités</p>
+                <div className="space-y-1.5">
+                  <MiniBar label="Cardiologie" value={82} color="#2563EB" />
+                  <MiniBar label="Dermatologie" value={67} color="#2563EB" />
+                  <MiniBar label="Endocrinologie" value={58} color="#2563EB" />
+                  <MiniBar label="Gastro-entérologie" value={74} color="#2563EB" />
+                </div>
+                <p className="mt-3 text-[11px] font-bold" style={{ color: '#16793C' }}>+18% <span className="font-medium text-[#9AA1AE]">sur 4 semaines</span></p>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 2 — Révisez ce qui compte vraiment */}
+          <Reveal delay={0.05}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#E7F6EC', color: '#16793C' }}><Target className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Révisez ce qui compte<br />vraiment</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Des recommandations et parcours de travail adaptés à votre niveau pour concentrer vos efforts là où ils auront le plus d’impact.</p>
+              <div className={widget} style={widgetStyle}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] text-[#9AA1AE]">Votre priorité actuelle</span>
+                  <span className="rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[10px] font-bold text-[#16793C]">Priorité haute</span>
+                </div>
+                <p className="mt-1 text-sm font-bold" style={{ color: TG_NAVY }}>Physiopathologie cardiovasculaire</p>
+                <p className="mt-2 text-[11px] text-[#9AA1AE]">Plan recommandé</p>
+                <p className="text-[12px] font-semibold" style={{ color: TG_NAVY }}>12 dossiers · 45 QCM · 2 fiches</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]"><span className="block h-full rounded-full" style={{ width: '66%', background: '#16793C' }} /></span>
+                  <span className="text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>66%</span>
+                </div>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 3 — Mesurez vos performances */}
+          <Reveal delay={0.1}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#F1E8FD', color: '#6D28D9' }}><LineChart className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Mesurez<br />vos performances</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Analysez votre évolution au fil du temps et repérez les notions qui nécessitent un renforcement.</p>
+              <div className={widget + ' grid grid-cols-3 gap-2'} style={widgetStyle}>
+                {[
+                  { l: 'Score moyen', v: '76%', s: '+8%', sub: 'vs semaine dernière', g: true },
+                  { l: 'Percentile', v: '78ᵉ', s: '+12', sub: 'vs semaine dernière', g: true },
+                  { l: 'Points à renforcer', v: '14', s: '', sub: 'thématiques identifiées', g: false },
+                ].map((k) => (
+                  <div key={k.l}>
+                    <p className="text-[10px] leading-tight text-[#9AA1AE]">{k.l}</p>
+                    <p className="mt-1 text-lg font-black" style={{ color: TG_NAVY }}>{k.v}</p>
+                    {k.s && <p className="text-[10px] font-bold text-[#16793C]">{k.s}</p>}
+                    <p className="text-[9px] leading-tight text-[#9AA1AE]">{k.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 4 — Entraînez-vous efficacement */}
+          <Reveal delay={0.15}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#FFEAD9', color: '#B45B00' }}><Brain className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Entraînez-vous<br />efficacement</h3>
+              </div>
+              <p className={descCls} style={descStyle}>QCM, flashcards, dossiers progressifs, annales et ressources pédagogiques organisés pour favoriser une progression régulière.</p>
+              <div className={widget + ' flex flex-wrap gap-2'} style={widgetStyle}>
+                {[
+                  { Icon: ListChecks, l: 'QCM', c: '#B45B00', bg: '#FFEAD9' },
+                  { Icon: Layers3, l: 'Flashcards', c: '#B45B00', bg: '#FFF3E2' },
+                  { Icon: Folder, l: 'Dossiers', c: '#1E40AF', bg: '#EAF1FB' },
+                  { Icon: FileText, l: 'Annales', c: '#6D28D9', bg: '#F1E8FD' },
+                  { Icon: FileText, l: 'Fiches', c: '#16793C', bg: '#E7F6EC' },
+                ].map((t) => (
+                  <span key={t.l} className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-bold" style={{ background: t.bg, color: t.c }}>
+                    <t.Icon className="h-3.5 w-3.5" />{t.l}
+                  </span>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 5 — Organisez vos révisions */}
+          <Reveal delay={0.2}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#EAF1FB', color: '#1E40AF' }}><CalendarDays className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Organisez<br />vos révisions</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Structurez votre préparation grâce à des objectifs de travail, un calendrier clair et un suivi de vos avancées.</p>
+              <div className={widget} style={widgetStyle}>
+                <div className="grid grid-cols-7 gap-1 text-center">
+                  {[
+                    { d: 'Lun', a: 'QCM', t: '30 min', c: '#1E40AF' },
+                    { d: 'Mar', a: 'Dossier', t: '45 min', c: '#16793C' },
+                    { d: 'Mer', a: 'Fiche', t: '30 min', c: '#6D28D9' },
+                    { d: 'Jeu', a: 'Annales', t: '1h', c: '#B45B00' },
+                    { d: 'Ven', a: 'QCM', t: '30 min', c: '#1E40AF' },
+                    { d: 'Sam', a: '–', t: '', c: '#9AA1AE' },
+                    { d: 'Dim', a: '–', t: '', c: '#9AA1AE' },
+                  ].map((x) => (
+                    <div key={x.d}>
+                      <p className="text-[9px] text-[#9AA1AE]">{x.d}</p>
+                      <div className="mt-1 rounded-md py-1.5" style={{ background: x.a === '–' ? 'transparent' : '#F4F6FA' }}>
+                        <p className="text-[9px] font-bold leading-tight" style={{ color: x.c }}>{x.a}</p>
+                        {x.t && <p className="text-[8px] text-[#9AA1AE]">{x.t}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="text-[10px] text-[#9AA1AE]">Objectif hebdomadaire</span>
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]"><span className="block h-full rounded-full" style={{ width: '72%', background: '#2563EB' }} /></span>
+                  <span className="text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>72%</span>
+                </div>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 6 — Bénéficiez d'un accompagnement */}
+          <Reveal delay={0.25}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: '#C0112E' }}><Users className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Bénéficiez d’un<br />accompagnement<br />pédagogique</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Webinars, événements pédagogiques et échanges avec notre équipe pour vous accompagner tout au long de votre préparation.</p>
+              <div className={widget + ' grid grid-cols-4 gap-2 text-center'} style={widgetStyle}>
+                {[
+                  { Icon: Radio, l: 'Webinars en direct' },
+                  { Icon: CalendarDays, l: 'Événements pédagogiques' },
+                  { Icon: UserCheck, l: 'Experts à vos côtés' },
+                  { Icon: MessageCircle, l: 'Réponses à vos questions' },
+                ].map((x) => (
+                  <div key={x.l} className="flex flex-col items-center gap-1">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: '#C0112E' }}><x.Icon className="h-4 w-4" /></span>
+                    <p className="text-[9px] leading-tight text-[#6B7280]">{x.l}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

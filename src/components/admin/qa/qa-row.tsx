@@ -9,6 +9,7 @@ import {
   deleteAnswerAction,
   archiveQuestionAction,
 } from '@/app/admin/qa/actions';
+import { Markdown } from '@/components/ui/markdown';
 
 export type QaAnswerView = {
   id: string;
@@ -137,7 +138,7 @@ export function QaRow({ q }: { q: QaQuestionView }) {
                       {new Date(a.created_at).toLocaleString('fr-FR', { day: '2-digit', month: 'short' })}
                     </span>
                   </p>
-                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-(--color-ink)">{a.body}</p>
+                  <Markdown className="mt-1.5 text-sm text-(--color-ink)">{a.body}</Markdown>
                 </div>
                 <button
                   type="button"

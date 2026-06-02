@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { TarifsBlock, FinalCtaBlock } from '@/components/marketing/extra-sections';
-import { FAQSection } from '@/components/marketing/manus-sections';
 
 export const metadata = {
   title: 'Tarifs — Major ECN',
@@ -16,7 +15,6 @@ export default async function TarifsPage() {
   return (
     <>
       <TarifsBlock />
-      <FAQSection />
       <FinalCtaBlock colleges={colleges} />
     </>
   );

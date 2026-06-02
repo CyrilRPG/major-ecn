@@ -25,26 +25,25 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const fiche = c.fiches?.[0];
-  let signedUrl: string | null = null;
-  if (fiche?.storage_path) {
-    const { data } = await supabase.storage.from('fiches').createSignedUrl(fiche.storage_path, 60 * 60);
-    signedUrl = data?.signedUrl ?? null;
-  }
+  // PDF watermarké à la volée avec l'identité de l'utilisateur connecté
+  // (route /api/fiches/[cours]/pdf). Pas d'URL signée nécessaire ; l'auth
+  // est gérée côté route via Supabase cookies.
+  const pdfUrl: string | null = fiche?.storage_path ? `/api/fiches/${coursId}/pdf` : null;
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-6 lg:px-8">
+    <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
       {fiche?.pages && (
-        <p className="mb-3 text-sm text-(--color-ink-soft)">{fiche.pages} pages</p>
+        <p className="mb-2 text-xs text-(--color-ink-soft) sm:mb-3 sm:text-sm">{fiche.pages} pages</p>
       )}
-      {signedUrl ? (
-        <PdfViewer src={signedUrl} coursId={coursId} initiallyRead={initiallyRead} />
+      {pdfUrl ? (
+        <PdfViewer src={pdfUrl} coursId={coursId} initiallyRead={initiallyRead} />
       ) : (
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState
             icon={FileText}
             title="Fiche bientôt disponible"
-            description="La fiche de synthèse est en cours de rédaction par l’équipe pédagogique. Revenez d’ici quelques jours."
+            description="La fiche de cours exhaustive est en cours de rédaction par l’équipe pédagogique. Revenez d’ici quelques jours."
           />
         </div>
       )}

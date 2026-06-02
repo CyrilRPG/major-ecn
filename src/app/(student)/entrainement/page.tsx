@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { ArrowRight, ListChecks, Target, TrendingDown } from 'lucide-react';
+import { Building2, CheckCircle, HelpCircle, ListChecks, Target, TrendingDown } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
@@ -60,10 +59,12 @@ export default async function EntrainementPage() {
   const defaultAvailable = weak.reduce((sum, c) => sum + (questionsByCollege.get(c.id) ?? 0), 0);
   const sessionSize = Math.min(defaultAvailable || MAX_Q, MAX_Q);
 
+  // KPI latéraux : chacun a sa propre couleur (purple / blue / green)
+  // pour ancrer la lecture et rassurer (alignement maquette).
   const stats = [
-    { value: sessionSize, label: 'questions dans la session' },
-    { value: totalToReview, label: 'questions ratées à revoir' },
-    { value: weak.length, label: 'collèges à renforcer' },
+    { value: sessionSize, label: 'questions dans la session', Icon: HelpCircle, accent: '#7C3AED', bg: '#F1E8FD' },
+    { value: totalToReview, label: 'questions ratées à revoir', Icon: CheckCircle, accent: '#2563EB', bg: '#E5F1FF' },
+    { value: weak.length, label: 'collèges à renforcer',      Icon: Building2,  accent: '#16A34A', bg: '#E7F6EC' },
   ];
   const steps = [
     { Icon: TrendingDown, t: 'On repère tes erreurs', d: 'Analyse de tes QCM passés, collège par collège.' },
@@ -73,8 +74,15 @@ export default async function EntrainementPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-7 lg:px-8">
-      {/* Hero — large, sobre */}
-      <section className="grid items-center gap-6 rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) lg:grid-cols-[1.5fr_1fr] lg:p-8">
+      {/* Hero — fond pastel doux (blanc → blush → bleu très clair) pour
+          apporter de la chaleur à la page sans concurrencer le bouton CTA. */}
+      <section
+        className="grid items-center gap-6 rounded-2xl border border-(--color-border) p-6 shadow-(--shadow-soft) lg:grid-cols-[1.5fr_1fr] lg:p-8"
+        style={{
+          background:
+            'linear-gradient(135deg, #FFFFFF 0%, #FDF1F3 45%, #EFF4FF 100%)',
+        }}
+      >
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-(--color-primary-soft) px-3 py-1 text-xs font-semibold text-(--color-primary-deep)">
             <Target className="h-3.5 w-3.5" />
@@ -101,10 +109,23 @@ export default async function EntrainementPage() {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-4 py-3 text-center lg:flex lg:items-center lg:gap-3 lg:text-left"
+              className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-3 text-left shadow-(--shadow-soft)"
             >
-              <p className="text-2xl font-bold tabular-nums text-(--color-primary)">{s.value}</p>
-              <p className="mt-0.5 text-xs leading-tight text-(--color-ink-muted) lg:mt-0">{s.label}</p>
+              <span
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+                style={{ background: s.bg, color: s.accent }}
+              >
+                <s.Icon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <p
+                  className="text-2xl font-bold tabular-nums leading-none"
+                  style={{ color: s.accent }}
+                >
+                  {s.value}
+                </p>
+                <p className="mt-1 text-xs leading-tight text-(--color-ink-muted)">{s.label}</p>
+              </div>
             </div>
           ))}
         </div>

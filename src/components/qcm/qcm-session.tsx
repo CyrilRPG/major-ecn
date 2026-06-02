@@ -27,6 +27,7 @@ export function QcmSession({
   coursId,
   serieLabel,
   serieKind,
+  vignette = null,
   questions,
   backHref,
   mode = 'live',
@@ -36,6 +37,9 @@ export function QcmSession({
   coursId: string;
   serieLabel: string;
   serieKind: 'qcm' | 'annale';
+  /** Vignette clinique commune à toutes les questions (DP / annale).
+   *  Affichée dans un encadré séparé au-dessus de chaque question. */
+  vignette?: string | null;
   questions: Question[];
   backHref: string;
   mode?: 'live' | 'training';
@@ -212,6 +216,30 @@ export function QcmSession({
       </div>
       <Progress value={progressPct} className="mb-3" />
 
+      {/* Vignette clinique commune à toutes les questions (DP / annale) —
+          <details> natif ouvert par défaut : visible sur tous les écrans
+          (y compris mobile), repliable après lecture pour gagner de la
+          place quand l'élève enchaîne les questions du DP. */}
+      {vignette && (
+        <details
+          open
+          className="group mb-3 block rounded-xl border border-(--color-primary)/30 border-l-4 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5 shadow-sm open:bg-(--color-primary-soft)/30"
+        >
+          <summary className="flex cursor-pointer items-center justify-between gap-2 list-none [&::-webkit-details-marker]:hidden">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
+              Contexte clinique du dossier
+            </span>
+            <span className="text-[11px] font-medium text-(--color-primary-deep) underline-offset-2 group-open:no-underline group-[:not([open])]:underline">
+              <span className="group-open:hidden">Afficher</span>
+              <span className="hidden group-open:inline">Réduire</span>
+            </span>
+          </summary>
+          <p className="mt-2 whitespace-pre-line break-words text-sm leading-relaxed text-(--color-ink)">
+            {vignette}
+          </p>
+        </details>
+      )}
+
       <motion.div
         key={q.id}
         initial={{ opacity: 0 }}
@@ -220,7 +248,11 @@ export function QcmSession({
         className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-          {isQroc ? 'QROC — Réponse courte' : 'Énoncé'}
+          {isQroc
+            ? `QROC — Question ${index + 1}`
+            : vignette
+              ? `Question ${index + 1}`
+              : 'Énoncé'}
         </p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line">
           {q.enonce}

@@ -19,7 +19,9 @@ export function parseScope(raw: unknown): PermissionScope {
     if (t === 'college') {
       const cs = (raw as { colleges?: unknown }).colleges;
       const list = Array.isArray(cs) ? cs.filter((x): x is string => typeof x === 'string') : [];
-      return { type: 'college', colleges: list, offer };
+      const co = (raw as { cours?: unknown }).cours;
+      const cours = Array.isArray(co) ? co.filter((x): x is string => typeof x === 'string') : undefined;
+      return { type: 'college', colleges: list, offer, ...(cours && cours.length > 0 ? { cours } : {}) };
     }
     // Legacy faculty-scoped accounts → full access (single EVC faculté now).
     if (t === 'faculty') return { type: 'all', offer };
@@ -30,6 +32,18 @@ export function parseScope(raw: unknown): PermissionScope {
 export function canAccessCollege(scope: PermissionScope, collegeId: string): boolean {
   if (scope.type === 'all') return true;
   return scope.colleges.includes(collegeId);
+}
+
+/** Vérifie l'accès à un cours précis :
+ *  - 'all' → toujours autorisé
+ *  - 'college' sans liste de cours → autorisé si le collège du cours est dans la liste
+ *  - 'college' avec liste de cours → autorisé si le cours est dans la liste explicite
+ */
+export function canAccessCours(scope: PermissionScope, collegeId: string, coursId: string): boolean {
+  if (scope.type === 'all') return true;
+  if (!scope.colleges.includes(collegeId)) return false;
+  if (scope.cours && scope.cours.length > 0) return scope.cours.includes(coursId);
+  return true;
 }
 
 /** Legacy faculté gate kept for unreferenced faculté routes; no-op under the EVC model. */

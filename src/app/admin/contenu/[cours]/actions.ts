@@ -133,7 +133,14 @@ type GenResult =
   | { ok: true; count: number; cost_usd: number }
   | { error: string; needsFiche?: boolean };
 
-type CourseCtx = { titre: string; matiere: string; description: string | null; hasFiche: boolean };
+type CourseCtx = {
+  titre: string;
+  matiere: string;
+  description: string | null;
+  hasFiche: boolean;
+  /** Annales déjà indexées pour ce cours — utilisées comme référence de style. */
+  annales: { label: string; questions: { enonce: string; items: { lettre: string; enonce: string; is_correct: boolean; justification: string }[] }[] }[];
+};
 
 async function loadCourseContext(coursId: string): Promise<CourseCtx | null> {
   const supabase = createAdminClient();
@@ -146,15 +153,49 @@ async function loadCourseContext(coursId: string): Promise<CourseCtx | null> {
   const matiere = (data as { matieres?: { nom?: string } | null }).matieres?.nom ?? '';
   const fiches = (data as { fiches?: { storage_path: string | null }[] | null }).fiches ?? [];
   const hasFiche = fiches.some((f) => !!f.storage_path);
-  return { titre: data.titre, matiere, description: data.description, hasFiche };
+
+  // Charge les annales existantes du cours (style de référence pour les DP)
+  const { data: annaleSeries } = await supabase
+    .from('qcm_series')
+    .select('id, label, qcm_questions(enonce, qcm_items(lettre, enonce, is_correct, justification))')
+    .eq('cours_id', coursId)
+    .eq('type', 'annale')
+    .order('order_index');
+  const annales = (annaleSeries ?? []).map((s) => ({
+    label: s.label,
+    questions: ((s as { qcm_questions?: { enonce: string; qcm_items?: { lettre: string; enonce: string; is_correct: boolean; justification: string }[] }[] }).qcm_questions ?? []).map((q) => ({
+      enonce: q.enonce,
+      items: q.qcm_items ?? [],
+    })),
+  }));
+
+  return { titre: data.titre, matiere, description: data.description, hasFiche, annales };
 }
 
 function contextToText(ctx: CourseCtx): string {
-  return [
+  const parts = [
     `Titre du cours : ${ctx.titre}`,
     ctx.matiere ? `Collège / matière : ${ctx.matiere}` : '',
     ctx.description ? `Description / résumé : ${ctx.description}` : '',
-  ].filter(Boolean).join('\n');
+  ];
+  if (ctx.annales.length > 0) {
+    parts.push('');
+    parts.push('=== ANNALES DU COURS (référence de style obligatoire pour les DP) ===');
+    for (const s of ctx.annales) {
+      parts.push(`\n--- ${s.label} ---`);
+      for (const q of s.questions.slice(0, 5)) {
+        parts.push(`\nQ : ${q.enonce}`);
+        for (const it of q.items) {
+          parts.push(`  ${it.lettre}. ${it.enonce} [${it.is_correct ? 'VRAI' : 'FAUX'}] — ${it.justification}`);
+        }
+      }
+    }
+  } else {
+    parts.push('');
+    parts.push('=== Aucune annale indexée pour ce cours ===');
+    parts.push('Génère les DP en s\'appuyant uniquement sur le contenu de la fiche, style EVC standard.');
+  }
+  return parts.filter(Boolean).join('\n');
 }
 
 async function logGeneration(args: {
@@ -267,6 +308,10 @@ export async function generateFlashcardsAction(coursId: string): Promise<GenResu
 type QcmGenShape = {
   series: {
     label: string;
+    /** 'cours' = questions isolées · 'dp' = dossier progressif avec vignette */
+    kind?: 'cours' | 'dp';
+    /** Vignette clinique commune (uniquement pour kind='dp'). */
+    vignette?: string;
     questions: {
       enonce: string;
       items: { lettre: string; enonce: string; is_correct: boolean; justification: string }[];
@@ -291,7 +336,7 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
   const { system, user } = qcmPrompt(contextToText(ctx));
   let result;
   try {
-    result = await callClaude({ system, user, maxTokens: 14000, temperature: 0.4 });
+    result = await callClaude({ system, user, maxTokens: 28000, temperature: 0.4 });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Échec de l’IA';
     await logGeneration({
@@ -327,15 +372,34 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
   let serieIdx = (existingSeries?.[0]?.order_index ?? -1) + 1;
 
   let totalQuestions = 0;
+  let coursSeen = 0;
+  let dpSeen = 0;
 
-  for (const s of parsed.series.slice(0, 4)) {
-    const { data: serieRow, error: serieErr } = await admin
+  for (const s of parsed.series.slice(0, 8)) {
+    const kind: 'cours' | 'dp' = s.kind === 'dp' || /^DP\s*\d/i.test(s.label ?? '') ? 'dp' : 'cours';
+    let label: string;
+    if (kind === 'cours') {
+      coursSeen += 1;
+      label = s.label?.trim() || `QCM — Série ${coursSeen}`;
+      // Conversion des anciens libellés « Cours — … » + ajout du préfixe.
+      label = label.replace(/^cours\b/i, 'QCM');
+      if (!/^qcm/i.test(label)) label = `QCM — ${label}`;
+    } else {
+      dpSeen += 1;
+      label = s.label?.trim() || `DP ${dpSeen}`;
+      if (!/^dp\s*\d/i.test(label)) label = `DP ${dpSeen} · ${label}`;
+    }
+
+    const vignette = kind === 'dp' && s.vignette?.trim() ? s.vignette.trim() : null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: serieRow, error: serieErr } = await (admin as any)
       .from('qcm_series')
       .insert({
         cours_id: coursId,
-        label: s.label || `Série ${serieIdx + 1}`,
+        label,
         type: 'qcm',
         order_index: serieIdx++,
+        vignette, // stockée séparément, affichée dans un encadré au-dessus de chaque question
       })
       .select('id').single();
     if (serieErr || !serieRow) continue;
@@ -343,9 +407,16 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
     const questions = (s.questions ?? []).slice(0, 5);
     for (let qi = 0; qi < questions.length; qi++) {
       const q = questions[qi];
+      // Si l'IA a quand même préfixé la vignette dans l'énoncé, on la retire :
+      // la vignette est désormais gérée séparément côté UI.
+      let enonce = q.enonce;
+      if (vignette && enonce.includes(vignette.slice(0, 40))) {
+        enonce = enonce.replace(vignette, '').replace(/^[\s\n]+/, '').trim();
+      }
+
       const { data: qRow, error: qErr } = await admin
         .from('qcm_questions')
-        .insert({ serie_id: serieRow.id, enonce: q.enonce, order_index: qi })
+        .insert({ serie_id: serieRow.id, enonce, order_index: qi })
         .select('id').single();
       if (qErr || !qRow) continue;
 
@@ -367,7 +438,7 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
     kind: 'qcm', items_count: totalQuestions,
     input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
     cost_usd, price_eur: PRICE_EUR.qcm,
-    status: totalQuestions === 20 ? 'success' : 'partial',
+    status: totalQuestions === 40 ? 'success' : 'partial',
     error_message: null, model: result.model,
   });
 

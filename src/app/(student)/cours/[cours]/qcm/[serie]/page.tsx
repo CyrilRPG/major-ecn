@@ -19,11 +19,13 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
 
   const { data: serie } = await supabase
     .from('qcm_series')
-    .select('id, label, type, cours_id')
+    // cast pour exposer la colonne vignette (ajoutée par migration)
+    .select('id, label, type, cours_id, vignette' as 'id, label, type, cours_id')
     .eq('id', serieId)
     .eq('cours_id', coursId)
     .maybeSingle();
   if (!serie) notFound();
+  const vignette = (serie as unknown as { vignette?: string | null }).vignette ?? null;
 
   const { data: questions } = await supabase
     .from('qcm_questions')
@@ -60,6 +62,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
       coursId={coursId}
       serieLabel={serie.label}
       serieKind={isAnnale ? 'annale' : 'qcm'}
+      vignette={vignette}
       questions={enrichedQuestions}
       backHref={backHref}
     />

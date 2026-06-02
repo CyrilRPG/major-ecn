@@ -15,6 +15,7 @@ type ProfScope = {
   role?: 'professor';
   type?: 'all' | 'college';
   colleges?: string[];
+  cours?: string[];
   /** Nouveau format : permission par type. */
   content_permissions?: Partial<Record<ContentType, PermissionLevel>>;
   /** Ancien format (rétrocompat) : liste de types accessibles (équivalent rw). */
@@ -28,11 +29,21 @@ const LEVEL_SHORT: Record<PermissionLevel, string> = {
   rw: 'lecture+écriture',
 };
 
-function describeScope(scope: ProfScope, collegeMap: Record<string, string>): { label: string; tone: 'muted' | 'primary' }[] {
+function describeScope(
+  scope: ProfScope,
+  collegeMap: Record<string, string>,
+  coursMap: Record<string, string>,
+): { label: string; tone: 'muted' | 'primary' }[] {
   const tags: { label: string; tone: 'muted' | 'primary' }[] = [];
   if (!scope.type || scope.type === 'all') tags.push({ label: 'Tous les collèges', tone: 'primary' });
   else if (scope.colleges?.length) {
     for (const id of scope.colleges) tags.push({ label: collegeMap[id] ?? id, tone: 'muted' });
+    if (scope.cours?.length) {
+      const list = scope.cours.length <= 4
+        ? scope.cours.map((id) => coursMap[id] ?? id).join(', ')
+        : `${scope.cours.length} cours spécifiques`;
+      tags.push({ label: `Cours : ${list}`, tone: 'muted' });
+    }
   } else tags.push({ label: 'Aucun collège', tone: 'muted' });
 
   // Permissions par type (nouveau format prioritaire)
@@ -62,18 +73,31 @@ export default async function ProfessorsPage() {
       .eq('role', 'professor')
       .order('last_name'),
     admin.from('facultes')
-      .select('semestres(matieres(id, nom, order_index))')
+      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
   ]);
 
-  const colleges = (
-    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null }[] }[] } | null)?.semestres ?? [])
+  type MatRaw = { id: string; nom: string; order_index: number | null; cours?: { id: string; titre: string; order_index: number | null }[] | null };
+  const matieres = (
+    ((fac as unknown as { semestres?: { matieres?: MatRaw[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-    .map((m) => ({ id: m.id, nom: m.nom }));
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+  const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom }));
   const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
+  const coursByCollege: Record<string, { id: string; titre: string }[]> = Object.fromEntries(
+    matieres.map((m) => [
+      m.id,
+      (m.cours ?? [])
+        .slice()
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((c) => ({ id: c.id, titre: c.titre })),
+    ]),
+  );
+  const coursMap = Object.fromEntries(
+    Object.values(coursByCollege).flat().map((c) => [c.id, c.titre]),
+  );
 
   const rows = (profs ?? []) as Array<{
     id: string; first_name: string | null; last_name: string | null;
@@ -92,7 +116,7 @@ export default async function ProfessorsPage() {
             l’onglet « Questions / Réponses » de l’admin.
           </p>
         </div>
-        <AddProfessorDialog colleges={colleges} />
+        <AddProfessorDialog colleges={colleges} coursByCollege={coursByCollege} />
       </header>
 
       {rows.length === 0 ? (
@@ -108,7 +132,7 @@ export default async function ProfessorsPage() {
         <ul className="space-y-3">
           {rows.map((p) => {
             const scope = (p.permission_scope ?? {}) as ProfScope;
-            const tags = describeScope(scope, collegeMap);
+            const tags = describeScope(scope, collegeMap, coursMap);
             return (
               <li key={p.id} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
                 <div className="flex flex-wrap items-start gap-4">

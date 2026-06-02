@@ -32,9 +32,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const { first_name, last_name, email, phone, permission_type, colleges, content_permissions } = parsed.data;
+  const { first_name, last_name, email, phone, permission_type, colleges, cours, content_permissions } = parsed.data;
 
   const cleanedColleges = permission_type === 'college' ? (colleges ?? []) : [];
+  const cleanedCours = permission_type === 'college' ? (cours ?? []).filter((c) => typeof c === 'string') : [];
   const cleanedPermissions: Partial<Record<ContentType, PermissionLevel>> = {};
   for (const t of CONTENT_TYPES) {
     const lvl = content_permissions?.[t];
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
     role: 'professor',
     type: permission_type,
     colleges: cleanedColleges,
+    ...(cleanedCours.length > 0 ? { cours: cleanedCours } : {}),
     content_permissions: cleanedPermissions,
   };
 
@@ -101,10 +103,25 @@ export async function POST(req: Request) {
   const setupUrl = (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
   const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
   const sent = await sendEmail({ to: email, subject, html, text });
-  if (!sent.ok && sent.error.includes('RESEND_API_KEY non configurée')) {
-    await admin.auth.admin.inviteUserByEmail(email, {
-      data: { first_name, last_name, role: 'professor' },
-      redirectTo,
+  if (!sent.ok) {
+    // Fallback Supabase si RESEND_API_KEY absente ; sinon on remonte l'erreur
+    // au front pour pouvoir diagnostiquer (domaine non vérifié, clé invalide, etc.)
+    if (sent.error.includes('RESEND_API_KEY non configurée')) {
+      await admin.auth.admin.inviteUserByEmail(email, {
+        data: { first_name, last_name, role: 'professor' },
+        redirectTo,
+      });
+      return NextResponse.json({
+        ok: true,
+        id: created.user.id,
+        warning: 'RESEND_API_KEY absente — email envoyé via Supabase Auth (template par défaut).',
+      });
+    }
+    // Erreur Resend réelle (4xx/5xx). Le prof est créé mais sans email.
+    return NextResponse.json({
+      ok: true,
+      id: created.user.id,
+      warning: `Profil créé, mais l'email Resend n'a pas pu être envoyé : ${sent.error}`,
     });
   }
 

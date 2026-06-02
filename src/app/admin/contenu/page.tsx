@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { requireContentEditor } from '@/lib/auth/require-role';
+import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { iconFromKey } from '@/lib/icons';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,7 @@ type College = {
 };
 
 export default async function AdminContenuPage() {
-  await requireContentEditor();
+  const { scope } = await requireContentEditor();
   const supabase = await createClient();
   const { data } = await supabase
     .from('facultes')
@@ -42,7 +42,14 @@ export default async function AdminContenuPage() {
     ((data as unknown as { semestres?: { matieres?: College[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    // Restreint la liste des cours selon les permissions du professeur (admin = tout)
+    .map((m) => ({
+      ...m,
+      cours: (m.cours ?? []).filter((c) => profCanAccessCours(scope, m.id, c.id)),
+    }))
+    // Cache les collèges qui n'ont plus aucun cours accessible
+    .filter((m) => (m.cours ?? []).length > 0);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">

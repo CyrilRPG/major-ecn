@@ -41,12 +41,12 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
           <EmptyState
             icon={PlayCircle}
             title="Vidéo bientôt disponible"
-            description="L’enregistrement de ce cours est en cours de post-production. En attendant, ouvrez la fiche de synthèse pour avancer votre préparation."
+            description="L’enregistrement de ce cours est en cours de post-production. En attendant, ouvrez la fiche de cours exhaustive pour avancer votre préparation."
             action={
               <Button asChild>
                 <Link href={`/cours/${coursId}/fiche`}>
                   <FileText />
-                  Ouvrir la fiche de synthèse
+                  Ouvrir la fiche de cours exhaustive
                 </Link>
               </Button>
             }

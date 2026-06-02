@@ -65,7 +65,7 @@ export function AddAnnaleDialog({ coursId }: { coursId: string }) {
             <Label htmlFor="annale-label">Intitulé</Label>
             <Input
               id="annale-label"
-              placeholder="ex. EDN 2024 · Session 1"
+              placeholder="ex. EVC 2024 · Session 1"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               required
@@ -102,7 +102,7 @@ export function AddAnnaleDialog({ coursId }: { coursId: string }) {
             </div>
           </div>
           <p className="text-xs text-(--color-ink-muted)">
-            Conseil : 180 min pour une épreuve EDN standard, 90 min pour un examen blanc rapide.
+            Conseil : 180 min pour une épreuve EVC standard, 90 min pour un examen blanc rapide.
           </p>
 
           {error && (

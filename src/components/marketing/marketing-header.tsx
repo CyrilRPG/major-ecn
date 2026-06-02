@@ -12,6 +12,7 @@ const NAV = [
   { href: '/equipe',      label: 'Équipe' },
   { href: '/temoignages', label: 'Témoignages' },
   { href: '/faq',         label: 'FAQ' },
+  { href: '/contact',     label: 'Nous contacter' },
 ];
 
 export function MarketingHeader() {
@@ -34,14 +35,9 @@ export function MarketingHeader() {
           : 'border-b border-transparent bg-white/0',
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-[72px] lg:gap-4 lg:px-8">
-        <Link href="/" className="-ml-1 inline-flex shrink-0 items-center gap-2.5 focus-ring">
-          <span className="inline-flex items-center justify-center rounded-xl bg-(--color-sidebar) px-2.5 py-1.5 shadow-sm">
-            <BrandLogo className="h-8 w-auto" />
-          </span>
-          <span className="font-display text-base font-bold tracking-tight text-(--color-ink) sm:text-lg">
-            Major <span className="text-(--color-primary)">ECN</span>
-          </span>
+      <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
+        <Link href="/" aria-label="Major ECN — Accueil" className="-ml-1 inline-flex shrink-0 items-center focus-ring">
+          <BrandLogo className="h-14 w-auto sm:h-16 lg:h-20" />
         </Link>
 
         <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
@@ -58,7 +54,7 @@ export function MarketingHeader() {
 
         {/* Nav réduite pour lg (sans xl) — colonne plus serrée */}
         <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
-          {NAV.slice(0, 5).map((n) => (
+          {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}

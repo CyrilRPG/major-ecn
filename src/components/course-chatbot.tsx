@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { ArrowUp, Bot, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AskTeacherButton } from '@/components/student/ask-teacher-button';
+import { Markdown } from '@/components/ui/markdown';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -19,7 +20,7 @@ export function CourseChatbot({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Bonjour. Je suis ton assistant pour le cours « ${coursTitre} ». Pose-moi une question : je réponds uniquement à partir des contenus pédagogiques de ce cours (vidéo, fiche, QCM et annales). Je n'invente rien en dehors de ça.`,
+      content: `Salut 👋 — je suis là pour t'aider sur « ${coursTitre} ». Vas-y, balance ta question, je te réponds.`,
     },
   ]);
   const [input, setInput] = useState('');
@@ -102,11 +103,11 @@ export function CourseChatbot({
                 className={cn(
                   'max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
                   m.role === 'user'
-                    ? 'bg-(--color-primary) text-(--color-primary-fg)'
+                    ? 'bg-(--color-primary) text-(--color-primary-fg) whitespace-pre-wrap'
                     : 'bg-(--color-surface-soft) border border-(--color-border) text-(--color-ink)',
                 )}
               >
-                {m.content}
+                {m.role === 'assistant' ? <Markdown>{m.content}</Markdown> : m.content}
               </div>
               {isAssistant && !isFirst && isLastAssistant && !loading && (
                 <div className="mt-1.5 max-w-[85%]">

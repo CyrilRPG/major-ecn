@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Flashcard } from './flashcard';
 import { DifficultyButtons, DIFFICULTY_ORDER } from './difficulty-buttons';
+import { themeFor } from './flashcard-theme';
 import {
   DIFFICULTY_SCORE,
   DIFFICULTY_WEIGHT,
@@ -34,12 +35,15 @@ export function FlashcardSession({
   cards,
   total,
   backHref,
+  collegeName,
 }: {
   cards: FlashcardInput[];
   total: number;
   coursId: string;
   backHref: string;
+  collegeName?: string;
 }) {
+  const theme = themeFor(collegeName);
   const [queue, setQueue] = useState<FlashcardInput[]>(() =>
     cards.filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD).sort((a, b) => a.score - b.score),
   );
@@ -86,16 +90,13 @@ export function FlashcardSession({
     [card, submitting],
   );
 
-  // Keyboard: Espace = retourner ; ←/→ + 1-4 = difficulté (carte retournée).
+  // Keyboard: plus de raccourci pour retourner la carte (Espace/Entrée
+  // désactivés sur demande, pour éviter les flips accidentels). Seuls
+  // ←/→ et 1-4 restent actifs, et UNIQUEMENT côté verso pour noter la
+  // difficulté.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!card) return;
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        setFlipped((f) => !f);
-        return;
-      }
-      if (!flipped) return;
+      if (!card || !flipped) return;
       if (e.key === 'ArrowLeft') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[0]); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[3]); }
       else if (e.key >= '1' && e.key <= '4') { e.preventDefault(); onDifficulty(DIFFICULTY_ORDER[Number(e.key) - 1]); }
@@ -139,16 +140,28 @@ export function FlashcardSession({
   const pct = total === 0 ? 100 : (mastered / total) * 100;
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 py-2 sm:px-6">
-      <div className="mb-3 flex w-full items-center justify-between gap-4">
-        <Button asChild variant="ghost" size="sm">
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-3 py-2 sm:px-6">
+      {/* Header session — gère le wrap sur mobile : Quitter à gauche,
+          compteur à droite, badge collège masqué <sm pour économiser
+          l'espace. */}
+      <div className="mb-3 flex w-full items-center justify-between gap-2 sm:gap-4">
+        <Button asChild variant="ghost" size="sm" className="shrink-0">
           <Link href={backHref}>
             <ArrowLeft />
-            Quitter
+            <span className="hidden sm:inline">Quitter</span>
           </Link>
         </Button>
-        <p className="text-sm text-(--color-ink-soft)">
-          <span className="font-semibold text-(--color-ink)">{mastered}</span> / {total} acquise{mastered > 1 ? 's' : ''}
+        {collegeName && (
+          <span
+            className="hidden truncate rounded-full px-2.5 py-1 text-[11px] font-semibold sm:inline-flex"
+            style={{ background: theme.bg, color: theme.accent }}
+          >
+            {collegeName}
+          </span>
+        )}
+        <p className="shrink-0 text-xs text-(--color-ink-soft) sm:text-sm">
+          <span className="font-semibold text-(--color-ink)">{mastered}</span> / {total}{' '}
+          <span className="hidden sm:inline">acquise{mastered > 1 ? 's' : ''}</span>
         </p>
       </div>
       <Progress value={pct} className="mb-4 w-full" />
@@ -158,7 +171,7 @@ export function FlashcardSession({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex w-full justify-center"
+        className="relative flex w-full justify-center"
       >
         <Flashcard
           recto={card.recto}
@@ -167,14 +180,15 @@ export function FlashcardSession({
           onFlip={() => setFlipped((f) => !f)}
           index={mastered}
           total={total}
+          theme={theme}
         />
       </motion.div>
 
-      <div className="mt-4 flex min-h-[96px] w-full flex-col items-center gap-2">
+      <div className="mt-3 flex min-h-[96px] w-full flex-col items-center gap-2 sm:mt-4">
         {flipped ? (
           <>
             <DifficultyButtons onPick={onDifficulty} disabled={submitting} />
-            <p className="flex items-center gap-1.5 text-xs text-(--color-ink-muted)">
+            <p className="hidden flex-wrap items-center justify-center gap-1.5 text-xs text-(--color-ink-muted) sm:flex">
               Utilise
               <kbd className="rounded border border-(--color-border) bg-(--color-surface) px-1.5 py-0.5">←</kbd>
               <kbd className="rounded border border-(--color-border) bg-(--color-surface) px-1.5 py-0.5">→</kbd>
@@ -183,8 +197,8 @@ export function FlashcardSession({
             </p>
           </>
         ) : (
-          <p className="text-center text-sm text-(--color-ink-soft)">
-            Retourne la carte (clic ou <kbd className="rounded border border-(--color-border) bg-(--color-surface) px-1.5 py-0.5">Espace</kbd>) pour révéler la réponse.
+          <p className="text-center text-xs text-(--color-ink-soft) sm:text-sm">
+            Clique sur la carte pour la retourner et révéler la réponse.
           </p>
         )}
       </div>
