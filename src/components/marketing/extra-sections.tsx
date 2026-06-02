@@ -5,10 +5,10 @@
  * cohérentes avec les composants existants dans manus-sections.tsx.
  */
 import {
-  Activity, ArrowRight, Award, Baby, BookOpen, BrainCircuit, Calendar, CalendarClock, Check,
-  CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap, Heart,
-  LineChart, Microscope, Pill, Quote, Scissors, ShieldCheck, Sparkles, Smile, Stethoscope,
-  Target, TrendingUp, Trophy, UserCheck, Users, Video,
+  Activity, ArrowRight, Award, Baby, BarChart3, BookOpen, Brain, BrainCircuit, Calendar, CalendarDays,
+  CalendarClock, Check, CheckCircle2, ClipboardCheck, Clock, FileText, Folder, GraduationCap, Heart,
+  Layers3, LineChart, ListChecks, MessageCircle, Microscope, Pill, Quote, Radio, Scissors, ShieldCheck,
+  Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Reveal } from './reveal';
@@ -996,6 +996,285 @@ export function TarifsBlock() {
         <p className="mt-10 text-center text-xs text-white/55">
           ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement · Annulation instantanée
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   10. BeyondPlatformSection — « Bien plus qu'une plateforme de cours »
+   ============================================================ */
+const BP_NAVY = '#14254E';
+const BP_PURPLE = '#6D28D9';
+const BP_RED = '#C0112E';
+const BP_INK_SOFT = '#5B6478';
+
+const BP_CARDS = [
+  { Icon: Radio,       t: 'Webinars en direct',            d: 'Sessions régulières avec notre équipe pédagogique pour approfondir les points clés du programme et répondre aux questions des candidats.', bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: CalendarDays, t: 'Masterclass & ateliers',        d: 'Des rendez-vous dédiés à la méthodologie, au raisonnement clinique et aux stratégies de réussite aux EVC.',                              bg: '#EAF1FB', fg: '#1E40AF' },
+  { Icon: Target,      t: 'Méthodologie EVC',              d: 'Une approche structurée développée au fil de 18 années d’expérience auprès des candidats aux EVC.',                                     bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: TrendingUp,  t: 'Nouveaux contenus chaque semaine', d: 'Une plateforme enrichie en continu avec de nouvelles ressources pédagogiques, entraînements et supports de révision.',                  bg: '#F1E8FD', fg: '#6D28D9' },
+];
+
+export function BeyondPlatformSection() {
+  return (
+    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em]"
+            style={{ background: '#F3EDFB', color: BP_PURPLE }}
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Méthode • Accompagnement • Entraînement
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: BP_NAVY }}>Bien </span>
+            <span style={{ color: BP_PURPLE }}>plus qu’une plateforme</span>
+            <span style={{ color: BP_NAVY }}> de cours</span>
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Depuis <span className="font-semibold" style={{ color: BP_RED }}>18 ans</span>, nous construisons un
+            environnement de préparation complet associant expertise pédagogique, méthodologie,
+            entraînement et accompagnement des candidats aux EVC.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {BP_CARDS.map((c, i) => (
+            <Reveal key={c.t} delay={i * 0.06}>
+              <article className="flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+                <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: c.bg, color: c.fg }}>
+                  <c.Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 text-lg font-extrabold leading-tight" style={{ color: BP_NAVY }}>{c.t}</h3>
+                <span className="mt-2 block h-[3px] w-8 rounded-full" style={{ background: c.fg }} />
+                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>{c.d}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2} className="mt-12">
+          <div className="flex flex-col items-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#F3EDFB', color: BP_PURPLE }}>
+              <GraduationCap className="h-5 w-5" />
+            </span>
+            <div className="mt-4 h-px w-full max-w-3xl bg-[#ECECEF]" />
+            <p className="mt-4 max-w-2xl text-center text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+              Une préparation exigeante, complète et évolutive pour mettre toutes les chances de votre côté.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   11. ToolsGridSection — « Tous les outils pour structurer votre progression »
+   ============================================================ */
+const TG_NAVY = '#14254E';
+const TG_BLUE = '#2563EB';
+const TG_INK_SOFT = '#5B6478';
+
+function MiniBar({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="w-28 shrink-0 truncate text-[11px]" style={{ color: TG_NAVY }}>{label}</span>
+      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]">
+        <span className="block h-full rounded-full" style={{ width: `${value}%`, background: color }} />
+      </span>
+      <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>{value}%</span>
+    </div>
+  );
+}
+
+export function ToolsGridSection() {
+  const cardCls = 'flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:shadow-lg sm:p-7';
+  const border = { borderColor: '#ECECEF' };
+  const titleCls = 'text-xl font-extrabold leading-tight';
+  const descCls = 'mt-3 text-sm leading-relaxed';
+  const descStyle = { color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" } as const;
+  const widget = 'mt-5 rounded-xl border p-4';
+  const widgetStyle = { borderColor: '#EEF0F4', background: '#FBFBFC' } as const;
+
+  return (
+    <section className="bg-[#FAFBFD] py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] sm:text-[11px]"
+            style={{ background: '#EEF2FB', color: TG_NAVY }}
+          >
+            Une méthode structurée • Des outils concrets • Une progression mesurable
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: TG_NAVY }}>Tous les outils pour structurer votre progression </span>
+            <span style={{ color: TG_BLUE }}>aux EVC</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Chaque fonctionnalité a été conçue pour répondre à un objectif simple :
+            vous aider à réviser avec méthode, gagner du temps et progresser efficacement jusqu’aux EVC.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {/* 1 — Visualisez votre progression */}
+          <Reveal>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#EAF1FB', color: '#1E40AF' }}><BarChart3 className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Visualisez<br />votre progression</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Suivez vos résultats par spécialité, thématique et type d’épreuve pour identifier rapidement vos priorités de révision.</p>
+              <div className={widget} style={widgetStyle}>
+                <p className="mb-2 text-[11px] font-bold" style={{ color: TG_NAVY }}>Spécialités</p>
+                <div className="space-y-1.5">
+                  <MiniBar label="Cardiologie" value={82} color="#2563EB" />
+                  <MiniBar label="Dermatologie" value={67} color="#2563EB" />
+                  <MiniBar label="Endocrinologie" value={58} color="#2563EB" />
+                  <MiniBar label="Gastro-entérologie" value={74} color="#2563EB" />
+                </div>
+                <p className="mt-3 text-[11px] font-bold" style={{ color: '#16793C' }}>+18% <span className="font-medium text-[#9AA1AE]">sur 4 semaines</span></p>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 2 — Révisez ce qui compte vraiment */}
+          <Reveal delay={0.05}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#E7F6EC', color: '#16793C' }}><Target className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Révisez ce qui compte<br />vraiment</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Des recommandations et parcours de travail adaptés à votre niveau pour concentrer vos efforts là où ils auront le plus d’impact.</p>
+              <div className={widget} style={widgetStyle}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] text-[#9AA1AE]">Votre priorité actuelle</span>
+                  <span className="rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[10px] font-bold text-[#16793C]">Priorité haute</span>
+                </div>
+                <p className="mt-1 text-sm font-bold" style={{ color: TG_NAVY }}>Physiopathologie cardiovasculaire</p>
+                <p className="mt-2 text-[11px] text-[#9AA1AE]">Plan recommandé</p>
+                <p className="text-[12px] font-semibold" style={{ color: TG_NAVY }}>12 dossiers · 45 QCM · 2 fiches</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]"><span className="block h-full rounded-full" style={{ width: '66%', background: '#16793C' }} /></span>
+                  <span className="text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>66%</span>
+                </div>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 3 — Mesurez vos performances */}
+          <Reveal delay={0.1}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#F1E8FD', color: '#6D28D9' }}><LineChart className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Mesurez<br />vos performances</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Analysez votre évolution au fil du temps et repérez les notions qui nécessitent un renforcement.</p>
+              <div className={widget + ' grid grid-cols-3 gap-2'} style={widgetStyle}>
+                {[
+                  { l: 'Score moyen', v: '76%', s: '+8%', sub: 'vs semaine dernière', g: true },
+                  { l: 'Percentile', v: '78ᵉ', s: '+12', sub: 'vs semaine dernière', g: true },
+                  { l: 'Points à renforcer', v: '14', s: '', sub: 'thématiques identifiées', g: false },
+                ].map((k) => (
+                  <div key={k.l}>
+                    <p className="text-[10px] leading-tight text-[#9AA1AE]">{k.l}</p>
+                    <p className="mt-1 text-lg font-black" style={{ color: TG_NAVY }}>{k.v}</p>
+                    {k.s && <p className="text-[10px] font-bold text-[#16793C]">{k.s}</p>}
+                    <p className="text-[9px] leading-tight text-[#9AA1AE]">{k.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 4 — Entraînez-vous efficacement */}
+          <Reveal delay={0.15}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#FFEAD9', color: '#B45B00' }}><Brain className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Entraînez-vous<br />efficacement</h3>
+              </div>
+              <p className={descCls} style={descStyle}>QCM, flashcards, dossiers progressifs, annales et ressources pédagogiques organisés pour favoriser une progression régulière.</p>
+              <div className={widget + ' flex flex-wrap gap-2'} style={widgetStyle}>
+                {[
+                  { Icon: ListChecks, l: 'QCM', c: '#B45B00', bg: '#FFEAD9' },
+                  { Icon: Layers3, l: 'Flashcards', c: '#B45B00', bg: '#FFF3E2' },
+                  { Icon: Folder, l: 'Dossiers', c: '#1E40AF', bg: '#EAF1FB' },
+                  { Icon: FileText, l: 'Annales', c: '#6D28D9', bg: '#F1E8FD' },
+                  { Icon: FileText, l: 'Fiches', c: '#16793C', bg: '#E7F6EC' },
+                ].map((t) => (
+                  <span key={t.l} className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-bold" style={{ background: t.bg, color: t.c }}>
+                    <t.Icon className="h-3.5 w-3.5" />{t.l}
+                  </span>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 5 — Organisez vos révisions */}
+          <Reveal delay={0.2}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#EAF1FB', color: '#1E40AF' }}><CalendarDays className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Organisez<br />vos révisions</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Structurez votre préparation grâce à des objectifs de travail, un calendrier clair et un suivi de vos avancées.</p>
+              <div className={widget} style={widgetStyle}>
+                <div className="grid grid-cols-7 gap-1 text-center">
+                  {[
+                    { d: 'Lun', a: 'QCM', t: '30 min', c: '#1E40AF' },
+                    { d: 'Mar', a: 'Dossier', t: '45 min', c: '#16793C' },
+                    { d: 'Mer', a: 'Fiche', t: '30 min', c: '#6D28D9' },
+                    { d: 'Jeu', a: 'Annales', t: '1h', c: '#B45B00' },
+                    { d: 'Ven', a: 'QCM', t: '30 min', c: '#1E40AF' },
+                    { d: 'Sam', a: '–', t: '', c: '#9AA1AE' },
+                    { d: 'Dim', a: '–', t: '', c: '#9AA1AE' },
+                  ].map((x) => (
+                    <div key={x.d}>
+                      <p className="text-[9px] text-[#9AA1AE]">{x.d}</p>
+                      <div className="mt-1 rounded-md py-1.5" style={{ background: x.a === '–' ? 'transparent' : '#F4F6FA' }}>
+                        <p className="text-[9px] font-bold leading-tight" style={{ color: x.c }}>{x.a}</p>
+                        {x.t && <p className="text-[8px] text-[#9AA1AE]">{x.t}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="text-[10px] text-[#9AA1AE]">Objectif hebdomadaire</span>
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#EAECF2]"><span className="block h-full rounded-full" style={{ width: '72%', background: '#2563EB' }} /></span>
+                  <span className="text-[11px] font-bold tabular-nums" style={{ color: TG_NAVY }}>72%</span>
+                </div>
+              </div>
+            </article>
+          </Reveal>
+
+          {/* 6 — Bénéficiez d'un accompagnement */}
+          <Reveal delay={0.25}>
+            <article className={cardCls} style={border}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: '#C0112E' }}><Users className="h-5 w-5" /></span>
+                <h3 className={titleCls} style={{ color: TG_NAVY }}>Bénéficiez d’un<br />accompagnement<br />pédagogique</h3>
+              </div>
+              <p className={descCls} style={descStyle}>Webinars, événements pédagogiques et échanges avec notre équipe pour vous accompagner tout au long de votre préparation.</p>
+              <div className={widget + ' grid grid-cols-4 gap-2 text-center'} style={widgetStyle}>
+                {[
+                  { Icon: Radio, l: 'Webinars en direct' },
+                  { Icon: CalendarDays, l: 'Événements pédagogiques' },
+                  { Icon: UserCheck, l: 'Experts à vos côtés' },
+                  { Icon: MessageCircle, l: 'Réponses à vos questions' },
+                ].map((x) => (
+                  <div key={x.l} className="flex flex-col items-center gap-1">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: '#C0112E' }}><x.Icon className="h-4 w-4" /></span>
+                    <p className="text-[9px] leading-tight text-[#6B7280]">{x.l}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
