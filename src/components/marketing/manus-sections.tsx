@@ -161,20 +161,39 @@ export function MethodeSection() {
 // EXPÉRIENCE COMPLÈTE — carousel d'images flottantes avec flèches & dots
 // ============================================================================
 const SLIDES = [
-  { src: '/flashcards-ia.png', Icon: Layers3,         title: 'Flashcards + Assistant IA',  caption: 'Système d’oubli intelligent + prof IA borné aux contenus du cours.' },
-  { src: '/accueil.png',       Icon: LineChart,       title: 'Dashboard accueil',          caption: 'Vos KPIs, votre progression et vos priorités d’un coup d’œil.' },
+  { src: '/entrainement.png',  Icon: Target,          title: 'Entraînement ciblé',         caption: 'L’IA priorise les QCM des collèges où tu rates le plus.' },
+  { src: '/accueil.png',       Icon: LineChart,       title: 'Suivi de progression',       caption: 'Tes KPIs, ta progression et tes priorités d’un coup d’œil.' },
   { src: '/cours.png',         Icon: BookOpen,        title: 'Page cours complète',        caption: 'Vidéo, fiche, QCM, annales — tout l’item dans un seul écran.' },
-  { src: '/entrainement.png',  Icon: Target,          title: 'Entraînement ciblé',         caption: 'L’IA priorise les QCM des collèges où vous échouez le plus.' },
-  { src: '/agenda.png',        Icon: CalendarDays,    title: 'Agenda hebdomadaire',        caption: 'Vos cours, créneaux Zoom et révisions sur 7 jours.' },
+  { src: '/agenda.png',        Icon: CalendarDays,    title: 'Planning intelligent',       caption: 'Tes cours, créneaux Zoom et révisions organisés sur 7 jours.' },
+  { src: '/flashcards-ia.png', Icon: Layers3,         title: 'Flashcards & fiches',        caption: 'Mémorisation espacée + prof IA borné aux contenus du cours.' },
   { src: '/annales.png',       Icon: ClipboardCheck,  title: 'Annales conditions réelles', caption: 'Mode entraînement chrono + corrigé détaillé après coup.' },
+];
+
+/* À l'intérieur de Major ECN — palette maquette */
+const IN_NAVY = '#14254E';
+const IN_RED = '#A91D2C';
+const IN_ORANGE = '#E8742C';
+const IN_INK_SOFT = '#5B6478';
+
+const IN_HEADER_BADGES = [
+  { Icon: Users,       t: 'Plus de 9 000 médecins', d: 'accompagnés depuis 18 ans',  bg: '#FDEEEF', fg: '#A91D2C' },
+  { Icon: ShieldCheck, t: 'Une méthode éprouvée',   d: 'et régulièrement mise à jour', bg: '#EEF2FB', fg: '#1E3A8A' },
+  { Icon: Lock,        t: 'Données sécurisées',     d: 'Hébergées en France',          bg: '#E7F6EC', fg: '#16793C' },
+];
+
+const IN_FEATURES = [
+  { Icon: Target,        t: 'Entraînement ciblé',   d: 'Travaille automatiquement les questions que tu rates le plus.', bg: '#FDEEEF', fg: '#A91D2C' },
+  { Icon: ClipboardCheck, t: 'QCM & cas cliniques',  d: 'Des milliers de Questions-Réponses et de cas cliniques corrigés.', bg: '#F1E8FD', fg: '#5B2BB8' },
+  { Icon: CalendarDays,  t: 'Planning intelligent', d: 'Organise ta préparation jusqu’au jour du concours.',            bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: LineChart,     t: 'Suivi de progression', d: 'Visualise tes résultats et identifie tes priorités.',           bg: '#FFEAD9', fg: '#B45B00' },
+  { Icon: Layers3,       t: 'Flashcards & fiches',  d: 'Mémorise efficacement grâce à des contenus synthétiques.',      bg: '#EAF1FB', fg: '#1E40AF' },
 ];
 
 export function ExperienceSection() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
-
-  // Auto-play toutes les 6 s — pause au hover.
   const [paused, setPaused] = useState(false);
+
   useEffect(() => {
     if (paused) return;
     const t = setInterval(() => {
@@ -194,64 +213,87 @@ export function ExperienceSection() {
   };
 
   const slide = SLIDES[idx];
-  const ActiveIcon = slide.Icon;
+  const prev = SLIDES[(idx - 1 + SLIDES.length) % SLIDES.length];
+  const next = SLIDES[(idx + 1) % SLIDES.length];
 
   const slideVariants = {
-    enter:  (d: number) => ({ opacity: 0, x:  d * 120, scale: 0.9, rotate:  d * 2 }),
-    center: { opacity: 1, x: 0, scale: 1, rotate: 0 },
-    exit:   (d: number) => ({ opacity: 0, x: -d * 120, scale: 0.9, rotate: -d * 2 }),
+    enter:  (d: number) => ({ opacity: 0, x: d * 80, scale: 0.96 }),
+    center: { opacity: 1, x: 0, scale: 1 },
+    exit:   (d: number) => ({ opacity: 0, x: -d * 80, scale: 0.96 }),
   };
 
   return (
-    <section id="plateforme" className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-24 sm:py-32 lg:py-40">
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -top-32 -left-32 -z-10 h-[1100px] w-[1100px] rounded-full bg-gradient-to-br from-[#3B82F6]/25 via-[#60A5FA]/12 to-transparent blur-3xl"
-        animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.1, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-32 -right-32 -z-10 h-[900px] w-[900px] rounded-full bg-gradient-to-tr from-[#14B8A6]/20 via-[#2DD4BF]/10 to-transparent blur-3xl"
-        animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.08, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-      />
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#6B1A2A]/15 via-[#8B2A3A]/8 to-transparent blur-3xl"
-        animate={{ opacity: [0.3, 0.55, 0.3], scale: [1, 1.05, 1] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-      />
+    <section id="plateforme" className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
+      {/* halos discrets */}
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-20 -z-10 h-96 w-96 rounded-full bg-[#3B82F6]/5 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-[#A91D2C]/5 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9 }}
-          className="text-center"
-        >
-          <span className={EYEBROW} style={{ fontFamily: MANROPE }}>La plateforme</span>
-          <h2
-            className="mb-6 text-4xl font-black leading-[1.05] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: JAKARTA, letterSpacing: '-0.04em' }}
+        {/* Header */}
+        <div className="text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] sm:text-xs"
+            style={{ background: '#EEF2FB', color: '#1E3A8A' }}
           >
-            <span className="block text-[#2D2D2D]">L’expérience</span>
-            <span className={'block ' + TRI}>complète.</span>
+            <Sparkles className="h-3.5 w-3.5" />
+            Découvrez la plateforme Major ECN
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            <span style={{ color: IN_NAVY }}>À l&rsquo;intérieur de </span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(90deg, ${IN_RED} 0%, ${IN_ORANGE} 100%)` }}
+            >
+              Major ECN.
+            </span>
           </h2>
-          <p className="mx-auto max-w-2xl text-base text-[#4A5568] sm:text-lg" style={{ fontFamily: MANROPE }}>
-            Faites défiler — chaque écran de la plateforme, en taille réelle.
+          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg" style={{ color: IN_INK_SOFT, fontFamily: MANROPE }}>
+            Découvrez quelques-uns des outils utilisés quotidiennement par nos candidats.
           </p>
-        </motion.div>
+        </div>
 
-        {/* CAROUSEL FLOTTANT */}
+        {/* 3 badges réassurance */}
+        <div className="mx-auto mt-8 grid max-w-4xl gap-4 rounded-2xl border bg-white p-4 sm:grid-cols-3 sm:p-5" style={{ borderColor: '#ECECEF' }}>
+          {IN_HEADER_BADGES.map((b, i) => (
+            <div
+              key={b.t}
+              className={'flex items-center gap-3 ' + (i < IN_HEADER_BADGES.length - 1 ? 'sm:border-r sm:border-[#EEE]' : '')}
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: b.bg, color: b.fg }}>
+                <b.Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-bold leading-tight" style={{ color: IN_NAVY }}>{b.t}</p>
+                <p className="text-xs" style={{ color: IN_INK_SOFT, fontFamily: MANROPE }}>{b.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CAROUSEL — mockup central + cartes flottantes latérales */}
         <div
-          className="relative mt-16 sm:mt-20"
+          className="relative mt-12"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          {/* Stage */}
-          <div className="relative mx-auto aspect-[16/9] w-full max-w-5xl overflow-visible">
+          {/* cartes latérales (desktop) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-10 top-1/2 hidden h-[68%] w-52 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-70 shadow-2xl lg:block"
+            style={{ transform: 'translateY(-50%) rotate(-4deg)' }}
+          >
+            <Image src={prev.src} alt="" fill sizes="220px" className="object-cover object-top" />
+          </div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 top-1/2 hidden h-[68%] w-52 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-70 shadow-2xl lg:block"
+            style={{ transform: 'translateY(-50%) rotate(4deg)' }}
+          >
+            <Image src={next.src} alt="" fill sizes="220px" className="object-cover object-top" />
+          </div>
+
+          {/* stage central */}
+          <div className="relative mx-auto aspect-[16/10] w-full max-w-4xl overflow-visible">
             <AnimatePresence initial={false} custom={dir} mode="popLayout">
               <motion.div
                 key={idx}
@@ -260,138 +302,74 @@ export function ExperienceSection() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-0"
               >
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                  className="relative h-full w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_40px_120px_-30px_rgba(107,26,42,0.45)] sm:rounded-3xl"
-                >
+                <div className="relative h-full w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_40px_120px_-30px_rgba(15,27,61,0.4)] ring-1 ring-black/5">
                   <Image
                     src={slide.src}
                     alt={slide.title}
                     fill
-                    sizes="(max-width:768px) 100vw, 1280px"
+                    sizes="(max-width:768px) 100vw, 1024px"
                     className="object-cover object-top"
                     priority={idx === 0}
                   />
-                  {/* Vignette gradient en bas pour lisibilité de la légende */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-                  {/* Légende */}
-                  <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 p-5 sm:p-7">
-                    <div className="min-w-0 flex-1">
-                      <span
-                        className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-[#6B1A2A] backdrop-blur"
-                        style={{ fontFamily: MANROPE }}
-                      >
-                        <ActiveIcon className="h-3.5 w-3.5" />
-                        {slide.title}
-                      </span>
-                      <p
-                        className="mt-2 max-w-xl text-sm font-bold text-white drop-shadow-sm sm:text-base"
-                        style={{ fontFamily: JAKARTA }}
-                      >
-                        {slide.caption}
-                      </p>
-                    </div>
-                    <span
-                      className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-black text-[#2D2D2D] backdrop-blur"
-                      style={{ fontFamily: JAKARTA }}
-                    >
-                      {idx + 1} / {SLIDES.length}
-                    </span>
-                  </div>
-                </motion.div>
+                </div>
               </motion.div>
             </AnimatePresence>
-
-            {/* Peek prev / next — petites tuiles à gauche / droite (desktop) */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-24 top-1/2 hidden h-[60%] w-44 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-50 shadow-2xl xl:block"
-              style={{ transform: 'translateY(-50%) rotate(-3deg)' }}
-            >
-              <Image
-                src={SLIDES[(idx - 1 + SLIDES.length) % SLIDES.length].src}
-                alt=""
-                fill
-                sizes="200px"
-                className="object-cover object-top"
-              />
-            </div>
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-24 top-1/2 hidden h-[60%] w-44 -translate-y-1/2 overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white opacity-50 shadow-2xl xl:block"
-              style={{ transform: 'translateY(-50%) rotate(3deg)' }}
-            >
-              <Image
-                src={SLIDES[(idx + 1) % SLIDES.length].src}
-                alt=""
-                fill
-                sizes="200px"
-                className="object-cover object-top"
-              />
-            </div>
           </div>
 
-          {/* Flèches navigation */}
+          {/* flèches */}
           <button
             type="button"
             onClick={() => go(-1)}
-            aria-label="Image précédente"
-            className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#E8E7E3] bg-white text-[#2D2D2D] shadow-2xl backdrop-blur transition-all hover:scale-110 hover:border-[#6B1A2A] hover:text-[#6B1A2A] sm:left-4 sm:h-14 sm:w-14 lg:-left-6"
+            aria-label="Écran précédent"
+            className="absolute left-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#E8E7E3] bg-white text-[#14254E] shadow-xl transition-all hover:scale-110 sm:left-2 lg:-left-5 lg:h-13 lg:w-13"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             type="button"
             onClick={() => go(1)}
-            aria-label="Image suivante"
-            className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-r from-[#6B1A2A] to-[#8B2A3A] text-white shadow-2xl transition-all hover:scale-110 hover:from-[#8B2A3A] hover:to-[#6B1A2A] sm:right-4 sm:h-14 sm:w-14 lg:-right-6"
+            aria-label="Écran suivant"
+            className="absolute right-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-xl transition-all hover:scale-110 sm:right-2 lg:-right-5 lg:h-13 lg:w-13"
+            style={{ background: IN_RED }}
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 w-5" />
           </button>
-
-          {/* Dots */}
-          <div className="mt-8 flex items-center justify-center gap-2.5">
-            {SLIDES.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={`Aller à l’image ${i + 1}`}
-                className={
-                  'h-2 rounded-full transition-all duration-300 ' +
-                  (i === idx
-                    ? 'w-10 bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6]'
-                    : 'w-2 bg-[#E8E7E3] hover:bg-[#6B1A2A]/40')
-                }
-              />
-            ))}
-          </div>
         </div>
 
-        {/* Features highlight */}
-        <div className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { Icon: Brain,      t: 'Apprentissage adaptatif', d: 'L’IA ajuste les QCM à votre niveau.' },
-            { Icon: LineChart,  t: 'Analytics avancés',       d: 'Performance par spé, par thème.' },
-            { Icon: TrendingUp, t: 'Progression en direct',   d: 'Vous voyez où vous en êtes.' },
-            { Icon: Zap,        t: 'Performance premium',     d: 'Vitesse et fluidité exceptionnelles.' },
-          ].map((x, i) => (
-            <motion.div
-              key={x.t}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="rounded-2xl border border-[#E8E7E3] bg-white p-5 shadow-sm"
+        {/* 5 cartes outils */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {IN_FEATURES.map((f) => (
+            <article
+              key={f.t}
+              className="rounded-2xl border bg-white p-5 transition-all hover:shadow-lg"
+              style={{ borderColor: '#ECECEF' }}
             >
-              <x.Icon className="h-5 w-5 text-[#6B1A2A]" strokeWidth={1.8} />
-              <p className="mt-3 text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{x.t}</p>
-              <p className="mt-1 text-xs leading-relaxed text-[#4A5568]" style={{ fontFamily: MANROPE }}>{x.d}</p>
-            </motion.div>
+              <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: f.bg, color: f.fg }}>
+                <f.Icon className="h-5 w-5" />
+              </span>
+              <p className="mt-3 text-sm font-extrabold leading-tight" style={{ color: IN_NAVY }}>{f.t}</p>
+              <p className="mt-1.5 text-xs leading-relaxed" style={{ color: IN_INK_SOFT, fontFamily: MANROPE }}>{f.d}</p>
+            </article>
+          ))}
+        </div>
+
+        {/* dots */}
+        <div className="mt-8 flex items-center justify-center gap-2.5">
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-label={`Aller à l’écran ${i + 1}`}
+              className={
+                'h-2 rounded-full transition-all duration-300 ' +
+                (i === idx ? 'w-8' : 'w-2 bg-[#E2E2E6] hover:bg-[#A91D2C]/40')
+              }
+              style={i === idx ? { background: IN_RED } : undefined}
+            />
           ))}
         </div>
       </div>
