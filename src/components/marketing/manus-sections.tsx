@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight, Award, Brain, BookOpen, CalendarDays, ChevronLeft, ChevronRight,
-  CheckCircle2, ClipboardCheck, Compass, Globe, GraduationCap, Heart, Layers3,
-  LineChart, MessagesSquare, Play, Quote, ShieldCheck, Sparkles, Star, Target,
+  CheckCircle2, ClipboardCheck, Clock, Compass, Globe, GraduationCap, Heart, Layers3,
+  LineChart, Lock, Mail, MessagesSquare, Play, Quote, ShieldCheck, Sparkles, Star, Target,
   TrendingUp, Users, Zap,
 } from 'lucide-react';
 
@@ -1051,98 +1052,203 @@ export function FAQSection() {
 // ============================================================================
 // FREE TRIAL CTA — bannière mise en avant de l'essai 7 jours
 // ============================================================================
+/* FreeTrialBanner — pixel-perfect maquette designer.
+   Gauche : badge gradient red→orange, titre navy + « pendant 7 jours. »
+   en dégradé, 4 atouts à coches rouges. Droite : carte blanche formulaire
+   email. Dessous : 3 cartes réassurance. */
+const FT_NAVY = '#0F1B3D';
+const FT_RED = '#A91D2C';
+const FT_RED_DEEP = '#7A1320';
+const FT_ORANGE = '#E8742C';
+const FT_GREEN = '#16A34A';
+const FT_PINK_BG = '#FDEEEF';
+
+const FT_LEFT_POINTS = [
+  { t: 'Accès immédiat',                       d: 'Activation par email en quelques minutes.' },
+  { t: 'Contenus disponibles dès l’inscription', d: 'QCM, cas cliniques, flashcards et ressources pédagogiques.' },
+  { t: 'Sans renouvellement automatique',      d: 'Aucun prélèvement, aucune obligation.' },
+  { t: 'Découvrez notre méthode',              d: 'Explorez notre approche et nos outils à votre rythme.' },
+];
+
+const FT_BOTTOM = [
+  { Icon: Clock,    t: '7 jours pour découvrir',  d: 'Prenez le temps d’explorer la plateforme et nos ressources.' },
+  { Icon: BookOpen, t: '18 ans d’expérience',     d: 'Une expertise reconnue au service de votre réussite depuis 2006.' },
+  { Icon: Users,    t: 'Des praticiens à vos côtés', d: 'PH spécialistes et CCA impliqués dans votre préparation.' },
+];
+
 export function FreeTrialBanner() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const q = email.trim() ? `?email=${encodeURIComponent(email.trim())}` : '';
+    router.push(`/inscription${q}`);
+  };
+
   return (
-    <section id="essai" className="relative overflow-hidden bg-gradient-to-b from-[#FAFAF8] via-white to-[#F5F4F0] py-16 sm:py-20 lg:py-24">
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[700px] w-[1100px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6B1A2A]/15 via-[#3B82F6]/12 to-[#14B8A6]/15 blur-3xl"
-        animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.05, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-      />
+    <section
+      id="essai"
+      className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
+      style={{ fontFamily: JAKARTA }}
+    >
+      {/* léger halo bleuté dans les coins, comme la maquette */}
+      <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#3B82F6]/5 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#3B82F6]/5 blur-3xl" />
 
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.96 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9 }}
-          className="relative overflow-hidden rounded-3xl border-2 border-[#6B1A2A]/15 bg-gradient-to-br from-white via-[#FAFAF8] to-[#F9F0F2]/40 p-8 shadow-[0_30px_90px_-20px_rgba(107,26,42,0.25)] sm:p-12 lg:p-16"
-        >
-          {/* Halos colorés intérieurs */}
-          <div aria-hidden className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[#6B1A2A]/15 blur-3xl" />
-          <div aria-hidden className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[#3B82F6]/12 blur-3xl" />
-          <div aria-hidden className="absolute right-1/3 bottom-0 h-40 w-40 rounded-full bg-[#14B8A6]/12 blur-3xl" />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-start gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+          {/* ============ GAUCHE ============ */}
+          <div>
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white shadow-md sm:text-xs"
+              style={{ background: `linear-gradient(90deg, ${FT_RED} 0%, ${FT_ORANGE} 100%)` }}
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              Sans carte bancaire · Sans engagement
+            </span>
 
-          <div className="relative grid items-center gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-12">
-            <div>
-              <motion.span
-                animate={{ scale: [1, 1.06, 1] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-lg sm:text-xs"
-                style={{ fontFamily: MANROPE }}
+            <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
+              <span className="block" style={{ color: FT_NAVY }}>Testez Major ECN</span>
+              <span
+                className="block bg-clip-text text-transparent"
+                style={{ backgroundImage: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 45%, ${FT_ORANGE} 100%)` }}
               >
-                <Sparkles className="h-3.5 w-3.5" />
-                Sans carte bancaire · sans engagement
-              </motion.span>
+                pendant 7 jours.
+              </span>
+            </h2>
 
-              <h2
-                className="mt-5 text-4xl font-black leading-[1.1] sm:text-5xl lg:text-6xl"
-                style={{ fontFamily: JAKARTA, letterSpacing: '-0.045em' }}
+            <p className="mt-6 max-w-xl text-lg font-bold leading-snug" style={{ color: FT_NAVY }}>
+              Découvrez la plateforme et notre méthode de préparation{' '}
+              <span style={{ color: FT_RED }}>avant de choisir</span> la formule qui vous convient.
+            </p>
+
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-[#4B5563]" style={{ fontFamily: MANROPE }}>
+              Accédez immédiatement à un aperçu de nos contenus (QCM, cas cliniques, flashcards,
+              ressources pédagogiques) et explorez notre méthode de travail. Vous décidez librement
+              de poursuivre avec l’abonnement de votre choix.
+            </p>
+
+            <ul className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              {FT_LEFT_POINTS.map((p) => (
+                <li key={p.t} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" style={{ color: FT_RED }} />
+                  <div>
+                    <p className="text-[15px] font-bold leading-tight" style={{ color: FT_NAVY }}>{p.t}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#6B7280]" style={{ fontFamily: MANROPE }}>{p.d}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ============ DROITE — carte formulaire ============ */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7 }}
+            className="rounded-2xl border border-[#EEE2E3] bg-white p-6 shadow-[0_30px_80px_-30px_rgba(15,27,61,0.25)] sm:p-8"
+          >
+            <div className="flex items-center gap-3">
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                style={{ background: FT_PINK_BG, color: FT_RED }}
               >
-                <span className="block text-[#2D2D2D]">Testez Major ECN</span>
-                <span className={'block ' + TRI_RICH}>7 jours gratuitement.</span>
-              </h2>
-
-              <p
-                className="mt-5 max-w-xl text-base text-[#4A5568] sm:text-lg"
-                style={{ fontFamily: MANROPE }}
-              >
-                Créez votre compte en 30 secondes et accédez immédiatement à un échantillon de QCM,
-                flashcards et à l’IA pédagogique. Aucune CB demandée, aucun engagement —
-                vous décidez librement de passer en Essentiel, Premium ou Intensif après votre essai.
-              </p>
-
-              <ul className="mt-6 grid gap-2.5 text-sm sm:grid-cols-2" style={{ fontFamily: MANROPE }}>
-                {[
-                  'Accès immédiat dès activation par email',
-                  'QCM, flashcards et IA inclus',
-                  'Aucun renouvellement automatique',
-                  'Arrêt en un clic à tout moment',
-                ].map((b) => (
-                  <li key={b} className="flex items-start gap-2 text-[#2D2D2D]">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#14B8A6]" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
+                <Sparkles className="h-6 w-6" />
+              </span>
+              <div>
+                <p className="text-xl font-extrabold leading-tight" style={{ color: FT_NAVY }}>
+                  Commencez votre essai gratuit
+                </p>
+                <p className="mt-0.5 text-sm text-[#6B7280]" style={{ fontFamily: MANROPE }}>
+                  Accédez à Major ECN pendant 7 jours, sans engagement.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <motion.a
-                href="#cta"
-                whileHover={{ scale: 1.04, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#6B1A2A] via-[#8B2A3A] to-[#C84A5A] px-7 py-5 text-base font-black text-white shadow-[0_15px_40px_-10px_rgba(107,26,42,0.7)] sm:text-lg"
-                style={{ fontFamily: JAKARTA }}
+            <form onSubmit={onSubmit} className="mt-6">
+              <label htmlFor="ft-email" className="block text-sm font-bold" style={{ color: FT_NAVY }}>
+                Votre adresse email
+              </label>
+              <div className="relative mt-2">
+                <Mail className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9AA1AE]" />
+                <input
+                  id="ft-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="exemple@email.com"
+                  className="w-full rounded-xl border border-[#E5E7EB] bg-white py-3.5 pl-12 pr-4 text-[15px] text-[#1F2937] outline-none transition-colors placeholder:text-[#9AA1AE] focus:border-[#A91D2C] focus:ring-2 focus:ring-[#A91D2C]/15"
+                  style={{ fontFamily: MANROPE }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-4 flex w-full items-center justify-center gap-2.5 rounded-xl py-4 text-base font-extrabold text-white shadow-[0_12px_30px_-10px_rgba(122,19,32,0.6)] transition-transform hover:scale-[1.01]"
+                style={{ background: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 100%)` }}
               >
-                <Sparkles className="h-5 w-5" />
                 Démarrer mon essai gratuit
                 <ArrowRight className="h-5 w-5" />
-              </motion.a>
-              <a
-                href="#tarifs"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#E8E7E3] bg-white px-7 py-4 text-sm font-bold text-[#2D2D2D] transition-colors hover:border-[#6B1A2A]/40"
-                style={{ fontFamily: JAKARTA }}
-              >
-                Voir d’abord les tarifs
-              </a>
-              <p className="text-center text-[11px] text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>
-                ✓ Email d’activation reçu en moins de 2 min
-              </p>
+              </button>
+            </form>
+
+            <div className="my-5 flex items-center gap-4">
+              <span className="h-px flex-1 bg-[#EAEAEA]" />
+              <span className="text-sm text-[#9AA1AE]" style={{ fontFamily: MANROPE }}>ou</span>
+              <span className="h-px flex-1 bg-[#EAEAEA]" />
             </div>
-          </div>
-        </motion.div>
+
+            <a
+              href="#tarifs"
+              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white py-3.5 text-[15px] font-bold transition-colors hover:bg-[#FAFAFA]"
+              style={{ color: FT_NAVY }}
+            >
+              Découvrir les formules
+              <ArrowRight className="h-5 w-5" />
+            </a>
+
+            <ul className="mt-6 space-y-3" style={{ fontFamily: MANROPE }}>
+              {['Sans carte bancaire', 'Sans engagement', 'Activation en moins de 2 minutes'].map((b) => (
+                <li key={b} className="flex items-center gap-2.5 text-[15px]" style={{ color: FT_NAVY }}>
+                  <CheckCircle2 className="h-5 w-5 shrink-0" style={{ color: FT_GREEN }} />
+                  {b}
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-5 flex items-center gap-2 text-[13px] text-[#9AA1AE]" style={{ fontFamily: MANROPE }}>
+              <Lock className="h-4 w-4 shrink-0" />
+              Vos données sont sécurisées et confidentielles.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* ============ BAS — 3 cartes réassurance ============ */}
+        <div className="mt-12 grid gap-4 rounded-2xl bg-[#F7F7F7] p-5 sm:grid-cols-3 sm:p-7">
+          {FT_BOTTOM.map((b, i) => (
+            <div
+              key={b.t}
+              className={
+                'flex items-start gap-3.5 ' +
+                (i < FT_BOTTOM.length - 1 ? 'sm:border-r sm:border-[#E5E5E5] sm:pr-5' : '')
+              }
+            >
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                style={{ background: FT_PINK_BG, color: FT_RED }}
+              >
+                <b.Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: FT_NAVY }}>{b.t}</p>
+                <p className="mt-1 text-sm leading-relaxed text-[#6B7280]" style={{ fontFamily: MANROPE }}>{b.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
