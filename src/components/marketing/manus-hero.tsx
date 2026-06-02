@@ -1,11 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  Activity, ArrowRight, BadgeCheck, BarChart3, Bell, BookOpen, Brain, Calendar, CalendarDays,
-  ClipboardList, Droplet, FileText, Heart, Home, Layers3, Search, Sparkles, Stethoscope,
-  Target, TrendingUp, Users,
+  ArrowRight, BadgeCheck, BookOpen, Calendar, Heart, Sparkles, Stethoscope, Users,
 } from 'lucide-react';
 
 /**
@@ -27,207 +26,6 @@ const STATS = [
   { Icon: Stethoscope, big: 'PH SPÉCIALISTES & CCA', sub: 'ÉQUIPE PÉDAGOGIQUE', small: true },
 ];
 
-const NAV = [
-  { Icon: Home,          label: 'Accueil',           active: true },
-  { Icon: Target,        label: 'Entraînement ciblé' },
-  { Icon: ClipboardList, label: 'Annales & QCM' },
-  { Icon: Layers3,       label: 'Flashcards' },
-  { Icon: BookOpen,      label: 'Cours & fiches' },
-  { Icon: TrendingUp,    label: 'Ma progression' },
-  { Icon: CalendarDays,  label: 'Agenda' },
-];
-
-const SPECIALTIES = [
-  { Icon: Heart,       label: 'Cardiologie', n: 4 },
-  { Icon: Activity,    label: 'Pneumologie', n: 3 },
-  { Icon: Droplet,     label: 'Hépato-gastro-entérologie', n: 3 },
-  { Icon: Brain,       label: 'Neurologie', n: 3 },
-  { Icon: Stethoscope, label: 'Néphrologie', n: 2 },
-];
-
-const KPIS = [
-  { Icon: BarChart3,     label: 'Progression globale', value: '75%',   delta: '+12% cette semaine', tint: '#EAF1FB', fg: '#1E40AF' },
-  { Icon: Target,        label: 'Taux de réussite',    value: '62%',   delta: '+8% cette semaine',  tint: '#E7F6EC', fg: '#16793C' },
-  { Icon: ClipboardList, label: 'QCM réalisés',        value: '2 450', delta: '+320 cette semaine', tint: '#F1E8FD', fg: '#6D28D9' },
-  { Icon: Layers3,       label: 'Flashcards acquises', value: '1 245', delta: '+210 cette semaine', tint: '#FFEAD9', fg: '#B45B00' },
-];
-
-const MATIERES = [
-  { label: 'Cardiologie', v: 52, c: '#C0112E' },
-  { label: 'Pneumologie', v: 60, c: '#E8742C' },
-  { label: 'Maladies infectieuses', v: 45, c: '#6D28D9' },
-  { label: 'Hématologie', v: 30, c: '#16793C' },
-];
-
-const ACTIVITE = [
-  { label: 'QCM – Cardiologie', val: '89%', when: 'il y a 1h' },
-  { label: 'Flashcards – Pneumologie', val: '42 nouvelles', when: 'il y a 2h' },
-  { label: 'Examen blanc – Neurologie', val: '76%', when: 'il y a 1 jour' },
-  { label: 'Annales – Hépato-gastro-entérologie', val: '85%', when: 'il y a 2 jours' },
-];
-
-const REPARTITION = [
-  { label: 'Connaissances', v: 40, c: '#C0112E' },
-  { label: 'Annales', v: 25, c: '#6D28D9' },
-  { label: 'Situations cliniques', v: 20, c: '#E8742C' },
-  { label: 'Dossiers progressifs', v: 15, c: '#16793C' },
-];
-
-/* Donut SVG (Répartition des QCM) */
-function Donut() {
-  const r = 26, c = 2 * Math.PI * r;
-  let acc = 0;
-  return (
-    <svg viewBox="0 0 64 64" className="h-20 w-20 -rotate-90">
-      {REPARTITION.map((s) => {
-        const len = (s.v / 100) * c;
-        const seg = <circle key={s.label} cx="32" cy="32" r={r} fill="none" stroke={s.c} strokeWidth="9"
-          strokeDasharray={`${len} ${c - len}`} strokeDashoffset={-acc} />;
-        acc += len;
-        return seg;
-      })}
-    </svg>
-  );
-}
-
-/* Mini sparkline « Évolution de la performance » */
-function Sparkline() {
-  return (
-    <svg viewBox="0 0 320 90" className="h-full w-full" preserveAspectRatio="none">
-      <polyline
-        fill="none" stroke={RED} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-        points="6,52 40,40 74,18 108,30 142,62 176,44 210,40 244,52 278,24 312,8"
-      />
-      {[ [6,52],[40,40],[74,18],[108,30],[142,62],[176,44],[210,40],[244,52],[278,24],[312,8] ].map(([x,y],i)=>(
-        <circle key={i} cx={x} cy={y} r="3" fill={RED} />
-      ))}
-    </svg>
-  );
-}
-
-function AppPreview() {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.45)] ring-1 ring-black/5">
-      <div className="flex" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-        {/* ===== Sidebar ===== */}
-        <aside className="hidden w-[150px] shrink-0 flex-col py-3.5 text-white sm:flex" style={{ background: 'linear-gradient(180deg,#0E1626 0%,#161336 45%,#2A1130 100%)' }}>
-          <div className="px-3 pb-3">
-            <span className="text-[13px] font-black leading-none">MAJOR<br /><span style={{ color: '#FF5A6E' }}>EVC</span></span>
-          </div>
-          <nav className="space-y-0.5 px-2">
-            {NAV.map((n) => (
-              <span
-                key={n.label}
-                className={'flex items-center gap-2 rounded-md px-2 py-1.5 text-[10.5px] font-medium ' + (n.active ? 'text-white' : 'text-white/70')}
-                style={n.active ? { background: 'linear-gradient(90deg,#C0112E,#E8742C)' } : undefined}
-              >
-                <n.Icon className="h-3 w-3 shrink-0" />
-                <span className="truncate">{n.label}</span>
-              </span>
-            ))}
-          </nav>
-          <p className="px-3 pb-1.5 pt-3 text-[8px] font-bold uppercase tracking-[0.14em] text-white/35">Spécialités</p>
-          <nav className="space-y-0.5 px-2">
-            {SPECIALTIES.map((s) => (
-              <span key={s.label} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[10.5px] font-medium text-white/70">
-                <s.Icon className="h-3 w-3 shrink-0" />
-                <span className="flex-1 truncate">{s.label}</span>
-                <span className="rounded-full bg-white/10 px-1 text-[8px] font-bold text-white/70">{s.n}</span>
-              </span>
-            ))}
-          </nav>
-          <span className="mt-2 flex items-center gap-1 px-3 text-[10px] font-medium text-white/60">
-            Toutes les spécialités <ArrowRight className="h-2.5 w-2.5" />
-          </span>
-        </aside>
-
-        {/* ===== Dashboard ===== */}
-        <div className="min-w-0 flex-1 bg-[#F6F7F9] p-3.5">
-          {/* topbar */}
-          <div className="mb-3 flex items-center gap-2">
-            <span className="text-[12px] font-medium text-[#5B6478]">Accueil</span>
-            <span className="ml-auto flex items-center gap-1.5">
-              <span className="flex items-center gap-1 rounded-md border border-[#E5E7EB] bg-white px-2 py-1 text-[9px] text-[#9AA1AE]"><Search className="h-2.5 w-2.5" /> Rechercher</span>
-              <span className="relative flex h-6 w-6 items-center justify-center rounded-md border border-[#E5E7EB] bg-white text-[#5B6478]"><Bell className="h-3 w-3" /><span className="absolute -right-0.5 -top-0.5 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#C0112E] text-[6px] font-bold text-white">3</span></span>
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#C0112E] text-[8px] font-bold text-white">AD</span>
-            </span>
-          </div>
-
-          <p className="text-[15px] font-extrabold" style={{ color: NAVY }}>Bonjour, Alice <span className="font-normal">👋</span></p>
-          <p className="text-[10px] text-[#7A7A7A]">Prêt(e) à avancer aujourd’hui ?</p>
-
-          {/* KPIs */}
-          <div className="mt-2.5 grid grid-cols-2 gap-2 lg:grid-cols-4">
-            {KPIS.map((k) => (
-              <div key={k.label} className="rounded-lg border border-[#ECEEF1] bg-white p-2">
-                <div className="flex items-center gap-1">
-                  <span className="flex h-4 w-4 items-center justify-center rounded" style={{ background: k.tint, color: k.fg }}><k.Icon className="h-2.5 w-2.5" /></span>
-                  <span className="truncate text-[7.5px] font-medium text-[#7A7A7A]">{k.label}</span>
-                </div>
-                <p className="mt-1 text-[15px] font-black" style={{ color: NAVY }}>{k.value}</p>
-                <p className="text-[7px] font-bold text-[#16793C]">{k.delta}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Row : chart + matières */}
-          <div className="mt-2 grid gap-2 lg:grid-cols-[1.5fr_1fr]">
-            <div className="rounded-lg border border-[#ECEEF1] bg-white p-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold" style={{ color: NAVY }}>Évolution de la performance</span>
-                <span className="rounded border border-[#E5E7EB] px-1.5 py-0.5 text-[7px] text-[#7A7A7A]">30 jours</span>
-              </div>
-              <div className="mt-1 h-14"><Sparkline /></div>
-            </div>
-            <div className="rounded-lg border border-[#ECEEF1] bg-white p-2.5">
-              <span className="text-[9px] font-bold" style={{ color: NAVY }}>Matières à travailler</span>
-              <div className="mt-1.5 space-y-1.5">
-                {MATIERES.map((m) => (
-                  <div key={m.label}>
-                    <div className="flex justify-between text-[7.5px]"><span className="truncate text-[#5B6478]">{m.label}</span><span className="font-bold" style={{ color: NAVY }}>{m.v}%</span></div>
-                    <span className="mt-0.5 block h-1 overflow-hidden rounded-full bg-[#EAECF2]"><span className="block h-full rounded-full" style={{ width: `${m.v}%`, background: m.c }} /></span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Row : activité + répartition */}
-          <div className="mt-2 grid gap-2 lg:grid-cols-[1.5fr_1fr]">
-            <div className="rounded-lg border border-[#ECEEF1] bg-white p-2.5">
-              <span className="text-[9px] font-bold" style={{ color: NAVY }}>Activité récente</span>
-              <ul className="mt-1.5 space-y-1">
-                {ACTIVITE.map((a) => (
-                  <li key={a.label} className="flex items-center gap-1.5">
-                    <FileText className="h-2.5 w-2.5 shrink-0 text-[#C0112E]" />
-                    <span className="min-w-0 flex-1 truncate text-[7.5px] text-[#2D2D2D]">{a.label}</span>
-                    <span className="text-[7.5px] font-bold" style={{ color: NAVY }}>{a.val}</span>
-                    <span className="text-[6.5px] text-[#9AA1AE]">{a.when}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-lg border border-[#ECEEF1] bg-white p-2.5">
-              <span className="text-[9px] font-bold" style={{ color: NAVY }}>Répartition des QCM</span>
-              <div className="mt-1 flex items-center gap-2">
-                <Donut />
-                <ul className="flex-1 space-y-0.5">
-                  {REPARTITION.map((s) => (
-                    <li key={s.label} className="flex items-center gap-1 text-[7px]">
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: s.c }} />
-                      <span className="flex-1 truncate text-[#5B6478]">{s.label}</span>
-                      <span className="font-bold" style={{ color: NAVY }}>{s.v}%</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function ManusHero() {
   return (
@@ -313,8 +111,23 @@ export function ManusHero() {
             transition={{ duration: 1.1, ease: 'easeOut', delay: 0.15 }}
             className="relative"
           >
-            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}>
-              <AppPreview />
+            {/* Cadre rectangulaire vertical (plus haut que large), prend
+                toute la hauteur de la partie droite ; on cadre la capture
+                accueil.png par object-cover ancré en haut-gauche pour
+                garder le maximum de l'interface visible. */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.45)] ring-1 ring-black/5"
+            >
+              <Image
+                src="/accueil.png"
+                alt="Aperçu de la plateforme Major ECN — tableau de bord étudiant"
+                fill
+                priority
+                sizes="(max-width:1024px) 100vw, 55vw"
+                className="object-cover object-left-top"
+              />
             </motion.div>
             <motion.span
               aria-hidden

@@ -1016,16 +1016,6 @@ export function FAQSection() {
               ))}
             </div>
 
-            {/* Bouton « Voir toutes les questions » */}
-            <a
-              href="/faq"
-              className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15px] font-bold transition-colors hover:brightness-95"
-              style={{ background: FQ_BLUE_BG, color: FQ_NAVY }}
-            >
-              Voir toutes les questions fréquentes (21)
-              <ArrowRight className="h-4 w-4" />
-            </a>
-
             {/* Carte contact pink */}
             <div
               className="mt-5 flex flex-col items-start gap-4 rounded-2xl px-5 py-5 sm:flex-row sm:items-center sm:gap-5"
