@@ -12,6 +12,7 @@ const NAV = [
   { href: '/equipe',      label: 'Équipe' },
   { href: '/temoignages', label: 'Témoignages' },
   { href: '/faq',         label: 'FAQ' },
+  { href: '/contact',     label: 'Nous contacter' },
 ];
 
 export function MarketingHeader() {
@@ -53,7 +54,7 @@ export function MarketingHeader() {
 
         {/* Nav réduite pour lg (sans xl) — colonne plus serrée */}
         <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
-          {NAV.slice(0, 5).map((n) => (
+          {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
