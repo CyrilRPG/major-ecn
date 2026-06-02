@@ -116,14 +116,20 @@ export async function POST(req: Request) {
     email,
     options: { redirectTo },
   });
-  if (linkErr || !link?.properties?.action_link) {
+  if (linkErr || (!link?.properties?.hashed_token && !link?.properties?.action_link)) {
     return NextResponse.json({ error: linkErr?.message ?? 'Lien d’activation indisponible.' }, { status: 500 });
   }
+  // On pointe vers notre route /auth/confirm SSR-safe via le hashed_token
+  // (l'action_link Supabase brut casse en flow PKCE par défaut).
+  const hashedToken = link.properties.hashed_token as string | undefined;
+  const setupUrl = hashedToken
+    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=invite&next=${encodeURIComponent('/auth/setup-password')}`
+    : (link.properties.action_link as string);
 
   // 3) Envoie NOTRE email branded via Resend (avec fallback Supabase si pas de clé).
   const { subject, html, text } = welcomeEmail({
     firstName: first_name,
-    setupUrl: link.properties.action_link as string,
+    setupUrl,
     role: 'student',
   });
   const sent = await sendEmail({ to: email, subject, html, text });

@@ -102,7 +102,12 @@ export async function POST(req: Request) {
     email,
     options: { redirectTo },
   });
-  const setupUrl = (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
+  // On pointe vers notre propre route /auth/confirm (SSR-safe) en utilisant
+  // le `hashed_token` plutôt que l'URL Supabase brute (qui casse en PKCE).
+  const hashedToken = link?.properties?.hashed_token as string | undefined;
+  const setupUrl = hashedToken
+    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=invite&next=${encodeURIComponent('/auth/setup-password')}`
+    : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
   const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
   const sent = await sendEmail({ to: email, subject, html, text });
   if (!sent.ok) {

@@ -16,65 +16,28 @@ export default function SetupPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  // Supabase peut renvoyer le lien d'invitation sous 3 formats selon le flow :
-  //   - ?code=... (PKCE — flow par défaut de @supabase/ssr)
-  //   - #access_token=...&refresh_token=... (implicit flow legacy)
-  //   - ?token_hash=...&type=invite (verify avec token_hash)
-  // On gère les 3 cas pour que le lien ne tombe jamais sur « no-session ».
+  // La session est désormais posée côté SERVEUR par /auth/confirm (PKCE-safe).
+  // On lit simplement la session ici ; on garde quand même un fallback pour
+  // les liens implicit-legacy (#access_token=…) en cas de vieux email.
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
 
-    const consume = async () => {
-      try {
-        const url = new URL(window.location.href);
-        const code = url.searchParams.get('code');
-        const tokenHash = url.searchParams.get('token_hash');
-        const type = url.searchParams.get('type');
+    // Affiche l'erreur remontée par /auth/confirm (?error=…) le cas échéant
+    const url = new URL(window.location.href);
+    const err = url.searchParams.get('error');
+    if (err) {
+      setMessage(decodeURIComponent(err));
+      // on n'arrête pas tout de suite : peut-être que la session est quand
+      // même posée via le fallback implicit.
+    }
 
-        // 1) PKCE : ?code=...
-        if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) {
-            setStatus('no-session');
-            setMessage(error.message);
-            return;
-          }
-          // Nettoie l'URL pour ne pas laisser le code consommé visible
-          url.searchParams.delete('code');
-          url.searchParams.delete('state');
-          window.history.replaceState({}, '', url.pathname);
-        }
-        // 2) token_hash + type (lien invite ou recovery)
-        else if (tokenHash && type) {
-          const { error } = await supabase.auth.verifyOtp({
-            token_hash: tokenHash,
-            type: type as 'invite' | 'recovery' | 'signup' | 'email_change' | 'magiclink',
-          });
-          if (error) {
-            setStatus('no-session');
-            setMessage(error.message);
-            return;
-          }
-          url.searchParams.delete('token_hash');
-          url.searchParams.delete('type');
-          window.history.replaceState({}, '', url.pathname);
-        }
-        // 3) Implicit flow : #access_token=... — détecté automatiquement par
-        //    le client Supabase, on laisse onAuthStateChange faire son job.
-
-        // Sinon (ou après échange réussi) on lit la session
-        const { data } = await supabase.auth.getSession();
-        if (!mounted) return;
-        setStatus(data.session ? 'ready' : 'no-session');
-      } catch (e) {
-        if (!mounted) return;
-        setStatus('no-session');
-        setMessage(e instanceof Error ? e.message : 'Échange du lien impossible.');
-      }
+    const check = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!mounted) return;
+      setStatus(data.session ? 'ready' : 'no-session');
     };
-
-    const t = setTimeout(consume, 100);
+    const t = setTimeout(check, 150);
     const sub = supabase.auth.onAuthStateChange((_evt, sess) => {
       if (!mounted) return;
       if (sess) setStatus('ready');
@@ -135,7 +98,9 @@ export default function SetupPasswordPage() {
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">
             {status === 'no-session'
-              ? 'Lien d’activation invalide ou expiré. Demandez un nouveau lien depuis la page d’inscription.'
+              ? (message
+                  ? `Lien invalide : ${message}. Demandez un nouveau lien depuis la page d’inscription.`
+                  : 'Lien d’activation invalide ou expiré. Demandez un nouveau lien depuis la page d’inscription.')
               : status === 'done'
               ? 'Votre mot de passe est créé. On vous redirige vers la plateforme…'
               : 'Définissez un mot de passe sécurisé pour accéder à votre espace Major ECN.'}
