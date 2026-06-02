@@ -80,20 +80,48 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: friendly }, { status: 400 });
   }
 
+  // Upsert (au lieu d'update) pour couvrir le cas où le trigger handle_new_user
+  // n'aurait pas (encore) inséré la ligne profile. On lit ensuite la ligne pour
+  // CONFIRMER que role='professor' a bien été persisté — sinon on supprime le
+  // user auth orphelin et on remonte une erreur claire (typiquement RLS qui
+  // bloque silencieusement à cause d'une SUPABASE_SERVICE_ROLE_KEY incorrecte).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: updErr } = await (admin as any)
+  const { error: upsertErr } = await (admin as any)
     .from('profiles')
-    .update({
+    .upsert({
+      id: created.user.id,
       first_name,
       last_name,
       email,
       phone: phone || null,
       role: 'professor',
       permission_scope,
-    })
-    .eq('id', created.user.id);
+    }, { onConflict: 'id' });
 
-  if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+  if (upsertErr) {
+    await admin.auth.admin.deleteUser(created.user.id).catch(() => null);
+    return NextResponse.json({ error: upsertErr.message }, { status: 500 });
+  }
+
+  // Vérification : la ligne a-t-elle vraiment été mise à jour avec role=professor ?
+  const { data: persisted } = await admin
+    .from('profiles')
+    .select('role')
+    .eq('id', created.user.id)
+    .maybeSingle();
+
+  if (!persisted || persisted.role !== 'professor') {
+    await admin.auth.admin.deleteUser(created.user.id).catch(() => null);
+    return NextResponse.json(
+      {
+        error:
+          'Le rôle « professeur » n\'a pas pu être appliqué. ' +
+          'Vérifie que SUPABASE_SERVICE_ROLE_KEY est bien la clé service_role ' +
+          '(et pas l\'anon key) dans les variables d\'environnement Vercel, puis redéploie.',
+      },
+      { status: 500 },
+    );
+  }
 
   // Magic-link + email branded (Resend) avec fallback Supabase si pas de clé.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
