@@ -16,18 +16,65 @@ export default function SetupPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  // The Supabase client auto-detects the invite tokens in the URL hash on mount.
+  // Supabase peut renvoyer le lien d'invitation sous 3 formats selon le flow :
+  //   - ?code=... (PKCE — flow par défaut de @supabase/ssr)
+  //   - #access_token=...&refresh_token=... (implicit flow legacy)
+  //   - ?token_hash=...&type=invite (verify avec token_hash)
+  // On gère les 3 cas pour que le lien ne tombe jamais sur « no-session ».
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
-    const check = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!mounted) return;
-      if (data.session) setStatus('ready');
-      else setStatus('no-session');
+
+    const consume = async () => {
+      try {
+        const url = new URL(window.location.href);
+        const code = url.searchParams.get('code');
+        const tokenHash = url.searchParams.get('token_hash');
+        const type = url.searchParams.get('type');
+
+        // 1) PKCE : ?code=...
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) {
+            setStatus('no-session');
+            setMessage(error.message);
+            return;
+          }
+          // Nettoie l'URL pour ne pas laisser le code consommé visible
+          url.searchParams.delete('code');
+          url.searchParams.delete('state');
+          window.history.replaceState({}, '', url.pathname);
+        }
+        // 2) token_hash + type (lien invite ou recovery)
+        else if (tokenHash && type) {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: type as 'invite' | 'recovery' | 'signup' | 'email_change' | 'magiclink',
+          });
+          if (error) {
+            setStatus('no-session');
+            setMessage(error.message);
+            return;
+          }
+          url.searchParams.delete('token_hash');
+          url.searchParams.delete('type');
+          window.history.replaceState({}, '', url.pathname);
+        }
+        // 3) Implicit flow : #access_token=... — détecté automatiquement par
+        //    le client Supabase, on laisse onAuthStateChange faire son job.
+
+        // Sinon (ou après échange réussi) on lit la session
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setStatus(data.session ? 'ready' : 'no-session');
+      } catch (e) {
+        if (!mounted) return;
+        setStatus('no-session');
+        setMessage(e instanceof Error ? e.message : 'Échange du lien impossible.');
+      }
     };
-    // small delay so Supabase has time to parse the URL hash
-    const t = setTimeout(check, 250);
+
+    const t = setTimeout(consume, 100);
     const sub = supabase.auth.onAuthStateChange((_evt, sess) => {
       if (!mounted) return;
       if (sess) setStatus('ready');
