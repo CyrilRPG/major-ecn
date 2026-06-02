@@ -71,7 +71,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
     links: [
       { label: 'Notre méthode',            href: '/methode' },
       { label: 'La plateforme',            href: '/plateforme' },
-      { label: 'Équipe pédagogique',       href: '/equipe' },
+      { label: 'Équipe pédagogique',       href: '/#equipe' },
       { label: 'Tarifs & formules',        href: '/tarifs' },
       { label: 'Démarrer l’essai gratuit', href: '/inscription' },
     ],
@@ -80,7 +80,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
     title: 'Ressources',
     links: [
       { label: 'Témoignages',             href: '/temoignages' },
-      { label: 'Questions fréquentes',     href: '/faq' },
+      { label: 'Questions fréquentes',     href: '/#faq' },
       { label: 'Nous contacter',           href: '/contact' },
       { label: 'Se connecter',             href: '/login' },
     ],

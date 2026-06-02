@@ -7,7 +7,7 @@
 import {
   Activity, ArrowRight, Award, Baby, BarChart3, BookOpen, Brain, BrainCircuit, Calendar, CalendarDays,
   CalendarClock, Check, CheckCircle2, ClipboardCheck, Clock, FileText, Folder, GraduationCap, Heart,
-  Layers3, LineChart, ListChecks, MessageCircle, Microscope, Pill, Quote, Radio, Scissors, ShieldCheck,
+  Layers3, LineChart, ListChecks, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, ShieldCheck,
   Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -738,7 +738,7 @@ function TeamPhotoCollage() {
 
 export function PedagogicalTeamSection() {
   return (
-    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <section id="equipe" className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header centré */}
         <Reveal className="mx-auto max-w-4xl text-center">
@@ -1010,10 +1010,14 @@ const BP_RED = '#C0112E';
 const BP_INK_SOFT = '#5B6478';
 
 const BP_CARDS = [
-  { Icon: Radio,       t: 'Webinars en direct',            d: 'Sessions régulières avec notre équipe pédagogique pour approfondir les points clés du programme et répondre aux questions des candidats.', bg: '#FCEAEC', fg: '#C0112E' },
-  { Icon: CalendarDays, t: 'Masterclass & ateliers',        d: 'Des rendez-vous dédiés à la méthodologie, au raisonnement clinique et aux stratégies de réussite aux EVC.',                              bg: '#EAF1FB', fg: '#1E40AF' },
-  { Icon: Target,      t: 'Méthodologie EVC',              d: 'Une approche structurée développée au fil de 18 années d’expérience auprès des candidats aux EVC.',                                     bg: '#E7F6EC', fg: '#16793C' },
-  { Icon: TrendingUp,  t: 'Nouveaux contenus chaque semaine', d: 'Une plateforme enrichie en continu avec de nouvelles ressources pédagogiques, entraînements et supports de révision.',                  bg: '#F1E8FD', fg: '#6D28D9' },
+  { n: 1, Icon: Brain,         t: 'Méthodologie EVC',                  d: 'Plus qu’un entraînement, une véritable méthode pour comprendre les attentes des jurys et optimiser vos performances.', bg: '#F1E8FD', fg: '#6D28D9' },
+  { n: 2, Icon: Target,         t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.', bg: '#F1E8FD', fg: '#6D28D9' },
+  { n: 3, Icon: Stethoscope,    t: 'Cas cliniques corrigés',             d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                       bg: '#E7F6EC', fg: '#16793C' },
+  { n: 4, Icon: ClipboardCheck, t: 'Interrogations & épreuves blanches', d: 'Évaluez vos connaissances et mettez-vous en conditions réelles d’examen avec des corrections commentées.',           bg: '#FFEAD9', fg: '#B45B00' },
+  { n: 5, Icon: Users,          t: 'Accompagnement pédagogique',         d: 'Une équipe d’enseignants experts disponible pour vous guider et répondre à toutes vos questions.',                    bg: '#FCEAEC', fg: '#C0112E' },
+  { n: 6, Icon: Video,          t: 'Webinars & replays',                 d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',         bg: '#EAF1FB', fg: '#1E40AF' },
+  { n: 7, Icon: FileText,       t: 'Fiches & flashcards',                d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                 bg: '#F1E8FD', fg: '#6D28D9' },
+  { n: 8, Icon: BarChart3,      t: 'Suivi de progression',               d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',           bg: '#E7F6EC', fg: '#16793C' },
 ];
 
 export function BeyondPlatformSection() {
@@ -1021,51 +1025,43 @@ export function BeyondPlatformSection() {
     <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <span
-            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em]"
-            style={{ background: '#F3EDFB', color: BP_PURPLE }}
-          >
-            <ShieldCheck className="h-3.5 w-3.5" />
-            Méthode • Accompagnement • Entraînement
-          </span>
-          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
-            <span style={{ color: BP_NAVY }}>Bien </span>
-            <span style={{ color: BP_PURPLE }}>plus qu’une plateforme</span>
-            <span style={{ color: BP_NAVY }}> de cours</span>
-          </h2>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-            Depuis <span className="font-semibold" style={{ color: BP_RED }}>18 ans</span>, nous construisons un
-            environnement de préparation complet associant expertise pédagogique, méthodologie,
-            entraînement et accompagnement des candidats aux EVC.
-          </p>
+          <div className="text-center">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em]"
+              style={{ background: '#EEF2FB', color: BP_NAVY }}
+            >
+              Méthode • Entraînement • Accompagnement • Réussite EVC
+            </span>
+            <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+              <span style={{ color: BP_NAVY }}>Bien </span>
+              <span style={{ color: BP_PURPLE }}>plus</span>
+              <span style={{ color: BP_NAVY }}> qu’une plateforme de cours</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+              Une préparation <span className="font-semibold" style={{ color: BP_PURPLE }}>EVC</span> complète associant
+              entraînement, méthodologie, accompagnement et outils de suivi pour les médecins étrangers préparant les{' '}
+              <span className="font-semibold" style={{ color: BP_PURPLE }}>Épreuves de Vérification des Connaissances (EVC)</span>.
+            </p>
+          </div>
         </Reveal>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {BP_CARDS.map((c, i) => (
-            <Reveal key={c.t} delay={i * 0.06}>
+            <Reveal key={c.t} delay={Math.min(i * 0.04, 0.32)}>
               <article className="flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
                 <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: c.bg, color: c.fg }}>
                   <c.Icon className="h-6 w-6" />
                 </span>
-                <h3 className="mt-5 text-lg font-extrabold leading-tight" style={{ color: BP_NAVY }}>{c.t}</h3>
-                <span className="mt-2 block h-[3px] w-8 rounded-full" style={{ background: c.fg }} />
+                <div className="mt-5 flex items-start gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold" style={{ background: c.bg, color: c.fg }}>{c.n}</span>
+                  <h3 className="text-base font-extrabold leading-tight" style={{ color: BP_NAVY }}>{c.t}</h3>
+                </div>
                 <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>{c.d}</p>
+                <span className="mt-4 block h-[3px] w-full rounded-full" style={{ background: c.fg }} />
               </article>
             </Reveal>
           ))}
         </div>
-
-        <Reveal delay={0.2} className="mt-12">
-          <div className="flex flex-col items-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#F3EDFB', color: BP_PURPLE }}>
-              <GraduationCap className="h-5 w-5" />
-            </span>
-            <div className="mt-4 h-px w-full max-w-3xl bg-[#ECECEF]" />
-            <p className="mt-4 max-w-2xl text-center text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-              Une préparation exigeante, complète et évolutive pour mettre toutes les chances de votre côté.
-            </p>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -1275,6 +1271,284 @@ export function ToolsGridSection() {
             </article>
           </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   12. TestimonialsTextSection — « Ils ont préparé les EVC avec Major ECN »
+   ============================================================ */
+const TT_BURGUNDY = '#6B1A2A';
+const TT_RED = '#A91D2C';
+const TT_PINK_BG = '#FCEAEC';
+const TT_INK_SOFT = '#5B6478';
+const TT_NAVY = '#14254E';
+
+const TT_CARDS = [
+  {
+    Icon: Stethoscope,
+    spec: 'Médecine Générale',
+    tint: '#FCEAEC',
+    accent: TT_RED,
+    quote: 'Les cours sont complets, les QCM très proches de l’examen et les dossiers corrigés en profondeur. J’ai gagné en confiance et progressé tout au long de l’année.',
+    name: 'Dr Sandrine Linda SA’A TALLA',
+    country: 'Cameroun',
+    flag: '🇨🇲',
+    year: 'EVC 2022',
+    initials: 'SS',
+  },
+  {
+    Icon: Activity,
+    spec: 'Radiologie',
+    tint: '#F1E8FD',
+    accent: '#6D28D9',
+    quote: 'Les fiches étaient claires, les dossiers bien construits et plusieurs cas étudiés sont tombés le jour J. Je recommande vivement Major ECN.',
+    name: 'Dr Samy KABAWEH',
+    country: 'Tunisie',
+    flag: '🇹🇳',
+    year: 'EVC 2022',
+    initials: 'SK',
+  },
+  {
+    Icon: Brain,
+    spec: 'Psychiatrie',
+    tint: '#E7F6EC',
+    accent: '#16793C',
+    quote: 'La formation m’a permis de progresser en méthodologie, rapidité et confiance en moi. Un accompagnement précieux jusqu’aux EVC.',
+    name: 'Dr A. C.',
+    country: 'Brésil',
+    flag: '🇧🇷',
+    year: 'EVC 2021',
+    initials: 'AC',
+  },
+];
+
+export function TestimonialsTextSection() {
+  return (
+    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: TT_PINK_BG, borderColor: 'rgba(169,29,44,0.2)', color: TT_RED }}
+          >
+            <MessageCircle className="h-3.5 w-3.5" />
+            Témoignages de candidats EVC
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: TT_NAVY }}>Ils ont préparé les EVC avec </span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(90deg, ${TT_BURGUNDY} 0%, ${TT_RED} 50%, #E8742C 100%)` }}
+            >
+              Major ECN
+            </span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: TT_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Découvrez comment des médecins de différentes spécialités ont préparé les EVC avec Major ECN.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {TT_CARDS.map((c, i) => (
+            <Reveal key={c.name} delay={i * 0.06}>
+              <article className="flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: c.tint, color: c.accent }}>
+                    <c.Icon className="h-6 w-6" />
+                  </span>
+                  <h3 className="text-lg font-extrabold" style={{ color: TT_NAVY }}>{c.spec}</h3>
+                </div>
+                <span className="mt-3 block h-[3px] w-10 rounded-full" style={{ background: c.accent }} />
+                <div className="mt-5 flex-1">
+                  <Quote className="h-7 w-7" style={{ color: c.accent }} fill="currentColor" />
+                  <p className="mt-3 text-[15px] leading-relaxed" style={{ color: TT_NAVY, fontFamily: "'Manrope', sans-serif" }}>
+                    {c.quote}
+                  </p>
+                </div>
+                <div className="mt-6 border-t pt-4" style={{ borderColor: '#ECECEF' }}>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-white"
+                      style={{ background: `linear-gradient(135deg, ${TT_BURGUNDY}, ${TT_RED})` }}
+                      aria-hidden
+                    >
+                      {c.initials}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-extrabold leading-tight" style={{ color: TT_NAVY }}>{c.name}</p>
+                      <p className="mt-0.5 flex items-center gap-1 text-xs" style={{ color: TT_INK_SOFT }}>
+                        <span aria-hidden>{c.flag}</span> {c.country}
+                      </p>
+                    </div>
+                    <span className="rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: c.tint, color: c.accent }}>
+                      {c.year}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2} className="mt-10 flex flex-col items-center gap-3">
+          <Link
+            href="/temoignages"
+            className="inline-flex items-center gap-3 rounded-2xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
+            style={{ background: `linear-gradient(90deg, ${TT_BURGUNDY} 0%, ${TT_RED} 100%)` }}
+          >
+            Voir tous les témoignages
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <p className="flex items-center gap-2 text-xs" style={{ color: TT_INK_SOFT }}>
+            <ShieldCheck className="h-3.5 w-3.5" style={{ color: TT_RED }} />
+            Témoignages authentiques de médecins ayant préparé les EVC avec Major ECN.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   13. TestimonialsVideoSection — « Ils racontent leur expérience »
+   ============================================================ */
+const TV_BURGUNDY = '#6B1A2A';
+const TV_RED = '#A91D2C';
+const TV_PINK_BG = '#FCEAEC';
+const TV_INK_SOFT = '#5B6478';
+const TV_NAVY = '#14254E';
+
+const TV_CARDS = [
+  {
+    spec: 'Médecine générale',
+    accent: TV_RED,
+    name: 'Dr Sandrine Linda SA’A TALLA',
+    country: 'Cameroun',
+    flag: '🇨🇲',
+    year: 'EVC 2022',
+    duration: '2:45',
+    quote: 'Les QCM et les dossiers m’ont permis de progresser tout au long de l’année.',
+    bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #A91D2C 60%, #E8742C 100%)',
+    initials: 'SS',
+  },
+  {
+    spec: 'Radiologie',
+    accent: TV_RED,
+    name: 'Dr Samy KABAWEH',
+    country: 'Tunisie',
+    flag: '🇹🇳',
+    year: 'EVC 2022',
+    duration: '2:38',
+    quote: 'Les fiches étaient claires et plusieurs cas du jour J ressemblaient à nos entraînements.',
+    bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
+    initials: 'SK',
+  },
+  {
+    spec: 'Psychiatrie',
+    accent: TV_RED,
+    name: 'Dr A. C.',
+    country: 'Brésil',
+    flag: '🇧🇷',
+    year: 'EVC 2021',
+    duration: '2:57',
+    quote: 'La préparation m’a apporté méthode, confiance et sérénité jusqu’au jour J.',
+    bgGrad: 'linear-gradient(135deg, #16793C 0%, #6B1A2A 60%, #A91D2C 100%)',
+    initials: 'AC',
+  },
+];
+
+export function TestimonialsVideoSection() {
+  return (
+    <section className="bg-[#FBFBFD] py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: TV_PINK_BG, borderColor: 'rgba(169,29,44,0.2)', color: TV_RED }}
+          >
+            <Video className="h-3.5 w-3.5" />
+            Témoignages vidéo
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: TV_NAVY }}>Ils racontent leur </span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(90deg, ${TV_BURGUNDY} 0%, ${TV_RED} 50%, #E8742C 100%)` }}
+            >
+              expérience
+            </span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: TV_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Découvrez les témoignages vidéo de médecins ayant préparé les EVC avec Major ECN.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {TV_CARDS.map((c, i) => (
+            <Reveal key={c.name} delay={i * 0.06}>
+              <article className="overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+                {/* Thumbnail vidéo (placeholder dégradé — remplacer par <video> ou <Image> quand assets fournis) */}
+                <button
+                  type="button"
+                  aria-label={`Lire le témoignage de ${c.name}`}
+                  className="group relative block aspect-video w-full overflow-hidden"
+                  style={{ background: c.bgGrad }}
+                >
+                  {/* avatar centré, façon portrait flou */}
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-5xl font-black text-white/15"
+                    aria-hidden
+                  >
+                    {c.initials}
+                  </span>
+                  {/* bouton play */}
+                  <span className="absolute inset-0 flex items-center justify-center" aria-hidden>
+                    <span
+                      className="flex h-16 w-16 items-center justify-center rounded-full text-white shadow-2xl backdrop-blur-sm transition-transform group-hover:scale-110"
+                      style={{ background: `radial-gradient(circle at 30% 30%, ${TV_RED}, ${TV_BURGUNDY})` }}
+                    >
+                      <Play className="ml-1 h-7 w-7" fill="currentColor" />
+                    </span>
+                  </span>
+                  {/* durée */}
+                  <span className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-[11px] font-bold text-white">
+                    {c.duration}
+                  </span>
+                </button>
+                <div className="p-5">
+                  <p className="text-base font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
+                  <p className="mt-0.5 text-sm font-bold" style={{ color: TV_RED }}>{c.spec}</p>
+                  <p className="mt-1.5 flex items-center gap-1.5 text-xs" style={{ color: TV_INK_SOFT }}>
+                    <span aria-hidden>{c.flag}</span> {c.country} • {c.year}
+                  </p>
+                  <div className="mt-4 border-t pt-3" style={{ borderColor: '#ECECEF' }}>
+                    <p className="flex items-start gap-1.5 text-sm italic leading-relaxed" style={{ color: TV_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+                      <Quote className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: TV_RED }} fill="currentColor" />
+                      <span>{c.quote}</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2} className="mt-10 flex flex-col items-center gap-3">
+          <Link
+            href="/temoignages"
+            className="inline-flex items-center gap-3 rounded-2xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
+            style={{ background: `linear-gradient(90deg, ${TV_BURGUNDY} 0%, ${TV_RED} 100%)` }}
+          >
+            Voir tous les témoignages
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <p className="flex items-center gap-2 text-xs" style={{ color: TV_INK_SOFT }}>
+            <ShieldCheck className="h-3.5 w-3.5" style={{ color: TV_RED }} />
+            Témoignages authentiques de médecins ayant préparé les EVC avec Major ECN.
+          </p>
+        </Reveal>
       </div>
     </section>
   );
