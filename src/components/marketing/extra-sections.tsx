@@ -5,9 +5,9 @@
  * cohérentes avec les composants existants dans manus-sections.tsx.
  */
 import {
-  Activity, ArrowRight, Award, Baby, BookOpen, BrainCircuit, CalendarClock, Check,
+  Activity, ArrowRight, Award, Baby, BookOpen, BrainCircuit, Calendar, CalendarClock, Check,
   CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap, Heart,
-  LineChart, Microscope, Pill, Scissors, ShieldCheck, Sparkles, Smile, Stethoscope,
+  LineChart, Microscope, Pill, Quote, Scissors, ShieldCheck, Sparkles, Smile, Stethoscope,
   Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -679,65 +679,154 @@ export function DashboardPreviewSection() {
 }
 
 /* ============================================================
-   8. PedagogicalTeamSection — « Une équipe d'experts »
+   8. PedagogicalTeamSection — pixel-perfect maquette designer
+   « Une équipe qui connaît les attentes des EVC »
    ============================================================ */
-const TEAM_PROFILES = [
-  { Icon: Stethoscope, role: 'Praticiens hospitaliers', count: '12', desc: 'CHU Pitié-Salpêtrière, Saint-Antoine, Necker, Bichat.' },
-  { Icon: Microscope,  role: 'PU-PH & enseignants',     count: '5',  desc: 'Membres de jurys EVC depuis plusieurs sessions.' },
-  { Icon: UserCheck,   role: 'CCA expérimentés',        count: '8',  desc: 'Chefs de clinique anciens majors du concours.' },
-  { Icon: Users,       role: 'Spécialistes par discipline', count: '20+', desc: 'Un référent identifié pour chaque collège.' },
+const TM_NAVY = '#14254E';
+const TM_RED = '#A91D2C';
+const TM_RED_BG = '#FCEAEC';
+const TM_INK_SOFT = '#5B6478';
+
+const TEAM_BENEFITS = [
+  'Une expérience terrain au cœur des hôpitaux universitaires',
+  'Une connaissance précise des programmes et des attentes jurys',
+  'Des contenus conçus, relus et actualisés en continu',
 ];
+
+const TEAM_CARDS = [
+  { Icon: Users,      t: 'Comprendre ce qu’attend le jury',          d: 'Nos enseignants connaissent les critères d’évaluation, les pièges classiques et les points clés particulièrement surveillés lors des EVC.' },
+  { Icon: BookOpen,   t: 'Maîtriser les contenus essentiels',         d: 'Chaque spécialité dispose de contenus ciblés sur les connaissances réellement attendues : QCM, cas cliniques, fiches, entraînements.' },
+  { Icon: Target,     t: 'Acquérir la bonne méthodologie',            d: 'Raisonnement clinique, gestion du temps, analyse des questions, méthode de réponse : des techniques clés pour performer le jour J.' },
+  { Icon: TrendingUp, t: 'Une expérience au service de votre réussite', d: 'Plus de 9 000 médecins accompagnés dans de nombreuses spécialités. Une expérience concrète qui nous permet d’anticiper vos difficultés et d’y répondre.' },
+];
+
+const TEAM_STATS = [
+  { Icon: Calendar,    big: '18',                   label: 'ans d’expérience',      sub: 'au service de votre réussite' },
+  { Icon: Users,       big: '9 000+',               label: 'médecins accompagnés',  sub: 'depuis 2006' },
+  { Icon: Stethoscope, big: '45',                   label: 'spécialités couvertes', sub: 'toutes les disciplines EVC' },
+  { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
+];
+
+/** Collage de 4 cadres inclinés (placeholder générique N&B, prêt à recevoir
+ *  de vraies photos de l'équipe). */
+function TeamPhotoCollage() {
+  return (
+    <div className="flex h-full items-center justify-center gap-1.5">
+      {[0, 1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="relative h-56 w-20 shrink-0 overflow-hidden sm:w-24"
+          style={{
+            transform: 'skewX(-9deg)',
+            background: 'linear-gradient(160deg, #E7E9EE 0%, #C9CDD6 55%, #AEB3BF 100%)',
+            boxShadow: '0 12px 30px -16px rgba(15,27,61,0.4)',
+          }}
+        >
+          {/* silhouette praticien (générique, en niveaux de gris) */}
+          <span
+            className="absolute inset-0 flex items-end justify-center"
+            style={{ transform: 'skewX(9deg)' }}
+            aria-hidden
+          >
+            <UserCheck className="mb-3 h-16 w-16 text-white/60" strokeWidth={1.2} />
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function PedagogicalTeamSection() {
   return (
-    <section className="relative overflow-hidden py-24 lg:py-32" style={{ backgroundColor: '#FAFAF8' }}>
+    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        {/* Header centré */}
+        <Reveal className="mx-auto max-w-4xl text-center">
           <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em]"
-            style={{ background: 'rgba(107,26,42,0.06)', borderColor: 'rgba(107,26,42,0.2)', color: BORDEAUX }}
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: 'white', borderColor: 'rgba(169,29,44,0.3)', color: TM_RED }}
           >
-            <Users className="h-3 w-3" />
+            <Users className="h-3.5 w-3.5" />
             Équipe pédagogique
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-blue sm:text-5xl">
-            Une expertise clinique et pédagogique reconnue
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+            <span style={{ color: TM_NAVY }}>Une équipe qui connaît les </span>
+            <span style={{ color: TM_RED }}>attentes des EVC</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
-            Plus de 25 médecins enseignants — praticiens hospitaliers, PU-PH, anciens majors du
-            concours — encadrent personnellement nos candidats.
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TM_INK_SOFT }}>
+            Depuis plus de 18 ans, nos enseignants accompagnent des médecins dans la préparation des EVC.
+            Ils maîtrisent les exigences des jurys, les contenus essentiels à connaître
+            et la méthodologie de réponse qui fait la différence le jour J.
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAM_PROFILES.map((p, i) => (
-            <Reveal key={p.role} delay={i * 0.06}>
-              <article className="group relative h-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white p-7 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-baseline justify-between">
-                  <span
-                    className="flex h-12 w-12 items-center justify-center rounded-xl text-white"
-                    style={{ background: `linear-gradient(135deg, ${BORDEAUX}, ${BORDEAUX_DEEP})` }}
-                  >
-                    <p.Icon className="h-5 w-5" />
-                  </span>
-                  <span className="font-display text-3xl font-black tracking-tight text-[#6B1A2A]">
-                    {p.count}
-                  </span>
+        {/* Corps : gauche (carte praticiens + citation) · droite (4 cartes) */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.15fr]">
+          {/* --- Colonne gauche --- */}
+          <div className="flex flex-col gap-6">
+            <div className="rounded-2xl border bg-white p-6 sm:p-7" style={{ borderColor: '#ECECEF' }}>
+              <div className="grid gap-5 sm:grid-cols-[1.1fr_1fr] sm:items-center">
+                <div>
+                  <h3 className="text-xl font-extrabold leading-tight" style={{ color: TM_NAVY }}>
+                    Des praticiens hospitaliers et enseignants expérimentés
+                  </h3>
+                  <ul className="mt-5 space-y-4">
+                    {TEAM_BENEFITS.map((b) => (
+                      <li key={b} className="flex items-start gap-2.5">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </span>
+                        <span className="text-sm leading-relaxed" style={{ color: TM_INK_SOFT }}>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="mt-5 font-display text-base font-bold tracking-tight text-[#2D2D2D]">
-                  {p.role}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#5A5A5A]">{p.desc}</p>
+                <TeamPhotoCollage />
+              </div>
+            </div>
+
+            {/* Citation */}
+            <div className="rounded-2xl border bg-white p-6 sm:p-7" style={{ borderColor: '#ECECEF' }}>
+              <Quote className="h-7 w-7" style={{ color: TM_RED }} fill="currentColor" />
+              <p className="mt-3 text-lg font-medium leading-relaxed" style={{ color: TM_NAVY }}>
+                Notre mission : vous donner toutes les clés pour comprendre,
+                apprendre efficacement et <span className="font-bold" style={{ color: TM_RED }}>réussir le jour J.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* --- Colonne droite : 4 cartes --- */}
+          <div className="grid gap-5 sm:grid-cols-2">
+            {TEAM_CARDS.map((c) => (
+              <article key={c.t} className="flex flex-col rounded-2xl border bg-white p-6 transition-all hover:shadow-lg" style={{ borderColor: '#ECECEF' }}>
+                <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                  <c.Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 text-base font-extrabold leading-tight" style={{ color: TM_RED }}>{c.t}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: TM_INK_SOFT }}>{c.d}</p>
+                <span className="mt-4 block h-[3px] w-8 rounded-full" style={{ background: TM_RED }} />
               </article>
-            </Reveal>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <Reveal delay={0.3} className="mt-14 text-center">
-          <p className="text-sm font-medium text-[#7A7A7A]">
-            Des médecins nous font confiance pour préparer leurs collègues étrangers en France.
-          </p>
-        </Reveal>
+        {/* Bandeau stats */}
+        <div className="mt-8 grid gap-5 rounded-2xl bg-[#F7F7F8] p-6 sm:grid-cols-2 lg:grid-cols-4 sm:p-8">
+          {TEAM_STATS.map((s) => (
+            <div key={s.label} className="flex items-start gap-3.5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: TM_RED_BG, color: TM_RED }}>
+                <s.Icon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="leading-tight" style={{ color: TM_NAVY }}>
+                  {s.big && <span className="text-2xl font-black tracking-tight">{s.big} </span>}
+                  <span className="text-sm font-bold">{s.label}</span>
+                </p>
+                <p className="mt-0.5 text-xs leading-relaxed" style={{ color: TM_INK_SOFT }}>{s.sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
