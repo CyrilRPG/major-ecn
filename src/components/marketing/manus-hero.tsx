@@ -128,16 +128,17 @@ export function ManusHero() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.4)] ring-1 ring-black/5"
+              className="relative aspect-[7/5] w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.4)] ring-1 ring-black/5"
             >
+              {/* Fenêtre à ratio fixe (format maquette) : on recadre et on
+                  zoome la capture par object-cover ancré en haut à gauche. */}
               <Image
                 src="/accueil.png"
                 alt="Aperçu de la plateforme Major ECN — tableau de bord étudiant"
-                width={2400}
-                height={1500}
+                fill
                 priority
                 sizes="(max-width:1024px) 100vw, 60vw"
-                className="h-auto w-full"
+                className="object-cover object-left-top"
               />
             </motion.div>
 
