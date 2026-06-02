@@ -45,7 +45,7 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Adresse email</Label>
-        <Input id="email" type="email" autoComplete="email" placeholder="alice@major-ecn-demo.fr" {...register('email')} />
+        <Input id="email" type="email" autoComplete="email" placeholder="exemple@email.com" {...register('email')} />
         {errors.email && <p className="text-xs text-(--color-danger)">{errors.email.message}</p>}
       </div>
       <div className="space-y-1.5">
@@ -65,10 +65,6 @@ export function LoginForm() {
         {isSubmitting ? <Loader2 className="animate-spin" /> : null}
         Se connecter
       </Button>
-
-      <p className="text-xs text-center text-(--color-ink-soft) mt-6">
-        Identifiants démo : <span className="font-mono text-(--color-primary-deep)">admin@major-ecn-demo.fr</span> · <span className="font-mono text-(--color-primary-deep)">alice@major-ecn-demo.fr</span> · <span className="font-mono text-(--color-primary-deep)">bob@major-ecn-demo.fr</span> · mdp <span className="font-mono">Demo2026!</span>
-      </p>
     </form>
   );
 }
