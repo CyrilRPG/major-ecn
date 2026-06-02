@@ -5,9 +5,11 @@ import { AddProfessorSchema, CONTENT_TYPES, PERMISSION_LEVELS, type ContentType,
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { welcomeEmail } from '@/lib/email/templates';
 
+/** URL publique : siteUrl() (NEXT_PUBLIC_SITE_URL / Vercel) en priorité,
+ *  sinon on tente de reconstruire depuis les en-têtes de la requête. */
 function origin(req: Request): string {
-  const env = process.env.NEXT_PUBLIC_SITE_URL;
-  if (env) return env.replace(/\/+$/, '');
+  const fromEnv = siteUrl();
+  if (fromEnv && !fromEnv.startsWith('http://localhost')) return fromEnv;
   const proto = req.headers.get('x-forwarded-proto') ?? 'https';
   const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? 'localhost:3000';
   return `${proto}://${host}`;
@@ -62,7 +64,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL ? siteUrl() : origin(req);
+  const base = origin(req);
   const redirectTo = `${base}/auth/setup-password`;
 
   const { data: created, error } = await admin.auth.admin.createUser({

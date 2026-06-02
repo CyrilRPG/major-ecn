@@ -33,9 +33,20 @@ export type SendResult =
   | { ok: true; id: string }
   | { ok: false; error: string };
 
+/** Base URL publique de l'app pour construire les liens d'email.
+ *  Cascade :
+ *   1. NEXT_PUBLIC_SITE_URL (priorité, ex: domaine custom https://major-ecn.fr)
+ *   2. VERCEL_PROJECT_PRODUCTION_URL (auto-injectée par Vercel sur les builds
+ *      de production — sans schéma, ex: "major-ecn.vercel.app")
+ *   3. VERCEL_URL (auto-injectée par Vercel — URL du déploiement courant)
+ *   4. localhost (dev uniquement) */
 export function siteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL;
   if (env) return env.replace(/\/+$/, '');
+  const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (prod) return `https://${prod.replace(/\/+$/, '')}`;
+  const v = process.env.VERCEL_URL;
+  if (v) return `https://${v.replace(/\/+$/, '')}`;
   return 'http://localhost:3000';
 }
 
