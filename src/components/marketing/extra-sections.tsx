@@ -5,11 +5,12 @@
  * cohérentes avec les composants existants dans manus-sections.tsx.
  */
 import {
-  Activity, ArrowRight, Award, BookOpen, BrainCircuit, CalendarClock, Check,
-  CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap,
-  LineChart, Microscope, ShieldCheck, Sparkles, Stethoscope,
+  Activity, ArrowRight, Award, Baby, BookOpen, BrainCircuit, CalendarClock, Check,
+  CheckCircle2, ClipboardCheck, Clock, FileText, GraduationCap, Heart,
+  LineChart, Microscope, Pill, Scissors, ShieldCheck, Sparkles, Smile, Stethoscope,
   Target, TrendingUp, Trophy, UserCheck, Users, Video,
 } from 'lucide-react';
+import Link from 'next/link';
 import { Reveal } from './reveal';
 import { InscriptionForm } from './inscription-form';
 
@@ -258,49 +259,181 @@ export function EcosystemSection() {
 /* ============================================================
    4. SpecialtiesSection — Les disciplines couvertes
    ============================================================ */
-const SPECIALTIES = [
-  'Cardiologie', 'Pneumologie', 'Neurologie', 'Pédiatrie',
-  'Gériatrie', 'Urologie', 'Médecine interne', 'Infectiologie',
-  'Néphrologie', 'Endocrinologie', 'Rhumatologie', 'Hématologie',
-  'Oncologie', 'ORL', 'Ophtalmologie', 'Allergologie',
-  'Gynécologie', 'Psychiatrie', 'Urgences', 'Dermatologie',
+/* SpecialtiesSection — pixel-perfect maquette designer
+   Header navy + red · 6 catégories + panneau expandé · 3 footer cards + CTA */
+
+const NAVY = '#0F1B3D';
+const RED = '#A91D2C';
+const RED_BG = '#FDEEEF';
+
+const CATEGORIES = [
+  { Icon: Stethoscope, label: 'Médecine Générale',         desc: 'Préparation dédiée aux EVC de médecine générale (PAE).',                  tint: '#FDEEEF', stroke: '#A91D2C', active: false },
+  { Icon: Heart,       label: 'Spécialités Médicales',     desc: '20+ spécialités EVC',                                                     tint: '#FDEEEF', stroke: '#A91D2C', active: true },
+  { Icon: Scissors,    label: 'Spécialités Chirurgicales', desc: 'Préparation adaptée aux EVC de toutes les spécialités chirurgicales.',  tint: '#E5F0FA', stroke: '#1F4F88', active: false },
+  { Icon: Smile,       label: 'Odontologie',               desc: 'Préparation spécifique aux EVC en odontologie.',                          tint: '#E7F6EC', stroke: '#16793C', active: false },
+  { Icon: Pill,        label: 'Pharmacie',                 desc: 'Accompagnement adapté aux épreuves EVC de pharmacie.',                    tint: '#F1E8FD', stroke: '#5B2BB8', active: false },
+  { Icon: Baby,        label: 'Maïeutique',                desc: 'Préparation dédiée aux EVC de maïeutique.',                               tint: '#FFEAD9', stroke: '#B45B00', active: false },
+];
+
+const MEDICAL_COLS = [
+  ['Gériatrie', 'Médecine d’Urgence', 'Radiologie', 'Anesthésie-Réanimation', 'Pédiatrie'],
+  ['Cardiologie', 'Neurologie', 'Pneumologie', 'Néphrologie', 'Endocrinologie'],
+  ['Gastro-entérologie', 'Hématologie', 'Oncologie', 'Médecine interne', 'Rhumatologie'],
+  ['Psychiatrie', 'Médecine physique et réadaptation', 'Maladies infectieuses'],
+];
+
+const FOOTER_BADGES = [
+  { Icon: Users,        title: '45 spécialités EVC couvertes',                desc: 'De la médecine générale aux spécialités les plus pointues.' },
+  { Icon: BookOpen,     title: 'Ressources dédiées EVC (PAE)',                desc: 'Des contenus spécifiques à chaque discipline.' },
+  { Icon: Target,       title: 'Préparation EVC adaptée aux attentes des jurys', desc: 'Méthodologie, entraînements et cas cliniques ciblés.' },
 ];
 
 export function SpecialtiesSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-28 lg:py-36">
+    <section
+      className="bg-white py-20 lg:py-28"
+      style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        {/* Header */}
+        <Reveal className="mx-auto max-w-4xl text-center">
           <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em]"
-            style={{ background: 'rgba(107,26,42,0.06)', borderColor: 'rgba(107,26,42,0.2)', color: BORDEAUX }}
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: RED_BG, color: RED }}
           >
-            <Stethoscope className="h-3 w-3" />
-            Disciplines
+            <ShieldCheck className="h-3.5 w-3.5" />
+            45 spécialités EVC couvertes
           </span>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-tight gradient-bord-amber sm:text-5xl">
-            20 spécialités couvertes
+          <h2 className="mt-5 text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]" style={{ color: NAVY }}>
+            Préparation <span style={{ color: RED }}>EVC (PAE)</span> adaptée<br className="hidden sm:block" />
+            <span> à votre spécialité</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[#5A5A5A] sm:text-lg">
-            L’intégralité du programme EVC en médecine générale, traitée item par item avec
-            vidéos, fiches, QCM, annales et flashcards.
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-[#4B5563] sm:text-lg">
+            Préparez les <span className="font-semibold" style={{ color: RED }}>Épreuves de Vérification des Connaissances (EVC)</span> dans
+            le cadre de la <span className="font-semibold" style={{ color: RED }}>Procédure d’Autorisation d’Exercice (PAE)</span> grâce à des
+            contenus, des cas cliniques et une méthodologie adaptés aux attentes des jurys.
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {SPECIALTIES.map((s, i) => (
-            <Reveal key={s} delay={Math.min(i * 0.03, 0.4)}>
-              <div className="group flex items-center gap-3 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] px-4 py-3 transition-all hover:border-[#6B1A2A]/30 hover:bg-white hover:shadow-sm">
+        {/* 6 catégories */}
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {CATEGORIES.map((c) => (
+            <article
+              key={c.label}
+              className="relative flex flex-col items-center rounded-2xl border bg-white p-5 text-center transition-all hover:shadow-lg"
+              style={{
+                borderColor: c.active ? RED : '#E5E7EB',
+                borderWidth: c.active ? 2 : 1,
+                boxShadow: c.active ? '0 8px 24px -10px rgba(169,29,44,0.25)' : undefined,
+              }}
+            >
+              <span
+                className="flex h-14 w-14 items-center justify-center rounded-full"
+                style={{ background: c.tint, color: c.stroke }}
+              >
+                <c.Icon className="h-6 w-6" strokeWidth={2.2} />
+              </span>
+              <h3 className="mt-4 text-base font-extrabold leading-tight" style={{ color: NAVY }}>
+                {c.label}
+              </h3>
+              {c.active ? (
+                <>
+                  <span className="mt-3 block h-[3px] w-8 rounded-full" style={{ background: RED }} />
+                  <span
+                    className="mt-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-bold"
+                    style={{ background: RED_BG, color: RED }}
+                  >
+                    {c.desc}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="mt-3 block h-[2px] w-8 rounded-full bg-[#E5E7EB]" />
+                  <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">{c.desc}</p>
+                </>
+              )}
+              {c.active && (
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white transition-transform group-hover:scale-110"
-                  style={{ background: `linear-gradient(135deg, ${BORDEAUX}, ${BORDEAUX_DEEP})` }}
-                >
-                  <Stethoscope className="h-3.5 w-3.5" />
-                </span>
-                <span className="text-sm font-semibold text-[#2D2D2D]">{s}</span>
-              </div>
-            </Reveal>
+                  aria-hidden
+                  className="absolute -bottom-3 left-1/2 h-6 w-6 -translate-x-1/2 rotate-45 rounded-sm"
+                  style={{ background: 'white', borderRight: `2px solid ${RED}`, borderBottom: `2px solid ${RED}` }}
+                />
+              )}
+            </article>
           ))}
+        </div>
+
+        {/* Panneau expandé sous « Spécialités Médicales » */}
+        <div
+          className="mt-10 grid gap-8 rounded-2xl border bg-[#FBFBFB] p-6 sm:p-8 lg:grid-cols-[0.85fr_2.4fr] lg:gap-10"
+          style={{ borderColor: '#E5E7EB' }}
+        >
+          <div>
+            <h3 className="text-xl font-extrabold leading-tight" style={{ color: RED }}>
+              Préparation EVC par<br />spécialité médicale
+            </h3>
+            <p className="mt-4 text-sm leading-relaxed text-[#4B5563]">
+              Un programme complet<br />
+              pour réussir les EVC (PAE)<br />
+              dans votre spécialité.
+            </p>
+            <Link
+              href="/preparations"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors hover:bg-[#FBEEEF]"
+              style={{ borderColor: RED, color: RED }}
+            >
+              Voir toutes les spécialités EVC
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div>
+            <ul className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+              {MEDICAL_COLS.flat().map((s) => (
+                <li key={s} className="flex items-center gap-2 text-sm" style={{ color: NAVY }}>
+                  <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: RED }} />
+                  <span>{s}</span>
+                </li>
+              ))}
+              <li className="col-span-full mt-2 text-sm font-bold" style={{ color: RED }}>
+                + 10 autres spécialités EVC
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* 3 footer cards */}
+        <div className="mt-10 grid gap-4 rounded-2xl bg-[#F7F7F7] p-5 sm:grid-cols-3 sm:p-7">
+          {FOOTER_BADGES.map((b) => (
+            <div key={b.title} className="flex items-start gap-3">
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                style={{ background: RED_BG, color: RED }}
+              >
+                <b.Icon className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-extrabold leading-tight" style={{ color: NAVY }}>{b.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-[#6B7280]">{b.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA principal */}
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <Link
+            href="/preparations"
+            className="inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-base font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
+            style={{ background: RED }}
+          >
+            Découvrir toutes les préparations EVC
+            <ArrowRight className="h-5 w-5" />
+          </Link>
+          <p className="flex items-center gap-2 text-sm text-[#6B7280]">
+            <ShieldCheck className="h-4 w-4" style={{ color: RED }} />
+            Une préparation complète et reconnue pour réussir les EVC (PAE), quelle que soit votre spécialité.
+          </p>
         </div>
       </div>
     </section>
