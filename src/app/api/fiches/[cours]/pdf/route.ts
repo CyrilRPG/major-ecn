@@ -45,7 +45,10 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const firstName = profile?.first_name?.trim() || '';
   const lastName = profile?.last_name?.trim() || '';
   const email = profile?.email?.trim() || user.email || '';
-  const nom = `${firstName} ${lastName}`.trim();
+  // Espacement élargi entre prénom et nom (les watermarks penchés les
+  // serraient trop) : triple espace normal (WinAnsi ne gère pas les
+  // espaces cadratins Unicode).
+  const nom = [firstName, lastName].filter(Boolean).join('   ');
 
   /** Dessine un watermark à 2 lignes (nom prénom au-dessus, email en-dessous)
    *  centré horizontalement à la hauteur yRatio (de 0 à 1, depuis le bas). */
