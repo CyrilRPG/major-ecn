@@ -1,3 +1,4 @@
+'use client';
 /* eslint-disable @next/next/no-img-element */
 /**
  * Sections additionnelles inspirées de la maquette designer (HeroIconic).
