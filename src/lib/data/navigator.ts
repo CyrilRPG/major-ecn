@@ -1,6 +1,7 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/lib/auth/get-profile';
+import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 
 export const EDN_FACULTE_ID = 'major-ecn';
 
@@ -45,8 +46,9 @@ type Row = {
  * Flat Collège → Item hierarchy for the persistent navigator.
  * Scoped to the EDN programme faculté; course_progress is RLS-scoped to the user.
  */
-export async function getNavigatorTree(_profile: Profile): Promise<NavCollege[]> {
+export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> {
   const supabase = await createClient();
+  const scope = parseScope(profile.permission_scope);
 
   const { data } = await supabase
     .from('facultes')
@@ -61,6 +63,7 @@ export async function getNavigatorTree(_profile: Profile): Promise<NavCollege[]>
   const colleges = (row?.semestres ?? []).flatMap((s) => s.matieres ?? []);
 
   return colleges
+    .filter((m) => canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
     .map((m) => ({
       id: m.id,
@@ -68,11 +71,14 @@ export async function getNavigatorTree(_profile: Profile): Promise<NavCollege[]>
       iconKey: m.icon_key,
       colorHex: m.color_hex,
       cours: [...(m.cours ?? [])]
+        .filter((c) => canAccessCours(scope, m.id, c.id))
         .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
         .map((c) => {
           const cp = c.course_progress?.[0];
           const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
           return { id: c.id, titre: c.titre, progress: Math.round((done / 2) * 100) };
         }),
-    }));
+    }))
+    // Évite d'afficher des collèges désormais vides (cours tous filtrés).
+    .filter((m) => m.cours.length > 0);
 }
