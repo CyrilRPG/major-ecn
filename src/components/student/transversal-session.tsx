@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, RefreshCcw, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -42,23 +42,26 @@ export function TransversalSession({
 
   const total = questions.length;
   const q = questions[index];
+  const isFinished = done || !q;
 
-  if (done || !q) {
-    const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-    // Enregistrement de la session (idempotent côté UI)
-    if (!recorded && total > 0) {
-      setRecorded(true);
-      const specialty_scores: Record<string, number> = {};
-      for (const [cid, v] of Object.entries(perCours)) {
-        specialty_scores[cid] = v.t > 0 ? v.c / v.t : 0;
-      }
-      void recordTransversalSession({
-        kind,
-        qcm_count: total,
-        score_correct: score,
-        specialty_scores,
-      });
+  // Enregistrement de la session (une seule fois, à la fin).
+  useEffect(() => {
+    if (!isFinished || recorded || total === 0) return;
+    setRecorded(true);
+    const specialty_scores: Record<string, number> = {};
+    for (const [cid, v] of Object.entries(perCours)) {
+      specialty_scores[cid] = v.t > 0 ? v.c / v.t : 0;
     }
+    void recordTransversalSession({
+      kind,
+      qcm_count: total,
+      score_correct: score,
+      specialty_scores,
+    });
+  }, [isFinished, recorded, total, perCours, score, kind]);
+
+  if (isFinished) {
+    const pct = total > 0 ? Math.round((score / total) * 100) : 0;
     return (
       <div className="mx-auto max-w-md px-6 py-16 text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-(--color-primary-soft) text-(--color-primary)">
