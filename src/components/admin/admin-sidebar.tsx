@@ -79,7 +79,7 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
         </nav>
         <div className="mt-auto space-y-1 border-t border-white/10 p-3">
           <Link
-            href="/app"
+            href="/accueil"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
             <GraduationCap className="h-4 w-4" />
