@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ManusHero } from '@/components/marketing/manus-hero';
 import { ExperienceSection, FAQSection, FreeTrialBanner } from '@/components/marketing/manus-sections';
 import {
-  BeyondPlatformSection, FeaturedTestimonialsSection, FinalCtaBlock, PedagogicalTeamSection,
+  BeyondPlatformSection, FinalCtaBlock, PedagogicalTeamSection,
   SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection,
 } from '@/components/marketing/extra-sections';
 
@@ -28,10 +28,7 @@ export default async function HomePage() {
       {/* 3) Témoignages texte de lauréats (cartes courtes) */}
       <TestimonialsTextSection />
 
-      {/* 4) Témoignages longs « Lauréats » — Dr Amélie Lamure & Dr Haykel Abdelbaki */}
-      <FeaturedTestimonialsSection />
-
-      {/* 5) Témoignages vidéo */}
+      {/* 4) Témoignages vidéo */}
       <TestimonialsVideoSection />
 
       {/* 6) Préparation EVC (PAE) adaptée à votre spécialité */}
