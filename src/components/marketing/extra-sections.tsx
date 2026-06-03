@@ -1880,20 +1880,6 @@ export function FeaturedTestimonialsSection() {
         </div>
 
         {/* CTA en bas */}
-        <Reveal delay={0.2} className="mt-12 flex flex-col items-center gap-3">
-          <Link
-            href="/temoignages"
-            className="inline-flex items-center gap-3 rounded-2xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
-            style={{ background: `linear-gradient(90deg, ${FT_BURGUNDY} 0%, ${FT_RED} 100%)` }}
-          >
-            Lire tous les témoignages
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <p className="flex items-center gap-2 text-xs" style={{ color: FT_INK_SOFT }}>
-            <ShieldCheck className="h-3.5 w-3.5" style={{ color: FT_RED }} />
-            Témoignages authentiques recueillis auprès de médecins ayant préparé les EVC avec Major ECN.
-          </p>
-        </Reveal>
       </div>
     </section>
   );
