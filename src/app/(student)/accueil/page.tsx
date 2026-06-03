@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { CollegesGrid } from '@/components/student/colleges-grid';
+import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ActivityArea, ActivityDonut } from '@/components/admin/stats/charts';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
@@ -309,7 +310,8 @@ export default async function AccueilPage() {
   };
 
   return (
-    <div className="flex flex-col gap-3 px-3 py-3 sm:px-4 lg:px-6 lg:py-4">
+    <div className="mx-auto grid w-full max-w-[1640px] gap-6 px-3 py-3 sm:px-4 lg:px-6 lg:py-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="flex min-w-0 flex-col gap-3">
       {/* Greeting — sur mobile, l'encouragement passe sur une 2e ligne pour rester lisible */}
       <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
         <h1 className="text-base font-bold tracking-tight text-(--color-ink) sm:text-xl">
@@ -510,6 +512,19 @@ export default async function AccueilPage() {
       <div className="mt-8">
         <UpgradeBanner context="default" profile={profile} />
       </div>
+
+      {/* Widget annonces : sous le contenu sur mobile/tablet (xl: caché ici, voir aside) */}
+      <div className="mt-6 xl:hidden">
+        <AnnouncementsWidget />
+      </div>
+      </div>
+
+      {/* Widget annonces — aside droite sticky à partir de XL */}
+      <aside className="hidden xl:block">
+        <div className="sticky top-4 max-h-[calc(100dvh-2rem)] overflow-y-auto pr-1">
+          <AnnouncementsWidget />
+        </div>
+      </aside>
     </div>
   );
 }
