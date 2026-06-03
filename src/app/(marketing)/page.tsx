@@ -2,8 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { ManusHero } from '@/components/marketing/manus-hero';
 import { ExperienceSection, FAQSection, FreeTrialBanner } from '@/components/marketing/manus-sections';
 import {
-  BeyondPlatformSection, FinalCtaBlock, PedagogicalTeamSection, SpecialtiesSection,
-  TestimonialsTextSection, TestimonialsVideoSection, ToolsGridSection,
+  BeyondPlatformSection, FeaturedTestimonialsSection, FinalCtaBlock, PedagogicalTeamSection,
+  SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection,
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
@@ -25,13 +25,13 @@ export default async function HomePage() {
       {/* 2) Bien plus qu'une plateforme de cours (8 cartes) */}
       <BeyondPlatformSection />
 
-      {/* 3) Tous les outils pour structurer votre progression */}
-      <ToolsGridSection />
-
-      {/* 4) Ils ont préparé les EVC avec Major ECN (témoignages texte) */}
+      {/* 3) Témoignages texte de lauréats (cartes courtes) */}
       <TestimonialsTextSection />
 
-      {/* 5) Ils racontent leur expérience (témoignages vidéo) */}
+      {/* 4) Témoignages longs « Lauréats » — Dr Amélie Lamure & Dr Haykel Abdelbaki */}
+      <FeaturedTestimonialsSection />
+
+      {/* 5) Témoignages vidéo */}
       <TestimonialsVideoSection />
 
       {/* 6) Préparation EVC (PAE) adaptée à votre spécialité */}

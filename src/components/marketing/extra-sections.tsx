@@ -6,9 +6,9 @@
  */
 import {
   Activity, ArrowRight, Award, Baby, BarChart3, BookOpen, Brain, BrainCircuit, Calendar, CalendarDays,
-  CalendarClock, Check, CheckCircle2, ClipboardCheck, Clock, FileText, Folder, GraduationCap, Heart,
-  Layers3, LineChart, ListChecks, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, ShieldCheck,
-  Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video,
+  CalendarClock, Check, CheckCircle2, ClipboardCheck, Clock, Compass, FileText, Folder, GraduationCap, Heart,
+  Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, ShieldCheck,
+  Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video, Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Reveal } from './reveal';
@@ -707,12 +707,18 @@ const TEAM_STATS = [
   { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
 ];
 
-/** Collage de 4 cadres inclinés (placeholder générique N&B, prêt à recevoir
- *  de vraies photos de l'équipe). */
+/** Collage de 4 cadres inclinés. Les slots prennent une vraie photo si présente
+ *  dans /public/team/ ; sinon ils retombent sur un placeholder N&B générique. */
+const TEAM_COLLAGE_PHOTOS = [
+  '/team/enseignante-1.jpg',  // ← dépose la photo de l'enseignante ici
+  null,
+  null,
+  null,
+];
 function TeamPhotoCollage() {
   return (
     <div className="flex h-full items-center justify-center gap-1.5">
-      {[0, 1, 2, 3].map((i) => (
+      {TEAM_COLLAGE_PHOTOS.map((src, i) => (
         <div
           key={i}
           className="relative h-56 w-20 shrink-0 overflow-hidden sm:w-24"
@@ -722,14 +728,31 @@ function TeamPhotoCollage() {
             boxShadow: '0 12px 30px -16px rgba(15,27,61,0.4)',
           }}
         >
-          {/* silhouette praticien (générique, en niveaux de gris) */}
-          <span
-            className="absolute inset-0 flex items-end justify-center"
-            style={{ transform: 'skewX(9deg)' }}
-            aria-hidden
-          >
-            <UserCheck className="mb-3 h-16 w-16 text-white/60" strokeWidth={1.2} />
-          </span>
+          {/* On compense le skewX du parent en re-skewant l'image vers la verticale */}
+          <div className="absolute inset-0" style={{ transform: 'skewX(9deg) scale(1.15)' }}>
+            {src ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={src}
+                alt=""
+                className="h-full w-full object-cover grayscale"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  img.style.display = 'none';
+                  const sib = img.nextElementSibling as HTMLElement | null;
+                  if (sib) sib.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <span
+              aria-hidden
+              className={
+                'h-full w-full items-end justify-center ' + (src ? 'hidden' : 'flex')
+              }
+            >
+              <UserCheck className="mb-3 h-16 w-16 text-white/60" strokeWidth={1.2} />
+            </span>
+          </div>
         </div>
       ))}
     </div>
@@ -1002,66 +1025,155 @@ export function TarifsBlock() {
 }
 
 /* ============================================================
-   10. BeyondPlatformSection — « Bien plus qu'une plateforme de cours »
+   10. BeyondPlatformSection — pixel-perfect maquette designer
+   « Bien plus qu'une plateforme de cours » (3 cartes + bandeau + 8 outils)
    ============================================================ */
-const BP_NAVY = '#14254E';
+const BP_NAVY = '#0F1B3D';
 const BP_PURPLE = '#6D28D9';
-const BP_RED = '#C0112E';
 const BP_INK_SOFT = '#5B6478';
+const BP_BG = '#FAFBFD';
 
-const BP_CARDS = [
-  { n: 1, Icon: Brain,         t: 'Méthodologie EVC',                  d: 'Plus qu’un entraînement, une véritable méthode pour comprendre les attentes des jurys et optimiser vos performances.', bg: '#F1E8FD', fg: '#6D28D9' },
-  { n: 2, Icon: Target,         t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.', bg: '#F1E8FD', fg: '#6D28D9' },
-  { n: 3, Icon: Stethoscope,    t: 'Cas cliniques corrigés',             d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                       bg: '#E7F6EC', fg: '#16793C' },
-  { n: 4, Icon: ClipboardCheck, t: 'Interrogations & épreuves blanches', d: 'Évaluez vos connaissances et mettez-vous en conditions réelles d’examen avec des corrections commentées.',           bg: '#FFEAD9', fg: '#B45B00' },
-  { n: 5, Icon: Users,          t: 'Accompagnement pédagogique',         d: 'Une équipe d’enseignants experts disponible pour vous guider et répondre à toutes vos questions.',                    bg: '#FCEAEC', fg: '#C0112E' },
-  { n: 6, Icon: Video,          t: 'Webinars & replays',                 d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',         bg: '#EAF1FB', fg: '#1E40AF' },
-  { n: 7, Icon: FileText,       t: 'Fiches & flashcards',                d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                 bg: '#F1E8FD', fg: '#6D28D9' },
-  { n: 8, Icon: BarChart3,      t: 'Suivi de progression',               d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',           bg: '#E7F6EC', fg: '#16793C' },
+/* Cartes du haut — 3 grandes vignettes */
+const BP_TOP = [
+  { Icon: Brain,      t: 'Suivi intelligent\nde vos connaissances',     d: 'La plateforme analyse vos résultats et identifie automatiquement les notions à renforcer.',      bg: '#F1E8FD', fg: '#6D28D9' },
+  { Icon: Target,     t: 'Révisions personnalisées\net adaptatives',    d: 'Des révisions transversales ciblées vous aident à entretenir vos acquis jusqu’au jour des EVC.', bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: TrendingUp, t: 'Évaluations et\nréévaluations ciblées',        d: 'En cas de baisse de niveau, la plateforme détecte les spécialités fragiles et propose des évaluations adaptées.', bg: '#FFEAD9', fg: '#E8742C' },
+];
+
+/* 8 cartes outils — grille 4×2 */
+const BP_TOOLS = [
+  { Icon: Compass,        t: 'Méthodologie EVC',                  d: 'Une méthodologie construite à partir des attentes des jurys EVC pour gagner en efficacité dans vos révisions et vos épreuves.', bg: '#F1E8FD', fg: '#6D28D9' },
+  { Icon: FileText,       t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.',           bg: '#F1E8FD', fg: '#6D28D9' },
+  { Icon: Stethoscope,    t: 'Cas cliniques\ncorrigés',            d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                                bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: ClipboardCheck, t: 'Interrogations &\népreuves blanches', d: 'Évaluez vos connaissanens et mettez-vous en conditions réelles d’examen avec des corrections commentées.',                    bg: '#FFEAD9', fg: '#E8742C' },
+  { Icon: Users,          t: 'Accompagnement\npédagogique',        d: 'Des enseignants expérimentés disponibles pour répondre à vos questions et vous guider tout au long de votre préparation.',     bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: Video,          t: 'Webinars &\nreplays',                d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',                  bg: '#EAF1FB', fg: '#1E40AF' },
+  { Icon: BookOpen,       t: 'Fiches &\nflashcards',               d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                          bg: '#F1E8FD', fg: '#6D28D9' },
+  { Icon: BarChart3,      t: 'Suivi de\nprogression',              d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',                     bg: '#E7F6EC', fg: '#16793C' },
 ];
 
 export function BeyondPlatformSection() {
   return (
-    <section className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <section className="py-16 sm:py-20 lg:py-24" style={{ background: BP_BG, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* ============ Header ============ */}
         <Reveal>
           <div className="text-center">
             <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em]"
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] sm:text-xs"
               style={{ background: '#EEF2FB', color: BP_NAVY }}
             >
-              Méthode • Entraînement • Accompagnement • Réussite EVC
+              Méthode <span style={{ color: BP_PURPLE }}>•</span> Entraînement <span style={{ color: BP_PURPLE }}>•</span> Accompagnement <span style={{ color: BP_PURPLE }}>•</span> Réussite EVC
             </span>
-            <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
               <span style={{ color: BP_NAVY }}>Bien </span>
               <span style={{ color: BP_PURPLE }}>plus</span>
               <span style={{ color: BP_NAVY }}> qu’une plateforme de cours</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-              Une préparation <span className="font-semibold" style={{ color: BP_PURPLE }}>EVC</span> complète associant
-              entraînement, méthodologie, accompagnement et outils de suivi pour les médecins étrangers préparant les{' '}
-              <span className="font-semibold" style={{ color: BP_PURPLE }}>Épreuves de Vérification des Connaissances (EVC)</span>.
+            <p className="mx-auto mt-5 max-w-4xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+              Une préparation <span className="font-bold" style={{ color: BP_PURPLE }}>EVC</span> complète associant entraînement,
+              méthodologie, accompagnement pédagogique et outils de suivi pour réussir les{' '}
+              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_PURPLE, textDecorationColor: BP_PURPLE }}>Épreuves de Vérification des Connaissances</span> dans le cadre de la{' '}
+              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_PURPLE, textDecorationColor: BP_PURPLE }}>PAE</span>.
             </p>
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {BP_CARDS.map((c, i) => (
-            <Reveal key={c.t} delay={Math.min(i * 0.04, 0.32)}>
-              <article className="flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
-                <span className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: c.bg, color: c.fg }}>
-                  <c.Icon className="h-6 w-6" />
-                </span>
-                <div className="mt-5 flex items-start gap-2">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold" style={{ background: c.bg, color: c.fg }}>{c.n}</span>
-                  <h3 className="text-base font-extrabold leading-tight" style={{ color: BP_NAVY }}>{c.t}</h3>
+        {/* ============ 3 cartes du haut ============ */}
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {BP_TOP.map((c, i) => (
+            <Reveal key={c.t} delay={i * 0.07}>
+              <article className="flex h-full flex-col rounded-2xl border bg-white p-7 transition-all hover:-translate-y-1 hover:shadow-xl sm:p-8" style={{ borderColor: '#ECECEF' }}>
+                <div className="flex items-start gap-5">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full" style={{ background: c.bg, color: c.fg }}>
+                    <c.Icon className="h-7 w-7" strokeWidth={2} />
+                  </span>
+                  <h3 className="whitespace-pre-line text-lg font-extrabold leading-tight sm:text-xl" style={{ color: BP_NAVY }}>
+                    {c.t}
+                  </h3>
                 </div>
-                <p className="mt-3 flex-1 text-sm leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>{c.d}</p>
-                <span className="mt-4 block h-[3px] w-full rounded-full" style={{ background: c.fg }} />
+                <p className="mt-5 text-sm leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>{c.d}</p>
               </article>
             </Reveal>
           ))}
         </div>
+
+        {/* ============ Bandeau violet ============ */}
+        <Reveal delay={0.15}>
+          <div
+            className="relative mt-8 overflow-hidden rounded-2xl border px-6 py-6 sm:px-8 sm:py-7"
+            style={{ background: '#EFEBFC', borderColor: '#D9CFF4' }}
+          >
+            {/* Petite trame de points décorative à droite — n'apparaît qu'en desktop */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-12 top-1/2 hidden h-40 w-60 -translate-y-1/2 opacity-50 sm:block"
+              style={{
+                background:
+                  'radial-gradient(circle, #6D28D9 1px, transparent 1.5px) 0 0/12px 12px',
+                maskImage: 'linear-gradient(to left, black, transparent)',
+                WebkitMaskImage: 'linear-gradient(to left, black, transparent)',
+              }}
+            />
+            <div className="relative flex items-start gap-4 sm:gap-5">
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md sm:h-14 sm:w-14"
+                style={{ background: BP_PURPLE }}
+              >
+                <Zap className="h-6 w-6 sm:h-7 sm:w-7" fill="currentColor" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-base font-extrabold leading-snug sm:text-lg" style={{ color: BP_NAVY }}>
+                  Major ECN ne se limite pas aux QCM.
+                </p>
+                <p className="mt-1 text-sm leading-relaxed sm:text-base" style={{ color: BP_PURPLE }}>
+                  La plateforme analyse votre progression, identifie vos points à renforcer
+                  et adapte vos révisions pour vous accompagner efficacement jusqu’aux EVC.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* ============ Bloc « Tous les outils » ============ */}
+        <Reveal delay={0.2}>
+          <div className="mt-10 rounded-2xl border bg-white p-6 sm:p-8 lg:p-10" style={{ borderColor: '#ECECEF' }}>
+            <div className="text-center">
+              <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl">
+                <span style={{ color: BP_NAVY }}>Tous les outils pour </span>
+                <span style={{ color: BP_PURPLE }}>réussir</span>
+                <span style={{ color: BP_NAVY }}> votre préparation EVC</span>
+              </h3>
+              <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+                Des ressources complètes et variées pour apprendre, réviser et vous évaluer efficacement.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+              {BP_TOOLS.map((tool, i) => (
+                <Reveal key={tool.t} delay={Math.min(i * 0.04, 0.28)}>
+                  <article className="flex items-start gap-3.5">
+                    <span
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: tool.bg, color: tool.fg }}
+                    >
+                      <tool.Icon className="h-5 w-5" strokeWidth={2.2} />
+                    </span>
+                    <div className="min-w-0">
+                      <h4 className="whitespace-pre-line text-[15px] font-extrabold leading-tight" style={{ color: BP_NAVY }}>
+                        {tool.t}
+                      </h4>
+                      <span className="mt-1.5 block h-[3px] w-10 rounded-full" style={{ background: tool.fg }} />
+                      <p className="mt-3 text-[13px] leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+                        {tool.d}
+                      </p>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -1547,6 +1659,240 @@ export function TestimonialsVideoSection() {
           <p className="flex items-center gap-2 text-xs" style={{ color: TV_INK_SOFT }}>
             <ShieldCheck className="h-3.5 w-3.5" style={{ color: TV_RED }} />
             Témoignages authentiques de médecins ayant préparé les EVC avec Major ECN.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   14. FeaturedTestimonialsSection — témoignages longs « Lauréats »
+   ============================================================ */
+const FT_NAVY = '#14254E';
+const FT_BURGUNDY = '#6B1A2A';
+const FT_RED = '#A91D2C';
+const FT_RED_DEEP = '#7A1320';
+const FT_INK = '#1F2937';
+const FT_INK_SOFT = '#4B5563';
+const FT_PINK_BG = '#FCEAEC';
+
+type FeaturedTestimony = {
+  /** Slug photo dans /public/temoignages/<slug>.jpg (à déposer à part) */
+  slug: string;
+  initials: string;
+  name: string;
+  title: string;
+  spec: string;
+  paragraphs: string[];
+};
+
+const FEATURED: FeaturedTestimony[] = [
+  {
+    slug: 'dr-amelie-lamure',
+    initials: 'AL',
+    name: 'Dr Amélie Lamure',
+    title: 'Lauréate des EVC',
+    spec: 'Anesthésie-Réanimation',
+    paragraphs: [
+      'Quand j’ai commencé à préparer les EVC, je me suis vite rendu compte que la difficulté ne venait pas seulement du concours lui-même. Il fallait aussi réussir à tenir dans la durée, garder sa motivation, gérer les moments de doute et continuer à avancer malgré la fatigue et les contraintes du quotidien.',
+      'Avant de rejoindre Major ECN, j’avais souvent l’impression d’être seule face à cette montagne. Je travaillais, je révisais, mais je me demandais constamment si j’étais dans la bonne direction, si je ne passais pas à côté de l’essentiel ou si ma façon de travailler était vraiment adaptée aux attentes des EVC.',
+      'Ce que Major ECN m’a apporté, c’est d’abord ce sentiment de ne plus être seule. J’ai trouvé une équipe présente, disponible et impliquée, qui connaissait parfaitement les exigences du concours et qui nous accompagnait à chaque étape de la préparation. J’avais le sentiment d’avoir de véritables partenaires à mes côtés, et cela a été extrêmement précieux tout au long de cette année.',
+      'Bien sûr, la qualité des cours a énormément compté. Les contenus étaient complets, structurés et orientés vers ce qu’il fallait réellement maîtriser pour les épreuves. Les cas cliniques, les examens blancs et les séances de méthodologie m’ont permis de comprendre ce qui était attendu le jour J et d’aborder progressivement le concours avec davantage de confiance.',
+      'Mais ce dont je me souviendrai le plus, c’est de l’accompagnement humain. Dans les moments où l’on doute, où l’on se sent dépassé par la charge de travail ou lorsque l’on se pose mille questions sur sa préparation, savoir que l’on peut compter sur une équipe réactive et bienveillante fait une vraie différence.',
+      'La réussite aux EVC demande beaucoup de travail personnel, personne ne peut faire ce travail à votre place. En revanche, être guidé, encouragé et accompagné tout au long du parcours permet d’avancer beaucoup plus sereinement et efficacement.',
+      'Aujourd’hui, après avoir réussi les EVC d’Anesthésie-Réanimation, je tiens à remercier sincèrement toute l’équipe de Major ECN. Leur accompagnement, leur disponibilité et leur engagement ont compté bien au-delà du simple enseignement. Ils ont été présents pendant toute cette préparation, et je leur en suis profondément reconnaissante.',
+    ],
+  },
+  {
+    slug: 'dr-haykel-abdelbaki',
+    initials: 'HA',
+    name: 'Dr Haykel Abdelbaki',
+    title: 'Lauréat des EVC',
+    spec: 'Radiologie',
+    paragraphs: [
+      'J’ai réussi les EVC de radiologie et Major ECN a largement contribué à cette réussite.',
+      'Ce que j’ai particulièrement apprécié, c’est le sérieux et la qualité de l’organisation. Les cours sont actualisés, clairs et réellement adaptés aux exigences du concours. Le planning est respecté, ce qui permet d’avancer sereinement tout au long de la préparation.',
+      'L’équipe pédagogique est un véritable point fort. Les enseignants sont disponibles, à l’écoute et prennent le temps d’identifier les difficultés de chaque candidat afin de l’aider à progresser efficacement.',
+      'Les épreuves blanches organisées dans des conditions proches de l’examen permettent de se préparer concrètement au jour J et d’évaluer son niveau de manière réaliste. Les annales corrigées avec les grilles officielles et les mots-clés attendus sont également d’une grande aide pour comprendre ce qui est réellement attendu par les jurys.',
+      'Au-delà des supports et des enseignements, j’ai trouvé chez Major ECN un cadre de travail structuré et rassurant qui m’a permis d’aborder les épreuves avec davantage de confiance.',
+      'Je recommande cette préparation à tous les candidats qui souhaitent mettre toutes les chances de leur côté pour réussir les EVC.',
+    ],
+  },
+];
+
+/** Carte photo ronde 256px avec halo dégradé burgundy + fallback initiales si l'image
+ *  n'est pas encore présente dans /public/temoignages/. */
+function FeaturedAvatar({ slug, initials }: { slug: string; initials: string }) {
+  return (
+    <div className="relative mx-auto" style={{ width: 'min(280px, 100%)', aspectRatio: '1 / 1' }}>
+      {/* halo dégradé décoratif */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 rounded-full blur-2xl opacity-60"
+        style={{ background: `radial-gradient(circle at 30% 30%, ${FT_RED}, ${FT_BURGUNDY} 60%, transparent 75%)` }}
+      />
+      {/* anneau accent */}
+      <div
+        aria-hidden
+        className="absolute inset-0 rounded-full"
+        style={{ background: `linear-gradient(135deg, ${FT_BURGUNDY}, ${FT_RED}, #E8742C)`, padding: '4px' }}
+      >
+        <div className="h-full w-full rounded-full bg-white" />
+      </div>
+      {/* photo (ou initiales si fichier absent) */}
+      <div className="absolute inset-1 overflow-hidden rounded-full bg-white">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/temoignages/${slug}.jpg`}
+          alt=""
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            const img = e.currentTarget;
+            img.style.display = 'none';
+            const sib = img.nextElementSibling as HTMLElement | null;
+            if (sib) sib.style.display = 'flex';
+          }}
+        />
+        <span
+          aria-hidden
+          className="hidden h-full w-full items-center justify-center text-5xl font-black text-white"
+          style={{ background: `linear-gradient(135deg, ${FT_BURGUNDY}, ${FT_RED})` }}
+        >
+          {initials}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function FeaturedTestimonialsSection() {
+  return (
+    <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      {/* halos décoratifs discrets */}
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-40 -z-10 h-96 w-96 rounded-full bg-[#A91D2C]/5 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-40 bottom-40 -z-10 h-96 w-96 rounded-full bg-[#6B1A2A]/5 blur-3xl" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: FT_PINK_BG, borderColor: 'rgba(169,29,44,0.2)', color: FT_RED }}
+          >
+            <Trophy className="h-3.5 w-3.5" />
+            Témoignages de lauréats
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            <span style={{ color: FT_NAVY }}>Leur histoire,</span>{' '}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(90deg, ${FT_BURGUNDY} 0%, ${FT_RED} 50%, #E8742C 100%)` }}
+            >
+              leur réussite
+            </span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: FT_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
+            Des médecins qui ont préparé les EVC avec Major ECN racontent, sans filtre, leur parcours.
+          </p>
+        </Reveal>
+
+        {/* Témoignages alternés gauche / droite */}
+        <div className="mt-14 flex flex-col gap-12 lg:gap-16">
+          {FEATURED.map((t, i) => {
+            const reverse = i % 2 === 1;
+            return (
+              <Reveal key={t.slug} delay={i * 0.1}>
+                <article
+                  className={
+                    'relative grid items-start gap-8 rounded-3xl border bg-white p-6 shadow-[0_30px_80px_-30px_rgba(15,27,61,0.18)] sm:p-8 lg:gap-12 lg:p-10 ' +
+                    (reverse ? 'lg:grid-cols-[1.7fr_1fr]' : 'lg:grid-cols-[1fr_1.7fr]')
+                  }
+                  style={{ borderColor: '#ECECEF' }}
+                >
+                  {/* COLONNE PHOTO + signature */}
+                  <aside
+                    className={
+                      'flex flex-col items-center gap-5 lg:sticky lg:top-24 ' + (reverse ? 'lg:order-2' : '')
+                    }
+                  >
+                    <FeaturedAvatar slug={t.slug} initials={t.initials} />
+
+                    <div className="text-center">
+                      <p className="text-lg font-extrabold leading-tight" style={{ color: FT_NAVY }}>{t.name}</p>
+                      <p className="mt-1 text-sm font-bold" style={{ color: FT_RED }}>{t.title}</p>
+                      <span
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
+                        style={{ background: FT_PINK_BG, color: FT_RED }}
+                      >
+                        <Stethoscope className="h-3.5 w-3.5" />
+                        {t.spec}
+                      </span>
+                    </div>
+                  </aside>
+
+                  {/* COLONNE TEXTE */}
+                  <div className={'relative ' + (reverse ? 'lg:order-1' : '')}>
+                    {/* Guillemet géant décoratif */}
+                    <Quote
+                      aria-hidden
+                      className="absolute -left-2 -top-3 h-16 w-16 opacity-15 sm:h-20 sm:w-20"
+                      style={{ color: FT_RED }}
+                      fill="currentColor"
+                    />
+                    <div className="relative space-y-4 pl-2">
+                      {t.paragraphs.map((p, idx) => (
+                        <p
+                          key={idx}
+                          className={
+                            (idx === 0
+                              ? 'text-base font-medium leading-relaxed sm:text-lg'
+                              : 'text-[15px] leading-relaxed') +
+                            ' first-letter:font-black'
+                          }
+                          style={{
+                            color: idx === 0 ? FT_INK : FT_INK_SOFT,
+                            fontFamily: "'Manrope', sans-serif",
+                          }}
+                        >
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+
+                    {/* Signature en bas */}
+                    <div className="mt-6 flex items-center justify-between gap-3 border-t pt-5" style={{ borderColor: '#ECECEF' }}>
+                      <p className="text-sm font-bold italic" style={{ color: FT_BURGUNDY }}>
+                        — {t.name}, lauréat·e des EVC {t.spec}
+                      </p>
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+                        style={{ background: FT_PINK_BG, color: FT_RED }}
+                      >
+                        <CheckCircle2 className="h-3 w-3" />
+                        Authentique
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        {/* CTA en bas */}
+        <Reveal delay={0.2} className="mt-12 flex flex-col items-center gap-3">
+          <Link
+            href="/temoignages"
+            className="inline-flex items-center gap-3 rounded-2xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_10px_30px_-10px_rgba(169,29,44,0.6)] transition-transform hover:scale-[1.02]"
+            style={{ background: `linear-gradient(90deg, ${FT_BURGUNDY} 0%, ${FT_RED} 100%)` }}
+          >
+            Lire tous les témoignages
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <p className="flex items-center gap-2 text-xs" style={{ color: FT_INK_SOFT }}>
+            <ShieldCheck className="h-3.5 w-3.5" style={{ color: FT_RED }} />
+            Témoignages authentiques recueillis auprès de médecins ayant préparé les EVC avec Major ECN.
           </p>
         </Reveal>
       </div>
