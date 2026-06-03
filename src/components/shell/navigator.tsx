@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, ChevronRight, FileText, Home, MessagesSquare, Target } from 'lucide-react';
+import { CalendarDays, ChevronRight, FileText, Home, MessagesSquare, RefreshCcw, Target } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
@@ -74,6 +74,7 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
 
   const homeActive = pathname === '/accueil';
   const trainActive = pathname.startsWith('/entrainement');
+  const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
   const forumActive = pathname.startsWith('/forum');
 
@@ -93,6 +94,11 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
       <Link href="/entrainement" className={topLevelClass(trainActive)}>
         <Target className="h-[18px] w-[18px] shrink-0" />
         Entraînement ciblé
+      </Link>
+
+      <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
+        <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
+        Révisions transversales
       </Link>
 
       <Link href="/agenda" className={topLevelClass(agendaActive)}>
