@@ -4,7 +4,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -21,13 +21,16 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, m.id)) redirect('/facultes');
 
-  const { data: cours } = await supabase
+  const { data: coursAll } = await supabase
     .from('cours')
     .select('id, titre, description, order_index, course_progress(video_watched, fiche_read), qcm_series(id), flashcards(id)')
     .eq('matiere_id', matiere)
     .order('order_index');
 
-  const coursIds = (cours ?? []).map((c) => c.id);
+  // Filtrage fin : un prof peut être limité à un sous-ensemble de cours
+  // (scope.cours). Pour les students/admins/'all', tout passe.
+  const cours = (coursAll ?? []).filter((c) => canAccessCours(scope, matiere, c.id));
+  const coursIds = cours.map((c) => c.id);
   const { data: attempts } = coursIds.length
     ? await supabase
         .from('qcm_attempts')
@@ -51,7 +54,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   const Icon = iconFromKey(m.icon_key);
 
-  const coursRows: IndexRow[] = (cours ?? []).map((c, idx) => {
+  const coursRows: IndexRow[] = cours.map((c, idx) => {
     const p = c.course_progress?.[0];
     const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
     const steps =

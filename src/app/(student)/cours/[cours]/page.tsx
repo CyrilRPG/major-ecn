@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, FileText, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 
 type Action = {
@@ -34,7 +34,10 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .maybeSingle();
 
   if (!c || !c.matieres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  const scope = parseScope(profile.permission_scope);
+  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  // Filtrage fin : si le prof est limité à certains cours, on bloque les autres.
+  if (!canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
 
   await supabase
     .from('course_progress')
