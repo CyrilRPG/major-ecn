@@ -708,54 +708,52 @@ const TEAM_STATS = [
   { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
 ];
 
-/** Collage de 4 cadres inclinés. Les slots prennent une vraie photo si présente
- *  dans /public/team/ ; sinon ils retombent sur un placeholder N&B générique. */
-const TEAM_COLLAGE_PHOTOS = [
-  '/team/enseignante-1.jpg',  // ← dépose la photo de l'enseignante ici
-  null,
-  null,
-  null,
-];
+/** Portrait grand format d'une enseignante de l'équipe.
+ *  Lit la photo dans /public/team/enseignante-1.jpg ; sinon retombe sur un
+ *  placeholder discret (initiales + icône). */
+const FEATURED_TEACHER = {
+  photo: '/team/enseignante-1.jpg',
+  name: 'Notre équipe pédagogique',
+  caption: 'Praticiens hospitaliers et CCA — 18 ans d’accompagnement EVC',
+};
 function TeamPhotoCollage() {
   return (
-    <div className="flex h-full items-center justify-center gap-1.5">
-      {TEAM_COLLAGE_PHOTOS.map((src, i) => (
-        <div
-          key={i}
-          className="relative h-56 w-20 shrink-0 overflow-hidden sm:w-24"
-          style={{
-            transform: 'skewX(-9deg)',
-            background: 'linear-gradient(160deg, #E7E9EE 0%, #C9CDD6 55%, #AEB3BF 100%)',
-            boxShadow: '0 12px 30px -16px rgba(15,27,61,0.4)',
+    <div className="flex h-full items-center justify-center">
+      <div
+        className="relative aspect-[3/4] w-full max-w-[260px] overflow-hidden rounded-2xl"
+        style={{
+          background: 'linear-gradient(160deg, #E7E9EE 0%, #C9CDD6 55%, #AEB3BF 100%)',
+          boxShadow: '0 24px 50px -22px rgba(15,27,61,0.45)',
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={FEATURED_TEACHER.photo}
+          alt={FEATURED_TEACHER.caption}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            const img = e.currentTarget;
+            img.style.display = 'none';
+            const sib = img.nextElementSibling as HTMLElement | null;
+            if (sib) sib.style.display = 'flex';
           }}
+        />
+        <span
+          aria-hidden
+          className="hidden h-full w-full items-end justify-center"
         >
-          {/* On compense le skewX du parent en re-skewant l'image vers la verticale */}
-          <div className="absolute inset-0" style={{ transform: 'skewX(9deg) scale(1.15)' }}>
-            {src ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={src}
-                alt=""
-                className="h-full w-full object-cover grayscale"
-                onError={(e) => {
-                  const img = e.currentTarget;
-                  img.style.display = 'none';
-                  const sib = img.nextElementSibling as HTMLElement | null;
-                  if (sib) sib.style.display = 'flex';
-                }}
-              />
-            ) : null}
-            <span
-              aria-hidden
-              className={
-                'h-full w-full items-end justify-center ' + (src ? 'hidden' : 'flex')
-              }
-            >
-              <UserCheck className="mb-3 h-16 w-16 text-white/60" strokeWidth={1.2} />
-            </span>
-          </div>
+          <UserCheck className="mb-6 h-20 w-20 text-white/70" strokeWidth={1.2} />
+        </span>
+        {/* dégradé bas + légende */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 via-black/25 to-transparent p-4 pt-12">
+          <p className="text-xs font-bold uppercase tracking-wider text-white/85">
+            Équipe pédagogique
+          </p>
+          <p className="mt-0.5 text-[11px] font-medium leading-snug text-white/75">
+            {FEATURED_TEACHER.caption}
+          </p>
         </div>
-      ))}
+      </div>
     </div>
   );
 }
