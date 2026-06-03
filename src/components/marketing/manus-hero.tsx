@@ -111,14 +111,14 @@ export function ManusHero() {
             transition={{ duration: 1.1, ease: 'easeOut', delay: 0.15 }}
             className="relative"
           >
-            {/* Cadre rectangulaire vertical (plus haut que large), prend
-                toute la hauteur de la partie droite ; on cadre la capture
-                accueil.png par object-cover ancré en haut-gauche pour
-                garder le maximum de l'interface visible. */}
+            {/* Cadre paysage (un peu plus large que haut) pour mettre en
+                avant la plateforme. La capture accueil.png est cadrée par
+                object-cover ancré en haut-gauche pour garder visible la
+                sidebar + dashboard. */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.45)] ring-1 ring-black/5"
+              className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl border border-[#E8E7E3] bg-white shadow-[0_50px_140px_-30px_rgba(15,27,61,0.45)] ring-1 ring-black/5"
             >
               <Image
                 src="/accueil.png"
