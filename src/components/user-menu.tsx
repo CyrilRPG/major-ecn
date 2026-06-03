@@ -39,18 +39,18 @@ export function UserMenu({ profile }: { profile: Profile }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {profile.role === 'admin' && (
+        {(profile.role === 'admin' || profile.role === 'professor') && (
           <DropdownMenuItem asChild>
             <Link href="/admin">
               <Shield />
-              Panneau admin
+              {profile.role === 'professor' ? 'Espace professeur' : 'Panneau admin'}
             </Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem asChild>
-          <Link href="/app">
+          <Link href={profile.role === 'admin' || profile.role === 'professor' ? '/accueil' : '/app'}>
             <UserRound />
-            Mon espace
+            {profile.role === 'admin' || profile.role === 'professor' ? 'Vue étudiant' : 'Mon espace'}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

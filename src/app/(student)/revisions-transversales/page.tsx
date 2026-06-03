@@ -262,87 +262,70 @@ export default async function RevisionsTransversalesPage() {
           <BannerUpToDate />
         ) : null}
 
-        {/* ============ CARDS RÉVISION ============ */}
-        <section className="grid gap-4 lg:grid-cols-[1.05fr_1.4fr]">
-          {/* Carte révision du jour — toujours visible */}
-          {!isInterrupted && (
-            <RevisionCard
-              kind="daily"
-              tint="#F1E8FD" tintFg="#6D28D9"
-              title="Révision du jour"
-              count={s.sessionSizes.daily}
-              estMin={Math.round(s.sessionSizes.daily * 0.6)}
-              cta="Commencer ma révision du jour"
-              ctaTone="purple"
-            />
-          )}
-
-          {/* Carte révision recommandée */}
-          {(s.sessionSizes.recommended || isInterrupted) && (
+        {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============
+              En mode interrompu : la carte « recommandée » est seule (pas de
+              daily) → on la pose côte à côte avec la table des spécialités
+              pour éviter l'espace vide à droite.
+              Sinon : layout classique daily + recommended, puis intensive,
+              puis la table en pleine largeur dessous. */}
+        {isInterrupted ? (
+          <section className="grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
             <RevisionCard
               kind="recommended"
               tint="#FFEAD9" tintFg="#E8742C"
-              title={isInterrupted ? 'Révision recommandée' : 'Révision recommandée (optionnelle)'}
-              count={isInterrupted ? 75 : (s.sessionSizes.recommended ?? 60)}
-              estMin={isInterrupted ? 60 : 35}
-              cta={isInterrupted ? 'Faire la révision recommandée' : 'Faire la révision recommandée'}
+              title="Révision recommandée"
+              count={75}
+              estMin={60}
+              cta="Faire la révision recommandée"
               ctaTone="orange"
-              hint={isInterrupted ? 'Pour retrouver un bon niveau de régularité' : 'Recommandée à ce stade de votre progression'}
+              hint="Pour retrouver un bon niveau de régularité"
               tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
             />
-          )}
-        </section>
+            <SpecialtiesPanel specs={s.specs} />
+          </section>
+        ) : (
+          <>
+            <section className="grid gap-4 lg:grid-cols-[1.05fr_1.4fr]">
+              <RevisionCard
+                kind="daily"
+                tint="#F1E8FD" tintFg="#6D28D9"
+                title="Révision du jour"
+                count={s.sessionSizes.daily}
+                estMin={Math.round(s.sessionSizes.daily * 0.6)}
+                cta="Commencer ma révision du jour"
+                ctaTone="purple"
+              />
+              {s.sessionSizes.recommended && (
+                <RevisionCard
+                  kind="recommended"
+                  tint="#FFEAD9" tintFg="#E8742C"
+                  title="Révision recommandée (optionnelle)"
+                  count={s.sessionSizes.recommended}
+                  estMin={35}
+                  cta="Faire la révision recommandée"
+                  ctaTone="orange"
+                  hint="Recommandée à ce stade de votre progression"
+                  tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
+                />
+              )}
+            </section>
 
-        {/* Carte intensive — uniquement si > 15 spé et pas en alerte */}
-        {!isInterrupted && !isAlert && s.sessionSizes.intensive && (
-          <RevisionCard
-            kind="intensive"
-            tint="#FCEAEC" tintFg="#A91D2C"
-            title="Révision intensive"
-            count={s.sessionSizes.intensive}
-            estMin={Math.round(s.sessionSizes.intensive * 0.6)}
-            cta="Lancer la révision intensive"
-            ctaTone="red"
-            hint="Idéale le week-end ou avant une période d'examens."
-          />
+            {!isAlert && s.sessionSizes.intensive && (
+              <RevisionCard
+                kind="intensive"
+                tint="#FCEAEC" tintFg="#A91D2C"
+                title="Révision intensive"
+                count={s.sessionSizes.intensive}
+                estMin={Math.round(s.sessionSizes.intensive * 0.6)}
+                cta="Lancer la révision intensive"
+                ctaTone="red"
+                hint="Idéale le week-end ou avant une période d'examens."
+              />
+            )}
+
+            <SpecialtiesPanel specs={s.specs} />
+          </>
         )}
-
-        {/* ============ TABLE SPÉCIALITÉS ============ */}
-        <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-6">
-          <h2 className="text-base font-bold text-(--color-ink)">Mes spécialités déjà étudiées</h2>
-          {s.specs.length === 0 ? (
-            <p className="mt-6 text-center text-sm text-(--color-ink-muted)">
-              Aucune spécialité étudiée pour le moment. Commencez un cours pour la voir apparaître ici.
-            </p>
-          ) : (
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[640px] text-sm">
-                <thead>
-                  <tr className="border-b border-(--color-border) text-left text-xs font-medium uppercase tracking-wider text-(--color-ink-muted)">
-                    <th className="pb-2.5 pr-3">Spécialité</th>
-                    <th className="pb-2.5 px-3">Dernière révision</th>
-                    <th className="pb-2.5 px-3">Révisions (30j)</th>
-                    <th className="pb-2.5 px-3">Régularité</th>
-                    <th className="pb-2.5 px-3">Statut officiel</th>
-                    <th className="pb-2.5 pl-3 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {s.specs.slice(0, 8).map((sp) => (
-                    <SpecRowRender key={sp.cours_id} sp={sp} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-          {s.specs.length > 8 && (
-            <div className="mt-4 flex justify-center">
-              <Link href="/matieres" className="inline-flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:underline">
-                Voir toutes mes spécialités étudiées <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          )}
-        </section>
       </div>
 
       {/* ============ SIDEBAR DROITE ============ */}
@@ -605,6 +588,46 @@ function RevisionCard({
         {cta} <ArrowRight className="h-4 w-4" />
       </Link>
     </article>
+  );
+}
+
+function SpecialtiesPanel({ specs }: { specs: SpecRow[] }) {
+  return (
+    <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-6">
+      <h2 className="text-base font-bold text-(--color-ink)">Mes spécialités déjà étudiées</h2>
+      {specs.length === 0 ? (
+        <p className="mt-6 text-center text-sm text-(--color-ink-muted)">
+          Aucune spécialité étudiée pour le moment. Commencez un cours pour la voir apparaître ici.
+        </p>
+      ) : (
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[520px] text-sm">
+            <thead>
+              <tr className="border-b border-(--color-border) text-left text-xs font-medium uppercase tracking-wider text-(--color-ink-muted)">
+                <th className="pb-2.5 pr-3">Spécialité</th>
+                <th className="pb-2.5 px-3">Dernière révision</th>
+                <th className="pb-2.5 px-3">Révisions (30j)</th>
+                <th className="pb-2.5 px-3">Régularité</th>
+                <th className="pb-2.5 px-3">Statut officiel</th>
+                <th className="pb-2.5 pl-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {specs.slice(0, 8).map((sp) => (
+                <SpecRowRender key={sp.cours_id} sp={sp} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {specs.length > 8 && (
+        <div className="mt-4 flex justify-center">
+          <Link href="/matieres" className="inline-flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:underline">
+            Voir toutes mes spécialités étudiées <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      )}
+    </section>
   );
 }
 

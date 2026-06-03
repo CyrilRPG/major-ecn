@@ -401,10 +401,10 @@ export default async function AccueilPage() {
             </p>
           ) : (
             <div
-              className="max-h-[460px] overflow-y-auto pr-2"
+              className="max-h-[300px] overflow-y-auto pr-2"
               style={{ scrollbarWidth: 'thin' }}
             >
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {coursByMatiere.map((group) => (
                   <section key={group.matiereNom}>
                     <header className="sticky top-0 z-10 -mx-1 mb-2 flex items-center gap-2 bg-(--color-surface) px-1 py-1.5">
@@ -427,14 +427,14 @@ export default async function AccueilPage() {
                         </span>
                       </span>
                     </header>
-                    <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
                       {group.cours.map((c) => {
                         const pill = priorityPill(c.value);
                         return (
                           <li key={c.id}>
                             <Link
                               href={`/cours/${c.id}`}
-                              className="group flex items-center gap-2.5 rounded-lg border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-(--color-accent) hover:bg-(--color-primary-soft)/40"
+                              className="group flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 transition-colors hover:border-(--color-accent) hover:bg-(--color-primary-soft)/40"
                             >
                               <span className="min-w-0 flex-1 truncate text-xs font-medium text-(--color-ink)">
                                 {c.nom}
