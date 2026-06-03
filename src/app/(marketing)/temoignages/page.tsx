@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { FinalCtaBlock } from '@/components/marketing/extra-sections';
+import { FeaturedTestimonialsSection, FinalCtaBlock } from '@/components/marketing/extra-sections';
 import { TemoignagesSection, TrustBanner } from '@/components/marketing/manus-sections';
 
 export const metadata = {
@@ -16,6 +16,7 @@ export default async function TemoignagesPage() {
   return (
     <>
       <TemoignagesSection />
+      <FeaturedTestimonialsSection />
       <TrustBanner />
       <FinalCtaBlock colleges={colleges} />
     </>
