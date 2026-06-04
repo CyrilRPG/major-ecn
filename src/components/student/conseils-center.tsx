@@ -24,12 +24,12 @@ const SECTIONS: { id: Section; label: string; Icon: typeof Lightbulb }[] = [
 ];
 
 const STARTER_SPECIALTIES = [
-  { Icon: Heart,       label: 'Cardiologie',    color: '#C0112E' },
-  { Icon: Stethoscope, label: 'Pneumologie',    color: '#2563EB' },
-  { Icon: TrendingUp,  label: 'Gériatrie',      color: '#EA580C' },
-  { Icon: BookOpen,    label: 'Neurologie',     color: '#7C3AED' },
-  { Icon: Stethoscope, label: 'Endocrinologie', color: '#0F766E' },
-  { Icon: Heart,       label: 'Néphrologie',    color: '#16A34A' },
+  { image: '/flashcards-decor/spec-cardio.png',    label: 'Cardiologie',    color: '#C0112E', bg: '#FCEAEC' },
+  { image: '/flashcards-decor/spec-pneumo.png',    label: 'Pneumologie',    color: '#2563EB', bg: '#DBEAFE' },
+  { image: '/flashcards-decor/spec-geriatrie.png', label: 'Gériatrie',      color: '#EA580C', bg: '#FFEDD5' },
+  { image: '/flashcards-decor/spec-neuro.png',     label: 'Neurologie',     color: '#7C3AED', bg: '#EDE9FE' },
+  { image: '/flashcards-decor/spec-endocrino.png', label: 'Endocrinologie', color: '#0F766E', bg: '#CCFBF1' },
+  { image: '/flashcards-decor/spec-nephro.png',    label: 'Néphrologie',    color: '#16A34A', bg: '#DCFCE7' },
 ];
 
 export function ConseilsCenter({ profile }: { profile?: Profile }) {
@@ -147,9 +147,10 @@ function PopupOverlay({
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {STARTER_SPECIALTIES.map((s, i) => (
               <div key={s.label} className="flex flex-col items-center text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ background: `${s.color}1A`, color: s.color }}>
-                  <s.Icon className="h-6 w-6" />
+                <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl p-1.5"
+                  style={{ background: s.bg }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.image} alt="" className="h-full w-full object-contain" />
                 </span>
                 <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
                 <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
@@ -307,9 +308,10 @@ function SectionDemarrer() {
       <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {STARTER_SPECIALTIES.map((s, i) => (
           <div key={s.label} className="flex flex-col items-center text-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl"
-              style={{ background: `${s.color}1A`, color: s.color }}>
-              <s.Icon className="h-5 w-5" />
+            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1"
+              style={{ background: s.bg }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={s.image} alt="" className="h-full w-full object-contain" />
             </span>
             <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
             <p className="text-[10px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
