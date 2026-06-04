@@ -8,28 +8,22 @@ import {
 import { upsertAgendaEvent, deleteAgendaEvent } from '@/app/(student)/agenda/actions';
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/*  Évènements « plateforme » (fixés en dur, communs à tous les étudiants)   */
+/*  Évènements « plateforme » (créés par admin, déjà filtrés côté serveur     */
+/*  selon les permissions de l'étudiant)                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
-type PlatformEv = {
-  day: number; // 1=Mon .. 7=Sun
-  start: string;
-  end: string;
-  titre: string;
-  college: string;
-  intervenant: string;
-  zoom: string;
+export type PlatformEvent = {
+  id: string;
+  title: string;
+  date: string;             // YYYY-MM-DD
+  start_time: string | null;
+  end_time: string | null;
+  college: string | null;
+  intervenant: string | null;
+  zoom_url: string | null;
+  notes: string | null;
 };
 
-const PLATFORM_EVENTS: PlatformEv[] = [
-  { day: 1, start: '18:00', end: '20:00', titre: 'Insuffisance cardiaque — item 234', college: 'Cardiologie',           intervenant: 'Dr. A. Lemaire (cardiologue, CHU)', zoom: 'https://zoom.us/j/8421007781' },
-  { day: 2, start: '19:00', end: '21:00', titre: 'Asthme de l’adulte — item 209',     college: 'Pneumologie',           intervenant: 'Dr. C. Bonnet (pneumologue)',      zoom: 'https://zoom.us/j/9120553340' },
-  { day: 3, start: '18:30', end: '20:30', titre: 'Infections urinaires — item 161',   college: 'Maladies infectieuses', intervenant: 'Dr. M. Haddad (infectiologue)',    zoom: 'https://zoom.us/j/7785512094' },
-  { day: 4, start: '18:00', end: '20:00', titre: 'ECOS blanc — stations cardio-pneumo', college: 'ECOS',                intervenant: 'Équipe Major ECN',                 zoom: 'https://zoom.us/j/6650091123' },
-  { day: 5, start: '19:00', end: '20:30', titre: 'Dernier Tour — Néphrologie',        college: 'Néphrologie',           intervenant: 'Dr. S. Roux (néphrologue)',        zoom: 'https://zoom.us/j/5540982217' },
-  { day: 6, start: '10:00', end: '12:30', titre: 'Concours blanc EVC — DP & QI',      college: 'Transversal',           intervenant: 'Équipe Major ECN',                 zoom: 'https://zoom.us/j/3398120475' },
-];
-
-/** Palette pour les évènements plateforme (par collège). */
+/** Palette pour les évènements plateforme (par collège, libellé texte). */
 const COLLEGE_PALETTE: Record<string, { bg: string; fg: string; tag: string }> = {
   'Cardiologie':           { bg: '#FFF1E6', fg: '#B35900', tag: '#FCD9A8' },
   'Pneumologie':           { bg: '#E5F1FF', fg: '#1E4D8B', tag: '#BBD7F7' },
@@ -39,7 +33,10 @@ const COLLEGE_PALETTE: Record<string, { bg: string; fg: string; tag: string }> =
   'Transversal':           { bg: '#FFEED5', fg: '#A65500', tag: '#F4D2A1' },
 };
 const DEFAULT_PALETTE = { bg: '#FDE7E9', fg: '#C0001F', tag: '#FACBD0' };
-const paletteFor = (college: string) => COLLEGE_PALETTE[college] ?? DEFAULT_PALETTE;
+const paletteFor = (college: string | null | undefined) => {
+  if (!college) return DEFAULT_PALETTE;
+  return COLLEGE_PALETTE[college] ?? DEFAULT_PALETTE;
+};
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Évènements personnels (un par étudiant, depuis la DB)                    */
@@ -88,13 +85,15 @@ function weekDates(offset = 0): Date[] {
 const dateKey = (d: Date) => d.toISOString().slice(0, 10);
 
 /* ════════════════════════════════════════════════════════════════════════ */
-export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
+export function AgendaWeek({
+  userEvents, platformEvents = [],
+}: { userEvents: UserEvent[]; platformEvents?: PlatformEvent[] }) {
   // Décalage en semaines par rapport à la semaine courante (0 = cette
   // semaine, -1 = semaine précédente, +1 = semaine prochaine…).
   const [weekOffset, setWeekOffset] = useState(0);
   const dates = weekDates(weekOffset);
   const todayKey = new Date().toDateString();
-  const [selectedPlatform, setSelectedPlatform] = useState<(PlatformEv & { date: Date }) | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<PlatformEvent | null>(null);
   const [selectedPersonal, setSelectedPersonal] = useState<UserEvent | null>(null);
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<UserEvent | null>(null);
@@ -150,14 +149,11 @@ export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
 
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:min-h-0 lg:grid-cols-7">
         {dates.map((date, i) => {
-          const dayNum = i + 1;
-          // Les évènements plateforme ne s'affichent QUE sur la semaine
-          // courante (offset 0). Les semaines passées/futures restent
-          // exclusivement personnelles : on n'imprime pas un calendrier
-          // de cours qui n'aura pas lieu.
-          const platformEvs = weekOffset === 0
-            ? PLATFORM_EVENTS.filter((e) => e.day === dayNum)
-            : [];
+          // Évènements plateforme du jour (déjà filtrés par permissions
+          // côté serveur).
+          const platformEvs = platformEvents
+            .filter((e) => e.date === dateKey(date))
+            .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));
           const dayUserEvs = userEvents
             .filter((e) => e.date === dateKey(date))
             .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));
@@ -190,33 +186,37 @@ export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
                 )}
 
                 {/* Évènements plateforme */}
-                {platformEvs.map((e, j) => {
+                {platformEvs.map((e) => {
                   const pal = paletteFor(e.college);
                   return (
                     <button
-                      key={`pf-${j}`}
+                      key={`pf-${e.id}`}
                       type="button"
-                      onClick={() => setSelectedPlatform({ ...e, date })}
+                      onClick={() => setSelectedPlatform(e)}
                       className="group flex flex-col rounded-xl border border-transparent p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
                       style={{ background: pal.bg }}
                     >
                       <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: pal.fg }}>
                         <Clock className="h-3.5 w-3.5" />
-                        {e.start} – {e.end}
+                        {e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée'}
                       </span>
                       <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink)">
-                        {e.titre}
+                        {e.title}
                       </span>
-                      <span
-                        className="mt-1.5 inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
-                        style={{ background: pal.tag, color: pal.fg }}
-                      >
-                        {e.college}
-                      </span>
-                      <span className="mt-2 flex items-center gap-1 text-[11px] text-(--color-ink-muted)">
-                        <Video className="h-3 w-3" />
-                        Cours en visio
-                      </span>
+                      {e.college && (
+                        <span
+                          className="mt-1.5 inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
+                          style={{ background: pal.tag, color: pal.fg }}
+                        >
+                          {e.college}
+                        </span>
+                      )}
+                      {e.zoom_url && (
+                        <span className="mt-2 flex items-center gap-1 text-[11px] text-(--color-ink-muted)">
+                          <Video className="h-3 w-3" />
+                          Cours en visio
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -274,33 +274,45 @@ export function AgendaWeek({ userEvents }: { userEvents: UserEvent[] }) {
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <CalendarDays className="h-5 w-5 text-(--color-primary)" />
-                  {selectedPlatform.titre}
+                  {selectedPlatform.title}
                 </DialogTitle>
-                <DialogDescription>{selectedPlatform.college}</DialogDescription>
+                {selectedPlatform.college && <DialogDescription>{selectedPlatform.college}</DialogDescription>}
               </DialogHeader>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-2.5 text-(--color-ink)">
                   <CalendarDays className="h-4 w-4 text-(--color-ink-muted)" />
-                  {selectedPlatform.date.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })}
+                  {new Date(selectedPlatform.date + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })}
                 </div>
-                <div className="flex items-center gap-2.5 text-(--color-ink)">
-                  <Clock className="h-4 w-4 text-(--color-ink-muted)" />
-                  {selectedPlatform.start} – {selectedPlatform.end}
-                </div>
-                <div className="flex items-center gap-2.5 text-(--color-ink)">
-                  <User className="h-4 w-4 text-(--color-ink-muted)" />
-                  {selectedPlatform.intervenant}
-                </div>
-                <a
-                  href={selectedPlatform.zoom}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
-                >
-                  <Video className="h-4 w-4" />
-                  Rejoindre le cours sur Zoom
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+                {selectedPlatform.start_time && (
+                  <div className="flex items-center gap-2.5 text-(--color-ink)">
+                    <Clock className="h-4 w-4 text-(--color-ink-muted)" />
+                    {selectedPlatform.start_time.slice(0, 5)}
+                    {selectedPlatform.end_time && ` – ${selectedPlatform.end_time.slice(0, 5)}`}
+                  </div>
+                )}
+                {selectedPlatform.intervenant && (
+                  <div className="flex items-center gap-2.5 text-(--color-ink)">
+                    <User className="h-4 w-4 text-(--color-ink-muted)" />
+                    {selectedPlatform.intervenant}
+                  </div>
+                )}
+                {selectedPlatform.notes && (
+                  <p className="rounded-lg bg-(--color-surface-soft) p-3 text-xs text-(--color-ink-soft) whitespace-pre-wrap">
+                    {selectedPlatform.notes}
+                  </p>
+                )}
+                {selectedPlatform.zoom_url && (
+                  <a
+                    href={selectedPlatform.zoom_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
+                  >
+                    <Video className="h-4 w-4" />
+                    Rejoindre le cours sur Zoom
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
             </>
           )}

@@ -173,8 +173,8 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   });
 
   // ============ Bas de page : date / signature / tampon ============
-  // Y baseline pour les libellés du bas (bien plus bas qu'avant pour éviter
-  // toute superposition avec le coeur du certificat).
+  // Signature centrée, tampon nettement décalé à droite pour éviter toute
+  // proximité visuelle avec la zone de signature.
   const labelY = 130; // hauteur des libellés "Délivré le", "Signature", "Tampon"
   const lineY  = 165; // ligne de signature
   const sigY   = 170; // base de la zone signature
@@ -186,11 +186,12 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawLine({ start: { x: 70, y: lineY }, end: { x: 200, y: lineY }, color: GREY, thickness: 0.5 });
   page.drawText(ansi("Date d'émission"), { x: 70, y: labelY, size: 7, font: fontReg, color: GREY });
 
-  // Signature (centre)
-  page.drawLine({ start: { x: width / 2 - 75, y: lineY }, end: { x: width / 2 + 75, y: lineY }, color: GREY, thickness: 0.5 });
+  // Signature (centre, décalée vers la gauche pour laisser de l'espace au tampon)
+  const sigCx = width / 2 - 35;
+  page.drawLine({ start: { x: sigCx - 75, y: lineY }, end: { x: sigCx + 75, y: lineY }, color: GREY, thickness: 0.5 });
   const sigLabel = ansi("Signature de l'étudiant");
   page.drawText(sigLabel, {
-    x: width / 2 - fontReg.widthOfTextAtSize(sigLabel, 7) / 2,
+    x: sigCx - fontReg.widthOfTextAtSize(sigLabel, 7) / 2,
     y: labelY, size: 7, font: fontReg, color: GREY,
   });
   if (completion.signature_data_url) {
@@ -203,13 +204,13 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
         const scale = Math.min(140 / img.width, 50 / img.height);
         const w = img.width * scale;
         const h = img.height * scale;
-        page.drawImage(img, { x: width / 2 - w / 2, y: sigY, width: w, height: h });
+        page.drawImage(img, { x: sigCx - w / 2, y: sigY, width: w, height: h });
       }
     } catch { /* best-effort */ }
   }
 
-  // Tampon Major ECN (droite)
-  const stampCx = width - 130;
+  // Tampon Major ECN (droite, écarté de la signature)
+  const stampCx = width - 85;
   const R = 38;
   page.drawCircle({ x: stampCx, y: stampCy, size: R, borderColor: RED, borderWidth: 2 });
   page.drawCircle({ x: stampCx, y: stampCy, size: R - 5, borderColor: RED, borderWidth: 0.8 });

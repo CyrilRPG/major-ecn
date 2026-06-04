@@ -32,37 +32,37 @@ export type FlashcardTheme = {
 };
 
 const THEMES: Record<string, FlashcardTheme> = {
-  // Mapping cours → image client (uploadée par l'utilisateur) + couleurs.
-  // Le fond `bg` reprend la teinte dominante de l'icône utilisée.
-  // Si pas d'image → fallback SVG anatomique.
-  'Cardiologie':               { bg: '#FCEAEC', accent: '#C0112E', Icon: HeartArt,           image: '/flashcards-decor/cardio.png' },
-  'Pneumologie':               { bg: '#DBEAFE', accent: '#2563EB', Icon: LungsArt,          image: '/flashcards-decor/pneumo.png' },
-  'Néphrologie':               { bg: '#DCFCE7', accent: '#16A34A', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
-  'Urologie':                  { bg: '#ECFCCB', accent: '#65A30D', Icon: KidneyArt },
-  'Gastro-entérologie':        { bg: '#FEF3C7', accent: '#A16207', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
-  'Gastroentérologie':         { bg: '#FEF3C7', accent: '#A16207', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
-  'Hépato-gastro':             { bg: '#FEF3C7', accent: '#A16207', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
-  'Hépato-gastro-entérologie': { bg: '#FEF3C7', accent: '#A16207', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
-  'Hématologie':               { bg: '#FFE4E6', accent: '#9F1239', Icon: BloodCellsArt,     image: '/flashcards-decor/hematologie.png' },
-  'ORL':                       { bg: '#E0F2FE', accent: '#0284C7', Icon: EarArt,            image: '/flashcards-decor/orl.png' },
-  'Ophtalmologie':             { bg: '#CFFAFE', accent: '#0891B2', Icon: EyeArt,            image: '/flashcards-decor/ophtalmo.png' },
-  'Gériatrie':                 { bg: '#FFEDD5', accent: '#EA580C', Icon: ElderlyArt,        image: '/flashcards-decor/geriatrie.png' },
-  'Gynécologie':               { bg: '#FCE7F3', accent: '#DB2777', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
-  'Obstétrique':               { bg: '#FCE7F3', accent: '#DB2777', Icon: PregnantWomanArt,  image: '/flashcards-decor/gyneco.png' },
-  'Médecine interne':          { bg: '#E2E8F0', accent: '#475569', Icon: HumanBodyArt,      image: '/flashcards-decor/medecine-interne.png' },
+  // Mapping cours → image client + couleurs.
+  // Les valeurs bg / accent sont calibrées sur la teinte dominante détectée
+  // dans l'image (analyse Pillow) pour garantir cohérence visuelle.
+  'Cardiologie':               { bg: '#F7CACB', accent: '#A53134', Icon: HeartArt,           image: '/flashcards-decor/cardio.png' },
+  'Pneumologie':               { bg: '#CADEF7', accent: '#3164A5', Icon: LungsArt,          image: '/flashcards-decor/pneumo.png' },
+  'Néphrologie':               { bg: '#F7DFCA', accent: '#A56831', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
+  'Urologie':                  { bg: '#F7DFCA', accent: '#A56831', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
+  'Gastro-entérologie':        { bg: '#CAF7CE', accent: '#31A53A', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
+  'Gastroentérologie':         { bg: '#CAF7CE', accent: '#31A53A', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
+  'Hépato-gastro':             { bg: '#CAF7CE', accent: '#31A53A', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
+  'Hépato-gastro-entérologie': { bg: '#CAF7CE', accent: '#31A53A', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
+  'Hématologie':               { bg: '#F7CACF', accent: '#A5313C', Icon: BloodCellsArt,     image: '/flashcards-decor/hematologie.png' },
+  'ORL':                       { bg: '#CADCF7', accent: '#315FA5', Icon: EarArt,            image: '/flashcards-decor/orl.png' },
+  'Ophtalmologie':             { bg: '#CAF7F3', accent: '#31A59C', Icon: EyeArt,            image: '/flashcards-decor/ophtalmo.png' },
+  'Gériatrie':                 { bg: '#CAF7E3', accent: '#31A571', Icon: ElderlyArt,        image: '/flashcards-decor/geriatrie.png' },
+  'Gynécologie':               { bg: '#F7CAD3', accent: '#A53149', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
+  'Obstétrique':               { bg: '#F7CAD3', accent: '#A53149', Icon: PregnantWomanArt,  image: '/flashcards-decor/gyneco.png' },
+  'Médecine interne':          { bg: '#CAF5F7', accent: '#31A0A5', Icon: HumanBodyArt,      image: '/flashcards-decor/medecine-interne.png' },
   'Médecine générale':         { bg: '#DBEAFE', accent: '#1E40AF', Icon: StethoscopeArt },
-  'Infectiologie':             { bg: '#FFE4E6', accent: '#BE123C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
-  'Maladies infectieuses':     { bg: '#FFE4E6', accent: '#BE123C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
-  'Pédiatrie':                 { bg: '#FCE7F3', accent: '#DB2777', Icon: ChildArt,          image: '/flashcards-decor/pediatrie.png' },
-  'Endocrinologie':            { bg: '#CCFBF1', accent: '#0F766E', Icon: ThyroidArt,        image: '/flashcards-decor/endocrino.png' },
-  'Neurologie':                { bg: '#EDE9FE', accent: '#7C3AED', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
-  'Psychiatrie':               { bg: '#EDE9FE', accent: '#8B5CF6', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
-  'Rhumatologie':              { bg: '#FEF3C7', accent: '#D97706', Icon: JointArt,          image: '/flashcards-decor/rhumato.png' },
-  'Réanimation':               { bg: '#FEE2E2', accent: '#DC2626', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
-  'Reanimation':               { bg: '#FEE2E2', accent: '#DC2626', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
-  'Pharmacologie':             { bg: '#EDE9FE', accent: '#6D28D9', Icon: PillArt,           image: '/flashcards-decor/pharmaco.png' },
-  'Dermatologie':              { bg: '#FFEDD5', accent: '#EA580C', Icon: HumanBodyArt,      image: '/flashcards-decor/dermato.png' },
-  'Allergologie':              { bg: '#FEF3C7', accent: '#D97706', Icon: VirusArt,          image: '/flashcards-decor/allergo.png' },
+  'Infectiologie':             { bg: '#E4CAF7', accent: '#7331A5', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
+  'Maladies infectieuses':     { bg: '#E4CAF7', accent: '#7331A5', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
+  'Pédiatrie':                 { bg: '#CADEF7', accent: '#3165A5', Icon: ChildArt,          image: '/flashcards-decor/pediatrie.png' },
+  'Endocrinologie':            { bg: '#F7DBCA', accent: '#A55C31', Icon: ThyroidArt,        image: '/flashcards-decor/endocrino.png' },
+  'Neurologie':                { bg: '#E1CAF7', accent: '#6C31A5', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
+  'Psychiatrie':               { bg: '#E1CAF7', accent: '#6C31A5', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
+  'Rhumatologie':              { bg: '#CADDF7', accent: '#3162A5', Icon: JointArt,          image: '/flashcards-decor/rhumato.png' },
+  'Réanimation':               { bg: '#CADEF7', accent: '#3165A5', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
+  'Reanimation':               { bg: '#CADEF7', accent: '#3165A5', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
+  'Pharmacologie':             { bg: '#F7CAD5', accent: '#A5314C', Icon: PillArt,           image: '/flashcards-decor/pharmaco.png' },
+  'Dermatologie':              { bg: '#DFCAF7', accent: '#6831A5', Icon: HumanBodyArt,      image: '/flashcards-decor/dermato.png' },
+  'Allergologie':              { bg: '#E3CAF7', accent: '#7331A5', Icon: VirusArt,          image: '/flashcards-decor/allergo.png' },
 };
 
 const DEFAULT_THEME: FlashcardTheme = {
