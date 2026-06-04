@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, FileText, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
@@ -16,6 +17,8 @@ type Action = {
   accent: string;
   /** Fond pastel doux pour le conteneur d'icône. */
   bg: string;
+  /** Image décorative latérale optionnelle (remplace le watermark Lucide). */
+  decorImage?: string;
 };
 
 export default async function CoursApercuPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -72,6 +75,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
       desc: 'Révisez et mémorisez les points clés du programme.',
       Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+      decorImage: '/flashcards-decor/flashcard-1.png',
       available: (c.flashcards?.length ?? 0) > 0,
     },
   ];
@@ -103,14 +107,30 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               style={{ background: `linear-gradient(135deg, transparent 55%, ${a.bg} 100%)` }}
             />
 
-            {/* Icône organe géante en watermark à droite. */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -right-6 bottom-0 select-none opacity-[0.10]"
-              style={{ color: a.accent }}
-            >
-              <a.Icon className="h-44 w-44" strokeWidth={1.4} />
-            </span>
+            {/* Watermark latéral droit : image décorative si fournie
+                (ex. flashcards), sinon icône Lucide géante en couleur du thème. */}
+            {a.decorImage ? (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-4 bottom-0 select-none opacity-[0.10]"
+              >
+                <Image
+                  src={a.decorImage}
+                  alt=""
+                  width={320}
+                  height={320}
+                  className="h-44 w-auto object-contain"
+                />
+              </span>
+            ) : (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-6 bottom-0 select-none opacity-[0.10]"
+                style={{ color: a.accent }}
+              >
+                <a.Icon className="h-44 w-44" strokeWidth={1.4} />
+              </span>
+            )}
 
             <div className="relative flex items-start justify-between">
               <span

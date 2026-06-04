@@ -63,18 +63,25 @@ function Face({
         />
       </span>
 
-      {/* Illustration anatomique détaillée : par-dessus la surface de la
-          carte, ancrée à droite, taille fluide (responsive). Opacité 35 %
-          + stroke 2 pour rendre justice aux détails (bronches, gyri, etc.). */}
+      {/* Illustration latérale : image fournie par le client en watermark
+          discret sur le bord droit. Opacité 8 % pour rester lisible sans
+          concurrencer le texte. Garde une utilisation de ThemeIcon comme
+          fallback côté thème (non rendu ici, juste typage). */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-2 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.32] sm:-right-4"
-        style={{ color: theme.accent }}
+        className="pointer-events-none absolute -right-4 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.08] sm:-right-6"
       >
-        <ThemeIcon
-          className="h-44 w-44 sm:h-60 sm:w-60 md:h-80 md:w-80"
-          strokeWidth={2}
+        <Image
+          src="/flashcards-decor/flashcard-1.png"
+          alt=""
+          width={520}
+          height={520}
+          className="h-48 w-auto object-contain sm:h-64 md:h-80"
+          priority={false}
         />
+      </span>
+      <span aria-hidden className="hidden">
+        <ThemeIcon className="h-1 w-1" />
       </span>
 
       {/* Bandeau pastel discret à gauche pour ancrer la teinte du thème. */}
