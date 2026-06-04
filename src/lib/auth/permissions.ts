@@ -29,17 +29,45 @@ export function parseScope(raw: unknown): PermissionScope {
   return { type: 'all', offer };
 }
 
-export function canAccessCollege(scope: PermissionScope, collegeId: string): boolean {
+/**
+ * Vérifie l'accès à un collège.
+ * `accessType` (depuis `matieres.access_type`) :
+ *  - 'all' (défaut) : accessible si `scope.type === 'all'` OU si le collège
+ *                     est dans `scope.colleges`.
+ *  - 'specific'     : exige que le collège soit explicitement dans
+ *                     `scope.colleges` (les utilisateurs 'all' doivent quand
+ *                     même recevoir un accès nominatif).
+ */
+export function canAccessCollege(
+  scope: PermissionScope,
+  collegeId: string,
+  accessType: 'all' | 'specific' = 'all',
+): boolean {
+  if (accessType === 'specific') {
+    return scope.type === 'college' && scope.colleges.includes(collegeId);
+  }
   if (scope.type === 'all') return true;
   return scope.colleges.includes(collegeId);
 }
 
 /** Vérifie l'accès à un cours précis :
- *  - 'all' → toujours autorisé
+ *  - 'all' → toujours autorisé (sauf si le cours lui-même est 'specific')
  *  - 'college' sans liste de cours → autorisé si le collège du cours est dans la liste
  *  - 'college' avec liste de cours → autorisé si le cours est dans la liste explicite
+ *  - `accessType` (depuis `cours.access_type`) : si 'specific', le cours doit
+ *    être explicitement listé dans `scope.cours` même pour un utilisateur 'all'.
  */
-export function canAccessCours(scope: PermissionScope, collegeId: string, coursId: string): boolean {
+export function canAccessCours(
+  scope: PermissionScope,
+  collegeId: string,
+  coursId: string,
+  accessType: 'all' | 'specific' = 'all',
+): boolean {
+  if (accessType === 'specific') {
+    if (scope.type !== 'college') return false;
+    if (!scope.colleges.includes(collegeId)) return false;
+    return !!scope.cours && scope.cours.includes(coursId);
+  }
   if (scope.type === 'all') return true;
   if (!scope.colleges.includes(collegeId)) return false;
   if (scope.cours && scope.cours.length > 0) return scope.cours.includes(coursId);

@@ -11,9 +11,9 @@ export type Database = {
   public: {
     Tables: {
       cours: {
-        Row: { created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string };
-        Insert: { created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string };
-        Update: { created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string };
+        Row: { access_type: string; created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string };
+        Insert: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string };
+        Update: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string };
         Relationships: [{ foreignKeyName: 'cours_matiere_id_fkey'; columns: ['matiere_id']; isOneToOne: false; referencedRelation: 'matieres'; referencedColumns: ['id'] }];
       };
       course_progress: {
@@ -53,9 +53,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'flashcards_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       matieres: {
-        Row: { color_hex: string; created_at: string; icon_key: string; id: string; nom: string; order_index: number; semestre_id: string };
-        Insert: { color_hex: string; created_at?: string; icon_key: string; id: string; nom: string; order_index?: number; semestre_id: string };
-        Update: { color_hex?: string; created_at?: string; icon_key?: string; id?: string; nom?: string; order_index?: number; semestre_id?: string };
+        Row: { access_type: string; color_hex: string; created_at: string; icon_key: string; id: string; min_offer: string | null; nom: string; order_index: number; semestre_id: string };
+        Insert: { access_type?: string; color_hex: string; created_at?: string; icon_key: string; id: string; min_offer?: string | null; nom: string; order_index?: number; semestre_id: string };
+        Update: { access_type?: string; color_hex?: string; created_at?: string; icon_key?: string; id?: string; min_offer?: string | null; nom?: string; order_index?: number; semestre_id?: string };
         Relationships: [{ foreignKeyName: 'matieres_semestre_id_fkey'; columns: ['semestre_id']; isOneToOne: false; referencedRelation: 'semestres'; referencedColumns: ['id'] }];
       };
       profiles: {

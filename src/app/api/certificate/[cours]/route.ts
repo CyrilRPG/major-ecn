@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient } from '@/lib/supabase/server';
@@ -95,11 +95,26 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawRectangle({ x: m, y: m, width: width - 2 * m, height: height - 2 * m, borderColor: GOLD, borderWidth: 2 });
   page.drawRectangle({ x: m + 6, y: m + 6, width: width - 2 * m - 12, height: height - 2 * m - 12, borderColor: GOLD, borderWidth: 0.6 });
 
-  // ============ Logo officiel Major ECN ============
+  // ============ Watermark gris : gros logo Major ECN en arrière-plan ============
+  // Doit être dessiné AVANT le contenu pour rester derrière. Faible opacité.
+  let logoImg: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
   try {
     const logoPath = join(process.cwd(), 'public', 'major-ecn-logo.png');
     const logoBytes = readFileSync(logoPath);
-    const logoImg = await pdf.embedPng(logoBytes);
+    logoImg = await pdf.embedPng(logoBytes);
+    const wmH = 480;
+    const wmW = (logoImg.width / logoImg.height) * wmH;
+    page.drawImage(logoImg, {
+      x: (width - wmW) / 2,
+      y: (height - wmH) / 2,
+      width: wmW,
+      height: wmH,
+      opacity: 0.06,
+    });
+  } catch { /* logo manquant : on continue sans watermark */ }
+
+  // ============ Logo officiel Major ECN (en-tête) ============
+  if (logoImg) {
     const logoH = 90;
     const logoW = (logoImg.width / logoImg.height) * logoH;
     page.drawImage(logoImg, {
@@ -108,7 +123,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
       width: logoW,
       height: logoH,
     });
-  } catch {
+  } else {
     // Fallback texte si le logo manque
     page.drawText('MAJOR', { x: width / 2 - 60, y: height - 110, size: 28, font: fontBold, color: NAVY });
     page.drawText('ECN',   { x: width / 2 + 18, y: height - 110, size: 28, font: fontBold, color: RED });
@@ -173,8 +188,8 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   });
 
   // ============ Bas de page : date / signature / tampon ============
-  // Y baseline pour les libellés du bas (bien plus bas qu'avant pour éviter
-  // toute superposition avec le coeur du certificat).
+  // Signature centrée, tampon nettement décalé à droite pour éviter toute
+  // proximité visuelle avec la zone de signature.
   const labelY = 130; // hauteur des libellés "Délivré le", "Signature", "Tampon"
   const lineY  = 165; // ligne de signature
   const sigY   = 170; // base de la zone signature
@@ -186,11 +201,12 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawLine({ start: { x: 70, y: lineY }, end: { x: 200, y: lineY }, color: GREY, thickness: 0.5 });
   page.drawText(ansi("Date d'émission"), { x: 70, y: labelY, size: 7, font: fontReg, color: GREY });
 
-  // Signature (centre)
-  page.drawLine({ start: { x: width / 2 - 75, y: lineY }, end: { x: width / 2 + 75, y: lineY }, color: GREY, thickness: 0.5 });
+  // Signature (centre, décalée vers la gauche pour laisser de l'espace au tampon)
+  const sigCx = width / 2 - 35;
+  page.drawLine({ start: { x: sigCx - 75, y: lineY }, end: { x: sigCx + 75, y: lineY }, color: GREY, thickness: 0.5 });
   const sigLabel = ansi("Signature de l'étudiant");
   page.drawText(sigLabel, {
-    x: width / 2 - fontReg.widthOfTextAtSize(sigLabel, 7) / 2,
+    x: sigCx - fontReg.widthOfTextAtSize(sigLabel, 7) / 2,
     y: labelY, size: 7, font: fontReg, color: GREY,
   });
   if (completion.signature_data_url) {
@@ -203,13 +219,13 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
         const scale = Math.min(140 / img.width, 50 / img.height);
         const w = img.width * scale;
         const h = img.height * scale;
-        page.drawImage(img, { x: width / 2 - w / 2, y: sigY, width: w, height: h });
+        page.drawImage(img, { x: sigCx - w / 2, y: sigY, width: w, height: h });
       }
     } catch { /* best-effort */ }
   }
 
-  // Tampon Major ECN (droite)
-  const stampCx = width - 130;
+  // Tampon Major ECN (droite, écarté de la signature)
+  const stampCx = width - 85;
   const R = 38;
   page.drawCircle({ x: stampCx, y: stampCy, size: R, borderColor: RED, borderWidth: 2 });
   page.drawCircle({ x: stampCx, y: stampCy, size: R - 5, borderColor: RED, borderWidth: 0.8 });
@@ -230,15 +246,6 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
 
   const certId = `${coursId.slice(0, 8)}-${signedAt.getTime().toString(36)}`.toUpperCase();
   page.drawText(ansi(`Réf. : ${certId}`), { x: width - 150, y: m + 18, size: 6, font: fontReg, color: GREY });
-
-  // Filigrane discret en arrière-plan (rotation 30°)
-  page.drawText('MAJOR ECN', {
-    x: 120, y: 420,
-    size: 70, font: fontBold,
-    color: rgb(0.95, 0.95, 0.97),
-    rotate: degrees(30),
-    opacity: 0.5,
-  });
 
   const bytes = await pdf.save();
   const safeName = `${firstName}-${lastName}`.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'eleve';

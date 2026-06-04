@@ -18,8 +18,8 @@ export default async function CoursLayout({
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre, matiere_id,
-      matieres(nom, semestres(label)),
+      id, titre, matiere_id, access_type,
+      matieres(nom, access_type, semestres(label)),
       videos(storage_path),
       fiches(storage_path),
       qcm_series(type),
@@ -30,7 +30,9 @@ export default async function CoursLayout({
     .maybeSingle();
 
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  const scope = parseScope(profile.permission_scope);
+  const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
+  if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
 
   const availability = {
     video: (c.videos ?? []).some((v) => !!v.storage_path),

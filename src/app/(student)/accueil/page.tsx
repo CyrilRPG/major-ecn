@@ -78,8 +78,14 @@ export default async function AccueilPage() {
       .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index, course_progress(video_watched, fiche_read))))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
-    supabase.from('flashcards').select('id', { count: 'exact', head: true }),
-    supabase.from('qcm_questions').select('id', { count: 'exact', head: true }),
+    // Totaux scopés au programme EDN (les comptes globaux remontaient toute la
+    // base, y compris contenu héritage hors EDN — d'où les chiffres faux affichés).
+    supabase.from('flashcards')
+      .select('id, cours!inner(matieres!inner(semestres!inner(faculte_id)))', { count: 'exact', head: true })
+      .eq('cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
+    supabase.from('qcm_questions')
+      .select('id, qcm_series!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))', { count: 'exact', head: true })
+      .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
     (supabase as unknown as {
       from: (t: string) => {
         select: (s: string) => {
@@ -222,6 +228,9 @@ export default async function AccueilPage() {
   /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
   const itemsMastered = coursScored.filter((c) => c.value >= 75).length;
   const itemsTotal = qcmQuestionsTotal ?? 0;
+  // Total cours du programme (= dénominateur cohérent pour « items maîtrisés »)
+  const coursTotalEdn = coursScored.length;
+  const flashcardsTotalEdn = flashcardsTotal ?? 0;
 
   /* ---- Progression par cours groupée par collège ---- */
   type Group = { matiereNom: string; cours: typeof coursScored };
@@ -374,13 +383,13 @@ export default async function AccueilPage() {
             </Link>
           </KpiCard>
 
-          {/* 4. Items maîtrisés */}
+          {/* 4. Items maîtrisés (cours ≥ 75 % de réussite) */}
           <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
             <p className="text-3xl font-black tabular-nums text-(--color-ink)">
-              {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {itemsTotal}</span>
+              {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
             </p>
             <p className="text-xs text-(--color-ink-soft)">
-              {itemsTotal > 0 ? Math.round((itemsMastered / itemsTotal) * 100) : 0}% du deck étudié
+              {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
             </p>
             <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
               Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
@@ -439,7 +448,7 @@ export default async function AccueilPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
-              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions} / {itemsTotal}</span>
+              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions} / {itemsTotal + flashcardsTotalEdn}</span>
             </p>
           </Card>
         </section>

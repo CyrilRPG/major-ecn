@@ -91,10 +91,10 @@ export function StudyConsole({
             onClick={() => setAssistantOpen((v) => !v)}
             aria-label="Assistant du cours"
             className={cn(
-              'flex h-9 shrink-0 items-center gap-2 rounded-lg border px-2.5 text-sm transition-colors focus-ring sm:px-3',
+              'flex h-9 shrink-0 items-center gap-2 rounded-lg border-2 bg-white px-2.5 text-sm font-bold transition-colors focus-ring sm:px-3',
               assistantOpen
-                ? 'border-(--color-accent) bg-(--color-primary-soft) text-(--color-primary-deep)'
-                : 'border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-soft) hover:border-(--color-border-strong)',
+                ? 'border-[#E4002B] text-[#E4002B]'
+                : 'border-(--color-border) text-(--color-ink-soft) hover:border-[#E4002B] hover:text-[#E4002B]',
             )}
           >
             <MessageCircle className="h-4 w-4" />
@@ -113,7 +113,7 @@ export function StudyConsole({
                 className={cn(
                   'flex items-center gap-1.5 whitespace-nowrap border-b-2 px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
                   active
-                    ? 'border-(--color-primary) text-(--color-primary)'
+                    ? 'border-[#E4002B] text-[#E4002B] font-bold'
                     : 'border-transparent text-(--color-ink-soft) hover:text-(--color-ink)',
                 )}
               >
@@ -121,7 +121,7 @@ export function StudyConsole({
                 {t.label}
                 {!t.available && t.seg && (
                   <span
-                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-(--color-primary)' : 'bg-(--color-ink-muted)')}
+                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-[#E4002B]' : 'bg-(--color-ink-muted)')}
                     title="Bientôt disponible"
                   />
                 )}
