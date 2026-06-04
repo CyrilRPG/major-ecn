@@ -247,8 +247,28 @@ const FEATURED: Featured[] = [
     photo: '/temoignages/dr-haykel-abdelbaki.jpg',
     quote: 'Sérieux, qualité et accompagnement : les clés de ma réussite.',
     paragraphs: [
-      "Les cours sont actualisés, clairs et parfaitement adaptés aux exigences du concours. Les concours blancs organisés dans des conditions proches de l'examen m'ont permis de me préparer concrètement au jour J. L'équipe pédagogique est à l'écoute et prend le temps d'identifier les difficultés de chaque candidat.",
+      "J'ai réussi les EVC de radiologie et Major ECN a largement contribué à cette réussite.",
+      "Ce que j'ai particulièrement apprécié, c'est le sérieux et la qualité de l'organisation. Les cours sont actualisés, clairs et réellement adaptés aux exigences du concours. Le planning est respecté, ce qui permet d'avancer sereinement tout au long de la préparation.",
+      "L'équipe pédagogique est un véritable point fort. Les enseignants sont disponibles, à l'écoute et prennent le temps d'identifier les difficultés de chaque candidat afin de l'aider à progresser efficacement.",
+      "Les épreuves blanches organisées dans des conditions proches de l'examen permettent de se préparer concrètement au jour J et d'évaluer son niveau de manière réaliste.",
       "Au-delà des supports et des enseignements, j'ai trouvé chez Major ECN un cadre de travail structuré et rassurant qui m'a permis d'aborder les épreuves avec davantage de confiance.",
+      "Je recommande cette préparation à tous les candidats qui souhaitent mettre toutes les chances de leur côté pour réussir les EVC.",
+    ],
+  },
+  {
+    name: 'Dr Amélie Lamure',
+    initials: 'AL',
+    spec: 'Anesthésie-Réanimation',
+    role: 'Lauréate des EVC',
+    photo: '/temoignages/dr-amelie-lamure.jpg',
+    quote: "Une équipe présente, disponible et impliquée à chaque étape.",
+    paragraphs: [
+      "Quand j'ai commencé à préparer les EVC, je me suis vite rendu compte que la difficulté ne venait pas seulement du concours lui-même. Il fallait aussi réussir à tenir dans la durée, garder sa motivation, gérer les moments de doute et continuer à avancer malgré la fatigue et les contraintes du quotidien.",
+      "Avant de rejoindre Major ECN, j'avais souvent l'impression d'être seule face à cette montagne. Je travaillais, je révisais, mais je me demandais constamment si j'étais dans la bonne direction et si ma façon de travailler était vraiment adaptée aux attentes des EVC.",
+      "Ce que Major ECN m'a apporté, c'est d'abord ce sentiment de ne plus être seule. J'ai trouvé une équipe présente, disponible et impliquée, qui connaissait parfaitement les exigences du concours et qui nous accompagnait à chaque étape de la préparation.",
+      "La qualité des cours a énormément compté. Les contenus étaient complets, structurés et orientés vers ce qu'il fallait réellement maîtriser pour les épreuves. Les cas cliniques, les examens blancs et les séances de méthodologie m'ont permis de comprendre ce qui était attendu le jour J et d'aborder progressivement le concours avec davantage de confiance.",
+      "Mais ce dont je me souviendrai le plus, c'est de l'accompagnement humain. Savoir que l'on peut compter sur une équipe réactive et bienveillante fait une vraie différence.",
+      "Aujourd'hui, après avoir réussi les EVC d'Anesthésie-Réanimation, je tiens à remercier sincèrement toute l'équipe de Major ECN. Leur accompagnement, leur disponibilité et leur engagement ont compté bien au-delà du simple enseignement.",
     ],
   },
   {
@@ -256,7 +276,7 @@ const FEATURED: Featured[] = [
     initials: 'LB',
     spec: 'Médecine générale',
     role: 'Lauréate des EVC MG',
-    photo: '/temoignages/Leila.jpg',
+    photo: '/temoignages/dr-leila-bettaieb.jpg',
     quote: "Une méthode claire, de bons supports et un véritable accompagnement.",
     paragraphs: [
       "J'ai particulièrement apprécié le travail réalisé autour des cas cliniques corrigés. Pouvoir s'entraîner sur un grand nombre de dossiers et comprendre précisément ce qui était attendu dans les réponses m'a énormément aidée à progresser.",
