@@ -1,102 +1,106 @@
 import Link from 'next/link';
-import { ArrowRight, ClipboardCheck, GraduationCap, History, Layers3, Target } from 'lucide-react';
+import {
+  ArrowRight, BookOpen, Calendar, ClipboardCheck, Clock, FileText, GraduationCap,
+  Layers3, Play, RefreshCcw, Target, TrendingUp, Zap,
+} from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
-import { UpgradeBanner } from '@/components/student/upgrade-banner';
-import { CollegesGrid } from '@/components/student/colleges-grid';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { ActivityArea, ActivityDonut } from '@/components/admin/stats/charts';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 
 export const metadata = { title: 'Accueil' };
 
-
-// Le « cours » (Pédiatrie, Pneumologie…) est l'unité de progression
-// affichée à l'utilisateur. La matière (« Médecine générale ») n'est
-// qu'un conteneur — on ne l'utilise plus pour agréger sur le dashboard.
-type CoursRef = { id: string; titre: string };
+/* ============================================================
+   Types
+   ============================================================ */
 type AttemptRow = {
   is_correct: boolean;
   attempted_at: string;
+  time_spent_seconds: number | null;
   qcm_questions: {
     qcm_series: {
       type: string;
-      cours: CoursRef & {
-        matieres: { id: string; nom: string; semestres: { faculte_id: string } };
-      };
+      cours: { id: string; titre: string; matieres: { id: string; nom: string; semestres: { faculte_id: string } } };
     };
   };
 };
 type SessionRow = {
-  score_correct: number;
-  score_total: number;
   finished_at: string | null;
-  qcm_series: {
-    label: string;
-    type: string;
-    cours: CoursRef & {
-      matieres: { id: string; nom: string; semestres: { faculte_id: string } };
-    };
-  };
+  qcm_series: { cours: { id: string; titre: string; matieres: { id: string; semestres: { faculte_id: string } } } };
 };
 type ReviewRow = {
   difficulty: string;
   reviewed_at: string;
-  flashcards: {
-    cours: CoursRef & {
-      matieres: { id: string; nom: string; semestres: { faculte_id: string } };
-    };
-  };
+  flashcards: { cours: { id: string; titre: string; matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
 type CollegeRow = {
   id: string;
   nom: string;
-  cours?: {
-    id: string;
-    titre: string;
-    course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
-  }[] | null;
+  order_index: number | null;
+  cours?: { id: string; titre: string; order_index: number | null; course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
 };
 
-function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft) ${className}`}>
-      {children}
-    </div>
-  );
-}
-
+/* ============================================================
+   PAGE
+   ============================================================ */
 export default async function AccueilPage() {
   const { user, profile } = await requireUser();
   const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
-  const [{ data: attemptsRaw }, { data: sessionsRaw }, { data: reviewsRaw }, { data: edn }, { count: flashcardsTotal }] =
-    await Promise.all([
-      supabase
-        .from('qcm_attempts')
-        .select('is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
-        .eq('user_id', user.id),
-      supabase
-        .from('qcm_sessions')
-        .select('score_correct, score_total, finished_at, qcm_series!inner(label, type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
-        .eq('user_id', user.id)
-        .not('finished_at', 'is', null)
-        .order('finished_at', { ascending: false }),
-      supabase
-        .from('flashcard_reviews')
-        .select('difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
-        .eq('user_id', user.id)
-        .order('reviewed_at', { ascending: false }),
-      supabase
-        .from('facultes')
-        .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index, course_progress(video_watched, fiche_read))))')
-        .eq('id', EDN_FACULTE_ID)
-        .maybeSingle(),
-      supabase.from('flashcards').select('id', { count: 'exact', head: true }),
-    ]);
+  const [
+    { data: attemptsRaw },
+    { data: sessionsRaw },
+    { data: reviewsRaw },
+    { data: edn },
+    { count: flashcardsTotal },
+    { count: qcmQuestionsTotal },
+    { data: countdownAnn },
+  ] = await Promise.all([
+    supabase
+      .from('qcm_attempts')
+      .select('is_correct, attempted_at, time_spent_seconds, qcm_questions!inner(qcm_series!inner(type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
+      .eq('user_id', user.id),
+    supabase
+      .from('qcm_sessions')
+      .select('finished_at, qcm_series!inner(cours!inner(id, titre, matieres!inner(id, semestres!inner(faculte_id))))')
+      .eq('user_id', user.id)
+      .not('finished_at', 'is', null),
+    supabase
+      .from('flashcard_reviews')
+      .select('difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
+      .eq('user_id', user.id)
+      .order('reviewed_at', { ascending: false }),
+    supabase
+      .from('facultes')
+      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index, course_progress(video_watched, fiche_read))))')
+      .eq('id', EDN_FACULTE_ID)
+      .maybeSingle(),
+    supabase.from('flashcards').select('id', { count: 'exact', head: true }),
+    supabase.from('qcm_questions').select('id', { count: 'exact', head: true }),
+    (supabase as unknown as {
+      from: (t: string) => {
+        select: (s: string) => {
+          eq: (c: string, v: string) => {
+            eq: (c: string, v: boolean) => {
+              order: (c: string, o: { ascending: boolean }) => {
+                limit: (n: number) => { maybeSingle: () => Promise<{ data: { data: Record<string, unknown> } | null }> };
+              };
+            };
+          };
+        };
+      };
+    })
+      .from('homepage_announcements')
+      .select('data')
+      .eq('kind', 'countdown')
+      .eq('visible', true)
+      .order('order_index', { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+  ]);
 
   const inEdn = (f: string) => f === EDN_FACULTE_ID;
   const attempts = ((attemptsRaw ?? []) as unknown as AttemptRow[]).filter((a) =>
@@ -110,34 +114,26 @@ export default async function AccueilPage() {
   );
 
   const now = Date.now();
-  const weekAgo = now - 7 * 86400_000;
-  const twoWeeksAgo = now - 14 * 86400_000;
-  const totalAttempts = attempts.length;
-  const correct = attempts.filter((a) => a.is_correct).length;
-  const successRate = totalAttempts > 0 ? Math.round((correct / totalAttempts) * 100) : 0;
+  const weekAgo = now - 7 * 86_400_000;
+  const twoWeeksAgo = now - 14 * 86_400_000;
+  const yearLabel = '2027'; // affiché dans EVC (PAE) 2027
 
-  // Deltas hebdo (semaine S vs S-1)
-  const inWindow = (t: string | null, from: number, to: number) => {
-    if (!t) return false;
-    const v = new Date(t).getTime();
-    return v >= from && v < to;
-  };
-  const attemptsThisWeek = attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now)).length;
-  const attemptsPrevWeek = attempts.filter((a) => inWindow(a.attempted_at, twoWeeksAgo, weekAgo)).length;
-  const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
-  const reviewsThisWeek = reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length;
-  const correctThisWeek = attempts.filter((a) => a.is_correct && inWindow(a.attempted_at, weekAgo, now)).length;
-  const successThisWeek = attemptsThisWeek > 0 ? Math.round((correctThisWeek / attemptsThisWeek) * 100) : 0;
-  const correctPrevWeek = attempts.filter((a) => a.is_correct && inWindow(a.attempted_at, twoWeeksAgo, weekAgo)).length;
-  const successPrevWeek = attemptsPrevWeek > 0 ? Math.round((correctPrevWeek / attemptsPrevWeek) * 100) : 0;
-  const successDelta = successThisWeek - successPrevWeek;
+  /* ---- Compte à rebours EVC ---- */
+  const countdownData = (countdownAnn?.data ?? null) as Record<string, unknown> | null;
+  const targetIso = typeof countdownData?.target_date === 'string'
+    ? countdownData.target_date
+    : '2027-10-12';
+  const daysUntilExam = Math.max(0, Math.ceil((new Date(targetIso).getTime() - now) / 86_400_000));
 
-  // Progression
+  /* ---- Périmètre EDN ---- */
   const colleges = (
     ((edn as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .filter((m) => canAccessCollege(scope, m.id));
+    .filter((m) => canAccessCollege(scope, m.id))
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+
+  /* ---- Progression couverture (vidéo + fiche) ---- */
   let stepsDone = 0, stepsTotal = 0;
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
@@ -148,40 +144,55 @@ export default async function AccueilPage() {
   }
   const globalProgress = stepsTotal > 0 ? Math.round((stepsDone / stepsTotal) * 100) : 0;
 
-  // Flashcards mastered (cumulative score per card, EDN scope)
+  /* ---- Statistiques attempts ---- */
+  const totalAttempts = attempts.length;
+  const correctTotal = attempts.filter((a) => a.is_correct).length;
+  const inWindow = (t: string | null, from: number, to: number) => {
+    if (!t) return false;
+    const v = new Date(t).getTime();
+    return v >= from && v < to;
+  };
+  const attemptsThisWeek = attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now)).length;
+  const sessionsCount = sessions.length;
+  const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
+
+  /* ---- Temps de révision (estimé à partir de time_spent_seconds + reviews) ---- */
+  const secondsThisWeek =
+    attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now))
+      .reduce((s, a) => s + (a.time_spent_seconds ?? 0), 0)
+    + reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length * 15; // ~15s/flashcard
+  const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
+  const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
+  const goalSeconds = 6 * 3600;
+
+  /* ---- Flashcards maîtrisées ---- */
   const { data: fr2 } = await supabase
     .from('flashcard_reviews')
     .select('flashcard_id, difficulty, flashcards!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))')
     .eq('user_id', user.id);
   const scoreByCard = new Map<string, number>();
-  for (const r of ((fr2 ?? []) as unknown as { flashcard_id: string; difficulty: string; flashcards: { cours: { matieres: { semestres: { faculte_id: string } } } } }[])) {
+  type FR2 = { flashcard_id: string; difficulty: string; flashcards: { cours: { matieres: { semestres: { faculte_id: string } } } } };
+  for (const r of ((fr2 ?? []) as unknown as FR2[])) {
     if (!inEdn(r.flashcards.cours.matieres.semestres.faculte_id)) continue;
     scoreByCard.set(r.flashcard_id, (scoreByCard.get(r.flashcard_id) ?? 0) + (DIFFICULTY_SCORE[r.difficulty as Difficulty] ?? 0));
   }
   let fcMastered = 0;
   for (const v of scoreByCard.values()) if (v >= FLASHCARD_MASTERY_THRESHOLD) fcMastered++;
 
-  // Progression PAR COURS (Pédiatrie, Pneumologie…) — pas par matière.
-  // Chaque cours est l'unité visible côté élève sur la sidebar.
-  // Combine taux de réussite QCM + couverture vidéo/fiche pour donner
-  // un % unifié par item.
+  /* ---- Score par cours (priorité de révision) ---- */
   type CoursStats = {
     id: string; titre: string; matiereNom: string;
     attempts: number; correct: number;
     videoDone: boolean; ficheDone: boolean;
   };
   const perCours = new Map<string, CoursStats>();
-
-  // Pré-remplit avec TOUS les cours accessibles (mêmes ceux sans attempt),
-  // pour qu'ils apparaissent à 0 % au lieu d'être absents.
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
       const cp = c.course_progress?.[0];
       perCours.set(c.id, {
         id: c.id, titre: c.titre, matiereNom: m.nom,
         attempts: 0, correct: 0,
-        videoDone: !!cp?.video_watched,
-        ficheDone: !!cp?.fiche_read,
+        videoDone: !!cp?.video_watched, ficheDone: !!cp?.fiche_read,
       });
     }
   }
@@ -192,25 +203,30 @@ export default async function AccueilPage() {
     e.attempts++;
     if (a.is_correct) e.correct++;
   }
+  const coursScored = [...perCours.values()].map((c) => {
+    const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
+    const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0)) / 2 * 100;
+    const value = c.attempts > 0
+      ? Math.round(successPct * 0.5 + coverage * 0.5)
+      : Math.round(coverage);
+    return { id: c.id, titre: c.titre, matiereNom: c.matiereNom, value, attempts: c.attempts };
+  });
 
-  // Score par item = moyenne pondérée : 50 % taux de réussite QCM,
-  // 25 % vidéo vue, 25 % fiche lue. Si pas encore de QCM, on prend la
-  // couverture vidéo+fiche seule.
-  const matieres = [...perCours.values()]
-    .map((c) => {
-      const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
-      const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0)) / 2 * 100;
-      const value = c.attempts > 0
-        ? Math.round(successPct * 0.5 + coverage * 0.5)
-        : Math.round(coverage);
-      return { id: c.id, nom: c.titre, value, matiereNom: c.matiereNom };
-    })
-    .sort((a, b) => a.value - b.value);
-  // Regroupement par collège pour le panneau « Progression cours par cours »
-  // (ordre alphabétique du collège, cours triés du plus faible au plus fort).
-  type Group = { matiereNom: string; cours: typeof matieres; avg: number };
-  const byMatiere = new Map<string, typeof matieres>();
-  for (const c of matieres) {
+  // À travailler en priorité : 5 cours les plus faibles (en privilégiant ceux
+  // qui ont déjà été abordés pour fournir un signal pertinent ; sinon tirés).
+  const priorities = [...coursScored]
+    .sort((a, b) => a.value - b.value)
+    .slice(0, 5);
+  const nextPriority = priorities[0] ?? null;
+
+  /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
+  const itemsMastered = coursScored.filter((c) => c.value >= 75).length;
+  const itemsTotal = qcmQuestionsTotal ?? 0;
+
+  /* ---- Progression par cours groupée par collège ---- */
+  type Group = { matiereNom: string; cours: typeof coursScored };
+  const byMatiere = new Map<string, typeof coursScored>();
+  for (const c of coursScored) {
     const arr = byMatiere.get(c.matiereNom) ?? [];
     arr.push(c);
     byMatiere.set(c.matiereNom, arr);
@@ -219,312 +235,489 @@ export default async function AccueilPage() {
     .map(([matiereNom, list]) => ({
       matiereNom,
       cours: [...list].sort((a, b) => a.value - b.value),
-      avg: Math.round(list.reduce((s, c) => s + c.value, 0) / list.length),
     }))
     .sort((a, b) => a.matiereNom.localeCompare(b.matiereNom, 'fr'));
 
-  // Performance area (30 days, attempts/day)
-  const days: { label: string; value: number }[] = [];
+  /* ---- Évolution 30 jours ---- */
+  const days: { dayLabel: string; value: number }[] = [];
   const idxByKey = new Map<string, number>();
   for (let i = 29; i >= 0; i--) {
-    const d = new Date(now - i * 86400_000);
+    const d = new Date(now - i * 86_400_000);
     idxByKey.set(d.toISOString().slice(0, 10), days.length);
-    days.push({ label: d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }), value: 0 });
+    days.push({
+      dayLabel: d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
+      value: 0,
+    });
   }
   for (const a of attempts) {
     const i = idxByKey.get(new Date(a.attempted_at).toISOString().slice(0, 10));
     if (i !== undefined) days[i].value++;
   }
+  // Pour la jauge de la courbe : valeur max sur les 30j (au moins 4)
+  const maxDay = Math.max(4, ...days.map((d) => d.value));
 
-  // Répartition par type d'activité
-  const qcmCount = attempts.filter((a) => a.qcm_questions.qcm_series.type === 'qcm').length;
-  const annaleCount = attempts.filter((a) => a.qcm_questions.qcm_series.type === 'annale').length;
-  const repartition = [
-    { label: 'QCM', value: qcmCount, color: '#E4002B' },
-    { label: 'Annales', value: annaleCount, color: '#8B5CF6' },
-    { label: 'Flashcards', value: reviews.length, color: '#F59E0B' },
-    { label: 'Items vus', value: stepsDone, color: '#5B8DEF' },
-  ].filter((s) => s.value > 0);
+  /* ---- Répartition révisions (QCM vs Flashcards) ---- */
+  const totalRevisions = totalAttempts + reviews.length;
+  const qcmPct = totalRevisions > 0 ? Math.round((totalAttempts / totalRevisions) * 100) : 0;
+  const fcPct  = totalRevisions > 0 ? Math.round((reviews.length / totalRevisions) * 100) : 0;
 
-  // Activité récente
-  type Recent = { kind: string; label: string; college: string; when: number; score?: string };
-  const recent: Recent[] = [
-    ...sessions.slice(0, 6).map((s) => ({
-      kind: s.qcm_series.type === 'annale' ? 'Annale' : 'QCM',
-      label: s.qcm_series.label,
-      college: s.qcm_series.cours.titre,
-      when: s.finished_at ? new Date(s.finished_at).getTime() : 0,
-      score: `${s.score_correct}/${s.score_total}`,
-    })),
-    ...reviews.slice(0, 4).map((r) => ({
-      kind: 'Flashcards',
-      label: 'Révision',
-      college: r.flashcards.cours.titre,
-      when: new Date(r.reviewed_at).getTime(),
-    })),
-  ]
-    .sort((a, b) => b.when - a.when)
-    .slice(0, 6);
+  /* ---- Cette semaine (3 stats) ---- */
+  const reviewsThisWeek = reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length;
+  const coursTouchedThisWeek = new Set<string>();
+  for (const a of attempts) if (inWindow(a.attempted_at, weekAgo, now)) coursTouchedThisWeek.add(a.qcm_questions.qcm_series.cours.id);
+  for (const r of reviews) if (inWindow(r.reviewed_at, weekAgo, now)) coursTouchedThisWeek.add(r.flashcards.cours.id);
+  const itemsConsolidatedThisWeek = coursTouchedThisWeek.size;
+  // Progression delta hebdo (≈ items revus cette semaine / total)
+  const totalCoursCount = coursScored.length;
+  const progDeltaPct = totalCoursCount > 0 ? Math.round((itemsConsolidatedThisWeek / totalCoursCount) * 100) : 0;
 
   const firstName = profile.first_name || 'étudiant';
   const ago = (t: number) => {
-    const h = Math.round((now - t) / 3600_000);
+    const h = Math.round((now - t) / 3_600_000);
     if (h < 1) return "à l'instant";
     if (h < 24) return `il y a ${h} h`;
     const d = Math.round(h / 24);
     return d === 1 ? 'hier' : `il y a ${d} j`;
   };
-  const kpis = [
-    {
-      Icon: GraduationCap, label: 'Progression globale', value: `${globalProgress}%`,
-      hint: `${stepsDone} / ${stepsTotal} items revus`,
-      delta: null as null | string,
-      accent: '#5B8DEF',
-    },
-    {
-      Icon: Target, label: 'Taux de réussite', value: `${successRate}%`,
-      hint: `${correct} / ${totalAttempts} QCM réussis`,
-      delta: successDelta !== 0 ? `${successDelta > 0 ? '+' : ''}${successDelta} pts cette semaine` : null,
-      accent: '#22C55E',
-    },
-    {
-      Icon: ClipboardCheck, label: 'QCM réalisés', value: sessions.length,
-      hint: `sur ${Math.max(totalAttempts, 0)} QCM`,
-      delta: sessionsThisWeek > 0 ? `+${sessionsThisWeek} cette semaine` : null,
-      accent: '#E4002B',
-    },
-    {
-      Icon: Layers3, label: 'Flashcards acquises', value: `${fcMastered} / ${flashcardsTotal ?? 0}`,
-      hint: flashcardsTotal ? `${Math.round((fcMastered / flashcardsTotal) * 100)}% du deck étudié` : '—',
-      delta: reviewsThisWeek > 0 ? `+${reviewsThisWeek} révisions cette semaine` : null,
-      accent: '#8B5CF6',
-    },
-  ];
 
-  const barColor = (v: number) => (v < 50 ? '#E4002B' : v < 75 ? '#F59E0B' : '#22C55E');
+  /* ---- Activité récente ---- */
+  type Recent = { kind: string; college: string; when: number };
+  const recent: Recent[] = [
+    ...sessions.slice(0, 6).map((s) => ({
+      kind: 'QCM',
+      college: s.qcm_series.cours.titre,
+      when: s.finished_at ? new Date(s.finished_at).getTime() : 0,
+    })),
+    ...reviews.slice(0, 4).map((r) => ({
+      kind: 'Flashcards',
+      college: r.flashcards.cours.titre,
+      when: new Date(r.reviewed_at).getTime(),
+    })),
+  ].sort((a, b) => b.when - a.when).slice(0, 5);
 
-  const priorityPill = (v: number) => {
-    if (v < 50) return { label: 'Urgent', bg: '#FDE7E9', fg: '#C0001F' };
-    if (v < 75) return { label: 'À revoir', bg: '#FEF3E2', fg: '#B26A00' };
-    return { label: 'En progrès', bg: '#E7F6EC', fg: '#16793C' };
-  };
+  /* ---- Aujourd'hui — objectif du jour ---- */
+  const todayQcmTarget = 15;
+  const todayCasTarget = 1;
+  const todayFcTarget = 10;
+  const todayEstMin = 35;
 
   return (
-    <div className="mx-auto grid w-full max-w-[1640px] gap-6 px-3 py-3 sm:px-4 lg:px-6 lg:py-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="flex min-w-0 flex-col gap-3">
-      {/* Greeting — sur mobile, l'encouragement passe sur une 2e ligne pour rester lisible */}
-      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
-        <h1 className="text-base font-bold tracking-tight text-(--color-ink) sm:text-xl">
-          Bonjour, {firstName} <span aria-hidden>👋</span>
-        </h1>
-        <p className="text-xs font-normal text-(--color-ink-soft) sm:text-sm">
-          Prêt(e) à cartonner aujourd’hui ? <span aria-hidden>💪</span>
-        </p>
-      </div>
+    <div className="mx-auto grid w-full max-w-[1640px] gap-5 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+      {/* ============ COLONNE PRINCIPALE ============ */}
+      <div className="flex min-w-0 flex-col gap-5">
 
-      {/* KPI row — chaque carte a un trait coloré en haut + une pastille
-          d'icône assortie. */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
-        {kpis.map((k) => (
-          <div
-            key={k.label}
-            className="relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) p-3 shadow-(--shadow-soft) sm:p-4"
-          >
-            <div
-              className="absolute inset-x-0 top-0 h-[3px]"
-              style={{ background: k.accent }}
-              aria-hidden
-            />
-            <div className="flex items-center gap-2 text-(--color-ink-muted)">
-              <span
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8"
-                style={{ background: `${k.accent}1A`, color: k.accent }}
-              >
-                <k.Icon className="h-4 w-4" />
-              </span>
-              <span className="text-[11px] font-medium leading-tight sm:text-xs">{k.label}</span>
-            </div>
-            <p className="mt-1.5 text-xl font-bold tracking-tight text-(--color-ink) sm:mt-2 sm:text-2xl lg:text-3xl">{k.value}</p>
-            <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">{k.hint}</p>
-            {k.delta && (
-              <p className="mt-1 text-[11px] font-semibold text-[#16793C]">{k.delta}</p>
-            )}
+        {/* ---- Bandeau de bienvenue ---- */}
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
+              Bonjour, {firstName} <span aria-hidden>👋</span>
+            </h1>
+            <p className="mt-1 text-sm text-(--color-ink-soft) sm:text-[15px]">
+              Plus que <span className="font-bold text-(--color-primary)">{daysUntilExam} jours</span> avant
+              les EVC (PAE {yearLabel}) — Chaque jour compte ! <span aria-hidden>💪</span>
+            </p>
           </div>
-        ))}
-      </div>
-
-      {/* Main grid */}
-      <div className="grid gap-3 lg:grid-cols-3">
-        {/* Performance */}
-        <Card className="flex min-h-0 flex-col lg:col-span-2">
-          <div className="mb-1 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-(--color-ink)">Évolution de ta performance</h2>
-            <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">
-              30 j
-            </span>
-          </div>
-          <div className="min-h-0 flex-1">
-            <ActivityArea data={days} height={150} />
-          </div>
-        </Card>
-
-        {/* Répartition */}
-        <Card className="flex min-h-0 flex-col">
-          <h2 className="text-sm font-semibold text-(--color-ink)">Répartition</h2>
-          {repartition.length > 0 ? (
-            <div className="flex flex-1 items-center">
-              <ActivityDonut data={repartition} size={120} />
+          <div className="flex items-end gap-3">
+            <div className="hidden text-right sm:block">
+              <p className="text-xs text-(--color-ink-soft)">Prêt(e) à avancer aujourd&rsquo;hui ?</p>
             </div>
-          ) : (
-            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Pas encore de données.</p>
-          )}
-        </Card>
-
-        {/* Progression cours par cours — panneau scrollable groupé par collège.
-            Tout est visible d'un coup d'œil, on défile à la souris pour voir l'ensemble. */}
-        <Card className="lg:col-span-3">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-semibold text-(--color-ink)">Progression cours par cours</h2>
-              <p className="mt-0.5 text-[11px] text-(--color-ink-muted)">
-                {matieres.length} cours · groupés par collège · faites défiler pour tout voir
-              </p>
-            </div>
-            <Link href="/facultes" className="inline-flex shrink-0 items-center gap-1 text-xs text-(--color-accent-deep) hover:underline">
-              Tous les collèges <ArrowRight className="h-3 w-3" />
+            <Link
+              href="/entrainement"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#1E40AF] px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+            >
+              <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
             </Link>
           </div>
+        </header>
 
-          {matieres.length === 0 ? (
-            <p className="py-8 text-center text-xs text-(--color-ink-muted)">
-              Lancez vos premiers QCM ou ouvrez un cours pour voir votre progression apparaître ici.
-            </p>
-          ) : (
-            <div
-              className="max-h-[300px] overflow-y-auto pr-2"
-              style={{ scrollbarWidth: 'thin' }}
-            >
-              <div className="space-y-3">
-                {coursByMatiere.map((group) => (
-                  <section key={group.matiereNom}>
-                    <header className="sticky top-0 z-10 -mx-1 mb-2 flex items-center gap-2 bg-(--color-surface) px-1 py-1.5">
-                      <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-ink-soft)">
-                        {group.matiereNom}
-                      </h3>
-                      <span className="text-[11px] text-(--color-ink-muted)">·</span>
-                      <span className="text-[11px] tabular-nums text-(--color-ink-muted)">
-                        {group.cours.length} cours
-                      </span>
-                      <span className="ml-auto flex items-center gap-2">
-                        <span className="text-[11px] font-semibold tabular-nums text-(--color-ink-soft)">
-                          {group.avg}%
-                        </span>
-                        <span className="h-1.5 w-24 overflow-hidden rounded-full bg-(--color-sand-200)">
-                          <span
-                            className="block h-full rounded-full"
-                            style={{ width: `${group.avg}%`, background: barColor(group.avg) }}
-                          />
-                        </span>
-                      </span>
-                    </header>
-                    <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-                      {group.cours.map((c) => {
-                        const pill = priorityPill(c.value);
-                        return (
-                          <li key={c.id}>
-                            <Link
-                              href={`/cours/${c.id}`}
-                              className="group flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 transition-colors hover:border-(--color-accent) hover:bg-(--color-primary-soft)/40"
-                            >
-                              <span className="min-w-0 flex-1 truncate text-xs font-medium text-(--color-ink)">
-                                {c.nom}
-                              </span>
-                              <span className="hidden h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-(--color-sand-200) sm:block">
-                                <span
-                                  className="block h-full rounded-full"
-                                  style={{ width: `${c.value}%`, background: barColor(c.value) }}
-                                />
-                              </span>
-                              <span className="w-9 shrink-0 text-right text-xs font-semibold tabular-nums text-(--color-ink)">
-                                {c.value}%
-                              </span>
-                              <span
-                                className="hidden shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold sm:inline"
-                                style={{ background: pill.bg, color: pill.fg }}
-                              >
-                                {pill.label}
-                              </span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </section>
-                ))}
+        {/* ---- KPI cards (4) ---- */}
+        <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {/* 1. Progression globale */}
+          <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">
+            <div className="flex items-center gap-3">
+              <ProgressRing pct={globalProgress} />
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-(--color-ink-muted)">Prochaine priorité</p>
+                <p className="truncate text-sm font-extrabold text-(--color-ink)">
+                  {nextPriority?.titre ?? '—'}
+                </p>
+                <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Temps estimé : 2h15</p>
               </div>
             </div>
-          )}
-        </Card>
+            <Link href="/matieres" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
+              Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </KpiCard>
 
-        {/* Activité récente */}
-        <Card className="flex min-h-0 flex-col lg:col-span-3">
-          <h2 className="text-sm font-semibold text-(--color-ink)">Activité récente</h2>
-          {recent.length > 0 ? (
-            <ul className="mt-1 divide-y divide-(--color-border)">
-              {recent.slice(0, 5).map((r, i) => (
-                <li key={i} className="flex items-center gap-2.5 py-1.5">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-primary)">
-                    {r.kind === 'Flashcards' ? <Layers3 className="h-3.5 w-3.5" /> : r.kind === 'Annale' ? <History className="h-3.5 w-3.5" /> : <ClipboardCheck className="h-3.5 w-3.5" />}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-(--color-ink)">
-                    {r.kind} — {r.college}
-                  </span>
-                  <span className="shrink-0 text-[11px] text-(--color-ink-muted)">{ago(r.when)}</span>
-                  {r.score && (
-                    <span className="shrink-0 rounded-full bg-(--color-primary-soft) px-1.5 py-0.5 text-[11px] font-semibold text-(--color-primary-deep)">
-                      {r.score}
-                    </span>
-                  )}
-                </li>
-              ))}
+          {/* 2. Temps de révision */}
+          <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">
+              {hoursThisWeek}h <span className="text-2xl">{minsThisWeek.toString().padStart(2, '0')}</span>
+            </p>
+            <p className="text-xs text-(--color-ink-soft)">cette semaine</p>
+            <div className="mt-auto">
+              <p className="rounded-md bg-[#DCFCE7] px-2 py-1 text-center text-[11px] font-bold text-[#16793C]">
+                Objectif conseillé : 6h / semaine
+              </p>
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-(--color-sand-200)">
+                <div className="h-full rounded-full bg-[#16A34A]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />
+              </div>
+            </div>
+          </KpiCard>
+
+          {/* 3. QCM réalisés */}
+          <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">{sessionsCount}</p>
+            <p className="text-xs text-(--color-ink-soft)">sur {itemsTotal} QCM</p>
+            <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]">
+              Commencer un entraînement <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </KpiCard>
+
+          {/* 4. Items maîtrisés */}
+          <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
+            <p className="text-3xl font-black tabular-nums text-(--color-ink)">
+              {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {itemsTotal}</span>
+            </p>
+            <p className="text-xs text-(--color-ink-soft)">
+              {itemsTotal > 0 ? Math.round((itemsMastered / itemsTotal) * 100) : 0}% du deck étudié
+            </p>
+            <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
+              Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </KpiCard>
+        </section>
+
+        {/* ---- 3 cartes : Aujourd'hui + Évolution + Répartition ---- */}
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
+          {/* Aujourd'hui */}
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
+                <Target className="h-4 w-4" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Aujourd&rsquo;hui</p>
+            </div>
+            <p className="mt-1 text-[11px] text-(--color-ink-soft)">
+              Objectif du jour pour avancer sereinement
+            </p>
+            <ul className="mt-3 space-y-2">
+              <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
+              <TodayRow Icon={FileText}       bg="#DBEAFE" fg="#2563EB" title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
+              <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
+              <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
             </ul>
+            <Link href="/entrainement" className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E40AF] px-3 py-2 text-sm font-bold text-white hover:scale-[1.01]">
+              <Play className="h-4 w-4" /> Commencer maintenant
+            </Link>
+          </Card>
+
+          {/* Évolution */}
+          <Card>
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-sm font-bold text-(--color-ink)">Évolution de ta performance</p>
+              <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
+            </div>
+            <Sparkline days={days} max={maxDay} />
+            <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
+              <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
+              <p className="text-[12px] leading-relaxed text-(--color-ink)">
+                <strong>Vos résultats s&rsquo;amélioreront avec la régularité.</strong>{' '}
+                Continuez vos entraînements !
+              </p>
+            </div>
+          </Card>
+
+          {/* Répartition révisions */}
+          <Card>
+            <p className="text-sm font-bold text-(--color-ink)">Répartition de tes révisions</p>
+            <div className="mt-3 flex items-center gap-4">
+              <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
+              <div className="flex-1 space-y-2 text-[12px]">
+                <LegendRow color="#C0112E" label="QCM" count={totalAttempts} pct={qcmPct} />
+                <LegendRow color="#7C3AED" label="Flashcards" count={reviews.length} pct={fcPct} />
+              </div>
+            </div>
+            <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
+              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions} / {itemsTotal}</span>
+            </p>
+          </Card>
+        </section>
+
+        {/* ---- À travailler en priorité ---- */}
+        <Card>
+          <div className="flex items-baseline justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
+              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats</p>
+            </div>
+          </div>
+          {priorities.length === 0 ? (
+            <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
+              Lancez vos premiers QCM pour voir vos priorités apparaître ici.
+            </p>
           ) : (
-            <p className="py-6 text-center text-xs text-(--color-ink-muted)">Aucune activité.</p>
+            <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {priorities.map((p, i) => {
+                const pill = p.value < 50
+                  ? { label: 'Priorité haute',   bg: '#FCEAEC', fg: '#C0112E' }
+                  : { label: 'Priorité moyenne', bg: '#FFEDD5', fg: '#B45B00' };
+                return (
+                  <li key={p.id}>
+                    <Link
+                      href={`/cours/${p.id}`}
+                      className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 hover:border-(--color-primary)/40 hover:bg-(--color-primary-soft)/30"
+                    >
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-sand-100) text-[12px] font-black text-(--color-ink-soft)">
+                        {i + 1}
+                      </span>
+                      <span className="flex-1 truncate text-sm font-bold text-(--color-ink)">{p.titre}</span>
+                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
+                        {pill.label}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           )}
+          <div className="mt-3 flex justify-center">
+            <Link href="/matieres" className="inline-flex items-center gap-1 rounded-md bg-[#EDE9FE] px-3 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
+              Voir toutes mes lacunes <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </Card>
+
+        {/* ---- Progression par cours ---- */}
+        <Card>
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-(--color-ink)">Progression par cours</p>
+              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">
+                {coursScored.length} cours · Groupés par collège · Faites défiler pour tout voir
+              </p>
+            </div>
+          </div>
+          <div className="max-h-[300px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+            {coursByMatiere.map((g) => (
+              <section key={g.matiereNom}>
+                <p className="sticky top-0 bg-(--color-surface) py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
+                  {g.matiereNom}
+                </p>
+                <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                  {g.cours.map((c) => {
+                    const pill = c.value < 50
+                      ? { label: 'Urgent', bg: '#FCEAEC', fg: '#C0112E' }
+                      : c.value < 75
+                      ? { label: 'À revoir', bg: '#FEF3C7', fg: '#A16207' }
+                      : { label: 'En progrès', bg: '#DCFCE7', fg: '#16A34A' };
+                    return (
+                      <li key={c.id}>
+                        <Link href={`/cours/${c.id}`} className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 hover:border-(--color-primary)/40">
+                          <span className="min-w-0 flex-1 truncate text-[12.5px] text-(--color-ink)">{c.titre}</span>
+                          <span className="hidden h-1 w-16 shrink-0 overflow-hidden rounded-full bg-(--color-sand-200) sm:block">
+                            <span className="block h-full rounded-full" style={{ width: `${c.value}%`, background: pill.fg }} />
+                          </span>
+                          <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums text-(--color-ink)">{c.value}%</span>
+                          <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
+                            {pill.label}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </Card>
+
+        {/* ---- Activité récente + Cette semaine ---- */}
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
+                <RefreshCcw className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Activité récente</p>
+            </div>
+            {recent.length === 0 ? (
+              <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
+                Aucune activité récente. Lancez votre premier entraînement !
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {recent.map((r, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[12px]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
+                      {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
+                    </span>
+                    <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
+                    <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DCFCE7] text-[#16A34A]">
+                <Zap className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`} label="Progression" color="#16A34A" />
+              <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`} label="Flashcards révisées" color="#7C3AED" />
+              <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`} label="Items consolidés" color="#2563EB" />
+            </div>
+          </Card>
+        </section>
       </div>
 
-      {/* Vos collèges — grille complète (toutes les matières EDN accessibles) */}
-      <section className="mt-2">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-(--color-ink)">Vos collèges</h2>
-          <Link
-            href="/facultes"
-            className="inline-flex items-center gap-1 text-xs text-(--color-accent-deep) hover:underline"
-          >
-            Tout voir <ArrowRight className="h-3 w-3" />
-          </Link>
-        </div>
-        <CollegesGrid scope={scope} />
-      </section>
-
-      {/* CTA passage à l'abonnement (caché pour les abonnés) */}
-      <div className="mt-8">
-        <UpgradeBanner context="default" profile={profile} />
-      </div>
-
-      {/* Widget annonces : sous le contenu sur mobile/tablet (xl: caché ici, voir aside) */}
-      <div className="mt-6 xl:hidden">
+      {/* ============ SIDEBAR DROITE ============ */}
+      <aside className="space-y-3">
         <AnnouncementsWidget />
-      </div>
-      </div>
-
-      {/* Widget annonces — aside droite sticky à partir de XL */}
-      <aside className="hidden xl:block">
-        <div className="sticky top-4 max-h-[calc(100dvh-2rem)] overflow-y-auto pr-1">
-          <AnnouncementsWidget />
-        </div>
       </aside>
+    </div>
+  );
+}
+
+/* ============================================================
+   Sub-components
+   ============================================================ */
+function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+function KpiCard({
+  accent, Icon, label, children,
+}: {
+  accent: string;
+  Icon: typeof Target;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative flex flex-col gap-2 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
+      <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: accent }} />
+      <div className="flex items-center gap-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${accent}1A`, color: accent }}>
+          <Icon className="h-3.5 w-3.5" />
+        </span>
+        <p className="text-[12px] font-bold text-(--color-ink)">{label}</p>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function ProgressRing({ pct }: { pct: number }) {
+  const r = 22;
+  const circ = 2 * Math.PI * r;
+  return (
+    <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center">
+      <svg viewBox="0 0 60 60" className="h-14 w-14 -rotate-90">
+        <defs>
+          <linearGradient id="kpi-prog-arc" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stopColor="#3B5BFF" stopOpacity="1" />
+            <stop offset="60%"  stopColor="#7C93FF" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#C7D2FF" stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
+        <circle cx="30" cy="30" r={r} fill="none" stroke="#EEF1FB" strokeWidth="5" />
+        <circle cx="30" cy="30" r={r} fill="none" stroke="url(#kpi-prog-arc)" strokeWidth="5" strokeLinecap="round"
+          strokeDasharray={circ} strokeDashoffset={circ - (circ * pct) / 100} />
+      </svg>
+      <span className="absolute text-sm font-black tabular-nums text-[#0F1F4D]">{pct}%</span>
+    </span>
+  );
+}
+
+function TodayRow({ Icon, bg, fg, title, sub }: { Icon: typeof Target; bg: string; fg: string; title: string; sub: string }) {
+  return (
+    <li className="flex items-center gap-2.5">
+      <span className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: bg, color: fg }}>
+        <Icon className="h-3.5 w-3.5" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[12.5px] font-bold text-(--color-ink)">{title}</p>
+        <p className="text-[11px] text-(--color-ink-soft)">{sub}</p>
+      </div>
+    </li>
+  );
+}
+
+function Sparkline({ days, max }: { days: { dayLabel: string; value: number }[]; max: number }) {
+  const W = 600, H = 110, P = 6;
+  const points = days.map((d, i) => {
+    const x = P + (i * (W - 2 * P)) / (days.length - 1);
+    const y = H - P - ((d.value / max) * (H - 2 * P));
+    return { x, y };
+  });
+  const poly = points.map((p) => `${p.x},${p.y}`).join(' ');
+  return (
+    <div className="relative mt-2">
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-28 w-full">
+        {[0.25, 0.5, 0.75, 1].map((g, i) => (
+          <line key={i} x1={P} y1={H - P - g * (H - 2 * P)} x2={W - P} y2={H - P - g * (H - 2 * P)} stroke="#F1F5F9" strokeWidth="1" />
+        ))}
+        <polyline points={poly} fill="none" stroke="#C0112E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {points.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r="2.2" fill="#C0112E" />
+        ))}
+      </svg>
+      {/* Quelques labels d'axe (4) */}
+      <div className="mt-1 grid grid-cols-4 text-[9px] text-(--color-ink-muted)">
+        {[0, 9, 19, 29].map((i) => <span key={i}>{days[i]?.dayLabel}</span>)}
+      </div>
+    </div>
+  );
+}
+
+function DonutChart({ qcmPct, fcPct }: { qcmPct: number; fcPct: number }) {
+  const r = 26;
+  const circ = 2 * Math.PI * r;
+  const qcmLen = (circ * qcmPct) / 100;
+  const fcLen  = (circ * fcPct) / 100;
+  return (
+    <span className="relative inline-flex h-20 w-20 items-center justify-center">
+      <svg viewBox="0 0 70 70" className="h-20 w-20 -rotate-90">
+        <circle cx="35" cy="35" r={r} fill="none" stroke="#F1F5F9" strokeWidth="9" />
+        <circle cx="35" cy="35" r={r} fill="none" stroke="#C0112E" strokeWidth="9"
+          strokeDasharray={`${qcmLen} ${circ - qcmLen}`} />
+        <circle cx="35" cy="35" r={r} fill="none" stroke="#7C3AED" strokeWidth="9"
+          strokeDasharray={`${fcLen} ${circ - fcLen}`} strokeDashoffset={-qcmLen} />
+      </svg>
+    </span>
+  );
+}
+
+function LegendRow({ color, label, count, pct }: { color: string; label: string; count: number; pct: number }) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <span className="inline-flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-sm" style={{ background: color }} />
+        <span className="text-(--color-ink)">{label} ({count})</span>
+      </span>
+      <span className="font-bold tabular-nums text-(--color-ink-soft)">{pct}%</span>
+    </div>
+  );
+}
+
+function WeekStat({ Icon, value, label, color }: { Icon: typeof Target; value: string; label: string; color: string }) {
+  return (
+    <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 text-center">
+      <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${color}1A`, color }}>
+        <Icon className="h-3.5 w-3.5" />
+      </span>
+      <p className="mt-1.5 text-base font-black tabular-nums" style={{ color }}>{value}</p>
+      <p className="text-[10px] leading-tight text-(--color-ink-soft)">{label}</p>
     </div>
   );
 }

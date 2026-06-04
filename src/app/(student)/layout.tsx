@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { AppShell } from '@/components/shell/app-shell';
 import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
+import { ConseilsCenter } from '@/components/student/conseils-center';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
 
@@ -73,6 +74,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
           {children}
         </AppShell>
       </div>
+      <ConseilsCenter />
     </div>
   );
 }

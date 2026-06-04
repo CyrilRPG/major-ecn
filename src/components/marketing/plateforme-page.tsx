@@ -100,7 +100,7 @@ function HowDailySection() {
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
-          Comment j&rsquo;utilise Major EVC au quotidien ?
+          Comment j&rsquo;utilise Major ECN au quotidien ?
         </h2>
         <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-2">
           {steps.map((s, i) => (
