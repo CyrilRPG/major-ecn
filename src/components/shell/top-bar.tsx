@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Command as CmdIcon, PanelLeft, Search } from 'lucide-react';
+import { Command as CmdIcon, Lightbulb, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
 import type { Profile } from '@/lib/auth/get-profile';
 
@@ -34,7 +34,7 @@ export function TopBar({
 }) {
   const pathname = usePathname();
   return (
-    <header className="flex h-14 items-center gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
+    <header className="flex h-16 items-center gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
       <button
         type="button"
         onClick={onToggleSidebar}
@@ -57,6 +57,19 @@ export function TopBar({
           <CmdIcon className="h-2.5 w-2.5" />K
         </kbd>
       </button>
+
+      <span className="inline-flex h-9 rounded-lg bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[1.5px] transition-transform hover:scale-[1.02]">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event('conseils:open'))}
+          className="flex items-center gap-2 rounded-[7px] bg-white px-3 text-[13px] font-bold text-[#E4002B]"
+        >
+          <Lightbulb className="h-4 w-4" />
+          <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
+            Conseils de préparation
+          </span>
+        </button>
+      </span>
 
       <UserMenu profile={profile} />
     </header>

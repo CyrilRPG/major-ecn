@@ -7,8 +7,6 @@ import {
   HelpCircle, Lightbulb, MessageCircle, RefreshCcw, Stethoscope, Target,
   TrendingUp, X,
 } from 'lucide-react';
-import { UserMenu } from '@/components/user-menu';
-import type { Profile } from '@/lib/auth/get-profile';
 
 const STORAGE_KEY = 'major-ecn:conseils-dismissed';
 // Charte cohérente avec le menu (rouge-orange officiel Major ECN)
@@ -35,12 +33,20 @@ const STARTER_SPECIALTIES = [
   { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#A56831', bg: '#F7DFCA' },
 ];
 
-export function ConseilsCenter({ profile }: { profile?: Profile }) {
+export function ConseilsCenter() {
   // 'popup' = grand popup d'accueil ; 'panel' = panneau latéral compact ;
   // 'closed' = bouton seul dans le header.
   const [mode, setMode] = useState<'popup' | 'panel' | 'closed'>('closed');
   const [section, setSection] = useState<Section>('demarrer');
   const [neverShow, setNeverShow] = useState(false);
+
+  // Custom event : permet à la TopBar (ou n'importe quel autre composant)
+  // d'ouvrir le panneau Conseils sans avoir besoin d'un context global.
+  useEffect(() => {
+    const onOpen = () => { setSection('demarrer'); setMode('panel'); };
+    window.addEventListener('conseils:open', onOpen);
+    return () => window.removeEventListener('conseils:open', onOpen);
+  }, []);
 
   // À la première ouverture, montre le grand popup (sauf si déjà fermé une fois).
   useEffect(() => {
@@ -56,29 +62,6 @@ export function ConseilsCenter({ profile }: { profile?: Profile }) {
 
   return (
     <>
-      {/* Bouton « Conseils de préparation » + avatar profil — toujours visibles */}
-      {mode !== 'popup' && (
-        <div className="fixed right-4 top-3 z-30 flex items-center gap-2">
-          <span className="inline-flex rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[2px] shadow-(--shadow-soft) transition-transform hover:scale-[1.02]">
-            <button
-              type="button"
-              onClick={() => { setSection('demarrer'); setMode('panel'); }}
-              className="inline-flex items-center gap-2 rounded-[10px] bg-white px-3.5 pt-2.5 pb-3 text-[13px] font-bold text-[#E4002B]"
-            >
-              <Lightbulb className="h-4 w-4" />
-              <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
-                <span className="hidden sm:inline">Conseils de préparation</span>
-                <span className="sm:hidden">Conseils</span>
-              </span>
-            </button>
-          </span>
-          {profile && (
-            <span className="rounded-full bg-white p-1 shadow-(--shadow-soft)">
-              <UserMenu profile={profile} />
-            </span>
-          )}
-        </div>
-      )}
 
       {mode === 'popup' && (
         <PopupOverlay
