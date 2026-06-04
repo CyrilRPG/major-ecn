@@ -31,9 +31,19 @@ function SidebarProgress({ tree }: { tree: NavCollege[] }) {
     >
       <span className="relative h-11 w-11 shrink-0">
         <svg viewBox="0 0 40 40" className="h-11 w-11 -rotate-90">
+          <defs>
+            {/* Dégradé le long de l'arc : foncé au début → de plus en plus
+                clair vers la fin de la progression. On garde la teinte
+                accent (rouge primaire) mais on monte la luminosité. */}
+            <linearGradient id="progress-arc" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stopColor="var(--color-accent)" stopOpacity="1" />
+              <stop offset="55%"  stopColor="var(--color-accent)" stopOpacity="0.75" />
+              <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0.35" />
+            </linearGradient>
+          </defs>
           <circle cx="20" cy="20" r={r} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="4" />
           <circle
-            cx="20" cy="20" r={r} fill="none" stroke="var(--color-accent)" strokeWidth="4"
+            cx="20" cy="20" r={r} fill="none" stroke="url(#progress-arc)" strokeWidth="4"
             strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ - (circ * pct) / 100}
           />
         </svg>

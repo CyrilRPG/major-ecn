@@ -1,24 +1,11 @@
-import { createClient } from '@/lib/supabase/server';
-import { FeaturedTestimonialsSection, FinalCtaBlock } from '@/components/marketing/extra-sections';
-import { TemoignagesSection, TrustBanner } from '@/components/marketing/manus-sections';
+import { TemoignagesPageContent } from '@/components/marketing/temoignages-page';
 
 export const metadata = {
   title: 'Témoignages — Major ECN',
   description:
-    'Médecins de tous horizons : leur parcours, leurs résultats aux EVC avec Major ECN.',
+    'Médecins de tous horizons qui ont préparé les EVC avec Major ECN : leur parcours, leurs résultats, sans filtre.',
 };
 
-export default async function TemoignagesPage() {
-  const supabase = await createClient();
-  const { data: collegesRaw } = await supabase.from('matieres').select('id, nom').order('nom');
-  const colleges = collegesRaw ?? [];
-
-  return (
-    <>
-      <TemoignagesSection />
-      <FeaturedTestimonialsSection />
-      <TrustBanner />
-      <FinalCtaBlock colleges={colleges} />
-    </>
-  );
+export default function TemoignagesPage() {
+  return <TemoignagesPageContent />;
 }
