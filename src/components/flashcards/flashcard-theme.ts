@@ -53,15 +53,16 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Médecine générale':         { bg: '#DBEAFE', accent: '#1E40AF', Icon: StethoscopeArt },
   'Infectiologie':             { bg: '#FFE4E6', accent: '#BE123C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
   'Maladies infectieuses':     { bg: '#FFE4E6', accent: '#BE123C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
-  'Pédiatrie':                 { bg: '#FCE7F3', accent: '#DB2777', Icon: ChildArt },
-  'Endocrinologie':            { bg: '#CCFBF1', accent: '#0F766E', Icon: ThyroidArt },
+  'Pédiatrie':                 { bg: '#FCE7F3', accent: '#DB2777', Icon: ChildArt,          image: '/flashcards-decor/pediatrie.png' },
+  'Endocrinologie':            { bg: '#CCFBF1', accent: '#0F766E', Icon: ThyroidArt,        image: '/flashcards-decor/endocrino.png' },
   'Neurologie':                { bg: '#EDE9FE', accent: '#7C3AED', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
-  'Psychiatrie':               { bg: '#EDE9FE', accent: '#8B5CF6', Icon: BrainArt,          image: '/flashcards-decor/psychiatrie.png' },
-  'Rhumatologie':              { bg: '#FEF3C7', accent: '#D97706', Icon: JointArt },
+  'Psychiatrie':               { bg: '#EDE9FE', accent: '#8B5CF6', Icon: BrainArt,          image: '/flashcards-decor/neuro.png' },
+  'Rhumatologie':              { bg: '#FEF3C7', accent: '#D97706', Icon: JointArt,          image: '/flashcards-decor/rhumato.png' },
   'Réanimation':               { bg: '#FEE2E2', accent: '#DC2626', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
   'Reanimation':               { bg: '#FEE2E2', accent: '#DC2626', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
   'Pharmacologie':             { bg: '#EDE9FE', accent: '#6D28D9', Icon: PillArt,           image: '/flashcards-decor/pharmaco.png' },
   'Dermatologie':              { bg: '#FFEDD5', accent: '#EA580C', Icon: HumanBodyArt,      image: '/flashcards-decor/dermato.png' },
+  'Allergologie':              { bg: '#FEF3C7', accent: '#D97706', Icon: VirusArt,          image: '/flashcards-decor/allergo.png' },
 };
 
 const DEFAULT_THEME: FlashcardTheme = {
