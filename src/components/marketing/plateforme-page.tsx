@@ -264,37 +264,133 @@ function PlateformeHero_LegacyMock() {
 
 /* ============ COMMENT J'UTILISE ============ */
 function HowDailySection() {
+  // Mini-mock #1 : dashboard (barres + ligne)
+  const MockDashboard = () => (
+    <div className="grid grid-cols-2 gap-1 h-full p-2">
+      <div className="rounded-md bg-white/70 p-1.5">
+        <div className="flex items-end gap-0.5 h-8">
+          {[40, 60, 50, 75, 65, 80, 55].map((h, k) => (
+            <span key={k} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: '#2563EB' }} />
+          ))}
+        </div>
+      </div>
+      <div className="rounded-md bg-white/70 p-1.5">
+        <svg viewBox="0 0 60 30" className="h-full w-full">
+          <polyline points="0,22 10,18 20,12 30,8 40,15 50,5 60,10" fill="none" stroke="#C0112E" strokeWidth="1.5" />
+        </svg>
+      </div>
+      <div className="col-span-2 flex items-center gap-1 rounded-md bg-white/70 px-1.5 py-1">
+        <span className="h-2 w-2 rounded-full bg-[#16A34A]" />
+        <span className="h-1 flex-1 rounded-full bg-white">
+          <span className="block h-full w-3/4 rounded-full" style={{ background: '#16A34A' }} />
+        </span>
+      </div>
+    </div>
+  );
+  // Mini-mock #2 : priorités de révision (barres horizontales)
+  const MockPriorities = () => (
+    <ul className="space-y-1.5 p-2 text-[8px]">
+      {[
+        { l: 'Cardiologie',  v: 82, c: '#C0112E' },
+        { l: 'Néphrologie',  v: 74, c: '#16A34A' },
+        { l: 'Pneumologie',  v: 68, c: '#2563EB' },
+      ].map((r) => (
+        <li key={r.l} className="flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: r.c }} />
+          <span className="flex-1 truncate font-bold" style={{ color: NAVY }}>{r.l}</span>
+          <span className="font-extrabold tabular-nums" style={{ color: r.c }}>{r.v}%</span>
+        </li>
+      ))}
+    </ul>
+  );
+  // Mini-mock #3 : QCM par spécialités
+  const MockQcmList = () => (
+    <div className="p-2 text-[8px]">
+      <p className="mb-1 font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>QCM par spécialités</p>
+      <ul className="space-y-0.5">
+        {['Cardiologie', 'Gastro-entérologie', 'Pédiatrie', 'Pneumologie', 'Urologie'].map((s) => (
+          <li key={s} className="flex items-center gap-1">
+            <span className="h-1 w-1 rounded-full" style={{ background: '#6D28D9' }} />
+            <span className="truncate" style={{ color: NAVY }}>{s}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+  // Mini-mock #4 : correction détaillée (barre rouge + texte striké)
+  const MockCorrection = () => (
+    <div className="p-2 text-[8px]">
+      <p className="mb-1 font-bold uppercase tracking-wider" style={{ color: RED }}>Correction détaillée</p>
+      <div className="space-y-1">
+        <span className="block h-1 rounded-full bg-white">
+          <span className="block h-full w-full rounded-full" style={{ background: '#EA580C' }} />
+        </span>
+        <span className="block h-1 w-4/5 rounded-full" style={{ background: '#FED7AA' }} />
+        <span className="block h-1 w-3/5 rounded-full" style={{ background: '#FED7AA' }} />
+      </div>
+    </div>
+  );
+  // Mini-mock #5 : flashcard recto / verso
+  const MockFlashcards = () => (
+    <div className="grid grid-cols-2 gap-1 p-1.5">
+      <div className="rounded-md bg-white p-1 text-[7px] font-bold leading-tight" style={{ color: NAVY }}>
+        <p className="border-b border-(--color-border) pb-0.5">Insuff. cardiaque</p>
+        <p className="mt-0.5 text-[6.5px]" style={{ color: INK_MUTED }}>Que retenir ?</p>
+      </div>
+      <div className="rounded-md p-1 text-[7px] font-bold leading-tight text-white" style={{ background: '#0F766E' }}>
+        <p>Carte réponse</p>
+        <p className="mt-0.5 text-[6.5px] opacity-85">ETT, BNP…</p>
+      </div>
+    </div>
+  );
+  // Mini-mock #6 : progression chart
+  const MockProgress = () => (
+    <div className="p-2">
+      <p className="mb-1 text-[8px] font-bold uppercase tracking-wider" style={{ color: '#16A34A' }}>Progression globale</p>
+      <svg viewBox="0 0 80 30" className="h-12 w-full">
+        <polyline points="0,25 10,22 20,18 30,12 40,15 50,8 60,10 70,5 80,8" fill="none" stroke="#16A34A" strokeWidth="1.5" />
+        {[0, 20, 40, 60, 80].map((x) => {
+          const ys = [25, 18, 15, 10, 8];
+          const i = [0, 20, 40, 60, 80].indexOf(x);
+          return <circle key={x} cx={x} cy={ys[i]} r="1.5" fill="#16A34A" />;
+        })}
+      </svg>
+    </div>
+  );
+
   const steps = [
-    { Icon: LayoutDashboard, bg: '#DBEAFE', fg: '#2563EB', t: 'Je consulte mon tableau de bord',        d: "Vue d'ensemble claire de ma préparation." },
-    { Icon: Target,          bg: '#FCEAEC', fg: RED,       t: 'Je vois mes priorités de révision',      d: 'La plateforme identifie ce que je dois travailler en priorité.' },
-    { Icon: ClipboardCheck,  bg: '#EDE9FE', fg: '#6D28D9', t: 'Je travaille les QCM et cas cliniques',  d: "Des milliers de QCM et cas cliniques pour m'entraîner efficacement." },
-    { Icon: FileText,        bg: '#FFEDD5', fg: '#EA580C', t: 'Je corrige mes erreurs et comprends',    d: 'Des corrections détaillées pour apprendre de chaque erreur.' },
-    { Icon: Layers3,         bg: '#CCFBF1', fg: '#0F766E', t: 'Je consolide avec les flashcards',       d: 'Mémorisation active et intelligente pour des révisions durables.' },
-    { Icon: TrendingUp,      bg: '#DCFCE7', fg: '#16A34A', t: 'Je suis ma progression en temps réel',   d: 'Des statistiques précises pour rester motivé et progresser.' },
+    { bg: '#DBEAFE', fg: '#2563EB', t: 'Je consulte mon tableau de bord',       d: "Vue d'ensemble claire de ma préparation.",                            Mock: MockDashboard },
+    { bg: '#FCEAEC', fg: RED,       t: 'Je vois mes priorités de révision',     d: 'La plateforme identifie ce que je dois travailler en priorité.',     Mock: MockPriorities },
+    { bg: '#EDE9FE', fg: '#6D28D9', t: 'Je travaille les QCM et cas cliniques', d: "Des milliers de QCM et cas cliniques pour m'entraîner efficacement.", Mock: MockQcmList },
+    { bg: '#FFEDD5', fg: '#EA580C', t: 'Je corrige mes erreurs et comprends',   d: 'Des corrections détaillées pour apprendre de chaque erreur.',         Mock: MockCorrection },
+    { bg: '#CCFBF1', fg: '#0F766E', t: 'Je consolide avec les flashcards',      d: 'Mémorisation active et intelligente pour des révisions durables.',    Mock: MockFlashcards },
+    { bg: '#DCFCE7', fg: '#16A34A', t: 'Je suis ma progression en temps réel',  d: 'Des statistiques précises pour rester motivé et progresser.',         Mock: MockProgress },
   ];
+
   return (
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
           Comment j&rsquo;utilise Major ECN au quotidien ?
         </h2>
-        <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-2">
+        <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-3">
           {steps.map((s, i) => (
-            <div key={s.t} className="relative text-center">
-              <div className="flex items-center justify-center gap-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full text-[13px] font-black"
+            <div key={s.t} className="relative">
+              <div className="flex items-start justify-center gap-2">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-black"
                   style={{ background: '#FCEAEC', color: RED }}>
                   {i + 1}
                 </span>
                 <p className="text-left text-[12px] font-extrabold leading-tight" style={{ color: NAVY }}>{s.t}</p>
               </div>
-              <div className="mx-auto mt-3 flex h-24 w-full max-w-[180px] items-center justify-center rounded-xl border" style={{ background: s.bg, borderColor: BORDER }}>
-                <s.Icon className="h-10 w-10" style={{ color: s.fg }} />
+              <div className="mx-auto mt-3 h-24 w-full overflow-hidden rounded-xl border" style={{ background: s.bg, borderColor: BORDER }}>
+                <s.Mock />
               </div>
-              <p className="mt-2 text-[11.5px] leading-relaxed" style={{ color: INK_SOFT }}>{s.d}</p>
+              <p className="mt-2 text-center text-[11.5px] leading-relaxed" style={{ color: INK_SOFT }}>{s.d}</p>
               {i < steps.length - 1 && (
-                <span className="absolute right-[-8px] top-[18px] hidden xl:inline-flex items-center justify-center" style={{ color: INK_MUTED }}>
-                  <ChevronRight className="h-4 w-4" />
+                <span aria-hidden className="absolute right-[-10px] top-[14px] hidden xl:flex h-7 w-7 items-center justify-center rounded-full bg-white"
+                  style={{ color: INK_MUTED, border: `1px solid ${BORDER}` }}>
+                  <ChevronRight className="h-3.5 w-3.5" />
                 </span>
               )}
             </div>

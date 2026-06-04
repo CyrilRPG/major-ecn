@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, FileText, Layers3, MonitorPlay, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
+
+const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 
 type Action = {
   href: string;
@@ -19,6 +21,8 @@ type Action = {
   bg: string;
   /** Image décorative latérale optionnelle (remplace le watermark Lucide). */
   decorImage?: string;
+  /** Carte verrouillée (parcours pas terminé) → grisée, lien désactivé. */
+  locked?: boolean;
 };
 
 export default async function CoursApercuPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -49,9 +53,26 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       { onConflict: 'user_id,cours_id', ignoreDuplicates: false },
     );
 
-  // 4 cartes du parcours pédagogique : vidéo, fiche, DP&QI, flashcards.
-  // Les annales EVC restent accessibles via la sidebar (entrée transversale
-  // sous chaque collège) — pas de carte dédiée ici.
+  // Etat de complétion du parcours pour débloquer l'Interrogation (5e contenu).
+  // Critères : vidéo vue + fiche lue + au moins 1 QCM attempt + au moins 1 flashcard review.
+  // Bypass pour Pneumologie (test de la fonctionnalité).
+  const [{ data: cpRow }, { count: qcmAttempts }, { count: flashReviews }] = await Promise.all([
+    supabase.from('course_progress')
+      .select('video_watched, fiche_read')
+      .eq('user_id', user.id).eq('cours_id', coursId).maybeSingle(),
+    supabase.from('qcm_attempts')
+      .select('id, qcm_questions!inner(qcm_series!inner(cours_id))', { count: 'exact', head: true })
+      .eq('user_id', user.id).eq('qcm_questions.qcm_series.cours_id', coursId),
+    supabase.from('flashcard_reviews')
+      .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
+      .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
+  ]);
+  const allDone =
+    !!cpRow?.video_watched && !!cpRow?.fiche_read &&
+    (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0;
+  const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
+
+  // 5 cartes du parcours : vidéo, fiche, DP&QI, flashcards, interrogation.
   const actions: Action[] = [
     {
       href: `/cours/${coursId}/video`, label: 'Cours vidéo',
@@ -75,8 +96,19 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
       desc: 'Révisez et mémorisez les points clés du programme.',
       Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
-      decorImage: '/flashcards-decor/flashcard-1.png',
       available: (c.flashcards?.length ?? 0) > 0,
+    },
+    {
+      href: `/cours/${coursId}/interrogation`,
+      label: 'Interrogation',
+      desc: interrogationUnlocked
+        ? 'Test final du parcours — signez le certificat à l\'issue.'
+        : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
+      Icon: interrogationUnlocked ? Award : Lock,
+      accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
+      bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
+      available: interrogationUnlocked,
+      locked: !interrogationUnlocked,
     },
   ];
 
@@ -92,12 +124,16 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {actions.map((a) => (
-          <Link
+        {actions.map((a) => {
+          const Tag = a.locked ? 'div' : Link;
+          const tagProps = a.locked
+            ? { 'aria-disabled': true as const }
+            : { href: a.href };
+          return (
+          <Tag
             key={a.href}
-            href={a.href}
-            aria-disabled={!a.available || undefined}
-            className="group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
+            {...(tagProps as { href: string })}
+            className={`group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-soft) transition-all focus-ring ${a.locked ? 'cursor-not-allowed opacity-70' : 'hover:-translate-y-0.5 hover:shadow-(--shadow-lifted)'}`}
           >
             {/* Halo pastel doux dégradant depuis la droite — couleur du
                 thème, jamais opaque sur le texte. */}
@@ -156,11 +192,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold"
               style={{ color: a.accent }}
             >
-              Ouvrir
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              {a.locked ? <><Lock className="h-4 w-4" /> Verrouillé</> : <>Ouvrir <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></>}
             </span>
-          </Link>
-        ))}
+          </Tag>
+          );
+        })}
       </div>
 
       <div className="mt-8">

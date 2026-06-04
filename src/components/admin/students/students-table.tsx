@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Award, Search } from 'lucide-react';
+import Link from 'next/link';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -137,6 +138,16 @@ export function StudentsTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      <Link
+                        href={`/api/admin/certificates/${s.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Télécharger tous les certificats signés de cet élève"
+                        className="inline-flex h-8 items-center gap-1 rounded-md border border-(--color-border) bg-(--color-surface) px-2 text-xs font-bold text-(--color-ink-soft) hover:border-[#7C3AED] hover:text-[#7C3AED]"
+                      >
+                        <Award className="h-3.5 w-3.5" />
+                        <span className="hidden lg:inline">Certificats</span>
+                      </Link>
                       <EditStudentDialog student={s} colleges={colleges} />
                       <ImpersonateAction
                         studentId={s.id}
