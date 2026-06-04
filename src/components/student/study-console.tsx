@@ -86,26 +86,25 @@ export function StudyConsole({
             <p className="truncate text-[11px] font-medium text-(--color-ink-muted) sm:text-xs">{context}</p>
             <h1 className="truncate text-sm font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
-          <span
-            className={cn(
-              'inline-flex h-9 shrink-0 rounded-lg p-[2px] transition-colors',
-              assistantOpen
-                ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]'
-                : 'bg-(--color-border) hover:bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]',
-            )}
+          <button
+            type="button"
+            onClick={() => setAssistantOpen((v) => !v)}
+            aria-label="Assistant du cours"
+            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg bg-white px-2.5 text-sm font-bold text-[#E4002B] transition-transform hover:scale-[1.02] focus-ring sm:px-3"
+            style={{
+              backgroundImage: assistantOpen
+                ? 'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(90deg,#E4002B 0%,#F97316 100%)'
+                : 'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(0deg,var(--color-border),var(--color-border))',
+              backgroundOrigin: 'border-box',
+              backgroundClip: 'padding-box, border-box',
+              border: '1.5px solid transparent',
+            }}
           >
-            <button
-              type="button"
-              onClick={() => setAssistantOpen((v) => !v)}
-              aria-label="Assistant du cours"
-              className="flex h-full items-center gap-2 rounded-[6px] bg-white px-2.5 text-sm font-bold text-[#E4002B] focus-ring sm:px-3"
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
-                Assistant
-              </span>
-            </button>
-          </span>
+            <MessageCircle className="h-4 w-4" />
+            <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
+              Assistant
+            </span>
+          </button>
         </div>
 
         {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
