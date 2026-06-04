@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient } from '@/lib/supabase/server';
@@ -95,11 +95,26 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawRectangle({ x: m, y: m, width: width - 2 * m, height: height - 2 * m, borderColor: GOLD, borderWidth: 2 });
   page.drawRectangle({ x: m + 6, y: m + 6, width: width - 2 * m - 12, height: height - 2 * m - 12, borderColor: GOLD, borderWidth: 0.6 });
 
-  // ============ Logo officiel Major ECN ============
+  // ============ Watermark gris : gros logo Major ECN en arrière-plan ============
+  // Doit être dessiné AVANT le contenu pour rester derrière. Faible opacité.
+  let logoImg: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
   try {
     const logoPath = join(process.cwd(), 'public', 'major-ecn-logo.png');
     const logoBytes = readFileSync(logoPath);
-    const logoImg = await pdf.embedPng(logoBytes);
+    logoImg = await pdf.embedPng(logoBytes);
+    const wmH = 480;
+    const wmW = (logoImg.width / logoImg.height) * wmH;
+    page.drawImage(logoImg, {
+      x: (width - wmW) / 2,
+      y: (height - wmH) / 2,
+      width: wmW,
+      height: wmH,
+      opacity: 0.06,
+    });
+  } catch { /* logo manquant : on continue sans watermark */ }
+
+  // ============ Logo officiel Major ECN (en-tête) ============
+  if (logoImg) {
     const logoH = 90;
     const logoW = (logoImg.width / logoImg.height) * logoH;
     page.drawImage(logoImg, {
@@ -108,7 +123,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
       width: logoW,
       height: logoH,
     });
-  } catch {
+  } else {
     // Fallback texte si le logo manque
     page.drawText('MAJOR', { x: width / 2 - 60, y: height - 110, size: 28, font: fontBold, color: NAVY });
     page.drawText('ECN',   { x: width / 2 + 18, y: height - 110, size: 28, font: fontBold, color: RED });
@@ -231,15 +246,6 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
 
   const certId = `${coursId.slice(0, 8)}-${signedAt.getTime().toString(36)}`.toUpperCase();
   page.drawText(ansi(`Réf. : ${certId}`), { x: width - 150, y: m + 18, size: 6, font: fontReg, color: GREY });
-
-  // Filigrane discret en arrière-plan (rotation 30°)
-  page.drawText('MAJOR ECN', {
-    x: 120, y: 420,
-    size: 70, font: fontBold,
-    color: rgb(0.95, 0.95, 0.97),
-    rotate: degrees(30),
-    opacity: 0.5,
-  });
 
   const bytes = await pdf.save();
   const safeName = `${firstName}-${lastName}`.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'eleve';
