@@ -86,20 +86,26 @@ export function StudyConsole({
             <p className="truncate text-[11px] font-medium text-(--color-ink-muted) sm:text-xs">{context}</p>
             <h1 className="truncate text-sm font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
-          <button
-            type="button"
-            onClick={() => setAssistantOpen((v) => !v)}
-            aria-label="Assistant du cours"
+          <span
             className={cn(
-              'flex h-9 shrink-0 items-center gap-2 rounded-lg border-2 bg-white px-2.5 text-sm font-bold transition-colors focus-ring sm:px-3',
+              'inline-flex h-9 shrink-0 rounded-lg p-[2px] transition-colors',
               assistantOpen
-                ? 'border-[#E4002B] text-[#E4002B]'
-                : 'border-(--color-border) text-(--color-ink-soft) hover:border-[#E4002B] hover:text-[#E4002B]',
+                ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]'
+                : 'bg-(--color-border) hover:bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]',
             )}
           >
-            <MessageCircle className="h-4 w-4" />
-            <span className="hidden sm:inline">Assistant</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setAssistantOpen((v) => !v)}
+              aria-label="Assistant du cours"
+              className="flex h-full items-center gap-2 rounded-[6px] bg-white px-2.5 text-sm font-bold text-[#E4002B] focus-ring sm:px-3"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
+                Assistant
+              </span>
+            </button>
+          </span>
         </div>
 
         {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
