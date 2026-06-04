@@ -55,9 +55,8 @@ export function ManusHero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: 'easeOut' }}
           >
-            <h1 className="text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>Depuis 18 ans,</span>
-              <br />
+            <h1 className="text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.75rem]">
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>Depuis 18 ans,</span>{' '}
               <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>nous préparons les candidats aux EVC.</span>
             </h1>
 

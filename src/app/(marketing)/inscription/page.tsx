@@ -14,9 +14,9 @@ export default async function InscriptionPage() {
   const colleges = collegesRaw ?? [];
 
   return (
-    <section className="bg-white py-16 lg:py-24">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-[#E8E7E3] bg-gradient-to-br from-white to-[#FAFAF8] p-8 text-center shadow-sm sm:p-12">
+    <section className="bg-white py-12 sm:py-16 lg:py-24">
+      <div className="mx-auto w-full max-w-5xl px-3 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl border border-[#E8E7E3] bg-gradient-to-br from-white to-[#FAFAF8] p-4 text-center shadow-sm sm:p-8 lg:p-12">
           <div
             aria-hidden
             className="absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full blur-[100px]"

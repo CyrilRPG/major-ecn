@@ -11,7 +11,6 @@ const NAV = [
   { href: '/plateforme',  label: 'Plateforme' },
   { href: '/tarifs',      label: 'Tarifs' },
   { href: '/temoignages', label: 'Témoignages' },
-  { href: '/#faq',        label: 'FAQ' },
   { href: '/contact',     label: 'Nous contacter' },
 ];
 
