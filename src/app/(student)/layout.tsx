@@ -63,6 +63,90 @@ export default async function StudentLayout({ children }: { children: React.Reac
     redirect(`/formulaires/${mandatoryPending.id}`);
   }
 
+  // ───────────────────────────────────────────────────────────────
+  // Interrogation obligatoire : dès qu'un parcours est terminé
+  // (vidéo + fiche + ≥1 QCM + ≥1 flashcard review) et que le certificat
+  // n'a pas encore été signé, l'élève est redirigé vers l'interrogation
+  // et bloqué sur celle-ci jusqu'à l'avoir terminée + signée.
+  // Exceptions : la page d'interrogation elle-même, le téléchargement du
+  // certificat, les pages d'auth, et la déconnexion.
+  // ───────────────────────────────────────────────────────────────
+  const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
+  const [{ data: progressRows }, { data: completionsRows }] = await Promise.all([
+    supabase
+      .from('course_progress')
+      .select('cours_id, video_watched, fiche_read, last_seen_at')
+      .eq('user_id', user.id)
+      .eq('video_watched', true)
+      .eq('fiche_read', true),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any).from('parcours_completions')
+      .select('cours_id, certificate_signed_at')
+      .eq('user_id', user.id),
+  ]);
+  const signedSet = new Set(
+    ((completionsRows ?? []) as Array<{ cours_id: string; certificate_signed_at: string | null }>)
+      .filter((r) => !!r.certificate_signed_at)
+      .map((r) => r.cours_id)
+  );
+  // Cours candidats : video + fiche OK, pas encore signés. On ajoute
+  // Pneumologie en bypass (toujours candidat pour tester la mécanique).
+  const candidateIds = new Set<string>(
+    ((progressRows ?? []) as Array<{ cours_id: string }>)
+      .map((r) => r.cours_id)
+      .filter((id) => !signedSet.has(id))
+  );
+  if (!signedSet.has(PNEUMO_COURS_ID)) candidateIds.add(PNEUMO_COURS_ID);
+
+  let pendingInterrogationId: string | null = null;
+  if (candidateIds.size > 0) {
+    const ids = [...candidateIds];
+    // Pour qu'un cours candidate ait une interro pending, il faut aussi
+    // ≥1 qcm_attempts ET ≥1 flashcard_review (le bypass Pneumo passe outre).
+    const [{ data: atts }, { data: revs }] = await Promise.all([
+      supabase
+        .from('qcm_attempts')
+        .select('id, qcm_questions!inner(qcm_series!inner(cours_id))')
+        .eq('user_id', user.id)
+        .in('qcm_questions.qcm_series.cours_id', ids),
+      supabase
+        .from('flashcard_reviews')
+        .select('id, flashcards!inner(cours_id)')
+        .eq('user_id', user.id)
+        .in('flashcards.cours_id', ids),
+    ]);
+    type AttRow = { qcm_questions: { qcm_series: { cours_id: string } } };
+    type RevRow = { flashcards: { cours_id: string } };
+    const withQcm = new Set(
+      ((atts ?? []) as unknown as AttRow[]).map((a) => a.qcm_questions.qcm_series.cours_id)
+    );
+    const withRev = new Set(
+      ((revs ?? []) as unknown as RevRow[]).map((r) => r.flashcards.cours_id)
+    );
+    for (const id of ids) {
+      const isPneumoBypass = id === PNEUMO_COURS_ID;
+      if (isPneumoBypass || (withQcm.has(id) && withRev.has(id))) {
+        pendingInterrogationId = id;
+        break;
+      }
+    }
+  }
+
+  if (pendingInterrogationId) {
+    const interroPath = `/cours/${pendingInterrogationId}/interrogation`;
+    // Routes autorisées pendant un blocage d'interrogation :
+    //  - la page d'interrogation elle-même (et ses sous-routes éventuelles)
+    //  - le téléchargement du certificat (post-signature)
+    //  - /logout, /api/* pour permettre les actions internes (signature, etc.)
+    const isOnInterrogation = pathname.startsWith(interroPath);
+    const isCertDownload = pathname.startsWith('/api/certificate/');
+    const isLogout = pathname.startsWith('/logout');
+    const isApi = pathname.startsWith('/api/');
+    if (!isOnInterrogation && !isCertDownload && !isLogout && !isApi) {
+      redirect(interroPath);
+    }
+  }
+
   return (
     <div className="flex h-screen flex-col">
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}

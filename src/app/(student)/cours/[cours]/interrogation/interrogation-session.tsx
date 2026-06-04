@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Award, ArrowLeft, ArrowRight, Check, CheckCircle2, Eraser, FileText, Loader2,
+  Award, ArrowRight, Check, CheckCircle2, Eraser, FileText, Loader2,
   Play, Trophy, X,
 } from 'lucide-react';
 import { saveInterrogationResult, saveSignature } from './actions';
@@ -78,31 +78,36 @@ export function InterrogationSession({
   if (phase === 'intro') {
     return (
       <div className="mx-auto max-w-2xl px-4 py-12 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#EDE9FE] text-[#7C3AED]">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white">
           <Award className="h-8 w-8" />
         </div>
-        <h1 className="mt-5 text-3xl font-black tracking-tight text-(--color-ink)">
+        <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#FFE4E8] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#E4002B]">
+          Étape obligatoire
+        </p>
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-(--color-ink)">
           Interrogation — {coursTitre}
         </h1>
         <p className="mt-3 text-(--color-ink-soft)">
-          Vous êtes sur le point de commencer le test final du parcours. À l&rsquo;issue,
-          vous pourrez signer votre certificat de fin de parcours Major ECN.
+          Vous avez terminé l&rsquo;ensemble des contenus de ce parcours. L&rsquo;interrogation
+          finale est désormais <strong className="text-(--color-ink)">obligatoire</strong> et doit
+          être réalisée du début à la fin avant de pouvoir reprendre les autres cours.
         </p>
         <ul className="mx-auto mt-6 inline-flex flex-col gap-2 text-left text-sm text-(--color-ink)">
           <li className="flex items-center gap-2"><Check className="h-4 w-4 text-[#16A34A]" /> {total} questions QCM tirées du cours</li>
-          <li className="flex items-center gap-2"><Check className="h-4 w-4 text-[#16A34A]" /> Score affiché à la fin</li>
-          <li className="flex items-center gap-2"><Check className="h-4 w-4 text-[#16A34A]" /> Certificat signé téléchargeable en PDF</li>
+          <li className="flex items-center gap-2"><Check className="h-4 w-4 text-[#16A34A]" /> Signature électronique du certificat à la fin</li>
+          <li className="flex items-center gap-2"><Check className="h-4 w-4 text-[#16A34A]" /> Certificat PDF téléchargeable une fois signé</li>
         </ul>
+        <p className="mx-auto mt-6 max-w-md text-xs text-(--color-ink-muted)">
+          ⚠️ Tant que l&rsquo;interrogation n&rsquo;est pas signée, la plateforme reste verrouillée
+          sur cette page. Prenez le temps qu&rsquo;il faut pour la finaliser sereinement.
+        </p>
         <div className="mt-8 flex justify-center gap-3">
-          <Link href={`/cours/${coursId}`} className="inline-flex items-center gap-2 rounded-xl border border-(--color-border) px-4 py-2.5 text-sm font-bold text-(--color-ink-soft)">
-            <ArrowLeft className="h-4 w-4" /> Retour
-          </Link>
           <button
             onClick={() => setPhase('quiz')}
             disabled={total === 0}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#7C3AED] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:scale-[1.02] disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-6 py-3 text-sm font-bold text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)] hover:scale-[1.02] disabled:opacity-60"
           >
-            <Play className="h-4 w-4" /> Voulez-vous commencer l&rsquo;interrogation ?
+            <Play className="h-4 w-4" /> Commencer l&rsquo;interrogation
           </button>
         </div>
         {total === 0 && (
