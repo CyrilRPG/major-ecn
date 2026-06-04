@@ -59,15 +59,19 @@ export function ConseilsCenter({ profile }: { profile?: Profile }) {
       {/* Bouton « Conseils de préparation » + avatar profil — toujours visibles */}
       {mode !== 'popup' && (
         <div className="fixed right-4 top-3 z-30 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => { setSection('demarrer'); setMode('panel'); }}
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#E4002B] bg-white px-3.5 py-2 text-[13px] font-bold text-[#E4002B] shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-          >
-            <Lightbulb className="h-4 w-4" />
-            <span className="hidden sm:inline">Conseils de préparation</span>
-            <span className="sm:hidden">Conseils</span>
-          </button>
+          <span className="inline-flex rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[2px] shadow-(--shadow-soft) transition-transform hover:scale-[1.02]">
+            <button
+              type="button"
+              onClick={() => { setSection('demarrer'); setMode('panel'); }}
+              className="inline-flex items-center gap-2 rounded-[10px] bg-white px-3.5 pt-2.5 pb-3 text-[13px] font-bold text-[#E4002B]"
+            >
+              <Lightbulb className="h-4 w-4" />
+              <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
+                <span className="hidden sm:inline">Conseils de préparation</span>
+                <span className="sm:hidden">Conseils</span>
+              </span>
+            </button>
+          </span>
           {profile && (
             <span className="rounded-full bg-white p-1 shadow-(--shadow-soft)">
               <UserMenu profile={profile} />
@@ -277,9 +281,11 @@ function PanelOverlay({
             })}
           </nav>
           <div className="mt-4 hidden border-t border-(--color-border) pt-3 sm:block">
-            <p className="flex items-center gap-2 text-[12px] font-bold text-(--color-ink)">
-              <MessageCircle className="h-3.5 w-3.5" style={{ color: PURPLE }} />
-              Besoin d&rsquo;aide ?
+            <p className="flex items-center gap-2 text-[12px] font-bold">
+              <MessageCircle className="h-3.5 w-3.5 text-[#E4002B]" />
+              <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
+                Besoin d&rsquo;aide ?
+              </span>
             </p>
             <a href="mailto:contact@major-ecn.fr" className="mt-1 inline-block text-[11px] text-(--color-ink-soft) hover:underline">
               Contactez-nous
