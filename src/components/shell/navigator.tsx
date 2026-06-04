@@ -186,14 +186,6 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
           </div>
         );
       })}
-
-      <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
-        Communauté
-      </p>
-      <Link href="/forum" className={topLevelClass(forumActive)}>
-        <MessagesSquare className="h-[18px] w-[18px] shrink-0" />
-        Forum Q&amp;R
-      </Link>
     </nav>
   );
 }
