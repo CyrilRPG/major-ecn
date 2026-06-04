@@ -33,8 +33,13 @@ function TemoignagesHeader() {
           style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
           <Trophy className="h-3.5 w-3.5" /> Témoignages de lauréats
         </span>
-        <h1 className="mx-auto mt-5 max-w-4xl text-4xl font-black leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.5rem]" style={{ color: NAVY }}>
-          Leur histoire, <span style={{ color: RED }}>leur réussite</span>
+        <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]"
+          style={{
+            backgroundImage: 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 45%, #C0112E 100%)',
+            WebkitBackgroundClip: 'text', backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent', color: 'transparent',
+          }}>
+          Leur histoire, leur réussite
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
           Des médecins qui ont préparé les EVC avec Major ECN racontent,

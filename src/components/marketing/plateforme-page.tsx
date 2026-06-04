@@ -26,6 +26,20 @@ const BORDER = '#E5E9F0';
 const SOFT_BG = '#F7F8FB';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 
+/* Dégradés titres — palette Major ECN (rouge bordeaux + accents) */
+const GRAD_BURGUNDY = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)';
+const GRAD_RED_BLUE = 'linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)';
+const GRAD_NAVY_RED = 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)';
+const GRAD_RED_PURPLE = 'linear-gradient(90deg, #C0112E 0%, #BE185D 50%, #7C3AED 100%)';
+const gradientText = (grad: string) => ({
+  backgroundImage: grad,
+  WebkitBackgroundClip: 'text' as const,
+  backgroundClip: 'text' as const,
+  WebkitTextFillColor: 'transparent' as const,
+  color: 'transparent',
+});
+
+
 /* ============ HERO — capture réelle de la plateforme ============ */
 function PlateformeHero() {
   return (
@@ -84,7 +98,7 @@ function HowDailySection() {
   return (
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={{ color: NAVY }}>
+        <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
           Comment j&rsquo;utilise Major EVC au quotidien ?
         </h2>
         <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-2">
@@ -135,7 +149,7 @@ function CorrectorExampleSection() {
               <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#FCEAEC', color: RED }}>
                 <Stethoscope className="h-5 w-5" />
               </span>
-              <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+              <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
                 Comprendre ce qu&rsquo;attend le correcteur des EVC
               </h2>
             </div>
@@ -241,7 +255,7 @@ function TransversalRevisionSection() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#DCFCE7', color: '#16A34A' }}>
                   <Compass className="h-5 w-5" />
                 </span>
-                <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_RED_PURPLE)}>
                   Révision transversale intelligente
                 </h2>
               </div>
@@ -310,7 +324,7 @@ function RecordedCoursesSection() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#EDE9FE', color: '#6D28D9' }}>
                   <Play className="h-5 w-5" />
                 </span>
-                <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_NAVY_RED)}>
                   Cours enregistrés et/ou en direct<span style={{ color: RED }}>*</span>
                 </h2>
               </div>
@@ -383,7 +397,7 @@ function TeamSection() {
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-[0.9fr_1.4fr_0.7fr]">
         <div>
-          <h2 className="text-2xl font-black tracking-tight" style={{ color: NAVY }}>
+          <h2 className="text-2xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
             Une équipe à vos côtés
           </h2>
           <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>
@@ -436,7 +450,7 @@ function PlatformToolsSection() {
   return (
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-black tracking-tight sm:text-[1.7rem]" style={{ color: NAVY }}>
+        <h2 className="text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
           Tous les outils de préparation aux EVC (PAE) pour les médecins étrangers et PADHUE
         </h2>
         <p className="mt-3 text-[14px] max-w-4xl" style={{ color: INK_SOFT }}>
