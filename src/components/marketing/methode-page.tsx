@@ -130,12 +130,12 @@ function MethodeHero() {
 
 /* ============ 2. PARCOURS 6 ÉTAPES ============ */
 const STEPS = [
-  { n: '01', Icon: Target,        bg: '#FCEAEC', fg: RED,         titre: 'Structuration\nde la préparation',     desc: 'Plan de travail personnalisé selon votre spécialité, vos objectifs et votre niveau.' },
-  { n: '02', Icon: Lightbulb,     bg: '#FCE7F3', fg: '#BE185D',   titre: 'Comprendre la\nméthodologie EVC',       desc: 'Raisonnement clinique, logique de correction et attentes du jury.' },
-  { n: '03', Icon: Zap,           bg: '#EDE9FE', fg: '#6D28D9',   titre: 'Entraînements\nciblés',                 desc: 'QCM et cas cliniques adaptés aux points faibles identifiés.' },
-  { n: '04', Icon: BookOpen,      bg: '#DBEAFE', fg: '#2563EB',   titre: 'Annales & cas\ncliniques corrigés',     desc: "Travail sur des situations proches des épreuves et corrigées en détail." },
-  { n: '05', Icon: Trophy,        bg: '#CCFBF1', fg: '#0F766E',   titre: 'Concours blancs',                        desc: "Mise en situation réelle avec conditions d'examen et corrections détaillées." },
-  { n: '06', Icon: TrendingUp,    bg: '#DCFCE7', fg: '#16A34A',   titre: 'Consolidation &\nrappels',               desc: 'Révision transversale, mémorisation active et rappels réguliers.' },
+  { n: '01', Icon: Target,     fg: '#9F1239', titre: 'Structuration\nde la préparation',     desc: 'Plan de travail personnalisé selon votre spécialité, vos objectifs et votre niveau.' },
+  { n: '02', Icon: Lightbulb,  fg: '#BE185D', titre: 'Comprendre la\nméthodologie EVC',       desc: 'Raisonnement clinique, logique de correction et attentes du jury.' },
+  { n: '03', Icon: Zap,        fg: '#6D28D9', titre: 'Entraînements\nciblés',                 desc: 'QCM et cas cliniques adaptés aux points faibles identifiés.' },
+  { n: '04', Icon: BookOpen,   fg: '#2563EB', titre: 'Annales & cas\ncliniques corrigés',     desc: "Travail sur des situations proches des épreuves et corrigées en détail." },
+  { n: '05', Icon: Trophy,     fg: '#0F766E', titre: 'Concours blancs',                        desc: "Mise en situation réelle avec conditions d'examen et corrections détaillées." },
+  { n: '06', Icon: TrendingUp, fg: '#16A34A', titre: 'Consolidation &\nrappels',               desc: 'Révision transversale, mémorisation active et rappels réguliers.' },
 ];
 function StepsSection() {
   return (
@@ -151,19 +151,32 @@ function StepsSection() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-          {STEPS.map((s) => (
-            <Reveal key={s.n}>
-              <div className="relative h-full rounded-2xl border bg-white p-5 text-center" style={{ borderColor: BORDER }}>
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: s.bg, color: s.fg }}>
-                  <s.Icon className="h-6 w-6" />
-                </span>
-                <p className="mt-3 text-2xl font-black tabular-nums" style={{ color: s.fg }}>{s.n}</p>
-                <h3 className="mt-1 whitespace-pre-line text-sm font-extrabold leading-snug" style={{ color: NAVY }}>{s.titre}</h3>
-                <p className="mt-2 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>{s.desc}</p>
-              </div>
-            </Reveal>
-          ))}
+        {/* Ligne pointillée + points verts reliant les étapes (desktop) */}
+        <div className="relative mt-12">
+          <div aria-hidden className="pointer-events-none absolute top-[44px] hidden xl:block" style={{ left: '6%', right: '6%' }}>
+            <svg viewBox="0 0 1000 8" preserveAspectRatio="none" className="h-2 w-full">
+              <line x1="0" y1="4" x2="1000" y2="4" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 6" />
+            </svg>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {STEPS.map((s) => (
+              <Reveal key={s.n}>
+                <div className="relative h-full rounded-2xl border bg-white p-5 text-center transition-shadow hover:shadow-[0_22px_50px_-30px_rgba(15,31,77,0.35)]" style={{ borderColor: BORDER }}>
+                  {/* Pastille verte sur la ligne pointillée */}
+                  <span aria-hidden className="absolute left-1/2 top-[-6px] hidden h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white xl:block"
+                    style={{ background: '#10B981' }} />
+                  {/* Icône carrée pleine couleur, glyph blanc */}
+                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-[0_10px_24px_-14px_rgba(15,31,77,0.5)]"
+                    style={{ background: `linear-gradient(160deg, ${s.fg}, ${s.fg}dd)` }}>
+                    <s.Icon className="h-7 w-7" />
+                  </span>
+                  <p className="mt-3 text-3xl font-black tabular-nums" style={{ color: s.fg }}>{s.n}</p>
+                  <h3 className="mt-2 whitespace-pre-line text-[15px] font-extrabold leading-snug" style={{ color: NAVY }}>{s.titre}</h3>
+                  <p className="mt-2 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>{s.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
