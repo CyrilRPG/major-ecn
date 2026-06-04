@@ -57,7 +57,7 @@ export function CourseChatbot({
     <div className="flex h-full flex-col">
       <header className="px-5 py-4 border-b border-(--color-border)">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-(--color-primary) text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
             <Bot className="h-4.5 w-4.5" />
           </div>
           <div className="flex-1 min-w-0">
@@ -75,8 +75,8 @@ export function CourseChatbot({
             </button>
           )}
         </div>
-        <div className="mt-3 flex items-start gap-2 rounded-xl bg-(--color-primary-soft) px-3 py-2 text-[11px] leading-relaxed text-(--color-ink-soft)">
-          <ShieldCheck className="h-3.5 w-3.5 mt-0.5 shrink-0 text-(--color-accent)" />
+        <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#FFE4E8] px-3 py-2 text-[11px] leading-relaxed text-(--color-ink-soft)">
+          <ShieldCheck className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#E4002B]" />
           <span>
             Cet assistant s’appuie <strong className="text-(--color-ink)">uniquement</strong> sur les contenus
             pédagogiques de ce cours. Il ne fait pas de recherche extérieure.

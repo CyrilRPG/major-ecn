@@ -29,18 +29,21 @@ function SidebarHelpCard() {
             Notre équipe vous répond<br />7j/7 sur le forum
           </p>
         </div>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-          style={{ background: '#EDE9FE', color: '#6D28D9' }}>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
           <MessageCircle className="h-4 w-4" />
         </span>
       </div>
-      <Link
-        href="/forum"
-        className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#C7BFFB] bg-[#F5F3FF] px-3 py-2 text-[12.5px] font-bold transition-colors hover:bg-[#EDE9FE]"
-        style={{ color: '#6D28D9' }}
-      >
-        Accéder au forum <ArrowRight className="h-3.5 w-3.5" />
-      </Link>
+      <span className="mt-3 block rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[2px]">
+        <Link
+          href="/forum"
+          className="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-bold text-[#E4002B] transition-colors hover:bg-[#FFE4E8]"
+        >
+          <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
+            Accéder au forum
+          </span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </span>
     </div>
   );
 }
