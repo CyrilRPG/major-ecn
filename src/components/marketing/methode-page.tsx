@@ -24,6 +24,19 @@ const BORDER = '#E5E9F0';
 const SOFT_BG = '#F7F8FB';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 
+/* Dégradés titres — palette Major ECN (rouge bordeaux + accents) */
+const GRAD_BURGUNDY = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)';
+const GRAD_RED_BLUE = 'linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)';
+const GRAD_NAVY_RED = 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)';
+const GRAD_RED_PURPLE = 'linear-gradient(90deg, #C0112E 0%, #BE185D 50%, #7C3AED 100%)';
+const gradientText = (grad: string) => ({
+  backgroundImage: grad,
+  WebkitBackgroundClip: 'text' as const,
+  backgroundClip: 'text' as const,
+  WebkitTextFillColor: 'transparent' as const,
+  color: 'transparent',
+});
+
 /* ============ 1. HERO ============ */
 function MethodeHero() {
   return (
@@ -130,8 +143,8 @@ function StepsSection() {
             style={{ background: '#FCEAEC', color: RED }}>
             <Sparkles className="h-3.5 w-3.5" /> Notre méthode en 6 étapes
           </span>
-          <h2 className="mx-auto mt-4 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-4xl" style={{ color: NAVY }}>
-            Un parcours clair <span style={{ color: RED }}>et progressif</span> pour réussir les <span style={{ color: RED }}>EVC (PAE)</span>
+          <h2 className="mx-auto mt-4 max-w-4xl text-3xl font-black leading-tight tracking-tight sm:text-4xl" style={gradientText(GRAD_RED_BLUE)}>
+            Un parcours clair et progressif pour réussir les EVC (PAE)
           </h2>
         </div>
 
@@ -176,7 +189,7 @@ function WhyFailSection() {
     <section className="bg-white py-14 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border p-6 sm:p-8" style={{ borderColor: BORDER, background: SOFT_BG }}>
-          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={{ color: NAVY }}>
+          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_BURGUNDY)}>
             1. Pourquoi certains candidats échouent ?
           </h2>
           <div className="mt-6 grid gap-7 lg:grid-cols-2">
@@ -230,7 +243,7 @@ function CorrectorSection() {
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border p-6 sm:p-8" style={{ borderColor: BORDER, background: SOFT_BG }}>
-          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={{ color: NAVY }}>
+          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_RED_PURPLE)}>
             2. Comprendre ce qu&rsquo;attend réellement le correcteur EVC
           </h2>
           <div className="mt-6 grid gap-5 items-center lg:grid-cols-[1fr_auto_1fr]">
@@ -309,7 +322,7 @@ function MethodologyAndSkillsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-[0.95fr_1.4fr]">
         {/* LEFT — méthodologie 4 cartes */}
         <div className="rounded-3xl border p-6 sm:p-7" style={{ borderColor: BORDER, background: SOFT_BG }}>
-          <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+          <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_NAVY_RED)}>
             3. Une méthodologie pensée pour les médecins étrangers et PADHUE
           </h2>
           <div className="mt-5 space-y-3">
@@ -329,7 +342,7 @@ function MethodologyAndSkillsSection() {
 
         {/* RIGHT — tableau compétences Avant/Pendant/Après */}
         <div className="rounded-3xl border p-6 sm:p-7" style={{ borderColor: BORDER, background: SOFT_BG }}>
-          <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+          <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
             4. Les compétences développées pendant la préparation
           </h2>
           <div className="mt-5 overflow-x-auto">
@@ -385,7 +398,7 @@ function ToolsSection() {
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border p-6 sm:p-8" style={{ borderColor: BORDER, background: SOFT_BG }}>
-          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={{ color: NAVY }}>
+          <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_RED_PURPLE)}>
             5. Une méthode qui s&rsquo;appuie sur des outils concrets
           </h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
@@ -420,7 +433,7 @@ function MethodTestimonials() {
   return (
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={{ color: NAVY }}>
+        <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_NAVY_RED)}>
           6. Ils ont réussi avec notre méthode
         </h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -477,7 +490,7 @@ function ForWhomSection() {
   return (
     <section className="bg-white py-10 pb-20 sm:pb-24" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={{ color: NAVY }}>
+        <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_BURGUNDY)}>
           7. Pour qui cette méthode a-t-elle été conçue ?
         </h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

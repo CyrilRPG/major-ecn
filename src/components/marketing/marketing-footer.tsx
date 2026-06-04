@@ -3,6 +3,7 @@ import {
   ArrowRight, Award, BookOpen, Calendar, GraduationCap, HelpCircle, LogIn, Mail,
   MessageCircle, ShieldCheck, Sparkles, Stethoscope, Trophy, Users,
 } from 'lucide-react';
+import { BrandLogo } from '@/components/brand/brand-logo';
 
 /* Icônes sociales (lucide v1 ne les fournit pas) — SVG inline */
 const SocialFacebook = (p: React.SVGProps<SVGSVGElement>) => (
@@ -37,23 +38,9 @@ const INK = '#1F2937';
 const INK_SOFT = '#4B5563';
 const BORDER_SOFT = '#F0E4E6';
 
-/* Logo Major EVC */
+/* Logo officiel Major ECN (image unique marque + texte). */
 function MajorEvcLogo() {
-  return (
-    <div className="flex items-center gap-2" aria-label="Major ECN — Préparation EVC">
-      <svg viewBox="0 0 64 64" className="h-12 w-12 shrink-0" fill="none" stroke={RED} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d="M18 8c0 8 0 14 6 18s6 6 6 14" />
-        <path d="M30 8c0 8 0 14-6 18s-6 6-6 14" />
-        <circle cx="30" cy="44" r="6" />
-        <path d="M36 44h8c4 0 8 3 8 8v6" />
-        <circle cx="52" cy="60" r="3.6" />
-      </svg>
-      <div className="leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-        <p className="text-xl font-black tracking-tight" style={{ color: INK }}>MAJOR</p>
-        <p className="text-xl font-black tracking-tight" style={{ color: RED }}>EVC</p>
-      </div>
-    </div>
-  );
+  return <BrandLogo className="h-14 w-auto" />;
 }
 
 /* Trust en bas du brand : court, dense, sans cartes */
@@ -80,7 +67,6 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
     title: 'Ressources',
     links: [
       { label: 'Témoignages',             href: '/temoignages' },
-      { label: 'Questions fréquentes',     href: '/#faq' },
       { label: 'Nous contacter',           href: '/contact' },
       { label: 'Se connecter',             href: '/login' },
     ],

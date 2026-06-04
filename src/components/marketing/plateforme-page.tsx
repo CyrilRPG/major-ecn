@@ -26,175 +26,59 @@ const BORDER = '#E5E9F0';
 const SOFT_BG = '#F7F8FB';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 
-/* ============ HERO — Mock plateforme grand format ============ */
-function PlateformeHero() {
-  const tabs = ['Tableau de bord', 'QCM', 'Cas cliniques', 'Cours Live', 'Concours blancs', 'Actualités CNG', 'Ressources'];
-  const sideItems = [
-    { L: LayoutDashboard, n: 'Tableau de bord', active: true },
-    { L: ListChecks,      n: 'QCM' },
-    { L: ClipboardCheck,  n: 'Cas cliniques' },
-    { L: Video,           n: 'Cours Live', badge: 'Live' },
-    { L: Trophy,          n: 'Concours blancs' },
-    { L: Layers3,         n: 'Flashcards' },
-    { L: TrendingUp,      n: 'Statistiques' },
-    { L: Bell,            n: 'Actualités CNG' },
-    { L: Library,         n: 'Ressources' },
-    { L: Calendar,        n: 'Calendrier' },
-  ];
+/* Dégradés titres — palette Major ECN (rouge bordeaux + accents) */
+const GRAD_BURGUNDY = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)';
+const GRAD_RED_BLUE = 'linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)';
+const GRAD_NAVY_RED = 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)';
+const GRAD_RED_PURPLE = 'linear-gradient(90deg, #C0112E 0%, #BE185D 50%, #7C3AED 100%)';
+const gradientText = (grad: string) => ({
+  backgroundImage: grad,
+  WebkitBackgroundClip: 'text' as const,
+  backgroundClip: 'text' as const,
+  WebkitTextFillColor: 'transparent' as const,
+  color: 'transparent',
+});
 
+
+/* ============ HERO — capture réelle de la plateforme ============ */
+function PlateformeHero() {
   return (
-    <section className="bg-white pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-12" style={{ fontFamily: FONT }}>
+    <section className="bg-white pt-10 pb-10 sm:pt-14 sm:pb-12 lg:pt-16 lg:pb-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Top bar mock */}
-        <div className="rounded-t-2xl border-x border-t bg-white px-5 py-3 flex items-center gap-6" style={{ borderColor: BORDER }}>
-          <div className="flex items-center gap-1.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded font-black text-white" style={{ background: RED }}>M</span>
-            <span className="text-sm font-black tracking-tight" style={{ color: NAVY }}>MAJOR EVC</span>
-            <span className="hidden sm:inline-block text-[9px] font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>PRÉPARATION EVC (PAE)</span>
-          </div>
-          <nav className="hidden lg:flex items-center gap-4 text-[12.5px] font-semibold flex-1" style={{ color: INK_SOFT }}>
-            {tabs.map((t, i) => (
-              <span key={t} className={i === 0 ? 'font-bold border-b-2 pb-0.5' : ''} style={i === 0 ? { color: NAVY, borderColor: RED } : {}}>
-                {t}
-                {t === 'Cours Live' && (
-                  <span className="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[8px] font-bold align-middle" style={{ background: RED, color: 'white' }}>Live</span>
-                )}
-              </span>
-            ))}
-          </nav>
-          <button className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white" style={{ background: RED }}>
-            <UserCheck className="h-3.5 w-3.5" /> Espace membre
-          </button>
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
+            <Sparkles className="h-3.5 w-3.5" /> Plateforme pédagogique
+          </span>
+          <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl" style={{ color: NAVY }}>
+            La plateforme conçue pour <span style={{ color: RED }}>réussir les EVC (PAE)</span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
+            Tableau de bord, QCM corrigés, cas cliniques, révision transversale intelligente,
+            cours enregistrés et accompagnement personnalisé — tout en un seul endroit.
+          </p>
         </div>
 
-        {/* Dashboard mock */}
-        <div className="rounded-b-2xl border-x border-b bg-white grid grid-cols-[180px_1fr]" style={{ borderColor: BORDER }}>
-          {/* Sidebar */}
-          <aside className="border-r p-3" style={{ borderColor: BORDER, background: NAVY_DEEP }}>
-            <div className="flex items-center justify-center py-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded font-black text-white" style={{ background: RED }}>M</span>
-            </div>
-            <ul className="mt-3 space-y-1">
-              {sideItems.map((it) => (
-                <li key={it.n}>
-                  <span className={'flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[11.5px] font-medium ' + (it.active ? 'text-white' : 'text-white/65')}
-                    style={it.active ? { background: RED } : {}}>
-                    <it.L className="h-3.5 w-3.5" />
-                    {it.n}
-                    {it.badge && <span className="ml-auto rounded px-1 py-px text-[8px] font-bold" style={{ background: RED, color: 'white' }}>{it.badge}</span>}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </aside>
-
-          {/* Content */}
-          <div className="p-5">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-black" style={{ color: NAVY }}>Bonjour, Alice 👋</h1>
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full border" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <Bell className="h-3.5 w-3.5" />
-                </span>
-                <span className="flex h-7 w-7 items-center justify-center rounded-full border" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <Settings className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-
-            {/* KPIs */}
-            <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {[
-                { Icon: Calendar,    bg: '#FCEAEC', fg: RED,         label: 'JOURS AVANT LES EVC', big: '128', sub: '20 juin 2026' },
-                { Icon: TrendingUp,  bg: '#DCFCE7', fg: '#16A34A',   label: 'TAUX DE RÉUSSITE',    big: '65%', sub: '+7% cette semaine', subFg: '#16A34A' },
-                { Icon: LineChart,   bg: '#FCEAEC', fg: RED,         label: 'PROGRESSION GLOBALE', big: '72%', sub: '+12% cette semaine', subFg: '#16A34A' },
-                { Icon: Calendar,    bg: '#EDE9FE', fg: '#6D28D9',   label: 'RÉVISION DU JOUR',    big: '12',  sub: 'questions à revoir', cta: true },
-              ].map((k) => (
-                <div key={k.label} className="rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: k.bg, color: k.fg }}>
-                      <k.Icon className="h-3.5 w-3.5" />
-                    </span>
-                    <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>{k.label}</p>
-                  </div>
-                  <p className="mt-2 text-2xl font-black tabular-nums" style={{ color: NAVY }}>{k.big}</p>
-                  <p className="text-[10px] font-semibold" style={{ color: k.subFg ?? INK_SOFT }}>{k.sub}</p>
-                  {k.cta && (
-                    <button className="mt-2 w-full rounded-md py-1 text-[11px] font-bold text-white" style={{ background: '#6D28D9' }}>
-                      Commencer
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom row */}
-            <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
-              {/* Chart */}
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
-                <p className="text-[11px] font-bold" style={{ color: NAVY }}>Évolution de votre performance</p>
-                <svg viewBox="0 0 240 100" className="mt-2 h-24 w-full">
-                  <polyline points="0,70 30,55 60,68 90,38 120,22 150,30 180,52 210,48 240,42" fill="none" stroke={RED} strokeWidth="2" />
-                  {[0, 30, 60, 90, 120, 150, 180, 210, 240].map((x, i) => {
-                    const ys = [70, 55, 68, 38, 22, 30, 52, 48, 42];
-                    return <circle key={i} cx={x} cy={ys[i]} r="2.5" fill={RED} />;
-                  })}
-                </svg>
-                <div className="mt-1 grid grid-cols-5 text-[8px]" style={{ color: INK_MUTED }}>
-                  {['20/04', '04/05', '18/05', '01/06', '15/06'].map((d) => <span key={d}>{d}</span>)}
-                </div>
-              </div>
-              {/* Révisions recommandées */}
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
-                <p className="text-[11px] font-bold" style={{ color: NAVY }}>Révisions recommandées</p>
-                <ul className="mt-2 space-y-2">
-                  {[
-                    { t: 'Cardiologie',     sub: 'Non revue depuis 2 jours', tag: 'Priorité haute',   tagBg: '#FCEAEC', tagFg: RED },
-                    { t: 'Néphrologie',     sub: 'Non revue depuis 2 jours', tag: 'Priorité haute',   tagBg: '#FCEAEC', tagFg: RED },
-                    { t: 'Pneumologie',     sub: 'Non revue depuis 5 jours', tag: 'Priorité moyenne', tagBg: '#DCFCE7', tagFg: '#16A34A' },
-                  ].map((r) => (
-                    <li key={r.t} className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: '#FCEAEC', color: RED }}>
-                        <Heart className="h-3 w-3" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-[10.5px] font-bold" style={{ color: NAVY }}>{r.t}</p>
-                        <p className="text-[9px]" style={{ color: INK_MUTED }}>{r.sub}</p>
-                      </div>
-                      <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[8px] font-bold" style={{ background: r.tagBg, color: r.tagFg }}>{r.tag}</span>
-                    </li>
-                  ))}
-                </ul>
-                <a className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold" style={{ color: RED }}>
-                  Voir toutes mes révisions <ArrowRight className="h-3 w-3" />
-                </a>
-              </div>
-              {/* Actualités CNG */}
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
-                <div className="flex items-center justify-between">
-                  <p className="text-[11px] font-bold" style={{ color: NAVY }}>Actualités CNG</p>
-                  <a className="text-[9px] font-bold" style={{ color: RED }}>Voir tout</a>
-                </div>
-                <ul className="mt-2 space-y-2">
-                  {[
-                    { t: 'Ouverture des inscriptions', sub: 'Du 15 mai au 15 juin 2026' },
-                    { t: 'Nombre de postes 2026',      sub: '1720 postes ouverts' },
-                    { t: 'Informations importantes',   sub: 'Consultez les nouvelles modalités' },
-                  ].map((a) => (
-                    <li key={a.t} className="flex items-start gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: '#DBEAFE', color: '#2563EB' }}>
-                        <FileText className="h-3 w-3" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-[10.5px] font-bold" style={{ color: NAVY }}>{a.t}</p>
-                        <p className="text-[9px]" style={{ color: INK_MUTED }}>{a.sub}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+        {/* Capture réelle de l'accueil étudiant */}
+        <div className="relative mx-auto mt-10 max-w-6xl">
+          <div className="overflow-hidden rounded-2xl border bg-white shadow-[0_40px_120px_-30px_rgba(15,31,77,0.35)]"
+            style={{ borderColor: BORDER }}>
+            <img
+              src="/accueil.png"
+              alt="Aperçu de la plateforme Major ECN — tableau de bord étudiant"
+              className="block h-auto w-full"
+              loading="eager"
+            />
           </div>
+          {/* Pastilles flottantes — décor */}
+          <span aria-hidden className="absolute -left-3 top-6 hidden items-center gap-2 rounded-full border bg-white px-3 py-2 text-xs font-bold shadow-2xl sm:inline-flex"
+            style={{ borderColor: BORDER, color: RED }}>
+            <Stethoscope className="h-4 w-4" /> 45 spécialités
+          </span>
+          <span aria-hidden className="absolute -right-3 bottom-6 hidden items-center gap-2 rounded-full px-3 py-2 text-xs font-bold text-white shadow-2xl sm:inline-flex"
+            style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}>
+            <CheckCircle2 className="h-4 w-4" /> Méthodologie EVC
+          </span>
         </div>
       </div>
     </section>
@@ -214,7 +98,7 @@ function HowDailySection() {
   return (
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={{ color: NAVY }}>
+        <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
           Comment j&rsquo;utilise Major EVC au quotidien ?
         </h2>
         <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-2">
@@ -265,7 +149,7 @@ function CorrectorExampleSection() {
               <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#FCEAEC', color: RED }}>
                 <Stethoscope className="h-5 w-5" />
               </span>
-              <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+              <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
                 Comprendre ce qu&rsquo;attend le correcteur des EVC
               </h2>
             </div>
@@ -371,7 +255,7 @@ function TransversalRevisionSection() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#DCFCE7', color: '#16A34A' }}>
                   <Compass className="h-5 w-5" />
                 </span>
-                <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_RED_PURPLE)}>
                   Révision transversale intelligente
                 </h2>
               </div>
@@ -440,7 +324,7 @@ function RecordedCoursesSection() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#EDE9FE', color: '#6D28D9' }}>
                   <Play className="h-5 w-5" />
                 </span>
-                <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>
+                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_NAVY_RED)}>
                   Cours enregistrés et/ou en direct<span style={{ color: RED }}>*</span>
                 </h2>
               </div>
@@ -513,7 +397,7 @@ function TeamSection() {
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-[0.9fr_1.4fr_0.7fr]">
         <div>
-          <h2 className="text-2xl font-black tracking-tight" style={{ color: NAVY }}>
+          <h2 className="text-2xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
             Une équipe à vos côtés
           </h2>
           <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>
@@ -566,7 +450,7 @@ function PlatformToolsSection() {
   return (
     <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-black tracking-tight sm:text-[1.7rem]" style={{ color: NAVY }}>
+        <h2 className="text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
           Tous les outils de préparation aux EVC (PAE) pour les médecins étrangers et PADHUE
         </h2>
         <p className="mt-3 text-[14px] max-w-4xl" style={{ color: INK_SOFT }}>
