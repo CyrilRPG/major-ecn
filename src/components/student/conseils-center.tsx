@@ -62,7 +62,7 @@ export function ConseilsCenter({ profile }: { profile?: Profile }) {
           <button
             type="button"
             onClick={() => { setSection('demarrer'); setMode('panel'); }}
-            className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-3.5 py-2 text-[13px] font-bold text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)] transition-transform hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#E4002B] bg-white px-3.5 py-2 text-[13px] font-bold text-[#E4002B] shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
           >
             <Lightbulb className="h-4 w-4" />
             <span className="hidden sm:inline">Conseils de préparation</span>
@@ -268,7 +268,7 @@ function PanelOverlay({
                 <button
                   key={s.id}
                   onClick={() => onSectionChange(s.id)}
-                  className={'flex items-center gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium transition-colors sm:whitespace-normal ' + (active ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]' : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)')}
+                  className={'flex items-center gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 text-left text-[12.5px] transition-colors sm:whitespace-normal ' + (active ? 'font-bold text-[#E4002B]' : 'font-medium text-(--color-ink-soft) hover:bg-(--color-sand-100)')}
                 >
                   <s.Icon className="h-3.5 w-3.5 shrink-0" />
                   <span className="flex-1">{s.label}</span>

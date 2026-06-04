@@ -124,6 +124,48 @@ export async function updateCollegePermission(
   }
 }
 
+/** Périmètre d'accès du collège ('all' = toute l'offre / 'specific' = collège spécifique). */
+export async function updateCollegeAccessType(
+  id: string,
+  access_type: 'all' | 'specific',
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const admin = await requireAdminClient();
+    const { error } = await (admin as unknown as {
+      from: (t: string) => { update: (v: Record<string, unknown>) => { eq: (c: string, v: string) => Promise<{ error: { message: string } | null }> } };
+    })
+      .from('matieres')
+      .update({ access_type })
+      .eq('id', id);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath('/admin/arborescence');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
+  }
+}
+
+/** Périmètre d'accès du cours (item) — même sémantique que pour les collèges. */
+export async function updateCoursAccessType(
+  id: string,
+  access_type: 'all' | 'specific',
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const admin = await requireAdminClient();
+    const { error } = await (admin as unknown as {
+      from: (t: string) => { update: (v: Record<string, unknown>) => { eq: (c: string, v: string) => Promise<{ error: { message: string } | null }> } };
+    })
+      .from('cours')
+      .update({ access_type })
+      .eq('id', id);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath('/admin/arborescence');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
+  }
+}
+
 export async function deleteCollege(id: string): Promise<{ ok: boolean; error?: string }> {
   try {
     const admin = await requireAdminClient();

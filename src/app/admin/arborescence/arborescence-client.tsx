@@ -9,11 +9,12 @@ import {
 import {
   addSlot, createCollege, createItem, deleteCollege, deleteItem, deleteSlot,
   duplicateItem, moveItem, renameCollege, renameItem, updateCollegePermission,
+  updateCollegeAccessType, updateCoursAccessType,
 } from './actions';
 
 type Slot = { id: string; label: string; content_type: 'video' | 'fiche' | 'qcm' | 'flashcards'; position: number };
-type Item = { id: string; titre: string; order_index: number; slots: Slot[] };
-type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; min_offer: string | null; items: Item[] };
+type Item = { id: string; titre: string; order_index: number; access_type: 'all' | 'specific'; slots: Slot[] };
+type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; min_offer: string | null; access_type: 'all' | 'specific'; items: Item[] };
 
 const SLOT_ICONS = {
   video:      Video,
@@ -235,20 +236,60 @@ function CollegeNameEditor({ college, onRun }: { college: College; onRun: (a: ()
 
 function PermissionEditor({ college, onRun }: { college: College; onRun: (a: () => Promise<{ ok: boolean; error?: string }>) => void }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-(--color-border) bg-(--color-sand-100) px-2.5 py-1 text-[11px] font-medium text-(--color-ink-soft)">
-      <Lock className="h-3 w-3" />
+    <span className="inline-flex flex-wrap items-center gap-1.5">
+      {/* Offre minimale */}
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-(--color-border) bg-(--color-sand-100) px-2.5 py-1 text-[11px] font-medium text-(--color-ink-soft)">
+        <Lock className="h-3 w-3" />
+        <select
+          value={college.min_offer ?? ''}
+          onChange={(e) => {
+            const v = (e.target.value || null) as 'essentiel' | 'premium' | 'intensif' | null;
+            onRun(async () => await updateCollegePermission(college.id, v));
+          }}
+          className="bg-transparent text-[11px] font-medium text-(--color-ink) outline-none"
+          title="Offre minimale requise pour accéder à ce collège"
+        >
+          <option value="">Accès libre</option>
+          <option value="essentiel">{OFFER_LABELS.essentiel}</option>
+          <option value="premium">{OFFER_LABELS.premium}</option>
+          <option value="intensif">{OFFER_LABELS.intensif}</option>
+        </select>
+      </span>
+      {/* Périmètre */}
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-(--color-border) bg-(--color-sand-100) px-2.5 py-1 text-[11px] font-medium text-(--color-ink-soft)">
+        <select
+          value={college.access_type}
+          onChange={(e) => {
+            const v = e.target.value as 'all' | 'specific';
+            onRun(async () => await updateCollegeAccessType(college.id, v));
+          }}
+          className="bg-transparent text-[11px] font-medium text-(--color-ink) outline-none"
+          title="Toute l’offre : accessible à tous les élèves avec la bonne offre. Collège spécifique : l’élève doit avoir ce collège listé dans son scope."
+        >
+          <option value="all">Toute l’offre</option>
+          <option value="specific">Collège spécifique</option>
+        </select>
+      </span>
+    </span>
+  );
+}
+
+/** Sélecteur du périmètre d'accès au niveau d'un item (cours). */
+function ItemAccessEditor({ item, onRun }: { item: Item; onRun: (a: () => Promise<{ ok: boolean; error?: string }>) => void }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-(--color-border) bg-(--color-sand-100) px-2 py-0.5 text-[10px] font-medium text-(--color-ink-soft)">
+      <Lock className="h-2.5 w-2.5" />
       <select
-        value={college.min_offer ?? ''}
+        value={item.access_type}
         onChange={(e) => {
-          const v = (e.target.value || null) as 'essentiel' | 'premium' | 'intensif' | null;
-          onRun(async () => await updateCollegePermission(college.id, v));
+          const v = e.target.value as 'all' | 'specific';
+          onRun(async () => await updateCoursAccessType(item.id, v));
         }}
-        className="bg-transparent text-[11px] font-medium text-(--color-ink) outline-none"
+        className="bg-transparent text-[10px] font-medium text-(--color-ink) outline-none"
+        title="Toute l’offre : accessible à tous les élèves avec la bonne offre. Cours spécifique : l’élève doit avoir ce cours listé dans son scope."
       >
-        <option value="">Accès libre</option>
-        <option value="essentiel">{OFFER_LABELS.essentiel}</option>
-        <option value="premium">{OFFER_LABELS.premium}</option>
-        <option value="intensif">{OFFER_LABELS.intensif}</option>
+        <option value="all">Toute l’offre</option>
+        <option value="specific">Cours spécifique</option>
       </select>
     </span>
   );
@@ -303,6 +344,8 @@ function ItemRow({
         <span className="text-[11px] text-(--color-ink-muted)">
           {item.slots.length} contenu{item.slots.length > 1 ? 's' : ''}
         </span>
+
+        <ItemAccessEditor item={item} onRun={onRun} />
 
         <div className="ml-auto flex items-center gap-1">
           <select

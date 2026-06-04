@@ -33,8 +33,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre, description, matiere_id,
-      matieres(nom),
+      id, titre, description, matiere_id, access_type,
+      matieres(nom, access_type),
       videos(storage_path), fiches(storage_path), qcm_series(type), flashcards(id)
     `)
     .eq('id', coursId)
@@ -42,9 +42,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
   if (!c || !c.matieres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
+  const coursAccess  = (c as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
+  if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
   // Filtrage fin : si le prof est limité à certains cours, on bloque les autres.
-  if (!canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
+  if (!canAccessCours(scope, c.matiere_id, coursId, coursAccess)) redirect(`/matieres/${c.matiere_id}`);
 
   await supabase
     .from('course_progress')

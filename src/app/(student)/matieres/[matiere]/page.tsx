@@ -13,23 +13,26 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   const { data: m } = await supabase
     .from('matieres')
-    .select('id, nom, color_hex, icon_key, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))')
+    .select('id, nom, color_hex, icon_key, access_type, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))')
     .eq('id', matiere)
     .maybeSingle();
 
   if (!m || !m.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, m.id)) redirect('/facultes');
+  const collegeAccess = ((m as { access_type?: 'all' | 'specific' }).access_type ?? 'all');
+  if (!canAccessCollege(scope, m.id, collegeAccess)) redirect('/facultes');
 
   const { data: coursAll } = await supabase
     .from('cours')
-    .select('id, titre, description, order_index, course_progress(video_watched, fiche_read), qcm_series(id), flashcards(id)')
+    .select('id, titre, description, order_index, access_type, course_progress(video_watched, fiche_read), qcm_series(id), flashcards(id)')
     .eq('matiere_id', matiere)
     .order('order_index');
 
   // Filtrage fin : un prof peut être limité à un sous-ensemble de cours
-  // (scope.cours). Pour les students/admins/'all', tout passe.
-  const cours = (coursAll ?? []).filter((c) => canAccessCours(scope, matiere, c.id));
+  // (scope.cours). Cours marqués 'specific' : exige listing explicite.
+  const cours = (coursAll ?? []).filter((c) =>
+    canAccessCours(scope, matiere, c.id, (c as { access_type?: 'all' | 'specific' }).access_type ?? 'all')
+  );
   const coursIds = cours.map((c) => c.id);
   const { data: attempts } = coursIds.length
     ? await supabase

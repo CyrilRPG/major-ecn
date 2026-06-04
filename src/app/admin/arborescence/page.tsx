@@ -6,8 +6,8 @@ import { ArborescenceClient } from './arborescence-client';
 export const metadata = { title: 'Arborescence' };
 
 type Slot = { id: string; label: string; content_type: 'video' | 'fiche' | 'qcm' | 'flashcards'; position: number };
-type Item = { id: string; titre: string; order_index: number; slots: Slot[] };
-type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; min_offer: string | null; items: Item[] };
+type Item = { id: string; titre: string; order_index: number; access_type: 'all' | 'specific'; slots: Slot[] };
+type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; min_offer: string | null; access_type: 'all' | 'specific'; items: Item[] };
 
 export default async function ArborescencePage() {
   await requireAdmin();
@@ -17,16 +17,16 @@ export default async function ArborescencePage() {
   const { data: colsRaw } = await supabase
     .from('facultes')
     .select(`
-      semestres(matieres(id, nom, icon_key, color_hex, order_index, min_offer,
-        cours(id, titre, order_index)))
+      semestres(matieres(id, nom, icon_key, color_hex, order_index, min_offer, access_type,
+        cours(id, titre, order_index, access_type)))
     `)
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
 
   type Row = { semestres?: { matieres?: Array<{
     id: string; nom: string; icon_key: string | null; color_hex: string | null;
-    order_index: number; min_offer: string | null;
-    cours?: { id: string; titre: string; order_index: number }[] | null;
+    order_index: number; min_offer: string | null; access_type: 'all' | 'specific' | null;
+    cours?: { id: string; titre: string; order_index: number; access_type: 'all' | 'specific' | null }[] | null;
   }> }[] };
   const cols = ((colsRaw as unknown as Row | null)?.semestres ?? [])
     .flatMap((s) => s.matieres ?? [])
@@ -64,12 +64,14 @@ export default async function ArborescencePage() {
     color_hex: m.color_hex,
     order_index: m.order_index,
     min_offer: m.min_offer,
+    access_type: (m.access_type ?? 'all') as 'all' | 'specific',
     items: (m.cours ?? [])
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
       .map((c) => ({
         id: c.id,
         titre: c.titre,
         order_index: c.order_index,
+        access_type: (c.access_type ?? 'all') as 'all' | 'specific',
         slots: slotsByCours.get(c.id) ?? [],
       })),
   }));
