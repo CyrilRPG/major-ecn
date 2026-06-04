@@ -1,28 +1,11 @@
-import { createClient } from '@/lib/supabase/server';
-import {
-  EcosystemSection, QCMPreviewSection, DashboardPreviewSection, FinalCtaBlock,
-} from '@/components/marketing/extra-sections';
-import { ExperienceSection, StatsSection } from '@/components/marketing/manus-sections';
+import { PlateformePageContent } from '@/components/marketing/plateforme-page';
 
 export const metadata = {
   title: 'Plateforme — Major ECN',
   description:
-    'Découvrez l’écosystème pédagogique Major ECN : QCM intelligents, dashboard temps réel, lives hebdomadaires.',
+    'Découvrez la plateforme Major ECN : tableau de bord, QCM corrigés, cas cliniques, révision transversale intelligente, cours enregistrés/live et accompagnement personnalisé.',
 };
 
-export default async function PlateformePage() {
-  const supabase = await createClient();
-  const { data: collegesRaw } = await supabase.from('matieres').select('id, nom').order('nom');
-  const colleges = collegesRaw ?? [];
-
-  return (
-    <>
-      <EcosystemSection />
-      <ExperienceSection />
-      <QCMPreviewSection />
-      <DashboardPreviewSection />
-      <StatsSection />
-      <FinalCtaBlock colleges={colleges} />
-    </>
-  );
+export default function PlateformePage() {
+  return <PlateformePageContent />;
 }

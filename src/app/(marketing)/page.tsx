@@ -3,7 +3,7 @@ import { ManusHero } from '@/components/marketing/manus-hero';
 import { ExperienceSection, FAQSection, FreeTrialBanner } from '@/components/marketing/manus-sections';
 import {
   BeyondPlatformSection, FinalCtaBlock, PedagogicalTeamSection,
-  SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection,
+  SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection, ToolsForProgressSection,
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
@@ -25,7 +25,10 @@ export default async function HomePage() {
       {/* 2) Bien plus qu'une plateforme de cours (8 cartes) */}
       <BeyondPlatformSection />
 
-      {/* 3) Témoignages texte de lauréats (cartes courtes) */}
+      {/* 3) Tous les outils pour structurer votre progression aux EVC (6 cartes) */}
+      <ToolsForProgressSection />
+
+      {/* 4) Témoignages texte de lauréats (cartes courtes) */}
       <TestimonialsTextSection />
 
       {/* 4) Témoignages vidéo */}
