@@ -47,16 +47,19 @@ function MethodeHero() {
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-12">
           {/* LEFT */}
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em]"
+            <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] sm:rounded-full sm:text-[11px]"
               style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
               <Sparkles className="h-3.5 w-3.5" />
-              Méthodologie EVC (PAE) <span className="opacity-50">·</span> Médecins étrangers <span className="opacity-50">·</span> PADHUE
+              <span>Méthodologie EVC (PAE)</span>
+              <span className="opacity-50">·</span>
+              <span>Médecins étrangers</span>
+              <span className="opacity-50">·</span>
+              <span>PADHUE</span>
             </span>
 
-            <h1 className="mt-5 text-4xl font-black leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.4rem]" style={{ color: NAVY }}>
-              La méthode qui aide<br />
-              les médecins étrangers<br />
-              à réussir les <span style={{ color: RED }}>EVC (PAE)</span>
+            <h1 className="mt-5 text-3xl font-black leading-[1.08] tracking-tight sm:text-4xl lg:text-[3.2rem]"
+              style={gradientText(GRAD_NAVY_RED)}>
+              La méthode qui aide les médecins étrangers à réussir les EVC (PAE)
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
@@ -72,7 +75,7 @@ function MethodeHero() {
               Depuis plus de 18 ans, Major ECN accompagne les médecins étrangers vers la réussite.
             </p>
 
-            <div className="mt-7 grid grid-cols-3 gap-4 max-w-xl">
+            <div className="mt-7 grid grid-cols-1 gap-4 max-w-xl sm:grid-cols-3">
               {[
                 { Icon: Target, big: '+18 ans', sub: "d'expérience" },
                 { Icon: Trophy, big: 'Des milliers de', sub: 'lauréats', small: true },

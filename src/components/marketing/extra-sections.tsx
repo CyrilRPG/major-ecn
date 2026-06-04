@@ -305,9 +305,13 @@ export function SpecialtiesSection() {
             <ShieldCheck className="h-3.5 w-3.5" />
             45 spécialités EVC couvertes
           </span>
-          <h2 className="mt-5 text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]" style={{ color: NAVY }}>
-            Préparation <span style={{ color: RED }}>EVC (PAE)</span> adaptée<br className="hidden sm:block" />
-            <span> à votre spécialité</span>
+          <h2 className="mt-5 text-3xl font-black leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]"
+            style={{
+              backgroundImage: 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)',
+              WebkitBackgroundClip: 'text', backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent', color: 'transparent',
+            }}>
+            Préparation EVC (PAE) adaptée à votre spécialité
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-[#4B5563] sm:text-lg">
             Préparez les <span className="font-semibold" style={{ color: RED }}>Épreuves de Vérification des Connaissances (EVC)</span> dans
