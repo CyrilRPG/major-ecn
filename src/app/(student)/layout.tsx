@@ -15,8 +15,23 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
   const tree = await getNavigatorTree(profile);
 
-  // Détection des formulaires en attente pour cet utilisateur
+  // Delta hebdo « +X% cette semaine » pour la carte Progression globale :
+  // ratio des cours touchés dans les 7 derniers jours sur le total des cours
+  // visibles, arrondi à l'entier le plus proche (0 si pas d'activité).
   const supabase = await createClient();
+  const totalCours = tree.reduce((acc, c) => acc + c.cours.length, 0);
+  const days7Ago = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const { data: recentProgress } = await supabase
+    .from('course_progress')
+    .select('cours_id')
+    .eq('user_id', user.id)
+    .gte('last_seen_at', days7Ago);
+  const touchedThisWeek = new Set((recentProgress ?? []).map((r) => r.cours_id)).size;
+  const weeklyProgressDelta = totalCours > 0
+    ? Math.min(100, Math.round((touchedThisWeek / totalCours) * 100))
+    : 0;
+
+  // Détection des formulaires en attente pour cet utilisateur
   const [{ data: forms }, { data: responses }] = await Promise.all([
     supabase
       .from('satisfaction_forms')
@@ -51,7 +66,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
     <div className="flex h-screen flex-col">
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="min-h-0 flex-1">
-        <AppShell profile={profile} tree={tree}>
+        <AppShell profile={profile} tree={tree} weeklyProgressDelta={weeklyProgressDelta}>
           {optionalPending.length > 0 && !onFormPage && (
             <SatisfactionBanner form={optionalPending[0]} />
           )}
