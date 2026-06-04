@@ -20,7 +20,7 @@ export function CourseChatbot({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Salut 👋 — je suis là pour t'aider sur « ${coursTitre} ». Vas-y, balance ta question, je te réponds.`,
+      content: `Bonjour. Posez votre question concernant ce cours, je vous réponds en m'appuyant sur les contenus pédagogiques.`,
     },
   ]);
   const [input, setInput] = useState('');
