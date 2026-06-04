@@ -6,8 +6,8 @@ import { Info, RefreshCw, type LucideProps } from 'lucide-react';
 import { Layers3 } from 'lucide-react';
 import type { ComponentType } from 'react';
 
-type ThemeShape = { bg: string; accent: string; Icon: ComponentType<LucideProps> };
-const NEUTRAL_THEME: ThemeShape = { bg: '#FDE7E9', accent: '#C0001F', Icon: Layers3 };
+type ThemeShape = { bg: string; accent: string; Icon: ComponentType<LucideProps>; image?: string };
+const NEUTRAL_THEME: ThemeShape = { bg: '#FCEAEC', accent: '#C0112E', Icon: Layers3 };
 
 function Face({
   side,
@@ -63,26 +63,33 @@ function Face({
         />
       </span>
 
-      {/* Illustration latérale : image fournie par le client en watermark
-          discret sur le bord droit. Opacité 8 % pour rester lisible sans
-          concurrencer le texte. Garde une utilisation de ThemeIcon comme
-          fallback côté thème (non rendu ici, juste typage). */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-4 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.08] sm:-right-6"
-      >
-        <Image
-          src="/flashcards-decor/flashcard-1.png"
-          alt=""
-          width={520}
-          height={520}
-          className="h-48 w-auto object-contain sm:h-64 md:h-80"
-          priority={false}
-        />
-      </span>
-      <span aria-hidden className="hidden">
-        <ThemeIcon className="h-1 w-1" />
-      </span>
+      {/* Illustration latérale adaptée à la spécialité.
+          Si une image client est fournie (theme.image), on l'utilise en
+          watermark à droite (opacité 12 %). Sinon on retombe sur l'icône
+          SVG du thème. Le fond de la carte reprend la couleur de la spé. */}
+      {theme.image ? (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-2 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.12] sm:-right-4"
+        >
+          <Image
+            src={theme.image}
+            alt=""
+            width={520}
+            height={520}
+            className="h-44 w-auto object-contain sm:h-60 md:h-80"
+            priority={false}
+          />
+        </span>
+      ) : (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-2 top-1/2 z-10 -translate-y-1/2 select-none opacity-[0.12] sm:-right-4"
+          style={{ color: theme.accent }}
+        >
+          <ThemeIcon className="h-44 w-44 sm:h-60 sm:w-60 md:h-80 md:w-80" strokeWidth={2} />
+        </span>
+      )}
 
       {/* Bandeau pastel discret à gauche pour ancrer la teinte du thème. */}
       <span

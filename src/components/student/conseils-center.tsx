@@ -23,13 +23,14 @@ const SECTIONS: { id: Section; label: string; Icon: typeof Lightbulb }[] = [
   { id: 'faq',      label: 'Questions fréquentes',    Icon: HelpCircle },
 ];
 
+/** Spécialités du popup : chacune avec son image adaptée (uploadée par le client). */
 const STARTER_SPECIALTIES = [
-  { image: '/flashcards-decor/spec-cardio.png',    label: 'Cardiologie',    color: '#C0112E', bg: '#FCEAEC' },
-  { image: '/flashcards-decor/spec-pneumo.png',    label: 'Pneumologie',    color: '#2563EB', bg: '#DBEAFE' },
-  { image: '/flashcards-decor/spec-geriatrie.png', label: 'Gériatrie',      color: '#EA580C', bg: '#FFEDD5' },
-  { image: '/flashcards-decor/spec-neuro.png',     label: 'Neurologie',     color: '#7C3AED', bg: '#EDE9FE' },
-  { image: '/flashcards-decor/spec-endocrino.png', label: 'Endocrinologie', color: '#0F766E', bg: '#CCFBF1' },
-  { image: '/flashcards-decor/spec-nephro.png',    label: 'Néphrologie',    color: '#16A34A', bg: '#DCFCE7' },
+  { image: '/flashcards-decor/cardio.png',    label: 'Cardiologie',    color: '#C0112E', bg: '#FCEAEC' },
+  { image: '/flashcards-decor/pneumo.png',    label: 'Pneumologie',    color: '#2563EB', bg: '#DBEAFE' },
+  { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#EA580C', bg: '#FFEDD5' },
+  { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#7C3AED', bg: '#EDE9FE' },
+  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#0F766E', bg: '#CCFBF1' },
+  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#16A34A', bg: '#DCFCE7' },
 ];
 
 export function ConseilsCenter({ profile }: { profile?: Profile }) {
@@ -322,7 +323,7 @@ function SectionDemarrer() {
         Ces spécialités vous permettront d&rsquo;acquérir des bases solides et utiles dans de
         nombreuses situations cliniques.
       </p>
-      <Link href="/facultes" className="mt-5 inline-flex items-center gap-1 text-[12.5px] font-bold" style={{ color: PURPLE }}>
+      <Link href="/methode" className="mt-5 inline-flex items-center gap-1 text-[12.5px] font-bold" style={{ color: PURPLE }}>
         Voir tous nos conseils <ArrowRight className="h-3.5 w-3.5" />
       </Link>
     </div>

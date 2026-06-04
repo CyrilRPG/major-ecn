@@ -1,15 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ItemOutcome } from '@/lib/qcm/grade';
+
+/** Caractères avant troncature « voir plus » sur une justification d'item. */
+const JUSTIF_MAX = 280;
 
 export type QcmItemView = {
   id: string;
   lettre: string;
   enonce: string;
-  justification: string;
+  justification: string | null;
 };
 
 export function QcmItem({
@@ -77,11 +81,32 @@ export function QcmItem({
               <p className="text-[10px] uppercase tracking-wider text-(--color-primary-deep) font-medium">
                 {isCorrect ? 'Réponse correcte' : 'À retravailler'}
               </p>
-              <p className="mt-0.5 text-xs text-(--color-ink-soft) leading-snug">{item.justification}</p>
+              <JustificationText text={item.justification} />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/** Affiche la justification avec un « voir plus » si elle dépasse JUSTIF_MAX. */
+function JustificationText({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > JUSTIF_MAX;
+  const display = !isLong || expanded ? text : text.slice(0, JUSTIF_MAX).trimEnd() + '…';
+  return (
+    <>
+      <p className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug">{display}</p>
+      {isLong && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-1 inline-flex items-center gap-1 text-[11px] font-bold text-(--color-primary) hover:underline"
+        >
+          {expanded ? <><ChevronUp className="h-3 w-3" /> Voir moins</> : <><ChevronDown className="h-3 w-3" /> Voir plus</>}
+        </button>
+      )}
+    </>
   );
 }
