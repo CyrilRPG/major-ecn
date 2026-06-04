@@ -7,6 +7,8 @@ import {
   HelpCircle, Lightbulb, MessageCircle, RefreshCcw, Stethoscope, Target,
   TrendingUp, X,
 } from 'lucide-react';
+import { UserMenu } from '@/components/user-menu';
+import type { Profile } from '@/lib/auth/get-profile';
 
 const STORAGE_KEY = 'major-ecn:conseils-dismissed';
 const PURPLE = '#6D28D9';
@@ -22,15 +24,15 @@ const SECTIONS: { id: Section; label: string; Icon: typeof Lightbulb }[] = [
 ];
 
 const STARTER_SPECIALTIES = [
-  { Icon: Heart,       label: 'Cardiologie',    color: '#C0112E' },
-  { Icon: Stethoscope, label: 'Pneumologie',    color: '#2563EB' },
-  { Icon: TrendingUp,  label: 'Gériatrie',      color: '#EA580C' },
-  { Icon: BookOpen,    label: 'Neurologie',     color: '#7C3AED' },
-  { Icon: Stethoscope, label: 'Endocrinologie', color: '#0F766E' },
-  { Icon: Heart,       label: 'Néphrologie',    color: '#16A34A' },
+  { image: '/flashcards-decor/spec-cardio.png',    label: 'Cardiologie',    color: '#C0112E', bg: '#FCEAEC' },
+  { image: '/flashcards-decor/spec-pneumo.png',    label: 'Pneumologie',    color: '#2563EB', bg: '#DBEAFE' },
+  { image: '/flashcards-decor/spec-geriatrie.png', label: 'Gériatrie',      color: '#EA580C', bg: '#FFEDD5' },
+  { image: '/flashcards-decor/spec-neuro.png',     label: 'Neurologie',     color: '#7C3AED', bg: '#EDE9FE' },
+  { image: '/flashcards-decor/spec-endocrino.png', label: 'Endocrinologie', color: '#0F766E', bg: '#CCFBF1' },
+  { image: '/flashcards-decor/spec-nephro.png',    label: 'Néphrologie',    color: '#16A34A', bg: '#DCFCE7' },
 ];
 
-export function ConseilsCenter() {
+export function ConseilsCenter({ profile }: { profile?: Profile }) {
   // 'popup' = grand popup d'accueil ; 'panel' = panneau latéral compact ;
   // 'closed' = bouton seul dans le header.
   const [mode, setMode] = useState<'popup' | 'panel' | 'closed'>('closed');
@@ -51,17 +53,25 @@ export function ConseilsCenter() {
 
   return (
     <>
-      {/* Bouton « Conseils de préparation » — toujours visible dans le coin */}
+      {/* Bouton « Conseils de préparation » + avatar profil — toujours visibles */}
       {mode !== 'popup' && (
-        <button
-          type="button"
-          onClick={() => { setSection('demarrer'); setMode('panel'); }}
-          className="fixed right-4 top-3 z-30 inline-flex items-center gap-2 rounded-xl border-2 bg-white px-3.5 py-2 text-[13px] font-bold shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-          style={{ borderColor: PURPLE, color: PURPLE }}
-        >
-          <Lightbulb className="h-4 w-4" />
-          Conseils de préparation
-        </button>
+        <div className="fixed right-4 top-3 z-30 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => { setSection('demarrer'); setMode('panel'); }}
+            className="inline-flex items-center gap-2 rounded-xl border-2 bg-white px-3.5 py-2 text-[13px] font-bold shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+            style={{ borderColor: PURPLE, color: PURPLE }}
+          >
+            <Lightbulb className="h-4 w-4" />
+            <span className="hidden sm:inline">Conseils de préparation</span>
+            <span className="sm:hidden">Conseils</span>
+          </button>
+          {profile && (
+            <span className="rounded-full bg-white p-1 shadow-(--shadow-soft)">
+              <UserMenu profile={profile} />
+            </span>
+          )}
+        </div>
       )}
 
       {mode === 'popup' && (
@@ -104,10 +114,11 @@ function PopupOverlay({
           <X className="h-4 w-4" />
         </button>
 
-        {/* Header : illustration + titre */}
+        {/* Header : logo Major ECN officiel + titre */}
         <div className="flex flex-col items-start gap-4 pr-8 sm:flex-row sm:items-center">
-          <div className="hidden h-20 w-28 shrink-0 rounded-2xl bg-[#EEF2FB] sm:flex sm:items-center sm:justify-center">
-            <BookOpen className="h-9 w-9 text-[#2563EB]" />
+          <div className="hidden h-20 w-28 shrink-0 items-center justify-center rounded-2xl bg-[#FCEAEC] p-2 sm:flex">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/major-ecn-logo.png" alt="Major ECN" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
@@ -136,9 +147,10 @@ function PopupOverlay({
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {STARTER_SPECIALTIES.map((s, i) => (
               <div key={s.label} className="flex flex-col items-center text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ background: `${s.color}1A`, color: s.color }}>
-                  <s.Icon className="h-6 w-6" />
+                <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl p-1.5"
+                  style={{ background: s.bg }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.image} alt="" className="h-full w-full object-contain" />
                 </span>
                 <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
                 <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
@@ -296,9 +308,10 @@ function SectionDemarrer() {
       <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {STARTER_SPECIALTIES.map((s, i) => (
           <div key={s.label} className="flex flex-col items-center text-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl"
-              style={{ background: `${s.color}1A`, color: s.color }}>
-              <s.Icon className="h-5 w-5" />
+            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1"
+              style={{ background: s.bg }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={s.image} alt="" className="h-full w-full object-contain" />
             </span>
             <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
             <p className="text-[10px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>

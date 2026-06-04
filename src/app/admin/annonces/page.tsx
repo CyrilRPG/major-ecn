@@ -29,6 +29,10 @@ export default async function AdminAnnoncesPage() {
 
   const rows = ((data ?? []) as unknown as Row[]) ?? [];
 
+  // Liste des collèges (pour le sélecteur d'audience par collège dans le formulaire).
+  const { data: collegesRaw } = await admin.from('matieres').select('id, nom').order('nom');
+  const colleges = (collegesRaw ?? []) as { id: string; nom: string }[];
+
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="mb-6 border-b border-(--color-border) pb-5">
@@ -101,7 +105,11 @@ export default async function AdminAnnoncesPage() {
                     visible: r.visible,
                     order_index: r.order_index,
                     data: r.data,
+                    min_offer: (r as { min_offer?: 'essentiel'|'premium'|'intensif'|null }).min_offer ?? null,
+                    target_scope: ((r as { target_scope?: 'all'|'full'|'college' }).target_scope) ?? 'all',
+                    target_colleges: ((r as { target_colleges?: string[] }).target_colleges) ?? [],
                   }}
+                  colleges={colleges}
                 />
               </div>
             </details>
@@ -114,7 +122,7 @@ export default async function AdminAnnoncesPage() {
         <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-(--color-ink-soft)">
           Ajouter un nouveau bloc
         </h2>
-        <AnnouncementForm mode="create" />
+        <AnnouncementForm mode="create" colleges={colleges} />
       </section>
     </main>
   );

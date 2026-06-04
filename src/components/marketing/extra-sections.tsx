@@ -776,7 +776,7 @@ export function PedagogicalTeamSection() {
             Équipe pédagogique
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
-            <span style={{ color: TM_NAVY }}>Une équipe qui connaît les </span>
+            <span style={{ backgroundImage: "linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Une équipe qui connaît les </span>
             <span style={{ color: TM_RED }}>attentes des EVC</span>
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TM_INK_SOFT }}>
@@ -1143,7 +1143,7 @@ export function BeyondPlatformSection() {
           <div className="mt-10 rounded-2xl border bg-white p-6 sm:p-8 lg:p-10" style={{ borderColor: '#ECECEF' }}>
             <div className="text-center">
               <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl">
-                <span style={{ color: BP_NAVY }}>Tous les outils pour </span>
+                <span style={{ backgroundImage: "linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Tous les outils pour </span>
                 <span style={{ color: BP_PURPLE }}>réussir</span>
                 <span style={{ color: BP_NAVY }}> votre préparation EVC</span>
               </h3>
@@ -1221,7 +1221,7 @@ export function ToolsGridSection() {
             Une méthode structurée • Des outils concrets • Une progression mesurable
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
-            <span style={{ color: TG_NAVY }}>Tous les outils pour structurer votre progression </span>
+            <span style={{ backgroundImage: "linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Tous les outils pour structurer votre progression </span>
             <span style={{ color: TG_BLUE }}>aux EVC</span>
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
@@ -1738,7 +1738,7 @@ export function TestimonialsTextSection() {
             Témoignages de candidats EVC
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
-            <span style={{ color: TT_NAVY }}>Ils ont préparé les EVC avec </span>
+            <span style={{ backgroundImage: "linear-gradient(90deg, #C0112E 0%, #BE185D 50%, #7C3AED 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Ils ont préparé les EVC avec </span>
             <span
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(90deg, ${TT_BURGUNDY} 0%, ${TT_RED} 50%, #E8742C 100%)` }}
@@ -1873,7 +1873,7 @@ export function TestimonialsVideoSection() {
             Témoignages vidéo
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
-            <span style={{ color: TV_NAVY }}>Ils racontent leur </span>
+            <span style={{ backgroundImage: "linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Ils racontent leur </span>
             <span
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: `linear-gradient(90deg, ${TV_BURGUNDY} 0%, ${TV_RED} 50%, #E8742C 100%)` }}

@@ -1164,7 +1164,7 @@ export function FreeTrialBanner() {
             </span>
 
             <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
-              <span className="block" style={{ color: FT_NAVY }}>Testez Major ECN</span>
+              <span className="block" style={{ backgroundImage: "linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Testez Major ECN</span>
               <span
                 className="block bg-clip-text text-transparent"
                 style={{ backgroundImage: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 45%, ${FT_ORANGE} 100%)` }}

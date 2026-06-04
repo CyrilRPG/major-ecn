@@ -322,7 +322,7 @@ export default async function AccueilPage() {
               <p className="text-xs text-(--color-ink-soft)">Prêt(e) à avancer aujourd&rsquo;hui ?</p>
             </div>
             <Link
-              href="/entrainement"
+              href="/revisions-transversales"
               className="inline-flex items-center gap-2 rounded-xl bg-[#1E40AF] px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
             >
               <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
@@ -407,7 +407,7 @@ export default async function AccueilPage() {
               <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
               <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
             </ul>
-            <Link href="/entrainement" className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E40AF] px-3 py-2 text-sm font-bold text-white hover:scale-[1.01]">
+            <Link href="/revisions-transversales" className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E40AF] px-3 py-2 text-sm font-bold text-white hover:scale-[1.01]">
               <Play className="h-4 w-4" /> Commencer maintenant
             </Link>
           </Card>

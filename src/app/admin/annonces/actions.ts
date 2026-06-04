@@ -7,6 +7,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 const KIND = z.enum(['countdown', 'event_list', 'info', 'stat', 'text']);
 const TONE = z.enum(['red', 'green', 'blue', 'orange', 'purple', 'gray']);
+const OFFER = z.enum(['essentiel', 'premium', 'intensif']);
+const SCOPE = z.enum(['all', 'full', 'college']);
 
 const Base = z.object({
   kind: KIND,
@@ -18,6 +20,10 @@ const Base = z.object({
   order_index: z.number().int().default(0),
   /** Champ libre — validé selon le kind ci-dessous. */
   data: z.record(z.string(), z.unknown()).default({}),
+  /** Audience — qui voit cette annonce. */
+  min_offer: OFFER.nullable().optional(),
+  target_scope: SCOPE.default('all'),
+  target_colleges: z.array(z.string()).default([]),
 });
 
 const CreateInput = Base;
