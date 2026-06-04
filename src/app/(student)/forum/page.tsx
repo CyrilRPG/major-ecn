@@ -6,6 +6,9 @@ import {
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { Markdown } from '@/components/ui/markdown';
+import { ForumQuestionForm } from '@/components/student/forum-question-form';
+import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
+import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 
 export const metadata = { title: 'Forum questions / réponses' };
 
@@ -32,9 +35,32 @@ export default async function ForumPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireUser();
+  const { profile } = await requireUser();
+  const scope = parseScope(profile.permission_scope);
   const sp = await searchParams;
   const supabase = await createClient();
+
+  // Récupère l'arborescence collège/items pour le formulaire de question.
+  const { data: facRaw } = await supabase
+    .from('facultes')
+    .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
+    .eq('id', EDN_FACULTE_ID)
+    .maybeSingle();
+  type FacRow = { semestres?: { matieres?: Array<{ id: string; nom: string; order_index: number | null;
+    cours?: { id: string; titre: string; order_index: number | null }[] | null }> }[] };
+  const collegesForForm = ((facRaw as unknown as FacRow | null)?.semestres ?? [])
+    .flatMap((s) => s.matieres ?? [])
+    .filter((m) => canAccessCollege(scope, m.id))
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    .map((m) => ({
+      id: m.id,
+      nom: m.nom,
+      cours: (m.cours ?? [])
+        .filter((c) => canAccessCours(scope, m.id, c.id))
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((c) => ({ id: c.id, titre: c.titre })),
+    }))
+    .filter((m) => m.cours.length > 0);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = (supabase as any)
@@ -130,6 +156,9 @@ export default async function ForumPage({
           </div>
         </div>
       </section>
+
+      {/* ─────────────── Formulaire pour poser une question ─────────────── */}
+      <ForumQuestionForm colleges={collegesForForm} />
 
       {/* ─────────────── Search ─────────────── */}
       <form method="GET" className="mt-6 flex flex-col gap-2 sm:flex-row">

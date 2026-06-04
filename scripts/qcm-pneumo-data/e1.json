@@ -1,0 +1,734 @@
+[
+  {
+    "section": "cours",
+    "enonce": "A propos de l’hypersensibilité et des allergies",
+    "items": {
+      "A": "L’hypersensibilité allergique aux piqûres d’insectes est médiée par les IgE",
+      "B": "L’atopie est le fait d’avoir un test allergique positif",
+      "C": "L’eczéma est un exemple d’hypersensibilité immédiate",
+      "D": "Les prick-tests dans le cas de l’asthme ne se font que si on suspecte que cet asthme est allergique",
+      "E": "L’asthme allergique est médié par une réaction inflammatoire Th1"
+    },
+    "answers": [
+      "A"
+    ],
+    "per_item": {
+      "A": "VRAI",
+      "B": "la sensibilisation est le fait d’avoir un test positif",
+      "C": "L’eczéma est un exemple d’hypersensibilité retardée (48h)",
+      "D": "systématique à chaque diagnostic d’asthme",
+      "E": "L’asthme allergique est médié par une réaction inflammatoire Th2 Les différents types d’hypersensibilité sont définies par la classification de Gell et Coombs par leur délai de survenue, leurs effecteurs et les mécanismes. Ces différentes classifications ne sont probablement pas à connaître par cœur. Je veux insister ici sur plusieurs points : Les définitions précises de tous ces termes Quelques points physiopathologiques simples La méthode diagnostique Définition : Atopie : propension à produire des IgE => c’est en général un terrain génétique Sensibilisation : c’est la propension à produire des IgE en présence d’un allergène donné => c’est la présence d’un test allergique positif Allergie : c’est l’association d’une sensibilisation et d’une atteinte symptomatique décrite par le patient à cet allergène => test positif + symptômes allergiques La plupart des allergies sont médiées par les IgE : elles sont essentiellement d’ordre dermatologiques, respiratoire, digestive, et peuvent avoir des complications systémiques, c’est l’anaphylaxie. Les tests allergiques simples sont : (il en existe d’autres bien-sûr) Les prick-tests Les IgE spécifiques Les prick-tests en pneumologie sont les tests de première intention qu’on utilise pour rechercher une sensibilisation à un allergène respiratoire. Les IgE spécifiques connaissent une place secondaire : en cas de discordance entre un test négatif mais une forte présomption clinique d’allergie médiée par cet allergène. Les tests allergiques pour des allergènes respiratoires connaissent deux indications principales : Bilan symptomatique : d’une rhinoconjonctivite allergique Bilan d’asthme : qu’il ait l’air allergique ou non, tout asthme doit faire réaliser un bilan allergiologique minimal comprenant un interrogatoire spécifique et des prick tests aux pneumallergènes classiques Le traitement est avant tout l’éviction. Elle n’est pas toujours possible, mais de nombreuses mesures permettent de réduire au maximum la charge en allergène dans l’environnement respiratoire du patient. Les traitements anti-histamniques sont efficaces pour traiter les symptômes rhinoconjonctivaux, mais n’ont aucune efficacité sur les symptômes respiratoires de l’asthme allergique. En revanche, contrôler la comorbidité allergique rhinoconjonctivale, peut participer à contrôler la maladie asthmatique. L’immunothérapie antiallergique peut aider certains patients dans certains cas mais connait des indications précises : globalement elle est recommandée s’il existe un traitement pour l’allergène coupable, si le retentissement sur la vie est significatif malgré un traitement d’éviction bien conduit ou si l’éviction semble impossible et leur exposition imprévisible (par exemple pour les venis de guêpes, abeilles). _____"
+    },
+    "correction_generale": "Correction :"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos de l’hypersensibilité et des allergies",
+    "items": {
+      "A": "Les macrophages sont très présents dans la peau, les voies aériennes et le tube digestif, ceci explique que les manifestations allergiques se font essentiellement sur ces 3 sites",
+      "B": "L’allergie médicamenteuse peut conduire à des états de choc",
+      "C": "Les polynucléaires éosinophiles peuvent participer à la médiation immunologique de l’allergie",
+      "D": "L’asthme est une maladie constamment allergique",
+      "E": "Il existe une relation bien établie entre l’obésité et l’asthme"
+    },
+    "answers": [
+      "B",
+      "C",
+      "E"
+    ],
+    "per_item": {
+      "A": "ce sont les mastocytes",
+      "B": "VRAI, l’une des principales cause",
+      "C": "VRAI",
+      "D": "FAUX, il existe des asthmes sans allergie ni aucun terrai atopique",
+      "E": "Il existe une relation bien établie entre l’obésité et l’asthme _____"
+    },
+    "correction_generale": "Question difficile"
+  },
+  {
+    "section": "cours",
+    "enonce": "Sont des pneumallergènes perannuels",
+    "items": {
+      "A": "Graminés",
+      "B": "Acariens",
+      "C": "Moisissures",
+      "D": "Ficus",
+      "E": "Les pollens d’arbre type bouleau, cyprès, frêne"
+    },
+    "answers": [
+      "B",
+      "C",
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "Allergènes per-annuels = allergènes présents tout au long de l’année\n\n_____"
+  },
+  {
+    "section": "cours",
+    "enonce": "Sont des signes sévérité d’une exacerbation d’asthme :",
+    "items": {
+      "A": "Ne peut plus faire de phrases, parle avec des mots",
+      "B": "Platypnée",
+      "C": "SpO2 < 90%",
+      "D": "Silence auscultatoire",
+      "E": "Bradycardie"
+    },
+    "answers": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "L’exacerbation aigue d’asthme est une complication de l’asthme liée à une acutisation des mécanismes inflammatoires au sein de la muqueuse bronchique conduisant à une contraction du muscles lisse bronchique, le tout obstruant les voies aériennes.\n\nIl existe différents stades de sévérité. L’asthme aigu grave ou quasi-mortel est la forme la plus grave, conduisant çà une hospitalisation en réanimation. Dans 60% des cas elle concerne des asthmes légers à modérés, en général insuffisamment pris en charge. Cette complication est associée à l’absence corticothérapie inhalée de fond, et des techniques d’emploi ou une observance insuffisante de celle-ci.\n\nUne avancée majeure a été de se rendre compte que tout patient atteint d’asthme doit recevoir une corticothérapie inhalée, son absence étant le facteur de risque principal d’asthme aigu grave.\n\nIl existe en France, 4,5 à 6 millions d’asthmatiques et environ 1500 décès par an pour exacerbation d’asthme.\n\nL’asthme aigu grave est défini par le recours à une hospitalisation en réanimation pour sa prise en charge et découle de la reconnaissance de signes qui font consensus.\n\nParle avec des mots\n\nAssis penché en avant\n\nAgité\n\nFR > 30/min\n\nUtilisation des muscles respiratoires accessoires\n\nFC > 120/min\n\nSpO2 < 90% en air\n\nDEP ≤ 50% de la meilleure valeur (ou théorique si inconnue) ou impossible à réaliser\n\nSilence auscultatoire\n\nRespiration paradoxale\n\nTroubles de la conscience, bradycardie, collapsus\n\n____"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos du traitement d’une exacerbation d’asthme, quelle(s) thérapeutique(s) est (sont) systématique(s) ?",
+    "items": {
+      "A": "Administrer rapidement un bronchodilatateur de courte durée d’action, idéalement en nébulisation si la crise est sévère",
+      "B": "Corticothérapie inhalée",
+      "C": "Corticothérapie systémique",
+      "D": "Hospitalisation",
+      "E": "Antibiothérapie probabiliste"
+    },
+    "answers": [
+      "A",
+      "C"
+    ],
+    "per_item": {},
+    "correction_generale": "Lors d’une exacerbation d’asthme, le traitement doit être rapide et adapté à la sévérité de la crise. Parmi les options proposées :\n\nA – Nébulisation de bronchodilatateurs de courte durée d’action :\n\nLes β2-agonistes de courte durée d’action (SABA) (comme le salbutamol) sont bien la première ligne de traitement pour soulager rapidement le bronchospasme.\n\nLeur administration se fait généralement par aérosol-doseur avec chambre d’inhalation ou par nébulisation en cas de crise sévère.\n\nCependant, la nébulisation n’est pas systématique dans toutes les exacerbations, il dépend de la sévérité => en général la nébulisation est mise en place si le patient doit être hospitalisé, sinon le traitement se fait avec un spray avec chambre d’inhalation pour une prise en charge ambulatoire\n\nB – Les corticoïdes inhalés sont utilisés en traitement de fond de l’asthme et parfois en relais après une exacerbation. Ils ne sont pas utilisés seuls ni en urgence pour traiter une exacerbation.\n\nC – En cas d’exacerbation modérée à sévère, la corticothérapie orale (prednisone/prednisolone) ou intraveineuse (en cas de trouble de la déglutition ou de vomissements) est systématique pour réduire l’inflammation bronchique. Elle permet de prévenir les rechutes et d’accélérer la résolution de l’exacerbation.\n\nD – Hospitalisation : pas systématique.\n\nElle est indiquée uniquement en cas d’exacerbation sévère ou menaçante.\n\nE – Antibiothérapie : Pas systématique. Les exacerbations d’asthme sont le plus souvent d’origine virale et ne justifient pas d’antibiotiques, sauf en cas de suspicion d’infection bactérienne (fièvre, expectorations purulentes, signe de pneumonie associée).\n\nÀ retenir :\n\nLe traitement systématique d’une exacerbation d’asthme modérée à sévère repose sur :\n\nBronchodilatateurs à action rapide (SABA ± anticholinergiques selon sévérité)\n\nCorticothérapie systémique (orale ou IV)\n\nLes autres mesures (hospitalisation, antibiothérapie) dépendent du contexte clinique\n\n____"
+  },
+  {
+    "section": "cours",
+    "enonce": "Vous souhaitez évaluer le contrôle de son asthme en consultation, que pouvez-vous demander ?",
+    "items": {
+      "A": "Une radiographie de thorax systématique à chaque consultation.",
+      "B": "Rechercher des réveils nocturnes dus à des symptômes respiratoires",
+      "C": "Rechercher une limitation de ses activités physiques",
+      "D": "Rechercher survenue d’exacerbations depuis sa dernière consultation",
+      "E": "Spirométrie"
+    },
+    "answers": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Radiographie de thorax\n\nPas systématique pour évaluer le contrôle de l’asthme. Elle est indiquée uniquement en cas de signes inhabituels (fièvre, douleurs thoraciques, suspicion de complication comme une pneumonie ou un pneumothorax) et au diagnostic.\n\nB – Rechercher des réveils nocturnes dus à des symptômes respiratoires\n\nLes symptômes nocturnes sont un signe classique de mauvais contrôle de l’asthme. Ils traduisent une hyperréactivité bronchique persistante.\n\nC – Rechercher une limitation des activités physiques\n\nLa gêne à l’effort est un indicateur de persistance des symptômes. L’asthme bien contrôlé ne doit pas limiter les activités quotidiennes ou sportives.\n\nD – Rechercher la survenue d’exacerbations depuis la dernière consultation\n\nLes exacerbations (prises de corticostéroïdes oraux, hospitalisations, visites aux urgences) sont des marqueurs importants d’un asthme mal contrôlé. Elles nécessitent une réévaluation du traitement de fond.\n\nE – Spirométrie\n\nLa mesure du VEMS (volume expiratoire maximal seconde) et du DEP (débit expiratoire de pointe) permet d’objectiver l’obstruction bronchique et sa réversibilité. C’est un outil clé pour le suivi de l’asthme.\n\nAsthme bien contrôlé : 0 critère\n\nPartiellement contrôlé : 1-2 critères\n\nNon contrôlé : ≥3 critères\n\nExploration fonctionnelle respiratoire (EFR)\n\nLe VEMS <80% du prédictif ou une variabilité du DEP >20% indique un mauvais contrôle.\n\nCe que cela implique pour la prise en charge\n\nSi contrôle insuffisant : vérifier adhésion au traitement, technique d’inhalation, éliminer les facteurs aggravants (tabac, allergènes).\n\nAugmenter le traitement de fond selon l’escalade des paliers (ajout/increase CSI, LABA).\n\nRéévaluer régulièrement jusqu’à obtenir un asthme bien contrôlé.\n\nSi contrôle atteint et stable >3 mois : envisager une réduction progressive du traitement.\n\n____\n\n<table class=\"qcm-table\"><tbody><tr><td>Critères</td><td>Oui/Non</td></tr><tr><td>Symptômes diurnes >2/semaine</td><td></td></tr><tr><td>Réveils nocturnes</td><td></td></tr><tr><td>Utilisation d’un traitement de secours >2/sem</td><td></td></tr><tr><td>Limitation des activités</td><td></td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Que recherchez-vous à l’interrogatoire pour expliquer le mauvais contrôle de cet asthme :",
+    "items": {
+      "A": "Rhinite chronique",
+      "B": "RGO",
+      "C": "Prise d’AINS",
+      "D": "Anxiété",
+      "E": "Tabagisme"
+    },
+    "answers": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Rhinite chronique\n\nLa rhinite allergique ou non allergique est très fréquemment associée à l’asthme (concept d’“inflammation des voies aériennes unifiée”). Une rhinite non traitée peut favoriser une hyperréactivité bronchique et aggraver l’asthme.\n\nB – Reflux gastro-œsophagien (RGO)\n\nLe RGO peut être un facteur aggravant de l’asthme par micro-inhalation de contenu acide ou via des réflexes vagaux bronchoconstricteurs. Il est important de rechercher des symptômes digestifs, surtout en position couchée.\n\nC – Prise d’AINS\n\nLes AINS (dont l’aspirine) peuvent induire un bronchospasme chez les patients asthmatiques sensibles (asthme induit par l’aspirine).\n\nD – Anxiété\n\nLes troubles anxieux et le stress peuvent majorer les symptômes asthmatiques et réduire l’adhésion au traitement. Ils doivent être identifiés et pris en compte.\n\nE – Tabagisme\n\nLe tabac aggrave l’inflammation bronchique, réduit l’efficacité des corticoïdes inhalés et favorise les exacerbations. Son arrêt est une priorité dans la prise en charge.\n\n/!\\ Rappel : prise en charge d’un asthme mal contrôlé – méthode point par point\n\n1. Confirmer le diagnostic d’asthme\n\nRéévaluer les symptômes et leur variabilité.\n\nRéaliser une spirométrie pour objectiver une obstruction bronchique réversible.\n\n2. Évaluer l’observance et la technique d’inhalation\n\nS’assurer que le patient prend son traitement tel que prescrit.\n\nVérifier la technique d’inhalation et la corriger si besoin.\n\n3. Identifier et traiter les facteurs aggravants ou comorbidités\n\nRhinite chronique : proposer un traitement adapté (antihistaminiques, corticoïdes nasaux).\n\nRGO : mesures hygiéno-diététiques, IPP si symptômes importants.\n\nTabagisme : accompagner le sevrage.\n\nAnxiété/stress : proposer un accompagnement psychologique si nécessaire.\n\nÉviter l’exposition aux allergènes connus.\n\n4. Adapter le traitement de fond\n\nRéévaluer le traitement selon les paliers GINA :\n\nAugmenter la dose de corticoïdes inhalés si nécessaire.\n\nAjouter un LABA si non déjà prescrit.\n\nEn cas d’asthme sévère, envisager d’autres options (anticorps monoclonaux : anti-IgE, anti-IL-5).\n\n5. Mettre en place un plan d’action personnalisé\n\nExpliquer au patient comment reconnaître une exacerbation et ajuster son traitement de secours.\n\nPlanifier une consultation de suivi rapprochée.\n\n6. Surveillance régulière\n\nSuivi clinique et spirométrique pour évaluer l’efficacité des ajustements.\n\nRéévaluer périodiquement le niveau de contrôle.\n\n____\n\n<table class=\"qcm-table\"><tbody><tr><td>Facteur de mauvais contrôle</td><td>Conséquences possibles</td><td>Prise en charge</td></tr><tr><td>Rhinite chronique</td><td>Hyperréactivité bronchique accrue</td><td>Corticoïdes nasaux, antihistaminiques</td></tr><tr><td>RGO</td><td>Toux, bronchospasmes nocturnes</td><td>Mesures hygiéno-diététiques, IPP si symptomatique</td></tr><tr><td>Prise d’AINS</td><td>Déclenchement de crises</td><td>Éviter les AINS, préférer le paracétamol</td></tr><tr><td>Anxiété</td><td>Perception amplifiée des symptômes</td><td>Soutien psychologique, techniques de gestion du stress</td></tr><tr><td>Tabagisme</td><td>Réduction de l’efficacité des CSI, aggravation des symptômes</td><td>Sevrage tabagique accompagné, substituts nicotiniques</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos de la toux",
+    "items": {
+      "A": "La toux aigue se définit par une toux < 4 semaines et la toux chroniques par une toux > 8 semaines",
+      "B": "Une toux nocturne peut orienter vers un RGO",
+      "C": "Les examens systématiques en cas de toux chronique sont la radiographie de thorax et la spirométrie",
+      "D": "Il faut rechercher une cause iatrogène : IEC, certains ARA2, gliptines",
+      "E": "Les TOCRI peuvent être déclenchés par la parole et le rire, prédominent la journée"
+    },
+    "answers": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – La toux aiguë se définit par une toux < 4 semaines et la toux chronique par une toux > 8 semaines\n\nFaux. La toux aiguë est effectivement définie par une durée < 3 semaines (parfois < 4 selon certaines sources), mais la toux chronique est définie par une durée > 8 semaines. Entre 3-8 semaines, on parle de toux subaiguë.\n\nB – Une toux nocturne peut orienter vers un RGO\n\nVrai. Le reflux gastro-œsophagien peut provoquer une irritation laryngée et pharyngée, entraînant une toux nocturne, souvent en position couchée. C’est un diagnostic fréquent à évoquer dans la toux chronique.\n\nC – Les examens systématiques en cas de toux chronique sont la radiographie de thorax et la spirométrie\n\nVrai. La radiographie thoracique est indispensable pour rechercher une cause pulmonaire ou médiastinale (infection, tumeur, fibrose). La spirométrie permet de dépister une obstruction bronchique (asthme, BPCO).\n\nD – Il faut rechercher une cause iatrogène : IEC, certains ARA2, gliptines\n\nVrai. Les inhibiteurs de l’enzyme de conversion (IEC) sont responsables de toux sèche persistante chez 5 à 20% des patients. Certaines gliptines (antidiabétiques) ou ARA2 peuvent rarement être en cause. Les gliptines viennent d’être ajoutées à la liste des médicaments tussigènes.\n\nE – Les TOCRI peuvent être déclenchés par la parole et le rire, prédominent la journée\n\nVrai. Les toux d’origine réflexe (Toux d’Origine des Centres Réflexes Inhibés, ou TOCRI) sont caractéristiques d’une hypersensibilité de la toux. Elles sont souvent déclenchées par des stimuli faibles (parole, rire, odeurs) et surviennent principalement en journée.\n\nRappel : La toux chronique – approche diagnostique\n\nDéfinition\n\nToux chronique : persistance >8 semaines.\n\nPrincipales causes\n\nCauses respiratoires\n\nAsthme et équivalents asthmatiques (toux seule, asthme tussif)\n\nBronchite chronique (BPCO)\n\nBronchiectasies\n\nCancer bronchopulmonaire\n\nCauses ORL\n\nRhinite postérieure (syndrome de goutte post-nasale)\n\nCauses digestives\n\nReflux gastro-œsophagien\n\nCauses médicamenteuses\n\nIEC (+++), ARA2 (rare), gliptines (rare)\n\nBilan initial recommandé\n\nInterrogatoire minutieux : durée, contexte, facteurs déclenchants, traitements.\n\nExamen clinique : auscultation pulmonaire, recherche de signes ORL ou digestifs.\n\nExamens complémentaires systématiques :\n\nRadiographie thoracique\n\nSpirométrie\n\nConduite pratique\n\nSi cause identifiée : traiter spécifiquement\n\nSi bilan négatif : évoquer d’approfondir le bilan avec un scanner thoracique ou des explorations dédiées, ou envisager possibilité d’une hypersensibilité réflexe ou une cause psychogène, envisager un traitement symptomatique.\n\n____"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos de l’hémoptysie",
+    "items": {
+      "A": "En cas d’hémoptysie massive, il y a un risque important de choc hémorragique",
+      "B": "Le cancer bronchique, la tuberculose évolutive ou bien au stade de séquelle, et la pneumopathie nécrosante en sont des causes classiques",
+      "C": "Le saignement est le plus souvent d’origine artérielle pulmonaire",
+      "D": "L’embolie pulmonaire et l’insuffisance cardiaque en sont des causes possibles",
+      "E": "L’appréciation de la gravité est essentiellement clinique"
+    },
+    "answers": [
+      "B",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – En cas d’hémoptysie massive, il y a un risque important de choc hémorragique\n\nFaux. En cas d’hémoptysie massive (souvent définie comme >200-600 mL/24 h), le risque principal est l’asphyxie par inondation bronchique et non un choc hémorragique. La mortalité est liée à l’obstruction des voies aériennes par le sang.\n\nB – Le cancer bronchique, la tuberculose évolutive ou bien au stade de séquelle, et la pneumopathie nécrosante en sont des causes classiques\n\nVrai. Ces étiologies représentent les causes les plus fréquentes et graves d’hémoptysie.\n\nC – Le saignement est le plus souvent d’origine artérielle pulmonaire\n\nFaux. Dans environ 90 % des cas, l’hémoptysie est d’origine artérielle bronchique (circulation systémique à haute pression), et non d’origine artérielle pulmonaire (basse pression).\n\nD – L’embolie pulmonaire et l’insuffisance cardiaque en sont des causes possibles\n\nVrai. L’embolie pulmonaire peut être responsable d’une hémoptysie modérée. L’insuffisance cardiaque gauche (œdème pulmonaire hémorragique) peut donner des expectorations mousseuses et rosées.\n\nE – L’appréciation de la gravité est essentiellement clinique\n\nVrai. Elle repose sur l’estimation du volume de sang, la vitesse du saignement, la tolérance respiratoire et l’état hémodynamique du patient. La présence de signes de détresse respiratoire constitue un critère de gravité majeur.\n\nPoint de cours : l’hémoptysie\n\nDéfinition : saignement provenant des voies respiratoires sous-glottiques.\n\nÀ différencier de l’hématémèse (origine digestive) et de l’épistaxis postérieure.\n\n30% des cas : idiopathique / sans cause retrouvée\n\nCirculation en cause\n\nArtères bronchiques (90 % des cas) : système à haute pression, responsable des hémoptysies abondantes.\n\nArtères pulmonaires (10 % des cas) : système à basse pression, rarement en cause.\n\nAppréciation de la gravité\n\nHémoptysie massive : volume >200 mL en 24 h ou débit menaçant la ventilation.\n\nRisque vital lié à l’asphyxie par obstruction des voies aériennes.\n\nConduite à tenir\n\nProtéger les voies aériennes\n\nPosition latérale du côté du saignement\n\n± Oxygénothérapie\n\nAnticiper une éventuelle intubation\n\nÉvaluer la gravité\n\nRechercher la cause\n\nRadiographie thoracique\n\nScanner thoracique injecté (examen de référence) au temps artériel pulmonaire et artériel bronchique\n\n± fibroscopie bronchique pour bilan étiologoque d’une lésion pulmonaire retrouvée au scanner\n\nHaut du formulaire\n\nBas du formulaire\n\n____\n\n<table class=\"qcm-table\"><tbody><tr><td>Origine</td><td>Exemples</td></tr><tr><td>Bronchopulmonaire</td><td>Cancer bronchique, tuberculose, bronchiectasies, abcès pulmonaire</td></tr><tr><td>Cardiovasculaire</td><td>Embolie pulmonaire, œdème pulmonaire aigu</td></tr><tr><td>Iatrogène</td><td>Biopsie bronchique, traitement anticoagulant</td></tr><tr><td>Malformations vasculaires</td><td>Fistules artérioveineuses</td></tr><tr><td>Troubles de la coagulation</td><td>Thrombopénie, troubles de l’hémostase</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "M A 72ans tabagique, consulte pour une dyspnée.\nVoici la radiographie de thorax :",
+    "items": {
+      "A": "Pneumopathie basale droite",
+      "B": "Augmentation des vibrations vocales en base droite",
+      "C": "Médiastinite",
+      "D": "Surélévation de la coupole diaphragmatique droite",
+      "E": "Il peut s’agir d’un cancer du poumon"
+    },
+    "answers": [
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "Haut du formulaire\n\nBas du formulaire\n\n____"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos des exsudats dans les épanchements pleuraux",
+    "items": {
+      "A": "Ils peuvent révéler une embolie pulmonaire",
+      "B": "La dyspnée est plus sévère",
+      "C": "Aspect macroscopiquement citrin",
+      "D": "Une tuberculose donnera un exsudat avec une prédominance de polynucléaire neutrophiles",
+      "E": "Ils nécessitent d’être ponctionnés et évacués systématiquement"
+    },
+    "answers": [
+      "A"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Ils peuvent révéler une embolie pulmonaire\n\nVrai. L’embolie pulmonaire peut entraîner un épanchement pleural exsudatif, généralement de faible abondance. Il traduit une inflammation locale secondaire à l’infarctus pulmonaire. Il peut aussi être transsudatif.\n\nB – La dyspnée est plus sévère\n\nFaux. L’importance de la dyspnée dépend davantage du volume de l’épanchement que de la nature (exsudat ou transsudat). Un exsudat n’induit pas intrinsèquement une dyspnée plus sévère.\n\nC – Aspect macroscopiquement citrin\n\nFaux. Un liquide citrin (jaune clair) est typique d’un transsudat (épanchement d’origine hydrostatique comme dans l’insuffisance cardiaque). Un exsudat est souvent trouble, opalescent, voire hémorragique ou purulent selon l’étiologie.\n\nD – Une tuberculose donnera un exsudat avec une prédominance de polynucléaires neutrophiles\n\nFaux. L’épanchement tuberculeux est classiquement un exsudat lymphocytaire (lymphocytes >50%). La prédominance de polynucléaires neutrophiles se voit plutôt dans les pleurésies infectieuses aiguës.\n\nE – Ils nécessitent d’être ponctionnés et évacués systématiquement\n\nFaux. La ponction pleurale est indiquée pour le diagnostic afin de caractériser le liquide (transsudat vs exsudat, cytologie, microbiologie). L’évacuation complète n’est pas systématique sauf si l’épanchement est abondant et symptomatique (dyspnée) ou purulent (empyème).\n\nPrincipales causes d’exsudat :\n\nInfectieuses : pneumonie (parapneumonique), tuberculose, abcès\n\nNéoplasiques : cancer bronchique, métastases\n\nInflammatoires : connectivites, embolie pulmonaire\n\n____"
+  },
+  {
+    "section": "cours",
+    "enonce": "Sont des causes d’adénopathies médiastinales :",
+    "items": {
+      "A": "Silicose",
+      "B": "Cancer bronchique",
+      "C": "L’insuffisance rénale aigue",
+      "D": "Insuffisance cardiaque",
+      "E": "Sarcoïdose"
+    },
+    "answers": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Silicose\n\nVrai. La silicose entraîne fréquemment des adénopathies médiastinales, parfois calcifiées. Les calcifications peuvent avoir un aspect typique en « coquille d’œuf » (fine calcification périphérique de l’adénopathie).\n\nB – Cancer bronchique\n\nVrai. Le cancer bronchique peut donner des adénopathies médiastinales par extension loco-régionale ou métastatique (ganglions hilaires et médiastinaux). Ces adénopathies sont souvent volumineuses et asymétriques.\n\nC – Insuffisance rénale aiguë\n\nFaux. L’insuffisance rénale aiguë ne cause pas d’adénopathies médiastinales. Elle peut entraîner un épanchement pleural ou un œdème pulmonaire, mais pas d’hypertrophie ganglionnaire.\n\nD – Insuffisance cardiaque\n\nVrai. L’insuffisance cardiaque peut donner une congestion lymphatique et parfois des adénopathies médiastinales modérées, mais celles-ci sont moins caractéristiques et moins fréquentes que dans les pathologies infectieuses ou néoplasiques.\n\nE – Sarcoïdose\n\nVrai. La sarcoïdose est une cause classique d’adénopathies médiastinales, souvent bilatérales et symétriques (aspect typique du « paquet ganglionnaire médiastino-hilaire » à la radiographie ou au scanner).\n\nPoint de rappel : Adénopathies médiastinales – principales causes\n\nInfectieuses\n\nTuberculose\n\nHistoplasmose\n\nInfections fongiques (aspergillose)\n\nTumorales\n\nCancers bronchopulmonaires\n\nLymphomes (Hodgkinien et non-Hodgkinien)\n\nMétastases d’autres cancers\n\nPneumoconioses\n\nSilicose (calcifications en coquille d’œuf)\n\nBéryliose\n\nInflammatoires\n\nSarcoïdose (bilatérales, symétriques)\n\nAutres\n\nInsuffisance cardiaque (rarement volumineuses)\n\nConnectivites (rarement)\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos du pneumothorax :",
+    "items": {
+      "A": "Il peut se développer sur un poumon sans maladie respiratoire",
+      "B": "Les sujets longilignes et âgés sont les plus atteints par les formes spontanées et idiopathiques",
+      "C": "La pleurodèse est indiquée systématiquement une fois le poumon recollé au retrait du drain",
+      "D": "Le tabac est un facteur de risque reconnu de pneumothorax spontané primaire",
+      "E": "Les voyages en avion sont contre-indiqués à vie chez les patients avec un antécédent de pneumothorax"
+    },
+    "answers": [
+      "A",
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "Correction détaillée\n\nA – Il peut se développer sur un poumon sans maladie respiratoire\n\nVrai. C’est le pneumothorax spontané primaire (PSP) qui survient sans pathologie pulmonaire sous-jacente identifiable. Il est dû à la rupture de bulles sous-pleurales (blebs) dans un poumon apparemment sain.\n\nB – Les sujets longilignes et âgés sont les plus atteints par les formes spontanées et idiopathiques\n\nFaux. Les sujets longilignes sont effectivement plus à risque, mais le pneumothorax spontané primaire touche surtout les adolescents et les jeunes adultes, généralement entre 15 et 35 ans. Le pneumothorax chez les sujets âgés est souvent secondaire à une maladie pulmonaire (pneumothorax spontané secondaire).\n\nC – La pleurodèse est indiquée systématiquement une fois le poumon recollé au retrait du drain\n\nFaux. La pleurodèse (chimique ou chirurgicale) n’est pas systématique. Elle est indiquée en cas de pneumothorax récidivant, bilatéral ou persistant après drainage (>3-5 jours).\n\nD – Le tabac est un facteur de risque reconnu de pneumothorax spontané primaire\n\nVrai. Le tabagisme augmente fortement le risque de rupture de bulles sous-pleurales, même chez des sujets jeunes sans pathologie pulmonaire connue.\n\nE – Les voyages en avion sont contre-indiqués à vie chez les patients avec un antécédent de pneumothorax\n\nFaux. Les voyages en avion sont contre-indiqués uniquement tant que le pneumothorax n’est pas totalement résolu (confirmé par imagerie). Après guérison complète, il n’y a pas de contre-indication définitive. Il est généralement conseillé d’attendre 2 à 6 semaines après résolution pour voler.\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Type</td><td>Définition</td></tr><tr><td>Spontané primaire (PSP)</td><td>Sans pathologie pulmonaire connue, sujet jeune, tabagisme</td></tr><tr><td>Spontané secondaire (PSS)</td><td>Sur poumon pathologique (BPCO, fibrose, infections)</td></tr><tr><td>Traumatique</td><td>Après traumatisme thoracique (ou geste invasif)</td></tr><tr><td>Iatrogène</td><td>Après ponction, ventilation mécanique, biopsie</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "À propos du diagnostic de la BPCO",
+    "items": {
+      "A": "Il repose sur la présence d’un VEMS/CVF",
+      "B": "La spirométrie est suffisante pour classer la sévérité de la maladie selon les groupes ABE",
+      "C": "Une DLCO basse est typique dans l’emphysème",
+      "D": "La radiographie thoracique est systématiquement anormale dans la BPCO",
+      "E": "Le tabagisme est le seul facteur de risque reconnu de BPCO"
+    },
+    "answers": [
+      "A",
+      "C"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Vrai. Le diagnostic repose sur la mise en évidence d’une obstruction bronchique non complètement réversible avec un rapport VEMS/CV < 0,7 ou inférieur à la limite inférieure de la valeur normale après test de réversibilité.\n\nB – Faux. La spirométrie seule classe la sévérité selon le VEMS (% du théorique), mais l’évaluation globale (classification GOLD) inclut aussi les symptômes (CAT/mMRC) et les exacerbations.\n\nC – Vrai. Une baisse de la DLCO est en faveur d’un emphysème par destruction de la membrane alvéolo-capillaire.\n\nD – Faux. La radiographie peut être normale, surtout aux stades précoces. Elle peut montrer un thorax distendu, un aplatissement des coupoles diaphragmatiques et une raréfaction vasculaire en cas d’emphysème avancé.\n\nE – Faux. Le tabac est le principal facteur de risque en France, mais d’autres existent : exposition professionnelle (poussières, fumées), pollution de l’air intérieur (biomasse), déficit en alpha-1 antitrypsine.\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Concernant le traitement de la BPCO",
+    "items": {
+      "A": "Les corticoïdes inhalés sont systématiquement prescrits en traitement de fond",
+      "B": "La réhabilitation respiratoire est une prise en charge qui peut améliorer la dyspnée des patients",
+      "C": "L’oxygénothérapie prolongée est indiquée si PaO₂ < 55 mmHg",
+      "D": "Les bronchodilatateurs de longue durée (LABA/LAMA) sont utilisés pour améliorer la survie",
+      "E": "Le sevrage tabagique est la mesure la plus efficace pour ralentir le déclin du VEMS"
+    },
+    "answers": [
+      "B",
+      "C",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Faux. Les corticoïdes inhalés ne sont pas prescrits en monothérapie et ne sont indiqués qu’en association (LABA/CSI) chez les patients présentant des exacerbations fréquentes.\n\nB – Vrai. La réhabilitation respiratoire est recommandée pour améliorer la tolérance à l’effort et la qualité de vie.\n\nC – Vrai. L’oxygénothérapie de longue durée (>15 h/j) améliore la survie si PaO₂ ≤ 55 mmHg ou PaO₂ ≤ 60 mmHg avec signes d’hypoxémie chronique (polyglobulie, hypertension pulmonaire, décompensation cardiaque droite).\n\nD – Faux. Les bronchodilatateurs de longue durée améliorent les symptômes et réduisent les exacerbations, les effets sur la survie sont modestes.\n\nE – Vrai…\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "À propos des exacerbations de la BPCO",
+    "items": {
+      "A": "Elles sont définies notamment par une aggravation des symptômes respiratoires nécessitant une modification du traitement habituel",
+      "B": "La principale cause infectieuse bactérienne est Streptococcus pneumoniae",
+      "C": "La radiographie de thorax est systématique pour rechercher une pneumonie associée",
+      "D": "La corticothérapie orale (prednisone) est une option thérapeutique à envisager",
+      "E": "Les antibiotiques sont indiqués chez tous les patients en exacerbation"
+    },
+    "answers": [
+      "B",
+      "C",
+      "D"
+    ],
+    "per_item": {
+      "A": "Vous indiquez une ventilation non invasive AUGMENTIN Quadrithérapie antituberculeuse Un scanner thoracique Anticoagulation par AOD CRP Vous ajoutez un anticholinergique Vous introduisez une antibiothérapie par AMOXICILLINE Il faudra réaliser en urgence un scanner thoracique injecté sous réserve de la fonction rénale le seul examen indispensable en urgence, 3 vertus : -\tLocalise le saignement -\tRenseigne sur l’étiologie -\tIndique ou pas un geste d’embolisation Echographie trans thoracique pas d’indication à ce stade, en plus il n’existe pas de signe de décompensation cardiaque associé, le tableau est plutôt septique",
+      "B": "Ce patient est éligible à un programme de chirurgie bariatrique AMOXICILLINE Rifampicine seule 6 mois Une IGRA Pas d’anticoagulation en raison de la thrombopénie Gaz du sang Vous recherchez une prise de poids récente Vous introduisez une antibiothérapie par AMOCICILLINE – ACIDE CLAVULANIQUE Il faudra réaliser en urgence une fibroscopie bronchique MZ Ponction pleurale effectivement, c’est une des indications à la réaliser en urgence",
+      "C": "Même en l’absence de somnolence diurne vous pouvez diagnostiquer un syndrome d’apnée central du sommeil MACROLIDES Isoniazide seul 3 mois Il s’agit d’un syndrome de Lofgrën, la règle est l’évolution spontanément favorable Anticoagulation par AVK d’emblée Echographie transthoracique Vous introduisez une corticothérapie systémique Vous introduisez une aérosolthérapie par B2 mimétiques et anticholinergiques Il y a un risque important de choc hémorragique et de déglobulisation le risque est lié à la détresse respiratoire, avant d’être assez abondant pour provoquer un choc hypovolémique ou une déglobulisation, les voies aériennes seront assez inondées pour provoquer un arrêt hypoxique. Hémocultures fièvre > 38,5°C",
+      "D": "Même en l’absence de somnolence diurne vous pouvez diagnostiquer un syndrome d’apnée obstructif du sommeil C3G et MACROLIDES Vous réalisez une déclaration obligatoire EFR Anticoagulation par héparine Radiographie de thorax Vous évaluez quantitativement la prise de BDCA Vous réalisez une séance de ventilation non invasive Vous pouvez utiliser des vasopresseurs comme la terlipressine pour temporiser la situation ce patient présente une cardiopathie ischémique, avec un IDM récent Transfert en réanimation la tolérance hémodynamique, respiratoire et neurologique ne justifie pas son transfert",
+      "E": "En l’absence d’hypersomnolence diurne, vous ne retenez pas ici le diagnostic de syndrome d’apnée du sommeil, obstructif ou central Antigénurie pneumocoque Une enquête autour d’elle par le CLAT n’est pas nécessaire Une échographie trans thoracique Recherche SAPL ECG Vous montez la dose de son traitement de fond actuel Vous augmentez le débit d’oxygène Il faudra très probablement réaliser une chirurgie d’hémostase chez ce patient Réponse(s) : A Correction détaillée : distracteur, c’est un traitement d’exception, avec une forte mortalité. On ne peut vous demander de la choisir comme option thérapeutique, qui plus est sans scanner. Concernant l’hémoptysie il faut se rappeler des caractéristiques cliniques qui doivent la faire distinguer des diagnostics différentiels que sont l’épistaxis et l’hématémèse. Voici une liste exhaustive de caractéristiques cliniques qui peuvent vous servir : -\tSang rouge vif, spumeux, aéré : effort de toux => par bouche +/- nez -\tProdromes ou signes accompagnement : angoisse, chaleur rétrosternale, chatouillement laryngé, gout métallique bouche -\tCraquement ou gargouillement : peuvent localiser côté de l’hémoptysie -\tTardivement queue de l’hémoptysie = expectoration crachats sanglants de plus en plus foncés => noirâtres Les signes de gravité sont la tolérance respiratoire et les paramètres vitaux. Les saignements artériels pulmonaires sont plus graves mais ne représentent que 10% des hémoptysies tandis que les saignements aretériels bronchiques 90%. Il faut connaître quelques étiologies : idiopathique, cancer bronchique, bronchectasies, pneumopathies nécrosantes, tuberculose, infections aspergillaires, l’embolie pulmonaire… L’examen essentiel dans la prise en charge est le scanner thoracique injecté au temps artériel pulmonaire et artériel bronchique. Il permet de localiser le saignement, en déterminer l’étiologie, indiquer une prise en charge percutanée. La fibroscopie a une indication plus accessoire à la phase aigue, elle permet surtout dans un second temps de participer au bilan étiologique, par exemple documenter histologiquement la masse qui était à l’origine du saignement. La terlipressine est un vasoconstricteur puissant qui permet de diminuer sinon d’interrompre le saignement, il est contre indiqué en cas d’antécédent d’AVC ou d’infarctus et expose au risque d’hyponatrémie (ayant des effets analogues à la vasopressine). Le traitement le plus important est l’embolisation d’une artère bronchique ou la vaso-occlusion d’une artère pulmonaire. Il interrompt plus de 70% des saignements lorsqu’il est indiqué. ___ QI 10 : Un patient de 33 ans est adressé par son médecin traitant aux urgences pour une dyspnée et une fièvre. ATCD : pas de suivi médical Intoxication intraveineuse aux opiacés, tabagisme important actif, sans domicile fixe avec une très mauvaise hygiène de vie. Son état bucco-dentaire est inquiétant. Il présente des difficultés respiratoires associées à une toux et des expectorations purulentes depuis 4 jours. Constantes : SaO2 89% en air ambiant, PA 126/76 mmHg, FC 101 bpm, 39,1°C Il existe une abolition du murmure vésiculaire en base gauche. L’examen neurologique, digestif et cardiovasculaire vous semble normal. Que faites-vous à ce stade ? Antigénurie légionnelle Réponse(s) : BC Il s’agit ici d’un épanchement pleural fébrile, une ponction exploratrice à la recherche d’argument pour un épanchement parapneumonique compliqué est une urgence. devant une suspicion de pleuropneumopathie infectieuse les explorations microbiologiques doivent être les mêmes que pour une pneumopathie aigue communautaire, il faut juste ajouter la ponction pleurale au bilan Devant un épanchement pleural et des signes de pneumopathies infectieuse il faut suspecter une pleuropneumopathie infectieuse. La ponction est une urgence, elle permet d’établir la nature du liquide. 1. Est-ce un exsudat ? (il sera normalement neutrophilique) 2. Si oui l’épanchement parapneumonique est-il compliqué ou non compliqué ? ___"
+    },
+    "correction_generale": "Correction détaillée\n\nA – Vrai. Une exacerbation est une aggravation aiguë des symptômes (dyspnée, toux, expectorations) > 48h, au-delà des fluctuations quotidiennes de la maladie, nécessitant un ajustement thérapeutique\n\nB – Vrai. Streptococcus pneumoniae, Haemophilus influenzae et Moraxella catarrhalis sont les bactéries les plus fréquemment impliquées.\n\nC – Vrai. La radiographie thoracique est recommandée pour rechercher une pneumonie ou d’autres complications (pneumothorax).\n\nD – Vrai. La corticothérapie systémique (prednisone 40 mg/j) est recommandée pour une durée courte de 5 jours. Elle n’est cependant pas indispensable.\n\nE – Faux. Les antibiotiques sont indiqués si présence de purulence des expectorations et signes d’infection (fièvre, augmentation du volume des expectorations) ou si exacerbation sévère.\n\n2ème partie : QCM cas clinique, chaque comporte 1 à 5 réponses justes\n\nIl s’agit ici de questions en rapport avec des situations cliniques. Il n’y a pas de caractère évolutif : les contextes, patients et questions de ces différents cas doivent être traités indépendamment d’une question à l’autre.\n\n___\n\nQI1 :\n\nM A 45 ans vous consulte pour des céphalées matinales associées à des troubles de la libido et des nycturies.\n\nIl présente comme antécédents : une obésité IMC 38, HTA sous quadrithérapie, dyslipidémie, diabète insulinodépendant.\n\nIl suit depuis 8 mois un programme de prise en charge de son obésité médical, nutritionnel, diététique et psychothérapeutique. Celui-ci a été peu efficace.\n\nEn l’absence de diagnostic évident, vous l’avez adressé à un pneumologue afin de rechercher un syndrome d’apnée du sommeil.\n\nUne polygraphie du sommeil est réalisée, l’IAH est à 48/h avec des épisodes de diminution ou d’arrêt du débit aérien naso-buccal pendant au moins 10 secondes avec persistance d’efforts ventilatoires essentiellement.\n\nLe gaz du sang en air ambiant est le suivant : pH 7.42, PO2 82 mmHg, PCO2 42mmHg, HCO3- 26.9mmol/L\n\nQuelle(s) est (sont) la (les) réponse(s) vraie(s) ?\n\nA – Vous indiquez une ventilation non invasive\n\nFaux. La ventilation non invasive (VNI) n’est pas indiquée ici car il s’agit d’un syndrome d’apnées obstructives du sommeil (SAOS) sans hypoventilation alvéolaire (pas d’hypercapnie). La prise en charge repose en première intention sur la pression positive continue (PPC ou CPAP), pas sur la VNI. La VNI est plutôt utilisée en cas de syndrome obésité-hypoventilation (syndrome de Pickwick) avec hypercapnie chronique.\n\nB – Ce patient est éligible à un programme de chirurgie bariatrique\n\nVrai. L’IMC est de 38 kg/m², et il présente plusieurs comorbidités graves associées à l’obésité (SAOS sévère, diabète de type 2, HTA). Selon les recommandations, il est éligible à une chirurgie bariatrique après échec d’un programme médical bien conduit.\n\nC – Même en l’absence de somnolence diurne vous pouvez diagnostiquer un syndrome d’apnée central du sommeil\n\nFaux. La polygraphie montre des apnées/hypopnées obstructives (efforts ventilatoires persistants). Un syndrome d’apnée centrale (SACS) se caractérise par l’absence d’efforts respiratoires.\n\nD – Même en l’absence de somnolence diurne vous pouvez diagnostiquer un syndrome d’apnée obstructif du sommeil\n\nVrai. Le SAOS peut être diagnostiqué sans hypersomnolence diurne si l’IAH est ≥ 30/h (ici 48/h). La somnolence diurne est fréquente mais n’est pas un critère obligatoire pour retenir le diagnostic en cas de SAOS sévère.\n\nE – En l’absence d’hypersomnolence diurne, vous ne retenez pas ici le diagnostic de syndrome d’apnée du sommeil, obstructif ou central\n\nFaux. L’hypersomnolence diurne n’est pas indispensable au diagnostic. Selon les recommandations (AASM), le SAOS est défini par :\n\nIAH ≥ 5/h + symptômes évocateurs (somnolence, fatigue, céphalées matinales, nycturies…)\n\nPoint de rappel : Diagnostic du SAOS\n\nDiagnostic\n\nIAH ≥ 5/h avec symptômes évocateurs\n\nDifférencier :\n\nObstructif : efforts ventilatoires persistants\n\nCentral : absence d’efforts ventilatoires\n\n___\n\nQI2 :\n\nMadame F âgée de 38ans se présente aux urgences pour une dyspnée, une toux et des diarrhées.\n\nElle n’a pas d’antécédent.\n\nElle est tabagique active, 10 PA.\n\nDepuis 4 jours sont apparus des symptômes de dyspnée, de toux, d’expectorations purulentes, de diarrhée et de céphalées.\n\nA l’arrivée elle présente une tachypnée à 32/min, un tirage intercostal, une dyspnée de repos, une toux grasse.\n\nElle se plaint aussi de myalgies, de céphalées et de douleurs abdominales.\n\nVous pensez en tout état de cause à une légionellose.\n\nLes constantes à l’arrivée sous 5L/min d’O2 : 91% SaO2, 95/44mmHg, FC 126bpm, 39.8°C\n\nLe gaz du sang réalisé sous 5L/min d’O2 : pH 7.31, PO2 67mmHg, PCO2 48mmHg, HCO3- 18mmol/L, lactatémie 3.1mmol/L.\n\nParamètres vitaux : FC 141bpm, 103/37 mmHg., 39.4°C.\n\nLa radiographie de thorax est la suivante :\n\nUn scanner thoracique est réalisé.\n\nQuelle prise en charge proposez-vous ?\n\nA – AUGMENTIN\n\nFaux. L’amoxicilline-acide clavulanique (Augmentin) n’est pas un traitement adapté pour une pneumonie communautaire sévère car elle ne couvre pas les bactéries intracellulaires comme Legionella pneumophila ni les pneumocoques résistants.\n\nB – AMOXICILLINE\n\nFaux. L’amoxicilline seule n’est pas adaptée ici. Elle ne couvre pas les agents atypiques comme Legionella, Mycoplasma et Chlamydiae.\n\nC – MACROLIDES\n\nFaux. Les macrolides (comme la clarithromycine ou l’azithromycine) sont actifs sur les germes intracellulaires (Legionella, Mycoplasma), mais en monothérapie ils ne suffisent pas pour une pneumonie communautaire grave, qui nécessite une couverture large incluant Streptococcus pneumoniae.\n\nD – C3G et MACROLIDES\n\nVrai. Le traitement probabiliste d’une pneumonie communautaire sévère hospitalisée associe une céphalosporine de 3e génération (C3G) telle que cefotaxime ou ceftriaxone pour Streptococcus pneumoniae et un macrolide (ou une fluoroquinolone antipneumococcique) pour couvrir les germes intracellulaires comme Legionella.\n\nE – Antigénurie pneumocoque\n\nVrai. Elle est recommandée en plus de l’antigénurie légionnelle pour rechercher rapidement une infection à Streptococcus pneumoniae dans les pneumopathies graves, principal agent des pneumonies communautaires.\n\nPoint clé sur la légionellose\n\nInfection à Legionella pneumophila, bactéries intracellulaires.\n\nSignes évocateurs : pneumonie fébrile associée à troubles digestifs (diarrhées), neurologiques (céphalées, confusion), hyponatrémie fréquente, CRP élevée.\n\nL’antigénurie détecte uniquement L. pneumophila sérogroupe 1. Un test négatif n’exclut donc pas le diagnostic.\n\nLe diagnostic peut être confirmé par PCR sur expectoration ou aspiration bronchique.\n\nPrise en charge\n\nHospitalisation en réanimation : /!\\ diastolique < 40mmHg +++signe d’instabilité hémodynamique sévère.\n\nAntibiothérapie probabiliste pneumopathie grave :\n\nC3G IV + macrolide IV ou fluoroquinolone antipneumococcique IV.\n\nDurée : 5-7j\n\nSurveillance rapprochée : gaz du sang, fonction rénale, bilan infectieux complet.\n\n___\n\nQI3 :\n\nMme H âgée de 24 ans est suivie pour une neurosarcoïdose.\n\nLa maladie est évolutive sous corticoïdes, un traitement par méthotrexate et anti TNF alpha va être introduit.\n\nUn IGRA est réalisé, celui-ci est positif.\n\nVous réaliser un scanner thoracique et celui-là est normal.\n\nQue faites-vous ?\n\nA – Quadrithérapie antituberculeuse : Faux. Pas d’arguments cliniques ou radiologiques pour une tuberculose maladie active.\n\nB – Rifampicine seule 6 mois : Faux. Non recommandé.\n\nC – Isoniazide seul 3 mois : Faux. C’est soit 3 mois de RIF INH soit 6 mois d’isoniazide\n\nD – Déclaration obligatoire : Faux. L’IGRA positif seul ne nécessite pas de déclaration, qui est réservée aux cas de tuberculose maladie.\n\nE – Enquête CLAT non nécessaire : Vrai. L’IGRA positif témoigne d’une infection tuberculeuse latente (ITL). Il ne s’agit pas d’une tuberculose contagieuse, donc pas d’enquête autour d’elle.\n\nÀ retenir :\n\nUne ITL nécessite une chimioprophylaxie avant immunosuppression : isoniazide 6 mois ou rifampicine + isoniazide 3 mois selon protocoles.\n\nLes anti TNF peuvent être débutés après 3 semaines de traitement bien conduit\n\n___\n\nQI4 :\n\nUn patient de 26 ans est allé voir son médecin traitant en raison d’une toux chronique.\n\nVoici sa radiographie de thorax :\n\nQue faites-vous en première intention ?\n\nContexte\n\nHomme jeune, 26 ans, toux chronique.\n\nLa radiographie thoracique montre une augmentation de la trame pulmonaire bilatérale avec opacités hilaires, évocatrice d’adénopathies hilaires et médiastinales.\n\nCe tableau est compatible avec une maladie granulomateuse.\n\nA – Un scanner thoracique\n\nVrai. Le scanner est l’examen de choix pour :\n\nConfirmer la présence d’adénopathies médiastino-hilaires.\n\nRechercher une atteinte parenchymateuse associée (nodules, verre dépoli, fibrose).\n\nAffiner l’orientation diagnostique (sarcoïdose, lymphome, tuberculose…).\n\nB – Une IGRA\n\nFaux. Le test IGRA (interféron gamma release assay) peut être utile pour rechercher une infection tuberculeuse latente. Mais il n’est pas indiqué en première intention, car la priorité est d’identifier la cause des anomalies radiologiques par imagerie et éventuellement biopsie.\n\nC – Il s’agit d’un syndrome de Löfgren, la règle est l’évolution spontanément favorable\n\nFaux. Le syndrome de Löfgren associe un érythème noueux, une arthrite bilatérale des chevilles et des adénopathies médiastino-hilaires, ce qui n’est pas rapporté ici.\n\nD – EFR\n\nVrai. Les épreuves fonctionnelles respiratoires permettent :\n\nD’évaluer le retentissement fonctionnel (syndrome restrictif en cas de fibrose, trouble ventilatoire obstructif possible).\n\nDe surveiller l’évolution.\n\nE – Une échographie transthoracique\n\nFaux. Pas d’indication ici. Cet examen est utile pour explorer une dyspnée d’origine cardiaque, une suspicion d’épanchement péricardique ou une HTAP.\n\nTopo de cours : Toux chronique + anomalies radiologiques diffuses\n\n1. Définition de la toux chronique\n\nPersistance > 8 semaines\n\nDiagnostic repose sur interrogatoire, examen clinique et radiographie de thorax systématique\n\n2. Anomalies radiologiques évocatrices\n\nAdénopathies hilaires et médiastinales :\n\nSarcoïdose (+++)\n\nLymphome\n\nTuberculose ganglionnaire\n\nAtteinte interstitielle diffuse :\n\nPneumopathie interstitielle diffuse\n\nInfections opportunistes (chez immunodéprimé)\n\n3. Principales causes à évoquer\n\nSarcoïdose\t: Adénopathies médiastino-hilaires bilatérales symétriques, atteinte interstitielle, sujet jeune\n\nTuberculose : Contage tuberculeux, signes généraux (fièvre, sueurs, amaigrissement), lésions apicales\n\nLymphome\t: Syndrome tumoral, adénopathies volumineuses, B-symptômes (fièvre, sueurs nocturnes, amaigrissement)\n\n4. Conduite diagnostique\n\nScanner thoracique : confirmer les anomalies et guider une éventuelle biopsie.\n\nEFR : apprécier l’atteinte fonctionnelle en cas de suspicion de sarcoïdose par exemple\n\nBiopsie (si besoin) : ganglionnaire (endoscopie bronchique avec ponction transbronchique), pulmonaire ou autre site accessible.\n\nTests spécifiques : IGRA/tuberculose, sérologies, recherche d’autoanticorps selon le contexte.\n\n5. Diagnostic probable ici\n\nSarcoïdose au stade I (adénopathies médiastino-hilaires isolées) ou II (atteinte interstitielle associée).\n\nConfirmation par biopsie ganglionnaire montrant des granulomes épithélioïdes et giganto-cellulaires sans nécrose caséeuse.\n\n6. Points clés de la sarcoïdose\n\nMaladie systémique granulomateuse d’étiologie inconnue.\n\nSujets jeunes (20-40 ans), plus fréquente chez les femmes et certaines populations (afro-antillaises).\n\nManifestations : atteinte pulmonaire (>80 % des cas), adénopathies médiastinales, atteinte cutanée, cardiaque, ophtalmologique, rhumatologique, neurologique.\n\nÉvolution souvent spontanément favorable au stade I.\n\n7. Traitement\n\nSurveillance si formes peu symptomatiques et sans atteinte fonctionnelle.\n\nCorticothérapie générale si atteinte viscérale significative ou retentissement fonctionnel.\n\nQI5 :\n\nMme H 31 ans est ramenée aux urgences pour une dyspnée de majoration rapidement progressive depuis 3 jours.\n\nElle ne présente aucun antécédent, est très active, pratique le cross fit.\n\nA l’examen clinique : elle est tachypnéique à 24/min, il n’y a pas de douleur thoracique ni de toux, l’auscultation est symétrique et claire.\n\nLe bilan biologique est sans particularité en dehors d’une thrombopénie à 77 G/L, la troponinémie est élevée.\n\nLa radiographie de thorax est normale.\n\nUn angioscanner thoracique est d’emblée réalisé.\n\nIl existe une dilatation du ventricule droit au scanner.\n\nQue faites-vous ?\n\nContexte\n\nFemme jeune, sportive, sans antécédents.\n\nDyspnée d’aggravation rapide, sans douleur thoracique ni toux.\n\nExamen clinique : tachypnée à 24/min, auscultation normale, pas de signes de phlébite.\n\nBilan biologique : thrombopénie (77 G/L), troponines élevées.\n\nRadiographie thoracique normale.\n\nAngioscanner thoracique : embolie pulmonaire avec dilatation du ventricule droit.\n\nLe diagnostic est une embolie pulmonaire (EP) à risque intermédiaire élevé : troponines élevées et dilatation VD\n\nLa thrombopénie impose prudence mais n’empêche pas le traitement : pas très profonde, ne contre indique pas l’anticoagulation mais doit faire suspecter un SAPL\n\nAnalyse des propositions\n\nA – Anticoagulation par AOD\n\nFaux. Les anticoagulants oraux directs (AOD) ne sont pas recommandés en initiation dans une EP à risque intermédiaire élevée. En phase aiguë, la prise en charge repose sur une anticoagulation parentérale (Héparine). Les AOD peuvent être relayés secondairement une fois la situation stabilisée.\n\nB – Pas d’anticoagulation en raison de la thrombopénie\n\nFaux. Une thrombopénie modérée (>50 G/L) n’est pas une contre-indication à l’anticoagulation. Elle nécessite une surveillance attentive et une adaptation des doses si la thrombopénie s’aggrave. Seule une thrombopénie sévère (<50 G/L) impose d’envisager des alternatives.\n\nC – Anticoagulation par AVK d’emblée\n\nFaux. Les AVK ne sont jamais utilisés seuls en phase aiguë. Ils doivent être associés à une héparine de bas poids moléculaire (HBPM) ou fondaparinux pendant au moins 5 jours jusqu’à INR thérapeutique stable.\n\nD – Anticoagulation par héparine\n\nVrai. L’anticoagulation est indispensable et doit être instaurée rapidement par des héparines, adaptés au poids. La présence d’une dilatation du VD et d’une élévation des troponines signe un EP à risque intermédiaire élevé.\n\nE – Recherche SAPL\n\nVrai. La thrombopénie associée à une EP chez une jeune femme sans facteur de risque évident impose de rechercher une cause thrombogène particulière, notamment un syndrome des antiphospholipides (SAPL).\n\nTopo de cours : Embolie pulmonaire (EP) – prise en charge initiale\n\n1. Classification pronostique (ESC 2019)\n\nCatégorie\tCritères\n\nHaut risque\tChoc obstructif (hypotension persistante)\n\nRisque intermédiaire\tVD dilaté au scanner/écho et troponines élevées\n\nFaible risque\tAucun signe de gravité, patient stable\n\n2. Signes d’EP à risque intermédiaire\n\nDilatation ventriculaire droite (VD/ VG >0,9 au scanner ou à l’échographie)\n\nTroponines élevées (atteinte myocardique droite)\n\nAbsence d’hypotension systémique (<90 mmHg)\n\n3. Prise en charge selon le risque\n\nRisque\t                                   Traitement initial\n\nHaut\t                             Thrombolyse IV (fibrinolytiques) + HNF\n\nIntermédiaire\t élevé                        HBPM ou HNF en aigu\n\nIntermédiaire Faible ou faible   AOD en ambulatoire possible\n\n4. Recherche étiologique\n\nRecherche de facteurs de risques\n\nNéoplasie sous-jacente : clinique et mise à jour des dépistages\n\nSAPL (syndrome des antiphospholipides) : jeunes, thromboses artérielles et veineuses, fausses couches, rétrecissement intra-utérin.\n\nAutres thrombophilies (plus rare chez adultes sans ATCD) : déficit en antithrombine, protéine C/S, mutation facteur V Leiden.\n\n5. Points clés du SAPL\n\nAssociation possible de thromboses artérielles/veineuses et de thrombopénie, fausses couches…\n\nRecherche : anticorps anticardiolipine, anti-bêta2GP1, anticoagulant lupique (2 déterminations à 12 semaines d’intervalle).\n\n___\n\nQI6 :\n\nUn homme de 21 ans consulte aux urgences pour la survenue d’une douleur brutale latéro thoracique droite.\n\nCelle-ci est permanente et rythmée par la respiration.\n\nConstantes : 91% SaO2 en air ambiant, PA 165/95mmHg, FC 114bpm, 37.4°C\n\nQue faites-vous en première intention ?\n\nContexte\n\nPatient jeune sans antécédents connus.\n\nDouleur brutale, latéro-thoracique, permanente et rythmée par la respiration (douleur pleurétique).\n\nSignes vitaux :\n\nSaO₂ légèrement abaissée (91 %).\n\nTachycardie (114 bpm).\n\nTA élevée (165/95 mmHg).\n\nTempérature normale (37,4°C).\n\nCes éléments imposent d’envisager plusieurs diagnostics potentiellement graves : pneumothorax, embolie pulmonaire, péricardite, voire syndrome coronaire aigu atypique.\n\nAnalyse des propositions\n\nA – CRP\n\nVrai. Recherche une éventuelle étiologie inflammatoire ou infectieuse (pneumonie, pleurésie infectieuse). Non prioritaire mais utile rapidement.\n\nB – Gaz du sang\n\nVrai. Permet d’évaluer l’hypoxémie, la PaCO₂ et le pH => spO2 basse\n\nC – Échographie transthoracique\n\nFaux. Pas indiqué en première intention chez un jeune sans contexte cardiovasculaire. Elle peut être utile plus tard si suspicion d’atteinte péricardique ou d’embolie pulmonaire avec signes d’insuffisance cardiaque droite.\n\nD – Radiographie de thorax\n\nVrai. Examen clé en première intention. Recherche :\n\nPneumothorax\n\nSyndrome alvéolaire (pneumonie)\n\nÉpanchement pleural\n\nSignes indirects d’embolie pulmonaire (infarctus pulmonaire, oligohémie zonale)\n\nE – ECG\n\nVrai. Pour éliminer une cause cardiovasculaire (péricardite, embolie pulmonaire, SCA atypique).\n\nPneumothorax spontané primaire : diagnostic le plus probable ici\n\nTypique chez les hommes jeunes, longilignes, souvent fumeurs.\n\nConfirmé par la radiographie : ligne de décollement pleural visible, hyperclarté périphérique, disparition du dessin vasculaire.\n\n___\n\nQI7 :\n\nMonsieur H, âgé de 24 ans se présente à votre consultation pour le suivi de son asthme.\n\nIl est sous pallier II.\n\nIl présente des signes de mauvais contrôle depuis 2 mois avec des symptômes nocturnes hebdomadaires, des symptômes diurnes quotidiens.\n\nL’observance et la technique de prise sont satisfaisantes.\n\nIl est tabagique, IMC 31, présente de nombreuses allergies pour lesquelles l’éviction est optimale.\n\nA votre consultation il est eupnéique, avec une fréquence respiratoire à 16/min, sans signe de détresse respiratoire aiguë\n\nQue faites-vous ?\n\nContexte\n\nPatient jeune asthmatique sous traitement pallier II (corticoïdes inhalés à faible dose ou association faible dose + bêta-2 agoniste à courte durée d’action en fonction des recommandations utilisées).\n\nMauvais contrôle depuis 2 mois : symptômes nocturnes hebdomadaires et symptômes diurnes quotidiens.\n\nObservance et technique d’inhalation vérifiées et satisfaisantes.\n\nFacteurs aggravants potentiels : tabagisme actif, surpoids (IMC 31), allergies multiples mais éviction correcte.\n\nAnalyse des propositions\n\nA – Vous ajoutez un anticholinergique\n\nFaux. L’ajout d’un anticholinergique (tiotropium) n’est pas recommandé en première intention pour un asthme mal contrôlé. Il est réservé en cas d’asthme sévère (pallier V), ou d’exacerbations fréquentes malgré un traitement optimal.\n\nB – Vous recherchez une prise de poids récente\n\nVrai. L’obésité est un facteur aggravant bien connu de l’asthme. Une prise de poids récente peut expliquer une perte de contrôle et doit être identifiée pour proposer une prise en charge adaptée (régime, activité physique, éventuel accompagnement diététique).\n\nC – Vous introduisez une corticothérapie systémique\n\nFaux. La corticothérapie systémique (prednisone) est réservée aux exacerbations aiguës ou aux asthmes sévères non contrôlés malgré un traitement de fond maximal. Ce patient ne présente aucun signe d’exacerbation (pas de dyspnée aiguë, pas de signes de détresse respiratoire).\n\nD – Vous évaluez quantitativement la prise de BDCA\n\nVrai. Une consommation excessive de bêta-2 agonistes de courte durée (BDCA) est un marqueur de mauvais contrôle. Il est recommandé d’interroger le patient sur la fréquence d’utilisation :\n\n2 fois/semaine = asthme mal contrôlé.\n\n1 inhalation/jour ou plusieurs fois par jour = très mauvais contrôle, risque accru d’exacerbations.\n\nE – Vous montez la dose de son traitement de fond actuel\n\nFaux (pas immédiatement). Avant toute escalade thérapeutique, il est impératif de vérifier les causes de mauvais contrôle (observance, technique, facteurs aggravants). Si tout est optimal, on pourra envisager le passage au pallier supérieur (pallier III : association CSI à dose faible ou modérée + LABA).\n\nCauses fréquentes de mauvais contrôle\n\nObservance (oubli de prises)\n\nMauvaise technique d’inhalation\n\nFacteurs aggravants :\n\nTabagisme actif\n\nObésité (IMC >30)\n\nAllergènes domestiques (acariens, animaux)\n\nExposition professionnelle (irritants, poussières)\n\nComorbidités :\n\nRGO\n\nRhinite non traitée\n\nAnxiété/stress\n\n…\n\nConduite pratique\n\nVérifier :\n\nObservance et technique d’inhalation\n\nFacteurs aggravants (tabac, prise de poids, exposition allergénique)\n\nAdapter si besoin :\n\nSevrage tabagique\n\nPrise en charge diététique pour l’obésité\n\nTraitement de la rhinite ou du RGO\n\nEscalader le traitement seulement si nécessaire :\n\nPassage au pallier III : association CSI dose faible + LABA\n\nRéévaluation régulière après 4 à 6 semaines\n\n___\n\nQI8 :\n\nMadame F, âgée de 68 ans se présente aux urgences pour une majoration de sa dyspnée.\n\nElle est insuffisante respratoire chronique sur une BPCO, avec 1L/min d’O2 au domicile.\n\nSon VEMS est à 34%, elle présente environ 1 exacerbation hospitalisée par an.\n\nElle est aussi suivie pour une cardiopathie ischémique.\n\nTraitement au domicile : PERINDIPRIL, SPIRONOLACTONE, DAPAGLIFOZINE, BISOPROLOL, LERCANDIPINE, ULTIBRO.\n\nDepuis 5 jours elle majore ses besoins en oxygène, sa dyspnée, a plus de toux et d’expectorations, elles sont plus purulentes.\n\nConstantes à l’arrivée : 89% SaO2 sous 4L/min d’O2, FC 101 bpm, 37.5°C, 112/65mmHg\n\nElle présente une polypnée superficielle à 28/min, l’auscultation retrouve une diminution globale du murumure vésiculaire, il existe des oedèmes des membres inférieurs.\n\nGaz du sang sous 4L/mn d’O2 : pH 7.31, PO2 58mmHg, PCO2 58mmHg, HCO3- 31mmol/L.\n\nVoici sa radiographie de thorax :\n\nQuelle(s) est (sont) la (les) réponse(s) vraie(s) ?\n\n___\n\nQI9 :\n\nMonsieur F 61ans, diabétique, hypertendu, dyslipidémie, BPCO GOLD 2., cardiopathe ischémique stentée sur 2 infarctus avec arrêt cardiorespiratoire, le dernier il y a 3 mois.\n\nIl présente depuis ce matin des hémoptysies. Il présente une dyspnée d’aggravation progressive depuis, tachypnée 20/min.\n\nAux urgences il aurait rempli l’équivalent d’un verre d’eau d’environ 33cc.\n\nLes extériorisations de sang sont rouge vif, spumeuses, contemporaine d’efforts de toux.\n\nParamètres vitaux : 91% SpO2 en air ambiant, PA 112/73mmHg, FC 96 bpm, 37,2°C\n\nQuelle(s) est (sont) la (les) bonne(s) réponse(s) à ce stade ?\n\n<table class=\"qcm-table\"><tbody><tr><td>Diagnostic</td><td>Arguments en faveur</td></tr><tr><td>Pneumothorax spontané</td><td>Sujet jeune, longiligne, douleur brutale, rythmée par la respiration, abolition du murmure vésiculaire à l’examen</td></tr><tr><td>Embolie pulmonaire</td><td>Dyspnée, tachycardie, facteur de risque thromboembolique</td></tr><tr><td>Pleurésie</td><td>Douleur pleurétique, fièvre si origine infectieuse</td></tr><tr><td>Péricardite</td><td>Douleur rétrosternale, positionnelle, frottement péricardique</td></tr><tr><td>Syndrome coronaire aigu</td><td>Rare à cet âge sauf facteur de risque majeur</td></tr></tbody></table>\n<table class=\"qcm-table\"><tbody><tr><td>Examen</td><td>Objectif</td></tr><tr><td>Radiographie thoracique</td><td>Pneumothorax, pleurésie, pneumonie, signes indirects EP</td></tr><tr><td>ECG</td><td>Eliminer péricardite ou SCA atypique</td></tr><tr><td>Gaz du sang</td><td>Apprécier l’hypoxémie et la ventilation</td></tr><tr><td>CRP</td><td>Recherche d’un syndrome inflammatoire</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Madame P âgée de 23 ans vous est adressée pour une dyspnée paroxystique et une toux depuis plusieurs mois.\nVous avez réalisé cette EFR.\nQuel est votre diagnostic ?",
+    "items": {
+      "A": "BPCO",
+      "B": "Dilatations des bronches",
+      "C": "Asthme",
+      "D": "Fibrose pulmonaire",
+      "E": "Sténose bronchique"
+    },
+    "answers": [
+      "A"
+    ],
+    "per_item": {},
+    "correction_generale": "TVO réversible, âge jeune, symptomatologie de dyspnée et toux, caractère variable des symptômes.\n\nTVO : VEMS/CVF < 70%\n\nRéversibilité de l’obstruction : VEMS post B2 augmente de plus de 200mL et de plus de 12%\n\nQCM cas cliniques progressifs : 1 à 5 réponses possibles à chaque question.\n\nIl s’agit ici d’exercices progressifs, les questions se suivent et les informations des énoncés de chaque question peuvent vous servir à répondre à la ou les questions qui suivent.\n\nIl y a 2 exercices.\n\nCas clinique n°1 :\n\nMonsieur A 62 ans, vous est adressé par son cardiologue.\n\nIl présente un essoufflement depuis plusieurs années, qui s’aggrave progressivement, notamment à la montée des escaliers, il ne peut pas marcher plus de deux minutes.\n\nIl présente une toux grasse avec des expectorations depuis 3 ans.\n\nIl a présenté 2 épisodes de bronchite cette année.\n\nIl y a des oedèmes des membres inférieurs.\n\nAntécédents notables : cardiopathie ischémique avec SCA ST+ stenté il y a 6 mois, HTA, multiples embolies pulmonaires, obésité 37 IMC, appendicectomie.\n\nIl est depuis 6 mois sous ramipril, bisoprolol, amlodipine, furosémide, aspirine et depuis plusieurs années sous apixaban.\n\nTabagisme actif 30 paquets-année.\n\n<table class=\"qcm-table\"><tbody><tr><td></td><td>Mesure</td><td>% Théorique</td><td>Mesure post Bronchodilatateur</td><td>% théorique post bronchodilatateurs</td></tr><tr><td>CVF</td><td>3.51L</td><td>110%</td><td>3.55L</td><td>112%</td></tr><tr><td>VEMS</td><td>2.01L</td><td>73%</td><td>2.62L</td><td>95%</td></tr><tr><td>VEMS/CVF</td><td>57%</td><td></td><td>74%</td><td></td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle(s) est (sont) la ou les causes pouvant participer à sa dyspnée ?",
+    "items": {
+      "A": "Œdème aigu du poumon",
+      "B": "BPCO",
+      "C": "Hypertension pulmonaire",
+      "D": "Insuffisance cardiaque droite",
+      "E": "Obésité"
+    },
+    "answers": [
+      "B",
+      "C",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Œdème aigu du poumon\n\nFaux.\n\nL’œdème aigu du poumon (OAP) se manifeste par une dyspnée d’apparition brutale ou rapidement progressive, orthopnée, toux avec expectorations mousseuses et rosées, râles crépitants bilatéraux à l’auscultation, souvent dans un contexte d’hypertension artérielle. Ici, la dyspnée est d’installation progressive sur plusieurs années, sans signes d’insuffisance cardiaque gauche aiguë, ce qui rend l’OAP improbable.\n\nB – BPCO\n\nVrai.\n\nLe patient présente une toux chronique productive depuis 3 ans (critère de bronchite chronique), un tabagisme actif (30 PA) et une dyspnée d’effort progressive. Ces éléments sont compatibles avec une bronchopneumopathie chronique obstructive (BPCO). Le diagnostic sera confirmé par une spirométrie mettant en évidence une obstruction bronchique (VEMS/CV < 0,7 post-bronchodilatateur).\n\nC – Hypertension pulmonaire (HTP)\n\nVrai.\n\nLe patient a des antécédents de multiples embolies pulmonaires. Cela expose à une HTP thromboembolique chronique (HTP-TEC) qui peut participer à la dyspnée et à l’apparition d’œdèmes des membres inférieurs par retentissement droit (insuffisance cardiaque droite). Un échodoppler cardiaque permettrait de rechercher des signes d’HTP (élévation de la PAPs, dilatation du ventricule droit).\n\nD – Insuffisance cardiaque droite\n\nFaux.\n\nBien que le patient présente des œdèmes des membres inférieurs, l’insuffisance cardiaque droite isolément ne cause pas de dyspnée. C’est l’HTP associée ou l’insuffisance cardiaque gauche associée qui expliquent dans ces cas la dyspnée.\n\nIci la question demande ce qui peut expliquer la dyspnée du patient.\n\nE – Obésité\n\nVrai.\n\nAvec un IMC de 37 kg/m², l’obésité contribue à la dyspnée par diminution des volumes pulmonaires (syndrome restrictif modéré), augmentation du travail ventilatoire et déconditionnement à l’effort. Ce facteur peut aggraver une BPCO ou une cardiopathie sous-jacente.\n\nRappel : Dyspnée chronique – principales étiologies chez un sujet âgé\n\nPoints clés à retenir pour ce patient\n\nBPCO probable devant la toux productive chronique et tabagisme actif.\n\nHTP possible en lien avec ses embolies pulmonaires récidivantes ou une maladie respiratoire chronique\n\nObésité aggrave la dyspnée par surcharge mécanique et déconditionnement.\n\n____\n\n<table class=\"qcm-table\"><tbody><tr><td>\tOrigine</td><td>\tPathologies fréquentes</td></tr><tr><td>\tRespiratoire</td><td>\tBPCO, fibrose pulmonaire, asthme, HTP</td></tr><tr><td>\tCardiaque</td><td>\tInsuffisance cardiaque gauche, HTP post-embolique</td></tr><tr><td>\tMixte</td><td>\tHTP secondaire à pathologies pulmonaires ou cardiaques</td></tr><tr><td>\tAutres</td><td>\tObésité, anémie, déconditionnement physique</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Que faites-vous en première intention ?",
+    "items": {
+      "A": "Radiographie de thorax",
+      "B": "PCR coqueluche",
+      "C": "Gaz du sang",
+      "D": "EFR",
+      "E": "pH métrie pour exploration d’un possible RGO"
+    },
+    "answers": [
+      "A",
+      "C",
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Radiographie de thorax\n\nVrai. Elle est systématique pour explorer une dyspnée chronique. Elle permet de détecter des signes d’hyperinflation (emphysème), des anomalies parenchymateuses, des cardiomégalies ou des séquelles d’embolie pulmonaire.\n\nB – PCR coqueluche\n\nFaux. La coqueluche donne une toux persistante mais elle est rarement responsable de dyspnée chronique chez l’adulte. Ce n’est pas un examen de première intention ici.\n\nC – Gaz du sang\n\nVrai. Indiqué pour rechercher une hypoxémie et/ou une hypercapnie, surtout chez un patient dyspnéique chronique avec suspicion d’atteinte respiratoire et antécédents d’embolie pulmonaire.\n\nD – EFR (épreuves fonctionnelles respiratoires)\n\nVrai. Examen clé pour identifier un syndrome obstructif (BPCO), restrictif (obésité, fibrose) ou mixte, et pour évaluer la sévérité.\n\nE – pH-métrie pour exploration d’un possible RGO\n\nFaux. Le reflux gastro-œsophagien peut aggraver une dyspnée ou une toux chronique mais ce n’est pas une priorité dans ce contexte avec suspicion forte de pathologie respiratoire et cardiovasculaire.\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Vous réalisez une EFR, un gaz du sang et une radiographie de thorax.\nGaz du sang en air ambiant : pH 7,43, PO2 57mmHg, PCO2 39 mmHg, HCO3- 25 mmol/L.",
+    "items": {
+      "A": "Vous diagnostiquez une BPCO gold 3 et du groupe B",
+      "B": "Vous diagnostiquez une BPCO gold 2 et du groupe E",
+      "C": "Il est probablement insuffisant respiratoire chronique",
+      "D": "Ces résultats sont compatibles avec la présence d’une maladie vasculaire pulmonaire sous-jacente",
+      "E": "Ces résultats sont compatibles avec la présence d’une emphysème pulmonaire important"
+    },
+    "answers": [
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "Résultats clés\n\nGaz du sang :\n\npH 7,43 (normal)\n\nPaO₂ 57 mmHg → hypoxémie\n\nPaCO₂ 39 mmHg → normale\n\nHCO₃⁻ 25 mmol/L → normal\n\nEFR :\n\nVEMS/CVF = 46 % (obstruction bronchique)\n\nVEMS 41 % → obstruction sévère\n\nVR/CPT = 69 % (augmentation, hyperinflation)\n\nDLCOc = 23 % (baisse marquée, évocatrice d’emphysème ou maladie vasculaire pulmonaire)\n\nA – Vous diagnostiquez une BPCO GOLD 3 et du groupe B\n\nFaux.\n\nVEMS = 41 % → BPCO GOLD 3 (obstruction sévère).\n\nMais pour déterminer le groupe (A, B, E), il faut connaître les symptômes (mMRC, CAT) et le nombre d’exacerbations. Ici, il a 2 exacerbations/an → risque élevé. Avec dyspnée marquée → probablement groupe D.\n\nB – Vous diagnostiquez une BPCO GOLD 2 et du groupe C\n\nFaux. Le VEMS est à 41 % (donc GOLD 3, pas GOLD 2). Groupe E car 2 exacerbations dans l’année\n\nC – Il est probablement insuffisant respiratoire chronique\n\nVrai. La PaO₂ à 57 mmHg en air ambiant est inférieure à 60 mmHg, seuil définissant une hypoxémie chronique. Il remplit les critères d’insuffisance respiratoire chronique.\n\nD – Ces résultats sont compatibles avec la présence d’une maladie vasculaire pulmonaire sous-jacente\n\nVrai. La baisse très importante de la DLCO (23 %) peut traduire une destruction alvéolo-capillaire (emphysème) mais aussi une atteinte vasculaire pulmonaire (hypertension pulmonaire thromboembolique chronique en lien avec ses antécédents d’EP).\n\nE – Ces résultats sont compatibles avec la présence d’un emphysème pulmonaire important\n\nVrai. Hyperinflation (↑ VR, VR/CPT) et baisse de la DLCO sont typiques d’un emphysème centrolobulaire chez un fumeur.\n\nTopo : Interprétation EFR et gaz du sang dans la BPCO\n\nClassification GOLD (VEMS post-BD)\n\nSignes d’emphysème à l’EFR\n\nObstruction : VEMS/CVF < 70 %\n\nHyperinflation : VR et VR/CPT augmentés\n\nBaisse DLCO : destruction alvéolo-capillaire\n\nSignes d’HTP possible\n\nDLCO très diminuée de façon disproportionnée par rapport au trouble ventilatoire\n\nAntécédents d’embolies pulmonaires récidivantes\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td></td><td>Mesure</td><td>% Théorique</td></tr><tr><td>CVF</td><td>1.71L</td><td>64%</td></tr><tr><td>VEMS</td><td>0.79L</td><td>41%</td></tr><tr><td>VEMS/CVF</td><td>46%</td><td>72%</td></tr><tr><td>VR</td><td>4.17L</td><td>153%</td></tr><tr><td>CPT</td><td>6.02L</td><td>106%</td></tr><tr><td>VR/CPT</td><td>69%</td><td>47%</td></tr><tr><td>DLCOc*</td><td></td><td>23%</td></tr><tr><td>*DLCOc : DLCO corrigée</td></tr></tbody></table>\n\n<table class=\"qcm-table\"><tbody><tr><td>\tStade</td><td>\tVEMS % théorique</td></tr><tr><td>\t1</td><td>\t≥80 %</td></tr><tr><td>\t2</td><td>\t50-79 %</td></tr><tr><td>\t3</td><td>\t30-49 %</td></tr><tr><td>\t4</td><td>\t<30 %</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Le patient réalise de nouveaux gaz du sang comparables avec des PO2 mesurées à 56mmHg, 58mmHg.\nVous considérez M A insuffisant respiratoire chronique.\nA propos des mécanismes d’insuffisance respiratoire chronique de M A :",
+    "items": {
+      "A": "Effet shunt",
+      "B": "Shunt vrai anatomique",
+      "C": "Hypoventilation alvéolaire pure",
+      "D": "Effet espace mort",
+      "E": "Altération de la diffusion des gaz"
+    },
+    "answers": [
+      "A",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "M. A présente une BPCO sévère avec :\n\nVEMS à 41 % (GOLD 3)\n\nDLCO très diminuée (23 %)\n\nHypoxémie chronique persistante (PaO₂ 56-58 mmHg en air ambiant).\n\nLe scanner thoracique montre un emphysème panlobulaire prédominant, compatible avec une destruction alvéolaire diffuse.\n\nLes mécanismes de son insuffisance respiratoire chronique sont donc multiples et caractéristiques de la BPCO avancée.\n\nA – Effet shunt\n\nVrai.\n\nL’effet shunt (zones perfusées mais non ventilées, rapport V/Q très bas) est fréquent dans la BPCO en raison d’un collapsus alvéolaire et d’une obstruction bronchique distale. Ces zones contribuent à une hypoxémie corrigible par oxygène.\n\nB – Shunt vrai anatomique\n\nFaux.\n\nUn shunt vrai (communication anatomique entre le système veineux et artériel sans passage par les poumons) n’est pas une caractéristique de la BPCO. Il se retrouve plutôt dans les malformations vasculaires (fistules artérioveineuses) ou certaines cardiopathies congénitales, réouverture d’un foramen ovale perméable.\n\nC – Hypoventilation alvéolaire pure\n\nFaux.\n\nIci, l’hypoxémie est surtout due à un trouble ventilation/perfusion et une altération de la diffusion.\n\nL’hypoventilation alvéolaire pure correspond à des troubles de la musculature respiratoire (SLA), hypoventilation alvéolaire centrale liée à des anomalies neurologiques (syndrome d’Ondine par exemple), des traitements dépresseurs respiratoires (benzodiazépines, morphine).\n\nDans l’emphysème il peut exister une hypoventilation alvéolaire liée notamment à la distension qui étire les fibres musculaires des muscles respiratoires inspiratoires et réduit leur amplitude de contraction. Mais dans ce cas, elle n’est jamais pure, car s’associe à des anomalies de ventilation perfusion ainsi que des troubles de la diffusion. On parle d’hypoventilation alvéolaire pure quand l’hypoventilation ne s’associe pas à d’autres mécanismes d’hypoxémie.\n\nD – Effet espace mort\n\nVrai.\n\nLa destruction alvéolaire emphysémateuse entraîne une augmentation des zones ventilées mais peu ou pas perfusées (rapport V/Q très élevé), ce qui augmente l’espace mort physiologique. Cela réduit l’efficacité des échanges gazeux et contribue à la dyspnée.\n\nE – Altération de la diffusion des gaz\n\nVrai.\n\nL’emphysème entraîne une destruction des parois alvéolaires et de la membrane alvéolo-capillaire, ce qui réduit la surface d’échange et altère la diffusion des gaz, en particulier l’oxygène. Ce mécanisme est responsable de la baisse marquée de la DLCO.\n\nMécanismes d’hypoxémie dans la BPCO\n\n1. Principaux mécanismes\n\nMécanisme\tExplication\tRéversibilité par O₂\n\nInégalités ventilation/perfusion (effet shunt)\tZones perfusées mais mal ventilées (V/Q ↓)\tOui\n\nEffet espace mort\tZones ventilées mais peu perfusées (V/Q ↑)\tOui\n\nAltération de la diffusion\tDestruction de la membrane alvéolo-capillaire (DLCO ↓)\tOui (partielle)\n\n2. Hypoventilation alvéolaire\n\nMoins fréquente dans la BPCO sauf à un stade terminal ou en cas d’association (syndrome obésité-hypoventilation).\n\nProvoque hypoxémie + hypercapnie (PaCO₂ >45 mmHg).\n\n3. Shunt vrai anatomique\n\nRare, absent dans la BPCO. Retrouvé dans :\n\nFistules artérioveineuses pulmonaires (Rendu-Osler)\n\nCardiopathies congénitales (CIV, CIA)\n\nPoints clés pour M. A\n\nHypoxémie chronique multifactorielle : effet shunt, espace mort augmenté et altération diffusion.\n\nHypocapnie encore absente (PaCO₂ normale) mais à surveiller.\n\nCorrection partielle par oxygène, mais prudence pour éviter une hypercapnie induite.\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle(s) thérapeutique(s) mettez-vous en place ?",
+    "items": {
+      "A": "Introduction d’un traitement de fond par bêta 2 mimétique de courte durée d’action seul",
+      "B": "Introduction d’un traitement de fond par anticholinergique inhalé seul",
+      "C": "Mesures générales d’encouragement à l’effort",
+      "D": "Un antileucotriène",
+      "E": "Nébulisation de B2 mimétiques de courte durée d’action au domicile"
+    },
+    "answers": [
+      "B",
+      "C"
+    ],
+    "per_item": {},
+    "correction_generale": "BPCO symptomatique (dyspnée ou exacerbations) : monothérapie par B2 mimétique ou anticholinergique de lognue durée d’action + bronchodilatateur de courte durée d’action\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Vous introduisez un traitement de fond par B2 mimétique de longue durée d’action et une oxygénothérapie de longue durée.\nQuelques semaines plus tard, M A se présente aux urgences, pour majoration de sa dyspnée, de sa toux, de ses expectorations ainsi que de leur purulence depuis 2 jours. Son traitement de secours ne l’a pas soulagé.\nIl existe des sibilants diffus.\nGazométrie sous 2L/min : pH 7,31, PCO2 58 mmHg, PO2 57 mmHg, bicarbonates 27 mmol/L\nConstantes : PA 160/101 mmHg, SaO2 89%, T°C 37,2\nIl tremble et est en sueurs.\nLa NFS retrouve une Hb 16,6 g/dL, les PNN sont à 6 G/L.\nLa CRP est à 23mg/L.\nIl n’y a pas d’insuffisance rénale aigue ni d’anomalie du ionogramme sanguin.\nQuel(s) examen(s) faites-vous pratiquer :",
+    "items": {
+      "A": "Antigénurie légionnelle",
+      "B": "Radiographie de thorax",
+      "C": "Scanner thoracique",
+      "D": "Hémocultures",
+      "E": "Trou anionique urinaire"
+    },
+    "answers": [
+      "B"
+    ],
+    "per_item": {},
+    "correction_generale": "Contexte clinique\n\nPatient connu pour une BPCO sévère et hypoxémie chronique sous oxygénothérapie de longue durée (OLD).\n\nPrésentation : majoration récente (2 jours) de dyspnée, toux, volume et purulence des expectorations = exacerbation aiguë de BPCO.\n\nGaz du sang :\n\npH 7,31 → acidose respiratoire légère\n\nPaCO₂ 58 mmHg → hypercapnie modérée\n\nPaO₂ 57 mmHg → hypoxémie\n\nHCO₃⁻ 27 mmol/L → compensation métabolique débutante\n\nSignes vitaux : SaO₂ 89 % sous 2 L/min, TA 160/101 mmHg, T°C 37,2°C (pas de fièvre franche).\n\nBiologie : CRP modérément élevée (23 mg/L), pas d’hyperleucocytose ni de syndrome infectieux franc.\n\nAnalyse des propositions\n\nA – Antigénurie légionnelle\n\nFaux.\n\nL’antigénurie légionnelle est indiquée en cas de pneumonie communautaire grave ou avec atteinte systémique suspectée (troubles digestifs, confusion, fièvre élevée). Ici, rien ne suggère une pneumonie grave d’emblée.\n\nB – Radiographie de thorax\n\nVrai.\n\nC’est l’examen d’imagerie clé en première intention devant une exacerbation de BPCO pour :\n\nÉliminer une pneumonie associée.\n\nÉcarter un pneumothorax, cause classique de décompensation.\n\nRechercher un épanchement pleural ou des signes indirects d’embolie pulmonaire.\n\nC – Scanner thoracique\n\nFaux.\n\nNon indiqué en première intention. Il peut être envisagé si la radiographie est non contributive et si la clinique évoque une complication (pneumonie, EP, tumeur obstructive).\n\nD – Hémocultures\n\nFaux.\n\nIndiquées uniquement en cas de fièvre ≥ 38,5°C, frissons, ou signes de sepsis ou en cas de suspicion de pneumopathie aigue communautaire. Ici, la température est normale (37,2°C) et il n’y a pas de signe de pneumonie à ce stade. Vous devez attendre les résultats de la rdiographie de thorax.\n\nE – Trou anionique urinaire\n\nFaux.\n\nCet examen est utile pour évaluer certaines acidoses métaboliques (RTA, pertes digestives) mais ici l’acidose est respiratoire (PaCO₂ ↑), donc non pertinent.\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle(s) thérapeutique(s) pouvez-vous mettre en en place ?",
+    "items": {
+      "A": "Antibiothérapie par amoxicilline – acide clavulanique",
+      "B": "Nébulisation – aérosols de bêta 2 mimétiques",
+      "C": "Corticothérapie",
+      "D": "Amikacine",
+      "E": "Ventilation non invasive"
+    },
+    "answers": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Antibiothérapie par amoxicilline – acide clavulanique\n\nVrai.\n\nExacerbation aiguë de BPCO avec :\n\nPurulence des expectorations, augmentation de leur volume et de la dyspnée (critères d’Anthonisen).\n\nVEMS sévèrement altéré (GOLD 3-4).\n\nIndication d’une antibiothérapie probabiliste :\n\nAmoxicilline-acide clavulanique\n\nAlternative : céphalosporine orale (cefpodoxime) ou fluoroquinolone antipneumococcique (lévofloxacine) si allergie.\n\nB – Nébulisation – aérosols de bêta-2 mimétiques\n\nVrai.\n\nLes bêta-2 mimétiques d’action rapide (SABA, salbutamol) en nébulisation sont indiqués pour :\n\nSoulager la dyspnée rapidement.\n\nAméliorer la bronchoconstriction.\n\nIls peuvent être associés à un anticholinergique de courte durée d’action (ipratropium).\n\nC – Corticothérapie\n\nVrai.\n\nUne corticothérapie systémique peut être envisagée en cas d’exacerbation aiguë de BPCO pour réduire l’inflammation bronchique et accélérer la récupération :\n\nPrednisone 40 mg/j per os pendant 5 jours.\n\nD – Amikacine\n\nFaux\n\nPas indiquée. Les aminosides (amikacine) ne sont pas utilisés dans la prise en charge des exacerbations de BPCO.\n\nE – Ventilation non invasive (VNI)\n\nVrai.\n\nIndiquée ici car le patient présente :\n\nAcidose respiratoire (pH 7,31).\n\nHypercapnie (PaCO₂ 58 mmHg).\n\nLa VNI permet :\n\nDe corriger l’hypoventilation alvéolaire.\n\nDe réduire l’effort ventilatoire.\n\nDe prévenir une intubation en cas d’acidose respiratoire.\n\nTopo : Prise en charge d’une exacerbation aiguë de BPCO\n\n1. Objectifs\n\nCorriger l’hypoxémie sans provoquer d’hypercapnie\n\nSoulager la dyspnée\n\nRéduire l’inflammation bronchique et le bronchospasme\n\nTraiter une éventuelle infection bactérienne\n\nPrévenir la défaillance respiratoire\n\n2. Mesures principales\n\n3. Antibiothérapie : quand ?\n\nPurulence des expectorations (critère majeur)\n\n≥2 critères d’Anthonisen (parmi majoration de dyspnée, volume et purulence des expectorations)\n\nExacerbation sévère nécessitant hospitalisation en réanimation\n\n4. Indication VNI\n\npH <7,35 sur hypercapnie (acidose respiratoire)\n\nPoints clés\n\nAssociation bronchodilatateurs ± corticoïdes ± antibiotiques si infection bactérienne probable.\n\nSurveillance rapprochée : signes de défaillance ventilatoire.\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>\tMesure</td><td>\tDétail</td></tr><tr><td>\t±Oxygénothérapie</td><td>\tDébit ajusté pour SpO₂ cible 88-92 %</td></tr><tr><td>\tBronchodilatateurs</td><td>\tSABA ± anticholinergique en nébulisation</td></tr><tr><td>\t±Corticothérapie systémique</td><td>\tPrednisone 40 mg/j per os (5-7 jours)</td></tr><tr><td>\t±Antibiothérapie (si Anthonisen)</td><td>\tAmox-clavulanique per os (5-7 jours)</td></tr><tr><td>\t±VNI (si acidose/hypercapnie)</td><td>\tBiPAP à adapter selon tolérance</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "L’évolution est favorable. Vous décidez une incrémentation des thérapeutiques chez votre patient.\nIl présente une dyspnée mMRC 3 de base actuellement, a présenté 3 épisodes d’exacerbation depuis le début de l’année, dont celle-ci qui a nécessité une hospitalisation.\nQuel(s) traitement(s) pouvez-vous instaurer ?",
+    "items": {
+      "A": "Macrolides",
+      "B": "Théophylline",
+      "C": "Roflumilast",
+      "D": "Anticholinergique",
+      "E": "Corticostéroïde inhalé"
+    },
+    "answers": [
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Macrolides\n\nFaux (pas en première intention).\n\nLes macrolides à faible dose (ex : azithromycine 250 mg/j) peuvent réduire les exacerbations en prévention secondaire chez les patients très exacerbateurs et sous trithérapie inhalée et qui ont bénéficié d’une réadaptation respiratoire\n\nB – Théophylline\n\nFaux.\n\nLa théophylline n’est plus recommandée dans la BPCO en raison d’un rapport bénéfice/risque défavorable : faible efficacité, nombreuses interactions et effets secondaires (troubles digestifs, cardiaques, neurologiques).\n\nC – Roflumilast\n\nFaux\n\nPas d’AMM en France. Recommandé aux USA.\n\nD – Anticholinergique\n\nVrai.\n\nL’ajout d’un anticholinergique de longue durée d’action (LAMA, ex : tiotropium) est recommandé chez les patients GOLD D.\n\n→ Association LABA + LAMA = traitement de référence pour :\n\nRéduire les symptômes\n\nDiminuer les exacerbations\n\nE – Corticostéroïde inhalé (CSI)\n\nFaux (pas systématique).\n\nLes CSI sont envisagés chez les patients BPCO présentant :\n\nDes exacerbations fréquentes malgré LABA ou LAMA seul ou LABA + LAMA\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Il se présente un soir aux urgences pour une majoration de dyspnée dans la matinée.\nIl existe un œdème du membre inférieur droit, une perte du ballant du mollet droit, un cordon inflammatoire en regard.\nSaO2 84% sous 2L/min, 125/72, 131 bpm, 37,8°C\n- NFS : Hb 9,6 g/dl, PNN 4,1 G/L, Pl 273 G/L\n- Ionogramme sanguin : Natrémie 134 mmol/L, kaliémie 3,9 mmol/L, calcémie 2,3 mmol/L, phosphorémie 1,70 mmol/L\n- CRP 16 mg/L\n- Créatininémie : 87 umol/L\n- Urée : 6,4 mmol/L\nQuelle prise en charge pouvez-vous proposer ?",
+    "items": {
+      "A": "Anticoagulation d’emblée si indisponibilité des examens complémentaires",
+      "B": "Scintigraphie V/P",
+      "C": "Contention élastique",
+      "D": "Pose d’un filtre cave pourrait se discuter une fois le diagnostic confirmé devant le risque de récidive important",
+      "E": "Rajouter BNP et troponines au bilan biologique prélevé précédemment"
+    },
+    "answers": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "Contexte\n\nPatient BPCO connu, sous oxygène, présentant une dyspnée aiguë dans un contexte de signes cliniques francs de thrombose veineuse profonde (TVP) :\n\nŒdème du mollet droit\n\nPerte du ballottement\n\nCordon veineux inflammatoire palpable\n\nHypoxémie sévère (SaO₂ 84 % sous 2 L/min).\n\nTachycardie (131 bpm), fébricule (37,8°C).\n\nBiologie sans anomalie majeure hors une anémie modérée (Hb 9,6 g/dL) et CRP légèrement élevée.\n\nCes éléments sont fortement évocateurs d’une embolie pulmonaire (EP) associée à une TVP.\n\nAnalyse des propositions\n\nA – Anticoagulation d’emblée si indisponibilité des examens complémentaires\n\nVrai.\n\nChez un patient avec une suspicion forte d’EP (score de Wells élevé) et une TVP clinique, il est recommandé de débuter une anticoagulation probabiliste en attendant la confirmation diagnostique, surtout si les examens d’imagerie sont retardés.\n\nB – Scintigraphie V/P\n\nFaux.\n\nLa scintigraphie ventilation/perfusion est une alternative si le scanner n’est pas disponible, mais :\n\nElle nécessite un parenchyme pulmonaire sain pour être interprétable.\n\nIci, le patient a une BPCO sévère → anomalies préexistantes → risque de résultat non concluant élevé.\n\nAngioscanner thoracique reste l’examen de choix.\n\nC – Contention élastique\n\nVrai.\n\nIndiquée pour prévenir le syndrome post-thrombotique une fois le diagnostic de TVP confirmé et l’anticoagulation instaurée. Elle doit être mise en place après avoir exclu une ischémie artérielle périphérique (questions cliniques peuvent suffire) et sous anticoagulation efficace.\n\nD – Pose d’un filtre cave pourrait se discuter une fois le diagnostic confirmé devant le risque de récidive important\n\nVrai.\n\nIndication exceptionnelle et seulement :\n\nEn cas de contre-indication absolue à l’anticoagulation\n\nOu récidive d’EP sous anticoagulation bien conduite.\n\nChez ce patient avec antécédents thromboemboliques multiples et BPCO sévère, le risque de récidive est élevé → filtre cave peut être discuté après confirmation du diagnostic.\n\nE – Rajouter BNP et troponines au bilan biologique prélevé précédemment\n\nVrai.\n\nChez un patient suspect d’EP, BNP et troponines peuvent être utiles pour :\n\nÉvaluer le retentissement droit (dilatation VD, surcharge VD).\n\nStratifier le risque (haut, intermédiaire, bas) selon les recommandations ESC 2019.\n\nUne élévation suggère une atteinte myocardique droite et indique un EP à risque intermédiaire.\n\nTopo : Dyspnée aiguë et TVP – prise en charge\n\n1. Éléments évocateurs d’EP\n\nDyspnée brutale, hypoxémie\n\nTachycardie\n\nSigne de TVP (œdème, cordon, perte du ballant)\n\nAntécédents de maladie thromboembolique, cancer, immobilisation prolongée\n\n2. Examens recommandés\n\n3. Anticoagulation probabiliste\n\nIndiquée si suspicion forte et imagerie différée.\n\nHBPM, fondaparinux ou héparine non fractionnée selon contexte.\n\n4. Quand discuter un filtre cave ?\n\nContre-indication à l’anticoagulation\n\nEP récidivante sous traitement bien conduit\n\nPoints clés\n\nSuspicion clinique forte = anticoagulation sans attendre l’imagerie.\n\nAngioscanner en priorité sauf contre-indication.\n\nContention élastique à mettre après anticoagulation débutée.\n\nFiltre cave réservé à des cas exceptionnels.\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Examen</td><td>Rôle</td></tr><tr><td>Angioscanner thoracique</td><td>Examen de 1re intention</td></tr><tr><td>Échodoppler veineux MI</td><td>Diagnostic TVP, permet de confirmer une EP par présomption si positif</td></tr><tr><td>BNP/Troponines</td><td>Évaluation du retentissement droit</td></tr><tr><td>ECG</td><td>Recherche signes de surcharge VD (S1Q3T3)</td></tr><tr><td>Échocardiographie</td><td>Recherche dilatation VD en cas d’instabilité</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "L’angioscanner thoracique met en évidence une embolie pulmonaire proximale droite.\nFinalement le patient ne prend plus sont APIXABAN depuis 6 mois.\nUne ETT est réalisée, elle retrouve une inversion de la courbure septale.\nBNP élevés, troponines élevées.\nVous ne retrouvez pas de circonstances favorisantes, de facteur de risque majeur transitoire ni persistant.\nQuelle est la suite de votre prise en charge ?",
+    "items": {
+      "A": "Anticoagulation par AOD",
+      "B": "Fibrinolyse",
+      "C": "Hospitalisation dans un service conventionnel",
+      "D": "Hospitalisation dans un service de soins intensifs",
+      "E": "Prise en charge ambulatoire avec consultation dans 48h"
+    },
+    "answers": [
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "Contexte clinique\n\nHomme BPCO sévère avec hypoxémie chronique.\n\nSuspicion d’EP confirmée par angioscanner thoracique : embolie pulmonaire proximale droite.\n\nNon observance de l’APIXABAN (arrêté depuis 6 mois).\n\nÉchocardiographie transthoracique (ETT) : inversion de la courbure septale, témoin d’une surcharge ventriculaire droite.\n\nBNP et troponines élevés → atteinte myocardique droite.\n\nPas de circonstances favorisantes → probable EP non provoquée (idiopathique).\n\nCe tableau correspond à une EP à risque intermédiaire élevé (EP sous-massive).\n\nA – Anticoagulation par AOD\n\nFaux.\n\nDans une EP risque intermédiaire élevé (BNP/Troponines élevés, dilatation VD), les AOD ne sont pas le traitement de 1re intention. La phase aiguë doit être couverte par une anticoagulation parentérale (HBPM ou héparine non fractionnée) car une fibrinolyse pourrait être nécessaire si l’état s’aggrave. Les AOD peuvent être envisagés en relais secondaire.\n\nB – Fibrinolyse\n\nFaux\n\nLa fibrinolyse est réservée aux EP à haut risque (choc obstructif avec hypotension persistante ou collapsus).\n\nIci, il s’agit d’une EP à risque intermédiaire élevé (surcharge VD et biomarqueurs élevés) sans instabilité hémodynamique → surveillance étroite en soins intensifs avec possible fibrinolyse de rattrapage en cas de dégradation.\n\nC – Hospitalisation dans un service conventionnel\n\nFaux.\n\nEn cas d’EP intermédiaire haut risque (retentissement droit, BNP/troponines élevés), une surveillance rapprochée en soins intensifs ou unité de soins continus est recommandée. Le risque d’évolution vers une défaillance circulatoire justifie ce niveau de soins.\n\nD – Hospitalisation dans un service de soins intensifs\n\nVrai.\n\nIndiquée. L’atteinte du VD (inversion de la courbure septale) et l’élévation des biomarqueurs (BNP, troponines) définissent un EP intermédiaire élevé (ESC 2019). Une surveillance rapprochée est nécessaire pour détecter une éventuelle décompensation hémodynamique qui imposerait une fibrinolyse.\n\nE – Prise en charge ambulatoire avec consultation dans 48 h\n\nFaux.\n\nLa prise en charge ambulatoire est réservée aux EP faible risque (Pas de retentissement droit à l’échographie, biomarqueurs normaux, absence de comorbidités graves, score PESI bas). Ici, le patient est à haut risque d’aggravation → contre-indiqué.\n\nTopo : Embolie pulmonaire et stratification du risque (ESC 2019)\n\n1. Stratification du risque\n\n2. Résumé prise en charge\n\nAnticoagulation immédiate (HBPM ou héparine non fractionnée)\n\nSurveillance en soins intensifs si risque intermédiaire haut\n\nFibrinolyse seulement en cas de dégradation hémodynamique\n\n3. Particularités ici\n\nEP non provoquée → évaluation à distance d’une thrombophilie secondaire si indiqué (SAPL chez sujet jeune).\n\nImportance de l’observance anticoagulante à long terme.\n\nPoints clés\n\nRetentissement droit (inversion septale) + biomarqueurs élevés = EP intermédiaire haut risque.\n\nSurveillance en soins intensifs impérative.\n\nPas d’AOD ni de fibrinolyse immédiate.\n\nCas clinique n°2 :\n\nMme F, 27 ans, se présente à votre cabinet de médecine général pour une dyspnée associée à des sensations d’oppression thoracique paroxystique, le plus souvent après des efforts, cette symptomatologie est intermittente depuis environ 3 mois.\n\nIl existe une toux sèche, sans expectorations.\n\nIl n’existe pas d’antécédents particuliers.\n\nSaO2 98% en air ambiant, 68bpm, 115/61 mmHg\n\nPoids 71kg, taille 175cm\n\n<table class=\"qcm-table\"><tbody><tr><td>Risque</td><td>Caractéristiques</td><td>Prise en charge</td></tr><tr><td>Haut risque</td><td>Instabilité hémodynamique (PAS < 90 mmHg, choc obstructif)</td><td>Fibrinolyse IV + anticoagulation</td></tr><tr><td>Intermédiaire haut</td><td>Surcharge VD + biomarqueurs élevés (BNP/troponines)</td><td>AHéparinothérapie + soins intensifs</td></tr><tr><td>Intermédiaire bas</td><td>Surcharge VD ou biomarqueurs élevés isolés<br>Et/ou sPESI ≥1</td><td>AOD sauf si CI + hospitalisation</td></tr><tr><td>Faible risque</td><td>Pas de surcharge VD, biomarqueurs normaux, score sPESI bas</td><td>Anticoagulation ambulatoire possible</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle(s) cause(s) de dyspnée est (sont) envisageable(s) en premier lieu ?",
+    "items": {
+      "A": "Rhinite postérieure",
+      "B": "Reflux gastro oesophagien",
+      "C": "Cancer bronchopulmonaire",
+      "D": "Asthme",
+      "E": "Anémie"
+    },
+    "answers": [
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Rhinite postérieure\n\nFaux.\n\nLa rhinite postérieure peut entraîner une toux chronique irritative mais n’explique pas les épisodes d’oppression thoracique et de dyspnée d’effort.\n\nB – Reflux gastro-œsophagien (RGO)\n\nFaux.\n\nLe RGO peut être un facteur aggravant d’un asthme existant mais ne provoque pas directement de dyspnée paroxystique.\n\nC – Cancer bronchopulmonaire\n\nFaux.\n\nLe cancer bronchique est peu probable chez une jeune femme sans antécédents, sans tabagisme, sans hémoptysie, ni altération de l’état général.\n\nD – Asthme\n\nVrai.\n\nLe tableau est typique d’un asthme intermittent :\n\nDyspnée paroxystique à l’effort\n\nOppressions thoraciques\n\nToux sèche associée\n\nLe diagnostic d’asthme repose sur la mise en évidence d’une obstruction bronchique réversible.\n\nE – Anémie\n\nFaux.\n\nUne anémie peut provoquer une dyspnée d’effort mais n’explique pas les accès paroxystiques d’oppression et la toux sèche.\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quel(s) examen(s) faites-vous réaliser pour confirmer votre diagnostic ?",
+    "items": {
+      "A": "pH métrie",
+      "B": "EFR",
+      "C": "Prick-tests",
+      "D": "Test à la métacholine",
+      "E": "NFS à la recherche d’éosinophiles"
+    },
+    "answers": [
+      "B"
+    ],
+    "per_item": {},
+    "correction_generale": "A – pH-métrie\n\nFaux.\n\nNon indiquée en première intention. Elle peut être utile pour confirmer un RGO mais ici la symptomatologie évoque un asthme.\n\nB – EFR (Épreuves fonctionnelles respiratoires)\n\nVrai.\n\nL’examen clé pour :\n\nDémontrer un trouble ventilatoire obstructif (VEMS/CVF <70 %)\n\nConfirmer la réversibilité de l’obstruction après bronchodilatateur (VEMS ↑ ≥12 % et ≥200 mL)\n\nC’est l’examen de première intention devant une suspicion d’asthme.\n\nC – Prick-tests\n\nFaux.\n\nLes tests cutanés allergologiques sont utiles pour identifier des allergènes responsables en cas d’asthme atopique mais ne confirment pas le diagnostic d’asthme.\n\nD – Test à la métacholine\n\nFaux.\n\nLe test à la métacholine est utilisé si les EFR sont normales mais que la suspicion clinique reste forte. Il recherche une hyperréactivité bronchique (chute VEMS ≥20 % après inhalation). Ici, il est prématuré avant de réaliser des EFR classiques.\n\nE – NFS à la recherche d’éosinophiles\n\nFaux.\n\nUne hyperéosinophilie sanguine peut être retrouvée dans l’asthme allergique mais n’a pas de valeur diagnostique pour l’asthme.\n\nTopo : Asthme – Diagnostic et examens\n\n1. Signes cliniques évocateurs +++caractère variable des symptômes\n\nDyspnée expiratoire paroxystique\n\nToux sèche, nocturne ou à l’effort\n\nOppressions thoraciques\n\nSymptômes intermittents et réversibles spontanément ou sous traitement\n\n2. Confirmation diagnostique\n\n3. Examens complémentaires\n\nPoints clés\n\nEFR : examen de 1re intention pour confirmer un asthme.\n\nTest à la métacholine réservé si EFR normales.\n\nAsthme probable ici : jeune femme, symptômes paroxystiques, toux sèche\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Examen</td><td>Ce qu’il montre</td></tr><tr><td>EFR</td><td>TVO (VEMS/CVF <70 %)</td></tr><tr><td>Réversibilité</td><td>VEMS ↑ ≥12 % et ≥200 mL après SABA</td></tr><tr><td>Test à la métacholine</td><td>Hyperréactivité bronchique si EFR N</td></tr></tbody></table>\n\n<table class=\"qcm-table\"><tbody><tr><td>Examen</td><td>Rôle</td></tr><tr><td>Prick-tests </td><td>Recherche allergènes déclenchants</td></tr><tr><td>Radiographie thorax  </td><td>Recherche diagnostics différentiels</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Que pouvez-vous attendre des résultats de sa spirométrie ?",
+    "items": {
+      "A": "Tiffeneau < 80%",
+      "B": "CPT < 80%",
+      "C": "Le Tiffeneau c’est le VEMS/CPT",
+      "D": "Réversibilité significative avec augmentation de son VEMS de 12% et 200 mL",
+      "E": "Réversibilité complète avec normalisation du Tiffeneau et du VEMS"
+    },
+    "answers": [
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Tiffeneau < 80 %\n\nFaux.\n\nLa norme pour le rapport de Tiffeneau (VEMS/CVF) est 70 %, pas 80 %. Un rapport <70 % (selon les recommandations GOLD) définit un trouble ventilatoire obstructif (TVO).\n\nB – CPT < 80 %\n\nFaux.\n\nLa CPT (capacité pulmonaire totale) est normale ou augmentée dans l’asthme. Une CPT <80 % indique un trouble ventilatoire restrictif (fibrose, obésité, atteinte neuromusculaire).\n\nC – Le Tiffeneau c’est le VEMS/CPT\n\nFaux.\n\nLe rapport de Tiffeneau est le VEMS/CVF (volume expiratoire maximal en 1 seconde / capacité vitale forcée), pas VEMS/CPT.\n\nD – Réversibilité significative avec augmentation du VEMS de 12 % et 200 mL\n\nVrai.\n\nC’est le critère classique de réversibilité dans l’asthme après inhalation d’un bronchodilatateur de courte durée (ex : salbutamol) :\n\nAugmentation ≥12 % du VEMS ET\n\nGain absolu ≥200 mL\n\nCela signe un asthme réversible.\n\nE – Réversibilité complète avec normalisation du Tiffeneau et du VEMS\n\nVrai.\n\nDans l’asthme, l’obstruction bronchique est réversible et peut disparaître complètement après bronchodilatateur, avec retour à des valeurs normales du VEMS et du rapport de Tiffeneau. Cela distingue l’asthme de la BPCO où la réversibilité est incomplète.\n\nTopo : Spirométrie et asthme\n\n1. Critères diagnostiques\n\n2. Réversibilité\n\nAsthme : obstruction significativement réversible\n\nBPCO : obstruction irréversible (parfois réversible)\n\n3. Autres paramètres\n\nPoints clés\n\nRéversibilité significative : VEMS ↑ ≥12 % et ≥200 mL\n\nRéversibilité complète possible dans l’asthme → normalisation VEMS et Tiffeneau\n\nCPT et VR normaux ou légèrement augmentés (pas de syndrome restrictif)\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Paramètre</td><td>Attendu dans l’asthme</td></tr><tr><td>VEMS/CVF (Tiffeneau)</td><td><70 % avant bronchodilatateur</td></tr><tr><td>Réversibilité VEMS</td><td>↑ ≥12 % et ≥200 mL après BDCA</td></tr></tbody></table>\n\n<table class=\"qcm-table\"><tbody><tr><td>Paramètre</td><td>Interprétation</td></tr><tr><td>CPT</td><td>Normale ou ↑ (hyperinflation)</td></tr><tr><td>VR</td><td>↑ en cas d’hyperinflation</td></tr><tr><td>DLCO</td><td>Normale dans l’asthme</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Il existe un trouble ventilatoire obstructif avec réversibilité significative.\nVous décidez d’instaurer un traitement de fond en accord avec les recommandations internationales :",
+    "items": {
+      "A": "B2 mimétiques longue durée d’action seuls",
+      "B": "Corticostéroïdes inhalés seuls",
+      "C": "Antileucotriènes",
+      "D": "Corticothérapie systémique",
+      "E": "Association fixe corticostéroïdes inhalés et B2 mimétiques longue durée d’action"
+    },
+    "answers": [
+      "B"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Bêta-2 mimétiques de longue durée d’action (LABA) seuls\n\nFaux.\n\nLes LABA ne doivent jamais être utilisés seuls dans l’asthme en raison du risque d’augmentation des exacerbations graves et des décès liés à l’asthme (effet paradoxal décrit dans les études SMART). Ils sont toujours associés à un corticostéroïde inhalé (CSI).\n\nB – Corticostéroïdes inhalés (CSI) seuls\n\nVrai.\n\nLe traitement de fond de première intention dans l’asthme persistant repose sur les corticostéroïdes inhalés :\n\nRéduisent l’inflammation bronchique chronique.\n\nPrévention des exacerbations.\n\nAméliorent le contrôle de la maladie.\n\nC – Antileucotriènes\n\nFaux (en première intention).\n\nLes antileucotriènes (ex : montélukast) sont des traitements complémentaires éventuels en cas d’asthme allergique ou d’intolérance aux CSI, mais ils ne remplacent pas les corticostéroïdes inhalés en traitement de fond. Leur efficacité est inférieure à celle des CSI.\n\nD – Corticothérapie systémique\n\nFaux.\n\nLa corticothérapie systémique est réservée aux exacerbations sévères ou à l’asthme sévère non contrôlé malgré un traitement inhalé optimal (pallier 5). Elle n’est pas justifiée pour un asthme persistant modéré sans aggravation aiguë.\n\nE – Association fixe CSI + LABA\n\nFaux.\n\nCette association est recommandée au pallier supérieur (pallier 3 et plus) chez les patients dont l’asthme persiste mal contrôlé malgré un traitement par CSI seul à dose faible ou modérée.\n\nTopo : Mise en route du traitement de fond de l’asthme (GINA)\n\n1. Stratégie par paliers (étapes)\n\nIci : asthme\n\nSymptômes intermittents mais récurrents\n\nTrouble ventilatoire obstructif avec réversibilité\n\n→ CSI faible dose quotidien = pallier 2 GINA\n\n3. Pourquoi ne pas mettre LABA seul ?\n\nLe traitement de fond doit cibler l’inflammation bronchique (CSI).\n\nLes LABA agissent sur le bronchospasme mais sans effet anti-inflammatoire.\n\nPoints clés\n\nAsthme confirmé → traitement de fond = CSI faible dose quotidien\n\nPas de LABA seul (toujours associé au CSI)\n\nAntileucotriènes et autres traitements = options additionnelles si contrôle insuffisant\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Pallier</td><td>Traitement de fond</td></tr><tr><td>2</td><td>CSI faible dose continu</td></tr><tr><td>3</td><td>CSI dose faible + LABA</td></tr><tr><td>4</td><td>CSI dose moyenne/élevée + LABA</td></tr><tr><td>5</td><td>CSI dose élevée + LABA ± autres (anti-IgE, anti-IL5, cortico PO)</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Vous suivez maintenant Mme F depuis 2ans, elle est sous corticostéroïdes inhalés seuls.\nElle travaille dans l’humanitaire en Afrique et en Amérique latine. Elle y passe 3 à 6 mois par an.\nElle ne présente aucun autre nouvel antécédent mis à part cet asthme.\nVous la voyez ce jour en consultation après l’avoir perdu de vue depuis près de 1 an.\nVous souhaitez évaluer le contrôle de son asthme, que demandez-vous ?",
+    "items": {
+      "A": "Radiographie de thorax",
+      "B": "Rechercher des réveils nocturnes dus à des symptômes respiratoires",
+      "C": "Rechercher une limitation de ses activités physiques",
+      "D": "Rechercher la survenue d’exacerbations depuis sa dernière consultation",
+      "E": "EFR"
+    },
+    "answers": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Elle n’a jamais présenté de vraie exacerbation, en revanche ses symptômes ne sont que partiellement contrôlés.\nSon VEMS est mesuré à 71%, avec une réversibilité non significative.\nElle assure une observance irréprochable et vous constatez une technique de prise optimale.\nVous décidez d’incrémenter le niveau des thérapeutiques de fond.",
+    "items": {
+      "A": "Vous ajouter un anticholinergique",
+      "B": "Vous ajoutez un bêta 2 mimétique",
+      "C": "Ce n’est plus un asthme, il faut d’abord réévaluer le diagnostic",
+      "D": "Majoration de la dose du bronchodilatateur de courte durée d’action",
+      "E": "Thérapie ciblée par mépolizumab"
+    },
+    "answers": [
+      "B"
+    ],
+    "per_item": {},
+    "correction_generale": "Contexte clinique\n\nPatiente asthmatique avec symptômes partiellement contrôlés :\n\nVEMS à 71 % (trouble ventilatoire obstructif modéré).\n\nRéversibilité non significative → n’exclut pas un asthme.\n\nObservance et technique d’inhalation correctes → l’inefficacité du traitement n’est pas liée à ces facteurs.\n\nActuellement sous CSI faible dose (pallier 2 GINA).\n\nElle nécessite donc une escalade thérapeutique vers le pallier 3.\n\nAnalyse des propositions\n\nA – Vous ajoutez un anticholinergique\n\nFaux.\n\nLes anticholinergiques (tiotropium) ne sont pas indiqués en première ligne dans l’asthme. Ils peuvent être ajoutés dans l’asthme sévère non contrôlé (pallier 5) en complément du traitement inhalé optimal.\n\nB – Vous ajoutez un bêta-2 mimétique de longue durée d’action (LABA)\n\nVrai.\n\nL’ajout d’un LABA au CSI est recommandé au pallier 3 GINA :\n\nAssociation fixe CSI + LABA = traitement de fond standard pour améliorer le contrôle des symptômes et réduire les exacerbations.\n\nPermet une meilleure dilatation bronchique et une synergie anti-inflammatoir\n\nC – Ce n’est plus un asthme, il faut d’abord réévaluer le diagnostic\n\nFaux.\n\nUne réversibilité non significative à l’EFR n’exclut pas l’asthme, surtout chez une patiente déjà sous traitement anti-inflammatoire. Le diagnostic est clinique et renforcé par l’évolution sous traitement.\n\nD – Majoration de la dose du bronchodilatateur de courte durée d’action (SABA)\n\nFaux.\n\nLes SABA sont des traitements de secours. Ils ne doivent pas être augmentés en traitement de fond car ils n’ont aucun effet anti-inflammatoire et leur surutilisation augmente le risque d’exacerbations\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "A propos de la physiopathologie de l’asthme :",
+    "items": {
+      "A": "Implication des éosinophiles",
+      "B": "Œdème bronchique",
+      "C": "Hyperréactivité bronchique",
+      "D": "Implication des cellules épithéliales",
+      "E": "25% des enfants ayant 2 parents asthmatiques seront asthmatiques eux-même"
+    },
+    "answers": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Implication des éosinophiles\n\nVrai.\n\nL’asthme est une maladie inflammatoire des voies aériennes dominée par une réponse immunitaire de type Th2 :\n\nLes éosinophiles sont recrutés sous l’action d’IL-5 et participent aux lésions épithéliales bronchiques par libération de protéines cationiques, leucotriènes, et radicaux libres.\n\nIls sont un marqueur important dans les formes allergiques et dans l’asthme dit éosinophilique.\n\nB – Œdème bronchique\n\nVrai.\n\nL’inflammation chronique des voies aériennes entraîne :\n\nŒdème de la muqueuse bronchique.\n\nAugmentation des sécrétions muqueuses.\n\nHyperplasie des glandes sous-muqueuses.\n\nCela contribue à l’obstruction bronchique réversible.\n\nC – Hyperréactivité bronchique\n\nVrai.\n\nCaractéristique clé de l’asthme : les bronches répondent de façon exagérée à des stimuli normalement inoffensifs (froid, effort, allergènes, infections).\n\nElle est due à :\n\nRemodelage bronchique (fibrose, hypertrophie des muscles lisses).\n\nInflammation persistante des voies aériennes.\n\nD – Implication des cellules épithéliales\n\nVrai.\n\nLes cellules épithéliales bronchiques jouent un rôle central :\n\nElles détectent les allergènes/infections via les récepteurs de type Toll (TLR).\n\nElles produisent des cytokines (IL-33, IL-25, TSLP) qui activent les lymphocytes Th2 et les cellules lymphoïdes innées (ILC2).\n\nElles participent au remodelage bronchique en favorisant la fibrose et l’hypertrophie musculaire.\n\nE – 25 % des enfants ayant 2 parents asthmatiques seront asthmatiques eux-mêmes\n\nFaux.\n\nLe risque est plus élevé : environ 50 % des enfants ayant deux parents asthmatiques développent un asthme (contre 25 % avec un seul parent asthmatique et 10 % sans antécédent familial). L’asthme est une maladie multifactorielle à forte composante génétique (polymorphismes des gènes IL-4, IL-13, TSLP, ADAM33…).\n\nTopo : Physiopathologie de l’asthme\n\n1. Principaux mécanismes\n\n2. Acteurs cellulaires et médiateurs\n\nPoints clés\n\nAsthme = inflammation bronchique + hyperréactivité + remodelage.\n\nÉosinophiles et cellules épithéliales sont des acteurs centraux\n\nForte composante génétique → risque ≈ 50 % si 2 parents asthmatiques.\n\n___\n\n<table class=\"qcm-table\"><tbody><tr><td>Mécanisme</td><td>Conséquences</td></tr><tr><td>Inflammation chronique</td><td>Recrutement d’éosinophiles, mastocytes, lymphocytes Th2</td></tr><tr><td>Remodelage bronchique</td><td>Fibrose, hypertrophie des muscles lisses, épaississement de la membrane basale</td></tr><tr><td>Hyperréactivité bronchique</td><td>Réponse exagérée aux stimuli</td></tr><tr><td>Œdème, hypersécrétion</td><td>Obstruction bronchique</td></tr></tbody></table>\n\n<table class=\"qcm-table\"><tbody><tr><td>Cellules impliquées</td><td>Médiateurs</td></tr><tr><td>Éosinophiles</td><td>Leucotriènes, protéines cationiques</td></tr><tr><td>Mastocytes</td><td>Histamine, prostaglandines</td></tr><tr><td>Cellules épithéliales</td><td>IL-25, IL-33, TSLP</td></tr><tr><td>Lymphocytes Th2</td><td>IL-4, IL-5, IL-13</td></tr></tbody></table>"
+  },
+  {
+    "section": "cours",
+    "enonce": "Que recherchez-vous à l’interrogatoire pour expliquer le mauvais contrôle de cet asthme :",
+    "items": {
+      "A": "Rhinite chronique",
+      "B": "RGO",
+      "C": "Prise d’AINS",
+      "D": "Anxiété",
+      "E": "Tabagisme"
+    },
+    "answers": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "per_item": {},
+    "correction_generale": "A – Rhinite chronique\n\nVrai.\n\nLa rhinite allergique ou non allergique est fréquemment associée à l’asthme (syndrome sino-bronchique) :\n\nElle aggrave l’inflammation des voies aériennes.\n\nSa prise en charge améliore le contrôle de l’asthme.\n\nToujours rechercher des symptômes nasaux (obstruction, écoulement, éternuements).\n\nB – Reflux gastro-œsophagien (RGO)\n\nVrai.\n\nLe RGO favorise l’irritation bronchique par micro-aspirations nocturnes ou réflexes vagaux, pouvant aggraver la toux et la dyspnée.\n\nRechercher pyrosis, régurgitations, toux nocturne.\n\nC – Prise d’AINS\n\nVrai.\n\nLes AINS peuvent provoquer un bronchospasme chez les asthmatiques AINS-sensibles (syndrome de Widal = asthme + polypose nasale + hypersensibilité aux AINS).\n\nInterroger sur la prise d’anti-inflammatoires et la survenue d’une aggravation des symptômes.\n\nD – Anxiété\n\nVrai.\n\nL’anxiété et les troubles du sommeil majorent la perception des symptômes respiratoires et peuvent entraîner une utilisation inappropriée des bronchodilatateurs de secours.\n\nEnvisager un accompagnement psychologique si nécessaire.\n\nE – Tabagisme\n\nVrai.\n\nLe tabac est un facteur aggravant majeur :\n\nAugmente l’inflammation bronchique et la résistance aux corticostéroïdes inhalés.\n\nRechercher un tabagisme actif ou passif.\n\nProposer un sevrage systématiquement.\n\nCas clinique n°3 :\n\nMonsieur P., 67 ans, consulte aux urgences pour une fièvre et une toux depuis 5 jours. Il décrit des expectorations jaunes et une douleur thoracique basale droite augmentée à l’inspiration profonde. Il se sent très fatigué et a eu des frissons dans les 48 dernières heures.\n\nAntécédents :\n\nTabagisme actif : 40 PA\n\nHypertension artérielle sous ramipril\n\nDiabète de type 2 sous metformine\n\nPas de voyages récents, pas de notion d’hospitalisation récente.\n\nÀ l’examen :\n\nT : 39,1°C, FC : 108 bpm, FR : 26/min, PA : 105/62 mmHg, SpO₂ : 92% en air ambiant\n\nAuscultation : crépitants focaux à la base droite, matité à la percussion."
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle(s) est (sont) l(es) hypothèse(s) diagnostique(s) principale(s) ?",
+    "items": {
+      "A": "Pneumopathie aiguë communautaire",
+      "B": "Embolie pulmonaire",
+      "C": "Insuffisance cardiaque gauche avec OAP",
+      "D": "Pneumonie nosocomiale",
+      "E": "Cancer bronchopulmonaire surinfecté"
+    },
+    "answers": [
+      "A"
+    ],
+    "per_item": {
+      "A": "Pneumopathie aiguë communautaire (PAC) Tableau typique : fièvre, toux productive, douleur thoracique pleurale, crépitants focaux, consolidation radiologique. Facteurs de risque : âge >65 ans, tabagisme, diabète.",
+      "B": "Embolie pulmonaire Peut donner dyspnée et douleur basithoracique, mais absence de facteurs de risque thromboembolique récent et expectoration purulente rend ce diagnostic moins probable.",
+      "C": "OAP Pas de contexte d’IC gauche connue, pas de râles crépitants bilatéraux ni d’orthopnée.",
+      "D": "Pneumonie nosocomiale Pas d’hospitalisation récente (critère : ≥48h d’hospitalisation).",
+      "E": "Cancer bronchopulmonaire surinfecté Possible chez tabagique âgé, mais pas de signes évocateurs (amaigrissement, hémoptysie, toux chronique). ___"
+    },
+    "correction_generale": null
+  },
+  {
+    "section": "cours",
+    "enonce": "Quels examens demandez-vous en première intention ?",
+    "items": {
+      "A": "Radiographie de thorax face et profil",
+      "B": "CRP et hémogramme",
+      "C": "Gaz du sang artériel",
+      "D": "Hémocultures",
+      "E": "Scanner thoracique"
+    },
+    "answers": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "per_item": {
+      "A": "Radiographie de thorax face et profil Permet de confirmer la PAC (syndrome alvéolaire focal), éliminer un épanchement pleural ou un pneumothorax.",
+      "C": "Gaz du sang artériel Chez un patient avec SpO₂ <93 % en air ambiant → utile pour évaluer une hypoxémie/hypercapnie.",
+      "E": "Scanner thoracique Pas systématique en première intention. Réservé aux formes compliquées (empyème, échec du traitement, suspicion de tumeur). ___"
+    },
+    "correction_generale": null
+  },
+  {
+    "section": "cours",
+    "enonce": "Le patient a une condensation alvéolaire basale droite à la radiographie, la CRP est à 132 mg/L, les PNN sont à 11 G/L, la SpO₂ est à 92%. Où orientez-vous la prise en charge ?",
+    "items": {
+      "A": "Retour à domicile avec traitement oral et contrôle dans 48 h",
+      "B": "Hospitalisation en service conventionnel",
+      "C": "Hospitalisation en soins intensifs",
+      "D": "Surveillance aux urgences pendant 6 h puis retour à domicile",
+      "E": "Indication d’une antibiothérapie IV en ambulatoire Réponse B ` Patient âgé avec comorbidités et hypoxémie. Pas de signe de pneumonie grave : donc hospitalisation en secteur conventionnel. ___"
+    },
+    "answers": [],
+    "per_item": {},
+    "correction_generale": null
+  },
+  {
+    "section": "cours",
+    "enonce": "Quelle antibiothérapie probabiliste initiez-vous en première intention ?",
+    "items": {
+      "A": "Amoxicilline seule",
+      "B": "Amoxicilline-acide clavulanique ± macrolide",
+      "C": "Céftriaxone seule",
+      "D": "Lévofloxacine en monothérapie",
+      "E": "Amikacine + vancomycine"
+    },
+    "answers": [
+      "B"
+    ],
+    "per_item": {},
+    "correction_generale": "PAC d’intensité modérée avec comorbidités (diabète, HTA, âgé) en l’absence d’allergie\n\nAmoxicilline-acide clavulanique 1 g x 3/jour\n\n___"
+  },
+  {
+    "section": "cours",
+    "enonce": "Quels éléments rechercheriez-vous pour suspecter une pneumonie à germes atypiques (ex. Legionella, Mycoplasma) ?",
+    "items": {
+      "A": "Troubles digestifs associés",
+      "B": "Atteinte neurologique",
+      "C": "Raideur méningée",
+      "D": "Atteinte bilatérale à la radiographie thoracique",
+      "E": "Évolution rapide vers le choc septique"
+    },
+    "answers": [
+      "A",
+      "B",
+      "D"
+    ],
+    "per_item": {
+      "A": "Troubles digestifs associés (classique pour Legionella : diarrhées, vomissements).",
+      "B": "Atteinte neurologique (céphalées, confusion pour Legionella).",
+      "C": "=> méningite",
+      "D": "Atteinte bilatérale à la radiographie (suggestive d’atypiques).",
+      "E": "Evolution rapide vers le choc septique (typiquement pneumocoque, voire légionelle, pas les autres germes atypiques)."
+    },
+    "correction_generale": null
+  }
+]
