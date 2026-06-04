@@ -118,7 +118,7 @@ export function InscriptionForm({ colleges = [] }: { colleges?: { id: string; no
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8 }}
-      className="relative mx-auto mt-8 w-full max-w-5xl overflow-hidden rounded-3xl border-2 border-[#E8E7E3] bg-white p-4 text-left shadow-[0_25px_70px_-25px_rgba(107,26,42,0.25)] sm:p-8 lg:p-10"
+      className="relative mx-auto mt-6 w-full max-w-6xl overflow-hidden rounded-2xl border-2 border-[#E8E7E3] bg-white p-3 text-left shadow-[0_25px_70px_-25px_rgba(107,26,42,0.25)] sm:mt-8 sm:rounded-3xl sm:p-8 lg:p-10"
     >
       {/* Halos décoratifs */}
       <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#6B1A2A]/12 blur-3xl" />

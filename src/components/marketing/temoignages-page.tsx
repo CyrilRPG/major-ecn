@@ -266,10 +266,12 @@ function FeaturedCard({ t }: { t: Featured }) {
         <p className="mt-2 text-xl font-black leading-tight" style={{ color: NAVY }}>
           &ldquo;{t.quote}&rdquo;
         </p>
-        {/* Extrait : seulement le 1er paragraphe + lien vers la page complète. */}
-        <p className="mt-4 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-          {t.paragraphs[0]}
-        </p>
+        {/* Extrait : 2 premiers paragraphes + lien vers la page complète. */}
+        {t.paragraphs.slice(0, 2).map((p, i) => (
+          <p key={i} className={(i === 0 ? 'mt-4 ' : 'mt-3 ') + 'text-[13.5px] leading-relaxed'} style={{ color: INK_SOFT }}>
+            {p}
+          </p>
+        ))}
         <Link
           href={`/temoignages/${t.slug}`}
           className="mt-3 inline-flex items-center gap-1 text-[13px] font-bold"

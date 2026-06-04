@@ -50,8 +50,9 @@ function PlateformeHero() {
             style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
             <Sparkles className="h-3.5 w-3.5" /> Plateforme pédagogique
           </span>
-          <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl" style={{ color: NAVY }}>
-            La plateforme conçue pour <span style={{ color: RED }}>réussir les EVC (PAE)</span>
+          <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl"
+            style={gradientText(GRAD_RED_BLUE)}>
+            La plateforme conçue pour réussir les EVC (PAE)
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
             Tableau de bord, QCM corrigés, cas cliniques, révision transversale intelligente,
