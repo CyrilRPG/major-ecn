@@ -3,6 +3,20 @@ import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+/** Nettoie une chaîne pour la rendre encodable en WinAnsi (Helvetica standard).
+ *  Remplace les caractères Unicode hors-WinAnsi par des équivalents ASCII. */
+function ansi(s: string): string {
+  return s
+    .replace(/[—–]/g, '-')        // em/en dash → tiret
+    .replace(/[‘’]/g, "'")        // smart quotes simples → apostrophe
+    .replace(/[“”]/g, '"')        // smart quotes doubles → guillemet
+    .replace(/…/g, '...')               // ellipse → ...
+    .replace(/[★☆]/g, '*')        // étoiles → *
+    .replace(/[ ]/g, ' ')              // espace insécable → espace
+    .replace(/[  ]/g, ' ');       // espace fine → espace
+}
 
 /**
  * GET /api/certificate/[coursId]
@@ -103,24 +117,24 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawRectangle({ x: m + 6, y: m + 6, width: width - 2 * m - 12, height: height - 2 * m - 12, borderColor: GOLD, borderWidth: 0.6 });
 
   // Logo Major ECN (texte stylisé)
-  page.drawText('MAJOR', { x: width / 2 - 70, y: height - 80, size: 26, font: fontBold, color: NAVY });
-  page.drawText('ECN', { x: width / 2 + 8, y: height - 80, size: 26, font: fontBold, color: RED });
-  page.drawText('PRÉPARATION EVC (PAE) — 18 ANS D\'EXPÉRIENCE', { x: width / 2 - 130, y: height - 100, size: 8, font: fontBold, color: INK_SOFT });
+  page.drawText(ansi('MAJOR'), { x: width / 2 - 70, y: height - 80, size: 26, font: fontBold, color: NAVY });
+  page.drawText(ansi('ECN'), { x: width / 2 + 8, y: height - 80, size: 26, font: fontBold, color: RED });
+  page.drawText(ansi("PRÉPARATION EVC (PAE) - 18 ANS D'EXPÉRIENCE"), { x: width / 2 - 130, y: height - 100, size: 8, font: fontBold, color: INK_SOFT });
 
   // Titre
-  page.drawText('CERTIFICAT', { x: width / 2 - 105, y: height - 165, size: 36, font: fontSerifBold, color: NAVY });
-  page.drawText('DE FIN DE PARCOURS', { x: width / 2 - 115, y: height - 195, size: 16, font: fontSerifBold, color: RED });
+  page.drawText(ansi('CERTIFICAT'), { x: width / 2 - 105, y: height - 165, size: 36, font: fontSerifBold, color: NAVY });
+  page.drawText(ansi('DE FIN DE PARCOURS'), { x: width / 2 - 115, y: height - 195, size: 16, font: fontSerifBold, color: RED });
 
   // Ligne d'or
   page.drawLine({ start: { x: width / 2 - 60, y: height - 215 }, end: { x: width / 2 + 60, y: height - 215 }, color: GOLD, thickness: 1.2 });
 
   // Texte d'introduction
-  page.drawText('Le présent certificat est décerné à', {
+  page.drawText(ansi('Le présent certificat est décerné à'), {
     x: width / 2 - 110, y: height - 240, size: 11, font: fontIta, color: INK_SOFT,
   });
 
   // Nom + prénom
-  const nameText = `${firstName} ${lastName}`.toUpperCase();
+  const nameText = ansi(`${firstName} ${lastName}`.toUpperCase());
   const nameWidth = fontSerifBold.widthOfTextAtSize(nameText, 30);
   page.drawText(nameText, { x: (width - nameWidth) / 2, y: height - 285, size: 30, font: fontSerifBold, color: INK });
 
@@ -132,17 +146,17 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   });
 
   // Promo
-  page.drawText(`Promotion : ${promotion}`, {
+  page.drawText(ansi(`Promotion : ${promotion}`), {
     x: width / 2 - fontReg.widthOfTextAtSize(`Promotion : ${promotion}`, 11) / 2,
     y: height - 310, size: 11, font: fontReg, color: INK_SOFT,
   });
 
   // Mention parcours
-  page.drawText('pour avoir mené à terme le parcours pédagogique', {
+  page.drawText(ansi('pour avoir mené à terme le parcours pédagogique'), {
     x: width / 2 - fontReg.widthOfTextAtSize('pour avoir mené à terme le parcours pédagogique', 12) / 2,
     y: height - 345, size: 12, font: fontReg, color: INK,
   });
-  const coursLabel = matiereNom ? `${matiereNom} — ${coursTitre}` : coursTitre;
+  const coursLabel = ansi(matiereNom ? `${matiereNom} - ${coursTitre}` : coursTitre);
   const coursWidth = fontSerifBold.widthOfTextAtSize(coursLabel, 18);
   page.drawText(coursLabel, {
     x: (width - coursWidth) / 2,
@@ -151,7 +165,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
 
   // Score + date
   if (total > 0) {
-    const scoreText = `Score à l'interrogation finale : ${score} / ${total} (${Math.round((score / total) * 100)}%)`;
+    const scoreText = ansi(`Score a l'interrogation finale : ${score} / ${total} (${Math.round((score / total) * 100)}%)`);
     page.drawText(scoreText, {
       x: width / 2 - fontReg.widthOfTextAtSize(scoreText, 10) / 2,
       y: height - 400, size: 10, font: fontIta, color: INK_SOFT,
@@ -162,14 +176,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const baseY = 130;
 
   // Date (gauche)
-  page.drawText('Délivré le', { x: 100, y: baseY + 60, size: 9, font: fontReg, color: INK_SOFT });
+  page.drawText(ansi('Délivré le'), { x: 100, y: baseY + 60, size: 9, font: fontReg, color: INK_SOFT });
   page.drawText(dateFr, { x: 100, y: baseY + 42, size: 13, font: fontSerifBold, color: INK });
   page.drawLine({ start: { x: 100, y: baseY + 35 }, end: { x: 240, y: baseY + 35 }, color: GREY, thickness: 0.5 });
-  page.drawText('Date d\'émission', { x: 100, y: baseY + 22, size: 7, font: fontReg, color: GREY });
+  page.drawText(ansi("Date d'émission"), { x: 100, y: baseY + 22, size: 7, font: fontReg, color: GREY });
 
   // Signature étudiant (milieu)
   page.drawLine({ start: { x: width / 2 - 80, y: baseY + 35 }, end: { x: width / 2 + 80, y: baseY + 35 }, color: GREY, thickness: 0.5 });
-  page.drawText('Signature de l\'étudiant', { x: width / 2 - fontReg.widthOfTextAtSize('Signature de l\'étudiant', 7) / 2, y: baseY + 22, size: 7, font: fontReg, color: GREY });
+  page.drawText(ansi("Signature de l'étudiant"), { x: width / 2 - fontReg.widthOfTextAtSize("Signature de l'etudiant", 7) / 2, y: baseY + 22, size: 7, font: fontReg, color: GREY });
   // Embed la signature data URL
   if (completion.signature_data_url) {
     try {
@@ -193,24 +207,24 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawCircle({ x: stampCx, y: stampCy, size: R, borderColor: RED, borderWidth: 2 });
   page.drawCircle({ x: stampCx, y: stampCy, size: R - 5, borderColor: RED, borderWidth: 0.8 });
   // Texte sur le tampon
-  page.drawText('MAJOR', { x: stampCx - 23, y: stampCy + 6, size: 11, font: fontBold, color: RED });
-  page.drawText('ECN', { x: stampCx - 11, y: stampCy - 8, size: 11, font: fontBold, color: RED });
-  page.drawText('CERTIFIÉ', { x: stampCx - 17, y: stampCy - 22, size: 6, font: fontBold, color: RED });
+  page.drawText(ansi('MAJOR'), { x: stampCx - 23, y: stampCy + 6, size: 11, font: fontBold, color: RED });
+  page.drawText(ansi('ECN'), { x: stampCx - 11, y: stampCy - 8, size: 11, font: fontBold, color: RED });
+  page.drawText(ansi('CERTIFIÉ'), { x: stampCx - 17, y: stampCy - 22, size: 6, font: fontBold, color: RED });
   // Petit tilt visuel (overlay arc avec rotation)
-  page.drawText('★', { x: stampCx - 4, y: stampCy + R - 12, size: 12, font: fontBold, color: GOLD });
+  page.drawText('*', { x: stampCx - 4, y: stampCy + R - 12, size: 12, font: fontBold, color: GOLD });
 
   // Mention bas de page
   page.drawText(
-    'Document généré automatiquement par Major ECN — Préparation EVC (PAE). Toute reproduction non autorisée est interdite.',
+    ansi('Document généré automatiquement par Major ECN - Préparation EVC (PAE). Toute reproduction non autorisée est interdite.'),
     { x: m + 30, y: m + 14, size: 6.5, font: fontIta, color: GREY },
   );
 
   // ID unique de vérification (en bas-droite, discret)
   const certId = `${coursId.slice(0, 8)}-${signedAt.getTime().toString(36)}`.toUpperCase();
-  page.drawText(`Réf. : ${certId}`, { x: width - 180, y: m + 14, size: 6.5, font: fontReg, color: GREY });
+  page.drawText(ansi(`Réf. : ${certId}`), { x: width - 180, y: m + 14, size: 6.5, font: fontReg, color: GREY });
 
   // Filigrane MAJOR ECN en arrière-plan (rotation 30°)
-  page.drawText('MAJOR ECN', {
+  page.drawText(ansi('MAJOR ECN'), {
     x: 200, y: 250,
     size: 90, font: fontBold,
     color: rgb(0.94, 0.94, 0.96),
