@@ -1,38 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-/** Nettoie une chaîne pour la rendre encodable en WinAnsi (Helvetica standard).
- *  Remplace les caractères Unicode hors-WinAnsi par des équivalents ASCII. */
+/** Normalise pour encodage WinAnsi (Helvetica standard ne supporte pas em-dash, smart quotes, ★, etc.). */
 function ansi(s: string): string {
   return s
-    .replace(/[—–]/g, '-')        // em/en dash → tiret
-    .replace(/[‘’]/g, "'")        // smart quotes simples → apostrophe
-    .replace(/[“”]/g, '"')        // smart quotes doubles → guillemet
-    .replace(/…/g, '...')               // ellipse → ...
-    .replace(/[★☆]/g, '*')        // étoiles → *
-    .replace(/[ ]/g, ' ')              // espace insécable → espace
-    .replace(/[  ]/g, ' ');       // espace fine → espace
+    .replace(/[—–]/g, '-')
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/…/g, '...')
+    .replace(/[★☆]/g, '*')
+    .replace(/[   ]/g, ' ');
 }
 
 /**
  * GET /api/certificate/[coursId]
- *
- * Génère un PDF de certificat de fin de parcours signé, design pro :
- * - Logo Major ECN
- * - Encadré or
- * - Nom + prénom de l'élève
- * - Spécialité (cours)
- * - Date
- * - Signature scannée
- * - Tampon Major ECN
- *
- * Accessible :
- * - par l'élève propriétaire du certificat
- * - par un admin (via param ?user_id=<uuid>)
+ * Certificat de fin de parcours signé, A4 portrait, logo officiel Major ECN.
  */
 export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
@@ -43,7 +31,6 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const url = new URL(req.url);
   const overrideUserId = url.searchParams.get('user_id');
 
-  // Si admin demande pour un autre élève → utilise overrideUserId
   let targetUserId = user.id;
   if (overrideUserId && overrideUserId !== user.id) {
     const { data: prof } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
@@ -51,23 +38,20 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     targetUserId = overrideUserId;
   }
 
-  // Lit le certificat signé
   const { data: completion } = await (supabase as unknown as {
     from: (t: string) => {
       select: (s: string) => {
         eq: (k: string, v: string) => {
           eq: (k: string, v: string) => {
             maybeSingle: () => Promise<{ data: {
-              qcm_test_score: number | null; qcm_test_total: number | null;
-              certificate_signed_at: string | null; signature_data_url: string | null;
-              promotion: string | null;
+              certificate_signed_at: string | null; signature_data_url: string | null; promotion: string | null;
             } | null }>;
           };
         };
       };
     };
   }).from('parcours_completions')
-    .select('qcm_test_score, qcm_test_total, certificate_signed_at, signature_data_url, promotion')
+    .select('certificate_signed_at, signature_data_url, promotion')
     .eq('user_id', targetUserId).eq('cours_id', coursId).maybeSingle();
 
   if (!completion?.certificate_signed_at) {
@@ -79,161 +63,185 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     supabase.from('cours').select('titre, matieres(nom)').eq('id', coursId).maybeSingle(),
   ]);
 
-  const firstName = target?.first_name ?? '—';
-  const lastName = target?.last_name ?? '—';
-  const promotion = completion.promotion ?? target?.promotion ?? '—';
-  const coursTitre = cours?.titre ?? '—';
+  const firstName = target?.first_name ?? '';
+  const lastName  = target?.last_name ?? '';
+  const promotion = completion.promotion ?? target?.promotion ?? '';
+  const coursTitre = cours?.titre ?? '';
   const matiereNom = (cours as { matieres?: { nom?: string } } | null)?.matieres?.nom ?? '';
   const signedAt = new Date(completion.certificate_signed_at);
   const dateFr = signedAt.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-  const score = completion.qcm_test_score ?? 0;
-  const total = completion.qcm_test_total ?? 0;
 
-  // ============ PDF ============
+  /* ============ PDF — A4 portrait ============ */
   const pdf = await PDFDocument.create();
-  const page = pdf.addPage([842, 595]); // A4 paysage
+  const page = pdf.addPage([595, 842]); // A4 portrait
   const { width, height } = page.getSize();
 
-  const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
-  const fontReg = await pdf.embedFont(StandardFonts.Helvetica);
-  const fontIta = await pdf.embedFont(StandardFonts.HelveticaOblique);
-  const fontSerif = await pdf.embedFont(StandardFonts.TimesRoman);
+  const fontBold      = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const fontReg       = await pdf.embedFont(StandardFonts.Helvetica);
+  const fontIta       = await pdf.embedFont(StandardFonts.HelveticaOblique);
   const fontSerifBold = await pdf.embedFont(StandardFonts.TimesRomanBold);
 
-  const RED = rgb(0.753, 0.067, 0.180);  // #C0112E
-  const NAVY = rgb(0.059, 0.122, 0.302); // #0F1F4D
-  const GOLD = rgb(0.831, 0.686, 0.216); // #D4AF37
-  const INK = rgb(0.06, 0.09, 0.16);
+  const RED      = rgb(0.753, 0.067, 0.180); // #C0112E
+  const NAVY     = rgb(0.059, 0.122, 0.302); // #0F1F4D
+  const GOLD     = rgb(0.831, 0.686, 0.216); // #D4AF37
+  const INK      = rgb(0.06, 0.09, 0.16);
   const INK_SOFT = rgb(0.32, 0.38, 0.48);
-  const GREY = rgb(0.55, 0.60, 0.68);
+  const GREY     = rgb(0.55, 0.60, 0.68);
 
-  // Bandes décoratives verticales rouges (gauche + droite)
-  page.drawRectangle({ x: 0, y: 0, width: 14, height, color: RED });
-  page.drawRectangle({ x: width - 14, y: 0, width: 14, height, color: RED });
-
-  // Bordure principale or
-  const m = 32;
+  // Bandes décoratives verticales rouges + bordure or
+  page.drawRectangle({ x: 0, y: 0, width: 12, height, color: RED });
+  page.drawRectangle({ x: width - 12, y: 0, width: 12, height, color: RED });
+  const m = 30;
   page.drawRectangle({ x: m, y: m, width: width - 2 * m, height: height - 2 * m, borderColor: GOLD, borderWidth: 2 });
   page.drawRectangle({ x: m + 6, y: m + 6, width: width - 2 * m - 12, height: height - 2 * m - 12, borderColor: GOLD, borderWidth: 0.6 });
 
-  // Logo Major ECN (texte stylisé)
-  page.drawText(ansi('MAJOR'), { x: width / 2 - 70, y: height - 80, size: 26, font: fontBold, color: NAVY });
-  page.drawText(ansi('ECN'), { x: width / 2 + 8, y: height - 80, size: 26, font: fontBold, color: RED });
-  page.drawText(ansi("PRÉPARATION EVC (PAE) - 18 ANS D'EXPÉRIENCE"), { x: width / 2 - 130, y: height - 100, size: 8, font: fontBold, color: INK_SOFT });
+  // ============ Logo officiel Major ECN ============
+  try {
+    const logoPath = join(process.cwd(), 'public', 'major-ecn-logo.png');
+    const logoBytes = readFileSync(logoPath);
+    const logoImg = await pdf.embedPng(logoBytes);
+    const logoH = 90;
+    const logoW = (logoImg.width / logoImg.height) * logoH;
+    page.drawImage(logoImg, {
+      x: (width - logoW) / 2,
+      y: height - 60 - logoH,
+      width: logoW,
+      height: logoH,
+    });
+  } catch {
+    // Fallback texte si le logo manque
+    page.drawText('MAJOR', { x: width / 2 - 60, y: height - 110, size: 28, font: fontBold, color: NAVY });
+    page.drawText('ECN',   { x: width / 2 + 18, y: height - 110, size: 28, font: fontBold, color: RED });
+  }
 
-  // Titre
-  page.drawText(ansi('CERTIFICAT'), { x: width / 2 - 105, y: height - 165, size: 36, font: fontSerifBold, color: NAVY });
-  page.drawText(ansi('DE FIN DE PARCOURS'), { x: width / 2 - 115, y: height - 195, size: 16, font: fontSerifBold, color: RED });
-
-  // Ligne d'or
-  page.drawLine({ start: { x: width / 2 - 60, y: height - 215 }, end: { x: width / 2 + 60, y: height - 215 }, color: GOLD, thickness: 1.2 });
-
-  // Texte d'introduction
-  page.drawText(ansi('Le présent certificat est décerné à'), {
-    x: width / 2 - 110, y: height - 240, size: 11, font: fontIta, color: INK_SOFT,
+  // Sous-titre sous le logo
+  const subTitle = ansi('PRÉPARATION EVC (PAE) - 18 ANS D\'EXPÉRIENCE');
+  page.drawText(subTitle, {
+    x: width / 2 - fontBold.widthOfTextAtSize(subTitle, 8) / 2,
+    y: height - 175, size: 8, font: fontBold, color: INK_SOFT,
   });
 
-  // Nom + prénom
-  const nameText = ansi(`${firstName} ${lastName}`.toUpperCase());
-  const nameWidth = fontSerifBold.widthOfTextAtSize(nameText, 30);
-  page.drawText(nameText, { x: (width - nameWidth) / 2, y: height - 285, size: 30, font: fontSerifBold, color: INK });
+  // Ligne or séparatrice
+  page.drawLine({ start: { x: width / 2 - 50, y: height - 195 }, end: { x: width / 2 + 50, y: height - 195 }, color: GOLD, thickness: 1 });
 
-  // Underline sous le nom
+  // ============ Titre CERTIFICAT ============
+  const titre1 = ansi('CERTIFICAT');
+  const titre1W = fontSerifBold.widthOfTextAtSize(titre1, 40);
+  page.drawText(titre1, { x: (width - titre1W) / 2, y: height - 240, size: 40, font: fontSerifBold, color: NAVY });
+
+  const titre2 = ansi('DE FIN DE PARCOURS');
+  const titre2W = fontSerifBold.widthOfTextAtSize(titre2, 16);
+  page.drawText(titre2, { x: (width - titre2W) / 2, y: height - 268, size: 16, font: fontSerifBold, color: RED });
+
+  // ============ Intro + nom ============
+  const intro = ansi('Le présent certificat est décerné à');
+  page.drawText(intro, {
+    x: width / 2 - fontIta.widthOfTextAtSize(intro, 11) / 2,
+    y: height - 320, size: 11, font: fontIta, color: INK_SOFT,
+  });
+
+  const nameText = ansi(`${firstName} ${lastName}`.trim().toUpperCase() || '—');
+  const nameW = fontSerifBold.widthOfTextAtSize(nameText, 28);
+  page.drawText(nameText, { x: (width - nameW) / 2, y: height - 360, size: 28, font: fontSerifBold, color: INK });
+
   page.drawLine({
-    start: { x: (width - nameWidth) / 2 - 10, y: height - 290 },
-    end:   { x: (width + nameWidth) / 2 + 10, y: height - 290 },
+    start: { x: (width - nameW) / 2 - 12, y: height - 366 },
+    end:   { x: (width + nameW) / 2 + 12, y: height - 366 },
     color: NAVY, thickness: 0.8,
   });
 
-  // Promo
-  page.drawText(ansi(`Promotion : ${promotion}`), {
-    x: width / 2 - fontReg.widthOfTextAtSize(`Promotion : ${promotion}`, 11) / 2,
-    y: height - 310, size: 11, font: fontReg, color: INK_SOFT,
-  });
-
-  // Mention parcours
-  page.drawText(ansi('pour avoir mené à terme le parcours pédagogique'), {
-    x: width / 2 - fontReg.widthOfTextAtSize('pour avoir mené à terme le parcours pédagogique', 12) / 2,
-    y: height - 345, size: 12, font: fontReg, color: INK,
-  });
-  const coursLabel = ansi(matiereNom ? `${matiereNom} - ${coursTitre}` : coursTitre);
-  const coursWidth = fontSerifBold.widthOfTextAtSize(coursLabel, 18);
-  page.drawText(coursLabel, {
-    x: (width - coursWidth) / 2,
-    y: height - 375, size: 18, font: fontSerifBold, color: RED,
-  });
-
-  // Score + date
-  if (total > 0) {
-    const scoreText = ansi(`Score a l'interrogation finale : ${score} / ${total} (${Math.round((score / total) * 100)}%)`);
-    page.drawText(scoreText, {
-      x: width / 2 - fontReg.widthOfTextAtSize(scoreText, 10) / 2,
-      y: height - 400, size: 10, font: fontIta, color: INK_SOFT,
+  if (promotion) {
+    const promoText = ansi(`Promotion : ${promotion}`);
+    page.drawText(promoText, {
+      x: width / 2 - fontReg.widthOfTextAtSize(promoText, 11) / 2,
+      y: height - 388, size: 11, font: fontReg, color: INK_SOFT,
     });
   }
 
-  // ============ Bas du certificat : date / signature / tampon ============
-  const baseY = 130;
+  // ============ Mention parcours ============
+  const mention = ansi('pour avoir mené à terme le parcours pédagogique');
+  page.drawText(mention, {
+    x: width / 2 - fontReg.widthOfTextAtSize(mention, 12) / 2,
+    y: height - 430, size: 12, font: fontReg, color: INK,
+  });
+
+  const coursLabel = ansi(matiereNom ? `${matiereNom} - ${coursTitre}` : coursTitre);
+  const coursW = fontSerifBold.widthOfTextAtSize(coursLabel, 20);
+  page.drawText(coursLabel, {
+    x: (width - coursW) / 2,
+    y: height - 470, size: 20, font: fontSerifBold, color: RED,
+  });
+
+  // ============ Bas de page : date / signature / tampon ============
+  // Y baseline pour les libellés du bas (bien plus bas qu'avant pour éviter
+  // toute superposition avec le coeur du certificat).
+  const labelY = 130; // hauteur des libellés "Délivré le", "Signature", "Tampon"
+  const lineY  = 165; // ligne de signature
+  const sigY   = 170; // base de la zone signature
+  const stampCy = 175;
 
   // Date (gauche)
-  page.drawText(ansi('Délivré le'), { x: 100, y: baseY + 60, size: 9, font: fontReg, color: INK_SOFT });
-  page.drawText(dateFr, { x: 100, y: baseY + 42, size: 13, font: fontSerifBold, color: INK });
-  page.drawLine({ start: { x: 100, y: baseY + 35 }, end: { x: 240, y: baseY + 35 }, color: GREY, thickness: 0.5 });
-  page.drawText(ansi("Date d'émission"), { x: 100, y: baseY + 22, size: 7, font: fontReg, color: GREY });
+  page.drawText(ansi('Délivré le'), { x: 70, y: lineY + 30, size: 8.5, font: fontReg, color: INK_SOFT });
+  page.drawText(dateFr, { x: 70, y: lineY + 12, size: 13, font: fontSerifBold, color: INK });
+  page.drawLine({ start: { x: 70, y: lineY }, end: { x: 200, y: lineY }, color: GREY, thickness: 0.5 });
+  page.drawText(ansi("Date d'émission"), { x: 70, y: labelY, size: 7, font: fontReg, color: GREY });
 
-  // Signature étudiant (milieu)
-  page.drawLine({ start: { x: width / 2 - 80, y: baseY + 35 }, end: { x: width / 2 + 80, y: baseY + 35 }, color: GREY, thickness: 0.5 });
-  page.drawText(ansi("Signature de l'étudiant"), { x: width / 2 - fontReg.widthOfTextAtSize("Signature de l'etudiant", 7) / 2, y: baseY + 22, size: 7, font: fontReg, color: GREY });
-  // Embed la signature data URL
+  // Signature (centre)
+  page.drawLine({ start: { x: width / 2 - 75, y: lineY }, end: { x: width / 2 + 75, y: lineY }, color: GREY, thickness: 0.5 });
+  const sigLabel = ansi("Signature de l'étudiant");
+  page.drawText(sigLabel, {
+    x: width / 2 - fontReg.widthOfTextAtSize(sigLabel, 7) / 2,
+    y: labelY, size: 7, font: fontReg, color: GREY,
+  });
   if (completion.signature_data_url) {
     try {
-      const m = completion.signature_data_url.match(/^data:image\/(png|jpe?g);base64,(.+)$/);
-      if (m) {
-        const isPng = m[1] === 'png';
-        const bytes = Buffer.from(m[2], 'base64');
+      const mm = completion.signature_data_url.match(/^data:image\/(png|jpe?g);base64,(.+)$/);
+      if (mm) {
+        const isPng = mm[1] === 'png';
+        const bytes = Buffer.from(mm[2], 'base64');
         const img = isPng ? await pdf.embedPng(bytes) : await pdf.embedJpg(bytes);
-        const scale = Math.min(150 / img.width, 60 / img.height);
+        const scale = Math.min(140 / img.width, 50 / img.height);
         const w = img.width * scale;
         const h = img.height * scale;
-        page.drawImage(img, { x: width / 2 - w / 2, y: baseY + 38, width: w, height: h });
+        page.drawImage(img, { x: width / 2 - w / 2, y: sigY, width: w, height: h });
       }
-    } catch { /* image embed best-effort */ }
+    } catch { /* best-effort */ }
   }
 
-  // Tampon Major ECN (droite) — cercle rouge stylisé
-  const stampCx = width - 180;
-  const stampCy = baseY + 55;
-  const R = 40;
+  // Tampon Major ECN (droite)
+  const stampCx = width - 130;
+  const R = 38;
   page.drawCircle({ x: stampCx, y: stampCy, size: R, borderColor: RED, borderWidth: 2 });
   page.drawCircle({ x: stampCx, y: stampCy, size: R - 5, borderColor: RED, borderWidth: 0.8 });
-  // Texte sur le tampon
-  page.drawText(ansi('MAJOR'), { x: stampCx - 23, y: stampCy + 6, size: 11, font: fontBold, color: RED });
-  page.drawText(ansi('ECN'), { x: stampCx - 11, y: stampCy - 8, size: 11, font: fontBold, color: RED });
-  page.drawText(ansi('CERTIFIÉ'), { x: stampCx - 17, y: stampCy - 22, size: 6, font: fontBold, color: RED });
-  // Petit tilt visuel (overlay arc avec rotation)
-  page.drawText('*', { x: stampCx - 4, y: stampCy + R - 12, size: 12, font: fontBold, color: GOLD });
+  page.drawText('MAJOR',   { x: stampCx - 19, y: stampCy + 6,  size: 10, font: fontBold, color: RED });
+  page.drawText('ECN',     { x: stampCx - 10, y: stampCy - 7,  size: 10, font: fontBold, color: RED });
+  page.drawText(ansi('CERTIFIÉ'), { x: stampCx - 16, y: stampCy - 21, size: 6, font: fontBold, color: RED });
+  page.drawText('*',       { x: stampCx - 3,  y: stampCy + R - 11, size: 11, font: fontBold, color: GOLD });
+  page.drawText('Tampon officiel', {
+    x: stampCx - fontReg.widthOfTextAtSize('Tampon officiel', 7) / 2,
+    y: labelY, size: 7, font: fontReg, color: GREY,
+  });
 
-  // Mention bas de page
+  // ============ Footer ============
   page.drawText(
     ansi('Document généré automatiquement par Major ECN - Préparation EVC (PAE). Toute reproduction non autorisée est interdite.'),
-    { x: m + 30, y: m + 14, size: 6.5, font: fontIta, color: GREY },
+    { x: m + 22, y: m + 18, size: 6, font: fontIta, color: GREY },
   );
 
-  // ID unique de vérification (en bas-droite, discret)
   const certId = `${coursId.slice(0, 8)}-${signedAt.getTime().toString(36)}`.toUpperCase();
-  page.drawText(ansi(`Réf. : ${certId}`), { x: width - 180, y: m + 14, size: 6.5, font: fontReg, color: GREY });
+  page.drawText(ansi(`Réf. : ${certId}`), { x: width - 150, y: m + 18, size: 6, font: fontReg, color: GREY });
 
-  // Filigrane MAJOR ECN en arrière-plan (rotation 30°)
-  page.drawText(ansi('MAJOR ECN'), {
-    x: 200, y: 250,
-    size: 90, font: fontBold,
-    color: rgb(0.94, 0.94, 0.96),
+  // Filigrane discret en arrière-plan (rotation 30°)
+  page.drawText('MAJOR ECN', {
+    x: 120, y: 420,
+    size: 70, font: fontBold,
+    color: rgb(0.95, 0.95, 0.97),
     rotate: degrees(30),
-    opacity: 0.6,
+    opacity: 0.5,
   });
 
   const bytes = await pdf.save();
-  const safeName = `${firstName}-${lastName}`.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const safeName = `${firstName}-${lastName}`.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'eleve';
   const fileName = `certificat-major-ecn-${safeName}-${coursId.slice(0, 8)}.pdf`;
   return new NextResponse(Buffer.from(bytes), {
     headers: {
