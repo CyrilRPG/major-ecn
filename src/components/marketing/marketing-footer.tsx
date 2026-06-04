@@ -40,7 +40,7 @@ const BORDER_SOFT = '#F0E4E6';
 
 /* Logo officiel Major ECN (image unique marque + texte). */
 function MajorEvcLogo() {
-  return <BrandLogo className="h-14 w-auto" />;
+  return <BrandLogo className="h-20 w-auto sm:h-24" />;
 }
 
 /* Trust en bas du brand : court, dense, sans cartes */

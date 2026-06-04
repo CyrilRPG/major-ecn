@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, ClipboardList, GraduationCap, Library, Mail, Megaphone, MessagesSquare, Receipt, Users } from 'lucide-react';
+import { BarChart3, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, Receipt, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -14,6 +14,7 @@ type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; 
 const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
   { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
+  { href: '/admin/arborescence', label: 'Arborescence', Icon: ListTree },
   { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
   { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },

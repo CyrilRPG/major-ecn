@@ -878,7 +878,7 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
             <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
           </span>
           <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight gradient-vivid sm:text-4xl lg:text-5xl">
-            Rejoignez les candidats
+            Rejoignez les candidats{' '}
             <br className="hidden sm:block" />
             qui ont réussi avec Major ECN
           </h2>
