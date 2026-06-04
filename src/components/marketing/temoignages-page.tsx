@@ -228,68 +228,126 @@ function WrittenSection() {
 }
 
 /* ============ TÉMOIGNAGE À LA UNE ============ */
+type Featured = {
+  name: string;
+  initials: string;
+  spec: string;
+  role: string;
+  /** Photo dans /public/temoignages/<photo> ; fallback initiales si absente. */
+  photo: string;
+  quote: string;
+  paragraphs: string[];
+};
+const FEATURED: Featured[] = [
+  {
+    name: 'Dr Haykel Abdelbaki',
+    initials: 'HA',
+    spec: 'Radiologie',
+    role: 'Lauréat des EVC',
+    photo: '/temoignages/dr-haykel-abdelbaki.jpg',
+    quote: 'Sérieux, qualité et accompagnement : les clés de ma réussite.',
+    paragraphs: [
+      "Les cours sont actualisés, clairs et parfaitement adaptés aux exigences du concours. Les concours blancs organisés dans des conditions proches de l'examen m'ont permis de me préparer concrètement au jour J. L'équipe pédagogique est à l'écoute et prend le temps d'identifier les difficultés de chaque candidat.",
+      "Au-delà des supports et des enseignements, j'ai trouvé chez Major ECN un cadre de travail structuré et rassurant qui m'a permis d'aborder les épreuves avec davantage de confiance.",
+    ],
+  },
+  {
+    name: 'Dr Leila Bettaieb',
+    initials: 'LB',
+    spec: 'Médecine générale',
+    role: 'Lauréate des EVC MG',
+    photo: '/temoignages/Leila.jpg',
+    quote: "Une méthode claire, de bons supports et un véritable accompagnement.",
+    paragraphs: [
+      "J'ai particulièrement apprécié le travail réalisé autour des cas cliniques corrigés. Pouvoir s'entraîner sur un grand nombre de dossiers et comprendre précisément ce qui était attendu dans les réponses m'a énormément aidée à progresser.",
+      "Au-delà des connaissances, cette préparation m'a surtout permis d'acquérir une véritable méthodologie de travail et de réponse aux épreuves, ce qui fait souvent la différence le jour du concours.",
+      "Bien sûr, il faut travailler sérieusement et réviser régulièrement. Aucune formation ne peut apprendre ou mémoriser à votre place 😊. Mais lorsqu'on dispose d'une méthode claire, de bons supports et d'un accompagnement adapté, on avance beaucoup plus sereinement.",
+      "J'ai également beaucoup apprécié la disponibilité de l'équipe. À plusieurs reprises, j'ai pu poser mes questions et obtenir des réponses qui m'ont permis de continuer à avancer sans rester bloquée dans mes révisions.",
+      "Je recommande sincèrement Major ECN à tous les candidats qui recherchent non seulement des cours et des entraînements de qualité, mais aussi un véritable accompagnement tout au long de leur préparation.",
+    ],
+  },
+];
+
+function FeaturedCard({ t }: { t: Featured }) {
+  return (
+    <div className="rounded-3xl p-6 sm:p-8 grid gap-6 lg:grid-cols-[260px_1fr_280px] items-center"
+      style={{ background: SOFT_BG, border: `1px solid #F3D9DD` }}>
+      {/* Left avatar + name */}
+      <div className="text-center">
+        <span className="relative mx-auto block h-32 w-32 overflow-hidden rounded-full"
+          style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
+          <img
+            src={t.photo}
+            alt=""
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              const img = e.currentTarget;
+              img.style.display = 'none';
+              const sib = img.nextElementSibling as HTMLElement | null;
+              if (sib) sib.style.display = 'flex';
+            }}
+          />
+          <span
+            aria-hidden
+            className="hidden h-full w-full items-center justify-center text-3xl font-black text-white"
+          >
+            {t.initials}
+          </span>
+        </span>
+        <p className="mt-4 text-[10.5px] font-bold uppercase tracking-wider" style={{ color: RED }}>
+          Témoignage à la une
+        </p>
+        <p className="mt-1 text-base font-extrabold" style={{ color: NAVY }}>{t.name}</p>
+        <span className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10.5px] font-bold"
+          style={{ background: 'white', color: RED, border: `1px solid #F3D9DD` }}>
+          <Trophy className="h-3 w-3" /> {t.spec}
+        </span>
+        <p className="mt-1 text-[11px]" style={{ color: INK_SOFT }}>{t.role}</p>
+      </div>
+
+      {/* Center — quote + paragraphs */}
+      <div>
+        <Quote className="h-6 w-6" style={{ color: RED }} fill="currentColor" />
+        <p className="mt-2 text-xl font-black leading-tight" style={{ color: NAVY }}>
+          &ldquo;{t.quote}&rdquo;
+        </p>
+        {t.paragraphs.map((p, i) => (
+          <p key={i} className={(i === 0 ? 'mt-4 ' : 'mt-3 ') + 'text-[13.5px] leading-relaxed'} style={{ color: INK_SOFT }}>
+            {p}
+          </p>
+        ))}
+        <a href="#full" className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
+          style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}>
+          Lire le témoignage complet <ArrowRight className="h-4 w-4" />
+        </a>
+      </div>
+
+      {/* Right — decorative card */}
+      <div className="hidden lg:block">
+        <div className="relative aspect-square overflow-hidden rounded-2xl" style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
+          <div aria-hidden className="absolute inset-0" style={{
+            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%)',
+          }} />
+          <div className="absolute left-5 top-5 flex items-center gap-2">
+            <Stethoscope className="h-5 w-5 text-white" />
+            <span className="text-xs font-bold uppercase tracking-wider text-white">Major ECN</span>
+          </div>
+          <p className="absolute bottom-5 left-5 right-5 text-[13px] font-bold leading-snug text-white">
+            Référentiel EVC<br />Méthodologie & accompagnement
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FeaturedSection() {
   return (
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl p-6 sm:p-8 grid gap-6 lg:grid-cols-[260px_1fr_280px] items-center"
-          style={{ background: SOFT_BG, border: `1px solid #F3D9DD` }}>
-          {/* Left avatar + name */}
-          <div className="text-center">
-            <span className="mx-auto flex h-32 w-32 items-center justify-center rounded-full text-3xl font-black text-white"
-              style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-              HA
-            </span>
-            <p className="mt-4 text-[10.5px] font-bold uppercase tracking-wider" style={{ color: RED }}>
-              Témoignage à la une
-            </p>
-            <p className="mt-1 text-base font-extrabold" style={{ color: NAVY }}>Dr Haykel Abdelbaki</p>
-            <span className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10.5px] font-bold"
-              style={{ background: 'white', color: RED, border: `1px solid #F3D9DD` }}>
-              <Trophy className="h-3 w-3" /> Radiologie
-            </span>
-            <p className="mt-1 text-[11px]" style={{ color: INK_SOFT }}>Lauréat des EVC</p>
-          </div>
-
-          {/* Center — quote + paragraphs */}
-          <div>
-            <Quote className="h-6 w-6" style={{ color: RED }} fill="currentColor" />
-            <p className="mt-2 text-xl font-black leading-tight" style={{ color: NAVY }}>
-              &ldquo;Sérieux, qualité et accompagnement&nbsp;: les clés de ma réussite.&rdquo;
-            </p>
-            <p className="mt-4 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-              Les cours sont actualisés, clairs et parfaitement adaptés aux exigences du concours.
-              Les concours blancs organisés dans des conditions proches de l&rsquo;examen m&rsquo;ont permis
-              de me préparer concrètement au jour J. L&rsquo;équipe pédagogique est à l&rsquo;écoute et prend
-              le temps d&rsquo;identifier les difficultés de chaque candidat.
-            </p>
-            <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-              Au-delà des supports et des enseignements, j&rsquo;ai trouvé chez Major ECN un cadre
-              de travail structuré et rassurant qui m&rsquo;a permis d&rsquo;aborder les épreuves avec davantage
-              de confiance.
-            </p>
-            <a href="#full" className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
-              style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}>
-              Lire le témoignage complet <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-
-          {/* Right — decorative card */}
-          <div className="hidden lg:block">
-            <div className="relative aspect-square overflow-hidden rounded-2xl" style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-              <div aria-hidden className="absolute inset-0" style={{
-                background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%)',
-              }} />
-              <div className="absolute left-5 top-5 flex items-center gap-2">
-                <Stethoscope className="h-5 w-5 text-white" />
-                <span className="text-xs font-bold uppercase tracking-wider text-white">Major ECN</span>
-              </div>
-              <p className="absolute bottom-5 left-5 right-5 text-[13px] font-bold leading-snug text-white">
-                Référentiel EVC<br />Méthodologie & accompagnement
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
+        {FEATURED.map((t) => (
+          <FeaturedCard key={t.name} t={t} />
+        ))}
       </div>
     </section>
   );
