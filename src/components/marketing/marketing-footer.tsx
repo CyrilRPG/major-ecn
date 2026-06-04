@@ -205,6 +205,7 @@ function IconForLink({ href }: { href: string }) {
     '/methode':      <BookOpen className={cls} style={{ color: RED }} />,
     '/plateforme':   <Stethoscope className={cls} style={{ color: RED }} />,
     '/equipe':       <Users className={cls} style={{ color: RED }} />,
+    '/#equipe':      <Users className={cls} style={{ color: RED }} />,
     '/tarifs':       <Trophy className={cls} style={{ color: RED }} />,
     '/inscription':  <Sparkles className={cls} style={{ color: RED }} />,
     '/temoignages':  <MessageCircle className={cls} style={{ color: RED }} />,
