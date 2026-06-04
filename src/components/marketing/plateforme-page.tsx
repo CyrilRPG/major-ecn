@@ -40,8 +40,29 @@ const gradientText = (grad: string) => ({
 });
 
 
-/* ============ HERO — mock dashboard pixel-perfect ============ */
+/* ============ HERO — grande capture de la plateforme (plein hero) ============ */
 function PlateformeHero() {
+  // const tabs (legacy mock) and sideItems removed: hero uses /accueil.png full-bleed.
+  return (
+    <section className="bg-(--color-surface-soft) pt-6 pb-10 sm:pt-10 sm:pb-12 lg:pt-12" style={{ fontFamily: FONT }}>
+      <div className="mx-auto w-full max-w-[1280px] px-3 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-2xl border bg-white shadow-[0_40px_120px_-40px_rgba(15,31,77,0.35)]" style={{ borderColor: BORDER }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/accueil.png"
+            alt="Plateforme Major ECN — Tableau de bord étudiant"
+            className="block h-auto w-full"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Ancien mock dashboard (HTML reconstruit) — conservé pour référence mais
+// désactivé : la maquette demande une vraie capture d'écran en plein cadre.
+function PlateformeHero_LegacyMock() {
   const tabs = ['Tableau de bord', 'QCM', 'Cas cliniques', 'Cours Live', 'Concours blancs', 'Actualités CNG', 'Ressources'];
   const sideItems = [
     { L: LayoutDashboard, n: 'Tableau de bord', active: true },
@@ -56,7 +77,6 @@ function PlateformeHero() {
     { L: Calendar,        n: 'Calendrier' },
   ];
 
-  // Mini ligne d'évolution (points calqués sur la maquette : oscillant entre 25 et 80%).
   const sparklinePts = [40, 30, 45, 28, 35, 25, 40, 75, 55, 35, 50, 60, 45, 38, 35];
 
   return (

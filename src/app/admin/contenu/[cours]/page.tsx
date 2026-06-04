@@ -189,7 +189,8 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
               </CardContent>
             </Card>
           </div>
-          {can.qcm.write && (
+          {/* Génération IA — réservée à l'admin (les profs n'ont aucune trace d'IA). */}
+          {can.qcm.write && scope === null && (
             <div className="mt-4">
               <GenerateButton coursId={coursId} kind="qcm" />
             </div>
@@ -210,7 +211,8 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
 
         {can.flashcards.read && (
           <TabsContent value="flashcards">
-            {can.flashcards.write && (
+            {/* Génération IA + réindexation IA : réservées à l'admin. */}
+            {can.flashcards.write && scope === null && (
               <div className="mb-4 space-y-3">
                 <GenerateButton coursId={coursId} kind="flashcards" />
                 <ReindexButton coursId={coursId} />
