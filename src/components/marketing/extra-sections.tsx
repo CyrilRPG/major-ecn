@@ -1032,27 +1032,29 @@ export function TarifsBlock() {
    « Bien plus qu'une plateforme de cours » (3 cartes + bandeau + 8 outils)
    ============================================================ */
 const BP_NAVY = '#0F1B3D';
-const BP_PURPLE = '#6D28D9';
+const BP_RED = '#C0112E';
+const BP_ORANGE = '#E8742C';
+const BP_GRAD_RO = 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)';
 const BP_INK_SOFT = '#5B6478';
 const BP_BG = '#FAFBFD';
 
-/* Cartes du haut — 3 grandes vignettes */
+/* Cartes du haut — 3 grandes vignettes, toutes en variantes rouge-orange */
 const BP_TOP = [
-  { Icon: Brain,      t: 'Suivi intelligent\nde vos connaissances',     d: 'La plateforme analyse vos résultats et identifie automatiquement les notions à renforcer.',      bg: '#F1E8FD', fg: '#6D28D9' },
-  { Icon: Target,     t: 'Révisions personnalisées\net adaptatives',    d: 'Des révisions transversales ciblées vous aident à entretenir vos acquis jusqu’au jour des EVC.', bg: '#E7F6EC', fg: '#16793C' },
-  { Icon: TrendingUp, t: 'Évaluations et\nréévaluations ciblées',        d: 'En cas de baisse de niveau, la plateforme détecte les spécialités fragiles et propose des évaluations adaptées.', bg: '#FFEAD9', fg: '#E8742C' },
+  { Icon: Brain,      t: 'Suivi intelligent\nde vos connaissances',     d: 'La plateforme analyse vos résultats et identifie automatiquement les notions à renforcer.',      bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: Target,     t: 'Révisions personnalisées\net adaptatives',    d: 'Des révisions transversales ciblées vous aident à entretenir vos acquis jusqu’au jour des EVC.', bg: '#FFEAD9', fg: '#E8742C' },
+  { Icon: TrendingUp, t: 'Évaluations et\nréévaluations ciblées',        d: 'En cas de baisse de niveau, la plateforme détecte les spécialités fragiles et propose des évaluations adaptées.', bg: '#FFF1E6', fg: '#B35900' },
 ];
 
-/* 8 cartes outils — grille 4×2 */
+/* 8 cartes outils — grille 4×2, palette uniquement rouge → orange */
 const BP_TOOLS = [
-  { Icon: Compass,        t: 'Méthodologie EVC',                  d: 'Une méthodologie construite à partir des attentes des jurys EVC pour gagner en efficacité dans vos révisions et vos épreuves.', bg: '#F1E8FD', fg: '#6D28D9' },
-  { Icon: FileText,       t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.',           bg: '#F1E8FD', fg: '#6D28D9' },
-  { Icon: Stethoscope,    t: 'Cas cliniques\ncorrigés',            d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                                bg: '#E7F6EC', fg: '#16793C' },
-  { Icon: ClipboardCheck, t: 'Interrogations &\népreuves blanches', d: 'Évaluez vos connaissanens et mettez-vous en conditions réelles d’examen avec des corrections commentées.',                    bg: '#FFEAD9', fg: '#E8742C' },
-  { Icon: Users,          t: 'Accompagnement\npédagogique',        d: 'Des enseignants expérimentés disponibles pour répondre à vos questions et vous guider tout au long de votre préparation.',     bg: '#FCEAEC', fg: '#C0112E' },
-  { Icon: Video,          t: 'Webinars &\nreplays',                d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',                  bg: '#EAF1FB', fg: '#1E40AF' },
-  { Icon: BookOpen,       t: 'Fiches &\nflashcards',               d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                          bg: '#F1E8FD', fg: '#6D28D9' },
-  { Icon: BarChart3,      t: 'Suivi de\nprogression',              d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',                     bg: '#E7F6EC', fg: '#16793C' },
+  { Icon: Compass,        t: 'Méthodologie EVC',                  d: 'Une méthodologie construite à partir des attentes des jurys EVC pour gagner en efficacité dans vos révisions et vos épreuves.', bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: FileText,       t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.',           bg: '#FFEAD9', fg: '#E8742C' },
+  { Icon: Stethoscope,    t: 'Cas cliniques\ncorrigés',            d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                                bg: '#FFF1E6', fg: '#B35900' },
+  { Icon: ClipboardCheck, t: 'Interrogations &\népreuves blanches', d: 'Évaluez vos connaissances et mettez-vous en conditions réelles d’examen avec des corrections commentées.',                    bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: Users,          t: 'Accompagnement\npédagogique',        d: 'Des enseignants expérimentés disponibles pour répondre à vos questions et vous guider tout au long de votre préparation.',     bg: '#FFEAD9', fg: '#E8742C' },
+  { Icon: Video,          t: 'Webinars &\nreplays',                d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',                  bg: '#FFF1E6', fg: '#B35900' },
+  { Icon: BookOpen,       t: 'Fiches &\nflashcards',               d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                          bg: '#FCEAEC', fg: '#C0112E' },
+  { Icon: BarChart3,      t: 'Suivi de\nprogression',              d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',                     bg: '#FFEAD9', fg: '#E8742C' },
 ];
 
 export function BeyondPlatformSection() {
@@ -1064,20 +1066,26 @@ export function BeyondPlatformSection() {
           <div className="text-center">
             <span
               className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] sm:text-xs"
-              style={{ background: '#EEF2FB', color: BP_NAVY }}
+              style={{ background: '#FFE4D6', color: '#8B0E22' }}
             >
-              Méthode <span style={{ color: BP_PURPLE }}>•</span> Entraînement <span style={{ color: BP_PURPLE }}>•</span> Accompagnement <span style={{ color: BP_PURPLE }}>•</span> Réussite EVC
+              Méthode <span style={{ color: BP_RED }}>•</span> Entraînement <span style={{ color: BP_RED }}>•</span> Accompagnement <span style={{ color: BP_RED }}>•</span> Réussite EVC
             </span>
-            <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
-              <span style={{ color: BP_NAVY }}>Bien </span>
-              <span style={{ color: BP_PURPLE }}>plus</span>
-              <span style={{ color: BP_NAVY }}> qu’une plateforme de cours</span>
+            {/* Tout le titre est dans le dégradé rouge-orange caractéristique de la plateforme */}
+            <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]"
+              style={{
+                backgroundImage: BP_GRAD_RO,
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                color: 'transparent',
+              }}>
+              Bien plus qu’une plateforme de cours
             </h2>
             <p className="mx-auto mt-5 max-w-4xl text-base leading-relaxed sm:text-lg" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-              Une préparation <span className="font-bold" style={{ color: BP_PURPLE }}>EVC</span> complète associant entraînement,
+              Une préparation <span className="font-bold" style={{ color: BP_RED }}>EVC</span> complète associant entraînement,
               méthodologie, accompagnement pédagogique et outils de suivi pour réussir les{' '}
-              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_PURPLE, textDecorationColor: BP_PURPLE }}>Épreuves de Vérification des Connaissances</span> dans le cadre de la{' '}
-              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_PURPLE, textDecorationColor: BP_PURPLE }}>PAE</span>.
+              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_RED, textDecorationColor: BP_RED }}>Épreuves de Vérification des Connaissances</span> dans le cadre de la{' '}
+              <span className="font-bold underline decoration-2 underline-offset-2" style={{ color: BP_RED, textDecorationColor: BP_RED }}>PAE</span>.
             </p>
           </div>
         </Reveal>
@@ -1101,19 +1109,18 @@ export function BeyondPlatformSection() {
           ))}
         </div>
 
-        {/* ============ Bandeau violet ============ */}
+        {/* ============ Bandeau rouge (ne se limite pas aux QCM) ============ */}
         <Reveal delay={0.15}>
           <div
             className="relative mt-8 overflow-hidden rounded-2xl border px-6 py-6 sm:px-8 sm:py-7"
-            style={{ background: '#EFEBFC', borderColor: '#D9CFF4' }}
+            style={{ background: '#FFEDE2', borderColor: '#FBD0BB' }}
           >
-            {/* Petite trame de points décorative à droite — n'apparaît qu'en desktop */}
             <div
               aria-hidden
               className="pointer-events-none absolute -right-12 top-1/2 hidden h-40 w-60 -translate-y-1/2 opacity-50 sm:block"
               style={{
                 background:
-                  'radial-gradient(circle, #6D28D9 1px, transparent 1.5px) 0 0/12px 12px',
+                  'radial-gradient(circle, #C0112E 1px, transparent 1.5px) 0 0/12px 12px',
                 maskImage: 'linear-gradient(to left, black, transparent)',
                 WebkitMaskImage: 'linear-gradient(to left, black, transparent)',
               }}
@@ -1121,7 +1128,7 @@ export function BeyondPlatformSection() {
             <div className="relative flex items-start gap-4 sm:gap-5">
               <span
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md sm:h-14 sm:w-14"
-                style={{ background: BP_PURPLE }}
+                style={{ background: BP_GRAD_RO }}
               >
                 <Zap className="h-6 w-6 sm:h-7 sm:w-7" fill="currentColor" />
               </span>
@@ -1129,7 +1136,7 @@ export function BeyondPlatformSection() {
                 <p className="text-base font-extrabold leading-snug sm:text-lg" style={{ color: BP_NAVY }}>
                   Major ECN ne se limite pas aux QCM.
                 </p>
-                <p className="mt-1 text-sm leading-relaxed sm:text-base" style={{ color: BP_PURPLE }}>
+                <p className="mt-1 text-sm leading-relaxed sm:text-base" style={{ color: BP_RED }}>
                   La plateforme analyse votre progression, identifie vos points à renforcer
                   et adapte vos révisions pour vous accompagner efficacement jusqu’aux EVC.
                 </p>
@@ -1142,10 +1149,9 @@ export function BeyondPlatformSection() {
         <Reveal delay={0.2}>
           <div className="mt-10 rounded-2xl border bg-white p-6 sm:p-8 lg:p-10" style={{ borderColor: '#ECECEF' }}>
             <div className="text-center">
-              <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl">
-                <span style={{ backgroundImage: "linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Tous les outils pour </span>
-                <span style={{ color: BP_PURPLE }}>réussir</span>
-                <span style={{ color: BP_NAVY }}> votre préparation EVC</span>
+              <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl"
+                style={{ backgroundImage: BP_GRAD_RO, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+                Tous les outils pour réussir votre préparation EVC
               </h3>
               <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
                 Des ressources complètes et variées pour apprendre, réviser et vous évaluer efficacement.
@@ -1220,9 +1226,15 @@ export function ToolsGridSection() {
           >
             Une méthode structurée • Des outils concrets • Une progression mesurable
           </span>
-          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl">
-            <span style={{ backgroundImage: "linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Tous les outils pour structurer votre progression </span>
-            <span style={{ color: TG_BLUE }}>aux EVC</span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl"
+            style={{
+              backgroundImage: 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              color: 'transparent',
+            }}>
+            Tous les outils pour structurer votre progression aux EVC
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TG_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
             Chaque fonctionnalité a été conçue pour répondre à un objectif simple :

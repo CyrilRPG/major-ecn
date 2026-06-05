@@ -19,10 +19,9 @@ const TOC = [
   'Les CHU : la structure de référence',
   'Établissements privés et ESPIC',
   'Structures sanitaires et médico-sociales agréées',
-  'Validation finale du parcours',
-  'Autorisation d\'exercice',
-  'Préparer les EVC avec Major ECN',
+  'Validation finale & autorisation d\'exercice',
   'FAQ — Vos questions fréquentes',
+  'À retenir',
 ];
 
 const STRUCTURES = [
@@ -235,7 +234,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
               </p>
             </BoxSection>
 
-            <section className="rounded-2xl border border-[#ECEEF1] bg-[#FFF1F3] p-5">
+            <section id="sec-9" className="scroll-mt-24 rounded-2xl border border-[#ECEEF1] bg-[#FFF1F3] p-5">
               <h2 className="text-[18px] font-extrabold text-[#1A2233]">FAQ — Vos questions fréquentes</h2>
               <ul className="mt-3 space-y-2">
                 {FAQS.map(([q, a]) => (
@@ -252,7 +251,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
               </ul>
             </section>
 
-            <section className="rounded-2xl border border-[#FCD34D] bg-[#FFFBEB] p-5">
+            <section id="sec-10" className="scroll-mt-24 rounded-2xl border border-[#FCD34D] bg-[#FFFBEB] p-5">
               <div className="flex items-start gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FEF3C7] text-[#B45309]">
                   <Target className="h-4.5 w-4.5" />

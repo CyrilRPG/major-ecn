@@ -1,7 +1,8 @@
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { LoginForm } from './login-form';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MarketingHeader } from '@/components/marketing/marketing-header';
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
 
 export const metadata = { title: 'Se connecter' };
@@ -9,7 +10,12 @@ export const metadata = { title: 'Se connecter' };
 export default function LoginPage() {
   return (
     <div className="theme-manus relative isolate flex min-h-screen flex-col bg-(--color-surface) font-sans text-(--color-ink)">
-      <MarketingHeader />
+      {/* Header minimal sur la page de connexion : juste le logo, aucun menu. */}
+      <header className="px-4 pt-6 sm:px-6 lg:px-8">
+        <Link href="/" aria-label="Major ECN — Accueil" className="inline-flex shrink-0 items-center focus-ring">
+          <BrandLogo className="h-12 w-auto sm:h-14" />
+        </Link>
+      </header>
 
       <main className="relative flex-1">
         <div aria-hidden className="absolute -right-32 -top-32 -z-10 h-[420px] w-[420px] rounded-full bg-(--color-primary)/12 blur-[120px]" />
