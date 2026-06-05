@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, CalendarDays, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, Receipt, Users } from 'lucide-react';
+import { BarChart3, CalendarDays, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, Receipt, ScrollText, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { UserMenu } from '@/components/user-menu';
 import { hasAnyContentAccess, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 
-type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean };
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean; adminOnly?: boolean };
 
 const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
@@ -23,6 +23,7 @@ const ALL_ITEMS: Item[] = [
   { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
   { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
+  { href: '/admin/logs', label: 'Logs', Icon: ScrollText, adminOnly: true },
 ];
 
 type ProfScopeRaw = {

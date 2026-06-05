@@ -14,6 +14,7 @@ import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
 import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
+import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -51,6 +52,17 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
+
+  // Charge le détail complet des séries QCM (questions + items + images + corrigé général)
+  // pour l'éditeur intégré côté admin. Une seule requête supplémentaire.
+  const qcmSerieIds = qcmSeries.map((s) => s.id);
+  const { data: qcmDetail } = qcmSerieIds.length > 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? await (supabase as any).from('qcm_questions')
+        .select('id, serie_id, enonce, order_index, correction_generale, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
+        .in('serie_id', qcmSerieIds)
+        .order('order_index', { ascending: true })
+    : { data: [] };
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
@@ -197,14 +209,34 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           )}
 
           {can.qcm.write && (
-            <Card className="mt-4">
-              <CardHeader>
-                <CardTitle>Ajouter du contenu QCM manuellement</CardTitle>
-                <CardDescription>
-                  L’éditeur question par question et l’import CSV/Excel (template <code>serie, question_order, enonce, item_lettre, item_enonce, is_correct, justification</code>) sont accessibles via l’onglet de chaque série côté Supabase Studio dans cette version de la démo.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="mt-4">
+              <QcmSeriesManager
+                coursId={coursId}
+                series={qcmSeries.map((s) => ({
+                  id: s.id,
+                  label: s.label,
+                  questions: ((qcmDetail ?? []) as Array<{
+                    id: string; serie_id: string; enonce: string; order_index: number;
+                    correction_generale: string | null; images: string[] | null;
+                    qcm_items: Array<{ id: string; lettre: string; enonce: string; is_correct: boolean; justification: string | null; images: string[] | null }>;
+                  }>)
+                    .filter((q) => q.serie_id === s.id)
+                    .map((q) => ({
+                      id: q.id,
+                      enonce: q.enonce,
+                      correction_generale: q.correction_generale ?? '',
+                      images: q.images ?? [],
+                      items: (q.qcm_items ?? []).map((it) => ({
+                        lettre: it.lettre as 'A'|'B'|'C'|'D'|'E',
+                        enonce: it.enonce,
+                        is_correct: it.is_correct,
+                        justification: it.justification ?? '',
+                        images: it.images ?? [],
+                      })),
+                    })),
+                }))}
+              />
+            </div>
           )}
         </TabsContent>
         )}

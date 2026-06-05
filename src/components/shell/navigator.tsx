@@ -37,7 +37,9 @@ function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   );
 }
 
-export function Navigator({ tree }: { tree: NavCollege[] }) {
+export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role?: 'student' | 'admin' | 'professor' }) {
+  // Pour les profs : seulement les collèges/cours, pas Accueil/Agenda/etc.
+  const isProf = role === 'professor';
   const pathname = usePathname();
   const activeCoursId = pathname.startsWith('/cours/') ? pathname.split('/')[2] : null;
   const activeCollegeId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
@@ -76,7 +78,6 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
   const trainActive = pathname.startsWith('/entrainement');
   const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
-  const forumActive = pathname.startsWith('/forum');
 
   const topLevelClass = (active: boolean) =>
     cn(
@@ -86,28 +87,32 @@ export function Navigator({ tree }: { tree: NavCollege[] }) {
 
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
-      <Link href="/accueil" className={topLevelClass(homeActive)}>
-        <Home className="h-[18px] w-[18px] shrink-0" />
-        Accueil
-      </Link>
+      {!isProf && (
+        <>
+          <Link href="/accueil" className={topLevelClass(homeActive)}>
+            <Home className="h-[18px] w-[18px] shrink-0" />
+            Accueil
+          </Link>
 
-      <Link href="/entrainement" className={topLevelClass(trainActive)}>
-        <Target className="h-[18px] w-[18px] shrink-0" />
-        Entraînement ciblé
-      </Link>
+          <Link href="/entrainement" className={topLevelClass(trainActive)}>
+            <Target className="h-[18px] w-[18px] shrink-0" />
+            Entraînement ciblé
+          </Link>
 
-      <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
-        <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
-        Révisions transversales
-      </Link>
+          <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
+            <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
+            Révisions transversales
+          </Link>
 
-      <Link href="/agenda" className={topLevelClass(agendaActive)}>
-        <CalendarDays className="h-[18px] w-[18px] shrink-0" />
-        Agenda
-      </Link>
+          <Link href="/agenda" className={topLevelClass(agendaActive)}>
+            <CalendarDays className="h-[18px] w-[18px] shrink-0" />
+            Agenda
+          </Link>
+        </>
+      )}
 
       <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
-        Médecine
+        {isProf ? 'Mes collèges' : 'Médecine'}
       </p>
       {tree.length === 0 && (
         <p className="px-3 py-6 text-sm text-white/50">Aucun contenu accessible.</p>

@@ -100,7 +100,7 @@ export function AppShell({
         </button>
       </div>
       <div className="flex-1 overflow-y-auto pt-3">
-        <Navigator tree={tree} />
+        <Navigator tree={tree} role={profile.role as 'student' | 'admin' | 'professor'} />
       </div>
       <SidebarHelpCard />
     </div>
