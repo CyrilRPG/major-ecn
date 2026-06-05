@@ -44,90 +44,135 @@ const gradientText = (grad: string) => ({
 function PlateformeHero() {
   return (
     <section
-      className="relative overflow-hidden pt-10 pb-16 sm:pt-14 sm:pb-20 lg:pt-20"
-      style={{ fontFamily: FONT, background: 'radial-gradient(1200px 600px at 50% -20%, rgba(192,17,46,0.08) 0%, rgba(255,255,255,0) 60%), linear-gradient(180deg,#FAFBFE 0%,#FFFFFF 100%)' }}
+      className="relative overflow-hidden pt-10 pb-24 sm:pt-14 sm:pb-28 lg:pt-16 lg:pb-32"
+      style={{
+        fontFamily: FONT,
+        background:
+          'radial-gradient(1200px 600px at 80% 0%, rgba(192,17,46,0.10) 0%, rgba(255,255,255,0) 55%),' +
+          'radial-gradient(900px 500px at 0% 80%, rgba(232,116,44,0.10) 0%, rgba(255,255,255,0) 55%),' +
+          'linear-gradient(180deg,#FBFCFF 0%,#FFFFFF 100%)',
+      }}
     >
-      {/* Grille décorative subtile en fond */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[0.04]"
+      {/* Grille décorative subtile */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.035]"
         style={{
-          backgroundImage: 'linear-gradient(#0F1F4D 1px, transparent 1px), linear-gradient(90deg, #0F1F4D 1px, transparent 1px)',
-          backgroundSize: '36px 36px',
-        }} />
-      {/* Halos colorés */}
-      <span aria-hidden className="pointer-events-none absolute -right-32 -top-20 -z-10 h-[520px] w-[520px] rounded-full blur-3xl"
-        style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.18), rgba(255,255,255,0))' }} />
-      <span aria-hidden className="pointer-events-none absolute -left-40 top-40 -z-10 h-[420px] w-[420px] rounded-full blur-3xl"
-        style={{ background: 'radial-gradient(closest-side, rgba(124,58,237,0.16), rgba(255,255,255,0))' }} />
+          backgroundImage:
+            'linear-gradient(#0F1F4D 1px, transparent 1px), linear-gradient(90deg, #0F1F4D 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      />
 
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
-        {/* Eyebrow + crown */}
-        <Reveal className="flex flex-col items-center text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border bg-white/70 px-3.5 py-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.22em] backdrop-blur"
-            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
-            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
-            La plateforme officielle de préparation aux EVC (PAE)
-          </span>
+      <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8">
+        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_1.15fr] lg:gap-6">
+          {/* ── COLONNE TEXTE (gauche) — au-dessus du device en z ── */}
+          <Reveal className="relative z-20">
+            <span
+              className="inline-flex items-center gap-2 rounded-full border bg-white/80 px-3.5 py-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.22em] backdrop-blur"
+              style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}
+            >
+              <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+              Plateforme officielle EVC (PAE)
+            </span>
 
-          {/* Titre éditorial : serif élégant + dégradé subtil */}
-          <h1
-            className="mt-5 max-w-4xl text-[2rem] font-black leading-[1.05] tracking-tight sm:text-[2.8rem] lg:text-[3.4rem]"
-            style={{ ...gradientText('linear-gradient(90deg,#0F1F4D 0%,#5C1827 45%,#C0112E 100%)'), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}
-          >
-            Une plateforme pensée comme un cabinet d&rsquo;experts,<br className="hidden sm:inline" />{' '}
-            pas comme un manuel.
-          </h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed sm:text-[16px]" style={{ color: INK_SOFT }}>
-            Tout l&rsquo;arsenal de Major ECN — fiches synthétiques, vidéos par PH spécialistes,
-            QCM corrigés au format EVC, flashcards et concours blancs — réuni dans un environnement
-            d&rsquo;étude unique, pensé jusqu&rsquo;au moindre détail pour la réussite des PADHUE.
-          </p>
+            <h1
+              className="mt-5 text-[2.2rem] font-black leading-[1.02] tracking-tight sm:text-[3rem] lg:text-[3.5rem]"
+              style={{
+                ...gradientText('linear-gradient(90deg,#0F1F4D 0%,#5C1827 45%,#C0112E 100%)'),
+                fontFamily: '"Cormorant Garamond","Times New Roman",serif',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Toute la réussite EVC,<br />
+              <span className="relative inline-block">
+                <span className="relative z-10">dans un seul espace.</span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-1 bottom-1 -z-0 h-3 rounded-full"
+                  style={{ background: 'linear-gradient(90deg,rgba(212,175,55,0.45),rgba(192,17,46,0.30))' }}
+                />
+              </span>
+            </h1>
 
-          {/* CTA pair : primaire chaleureux + secondaire élégant */}
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <a href="/inscription" className="group inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-[14px] font-extrabold text-white shadow-[0_18px_40px_-18px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(120deg,#8B0E22 0%,#C0112E 55%,#E8742C 100%)' }}>
-              Démarrer l&rsquo;essai gratuit
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a href="/methode" className="inline-flex items-center gap-2 rounded-2xl border bg-white px-5 py-3 text-[14px] font-extrabold transition-colors hover:bg-[#FFF5F1]"
-              style={{ borderColor: '#E5D9C5', color: '#5C1827' }}>
-              Découvrir la méthode
-            </a>
-          </div>
+            <p
+              className="mt-5 max-w-xl text-[15px] leading-relaxed sm:text-[16.5px]"
+              style={{ color: INK_SOFT }}
+            >
+              Fiches synthétiques, vidéos par PH spécialistes, QCM au format EVC, flashcards
+              et concours blancs — orchestrés dans une console pensée pour vous porter
+              jusqu&rsquo;au jour J.
+            </p>
 
-          {/* Trust strip */}
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px]" style={{ color: INK_MUTED }}>
-            {[
-              { Icon: Award,        t: '18 ans d\'expertise EVC' },
-              { Icon: Stethoscope,  t: 'Équipe de PH & PU-PH' },
-              { Icon: CheckCircle2, t: '9 000+ médecins formés' },
-              { Icon: ShieldDot,    t: 'Données chiffrées & RGPD' },
-            ].map((p) => (
-              <li key={p.t} className="inline-flex items-center gap-1.5">
-                <p.Icon className="h-3.5 w-3.5" style={{ color: '#8B5A1A' }} />
-                {p.t}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a
+                href="/inscription"
+                className="group inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-[14px] font-extrabold text-white shadow-[0_18px_40px_-18px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
+                style={{ background: 'linear-gradient(120deg,#8B0E22 0%,#C0112E 55%,#E8742C 100%)' }}
+              >
+                Démarrer l&rsquo;essai gratuit
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </a>
+              <a
+                href="/methode"
+                className="inline-flex items-center gap-2 rounded-2xl border bg-white px-5 py-3 text-[14px] font-extrabold transition-colors hover:bg-[#FFF5F1]"
+                style={{ borderColor: '#E5D9C5', color: '#5C1827' }}
+              >
+                Découvrir la méthode
+              </a>
+            </div>
 
-        {/* Capture plateforme — cadrée comme un device avec halo doré subtil */}
-        <Reveal delay={0.15} className="mt-10">
-          <div className="relative mx-auto max-w-[1180px]">
-            {/* halo doré derrière la capture */}
-            <span aria-hidden className="pointer-events-none absolute -inset-x-12 -bottom-10 -z-10 h-32 rounded-[40%] blur-3xl"
-              style={{ background: 'radial-gradient(closest-side, rgba(212,175,55,0.45), rgba(212,175,55,0))' }} />
-            {/* cadre */}
-            <div className="rounded-[28px] p-1.5"
-              style={{ background: 'linear-gradient(135deg,#D4AF37 0%,#FFFFFF 50%,#0F1F4D 100%)' }}>
-              <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_60px_140px_-50px_rgba(15,31,77,0.55)]">
-                {/* Faux mac chrome */}
-                <div className="flex items-center gap-1.5 border-b bg-gradient-to-b from-[#F4F6FA] to-[#EEF1F6] px-4 py-2.5"
-                  style={{ borderColor: BORDER }}>
+            <ul className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]" style={{ color: INK_MUTED }}>
+              {[
+                { Icon: Award,        t: '18 ans d\'expertise EVC' },
+                { Icon: Stethoscope,  t: 'Équipe PH & PU-PH' },
+                { Icon: CheckCircle2, t: '9 000+ médecins formés' },
+              ].map((p) => (
+                <li key={p.t} className="inline-flex items-center gap-1.5">
+                  <p.Icon className="h-3.5 w-3.5" style={{ color: '#8B5A1A' }} />
+                  {p.t}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          {/* ── COLONNE VISUEL (droite) — overhang à gauche pour fusion ── */}
+          <Reveal delay={0.12} className="relative lg:-ml-16 lg:-mr-12">
+            {/* Halo doré derrière la capture */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 -z-10"
+              style={{
+                background:
+                  'radial-gradient(60% 50% at 50% 50%, rgba(212,175,55,0.32) 0%, rgba(212,175,55,0) 60%)',
+              }}
+            />
+            {/* Halo rouge qui déborde sous le texte côté gauche */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -left-40 top-1/2 -z-10 hidden h-[460px] w-[460px] -translate-y-1/2 rounded-full blur-3xl lg:block"
+              style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.22), rgba(255,255,255,0))' }}
+            />
+
+            <div
+              className="relative rounded-[26px] p-1.5"
+              style={{ background: 'linear-gradient(135deg,#D4AF37 0%,#FFFFFF 50%,#0F1F4D 100%)' }}
+            >
+              <div
+                className="relative overflow-hidden rounded-[20px] bg-white"
+                style={{ boxShadow: '0 80px 160px -60px rgba(15,31,77,0.55), 0 0 0 1px rgba(15,31,77,0.04)' }}
+              >
+                <div
+                  className="flex items-center gap-1.5 border-b bg-gradient-to-b from-[#F4F6FA] to-[#EEF1F6] px-4 py-2"
+                  style={{ borderColor: BORDER }}
+                >
                   <span className="h-3 w-3 rounded-full" style={{ background: '#FF5F57' }} />
                   <span className="h-3 w-3 rounded-full" style={{ background: '#FEBC2E' }} />
                   <span className="h-3 w-3 rounded-full" style={{ background: '#28C840' }} />
-                  <span className="mx-auto rounded-md bg-white px-3 py-0.5 text-[10.5px] font-semibold tabular-nums" style={{ color: INK_MUTED, border: `1px solid ${BORDER}` }}>
+                  <span
+                    className="mx-auto rounded-md bg-white px-3 py-0.5 text-[10.5px] font-semibold tabular-nums"
+                    style={{ color: INK_MUTED, border: `1px solid ${BORDER}` }}
+                  >
                     major-ecn.fr / accueil
                   </span>
                 </div>
@@ -138,9 +183,52 @@ function PlateformeHero() {
                   loading="eager"
                 />
               </div>
+
+              {/* Carte flottante haut-droite : QCM réalisés */}
+              <div
+                className="absolute -right-4 -top-5 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_24px_60px_-20px_rgba(15,31,77,0.45)] sm:flex"
+                style={{ borderColor: BORDER }}
+              >
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ background: 'linear-gradient(135deg,#FCEAEC,#FFF7ED)', color: '#C0112E' }}
+                >
+                  <ClipboardCheck className="h-4.5 w-4.5" />
+                </span>
+                <div>
+                  <p className="text-[10px] font-extrabold uppercase tracking-wide" style={{ color: '#8B0E22' }}>
+                    QCM réalisés
+                  </p>
+                  <p className="text-[16px] font-black leading-none tabular-nums" style={{ color: INK }}>
+                    1 248
+                  </p>
+                </div>
+              </div>
+
+              {/* Carte flottante bas-gauche (déborde côté texte) : progression */}
+              <div
+                className="absolute -bottom-6 -left-6 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_24px_60px_-20px_rgba(15,31,77,0.45)] sm:flex lg:-left-14"
+                style={{ borderColor: BORDER }}
+              >
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ background: 'linear-gradient(135deg,#DCFCE7,#E0F2FE)', color: '#16A34A' }}
+                >
+                  <TrendingUp className="h-4.5 w-4.5" />
+                </span>
+                <div>
+                  <p className="text-[10px] font-extrabold uppercase tracking-wide" style={{ color: '#16793C' }}>
+                    Progression
+                  </p>
+                  <p className="text-[16px] font-black leading-none" style={{ color: INK }}>
+                    +12<span className="text-[12px]">%</span>{' '}
+                    <span className="text-[11px] font-semibold" style={{ color: INK_SOFT }}>cette semaine</span>
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -554,11 +642,25 @@ function HowDailySection() {
   ];
 
   return (
-    <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
+    <section className="relative bg-white py-14 sm:py-18 lg:py-20" style={{ fontFamily: FONT }}>
+      {/* Filets dorés haut/bas pour le ton premium */}
+      <span aria-hidden className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg,transparent 0%,#E5D9C5 50%,transparent 100%)' }} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
-          Comment j&rsquo;utilise Major ECN au quotidien ?
-        </h2>
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+            Une journée d&rsquo;étude avec Major ECN
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            Comment j&rsquo;utilise Major ECN au quotidien
+          </h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Six gestes simples qui structurent chaque session de révision et installent une
+            dynamique de progression durable.
+          </p>
+        </Reveal>
         <div className="relative mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-3">
           {steps.map((s, i) => (
             <div key={s.t} className="relative">
@@ -600,21 +702,25 @@ function CorrectorExampleSection() {
   const oublies = ["Préciser l'utilité de l'échocardiographie"];
   const pieges = ["Prescrire l'embolie en urgence"];
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
+    <section className="relative py-14 sm:py-18" style={{ fontFamily: FONT, background: 'linear-gradient(180deg,#FFFFFF 0%,#FAFBFE 100%)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border bg-white p-5 sm:p-6 grid gap-6 lg:grid-cols-2" style={{ borderColor: BORDER }}>
+        <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+            La logique du jury, démystifiée
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            Comprendre exactement ce qu&rsquo;attend le correcteur EVC
+          </h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Chaque QCM et chaque dossier progressif est annoté selon la grille officielle :
+            mots-clés attendus, éléments souvent oubliés, pièges classiques.
+          </p>
+        </Reveal>
+        <div className="rounded-3xl border bg-white p-5 shadow-[0_30px_80px_-40px_rgba(15,31,77,0.25)] sm:p-6 grid gap-6 lg:grid-cols-2" style={{ borderColor: BORDER }}>
           <div>
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#FCEAEC', color: RED }}>
-                <Stethoscope className="h-5 w-5" />
-              </span>
-              <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
-                Comprendre ce qu&rsquo;attend le correcteur des EVC
-              </h2>
-            </div>
-            <p className="mt-3 text-[13px]" style={{ color: INK_SOFT }}>
-              Chaque QCM et cas clinique est corrigé selon les attentes officielles des EVC.
-            </p>
 
             <div className="mt-5 rounded-xl border p-4" style={{ borderColor: BORDER, background: SOFT_BG }}>
               <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: RED }}>Cardiologie – Item 234</p>
@@ -705,20 +811,27 @@ function TransversalRevisionSection() {
     { x: 50, y: 50, l: 'EVC\n(PAE)',          center: true },
   ];
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
+    <section className="relative py-14 sm:py-18" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border bg-white p-5 sm:p-7" style={{ borderColor: BORDER }}>
+        <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+            Intelligence transversale
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            La révision qui relie 45 spécialités entre elles
+          </h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Une médecine ne se compartimente pas. L&rsquo;algorithme tisse les liens entre items
+            transversaux et propose des révisions qui consolident plusieurs spécialités à la fois.
+          </p>
+        </Reveal>
+        <div className="rounded-3xl border bg-white p-5 shadow-[0_30px_80px_-40px_rgba(15,31,77,0.20)] sm:p-7" style={{ borderColor: BORDER }}>
           <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
             <div>
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#DCFCE7', color: '#16A34A' }}>
-                  <Compass className="h-5 w-5" />
-                </span>
-                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_RED_PURPLE)}>
-                  Révision transversale intelligente
-                </h2>
-              </div>
-              <p className="mt-3 text-[13px]" style={{ color: INK_SOFT }}>
+              <p className="text-[13px]" style={{ color: INK_SOFT }}>
                 Notre système identifie automatiquement les liens entre plus de 45 spécialités
                 pour optimiser votre préparation.
               </p>
@@ -774,20 +887,27 @@ function RecordedCoursesSection() {
     { t: 'Méthodologie EVC',d: 'Mar. 27/05 – 18h00' },
   ];
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
+    <section className="relative py-14 sm:py-18" style={{ fontFamily: FONT, background: 'linear-gradient(180deg,#FAFBFE 0%,#FFFFFF 100%)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border bg-white p-5 sm:p-7" style={{ borderColor: BORDER }}>
+        <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+            En live et en replay
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            Des cours enseignés par des PH spécialistes en exercice
+          </h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Des sessions filmées en haute définition, organisées spécialité par spécialité,
+            avec un calendrier de directs où vous interagissez avec l&rsquo;enseignant en temps réel.
+          </p>
+        </Reveal>
+        <div className="rounded-3xl border bg-white p-5 shadow-[0_30px_80px_-40px_rgba(15,31,77,0.20)] sm:p-7" style={{ borderColor: BORDER }}>
           <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
             <div>
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#EDE9FE', color: '#6D28D9' }}>
-                  <Play className="h-5 w-5" />
-                </span>
-                <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_NAVY_RED)}>
-                  Cours enregistrés et/ou en direct<span style={{ color: RED }}>*</span>
-                </h2>
-              </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>
+              <p className="text-[13px]" style={{ color: INK_SOFT }}>
                 Des cours clairs et structurés pour comprendre, approfondir et gagner en efficacité.
               </p>
               {/* Video mock */}
@@ -853,18 +973,27 @@ function TeamSection() {
     { Icon: TrendingUp,    bg: '#DCFCE7', fg: '#16A34A',   t: 'Suivi personnalisé de votre progression' },
   ];
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-[0.9fr_1.4fr_0.7fr]">
-        <div>
-          <h2 className="text-2xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
+    <section className="relative py-14 sm:py-18" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <span aria-hidden className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg,transparent 0%,#E5D9C5 50%,transparent 100%)' }} />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
             Une équipe à vos côtés
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            Vingt experts hospitaliers, mobilisés pour votre réussite
           </h2>
-          <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>
-            Vous n&rsquo;êtes pas seul dans votre préparation. Derrière la plateforme,
-            une équipe d&rsquo;enseignants et de correcteurs spécialistes des EVC
-            vous accompagne à chaque étape.
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Derrière chaque cours, chaque QCM et chaque correction, une équipe d&rsquo;enseignants
+            et de correcteurs spécialistes des EVC qui vous accompagne à chaque étape.
           </p>
-        </div>
+        </Reveal>
+      </div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-[0.9fr_1.4fr_0.7fr]">
+        <div className="hidden lg:block" />
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
           {pillars.map((p) => (
             <div key={p.t} className="rounded-2xl border bg-white p-3 text-center" style={{ borderColor: BORDER }}>
@@ -907,24 +1036,35 @@ function PlatformToolsSection() {
     { Icon: BookOpen,      bg: '#FCE7F3', fg: '#DB2777',   t: 'Référentiel EVC',       d: 'Le référentiel officiel structuré pour faciliter vos révisions.' },
   ];
   return (
-    <section className="bg-white py-12 sm:py-16" style={{ fontFamily: FONT }}>
+    <section className="relative py-14 sm:py-18" style={{ fontFamily: FONT, background: 'linear-gradient(180deg,#FFFFFF 0%,#FAFBFE 100%)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-black tracking-tight sm:text-[1.7rem]" style={gradientText(GRAD_RED_BLUE)}>
-          Tous les outils de préparation aux EVC (PAE) pour les médecins étrangers et PADHUE
-        </h2>
-        <p className="mt-3 text-[14px] max-w-4xl" style={{ color: INK_SOFT }}>
-          Tout ce dont vous avez besoin pour réussir les Épreuves de Vérification des Connaissances (EVC)
-          dans le cadre de la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
-        </p>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em]"
+            style={{ borderColor: '#E9D6BE', color: '#8B5A1A' }}>
+            <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
+            Une boîte à outils complète
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
+            style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: '"Cormorant Garamond","Times New Roman",serif', letterSpacing: '-0.02em' }}>
+            Tous les outils de préparation aux EVC, réunis
+          </h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+            Huit briques pédagogiques pensées pour s&rsquo;articuler entre elles et porter
+            chaque candidat aux Épreuves de Vérification des Connaissances jusqu&rsquo;au jour J.
+          </p>
+        </Reveal>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {tools.map((t) => (
             <Reveal key={t.t}>
-              <div className="flex h-full flex-col rounded-2xl border bg-white p-4" style={{ borderColor: BORDER }}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: t.bg, color: t.fg }}>
+              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_30px_80px_-30px_rgba(15,31,77,0.25)]"
+                style={{ borderColor: BORDER }}>
+                <span aria-hidden className="absolute -right-4 -top-4 h-20 w-20 rounded-full opacity-[0.10]"
+                  style={{ background: t.fg }} />
+                <span className="relative flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: t.bg, color: t.fg }}>
                   <t.Icon className="h-5 w-5" />
                 </span>
-                <p className="mt-3 text-[14px] font-extrabold" style={{ color: NAVY }}>{t.t}</p>
-                <p className="mt-1.5 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>{t.d}</p>
+                <p className="relative mt-3 text-[14px] font-extrabold" style={{ color: NAVY }}>{t.t}</p>
+                <p className="relative mt-1.5 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>{t.d}</p>
               </div>
             </Reveal>
           ))}
