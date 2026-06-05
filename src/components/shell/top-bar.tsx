@@ -58,26 +58,25 @@ export function TopBar({
         </kbd>
       </button>
 
-      <button
-        type="button"
-        onClick={() => window.dispatchEvent(new Event('conseils:open'))}
-        className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-3 text-[13px] font-bold text-[#E4002B] transition-transform hover:scale-[1.02] focus-ring"
-        style={{
-          // Bord dégradé propre via background-clip : la bordure est dessinée
-          // par un linear-gradient peint dans la zone "border" du box-model.
-          // Plus de glitch d'antialiasing sur les coins comme avec p-[1.5px].
-          backgroundImage:
-            'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(90deg,#E4002B 0%,#F97316 100%)',
-          backgroundOrigin: 'border-box',
-          backgroundClip: 'padding-box, border-box',
-          border: '1.5px solid transparent',
-        }}
-      >
-        <Lightbulb className="h-4 w-4" />
-        <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
-          Conseils de préparation
-        </span>
-      </button>
+      {profile.role !== 'professor' && (
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event('conseils:open'))}
+          className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-3 text-[13px] font-bold text-[#E4002B] transition-transform hover:scale-[1.02] focus-ring"
+          style={{
+            backgroundImage:
+              'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(90deg,#E4002B 0%,#F97316 100%)',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            border: '1.5px solid transparent',
+          }}
+        >
+          <Lightbulb className="h-4 w-4" />
+          <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
+            Conseils de préparation
+          </span>
+        </button>
+      )}
 
       <UserMenu profile={profile} />
     </header>
