@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +22,7 @@ export function LoginForm() {
   const params = useSearchParams();
   const next = params.get('next') || '/app';
   const [authError, setAuthError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -50,7 +51,25 @@ export function LoginForm() {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="password">Mot de passe</Label>
-        <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" {...register('password')} />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            placeholder="••••••••"
+            className="pr-10"
+            {...register('password')}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            tabIndex={-1}
+            className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-(--color-ink-soft) hover:bg-(--color-sand-100) hover:text-(--color-ink) focus-ring"
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
         {errors.password && <p className="text-xs text-(--color-danger)">{errors.password.message}</p>}
       </div>
 
