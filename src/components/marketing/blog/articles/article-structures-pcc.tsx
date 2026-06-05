@@ -110,8 +110,19 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
 
             <BoxSection num={3} title="Le Parcours de Consolidation des Compétences (PCC)">
               <p className="text-[13px] text-[#1A2233]">
-                Le PCC est réalisé dans une structure agréée ou habilitée dans le cadre de la PAE.
-                Le praticien est rattaché à une UFR de médecine de son lieu d&rsquo;affectation.
+                Le PCC est une période d&rsquo;exercice supervisé qui fait suite à la réussite
+                des EVC. Sa durée est fixée à deux années pour les médecins, et à un an pour
+                les chirurgiens-dentistes et les sages-femmes. Pendant toute cette période,
+                le praticien est affecté à un poste hospitalier rémunéré, sous la responsabilité
+                pédagogique d&rsquo;un médecin titulaire et le rattachement administratif
+                d&rsquo;une UFR de médecine ou de l&rsquo;université dont dépend son lieu
+                d&rsquo;exercice.
+              </p>
+              <p className="mt-2 text-[13px] text-[#52607A]">
+                L&rsquo;objectif du PCC est double : confirmer la capacité du candidat à exercer
+                en autonomie dans le système de santé français et lui permettre de compléter
+                sa formation par des enseignements universitaires ciblés. Une évaluation continue
+                ponctue ce parcours et conditionne la suite de la procédure.
               </p>
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
                 {[
@@ -138,9 +149,20 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
 
             {/* Tableau comparatif */}
             <BoxSection num={4} title="Où réaliser son PCC ? Les structures d'accueil agréées">
-              <p className="text-[12.5px] text-[#52607A]">
-                Le PCC doit être réalisé dans une structure agréée ou habilitée dans le cadre de la PAE.
-                Toutes les structures ne sont pas éligibles.
+              <p className="text-[12.5px] text-[#1A2233]">
+                Le choix du lieu d&rsquo;affectation est encadré : le PCC ne peut se dérouler
+                que dans une structure agréée par les autorités compétentes (Centre National
+                de Gestion, Agence Régionale de Santé). L&rsquo;agrément garantit la présence
+                d&rsquo;un encadrement médical qualifié, d&rsquo;une activité clinique
+                suffisamment diversifiée et d&rsquo;une convention avec une faculté de médecine
+                assurant le volet universitaire.
+              </p>
+              <p className="mt-2 text-[12.5px] text-[#52607A]">
+                Quatre grandes familles de structures peuvent accueillir un PCC. Chacune
+                présente des spécificités en termes d&rsquo;encadrement, d&rsquo;exposition
+                clinique, de suivi universitaire et de perspectives d&rsquo;intégration. Le
+                tableau ci-dessous synthétise ces différences pour aider le candidat à
+                construire son projet professionnel.
               </p>
               <div className="mt-3 overflow-x-auto">
                 <table className="w-full min-w-[680px] border-separate border-spacing-0 text-[12px]">
@@ -185,7 +207,16 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
             </div>
 
             <BoxSection num={8} title="Validation finale du parcours : le chemin vers l'autorisation d'exercice">
-              <ol className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+              <p className="text-[12.5px] text-[#1A2233]">
+                À l&rsquo;issue du Parcours de Consolidation des Compétences, la procédure
+                d&rsquo;autorisation d&rsquo;exercice se conclut par une étape d&rsquo;évaluation
+                en plusieurs temps. Le candidat constitue un dossier reprenant l&rsquo;ensemble
+                de son parcours hospitalier et universitaire, qui est soumis successivement à
+                son responsable de structure, à la commission régionale compétente, puis à la
+                Commission Nationale d&rsquo;Autorisation d&rsquo;Exercice (CNAE) instituée
+                auprès du Centre National de Gestion.
+              </p>
+              <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
                 {['Fin du PCC (2 ans validés)', 'Rapport d\'évaluation par le responsable de structure', 'Avis de la commission compétente', 'Saisine de la CNAE (évaluation finale)', 'Autorisation d\'exercice délivrée par le Ministère de la Santé'].map((s, i) => (
                   <li key={s} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-3 text-center">
                     <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-[#FDE7E9] text-[11px] font-extrabold text-[#C0001F]">{i + 1}</span>
@@ -194,8 +225,13 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
                 ))}
               </ol>
               <p className="mt-3 text-[12px] text-[#52607A]">
-                Depuis 2025, une saisine anticipée de la CNAE peut être possible après 6 mois de PCC
-                pour certains médecins, sous avis favorable du responsable de structure et de la commission compétente.
+                Une fois l&rsquo;avis favorable de la CNAE obtenu, l&rsquo;arrêté
+                d&rsquo;autorisation d&rsquo;exercice est délivré par le ministère chargé de
+                la santé. Le praticien peut alors s&rsquo;inscrire au Tableau de
+                l&rsquo;Ordre, ce qui ouvre l&rsquo;accès à l&rsquo;exercice de plein droit
+                — y compris en secteur libéral. Depuis 2025, une saisine anticipée de la
+                CNAE est ouverte dans certains cas dès six mois de PCC, sous avis favorable
+                du responsable de structure et de la commission compétente.
               </p>
             </BoxSection>
 

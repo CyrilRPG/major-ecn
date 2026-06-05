@@ -208,7 +208,15 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={5} icon={MapPin} accent="#C0001F" bg="#FDE7E9"
               title="Pourquoi les rémunérations varient-elles autant ?"
             >
-              <p className="text-[13.5px] text-[#52607A]">Plusieurs facteurs expliquent ces écarts de salaire :</p>
+              <p>
+                Les écarts de rémunération entre un FFI et un PH expérimenté peuvent
+                représenter un facteur supérieur à six. Ces différences ne sont pas
+                arbitraires : elles reflètent l&rsquo;évolution du statut, des responsabilités
+                et du périmètre d&rsquo;exercice du praticien tout au long de la PAE.
+                Au-delà de l&rsquo;ancienneté, plusieurs leviers expliquent la dispersion
+                des salaires observés en France.
+              </p>
+              <p className="mt-2 text-[13.5px] text-[#52607A]">Plusieurs facteurs expliquent ces écarts de salaire :</p>
               <ul className="mt-3 space-y-2 text-[13.5px] text-[#1A2233]">
                 <CheckLi>Région d&rsquo;exercice (coût de la vie, tension de l&rsquo;offre de soins).</CheckLi>
                 <CheckLi>Ancienneté et expérience professionnelle.</CheckLi>
