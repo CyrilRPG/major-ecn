@@ -70,15 +70,15 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // redirigé vers /facultes (la racine du contenu pédagogique).
   // ───────────────────────────────────────────────────────────────
   if (profile.role === 'professor') {
+    // /accueil et /forum sont autorisés : le prof y a sa page d'accueil
+    // adaptée et l'accès au forum d'entraide entre profs/élèves.
     const blockedPrefixes = [
-      '/accueil',
       '/agenda',
       '/revisions-transversales',
       '/entrainement',
-      '/forum',
     ];
     if (blockedPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
-      redirect('/facultes');
+      redirect('/accueil');
     }
   }
 
