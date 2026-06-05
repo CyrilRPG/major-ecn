@@ -7,6 +7,7 @@ import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { embed, toPgVector } from '@/lib/ai/embeddings';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
 import { usageToUsd, PRICE_EUR } from '@/lib/ai/cost';
+import { logAudit } from '@/lib/audit/log';
 
 export async function addAnnaleAction(input: {
   coursId: string;
@@ -14,7 +15,7 @@ export async function addAnnaleAction(input: {
   annee: number | null;
   duration_minutes: number | null;
 }): Promise<{ ok: true; id: string } | { error: string }> {
-  const { scope } = await requireContentEditor();
+  const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'annale'); } catch (e) { return { error: (e as Error).message }; }
   if (!input.label?.trim()) return { error: 'Intitulé requis.' };
   const admin = createAdminClient();
@@ -43,6 +44,18 @@ export async function addAnnaleAction(input: {
     .select('id')
     .single();
   if (error || !data) return { error: error?.message ?? 'Échec de la création.' };
+
+  const { data: cours } = await admin.from('cours').select('titre, matieres(nom)').eq('id', input.coursId).maybeSingle();
+  await logAudit({
+    actor: profile,
+    action: 'create',
+    entity: 'annale',
+    entityId: data.id,
+    coursId: input.coursId,
+    coursTitre: (cours as { titre?: string } | null)?.titre ?? null,
+    matiereNom: (cours as { matieres?: { nom?: string } | null } | null)?.matieres?.nom ?? null,
+    description: `Création de l'annale « ${input.label.trim()} »${input.annee ? ` (${input.annee})` : ''}`,
+  });
 
   revalidatePath(`/admin/contenu/${input.coursId}`);
   return { ok: true, id: data.id };
@@ -301,6 +314,16 @@ export async function generateFlashcardsAction(coursId: string): Promise<GenResu
     status: 'success', error_message: null, model: result.model,
   });
 
+  await logAudit({
+    actor: profile,
+    action: 'create',
+    entity: 'flashcard',
+    coursId,
+    coursTitre: cours_titre,
+    description: `Génération IA de ${cards.length} flashcards`,
+    diff: { ai_model: result.model, ai_kind: 'flashcards', ai_cost_usd: cost_usd },
+  });
+
   revalidatePath(`/admin/contenu/${coursId}`);
   return { ok: true, count: cards.length, cost_usd };
 }
@@ -440,6 +463,16 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
     cost_usd, price_eur: PRICE_EUR.qcm,
     status: totalQuestions === 40 ? 'success' : 'partial',
     error_message: null, model: result.model,
+  });
+
+  await logAudit({
+    actor: profile,
+    action: 'create',
+    entity: 'qcm_question',
+    coursId,
+    coursTitre: cours_titre,
+    description: `Génération IA de ${totalQuestions} questions QCM (cours + DP)`,
+    diff: { ai_model: result.model, ai_kind: 'qcm', ai_cost_usd: cost_usd, series_count: parsed.series.length },
   });
 
   revalidatePath(`/admin/contenu/${coursId}`);

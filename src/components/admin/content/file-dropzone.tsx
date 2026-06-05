@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle2, Loader2, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
+import { logFileUploadAction, logFileRemoveAction } from '@/app/admin/contenu/[cours]/file-actions';
 
 type Props = {
   bucket: 'videos' | 'fiches';
@@ -38,11 +39,18 @@ export function FileDropzone({ bucket, coursId, rowId, existingPath, table, acce
         return;
       }
       // Update DB row
+      let finalRowId = rowId;
       if (rowId) {
         await supabase.from(table).update({ storage_path: path }).eq('id', rowId);
       } else {
-        await supabase.from(table).insert({ cours_id: coursId, storage_path: path, titre: label });
+        const { data } = await supabase.from(table).insert({ cours_id: coursId, storage_path: path, titre: label }).select('id').single();
+        finalRowId = (data as { id?: string } | null)?.id ?? undefined;
       }
+      // Journal admin
+      await logFileUploadAction({
+        table, coursId, rowId: finalRowId ?? null,
+        oldPath: existingPath ?? null, newPath: path, fileName: file.name,
+      });
       setProgress(100);
       router.refresh();
     });
@@ -51,8 +59,12 @@ export function FileDropzone({ bucket, coursId, rowId, existingPath, table, acce
   const remove = () => {
     start(async () => {
       const supabase = createClient();
+      const oldPath = existingPath ?? null;
       if (existingPath) await supabase.storage.from(bucket).remove([existingPath]);
       if (rowId) await supabase.from(table).update({ storage_path: null }).eq('id', rowId);
+      if (oldPath) {
+        await logFileRemoveAction({ table, coursId, rowId: rowId ?? null, oldPath });
+      }
       router.refresh();
     });
   };
