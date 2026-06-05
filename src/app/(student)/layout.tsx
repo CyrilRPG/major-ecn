@@ -64,6 +64,25 @@ export default async function StudentLayout({ children }: { children: React.Reac
   }
 
   // ───────────────────────────────────────────────────────────────
+  // Restriction prof côté vue étudiant : un professeur ne doit accéder
+  // qu'aux pages de contenu (collèges + cours). Tout le reste (Accueil,
+  // Agenda, Révisions transversales, Entraînement ciblé, Forum) est
+  // redirigé vers /facultes (la racine du contenu pédagogique).
+  // ───────────────────────────────────────────────────────────────
+  if (profile.role === 'professor') {
+    const blockedPrefixes = [
+      '/accueil',
+      '/agenda',
+      '/revisions-transversales',
+      '/entrainement',
+      '/forum',
+    ];
+    if (blockedPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
+      redirect('/facultes');
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────
   // Interrogation obligatoire : dès qu'un parcours est terminé
   // (vidéo + fiche + ≥1 QCM + ≥1 flashcard review) et que le certificat
   // n'a pas encore été signé, l'élève est redirigé vers l'interrogation

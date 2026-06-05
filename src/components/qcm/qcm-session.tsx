@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -12,6 +13,7 @@ import { QrocItem, type QrocOutcome } from './qroc-item';
 import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn, formatDuration } from '@/lib/utils';
+import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
 
 type Question = {
   id: string;
@@ -19,12 +21,15 @@ type Question = {
   order_index: number;
   format?: 'qcm' | 'qroc';
   reponse_attendue?: string | null;
+  correction_generale?: string | null;
+  images?: string[] | null;
   items: (QcmItemView & { is_correct: boolean })[];
 };
 
 export function QcmSession({
   sessionId,
   coursId,
+  serieId,
   serieLabel,
   serieKind,
   vignette = null,
@@ -32,9 +37,11 @@ export function QcmSession({
   backHref,
   mode = 'live',
   durationMinutes = null,
+  editable = false,
 }: {
   sessionId: string;
   coursId: string;
+  serieId?: string;
   serieLabel: string;
   serieKind: 'qcm' | 'annale';
   /** Vignette clinique commune à toutes les questions (DP / annale).
@@ -44,7 +51,11 @@ export function QcmSession({
   backHref: string;
   mode?: 'live' | 'training';
   durationMinutes?: number | null;
+  /** Mode édition prof : affiche un bouton crayon sur chaque question
+   *  pour ouvrir l'éditeur de question depuis la vue étudiant. */
+  editable?: boolean;
 }) {
+  const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
   const isTraining = mode === 'training';
   const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
@@ -245,18 +256,51 @@ export function QcmSession({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
-        className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
+        className="relative mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-          {isQroc
-            ? `QROC — Question ${index + 1}`
-            : vignette
-              ? `Question ${index + 1}`
-              : 'Énoncé'}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+            {isQroc
+              ? `QROC — Question ${index + 1}`
+              : vignette
+                ? `Question ${index + 1}`
+                : 'Énoncé'}
+          </p>
+          {editable && (
+            <button
+              type="button"
+              onClick={() => setEditingQ({
+                id: q.id,
+                enonce: q.enonce,
+                correction_generale: q.correction_generale ?? '',
+                images: q.images ?? [],
+                items: q.items.map((it) => ({
+                  lettre: it.lettre as 'A'|'B'|'C'|'D'|'E',
+                  enonce: it.enonce,
+                  is_correct: it.is_correct,
+                  justification: it.justification ?? '',
+                  images: it.images ?? [],
+                })),
+              })}
+              title="Modifier cette question (mode prof)"
+              className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-primary)"
+            >
+              <Pencil className="h-3 w-3" /> Éditer
+            </button>
+          )}
+        </div>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line">
           {q.enonce}
         </h2>
+        {(q.images?.length ?? 0) > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {q.images!.map((src) => (
+              <div key={src} className="relative h-32 w-32 overflow-hidden rounded-lg border border-(--color-border) bg-white sm:h-40 sm:w-40">
+                <Image src={src} alt="" fill sizes="160px" className="object-contain p-1.5" unoptimized />
+              </div>
+            ))}
+          </div>
+        )}
       </motion.div>
 
       {/* ─── QCM items ─── */}
@@ -312,6 +356,18 @@ export function QcmSession({
         </div>
       )}
 
+      {/* Corrigé général de la question — visible après validation, mode 'live'. */}
+      {isValidated && !isTraining && q.correction_generale && (
+        <div className="mt-3 rounded-xl border border-(--color-border) bg-(--color-primary-soft)/40 p-3.5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
+            Corrigé général
+          </p>
+          <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+            {q.correction_generale}
+          </p>
+        </div>
+      )}
+
       <div className="mt-4 flex items-center justify-end gap-3 pb-2">
         {!isValidated ? (
           <Button onClick={validate} disabled={!canValidate || submitting}>
@@ -324,6 +380,17 @@ export function QcmSession({
           </Button>
         )}
       </div>
+
+      {/* Dialog d'édition prof (vue étudiant → édition directe) */}
+      {editable && serieId && (
+        <QcmQuestionEditor
+          open={!!editingQ}
+          onOpenChange={(v) => { if (!v) setEditingQ(null); }}
+          coursId={coursId}
+          serieId={serieId}
+          initial={editingQ}
+        />
+      )}
     </div>
   );
 }
