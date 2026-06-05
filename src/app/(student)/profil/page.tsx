@@ -1,15 +1,26 @@
 import { CalendarClock, GraduationCap, Mail, Phone, Sparkles, User } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
 import { generatePseudo } from '@/lib/auth/pseudo';
 import { PseudoEditor } from '@/components/student/pseudo-editor';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
+import { ProfProfile } from '@/components/professor/prof-profile';
+import { getNavigatorTree } from '@/lib/data/navigator';
 
 export const metadata = { title: 'Mon profil' };
 
 export default async function ProfilPage() {
   const { profile } = await requireUser();
+
+  // Profil dédié professeur : pas de formule/abonnement, mais accès
+  // pédagogiques (collèges, permissions par type de contenu).
+  if (profile.role === 'professor') {
+    const profScope = getProfessorScope(profile.permission_scope);
+    const tree = await getNavigatorTree(profile);
+    return <ProfProfile profile={profile} scope={profScope} colleges={tree} />;
+  }
+
   const scope = parseScope(profile.permission_scope);
   const pseudo =
     profile.pseudo ??

@@ -7,8 +7,9 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
-import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
+import { ProfWelcome } from '@/components/professor/prof-welcome';
 
 export const metadata = { title: 'Accueil' };
 
@@ -47,6 +48,15 @@ type CollegeRow = {
    ============================================================ */
 export default async function AccueilPage() {
   const { user, profile } = await requireUser();
+
+  // Page d'accueil dédiée pour les professeurs : visuel des collèges
+  // accessibles + items + accès rapide au forum. Pas de dashboard
+  // QCM/flashcards (qui n'a aucun sens pour un prof).
+  if (profile.role === 'professor') {
+    const tree = await getNavigatorTree(profile);
+    return <ProfWelcome profile={profile} tree={tree} />;
+  }
+
   const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
