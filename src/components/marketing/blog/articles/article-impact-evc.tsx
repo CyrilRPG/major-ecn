@@ -281,7 +281,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
 
 function Sec({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
-    <section id={`impact-${n}`} className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
+    <section id={`impact-${n}`} className="scroll-mt-24 rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
       <h2 className="text-[18px] font-extrabold leading-snug text-[#1A2233]">{n}. {title}</h2>
       <div className="mt-3 space-y-2 text-[13px] leading-relaxed text-[#1A2233]">{children}</div>
     </section>

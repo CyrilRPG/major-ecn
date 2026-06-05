@@ -312,7 +312,8 @@ function Section({
   void accent;
   return (
     <section
-      className="rounded-2xl border p-5 sm:p-6"
+      id={`section-${num}`}
+      className="scroll-mt-24 rounded-2xl border p-5 sm:p-6"
       style={
         soft
           ? { background: 'linear-gradient(135deg,#FFF1F3 0%,#FFE4E8 100%)', borderColor: '#FACBD0' }
@@ -392,7 +393,7 @@ function Callout({ children }: { children: React.ReactNode }) {
 
 function RetentionBlock({ num, title, text }: { num: number; title: string; text: string }) {
   return (
-    <section className="rounded-2xl border border-[#FCD34D] bg-[#FFFBEB] p-5">
+    <section id={`section-${num}`} className="scroll-mt-24 rounded-2xl border border-[#FCD34D] bg-[#FFFBEB] p-5">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FEF3C7] text-[#B45309]">
           <AlertTriangle className="h-4.5 w-4.5" />

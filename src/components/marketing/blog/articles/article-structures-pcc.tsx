@@ -314,7 +314,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
 
 function BoxSection({ num, title, children }: { num: number; title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
+    <section id={`sec-${num}`} className="scroll-mt-24 rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
       <h2 className="text-[16px] font-extrabold text-[#1A2233]">{num}. {title}</h2>
       <div className="mt-3">{children}</div>
     </section>
@@ -323,7 +323,7 @@ function BoxSection({ num, title, children }: { num: number; title: string; chil
 
 function SmallBlock({ num, title, bullets }: { num: number; title: string; bullets: string[] }) {
   return (
-    <section className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
+    <section id={`sec-${num}`} className="scroll-mt-24 rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
       <p className="text-[12px] font-extrabold uppercase tracking-wide text-[#9AA1AE]">Section {num}</p>
       <h3 className="mt-0.5 text-[14px] font-bold leading-snug text-[#1A2233]">{title}</h3>
       <ul className="mt-3 space-y-1.5 text-[12px] text-[#1A2233]">
