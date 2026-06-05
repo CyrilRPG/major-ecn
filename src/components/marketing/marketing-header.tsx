@@ -12,6 +12,7 @@ const NAV = [
   { href: '/tarifs',      label: 'Tarifs' },
   { href: '/temoignages', label: 'Témoignages' },
   { href: '/contact',     label: 'Nous contacter' },
+  { href: '/blog',        label: 'Blog' },
 ];
 
 export function MarketingHeader() {
