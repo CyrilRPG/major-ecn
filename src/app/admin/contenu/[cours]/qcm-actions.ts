@@ -88,6 +88,38 @@ export async function createQcmSerieAction(input: {
   return { ok: true, id: data.id };
 }
 
+/** Mise à jour de la vignette clinique (contexte) d'un DP. */
+export async function updateSerieVignetteAction(input: {
+  serieId: string;
+  coursId: string;
+  vignette: string;
+}): Promise<{ ok: true } | { error: string }> {
+  const { profile, scope } = await requireContentEditor();
+  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  const admin = createAdminClient();
+  const { data: serie } = await admin.from('qcm_series').select('label').eq('id', input.serieId).maybeSingle();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any).from('qcm_series')
+    .update({ vignette: input.vignette.trim() || null })
+    .eq('id', input.serieId);
+  if (error) return { error: error.message };
+
+  const ctx = await loadCoursCtx(input.coursId);
+  await logAudit({
+    actor: profile,
+    action: 'update',
+    entity: 'qcm_series',
+    entityId: input.serieId,
+    coursId: input.coursId,
+    coursTitre: ctx?.titre ?? null,
+    matiereNom: ctx?.matieres?.nom ?? null,
+    description: `Modification du contexte clinique de « ${serie?.label ?? input.serieId} »`,
+  });
+  revalidatePath(`/admin/contenu/${input.coursId}`);
+  revalidatePath(`/cours/${input.coursId}/qcm`);
+  return { ok: true };
+}
+
 export async function deleteQcmSerieAction(serieId: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }

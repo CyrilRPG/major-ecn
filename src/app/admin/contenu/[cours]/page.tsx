@@ -63,6 +63,16 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
         .in('serie_id', qcmSerieIds)
         .order('order_index', { ascending: true })
     : { data: [] };
+  // Vignettes par série (DP)
+  const { data: vignetteRows } = qcmSerieIds.length > 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? await (supabase as any).from('qcm_series')
+        .select('id, vignette')
+        .in('id', qcmSerieIds)
+    : { data: [] };
+  const vignetteMap = new Map<string, string | null>(
+    ((vignetteRows ?? []) as Array<{ id: string; vignette: string | null }>).map((r) => [r.id, r.vignette])
+  );
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
@@ -215,6 +225,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                 series={qcmSeries.map((s) => ({
                   id: s.id,
                   label: s.label,
+                  vignette: vignetteMap.get(s.id) ?? null,
                   questions: ((qcmDetail ?? []) as Array<{
                     id: string; serie_id: string; enonce: string; order_index: number;
                     correction_generale: string | null; images: string[] | null;
