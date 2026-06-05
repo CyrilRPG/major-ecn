@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Search, ShieldCheck, GraduationCap, Pencil, Plus, Trash2, RefreshCw } from 'lucide-react';
+import { useMemo, useState, useTransition } from 'react';
+import { Search, ShieldCheck, GraduationCap, Pencil, Plus, Trash2, RefreshCw, Undo2, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { restoreFromLogAction } from '@/app/admin/contenu/[cours]/qcm-actions';
 
 export type LogRow = {
   id: string;
@@ -100,12 +101,13 @@ export function LogsTable({ logs }: { logs: LogRow[] }) {
             <TableHead className="w-32">Action</TableHead>
             <TableHead>Description</TableHead>
             <TableHead className="hidden lg:table-cell">Cours / Matière</TableHead>
+            <TableHead className="w-28 text-right">Restaurer</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="py-10 text-center text-(--color-ink-soft)">
+              <TableCell colSpan={6} className="py-10 text-center text-(--color-ink-soft)">
                 Aucune entrée correspondant aux filtres.
               </TableCell>
             </TableRow>
@@ -156,11 +158,50 @@ export function LogsTable({ logs }: { logs: LogRow[] }) {
                     <span className="text-xs text-(--color-ink-muted)">—</span>
                   )}
                 </TableCell>
+                <TableCell className="text-right">
+                  {l.action === 'delete' && (l.diff as { snapshot?: unknown } | null)?.snapshot ? (
+                    <RestoreButton logId={l.id} />
+                  ) : (
+                    <span className="text-[10px] text-(--color-ink-muted)">—</span>
+                  )}
+                </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
+    </>
+  );
+}
+
+function RestoreButton({ logId }: { logId: string }) {
+  const [pending, start] = useTransition();
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const onClick = () => {
+    if (done) return;
+    if (!confirm('Restaurer cet élément depuis le journal ?')) return;
+    setErr(null);
+    start(async () => {
+      const res = await restoreFromLogAction(logId);
+      if ('error' in res) setErr(res.error);
+      else { setDone(true); setTimeout(() => window.location.reload(), 700); }
+    });
+  };
+  if (done) return <span className="text-[11px] font-semibold text-[#16793C]">Restauré ✓</span>;
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={pending}
+        title="Restaurer cet élément (recrée la flashcard / question / série)"
+        className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white px-2 py-1 text-[11px] font-semibold text-(--color-ink) hover:border-[#16A34A] hover:text-[#16793C] disabled:opacity-50"
+      >
+        {pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Undo2 className="h-3 w-3" />}
+        Restaurer
+      </button>
+      {err && <p className="mt-1 text-[10px] text-(--color-danger)">{err}</p>}
     </>
   );
 }

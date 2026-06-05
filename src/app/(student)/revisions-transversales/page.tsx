@@ -275,7 +275,7 @@ export default async function RevisionsTransversalesPage() {
               tint="#FFEAD9" tintFg="#E8742C"
               title="Révision recommandée"
               count={75}
-              estMin={60}
+              estMin={75}
               cta="Faire la révision recommandée"
               ctaTone="orange"
               hint="Pour retrouver un bon niveau de régularité"
@@ -291,7 +291,7 @@ export default async function RevisionsTransversalesPage() {
                 tint="#F1E8FD" tintFg="#6D28D9"
                 title="Révision du jour"
                 count={s.sessionSizes.daily}
-                estMin={Math.round(s.sessionSizes.daily * 0.6)}
+                estMin={s.sessionSizes.daily}
                 cta="Commencer ma révision du jour"
                 ctaTone="purple"
               />

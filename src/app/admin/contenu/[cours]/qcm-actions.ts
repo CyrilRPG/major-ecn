@@ -205,7 +205,12 @@ export async function deleteQcmQuestionAction(questionId: string, coursId: strin
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
   const admin = createAdminClient();
-  const { data: q } = await admin.from('qcm_questions').select('enonce').eq('id', questionId).maybeSingle();
+  // Snapshot complet (question + items) AVANT delete → permet la restauration depuis les logs.
+  const { data: snapshot } = await admin
+    .from('qcm_questions')
+    .select('id, serie_id, enonce, order_index, reponse_attendue, correction_generale, images, qcm_items(lettre, enonce, is_correct, justification, images)')
+    .eq('id', questionId)
+    .maybeSingle();
   const { error } = await admin.from('qcm_questions').delete().eq('id', questionId);
   if (error) return { error: error.message };
 
@@ -218,7 +223,8 @@ export async function deleteQcmQuestionAction(questionId: string, coursId: strin
     coursId,
     coursTitre: ctx?.titre ?? null,
     matiereNom: ctx?.matieres?.nom ?? null,
-    description: `Suppression de la question : « ${q?.enonce?.slice(0, 80) ?? questionId}${(q?.enonce?.length ?? 0) > 80 ? '…' : ''} »`,
+    description: `Suppression de la question : « ${(snapshot as { enonce?: string } | null)?.enonce?.slice(0, 80) ?? questionId}${((snapshot as { enonce?: string } | null)?.enonce?.length ?? 0) > 80 ? '…' : ''} »`,
+    diff: { snapshot: snapshot as Record<string, unknown> | null },
   });
   revalidatePath(`/admin/contenu/${coursId}`);
   revalidatePath(`/cours/${coursId}/qcm`);
@@ -285,7 +291,9 @@ export async function deleteFlashcardAction(id: string, coursId: string): Promis
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
   const admin = createAdminClient();
-  const { data: fc } = await admin.from('flashcards').select('recto').eq('id', id).maybeSingle();
+  const { data: snapshot } = await admin.from('flashcards')
+    .select('id, cours_id, recto, verso, order_index')
+    .eq('id', id).maybeSingle();
   const { error } = await admin.from('flashcards').delete().eq('id', id);
   if (error) return { error: error.message };
 
@@ -298,11 +306,84 @@ export async function deleteFlashcardAction(id: string, coursId: string): Promis
     coursId,
     coursTitre: ctx?.titre ?? null,
     matiereNom: ctx?.matieres?.nom ?? null,
-    description: `Suppression de la flashcard : « ${fc?.recto?.slice(0, 60) ?? id}${(fc?.recto?.length ?? 0) > 60 ? '…' : ''} »`,
+    description: `Suppression de la flashcard : « ${(snapshot as { recto?: string } | null)?.recto?.slice(0, 60) ?? id}${((snapshot as { recto?: string } | null)?.recto?.length ?? 0) > 60 ? '…' : ''} »`,
+    diff: { snapshot: snapshot as Record<string, unknown> | null },
   });
   revalidatePath(`/admin/contenu/${coursId}`);
   revalidatePath(`/cours/${coursId}/flashcards`);
   return { ok: true };
+}
+
+/* ────────── Restauration depuis les logs (admin uniquement) ────────── */
+
+export async function restoreFromLogAction(logId: string): Promise<{ ok: true; entity: string } | { error: string }> {
+  const { profile } = await requireContentEditor();
+  if (profile.role !== 'admin') return { error: 'Seuls les administrateurs peuvent restaurer.' };
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: log } = await (admin as any)
+    .from('admin_audit_logs')
+    .select('id, action, entity_type, entity_id, cours_id, diff')
+    .eq('id', logId)
+    .maybeSingle();
+  if (!log) return { error: 'Log introuvable.' };
+  if (log.action !== 'delete') return { error: 'Cette action n\'est pas une suppression — rien à restaurer.' };
+  const snap = (log.diff as { snapshot?: Record<string, unknown> } | null)?.snapshot;
+  if (!snap) return { error: 'Aucun instantané disponible (suppression antérieure à la fonctionnalité).' };
+
+  try {
+    if (log.entity_type === 'flashcard') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (admin as any).from('flashcards').insert({
+        id: snap.id, cours_id: snap.cours_id, recto: snap.recto, verso: snap.verso,
+        order_index: snap.order_index,
+      });
+      if (error) return { error: error.message };
+    } else if (log.entity_type === 'qcm_question') {
+      const items = (snap.qcm_items as Array<Record<string, unknown>>) ?? [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: qErr } = await (admin as any).from('qcm_questions').insert({
+        id: snap.id, serie_id: snap.serie_id, enonce: snap.enonce, order_index: snap.order_index,
+        reponse_attendue: snap.reponse_attendue, correction_generale: snap.correction_generale,
+        images: snap.images ?? [],
+      });
+      if (qErr) return { error: qErr.message };
+      if (items.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: iErr } = await (admin as any).from('qcm_items').insert(
+          items.map((it) => ({
+            question_id: snap.id,
+            lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct,
+            justification: it.justification ?? '', images: it.images ?? [],
+          })),
+        );
+        if (iErr) return { error: iErr.message };
+      }
+    } else if (log.entity_type === 'qcm_series') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (admin as any).from('qcm_series').insert(snap);
+      if (error) return { error: error.message };
+    } else {
+      return { error: `Restauration non supportée pour le type « ${log.entity_type} ».` };
+    }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Échec de la restauration.' };
+  }
+
+  await logAudit({
+    actor: profile,
+    action: 'create',
+    entity: (log.entity_type as 'flashcard' | 'qcm_question' | 'qcm_series'),
+    entityId: (snap.id as string | undefined) ?? null,
+    coursId: (log.cours_id as string | null) ?? null,
+    description: `Restauration depuis le journal (log #${logId.slice(0, 8)})`,
+  });
+  if (log.cours_id) {
+    revalidatePath(`/admin/contenu/${log.cours_id}`);
+    revalidatePath(`/cours/${log.cours_id}/qcm`);
+    revalidatePath(`/cours/${log.cours_id}/flashcards`);
+  }
+  return { ok: true, entity: log.entity_type };
 }
 
 /* ───── Image upload helper ───── */

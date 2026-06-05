@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -40,6 +40,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   }
 
   const isDp = (label: string) => /^dp\s*\d/i.test(label);
+  const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
 
   // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
   const scoreTheme = (correct: number, total: number) => {
@@ -75,10 +76,13 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
             const lr = lastBySerie.get(s.id);
             const qCount = s.qcm_questions?.length ?? 0;
             const dp = isDp(s.label);
-            // Bleu pour QCM (Cours), rouge pour DP.
-            const theme = dp
-              ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList, kindLabel: 'DP' }
-              : { bar: '#2563EB', bg: '#E5F1FF', fg: '#1E4D8B', Icon: GraduationCap, kindLabel: 'QCM' };
+            const entr = isEntrainement(s.label);
+            // Vert pour Entraînement, rouge pour DP, bleu pour QCM standard.
+            const theme = entr
+              ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }
+              : dp
+              ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList,  kindLabel: 'DP' }
+              : { bar: '#2563EB', bg: '#E5F1FF', fg: '#1E4D8B', Icon: GraduationCap,  kindLabel: 'QCM' };
             const scoreT = lr ? scoreTheme(lr.score_correct, lr.score_total) : null;
             return (
               <li key={s.id}>
@@ -107,7 +111,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] font-semibold text-(--color-ink)">{s.label}</p>
                     <p className="text-xs text-(--color-ink-muted)">
-                      {qCount} questions · environ {Math.max(5, qCount * 2)} min
+                      {qCount} questions · environ {Math.max(1, qCount)} min
                     </p>
                   </div>
                   {scoreT ? (
