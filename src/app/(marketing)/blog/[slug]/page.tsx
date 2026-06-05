@@ -5,6 +5,8 @@ import { ArticleRemuneration } from '@/components/marketing/blog/articles/articl
 import { ArticleStructuresPcc } from '@/components/marketing/blog/articles/article-structures-pcc';
 import { ArticleDefisEvc } from '@/components/marketing/blog/articles/article-defis-evc';
 import { ArticleImpactEvc } from '@/components/marketing/blog/articles/article-impact-evc';
+import { ArticleListeDocuments } from '@/components/marketing/blog/articles/article-liste-documents';
+import { ArticleCommentSinscrire } from '@/components/marketing/blog/articles/article-comment-sinscrire';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 
 export async function generateMetadata({
@@ -37,6 +39,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       return <ArticleDefisEvc article={article} />;
     case 'impact-evc-acces-soins':
       return <ArticleImpactEvc article={article} />;
+    case 'evc-pae-liste-documents-fournir':
+      return <ArticleListeDocuments article={article} />;
+    case 'comment-se-presenter-aux-evc':
+      return <ArticleCommentSinscrire article={article} />;
     default:
       return <ArticleGeneric article={article} />;
   }
