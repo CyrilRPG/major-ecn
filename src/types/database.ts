@@ -71,15 +71,15 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'qcm_attempts_question_id_fkey'; columns: ['question_id']; isOneToOne: false; referencedRelation: 'qcm_questions'; referencedColumns: ['id'] }, { foreignKeyName: 'qcm_attempts_session_id_fkey'; columns: ['session_id']; isOneToOne: false; referencedRelation: 'qcm_sessions'; referencedColumns: ['id'] }];
       };
       qcm_items: {
-        Row: { created_at: string; enonce: string; id: string; is_correct: boolean; justification: string; lettre: string; question_id: string };
-        Insert: { created_at?: string; enonce: string; id?: string; is_correct?: boolean; justification?: string; lettre: string; question_id: string };
-        Update: { created_at?: string; enonce?: string; id?: string; is_correct?: boolean; justification?: string; lettre?: string; question_id?: string };
+        Row: { created_at: string; enonce: string; id: string; is_correct: boolean; justification: string; lettre: string; question_id: string; images: Json };
+        Insert: { created_at?: string; enonce: string; id?: string; is_correct?: boolean; justification?: string; lettre: string; question_id: string; images?: Json };
+        Update: { created_at?: string; enonce?: string; id?: string; is_correct?: boolean; justification?: string; lettre?: string; question_id?: string; images?: Json };
         Relationships: [{ foreignKeyName: 'qcm_items_question_id_fkey'; columns: ['question_id']; isOneToOne: false; referencedRelation: 'qcm_questions'; referencedColumns: ['id'] }];
       };
       qcm_questions: {
-        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string };
-        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string };
-        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string };
+        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string; images: Json; correction_generale: string | null };
+        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string; images?: Json; correction_generale?: string | null };
+        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string; images?: Json; correction_generale?: string | null };
         Relationships: [{ foreignKeyName: 'qcm_questions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
       qcm_series: {
