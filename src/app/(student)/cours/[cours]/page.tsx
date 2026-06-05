@@ -74,19 +74,20 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0;
   const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
 
-  // 5 cartes du parcours : vidéo, fiche, DP&QI, flashcards, interrogation.
+  // 5 cartes du parcours dans l'ordre pédagogique :
+  // fiche → vidéo → DP & QI → flashcards → interrogation.
   const actions: Action[] = [
-    {
-      href: `/cours/${coursId}/video`, label: 'Cours vidéo',
-      desc: 'Le cours filmé, aligné sur les recommandations HAS.',
-      Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
-      available: (c.videos ?? []).some((v) => !!v.storage_path),
-    },
     {
       href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
       desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
       Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
       available: (c.fiches ?? []).some((f) => !!f.storage_path),
+    },
+    {
+      href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+      desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+      Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+      available: (c.videos ?? []).some((v) => !!v.storage_path),
     },
     {
       href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
