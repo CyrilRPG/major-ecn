@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,6 +15,7 @@ export type QcmItemView = {
   lettre: string;
   enonce: string;
   justification: string | null;
+  images?: string[] | null;
 };
 
 export function QcmItem({
@@ -57,7 +59,18 @@ export function QcmItem({
         >
           {item.lettre}
         </span>
-        <span className="flex-1 text-sm leading-snug text-(--color-ink)">{item.enonce}</span>
+        <span className="flex-1 text-sm leading-snug text-(--color-ink)">
+          {item.enonce}
+          {(item.images?.length ?? 0) > 0 && (
+            <span className="mt-2 flex flex-wrap gap-2">
+              {item.images!.map((src) => (
+                <span key={src} className="relative block h-20 w-20 overflow-hidden rounded-md border border-(--color-border) bg-white sm:h-24 sm:w-24">
+                  <Image src={src} alt="" fill sizes="96px" className="object-contain p-1" unoptimized />
+                </span>
+              ))}
+            </span>
+          )}
+        </span>
         {outcome && (
           <span className="shrink-0">
             {outcome === 'correct' ? (

@@ -1,8 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canWrite } from '@/lib/schemas/professor';
 
 export default async function QcmRunPage({ params }: { params: Promise<{ cours: string; serie: string }> }) {
   const { cours: coursId, serie: serieId } = await params;
@@ -29,22 +30,36 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
 
   const { data: questions } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)' + ', format, reponse_attendue' as 'id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
     .eq('serie_id', serieId)
     .order('order_index');
 
   if (!questions || questions.length === 0) notFound();
 
-  const enrichedQuestions = questions.map((q) => ({
+  type QRow = {
+    id: string; enonce: string; order_index: number; format: string;
+    reponse_attendue: string | null; correction_generale: string | null;
+    images: string[] | null;
+    qcm_items: Array<{ id: string; lettre: string; enonce: string; is_correct: boolean; justification: string | null; images: string[] | null }>;
+  };
+  const enrichedQuestions = (questions as unknown as QRow[]).map((q) => ({
     id: q.id,
     enonce: q.enonce,
     order_index: q.order_index,
-    format: (q as unknown as { format: string }).format as 'qcm' | 'qroc',
-    reponse_attendue: (q as unknown as { reponse_attendue: string | null }).reponse_attendue,
+    format: q.format as 'qcm' | 'qroc',
+    reponse_attendue: q.reponse_attendue,
+    correction_generale: q.correction_generale,
+    images: q.images ?? [],
     items: (q.qcm_items ?? [])
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
+      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
+
+  // Mode édition prof : visible UNIQUEMENT pour profs ayant le scope écriture
+  // sur le contenu QCM. Permet d'ouvrir l'éditeur de question depuis la vue
+  // élève via un bouton crayon.
+  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
+  const editable = profile.role === 'admin' || (profScope ? canWrite(profScope, 'qcm') : false);
 
   const { data: session } = await supabase
     .from('qcm_sessions')
@@ -60,11 +75,13 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
     <QcmSession
       sessionId={session.id}
       coursId={coursId}
+      serieId={serieId}
       serieLabel={serie.label}
       serieKind={isAnnale ? 'annale' : 'qcm'}
       vignette={vignette}
       questions={enrichedQuestions}
       backHref={backHref}
+      editable={editable}
     />
   );
 }

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, RotateCcw } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Pencil, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Flashcard } from './flashcard';
@@ -16,6 +16,8 @@ import {
   type Difficulty,
 } from '@/types/domain';
 import { createClient } from '@/lib/supabase/client';
+import { FlashcardEditDialog } from '@/components/admin/content/flashcard-edit-dialog';
+import { useRouter } from 'next/navigation';
 
 export type FlashcardInput = {
   id: string;
@@ -36,13 +38,19 @@ export function FlashcardSession({
   total,
   backHref,
   collegeName,
+  coursId,
+  editable = false,
 }: {
   cards: FlashcardInput[];
   total: number;
   coursId: string;
   backHref: string;
   collegeName?: string;
+  /** Mode prof : affiche un bouton crayon pour éditer la carte courante. */
+  editable?: boolean;
 }) {
+  const router = useRouter();
+  const [editingCard, setEditingCard] = useState<FlashcardInput | null>(null);
   const theme = themeFor(collegeName);
   const [queue, setQueue] = useState<FlashcardInput[]>(() =>
     cards.filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD).sort((a, b) => a.score - b.score),
@@ -182,7 +190,29 @@ export function FlashcardSession({
           total={total}
           theme={theme}
         />
+        {editable && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setEditingCard(card); }}
+            title="Modifier cette flashcard (mode prof)"
+            className="absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white/95 px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) shadow-sm hover:border-(--color-primary) hover:text-(--color-primary)"
+          >
+            <Pencil className="h-3 w-3" /> Éditer
+          </button>
+        )}
       </motion.div>
+
+      {editable && editingCard && (
+        <FlashcardEditDialog
+          open={!!editingCard}
+          onOpenChange={(v) => { if (!v) setEditingCard(null); }}
+          coursId={coursId}
+          flashcardId={editingCard.id}
+          initialRecto={editingCard.recto}
+          initialVerso={editingCard.verso}
+          onSaved={() => router.refresh()}
+        />
+      )}
 
       <div className="mt-3 flex min-h-[96px] w-full flex-col items-center gap-2 sm:mt-4">
         {flipped ? (

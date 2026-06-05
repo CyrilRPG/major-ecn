@@ -1,10 +1,11 @@
 import { notFound, redirect } from 'next/navigation';
 import { Layers3 } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canWrite } from '@/lib/schemas/professor';
 import { DIFFICULTY_SCORE, type Difficulty } from '@/types/domain';
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -65,6 +66,9 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     score: scoreMap.get(c.id) ?? 0,
   }));
 
+  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
+  const editable = profile.role === 'admin' || (profScope ? canWrite(profScope, 'flashcards') : false);
+
   return (
     <FlashcardSession
       cards={input}
@@ -72,6 +76,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
       coursId={coursId}
       backHref={`/cours/${coursId}`}
       collegeName={c.titre}
+      editable={editable}
     />
   );
 }
