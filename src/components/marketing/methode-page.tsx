@@ -361,7 +361,8 @@ function MethodologyAndSkillsSection() {
           <h2 className="text-xl font-black tracking-tight" style={gradientText(GRAD_BURGUNDY)}>
             4. Les compétences développées pendant la préparation
           </h2>
-          <div className="mt-5 overflow-x-auto">
+          {/* Tableau version desktop (md+) */}
+          <div className="mt-5 hidden overflow-x-auto md:block">
             <table className="w-full min-w-[680px] text-[12.5px]">
               <thead>
                 <tr>
@@ -391,6 +392,30 @@ function MethodologyAndSkillsSection() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Version mobile (< md) : cartes empilées, sans débordement horizontal */}
+          <div className="mt-5 grid gap-3 md:hidden">
+            {rows.map((r, i) => (
+              <div key={r.label} className="rounded-2xl bg-white p-4" style={{ border: `1px solid ${BORDER}` }}>
+                <p className="text-[11px] font-extrabold uppercase tracking-wider" style={{ color: rowColor(i) }}>
+                  {r.label}
+                </p>
+                <ul className="mt-2.5 space-y-2.5">
+                  {skills.map((s, j) => (
+                    <li key={s.name} className="flex items-start gap-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: s.bg, color: s.fg }}>
+                        <s.Icon className="h-3.5 w-3.5" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide" style={{ color: s.fg }}>{s.name}</p>
+                        <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: INK }}>{r.values[j]}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -530,7 +555,7 @@ function ForWhomSection() {
 /* ============ PAGE ============ */
 export function MethodePageContent() {
   return (
-    <>
+    <div className="overflow-x-hidden">
       <MethodeHero />
       <StepsSection />
       <WhyFailSection />
@@ -539,6 +564,6 @@ export function MethodePageContent() {
       <ToolsSection />
       <MethodTestimonials />
       <ForWhomSection />
-    </>
+    </div>
   );
 }
