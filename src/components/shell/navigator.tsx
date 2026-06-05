@@ -87,13 +87,15 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
 
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
+      {/* Accueil : présent pour tous, mais redirige vers la page d'accueil
+          adaptée au rôle (ProfWelcome pour les profs). */}
+      <Link href="/accueil" className={topLevelClass(homeActive)}>
+        <Home className="h-[18px] w-[18px] shrink-0" />
+        Accueil
+      </Link>
+
       {!isProf && (
         <>
-          <Link href="/accueil" className={topLevelClass(homeActive)}>
-            <Home className="h-[18px] w-[18px] shrink-0" />
-            Accueil
-          </Link>
-
           <Link href="/entrainement" className={topLevelClass(trainActive)}>
             <Target className="h-[18px] w-[18px] shrink-0" />
             Entraînement ciblé

@@ -14,6 +14,7 @@ import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
+import { VignetteEditorDialog } from '@/components/admin/content/vignette-editor-dialog';
 
 type Question = {
   id: string;
@@ -56,6 +57,7 @@ export function QcmSession({
   editable?: boolean;
 }) {
   const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
+  const [editingVignette, setEditingVignette] = useState(false);
   const isTraining = mode === 'training';
   const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
@@ -231,23 +233,39 @@ export function QcmSession({
           <details> natif ouvert par défaut : visible sur tous les écrans
           (y compris mobile), repliable après lecture pour gagner de la
           place quand l'élève enchaîne les questions du DP. */}
-      {vignette && (
+      {(vignette || (editable && serieId)) && (
         <details
           open
           className="group mb-3 block rounded-xl border border-(--color-primary)/30 border-l-4 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5 shadow-sm open:bg-(--color-primary-soft)/30"
         >
           <summary className="flex cursor-pointer items-center justify-between gap-2 list-none [&::-webkit-details-marker]:hidden">
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
-              Contexte clinique du dossier
+              {vignette ? 'Contexte clinique du dossier' : 'Pas de contexte clinique'}
             </span>
-            <span className="text-[11px] font-medium text-(--color-primary-deep) underline-offset-2 group-open:no-underline group-[:not([open])]:underline">
-              <span className="group-open:hidden">Afficher</span>
-              <span className="hidden group-open:inline">Réduire</span>
+            <span className="flex items-center gap-2">
+              {editable && serieId && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setEditingVignette(true); }}
+                  className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white px-2 py-0.5 text-[11px] font-semibold text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-primary)"
+                  title="Modifier le contexte clinique (mode prof)"
+                >
+                  <Pencil className="h-3 w-3" /> Éditer
+                </button>
+              )}
+              {vignette && (
+                <span className="text-[11px] font-medium text-(--color-primary-deep) underline-offset-2 group-open:no-underline group-[:not([open])]:underline">
+                  <span className="group-open:hidden">Afficher</span>
+                  <span className="hidden group-open:inline">Réduire</span>
+                </span>
+              )}
             </span>
           </summary>
-          <p className="mt-2 whitespace-pre-line break-words text-sm leading-relaxed text-(--color-ink)">
-            {vignette}
-          </p>
+          {vignette && (
+            <p className="mt-2 whitespace-pre-line break-words text-sm leading-relaxed text-(--color-ink)">
+              {vignette}
+            </p>
+          )}
         </details>
       )}
 
@@ -383,13 +401,23 @@ export function QcmSession({
 
       {/* Dialog d'édition prof (vue étudiant → édition directe) */}
       {editable && serieId && (
-        <QcmQuestionEditor
-          open={!!editingQ}
-          onOpenChange={(v) => { if (!v) setEditingQ(null); }}
-          coursId={coursId}
-          serieId={serieId}
-          initial={editingQ}
-        />
+        <>
+          <QcmQuestionEditor
+            open={!!editingQ}
+            onOpenChange={(v) => { if (!v) setEditingQ(null); }}
+            coursId={coursId}
+            serieId={serieId}
+            initial={editingQ}
+          />
+          <VignetteEditorDialog
+            open={editingVignette}
+            onOpenChange={setEditingVignette}
+            coursId={coursId}
+            serieId={serieId}
+            initial={vignette}
+            onSaved={() => router.refresh()}
+          />
+        </>
       )}
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronRight, ClipboardList, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, ClipboardList, FileText, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
 import { QcmQuestionEditor, type QcmQuestionDraft } from './qcm-question-editor';
+import { VignetteEditorDialog } from './vignette-editor-dialog';
 import {
   createQcmSerieAction,
   deleteQcmQuestionAction,
@@ -20,6 +21,7 @@ import {
 export type QcmSerieFull = {
   id: string;
   label: string;
+  vignette?: string | null;
   questions: QcmQuestionDraft[];
 };
 
@@ -29,6 +31,7 @@ export function QcmSeriesManager({
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<{ serieId: string; q?: QcmQuestionDraft } | null>(null);
+  const [editingVignette, setEditingVignette] = useState<{ serieId: string; current: string | null } | null>(null);
   const [openSerie, setOpenSerie] = useState<Set<string>>(new Set());
   const [pending, start] = useTransition();
 
@@ -87,6 +90,13 @@ export function QcmSeriesManager({
                   <span className="rounded-full bg-(--color-sand-100) px-2 py-0.5 text-[11px] font-semibold text-(--color-ink-soft)">
                     {s.questions.length} Q
                   </span>
+                  <Button
+                    type="button" variant="ghost" size="sm"
+                    onClick={() => setEditingVignette({ serieId: s.id, current: s.vignette ?? null })}
+                    title={s.vignette ? 'Modifier le contexte clinique' : 'Ajouter un contexte clinique (DP)'}
+                  >
+                    <FileText className="h-3.5 w-3.5" />
+                  </Button>
                   <Button
                     type="button" variant="ghost" size="sm"
                     onClick={() => setEditingQuestion({ serieId: s.id, q: undefined })}
@@ -159,6 +169,16 @@ export function QcmSeriesManager({
           coursId={coursId}
           serieId={editingQuestion.serieId}
           initial={editingQuestion.q ?? null}
+        />
+      )}
+      {editingVignette && (
+        <VignetteEditorDialog
+          open={!!editingVignette}
+          onOpenChange={(v) => { if (!v) setEditingVignette(null); }}
+          coursId={coursId}
+          serieId={editingVignette.serieId}
+          initial={editingVignette.current}
+          onSaved={() => router.refresh()}
         />
       )}
     </div>

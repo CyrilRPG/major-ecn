@@ -75,10 +75,27 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#EDE9FE 0%,#FDE7E9 100%)"
               illustrationIcon={Stethoscope}
             >
-              Les PADHUE (Praticiens à Diplôme Hors Union Européenne) sont des médecins diplômés
-              en dehors de l&rsquo;Union européenne. Pour exercer en France, ils doivent suivre
-              un parcours spécifique : réussir les Épreuves de Vérification des Connaissances (EVC),
-              puis la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
+              <p>
+                Le sigle PADHUE désigne les Praticiens à Diplôme Hors Union Européenne :
+                médecins, chirurgiens-dentistes, sages-femmes et pharmaciens dont le titre
+                a été délivré dans un pays situé en dehors de l&rsquo;Union européenne, de
+                l&rsquo;Espace économique européen ou de la Suisse. En France, leur diplôme
+                n&rsquo;est pas reconnu automatiquement : un parcours d&rsquo;autorisation
+                d&rsquo;exercice est imposé par le Code de la santé publique.
+              </p>
+              <p className="mt-2">
+                Ce parcours porte le nom de Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
+                Il s&rsquo;ouvre par les Épreuves de Vérification des Connaissances (EVC), des
+                examens nationaux destinés à attester d&rsquo;un socle de compétences cliniques
+                aligné sur les standards de formation français. Après les EVC, le praticien
+                effectue un Parcours de Consolidation des Compétences (PCC) en milieu hospitalier
+                agréé, avant d&rsquo;obtenir une autorisation pleine et entière d&rsquo;exercer.
+              </p>
+              <p className="mt-2 text-[#52607A]">
+                Avant chacune de ces étapes, le statut professionnel — et donc la rémunération —
+                évolue de manière significative. Comprendre ces transitions est indispensable
+                pour anticiper les écarts de salaire que nous détaillons ci-dessous.
+              </p>
               <Callout>PADHUE = Praticien à Diplôme Hors Union Européenne</Callout>
             </Section>
 
@@ -89,10 +106,24 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationIcon={Briefcase}
               right
             >
-              <div className="grid grid-cols-2 gap-3">
+              <p>
+                Le statut de Faisant Fonction d&rsquo;Interne est très souvent la première
+                porte d&rsquo;entrée des médecins étrangers dans l&rsquo;hôpital public français.
+                Recruté en CDD par un établissement, le FFI partage le quotidien des internes
+                — services, gardes, contre-visites — sous la supervision étroite d&rsquo;un
+                médecin titulaire (PH, PU-PH, MCU-PH). Ce statut permet de se familiariser
+                avec la pratique hospitalière française pendant la préparation aux EVC.
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
                 <SalaryBox bg="#EDE9FE" fg="#6D28D9" label="Salaire brut mensuel" value="≈ 1 450 €" />
                 <SalaryBox bg="#FDE7E9" fg="#C0001F" label="Salaire net estimé" value="1 200 € – 1 300 €" />
               </div>
+              <p className="mt-3 text-[12.5px] text-[#52607A]">
+                Le niveau de rémunération est aligné sur la grille des internes : il reste
+                modeste au regard de la charge de travail et des responsabilités exercées.
+                Les indemnités de gardes et d&rsquo;astreintes peuvent toutefois augmenter
+                sensiblement le salaire net en fin de mois.
+              </p>
               <Characteristics
                 items={[
                   'Formation et supervision par des médecins titulaires.',
@@ -109,9 +140,20 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)"
               illustrationIcon={Stethoscope}
             >
-              Après la réussite des EVC, certains médecins étrangers peuvent accéder au statut de
-              Praticien Attaché Associé. Ils travaillent dans un hôpital mais n&rsquo;ont pas encore
-              le statut de titulaire.
+              <p>
+                Une fois les EVC validées, le médecin PADHUE peut accéder au statut de
+                Praticien Attaché Associé. Le PAA est rattaché à une équipe médicale et
+                participe aux consultations, à la prise en charge des patients hospitalisés
+                et aux gardes — avec un niveau d&rsquo;autonomie supérieur à celui du FFI,
+                tout en restant sous la responsabilité d&rsquo;un praticien titulaire référent.
+              </p>
+              <p className="mt-2 text-[#52607A]">
+                C&rsquo;est généralement le statut occupé pendant le Parcours de Consolidation
+                des Compétences (PCC), période d&rsquo;exercice supervisé d&rsquo;une durée de
+                deux ans pour les médecins. Le contrat est le plus souvent un CDD renouvelable,
+                ce qui maintient une certaine précarité statutaire avant l&rsquo;autorisation
+                définitive d&rsquo;exercice.
+              </p>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <SalaryBox bg="#DCFCE7" fg="#16A34A" label="Salaire brut mensuel" value="≈ 3 000 €" />
                 <SalaryBox bg="#FDE7E9" fg="#C0001F" label="Salaire net estimé" value="≈ 2 400 €" />
@@ -132,9 +174,21 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationIcon={Building2}
               right
             >
-              Le statut de Praticien Hospitalier (PH) est le poste de titulaire dans le système
-              hospitalier public français. Il est accessible après la réussite des EVC dans le cadre
-              de la PAE.
+              <p>
+                Le grade de Praticien Hospitalier est le statut de titulaire de la fonction
+                publique hospitalière. Il s&rsquo;obtient après l&rsquo;autorisation définitive
+                d&rsquo;exercice délivrée à l&rsquo;issue de la PAE et l&rsquo;inscription au
+                Tableau de l&rsquo;Ordre des médecins. Le PH bénéficie d&rsquo;un contrat à
+                durée indéterminée et d&rsquo;une carrière organisée en treize échelons
+                d&rsquo;ancienneté.
+              </p>
+              <p className="mt-2 text-[#52607A]">
+                La rémunération évolue automatiquement avec l&rsquo;ancienneté, les sujétions
+                particulières (gardes, astreintes, temps additionnel) et les éventuelles
+                primes liées à l&rsquo;exercice en zone sous-dotée ou en spécialité prioritaire.
+                C&rsquo;est ce statut qui ouvre l&rsquo;accès aux postes à responsabilités —
+                chef de service, chef de pôle, voire PU-PH après concours universitaire.
+              </p>
               <div className="mt-3 grid grid-cols-3 gap-3">
                 <SalaryBox bg="#EDE9FE" fg="#6D28D9" label="Début de carrière" value="≈ 4 500 €" sub="Salaire brut mensuel" />
                 <SalaryBox bg="#DCFCE7" fg="#16A34A" label="Fin de carrière" value="jusqu'à 9 200 €" sub="Salaire brut mensuel" />
@@ -154,7 +208,15 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={5} icon={MapPin} accent="#C0001F" bg="#FDE7E9"
               title="Pourquoi les rémunérations varient-elles autant ?"
             >
-              <p className="text-[13.5px] text-[#52607A]">Plusieurs facteurs expliquent ces écarts de salaire :</p>
+              <p>
+                Les écarts de rémunération entre un FFI et un PH expérimenté peuvent
+                représenter un facteur supérieur à six. Ces différences ne sont pas
+                arbitraires : elles reflètent l&rsquo;évolution du statut, des responsabilités
+                et du périmètre d&rsquo;exercice du praticien tout au long de la PAE.
+                Au-delà de l&rsquo;ancienneté, plusieurs leviers expliquent la dispersion
+                des salaires observés en France.
+              </p>
+              <p className="mt-2 text-[13.5px] text-[#52607A]">Plusieurs facteurs expliquent ces écarts de salaire :</p>
               <ul className="mt-3 space-y-2 text-[13.5px] text-[#1A2233]">
                 <CheckLi>Région d&rsquo;exercice (coût de la vie, tension de l&rsquo;offre de soins).</CheckLi>
                 <CheckLi>Ancienneté et expérience professionnelle.</CheckLi>

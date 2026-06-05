@@ -5,20 +5,20 @@ import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 
 const DEFIS = [
   { n: 1, title: 'Une profusion de sources d\'information', icon: BookOpen,
-    intro: 'Recommandations HAS, publications du CLIN, données du CRAT, directives des sociétés savantes… La diversité des sources peut entraîner une dispersion des efforts.',
-    tip: 'Il est conseillé de privilégier des sources officielles et actualisées. La HAS publie régulièrement des recommandations de bonne pratique qui constituent une référence solide pour la préparation des EVC.' },
+    intro: 'Le programme des EVC s\'appuie sur un corpus vaste et hétérogène : recommandations de la Haute Autorité de Santé, conférences de consensus des sociétés savantes françaises, données du CRAT, référentiels des collèges d\'enseignants. Sans hiérarchisation, le candidat passe l\'essentiel de son temps à chercher la bonne information au lieu de l\'assimiler.',
+    tip: 'Privilégiez en première ligne les recommandations de la HAS et les référentiels actualisés des collèges d\'enseignants français : ce sont ces sources que le jury attend de retrouver dans vos réponses, en particulier pour les arguments thérapeutiques et les conduites à tenir.' },
   { n: 2, title: 'Des épreuves aux exigences élevées', icon: Activity,
-    intro: 'Les EVC évaluent les connaissances théoriques ET la capacité à les appliquer dans des situations cliniques concrètes.',
-    tip: 'Les épreuves sont conçues pour refléter les situations cliniques courantes en France. Il est essentiel de se familiariser avec le système de santé français et ses spécificités.' },
+    intro: 'Les EVC ne se contentent pas d\'évaluer des connaissances : elles testent la capacité à les mobiliser face à des vignettes cliniques calquées sur la pratique hospitalière française. La typologie des questions (QRU, QRM, raisonnement multi-étapes) demande un entraînement spécifique, distinct de celui des examens du pays d\'origine.',
+    tip: 'Familiarisez-vous avec les codes de l\'épreuve française : importance accordée aux mots-clés du raisonnement clinique, hiérarchisation des examens complémentaires, place centrale de la justification thérapeutique conforme aux recommandations.' },
   { n: 3, title: 'Briser l\'isolement : une préparation collaborative avec Major ECN', icon: Users,
-    intro: 'Se préparer seul peut être décourageant. L\'accompagnement et l\'échange avec des pairs font toute la différence.',
-    tip: 'L\'accompagnement personnalisé et les échanges avec les pairs sont des clés essentielles pour une préparation efficace et maintenir une dynamique de travail soutenue.' },
+    intro: 'La préparation aux EVC s\'étale sur plusieurs mois et combine charge cognitive, contraintes administratives et, le plus souvent, exercice professionnel en parallèle. Avancer seul rend l\'évaluation de ses progrès difficile, entretient les angles morts et fragilise la régularité du travail.',
+    tip: 'Intégrez un programme structuré qui combine corrections détaillées, échanges avec des pairs candidats et accompagnement d\'enseignants. La rétroaction régulière sur vos productions est l\'un des leviers les plus efficaces pour progresser.' },
   { n: 4, title: 'Une pénurie de supports d\'entraînement adaptés', icon: FileText,
-    intro: 'Peu d\'annales récentes et de qualité, surtout pour l\'épreuve pratique. Les ressources incomplètes ne permettent pas une préparation optimale.',
-    tip: 'Diversifiez vos sources et privilégiez des supports actualisés et conformes aux exigences des EVC pour maximiser vos chances de réussite.' },
+    intro: 'Les annales officielles d\'EVC sont peu nombreuses et leur disponibilité reste limitée. Les supports généralistes du concours national de médecine ne couvrent pas l\'intégralité des spécificités des EVC, en particulier sur l\'épreuve d\'analyse clinique.',
+    tip: 'Combinez QCM corrigés conformes au format EVC, dossiers cliniques progressifs alignés sur les annales récentes, et fiches de synthèse mises à jour. La diversité et l\'actualisation des supports sont déterminantes.' },
   { n: 5, title: 'La méthodologie : un pilier essentiel pour réussir les EVC', icon: Compass,
-    intro: 'Il ne suffit pas de connaître : il faut savoir présenter ses réponses de manière structurée et conforme aux attentes du jury.',
-    tip: 'Une méthodologie rigoureuse permet de valoriser vos connaissances, de structurer vos réponses et d\'utiliser une terminologie médicale appropriée.' },
+    intro: 'Au-delà du contenu, ce sont la structure de la réponse, la précision de la terminologie et la justesse des arguments qui font la différence à l\'examen. Une bonne connaissance mal présentée peut être insuffisante face à des correcteurs qui recherchent des mots-clés précis et un raisonnement médical lisible.',
+    tip: 'Travaillez la méthodologie de réponse en amont du contenu : entraînez-vous à rédiger sous pression de temps, à structurer en plan court, à utiliser la terminologie attendue et à hiérarchiser systématiquement vos propositions.' },
 ];
 
 const PILIERS = [
