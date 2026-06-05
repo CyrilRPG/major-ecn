@@ -6,12 +6,11 @@ import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 
 const TOC = [
   'Qu\'est-ce que les EVC ?',
-  'Pourquoi les EVC sont essentielles ?',
-  'Le rôle des EVC dans l\'accès aux soins',
-  'L\'intégration des professionnels de santé',
-  'Comment Major-ECN accompagne les candidats',
-  'Les bénéfices d\'une préparation structurée',
-  'Perspectives d\'avenir',
+  'Le rôle clé dans l\'intégration des professionnels',
+  'Les EVC et l\'amélioration de l\'accès aux soins',
+  'Major-ECN : un accompagnement dédié',
+  'Les avantages d\'une préparation structurée',
+  'Perspectives d\'avenir pour l\'accès aux soins',
 ];
 
 const RECAP = [

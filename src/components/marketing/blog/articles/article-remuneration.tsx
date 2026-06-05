@@ -40,9 +40,9 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
         />
 
         {/* Bloc rémunérations 4 colonnes */}
-        <section className="mb-6 rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
+        <section id="section-2" className="mb-6 scroll-mt-24 rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
           <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#9AA1AE]">
-            Rémunérations indicatives des médecins étrangers en France selon le statut
+            2. Rémunérations indicatives des médecins étrangers en France selon le statut
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {STATUS.map((s) => (
@@ -100,7 +100,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={2} icon={Award} accent="#6D28D9" bg="#EDE9FE"
+              num={3} icon={Award} accent="#6D28D9" bg="#EDE9FE"
               title="Faisant Fonction d'Interne (FFI)"
               illustrationBg="linear-gradient(135deg,#E7F6EC 0%,#DCFCE7 100%)"
               illustrationIcon={Briefcase}
@@ -135,7 +135,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={3} icon={Stethoscope} accent="#16A34A" bg="#DCFCE7"
+              num={4} icon={Stethoscope} accent="#16A34A" bg="#DCFCE7"
               title="Praticien Attaché Associé (PAA)"
               illustrationBg="linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)"
               illustrationIcon={Stethoscope}
@@ -168,7 +168,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={4} icon={Building2} accent="#C0001F" bg="#FDE7E9"
+              num={5} icon={Building2} accent="#C0001F" bg="#FDE7E9"
               title="Praticien Hospitalier (PH)"
               illustrationBg="linear-gradient(135deg,#FDE7E9 0%,#EDE9FE 100%)"
               illustrationIcon={Building2}
@@ -205,7 +205,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={5} icon={MapPin} accent="#C0001F" bg="#FDE7E9"
+              num={6} icon={MapPin} accent="#C0001F" bg="#FDE7E9"
               title="Pourquoi les rémunérations varient-elles autant ?"
             >
               <p>
@@ -227,8 +227,8 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={6} icon={ShieldCheck} accent="#C0001F" bg="#FDE7E9"
-              title="Pourquoi réussir les EVC change la rémunération ?"
+              num={7} icon={ShieldCheck} accent="#C0001F" bg="#FDE7E9"
+              title="L'impact des EVC et de la PAE sur la rémunération"
             >
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
                 {['Réussite des EVC', 'Parcours PAE', 'Accès aux postes titulaires', 'Meilleure rémunération', 'Évolution professionnelle'].map((s, i) => (
@@ -247,8 +247,8 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <Section
-              num={7} icon={BookOpen} accent="#C0001F" bg="#FDE7E9"
-              title="Réussir les EVC avec Major ECN"
+              num={8} icon={BookOpen} accent="#C0001F" bg="#FDE7E9"
+              title="Major ECN, votre partenaire pour réussir les EVC"
               soft
             >
               Les Épreuves de Vérification des Connaissances (EVC) constituent une étape déterminante
@@ -272,7 +272,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             </Section>
 
             <RetentionBlock
-              num={8}
+              num={9}
               title="À retenir"
               text="La réussite des EVC constitue généralement l'étape déterminante permettant aux médecins étrangers d'accéder à des postes plus stables, reconnus et mieux rémunérés au sein du système de santé français."
             />
