@@ -327,7 +327,7 @@ export default async function AccueilPage() {
                 </p>
               </div>
             </div>
-            <Link href="/matieres" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
+            <Link href="/revisions-transversales" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
               Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
@@ -362,7 +362,7 @@ export default async function AccueilPage() {
             <p className="text-xs text-(--color-ink-soft)">
               {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
             </p>
-            <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
+            <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
               Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
@@ -433,7 +433,7 @@ export default async function AccueilPage() {
               <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
               <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats récents</p>
             </div>
-            <Link href="/matieres" className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex">
+            <Link href="/entrainement" className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex">
               Voir mes lacunes <ArrowRight className="ml-0.5 h-3.5 w-3.5" />
             </Link>
           </div>

@@ -6,14 +6,15 @@
  * En-bas : "Questions les plus posées" (5 cartes), CTA final.
  */
 
+import { useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, BookOpen, Calendar, CheckCircle2, ChevronRight,
-  GraduationCap, HelpCircle, Layers3, MessageCircle, Sparkles, Stethoscope, TrendingUp,
+  ArrowRight, BookOpen, CheckCircle2, ChevronDown, ChevronRight,
+  HelpCircle, Sparkles, TrendingUp,
   Users,
 } from 'lucide-react';
 import { Reveal } from './reveal';
-import { FaqAccordion } from './faq-accordion';
+import { FaqAccordion, FaqSidebar } from './faq-accordion';
 import { FAQ_CATEGORIES } from '@/lib/data/faq-categories';
 
 const RED = '#C0112E';
@@ -144,78 +145,10 @@ function FaqMain() {
             <FaqAccordion categories={FAQ_CATEGORIES} />
           </Reveal>
 
-          {/* ============ RIGHT — Sidebar ============ */}
-          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            {/* Carte 1 — pas trouvé ? */}
-            <Reveal>
-              <div className="rounded-3xl border bg-white p-5 shadow-sm sm:p-6" style={{ borderColor: BORDER }}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl"
-                  style={{ background: '#FCEAEC', color: RED }}>
-                  <MessageCircle className="h-5 w-5" />
-                </span>
-                <p className="mt-3 text-base font-extrabold" style={{ color: NAVY }}>
-                  Vous ne trouvez pas la réponse à votre question&nbsp;?
-                </p>
-                <p className="mt-1.5 text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
-                  Notre équipe répond personnellement sous 24&nbsp;h ouvrées.
-                </p>
-                <Link href="/contact"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_12px_30px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
-                  style={{ background: `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)` }}>
-                  Nous contacter <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </Reveal>
-
-            {/* Carte 2 — Pourquoi Major ECN ? */}
-            <Reveal delay={0.06}>
-              <div className="rounded-3xl border bg-white p-5 shadow-sm sm:p-6" style={{ borderColor: BORDER }}>
-                <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em]"
-                  style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
-                  <Sparkles className="h-3 w-3" /> Pourquoi Major ECN
-                </span>
-                <p className="mt-3 text-base font-extrabold" style={{ color: NAVY }}>Pourquoi choisir Major ECN&nbsp;?</p>
-                <ul className="mt-3 space-y-2.5">
-                  {[
-                    { Icon: Calendar,      t: 'Depuis 2011, +18 ans d’expérience' },
-                    { Icon: GraduationCap, t: '+45 spécialités préparées' },
-                    { Icon: Stethoscope,   t: 'Correcteurs spécialistes en activité' },
-                    { Icon: Layers3,       t: 'Révisions transversales & flashcards' },
-                    { Icon: TrendingUp,    t: 'Concours blancs corrigés EVC' },
-                  ].map((it, i) => (
-                    <li key={i} className="flex items-start gap-2.5">
-                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ background: '#FCEAEC', color: RED }}>
-                        <it.Icon className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="text-[13px] leading-snug" style={{ color: NAVY }}>{it.t}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-
-            {/* Carte 3 — Tester 7 jours */}
-            <Reveal delay={0.12}>
-              <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#C0112E] via-[#8B0E22] to-[#0F1F4D] p-5 text-white shadow-[0_24px_60px_-24px_rgba(192,17,46,0.55)] sm:p-6"
-                style={{ borderColor: 'rgba(255,255,255,0.18)' }}>
-                <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-3xl" />
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.22em] backdrop-blur">
-                  <Sparkles className="h-3 w-3" /> Essai gratuit
-                </span>
-                <p className="mt-3 text-base font-extrabold leading-tight">
-                  Tester Major ECN pendant 7&nbsp;jours
-                </p>
-                <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/85">
-                  Accès complet à la plateforme, sans carte bancaire.
-                </p>
-                <Link href="/inscription"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-md transition-transform hover:scale-[1.02]"
-                  style={{ color: RED }}>
-                  Démarrer l’essai <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </Reveal>
-          </aside>
+          {/* ============ RIGHT — Sidebar (3 cartes partagees) ============ */}
+          <Reveal>
+            <FaqSidebar />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -225,14 +158,27 @@ function FaqMain() {
 /* ============================================================
    3. Questions les plus posées (top 5)
    ============================================================ */
+/* Recupere une Q/R dans FAQ_CATEGORIES en cherchant par categorie + debut
+ * du libelle de la question. Permet d'aligner le top sur le contenu reel. */
+function findQA(catId: string, qStartsWith: string): { q: string; a: string } | null {
+  const cat = FAQ_CATEGORIES.find((c) => c.id === catId);
+  if (!cat) return null;
+  const qa = cat.qas.find((x) => x.q.startsWith(qStartsWith));
+  return qa ?? null;
+}
+
 function TopQuestions() {
   const top = [
-    { q: "Qu'est-ce que les EVC ?",                            cat: 'Questions sur les EVC',         id: 'evc' },
-    { q: "Combien de temps faut-il préparer les EVC ?",        cat: 'Préparation',                   id: 'preparation' },
-    { q: "Pourquoi choisir Major ECN ?",                       cat: 'À propos de Major ECN',         id: 'major-ecn' },
-    { q: "Comment s'inscrire à une préparation Major ECN ?",   cat: 'Inscription',                   id: 'inscription' },
-    { q: "Préparez-vous plus de 45 spécialités ?",             cat: 'Par spécialité',                id: 'par-specialite' },
-  ];
+    { catLabel: 'Questions sur les EVC',     catId: 'evc',           qStarts: "Qu'est-ce que les Épreuves" },
+    { catLabel: 'Préparation',               catId: 'preparation',   qStarts: 'Combien de temps' },
+    { catLabel: 'À propos de Major ECN',     catId: 'major-ecn',     qStarts: 'Pourquoi choisir Major ECN' },
+    { catLabel: 'Inscription',               catId: 'inscription',   qStarts: "Comment s'inscrire" },
+    { catLabel: 'Par spécialité',            catId: 'par-specialite',qStarts: 'Préparez-vous plus de 45' },
+  ].map((t) => ({ ...t, qa: findQA(t.catId, t.qStarts) }))
+   .filter((t): t is typeof t & { qa: { q: string; a: string } } => !!t.qa);
+
+  const [open, setOpen] = useState<string>('');
+
   return (
     <section className="relative bg-white py-14 sm:py-16 lg:py-20" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -246,28 +192,47 @@ function TopQuestions() {
           </h2>
           <p className="mt-3 text-[15px]" style={{ color: INK_SOFT }}>
             Les questions revenues le plus souvent dans nos échanges avec les
-            futurs candidats EVC.
+            futurs candidats EVC. Cliquez sur une question pour afficher la
+            réponse.
           </p>
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-3 lg:grid-cols-2">
-          {top.map((t, i) => (
-            <Reveal key={i} delay={i * 0.05}>
-              <Link href={`#${t.id}`}
-                className="flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-                style={{ borderColor: BORDER }}>
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-                  style={{ background: '#FCEAEC', color: RED }}>
-                  <HelpCircle className="h-5 w-5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[10.5px] font-extrabold uppercase tracking-wider" style={{ color: RED }}>{t.cat}</p>
-                  <p className="truncate text-[14px] font-extrabold" style={{ color: NAVY }}>{t.q}</p>
+          {top.map((t, i) => {
+            const id = `${t.catId}::${t.qa.q}`;
+            const isOpen = open === id;
+            return (
+              <Reveal key={i} delay={i * 0.05}>
+                <div className="overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow"
+                  style={{ borderColor: BORDER }}>
+                  <button type="button"
+                    onClick={() => setOpen((cur) => (cur === id ? '' : id))}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-[#FFF8F9]">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                      style={{ background: '#FCEAEC', color: RED }}>
+                      <HelpCircle className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10.5px] font-extrabold uppercase tracking-wider" style={{ color: RED }}>{t.catLabel}</p>
+                      <p className="text-[14px] font-extrabold" style={{ color: isOpen ? RED : NAVY }}>
+                        {t.qa.q}
+                      </p>
+                    </div>
+                    <ChevronDown className={'h-4 w-4 shrink-0 transition-transform ' + (isOpen ? 'rotate-180' : '')}
+                      style={{ color: isOpen ? RED : INK_MUTED }} />
+                  </button>
+                  {isOpen && (
+                    <div className="border-t bg-[#FFFCFD] px-4 py-3 sm:px-5" style={{ borderColor: BORDER }}>
+                      <p className="text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
+                        {t.qa.a}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <ChevronRight className="h-4 w-4 shrink-0" style={{ color: INK_MUTED }} />
-              </Link>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

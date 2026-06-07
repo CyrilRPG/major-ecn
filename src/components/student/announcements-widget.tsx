@@ -33,9 +33,12 @@ function pickIcon(key: string | null | undefined): LucideIcon {
   return ICON_MAP[key] ?? Megaphone;
 }
 
+/* On evite volontairement le vert : juxtapose au rouge brand, l'effet
+ * "feu tricolore" est visuellement agressif. Le ton 'green' est remappe
+ * sur un bleu profond, plus doux a cote du rouge primaire. */
 const BADGE_TONES: Record<NonNullable<Announcement['badge_tone']>, { bg: string; fg: string }> = {
   red:    { bg: '#FCEAEC', fg: '#A91D2C' },
-  green:  { bg: '#E7F6EC', fg: '#16793C' },
+  green:  { bg: '#EAF1FB', fg: '#1E40AF' },
   blue:   { bg: '#EAF1FB', fg: '#1E40AF' },
   orange: { bg: '#FFEAD9', fg: '#B45B00' },
   purple: { bg: '#F1E8FD', fg: '#6D28D9' },

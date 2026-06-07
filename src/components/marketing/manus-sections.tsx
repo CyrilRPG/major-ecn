@@ -935,147 +935,54 @@ export function AudienceSection() {
 }
 
 // ============================================================================
+// FAQ — exactement le meme accordeon + sidebar que /faq (avec recherche
+// fonctionnelle, categories et questions toutes fermees par defaut).
 // ============================================================================
-// FAQ — reprend l'accordeon partage de /faq (recherche + collapse par defaut)
-// ============================================================================
+import { FaqSidebar } from './faq-accordion';
 
-/* Sidebar « Major ECN — Votre partenaire pour réussir les EVC » */
-const FAQ_SIDE_ROWS = [
-  { Icon: Calendar,      t: '18 ans d’expérience',                 d: 'au service de votre réussite' },
-  { Icon: Users,         t: 'Plus de 9 000 médecins\naccompagnés', d: 'depuis 2006' },
-  { Icon: ShieldCheck,   t: 'Plus de 45 spécialités couvertes',    d: 'médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique' },
-  { Icon: GraduationCap, t: 'Des enseignants experts',             d: 'connaissant les attentes des jurys EVC' },
-  { Icon: BookOpen,      t: 'Une méthodologie dédiée aux EVC',     d: 'pour maximiser vos chances de réussite' },
-];
-
-/* Palette FAQ — pixel-perfect maquette : navy + crimson, sidebar bleu nuit */
 const FQ_NAVY = '#14254E';
 const FQ_RED = '#C4112E';
 const FQ_RED_BG = '#FCE9EC';
-const FQ_BLUE = '#1E3A8A';
-const FQ_BLUE_BG = '#EEF2FB';
 const FQ_INK_SOFT = '#5B6478';
 
 export function FAQSection() {
   return (
     <section id="faq" className="relative bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.65fr_1fr] lg:gap-12">
 
-          {/* ============ COLONNE PRINCIPALE ============ */}
-          <div>
-            {/* Badge + titre */}
-            <span
-              className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-bold"
-              style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.2)', color: FQ_RED }}
-            >
-              <HelpCircle className="h-4 w-4" />
-              FAQ
-            </span>
-            <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
-              <span style={{ color: FQ_NAVY }}>Questions </span>
-              <span style={{ color: FQ_RED }}>fréquentes</span>
-            </h2>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed sm:text-lg" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-              Retrouvez les réponses aux questions les plus courantes<br className="hidden sm:block" />
-              concernant les EVC, la PAE, les PADHUE et la préparation Major ECN.
-            </p>
-
-            {/* Accordeon partage : recherche fonctionnelle + tout fermé par defaut */}
-            <div className="mt-8">
-              <FaqAccordion />
-            </div>
-
-            {/* Carte contact pink */}
-            <div
-              className="mt-5 flex flex-col items-start gap-4 rounded-2xl px-5 py-5 sm:flex-row sm:items-center sm:gap-5"
-              style={{ background: FQ_RED_BG }}
-            >
-              <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white"
-                style={{ color: FQ_RED }}
-              >
-                <Headphones className="h-6 w-6" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-base font-bold" style={{ color: FQ_RED }}>
-                  Vous ne trouvez pas la réponse à votre question ?
-                </p>
-                <p className="mt-1 text-sm leading-relaxed" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-                  Notre équipe est à votre disposition pour vous accompagner
-                  dans votre projet de préparation aux EVC.
-                </p>
-              </div>
-              <a
-                href="/contact"
-                className="inline-flex shrink-0 items-center gap-2 rounded-xl border bg-white px-5 py-3 text-sm font-bold transition-colors hover:bg-[#FBEEEF]"
-                style={{ borderColor: FQ_RED, color: FQ_RED }}
-              >
-                Nous contacter
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-
-            <p className="mt-4 text-center text-[12px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-              Vous voulez voir l’intégralité des questions classées ?{' '}
-              <a href="/faq" className="font-bold underline" style={{ color: FQ_RED }}>
-                Consulter la FAQ complète
-              </a>
-            </p>
-          </div>
-
-          {/* ============ SIDEBAR ============ */}
-          <aside>
-            <div className="rounded-2xl border bg-white p-6 shadow-[0_20px_60px_-30px_rgba(15,27,61,0.25)] sm:p-7" style={{ borderColor: '#ECECEF' }}>
-              <p className="text-xl font-black" style={{ color: FQ_NAVY }}>Major ECN</p>
-              <p className="mt-1 text-lg font-bold" style={{ color: FQ_RED }}>
-                Votre partenaire pour réussir les EVC
-              </p>
-              <span className="mt-3 block h-[3px] w-12 rounded-full" style={{ background: FQ_RED }} />
-
-              <ul className="mt-6 space-y-5">
-                {FAQ_SIDE_ROWS.map((r) => (
-                  <li key={r.t} className="flex items-start gap-3.5">
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                      style={{ background: FQ_BLUE_BG, color: FQ_BLUE }}
-                    >
-                      <r.Icon className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <p className="whitespace-pre-line text-[15px] font-bold leading-tight" style={{ color: FQ_NAVY }}>{r.t}</p>
-                      <p className="mt-0.5 text-[13px] leading-relaxed" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>{r.d}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href="/plateforme"
-                className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] font-bold text-white transition-transform hover:scale-[1.01]"
-                style={{ background: FQ_BLUE }}
-              >
-                Découvrir la plateforme
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href="/inscription"
-                className="mt-3 flex w-full items-center gap-3 rounded-xl border bg-white px-4 py-3 transition-colors hover:bg-[#F7F9FE]"
-                style={{ borderColor: FQ_BLUE }}
-              >
-                <Calendar className="h-5 w-5 shrink-0" style={{ color: FQ_BLUE }} />
-                <span className="min-w-0 flex-1 text-left">
-                  <span className="block text-sm font-bold leading-tight" style={{ color: FQ_NAVY }}>
-                    Tester Major ECN pendant 7 jours
-                  </span>
-                  <span className="block text-xs" style={{ color: FQ_INK_SOFT }}>
-                    Accès immédiat – Sans engagement
-                  </span>
-                </span>
-              </a>
-            </div>
-          </aside>
+        {/* En-tete centre du bloc */}
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-bold"
+            style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.2)', color: FQ_RED }}
+          >
+            <HelpCircle className="h-4 w-4" />
+            FAQ
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            <span style={{ color: FQ_NAVY }}>Questions </span>
+            <span style={{ color: FQ_RED }}>fréquentes</span>
+          </h2>
+          <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+            Retrouvez les réponses aux questions les plus courantes concernant
+            les EVC, la PAE, les PADHUE et la préparation Major ECN.
+          </p>
         </div>
+
+        {/* Layout 2 colonnes identique a /faq */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr] lg:gap-8">
+          {/* Accordeon partage : recherche + tout ferme par defaut */}
+          <FaqAccordion />
+          {/* Sidebar partagee : 3 cartes fixes (contact, pourquoi, essai) */}
+          <FaqSidebar />
+        </div>
+
+        <p className="mt-8 text-center text-[12.5px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+          Vous voulez voir l’intégralité des questions classées par catégorie ?{' '}
+          <a href="/faq" className="font-bold underline" style={{ color: FQ_RED }}>
+            Consulter la FAQ complète
+          </a>
+        </p>
       </div>
     </section>
   );

@@ -1,7 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import Link from 'next/link';
+import {
+  ArrowRight, Calendar, ChevronDown, GraduationCap, Layers3, MessageCircle, Search,
+  Sparkles, Stethoscope, TrendingUp,
+} from 'lucide-react';
 import { FAQ_CATEGORIES, type FaqCategory, type FaqQA } from '@/lib/data/faq-categories';
 
 const RED = '#C0112E';
@@ -170,6 +174,82 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
           );
         })}
       </ul>
+    </div>
+  );
+}
+
+/* ============================================================
+   Sidebar partage entre /faq et le bloc FAQ de la page d'accueil :
+   3 cartes (contact, pourquoi Major ECN, essai 7 jours).
+   ============================================================ */
+const RED_DEEP = '#8B0E22';
+
+export function FaqSidebar() {
+  return (
+    <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+      {/* Carte 1 — pas trouve ? */}
+      <div className="rounded-3xl border bg-white p-5 shadow-sm sm:p-6" style={{ borderColor: BORDER }}>
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl"
+          style={{ background: '#FCEAEC', color: RED }}>
+          <MessageCircle className="h-5 w-5" />
+        </span>
+        <p className="mt-3 text-base font-extrabold" style={{ color: NAVY }}>
+          Vous ne trouvez pas la réponse à votre question&nbsp;?
+        </p>
+        <p className="mt-1.5 text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
+          Notre équipe répond personnellement sous 24&nbsp;h ouvrées.
+        </p>
+        <Link href="/contact"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_12px_30px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
+          style={{ background: `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)` }}>
+          Nous contacter <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+
+      {/* Carte 2 — Pourquoi Major ECN ? */}
+      <div className="rounded-3xl border bg-white p-5 shadow-sm sm:p-6" style={{ borderColor: BORDER }}>
+        <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em]"
+          style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
+          <Sparkles className="h-3 w-3" /> Pourquoi Major ECN
+        </span>
+        <p className="mt-3 text-base font-extrabold" style={{ color: NAVY }}>Pourquoi choisir Major ECN&nbsp;?</p>
+        <ul className="mt-3 space-y-2.5">
+          {[
+            { Icon: Calendar,      t: 'Depuis 2011, +18 ans d’expérience' },
+            { Icon: GraduationCap, t: '+45 spécialités préparées' },
+            { Icon: Stethoscope,   t: 'Correcteurs spécialistes en activité' },
+            { Icon: Layers3,       t: 'Révisions transversales & flashcards' },
+            { Icon: TrendingUp,    t: 'Concours blancs corrigés EVC' },
+          ].map((it, i) => (
+            <li key={i} className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ background: '#FCEAEC', color: RED }}>
+                <it.Icon className="h-3.5 w-3.5" />
+              </span>
+              <span className="text-[13px] leading-snug" style={{ color: NAVY }}>{it.t}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Carte 3 — Tester 7 jours */}
+      <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#C0112E] via-[#8B0E22] to-[#0F1F4D] p-5 text-white shadow-[0_24px_60px_-24px_rgba(192,17,46,0.55)] sm:p-6"
+        style={{ borderColor: 'rgba(255,255,255,0.18)' }}>
+        <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-3xl" />
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.22em] backdrop-blur">
+          <Sparkles className="h-3 w-3" /> Essai gratuit
+        </span>
+        <p className="mt-3 text-base font-extrabold leading-tight">
+          Tester Major ECN pendant 7&nbsp;jours
+        </p>
+        <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/85">
+          Accès complet à la plateforme, sans carte bancaire.
+        </p>
+        <Link href="/inscription"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-md transition-transform hover:scale-[1.02]"
+          style={{ color: RED }}>
+          Démarrer l’essai <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   );
 }
