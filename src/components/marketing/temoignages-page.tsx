@@ -110,7 +110,7 @@ function VideosSection() {
                     {v.duration}
                   </span>
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 px-1.5">
                   <span className="inline-block rounded-full px-2.5 py-0.5 text-[10.5px] font-bold" style={{ background: '#FCEAEC', color: RED }}>
                     {v.spec}
                   </span>

@@ -255,12 +255,12 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#FACBD0] bg-[#FFF1F3] p-5 sm:p-6">
           <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr] lg:items-center">
             <div>
-              <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#C0001F]">
-                <Sparkles className="h-3 w-3" /> Major ECN
-              </p>
-              <h3 className="mt-2 text-[18px] font-extrabold leading-snug text-[#1A2233]">
-                Pourquoi plus de 9 000 médecins ont choisi Major ECN ?
-              </h3>
+              <div className="flex items-center gap-3">
+                <BrandLogo className="h-12 w-auto sm:h-14" />
+                <h3 className="text-[18px] font-extrabold leading-snug text-[#1A2233]">
+                  Pourquoi plus de 9 000 médecins ont choisi Major ECN ?
+                </h3>
+              </div>
               <p className="mt-2 text-[12.5px] text-[#52607A]">
                 Depuis plus de 15 ans, Major ECN accompagne les médecins PADHUE dans leur préparation aux EVC,
                 première étape de la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
@@ -382,25 +382,33 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
 
 /* ─────────────── helpers ─────────────── */
 
-/* Image hero : on garde un visuel illustratif (gradient + icone livre),
- * mais on superpose une petite carte avec le logo officiel Major ECN
- * (« Programme officiel d'Autorisation d'Exercice (PAE) en France »)
- * dans le coin haut-droit, comme sur la maquette designer. */
+/* Image hero : placeholder illustratif (gradient + icone livre) en attendant
+ * la photo definitive. Superposition d'un badge vert "Etape essentielle de
+ * la PAE" en haut a droite, conforme a la maquette designer. */
 function HeroBookImage() {
   return (
     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)] lg:aspect-auto lg:h-56">
       <div className="absolute inset-0 flex items-center justify-center">
         <BookOpen className="h-16 w-16 text-[#1E4D8B]/40" />
       </div>
-      {/* Carte officielle PAE avec le logo Major ECN — coin haut-droit. */}
-      <div className="absolute right-3 top-3 flex max-w-[55%] items-center gap-2 rounded-xl border border-[#ECEEF1] bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
-        <BrandLogo className="h-7 w-auto sm:h-8" />
-        <div className="leading-tight">
-          <p className="text-[8.5px] font-extrabold uppercase tracking-wider text-[#C0001F]">Programme officiel</p>
-          <p className="text-[9px] font-semibold text-[#1A2233]">d&rsquo;Autorisation d&rsquo;Exercice (PAE) en France</p>
-        </div>
+      {/* Badge "Etape essentielle de la PAE" — coin haut-droit (maquette). */}
+      <div className="absolute right-3 top-3 flex max-w-[60%] items-start gap-1.5 rounded-xl border border-[#16793C]/30 bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
+        <ShieldCheckIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16793C]" />
+        <p className="text-[9.5px] font-semibold leading-snug text-[#1A2233]">
+          <span className="font-extrabold text-[#16793C]">Étape essentielle</span> de la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE) en France
+        </p>
       </div>
     </div>
+  );
+}
+
+/* Petit shield-check inline pour ne pas tirer une icone supplementaire. */
+function ShieldCheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
   );
 }
 
