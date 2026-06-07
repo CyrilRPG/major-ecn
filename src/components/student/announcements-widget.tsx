@@ -68,7 +68,11 @@ export async function AnnouncementsWidget() {
     .eq('visible', true)
     .order('order_index', { ascending: true });
 
-  const items = ((data ?? []) as unknown as Announcement[]) ?? [];
+  // Les blocs basés sur des dates (compte à rebours EVC, calendrier d'événements)
+  // sont masqués tant que le calendrier officiel n'est pas connu — on garde les
+  // lignes en base pour les réactiver d'un clic le moment venu.
+  const items = ((data ?? []) as unknown as Announcement[])
+    .filter((it) => it.kind !== 'countdown' && it.kind !== 'event_list');
   if (items.length === 0) return null;
 
   return (
