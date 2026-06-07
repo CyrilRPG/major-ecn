@@ -76,6 +76,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
       coursId={coursId}
       backHref={`/cours/${coursId}`}
       collegeName={c.titre}
+      matiereName={c.matieres?.nom ?? undefined}
       editable={editable}
     />
   );

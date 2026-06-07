@@ -4,7 +4,7 @@ import { sendEmail } from '@/lib/email/send';
 import { contactMessageEmail } from '@/lib/email/templates';
 
 /** Adresse de réception des messages de contact Major ECN. */
-const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
+const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));

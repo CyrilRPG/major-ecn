@@ -38,6 +38,7 @@ export function FlashcardSession({
   total,
   backHref,
   collegeName,
+  matiereName,
   coursId,
   editable = false,
 }: {
@@ -46,12 +47,15 @@ export function FlashcardSession({
   coursId: string;
   backHref: string;
   collegeName?: string;
+  /** Nom du collège (matière) — utilisé en repli pour le thème graphique
+   *  quand le titre du cours ne correspond pas à une ambiance connue. */
+  matiereName?: string;
   /** Mode prof : affiche un bouton crayon pour éditer la carte courante. */
   editable?: boolean;
 }) {
   const router = useRouter();
   const [editingCard, setEditingCard] = useState<FlashcardInput | null>(null);
-  const theme = themeFor(collegeName);
+  const theme = themeFor(collegeName, matiereName);
   const [queue, setQueue] = useState<FlashcardInput[]>(() =>
     cards.filter((c) => c.score < FLASHCARD_MASTERY_THRESHOLD).sort((a, b) => a.score - b.score),
   );

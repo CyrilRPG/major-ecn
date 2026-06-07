@@ -107,8 +107,8 @@ export default async function ProfilPage() {
         </dl>
         <p className="mt-3 text-xs text-(--color-ink-muted)">
           Pour modifier votre prénom, nom, email ou téléphone, écrivez à{' '}
-          <a className="font-semibold text-(--color-primary)" href="mailto:inscriptionmajorecn@gmail.com">
-            inscriptionmajorecn@gmail.com
+          <a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">
+            contact@major-ecn.fr
           </a>.
         </p>
       </section>
