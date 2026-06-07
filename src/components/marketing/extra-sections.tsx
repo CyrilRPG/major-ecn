@@ -1035,6 +1035,9 @@ const BP_NAVY = '#0F1B3D';
 const BP_RED = '#C0112E';
 const BP_ORANGE = '#E8742C';
 const BP_GRAD_RO = 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)';
+/* Degrade des grands titres : meme palette que "Ils racontent leur experience"
+ * (TestimonialsVideoSection) — burgundy -> red -> orange en 3 stops. */
+const BP_GRAD_TITLE = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)';
 const BP_INK_SOFT = '#5B6478';
 const BP_BG = '#FAFBFD';
 
@@ -1073,7 +1076,7 @@ export function BeyondPlatformSection() {
             {/* Tout le titre est dans le dégradé rouge-orange caractéristique de la plateforme */}
             <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]"
               style={{
-                backgroundImage: BP_GRAD_RO,
+                backgroundImage: BP_GRAD_TITLE,
                 WebkitBackgroundClip: 'text',
                 backgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -1150,7 +1153,7 @@ export function BeyondPlatformSection() {
           <div className="mt-10 rounded-2xl border bg-white p-6 sm:p-8 lg:p-10" style={{ borderColor: '#ECECEF' }}>
             <div className="text-center">
               <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl"
-                style={{ backgroundImage: BP_GRAD_RO, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+                style={{ backgroundImage: BP_GRAD_TITLE, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
                 Tous les outils pour réussir votre préparation EVC
               </h3>
               <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
