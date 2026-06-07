@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {
   AlertTriangle, ArrowRight, BookOpen, Brain, Check, CheckCircle2, ChevronDown,
   ClipboardCheck, Clock, FileBadge, FileText, Folder, GraduationCap, IdCard,
-  ListChecks, MapPin, Phone, Phone as Phone2, ScrollText, Sparkles,
+  ListChecks, MapPin, Phone, Phone as Phone2, Quote, ScrollText, Sparkles,
   Stethoscope, Users,
 } from 'lucide-react';
 import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
@@ -53,6 +53,12 @@ const ENVOI_STEPS = [
   { Icon: Sparkles,       t: 'Résultats' },
   { Icon: Users,          t: 'PCC' },
   { Icon: CheckCircle2,   t: 'Autorisation d\'exercice' },
+];
+
+const TESTIMONIALS = [
+  { initials: 'YK', name: 'Dr. Y. K.', spec: 'Admis EVC Médecine Générale Session 2024', text: 'Une préparation complète, des QCM de qualité et un suivi irréprochable. J\'ai obtenu les EVC dès ma 1re tentative !' },
+  { initials: 'SR', name: 'Dr. S. R.', spec: 'Admise EVC Pédiatrie Session 2024',         text: 'Les cas cliniques et les fiches m\'ont permis d\'être prête le jour J. Merci à toute l\'équipe Major ECN !' },
+  { initials: 'MT', name: 'Dr. M. T.', spec: 'Admis EVC Cardiologie Session 2024',        text: 'La plateforme est intuitive, les corrections détaillées et très pédagogiques. Je recommande à 100 %.' },
 ];
 
 const FAQS = [
@@ -286,6 +292,36 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                 <li className="inline-flex items-center gap-1"><Phone2 className="h-3 w-3 text-[#C0001F]" /> Application mobile</li>
               </ul>
             </div>
+          </div>
+        </section>
+
+        {/* Témoignages */}
+        <section className="mb-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <h3 className="text-[18px] font-extrabold text-[#1A2233]">Ils ont réussi les EVC avec Major ECN</h3>
+            <div className="flex items-center gap-2 text-[12px]">
+              <span className="font-extrabold text-[#16A34A]">Excellent</span>
+              <span className="text-[#F59E0B]">★★★★★</span>
+              <span className="font-bold text-[#1A2233]">4,8 / 5</span>
+              <span className="text-[10.5px] text-[#9AA1AE]">Basé sur plus de 1 200 avis sur Trustpilot</span>
+            </div>
+          </div>
+          <div className="mt-3 grid gap-3 lg:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <article key={t.initials} className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
+                <Quote className="h-5 w-5 text-[#F59E0B]" />
+                <p className="mt-2 text-[12.5px] italic leading-relaxed text-[#1A2233]">« {t.text} »</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE4E8] text-[10px] font-extrabold text-[#C0001F]">
+                    {t.initials}
+                  </span>
+                  <div>
+                    <p className="text-[12px] font-bold text-[#1A2233]">{t.name}</p>
+                    <p className="text-[10px] text-[#9AA1AE]">{t.spec}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 

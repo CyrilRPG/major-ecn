@@ -247,8 +247,27 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
           </div>
         </section>
 
-        {/* Avantages d'une préparation structurée */}
-        <section className="mb-6">
+        {/* Témoignage + avantages */}
+        <section className="mb-6 grid gap-4 lg:grid-cols-[1fr_1.6fr]">
+          <article className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
+            <p className="text-[13px] font-extrabold text-[#1A2233]">Ils ont réussi les EVC avec Major-ECN</p>
+            <div className="mt-3 text-[#F59E0B]">★★★★★</div>
+            <p className="mt-2 text-[12px] italic leading-relaxed text-[#1A2233]">
+              « Une préparation complète, des QCM de qualité et un suivi personnalisé m&rsquo;ont
+              permis d&rsquo;aborder les EVC avec confiance. Les cas cliniques et les fiches
+              m&rsquo;ont vraiment aidé. »
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFE4E8] text-[11px] font-extrabold text-[#C0001F]">
+                YK
+              </span>
+              <div>
+                <p className="text-[12px] font-bold text-[#1A2233]">Dr. Y. K.</p>
+                <p className="text-[10px] text-[#9AA1AE]">Admis EVC Médecine Générale Session 2024</p>
+              </div>
+            </div>
+          </article>
+
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
             <h3 className="text-[15px] font-extrabold text-[#1A2233]">Les avantages d&rsquo;une préparation structurée</h3>
             <div className="mt-4 grid gap-3 sm:grid-cols-5">
