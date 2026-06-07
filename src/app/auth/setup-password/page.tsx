@@ -177,8 +177,8 @@ export default function SetupPasswordPage() {
 
         <p className="mt-5 text-center text-xs text-(--color-ink-muted)">
           Un souci ? Écrivez-nous à{' '}
-          <a className="font-semibold text-(--color-primary)" href="mailto:inscriptionmajorecn@gmail.com">
-            inscriptionmajorecn@gmail.com
+          <a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">
+            contact@major-ecn.fr
           </a>
         </p>
       </div>

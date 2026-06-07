@@ -6,7 +6,7 @@ import { trialUntilForNewSignup } from '@/lib/auth/trial';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { welcomeEmail, adminSignupNotificationEmail } from '@/lib/email/templates';
 
-const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
+const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
 /** URL publique : siteUrl() (NEXT_PUBLIC_SITE_URL / Vercel) en priorité,
  *  sinon on tente de reconstruire depuis les en-têtes de la requête. */

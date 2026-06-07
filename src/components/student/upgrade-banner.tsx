@@ -3,7 +3,7 @@ import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
 import type { Profile } from '@/lib/auth/get-profile';
 
-const INSCRIPTION_EMAIL = 'inscriptionmajorecn@gmail.com';
+const INSCRIPTION_EMAIL = 'contact@major-ecn.fr';
 const SUBJECT = encodeURIComponent('Passage à l’abonnement Major ECN');
 
 type Variant = 'banner' | 'card' | 'inline';
@@ -29,7 +29,7 @@ const COPY: Record<string, { eyebrow: string; titre: string; sous: string }> = {
 /**
  * Pousse l'inscription vers les formules payantes (Essentiel/Premium/Intensif).
  * Visible sur la version gratuite/essai de la plateforme. Met en avant l'email
- * `inscriptionmajorecn@gmail.com` pour les demandes d'inscription.
+ * `contact@major-ecn.fr` pour les demandes d'inscription.
  */
 export function UpgradeBanner({
   variant = 'banner',

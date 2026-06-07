@@ -938,7 +938,7 @@ const PLANS = [
   },
 ];
 
-const CONTACT_EMAIL = 'contact@majorecn.fr';
+const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
 export function TarifsBlock() {
   return (

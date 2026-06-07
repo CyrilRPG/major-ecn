@@ -13,7 +13,7 @@ const INK_MUTED = '#7A8499';
 const BORDER = '#E5E9F0';
 const GREEN = '#0F8A6A';
 
-const CONTACT_EMAIL = 'inscriptionmajorecn@gmail.com';
+const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
 /* Liste alignée sur /specialites — version condensée pour le dropdown. */
 const SPECIALITES = [
