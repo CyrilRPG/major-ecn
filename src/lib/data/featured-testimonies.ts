@@ -118,4 +118,22 @@ export const FEATURED_TESTIMONIES: Featured[] = [
       "Je recommande Major ECN aux candidats qui préparent les EVC et qui ont besoin d'un cadre clair et d'une méthode de travail sérieuse.",
     ],
   },
+  {
+    slug: 'dr-lilia-ouled-ben-ahmed',
+    name: 'Dr Lilia Ouled Ben Ahmed',
+    initials: 'LO',
+    spec: 'Odontologie',
+    role: "Lauréate des EVC d'odontologie 2025",
+    photo: '/temoignages/dr-lilia-ouled-ben-ahmed.jpg',
+    quote: "Une préparation sérieuse, structurée et adaptée aux exigences du concours.",
+    paragraphs: [
+      "J'ai réussi les EVC d'odontologie 2025 après avoir préparé le concours avec Major ECN.",
+      "Lorsque j'ai commencé ma préparation, je travaillais déjà en parallèle et j'avais besoin d'une méthode claire pour optimiser mon temps de révision. Comme beaucoup de candidats, je me demandais quels étaient les sujets à privilégier et comment organiser efficacement mon travail.",
+      "La formation m'a permis d'avancer de manière beaucoup plus structurée. Les supports sont clairs, synthétiques et permettent d'aller à l'essentiel sans se disperser. J'ai particulièrement apprécié la qualité des cours ainsi que la méthodologie proposée, qui m'ont aidée à mieux comprendre les attentes de l'examen.",
+      "L'année 2025 a été marquée par un changement important du format des EVC. Malgré cette évolution, l'équipe a su s'adapter rapidement et proposer des contenus en phase avec les nouvelles modalités du concours. Cela a été très rassurant pendant ma préparation.",
+      "J'ai également apprécié la disponibilité de l'équipe, toujours à l'écoute lorsque nous avions besoin de précisions ou de conseils.",
+      "Bien sûr, la réussite aux EVC repose avant tout sur le travail personnel de chaque candidat. Mais avec le recul, je peux dire que cette préparation m'a permis de gagner un temps précieux, de mieux orienter mes révisions et d'aborder les épreuves avec davantage de confiance.",
+      "Je remercie sincèrement toute l'équipe Major ECN pour son accompagnement tout au long de cette préparation et je recommande cette formation aux chirurgiens-dentistes diplômés hors Union européenne qui souhaitent préparer les EVC dans un cadre sérieux, structuré et adapté aux exigences du concours.",
+    ],
+  },
 ];

@@ -66,7 +66,9 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: 'Ressources',
     links: [
-      { label: 'Témoignages',             href: '/temoignages' },
+      { label: 'Spécialités',              href: '/specialites' },
+      { label: 'Témoignages',              href: '/temoignages' },
+      { label: 'Foire aux questions',      href: '/faq' },
       { label: 'Nous contacter',           href: '/contact' },
       { label: 'Se connecter',             href: '/login' },
     ],
@@ -208,6 +210,7 @@ function IconForLink({ href }: { href: string }) {
     '/#equipe':      <Users className={cls} style={{ color: RED }} />,
     '/tarifs':       <Trophy className={cls} style={{ color: RED }} />,
     '/inscription':  <Sparkles className={cls} style={{ color: RED }} />,
+    '/specialites':  <Stethoscope className={cls} style={{ color: RED }} />,
     '/temoignages':  <MessageCircle className={cls} style={{ color: RED }} />,
     '/faq':          <HelpCircle className={cls} style={{ color: RED }} />,
     '/contact':      <Mail className={cls} style={{ color: RED }} />,
