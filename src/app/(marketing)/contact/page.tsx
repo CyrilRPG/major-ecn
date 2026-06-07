@@ -46,7 +46,7 @@ const FEATURES = [
 const TRUST_AVATARS = [
   { name: 'Dr Samy K.',     spe: 'Cardiologie',   photo: '/temoignages/drsamy.jpg' },
   { name: 'Dr Leila B.',    spe: 'Pédiatrie',     photo: '/temoignages/dr-leila-bettaieb.jpg' },
-  { name: 'Dr Amélie L.',   spe: 'Méd. Générale', photo: '/temoignages/dr-amelie-lamure.jpg' },
+  { name: 'Dr Bill B.',     spe: 'Méd. Générale', photo: '/temoignages/drbilly.png' },
   { name: 'Dr Haykel A.',   spe: 'Anesthésie',    photo: '/temoignages/dr-haykel-abdelbaki.jpg' },
   { name: 'Dr Faten K.',    spe: 'Néphrologie',   photo: '/temoignages/drfaten.png' },
 ];

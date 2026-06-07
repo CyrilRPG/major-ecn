@@ -482,18 +482,20 @@ function MgTestimonial() {
                 <Quote className="h-3 w-3" /> Ils ont choisi Major ECN
               </span>
               <div className="mt-5 flex items-center gap-4">
-                <img src="/temoignages/dr-amelie-lamure.jpg" alt="Dr Amélie L." className="h-16 w-16 rounded-full object-cover" />
+                <img src="/temoignages/drbilly.png" alt="Dr Bill Baron WANKPO" className="h-16 w-16 rounded-full object-cover" />
                 <div>
-                  <p className="text-base font-extrabold" style={{ color: NAVY }}>Dr Amélie L.</p>
-                  <p className="text-[12.5px] font-semibold" style={{ color: RED }}>Médecine Générale · session 2026</p>
+                  <p className="text-base font-extrabold" style={{ color: NAVY }}>Dr Bill Baron WANKPO</p>
+                  <p className="text-[12.5px] font-semibold" style={{ color: RED }}>Lauréat des EVC de Médecine Générale</p>
                 </div>
               </div>
               <p className="mt-5 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-                « Après plusieurs années d’exercice à l’étranger, j’avais besoin
-                d’une remise à niveau structurée. Major ECN m’a fait travailler les
-                bonnes priorités. Les corrections individuelles m’ont permis
-                d’identifier mes maladresses et d’y remédier. Mention spéciale aux
-                cas de cabinet, vraiment fidèles au quotidien du généraliste. »
+                « J’ai présenté le concours de médecine générale pour la première
+                fois après avoir préparé les épreuves avec Major ECN, et j’ai eu la
+                satisfaction de réussir avec de bonnes notes. Les examens blancs
+                réalisés dans des conditions proches du concours m’ont également
+                beaucoup aidé. Je recommande cette préparation pour réussir les EVC
+                grâce à une préparation structurée et ciblée, et améliorer sa
+                pratique médicale quotidienne. »
               </p>
               <ul className="mt-5 grid grid-cols-3 gap-3 border-t pt-4" style={{ borderColor: BORDER }}>
                 {[

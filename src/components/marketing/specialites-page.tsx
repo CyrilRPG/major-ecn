@@ -517,8 +517,8 @@ function MultiSpecTestimonials() {
       quote: "La banque de cas pédiatriques couvre vraiment tout — vaccinations, urgences, neuro-pédiatrie. Une mine.",
     },
     {
-      name: 'Dr Amélie L.', spe: 'Médecine Générale', photo: '/temoignages/dr-amelie-lamure.jpg',
-      quote: "Le suivi individualisé fait la différence. J’ai eu l’impression d’avoir un mentor à chaque étape.",
+      name: 'Dr Bill B.', spe: 'Médecine Générale', photo: '/temoignages/drbilly.png',
+      quote: "Une préparation structurée et ciblée — j'ai retrouvé le jour J de nombreuses situations déjà travaillées.",
     },
     {
       name: 'Dr Haykel A.', spe: 'Anesthésie-Réanimation', photo: '/temoignages/dr-haykel-abdelbaki.jpg',
