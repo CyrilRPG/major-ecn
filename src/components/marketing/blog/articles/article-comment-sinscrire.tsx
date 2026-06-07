@@ -299,12 +299,6 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         <section className="mb-6">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h3 className="text-[18px] font-extrabold text-[#1A2233]">Ils ont réussi les EVC avec Major ECN</h3>
-            <div className="flex items-center gap-2 text-[12px]">
-              <span className="font-extrabold text-[#16A34A]">Excellent</span>
-              <span className="text-[#F59E0B]">★★★★★</span>
-              <span className="font-bold text-[#1A2233]">4,8 / 5</span>
-              <span className="text-[10.5px] text-[#9AA1AE]">Basé sur plus de 1 200 avis sur Trustpilot</span>
-            </div>
           </div>
           <div className="mt-3 grid gap-3 lg:grid-cols-3">
             {TESTIMONIALS.map((t) => (
