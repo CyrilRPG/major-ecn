@@ -72,12 +72,12 @@ function MethodeHero() {
             <p className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold"
               style={{ background: '#FCEAEC', color: RED }}>
               <Sparkles className="h-3.5 w-3.5" />
-              Depuis plus de 18 ans, Major ECN accompagne les médecins étrangers vers la réussite.
+              Depuis plus de 15 ans, Major ECN accompagne les médecins étrangers vers la réussite.
             </p>
 
             <div className="mt-7 grid grid-cols-1 gap-4 max-w-xl sm:grid-cols-3">
               {[
-                { Icon: Target, big: '+18 ans', sub: "d'expérience" },
+                { Icon: Target, big: '+15 ans', sub: "d'expérience" },
                 { Icon: Trophy, big: 'Des milliers de', sub: 'lauréats', small: true },
                 { Icon: Award,  big: 'Méthode éprouvée', sub: 'et résultats concrets', small: true },
               ].map((s, i) => (
@@ -107,7 +107,7 @@ function MethodeHero() {
                   <span className="text-xs font-bold uppercase tracking-wider text-white/85">Référentiel EVC</span>
                 </div>
                 <p className="absolute left-6 bottom-8 max-w-[60%] text-sm font-bold leading-snug text-white/95">
-                  18 ans d&rsquo;expérience au service de la préparation aux EVC
+                  15 ans d&rsquo;expérience au service de la préparation aux EVC
                 </p>
               </div>
               {/* Floating mission card */}
@@ -462,13 +462,17 @@ function ToolsSection() {
 /* ============ 7. TÉMOIGNAGES ============ */
 function MethodTestimonials() {
   const testis = [
-    { name: 'Dr Karim M.',  spec: 'Lauréat PAE Gériatrie',  tag: 'Admis EVC 2025',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Samy K.',  spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/drsamy.jpg',
       txt: "La méthodologie m'a permis de comprendre ce que le jury attend réellement. Mes réponses sont maintenant claires et structurées." },
-    { name: 'Dr Faten H.',  spec: 'Lauréate des EVC',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Faten H.',  spec: 'Lauréate EVC Médecine Générale',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/drfaten.png',
       txt: "Les corrections détaillées m'ont fait gagner énormément de points. La méthode est claire et efficace." },
-    { name: 'Dr Leila B.',  spec: 'Lauréate PAE Pédiatrie', tag: 'Admise EVC 2025',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Leila B.',  spec: 'Lauréate EVC Médecine Générale', tag: 'Admise EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/dr-leila-bettaieb.jpg',
       txt: "Grâce à la méthode Major ECN, j'ai appris à prioriser et à gérer mon temps. Résultat : admission dès la première tentative !" },
-    { name: 'Dr Haykel G.', spec: 'Lauréat PAE Cardiologie',tag: 'Admis EVC 2025',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Haykel A.', spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/dr-haykel-abdelbaki.jpg',
       txt: "Les concours blancs sont très proches des épreuves réelles. Une préparation indispensable !" },
   ];
   return (
@@ -484,11 +488,13 @@ function MethodTestimonials() {
                 <Quote className="h-5 w-5" style={{ color: RED }} fill="currentColor" />
                 <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK }}>{t.txt}</p>
                 <div className="mt-4 flex items-end gap-3 pt-3" style={{ borderTop: `1px solid ${BORDER}` }}>
-                  {/* Placeholder avatar */}
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full font-bold text-white"
-                    style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-                    {t.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}
-                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={t.photo}
+                    alt={t.name}
+                    className="h-11 w-11 shrink-0 rounded-full object-cover"
+                    style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name}</p>
                     <p className="text-[11px]" style={{ color: INK_SOFT }}>{t.spec}</p>

@@ -707,7 +707,7 @@ const TEAM_CARDS = [
 
 const TEAM_STATS = [
   { Icon: Calendar,    big: '18',                   label: 'ans d’expérience',      sub: 'au service de votre réussite' },
-  { Icon: Users,       big: '9 000+',               label: 'médecins accompagnés',  sub: 'depuis 2006' },
+  { Icon: Users,       big: '9 000+',               label: 'médecins accompagnés',  sub: 'depuis 2011' },
   { Icon: Stethoscope, big: '45',                   label: 'spécialités couvertes', sub: 'toutes les disciplines EVC' },
   { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
 ];
@@ -718,7 +718,7 @@ const TEAM_STATS = [
 const FEATURED_TEACHER = {
   photo: '/team/enseignante-1.jpg',
   name: 'Notre équipe pédagogique',
-  caption: 'Praticiens hospitaliers et CCA — 18 ans d’accompagnement EVC',
+  caption: 'Praticiens hospitaliers et CCA — 15 ans d’accompagnement EVC',
 };
 function TeamPhotoCollage() {
   return (
@@ -780,7 +780,7 @@ export function PedagogicalTeamSection() {
             <span style={{ color: TM_RED }}>attentes des EVC</span>
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-lg" style={{ color: TM_INK_SOFT }}>
-            Depuis plus de 18 ans, nos enseignants accompagnent des médecins dans la préparation des EVC.
+            Depuis plus de 15 ans, nos enseignants accompagnent des médecins dans la préparation des EVC.
             Ils maîtrisent les exigences des jurys, les contenus essentiels à connaître
             et la méthodologie de réponse qui fait la différence le jour J.
           </p>
@@ -1512,11 +1512,17 @@ export function ToolsForProgressSection() {
           </p>
           <h2
             className="mx-auto mt-5 max-w-4xl text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl"
-            style={{ color: TOOLS_INK }}
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, #0F1F4D 0%, #1E3A8A 30%, #2563EB 60%, #4F46E5 100%)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              color: 'transparent',
+            }}
           >
             Tous les outils pour structurer<br className="hidden sm:inline" />
-            {' '}votre progression{' '}
-            <span style={{ color: TOOLS_BLUE }}>aux EVC</span>
+            {' '}votre progression aux EVC
           </h2>
           <p
             className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-[17px]"

@@ -33,9 +33,12 @@ function pickIcon(key: string | null | undefined): LucideIcon {
   return ICON_MAP[key] ?? Megaphone;
 }
 
+/* On evite volontairement le vert : juxtapose au rouge brand, l'effet
+ * "feu tricolore" est visuellement agressif. Le ton 'green' est remappe
+ * sur un bleu profond, plus doux a cote du rouge primaire. */
 const BADGE_TONES: Record<NonNullable<Announcement['badge_tone']>, { bg: string; fg: string }> = {
   red:    { bg: '#FCEAEC', fg: '#A91D2C' },
-  green:  { bg: '#E7F6EC', fg: '#16793C' },
+  green:  { bg: '#EAF1FB', fg: '#1E40AF' },
   blue:   { bg: '#EAF1FB', fg: '#1E40AF' },
   orange: { bg: '#FFEAD9', fg: '#B45B00' },
   purple: { bg: '#F1E8FD', fg: '#6D28D9' },
@@ -123,20 +126,21 @@ function AnnouncementCard({ a }: { a: Announcement }) {
 }
 
 /* ------------ Bodies ------------ */
-type CountdownData = { target_date?: string; suffix_top?: string; suffix_bottom?: string; unit?: string };
+/* NB. tant que le calendrier officiel des EVC (PAE) n'est pas connu,
+ * on n'affiche ni le nombre de jours restants ni les vraies dates :
+ * on les remplace par un placeholder « Bientôt communiqué ». */
+type CountdownData = { suffix_top?: string; suffix_bottom?: string };
 function CountdownBody({ data }: { data: Record<string, unknown> }) {
   const d = data as CountdownData;
-  const value = d.target_date ? daysUntil(d.target_date) : 0;
   return (
     <div className="relative overflow-hidden rounded-xl bg-(--color-primary-soft)/40 px-4 py-3">
       {d.suffix_top && <p className="text-xs text-(--color-ink-soft)">{d.suffix_top}</p>}
-      <p className="mt-0.5 flex items-baseline gap-2">
-        <span className="text-4xl font-black leading-none tabular-nums text-(--color-primary)">{value}</span>
-        <span className="text-sm font-bold text-(--color-ink-soft)">{d.unit ?? 'jours'}</span>
+      <p className="mt-1 text-base font-extrabold leading-snug text-(--color-primary)">
+        Bientôt communiqué
       </p>
-      {d.suffix_bottom && (
-        <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">{d.suffix_bottom}</p>
-      )}
+      <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">
+        {d.suffix_bottom ?? 'La date officielle sera annoncée dès sa publication.'}
+      </p>
       <Calendar
         aria-hidden
         className="pointer-events-none absolute -right-3 -bottom-2 h-20 w-20 text-(--color-primary)/10"
@@ -145,7 +149,7 @@ function CountdownBody({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-type Event = { label: string; date: string; icon?: string };
+type Event = { label: string; date?: string; icon?: string };
 type EventListData = { events?: Event[] };
 function EventListBody({ data }: { data: Record<string, unknown> }) {
   const d = data as EventListData;
@@ -159,7 +163,9 @@ function EventListBody({ data }: { data: Record<string, unknown> }) {
           <li key={i} className="flex items-center gap-2.5 text-sm">
             <EvIcon className="h-4 w-4 shrink-0 text-(--color-primary)" />
             <span className="flex-1 truncate text-(--color-ink-soft)">{e.label}</span>
-            <span className="shrink-0 font-bold tabular-nums text-(--color-ink)">{fmtDate(e.date)}</span>
+            <span className="shrink-0 rounded-full bg-(--color-sand-100) px-2 py-0.5 text-[11px] font-bold text-(--color-ink-soft)">
+              Bientôt communiqué
+            </span>
           </li>
         );
       })}
@@ -199,11 +205,15 @@ type StatData = {
 };
 function StatBody({ data }: { data: Record<string, unknown> }) {
   const d = data as StatData;
+  /* Tant que les chiffres officiels (places, dates, etc.) ne sont pas connus,
+   * on masque les valeurs numeriques et on affiche un placeholder. */
   return (
     <div>
-      {d.value && (
+      {(d.value || d.value_suffix) && (
         <p className="flex items-baseline gap-2">
-          <span className="text-3xl font-black tabular-nums text-(--color-primary)">{d.value}</span>
+          <span className="text-base font-extrabold leading-snug text-(--color-primary)">
+            Bientôt communiqué
+          </span>
           {d.value_suffix && <span className="text-sm text-(--color-ink-soft)">{d.value_suffix}</span>}
         </p>
       )}
@@ -212,7 +222,7 @@ function StatBody({ data }: { data: Record<string, unknown> }) {
           {d.sub_stats.map((s, i) => (
             <div key={i}>
               <p className="text-xs text-(--color-ink-soft)">{s.label}</p>
-              <p className="mt-0.5 text-sm font-bold tabular-nums text-(--color-ink)">{s.value}</p>
+              <p className="mt-0.5 text-[12px] font-bold text-(--color-ink-soft)">Bientôt communiqué</p>
             </div>
           ))}
         </div>

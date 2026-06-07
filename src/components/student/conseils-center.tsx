@@ -353,7 +353,7 @@ function SectionMethode() {
     <div>
       <h3 className="text-lg font-black tracking-tight text-(--color-ink)">Notre méthode</h3>
       <p className="mt-2 text-[13px] leading-relaxed text-(--color-ink-soft)">
-        Major ECN s&rsquo;appuie sur 18 ans d&rsquo;accompagnement des médecins étrangers et
+        Major ECN s&rsquo;appuie sur 15 ans d&rsquo;accompagnement des médecins étrangers et
         sur une méthodologie pensée pour les EVC.
       </p>
       <ul className="mt-4 space-y-2.5">

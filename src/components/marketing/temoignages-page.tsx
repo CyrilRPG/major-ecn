@@ -150,8 +150,10 @@ const WRITTEN: WrittenTesti[] = [
     short: 'Les concours blancs m\'ont permis d\'évaluer mon niveau et de gagner une vraie confiance.' },
   { name: 'Dr Maria C.',         spec: 'Médecine générale',    initials: 'MC',
     short: 'Grâce à Major ECN, j\'ai abordé les EVC avec méthode et sérénité.' },
+  { name: 'Dr Lilia Ouled Ben Ahmed', spec: 'Odontologie',     initials: 'LO',
+    short: "Une préparation sérieuse, structurée et adaptée aux nouvelles modalités EVC 2025. L'équipe a su s'adapter rapidement au nouveau format du concours." },
 ];
-const SPECIALTIES = ['Tous', 'Médecine générale', 'Radiologie', 'Anesthésie-Réanimation', 'Gériatrie', 'Cardiologie', 'Pédiatrie'] as const;
+const SPECIALTIES = ['Tous', 'Médecine générale', 'Radiologie', 'Anesthésie-Réanimation', 'Gériatrie', 'Cardiologie', 'Pédiatrie', 'Odontologie'] as const;
 
 function WrittenSection() {
   const [tab, setTab] = useState<string>('Tous');

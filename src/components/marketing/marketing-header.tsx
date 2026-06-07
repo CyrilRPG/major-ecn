@@ -9,8 +9,10 @@ import { cn } from '@/lib/utils';
 const NAV = [
   { href: '/methode',     label: 'Méthode' },
   { href: '/plateforme',  label: 'Plateforme' },
+  { href: '/specialites', label: 'Spécialités' },
   { href: '/tarifs',      label: 'Tarifs' },
   { href: '/temoignages', label: 'Témoignages' },
+  { href: '/faq',         label: 'FAQ' },
   { href: '/contact',     label: 'Nous contacter' },
   { href: '/blog',        label: 'Blog' },
 ];

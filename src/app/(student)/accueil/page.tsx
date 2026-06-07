@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import {
-  ArrowRight, BookOpen, Calendar, ClipboardCheck, Clock, FileText, GraduationCap,
-  Layers3, Play, RefreshCcw, Target, TrendingUp, Zap,
+  ArrowRight, ClipboardCheck, Clock, FileText, Layers3, Play, RefreshCcw, Target,
+  TrendingUp, Zap,
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -67,7 +67,6 @@ export default async function AccueilPage() {
     { data: edn },
     { count: flashcardsTotal },
     { count: qcmQuestionsTotal },
-    { data: countdownAnn },
   ] = await Promise.all([
     supabase
       .from('qcm_attempts')
@@ -96,26 +95,6 @@ export default async function AccueilPage() {
     supabase.from('qcm_questions')
       .select('id, qcm_series!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))', { count: 'exact', head: true })
       .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
-    (supabase as unknown as {
-      from: (t: string) => {
-        select: (s: string) => {
-          eq: (c: string, v: string) => {
-            eq: (c: string, v: boolean) => {
-              order: (c: string, o: { ascending: boolean }) => {
-                limit: (n: number) => { maybeSingle: () => Promise<{ data: { data: Record<string, unknown> } | null }> };
-              };
-            };
-          };
-        };
-      };
-    })
-      .from('homepage_announcements')
-      .select('data')
-      .eq('kind', 'countdown')
-      .eq('visible', true)
-      .order('order_index', { ascending: true })
-      .limit(1)
-      .maybeSingle(),
   ]);
 
   const inEdn = (f: string) => f === EDN_FACULTE_ID;
@@ -132,14 +111,6 @@ export default async function AccueilPage() {
   const now = Date.now();
   const weekAgo = now - 7 * 86_400_000;
   const twoWeeksAgo = now - 14 * 86_400_000;
-  const yearLabel = '2027'; // affiché dans EVC (PAE) 2027
-
-  /* ---- Compte à rebours EVC ---- */
-  const countdownData = (countdownAnn?.data ?? null) as Record<string, unknown> | null;
-  const targetIso = typeof countdownData?.target_date === 'string'
-    ? countdownData.target_date
-    : '2027-10-12';
-  const daysUntilExam = Math.max(0, Math.ceil((new Date(targetIso).getTime() - now) / 86_400_000));
 
   /* ---- Périmètre EDN ---- */
   const colleges = (
@@ -321,37 +292,31 @@ export default async function AccueilPage() {
   const todayEstMin = 35;
 
   return (
-    <div className="mx-auto grid w-full max-w-[1640px] gap-5 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="mx-auto grid w-full max-w-[1640px] gap-4 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_340px]">
       {/* ============ COLONNE PRINCIPALE ============ */}
-      <div className="flex min-w-0 flex-col gap-5">
+      <div className="flex min-w-0 flex-col gap-4">
 
-        {/* ---- Bandeau de bienvenue ---- */}
+        {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
               Bonjour, {firstName} <span aria-hidden>👋</span>
             </h1>
             <p className="mt-1 text-sm text-(--color-ink-soft) sm:text-[15px]">
-              Plus que <span className="font-bold text-(--color-primary)">{daysUntilExam} jours</span> avant
-              les EVC (PAE {yearLabel}) — Chaque jour compte ! <span aria-hidden>💪</span>
+              Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.
             </p>
           </div>
-          <div className="flex items-end gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-xs text-(--color-ink-soft)">Prêt(e) à avancer aujourd&rsquo;hui ?</p>
-            </div>
-            <Link
-              href="/revisions-transversales"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#1E40AF] px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-            >
-              <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
-            </Link>
-          </div>
+          <Link
+            href="/revisions-transversales"
+            className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+          >
+            <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
+          </Link>
         </header>
 
-        {/* ---- KPI cards (4) ---- */}
+        {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
         <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {/* 1. Progression globale */}
           <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">
             <div className="flex items-center gap-3">
               <ProgressRing pct={globalProgress} />
@@ -360,15 +325,13 @@ export default async function AccueilPage() {
                 <p className="truncate text-sm font-extrabold text-(--color-ink)">
                   {nextPriority?.titre ?? '—'}
                 </p>
-                <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Temps estimé : 2h15</p>
               </div>
             </div>
-            <Link href="/matieres" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
+            <Link href="/revisions-transversales" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
               Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
 
-          {/* 2. Temps de révision */}
           <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
             <p className="text-4xl font-black tabular-nums text-(--color-ink)">
               {hoursThisWeek}h <span className="text-2xl">{minsThisWeek.toString().padStart(2, '0')}</span>
@@ -384,7 +347,6 @@ export default async function AccueilPage() {
             </div>
           </KpiCard>
 
-          {/* 3. QCM réalisés */}
           <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
             <p className="text-4xl font-black tabular-nums text-(--color-ink)">{sessionsCount}</p>
             <p className="text-xs text-(--color-ink-soft)">sur {itemsTotal} QCM</p>
@@ -393,7 +355,6 @@ export default async function AccueilPage() {
             </Link>
           </KpiCard>
 
-          {/* 4. Items maîtrisés (cours ≥ 75 % de réussite) */}
           <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
             <p className="text-3xl font-black tabular-nums text-(--color-ink)">
               {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
@@ -401,7 +362,7 @@ export default async function AccueilPage() {
             <p className="text-xs text-(--color-ink-soft)">
               {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
             </p>
-            <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
+            <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
               Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
@@ -426,7 +387,9 @@ export default async function AccueilPage() {
               <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
               <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
             </ul>
-            <Link href="/revisions-transversales" className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E40AF] px-3 py-2 text-sm font-bold text-white hover:scale-[1.01]">
+            <Link href="/revisions-transversales"
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
+              style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}>
               <Play className="h-4 w-4" /> Commencer maintenant
             </Link>
           </Card>
@@ -434,22 +397,22 @@ export default async function AccueilPage() {
           {/* Évolution */}
           <Card>
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-bold text-(--color-ink)">Évolution de ta performance</p>
+              <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
               <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
             </div>
             <Sparkline days={days} max={maxDay} />
             <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
               <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
               <p className="text-[12px] leading-relaxed text-(--color-ink)">
-                <strong>Vos résultats s&rsquo;amélioreront avec la régularité.</strong>{' '}
-                Continuez vos entraînements !
+                <strong>Vos résultats s&rsquo;améliorent avec la régularité.</strong>{' '}
+                Continuez vos entraînements&nbsp;!
               </p>
             </div>
           </Card>
 
           {/* Répartition révisions */}
           <Card>
-            <p className="text-sm font-bold text-(--color-ink)">Répartition de tes révisions</p>
+            <p className="text-sm font-bold text-(--color-ink)">Répartition des révisions</p>
             <div className="mt-3 flex items-center gap-4">
               <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
               <div className="flex-1 space-y-2 text-[12px]">
@@ -458,7 +421,7 @@ export default async function AccueilPage() {
               </div>
             </div>
             <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
-              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions} / {itemsTotal + flashcardsTotalEdn}</span>
+              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions}</span> / {itemsTotal + flashcardsTotalEdn}
             </p>
           </Card>
         </section>
@@ -468,8 +431,11 @@ export default async function AccueilPage() {
           <div className="flex items-baseline justify-between gap-3">
             <div>
               <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
-              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats</p>
+              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats récents</p>
             </div>
+            <Link href="/entrainement" className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex">
+              Voir mes lacunes <ArrowRight className="ml-0.5 h-3.5 w-3.5" />
+            </Link>
           </div>
           {priorities.length === 0 ? (
             <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
@@ -480,12 +446,12 @@ export default async function AccueilPage() {
               {priorities.map((p, i) => {
                 const pill = p.value < 50
                   ? { label: 'Priorité haute',   bg: '#FCEAEC', fg: '#C0112E' }
-                  : { label: 'Priorité moyenne', bg: '#FFEDD5', fg: '#B45B00' };
+                  : { label: 'Priorité moyenne', bg: '#FEF3C7', fg: '#A16207' };
                 return (
                   <li key={p.id}>
                     <Link
                       href={`/cours/${p.id}`}
-                      className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 hover:border-(--color-primary)/40 hover:bg-(--color-primary-soft)/30"
+                      className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-[#C0112E]/40 hover:bg-[#FCEAEC]/40"
                     >
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-sand-100) text-[12px] font-black text-(--color-ink-soft)">
                         {i + 1}
@@ -500,11 +466,6 @@ export default async function AccueilPage() {
               })}
             </ul>
           )}
-          <div className="mt-3 flex justify-center">
-            <Link href="/matieres" className="inline-flex items-center gap-1 rounded-md bg-[#EDE9FE] px-3 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
-              Voir toutes mes lacunes <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
         </Card>
 
         {/* ---- Progression par cours ---- */}
@@ -513,11 +474,11 @@ export default async function AccueilPage() {
             <div>
               <p className="text-sm font-bold text-(--color-ink)">Progression par cours</p>
               <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">
-                {coursScored.length} cours · Groupés par collège · Faites défiler pour tout voir
+                {coursScored.length} cours · groupés par collège
               </p>
             </div>
           </div>
-          <div className="max-h-[300px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+          <div className="max-h-[320px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
             {coursByMatiere.map((g) => (
               <section key={g.matiereNom}>
                 <p className="sticky top-0 bg-(--color-surface) py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
@@ -526,15 +487,15 @@ export default async function AccueilPage() {
                 <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                   {g.cours.map((c) => {
                     const pill = c.value < 50
-                      ? { label: 'Urgent', bg: '#FCEAEC', fg: '#C0112E' }
+                      ? { label: 'Urgent',     bg: '#FCEAEC', fg: '#C0112E' }
                       : c.value < 75
-                      ? { label: 'À revoir', bg: '#FEF3C7', fg: '#A16207' }
+                      ? { label: 'À revoir',   bg: '#FEF3C7', fg: '#A16207' }
                       : { label: 'En progrès', bg: '#DCFCE7', fg: '#16A34A' };
                     return (
                       <li key={c.id}>
-                        <Link href={`/cours/${c.id}`} className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 hover:border-(--color-primary)/40">
+                        <Link href={`/cours/${c.id}`} className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 transition-colors hover:border-[#C0112E]/30">
                           <span className="min-w-0 flex-1 truncate text-[12.5px] text-(--color-ink)">{c.titre}</span>
-                          <span className="hidden h-1 w-16 shrink-0 overflow-hidden rounded-full bg-(--color-sand-200) sm:block">
+                          <span className="hidden h-1 w-16 shrink-0 overflow-hidden rounded-full sm:block" style={{ background: '#ECEEF1' }}>
                             <span className="block h-full rounded-full" style={{ width: `${c.value}%`, background: pill.fg }} />
                           </span>
                           <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums text-(--color-ink)">{c.value}%</span>
@@ -562,7 +523,7 @@ export default async function AccueilPage() {
             </div>
             {recent.length === 0 ? (
               <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
-                Aucune activité récente. Lancez votre premier entraînement !
+                Aucune activité récente. Lancez votre premier entraînement&nbsp;!
               </p>
             ) : (
               <ul className="mt-3 space-y-2">
@@ -587,9 +548,9 @@ export default async function AccueilPage() {
               <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
             </div>
             <div className="mt-3 grid grid-cols-3 gap-2">
-              <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`} label="Progression" color="#16A34A" />
-              <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`} label="Flashcards révisées" color="#7C3AED" />
-              <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`} label="Items consolidés" color="#2563EB" />
+              <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`}           label="Progression"          color="#16A34A" />
+              <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`}          label="Flashcards révisées" color="#7C3AED" />
+              <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`}label="Items consolidés"     color="#2563EB" />
             </div>
           </Card>
         </section>
@@ -672,6 +633,18 @@ function TodayRow({ Icon, bg, fg, title, sub }: { Icon: typeof Target; bg: strin
   );
 }
 
+function WeekStat({ Icon, value, label, color }: { Icon: typeof Target; value: string; label: string; color: string }) {
+  return (
+    <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 text-center">
+      <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${color}1A`, color }}>
+        <Icon className="h-3.5 w-3.5" />
+      </span>
+      <p className="mt-1.5 text-base font-black tabular-nums" style={{ color }}>{value}</p>
+      <p className="text-[10px] leading-tight text-(--color-ink-soft)">{label}</p>
+    </div>
+  );
+}
+
 function Sparkline({ days, max }: { days: { dayLabel: string; value: number }[]; max: number }) {
   const W = 600, H = 110, P = 6;
   const points = days.map((d, i) => {
@@ -725,18 +698,6 @@ function LegendRow({ color, label, count, pct }: { color: string; label: string;
         <span className="text-(--color-ink)">{label} ({count})</span>
       </span>
       <span className="font-bold tabular-nums text-(--color-ink-soft)">{pct}%</span>
-    </div>
-  );
-}
-
-function WeekStat({ Icon, value, label, color }: { Icon: typeof Target; value: string; label: string; color: string }) {
-  return (
-    <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 text-center">
-      <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${color}1A`, color }}>
-        <Icon className="h-3.5 w-3.5" />
-      </span>
-      <p className="mt-1.5 text-base font-black tabular-nums" style={{ color }}>{value}</p>
-      <p className="text-[10px] leading-tight text-(--color-ink-soft)">{label}</p>
     </div>
   );
 }

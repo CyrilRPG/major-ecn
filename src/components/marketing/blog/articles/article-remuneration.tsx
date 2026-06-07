@@ -255,7 +255,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               pour les médecins étrangers souhaitant obtenir leur autorisation d&rsquo;exercice en France
               dans le cadre de la PAE.
               <p className="mt-2 text-[13px] text-[#52607A]">
-                Depuis plus de 18 ans, Major ECN accompagne les candidats aux EVC grâce à une préparation
+                Depuis plus de 15 ans, Major ECN accompagne les candidats aux EVC grâce à une préparation
                 complète et ciblée.
               </p>
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
