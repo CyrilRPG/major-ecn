@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import {
   ArrowRight, ClipboardCheck, Clock, FileText, Layers3, Play, RefreshCcw, Target,
-  TrendingUp,
+  TrendingUp, Zap,
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
+import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
@@ -308,15 +309,15 @@ export default async function AccueilPage() {
           <Link
             href="/revisions-transversales"
             className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-            style={{ background: 'linear-gradient(135deg,#C0112E 0%,#8B0E22 100%)' }}
+            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
           >
             <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
           </Link>
         </header>
 
-        {/* ---- KPI cards (4) — palette unifiée navy + rouge brand ---- */}
+        {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
         <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiCard Icon={Target} label="Progression globale">
+          <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">
             <div className="flex items-center gap-3">
               <ProgressRing pct={globalProgress} />
               <div className="min-w-0">
@@ -326,60 +327,82 @@ export default async function AccueilPage() {
                 </p>
               </div>
             </div>
-            <Link href="/matieres" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#C0112E] hover:underline">
+            <Link href="/matieres" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
               Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
 
-          <KpiCard Icon={Clock} label="Temps de révision">
-            <p className="text-4xl font-black tabular-nums text-[#0F1F4D]">
-              {hoursThisWeek}h <span className="text-2xl text-(--color-ink-soft)">{minsThisWeek.toString().padStart(2, '0')}</span>
+          <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">
+              {hoursThisWeek}h <span className="text-2xl">{minsThisWeek.toString().padStart(2, '0')}</span>
             </p>
             <p className="text-xs text-(--color-ink-soft)">cette semaine</p>
             <div className="mt-auto">
-              <p className="rounded-md bg-[#FCEAEC] px-2 py-1 text-center text-[11px] font-bold text-[#8B0E22]">
+              <p className="rounded-md bg-[#DCFCE7] px-2 py-1 text-center text-[11px] font-bold text-[#16793C]">
                 Objectif conseillé : 6h / semaine
               </p>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-(--color-sand-200)">
-                <div className="h-full rounded-full bg-[#C0112E]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />
+                <div className="h-full rounded-full bg-[#16A34A]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />
               </div>
             </div>
           </KpiCard>
 
-          <KpiCard Icon={ClipboardCheck} label="QCM réalisés">
-            <p className="text-4xl font-black tabular-nums text-[#0F1F4D]">{sessionsCount}</p>
+          <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">{sessionsCount}</p>
             <p className="text-xs text-(--color-ink-soft)">sur {itemsTotal} QCM</p>
             <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]">
               Commencer un entraînement <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
 
-          <KpiCard Icon={Layers3} label="Items maîtrisés">
-            <p className="text-3xl font-black tabular-nums text-[#0F1F4D]">
+          <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
+            <p className="text-3xl font-black tabular-nums text-(--color-ink)">
               {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
             </p>
             <p className="text-xs text-(--color-ink-soft)">
               {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
             </p>
-            <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-(--color-sand-100) px-2 py-1.5 text-[12px] font-bold text-[#0F1F4D] hover:bg-(--color-sand-200)">
+            <Link href="/matieres" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
               Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </KpiCard>
         </section>
 
-        {/* ---- Évolution (large) + Répartition (compacte) ---- */}
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1.55fr_1fr]">
+        {/* ---- 3 cartes : Aujourd'hui + Évolution + Répartition ---- */}
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
+          {/* Aujourd'hui */}
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
+                <Target className="h-4 w-4" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Aujourd&rsquo;hui</p>
+            </div>
+            <p className="mt-1 text-[11px] text-(--color-ink-soft)">
+              Objectif du jour pour avancer sereinement
+            </p>
+            <ul className="mt-3 space-y-2">
+              <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
+              <TodayRow Icon={FileText}       bg="#DBEAFE" fg="#2563EB" title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
+              <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
+              <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
+            </ul>
+            <Link href="/revisions-transversales"
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
+              style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}>
+              <Play className="h-4 w-4" /> Commencer maintenant
+            </Link>
+          </Card>
+
+          {/* Évolution */}
           <Card>
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
-                <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Activité quotidienne sur 30 jours</p>
-              </div>
+              <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
               <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
             </div>
             <Sparkline days={days} max={maxDay} />
-            <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#FCEAEC] p-3">
-              <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#C0112E]" />
+            <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
+              <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
               <p className="text-[12px] leading-relaxed text-(--color-ink)">
                 <strong>Vos résultats s&rsquo;améliorent avec la régularité.</strong>{' '}
                 Continuez vos entraînements&nbsp;!
@@ -387,14 +410,14 @@ export default async function AccueilPage() {
             </div>
           </Card>
 
+          {/* Répartition révisions */}
           <Card>
             <p className="text-sm font-bold text-(--color-ink)">Répartition des révisions</p>
-            <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">QCM vs flashcards</p>
             <div className="mt-3 flex items-center gap-4">
               <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
               <div className="flex-1 space-y-2 text-[12px]">
                 <LegendRow color="#C0112E" label="QCM" count={totalAttempts} pct={qcmPct} />
-                <LegendRow color="#0F1F4D" label="Flashcards" count={reviews.length} pct={fcPct} />
+                <LegendRow color="#7C3AED" label="Flashcards" count={reviews.length} pct={fcPct} />
               </div>
             </div>
             <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
@@ -488,84 +511,54 @@ export default async function AccueilPage() {
             ))}
           </div>
         </Card>
+
+        {/* ---- Activité récente + Cette semaine ---- */}
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
+                <RefreshCcw className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Activité récente</p>
+            </div>
+            {recent.length === 0 ? (
+              <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
+                Aucune activité récente. Lancez votre premier entraînement&nbsp;!
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {recent.map((r, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[12px]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
+                      {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
+                    </span>
+                    <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
+                    <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+
+          <Card>
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DCFCE7] text-[#16A34A]">
+                <Zap className="h-3.5 w-3.5" />
+              </span>
+              <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`}           label="Progression"          color="#16A34A" />
+              <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`}          label="Flashcards révisées" color="#7C3AED" />
+              <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`}label="Items consolidés"     color="#2563EB" />
+            </div>
+          </Card>
+        </section>
       </div>
 
-      {/* ============ SIDEBAR DROITE — bien remplie ============ */}
-      <aside className="flex flex-col gap-4 xl:sticky xl:top-4 xl:self-start">
-
-        {/* Aujourd'hui */}
-        <Card>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCEAEC] text-[#C0112E]">
-              <Target className="h-4 w-4" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-(--color-ink)">Aujourd&rsquo;hui</p>
-              <p className="text-[11px] text-(--color-ink-soft)">Votre objectif du jour</p>
-            </div>
-          </div>
-          <ul className="mt-3 space-y-2">
-            <TodayRow Icon={ClipboardCheck} title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
-            <TodayRow Icon={FileText}       title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
-            <TodayRow Icon={Layers3}        title={`${todayFcTarget} flashcards`} sub="Révision active" />
-            <TodayRow Icon={Clock}          title="Temps estimé" sub={`${todayEstMin} min`} />
-          </ul>
-          <Link href="/revisions-transversales"
-            className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
-            style={{ background: 'linear-gradient(135deg,#C0112E 0%,#8B0E22 100%)' }}>
-            <Play className="h-4 w-4" /> Commencer maintenant
-          </Link>
-        </Card>
-
-        {/* Cette semaine */}
-        <Card>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCEAEC] text-[#C0112E]">
-              <TrendingUp className="h-4 w-4" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
-              <p className="text-[11px] text-(--color-ink-soft)">Vos progrès récents</p>
-            </div>
-          </div>
-          <ul className="mt-3 space-y-2.5">
-            <WeekRow Icon={TrendingUp}     value={`+${progDeltaPct} %`}              label="Progression hebdo" />
-            <WeekRow Icon={Layers3}        value={`+${reviewsThisWeek}`}              label="Flashcards révisées" />
-            <WeekRow Icon={Target}         value={`+${itemsConsolidatedThisWeek}`}    label="Items consolidés" />
-            <WeekRow Icon={ClipboardCheck} value={`+${attemptsThisWeek}`}             label="QCM tentés" />
-            <WeekRow Icon={Clock}          value={`+${sessionsThisWeek}`}             label="Sessions terminées" />
-          </ul>
-        </Card>
-
-        {/* Activité récente */}
-        <Card>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
-              <RefreshCcw className="h-4 w-4" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-(--color-ink)">Activité récente</p>
-              <p className="text-[11px] text-(--color-ink-soft)">Vos dernières actions</p>
-            </div>
-          </div>
-          {recent.length === 0 ? (
-            <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
-              Aucune activité récente. Lancez votre premier entraînement&nbsp;!
-            </p>
-          ) : (
-            <ul className="mt-3 space-y-2">
-              {recent.map((r, i) => (
-                <li key={i} className="flex items-center gap-2 text-[12px]">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
-                    {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
-                  </span>
-                  <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
-                  <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Card>
+      {/* ============ SIDEBAR DROITE ============ */}
+      <aside className="space-y-3">
+        <AnnouncementsWidget />
       </aside>
     </div>
   );
@@ -582,12 +575,19 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
   );
 }
 
-function KpiCard({ Icon, label, children }: { Icon: typeof Target; label: string; children: React.ReactNode }) {
+function KpiCard({
+  accent, Icon, label, children,
+}: {
+  accent: string;
+  Icon: typeof Target;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="relative flex flex-col gap-2 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-      <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: '#C0112E' }} />
+      <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: accent }} />
       <div className="flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FCEAEC] text-[#C0112E]">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${accent}1A`, color: accent }}>
           <Icon className="h-3.5 w-3.5" />
         </span>
         <p className="text-[12px] font-bold text-(--color-ink)">{label}</p>
@@ -605,11 +605,12 @@ function ProgressRing({ pct }: { pct: number }) {
       <svg viewBox="0 0 60 60" className="h-14 w-14 -rotate-90">
         <defs>
           <linearGradient id="kpi-prog-arc" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%"   stopColor="#C0112E" stopOpacity="1" />
-            <stop offset="100%" stopColor="#8B0E22" stopOpacity="1" />
+            <stop offset="0%"   stopColor="#3B5BFF" stopOpacity="1" />
+            <stop offset="60%"  stopColor="#7C93FF" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#C7D2FF" stopOpacity="0.6" />
           </linearGradient>
         </defs>
-        <circle cx="30" cy="30" r={r} fill="none" stroke="#FCEAEC" strokeWidth="5" />
+        <circle cx="30" cy="30" r={r} fill="none" stroke="#EEF1FB" strokeWidth="5" />
         <circle cx="30" cy="30" r={r} fill="none" stroke="url(#kpi-prog-arc)" strokeWidth="5" strokeLinecap="round"
           strokeDasharray={circ} strokeDashoffset={circ - (circ * pct) / 100} />
       </svg>
@@ -618,10 +619,10 @@ function ProgressRing({ pct }: { pct: number }) {
   );
 }
 
-function TodayRow({ Icon, title, sub }: { Icon: typeof Target; title: string; sub: string }) {
+function TodayRow({ Icon, bg, fg, title, sub }: { Icon: typeof Target; bg: string; fg: string; title: string; sub: string }) {
   return (
     <li className="flex items-center gap-2.5">
-      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FCEAEC] text-[#C0112E]">
+      <span className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: bg, color: fg }}>
         <Icon className="h-3.5 w-3.5" />
       </span>
       <div className="min-w-0 flex-1">
@@ -632,17 +633,15 @@ function TodayRow({ Icon, title, sub }: { Icon: typeof Target; title: string; su
   );
 }
 
-function WeekRow({ Icon, value, label }: { Icon: typeof Target; value: string; label: string }) {
+function WeekStat({ Icon, value, label, color }: { Icon: typeof Target; value: string; label: string; color: string }) {
   return (
-    <li className="flex items-center gap-2.5">
-      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
+    <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 text-center">
+      <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: `${color}1A`, color }}>
         <Icon className="h-3.5 w-3.5" />
       </span>
-      <div className="min-w-0 flex-1">
-        <p className="text-[11px] leading-tight text-(--color-ink-soft)">{label}</p>
-        <p className="text-[14px] font-black tabular-nums leading-tight text-[#C0112E]">{value}</p>
-      </div>
-    </li>
+      <p className="mt-1.5 text-base font-black tabular-nums" style={{ color }}>{value}</p>
+      <p className="text-[10px] leading-tight text-(--color-ink-soft)">{label}</p>
+    </div>
   );
 }
 
@@ -684,7 +683,7 @@ function DonutChart({ qcmPct, fcPct }: { qcmPct: number; fcPct: number }) {
         <circle cx="35" cy="35" r={r} fill="none" stroke="#F1F5F9" strokeWidth="9" />
         <circle cx="35" cy="35" r={r} fill="none" stroke="#C0112E" strokeWidth="9"
           strokeDasharray={`${qcmLen} ${circ - qcmLen}`} />
-        <circle cx="35" cy="35" r={r} fill="none" stroke="#0F1F4D" strokeWidth="9"
+        <circle cx="35" cy="35" r={r} fill="none" stroke="#7C3AED" strokeWidth="9"
           strokeDasharray={`${fcLen} ${circ - fcLen}`} strokeDashoffset={-qcmLen} />
       </svg>
     </span>
