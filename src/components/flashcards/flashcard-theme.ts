@@ -71,15 +71,19 @@ const DEFAULT_THEME: FlashcardTheme = {
   Icon: Layers3 as unknown as IconComponent,
 };
 
-export function themeFor(collegeName: string | null | undefined): FlashcardTheme {
-  if (!collegeName) return DEFAULT_THEME;
-  // Match exact d'abord
-  if (THEMES[collegeName]) return THEMES[collegeName];
-  // Match permissif : ignore la casse et les diacritiques
+export function themeFor(
+  collegeName: string | null | undefined,
+  fallbackName?: string | null,
+): FlashcardTheme {
   const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const target = norm(collegeName);
-  for (const [k, v] of Object.entries(THEMES)) {
-    if (norm(k) === target) return v;
-  }
-  return DEFAULT_THEME;
+  const tryMatch = (n: string | null | undefined): FlashcardTheme | null => {
+    if (!n) return null;
+    if (THEMES[n]) return THEMES[n];
+    const target = norm(n);
+    for (const [k, v] of Object.entries(THEMES)) {
+      if (norm(k) === target) return v;
+    }
+    return null;
+  };
+  return tryMatch(collegeName) ?? tryMatch(fallbackName) ?? DEFAULT_THEME;
 }
