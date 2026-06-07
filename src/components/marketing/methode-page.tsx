@@ -462,13 +462,17 @@ function ToolsSection() {
 /* ============ 7. TÉMOIGNAGES ============ */
 function MethodTestimonials() {
   const testis = [
-    { name: 'Dr Karim M.',  spec: 'Lauréat PAE Gériatrie',  tag: 'Admis EVC 2025',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Samy K.',  spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/drsamy.jpg',
       txt: "La méthodologie m'a permis de comprendre ce que le jury attend réellement. Mes réponses sont maintenant claires et structurées." },
-    { name: 'Dr Faten H.',  spec: 'Lauréate des EVC',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Faten H.',  spec: 'Lauréate EVC Médecine Générale',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/drfaten.png',
       txt: "Les corrections détaillées m'ont fait gagner énormément de points. La méthode est claire et efficace." },
-    { name: 'Dr Leila B.',  spec: 'Lauréate PAE Pédiatrie', tag: 'Admise EVC 2025',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Leila B.',  spec: 'Lauréate EVC Médecine Générale', tag: 'Admise EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/dr-leila-bettaieb.jpg',
       txt: "Grâce à la méthode Major ECN, j'ai appris à prioriser et à gérer mon temps. Résultat : admission dès la première tentative !" },
-    { name: 'Dr Haykel G.', spec: 'Lauréat PAE Cardiologie',tag: 'Admis EVC 2025',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Haykel A.', spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
+      photo: '/temoignages/dr-haykel-abdelbaki.jpg',
       txt: "Les concours blancs sont très proches des épreuves réelles. Une préparation indispensable !" },
   ];
   return (
@@ -484,11 +488,13 @@ function MethodTestimonials() {
                 <Quote className="h-5 w-5" style={{ color: RED }} fill="currentColor" />
                 <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK }}>{t.txt}</p>
                 <div className="mt-4 flex items-end gap-3 pt-3" style={{ borderTop: `1px solid ${BORDER}` }}>
-                  {/* Placeholder avatar */}
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full font-bold text-white"
-                    style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-                    {t.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}
-                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={t.photo}
+                    alt={t.name}
+                    className="h-11 w-11 shrink-0 rounded-full object-cover"
+                    style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name}</p>
                     <p className="text-[11px]" style={{ color: INK_SOFT }}>{t.spec}</p>

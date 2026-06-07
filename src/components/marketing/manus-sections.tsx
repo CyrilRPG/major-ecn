@@ -10,6 +10,7 @@ import {
   Heart, HelpCircle, Layers3, LineChart, Lock, Mail, MessagesSquare, Monitor, Play, Quote,
   ShieldCheck, Sparkles, Star, Target, TrendingUp, User, Users, Zap,
 } from 'lucide-react';
+import { FaqAccordion } from './faq-accordion';
 
 // Dégradés volontairement saturés et étendus pour des titres qui claquent.
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
@@ -934,16 +935,9 @@ export function AudienceSection() {
 }
 
 // ============================================================================
-// FAQ — light bg
 // ============================================================================
-const FAQ = [
-  { Icon: User, q: 'À qui s’adresse la préparation EVC Major ECN ?', a: 'Major ECN s’adresse aux médecins titulaires d’un diplôme étranger (PADHUE) qui préparent les Épreuves de Vérification des Connaissances dans le cadre de la Procédure d’Autorisation d’Exercice (PAE), quelle que soit leur spécialité.' },
-  { Icon: FileText, q: 'Qu’est-ce que les Épreuves de Vérification des Connaissances (EVC) ?', a: 'Les EVC sont des épreuves nationales qui évaluent les connaissances médicales des praticiens à diplôme étranger souhaitant exercer en France. Elles constituent une étape clé de la Procédure d’Autorisation d’Exercice (PAE).' },
-  { Icon: Target, q: 'Pourquoi suivre une préparation EVC ?', a: 'Les EVC sont sélectives et exigent une méthodologie précise. Une préparation structurée vous permet de cibler les attentes des jurys, de combler vos lacunes par spécialité et de maximiser vos chances de réussite.' },
-  { Icon: Monitor, q: 'Qu’est-ce qui différencie la plateforme Major ECN des autres préparations EVC ?', a: 'Des contenus conçus et relus par des praticiens hospitaliers et CCA, une méthodologie dédiée aux attentes des jurys EVC, un entraînement complet (QCM, cas cliniques, fiches, flashcards) et un suivi de progression personnalisé.' },
-  { Icon: Eye, q: 'Puis-je découvrir la plateforme avant de m’inscrire ?', a: 'Oui. Vous pouvez tester Major ECN gratuitement pendant 7 jours, sans carte bancaire ni engagement, et accéder immédiatement à un aperçu de l’ensemble de nos contenus et de notre méthode.' },
-  { Icon: ShieldCheck, q: 'Pourquoi choisir Major ECN pour préparer les EVC ?', a: 'Depuis plus de 18 ans, nous accompagnons les médecins étrangers vers la réussite des EVC. Plus de 9 000 médecins accompagnés, 45 spécialités couvertes et des enseignants experts connaissant parfaitement les attentes des jurys.' },
-];
+// FAQ — reprend l'accordeon partage de /faq (recherche + collapse par defaut)
+// ============================================================================
 
 /* Sidebar « Major ECN — Votre partenaire pour réussir les EVC » */
 const FAQ_SIDE_ROWS = [
@@ -987,33 +981,9 @@ export function FAQSection() {
               concernant les EVC, la PAE, les PADHUE et la préparation Major ECN.
             </p>
 
-            {/* Accordéons */}
-            <div className="mt-8 flex flex-col gap-3.5">
-              {FAQ.map((f) => (
-                <details
-                  key={f.q}
-                  className="group rounded-2xl border bg-white transition-all open:shadow-[0_8px_24px_-12px_rgba(15,27,61,0.18)]"
-                  style={{ borderColor: '#ECECEF' }}
-                >
-                  <summary
-                    className="flex cursor-pointer list-none items-center gap-4 p-4 text-left marker:hidden sm:p-5"
-                  >
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                      style={{ background: FQ_RED_BG, color: FQ_RED }}
-                    >
-                      <f.Icon className="h-5 w-5" />
-                    </span>
-                    <span className="min-w-0 flex-1 text-[15px] font-bold sm:text-base" style={{ color: FQ_NAVY }}>
-                      {f.q}
-                    </span>
-                    <ChevronDown className="h-5 w-5 shrink-0 text-[#9AA1AE] transition-transform group-open:rotate-180" />
-                  </summary>
-                  <p className="px-4 pb-5 pl-[4.25rem] text-sm leading-relaxed sm:px-5 sm:pl-[4.75rem]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-                    {f.a}
-                  </p>
-                </details>
-              ))}
+            {/* Accordeon partage : recherche fonctionnelle + tout fermé par defaut */}
+            <div className="mt-8">
+              <FaqAccordion />
             </div>
 
             {/* Carte contact pink */}
@@ -1045,6 +1015,13 @@ export function FAQSection() {
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
+
+            <p className="mt-4 text-center text-[12px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+              Vous voulez voir l’intégralité des questions classées ?{' '}
+              <a href="/faq" className="font-bold underline" style={{ color: FQ_RED }}>
+                Consulter la FAQ complète
+              </a>
+            </p>
           </div>
 
           {/* ============ SIDEBAR ============ */}
@@ -1103,6 +1080,7 @@ export function FAQSection() {
     </section>
   );
 }
+
 
 // ============================================================================
 // FREE TRIAL CTA — bannière mise en avant de l'essai 7 jours
