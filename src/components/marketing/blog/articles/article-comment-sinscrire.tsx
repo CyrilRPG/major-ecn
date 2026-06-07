@@ -7,6 +7,7 @@ import {
   Stethoscope, Users,
 } from 'lucide-react';
 import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
+import { BrandLogo } from '@/components/brand/brand-logo';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 import { getRelatedArticles } from '@/lib/data/blog-articles';
 
@@ -79,15 +80,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         <ArticleHeader
           article={article}
           subtitle="Conditions d'inscription, liste A et liste B, documents à fournir, nombre de tentatives et procédure auprès de l'ARS : le guide complet Major ECN pour réussir votre candidature aux EVC."
-          rightArea={
-            <div className="relative">
-              <HeroBookImage />
-              <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-2 py-1 text-[10px] font-extrabold text-[#16793C] shadow-sm">
-                <CheckCircle2 className="h-3 w-3" />
-                Étape essentielle de la PAE
-              </span>
-            </div>
-          }
+          rightArea={<HeroBookImage />}
         />
 
         {/* 4 info cards en intro */}
@@ -280,10 +273,11 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
             </div>
             <div>
               <p className="mb-3 text-center text-[11.5px] font-bold text-[#1A2233]">Découvrez la plateforme Major ECN</p>
-              <div className="grid grid-cols-3 gap-2">
-                <PlatformShot label="Tableau de bord complet" />
-                <PlatformShot label="QCM corrigés et commentés" />
-                <PlatformShot label="Corrections détaillées" />
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <PlatformShot label="Tableau de bord"        src="/accueil.png" />
+                <PlatformShot label="Entraînement ciblé"     src="/entrainement.png" />
+                <PlatformShot label="Cours par item EDN"     src="/cours.png" />
+                <PlatformShot label="Annales EVC corrigées"  src="/annales.png" />
               </div>
               <ul className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10.5px] font-semibold text-[#52607A]">
                 <li className="inline-flex items-center gap-1"><Clock className="h-3 w-3 text-[#C0001F]" /> Accessible 24h/24</li>
@@ -388,11 +382,23 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
 
 /* ─────────────── helpers ─────────────── */
 
+/* Image hero : on garde un visuel illustratif (gradient + icone livre),
+ * mais on superpose une petite carte avec le logo officiel Major ECN
+ * (« Programme officiel d'Autorisation d'Exercice (PAE) en France »)
+ * dans le coin haut-droit, comme sur la maquette designer. */
 function HeroBookImage() {
   return (
     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)] lg:aspect-auto lg:h-56">
       <div className="absolute inset-0 flex items-center justify-center">
         <BookOpen className="h-16 w-16 text-[#1E4D8B]/40" />
+      </div>
+      {/* Carte officielle PAE avec le logo Major ECN — coin haut-droit. */}
+      <div className="absolute right-3 top-3 flex max-w-[55%] items-center gap-2 rounded-xl border border-[#ECEEF1] bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
+        <BrandLogo className="h-7 w-auto sm:h-8" />
+        <div className="leading-tight">
+          <p className="text-[8.5px] font-extrabold uppercase tracking-wider text-[#C0001F]">Programme officiel</p>
+          <p className="text-[9px] font-semibold text-[#1A2233]">d&rsquo;Autorisation d&rsquo;Exercice (PAE) en France</p>
+        </div>
       </div>
     </div>
   );
@@ -412,12 +418,12 @@ function NumberedBox({ num, title, children }: { num: number; title: string; chi
   );
 }
 
-function PlatformShot({ label }: { label: string }) {
+function PlatformShot({ label, src = '/accueil.png' }: { label: string; src?: string }) {
   return (
     <div className="overflow-hidden rounded-lg border border-[#FACBD0] bg-white">
       <p className="border-b border-[#F2F3F5] px-2 py-1 text-center text-[9px] font-bold text-[#1A2233]">{label}</p>
       <div className="relative aspect-video">
-        <Image src="/accueil.png" alt="" fill className="object-cover object-top" sizes="(max-width:1024px) 33vw, 200px" />
+        <Image src={src} alt="" fill className="object-cover object-top" sizes="(max-width:1024px) 25vw, 180px" />
       </div>
     </div>
   );
