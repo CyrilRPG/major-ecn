@@ -97,10 +97,10 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
         )}
       </div>
 
-      {/* Catégories */}
-      <ul className="divide-y" style={{ borderColor: BORDER }}>
+      {/* Catégories — chaque entrée est un bloc gris séparé */}
+      <ul className="space-y-2.5 p-3 sm:p-4" style={{ background: '#F7F8FB' }}>
         {filtered.length === 0 && (
-          <li className="px-5 py-8 text-center text-[13px] sm:px-6" style={{ color: INK_SOFT }}>
+          <li className="rounded-xl bg-white px-5 py-8 text-center text-[13px]" style={{ color: INK_SOFT }}>
             Aucune question ne correspond à votre recherche.
           </li>
         )}
@@ -110,13 +110,17 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
           // résultats ; hors recherche, on respecte l'état (collapsed par défaut).
           const isOpen = searching ? true : openCat === cat.id;
           return (
-            <li key={cat.id}>
+            <li
+              key={cat.id}
+              className="overflow-hidden rounded-xl border bg-white transition-shadow"
+              style={{ borderColor: BORDER, boxShadow: isOpen ? '0 6px 22px -14px rgba(15,31,77,0.18)' : undefined }}
+            >
               <button
                 type="button"
                 onClick={() => setOpenCat((cur) => (cur === cat.id ? '' : cat.id))}
                 aria-expanded={isOpen}
                 disabled={searching}
-                className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-[#FFF8F9] sm:px-6 disabled:cursor-default"
+                className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-[#FFF8F9] sm:px-5 disabled:cursor-default"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[12.5px] font-black tabular-nums"
                   style={{ background: isOpen ? RED : '#FCEAEC', color: isOpen ? 'white' : RED }}>
@@ -133,7 +137,7 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
               </button>
 
               {isOpen && (
-                <div className="border-t bg-[#FFFCFD] px-3 pb-4 pt-3 sm:px-4" style={{ borderColor: BORDER }}>
+                <div className="border-t px-3 pb-4 pt-3 sm:px-4" style={{ borderColor: BORDER, background: '#FAFBFD' }}>
                   <ul className="space-y-2.5">
                     {matched.map((qa) => {
                       const qid = `${cat.id}::${qa.q}`;

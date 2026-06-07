@@ -382,9 +382,9 @@ function SpecialitesGrid() {
         </Reveal>
 
         {/* Grille */}
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {list.map((s, i) => (
-            <Reveal key={s.slug} delay={Math.min(0.04 * (i % 8), 0.32)}>
+            <Reveal key={s.slug} delay={Math.min(0.03 * (i % 10), 0.30)}>
               <SpecCard s={s} />
             </Reveal>
           ))}
@@ -404,29 +404,29 @@ function SpecCard({ s }: { s: Speciality }) {
   const href = s.slug === 'medecine-generale' ? '/specialites/medecine-generale' : `/specialites#${s.slug}`;
   return (
     <Link href={href}
-      className="group relative flex h-full flex-col gap-3 rounded-2xl border bg-white p-4 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
+      className="group relative flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-3.5 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
       style={{ borderColor: BORDER }}>
       <span aria-hidden className="absolute inset-x-4 top-0 h-[3px] rounded-b-full opacity-90"
         style={{ background: s.accent }} />
-      <div className="mt-1 flex items-center gap-2.5">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl"
+      <div className="mt-1 flex items-center gap-2">
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg"
           style={{ background: `${s.accent}14`, color: s.accent }}>
-          <s.Icon className="h-5 w-5" />
+          <s.Icon className="h-4.5 w-4.5" />
         </span>
         <div className="min-w-0">
-          <p className="truncate text-[14.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{s.name}</p>
-          <p className="text-[10.5px] font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>{s.family}</p>
+          <p className="truncate text-[13.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{s.name}</p>
+          <p className="text-[9.5px] font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>{s.family}</p>
         </div>
       </div>
-      <ul className="space-y-1.5 text-[12.5px]" style={{ color: INK_SOFT }}>
+      <ul className="space-y-1 text-[11.5px]" style={{ color: INK_SOFT }}>
         {s.bullets.map((b) => (
           <li key={b} className="flex items-start gap-1.5">
-            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: s.accent }} />
+            <Check className="mt-0.5 h-3 w-3 shrink-0" style={{ color: s.accent }} />
             <span>{b}</span>
           </li>
         ))}
       </ul>
-      <span className="mt-auto inline-flex items-center gap-1 text-[12.5px] font-bold transition-colors group-hover:underline"
+      <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
         style={{ color: s.accent }}>
         Découvrir <ChevronRight className="h-3.5 w-3.5" />
       </span>
