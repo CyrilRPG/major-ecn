@@ -1512,11 +1512,17 @@ export function ToolsForProgressSection() {
           </p>
           <h2
             className="mx-auto mt-5 max-w-4xl text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl"
-            style={{ color: TOOLS_INK }}
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, #0F1F4D 0%, #1E3A8A 30%, #2563EB 60%, #4F46E5 100%)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              color: 'transparent',
+            }}
           >
             Tous les outils pour structurer<br className="hidden sm:inline" />
-            {' '}votre progression{' '}
-            <span style={{ color: TOOLS_BLUE }}>aux EVC</span>
+            {' '}votre progression aux EVC
           </h2>
           <p
             className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-[17px]"
