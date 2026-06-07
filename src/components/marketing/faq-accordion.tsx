@@ -219,7 +219,7 @@ export function FaqSidebar() {
         <p className="mt-3 text-base font-extrabold" style={{ color: NAVY }}>Pourquoi choisir Major ECN&nbsp;?</p>
         <ul className="mt-3 space-y-2.5">
           {[
-            { Icon: Calendar,      t: 'Depuis 2011, +18 ans d’expérience' },
+            { Icon: Calendar,      t: 'Depuis 2011, +15 ans d’expérience' },
             { Icon: GraduationCap, t: '+45 spécialités préparées' },
             { Icon: Stethoscope,   t: 'Correcteurs spécialistes en activité' },
             { Icon: Layers3,       t: 'Révisions transversales & flashcards' },

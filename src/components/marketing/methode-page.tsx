@@ -72,12 +72,12 @@ function MethodeHero() {
             <p className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold"
               style={{ background: '#FCEAEC', color: RED }}>
               <Sparkles className="h-3.5 w-3.5" />
-              Depuis plus de 18 ans, Major ECN accompagne les médecins étrangers vers la réussite.
+              Depuis plus de 15 ans, Major ECN accompagne les médecins étrangers vers la réussite.
             </p>
 
             <div className="mt-7 grid grid-cols-1 gap-4 max-w-xl sm:grid-cols-3">
               {[
-                { Icon: Target, big: '+18 ans', sub: "d'expérience" },
+                { Icon: Target, big: '+15 ans', sub: "d'expérience" },
                 { Icon: Trophy, big: 'Des milliers de', sub: 'lauréats', small: true },
                 { Icon: Award,  big: 'Méthode éprouvée', sub: 'et résultats concrets', small: true },
               ].map((s, i) => (
@@ -107,7 +107,7 @@ function MethodeHero() {
                   <span className="text-xs font-bold uppercase tracking-wider text-white/85">Référentiel EVC</span>
                 </div>
                 <p className="absolute left-6 bottom-8 max-w-[60%] text-sm font-bold leading-snug text-white/95">
-                  18 ans d&rsquo;expérience au service de la préparation aux EVC
+                  15 ans d&rsquo;expérience au service de la préparation aux EVC
                 </p>
               </div>
               {/* Floating mission card */}

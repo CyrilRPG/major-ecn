@@ -45,7 +45,7 @@ function MajorEvcLogo() {
 
 /* Trust en bas du brand : court, dense, sans cartes */
 const TRUST = [
-  { Icon: Calendar,      t: '18 ans d’expérience' },
+  { Icon: Calendar,      t: '15 ans d’expérience' },
   { Icon: Users,         t: '9 000+ médecins accompagnés' },
   { Icon: ShieldCheck,   t: '45 spécialités couvertes' },
   { Icon: GraduationCap, t: 'PH spécialistes & CCA' },
@@ -76,7 +76,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
 ];
 
 const BOTTOM_BADGES = [
-  { Icon: Award,        label: '18 ans d’expérience' },
+  { Icon: Award,        label: '15 ans d’expérience' },
   { Icon: Users,        label: '9 000+ médecins accompagnés' },
   { Icon: ShieldCheck,  label: '45 spécialités couvertes' },
 ];
@@ -95,7 +95,7 @@ export function MarketingFooter() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: INK_SOFT }}>
             Plateforme dédiée à la préparation des <strong style={{ color: INK }}>Épreuves de Vérification
             des Connaissances (EVC)</strong> dans le cadre de la Procédure d&rsquo;Autorisation d&rsquo;Exercice
-            (PAE). Au service des médecins étrangers depuis <strong style={{ color: RED }}>plus de 18 ans</strong>.
+            (PAE). Au service des médecins étrangers depuis <strong style={{ color: RED }}>plus de 15 ans</strong>.
           </p>
 
           <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">

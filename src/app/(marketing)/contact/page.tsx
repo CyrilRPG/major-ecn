@@ -138,7 +138,7 @@ export default function ContactPage() {
                       +9 000&nbsp;médecins accompagnés
                     </p>
                     <p className="text-[11.5px] leading-tight" style={{ color: INK_SOFT }}>
-                      depuis plus de 18 ans dans 45+ spécialités.
+                      depuis plus de 15 ans dans 45+ spécialités.
                     </p>
                   </div>
                 </div>

@@ -373,7 +373,7 @@ function PlateformeHero() {
             <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12.5px]"
               style={{ color: INK_SOFT }}>
               {[
-                { Icon: Calendar,     t: 'Depuis 2011 — 18 ans d\'expérience EVC' },
+                { Icon: Calendar,     t: 'Depuis 2011 — 15 ans d\'expérience EVC' },
                 { Icon: Stethoscope,  t: 'Équipe PH & PU-PH spécialistes' },
                 { Icon: Users,        t: '9 000+ médecins accompagnés' },
                 { Icon: CheckCircle2, t: 'Plateforme 100 % en ligne' },
@@ -606,14 +606,13 @@ function PlateformeHero_LegacyMock() {
 /* ============ CREDENTIALS PREMIUM : pourquoi Major ECN ============ */
 function BrandCredentialsSection() {
   const metrics = [
-    { value: '18',     unit: 'ans',     label: "d'expertise dédiée aux EVC PAE",         tone: '#8B0E22' },
+    { value: '15',     unit: 'ans',     label: "d'expertise dédiée aux EVC PAE",         tone: '#8B0E22' },
     { value: '9 000',  unit: '+',       label: 'médecins étrangers accompagnés',         tone: '#0F1F4D' },
     { value: '45',     unit: '/45',     label: 'spécialités EDN couvertes',              tone: '#0F766E' },
-    { value: '92',     unit: '%',       label: 'taux de réussite parmi nos abonnés',     tone: '#8B5A1A' },
   ];
   const principes = [
     { Icon: Stethoscope,  t: 'Conçue par des praticiens hospitaliers',
-      d: 'Chaque fiche, chaque QCM est validé par un PH ou PU-PH exerçant en CHU. Aucune théorie hors-sol.' },
+      d: 'Chaque fiche, chaque QCM est validé par un PH ou PU-PH, CCA ou spécialiste exerçant en CHU. Aucune théorie hors-sol.' },
     { Icon: Target,       t: 'Calibrée au format EVC',
       d: 'QCM, dossiers progressifs et QI strictement alignés sur la grille du jury — y compris la notation.' },
     { Icon: TrendingUp,   t: 'Apprentissage qui s\'adapte',
@@ -644,7 +643,7 @@ function BrandCredentialsSection() {
 
         {/* Grille metrics premium */}
         <Reveal delay={0.1}>
-          <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {metrics.map((m) => (
               <li key={m.label} className="relative overflow-hidden rounded-2xl border bg-white p-5 shadow-[0_24px_60px_-30px_rgba(15,31,77,0.18)]"
                 style={{ borderColor: BORDER }}>

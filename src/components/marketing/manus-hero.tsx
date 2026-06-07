@@ -56,7 +56,7 @@ export function ManusHero() {
             transition={{ duration: 1, ease: 'easeOut' }}
           >
             <h1 className="text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.75rem]">
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>Depuis 18 ans,</span>{' '}
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>Depuis 15 ans,</span>{' '}
               <span className="bg-clip-text text-transparent" style={{ backgroundImage: TITLE_GRADIENT }}>nous préparons les candidats aux EVC.</span>
             </h1>
 

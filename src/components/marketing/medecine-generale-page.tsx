@@ -416,7 +416,7 @@ function MgWhy() {
     {
       Icon: GraduationCap, tone: RED,
       title: 'Expertise PADHUE',
-      text: '+18 ans d’accompagnement de médecins étrangers vers la réussite des EVC, sur toutes les spécialités.',
+      text: '+15 ans d’accompagnement de médecins étrangers vers la réussite des EVC, sur toutes les spécialités.',
     },
     {
       Icon: Stethoscope, tone: '#2563EB',

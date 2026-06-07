@@ -296,7 +296,7 @@ function MetricsStrip() {
     { Icon: Trophy,        big: '45+',   label: 'spécialités couvertes', tone: RED },
     { Icon: GraduationCap, big: '100%',  label: 'des programmes officiels', tone: '#0F8A6A' },
     { Icon: UserCheck,     big: '100%',  label: 'correcteurs spécialistes', tone: '#2563EB' },
-    { Icon: TrendingUp,    big: '+18 ans', label: 'd’expérience PADHUE', tone: '#7C3AED' },
+    { Icon: TrendingUp,    big: '+15 ans', label: 'd’expérience PADHUE', tone: '#7C3AED' },
     { Icon: Award,         big: '100%',  label: 'préparation EVC officielle', tone: '#E8742C' },
   ];
   return (
@@ -401,7 +401,8 @@ function SpecialitesGrid() {
 }
 
 function SpecCard({ s }: { s: Speciality }) {
-  const href = s.slug === 'medecine-generale' ? '/specialites/medecine-generale' : `/specialites#${s.slug}`;
+  const isMG = s.slug === 'medecine-generale';
+  const href = isMG ? '/specialites/medecine-generale' : '/contact';
   return (
     <Link href={href}
       className="group relative flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-3.5 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
@@ -426,10 +427,17 @@ function SpecCard({ s }: { s: Speciality }) {
           </li>
         ))}
       </ul>
-      <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
-        style={{ color: s.accent }}>
-        Découvrir <ChevronRight className="h-3.5 w-3.5" />
-      </span>
+      {isMG ? (
+        <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
+          style={{ color: s.accent }}>
+          Découvrir la préparation <ChevronRight className="h-3.5 w-3.5" />
+        </span>
+      ) : (
+        <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
+          style={{ color: INK_MUTED }}>
+          Nous contacter pour s’inscrire <ChevronRight className="h-3.5 w-3.5" />
+        </span>
+      )}
     </Link>
   );
 }

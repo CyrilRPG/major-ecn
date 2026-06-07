@@ -31,7 +31,7 @@ const PILIERS = [
   { n: '01', Icon: Compass,    color: '#6B1A2A', title: 'Diagnostic',  desc: 'Évaluation complète de votre niveau initial, identification des lacunes par spécialité.' },
   { n: '02', Icon: Zap,        color: '#3B82F6', title: 'Structure',   desc: 'Roadmap personnalisée et progressive en 12 semaines calée sur le programme EVC.' },
   { n: '03', Icon: TrendingUp, color: '#14B8A6', title: 'Progression', desc: 'Suivi en temps réel, IA pédagogique qui adapte la difficulté à votre niveau.' },
-  { n: '04', Icon: Award,      color: '#F59E0B', title: 'Réussite',    desc: 'Accompagnement humain et coaching jusqu’aux EVC — méthode éprouvée par 18 ans d’expérience.' },
+  { n: '04', Icon: Award,      color: '#F59E0B', title: 'Réussite',    desc: 'Accompagnement humain et coaching jusqu’aux EVC — méthode éprouvée par 15 ans d’expérience.' },
 ];
 
 export function MethodeSection() {
@@ -177,7 +177,7 @@ const IN_ORANGE = '#E8742C';
 const IN_INK_SOFT = '#5B6478';
 
 const IN_HEADER_BADGES = [
-  { Icon: Users,       t: 'Plus de 9 000 médecins', d: 'accompagnés depuis 18 ans',  bg: '#FDEEEF', fg: '#A91D2C' },
+  { Icon: Users,       t: 'Plus de 9 000 médecins', d: 'accompagnés depuis 15 ans',  bg: '#FDEEEF', fg: '#A91D2C' },
   { Icon: ShieldCheck, t: 'Une méthode éprouvée',   d: 'et régulièrement mise à jour', bg: '#EEF2FB', fg: '#1E3A8A' },
   { Icon: Lock,        t: 'Données sécurisées',     d: 'Hébergées en France',          bg: '#E7F6EC', fg: '#16793C' },
 ];
@@ -1012,7 +1012,7 @@ const FT_LEFT_POINTS = [
 
 const FT_BOTTOM = [
   { Icon: Clock,    t: '7 jours pour découvrir',  d: 'Prenez le temps d’explorer la plateforme et nos ressources.' },
-  { Icon: BookOpen, t: '18 ans d’expérience',     d: 'Une expertise reconnue au service de votre réussite depuis 2006.' },
+  { Icon: BookOpen, t: '15 ans d’expérience',     d: 'Une expertise reconnue au service de votre réussite depuis 2011.' },
   { Icon: Users,    t: 'Des praticiens à vos côtés', d: 'PH spécialistes et CCA impliqués dans votre préparation.' },
 ];
 
@@ -1205,7 +1205,7 @@ export function TrustBanner() {
     { Icon: BookOpen,       t: 'Méthodologie · Approche EVC' },
     { Icon: Users,          t: 'PH spécialistes & CCA' },
     { Icon: ClipboardCheck, t: 'Mis à jour chaque trimestre' },
-    { Icon: Award,          t: '18 ans d’expérience EVC' },
+    { Icon: Award,          t: '15 ans d’expérience EVC' },
     { Icon: MessagesSquare, t: 'Tuteur dédié sur demande' },
   ];
   // Loop the list twice so the marquee feels seamless
