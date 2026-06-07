@@ -40,7 +40,7 @@ export function AddProfessorDialog({
       permission_type: singleCollegeMode ? 'college' : 'all',
       colleges: singleCollegeMode ? [colleges[0].id] : [],
       content_permissions: Object.fromEntries(
-        CONTENT_TYPES.map((t) => [t, 'rw' as PermissionLevel]),
+        CONTENT_TYPES.map((t) => [t, t === 'video' ? 'none' as PermissionLevel : 'rw' as PermissionLevel]),
       ),
     },
   });
