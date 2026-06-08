@@ -7,6 +7,7 @@ import {
   Shield, ShieldCheck, Star, Stethoscope, Target, TrendingUp, Trophy, Users, Video,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { FAQSection } from './manus-sections';
 
 const NAVY = '#0F1F4D';
 const INK = '#1F2937';
@@ -194,6 +195,70 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         </div>
       </section>
 
+      {/* VOIES EXTERNE / INTERNE (Essentielle + Intensive) */}
+      {(variant === 'essentielle' || variant === 'intensive') && (
+        <section className="bg-[#F8F9FC] py-12">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-xl border bg-white p-5" style={{ borderColor: BORDER }}>
+                <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE EXTERNE</p>
+                <p className="text-[11px]" style={{ color: INK_SOFT }}>(Questions ouvertes)</p>
+                <ul className="mt-3 space-y-1.5">
+                  {['Methodologie de redaction', "Comprehension des attentes du jury", 'Conseils pratiques', 'Erreurs frequentes a eviter'].map(v => (
+                    <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
+                      <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-xl border bg-white p-5" style={{ borderColor: BORDER }}>
+                <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE INTERNE</p>
+                <p className="text-[11px]" style={{ color: INK_SOFT }}>(QCM)</p>
+                <ul className="mt-3 space-y-1.5">
+                  {['Methodologie specifique', 'Approche du raisonnement clinique', 'Gestion du temps', 'Erreurs frequentes a eviter'].map(v => (
+                    <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
+                      <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* POURQUOI CHOISIR (Intensive + Approfondi) */}
+      {(variant === 'intensive' || variant === 'approfondi') && (
+        <section className="bg-white py-12">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>
+              Pourquoi choisir la {c.label.replace('PROGRAMME', 'Programme').replace('FORMULE', 'Formule')} ?
+            </h2>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {(variant === 'intensive' ? [
+                { t: 'Consolidation des connaissances', d: 'Revoyez les notions essentielles et renforcez vos acquis grace a des contenus cibles.' },
+                { t: 'Corrections detaillees', d: 'Chaque QCM et chaque question ouverte est analyse et explique par nos experts.' },
+                { t: 'Rappels cibles des notions essentielles', d: 'Des fiches et seances de revision pour retenir l\'essentiel.' },
+                { t: 'Preparation ideale juste avant les EVC', d: 'Un dernier tour complet pour arriver le jour de l\'examen en confiance.' },
+              ] : [
+                { t: 'Reprise structuree', d: 'Reprise structuree des specialites essentielles.' },
+                { t: 'Dossiers cliniques guides', d: 'Dossiers cliniques guides et progressifs.' },
+                { t: 'Rappels cibles', d: 'Rappels cibles des notions indispensables.' },
+                { t: 'Echanges reguliers', d: 'Echanges reguliers avec des enseignants experts.' },
+              ]).map(p => (
+                <div key={p.t} className="rounded-xl border p-4" style={{ borderColor: BORDER }}>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: c.colorSoft, color: c.color }}>
+                    <CheckCircle2 className="h-4 w-4" />
+                  </span>
+                  <p className="mt-3 text-[13px] font-bold" style={{ color: NAVY }}>{p.t}</p>
+                  <p className="mt-1 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>{p.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* SPECIALTIES */}
       <section className="bg-[#F8F9FC] py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -301,6 +366,9 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FAQSection />
 
       {/* FINAL CTA */}
       <section className="py-12" style={{ background: variant === 'approfondi' ? '#1E40AF' : variant === 'intensive' ? '#C0112E' : '#2E7D32' }}>
