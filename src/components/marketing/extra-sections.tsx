@@ -1849,40 +1849,69 @@ const TV_NAVY = '#14254E';
 
 const TV_CARDS = [
   {
-    spec: 'Médecine générale',
+    spec: 'Radiodiagnostic & imagerie médicale',
     accent: TV_RED,
-    name: 'Dr Sandrine Linda SA’A TALLA',
-    country: 'Cameroun',
-    flag: '🇨🇲',
-    year: 'EVC 2022',
-    duration: '2:45',
-    quote: 'Les QCM et les dossiers m’ont permis de progresser tout au long de l’année.',
-    bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #A91D2C 60%, #E8742C 100%)',
-    initials: 'SS',
-  },
-  {
-    spec: 'Radiologie',
-    accent: TV_RED,
-    name: 'Dr Samy KABAWEH',
-    country: 'Tunisie',
-    flag: '🇹🇳',
-    year: 'EVC 2022',
-    duration: '2:38',
-    quote: 'Les fiches étaient claires et plusieurs cas du jour J ressemblaient à nos entraînements.',
+    name: 'Dr Sami KABAWEH',
+    country: '',
+    flag: '',
+    year: 'Lauréat EVC',
+    duration: '',
+    quote: 'Une préparation qui m’a fait franchir un cap : méthode claire, fiches synthétiques et examens blancs proches du jour J.',
     bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
     initials: 'SK',
+    videoSrc: '/temoignages/T1 FINAL V2.mp4',
   },
   {
-    spec: 'Psychiatrie',
+    spec: 'Anesthésie réanimation',
     accent: TV_RED,
-    name: 'Dr A. C.',
-    country: 'Brésil',
-    flag: '🇧🇷',
-    year: 'EVC 2021',
-    duration: '2:57',
-    quote: 'La préparation m’a apporté méthode, confiance et sérénité jusqu’au jour J.',
-    bgGrad: 'linear-gradient(135deg, #16793C 0%, #6B1A2A 60%, #A91D2C 100%)',
-    initials: 'AC',
+    name: 'Dr Karim KHIAREDDINE',
+    country: '',
+    flag: '',
+    year: 'Lauréat EVC 2025',
+    duration: '',
+    quote: 'Dans une spécialité exigeante, la méthodologie Major ECN m’a permis de structurer mes révisions et d’aborder le concours avec sérénité.',
+    bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)',
+    initials: 'KK',
+    videoSrc: '/temoignages/T2 FINAL V2.mp4',
+  },
+  {
+    spec: 'Endocrinologie & métabolisme',
+    accent: TV_RED,
+    name: 'Dr Ely Cheikh SY',
+    country: '',
+    flag: '',
+    year: 'Lauréat EVC 2025',
+    duration: '',
+    quote: 'Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne grâce à un accompagnement structuré.',
+    bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
+    initials: 'ES',
+    videoSrc: '/temoignages/T3 FINAL V2.mp4',
+  },
+  {
+    spec: 'Gériatrie',
+    accent: TV_RED,
+    name: 'Dr Ahmed SIFAOUI',
+    country: '',
+    flag: '',
+    year: 'Lauréat EVC 2025',
+    duration: '',
+    quote: 'Un accompagnement humain et exigeant, des supports clairs et un suivi qui fait toute la différence dans la durée.',
+    bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)',
+    initials: 'AS',
+    videoSrc: '/temoignages/T4 Final V2.mp4',
+  },
+  {
+    spec: 'Chirurgie viscérale & digestive',
+    accent: TV_RED,
+    name: 'Dr Ahena HAROUN',
+    country: '',
+    flag: '',
+    year: 'Lauréate EVC',
+    duration: '',
+    quote: 'Major ECN a structuré toute ma préparation : la méthode, les cas cliniques et les corrections détaillées font la différence.',
+    bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)',
+    initials: 'AH',
+    videoSrc: '/temoignages/T5 FINAL V2.mp4',
   },
 ];
 
@@ -1912,43 +1941,30 @@ export function TestimonialsVideoSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {TV_CARDS.map((c, i) => (
             <Reveal key={c.name} delay={i * 0.06}>
               <article className="overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
-                {/* Thumbnail vidéo (placeholder dégradé — remplacer par <video> ou <Image> quand assets fournis) */}
-                <button
-                  type="button"
-                  aria-label={`Lire le témoignage de ${c.name}`}
-                  className="group relative block aspect-video w-full overflow-hidden"
-                  style={{ background: c.bgGrad }}
-                >
-                  {/* avatar centré, façon portrait flou */}
-                  <span
-                    className="absolute inset-0 flex items-center justify-center text-5xl font-black text-white/15"
-                    aria-hidden
+                {/* Vidéo native — playback inline, poster gradient en fallback */}
+                <div className="relative aspect-video w-full overflow-hidden" style={{ background: c.bgGrad }}>
+                  <video
+                    src={c.videoSrc}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label={`Témoignage vidéo de ${c.name}`}
+                    className="absolute inset-0 h-full w-full bg-black object-cover"
                   >
-                    {c.initials}
-                  </span>
-                  {/* bouton play */}
-                  <span className="absolute inset-0 flex items-center justify-center" aria-hidden>
-                    <span
-                      className="flex h-16 w-16 items-center justify-center rounded-full text-white shadow-2xl backdrop-blur-sm transition-transform group-hover:scale-110"
-                      style={{ background: `radial-gradient(circle at 30% 30%, ${TV_RED}, ${TV_BURGUNDY})` }}
-                    >
-                      <Play className="ml-1 h-7 w-7" fill="currentColor" />
-                    </span>
-                  </span>
-                  {/* durée */}
-                  <span className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-[11px] font-bold text-white">
-                    {c.duration}
-                  </span>
-                </button>
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                </div>
                 <div className="p-5">
                   <p className="text-base font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
                   <p className="mt-0.5 text-sm font-bold" style={{ color: TV_RED }}>{c.spec}</p>
-                  <p className="mt-1.5 flex items-center gap-1.5 text-xs" style={{ color: TV_INK_SOFT }}>
-                    <span aria-hidden>{c.flag}</span> {c.country} • {c.year}
+                  <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wide"
+                    style={{ background: TV_PINK_BG, color: TV_RED }}>
+                    <ShieldCheck className="h-3 w-3" />
+                    {c.year}
                   </p>
                   <div className="mt-4 border-t pt-3" style={{ borderColor: '#ECECEF' }}>
                     <p className="flex items-start gap-1.5 text-sm italic leading-relaxed" style={{ color: TV_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
