@@ -712,29 +712,26 @@ const TEAM_STATS = [
   { Icon: ShieldCheck, big: '35+',   label: 'enseignants',            sub: 'PH specialistes et CCA' },
 ];
 
-/** Collage de photos des enseignants */
-const TEAM_PHOTOS = [
-  { photo: '/team/enseignante-1.jpg', name: 'Enseignante' },
-  { photo: '/team/enseignant-2.jpg', name: 'Enseignant' },
-];
+/** Collage style maquette : bandes verticales parallelo, N&B, decalees */
 function TeamPhotoCollage() {
+  const slices = [
+    { src: '/team/enseignante-1.jpg', mt: 0 },
+    { src: '/team/enseignant-2.jpg', mt: -20 },
+    { src: '/team/enseignante-1.jpg', mt: 10 },
+    { src: '/team/enseignant-2.jpg', mt: -10 },
+    { src: '/team/enseignante-1.jpg', mt: 5 },
+  ];
   return (
-    <div className="flex items-center justify-center gap-3">
-      {TEAM_PHOTOS.map((t) => (
-        <div key={t.name}
-          className="relative aspect-[3/4] w-full max-w-[140px] overflow-hidden rounded-2xl"
-          style={{
-            background: 'linear-gradient(160deg, #E7E9EE 0%, #C9CDD6 55%, #AEB3BF 100%)',
-            boxShadow: '0 16px 40px -16px rgba(15,27,61,0.35)',
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={t.photo} alt={t.name} className="h-full w-full object-cover" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2 pt-8">
-            <p className="text-[10px] font-bold text-white/90">{t.name}</p>
+    <div className="flex items-center justify-center">
+      <div className="flex gap-[3px]" style={{ height: '280px' }}>
+        {slices.map((s, i) => (
+          <div key={i} className="relative w-[52px] overflow-hidden"
+            style={{ clipPath: 'polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)', marginTop: `${s.mt}px` }}>
+            <img src={s.src} alt="" className="h-full w-full object-cover"
+              style={{ filter: 'grayscale(100%) contrast(1.1)' }} />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
