@@ -1394,7 +1394,7 @@ const TOOLS_INK_SOFT  = '#475569';
 const TOOLS_BORDER    = '#E5E9F0';
 const TOOLS_FONT      = "'Plus Jakarta Sans', sans-serif";
 /* Dégradé de fond rose chaud → blanc → rose (subtil, comme la maquette). */
-const TOOLS_BG = 'linear-gradient(180deg, #FFF6F7 0%, #FFFFFF 45%, #FFF6F7 100%)';
+const TOOLS_BG = 'linear-gradient(180deg, #FFF6F7 0%, #FFF2F4 50%, #FFF6F7 100%)';
 /* Dégradé du titre principal — même palette que « Ils racontent leur expérience ». */
 const TOOLS_GRAD_TITLE = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)';
 
@@ -1520,8 +1520,7 @@ export function ToolsForProgressSection() {
 
         {/* Sous-section "Une plateforme pensée pour vous faire gagner du temps" */}
         <div className="mt-6">
-          <div className="overflow-hidden rounded-2xl border bg-white"
-            style={{ borderColor: TOOLS_BORDER }}>
+          <div className="overflow-hidden rounded-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Gauche : titre + bullets */}
               <div className="flex flex-col justify-center p-5 sm:p-6">
