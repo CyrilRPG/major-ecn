@@ -9,7 +9,7 @@
 import {
   AlertCircle, ArrowRight, Award, Bell, BookOpen, Brain, CalendarCheck, CalendarDays,
   Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, FolderOpen,
-  GraduationCap, Heart, Lightbulb, ListChecks, MessageCircle, Quote, Settings, Shield,
+  GraduationCap, Heart, Home, Lightbulb, ListChecks, MessageCircle, Quote, Settings, Shield,
   ShieldCheck, Sparkles, Target, TrendingUp, Trophy, UserCheck, Users, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
@@ -29,6 +29,10 @@ const GRAD_BURGUNDY = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 55%, #E8742C 1
 const GRAD_RED_BLUE = 'linear-gradient(90deg, #C0112E 0%, #7C3AED 50%, #2563EB 100%)';
 const GRAD_NAVY_RED = 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)';
 const GRAD_RED_PURPLE = 'linear-gradient(90deg, #C0112E 0%, #BE185D 50%, #7C3AED 100%)';
+/* Bordeaux mat solide pour le titre principal — match template */
+const GRAD_BURGUNDY_SOLID = 'linear-gradient(90deg, #6B1A2A 0%, #5A1623 100%)';
+/* Bleu vif vers violet pour "EVC (PAE)" — match template */
+const GRAD_BLUE_VIOLET = 'linear-gradient(90deg, #2563EB 0%, #6366F1 50%, #7C3AED 100%)';
 const gradientText = (grad: string) => ({
   backgroundImage: grad,
   WebkitBackgroundClip: 'text' as const,
@@ -39,86 +43,127 @@ const gradientText = (grad: string) => ({
 
 /* ============ 1. HERO ============ */
 function MethodeHero() {
+  /* Hero pixel-perfect du template — image médecin laptop en background à droite,
+     texte à gauche, badges flottants + 4 stats en bas. Le fichier
+     attendu est /methode/hero-doctor-laptop.jpg : tant qu'il n'est pas présent,
+     le dégradé bordeaux de l'ancienne maquette sert de fallback élégant. */
   return (
     <section className="relative overflow-hidden bg-white pt-12 pb-14 sm:pt-16 sm:pb-16 lg:pt-20" style={{ fontFamily: FONT }}>
       <div aria-hidden className="pointer-events-none absolute -left-40 -top-40 -z-10 h-[500px] w-[500px] rounded-full bg-[#C0112E]/6 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-32 top-20 -z-10 h-[420px] w-[420px] rounded-full bg-[#1E40AF]/6 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-12">
-          {/* LEFT */}
-          <div>
-            <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] sm:rounded-full sm:text-[11px]"
-              style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Méthodologie EVC (PAE)</span>
-              <span className="opacity-50">·</span>
-              <span>Médecins étrangers</span>
-              <span className="opacity-50">·</span>
-              <span>PADHUE</span>
-            </span>
+        {/* Breadcrumb — fil d'ariane */}
+        <nav className="mb-6 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.16em] shadow-sm"
+          style={{ borderColor: BORDER, color: INK_SOFT }}>
+          <Home className="h-3 w-3" style={{ color: RED }} />
+          <span className="text-[#1E40AF]">Méthodologie EVC (PAE)</span>
+          <span aria-hidden className="text-[#C0112E]">●</span>
+          <span className="text-[#1E40AF]">Médecins étrangers</span>
+          <span aria-hidden className="text-[#C0112E]">●</span>
+          <span className="text-[#1E40AF]">PADHUE</span>
+        </nav>
 
-            <h1 className="mt-5 text-3xl font-black leading-[1.08] tracking-tight sm:text-4xl lg:text-[3.2rem]"
-              style={gradientText(GRAD_NAVY_RED)}>
-              La méthode qui aide les médecins étrangers à réussir les EVC (PAE)
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1.1fr] lg:gap-12">
+          {/* LEFT — texte */}
+          <div className="relative z-10">
+            <h1 className="text-3xl font-black leading-[1.05] tracking-tight sm:text-4xl lg:text-[3.2rem]"
+              style={{ color: NAVY }}>
+              <span style={gradientText(GRAD_BURGUNDY_SOLID)}>
+                La méthode qui aide<br />
+                les médecins étrangers<br />
+                à réussir les{' '}
+              </span>
+              <span style={gradientText(GRAD_BLUE_VIOLET)}>EVC (PAE)</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
-              Préparer les Épreuves de Vérification des Connaissances (EVC)
-              ne consiste pas seulement à apprendre son cours.
-              Il faut comprendre les attentes du jury, adopter la bonne méthode
-              et s&rsquo;entraîner dans des conditions proches du concours.
+              Préparer les Épreuves de Vérification des Connaissances (EVC) ne
+              consiste pas seulement à apprendre son cours. Il faut comprendre
+              les attentes du jury, maîtriser la méthodologie de réponse et s&rsquo;entraîner
+              dans des conditions proches du concours.
             </p>
 
-            <p className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold"
-              style={{ background: '#FCEAEC', color: RED }}>
-              <Sparkles className="h-3.5 w-3.5" />
-              Depuis plus de 15 ans, Major ECN accompagne les médecins étrangers vers la réussite.
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-bold shadow-sm"
+              style={{ color: NAVY, border: `1px solid ${BORDER}` }}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full" style={{ background: '#C0112E' }}>
+                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-white" fill="currentColor" aria-hidden>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </span>
+              Depuis plus de 18 ans, Major ECN accompagne<br />
+              les médecins étrangers vers la réussite.
             </p>
 
-            <div className="mt-7 grid grid-cols-1 gap-4 max-w-xl sm:grid-cols-3">
+            {/* 4 stats cards — match template */}
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 lg:gap-4 xl:grid-cols-4">
               {[
-                { Icon: Target, big: '+15 ans', sub: "d'expérience" },
-                { Icon: Trophy, big: 'Des milliers de', sub: 'lauréats', small: true },
-                { Icon: Award,  big: 'Méthode éprouvée', sub: 'et résultats concrets', small: true },
+                { Icon: Target,    big: '+18 ans',         sub: "d'expérience" },
+                { Icon: Trophy,    big: 'Des milliers de', sub: 'lauréats' },
+                { Icon: Users,     big: 'Méthode éprouvée', sub: 'et efficace' },
+                { Icon: Shield,    big: 'Résultats concrets', sub: 'et mesurables' },
               ].map((s, i) => (
-                <div key={i} className="flex flex-col items-start gap-1.5">
+                <div key={i} className="flex flex-col items-start gap-1.5 rounded-2xl border bg-white p-3.5 shadow-sm"
+                  style={{ borderColor: BORDER }}>
                   <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: RED }}>
                     <s.Icon className="h-4 w-4" />
                   </span>
-                  <p className={'font-extrabold ' + (s.small ? 'text-[13px] leading-tight' : 'text-base')} style={{ color: NAVY }}>{s.big}</p>
-                  <p className="text-[11px] font-medium" style={{ color: INK_SOFT }}>{s.sub}</p>
+                  <p className="text-[13px] font-extrabold leading-tight" style={{ color: NAVY }}>{s.big}</p>
+                  <p className="text-[11px] font-medium leading-tight" style={{ color: INK_SOFT }}>{s.sub}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT — visuel + carte mission */}
+          {/* RIGHT — photo médecin laptop + 3 floating badges */}
           <div className="relative">
-            <div className="relative overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-30px_rgba(15,31,77,0.35)]" style={{ borderColor: BORDER }}>
-              {/* Image décorative bordeaux */}
-              <div className="aspect-[5/4] w-full bg-gradient-to-br from-[#4D121E] via-[#6B1A2A] to-[#8B0E22] relative">
-                <div aria-hidden className="absolute inset-0 opacity-30" style={{
-                  background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%)',
-                }} />
-                <div className="absolute left-6 top-6 flex items-center gap-2">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/15 backdrop-blur">
-                    <BookOpen className="h-4 w-4 text-white" />
-                  </span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-white/85">Référentiel EVC</span>
-                </div>
-                <p className="absolute left-6 bottom-8 max-w-[60%] text-sm font-bold leading-snug text-white/95">
-                  15 ans d&rsquo;expérience au service de la préparation aux EVC
-                </p>
+            {/* halos */}
+            <span aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-[#1E40AF]/14 blur-3xl" />
+            <span aria-hidden className="pointer-events-none absolute -left-6 -bottom-10 h-60 w-60 rounded-full bg-[#C0112E]/14 blur-3xl" />
+
+            <div className="relative overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-30px_rgba(15,31,77,0.35)]"
+              style={{ borderColor: BORDER }}>
+              <div className="relative aspect-[4/3]"
+                style={{
+                  background:
+                    'linear-gradient(135deg,#1B2540 0%,#243556 35%,#3A2C3F 70%,#5B1828 100%)',
+                }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/methode/hero-doctor-laptop.jpg"
+                  alt="Médecin préparant les EVC sur ordinateur portable"
+                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  style={{ objectPosition: '50% 35%' }}
+                  decoding="async"
+                  fetchPriority="high"
+                  onError={(e) => {
+                    /* Fallback visuel discret si le fichier n'est pas encore présent. */
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+                {/* overlay doux pour la lisibilité des badges */}
+                <span aria-hidden className="pointer-events-none absolute inset-0"
+                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 30%, rgba(15,31,77,0.18) 100%)' }} />
               </div>
-              {/* Floating mission card */}
-              <div className="absolute right-5 top-5 w-56 rounded-2xl bg-white p-5 shadow-2xl">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: '#FCEAEC', color: RED }}>
-                  <Shield className="h-5 w-5" />
-                </span>
-                <p className="mt-3 text-sm font-bold" style={{ color: NAVY }}>Notre mission</p>
-                <p className="mt-1.5 text-[11px] leading-relaxed" style={{ color: INK_SOFT }}>
-                  Vous donner la méthode, les outils et les accompagnements pour transformer vos efforts en réussite le jour des EVC.
-                </p>
+
+              {/* 3 floating badges à droite — comme template */}
+              <div className="absolute right-4 top-6 flex flex-col gap-3 sm:right-5 sm:top-8 sm:gap-3.5">
+                {[
+                  { Icon: BookOpen, label: 'Méthodologie EVC',  bg: '#EDE9FE', fg: '#6D28D9' },
+                  { Icon: Brain,    label: 'Raisonnement clinique', bg: '#FCE7F3', fg: '#BE185D' },
+                  { Icon: Trophy,   label: 'Concours blancs',   bg: '#DCFCE7', fg: '#16A34A' },
+                ].map((b) => (
+                  <span key={b.label}
+                    className="inline-flex items-center gap-2.5 rounded-2xl border bg-white/95 px-3.5 py-2 text-[12.5px] font-extrabold backdrop-blur"
+                    style={{ borderColor: BORDER, color: NAVY, boxShadow: '0 14px 30px -16px rgba(15,31,77,0.40)' }}
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl"
+                      style={{ background: b.bg, color: b.fg }}>
+                      <b.Icon className="h-4 w-4" />
+                    </span>
+                    {b.label}
+                  </span>
+                ))}
               </div>
             </div>
           </div>

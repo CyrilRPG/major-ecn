@@ -1,4 +1,4 @@
-import { CheckCircle2, Building2, Stethoscope, ClipboardCheck, Award, ChevronDown, Users, GraduationCap, BookOpen, Activity, Target, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Building2, Stethoscope, ClipboardCheck, Award, ChevronDown, Users, GraduationCap, BookOpen, Activity, Target, AlertTriangle, Info, Home, HeartPulse, FileText, Building, Heart } from 'lucide-react';
 import { ArticleHeader, PrepCtaCard, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
 import { ArticleSidebarPopular } from '../article-sidebar-popular';
@@ -29,6 +29,33 @@ const STRUCTURES = [
   { type: 'Établissements privés (ESPIC et cliniques agréés)', medical: 4, clinique: 4, formation: 3, perspectives: 4, exemples: 'Cliniques privées, ESPIC, établissements de santé privés d\'intérêt collectif' },
   { type: 'Structures sanitaires agréées', medical: 4, clinique: 4, formation: 3, perspectives: 4, exemples: 'Centres de santé, SSR, établissements spécialisés' },
   { type: 'Structures médico-sociales agréées (selon le projet professionnel)', medical: 3, clinique: 3, formation: 3, perspectives: 3, exemples: 'EHPAD, PMI, services médico-sociaux, structures habilitées' },
+];
+
+/* Nouvelle table pixel-perfect — structures habilitées avec icônes colorées,
+   colonne "PCC possible ?" Oui (vert) et particularités. */
+const STRUCTURES_HABILITEES: Array<{
+  Icon: typeof Building2;
+  iconBg: string;
+  iconFg: string;
+  title: string;
+  subtitle?: string;
+  details: string[];
+}> = [
+  { Icon: Building2,   iconBg: '#E5F1FF', iconFg: '#1E4D8B', title: 'CHU',
+    subtitle: '(Centres Hospitaliers Universitaires)',
+    details: ['Activité universitaire et hospitalière,', 'plateau technique complet, recherche.'] },
+  { Icon: Building,    iconBg: '#DCFCE7', iconFg: '#16A34A', title: 'Centre Hospitalier',
+    subtitle: '(CH)',
+    details: ['Activité hospitalière de proximité', 'ou spécialisée.'] },
+  { Icon: HeartPulse,  iconBg: '#EDE9FE', iconFg: '#6D28D9', title: 'Établissement de Santé Privé',
+    subtitle: 'd’Intérêt Collectif (ESPIC)',
+    details: ['Établissements privés à but non lucratif', '(ex : fondations, centres spécialisés).'] },
+  { Icon: Stethoscope, iconBg: '#FFE4E8', iconFg: '#C0001F', title: 'Clinique privée habilitée',
+    details: ['Selon l’habilitation accordée', 'pour l’accueil des lauréats de la PAE.'] },
+  { Icon: Heart,       iconBg: '#DCFCE7', iconFg: '#0F8A6A', title: 'Centre de santé habilité',
+    details: ['Structures de soins de premier recours', 'habilitées, selon les postes ouverts.'] },
+  { Icon: Home,        iconBg: '#FEF3E2', iconFg: '#D97706', title: 'Structure médico-sociale habilitée',
+    details: ['Structures pouvant proposer des missions', 'en lien avec le projet professionnel.'] },
 ];
 
 const FAQS = [
@@ -146,53 +173,118 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
               </p>
             </BoxSection>
 
-            {/* Tableau comparatif */}
-            <BoxSection num={4} title="Où réaliser son PCC ? Les structures d'accueil agréées">
-              <p className="text-[12.5px] text-[#1A2233]">
-                Le choix du lieu d&rsquo;affectation est encadré : le PCC ne peut se dérouler
-                que dans une structure agréée par les autorités compétentes (Centre National
-                de Gestion, Agence Régionale de Santé). L&rsquo;agrément garantit la présence
-                d&rsquo;un encadrement médical qualifié, d&rsquo;une activité clinique
-                suffisamment diversifiée et d&rsquo;une convention avec une faculté de médecine
-                assurant le volet universitaire.
+            {/* Tableau pixel-perfect — structures d'accueil habilitées */}
+            <BoxSection num={4} title="Où réaliser son PCC ? Les structures d'accueil habilitées">
+              <p className="text-[13px] text-[#1A2233]">
+                Le PCC doit être réalisé dans une structure habilitée à accueillir des lauréats de la PAE.
               </p>
-              <p className="mt-2 text-[12.5px] text-[#52607A]">
-                Quatre grandes familles de structures peuvent accueillir un PCC. Chacune
-                présente des spécificités en termes d&rsquo;encadrement, d&rsquo;exposition
-                clinique, de suivi universitaire et de perspectives d&rsquo;intégration. Le
-                tableau ci-dessous synthétise ces différences pour aider le candidat à
-                construire son projet professionnel.
+              <p className="mt-1 text-[13px] text-[#1A2233]">
+                Toutes les structures de santé ne sont pas automatiquement éligibles.
               </p>
-              <div className="mt-3 overflow-x-auto">
-                <table className="w-full min-w-[680px] border-separate border-spacing-0 text-[12px]">
-                  <thead>
-                    <tr className="text-left text-[10px] uppercase tracking-wide text-[#9AA1AE]">
-                      <th className="border-b border-[#ECEEF1] pb-2 pr-2">Type de structure</th>
-                      <th className="border-b border-[#ECEEF1] pb-2 px-2">Encadrement médical</th>
-                      <th className="border-b border-[#ECEEF1] pb-2 px-2">Activité clinique</th>
-                      <th className="border-b border-[#ECEEF1] pb-2 px-2">Formation &amp; suivi universitaire</th>
-                      <th className="border-b border-[#ECEEF1] pb-2 px-2">Perspectives professionnelles</th>
-                      <th className="border-b border-[#ECEEF1] pb-2 pl-2">Exemples</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[#1A2233]">
-                    {STRUCTURES.map((s) => (
-                      <tr key={s.type}>
-                        <td className="border-b border-[#F2F3F5] py-3 pr-2 font-semibold">{s.type}</td>
-                        <td className="border-b border-[#F2F3F5] py-3 px-2"><Stars n={s.medical} /></td>
-                        <td className="border-b border-[#F2F3F5] py-3 px-2"><Stars n={s.clinique} /></td>
-                        <td className="border-b border-[#F2F3F5] py-3 px-2"><Stars n={s.formation} /></td>
-                        <td className="border-b border-[#F2F3F5] py-3 px-2"><Stars n={s.perspectives} /></td>
-                        <td className="border-b border-[#F2F3F5] py-3 pl-2 text-[11px] text-[#52607A]">{s.exemples}</td>
+
+              {/* Tableau structures */}
+              <div className="mt-4 overflow-hidden rounded-2xl border" style={{ borderColor: '#ECEEF1' }}>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[720px] border-collapse text-[12.5px]">
+                    <thead>
+                      <tr className="text-white" style={{ background: '#1E4D8B' }}>
+                        <th className="px-4 py-3 text-left text-[12px] font-extrabold">Type de structure</th>
+                        <th className="px-4 py-3 text-center text-[12px] font-extrabold">PCC possible&nbsp;?</th>
+                        <th className="px-4 py-3 text-left text-[12px] font-extrabold">Particularités</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {STRUCTURES_HABILITEES.map((s, idx) => (
+                        <tr key={s.title} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#FAFBFE]'}>
+                          {/* Col 1 — Type + icône */}
+                          <td className="border-t border-[#F2F3F5] px-4 py-4 align-top">
+                            <div className="flex items-start gap-3">
+                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                                style={{ background: s.iconBg, color: s.iconFg }}>
+                                <s.Icon className="h-5 w-5" />
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-[13px] font-extrabold leading-snug text-[#1A2233]">{s.title}</p>
+                                {s.subtitle && (
+                                  <p className="text-[11.5px] leading-snug text-[#52607A]">{s.subtitle}</p>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          {/* Col 2 — Oui badge */}
+                          <td className="border-t border-[#F2F3F5] px-4 py-4 align-middle text-center">
+                            <span className="inline-flex items-center gap-1.5 text-[13px] font-extrabold text-[#16A34A]">
+                              <CheckCircle2 className="h-4.5 w-4.5 fill-[#16A34A] text-white" />
+                              Oui
+                            </span>
+                          </td>
+                          {/* Col 3 — Particularités */}
+                          <td className="border-t border-[#F2F3F5] px-4 py-4 align-top text-[12px] text-[#1A2233]">
+                            {s.details.map((d, di) => (
+                              <p key={di} className="leading-snug">{d}</p>
+                            ))}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-[#FEF3C7] px-3 py-2 text-[11px] text-[#92400E]">
-                <AlertTriangle className="h-3 w-3 shrink-0" />
-                Toutes les structures ne sont pas éligibles. L&rsquo;affectation est décidée par le CNG ou l&rsquo;ARS
-                en fonction des postes disponibles et du projet professionnel du candidat.
+
+              {/* 2 cards : Important (bleu) + À retenir (vert) */}
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {/* Important — bleu */}
+                <div className="rounded-2xl border p-4"
+                  style={{ background: '#F0F5FF', borderColor: '#DCE6FF' }}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white" style={{ boxShadow: '0 0 0 3px #DCE6FF inset' }}>
+                      <Info className="h-4 w-4" style={{ color: '#1E4D8B' }} />
+                    </span>
+                    <p className="text-[14px] font-extrabold" style={{ color: '#1E4D8B' }}>Important</p>
+                  </div>
+                  <p className="mt-3 text-[12.5px] leading-relaxed text-[#1A2233]">
+                    Le Parcours de Consolidation des Compétences (PCC) doit être réalisé dans une{' '}
+                    <a href="#" className="font-bold underline" style={{ color: '#1E4D8B' }}>structure habilitée</a>{' '}
+                    à accueillir des lauréats de la PAE.
+                  </p>
+                  <span aria-hidden className="my-3 block h-px" style={{ background: '#DCE6FF' }} />
+                  <p className="text-[12.5px] leading-relaxed text-[#1A2233]">
+                    Les postes disponibles sont publiés dans le cadre de la procédure nationale.
+                    Toutes les structures de santé ne sont pas automatiquement éligibles.
+                  </p>
+                </div>
+
+                {/* À retenir — vert */}
+                <div className="rounded-2xl border p-4"
+                  style={{ background: '#F0FDF4', borderColor: '#BBF7D0' }}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white" style={{ boxShadow: '0 0 0 3px #BBF7D0 inset' }}>
+                      <GraduationCap className="h-4 w-4" style={{ color: '#16A34A' }} />
+                    </span>
+                    <p className="text-[14px] font-extrabold" style={{ color: '#16A34A' }}>À retenir</p>
+                  </div>
+                  <ul className="mt-3 space-y-2 text-[12.5px] text-[#1A2233]">
+                    {[
+                      'PCC de 2 ans pour les médecins.',
+                      'Inscription universitaire obligatoire dans le cadre du PCC.',
+                      'Réalisation du PCC dans une structure habilitée.',
+                      'Affectation sur un poste ouvert dans le cadre de la PAE.',
+                      'Le CHU n’est pas obligatoire.',
+                    ].map((t) => (
+                      <li key={t} className="flex items-start gap-2 leading-snug">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 fill-[#16A34A] text-white" />
+                        <span>{t}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Footer Références */}
+              <p className="mt-4 text-[11.5px] leading-snug text-[#52607A]">
+                <span className="font-extrabold text-[#1A2233]">Références :</span>{' '}
+                Décret n°&nbsp;2025-447 du 15&nbsp;mai 2025 relatif au parcours de consolidation des compétences des docteurs juniors en médecine
+                et à la procédure d&rsquo;affectation — Articles R.&nbsp;632-39-1 à R.&nbsp;632-39-11 du Code de l&rsquo;éducation.
               </p>
             </BoxSection>
 
