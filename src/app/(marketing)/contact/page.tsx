@@ -40,7 +40,7 @@ const FEATURES = [
   { Icon: Clock,       title: 'Réponse sous 24 h', sub: 'par un membre de l’équipe Major ECN.', tone: RED },
   { Icon: UserCheck,   title: 'Suivi sur mesure',  sub: 'orientation vers la formule adaptée.', tone: '#2563EB' },
   { Icon: Stethoscope, title: 'Spécialistes EVC',  sub: 'enseignants & praticiens en activité.', tone: '#0F8A6A' },
-  { Icon: Sparkles,    title: 'Sans engagement',   sub: 'essai gratuit 7 jours, sans CB.',       tone: '#E8742C' },
+  { Icon: Sparkles,    title: 'Sans engagement',   sub: 'essai gratuit 2 jours, sans CB.',       tone: '#E8742C' },
 ];
 
 const TRUST_AVATARS = [

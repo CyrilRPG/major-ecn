@@ -996,10 +996,10 @@ export function FAQSection() {
 
 
 // ============================================================================
-// FREE TRIAL CTA — bannière mise en avant de l'essai 7 jours
+// FREE TRIAL CTA — bannière mise en avant de l'essai 2 jours
 // ============================================================================
 /* FreeTrialBanner — pixel-perfect maquette designer.
-   Gauche : badge gradient red→orange, titre navy + « pendant 7 jours. »
+   Gauche : badge gradient red→orange, titre navy + « pendant 2 jours. »
    en dégradé, 4 atouts à coches rouges. Droite : carte blanche formulaire
    email. Dessous : 3 cartes réassurance. */
 const FT_NAVY = '#0F1B3D';
@@ -1017,7 +1017,7 @@ const FT_LEFT_POINTS = [
 ];
 
 const FT_BOTTOM = [
-  { Icon: Clock,    t: '7 jours pour découvrir',  d: 'Prenez le temps d’explorer la plateforme et nos ressources.' },
+  { Icon: Clock,    t: '2 jours pour découvrir',  d: 'Prenez le temps d’explorer la plateforme et nos ressources.' },
   { Icon: BookOpen, t: '15 ans d’expérience',     d: 'Une expertise reconnue au service de votre réussite depuis 2011.' },
   { Icon: Users,    t: 'Des praticiens à vos côtés', d: 'PH spécialistes et CCA impliqués dans votre préparation.' },
 ];
@@ -1060,7 +1060,7 @@ export function FreeTrialBanner() {
                 className="block bg-clip-text text-transparent"
                 style={{ backgroundImage: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 45%, ${FT_ORANGE} 100%)` }}
               >
-                pendant 7 jours.
+                pendant 2 jours.
               </span>
             </h2>
 
@@ -1108,7 +1108,7 @@ export function FreeTrialBanner() {
                   Commencez votre essai gratuit
                 </p>
                 <p className="mt-0.5 text-sm text-[#6B7280]" style={{ fontFamily: MANROPE }}>
-                  Accédez à Major ECN pendant 7 jours, sans engagement.
+                  Accédez à Major ECN pendant 2 jours, sans engagement.
                 </p>
               </div>
             </div>

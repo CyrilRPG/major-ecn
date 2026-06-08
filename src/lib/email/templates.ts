@@ -7,7 +7,7 @@
 type WelcomeArgs = {
   firstName: string;
   setupUrl: string;
-  /** 'student' = essai 7 jours, 'professor' = compte intervenant. */
+  /** 'student' = essai 2 jours, 'professor' = compte intervenant. */
   role: 'student' | 'professor';
 };
 
@@ -17,7 +17,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
   const title = isProf ? 'Activez votre espace professeur' : 'Activez votre compte étudiant';
   const intro = isProf
     ? `Votre compte intervenant Major ECN est créé. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder à l’espace « Questions / Réponses » où vous serez notifié des questions de vos élèves.`
-    : `Votre inscription à Major ECN est enregistrée. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe — vous accéderez immédiatement à la plateforme avec 7 jours d’essai gratuit, sans engagement.`;
+    : `Votre inscription à Major ECN est enregistrée. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe — vous accéderez immédiatement à la plateforme avec 2 jours d’essai gratuit, sans engagement.`;
   const subject = isProf
     ? '🩺 Activez votre espace professeur — Major ECN'
     : '🎓 Bienvenue chez Major ECN — activez votre compte';
@@ -80,7 +80,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
 
                 ${isProf ? '' : `
                 <div style="background:#F9F0F2;border:1px solid #F2D5DA;border-radius:14px;padding:14px 16px;margin:0 0 22px;">
-                  <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#6B1A2A;">✓ Votre essai 7 jours est actif</p>
+                  <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#6B1A2A;">✓ Votre essai 2 jours est actif</p>
                   <p style="margin:0;font-size:12px;line-height:1.6;color:#5A5A5A;">
                     Accès complet à 4 200+ QCM, flashcards, annales et IA pédagogique. Sans engagement,
                     annulation instantanée.

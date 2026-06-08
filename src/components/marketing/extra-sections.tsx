@@ -853,13 +853,13 @@ export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: stri
             qui ont réussi avec Major ECN
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-[#5A5A5A]">
-            Accès immédiat à la plateforme, 7 jours d’essai gratuit, sans engagement.
+            Accès immédiat à la plateforme, 2 jours d’essai gratuit, sans engagement.
           </p>
 
           <InscriptionForm colleges={colleges ?? []} />
 
           <p className="mt-4 text-xs text-[#7A7A7A]">
-            ✓ Essai gratuit 7 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
+            ✓ Essai gratuit 2 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
             Intensif : un conseiller vous rappelle sous 24 h.
           </p>
         </div>
@@ -925,7 +925,7 @@ export function TarifsBlock() {
             Votre réussite aux EVC commence ici
           </h2>
           <p className="mt-4 text-base text-white/70 sm:text-lg">
-            Choisissez la formule adaptée à vos objectifs. 7 jours d’essai gratuit, sans engagement.
+            Choisissez la formule adaptée à vos objectifs. 2 jours d’essai gratuit, sans engagement.
           </p>
         </Reveal>
 
@@ -990,7 +990,7 @@ export function TarifsBlock() {
         </div>
 
         <p className="mt-10 text-center text-xs text-white/55">
-          ✓ Essai gratuit 7 jours · Accès complet · Zéro engagement · Annulation instantanée
+          ✓ Essai gratuit 2 jours · Accès complet · Zéro engagement · Annulation instantanée
         </p>
       </div>
     </section>
@@ -1469,9 +1469,9 @@ const TOOLS_GRID: ToolItem[] = [
 ];
 
 const TOOLS_BULLETS = [
-  { Icon: Check,        t: ‘Tous vos sujets organisés’ },
-  { Icon: Settings,     t: ‘Outils méthodes intégrés’ },
-  { Icon: FolderOpen,   t: ‘Ressources organisées par spécialité’ },
+  { Icon: Check,        t: 'Tous vos sujets organisés' },
+  { Icon: Settings,     t: 'Outils méthodes intégrés' },
+  { Icon: FolderOpen,   t: 'Ressources organisées par spécialité' },
 ];
 
 export function ToolsForProgressSection() {

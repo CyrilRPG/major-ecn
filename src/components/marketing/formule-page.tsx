@@ -25,55 +25,55 @@ const CONFIGS: Record<Variant, {
 }> = {
   essentielle: {
     color: '#2E7D32', colorSoft: '#E8F5E9',
-    label: 'FORMULE ESSENTIELLE', tagline: 'Preparez les EVC avec une methode\nstructuree et des ressources concues\npour les medecins diplomes\nhors Union Europeenne.',
+    label: 'FORMULE ESSENTIELLE', tagline: 'Préparez les EVC avec une méthode\nstructurée et des ressources conçues\npour les médecins diplômés\nhors Union Européenne.',
     price: '495', hero: '/formules/hero-formule-essentielle.jpg',
-    desc: 'Travaillez en autonomie grace a une plateforme complete regroupant QCM, dossiers cliniques, flashcards, fiches pedagogiques et methodologie EVC.',
+    desc: 'Travaillez en autonomie grace a une plateforme complète regroupant QCM, dossiers cliniques, flashcards, fiches pédagogiques et méthodologie EVC.',
     cta: 'Commencer maintenant',
-    features: ['QCM, dossiers, fiches, flashcards', 'Methodologie EVC (voies interne et externe)', 'Ideal pour les candidats autonomes'],
+    features: ['QCM, dossiers, fiches, flashcards', 'Méthodologie EVC (voies interne et externe)', 'Idéal pour les candidats autonomes'],
     contentItems: [
-      { Icon: ClipboardCheck, t: 'QCM d\'entrainement', d: 'Series ciblees pour travailler efficacement' },
-      { Icon: FileText, t: 'Dossiers cliniques', d: 'Situations inspirees des EVC' },
-      { Icon: Layers3, t: 'Fiches pedagogiques', d: 'Informations cles a retenir' },
-      { Icon: BookOpen, t: 'Flashcards', d: 'Revisez rapidement les notions essentielles' },
-      { Icon: Target, t: 'Methodologie EVC', d: 'Seances dediees pour comprendre ce qui est attendu aux EVC' },
-      { Icon: LineChart, t: 'Suivi de progression', d: 'Visualisez vos acquis et vos points a ameliorer' },
+      { Icon: ClipboardCheck, t: "QCM d'entraînement", d: 'Séries ciblées pour travailler efficacement' },
+      { Icon: FileText, t: 'Dossiers cliniques', d: 'Situations inspirées des EVC' },
+      { Icon: Layers3, t: 'Fiches pédagogiques', d: 'Informations clés a retenir' },
+      { Icon: BookOpen, t: 'Flashcards', d: 'Révisez rapidement les notions essentielles' },
+      { Icon: Target, t: 'Méthodologie EVC', d: 'Séances dédiées pour comprendre ce qui est attendu aux EVC' },
+      { Icon: LineChart, t: 'Suivi de progression', d: 'Visualisez vos acquis et vos points a améliorer' },
     ],
   },
   intensive: {
     color: '#C0112E', colorSoft: '#FDE8EC',
-    label: 'FORMULE INTENSIVE', tagline: 'Finalisez votre preparation\ndans les derniers mois avant les EVC',
+    label: 'FORMULE INTENSIVE', tagline: 'Finalisez votre préparation\ndans les derniers mois avant les EVC',
     price: '995', hero: '/formules/hero-formule-intensive.jpg',
-    desc: 'Pour les candidats disposant deja de bases solides et souhaitant beneficier de revisions guidees, de corrections detaillees et de rappels cibles avant l\'examen.',
+    desc: "Pour les candidats disposant déjà de bases solides et souhaitant bénéficier de révisions guidées, de corrections détaillées et de rappels ciblés avant l'examen.",
     cta: 'Commencer maintenant',
-    features: ['Parcours adapte a votre voie (interne ou externe)', 'Seances de revision thematiques', 'Corrections commentees avec rappels cibles', 'Ideal dans les derniers mois avant les EVC'],
+    features: ['Parcours adapté a votre voie (interne ou externe)', 'Séances de révision thématiques', 'Corrections commentées avec rappels ciblés', 'Idéal dans les derniers mois avant les EVC'],
     contentItems: [
-      { Icon: ClipboardCheck, t: 'QCM d\'entrainement', d: 'Series ciblees par specialite et thematique' },
-      { Icon: CheckCircle2, t: 'Corrections commentees', d: 'Explications detaillees par des experts' },
-      { Icon: BookOpen, t: 'Seances de revision guidees', d: 'Rappels des points cles et astuces' },
-      { Icon: FileText, t: 'Fiches & dossiers cliniques', d: 'Cas pratiques et situations inspirees des EVC' },
-      { Icon: Target, t: 'Methodologie EVC', d: 'Conseils et strategies pour repondre aux attentes du jury' },
+      { Icon: ClipboardCheck, t: "QCM d'entraînement", d: 'Séries ciblées par spécialité et thématique' },
+      { Icon: CheckCircle2, t: 'Corrections commentées', d: 'Explications détaillées par des experts' },
+      { Icon: BookOpen, t: 'Séances de révision guidées', d: 'Rappels des points clés et astuces' },
+      { Icon: FileText, t: 'Fiches & dossiers cliniques', d: 'Cas pratiques et situations inspirées des EVC' },
+      { Icon: Target, t: 'Méthodologie EVC', d: 'Conseils et stratégies pour répondre aux attentes du jury' },
       { Icon: LineChart, t: 'Suivi de progression', d: 'Tableau de bord et recommandations' },
     ],
   },
   approfondi: {
     color: '#1E40AF', colorSoft: '#DBEAFE',
-    label: 'PROGRAMME APPROFONDI', tagline: 'Approfondissez votre preparation\navec un accompagnement structure\njusqu\'aux EVC',
+    label: 'PROGRAMME APPROFONDI', tagline: "Approfondissez votre préparation\navec un accompagnement structuré\njusqu'aux EVC",
     price: '2 395', pricePrefix: 'A partir de', hero: '/formules/hero-programme-approfondi.jpg',
-    desc: 'Le Programme Approfondi est concu pour vous offrir une reprise structuree des specialites essentielles, des seances interactives, des echanges reguliers avec les enseignants et un suivi pedagogique renforce.',
-    cta: 'Echanger avec un conseiller', ctaSecondary: 'Planifier un echange',
-    features: ['Approfondissement des specialites majeures', 'Echanges avec les enseignants', 'Epreuves blanches et suivi personnalise', 'Ideal pour une reprise complete et progressive'],
+    desc: "Le Programme Approfondi est conçu pour vous offrir une reprise structurée des spécialités essentielles, des séances interactives, des échanges réguliers avec les enseignants et un suivi pédagogique renforcé.",
+    cta: 'Échanger avec un conseiller', ctaSecondary: 'Planifier un échange',
+    features: ['Approfondissement des spécialités majeures', 'Échanges avec les enseignants', 'Épreuves blanches et suivi personnalisé', 'Idéal pour une reprise complète et progressive'],
     contentItems: [
-      { Icon: Users, t: 'Seances interactives', d: 'Reprise des notions cles a partir de dossiers cliniques guides' },
-      { Icon: FileText, t: 'Fiches & dossiers', d: 'Cas pratiques et situations cliniques inspirees des EVC' },
-      { Icon: BookOpen, t: 'Rappels cibles au bon moment', d: 'Consolidation des points essentiels' },
-      { Icon: MessageCircle, t: 'Echanges avec les enseignants', d: 'Reponses a vos questions et conseils personnalises' },
-      { Icon: ClipboardCheck, t: 'Epreuves blanches', d: 'Entrainements en conditions reelles et corrections detaillees' },
-      { Icon: LineChart, t: 'Suivi pedagogique', d: 'Accompagnement tout au long de votre preparation' },
+      { Icon: Users, t: 'Séances interactives', d: 'Reprise des notions clés a partir de dossiers cliniques guidés' },
+      { Icon: FileText, t: 'Fiches & dossiers', d: 'Cas pratiques et situations cliniques inspirées des EVC' },
+      { Icon: BookOpen, t: 'Rappels ciblés au bon moment', d: 'Consolidation des points essentiels' },
+      { Icon: MessageCircle, t: 'Échanges avec les enseignants', d: 'Réponses a vos questions et conseils personnalisés' },
+      { Icon: ClipboardCheck, t: 'Épreuves blanches', d: 'Entraînements en conditions réelles et corrections détaillées' },
+      { Icon: LineChart, t: 'Suivi pédagogique', d: 'Accompagnement tout au long de votre préparation' },
     ],
   },
 };
 
-const SPECIALTIES = ['Medecine Generale', 'Pediatrie', 'Cardiologie', 'Pneumologie', 'Neurologie', 'Gynecologie'];
+const SPECIALTIES = ['Médecine Générale', 'Pédiatrie', 'Cardiologie', 'Pneumologie', 'Neurologie', 'Gynécologie'];
 
 export function FormulePageContent({ variant }: { variant: Variant }) {
   const c = CONFIGS[variant];
@@ -111,8 +111,8 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
               {/* Stats */}
               <div className="mt-6 flex flex-wrap gap-5">
                 {[
-                  { Icon: Users, t: '+ 9 000', s: 'medecins\naccompagnes' },
-                  { Icon: GraduationCap, t: '45+', s: 'specialites\npreparees' },
+                  { Icon: Users, t: '+ 9 000', s: 'médecins\naccompagnés' },
+                  { Icon: GraduationCap, t: '45+', s: 'spécialités\npréparées' },
                   { Icon: Calendar, t: 'Depuis', s: '2011' },
                 ].map(st => (
                   <div key={st.t} className="flex items-center gap-2">
@@ -156,14 +156,14 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 </Link>
               )}
               {variant === 'approfondi' && (
-                <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la specialite preparee.</p>
+                <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la spécialité préparée.</p>
               )}
             </div>
             <div className="relative hidden lg:block">
               <img src={c.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
               {/* Side badges */}
               <div className="absolute right-4 top-8 flex flex-col gap-2">
-                {['Acces 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsecurise', 'Support reactif\n7j/7'].map(b => (
+                {['Accès 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsécurisé', 'Support réactif\n7j/7'].map(b => (
                   <span key={b} className="rounded-lg bg-white/95 px-3 py-2 text-[10px] font-bold leading-tight whitespace-pre-line shadow-sm"
                     style={{ color: NAVY }}>{b}</span>
                 ))}
@@ -204,7 +204,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE EXTERNE</p>
                 <p className="text-[11px]" style={{ color: INK_SOFT }}>(Questions ouvertes)</p>
                 <ul className="mt-3 space-y-1.5">
-                  {['Methodologie de redaction', "Comprehension des attentes du jury", 'Conseils pratiques', 'Erreurs frequentes a eviter'].map(v => (
+                  {['Méthodologie de rédaction', "Compréhension des attentes du jury", 'Conseils pratiques', 'Erreurs fréquentes a éviter'].map(v => (
                     <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
                       <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
                     </li>
@@ -215,7 +215,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE INTERNE</p>
                 <p className="text-[11px]" style={{ color: INK_SOFT }}>(QCM)</p>
                 <ul className="mt-3 space-y-1.5">
-                  {['Methodologie specifique', 'Approche du raisonnement clinique', 'Gestion du temps', 'Erreurs frequentes a eviter'].map(v => (
+                  {['Méthodologie spécifique', 'Approche du raisonnement clinique', 'Gestion du temps', 'Erreurs fréquentes a éviter'].map(v => (
                     <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
                       <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
                     </li>
@@ -236,15 +236,15 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {(variant === 'intensive' ? [
-                { t: 'Consolidation des connaissances', d: 'Revoyez les notions essentielles et renforcez vos acquis grace a des contenus cibles.' },
-                { t: 'Corrections detaillees', d: 'Chaque QCM et chaque question ouverte est analyse et explique par nos experts.' },
-                { t: 'Rappels cibles des notions essentielles', d: 'Des fiches et seances de revision pour retenir l\'essentiel.' },
-                { t: 'Preparation ideale juste avant les EVC', d: 'Un dernier tour complet pour arriver le jour de l\'examen en confiance.' },
+                { t: 'Consolidation des connaissances', d: 'Revoyez les notions essentielles et renforcez vos acquis grace a des contenus ciblés.' },
+                { t: 'Corrections détaillées', d: 'Chaque QCM et chaque question ouverte est analysé et expliqué par nos experts.' },
+                { t: 'Rappels ciblés des notions essentielles', d: "Des fiches et séances de révision pour retenir l'essentiel." },
+                { t: 'Préparation idéale juste avant les EVC', d: "Un dernier tour complet pour arriver le jour de l'examen en confiance." },
               ] : [
-                { t: 'Reprise structuree', d: 'Reprise structuree des specialites essentielles.' },
-                { t: 'Dossiers cliniques guides', d: 'Dossiers cliniques guides et progressifs.' },
-                { t: 'Rappels cibles', d: 'Rappels cibles des notions indispensables.' },
-                { t: 'Echanges reguliers', d: 'Echanges reguliers avec des enseignants experts.' },
+                { t: 'Reprise structurée', d: 'Reprise structurée des spécialités essentielles.' },
+                { t: 'Dossiers cliniques guidés', d: 'Dossiers cliniques guidés et progressifs.' },
+                { t: 'Rappels ciblés', d: 'Rappels ciblés des notions indispensables.' },
+                { t: 'Échanges réguliers', d: 'Échanges réguliers avec des enseignants experts.' },
               ]).map(p => (
                 <div key={p.t} className="rounded-xl border p-4" style={{ borderColor: BORDER }}>
                   <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: c.colorSoft, color: c.color }}>
@@ -264,7 +264,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-2">
             <div>
-              <h2 className="text-xl font-black" style={{ color: NAVY }}>Plus de 45 specialites preparees</h2>
+              <h2 className="text-xl font-black" style={{ color: NAVY }}>Plus de 45 spécialités préparées</h2>
               <div className="mt-5 flex flex-wrap gap-3">
                 {SPECIALTIES.map(s => (
                   <span key={s} className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
@@ -273,20 +273,20 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                   </span>
                 ))}
                 <span className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold"
-                  style={{ background: c.colorSoft, color: c.color }}>... + 39 autres specialites</span>
+                  style={{ background: c.colorSoft, color: c.color }}>... + 39 autres spécialités</span>
               </div>
               <Link href="/specialites" className="mt-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold"
                 style={{ borderColor: BORDER, color: NAVY }}>
-                Voir toutes les specialites <ArrowRight className="h-4 w-4" />
+                Voir toutes les spécialités <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div>
-              <h3 className="text-lg font-black" style={{ color: NAVY }}>Une plateforme pensee pour votre reussite</h3>
+              <h3 className="text-lg font-black" style={{ color: NAVY }}>Une plateforme pensée pour votre réussite</h3>
               <div className="mt-4 rounded-xl overflow-hidden border" style={{ borderColor: BORDER }}>
                 <img src="/accueil.png" alt="Apercu plateforme" className="w-full" />
               </div>
               <ul className="mt-4 space-y-1.5">
-                {['Tous les contenus reunis au meme endroit', 'Accessible 24h/24 et 7j/7', 'Compatible ordinateur, tablette et mobile', 'Mises a jour pedagogiques regulieres', 'Interface simple et intuitive'].map(b => (
+                {['Tous les contenus réunis au même endroit', 'Accessible 24h/24 et 7j/7', 'Compatible ordinateur, tablette et mobile', 'Mises a jour pédagogiques régulières', 'Interface simple et intuitive'].map(b => (
                   <li key={b} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
                     <Check className="h-4 w-4" style={{ color: c.color }} /> {b}
                   </li>
@@ -303,15 +303,15 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>Quelle formule est faite pour vous ?</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {[
-              { v: 'essentielle' as Variant, name: 'FORMULE ESSENTIELLE', price: '495', color: '#2E7D32', bg: '#E8F5E9', desc: 'Travail en autonomie', sub: 'Organisez votre preparation a votre rythme avec les ressources essentielles.' },
-              { v: 'intensive' as Variant, name: 'FORMULE INTENSIVE', price: '995', color: '#C0112E', bg: '#FDE8EC', desc: 'Consolidation avant les EVC', sub: 'Revisions guidees et corrections commentees pour consolider vos connaissances.' },
-              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: '2 395', color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structuree des specialites majeures', sub: 'Accompagnement renforce pour une remise a niveau complete et performante.' },
+              { v: 'essentielle' as Variant, name: 'FORMULE ESSENTIELLE', price: '495', color: '#2E7D32', bg: '#E8F5E9', desc: 'Travail en autonomie', sub: 'Organisez votre préparation a votre rythme avec les ressources essentielles.' },
+              { v: 'intensive' as Variant, name: 'FORMULE INTENSIVE', price: '995', color: '#C0112E', bg: '#FDE8EC', desc: 'Consolidation avant les EVC', sub: 'Révisions guidées et corrections commentées pour consolider vos connaissances.' },
+              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: '2 395', color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structurée des spécialités majeures', sub: 'Accompagnement renforcé pour une remise a niveau complète et performante.' },
             ].map(p => (
               <div key={p.v} className={`rounded-2xl border p-5 ${p.v === variant ? 'ring-2 shadow-lg' : ''}`}
                 style={{ borderColor: p.v === variant ? p.color : BORDER, ...(p.v === variant ? { ringColor: p.color } : {}) }}>
                 {p.v === variant && (
                   <span className="mb-3 inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: p.color }}>
-                    {p.v === 'approfondi' ? 'LA PREPARATION LA PLUS COMPLETE' : ''}
+                    {p.v === 'approfondi' ? 'LA PRÉPARATION LA PLUS COMPLÈTE' : ''}
                   </span>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
@@ -321,7 +321,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 <Link href={p.v === variant ? '#' : `/formules/${p.v === 'approfondi' ? 'programme-approfondi' : p.v}`}
                   className="mt-4 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white"
                   style={{ background: p.color }}>
-                  {p.v === variant ? c.cta : p.v === 'approfondi' ? 'Decouvrir le programme' : `Decouvrir l'${p.name.split(' ')[1]}`}
+                  {p.v === variant ? c.cta : p.v === 'approfondi' ? 'Découvrir le programme' : `Découvrir l'${p.name.split(' ')[1]}`}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -333,12 +333,12 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       {/* TESTIMONIALS */}
       <section className="bg-[#F8F9FC] py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>Ils ont reussi les EVC avec Major ECN</h2>
+          <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>Ils ont réussi les EVC avec Major ECN</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {[
-              { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Laureate EVC 2024', photo: '/temoignages/drfaten.png', quote: '"Une methode claire, des ressources completes et un vrai suivi de progression. Je recommande !"' },
-              { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Laureat EVC 2023', photo: '/temoignages/drsamy.jpg', quote: '"Les corrections detaillees m\'ont permis de comprendre mes erreurs et de gagner enormement en efficacite."' },
-              { name: 'Dr Nada Al Ali', spec: 'Pediatrie', year: 'Laureate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg', quote: '"L\'accompagnement des enseignants et la qualite des dossiers cliniques font vraiment la difference."' },
+              { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Lauréate EVC 2024', photo: '/temoignages/drfaten.png', quote: "\"Une méthode claire, des ressources complètes et un vrai suivi de progression. Je recommande !\"" },
+              { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg', quote: "\"Les corrections détaillées m'ont permis de comprendre mes erreurs et de gagner énormément en efficacité.\"" },
+              { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg', quote: "\"L'accompagnement des enseignants et la qualité des dossiers cliniques font vraiment la différence.\"" },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <div className="flex items-center gap-3">
@@ -361,7 +361,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           </div>
           <div className="mt-6 text-center">
             <Link href="/temoignages" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: c.color }}>
-              Voir plus de temoignages <ArrowRight className="h-4 w-4" />
+              Voir plus de témoignages <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -374,7 +374,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       <section className="py-12" style={{ background: variant === 'approfondi' ? '#1E40AF' : variant === 'intensive' ? '#C0112E' : '#2E7D32' }}>
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center text-white">
           <p className="text-sm font-semibold text-white/80">
-            Acces immediat a la plateforme apres votre inscription.
+            Accès immédiat a la plateforme après votre inscription.
           </p>
           <p className="mt-2 text-4xl font-black">{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
@@ -389,7 +389,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             )}
           </div>
           {variant === 'approfondi' && (
-            <p className="mt-3 text-xs text-white/70">*Tarif variable selon la specialite preparee.</p>
+            <p className="mt-3 text-xs text-white/70">*Tarif variable selon la spécialité préparée.</p>
           )}
         </div>
       </section>
@@ -398,7 +398,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       <section className="bg-white py-6 border-t" style={{ borderColor: BORDER }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-6 text-center text-xs" style={{ color: INK_SOFT }}>
-            {['Acces immediat apres inscription', 'Paiement securise en 1x ou 3x', 'Satisfait ou rembourse sous 14 jours', 'Sans engagement', 'Support reactif 7j/7'].map(b => (
+            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x ou 3x', 'Satisfait ou remboursé sous 14 jours', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
               <span key={b} className="flex items-center gap-1.5">
                 <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {b}
               </span>

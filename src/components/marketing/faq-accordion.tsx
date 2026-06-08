@@ -184,7 +184,7 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
 
 /* ============================================================
    Sidebar partage entre /faq et le bloc FAQ de la page d'accueil :
-   3 cartes (contact, pourquoi Major ECN, essai 7 jours).
+   3 cartes (contact, pourquoi Major ECN, essai 2 jours).
    ============================================================ */
 const RED_DEEP = '#8B0E22';
 
@@ -235,7 +235,7 @@ export function FaqSidebar() {
         </ul>
       </div>
 
-      {/* Carte 3 — Tester 7 jours */}
+      {/* Carte 3 — Tester 2 jours */}
       <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#C0112E] via-[#8B0E22] to-[#0F1F4D] p-5 text-white shadow-[0_24px_60px_-24px_rgba(192,17,46,0.55)] sm:p-6"
         style={{ borderColor: 'rgba(255,255,255,0.18)' }}>
         <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-3xl" />
@@ -243,7 +243,7 @@ export function FaqSidebar() {
           <Sparkles className="h-3 w-3" /> Essai gratuit
         </span>
         <p className="mt-3 text-base font-extrabold leading-tight">
-          Tester Major ECN pendant 7&nbsp;jours
+          Tester Major ECN pendant 2&nbsp;jours
         </p>
         <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/85">
           Accès complet à la plateforme, sans carte bancaire.

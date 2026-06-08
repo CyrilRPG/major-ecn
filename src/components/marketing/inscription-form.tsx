@@ -134,7 +134,7 @@ export function InscriptionForm({ colleges = [] }: { colleges?: { id: string; no
           style={{ fontFamily: MANROPE }}
         >
           <Sparkles className="h-3 w-3" />
-          7 jours gratuits · sans carte
+          2 jours gratuits · sans carte
         </motion.span>
         <h3
           className="mt-4 text-2xl font-black leading-tight sm:text-3xl"
@@ -260,7 +260,7 @@ export function InscriptionForm({ colleges = [] }: { colleges?: { id: string; no
         style={{ fontFamily: JAKARTA }}
       >
         {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
-        {status === 'submitting' ? 'Création de votre compte…' : 'Démarrer mes 7 jours gratuits'}
+        {status === 'submitting' ? 'Création de votre compte…' : 'Démarrer mes 2 jours gratuits'}
         {status !== 'submitting' && <ArrowRight className="h-5 w-5" />}
       </motion.button>
 

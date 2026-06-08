@@ -53,7 +53,7 @@ export default async function HomePage() {
       {/* 9) FAQ */}
       <FAQSection />
 
-      {/* 10) Testez Major ECN pendant 7 jours */}
+      {/* 10) Testez Major ECN pendant 2 jours */}
       <FreeTrialBanner />
 
       {/* 11) Rejoignez les candidats — CTA final (inscription) */}

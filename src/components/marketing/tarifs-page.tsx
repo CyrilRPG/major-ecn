@@ -22,8 +22,8 @@ const BORDER = '#E5E9F0';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 
 const SPECIALTIES = [
-  'Medecine Generale', 'Radiologie', 'Geriatrie', 'Pediatrie',
-  'Psychiatrie', 'Cardiologie', 'Pneumologie', 'Nephrologie',
+  'Médecine Générale', 'Radiologie', 'Gériatrie', 'Pédiatrie',
+  'Psychiatrie', 'Cardiologie', 'Pneumologie', 'Néphrologie',
 ];
 
 export function TarifsPageContent() {
@@ -33,26 +33,26 @@ export function TarifsPageContent() {
       <section className="bg-white pt-6 pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-3 rounded-full border px-5 py-2 text-[11px] font-bold uppercase tracking-wider" style={{ borderColor: BORDER, color: NAVY }}>
-            <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> 45 specialites EVC</span>
+            <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> 45 spécialités EVC</span>
             <span style={{ color: RED }}>&#8226;</span>
-            <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" style={{ color: RED }} /> Plus de 9 000 medecins accompagnes</span>
+            <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" style={{ color: RED }} /> Plus de 9 000 médecins accompagnés</span>
             <span style={{ color: RED }}>&#8226;</span>
             <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" style={{ color: RED }} /> Depuis 2011</span>
           </div>
 
           <h1 className="mt-7 text-center text-3xl font-black tracking-tight sm:text-4xl lg:text-[2.8rem]" style={{ color: NAVY }}>
-            Tarifs des preparations <span style={{ color: RED }}>EVC (PAE)</span>
+            Tarifs des préparations <span style={{ color: RED }}>EVC (PAE)</span>
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-center text-[15px] leading-relaxed" style={{ color: INK_SOFT }}>
-            Preparations destinees aux medecins diplomes hors Union Europeenne preparant les{' '}
-            <strong style={{ color: NAVY }}>Epreuves de Verification des Connaissances (EVC)</strong> dans le cadre de la
-            Procedure d{"'"}Autorisation d{"'"}Exercice (PAE).
+            Préparations destinées aux médecins diplômés hors Union Européenne préparant les{' '}
+            <strong style={{ color: NAVY }}>Épreuves de Vérification des Connaissances (EVC)</strong> dans le cadre de la
+            Procédure d{"'"}Autorisation d{"'"}Exercice (PAE).
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
             {[
-              { Icon: Users, big: 'Plus de 9 000', sub: 'medecins accompagnes' },
-              { Icon: GraduationCap, big: '45 specialites', sub: 'preparees' },
+              { Icon: Users, big: 'Plus de 9 000', sub: 'médecins accompagnés' },
+              { Icon: GraduationCap, big: '45 spécialités', sub: 'préparées' },
               { Icon: Calendar, big: 'Depuis 2011', sub: 'a vos cotes' },
             ].map(s => (
               <div key={s.big} className="flex items-center gap-2.5">
@@ -75,7 +75,7 @@ export function TarifsPageContent() {
           <div className="rounded-2xl border p-5" style={{ borderColor: BORDER }}>
             <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.14em]" style={{ color: NAVY }}>
               <Stethoscope className="mr-1.5 inline h-4 w-4" style={{ color: RED }} />
-              Plus de 45 specialites preparees
+              Plus de 45 spécialités préparées
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               {SPECIALTIES.map(s => (
@@ -83,12 +83,12 @@ export function TarifsPageContent() {
                   style={{ borderColor: BORDER, color: NAVY }}>{s}</span>
               ))}
               <span className="inline-flex items-center rounded-full px-3 py-1.5 text-[12px] font-bold" style={{ background: RED_SOFT, color: RED }}>
-                + 37 autres specialites
+                + 37 autres spécialités
               </span>
             </div>
             <div className="mt-4 text-center">
               <Link href="/specialites" className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-bold text-white" style={{ background: GREEN }}>
-                Decouvrir les 45 specialites preparees <ArrowRight className="h-3.5 w-3.5" />
+                Découvrir les 45 spécialités préparées <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </div>
@@ -105,8 +105,8 @@ export function TarifsPageContent() {
             <div>
               <p className="text-[14px] font-extrabold" style={{ color: RED }}>IMPORTANT</p>
               <p className="mt-1 text-[13px] leading-relaxed" style={{ color: INK }}>
-                Les tarifs et programmes varient selon les specialites preparees.<br />
-                La Medecine Generale est presentee ci-dessous a titre d{"'"}exemple detaille de preparation et de tarification.
+                Les tarifs et programmes varient selon les spécialités préparées.<br />
+                La Médecine Générale est présentée ci-dessous a titre d{"'"}exemple détaillé de préparation et de tarification.
               </p>
             </div>
           </div>
@@ -117,7 +117,7 @@ export function TarifsPageContent() {
       <section className="bg-white pb-5">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <p className="text-center text-[17px] font-extrabold" style={{ color: NAVY }}>
-            Exemple detaille : Preparation <span className="underline decoration-2" style={{ color: RED, textDecorationColor: RED }}>EVC Medecine Generale (PAE)</span>
+            Exemple détaillé : Préparation <span className="underline decoration-2" style={{ color: RED, textDecorationColor: RED }}>EVC Médecine Générale (PAE)</span>
           </p>
         </div>
       </section>
@@ -137,10 +137,10 @@ export function TarifsPageContent() {
                   <p className="text-[16px] font-black leading-none" style={{ color: GREEN }}>ESSENTIELLE</p>
                 </div>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>S{"'"}entrainer efficacement aux EVC</p>
+              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
               <p className="mt-3 text-[36px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Plateforme EVC acces illimite', "QCM d'entrainement", 'Dossiers et exercices corriges', 'Fiches de synthese', 'Suivi de progression', '1 seance video de methodologie EVC'].map(f => (
+                {["Plateforme EVC accès illimité", "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: GREEN }} /> {f}
                   </li>
@@ -149,11 +149,11 @@ export function TarifsPageContent() {
               <Link href="/formules/essentielle" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white" style={{ background: GREEN }}>
                 Commencer avec Essentielle <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>7 jours d{"'"}essai gratuit &#183; Sans engagement</p>
+              <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>2 jours d{"'"}essai gratuit &#183; Sans engagement</p>
             </div>
 
             {/* Intensive */}
-            <div className="relative flex flex-col rounded-2xl border-2 p-5 shadow-lg" style={{ borderColor: RED }}>
+            <div className="relative flex flex-col rounded-2xl border p-5" style={{ borderColor: BORDER }}>
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: RED_SOFT, color: RED }}>
                   <Target className="h-4 w-4" />
@@ -163,7 +163,7 @@ export function TarifsPageContent() {
                   <p className="text-[16px] font-black leading-none" style={{ color: RED }}>INTENSIVE</p>
                 </div>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Revisions ciblees EVC</p>
+              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Révisions ciblées EVC</p>
               <p className="mt-1 text-[13px] font-semibold" style={{ color: INK }}>Deux parcours au choix :</p>
               <div className="mt-1.5 flex gap-2">
                 <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE INTERNE &#8594;</span>
@@ -171,7 +171,7 @@ export function TarifsPageContent() {
               </div>
               <p className="mt-3 text-[36px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de revision ciblee', 'QCM supplementaires expliques', 'Methodologie avancee EVC', '2 epreuves blanches', 'Corrections detaillees', 'Supports de revision telechargeables'].map(f => (
+                {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées', 'Supports de révision téléchargeables'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: RED }} /> {f}
                   </li>
@@ -183,9 +183,9 @@ export function TarifsPageContent() {
             </div>
 
             {/* Programme Approfondi */}
-            <div className="flex flex-col rounded-2xl border p-5" style={{ borderColor: BORDER }}>
+            <div className="flex flex-col rounded-2xl border-2 p-5 shadow-lg" style={{ borderColor: PURPLE }}>
               <span className="self-start inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: '#F59E0B' }}>
-                <Star className="h-3 w-3" fill="currentColor" /> REMISE A NIVEAU APPROFONDIE
+                <Star className="h-3 w-3" fill="currentColor" /> REMISE À NIVEAU APPROFONDIE
               </span>
               <div className="mt-2.5 flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: PURPLE_SOFT, color: PURPLE }}>
@@ -196,18 +196,18 @@ export function TarifsPageContent() {
                   <p className="text-[16px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
                 </div>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise a niveau approfondie et preparation complete</p>
+              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise a niveau approfondie et préparation complète</p>
               <p className="mt-3 text-[12px]" style={{ color: INK_SOFT }}>A partir de</p>
               <p className="text-[36px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Remise a niveau et preparation complete', 'Reprise approfondie des specialites majeures', 'Cours de remise a niveau associes a des dossiers cliniques', 'Resolution progressive de dossiers inspires des EVC', 'Interrogations regulieres pour evaluer la progression', 'Epreuves blanches', 'Seances de revision dediees', 'Accompagnement pedagogique personnalise'].map(f => (
+                {['Remise a niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés a des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: PURPLE }} /> {f}
                   </li>
                 ))}
               </ul>
               <Link href="/formules/programme-approfondi" className="mt-5 flex items-center justify-center gap-2 rounded-xl border-2 py-2.5 text-[13px] font-bold" style={{ borderColor: PURPLE, color: PURPLE }}>
-                Decouvrir le programme <ArrowRight className="h-3.5 w-3.5" />
+                Découvrir le programme <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </div>
@@ -219,11 +219,11 @@ export function TarifsPageContent() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-5 text-center">
             {[
-              { Icon: Zap, t: 'Acces immediat', sub: 'apres inscription' },
+              { Icon: Zap, t: 'Accès immédiat', sub: 'après inscription' },
               { Icon: Shield, t: 'Sans carte', sub: 'bancaire' },
               { Icon: Check, t: 'Sans', sub: 'engagement' },
-              { Icon: Clock, t: 'Annulation', sub: 'instantanee' },
-              { Icon: ShieldCheck, t: 'Paiement', sub: 'securise' },
+              { Icon: Clock, t: 'Annulation', sub: 'instantanée' },
+              { Icon: ShieldCheck, t: 'Paiement', sub: 'sécurisé' },
             ].map(b => (
               <div key={b.t} className="flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
@@ -247,9 +247,9 @@ export function TarifsPageContent() {
           </h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {[
-              { color: GREEN, bg: GREEN_SOFT, border: GREEN, title: "Je souhaite principalement m'entrainer", desc: "Je possede deja de bonnes bases et je veux m'entrainer avec des QCM, exercices et dossiers corriges.", cta: 'Essentielle', href: '/formules/essentielle' },
-              { color: RED, bg: RED_SOFT, border: RED, title: 'Je souhaite reviser de facon ciblee', desc: 'Je veux consolider mes connaissances avec des revisions structurees et des entrainements cibles.', cta: 'Intensive', href: '/formules/intensive' },
-              { color: PURPLE, bg: PURPLE_SOFT, border: PURPLE, title: 'Je souhaite reprendre les specialites en profondeur', desc: 'Je souhaite reprendre les specialites en profondeur avec un accompagnement complet et personnalise.', cta: 'Programme approfondi', href: '/formules/programme-approfondi' },
+              { color: GREEN, bg: GREEN_SOFT, border: GREEN, title: "Je souhaite principalement m'entraîner", desc: "Je possède déjà de bonnes bases et je veux m'entraîner avec des QCM, exercices et dossiers corrigés.", cta: 'Essentielle', href: '/formules/essentielle' },
+              { color: RED, bg: RED_SOFT, border: RED, title: 'Je souhaite réviser de facon ciblée', desc: 'Je veux consolider mes connaissances avec des révisions structurées et des entraînements ciblés.', cta: 'Intensive', href: '/formules/intensive' },
+              { color: PURPLE, bg: PURPLE_SOFT, border: PURPLE, title: 'Je souhaite reprendre les spécialités en profondeur', desc: 'Je souhaite reprendre les spécialités en profondeur avec un accompagnement complet et personnalisé.', cta: 'Programme approfondi', href: '/formules/programme-approfondi' },
             ].map(c => (
               <div key={c.title} className="rounded-2xl border p-5 text-center" style={{ borderColor: BORDER }}>
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-full" style={{ background: c.bg, color: c.color }}>
@@ -275,11 +275,11 @@ export function TarifsPageContent() {
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {[
               { Icon: Smartphone, t: 'Plateforme en ligne' },
-              { Icon: LineChart, t: 'Suivi pedagogique' },
-              { Icon: Target, t: 'Methodologie EVC' },
-              { Icon: TrendingUp, t: 'Mises a jour regulieres' },
-              { Icon: MessageCircle, t: 'Support reactif' },
-              { Icon: Clock, t: 'Acces 24h/24, 7j/7' },
+              { Icon: LineChart, t: 'Suivi pédagogique' },
+              { Icon: Target, t: 'Méthodologie EVC' },
+              { Icon: TrendingUp, t: 'Mises a jour régulières' },
+              { Icon: MessageCircle, t: 'Support réactif' },
+              { Icon: Clock, t: 'Accès 24h/24, 7j/7' },
             ].map(f => (
               <div key={f.t} className="flex flex-col items-center gap-2 rounded-xl border bg-white p-3 text-center" style={{ borderColor: BORDER }}>
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: RED_SOFT, color: RED }}>
@@ -295,7 +295,7 @@ export function TarifsPageContent() {
       {/* ═══ DECOUVREZ LA PLATEFORME ═══ */}
       <section className="bg-white py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>DECOUVREZ LA PLATEFORME MAJOR ECN</h2>
+          <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>DÉCOUVREZ LA PLATEFORME MAJOR ECN</h2>
           <div className="mt-6 overflow-hidden rounded-2xl border shadow-lg" style={{ borderColor: BORDER }}>
             <img src="/accueil.png" alt="Apercu plateforme Major ECN" className="w-full" />
           </div>
@@ -308,10 +308,10 @@ export function TarifsPageContent() {
           <h2 className="text-center text-xl font-black tracking-tight" style={{ color: NAVY }}>POURQUOI CHOISIR MAJOR ECN ?</h2>
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              { Icon: Calendar, t: '15 ANS', sub: "D'EXPERIENCE", d: 'Depuis 2011, au service des medecins etrangers.' },
-              { Icon: Users, t: '+ DE 9 000', sub: 'MEDECINS ACCOMPAGNES', d: 'Toutes specialites confondues.' },
-              { Icon: GraduationCap, t: '45 SPECIALITES', sub: 'PREPAREES', d: 'Medecine generale et specialites medicales, chirurgicales.' },
-              { Icon: Trophy, t: 'ENSEIGNANTS', sub: 'EXPERIMENTES', d: 'PH et CCA presents depuis plusieurs annees.' },
+              { Icon: Calendar, t: '15 ANS', sub: "D'EXPÉRIENCE", d: 'Depuis 2011, au service des médecins étrangers.' },
+              { Icon: Users, t: '+ DE 9 000', sub: 'MÉDECINS ACCOMPAGNÉS', d: 'Toutes spécialités confondues.' },
+              { Icon: GraduationCap, t: '45 SPÉCIALITÉS', sub: 'PRÉPARÉES', d: 'Médecine générale et spécialités médicales, chirurgicales.' },
+              { Icon: Trophy, t: 'ENSEIGNANTS', sub: 'EXPÉRIMENTÉS', d: 'PH et CCA presents depuis plusieurs annees.' },
               { Icon: ClipboardCheck, t: 'DOSSIERS CLINIQUES', sub: 'QCM ET EVALUATIONS', d: 'Contenus fiables, a jour et conformes aux EVC.' },
             ].map(s => (
               <div key={s.t} className="rounded-xl border bg-white p-4 text-center" style={{ borderColor: '#F3D1D6' }}>
@@ -330,13 +330,13 @@ export function TarifsPageContent() {
       {/* ═══ TEMOIGNAGES ═══ */}
       <section className="bg-white py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>PLUS DE 9 000 MEDECINS ACCOMPAGNES DEPUIS 2011</h2>
+          <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>PLUS DE 9 000 MÉDECINS ACCOMPAGNÉS DEPUIS 2011</h2>
           <div className="mt-8 grid gap-6 lg:grid-cols-[2fr_1fr]">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Laureate EVC 2024', photo: '/temoignages/drfaten.png' },
-                { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Laureat EVC 2023', photo: '/temoignages/drsamy.jpg' },
-                { name: 'Dr Nada Al Ali', spec: 'Pediatrie', year: 'Laureate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg' },
+                { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Lauréate EVC 2024', photo: '/temoignages/drfaten.png' },
+                { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg' },
+                { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg' },
               ].map(t => (
                 <div key={t.name} className="text-center">
                   <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-xl">
@@ -352,22 +352,23 @@ export function TarifsPageContent() {
                 </div>
               ))}
             </div>
-            {/* Quote texte */}
+            {/* Quote texte — vrai témoignage */}
             <div className="flex flex-col justify-center rounded-xl border p-5" style={{ borderColor: BORDER }}>
               <p className="text-[14px] italic leading-relaxed" style={{ color: INK }}>
-                &ldquo;Une preparation complete, structuree et adaptee. Les dossiers cliniques et les interrogations
-                m{"'"}ont permis de gagner en confiance et d{"'"}etre prete le jour J.&rdquo;
+                &ldquo;Les cours sont actualisés, clairs et réellement adaptés aux exigences du concours.
+                Les épreuves blanches dans des conditions proches de l{"'"}examen permettent de se préparer
+                concrètement au jour J.&rdquo;
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <p className="text-[12px] font-bold" style={{ color: NAVY }}>Dr. M. Al Kurdi</p>
-                <p className="text-[11px]" style={{ color: INK_SOFT }}>Medecine interne</p>
+                <p className="text-[12px] font-bold" style={{ color: NAVY }}>Dr Haykel Abdelbaki</p>
+                <p className="text-[11px]" style={{ color: INK_SOFT }}>Radiologie — Lauréat des EVC</p>
               </div>
               <div className="mt-1 flex gap-0.5">{[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3" style={{ color: '#F59E0B' }} fill="currentColor" />)}</div>
             </div>
           </div>
           <div className="mt-6 text-center">
             <Link href="/temoignages" className="inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px] font-bold" style={{ borderColor: RED, color: RED }}>
-              Voir tous les temoignages <ArrowRight className="h-3.5 w-3.5" />
+              Voir tous les témoignages <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>

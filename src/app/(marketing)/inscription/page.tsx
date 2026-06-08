@@ -5,7 +5,7 @@ import { InscriptionForm } from '@/components/marketing/inscription-form';
 export const metadata = {
   title: 'Inscription — Major ECN',
   description:
-    '7 jours d’essai gratuit, sans engagement. Accès immédiat à la plateforme Major ECN.',
+    '2 jours d’essai gratuit, sans engagement. Accès immédiat à la plateforme Major ECN.',
 };
 
 export default async function InscriptionPage() {
@@ -32,7 +32,7 @@ export default async function InscriptionPage() {
             Créez votre compte
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-base text-[#5A5A5A]">
-            7 jours d’essai gratuit, sans engagement. Accès immédiat à toute la plateforme par
+            2 jours d’essai gratuit, sans engagement. Accès immédiat à toute la plateforme par
             email d’activation.
           </p>
 
