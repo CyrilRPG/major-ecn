@@ -1787,7 +1787,7 @@ const TV_CARDS = [
     quote: 'Une préparation qui m’a fait franchir un cap : méthode claire, fiches synthétiques et examens blancs proches du jour J.',
     bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
     initials: 'SK',
-    videoSrc: '/temoignages/T1 FINAL V2.mp4',
+    videoSrc: '/temoignages/T1 FINAL V2.mp4#t=3',
   },
   {
     spec: 'Anesthésie réanimation',
@@ -1800,7 +1800,7 @@ const TV_CARDS = [
     quote: 'Dans une spécialité exigeante, la méthodologie Major ECN m’a permis de structurer mes révisions et d’aborder le concours avec sérénité.',
     bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)',
     initials: 'KK',
-    videoSrc: '/temoignages/T2 FINAL V2.mp4',
+    videoSrc: '/temoignages/T2 FINAL V2.mp4#t=3',
   },
   {
     spec: 'Endocrinologie & métabolisme',
@@ -1813,7 +1813,7 @@ const TV_CARDS = [
     quote: 'Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne grâce à un accompagnement structuré.',
     bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
     initials: 'ES',
-    videoSrc: '/temoignages/T3 FINAL V2.mp4',
+    videoSrc: '/temoignages/T3 FINAL V2.mp4#t=3',
   },
   {
     spec: 'Gériatrie',
@@ -1826,7 +1826,7 @@ const TV_CARDS = [
     quote: 'Un accompagnement humain et exigeant, des supports clairs et un suivi qui fait toute la différence dans la durée.',
     bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)',
     initials: 'AS',
-    videoSrc: '/temoignages/T4 Final V2.mp4',
+    videoSrc: '/temoignages/T4 Final V2.mp4#t=3',
   },
   {
     spec: 'Chirurgie viscérale & digestive',
@@ -1839,7 +1839,7 @@ const TV_CARDS = [
     quote: 'Major ECN a structuré toute ma préparation : la méthode, les cas cliniques et les corrections détaillées font la différence.',
     bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)',
     initials: 'AH',
-    videoSrc: '/temoignages/T5 FINAL V2.mp4',
+    videoSrc: '/temoignages/T5 FINAL V2.mp4#t=3',
   },
 ];
 
