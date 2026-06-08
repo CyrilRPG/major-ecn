@@ -712,22 +712,19 @@ const TEAM_STATS = [
   { Icon: ShieldCheck, big: '35+',   label: 'enseignants',            sub: 'PH specialistes et CCA' },
 ];
 
-/** Collage style maquette : bandes verticales parallelo, N&B, decalees */
+/** Collage maquette : 2 bandes larges parallelo, N&B, decalees */
 function TeamPhotoCollage() {
   const slices = [
     { src: '/team/enseignante-1.jpg', mt: 0 },
-    { src: '/team/enseignant-2.jpg', mt: -20 },
-    { src: '/team/enseignante-1.jpg', mt: 10 },
-    { src: '/team/enseignant-2.jpg', mt: -10 },
-    { src: '/team/enseignante-1.jpg', mt: 5 },
+    { src: '/team/enseignant-2.jpg', mt: -24 },
   ];
   return (
     <div className="flex items-center justify-center">
-      <div className="flex gap-[3px]" style={{ height: '280px' }}>
+      <div className="flex gap-1" style={{ height: '260px' }}>
         {slices.map((s, i) => (
-          <div key={i} className="relative w-[52px] overflow-hidden"
-            style={{ clipPath: 'polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)', marginTop: `${s.mt}px` }}>
-            <img src={s.src} alt="" className="h-full w-full object-cover"
+          <div key={i} className="relative w-[110px] overflow-hidden"
+            style={{ clipPath: 'polygon(12% 0%, 100% 0%, 88% 100%, 0% 100%)', marginTop: `${s.mt}px` }}>
+            <img src={s.src} alt="" className="h-full w-full object-cover object-top"
               style={{ filter: 'grayscale(100%) contrast(1.1)' }} />
           </div>
         ))}
