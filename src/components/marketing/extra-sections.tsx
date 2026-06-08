@@ -1580,7 +1580,7 @@ export function ToolsForProgressSection() {
               </div>
 
               {/* Droite : aperçu plateforme — image bien grande */}
-              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-6 sm:p-8 flex items-center justify-center min-h-[400px] lg:min-h-[480px]">
+              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-6 sm:p-8 flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/plateforme/laptop-phone-dashboard.png"
@@ -1902,10 +1902,11 @@ export function TestimonialsVideoSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide sm:justify-center sm:overflow-visible sm:flex-wrap">
-          {TV_CARDS.map((c, i) => (
-            <Reveal key={c.name} delay={i * 0.06} className="snap-start shrink-0">
-              <article className="w-[260px] overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl sm:w-[240px]" style={{ borderColor: '#ECECEF' }}>
+        {/* Row 1 : 3 videos */}
+        <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 justify-items-center">
+          {TV_CARDS.slice(0, 3).map((c, i) => (
+            <Reveal key={c.name} delay={i * 0.06}>
+              <article className="w-full max-w-[260px] mx-auto overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
                 <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: c.bgGrad }}>
                   <video
                     src={c.videoSrc}
@@ -1925,6 +1926,27 @@ export function TestimonialsVideoSection() {
                     style={{ background: TV_PINK_BG, color: TV_RED }}>
                     <ShieldCheck className="h-3 w-3" />
                     {c.year}
+                  </p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+        {/* Row 2 : 2 videos centered */}
+        <div className="mt-5 flex justify-center gap-5">
+          {TV_CARDS.slice(3).map((c, i) => (
+            <Reveal key={c.name} delay={(i + 3) * 0.06}>
+              <article className="w-[260px] overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+                <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: c.bgGrad }}>
+                  <video src={c.videoSrc} controls playsInline preload="metadata"
+                    className="absolute inset-0 h-full w-full bg-black object-contain" />
+                </div>
+                <div className="p-4">
+                  <p className="text-[15px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
+                  <p className="mt-0.5 text-sm font-bold" style={{ color: TV_RED }}>{c.spec}</p>
+                  <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wide"
+                    style={{ background: TV_PINK_BG, color: TV_RED }}>
+                    <ShieldCheck className="h-3 w-3" />{c.year}
                   </p>
                 </div>
               </article>

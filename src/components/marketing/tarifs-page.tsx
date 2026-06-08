@@ -7,6 +7,7 @@ import {
   Smartphone, Sparkles, Star, Stethoscope, Target, TrendingUp, Trophy, Users, Video, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { FAQSection, FreeTrialBanner } from './manus-sections';
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -375,60 +376,9 @@ export function TarifsPageContent() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="bg-[#F8F9FC] py-14">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div>
-              <h2 className="text-xl font-black" style={{ color: NAVY }}>QUESTIONS FRÉQUENTES</h2>
-              <ul className="mt-4 space-y-3">
-                {[
-                  'À qui s\'adressent les préparations EVC ?',
-                  'Combien de temps avant les EVC faut-il commencer ?',
-                  'Les épreuves blanches sont-elles corrigées ?',
-                  'Les contenus sont-ils mis à jour régulièrement ?',
-                  'Y a-t-il un accompagnement personnalisé ?',
-                  'Quelle différence entre la voie interne et la voie externe ?',
-                ].map(q => (
-                  <li key={q} className="flex items-start gap-2 text-sm" style={{ color: INK }}>
-                    <ArrowRight className="mt-0.5 h-4 w-4 shrink-0" style={{ color: RED }} /> {q}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/faq" className="mt-4 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-bold" style={{ borderColor: BORDER, color: NAVY }}>
-                Voir toutes les questions <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            {/* TRIAL CTA */}
-            <div className="rounded-2xl border bg-white p-6" style={{ borderColor: BORDER }}>
-              <h3 className="text-lg font-black" style={{ color: RED }}>TESTEZ MAJOR ECN GRATUITEMENT PENDANT 7 JOURS</h3>
-              <ul className="mt-4 space-y-2">
-                {['Accès illimité à la plateforme', '7 jours d\'essai gratuit', 'Sans carte bancaire', 'Annulation à tout moment'].map(b => (
-                  <li key={b} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                    <Check className="h-4 w-4" style={{ color: '#2E7D32' }} /> {b}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-4 text-sm" style={{ color: INK_SOFT }}>
-                Découvrez la plateforme, les ressources pédagogiques et notre méthodologie sans engagement.
-              </p>
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <input placeholder="Prénom" className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
-                <input placeholder="Nom" className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
-                <input placeholder="Email" className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
-                <input placeholder="Téléphone" className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
-                <select className="rounded-lg border px-3 py-2 text-sm col-span-2" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Spécialité principale</option>
-                </select>
-              </div>
-              <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white" style={{ background: RED }}>
-                Démarrer mon essai gratuit <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* FAQ + CTA — réutilisation des composants existants */}
+      <FAQSection />
+      <FreeTrialBanner />
     </div>
   );
 }

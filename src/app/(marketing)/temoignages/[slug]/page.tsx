@@ -85,7 +85,7 @@ export default async function TestimonialPage({ params }: { params: Promise<{ sl
 
         <div className="mt-8 flex justify-center">
           <Link
-            href="/inscription"
+            href="/tarifs"
             className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white"
             style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
           >

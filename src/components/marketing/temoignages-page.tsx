@@ -421,7 +421,7 @@ function TemoignagesCta() {
             Rejoignez un accompagnement conçu par des experts pour maximiser vos chances de réussite.
           </p>
         </div>
-        <a href="/inscription" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white"
+        <a href="/tarifs" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white"
           style={{ background: RED }}>
           Découvrir nos préparations <ArrowRight className="h-4 w-4" />
         </a>
