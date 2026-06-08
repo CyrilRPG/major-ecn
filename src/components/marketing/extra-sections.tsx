@@ -7,8 +7,8 @@
  */
 import {
   Activity, ArrowRight, Award, Baby, BarChart3, Bell, BookOpen, Brain, BrainCircuit, Calendar, CalendarCheck, CalendarDays,
-  CalendarClock, Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, Folder, GraduationCap, Heart, Lightbulb,
-  Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, ShieldCheck,
+  CalendarClock, Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, Folder, FolderOpen, GraduationCap, Heart, Lightbulb,
+  Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, Settings, ShieldCheck,
   Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video, Zap,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -1454,293 +1454,182 @@ const TT_CARDS = [
   },
 ];
 
-/* ============================================================
-   TOOLS-FOR-PROGRESS Section — « Tous les outils pour structurer
-   votre progression aux EVC ». 6 cartes, accent bleu.
-   ============================================================ */
-const TOOLS_BLUE = '#2563EB';
-const TOOLS_INK = '#0F172A';
-const TOOLS_INK_SOFT = '#52607A';
-const TOOLS_BORDER = '#E5E9F0';
 
-function ToolCard({
-  iconBg, iconFg, Icon, title, desc, children,
-}: {
-  iconBg: string; iconFg: string; Icon: typeof Target;
-  title: string; desc: string; children: React.ReactNode;
-}) {
+/* ============================================================
+   TOOLS-FOR-PROGRESS Section — « Tous les outils pour réussir
+   votre préparation EVC ». 8 cartes en grille 4x2, fond rose dégradé,
+   sous-section plateforme. Pixel-perfect maquette IMG_2266.
+   ============================================================ */
+const TOOLS_RED       = '#C0112E';
+const TOOLS_RED_SOFT  = '#FCEAEC';
+const TOOLS_INK       = '#0F172A';
+const TOOLS_INK_SOFT  = '#475569';
+const TOOLS_BORDER    = '#E5E9F0';
+const TOOLS_FONT      = "'Plus Jakarta Sans', sans-serif";
+/* Dégradé de fond rose chaud → blanc → rose (subtil, comme la maquette). */
+const TOOLS_BG = 'linear-gradient(180deg, #FFF6F7 0%, #FFFFFF 45%, #FFF6F7 100%)';
+/* Dégradé du titre principal — même palette que « Ils racontent leur expérience ». */
+const TOOLS_GRAD_TITLE = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)';
+
+type ToolItem = {
+  Icon: typeof Target;
+  title: string;
+  desc: string;
+  badge?: string;
+};
+
+function ToolMiniCard({ t }: { t: ToolItem }) {
   return (
-    <Reveal>
-      <div className="flex flex-col rounded-2xl border bg-white p-6 sm:p-7 transition-shadow hover:shadow-[0_18px_44px_-26px_rgba(15,23,42,0.18)]"
-        style={{ borderColor: TOOLS_BORDER }}>
-      <header className="flex items-start gap-4">
-        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
-          style={{ background: iconBg, color: iconFg }}>
-          <Icon className="h-7 w-7" />
+    <div className="flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-5 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.18)] transition-shadow hover:shadow-[0_18px_40px_-22px_rgba(192,17,46,0.25)]"
+      style={{ borderColor: TOOLS_BORDER }}>
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+          style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
+          <t.Icon className="h-5 w-5" />
         </span>
-        <div className="min-w-0">
-          <h3 className="text-[19px] font-extrabold leading-tight" style={{ color: TOOLS_INK }}>
-            {title}
-          </h3>
-          <span className="mt-2 block h-0.5 w-10 rounded-full" style={{ background: iconFg }} />
-        </div>
-      </header>
-      <p className="mt-4 text-[14.5px] leading-relaxed" style={{ color: TOOLS_INK_SOFT }}>
-        {desc}
-      </p>
-      <div className="mt-5">{children}</div>
+        <h3 className="text-[14.5px] font-extrabold leading-tight" style={{ color: TOOLS_INK }}>
+          {t.title}
+        </h3>
       </div>
-    </Reveal>
+      <p className="text-[12.5px] leading-relaxed" style={{ color: TOOLS_INK_SOFT }}>
+        {t.desc}
+      </p>
+      {t.badge && (
+        <span className="mt-auto inline-flex items-center gap-1 self-start rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[10px] font-bold"
+          style={{ color: '#0F8A6A' }}>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+          {t.badge}
+        </span>
+      )}
+    </div>
   );
 }
+
+const TOOLS_GRID: ToolItem[] = [
+  { Icon: ShieldCheck,  title: 'Méthodologie EVC',
+    desc: "Méthode de réponse adaptée aux attentes réelles du jury EVC, calibrée sur les épreuves récentes." },
+  { Icon: BookOpen,     title: 'QCM & annales EVC',
+    desc: "Banque de QCM, annales et exercices corrigés pour un entraînement ciblé sur les EVC." },
+  { Icon: FolderOpen,   title: 'Cas cliniques corrigés',
+    desc: "Dossiers progressifs corrigés pour développer votre raisonnement clinique étape par étape." },
+  { Icon: ClipboardList,title: 'Interrogations & épreuves blanches',
+    desc: "Évaluez régulièrement votre niveau dans des conditions proches de l’examen avec correction." },
+  { Icon: Layers3,      title: 'Tous vos contenus au même endroit',
+    desc: "Cours, études, QCM, fiches : tout est centralisé sur la plateforme Major ECN." },
+  { Icon: Play,         title: 'Cours & replays accessibles',
+    desc: "Retrouvez vos séances enregistrées et toutes vos ressources pédagogiques en ligne.",
+    badge: 'Disponible en ligne' },
+  { Icon: Users,        title: 'Échanges avec l’équipe pédagogique',
+    desc: "Bénéficiez d’un accompagnement dans la préparation et la résolution des questions techniques." },
+  { Icon: TrendingUp,   title: 'Suivi de progression',
+    desc: "Analyse automatique de vos performances pour ajuster vos révisions et votre préparation." },
+];
+
+const TOOLS_BULLETS = [
+  { Icon: Check,        t: 'Tous vos sujets organisés' },
+  { Icon: Settings,     t: 'Outils méthodes intégrés' },
+  { Icon: FolderOpen,   t: 'Ressources organisées par spécialité' },
+  { Icon: ClipboardList,t: 'Préparation aux EVC d’oraux' },
+  { Icon: Award,        t: 'Conforme au programme EDN' },
+];
 
 export function ToolsForProgressSection() {
   return (
     <section
-      className="relative bg-white py-16 sm:py-20 lg:py-24"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      className="relative py-16 sm:py-20 lg:py-24"
+      style={{ fontFamily: TOOLS_FONT, background: TOOLS_BG }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Eyebrow */}
+        {/* Titre + sous-titre */}
         <Reveal className="text-center">
-          <p
-            className="text-[11px] font-extrabold uppercase tracking-[0.2em]"
-            style={{ color: TOOLS_INK_SOFT }}
-          >
-            <span style={{ color: TOOLS_INK }}>Une méthode structurée</span>
-            <span className="mx-2" aria-hidden>•</span>
-            <span style={{ color: TOOLS_INK }}>Des outils concrets</span>
-            <span className="mx-2" aria-hidden>•</span>
-            <span style={{ color: TOOLS_INK }}>Une progression mesurable</span>
-          </p>
-          <h2
-            className="mx-auto mt-5 max-w-4xl text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl"
+          <h2 className="mx-auto max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-[2.6rem]"
             style={{
-              backgroundImage:
-                'linear-gradient(90deg, #0F1F4D 0%, #1E3A8A 30%, #2563EB 60%, #4F46E5 100%)',
+              backgroundImage: TOOLS_GRAD_TITLE,
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               color: 'transparent',
             }}
           >
-            Tous les outils pour structurer<br className="hidden sm:inline" />
-            {' '}votre progression aux EVC
+            Tous les outils pour réussir votre préparation EVC
           </h2>
-          <p
-            className="mx-auto mt-5 max-w-3xl text-base leading-relaxed sm:text-[17px]"
-            style={{ color: TOOLS_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}
-          >
-            Chaque fonctionnalité a été conçue pour répondre à un objectif simple :
-            vous aider à réviser avec méthode, gagner du temps et progresser efficacement
-            jusqu&rsquo;aux EVC.
+          <p className="mx-auto mt-4 flex items-center justify-center gap-2 text-[13.5px] font-semibold sm:text-[14.5px]"
+            style={{ color: TOOLS_INK_SOFT }}>
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full"
+              style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
+              <Check className="h-3 w-3" />
+            </span>
+            Une préparation complète pour les Épreuves de Vérification des Connaissances (EVC) dans le cadre de la PAE.
           </p>
         </Reveal>
 
-        {/* Grille 6 cartes */}
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {/* 1. Visualisez votre progression */}
-          <ToolCard
-            Icon={BarChart3}
-            iconBg="#E0EBFF" iconFg="#2563EB"
-            title="Visualisez votre progression"
-            desc="Suivez vos résultats par spécialité, thématique et type d'épreuve pour identifier rapidement vos priorités de révision."
-          >
-            <div className="grid gap-3 rounded-xl border bg-[#F8FAFC] p-3.5" style={{ borderColor: TOOLS_BORDER }}>
+        {/* Grille 8 cartes (4×2) */}
+        <div className="mt-10 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+          {TOOLS_GRID.map((t) => (
+            <Reveal key={t.title}>
+              <ToolMiniCard t={t} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Sous-section "Une plateforme pensée pour vous faire gagner du temps" */}
+        <Reveal delay={0.1}>
+          <div className="mt-12 overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.20)]"
+            style={{ borderColor: TOOLS_BORDER }}>
+            <div className="grid grid-cols-1 gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-8">
+              {/* Gauche : titre + bullets */}
               <div>
-                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: TOOLS_INK_SOFT }}>
-                  Spécialités
-                </p>
-                <ul className="space-y-1.5">
-                  {[
-                    { l: 'Cardiologie', v: 82 },
-                    { l: 'Dermatologie', v: 67 },
-                    { l: 'Endocrinologie', v: 58 },
-                    { l: 'Gastro-entérologie', v: 74 },
-                  ].map((row) => (
-                    <li key={row.l} className="flex items-center gap-2 text-[11px]">
-                      <span className="w-[110px] truncate" style={{ color: TOOLS_INK }}>{row.l}</span>
-                      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#E2E8F0]">
-                        <span className="block h-full rounded-full" style={{ width: `${row.v}%`, background: '#2563EB' }} />
+                <h3 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[1.7rem]"
+                  style={{
+                    backgroundImage: TOOLS_GRAD_TITLE,
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'transparent',
+                  }}>
+                  Une plateforme pensée pour vous faire gagner du temps
+                </h3>
+                <ul className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {TOOLS_BULLETS.map((b) => (
+                    <li key={b.t} className="flex items-center gap-2.5 text-[13px]" style={{ color: TOOLS_INK }}>
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                        style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
+                        <b.Icon className="h-3.5 w-3.5" />
                       </span>
-                      <span className="w-8 text-right text-[11px] font-bold tabular-nums" style={{ color: TOOLS_INK }}>
-                        {row.v}%
-                      </span>
+                      <span className="font-semibold">{b.t}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div className="rounded-lg bg-white p-2.5" style={{ border: `1px solid ${TOOLS_BORDER}` }}>
-                <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: TOOLS_INK_SOFT }}>
-                  Évolution
-                </p>
-                <div className="mt-1.5 flex items-end gap-1.5 h-9">
-                  {[40, 52, 48, 58, 65, 72].map((h, i) => (
-                    <span key={i} className="w-2 rounded-sm" style={{ height: `${h}%`, background: '#3B82F6' }} />
-                  ))}
-                </div>
-                <p className="mt-1.5 text-[11px] font-bold" style={{ color: '#16A34A' }}>
-                  +18% <span className="font-normal" style={{ color: TOOLS_INK_SOFT }}>sur 4 semaines</span>
+                <p className="mt-6 text-[11.5px] font-bold uppercase tracking-[0.18em]" style={{ color: TOOLS_INK_SOFT }}>
+                  Préparation EVC · PAE · PADHUE · Médecins diplômés hors Union Européenne
                 </p>
               </div>
-            </div>
-          </ToolCard>
 
-          {/* 2. Révisez ce qui compte vraiment */}
-          <ToolCard
-            Icon={Target}
-            iconBg="#DCFCE7" iconFg="#16A34A"
-            title="Révisez ce qui compte vraiment"
-            desc="Des recommandations et parcours de travail adaptés à votre niveau pour concentrer vos efforts là où ils auront le plus d'impact."
-          >
-            <div className="rounded-xl border bg-[#F0FDF4] p-3.5" style={{ borderColor: '#BBF7D0' }}>
-              <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: TOOLS_INK_SOFT }}>
-                Votre priorité actuelle
-              </p>
-              <div className="mt-1.5 flex items-center justify-between gap-2">
-                <p className="text-[13px] font-bold" style={{ color: TOOLS_INK }}>
-                  Physiopathologie cardiovasculaire
-                </p>
-                <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                  style={{ background: '#DCFCE7', color: '#16A34A' }}>
-                  Priorité haute
-                </span>
-              </div>
-              <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: TOOLS_INK_SOFT }}>
-                Plan recommandé
-              </p>
-              <p className="mt-1 text-[12px]" style={{ color: TOOLS_INK }}>
-                <span className="font-bold">12</span> dossiers ·{' '}
-                <span className="font-bold">45</span> QCM ·{' '}
-                <span className="font-bold">2</span> fiches
-              </p>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#DCFCE7]">
-                  <span className="block h-full w-[66%] rounded-full" style={{ background: '#16A34A' }} />
-                </span>
-                <span className="w-8 text-right text-[11px] font-bold tabular-nums" style={{ color: '#16A34A' }}>
-                  66%
-                </span>
-              </div>
-            </div>
-          </ToolCard>
-
-          {/* 3. Mesurez vos performances */}
-          <ToolCard
-            Icon={LineChart}
-            iconBg="#F3E8FF" iconFg="#9333EA"
-            title="Mesurez vos performances"
-            desc="Analysez votre évolution au fil du temps et repérez les notions qui nécessitent un renforcement."
-          >
-            <div className="grid grid-cols-3 gap-2.5">
-              {[
-                { l: 'Score moyen',      v: '76%', d: '+8%', dc: '#16A34A' },
-                { l: 'Percentile',       v: '78ᵉ', d: '+12', dc: '#16A34A' },
-                { l: 'Points à renforcer', v: '14', d: 'thématiques identifiées', dc: TOOLS_INK_SOFT, small: true },
-              ].map((s) => (
-                <div key={s.l} className="rounded-lg border bg-[#FAF5FF] p-2.5 text-center" style={{ borderColor: '#E9D5FF' }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: TOOLS_INK_SOFT }}>
-                    {s.l}
-                  </p>
-                  <p className="mt-1 text-xl font-black tabular-nums" style={{ color: TOOLS_INK }}>{s.v}</p>
-                  <p className={'mt-1 leading-tight ' + (s.small ? 'text-[9px]' : 'text-[11px] font-bold')}
-                    style={{ color: s.dc }}>
-                    {s.d}
-                  </p>
-                  {!s.small && <p className="text-[9px]" style={{ color: TOOLS_INK_SOFT }}>vs semaine dernière</p>}
-                </div>
-              ))}
-            </div>
-          </ToolCard>
-
-          {/* 4. Entraînez-vous efficacement */}
-          <ToolCard
-            Icon={Brain}
-            iconBg="#FFEDD5" iconFg="#EA580C"
-            title="Entraînez-vous efficacement"
-            desc="QCM, flashcards, dossiers progressifs, annales et ressources pédagogiques organisés pour favoriser une progression régulière."
-          >
-            <div className="flex flex-wrap gap-2">
-              {[
-                { L: ListChecks, n: 'QCM',        bg: '#FFEDD5', fg: '#EA580C' },
-                { L: Layers3,    n: 'Flashcards', bg: '#FEF3C7', fg: '#D97706' },
-                { L: Folder,     n: 'Dossiers',   bg: '#EDE9FE', fg: '#7C3AED' },
-                { L: FileText,   n: 'Annales',    bg: '#DBEAFE', fg: '#2563EB' },
-                { L: BookOpen,   n: 'Fiches',     bg: '#DCFCE7', fg: '#16A34A' },
-              ].map((c) => (
-                <span key={c.n}
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold"
-                  style={{ background: c.bg, color: c.fg }}>
-                  <c.L className="h-3.5 w-3.5" />
-                  {c.n}
-                </span>
-              ))}
-            </div>
-          </ToolCard>
-
-          {/* 5. Organisez vos révisions */}
-          <ToolCard
-            Icon={CalendarCheck}
-            iconBg="#DBEAFE" iconFg="#2563EB"
-            title="Organisez vos révisions"
-            desc="Structurez votre préparation grâce à des objectifs de travail, un calendrier clair et un suivi de vos avancées."
-          >
-            <div className="rounded-xl border bg-[#F8FAFC] p-3" style={{ borderColor: TOOLS_BORDER }}>
-              <div className="grid grid-cols-7 gap-1.5 text-center">
-                {[
-                  { d: 'Lun', t: 'QCM', dur: '30 min',  bg: '#DBEAFE', fg: '#1E40AF' },
-                  { d: 'Mar', t: 'Dossier', dur: '45 min', bg: '#FEF3C7', fg: '#A16207' },
-                  { d: 'Mer', t: 'Fiche', dur: '30 min', bg: '#DCFCE7', fg: '#15803D' },
-                  { d: 'Jeu', t: 'Annales', dur: '1h',  bg: '#FFE4E6', fg: '#BE123C' },
-                  { d: 'Ven', t: 'QCM', dur: '30 min',  bg: '#DBEAFE', fg: '#1E40AF' },
-                  { d: 'Sam', t: '—',  dur: '',        bg: '#F1F5F9', fg: '#94A3B8' },
-                  { d: 'Dim', t: '—',  dur: '',        bg: '#F1F5F9', fg: '#94A3B8' },
-                ].map((c) => (
-                  <div key={c.d} className="overflow-hidden rounded-md" style={{ background: c.bg }}>
-                    <p className="px-1 pt-1 text-[9px] font-bold uppercase tracking-wider" style={{ color: c.fg }}>
-                      {c.d}
-                    </p>
-                    <p className="px-1 text-[10px] font-bold" style={{ color: c.fg }}>{c.t}</p>
-                    <p className="px-1 pb-1.5 text-[9px]" style={{ color: c.fg, opacity: 0.85 }}>{c.dur || ' '}</p>
+              {/* Droite : visuel plateforme */}
+              <div className="relative">
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                  {/* eslint-disable @next/next/no-img-element */}
+                  <div className="col-span-2 overflow-hidden rounded-2xl border shadow-md"
+                    style={{ borderColor: TOOLS_BORDER }}>
+                    <img src="/accueil.png" alt="Tableau de bord Major ECN"
+                      className="block aspect-[16/9] w-full object-cover object-top" />
                   </div>
-                ))}
-              </div>
-              <div className="mt-2.5 flex items-center gap-2">
-                <span className="text-[10px] font-semibold" style={{ color: TOOLS_INK_SOFT }}>Objectif hebdomadaire</span>
-                <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#E2E8F0]">
-                  <span className="block h-full w-[72%] rounded-full" style={{ background: '#2563EB' }} />
-                </span>
-                <span className="text-[11px] font-bold tabular-nums" style={{ color: '#2563EB' }}>72%</span>
-              </div>
-            </div>
-          </ToolCard>
-
-          {/* 6. Bénéficiez d'un accompagnement pédagogique */}
-          <ToolCard
-            Icon={Users}
-            iconBg="#FCE7F3" iconFg="#DB2777"
-            title="Bénéficiez d'un accompagnement pédagogique"
-            desc="Webinars, événements pédagogiques et échanges avec notre équipe pour vous accompagner tout au long de votre préparation."
-          >
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {[
-                { L: Radio,         n: 'Webinars',    s: 'en direct' },
-                { L: CalendarDays,  n: 'Événements',  s: 'pédagogiques' },
-                { L: UserCheck,     n: 'Experts',     s: 'à vos côtés' },
-                { L: MessageCircle, n: 'Réponses à',  s: 'vos questions' },
-              ].map((c) => (
-                <div key={c.n} className="rounded-lg p-2.5 text-center" style={{ background: '#FDF2F8' }}>
-                  <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full"
-                    style={{ background: '#FCE7F3', color: '#DB2777' }}>
-                    <c.L className="h-4 w-4" />
-                  </span>
-                  <p className="mt-1.5 text-[10px] font-bold" style={{ color: TOOLS_INK }}>{c.n}</p>
-                  <p className="text-[10px]" style={{ color: TOOLS_INK_SOFT }}>{c.s}</p>
+                  <div className="overflow-hidden rounded-2xl border shadow-md"
+                    style={{ borderColor: TOOLS_BORDER }}>
+                    <img src="/entrainement.png" alt="Entraînement ciblé"
+                      className="block aspect-[16/10] w-full object-cover object-top" />
+                  </div>
+                  <div className="overflow-hidden rounded-2xl border shadow-md"
+                    style={{ borderColor: TOOLS_BORDER }}>
+                    <img src="/cours.png" alt="Cours par item EDN"
+                      className="block aspect-[16/10] w-full object-cover object-top" />
+                  </div>
+                  {/* eslint-enable @next/next/no-img-element */}
                 </div>
-              ))}
+              </div>
             </div>
-          </ToolCard>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
