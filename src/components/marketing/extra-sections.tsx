@@ -1546,13 +1546,13 @@ export function ToolsForProgressSection() {
                 </p>
               </div>
 
-              {/* Droite : aperçu plateforme — image bien grande */}
-              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-3 flex items-end justify-center">
+              {/* Droite : aperçu plateforme — hauteur contrainte */}
+              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] flex items-end justify-center overflow-hidden" style={{ maxHeight: '260px' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/plateforme/laptop-phone-dashboard.png"
                   alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
-                  className="relative z-10 w-full max-w-[520px] select-none drop-shadow-2xl"
+                  className="relative z-10 w-full max-w-[480px] select-none drop-shadow-xl mt-4"
                   decoding="async"
                 />
               </div>
