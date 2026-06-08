@@ -1913,7 +1913,7 @@ export function TestimonialsVideoSection() {
                     playsInline
                     preload="metadata"
                     aria-label={`Témoignage vidéo de ${c.name}`}
-                    className="absolute inset-0 h-full w-full bg-black object-cover"
+                    className="absolute inset-0 h-full w-full bg-black object-contain"
                   >
                     Votre navigateur ne supporte pas la lecture vidéo.
                   </video>
