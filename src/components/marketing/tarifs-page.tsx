@@ -154,10 +154,7 @@ export function TarifsPageContent() {
 
             {/* Intensive */}
             <div className="relative flex flex-col rounded-2xl border-2 p-5 shadow-lg" style={{ borderColor: RED }}>
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: RED }}>
-                <Star className="h-3 w-3" fill="currentColor" /> LA PLUS CHOISIE
-              </span>
-              <div className="flex items-center gap-2.5 pt-1">
+              <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: RED_SOFT, color: RED }}>
                   <Target className="h-4 w-4" />
                 </span>

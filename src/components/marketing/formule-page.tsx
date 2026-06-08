@@ -44,7 +44,7 @@ const CONFIGS: Record<Variant, {
     label: 'FORMULE INTENSIVE', tagline: 'Finalisez votre preparation\ndans les derniers mois avant les EVC',
     price: '995', hero: '/formules/hero-formule-intensive.jpg',
     desc: 'Pour les candidats disposant deja de bases solides et souhaitant beneficier de revisions guidees, de corrections detaillees et de rappels cibles avant l\'examen.',
-    cta: 'Commencer maintenant', badge: 'LA PLUS CHOISIE AVANT LES EVC',
+    cta: 'Commencer maintenant',
     features: ['Parcours adapte a votre voie (interne ou externe)', 'Seances de revision thematiques', 'Corrections commentees avec rappels cibles', 'Ideal dans les derniers mois avant les EVC'],
     contentItems: [
       { Icon: ClipboardCheck, t: 'QCM d\'entrainement', d: 'Series ciblees par specialite et thematique' },
@@ -311,7 +311,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 style={{ borderColor: p.v === variant ? p.color : BORDER, ...(p.v === variant ? { ringColor: p.color } : {}) }}>
                 {p.v === variant && (
                   <span className="mb-3 inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: p.color }}>
-                    {p.v === 'intensive' ? 'LA PLUS CHOISIE AVANT LES EVC' : p.v === 'approfondi' ? 'LA PREPARATION LA PLUS COMPLETE' : ''}
+                    {p.v === 'approfondi' ? 'LA PREPARATION LA PLUS COMPLETE' : ''}
                   </span>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
