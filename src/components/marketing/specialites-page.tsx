@@ -455,35 +455,39 @@ function SpecCard({ s }: { s: Speciality }) {
       <span aria-hidden className="absolute inset-x-4 top-0 h-[3px] rounded-b-full opacity-90"
         style={{ background: s.accent }} />
 
-      {/* Titre + icone */}
+      {/* 1. Titre + icone */}
       <div className="mt-1 flex items-center gap-2.5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
           style={{ background: `${s.accent}14`, color: s.accent }}>
           <s.Icon className="h-5 w-5" />
         </span>
-        <p className="text-[14.5px] font-extrabold leading-tight" style={{ color: '#0F172A' }}>{s.name}</p>
+        <p className="text-[14.5px] font-extrabold leading-tight" style={{ color: s.accent }}>{s.name}</p>
       </div>
 
-      {/* Paragraphe descriptif tronqué */}
-      <p className="text-[12.5px] leading-relaxed [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] overflow-hidden"
-        style={{ color: '#475569' }}>
-        {s.description}
-      </p>
-
-      {/* Badges statut : preparation existante + inscriptions ouvertes */}
-      <ul className="mt-auto flex flex-wrap items-center gap-1.5 pt-1 text-[10.5px] font-semibold" style={{ color: '#52607A' }}>
-        <li className="inline-flex items-center gap-1 rounded-full bg-[#E7F6EC] px-2 py-0.5" style={{ color: '#0F8A6A' }}>
-          <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+      {/* 2. Check items : preparation existante + inscriptions ouvertes */}
+      <ul className="space-y-1 text-[11.5px] font-semibold" style={{ color: '#0F172A' }}>
+        <li className="flex items-center gap-1.5">
+          <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16A34A] text-white">
+            <Check className="h-2.5 w-2.5" strokeWidth={3} />
+          </span>
           Préparation existante
         </li>
-        <li className="inline-flex items-center gap-1 rounded-full bg-[#FCEAEC] px-2 py-0.5" style={{ color: '#A91D2C' }}>
-          <span className="h-1.5 w-1.5 rounded-full bg-[#C0112E]" />
+        <li className="flex items-center gap-1.5">
+          <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16A34A] text-white">
+            <Check className="h-2.5 w-2.5" strokeWidth={3} />
+          </span>
           Inscriptions ouvertes
         </li>
       </ul>
 
-      {/* CTA bas de carte */}
-      <span className="mt-1 inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
+      {/* 3. Paragraphe descriptif tronqué */}
+      <p className="text-[12px] leading-relaxed [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] overflow-hidden"
+        style={{ color: '#475569' }}>
+        {s.description}
+      </p>
+
+      {/* 4. CTA bas de carte */}
+      <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
         style={{ color: isMG ? s.accent : '#7A8499' }}>
         {isMG ? 'Découvrir la préparation' : 'Nous contacter pour s’inscrire'} <ChevronRight className="h-3.5 w-3.5" />
       </span>

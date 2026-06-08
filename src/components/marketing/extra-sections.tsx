@@ -1476,9 +1476,28 @@ type ToolItem = {
   title: string;
   desc: string;
   badge?: string;
+  /** Carte mise en avant : fond degrade rouge, titre + texte blancs. */
+  featured?: boolean;
 };
 
 function ToolMiniCard({ t }: { t: ToolItem }) {
+  if (t.featured) {
+    return (
+      <div className="flex h-full flex-col gap-2.5 rounded-2xl border p-5 text-white shadow-[0_14px_36px_-18px_rgba(192,17,46,0.45)] transition-shadow hover:shadow-[0_22px_50px_-22px_rgba(192,17,46,0.55)]"
+        style={{
+          background: 'linear-gradient(135deg, #C0112E 0%, #8B0E22 60%, #6B1A2A 100%)',
+          borderColor: 'rgba(255,255,255,0.18)',
+        }}>
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+            <t.Icon className="h-5 w-5" />
+          </span>
+          <h3 className="text-[14.5px] font-extrabold leading-tight text-white">{t.title}</h3>
+        </div>
+        <p className="text-[12.5px] leading-relaxed text-white/85">{t.desc}</p>
+      </div>
+    );
+  }
   return (
     <div className="flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-5 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.18)] transition-shadow hover:shadow-[0_18px_40px_-22px_rgba(192,17,46,0.25)]"
       style={{ borderColor: TOOLS_BORDER }}>
@@ -1515,7 +1534,7 @@ const TOOLS_GRID: ToolItem[] = [
   { Icon: ClipboardList,title: 'Interrogations & épreuves blanches',
     desc: "Évaluez régulièrement votre niveau dans des conditions proches de l’examen avec correction." },
   { Icon: Layers3,      title: 'Tous vos contenus au même endroit',
-    desc: "Cours, études, QCM, fiches : tout est centralisé sur la plateforme Major ECN." },
+    desc: "Cours, études, QCM, fiches : tout est centralisé sur la plateforme Major ECN.", featured: true },
   { Icon: Play,         title: 'Cours & replays accessibles',
     desc: "Retrouvez vos séances enregistrées et toutes vos ressources pédagogiques en ligne.",
     badge: 'Disponible en ligne' },
@@ -1605,26 +1624,39 @@ export function ToolsForProgressSection() {
                 </p>
               </div>
 
-              {/* Droite : visuel plateforme */}
+              {/* Droite : placeholder visuel ordinateur + telephone, a remplacer */}
               <div className="relative">
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="relative aspect-[16/11] w-full overflow-hidden rounded-3xl border shadow-md"
+                  style={{
+                    borderColor: TOOLS_BORDER,
+                    background: 'linear-gradient(135deg, #FFF6F7 0%, #FCEAEC 50%, #F0F4FA 100%)',
+                  }}>
                   {/* eslint-disable @next/next/no-img-element */}
-                  <div className="col-span-2 overflow-hidden rounded-2xl border shadow-md"
-                    style={{ borderColor: TOOLS_BORDER }}>
-                    <img src="/accueil.png" alt="Tableau de bord Major ECN"
-                      className="block aspect-[16/9] w-full object-cover object-top" />
-                  </div>
-                  <div className="overflow-hidden rounded-2xl border shadow-md"
-                    style={{ borderColor: TOOLS_BORDER }}>
-                    <img src="/entrainement.png" alt="Entraînement ciblé"
-                      className="block aspect-[16/10] w-full object-cover object-top" />
-                  </div>
-                  <div className="overflow-hidden rounded-2xl border shadow-md"
-                    style={{ borderColor: TOOLS_BORDER }}>
-                    <img src="/cours.png" alt="Cours par item EDN"
-                      className="block aspect-[16/10] w-full object-cover object-top" />
-                  </div>
+                  <img
+                    src="/tools-platform-mockup.png"
+                    alt="Aperçu plateforme Major ECN"
+                    className="absolute inset-0 h-full w-full object-contain"
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      img.style.display = 'none';
+                      const fb = img.nextElementSibling as HTMLElement | null;
+                      if (fb) fb.style.display = 'flex';
+                    }}
+                  />
                   {/* eslint-enable @next/next/no-img-element */}
+                  {/* Fallback placeholder si /tools-platform-mockup.png absent */}
+                  <div aria-hidden className="hidden h-full w-full flex-col items-center justify-center gap-3 p-6">
+                    <BarChart3 className="h-14 w-14" style={{ color: TOOLS_RED }} strokeWidth={1.3} />
+                    <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em]" style={{ color: TOOLS_INK }}>
+                      Illustration plateforme à venir
+                    </p>
+                    <p className="text-center text-[11px]" style={{ color: TOOLS_INK_SOFT }}>
+                      Fichier attendu&nbsp;:{' '}
+                      <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[10px]" style={{ color: TOOLS_RED }}>
+                        tools-platform-mockup.png
+                      </code>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
