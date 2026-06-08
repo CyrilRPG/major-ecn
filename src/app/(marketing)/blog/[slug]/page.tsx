@@ -7,6 +7,7 @@ import { ArticleDefisEvc } from '@/components/marketing/blog/articles/article-de
 import { ArticleImpactEvc } from '@/components/marketing/blog/articles/article-impact-evc';
 import { ArticleListeDocuments } from '@/components/marketing/blog/articles/article-liste-documents';
 import { ArticleCommentSinscrire } from '@/components/marketing/blog/articles/article-comment-sinscrire';
+import { ArticleConseilsLaureats } from '@/components/marketing/blog/articles/article-conseils-laureats';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 
 export async function generateMetadata({
@@ -43,6 +44,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       return <ArticleListeDocuments article={article} />;
     case 'comment-se-presenter-aux-evc':
       return <ArticleCommentSinscrire article={article} />;
+    case 'comment-reussir-les-evc-conseils-laureats':
+      return <ArticleConseilsLaureats article={article} />;
     default:
       return <ArticleGeneric article={article} />;
   }

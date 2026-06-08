@@ -36,6 +36,17 @@ export type BlogArticleMeta = {
 
 export const BLOG_ARTICLES: BlogArticleMeta[] = [
   {
+    slug: 'comment-reussir-les-evc-conseils-laureats',
+    title: 'Comment réussir les EVC : les conseils que les lauréats auraient aimé connaître plus tôt',
+    excerpt: "Méthode, gestion du temps, examens blancs, posture face au correcteur : les leçons clés tirées des retours de candidats lauréats pour préparer efficacement les Épreuves de Vérification des Connaissances.",
+    category: 'conseils-methodologie',
+    readingMinutes: 10,
+    readers: 1845,
+    publishedAt: '2026-06-07',
+    featured: true,
+    popularRank: 2,
+  },
+  {
     slug: 'comment-se-presenter-aux-evc',
     title: 'EVC PAE : comment s\'inscrire aux Épreuves de Vérification des Connaissances ?',
     excerpt: 'Conditions d\'inscription, liste A et liste B, documents à fournir, nombre de tentatives et procédure auprès de l\'ARS : le guide complet pour réussir votre candidature aux EVC.',

@@ -132,28 +132,71 @@ type WrittenTesti = {
   spec: string;
   short: string;
   initials: string;
+  /** Photo dans /public/temoignages/<file> — sinon initiales en fallback. */
+  photo?: string;
+  /** Slug de l'article-temoignage complet (route /temoignages/[slug]). */
+  slug?: string;
 };
 const WRITTEN: WrittenTesti[] = [
-  { name: 'Dr Amélie Lamure',    spec: 'Anesthésie-Réanimation', initials: 'AL',
-    short: 'Une équipe présente, disponible et impliquée à chaque étape. J\'ai trouvé de véritables partenaires à mes côtés.' },
-  { name: 'Dr Haykel Abdelbaki', spec: 'Radiologie',           initials: 'HA',
-    short: 'Les cours sont clairs, le planning respecté et les concours blancs proches de l\'examen réel.' },
-  { name: 'Dr Albert M.',        spec: 'Médecine générale',    initials: 'AM',
-    short: 'Major ECN m\'a permis de garder le cap et d\'avancer sereinement jusqu\'au jour J.' },
-  { name: 'Dr Sarah B.',         spec: 'Pédiatrie',            initials: 'SB',
-    short: 'Les annales corrigées et les mots-clés m\'ont aidée à comprendre ce que les jurys attendent vraiment.' },
-  { name: 'Dr Nabil T.',         spec: 'Cardiologie',          initials: 'NT',
-    short: 'L\'accompagnement personnalisé fait toute la différence.' },
-  { name: 'Dr Leïla K.',         spec: 'Gériatrie',            initials: 'LK',
-    short: 'Organisation, sérieux et qualité des contenus : les clés de ma réussite.' },
-  { name: 'Dr Youssef E.',       spec: 'Anesthésie-Réanimation', initials: 'YE',
-    short: 'Les concours blancs m\'ont permis d\'évaluer mon niveau et de gagner une vraie confiance.' },
-  { name: 'Dr Maria C.',         spec: 'Médecine générale',    initials: 'MC',
-    short: 'Grâce à Major ECN, j\'ai abordé les EVC avec méthode et sérénité.' },
-  { name: 'Dr Lilia Ouled Ben Ahmed', spec: 'Odontologie',     initials: 'LO',
-    short: "Une préparation sérieuse, structurée et adaptée aux nouvelles modalités EVC 2025. L'équipe a su s'adapter rapidement au nouveau format du concours." },
+  // Témoignages avec photo (issus de FEATURED_TESTIMONIES) -- carte avec
+  // photo et lien "Lire le témoignage" actif.
+  { name: 'Dr Haykel Abdelbaki', spec: 'Radiologie',                  initials: 'HA',
+    photo: '/temoignages/dr-haykel-abdelbaki.jpg', slug: 'dr-haykel-abdelbaki',
+    short: "Sérieux, qualité et accompagnement : les clés de ma réussite." },
+  { name: 'Dr Amélie Lamure',    spec: 'Anesthésie-Réanimation',      initials: 'AL',
+    photo: '/temoignages/dr-amelie-lamure.jpg', slug: 'dr-amelie-lamure',
+    short: "Une équipe présente, disponible et impliquée à chaque étape." },
+  { name: 'Dr Leila Bettaieb',   spec: 'Médecine générale',           initials: 'LB',
+    photo: '/temoignages/dr-leila-bettaieb.jpg', slug: 'dr-leila-bettaieb',
+    short: "Une méthode claire, de bons supports et un véritable accompagnement." },
+  { name: 'Dr Bill Baron WANKPO', spec: 'Médecine générale',          initials: 'BW',
+    photo: '/temoignages/drbilly.png', slug: 'dr-bill-baron-wankpo',
+    short: "Une préparation structurée et ciblée, utile bien au-delà du concours." },
+  { name: 'Dr Samy KABAWEH',     spec: 'Radiologie',                  initials: 'SK',
+    photo: '/temoignages/drsamy.jpg', slug: 'dr-samy-kabaweh',
+    short: "Cette préparation m'a vraiment permis de franchir un cap." },
+  { name: 'Dr Faten Hnania',     spec: 'Médecine générale',           initials: 'FH',
+    photo: '/temoignages/drfaten.png', slug: 'dr-faten-hnania',
+    short: "Un cadre clair et une méthode de travail sérieuse." },
+  { name: 'Dr Lilia Ouled Ben Ahmed', spec: 'Odontologie',            initials: 'LO',
+    photo: '/temoignages/dr-lilia-ouled-ben-ahmed.jpg', slug: 'dr-lilia-ouled-ben-ahmed',
+    short: "Une préparation sérieuse, structurée et adaptée aux nouvelles modalités EVC 2025." },
+
+  // Témoignages additionnels en attente de photo -- carte avec initiales.
+  { name: 'Dr Lynda SEMAI',          spec: 'Ophtalmologie',                       initials: 'LS',
+    short: "Une préparation rigoureuse qui m'a guidée vers la réussite des EVC en ophtalmologie." },
+  { name: 'Dr Sandrine Linda SA’A TALLA', spec: 'Médecine générale',              initials: 'ST',
+    short: "Une méthode claire et un accompagnement qui m'ont menée à la réussite des EVC en médecine générale." },
+  { name: 'Dr Monica WAITZFELDER',   spec: 'Psychiatrie',                         initials: 'MW',
+    short: "Après une première tentative en solo sans succès, la formation Major ECN m'a apporté la méthode qui a fait la différence." },
+  { name: 'Dr Imene DENECHE',        spec: 'Médecine générale',                   initials: 'ID',
+    short: "Classée 2ᵉ en médecine générale grâce à une méthode efficace et à des dossiers proches du jour J." },
+  { name: 'Dr Lamia BOUDEBZA',       spec: 'Médecine générale',                   initials: 'LB',
+    short: "Une formation qui fait gagner du temps, donne de la méthode et de la confiance pour le jour J." },
+  { name: 'Dr Joée MAEVAZAKA',       spec: 'Chirurgie viscérale',                 initials: 'JM',
+    short: "Une méthode rigoureuse qui change vraiment la donne après une préparation en solo." },
+  { name: 'Dr Carlyse MINKALA',      spec: 'Radiodiagnostic et imagerie médicale',initials: 'CM',
+    short: "Classée 11ᵉ sur 120 en radiodiagnostic grâce à un accompagnement précis et des conseils utiles." },
+  { name: 'Dr A. SEMÊVO',            spec: 'Endocrinologie',                      initials: 'AS',
+    short: "Après une première tentative manquée en solo, la méthode m'a permis de valider l'EVC en endocrinologie." },
+  { name: 'Dr Ikram HADJIJ',         spec: 'Gériatrie',                           initials: 'IH',
+    short: "Une préparation structurée qui m'a permis de réussir les EVC en gériatrie." },
 ];
-const SPECIALTIES = ['Tous', 'Médecine générale', 'Radiologie', 'Anesthésie-Réanimation', 'Gériatrie', 'Cardiologie', 'Pédiatrie', 'Odontologie'] as const;
+const SPECIALTIES = [
+  'Tous',
+  'Médecine générale',
+  'Radiologie',
+  'Anesthésie-Réanimation',
+  'Gériatrie',
+  'Cardiologie',
+  'Pédiatrie',
+  'Odontologie',
+  'Ophtalmologie',
+  'Psychiatrie',
+  'Chirurgie viscérale',
+  'Radiodiagnostic et imagerie médicale',
+  'Endocrinologie',
+] as const;
 
 function WrittenSection() {
   const [tab, setTab] = useState<string>('Tous');
@@ -190,10 +233,16 @@ function WrittenSection() {
             <Reveal key={w.name}>
               <article className="flex h-full flex-col rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <header className="flex items-start gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-bold text-white"
-                    style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-                    {w.initials}
-                  </span>
+                  {w.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={w.photo} alt={w.name}
+                      className="h-11 w-11 shrink-0 rounded-full object-cover" />
+                  ) : (
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-bold text-white"
+                      style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
+                      {w.initials}
+                    </span>
+                  )}
                   <span className="ml-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold"
                     style={{ background: '#FCEAEC', color: RED }}>
                     {w.spec === 'Pédiatrie' && <Heart className="h-2.5 w-2.5" />}
@@ -210,9 +259,17 @@ function WrittenSection() {
                   <Quote className="h-4 w-4 shrink-0" style={{ color: RED }} fill="currentColor" />
                   <p className="text-[12.5px] leading-relaxed" style={{ color: INK }}>{w.short}</p>
                 </div>
-                <a className="mt-4 inline-flex items-center gap-1 text-[12px] font-bold" style={{ color: RED }}>
-                  Lire le témoignage <ArrowRight className="h-3.5 w-3.5" />
-                </a>
+                {w.slug ? (
+                  <Link href={`/temoignages/${w.slug}`}
+                    className="mt-auto inline-flex items-center gap-1 pt-4 text-[12px] font-bold hover:underline"
+                    style={{ color: RED }}>
+                    Lire le témoignage <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                ) : (
+                  <span className="mt-auto pt-4 text-[11px] italic" style={{ color: INK_MUTED }}>
+                    Témoignage complet à venir
+                  </span>
+                )}
               </article>
             </Reveal>
           ))}

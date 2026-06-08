@@ -1049,16 +1049,6 @@ const BP_TOP = [
 ];
 
 /* 8 cartes outils — grille 4×2, palette uniquement rouge → orange */
-const BP_TOOLS = [
-  { Icon: Compass,        t: 'Méthodologie EVC',                  d: 'Une méthodologie construite à partir des attentes des jurys EVC pour gagner en efficacité dans vos révisions et vos épreuves.', bg: '#FCEAEC', fg: '#C0112E' },
-  { Icon: FileText,       t: 'QCM & annales EVC',                  d: 'Des milliers de QCM classés par spécialité, thème et niveau de difficulté pour un entraînement ciblé et efficace.',           bg: '#FFEAD9', fg: '#E8742C' },
-  { Icon: Stethoscope,    t: 'Cas cliniques\ncorrigés',            d: 'Entraînez votre raisonnement clinique avec des cas progressifs et des corrections détaillées.',                                bg: '#FFF1E6', fg: '#B35900' },
-  { Icon: ClipboardCheck, t: 'Interrogations &\népreuves blanches', d: 'Évaluez vos connaissances et mettez-vous en conditions réelles d’examen avec des corrections commentées.',                    bg: '#FCEAEC', fg: '#C0112E' },
-  { Icon: Users,          t: 'Accompagnement\npédagogique',        d: 'Des enseignants expérimentés disponibles pour répondre à vos questions et vous guider tout au long de votre préparation.',     bg: '#FFEAD9', fg: '#E8742C' },
-  { Icon: Video,          t: 'Webinars &\nreplays',                d: 'Assistez à nos sessions en direct ou en replay : cours, conseils méthodologiques et corrections d’épreuves.',                  bg: '#FFF1E6', fg: '#B35900' },
-  { Icon: BookOpen,       t: 'Fiches &\nflashcards',               d: 'Mémorisez efficacement les notions clés grâce à des fiches de synthèse et des flashcards pratiques.',                          bg: '#FCEAEC', fg: '#C0112E' },
-  { Icon: BarChart3,      t: 'Suivi de\nprogression',              d: 'Tableaux de bord et analyses personnalisées pour identifier vos points forts et vos axes d’amélioration.',                     bg: '#FFEAD9', fg: '#E8742C' },
-];
 
 export function BeyondPlatformSection() {
   return (
@@ -1148,44 +1138,8 @@ export function BeyondPlatformSection() {
           </div>
         </Reveal>
 
-        {/* ============ Bloc « Tous les outils » ============ */}
-        <Reveal delay={0.2}>
-          <div className="mt-10 rounded-2xl border bg-white p-6 sm:p-8 lg:p-10" style={{ borderColor: '#ECECEF' }}>
-            <div className="text-center">
-              <h3 className="text-2xl font-black leading-tight tracking-tight sm:text-3xl"
-                style={{ backgroundImage: BP_GRAD_TITLE, WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
-                Tous les outils pour réussir votre préparation EVC
-              </h3>
-              <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-                Des ressources complètes et variées pour apprendre, réviser et vous évaluer efficacement.
-              </p>
-            </div>
-
-            <div className="mt-8 grid gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
-              {BP_TOOLS.map((tool, i) => (
-                <Reveal key={tool.t} delay={Math.min(i * 0.04, 0.28)}>
-                  <article className="flex items-start gap-3.5">
-                    <span
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
-                      style={{ background: tool.bg, color: tool.fg }}
-                    >
-                      <tool.Icon className="h-5 w-5" strokeWidth={2.2} />
-                    </span>
-                    <div className="min-w-0">
-                      <h4 className="whitespace-pre-line text-[15px] font-extrabold leading-tight" style={{ color: BP_NAVY }}>
-                        {tool.t}
-                      </h4>
-                      <span className="mt-1.5 block h-[3px] w-10 rounded-full" style={{ background: tool.fg }} />
-                      <p className="mt-3 text-[13px] leading-relaxed" style={{ color: BP_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-                        {tool.d}
-                      </p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </Reveal>
+        {/* Le bloc "Tous les outils pour reussir votre preparation EVC" a
+         * ete deplace dans une section dediee ToolsForProgressSection. */}
       </div>
     </section>
   );
