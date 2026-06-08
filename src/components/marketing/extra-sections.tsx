@@ -1485,7 +1485,7 @@ const TOOLS_BULLETS = [
 export function ToolsForProgressSection() {
   return (
     <section
-      className="relative py-10 sm:py-12 lg:py-14"
+      className="relative py-8 sm:py-10"
       style={{ fontFamily: TOOLS_FONT, background: TOOLS_BG }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1522,12 +1522,12 @@ export function ToolsForProgressSection() {
         </div>
 
         {/* Sous-section "Une plateforme pensée pour vous faire gagner du temps" */}
-        <Reveal delay={0.1}>
-          <div className="mt-8 overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.20)]"
+        <div className="mt-6">
+          <div className="overflow-hidden rounded-2xl border bg-white"
             style={{ borderColor: TOOLS_BORDER }}>
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Gauche : titre + bullets */}
-              <div className="flex flex-col justify-center p-5 sm:p-6 lg:p-8">
+              <div className="flex flex-col justify-center p-5 sm:p-6">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: TOOLS_RED, color: '#fff' }}>
                     <Zap className="h-5 w-5" />
@@ -1556,18 +1556,18 @@ export function ToolsForProgressSection() {
               </div>
 
               {/* Droite : aperçu plateforme — image bien grande */}
-              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-3 sm:p-4 flex items-end justify-center">
+              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-3 flex items-end justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/plateforme/laptop-phone-dashboard.png"
                   alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
-                  className="relative z-10 w-full max-w-[560px] select-none drop-shadow-2xl"
+                  className="relative z-10 w-full max-w-[520px] select-none drop-shadow-2xl"
                   decoding="async"
                 />
               </div>
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
