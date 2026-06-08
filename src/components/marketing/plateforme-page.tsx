@@ -14,6 +14,7 @@ import {
   RefreshCcw, Rocket, Settings, Sparkles, Stethoscope, Target, TrendingUp, Trophy,
   UserCheck, Users, Video,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Reveal } from './reveal';
 import { BrandLogo } from '@/components/brand/brand-logo';
 
@@ -42,16 +43,288 @@ const gradientText = (grad: string) => ({
 });
 
 
-/* ============ HERO — recréation pleine largeur de la vraie plateforme
-   (sidebar navy + TopBar + zone de contenu) avec carte hero centrale
-   « Préparez les EVC avec une méthode éprouvée » + placeholder pour
-   l'illustration (ordinateur portable + tasse). ============ */
+/* ============ HERO — version éditoriale centrée sur la photo
+   (laptop + mug). Conservée en référence mais non utilisée — l'utilisateur
+   souhaite garder le mock CSS du dashboard comme hero principal et
+   simplement intégrer la photo dans le placeholder « Illustration ». ============ */
 
 /* Tokens fidèles à la plateforme réelle */
 const REAL_SIDEBAR_BG =
   'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 const REAL_ACTIVE_GRADIENT = 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)';
 
+function PlateformeHero_PhotoShowcase() {
+  return (
+    <section
+      className="relative isolate overflow-hidden"
+      style={{ fontFamily: FONT }}
+      aria-label="Aperçu de la plateforme Major ECN"
+    >
+      {/* ============ BACKDROP — gradients doux + grille + halos ambiants ============ */}
+      <span aria-hidden className="absolute inset-0 -z-10"
+        style={{ background: 'linear-gradient(180deg, #FAFAF6 0%, #FFFFFF 38%, #FFF8F4 100%)' }} />
+      {/* Halo chaud en haut à droite */}
+      <span aria-hidden
+        className="absolute -top-32 right-[-12%] -z-10 h-[520px] w-[520px] rounded-full opacity-70"
+        style={{ background: 'radial-gradient(closest-side, #FCE7E7 0%, transparent 70%)' }} />
+      {/* Halo doré en bas à gauche */}
+      <span aria-hidden
+        className="absolute -bottom-24 -left-24 -z-10 h-[460px] w-[460px] rounded-full opacity-60"
+        style={{ background: 'radial-gradient(closest-side, #FEF3E6 0%, transparent 70%)' }} />
+      {/* Halo navy froid au centre, très diffus */}
+      <span aria-hidden
+        className="absolute left-1/2 top-1/3 -z-10 h-[380px] w-[680px] -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+        style={{ background: 'radial-gradient(closest-side, #DDE6FB 0%, transparent 70%)' }} />
+      {/* Grille subtile */}
+      <svg aria-hidden className="absolute inset-0 -z-10 h-full w-full opacity-[0.045]">
+        <defs>
+          <pattern id="plateforme-hero-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M48 0H0V48" fill="none" stroke="#0F1F4D" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#plateforme-hero-grid)" />
+      </svg>
+
+      <div className="relative mx-auto max-w-7xl px-4 pt-14 pb-12 sm:px-6 sm:pt-20 sm:pb-16 lg:px-8 lg:pt-24">
+
+        {/* ============ HEADER ÉDITO (centré) ============ */}
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border bg-white px-3.5 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.22em]"
+            style={{
+              borderColor: '#E9D6BE',
+              color: '#8B5A1A',
+              boxShadow: '0 6px 18px -10px rgba(139,90,26,0.30)',
+            }}
+          >
+            <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: '#D4AF37' }} />
+            Plateforme officielle EVC (PAE)
+            <Sparkles className="h-3 w-3" />
+          </span>
+
+          <h1
+            className="mt-5 text-[2.4rem] font-black leading-[1.04] tracking-[-0.02em] sm:text-[3.25rem] lg:text-[4rem]"
+            style={{ color: NAVY, fontFamily: 'var(--font-display)' }}
+          >
+            Préparez les EVC<br />
+            avec une{' '}
+            <span style={gradientText(GRAD_BURGUNDY)}>méthode éprouvée.</span>
+          </h1>
+
+          <p className="mx-auto mt-5 max-w-2xl text-[15.5px] leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
+            Tableau de bord intelligent, QCM corrigés au format jury, flashcards adaptatives et
+            accompagnement par PH/PU-PH&nbsp;: tout l&rsquo;écosystème dont les candidats EVC ont besoin,
+            réuni dans un seul espace pensé pour le jour&nbsp;J.
+          </p>
+
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="/inscription"
+              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-[14.5px] font-extrabold text-white shadow-[0_18px_38px_-14px_rgba(228,0,43,0.55)] transition-transform hover:scale-[1.02]"
+              style={{ background: REAL_ACTIVE_GRADIENT }}
+            >
+              Démarrer l&rsquo;essai gratuit <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="/methode"
+              className="inline-flex items-center gap-2 rounded-xl border bg-white px-5 py-3 text-[14.5px] font-extrabold transition-colors hover:bg-[#FAF6EE]"
+              style={{ borderColor: BORDER, color: NAVY }}
+            >
+              <Play className="h-4 w-4" /> Découvrir la méthode
+            </a>
+          </div>
+          <p className="mt-3 text-[12px]" style={{ color: INK_MUTED }}>
+            Aucune carte bancaire demandée&nbsp;&middot;&nbsp;Annulation en 1 clic&nbsp;&middot;&nbsp;Accès au module démo complet
+          </p>
+        </Reveal>
+
+        {/* ============ SHOWCASE PHOTO — pièce maîtresse ============ */}
+        <Reveal delay={0.15} y={48} className="mt-12 sm:mt-16">
+          <div className="relative mx-auto max-w-[1180px]">
+
+            {/* Halos colorés sous la photo (rouge + ambré) */}
+            <span aria-hidden
+              className="absolute -inset-x-8 -bottom-8 -z-10 h-32 rounded-[60px] opacity-50 blur-2xl"
+              style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.35) 0%, transparent 70%)' }} />
+            <span aria-hidden
+              className="absolute -inset-x-2 -bottom-12 -z-10 h-20 rounded-[60px] opacity-40 blur-3xl"
+              style={{ background: 'radial-gradient(closest-side, rgba(232,116,44,0.45) 0%, transparent 70%)' }} />
+
+            {/* Cadre photo : double bordure dégradée + ombres profondes */}
+            <div
+              className="relative overflow-hidden rounded-[28px] border p-1.5 sm:p-2"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow:
+                  '0 40px 100px -40px rgba(15,31,77,0.35), 0 18px 40px -20px rgba(192,17,46,0.18)',
+                backgroundImage:
+                  'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(135deg,#FFE6E0 0%,#FFF2D9 50%,#E2EAFC 100%)',
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+              }}
+            >
+              <div className="relative overflow-hidden rounded-[22px]" style={{ background: '#F5F5F2' }}>
+                <picture>
+                  <source srcSet="/plateforme/hero-laptop-mug.jpg" type="image/jpeg" />
+                  <img
+                    src="/plateforme/hero-laptop-mug.png"
+                    alt="Étudiante préparant les EVC sur la plateforme Major ECN, avec mug officiel Major ECN"
+                    className="block h-auto w-full select-none"
+                    width={1983}
+                    height={793}
+                    decoding="async"
+                    fetchPriority="high"
+                  />
+                </picture>
+                {/* Sheen lumineux discret en haut-droit */}
+                <span aria-hidden
+                  className="pointer-events-none absolute -top-12 -right-12 h-44 w-44 rounded-full opacity-30 blur-2xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+                {/* Vignette douce dans les coins bas */}
+                <span aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+                  style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(15,31,77,0.04) 100%)' }} />
+              </div>
+            </div>
+
+            {/* ============ FLOATING ACCENT CARDS (autour du cadre) ============ */}
+
+            {/* Card 1 — TOP-LEFT : Communauté */}
+            <motion.div
+              initial={{ opacity: 0, x: -24, y: -8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.7, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute -top-5 left-2 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_20px_50px_-22px_rgba(15,31,77,0.30)] sm:flex sm:-left-8 sm:-top-7"
+              style={{ borderColor: BORDER }}
+            >
+              <div className="flex -space-x-2">
+                {[
+                  { c: '#C0112E', l: 'L' },
+                  { c: '#F59E0B', l: 'M' },
+                  { c: '#7C3AED', l: 'A' },
+                  { c: '#0F766E', l: 'S' },
+                ].map((a, i) => (
+                  <span key={i}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[10px] font-extrabold text-white"
+                    style={{ background: a.c }}>
+                    {a.l}
+                  </span>
+                ))}
+              </div>
+              <div className="leading-tight">
+                <p className="text-[11.5px] font-extrabold tabular-nums" style={{ color: NAVY }}>
+                  +9 000 médecins
+                </p>
+                <p className="text-[10px] font-medium" style={{ color: INK_MUTED }}>
+                  formés depuis 2011
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 2 — TOP-RIGHT : Note moyenne */}
+            <motion.div
+              initial={{ opacity: 0, x: 24, y: -8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.7, delay: 0.6, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute -top-5 right-2 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_20px_50px_-22px_rgba(15,31,77,0.30)] sm:flex sm:-right-8 sm:-top-7"
+              style={{ borderColor: BORDER }}
+            >
+              <div className="flex items-center gap-0.5" style={{ color: '#F59E0B' }}>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg key={i} viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                ))}
+              </div>
+              <div className="leading-tight">
+                <p className="text-[11.5px] font-extrabold tabular-nums" style={{ color: NAVY }}>
+                  4,9 / 5
+                </p>
+                <p className="text-[10px] font-medium" style={{ color: INK_MUTED }}>
+                  Note moyenne candidats
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 3 — BOTTOM-RIGHT : Comité scientifique */}
+            <motion.div
+              initial={{ opacity: 0, x: 24, y: 12 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.7, delay: 0.7, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute -bottom-6 right-2 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_20px_50px_-22px_rgba(15,31,77,0.30)] md:flex md:-right-10"
+              style={{ borderColor: BORDER }}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg,#F1F4FB 0%,#FCEAEC 100%)' }}>
+                <Stethoscope className="h-4 w-4" style={{ color: '#C0112E' }} />
+              </span>
+              <div className="leading-tight">
+                <p className="text-[11.5px] font-extrabold" style={{ color: NAVY }}>
+                  Validé par 60+ PH/PU-PH
+                </p>
+                <p className="text-[10px] font-medium" style={{ color: INK_MUTED }}>
+                  Comité scientifique en CHU
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 4 — BOTTOM-LEFT : Live indicator */}
+            <motion.div
+              initial={{ opacity: 0, x: -24, y: 12 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.7, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute -bottom-6 left-2 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_20px_50px_-22px_rgba(15,31,77,0.30)] md:flex md:-left-10"
+              style={{ borderColor: BORDER }}
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ background: '#16A34A' }} />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full" style={{ background: '#16A34A' }} />
+              </span>
+              <div className="leading-tight">
+                <p className="text-[11.5px] font-extrabold" style={{ color: NAVY }}>
+                  Cours Live ce soir &middot; 20h30
+                </p>
+                <p className="text-[10px] font-medium" style={{ color: INK_MUTED }}>
+                  Cardiologie &middot; Pr.&nbsp;Bertrand
+                </p>
+              </div>
+            </motion.div>
+
+          </div>
+        </Reveal>
+
+        {/* ============ TRUST STRIP ============ */}
+        <Reveal delay={0.3} className="mt-16 sm:mt-20">
+          <ul
+            className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[12.5px]"
+            style={{ color: INK_SOFT }}
+          >
+            {[
+              { Icon: Calendar,     t: 'Depuis 2011 — 15 ans d’expertise EVC' },
+              { Icon: Stethoscope,  t: 'Équipe PH & PU-PH spécialistes' },
+              { Icon: Users,        t: '9 000+ médecins accompagnés' },
+              { Icon: CheckCircle2, t: 'Plateforme 100 % en ligne' },
+            ].map((p) => (
+              <li key={p.t} className="inline-flex items-center gap-1.5">
+                <p.Icon className="h-3.5 w-3.5" style={{ color: '#C0112E' }} />
+                <span className="font-semibold" style={{ color: NAVY }}>{p.t}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============ HERO ACTIF — recréation pleine largeur de la vraie plateforme
+   (sidebar navy + TopBar + zone de contenu) avec carte hero centrale
+   « Préparez les EVC avec une méthode éprouvée » + photo laptop+mug dans
+   l'emplacement illustration (intégration intelligente, sans toucher au reste). ============ */
 function PlateformeHero() {
   /* Items de navigation principaux — strictement ceux du Navigator réel. */
   const sideItems = [
@@ -240,7 +513,7 @@ function PlateformeHero() {
             {/* ============ CARTE HERO CENTRALE ============ */}
             <div className="relative mt-5 overflow-hidden rounded-2xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.40)]"
               style={{ borderColor: BORDER }}>
-              <div className="grid grid-cols-1 gap-4 p-5 sm:p-6 lg:grid-cols-[1.4fr_1fr] lg:gap-8 lg:p-8">
+              <div className="flex flex-col gap-5 p-5 sm:p-6 sm:gap-6 lg:p-8 lg:gap-7">
 
                 {/* Texte */}
                 <div>
@@ -280,33 +553,88 @@ function PlateformeHero() {
                   </div>
                 </div>
 
-                {/* Illustration (placeholder) */}
+                {/* Illustration — vraie photo plateforme (laptop + mug Major ECN)
+                    intégrée dans le slot, avec halo, cadre premium et badge live. */}
                 <div className="relative">
-                  <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl border"
-                    style={{ borderColor: BORDER, background: 'linear-gradient(135deg,#FFF5F1 0%,#FDEAEC 50%,#FCE7F3 100%)' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/plateforme-hero-illustration.png"
-                      alt="Illustration de la plateforme Major ECN"
-                      className="absolute inset-0 h-full w-full object-contain"
-                      onError={(e) => {
-                        const img = e.currentTarget as HTMLImageElement;
-                        img.style.display = 'none';
-                        const fb = img.nextElementSibling as HTMLElement | null;
-                        if (fb) fb.style.display = 'flex';
-                      }}
-                    />
-                    <div aria-hidden className="hidden h-full w-full flex-col items-center justify-center gap-3 p-6">
-                      <Laptop className="h-16 w-16" style={{ color: '#C0112E' }} strokeWidth={1.3} />
-                      <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em]" style={{ color: NAVY }}>
-                        Illustration à venir
-                      </p>
-                      <p className="text-center text-[11px]" style={{ color: INK_MUTED }}>
-                        Fichier attendu&nbsp;:{' '}
-                        <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[10px]" style={{ color: '#C0112E' }}>
-                          plateforme-hero-illustration.png
-                        </code>
-                      </p>
+                  {/* Halos colorés sous la carte */}
+                  <span aria-hidden
+                    className="pointer-events-none absolute -inset-x-4 -bottom-4 -z-10 h-16 rounded-[40px] opacity-40 blur-2xl"
+                    style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.35) 0%, transparent 70%)' }} />
+                  <span aria-hidden
+                    className="pointer-events-none absolute -right-6 -top-4 -z-10 h-28 w-28 rounded-full opacity-40 blur-2xl"
+                    style={{ background: 'radial-gradient(closest-side, rgba(232,116,44,0.55) 0%, transparent 70%)' }} />
+
+                  {/* Cadre photo : bordure dégradée + ombre profonde, aspect 5/2
+                      qui matche le ratio natif de la photo (1983x793) → image entière visible. */}
+                  <div
+                    className="relative aspect-[5/2] w-full overflow-hidden rounded-2xl border p-1 lg:aspect-[5/2.2]"
+                    style={{
+                      borderColor: BORDER,
+                      boxShadow:
+                        '0 24px 60px -28px rgba(15,31,77,0.30), 0 10px 24px -14px rgba(192,17,46,0.20)',
+                      backgroundImage:
+                        'linear-gradient(135deg,#FFF5F1 0%,#FDEAEC 50%,#FCE7F3 100%), linear-gradient(135deg,#FFE6E0 0%,#FFF2D9 50%,#E2EAFC 100%)',
+                      backgroundOrigin: 'border-box',
+                      backgroundClip: 'padding-box, border-box',
+                    }}
+                  >
+                    <div className="relative h-full w-full overflow-hidden rounded-xl" style={{ background: '#F5F5F2' }}>
+                      <picture>
+                        <source srcSet="/plateforme/hero-laptop-mug.jpg" type="image/jpeg" />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/plateforme/hero-laptop-mug.png"
+                          alt="Étudiante préparant les EVC sur la plateforme Major ECN, avec mug officiel Major ECN"
+                          className="absolute inset-0 h-full w-full select-none object-contain"
+                          style={{ objectPosition: 'center' }}
+                          decoding="async"
+                          fetchPriority="high"
+                        />
+                      </picture>
+
+                      {/* Sheen lumineux discret en haut-droit */}
+                      <span aria-hidden
+                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-40 blur-2xl"
+                        style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+
+                      {/* Badge live — coin haut-gauche */}
+                      <span
+                        className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full border bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                        style={{ borderColor: BORDER, color: NAVY, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.25)' }}
+                      >
+                        <span aria-hidden className="relative flex h-1.5 w-1.5">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ background: '#16A34A' }} />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: '#16A34A' }} />
+                        </span>
+                        En direct
+                      </span>
+
+                      {/* Badge note — coin haut-droit */}
+                      <span
+                        className="absolute right-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border bg-white/95 px-2 py-1 text-[10px] font-extrabold backdrop-blur"
+                        style={{ borderColor: BORDER, color: NAVY, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.25)' }}
+                      >
+                        <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="#F59E0B" aria-hidden>
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        4,9 / 5
+                      </span>
+
+                      {/* Petit légende — coin bas (la "vraie" plateforme en photo) */}
+                      <span
+                        className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-lg border bg-white/95 px-2.5 py-1.5 text-[10px] backdrop-blur"
+                        style={{ borderColor: BORDER, color: INK_SOFT, boxShadow: '0 8px 16px -10px rgba(15,31,77,0.25)' }}
+                      >
+                        <span className="inline-flex items-center gap-1.5">
+                          <span aria-hidden className="flex h-4 w-4 items-center justify-center rounded" style={{ background: REAL_ACTIVE_GRADIENT, color: 'white' }}>
+                            <Sparkles className="h-2.5 w-2.5" />
+                          </span>
+                          <span className="font-bold" style={{ color: NAVY }}>Plateforme Major ECN</span>
+                        </span>
+                        <span className="hidden font-semibold sm:inline">
+                          la prépa officielle EVC&nbsp;(PAE)
+                        </span>
+                      </span>
                     </div>
                   </div>
                 </div>

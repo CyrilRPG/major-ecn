@@ -303,39 +303,45 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
             </p>
           </div>
 
-          {/* Droite : placeholder visuel (a remplacer par la vraie image) */}
+          {/* Droite : photo médecin réfléchie sur laptop (préparation EVC) */}
           <div className="relative">
+            {/* Halos colorés */}
+            <span aria-hidden
+              className="pointer-events-none absolute -inset-x-3 -bottom-4 -z-10 h-20 rounded-[60px] opacity-50 blur-2xl"
+              style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.30) 0%, transparent 70%)' }} />
+
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border shadow-md"
               style={{
                 borderColor: BORDER,
                 background:
                   'linear-gradient(135deg, #FFF6F7 0%, #FCEAEC 40%, #F0F4FA 100%)',
+                boxShadow: '0 30px 60px -28px rgba(15,31,77,0.30), 0 12px 30px -16px rgba(192,17,46,0.18)',
               }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/blog-conseils-laureats-hero.jpg"
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-                onError={(e) => {
-                  const img = e.currentTarget as HTMLImageElement;
-                  img.style.display = 'none';
-                  const fb = img.nextElementSibling as HTMLElement | null;
-                  if (fb) fb.style.display = 'flex';
-                }}
+                src="/blog/reussir-evc-asian-laptop.jpg"
+                alt="Médecin préparant les Épreuves de Vérification des Connaissances (EVC) avec méthode"
+                className="absolute inset-0 h-full w-full select-none object-cover"
+                style={{ objectPosition: '55% 30%' }}
+                decoding="async"
+                fetchPriority="high"
               />
-              <div aria-hidden className="hidden h-full w-full flex-col items-center justify-center gap-3 p-6">
-                <BookOpen className="h-16 w-16" style={{ color: RED }} strokeWidth={1.3} />
-                <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em]"
-                  style={{ color: INK }}>
-                  Visuel à venir
-                </p>
-                <p className="text-center text-[11px]" style={{ color: INK_MUTED }}>
-                  Fichier attendu&nbsp;:{' '}
-                  <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[10px]"
-                    style={{ color: RED }}>
-                    blog-conseils-laureats-hero.jpg
-                  </code>
-                </p>
-              </div>
+              {/* Sheen lumineux discret */}
+              <span aria-hidden
+                className="pointer-events-none absolute -top-10 -right-10 h-32 w-32 rounded-full opacity-40 blur-2xl"
+                style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+              {/* Vignette douce en bas */}
+              <span aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
+                style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(15,31,77,0.20) 100%)' }} />
+              {/* Badge bottom */}
+              <span
+                className="absolute inset-x-3 bottom-3 inline-flex items-center justify-center gap-1.5 rounded-full border bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                style={{ borderColor: BORDER, color: INK, boxShadow: '0 8px 18px -10px rgba(15,31,77,0.30)' }}
+              >
+                <BookOpen className="h-3 w-3" style={{ color: RED }} />
+                Méthode validée par 9000+ médecins
+              </span>
             </div>
           </div>
         </section>

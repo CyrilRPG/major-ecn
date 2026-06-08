@@ -69,9 +69,32 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
           article={article}
           subtitle="Les Épreuves de Vérification des Connaissances (EVC) jouent un rôle clé dans l'intégration des médecins PADHUE et contribuent au renforcement de l'offre de soins sur l'ensemble du territoire français."
           rightArea={
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)] lg:aspect-auto lg:h-52">
-              <span className="absolute inset-0 flex items-center justify-center">
-                <Stethoscope className="h-16 w-16 text-[#1E4D8B]/40" />
+            <div
+              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border lg:aspect-auto lg:h-52"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#E5F1FF 0%,#FFE4E8 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/medecins-essentiels-doctor-patient.jpg"
+                alt="Médecin PADHUE en consultation avec une patiente"
+                className="absolute inset-0 h-full w-full select-none object-cover"
+                style={{ objectPosition: '60% 35%' }}
+                decoding="async"
+                fetchPriority="high"
+              />
+              <span aria-hidden className="pointer-events-none absolute inset-0"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 40%, rgba(15,31,77,0.18) 100%)' }} />
+              {/* Badge en haut-gauche */}
+              <span
+                className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                style={{ color: '#1E4D8B', boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
+              >
+                <Stethoscope className="h-2.5 w-2.5" />
+                Accès aux soins
               </span>
             </div>
           }
@@ -166,13 +189,29 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
               ))}
             </ol>
 
-            {/* Colonne 2 : image placeholder + quote */}
+            {/* Colonne 2 : photo équipe médicale en mouvement (couloir CHU) + citation */}
             <div className="flex flex-col gap-3">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-[linear-gradient(135deg,#F0F4FA_0%,#E5F1FF_100%)]">
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <Building2 className="h-16 w-16 text-[#1E4D8B]/40" />
-                </span>
-                <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-md bg-white/90 px-2 py-1 text-[9px] font-bold text-[#1A2233]">
+              <div
+                className="relative aspect-[4/3] overflow-hidden rounded-xl border"
+                style={{
+                  borderColor: '#ECEEF1',
+                  background: 'linear-gradient(135deg,#F0F4FA 0%,#E5F1FF 100%)',
+                  boxShadow: '0 10px 24px -14px rgba(15,31,77,0.20)',
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/blog/medecins-essentiels-corridor.jpg"
+                  alt="Équipe médicale en mouvement dans un couloir d'hôpital"
+                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  style={{ objectPosition: '50% 60%' }}
+                  loading="lazy"
+                  decoding="async"
+                />
+                {/* Vignette douce en bas */}
+                <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-14"
+                  style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(15,31,77,0.30) 100%)' }} />
+                <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-md bg-white/95 px-2 py-1 text-[9px] font-bold text-[#1A2233] backdrop-blur">
                   <Users className="h-3 w-3 text-[#1E4D8B]" />
                   Équipe médicale CHU
                 </span>

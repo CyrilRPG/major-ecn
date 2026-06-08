@@ -383,28 +383,34 @@ export function ExperienceSection() {
 // ============================================================================
 const TEMOIGNAGES = [
   {
-    nom: 'Dr. Amina Diallo', role: 'Chirurgie générale', specColor: '#14B8A6',
-    citation: 'J’étais perdue. Maintenant je suis confiante.',
-    arc: 'De la confusion à la clarté', stat: 'Méthodologie EVC', duration: '8:42',
-    videoSrc: '/temoignages/amina-diallo.mp4',
+    nom: 'Dr. Sami Kabaweh', role: 'Radiodiagnostic & imagerie médicale', specColor: '#3B82F6',
+    citation: 'Une préparation qui m’a fait franchir un cap.',
+    arc: 'De la méthode à la réussite', stat: 'Lauréat EVC Radiologie', duration: '',
+    videoSrc: '/temoignages/T1 FINAL V2.mp4',
   },
   {
-    nom: 'Dr. Karim Benali', role: 'Médecine interne', specColor: '#3B82F6',
-    citation: 'La structure que j’attendais enfin.',
-    arc: 'De l’isolement à la communauté', stat: '3 mois de préparation', duration: '6:15',
-    videoSrc: '/temoignages/karim-benali.mp4',
+    nom: 'Dr. Karim Khiareddine', role: 'Anesthésie réanimation', specColor: '#7C3AED',
+    citation: 'Une méthode claire pour une spécialité exigeante.',
+    arc: 'De la rigueur à la sérénité', stat: 'Lauréat EVC 2025 — Anesthésie réa', duration: '',
+    videoSrc: '/temoignages/T2 FINAL V2.mp4',
   },
   {
-    nom: 'Dr. Leila Mansouri', role: 'Pédiatrie', specColor: '#F59E0B',
-    citation: 'Major ECN a changé ma vie professionnelle.',
-    arc: 'De l’incertitude à la réussite', stat: 'Reçue en 1ʳᵉ session', duration: '7:28',
-    videoSrc: '/temoignages/leila-mansouri.mp4',
+    nom: 'Dr. Ely Cheikh SY', role: 'Endocrinologie & métabolisme', specColor: '#0F8A6A',
+    citation: 'Reprendre confiance après un échec — et réussir.',
+    arc: 'Du doute à la victoire', stat: 'Lauréat EVC 2025 — Endocrinologie', duration: '',
+    videoSrc: '/temoignages/T3 FINAL V2.mp4',
   },
   {
-    nom: 'Dr. Hassan Okafor', role: 'Cardiologie', specColor: '#C84A5A',
-    citation: 'Enfin une plateforme à la hauteur de mes ambitions.',
-    arc: 'De la frustration à l’accomplissement', stat: 'Major de promo', duration: '9:05',
-    videoSrc: '/temoignages/hassan-okafor.mp4',
+    nom: 'Dr. Ahmed SIFAOUI', role: 'Gériatrie', specColor: '#D97706',
+    citation: 'Une vraie préparation, un vrai accompagnement.',
+    arc: 'De l’isolement à la communauté', stat: 'Lauréat EVC 2025 — Gériatrie', duration: '',
+    videoSrc: '/temoignages/T4 Final V2.mp4',
+  },
+  {
+    nom: 'Dr. Ahena Haroun', role: 'Chirurgie viscérale & digestive', specColor: '#C0112E',
+    citation: 'Major ECN a structuré toute ma préparation.',
+    arc: 'De la confusion à la clarté', stat: 'Lauréate EVC Chirurgie viscérale', duration: '',
+    videoSrc: '/temoignages/T5 FINAL V2.mp4',
   },
 ];
 
@@ -477,8 +483,8 @@ export function TemoignagesSection() {
           />
         </motion.figure>
 
-        {/* Sélecteur — 4 mini cards cliquables */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Sélecteur — 5 mini cards cliquables */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {TEMOIGNAGES.map((t, i) => (
             <motion.button
               key={t.nom}

@@ -170,6 +170,20 @@ export function PrepCtaCard({
           </li>
         ))}
       </ul>
+      {/* Aperçu plateforme — laptop + smartphone */}
+      <div className="relative mt-4 overflow-hidden rounded-xl border bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_100%)]"
+        style={{ borderColor: '#FACBD0' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/plateforme/laptop-phone-dashboard.png"
+          alt="Aperçu de la plateforme Major ECN sur ordinateur et smartphone"
+          className="block h-auto w-full select-none"
+          loading="lazy"
+          decoding="async"
+        />
+        <span aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-20 w-20 rounded-full opacity-40 blur-2xl"
+          style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+      </div>
       <Link
         href={ctaHref}
         className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-bold text-white shadow-sm transition-transform hover:scale-[1.01]"

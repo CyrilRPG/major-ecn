@@ -9,7 +9,7 @@ import {
   Activity, ArrowRight, Award, Baby, BarChart3, Bell, BookOpen, Brain, BrainCircuit, Calendar, CalendarCheck, CalendarDays,
   CalendarClock, Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, Folder, FolderOpen, GraduationCap, Heart, Lightbulb,
   Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, Settings, ShieldCheck,
-  Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video, Zap,
+  Smartphone, Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video, Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Reveal } from './reveal';
@@ -1578,42 +1578,172 @@ export function ToolsForProgressSection() {
                 </p>
               </div>
 
-              {/* Droite : placeholder visuel ordinateur + telephone, a remplacer */}
+              {/* Droite : aperçu plateforme — ordinateur portable + smartphone */}
               <div className="relative">
+                {/* Halos colorés derrière l'image */}
+                <span aria-hidden
+                  className="pointer-events-none absolute -inset-x-4 -bottom-4 -z-10 h-24 rounded-[60px] opacity-50 blur-2xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.30) 0%, transparent 70%)' }} />
+                <span aria-hidden
+                  className="pointer-events-none absolute -top-6 -right-6 -z-10 h-32 w-32 rounded-full opacity-40 blur-2xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(232,116,44,0.45) 0%, transparent 70%)' }} />
+
                 <div className="relative aspect-[16/11] w-full overflow-hidden rounded-3xl border shadow-md"
                   style={{
                     borderColor: TOOLS_BORDER,
                     background: 'linear-gradient(135deg, #FFF6F7 0%, #FCEAEC 50%, #F0F4FA 100%)',
                   }}>
-                  {/* eslint-disable @next/next/no-img-element */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/tools-platform-mockup.png"
-                    alt="Aperçu plateforme Major ECN"
-                    className="absolute inset-0 h-full w-full object-contain"
-                    onError={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      img.style.display = 'none';
-                      const fb = img.nextElementSibling as HTMLElement | null;
-                      if (fb) fb.style.display = 'flex';
-                    }}
+                    src="/plateforme/laptop-phone-dashboard.png"
+                    alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
+                    className="absolute inset-0 h-full w-full select-none object-contain"
+                    decoding="async"
                   />
-                  {/* eslint-enable @next/next/no-img-element */}
-                  {/* Fallback placeholder si /tools-platform-mockup.png absent */}
-                  <div aria-hidden className="hidden h-full w-full flex-col items-center justify-center gap-3 p-6">
-                    <BarChart3 className="h-14 w-14" style={{ color: TOOLS_RED }} strokeWidth={1.3} />
-                    <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em]" style={{ color: TOOLS_INK }}>
-                      Illustration plateforme à venir
-                    </p>
-                    <p className="text-center text-[11px]" style={{ color: TOOLS_INK_SOFT }}>
-                      Fichier attendu&nbsp;:{' '}
-                      <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[10px]" style={{ color: TOOLS_RED }}>
-                        tools-platform-mockup.png
-                      </code>
-                    </p>
+
+                  {/* Sheen lumineux discret en haut-droit */}
+                  <span aria-hidden
+                    className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full opacity-30 blur-2xl"
+                    style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+
+                  {/* Badge "Multi-device" en haut-droit */}
+                  <span
+                    className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                    style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
+                  >
+                    <Smartphone className="h-2.5 w-2.5" style={{ color: TOOLS_RED }} />
+                    Mobile &amp; Desktop
+                  </span>
+
+                  {/* Bandeau bas avec petits badges fonctionnels */}
+                  <div className="absolute inset-x-3 bottom-3 flex flex-wrap items-center gap-1.5">
+                    {['Sync temps réel', 'Hors-ligne', 'Synthèse vocale'].map((t) => (
+                      <span key={t}
+                        className="inline-flex items-center gap-1 rounded-full border bg-white/95 px-2 py-0.5 text-[9.5px] font-bold backdrop-blur"
+                        style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK_SOFT, boxShadow: '0 4px 10px -6px rgba(15,31,77,0.20)' }}>
+                        <span aria-hidden className="inline-block h-1 w-1 rounded-full" style={{ background: TOOLS_RED }} />
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   « Tout est regroupé au même endroit » — grille 8 cartes (pixel-perfect).
+   ============================================================ */
+export function ToutRegroupeSection() {
+  const cards = [
+    { Icon: Play,            t: 'Cours\net replays',                        d: 'Accédez à tous vos cours et replays selon votre formule.',                                  bg: '#FFE4E8', fg: '#C0001F' },
+    { Icon: ClipboardList,   t: 'QCM et annales',                            d: 'Entraînez-vous avec des milliers de QCM et annales ciblés EVC.',                            bg: '#EDE9FE', fg: '#6D28D9' },
+    { Icon: Stethoscope,     t: 'Cas cliniques\ncorrigés',                   d: 'Dossiers progressifs corrigés en détail pour développer votre raisonnement clinique.',     bg: '#FFE4E8', fg: '#C0001F' },
+    { Icon: FileText,        t: 'Fiches et\nflashcards',                     d: 'Mémorisez efficacement les notions clés grâce à des fiches synthétiques.',                  bg: '#DBEAFE', fg: '#1E40AF' },
+    { Icon: CalendarDays,    t: 'Planning\ndes cours',                       d: 'Retrouvez le calendrier des cours et organisez votre préparation.',                          bg: '#DCFCE7', fg: '#15803D' },
+    { Icon: TrendingUp,      t: 'Suivi de\nprogression',                     d: 'Visualisez vos résultats et identifiez vos points forts et vos axes d’amélioration.',  bg: '#FFE4D5', fg: '#C2410C' },
+    { Icon: ClipboardCheck,  t: 'Évaluations et\ninterrogations',           d: 'Évaluez régulièrement votre niveau avec des interrogations et des épreuves blanches.',       bg: '#EDE9FE', fg: '#6D28D9' },
+    { Icon: MessageCircle,   t: 'Questions à\nl’équipe pédagogique',   d: 'Posez vos questions directement dans la plateforme et obtenez des réponses rapides.',        bg: '#FFE4E8', fg: '#C0001F' },
+  ];
+  return (
+    <section className="relative overflow-hidden py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: '#FFF6F7' }}>
+      {/* Halos décoratifs */}
+      <span aria-hidden className="pointer-events-none absolute -left-32 -top-24 -z-10 h-[420px] w-[420px] rounded-full opacity-50 blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.20) 0%, transparent 70%)' }} />
+      <span aria-hidden className="pointer-events-none absolute -right-32 bottom-0 -z-10 h-[420px] w-[420px] rounded-full opacity-50 blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(232,116,44,0.18) 0%, transparent 70%)' }} />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[28px] border bg-white p-6 shadow-[0_30px_80px_-30px_rgba(15,31,77,0.18)] sm:p-8 lg:p-10"
+            style={{ borderColor: '#FCDCE0' }}>
+
+            {/* Header : éclair rouge + titre + intro */}
+            <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6">
+              <span className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl"
+                style={{
+                  background: 'linear-gradient(135deg,#FFE4E8 0%,#FFD3D8 100%)',
+                  boxShadow: '0 18px 38px -16px rgba(192,17,46,0.40), inset 0 0 0 4px white',
+                }}>
+                <Zap className="h-7 w-7 fill-current" style={{ color: '#C0112E' }} />
+              </span>
+              <div className="flex-1">
+                <h2 className="text-3xl font-black leading-[1.05] tracking-tight sm:text-4xl lg:text-[2.5rem]"
+                  style={{ color: '#0F1F4D' }}>
+                  Tout est regroupé{' '}
+                  <span style={{
+                    backgroundImage: 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)',
+                    WebkitBackgroundClip: 'text', backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent', color: 'transparent',
+                  }}>au même endroit.</span>
+                </h2>
+                <p className="mt-3 text-[14px] leading-relaxed sm:text-[15px]" style={{ color: '#52607A' }}>
+                  Retrouvez dans votre espace personnel l&rsquo;ensemble des ressources nécessaires à votre préparation aux{' '}
+                  <span className="font-bold" style={{ color: '#C0112E' }}>Épreuves de Vérification des Connaissances (EVC)</span>.
+                </p>
+              </div>
+            </div>
+
+            {/* Grille 8 cards (4 colonnes sur desktop, 2 sur tablette, 1 sur mobile) */}
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {cards.map((c) => (
+                <Reveal key={c.t}>
+                  <article
+                    className="flex h-full flex-col rounded-2xl border bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-22px_rgba(15,31,77,0.20)]"
+                    style={{ borderColor: '#ECEEF1' }}
+                  >
+                    <span
+                      className="flex h-12 w-12 items-center justify-center rounded-full"
+                      style={{ background: c.bg, color: c.fg }}
+                    >
+                      <c.Icon className="h-5.5 w-5.5" />
+                    </span>
+                    <h3 className="mt-4 whitespace-pre-line text-[18px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
+                      {c.t}
+                    </h3>
+                    <p className="mt-2 text-[13px] leading-relaxed" style={{ color: '#52607A' }}>
+                      {c.d}
+                    </p>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Bandeau bas rose avec badge mis en avant */}
+            <Reveal delay={0.1}>
+              <div
+                className="mt-7 flex flex-col items-start gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:gap-4 sm:px-6 sm:py-5"
+                style={{ background: '#FFF1F3', borderColor: '#FACBD0' }}
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+                  style={{ background: 'white', boxShadow: '0 0 0 3px #FCDCE0 inset' }}>
+                  <ShieldCheck className="h-5 w-5" style={{ color: '#C0112E' }} />
+                </span>
+                <p className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[13.5px] font-bold leading-snug sm:text-[15px]" style={{ color: '#0F1F4D' }}>
+                  <span>Un seul espace. Une seule connexion.</span>
+                  <span
+                    className="inline-flex items-center rounded-full px-3 py-1 text-[12px] font-extrabold text-white sm:text-[13px]"
+                    style={{
+                      background: 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)',
+                      boxShadow: '0 10px 24px -14px rgba(192,17,46,0.55)',
+                    }}
+                  >
+                    Tous vos outils de préparation EVC
+                  </span>
+                  <span className="relative">
+                    réunis au même endroit.
+                    <span
+                      aria-hidden
+                      className="absolute -bottom-1 left-0 right-0 h-1 rounded-full"
+                      style={{ background: 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)', opacity: 0.65 }}
+                    />
+                  </span>
+                </p>
+              </div>
+            </Reveal>
           </div>
         </Reveal>
       </div>

@@ -167,9 +167,19 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
                 ))}
               </ul>
 
-              {/* Mock laptop + phone */}
-              <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-xl bg-white/5">
-                <Image src="/accueil.png" alt="" fill className="object-cover object-top opacity-90" sizes="320px" />
+              {/* Aperçu plateforme — laptop + smartphone */}
+              <div className="relative mt-4 overflow-hidden rounded-xl border bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_100%)]"
+                style={{ borderColor: '#FACBD0' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/plateforme/laptop-phone-dashboard.png"
+                  alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
+                  className="block h-auto w-full select-none"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span aria-hidden className="pointer-events-none absolute -top-6 -right-6 h-20 w-20 rounded-full opacity-40 blur-2xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
               </div>
 
               <Link

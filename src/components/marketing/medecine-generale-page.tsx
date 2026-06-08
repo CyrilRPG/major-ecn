@@ -104,30 +104,39 @@ function MgHero() {
             </div>
           </Reveal>
 
-          {/* RIGHT — visuel stéthoscope */}
+          {/* RIGHT — photo stéthoscope réelle */}
           <Reveal delay={0.1}>
             <div className="relative">
-              <div className="relative aspect-[5/4] overflow-hidden rounded-3xl border bg-gradient-to-br from-white via-[#FDF7F8] to-[#FCEAEC] shadow-[0_30px_80px_-30px_rgba(192,17,46,0.30)]"
+              <div className="relative aspect-[5/4] overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-30px_rgba(192,17,46,0.30)]"
                 style={{ borderColor: BORDER }}>
-                {/* halos colorés */}
-                <span aria-hidden className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-[#C0112E]/15 blur-3xl" />
-                <span aria-hidden className="absolute -left-10 -bottom-12 h-60 w-60 rounded-full bg-[#E8742C]/15 blur-3xl" />
+                {/* halos colorés derrière */}
+                <span aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-60 w-60 rounded-full bg-[#C0112E]/15 blur-3xl" />
+                <span aria-hidden className="pointer-events-none absolute -left-10 -bottom-12 h-60 w-60 rounded-full bg-[#E8742C]/15 blur-3xl" />
 
-                {/* stéthoscope géant centré */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Stethoscope className="h-56 w-56 sm:h-72 sm:w-72" style={{ color: RED, strokeWidth: 1.2 }} />
-                </div>
+                {/* photo stéthoscope */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/specialites/stethoscope-hero.jpg"
+                  alt="Stéthoscope — symbole de la médecine de premier recours"
+                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  style={{ objectPosition: '50% 50%' }}
+                  decoding="async"
+                  fetchPriority="high"
+                />
+                {/* léger overlay pour la lisibilité des badges */}
+                <span aria-hidden className="pointer-events-none absolute inset-0"
+                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 30%, rgba(15,31,77,0.06) 100%)' }} />
 
                 {/* badges flottants */}
-                <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm"
+                <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-md backdrop-blur"
                   style={{ color: NAVY }}>
                   <HeartPulse className="h-3.5 w-3.5" style={{ color: RED }} /> Médecine de premier recours
                 </span>
-                <span className="absolute right-5 top-5 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm"
+                <span className="absolute right-5 top-5 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-md backdrop-blur"
                   style={{ color: NAVY }}>
                   <Sparkles className="h-3.5 w-3.5" style={{ color: '#E8742C' }} /> EVC (PAE) 2027
                 </span>
-                <span className="absolute bottom-5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-bold shadow-sm"
+                <span className="absolute bottom-5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-bold shadow-md backdrop-blur"
                   style={{ color: NAVY }}>
                   <BookOpen className="h-3.5 w-3.5" style={{ color: RED }} /> Programme CMG · HAS · ANSM
                 </span>

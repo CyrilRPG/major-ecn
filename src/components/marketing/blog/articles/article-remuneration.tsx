@@ -31,10 +31,36 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
           article={article}
           subtitle="La France fait appel à de nombreux médecins titulaires de diplômes obtenus hors de l'Union européenne (PADHUE). Avant d'exercer pleinement, ces praticiens passent par les Épreuves de Vérification des Connaissances (EVC), première étape de la Procédure d'Autorisation d'Exercice (PAE)."
           rightArea={
-            <div className="aspect-[16/10] w-full overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#E7F6EC_0%,#DBEAFE_100%)] lg:aspect-auto lg:h-44">
-              <div className="flex h-full items-center justify-center">
-                <Stethoscope className="h-16 w-16 text-[#1E4D8B]/40" />
-              </div>
+            <div
+              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border lg:aspect-auto lg:h-48"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#E7F6EC 0%,#DBEAFE 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/practitioners/practitioner-male-tablet.jpg"
+                alt="Médecin PADHUE consultant une tablette en milieu hospitalier"
+                className="absolute inset-0 h-full w-full select-none object-cover"
+                style={{ objectPosition: '70% 35%' }}
+                decoding="async"
+                fetchPriority="high"
+              />
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 40%, rgba(15,31,77,0.18) 100%)' }}
+              />
+              {/* Badge "PAE" en haut-gauche */}
+              <span
+                className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                style={{ color: '#1E4D8B', boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
+              >
+                <Stethoscope className="h-2.5 w-2.5" />
+                Médecin PADHUE
+              </span>
             </div>
           }
         />
@@ -73,7 +99,9 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={1} icon={User} accent="#6D28D9" bg="#EDE9FE"
               title="Qui sont les médecins PADHUE ?"
               illustrationBg="linear-gradient(135deg,#EDE9FE 0%,#FDE7E9 100%)"
-              illustrationIcon={Stethoscope}
+              illustrationImage="/blog/practitioners/practitioner-male-glasses.jpg"
+              illustrationAlt="Médecin PADHUE souriant en blouse blanche, exercant en France"
+              illustrationFocus="50% 25%"
             >
               <p>
                 Le sigle PADHUE désigne les Praticiens à Diplôme Hors Union Européenne :
@@ -103,7 +131,9 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={3} icon={Award} accent="#6D28D9" bg="#EDE9FE"
               title="Faisant Fonction d'Interne (FFI)"
               illustrationBg="linear-gradient(135deg,#E7F6EC 0%,#DCFCE7 100%)"
-              illustrationIcon={Briefcase}
+              illustrationImage="/blog/practitioners/practitioner-female-desk.jpg"
+              illustrationAlt="Faisant Fonction d'Interne (FFI) en service hospitalier"
+              illustrationFocus="50% 30%"
               right
             >
               <p>
@@ -138,7 +168,9 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={4} icon={Stethoscope} accent="#16A34A" bg="#DCFCE7"
               title="Praticien Attaché Associé (PAA)"
               illustrationBg="linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)"
-              illustrationIcon={Stethoscope}
+              illustrationImage="/blog/practitioners/practitioner-female-laptop.jpg"
+              illustrationAlt="Praticien Attaché Associé (PAA) consultant un dossier patient"
+              illustrationFocus="50% 25%"
             >
               <p>
                 Une fois les EVC validées, le médecin PADHUE peut accéder au statut de
@@ -171,7 +203,9 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={5} icon={Building2} accent="#C0001F" bg="#FDE7E9"
               title="Praticien Hospitalier (PH)"
               illustrationBg="linear-gradient(135deg,#FDE7E9 0%,#EDE9FE 100%)"
-              illustrationIcon={Building2}
+              illustrationImage="/blog/practitioners/practitioner-male-tie.jpg"
+              illustrationAlt="Praticien Hospitalier (PH) titulaire en milieu hospitalier"
+              illustrationFocus="60% 25%"
               right
             >
               <p>
@@ -251,17 +285,41 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               title="Major ECN, votre partenaire pour réussir les EVC"
               soft
             >
-              Les Épreuves de Vérification des Connaissances (EVC) constituent une étape déterminante
-              pour les médecins étrangers souhaitant obtenir leur autorisation d&rsquo;exercice en France
-              dans le cadre de la PAE.
-              <p className="mt-2 text-[13px] text-[#52607A]">
-                Depuis plus de 15 ans, Major ECN accompagne les candidats aux EVC grâce à une préparation
-                complète et ciblée.
-              </p>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
-                {['45 spécialités couvertes', 'QCM corrigés', 'Cas cliniques', 'Révisions transversales', 'Épreuves blanches'].map((b) => (
-                  <span key={b} className="rounded-lg bg-[#FDE7E9] px-2.5 py-1.5 text-center text-[11px] font-semibold text-[#C0001F]">{b}</span>
-                ))}
+              <div className="grid items-center gap-4 lg:grid-cols-[1.4fr_1fr]">
+                <div>
+                  Les Épreuves de Vérification des Connaissances (EVC) constituent une étape déterminante
+                  pour les médecins étrangers souhaitant obtenir leur autorisation d&rsquo;exercice en France
+                  dans le cadre de la PAE.
+                  <p className="mt-2 text-[13px] text-[#52607A]">
+                    Depuis plus de 15 ans, Major ECN accompagne les candidats aux EVC grâce à une préparation
+                    complète et ciblée.
+                  </p>
+                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {['45 spécialités couvertes', 'QCM corrigés', 'Cas cliniques', 'Révisions transversales', 'Épreuves blanches'].map((b) => (
+                      <span key={b} className="rounded-lg bg-[#FDE7E9] px-2.5 py-1.5 text-center text-[11px] font-semibold text-[#C0001F]">{b}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="relative">
+                  <span aria-hidden
+                    className="pointer-events-none absolute -inset-x-2 -bottom-2 -z-10 h-12 rounded-[40px] opacity-50 blur-2xl"
+                    style={{ background: 'radial-gradient(closest-side, rgba(192,0,31,0.35) 0%, transparent 70%)' }} />
+                  <div
+                    className="relative overflow-hidden rounded-2xl border bg-white"
+                    style={{ borderColor: '#FACBD0', boxShadow: '0 18px 36px -22px rgba(192,0,31,0.30)' }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/plateforme/laptop-phone-dashboard.png"
+                      alt="Plateforme Major ECN sur ordinateur portable et smartphone"
+                      className="block h-auto w-full select-none"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span aria-hidden className="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full opacity-40 blur-2xl"
+                      style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
+                  </div>
+                </div>
               </div>
               <a
                 href="/plateforme"
@@ -302,14 +360,18 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
 
 function Section({
   num, icon: Icon, accent, bg, title, children,
-  illustrationBg, illustrationIcon: IIcon, right = false, soft = false,
+  illustrationBg, illustrationIcon: IIcon, illustrationImage, illustrationAlt,
+  illustrationFocus, right = false, soft = false,
 }: {
   num: number; icon: React.ElementType; accent: string; bg: string;
   title: string; children: React.ReactNode;
-  illustrationBg?: string; illustrationIcon?: React.ElementType; right?: boolean;
+  illustrationBg?: string; illustrationIcon?: React.ElementType;
+  illustrationImage?: string; illustrationAlt?: string; illustrationFocus?: string;
+  right?: boolean;
   soft?: boolean;
 }) {
   void accent;
+  const hasIllustration = !!IIcon || !!illustrationImage;
   return (
     <section
       id={`section-${num}`}
@@ -328,13 +390,37 @@ function Section({
           {num}. {title}
         </h2>
       </div>
-      <div className={`grid items-start gap-4 ${IIcon ? 'lg:grid-cols-[1.6fr_1fr]' : ''} mt-3`}>
+      <div className={`grid items-start gap-4 ${hasIllustration ? 'lg:grid-cols-[1.6fr_1fr]' : ''} mt-3`}>
         <div className={`text-[13.5px] leading-relaxed text-[#1A2233] ${right ? 'order-2 lg:order-1' : ''}`}>
           {children}
         </div>
-        {IIcon && (
-          <div className={`order-1 ${right ? 'lg:order-2' : ''} hidden h-32 rounded-xl lg:flex lg:items-center lg:justify-center`} style={{ background: illustrationBg }}>
-            <IIcon className="h-12 w-12 text-[#1A2233]/30" />
+        {hasIllustration && (
+          <div
+            className={`order-1 ${right ? 'lg:order-2' : ''} hidden h-44 overflow-hidden rounded-xl border lg:block`}
+            style={{ background: illustrationBg, borderColor: '#ECEEF1' }}
+          >
+            {illustrationImage ? (
+              <div className="relative h-full w-full">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={illustrationImage}
+                  alt={illustrationAlt ?? title}
+                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  style={{ objectPosition: illustrationFocus ?? '50% 30%' }}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-12"
+                  style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(15,31,77,0.10) 100%)' }}
+                />
+              </div>
+            ) : IIcon ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <IIcon className="h-12 w-12 text-[#1A2233]/30" />
+              </div>
+            ) : null}
           </div>
         )}
       </div>
