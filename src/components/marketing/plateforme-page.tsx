@@ -333,21 +333,19 @@ function PlateformeHero() {
     { L: RefreshCcw,  n: 'Révisions transversales' },
     { L: CalendarDays,n: 'Agenda' },
   ];
-  /* Liste de collèges — fictive (autorisée par la consigne). */
+  /* Liste de collèges — fidèle à la maquette. */
   const colleges = [
-    { n: 'Cardiologie',             count: 12 },
-    { n: 'Pneumologie',             count: 9 },
-    { n: 'Pédiatrie',               count: 14 },
-    { n: 'Anesthésie-Réanimation',  count: 11 },
-    { n: 'Gastro-entérologie',      count: 10 },
-    { n: 'Néphrologie',             count: 8 },
-    { n: 'Endocrinologie',          count: 9 },
+    { n: 'Cardiologie',             count: 4 },
+    { n: 'Pneumologie',             count: 3 },
+    { n: 'Neurologie',              count: 3 },
+    { n: 'Anesthésie-Réanimation',  count: 3 },
+    { n: 'Gériatrie',               count: 2 },
   ];
   const kpis = [
-    { tone: '#2563EB', Icon: Target,         label: 'Progression globale', big: '75%',   sub: 'sur le programme EDN' },
-    { tone: '#C0112E', Icon: ClipboardCheck, label: 'QCM réalisés',        big: '2 288', sub: 'sur 3 000 QCM' },
-    { tone: '#7C3AED', Icon: Layers3,        label: 'Flashcards acquises', big: '1 763', sub: 'sur 2 528 flashcards' },
-    { tone: '#16A34A', Icon: Trophy,         label: 'Concours blancs',     big: '12',    sub: 'réalisés ce mois' },
+    { tone: '#2563EB', Icon: Target,         label: 'Progression globale', big: '58%',   sub: 'Objectif mensuel 75%' },
+    { tone: '#C0112E', Icon: ClipboardCheck, label: 'QCM réalisés',        big: '2 288', sub: 'sur 5 000 QCM' },
+    { tone: '#7C3AED', Icon: Layers3,        label: 'Flashcards acquises', big: '1 763', sub: 'sur 2 288 flashcards' },
+    { tone: '#16A34A', Icon: Trophy,         label: 'Concours blancs',     big: '12',    sub: 'Concours réalisés' },
   ];
 
   return (
@@ -387,7 +385,7 @@ function PlateformeHero() {
             ))}
 
             <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
-              Médecine
+              COLLÈGES EVC
             </p>
 
             {colleges.map((c) => (
@@ -403,6 +401,12 @@ function PlateformeHero() {
                 </span>
               </div>
             ))}
+
+            <div className="mt-2 px-3">
+              <span className="flex items-center gap-1.5 text-[12px] font-semibold text-white/70 hover:text-white cursor-pointer">
+                Voir tous les collèges <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
           </div>
 
           {/* Carte « Besoin d'aide ? » — identique à SidebarHelpCard. */}
@@ -481,7 +485,7 @@ function PlateformeHero() {
                   Bonjour, Alice <span aria-hidden>👋</span>
                 </p>
                 <p className="text-[12px] sm:text-[13px]" style={{ color: INK_SOFT }}>
-                  Prêt(e) à avancer aujourd&rsquo;hui&nbsp;?
+                  Prêt(e) à cartonner aujourd&rsquo;hui&nbsp;? 💪
                 </p>
               </div>
             </div>
@@ -548,9 +552,13 @@ function PlateformeHero() {
                     <a href="/methode"
                       className="inline-flex items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-[13.5px] font-extrabold transition-colors hover:bg-(--color-sand-100)"
                       style={{ borderColor: BORDER, color: NAVY }}>
-                      Découvrir la méthode
+                      Découvrir la méthode <ArrowRight className="h-4 w-4" />
                     </a>
                   </div>
+                  <p className="mt-3 flex items-center gap-1.5 text-[11px]" style={{ color: INK_MUTED }}>
+                    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="12" height="8" rx="1.5" /><path d="M2 7h12" /></svg>
+                    Aucune carte bancaire demandée
+                  </p>
                 </div>
 
                 {/* Illustration — vraie photo plateforme (laptop + mug Major ECN)
@@ -641,7 +649,7 @@ function PlateformeHero() {
               </div>
 
               {/* Mini graphes en bas de carte */}
-              <div className="grid grid-cols-1 gap-3 border-t bg-[#FAFBFD] p-4 sm:grid-cols-3"
+              <div className="grid grid-cols-2 gap-3 border-t bg-[#FAFBFD] p-4 sm:grid-cols-4"
                 style={{ borderColor: BORDER }}>
                 <div className="rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
                   <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: INK_SOFT }}>
@@ -658,9 +666,9 @@ function PlateformeHero() {
                   </p>
                   <div className="mt-2 space-y-1.5">
                     {[
-                      { n: 'Cardiologie',  v: 38, c: '#C0112E' },
-                      { n: 'Pneumologie',  v: 56, c: '#F59E0B' },
-                      { n: 'Pédiatrie',    v: 78, c: '#16A34A' },
+                      { n: 'Cardiologie',           v: 52, c: '#C0112E' },
+                      { n: 'Pneumologie',            v: 60, c: '#F59E0B' },
+                      { n: 'Maladies infectieuses',  v: 70, c: '#16A34A' },
                     ].map((b) => (
                       <div key={b.n} className="flex items-center gap-2">
                         <span className="w-20 truncate text-[10.5px]" style={{ color: NAVY }}>{b.n}</span>
@@ -677,22 +685,43 @@ function PlateformeHero() {
                     <svg viewBox="0 0 36 36" className="h-12 w-12 -rotate-90">
                       <circle cx="18" cy="18" r="14" fill="none" stroke="#F1F5F9" strokeWidth="5" />
                       <circle cx="18" cy="18" r="14" fill="none" stroke="#C0112E" strokeWidth="5"
-                        strokeDasharray={`${(2 * Math.PI * 14) * 0.45} ${(2 * Math.PI * 14) * 0.55}`} />
+                        strokeDasharray={`${(2 * Math.PI * 14) * 0.25} ${(2 * Math.PI * 14) * 0.75}`} />
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#F59E0B" strokeWidth="5"
+                        strokeDasharray={`${(2 * Math.PI * 14) * 0.07} ${(2 * Math.PI * 14) * 0.93}`}
+                        strokeDashoffset={-(2 * Math.PI * 14) * 0.25} />
                       <circle cx="18" cy="18" r="14" fill="none" stroke="#7C3AED" strokeWidth="5"
-                        strokeDasharray={`${(2 * Math.PI * 14) * 0.35} ${(2 * Math.PI * 14) * 0.65}`}
-                        strokeDashoffset={-(2 * Math.PI * 14) * 0.45} />
+                        strokeDasharray={`${(2 * Math.PI * 14) * 0.66} ${(2 * Math.PI * 14) * 0.34}`}
+                        strokeDashoffset={-(2 * Math.PI * 14) * 0.32} />
                     </svg>
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: INK_SOFT }}>
-                      Répartition des révisions
+                      Répartition de ton activité
                     </p>
                     <ul className="mt-1.5 space-y-0.5 text-[10.5px]" style={{ color: NAVY }}>
-                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#C0112E' }} /> QCM 45 %</li>
-                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#7C3AED' }} /> Flashcards 35 %</li>
-                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#16A34A' }} /> Cas cliniques 20 %</li>
+                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#C0112E' }} /> QCM 25 %</li>
+                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#F59E0B' }} /> Annales 7 %</li>
+                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#7C3AED' }} /> Flashcards 66 %</li>
+                      <li className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm" style={{ background: '#2563EB' }} /> Items vus 2 %</li>
                     </ul>
                   </div>
+                </div>
+                {/* Stats card */}
+                <div className="flex flex-col gap-2 rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
+                  {[
+                    { Icon: Layers3,       v: '2 288', l: 'flashcards', c: '#7C3AED' },
+                    { Icon: ClipboardCheck, v: '5 000+', l: 'QCM', c: '#C0112E' },
+                    { Icon: Trophy,        v: '50+', l: 'concours blancs', c: '#16A34A' },
+                    { Icon: GraduationCap, v: '45+', l: 'spécialités préparées', c: '#2563EB' },
+                  ].map(s => (
+                    <div key={s.l} className="flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded" style={{ background: `${s.c}1A`, color: s.c }}>
+                        <s.Icon className="h-3 w-3" />
+                      </span>
+                      <span className="text-[11px] font-black" style={{ color: NAVY }}>{s.v}</span>
+                      <span className="text-[10px]" style={{ color: INK_SOFT }}>{s.l}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -701,14 +730,19 @@ function PlateformeHero() {
             <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12.5px]"
               style={{ color: INK_SOFT }}>
               {[
-                { Icon: Calendar,     t: 'Depuis 2011 — 15 ans d\'expérience EVC' },
-                { Icon: Stethoscope,  t: 'Équipe PH & PU-PH spécialistes' },
-                { Icon: Users,        t: '9 000+ médecins accompagnés' },
-                { Icon: CheckCircle2, t: 'Plateforme 100 % en ligne' },
+                { Icon: Calendar,     t: 'Depuis 2011', s: 'au service des candidats EVC' },
+                { Icon: Stethoscope,  t: 'Équipe PH & PU-PH', s: 'experts des EVC' },
+                { Icon: Users,        t: '9 000+', s: 'médecins formés' },
+                { Icon: CheckCircle2, t: 'Plateforme 100% dédiée', s: 'aux EVC (PAE)' },
               ].map((p) => (
-                <li key={p.t} className="inline-flex items-center gap-1.5">
-                  <p.Icon className="h-3.5 w-3.5" style={{ color: '#C0112E' }} />
-                  <span className="font-semibold" style={{ color: NAVY }}>{p.t}</span>
+                <li key={p.t} className="inline-flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: '#C0112E' }}>
+                    <p.Icon className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <span className="text-[12px] font-bold" style={{ color: NAVY }}>{p.t}</span>
+                    {p.s && <span className="block text-[10px]" style={{ color: INK_SOFT }}>{p.s}</span>}
+                  </div>
                 </li>
               ))}
             </ul>
