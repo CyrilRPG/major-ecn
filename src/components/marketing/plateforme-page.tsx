@@ -1468,7 +1468,7 @@ function TeamSection() {
           </span>
           <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
             style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>
-            Vingt experts hospitaliers, mobilisés pour votre réussite
+            Plus de 35 enseignants mobilisés pour votre réussite
           </h2>
           <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
             Derrière chaque cours, chaque QCM et chaque correction, une équipe d&rsquo;enseignants

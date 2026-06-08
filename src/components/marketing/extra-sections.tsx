@@ -706,7 +706,7 @@ const TEAM_CARDS = [
 ];
 
 const TEAM_STATS = [
-  { Icon: Calendar,    big: '18',                   label: 'ans d’expérience',      sub: 'au service de votre réussite' },
+  { Icon: Calendar,    big: ‘15’,                   label: ‘ans d\’experience’,      sub: ‘au service de votre reussite’ },
   { Icon: Users,       big: '9 000+',               label: 'médecins accompagnés',  sub: 'depuis 2011' },
   { Icon: Stethoscope, big: '45',                   label: 'spécialités couvertes', sub: 'toutes les disciplines EVC' },
   { Icon: ShieldCheck, big: '',                     label: 'PH spécialistes & CCA', sub: 'impliqués dans la préparation et la réussite des candidats' },
