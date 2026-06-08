@@ -145,7 +145,7 @@ export function TarifsPageContent() {
               <p className="mt-2 text-sm" style={{ color: INK_SOFT }}>S'entraîner efficacement aux EVC</p>
               <p className="mt-4 text-4xl font-black" style={{ color: '#2E7D32' }}>495 €</p>
               <ul className="mt-5 space-y-2">
-                {['Plateforme EVC accès illimité', 'QCM d'entraînement', 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
+                {['Plateforme EVC accès illimité', 'QCM d\'entrainement', 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-sm" style={{ color: INK }}>
                     <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: '#2E7D32' }} /> {f}
                   </li>
@@ -154,7 +154,7 @@ export function TarifsPageContent() {
               <Link href="/inscription" className="mt-6 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white" style={{ background: '#2E7D32' }}>
                 Commencer avec Essentielle <ArrowRight className="h-4 w-4" />
               </Link>
-              <p className="mt-2 text-center text-xs" style={{ color: INK_SOFT }}>7 jours d'essai gratuit · Sans engagement</p>
+              <p className="mt-2 text-center text-xs" style={{ color: INK_SOFT }}>7 jours d\'essai gratuit · Sans engagement</p>
             </div>
 
             {/* Intensive — highlighted */}
@@ -255,7 +255,7 @@ export function TarifsPageContent() {
           </h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
-              { color: '#2E7D32', bg: '#E8F5E9', title: 'Je souhaite principalement m'entraîner', desc: 'Je possède déjà de bonnes bases et je veux m'entraîner avec des QCM, exercices et dossiers corrigés.', cta: 'Essentielle' },
+              { color: '#2E7D32', bg: '#E8F5E9', title: 'Je souhaite principalement m\'entrainer', desc: 'Je possède déjà de bonnes bases et je veux m\'entrainer avec des QCM, exercices et dossiers corrigés.', cta: 'Essentielle' },
               { color: RED, bg: RED_SOFT, title: 'Je souhaite réviser de façon ciblée', desc: 'Je veux consolider mes connaissances avec des révisions structurées et des entraînements ciblés.', cta: 'Intensive' },
               { color: '#7C3AED', bg: '#EDE9FE', title: 'Je souhaite reprendre les spécialités en profondeur', desc: 'Je souhaite reprendre les spécialités en profondeur avec un accompagnement complet et personnalisé.', cta: 'Programme approfondi' },
             ].map(c => (
@@ -319,7 +319,7 @@ export function TarifsPageContent() {
           <h2 className="text-center text-2xl font-black tracking-tight" style={{ color: NAVY }}>POURQUOI CHOISIR MAJOR ECN ?</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              { Icon: Calendar, t: '15 ANS', sub: 'D'EXPÉRIENCE', d: 'Depuis 2011, au service des médecins étrangers.' },
+              { Icon: Calendar, t: '15 ANS', sub: 'D\'EXPERIENCE', d: 'Depuis 2011, au service des médecins étrangers.' },
               { Icon: Users, t: '+ DE 9 000', sub: 'MÉDECINS ACCOMPAGNÉS', d: 'Toutes spécialités confondues.' },
               { Icon: GraduationCap, t: '45 SPÉCIALITÉS', sub: 'PRÉPARÉES', d: 'Médecine générale et spécialités médicales, chirurgicales, odontologiques et pharmaceutiques.' },
               { Icon: Trophy, t: 'ENSEIGNANTS', sub: 'EXPÉRIMENTÉS', d: 'Enseignants expérimentés présents depuis plusieurs années dans nos préparations.' },
@@ -345,8 +345,8 @@ export function TarifsPageContent() {
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {[
               { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Lauréate EVC 2024', photo: '/temoignages/drfaten.png', quote: '"Une méthode claire, des ressources complètes et un vrai suivi de progression. Je recommande !"' },
-              { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg', quote: '"Les corrections détaillées m'ont permis de comprendre mes erreurs et de gagner énormément en efficacité."' },
-              { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg', quote: '"L'accompagnement des enseignants et la qualité des dossiers cliniques font vraiment la différence."' },
+              { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg', quote: '"Les corrections détaillées m\'ont permis de comprendre mes erreurs et de gagner énormément en efficacité."' },
+              { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg', quote: '"L\'accompagnement des enseignants et la qualite des dossiers cliniques font vraiment la difference."' },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border p-5" style={{ borderColor: BORDER }}>
                 <div className="flex items-center gap-3">
@@ -383,7 +383,7 @@ export function TarifsPageContent() {
               <h2 className="text-xl font-black" style={{ color: NAVY }}>QUESTIONS FRÉQUENTES</h2>
               <ul className="mt-4 space-y-3">
                 {[
-                  'À qui s'adressent les préparations EVC ?',
+                  'À qui s\'adressent les préparations EVC ?',
                   'Combien de temps avant les EVC faut-il commencer ?',
                   'Les épreuves blanches sont-elles corrigées ?',
                   'Les contenus sont-ils mis à jour régulièrement ?',
@@ -404,7 +404,7 @@ export function TarifsPageContent() {
             <div className="rounded-2xl border bg-white p-6" style={{ borderColor: BORDER }}>
               <h3 className="text-lg font-black" style={{ color: RED }}>TESTEZ MAJOR ECN GRATUITEMENT PENDANT 7 JOURS</h3>
               <ul className="mt-4 space-y-2">
-                {['Accès illimité à la plateforme', '7 jours d'essai gratuit', 'Sans carte bancaire', 'Annulation à tout moment'].map(b => (
+                {['Accès illimité à la plateforme', '7 jours d\'essai gratuit', 'Sans carte bancaire', 'Annulation à tout moment'].map(b => (
                   <li key={b} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
                     <Check className="h-4 w-4" style={{ color: '#2E7D32' }} /> {b}
                   </li>

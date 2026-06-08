@@ -1557,7 +1557,7 @@ export function ToolsForProgressSection() {
                     <Zap className="h-5 w-5" />
                   </span>
                   <h3 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[1.75rem]"
-                    style={{ color: TOOLS_NAVY }}>
+                    style={{ color: TOOLS_INK }}>
                     Une plateforme pensée pour<br />
                     vous faire <span style={{ color: TOOLS_RED }}>gagner du temps</span>
                   </h3>
