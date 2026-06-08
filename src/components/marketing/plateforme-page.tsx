@@ -223,31 +223,6 @@ function PlateformeHero_PhotoShowcase() {
               </div>
             </motion.div>
 
-            {/* Card 2 — TOP-RIGHT : Note moyenne */}
-            <motion.div
-              initial={{ opacity: 0, x: 24, y: -8 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: 0.6, ease: [0.23, 1, 0.32, 1] }}
-              className="absolute -top-5 right-2 hidden items-center gap-2.5 rounded-2xl border bg-white px-3.5 py-2.5 shadow-[0_20px_50px_-22px_rgba(15,31,77,0.30)] sm:flex sm:-right-8 sm:-top-7"
-              style={{ borderColor: BORDER }}
-            >
-              <div className="flex items-center gap-0.5" style={{ color: '#F59E0B' }}>
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <svg key={i} viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                ))}
-              </div>
-              <div className="leading-tight">
-                <p className="text-[11.5px] font-extrabold tabular-nums" style={{ color: NAVY }}>
-                  4,9 / 5
-                </p>
-                <p className="text-[10px] font-medium" style={{ color: INK_MUTED }}>
-                  Note moyenne candidats
-                </p>
-              </div>
-            </motion.div>
 
             {/* Card 3 — BOTTOM-RIGHT : Comité scientifique */}
             <motion.div
@@ -618,16 +593,6 @@ function PlateformeHero() {
                         En direct
                       </span>
 
-                      {/* Badge note — coin haut-droit */}
-                      <span
-                        className="absolute right-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border bg-white/95 px-2 py-1 text-[10px] font-extrabold backdrop-blur"
-                        style={{ borderColor: BORDER, color: NAVY, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.25)' }}
-                      >
-                        <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="#F59E0B" aria-hidden>
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
-                        4,9 / 5
-                      </span>
 
                       {/* Petit légende — coin bas (la "vraie" plateforme en photo) */}
                       <span
