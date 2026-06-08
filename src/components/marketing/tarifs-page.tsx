@@ -53,7 +53,7 @@ export function TarifsPageContent() {
             {[
               { Icon: Users, big: 'Plus de 9 000', sub: 'médecins accompagnés' },
               { Icon: GraduationCap, big: '45 spécialités', sub: 'préparées' },
-              { Icon: Calendar, big: 'Depuis 2011', sub: 'a vos cotes' },
+              { Icon: Calendar, big: 'Depuis 2011', sub: 'à vos côtés' },
             ].map(s => (
               <div key={s.big} className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
@@ -106,7 +106,7 @@ export function TarifsPageContent() {
               <p className="text-[14px] font-extrabold" style={{ color: RED }}>IMPORTANT</p>
               <p className="mt-1 text-[13px] leading-relaxed" style={{ color: INK }}>
                 Les tarifs et programmes varient selon les spécialités préparées.<br />
-                La Médecine Générale est présentée ci-dessous a titre d{"'"}exemple détaillé de préparation et de tarification.
+                La Médecine Générale est présentée ci-dessous à titre d{"'"}exemple détaillé de préparation et de tarification.
               </p>
             </div>
           </div>
@@ -196,11 +196,11 @@ export function TarifsPageContent() {
                   <p className="text-[16px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
                 </div>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise a niveau approfondie et préparation complète</p>
+              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
               <p className="mt-3 text-[12px]" style={{ color: INK_SOFT }}>A partir de</p>
               <p className="text-[36px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Remise a niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés a des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
+                {['Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: PURPLE }} /> {f}
                   </li>
@@ -277,7 +277,7 @@ export function TarifsPageContent() {
               { Icon: Smartphone, t: 'Plateforme en ligne' },
               { Icon: LineChart, t: 'Suivi pédagogique' },
               { Icon: Target, t: 'Méthodologie EVC' },
-              { Icon: TrendingUp, t: 'Mises a jour régulières' },
+              { Icon: TrendingUp, t: 'Mises à jour régulières' },
               { Icon: MessageCircle, t: 'Support réactif' },
               { Icon: Clock, t: 'Accès 24h/24, 7j/7' },
             ].map(f => (
@@ -312,7 +312,7 @@ export function TarifsPageContent() {
               { Icon: Users, t: '+ DE 9 000', sub: 'MÉDECINS ACCOMPAGNÉS', d: 'Toutes spécialités confondues.' },
               { Icon: GraduationCap, t: '45 SPÉCIALITÉS', sub: 'PRÉPARÉES', d: 'Médecine générale et spécialités médicales, chirurgicales.' },
               { Icon: Trophy, t: 'ENSEIGNANTS', sub: 'EXPÉRIMENTÉS', d: 'PH et CCA presents depuis plusieurs annees.' },
-              { Icon: ClipboardCheck, t: 'DOSSIERS CLINIQUES', sub: 'QCM ET EVALUATIONS', d: 'Contenus fiables, a jour et conformes aux EVC.' },
+              { Icon: ClipboardCheck, t: 'DOSSIERS CLINIQUES', sub: 'QCM ET ÉVALUATIONS', d: 'Contenus fiables, à jour et conformes aux EVC.' },
             ].map(s => (
               <div key={s.t} className="rounded-xl border bg-white p-4 text-center" style={{ borderColor: '#F3D1D6' }}>
                 <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>

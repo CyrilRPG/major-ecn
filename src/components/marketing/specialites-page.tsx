@@ -174,6 +174,10 @@ const SPECIALITIES: Speciality[] = [
     description: "Préparation aux EVC en santé publique : épidémiologie, économie de la santé, prévention et dépistage, politiques publiques et organisation du système de soins." },
   { slug: 'anesthesie-reanimation', name: 'Anesthésie & Réanimation', family: 'Médecine', Icon: Syringe, accent: ACCENTS.violet,
     description: "Programme anesthésie-réanimation sur la consultation pré-opératoire, l'ALR et l'AG, les états de choc, l'arrêt circulatoire et les soins post-opératoires en SSPI." },
+  { slug: 'odontologie', name: 'Odontologie', family: 'Médecine', Icon: Smile, accent: ACCENTS.rose,
+    description: "Préparation aux EVC en odontologie : pathologies bucco-dentaires, chirurgie orale, parodontologie et prothèse dentaire." },
+  { slug: 'maieutique', name: 'Maïeutique (Sage-femme)', family: 'Médecine', Icon: Baby, accent: ACCENTS.rose,
+    description: "Préparation aux EVC en maïeutique : suivi de grossesse, accouchement, post-partum, gynécologie de prévention et néonatologie." },
 ];
 
 const FAMILIES: Family[] = ['Médecine', 'Chirurgie', 'Pédiatrie', 'Imagerie', 'Biologie', 'Pharmacie', 'Santé publique'];
@@ -417,29 +421,6 @@ function SpecialitesGrid() {
           </div>
         )}
 
-        {/* Encadré "Vous ne trouvez pas votre spécialité ?" */}
-        <div className="mt-10 grid grid-cols-1 gap-3 overflow-hidden rounded-3xl border bg-gradient-to-br from-[#FFF8F9] via-white to-[#F0F4FA] p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-7"
-          style={{ borderColor: BORDER, fontFamily: FONT }}>
-          <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-              style={{ background: '#FCEAEC', color: RED }}>
-              <Search className="h-5 w-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F172A' }}>
-                Vous ne trouvez pas votre spécialité&nbsp;?
-              </p>
-              <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#475569' }}>
-                D’autres spécialités sont en cours d’ajout. Écrivez-nous votre besoin et nous revenons vers vous sous 24&nbsp;h ouvrées.
-              </p>
-            </div>
-          </div>
-          <Link href="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-bold text-white shadow-[0_14px_30px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
-            style={{ background: `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)` }}>
-            Nous contacter <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
       </div>
     </section>
   );

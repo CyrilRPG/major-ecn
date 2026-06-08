@@ -1,5 +1,6 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
+import { useState } from 'react';
 /**
  * Page Plateforme — refonte pixel-perfect (maquette designer).
  * 8 sections : mock dashboard, comment j'utilise, comprendre attentes,
@@ -343,9 +344,9 @@ function PlateformeHero() {
   ];
   const kpis = [
     { tone: '#2563EB', Icon: Target,         label: 'Progression globale', big: '58%',   sub: 'Objectif mensuel 75%' },
-    { tone: '#C0112E', Icon: ClipboardCheck, label: 'QCM réalisés',        big: '2 288', sub: 'sur 5 000 QCM' },
-    { tone: '#7C3AED', Icon: Layers3,        label: 'Flashcards acquises', big: '1 763', sub: 'sur 2 288 flashcards' },
-    { tone: '#16A34A', Icon: Trophy,         label: 'Concours blancs',     big: '12',    sub: 'Concours réalisés' },
+    { tone: '#C0112E', Icon: ClipboardCheck, label: 'QCM réalisés',        big: '10 000+', sub: 'QCM disponibles' },
+    { tone: '#7C3AED', Icon: Layers3,        label: 'Flashcards acquises', big: '10 000+', sub: 'flashcards disponibles' },
+    { tone: '#16A34A', Icon: Trophy,         label: 'Épreuves blanches',   big: 'Inspirées',  sub: 'des EVC' },
   ];
 
   return (
@@ -517,7 +518,7 @@ function PlateformeHero() {
             {/* ============ CARTE HERO CENTRALE ============ */}
             <div className="relative mt-5 overflow-hidden rounded-2xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.40)]"
               style={{ borderColor: BORDER }}>
-              <div className="flex flex-col gap-5 p-5 sm:p-6 sm:gap-6 lg:p-8 lg:gap-7">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5 p-5 sm:p-6 lg:p-8">
 
                 {/* Texte */}
                 <div>
@@ -709,9 +710,9 @@ function PlateformeHero() {
                 {/* Stats card */}
                 <div className="flex flex-col gap-2 rounded-xl border bg-white p-3" style={{ borderColor: BORDER }}>
                   {[
-                    { Icon: Layers3,       v: '2 288', l: 'flashcards', c: '#7C3AED' },
-                    { Icon: ClipboardCheck, v: '5 000+', l: 'QCM', c: '#C0112E' },
-                    { Icon: Trophy,        v: '50+', l: 'concours blancs', c: '#16A34A' },
+                    { Icon: Layers3,       v: '10 000+', l: 'flashcards', c: '#7C3AED' },
+                    { Icon: ClipboardCheck, v: '10 000+', l: 'QCM', c: '#C0112E' },
+                    { Icon: Trophy,        v: 'Inspirées', l: 'des EVC', c: '#16A34A' },
                     { Icon: GraduationCap, v: '45+', l: 'spécialités préparées', c: '#2563EB' },
                   ].map(s => (
                     <div key={s.l} className="flex items-center gap-2">
@@ -1663,10 +1664,68 @@ function PlateformeCta() {
 }
 
 /* ============ PAGE ============ */
+function NouveauxContenusBanner() {
+  const [open, setOpen] = useState(true);
+  if (!open) return null;
+  return (
+    <section className="bg-white py-6 sm:py-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-[#F0F4FA] via-white to-[#F0F4FA] p-6 sm:p-8" style={{ borderColor: "#D4DBE8" }}>
+          <button onClick={() => setOpen(false)} className="absolute right-4 top-4 text-gray-400 hover:text-gray-600" aria-label="Fermer">
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          </button>
+          <div className="flex items-start gap-2 mb-4">
+            <span className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-black uppercase tracking-wider text-white" style={{ background: "#1E40AF" }}>
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              INFORMATION IMPORTANTE
+            </span>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-[200px_1fr] lg:items-center">
+            <div className="hidden lg:block">
+              <img src="/plateforme/integration-contenus.png" alt="" className="w-full" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black sm:text-2xl" style={{ color: "#0F172A" }}>
+                Nouveaux contenus <span style={{ color: "#16A34A" }}>en cours d'intégration</span>
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: "#475569" }}>
+                Afin de vous offrir les ressources les plus pertinentes pour réussir les EVC,
+                de nouveaux dossiers cliniques, QCM, fiches pédagogiques et supports de révision{' '}
+                <span className="font-semibold" style={{ color: "#16A34A" }}>sont actuellement ajoutés à la plateforme après validation par notre équipe pédagogique.</span>
+              </p>
+              <div className="mt-4 flex items-start gap-3 rounded-lg bg-[#F0F4FA] p-3">
+                <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 mt-0.5" fill="none" stroke="#1E40AF" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+                <p className="text-sm" style={{ color: "#1E3A5F" }}>De nouveaux contenus seront mis à disposition progressivement dans les <strong>prochains jours.</strong></p>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="#16A34A"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
+                <p className="text-sm" style={{ color: "#475569" }}>En attendant, l'ensemble des ressources déjà disponibles reste accessible.</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-3 border-t pt-4 sm:grid-cols-5" style={{ borderColor: "#E2E8F0" }}>
+            {["Dossiers cliniques", "QCM et entraînements", "Fiches pédagogiques", "Flashcards", "Méthodologie et conseils"].map(t => (
+              <div key={t} className="flex items-center gap-2 text-xs font-semibold" style={{ color: "#1E40AF" }}>
+                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 12l2 2 4-4" /></svg>
+                {t}
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-center justify-center">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="#C0112E"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+            <p className="text-sm font-bold" style={{ color: "#0F172A" }}>Merci de votre confiance.</p>
+          </div>
+          <p className="text-center text-xs mt-1" style={{ color: "#64748B" }}>L'équipe Major ECN</p>
+        </div>
+      </div>
+    </section>
+  );
+}
 export function PlateformePageContent() {
   return (
     <div className="overflow-x-hidden">
       <PlateformeHero />
+      <NouveauxContenusBanner />
       <BrandCredentialsSection />
       <HowDailySection />
       <CorrectorExampleSection />

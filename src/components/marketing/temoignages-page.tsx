@@ -72,11 +72,11 @@ function TemoignagesHeader() {
 
 /* ============ TÉMOIGNAGES VIDÉO ============ */
 const REAL_VIDEOS = [
-  { name: 'Dr Sami KABAWEH',       spec: 'Radiodiagnostic & imagerie médicale', year: 'Lauréat EVC',      videoSrc: '/temoignages/T1 FINAL V2.mp4#t=3', bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)' },
-  { name: 'Dr Karim KHIAREDDINE',  spec: 'Anesthésie réanimation',              year: 'Lauréat EVC', videoSrc: '/temoignages/T2 FINAL V2.mp4#t=3', bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)' },
-  { name: 'Dr Ely Cheikh SY',      spec: 'Endocrinologie & métabolisme',        year: 'Lauréat EVC', videoSrc: '/temoignages/T3 FINAL V2.mp4#t=3', bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)' },
-  { name: 'Dr Ahmed SIFAOUI',      spec: 'Gériatrie',                           year: 'Lauréat EVC', videoSrc: '/temoignages/T4 Final V2.mp4#t=3', bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)' },
-  { name: 'Dr Ahena HAROUN',       spec: 'Chirurgie viscérale & digestive',      year: 'Lauréate EVC',     videoSrc: '/temoignages/T5 FINAL V2.mp4#t=3', bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)' },
+  { name: 'Dr Sami KABAWEH',       spec: 'Radiodiagnostic & imagerie médicale', year: 'Lauréat EVC',      videoSrc: '/temoignages/T1 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)' },
+  { name: 'Dr Karim KHIAREDDINE',  spec: 'Anesthésie réanimation',              year: 'Lauréat EVC', videoSrc: '/temoignages/T2 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)' },
+  { name: 'Dr Ely Cheikh SY',      spec: 'Endocrinologie & métabolisme',        year: 'Lauréat EVC', videoSrc: '/temoignages/T3 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)' },
+  { name: 'Dr Ahmed SIFAOUI',      spec: 'Gériatrie',                           year: 'Lauréat EVC', videoSrc: '/temoignages/T4 Final V2.mp4', bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)' },
+  { name: 'Dr Ahena HAROUN',       spec: 'Chirurgie viscérale & digestive',      year: 'Lauréate EVC',     videoSrc: '/temoignages/T5 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)' },
 ];
 function VideosSection() {
   return (
@@ -104,6 +104,7 @@ function VideosSection() {
                     preload="metadata"
                     aria-label={`Témoignage vidéo de ${v.name}`}
                     className="absolute inset-0 h-full w-full bg-black object-contain"
+                    onLoadedData={(e) => { e.currentTarget.currentTime = 3; }} onPlay={(e) => { if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0; }}
                   >
                     Votre navigateur ne supporte pas la lecture vidéo.
                   </video>

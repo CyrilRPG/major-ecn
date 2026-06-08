@@ -391,19 +391,19 @@ const TEMOIGNAGES = [
   {
     nom: 'Dr. Karim Khiareddine', role: 'Anesthésie réanimation', specColor: '#7C3AED',
     citation: 'Une méthode claire pour une spécialité exigeante.',
-    arc: 'De la rigueur à la sérénité', stat: 'Lauréat EVC 2025 — Anesthésie réa', duration: '',
+    arc: 'De la rigueur à la sérénité', stat: 'Lauréat EVC — Anesthésie réa', duration: '',
     videoSrc: '/temoignages/T2 FINAL V2.mp4',
   },
   {
     nom: 'Dr. Ely Cheikh SY', role: 'Endocrinologie & métabolisme', specColor: '#0F8A6A',
     citation: 'Reprendre confiance après un échec — et réussir.',
-    arc: 'Du doute à la victoire', stat: 'Lauréat EVC 2025 — Endocrinologie', duration: '',
+    arc: 'Du doute à la victoire', stat: 'Lauréat EVC — Endocrinologie', duration: '',
     videoSrc: '/temoignages/T3 FINAL V2.mp4',
   },
   {
     nom: 'Dr. Ahmed SIFAOUI', role: 'Gériatrie', specColor: '#D97706',
     citation: 'Une vraie préparation, un vrai accompagnement.',
-    arc: 'De l’isolement à la communauté', stat: 'Lauréat EVC 2025 — Gériatrie', duration: '',
+    arc: 'De l’isolement à la communauté', stat: 'Lauréat EVC — Gériatrie', duration: '',
     videoSrc: '/temoignages/T4 Final V2.mp4',
   },
   {
