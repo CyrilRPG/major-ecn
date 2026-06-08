@@ -1551,7 +1551,7 @@ export function ToolsForProgressSection() {
             style={{ borderColor: TOOLS_BORDER }}>
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Gauche : titre + bullets */}
-              <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+              <div className="flex flex-col justify-center p-5 sm:p-6 lg:p-8">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: TOOLS_RED, color: '#fff' }}>
                     <Zap className="h-5 w-5" />
@@ -1562,7 +1562,7 @@ export function ToolsForProgressSection() {
                     vous faire <span style={{ color: TOOLS_RED }}>gagner du temps</span>
                   </h3>
                 </div>
-                <ul className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {TOOLS_BULLETS.map((b) => (
                     <li key={b.t} className="flex items-center gap-2.5 text-[13.5px]" style={{ color: TOOLS_INK }}>
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
@@ -1573,14 +1573,14 @@ export function ToolsForProgressSection() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-8 rounded-full inline-flex items-center gap-1.5 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em]"
+                <p className="mt-5 rounded-full inline-flex items-center gap-1.5 border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em]"
                   style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK_SOFT }}>
                   Préparation EVC · PAE · PADHUE · Médecins diplômés hors Union Européenne
                 </p>
               </div>
 
               {/* Droite : aperçu plateforme — image bien grande */}
-              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-4 sm:p-6 flex items-center justify-center">
+              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-3 sm:p-4 flex items-end justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/plateforme/laptop-phone-dashboard.png"
@@ -1902,11 +1902,11 @@ export function TestimonialsVideoSection() {
           </p>
         </Reveal>
 
-        {/* 5 videos cote a cote */}
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 justify-items-center">
+        {/* 5 videos cote a cote, hauteur identique */}
+        <div className="mt-12 grid grid-cols-5 gap-4">
           {TV_CARDS.map((c, i) => (
             <Reveal key={c.name} delay={i * 0.06}>
-              <article className="w-full max-w-[240px] mx-auto overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white" style={{ borderColor: '#ECECEF' }}>
                 <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: c.bgGrad }}>
                   <video
                     src={c.videoSrc}
@@ -1919,10 +1919,10 @@ export function TestimonialsVideoSection() {
                     Votre navigateur ne supporte pas la lecture vidéo.
                   </video>
                 </div>
-                <div className="p-4">
-                  <p className="text-[15px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
-                  <p className="mt-0.5 text-sm font-bold" style={{ color: TV_RED }}>{c.spec}</p>
-                  <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wide"
+                <div className="flex-1 p-3">
+                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
+                  <p className="mt-0.5 text-[12px] font-bold" style={{ color: TV_RED }}>{c.spec}</p>
+                  <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide"
                     style={{ background: TV_PINK_BG, color: TV_RED }}>
                     <ShieldCheck className="h-3 w-3" />
                     {c.year}
