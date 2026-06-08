@@ -1469,11 +1469,9 @@ const TOOLS_GRID: ToolItem[] = [
 ];
 
 const TOOLS_BULLETS = [
-  { Icon: Check,        t: 'Tous vos sujets organisés' },
-  { Icon: Settings,     t: 'Outils méthodes intégrés' },
-  { Icon: FolderOpen,   t: 'Ressources organisées par spécialité' },
-  { Icon: ClipboardList,t: 'Préparation aux EVC d’oraux' },
-  { Icon: Award,        t: 'Conforme au programme EDN' },
+  { Icon: Check,        t: ‘Tous vos sujets organisés’ },
+  { Icon: Settings,     t: ‘Outils méthodes intégrés’ },
+  { Icon: FolderOpen,   t: ‘Ressources organisées par spécialité’ },
 ];
 
 export function ToolsForProgressSection() {
