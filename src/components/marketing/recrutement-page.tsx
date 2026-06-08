@@ -17,6 +17,18 @@ const INK_SOFT = '#5B6478';
 const BORDER = '#E5E9F0';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 
+const COUNTRIES = [
+  'France', 'Algerie', 'Maroc', 'Tunisie', 'Liban', 'Syrie', 'Egypte', 'Irak',
+  'Jordanie', 'Libye', 'Mauritanie', 'Senegal', 'Cameroun', 'Cote d\'Ivoire',
+  'Mali', 'Congo (RDC)', 'Congo (Brazzaville)', 'Gabon', 'Madagascar', 'Benin',
+  'Burkina Faso', 'Tchad', 'Niger', 'Togo', 'Guinee', 'Djibouti', 'Comores',
+  'Haiti', 'Roumanie', 'Moldavie', 'Ukraine', 'Russie', 'Georgie', 'Armenie',
+  'Bresil', 'Colombie', 'Venezuela', 'Chili', 'Argentine', 'Mexique',
+  'Iran', 'Afghanistan', 'Pakistan', 'Inde', 'Bangladesh', 'Sri Lanka',
+  'Turquie', 'Albanie', 'Kosovo', 'Serbie', 'Bosnie-Herzegovine',
+  'Chine', 'Vietnam', 'Cambodge', 'Philippines', 'Autre',
+];
+
 type ModalStep = 1 | 2 | 3;
 
 function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -86,7 +98,8 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Pays de résidence *</label>
                 <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez un pays</option>
+                  <option value="">Sélectionnez un pays</option>
+                  {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
@@ -574,7 +587,8 @@ export function RecrutementPageContent() {
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Pays de residence *</label>
                   <select className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                    <option>Selectionnez un pays</option>
+                    <option value="">Selectionnez un pays</option>
+                    {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
