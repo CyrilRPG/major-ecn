@@ -200,7 +200,7 @@ export function TarifsPageContent() {
               <p className="mt-3 text-[12px]" style={{ color: INK_SOFT }}>A partir de</p>
               <p className="text-[36px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
+                {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: PURPLE }} /> {f}
                   </li>
