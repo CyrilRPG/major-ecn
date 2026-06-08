@@ -534,13 +534,57 @@ export function RecrutementPageContent() {
               </div>
             </div>
 
-            {/* CTA to open modal */}
-            <div className="flex items-center justify-center">
-              <div className="w-full max-w-md rounded-2xl border p-8 text-center" style={{ borderColor: BORDER }}>
-                <h3 className="text-lg font-black" style={{ color: NAVY }}>Déposer ma candidature</h3>
-                <p className="mt-2 text-sm" style={{ color: INK_SOFT }}>Rejoignez notre équipe pédagogique et contribuez à la réussite des candidats EVC.</p>
-                <button onClick={() => setModalOpen(true)} className="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white" style={{ background: RED }}>
-                  Déposer ma candidature <ArrowRight className="h-4 w-4" />
+            {/* Formulaire inline - Step 1 */}
+            <div className="rounded-2xl border p-6" style={{ borderColor: BORDER }}>
+              <h3 className="text-lg font-black" style={{ color: NAVY }}>Deposer votre candidature</h3>
+              {/* Step indicators */}
+              <div className="mt-4 flex items-center gap-0 justify-center">
+                <div className="flex flex-col items-center">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: RED }}>1</span>
+                  <span className="mt-1 text-[10px] font-semibold" style={{ color: NAVY }}>Informations</span>
+                </div>
+                <div className="h-0.5 w-10" style={{ background: '#E5E7EB' }} />
+                <div className="flex flex-col items-center">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold" style={{ background: '#E5E7EB', color: INK_SOFT }}>2</span>
+                  <span className="mt-1 text-[10px]" style={{ color: INK_SOFT }}>Profil</span>
+                </div>
+                <div className="h-0.5 w-10" style={{ background: '#E5E7EB' }} />
+                <div className="flex flex-col items-center">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold" style={{ background: '#E5E7EB', color: INK_SOFT }}>3</span>
+                  <span className="mt-1 text-[10px]" style={{ color: INK_SOFT }}>Documents</span>
+                </div>
+              </div>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>Prenom *</label>
+                  <input placeholder="Votre prenom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>Nom *</label>
+                  <input placeholder="Votre nom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>E-mail *</label>
+                  <input type="email" placeholder="exemple@email.com" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>Telephone *</label>
+                  <input placeholder="06 12 34 56 78" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>Pays de residence *</label>
+                  <select className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
+                    <option>Selectionnez un pays</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold" style={{ color: INK }}>Ville *</label>
+                  <input placeholder="Votre ville" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                </div>
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button onClick={() => setModalOpen(true)} className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: RED }}>
+                  Suivant <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             </div>
