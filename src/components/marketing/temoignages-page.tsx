@@ -71,12 +71,12 @@ function TemoignagesHeader() {
 }
 
 /* ============ TÉMOIGNAGES VIDÉO ============ */
-type VideoItem = { name: string; role: string; spec: string; duration: string };
-const VIDEOS: VideoItem[] = [
-  { name: 'Dr Haykel Abdelbaki', role: 'Lauréat des EVC',  spec: 'Radiologie',           duration: '0:56' },
-  { name: 'Dr Amélie Lamure',    role: 'Lauréate des EVC', spec: 'Anesthésie-Réanimation', duration: '0:48' },
-  { name: 'Dr Albert M.',        role: 'Lauréat des EVC',  spec: 'Médecine générale',    duration: '0:44' },
-  { name: 'Dr Leïla K.',         role: 'Lauréate des EVC', spec: 'Gériatrie',            duration: '0:52' },
+const REAL_VIDEOS = [
+  { name: 'Dr Sami KABAWEH',       spec: 'Radiodiagnostic & imagerie médicale', year: 'Lauréat EVC',      videoSrc: '/temoignages/T1 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)' },
+  { name: 'Dr Karim KHIAREDDINE',  spec: 'Anesthésie réanimation',              year: 'Lauréat EVC 2025', videoSrc: '/temoignages/T2 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)' },
+  { name: 'Dr Ely Cheikh SY',      spec: 'Endocrinologie & métabolisme',        year: 'Lauréat EVC 2025', videoSrc: '/temoignages/T3 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)' },
+  { name: 'Dr Ahmed SIFAOUI',      spec: 'Gériatrie',                           year: 'Lauréat EVC 2025', videoSrc: '/temoignages/T4 Final V2.mp4', bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)' },
+  { name: 'Dr Ahena HAROUN',       spec: 'Chirurgie viscérale & digestive',      year: 'Lauréate EVC',     videoSrc: '/temoignages/T5 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)' },
 ];
 function VideosSection() {
   return (
@@ -93,29 +93,29 @@ function VideosSection() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {VIDEOS.map((v) => (
-              <article key={v.name} className="overflow-hidden rounded-2xl">
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl"
-                  style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-                  <div aria-hidden className="absolute inset-0" style={{
-                    background: 'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 55%)',
-                  }} />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 shadow-2xl">
-                      <Play className="h-6 w-6" style={{ color: RED }} fill="currentColor" />
-                    </span>
-                  </div>
-                  <span className="absolute bottom-2.5 right-2.5 rounded bg-black/55 px-1.5 py-0.5 text-[11px] font-bold text-white">
-                    {v.duration}
-                  </span>
+          <div className="mt-8 flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide sm:justify-center sm:overflow-visible sm:flex-wrap">
+            {REAL_VIDEOS.map((v) => (
+              <article key={v.name} className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
+                <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: v.bgGrad }}>
+                  <video
+                    src={v.videoSrc}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label={`Témoignage vidéo de ${v.name}`}
+                    className="absolute inset-0 h-full w-full bg-black object-cover"
+                  >
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
                 </div>
-                <div className="mt-3 px-1.5">
-                  <span className="inline-block rounded-full px-2.5 py-0.5 text-[10.5px] font-bold" style={{ background: '#FCEAEC', color: RED }}>
-                    {v.spec}
-                  </span>
-                  <p className="mt-2 text-[15px] font-extrabold" style={{ color: NAVY }}>{v.name}</p>
-                  <p className="text-[12px]" style={{ color: INK_SOFT }}>{v.role}</p>
+                <div className="p-3">
+                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>{v.name}</p>
+                  <p className="mt-0.5 text-[12px] font-bold" style={{ color: RED }}>{v.spec}</p>
+                  <p className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide"
+                    style={{ background: SOFT_BG, color: RED }}>
+                    <ShieldCheck className="h-3 w-3" />
+                    {v.year}
+                  </p>
                 </div>
               </article>
             ))}

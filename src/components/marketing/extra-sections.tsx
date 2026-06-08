@@ -1185,7 +1185,7 @@ export function ToolsGridSection() {
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-5xl"
             style={{
-              backgroundImage: 'linear-gradient(90deg,#C0112E 0%,#E8742C 100%)',
+              backgroundImage: 'linear-gradient(90deg,#0F1F4D 0%,#1E40AF 50%,#3B82F6 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -1549,84 +1549,45 @@ export function ToolsForProgressSection() {
         <Reveal delay={0.1}>
           <div className="mt-12 overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.20)]"
             style={{ borderColor: TOOLS_BORDER }}>
-            <div className="grid grid-cols-1 gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Gauche : titre + bullets */}
-              <div>
-                <h3 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[1.7rem]"
-                  style={{
-                    backgroundImage: TOOLS_GRAD_TITLE,
-                    WebkitBackgroundClip: 'text',
-                    backgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    color: 'transparent',
-                  }}>
-                  Une plateforme pensée pour vous faire gagner du temps
-                </h3>
-                <ul className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: TOOLS_RED, color: '#fff' }}>
+                    <Zap className="h-5 w-5" />
+                  </span>
+                  <h3 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[1.75rem]"
+                    style={{ color: TOOLS_NAVY }}>
+                    Une plateforme pensée pour<br />
+                    vous faire <span style={{ color: TOOLS_RED }}>gagner du temps</span>
+                  </h3>
+                </div>
+                <ul className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   {TOOLS_BULLETS.map((b) => (
-                    <li key={b.t} className="flex items-center gap-2.5 text-[13px]" style={{ color: TOOLS_INK }}>
+                    <li key={b.t} className="flex items-center gap-2.5 text-[13.5px]" style={{ color: TOOLS_INK }}>
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                         style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
-                        <b.Icon className="h-3.5 w-3.5" />
+                        <Check className="h-3.5 w-3.5" />
                       </span>
                       <span className="font-semibold">{b.t}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-[11.5px] font-bold uppercase tracking-[0.18em]" style={{ color: TOOLS_INK_SOFT }}>
+                <p className="mt-8 rounded-full inline-flex items-center gap-1.5 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em]"
+                  style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK_SOFT }}>
                   Préparation EVC · PAE · PADHUE · Médecins diplômés hors Union Européenne
                 </p>
               </div>
 
-              {/* Droite : aperçu plateforme — ordinateur portable + smartphone */}
-              <div className="relative">
-                {/* Halos colorés derrière l'image */}
-                <span aria-hidden
-                  className="pointer-events-none absolute -inset-x-4 -bottom-4 -z-10 h-24 rounded-[60px] opacity-50 blur-2xl"
-                  style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.30) 0%, transparent 70%)' }} />
-                <span aria-hidden
-                  className="pointer-events-none absolute -top-6 -right-6 -z-10 h-32 w-32 rounded-full opacity-40 blur-2xl"
-                  style={{ background: 'radial-gradient(closest-side, rgba(232,116,44,0.45) 0%, transparent 70%)' }} />
-
-                <div className="relative aspect-[16/11] w-full overflow-hidden rounded-3xl border shadow-md"
-                  style={{
-                    borderColor: TOOLS_BORDER,
-                    background: 'linear-gradient(135deg, #FFF6F7 0%, #FCEAEC 50%, #F0F4FA 100%)',
-                  }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/plateforme/laptop-phone-dashboard.png"
-                    alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
-                    className="absolute inset-0 h-full w-full select-none object-contain"
-                    decoding="async"
-                  />
-
-                  {/* Sheen lumineux discret en haut-droit */}
-                  <span aria-hidden
-                    className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full opacity-30 blur-2xl"
-                    style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.95), transparent 70%)' }} />
-
-                  {/* Badge "Multi-device" en haut-droit */}
-                  <span
-                    className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
-                    style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
-                  >
-                    <Smartphone className="h-2.5 w-2.5" style={{ color: TOOLS_RED }} />
-                    Mobile &amp; Desktop
-                  </span>
-
-                  {/* Bandeau bas avec petits badges fonctionnels */}
-                  <div className="absolute inset-x-3 bottom-3 flex flex-wrap items-center gap-1.5">
-                    {['Sync temps réel', 'Hors-ligne', 'Synthèse vocale'].map((t) => (
-                      <span key={t}
-                        className="inline-flex items-center gap-1 rounded-full border bg-white/95 px-2 py-0.5 text-[9.5px] font-bold backdrop-blur"
-                        style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK_SOFT, boxShadow: '0 4px 10px -6px rgba(15,31,77,0.20)' }}>
-                        <span aria-hidden className="inline-block h-1 w-1 rounded-full" style={{ background: TOOLS_RED }} />
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+              {/* Droite : aperçu plateforme — image bien grande */}
+              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] p-6 sm:p-8 flex items-center justify-center min-h-[400px] lg:min-h-[480px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/plateforme/laptop-phone-dashboard.png"
+                  alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
+                  className="relative z-10 w-full max-w-[560px] select-none drop-shadow-2xl"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>
@@ -1941,12 +1902,11 @@ export function TestimonialsVideoSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="mt-12 flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide sm:justify-center sm:overflow-visible sm:flex-wrap">
           {TV_CARDS.map((c, i) => (
-            <Reveal key={c.name} delay={i * 0.06}>
-              <article className="overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl" style={{ borderColor: '#ECECEF' }}>
-                {/* Vidéo native — playback inline, poster gradient en fallback */}
-                <div className="relative aspect-video w-full overflow-hidden" style={{ background: c.bgGrad }}>
+            <Reveal key={c.name} delay={i * 0.06} className="snap-start shrink-0">
+              <article className="w-[260px] overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl sm:w-[240px]" style={{ borderColor: '#ECECEF' }}>
+                <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: c.bgGrad }}>
                   <video
                     src={c.videoSrc}
                     controls
@@ -1958,20 +1918,14 @@ export function TestimonialsVideoSection() {
                     Votre navigateur ne supporte pas la lecture vidéo.
                   </video>
                 </div>
-                <div className="p-5">
-                  <p className="text-base font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
+                <div className="p-4">
+                  <p className="text-[15px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
                   <p className="mt-0.5 text-sm font-bold" style={{ color: TV_RED }}>{c.spec}</p>
                   <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wide"
                     style={{ background: TV_PINK_BG, color: TV_RED }}>
                     <ShieldCheck className="h-3 w-3" />
                     {c.year}
                   </p>
-                  <div className="mt-4 border-t pt-3" style={{ borderColor: '#ECECEF' }}>
-                    <p className="flex items-start gap-1.5 text-sm italic leading-relaxed" style={{ color: TV_INK_SOFT, fontFamily: "'Manrope', sans-serif" }}>
-                      <Quote className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: TV_RED }} fill="currentColor" />
-                      <span>{c.quote}</span>
-                    </p>
-                  </div>
                 </div>
               </article>
             </Reveal>

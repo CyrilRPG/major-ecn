@@ -1,21 +1,11 @@
-import { createClient } from '@/lib/supabase/server';
-import { TarifsBlock, FinalCtaBlock } from '@/components/marketing/extra-sections';
+import { TarifsPageContent } from ‘@/components/marketing/tarifs-page’;
 
 export const metadata = {
-  title: 'Tarifs — Major ECN',
+  title: ‘Tarifs — Major ECN’,
   description:
-    'Trois formules adaptées à vos objectifs : Essentiel, Premium ou Intensif. 7 jours d’essai gratuit.',
+    ‘Trois formules adaptées à vos objectifs : Essentielle, Intensive ou Programme Approfondi. 7 jours d’essai gratuit.’,
 };
 
-export default async function TarifsPage() {
-  const supabase = await createClient();
-  const { data: collegesRaw } = await supabase.from('matieres').select('id, nom').order('nom');
-  const colleges = collegesRaw ?? [];
-
-  return (
-    <>
-      <TarifsBlock />
-      <FinalCtaBlock colleges={colleges} />
-    </>
-  );
+export default function TarifsPage() {
+  return <TarifsPageContent />;
 }

@@ -91,14 +91,14 @@ function MethodeHero() {
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
               </span>
-              Depuis plus de 18 ans, Major ECN accompagne<br />
+              Depuis plus de 15 ans, Major ECN accompagne<br />
               les médecins étrangers vers la réussite.
             </p>
 
             {/* 4 stats cards — match template */}
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 lg:gap-4 xl:grid-cols-4">
               {[
-                { Icon: Target,    big: '+18 ans',         sub: "d'expérience" },
+                { Icon: Target,    big: '+15 ans',         sub: "d'expérience" },
                 { Icon: Trophy,    big: 'Des milliers de', sub: 'lauréats' },
                 { Icon: Users,     big: 'Méthode éprouvée', sub: 'et efficace' },
                 { Icon: Shield,    big: 'Résultats concrets', sub: 'et mesurables' },

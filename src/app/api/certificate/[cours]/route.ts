@@ -142,7 +142,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     page.drawText('ECN',   { x: width / 2 + 18, y: height - 110, size: 28, font: fontBold, color: RED });
   }
 
-  const subTitle = ansi('PRÉPARATION EVC (PAE) - 18 ANS D\'EXPÉRIENCE');
+  const subTitle = ansi('PRÉPARATION EVC (PAE) - 15 ANS D\'EXPÉRIENCE');
   page.drawText(subTitle, {
     x: width / 2 - fontBold.widthOfTextAtSize(subTitle, 8) / 2,
     y: height - 155, size: 8, font: fontBold, color: INK_SOFT,
