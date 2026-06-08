@@ -118,11 +118,11 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
             </div>
 
-            <h3 className="mt-6 text-base font-black" style={{ color: NAVY }}>Missions d'intérêt (aperçu)</h3>
+            <h3 className="mt-6 text-base font-black" style={{ color: NAVY }}>Missions d\'interet (aperçu)</h3>
             <div className="mt-1 h-0.5 w-10" style={{ background: RED }} />
             <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>Sélectionnez les types de missions qui vous intéressent :</p>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires', 'Correction de dossiers', 'Élaboration d'épreuves blanches', 'Autre (précisez)'].map(m => (
+              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires', 'Correction de dossiers', 'Élaboration d\'epreuves blanches', 'Autre (précisez)'].map(m => (
                 <label key={m} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
                   <input type="checkbox" className="rounded" /> {m}
                 </label>
@@ -222,7 +222,7 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
 
             <p className="mt-4 text-xs font-bold" style={{ color: INK }}>Motivations (quel(s) domaine(s) vous intéressent particulièrement ?) *</p>
             <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires / vidéos', 'Correction de dossiers', 'Élaboration d'épreuves blanches', 'Autre (précisez)'].map(m => (
+              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires / vidéos', 'Correction de dossiers', 'Élaboration d\'epreuves blanches', 'Autre (précisez)'].map(m => (
                 <label key={m} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
                   <input type="checkbox" className="rounded" /> {m}
                 </label>
@@ -258,7 +258,7 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <div className="mt-4 space-y-3">
               {[
                 { title: 'CV à jour *', desc: 'Votre curriculum vitae actualisé', color: RED },
-                { title: 'Lettre de motivation (facultatif)', desc: 'Expliquez vos motivations et vos centres d'intérêt', color: '#F59E0B' },
+                { title: 'Lettre de motivation (facultatif)', desc: 'Expliquez vos motivations et vos centres d\'interet', color: '#F59E0B' },
                 { title: 'Diplômes et titres (facultatif)', desc: 'Copies de vos diplômes et titres universitaires', color: '#7C3AED' },
                 { title: 'Publications / travaux (facultatif)', desc: 'Articles, travaux, publications ou communications', color: '#2563EB' },
               ].map(d => (
@@ -291,7 +291,7 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             </div>
 
             <h4 className="mt-6 text-sm font-bold" style={{ color: INK }}>Un message pour notre équipe (facultatif)</h4>
-            <textarea placeholder="Précisez vos attentes, vos domaines d'intérêt ou toute information utile..."
+            <textarea placeholder="Précisez vos attentes, vos domaines d\'interet ou toute information utile..."
               className="mt-2 w-full rounded-lg border px-4 py-3 text-sm" style={{ borderColor: BORDER, minHeight: '100px' }} />
             <p className="mt-1 text-right text-xs" style={{ color: INK_SOFT }}>0/1000</p>
 
@@ -397,7 +397,7 @@ export function RecrutementPageContent() {
               { Icon: Users, big: '9 000+', sub: 'médecins\naccompagnés' },
               { Icon: GraduationCap, big: '45', sub: 'spécialités EVC\ncouvertes' },
               { Icon: Calendar, big: 'Depuis 2011', sub: '' },
-              { Icon: Star, big: '15 ans', sub: 'd'expérience\npédagogique' },
+              { Icon: Star, big: '15 ans', sub: 'd\'experience\npedagogique' },
             ].map(s => (
               <div key={s.big} className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
@@ -450,7 +450,7 @@ export function RecrutementPageContent() {
             <div>
               <h3 className="text-lg font-black" style={{ color: NAVY }}>Des missions variées au service de la pédagogie</h3>
               <ul className="mt-4 space-y-1.5">
-                {['Création de QCM', 'Création de cas cliniques', 'Création de fiches pédagogiques', 'Relecture scientifique', 'Mise à jour documentaire', 'Correction de dossiers', 'Animation de cours', 'Webinaires pédagogiques', 'Élaboration d'épreuves blanches', 'Accompagnement pédagogique'].map(m => (
+                {['Création de QCM', 'Création de cas cliniques', 'Création de fiches pédagogiques', 'Relecture scientifique', 'Mise à jour documentaire', 'Correction de dossiers', 'Animation de cours', 'Webinaires pédagogiques', 'Élaboration d\'epreuves blanches', 'Accompagnement pédagogique'].map(m => (
                   <li key={m} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
                     <Check className="h-3.5 w-3.5" style={{ color: RED }} /> {m}
                   </li>
