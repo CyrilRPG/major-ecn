@@ -58,7 +58,7 @@ type Speciality = {
   family: Family;
   Icon: LucideIcon;
   accent: string;       // couleur de l'icône
-  bullets: string[];    // 4 puces "Programme couvert"
+  description: string;  // paragraphe descriptif (1-3 phrases)
 };
 
 const ACCENTS = {
@@ -71,109 +71,109 @@ const ACCENTS = {
 const SPECIALITIES: Speciality[] = [
   // Médecine
   { slug: 'medecine-generale', name: 'Médecine Générale', family: 'Médecine', Icon: Stethoscope, accent: ACCENTS.red,
-    bullets: ['Référentiels CMG & HAS', 'Cas cliniques en consultation', 'QCM EVC ciblés', 'Prévention & soins primaires'] },
+    description: "Préparation complète aux EVC en médecine générale, calibrée sur le référentiel CMG et les recommandations HAS. Cas cliniques de consultation, suivi des maladies chroniques, prévention et coordination ville-hôpital." },
   { slug: 'cardiologie', name: 'Cardiologie', family: 'Médecine', Icon: HeartPulse, accent: ACCENTS.red,
-    bullets: ['ECG en autonomie', 'Insuffisance cardiaque', 'SCA & urgences', 'Hypertension & arythmies'] },
+    description: "Programme cardiologique exhaustif couvrant les syndromes coronariens, l'insuffisance cardiaque, les arythmies et l'hypertension. ECG en autonomie et prise en charge des urgences cardiovasculaires." },
   { slug: 'pneumologie', name: 'Pneumologie', family: 'Médecine', Icon: Wind, accent: ACCENTS.cyan,
-    bullets: ['Asthme & BPCO', 'Cancer bronchique', 'Pneumopathies', 'EFR & imagerie thoracique'] },
+    description: "Préparation aux EVC en pneumologie : asthme, BPCO, cancers bronchiques, pneumopathies infectieuses. Lecture de l'imagerie thoracique et interprétation des EFR au quotidien clinique." },
   { slug: 'gastro-enterologie', name: 'Gastro-entérologie', family: 'Médecine', Icon: Apple, accent: ACCENTS.orange,
-    bullets: ['MICI & hépatites', 'Cancers digestifs', 'Endoscopie raisonnée', 'Urgences abdominales'] },
+    description: "Programme gastro-hépatologique complet : MICI, hépatites virales et chroniques, cancers digestifs, hémorragies. Indications et conduites endoscopiques raisonnées." },
   { slug: 'endocrinologie', name: 'Endocrinologie', family: 'Médecine', Icon: Gauge, accent: ACCENTS.amber,
-    bullets: ['Diabète T1 / T2', 'Thyroïde & surrénales', 'Obésité & nutrition', 'Hormonologie clinique'] },
+    description: "Préparation endocrinologique couvrant le diabète de type 1 et 2, les pathologies thyroïdiennes et surrénaliennes, l'obésité et les troubles nutritionnels avec conduite à tenir précise." },
   { slug: 'nephrologie', name: 'Néphrologie', family: 'Médecine', Icon: Droplet, accent: ACCENTS.blue,
-    bullets: ['IRA & IRC', 'Dialyse & greffe', 'HTA secondaire', 'Désordres hydro-électrolytiques'] },
+    description: "Programme couvrant l'insuffisance rénale aiguë et chronique, la dialyse, la transplantation, l'HTA secondaire et les désordres hydro-électrolytiques selon les recommandations actualisées." },
   { slug: 'neurologie', name: 'Neurologie', family: 'Médecine', Icon: Brain, accent: ACCENTS.violet,
-    bullets: ['AVC & épilepsies', 'Sclérose en plaques', 'Démences', 'Pathologies du mouvement'] },
+    description: "Préparation aux EVC en neurologie : AVC, épilepsies, sclérose en plaques, démences et pathologies du mouvement. Démarche diagnostique structurée et prise en charge urgente." },
   { slug: 'hematologie', name: 'Hématologie', family: 'Médecine', Icon: TestTube, accent: ACCENTS.fuchsia,
-    bullets: ['Anémies & cytopénies', 'Hémopathies malignes', 'Hémostase', 'Transfusion raisonnée'] },
+    description: "Programme hématologique complet : anémies, cytopénies, hémopathies malignes, troubles de l'hémostase et indications de transfusion conformes aux protocoles français." },
   { slug: 'rhumatologie', name: 'Rhumatologie', family: 'Médecine', Icon: Bone, accent: ACCENTS.slate,
-    bullets: ['Arthrites & arthroses', 'PR & spondyloarthrites', 'Ostéoporose', 'Lombalgies & sciatiques'] },
+    description: "Préparation rhumatologique sur arthrites, arthroses, polyarthrite rhumatoïde, spondyloarthrites et ostéoporose. Démarche diagnostique des lombalgies et des sciatiques." },
   { slug: 'dermatologie', name: 'Dermatologie', family: 'Médecine', Icon: Bandage, accent: ACCENTS.rose,
-    bullets: ['Cancers cutanés', 'Eczéma & psoriasis', 'IST', 'Urgences dermatologiques'] },
+    description: "Programme dermatologique sur les cancers cutanés, eczéma, psoriasis, infections sexuellement transmissibles et urgences dermatologiques avec iconographie clinique." },
   { slug: 'infectiologie', name: 'Infectiologie', family: 'Médecine', Icon: Beaker, accent: ACCENTS.emerald,
-    bullets: ['Antibiothérapie raisonnée', 'VIH & hépatites', 'Tropicales & émergentes', 'Hygiène & BMR'] },
+    description: "Préparation aux EVC en infectiologie : antibiothérapie raisonnée, VIH, hépatites, pathologies tropicales et émergentes, hygiène et BMR conformes aux recommandations actualisées." },
   { slug: 'oncologie', name: 'Oncologie', family: 'Médecine', Icon: Target, accent: ACCENTS.indigo,
-    bullets: ['Cancers fréquents', 'Chimio & immunothérapie', 'Soins de support', 'RCP & parcours patient'] },
+    description: "Programme oncologique couvrant les cancers fréquents, les protocoles de chimiothérapie et d'immunothérapie, les soins de support et l'organisation des RCP en parcours patient." },
   { slug: 'medecine-interne', name: 'Médecine interne', family: 'Médecine', Icon: Compass, accent: ACCENTS.navy,
-    bullets: ['Maladies systémiques', 'AEG & démarche', 'Auto-immunité', 'Fièvre prolongée'] },
+    description: "Préparation transversale sur les maladies systémiques, les pathologies auto-immunes, la fièvre prolongée et l'altération de l'état général avec démarche diagnostique rigoureuse." },
   { slug: 'allergologie', name: 'Allergologie', family: 'Médecine', Icon: Activity, accent: ACCENTS.amber,
-    bullets: ['Rhinite & asthme', 'Allergies alimentaires', 'Anaphylaxie', 'Tests & désensibilisation'] },
+    description: "Programme allergologique sur rhinite, asthme, allergies alimentaires, anaphylaxie, tests cutanés et indications de désensibilisation au quotidien clinique." },
   { slug: 'medecine-vasculaire', name: 'Médecine vasculaire', family: 'Médecine', Icon: Activity, accent: ACCENTS.red,
-    bullets: ['MTEV & embolies', 'AOMI', 'Lymphoedème', 'Echo-doppler raisonné'] },
+    description: "Préparation aux EVC en médecine vasculaire : MTEV, embolies, AOMI, lymphœdèmes et interprétation de l'écho-doppler veineux et artériel." },
   { slug: 'urgences', name: 'Médecine d’urgence', family: 'Médecine', Icon: Zap, accent: ACCENTS.red,
-    bullets: ['Triage & déchocage', 'Détresse vitale', 'Toxicologie', 'Polytraumatisé'] },
+    description: "Programme urgences couvrant le triage, le déchocage, les détresses vitales, la toxicologie et la prise en charge du polytraumatisé selon les protocoles SAMU/SMUR." },
   { slug: 'reanimation', name: 'Médecine intensive — Réanimation', family: 'Médecine', Icon: Activity, accent: ACCENTS.red,
-    bullets: ['Sepsis & SDRA', 'Ventilation', 'États de choc', 'Défaillances multi-organes'] },
+    description: "Préparation à la médecine intensive : sepsis, SDRA, ventilation mécanique, états de choc et défaillances multi-organes selon les recommandations SRLF actualisées." },
   { slug: 'geriatrie', name: 'Gériatrie', family: 'Médecine', Icon: Users, accent: ACCENTS.orange,
-    bullets: ['Évaluation gériatrique', 'Chutes & fragilité', 'Démences', 'Polymédication'] },
+    description: "Programme gériatrique sur l'évaluation gériatrique standardisée, les chutes, la fragilité, les démences et la polymédication dans les parcours hospitaliers et ambulatoires." },
   { slug: 'mpr', name: 'Médecine physique & réadaptation', family: 'Médecine', Icon: Footprints, accent: ACCENTS.teal,
-    bullets: ['AVC & lésions médullaires', 'Rééducation locomotrice', 'Handicap & autonomie', 'Appareillage'] },
+    description: "Préparation aux EVC en MPR : rééducation post-AVC, lésions médullaires, prise en charge locomotrice, handicap et appareillage selon les standards SOFMER." },
   { slug: 'medecine-du-travail', name: 'Médecine du travail', family: 'Médecine', Icon: BriefcaseMedical, accent: ACCENTS.slate,
-    bullets: ['Aptitude & visites', 'Risques professionnels', 'TMS & RPS', 'Maladies pro'] },
+    description: "Programme médecine du travail couvrant les visites d'aptitude, les risques professionnels, les TMS, les risques psychosociaux et les maladies professionnelles reconnues." },
   { slug: 'medecine-legale', name: 'Médecine légale', family: 'Médecine', Icon: Shield, accent: ACCENTS.slate,
-    bullets: ['Coups & blessures', 'ITT & certificats', 'Décès & autopsies', 'Violences sexuelles'] },
+    description: "Préparation aux EVC en médecine légale : coups et blessures, ITT, certificats, examens des décès et prise en charge des violences sexuelles selon les protocoles." },
   { slug: 'psychiatrie', name: 'Psychiatrie', family: 'Médecine', Icon: Brain, accent: ACCENTS.violet,
-    bullets: ['Troubles de l’humeur', 'Schizophrénies', 'Conduites addictives', 'Urgences psy'] },
+    description: "Programme psychiatrique sur les troubles de l'humeur, schizophrénies, conduites addictives et urgences psychiatriques avec démarche diagnostique structurée." },
 
   // Pédiatrie
   { slug: 'pediatrie', name: 'Pédiatrie', family: 'Pédiatrie', Icon: Baby, accent: ACCENTS.rose,
-    bullets: ['Néonatologie', 'Vaccinations', 'Urgences pédiatriques', 'Suivi & dépistages'] },
+    description: "Préparation aux EVC en pédiatrie : néonatologie, calendrier vaccinal, urgences pédiatriques, suivi du nourrisson et dépistages systématiques selon les recommandations SFP." },
   { slug: 'chirurgie-pediatrique', name: 'Chirurgie pédiatrique', family: 'Pédiatrie', Icon: Scissors, accent: ACCENTS.rose,
-    bullets: ['Urgences viscérales', 'Malformations', 'Orthopédie pédiatrique', 'Cancérologie'] },
+    description: "Programme couvrant les urgences viscérales pédiatriques, les malformations congénitales, l'orthopédie de l'enfant et les cancers pédiatriques avec leur prise en charge." },
 
   // Chirurgie
   { slug: 'chirurgie-generale-viscerale', name: 'Chirurgie générale & viscérale', family: 'Chirurgie', Icon: Scissors, accent: ACCENTS.red,
-    bullets: ['Urgences digestives', 'Cancers digestifs', 'Pariétale & proctologie', 'Coelioscopie'] },
+    description: "Préparation chirurgie générale et viscérale couvrant les urgences digestives, les cancers, la chirurgie pariétale et proctologique avec techniques coelioscopiques modernes." },
   { slug: 'chirurgie-orthopedique', name: 'Chirurgie orthopédique', family: 'Chirurgie', Icon: Bone, accent: ACCENTS.amber,
-    bullets: ['Fractures & luxations', 'Prothèses', 'Arthroscopies', 'Traumato sportive'] },
+    description: "Programme orthopédie couvrant les fractures et luxations, les prothèses articulaires, les arthroscopies et la traumatologie sportive selon les protocoles SOFCOT." },
   { slug: 'chirurgie-cardio-thoracique', name: 'Chirurgie cardio-thoracique', family: 'Chirurgie', Icon: HeartPulse, accent: ACCENTS.red,
-    bullets: ['Coronaires & valvulaires', 'Aorte', 'Chirurgie pulmonaire', 'Soins post-op'] },
+    description: "Préparation à la chirurgie cardio-thoracique : pathologies coronaires et valvulaires, chirurgie de l'aorte, résections pulmonaires et soins post-opératoires spécifiques." },
   { slug: 'chirurgie-vasculaire', name: 'Chirurgie vasculaire', family: 'Chirurgie', Icon: Activity, accent: ACCENTS.red,
-    bullets: ['Anévrismes', 'AOMI', 'Carotides', 'Endovasculaire'] },
+    description: "Programme couvrant la prise en charge des anévrismes aortiques, de l'AOMI, des pathologies carotidiennes et des techniques endovasculaires actuelles." },
   { slug: 'neurochirurgie', name: 'Neurochirurgie', family: 'Chirurgie', Icon: Brain, accent: ACCENTS.violet,
-    bullets: ['Traumatismes crâniens', 'Tumeurs cérébrales', 'Rachis', 'Hydrocéphalie'] },
+    description: "Préparation aux EVC en neurochirurgie : traumatismes crâniens, tumeurs cérébrales, pathologie rachidienne et hydrocéphalie avec indications opératoires précises." },
   { slug: 'chirurgie-plastique', name: 'Chirurgie plastique', family: 'Chirurgie', Icon: Smile, accent: ACCENTS.fuchsia,
-    bullets: ['Brûlés', 'Reconstruction', 'Microchirurgie', 'Esthétique raisonnée'] },
+    description: "Programme chirurgie plastique couvrant la prise en charge des brûlés, la reconstruction post-traumatique ou oncologique, la microchirurgie et l'esthétique raisonnée." },
   { slug: 'chirurgie-maxillo-faciale', name: 'Chirurgie maxillo-faciale', family: 'Chirurgie', Icon: Smile, accent: ACCENTS.indigo,
-    bullets: ['Fractures faciales', 'Pathologie ATM', 'Tumeurs ORL', 'Implantologie'] },
+    description: "Préparation couvrant les fractures faciales, la pathologie de l'ATM, les tumeurs ORL et l'implantologie selon les standards de la SFSCMFCO." },
   { slug: 'urologie', name: 'Urologie', family: 'Chirurgie', Icon: Pipette, accent: ACCENTS.blue,
-    bullets: ['Lithiases & infections', 'Cancers urologiques', 'Troubles mictionnels', 'Andrologie'] },
+    description: "Programme urologique sur les lithiases, infections urinaires, cancers urologiques, troubles mictionnels et andrologie selon les recommandations AFU actuelles." },
   { slug: 'gyneco-obstetrique', name: 'Gynécologie-obstétrique', family: 'Chirurgie', Icon: Heart, accent: ACCENTS.rose,
-    bullets: ['Suivi de grossesse', 'Urgences obstétricales', 'Cancers gynécologiques', 'Contraception'] },
+    description: "Préparation complète au suivi de grossesse, aux urgences obstétricales, aux cancers gynécologiques et à la contraception selon les recommandations CNGOF." },
   { slug: 'orl', name: 'ORL', family: 'Chirurgie', Icon: Ear, accent: ACCENTS.cyan,
-    bullets: ['Surdités & vertiges', 'Cancers tête & cou', 'Pathologie sinusienne', 'Voix & déglutition'] },
+    description: "Programme ORL sur les surdités, vertiges, cancers de la tête et du cou, pathologies sinusiennes et troubles de la voix et de la déglutition." },
   { slug: 'ophtalmologie', name: 'Ophtalmologie', family: 'Chirurgie', Icon: Eye, accent: ACCENTS.blue,
-    bullets: ['DMLA & glaucome', 'Cataracte', 'Rétinopathie diabétique', 'Urgences oculaires'] },
+    description: "Préparation aux EVC en ophtalmologie : DMLA, glaucome, cataracte, rétinopathie diabétique et urgences oculaires avec démarche clinique structurée." },
   { slug: 'stomatologie', name: 'Stomatologie', family: 'Chirurgie', Icon: Smile, accent: ACCENTS.amber,
-    bullets: ['Pathologies bucco-dentaires', 'Tumeurs', 'Foyers infectieux', 'Implantologie'] },
+    description: "Programme couvrant les pathologies bucco-dentaires, les tumeurs, les foyers infectieux d'origine dentaire et l'implantologie selon les standards français." },
 
   // Imagerie
   { slug: 'radiologie', name: 'Radiologie', family: 'Imagerie', Icon: ScanSearch, accent: ACCENTS.indigo,
-    bullets: ['Radio standard & TDM', 'IRM ciblée', 'Echographie', 'Radiologie interventionnelle'] },
+    description: "Préparation aux EVC en radiologie : radiographies standard, scanner, IRM ciblée, échographie et radiologie interventionnelle avec interprétation systématique." },
   { slug: 'medecine-nucleaire', name: 'Médecine nucléaire', family: 'Imagerie', Icon: Radio, accent: ACCENTS.violet,
-    bullets: ['Scintigraphies', 'TEP-TDM', 'Radiothérapie interne', 'Dosimétrie clinique'] },
+    description: "Programme médecine nucléaire sur les scintigraphies, la TEP-TDM, la radiothérapie interne vectorisée et la dosimétrie clinique actualisée." },
 
   // Biologie
   { slug: 'biologie-medicale', name: 'Biologie médicale', family: 'Biologie', Icon: FlaskConical, accent: ACCENTS.emerald,
-    bullets: ['Hémato & biochimie', 'Microbiologie', 'Immunologie', 'Qualité & accréditation'] },
+    description: "Préparation couvrant l'hématologie biologique, la biochimie, la microbiologie, l'immunologie ainsi que les exigences de qualité et d'accréditation des laboratoires." },
   { slug: 'anatomie-pathologique', name: 'Anatomie & cytologie pathologiques', family: 'Biologie', Icon: Microscope, accent: ACCENTS.teal,
-    bullets: ['Cancers fréquents', 'Cytologie', 'Immuno-histochimie', 'Biologie moléculaire'] },
+    description: "Programme anatomopathologique sur les cancers fréquents, la cytologie, l'immuno-histochimie et la biologie moléculaire intégrées aux RCP." },
   { slug: 'genetique', name: 'Génétique médicale', family: 'Biologie', Icon: Dna, accent: ACCENTS.fuchsia,
-    bullets: ['Conseil génétique', 'Maladies héréditaires', 'Oncogénétique', 'Diagnostic prénatal'] },
+    description: "Préparation aux EVC en génétique médicale : conseil génétique, maladies héréditaires, oncogénétique et diagnostic prénatal avec les indications validées." },
   { slug: 'pharmacologie', name: 'Pharmacologie clinique', family: 'Biologie', Icon: Beaker, accent: ACCENTS.blue,
-    bullets: ['Pharmacocinétique', 'Pharmacovigilance', 'Interactions', 'Essais cliniques'] },
+    description: "Programme pharmacologie clinique sur la pharmacocinétique, la pharmacovigilance, les interactions médicamenteuses et la méthodologie des essais cliniques." },
 
   // Pharmacie
   { slug: 'pharmacie-hospitaliere', name: 'Pharmacie hospitalière', family: 'Pharmacie', Icon: Pill, accent: ACCENTS.green,
-    bullets: ['Dispensation', 'Préparations & stérilisation', 'Pharmacie clinique', 'Bon usage du médicament'] },
+    description: "Préparation aux EVC en pharmacie hospitalière : dispensation, préparations stériles et radiopharmacie, pharmacie clinique et bon usage du médicament." },
   { slug: 'pharmacie-officine', name: 'Pharmacie d’officine', family: 'Pharmacie', Icon: Pill, accent: ACCENTS.emerald,
-    bullets: ['Conseil & dispensation', 'Vaccination', 'Tests rapides', 'Coopération ville-hôpital'] },
+    description: "Programme pharmacie d'officine couvrant le conseil, la dispensation, la vaccination, les tests rapides d'orientation et la coopération ville-hôpital." },
 
   // Santé publique
   { slug: 'sante-publique', name: 'Santé publique', family: 'Santé publique', Icon: Users, accent: ACCENTS.indigo,
-    bullets: ['Épidémiologie', 'Économie de la santé', 'Prévention & dépistage', 'Politiques publiques'] },
+    description: "Préparation aux EVC en santé publique : épidémiologie, économie de la santé, prévention et dépistage, politiques publiques et organisation du système de soins." },
   { slug: 'anesthesie-reanimation', name: 'Anesthésie & Réanimation', family: 'Médecine', Icon: Syringe, accent: ACCENTS.violet,
-    bullets: ['Consultation pré-op', 'ALR & AG', 'Choc & arrêt circulatoire', 'Post-op & SSPI'] },
+    description: "Programme anesthésie-réanimation sur la consultation pré-opératoire, l'ALR et l'AG, les états de choc, l'arrêt circulatoire et les soins post-opératoires en SSPI." },
 ];
 
 const FAMILIES: Family[] = ['Médecine', 'Chirurgie', 'Pédiatrie', 'Imagerie', 'Biologie', 'Pharmacie', 'Santé publique'];
@@ -326,9 +326,13 @@ function MetricsStrip() {
 /* ============================================================
    3. Filtre + recherche + grille
    ============================================================ */
+/* Nombre de spécialités affichées avant le bouton « Voir toutes les spécialités ». */
+const SPEC_INITIAL_COUNT = 20;
+
 function SpecialitesGrid() {
   const [q, setQ] = useState('');
   const [fam, setFam] = useState<Family | 'Toutes'>('Toutes');
+  const [showAll, setShowAll] = useState(false);
 
   const list = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -383,7 +387,7 @@ function SpecialitesGrid() {
 
         {/* Grille */}
         <div className="mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {list.map((s, i) => (
+          {(showAll ? list : list.slice(0, SPEC_INITIAL_COUNT)).map((s, i) => (
             <Reveal key={s.slug} delay={Math.min(0.03 * (i % 10), 0.30)}>
               <SpecCard s={s} />
             </Reveal>
@@ -395,6 +399,47 @@ function SpecialitesGrid() {
             </div>
           )}
         </div>
+
+        {/* Bouton "Voir toutes les spécialités" */}
+        {list.length > SPEC_INITIAL_COUNT && (
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-2xl border bg-white px-5 py-2.5 text-[13.5px] font-bold transition-transform hover:scale-[1.02]"
+              style={{ borderColor: BORDER, color: NAVY, fontFamily: FONT }}
+            >
+              {showAll
+                ? `Réduire la liste`
+                : `Voir toutes les spécialités (${list.length - SPEC_INITIAL_COUNT} de plus)`}
+              <ChevronRight className={'h-4 w-4 transition-transform ' + (showAll ? 'rotate-90' : '')} />
+            </button>
+          </div>
+        )}
+
+        {/* Encadré "Vous ne trouvez pas votre spécialité ?" */}
+        <div className="mt-10 grid grid-cols-1 gap-3 overflow-hidden rounded-3xl border bg-gradient-to-br from-[#FFF8F9] via-white to-[#F0F4FA] p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-7"
+          style={{ borderColor: BORDER, fontFamily: FONT }}>
+          <div className="flex items-start gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+              style={{ background: '#FCEAEC', color: RED }}>
+              <Search className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F172A' }}>
+                Vous ne trouvez pas votre spécialité&nbsp;?
+              </p>
+              <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#475569' }}>
+                D’autres spécialités sont en cours d’ajout. Écrivez-nous votre besoin et nous revenons vers vous sous 24&nbsp;h ouvrées.
+              </p>
+            </div>
+          </div>
+          <Link href="/contact"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-bold text-white shadow-[0_14px_30px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
+            style={{ background: `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)` }}>
+            Nous contacter <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -405,39 +450,43 @@ function SpecCard({ s }: { s: Speciality }) {
   const href = isMG ? '/specialites/medecine-generale' : '/contact';
   return (
     <Link href={href}
-      className="group relative flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-3.5 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
-      style={{ borderColor: BORDER }}>
+      className="group relative flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-4 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
+      style={{ borderColor: BORDER, fontFamily: FONT }}>
       <span aria-hidden className="absolute inset-x-4 top-0 h-[3px] rounded-b-full opacity-90"
         style={{ background: s.accent }} />
-      <div className="mt-1 flex items-center gap-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg"
+
+      {/* Titre + icone */}
+      <div className="mt-1 flex items-center gap-2.5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
           style={{ background: `${s.accent}14`, color: s.accent }}>
-          <s.Icon className="h-4.5 w-4.5" />
+          <s.Icon className="h-5 w-5" />
         </span>
-        <div className="min-w-0">
-          <p className="truncate text-[13.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{s.name}</p>
-          <p className="text-[9.5px] font-bold uppercase tracking-wider" style={{ color: INK_MUTED }}>{s.family}</p>
-        </div>
+        <p className="text-[14.5px] font-extrabold leading-tight" style={{ color: '#0F172A' }}>{s.name}</p>
       </div>
-      <ul className="space-y-1 text-[11.5px]" style={{ color: INK_SOFT }}>
-        {s.bullets.map((b) => (
-          <li key={b} className="flex items-start gap-1.5">
-            <Check className="mt-0.5 h-3 w-3 shrink-0" style={{ color: s.accent }} />
-            <span>{b}</span>
-          </li>
-        ))}
+
+      {/* Paragraphe descriptif tronqué */}
+      <p className="text-[12.5px] leading-relaxed [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] overflow-hidden"
+        style={{ color: '#475569' }}>
+        {s.description}
+      </p>
+
+      {/* Badges statut : preparation existante + inscriptions ouvertes */}
+      <ul className="mt-auto flex flex-wrap items-center gap-1.5 pt-1 text-[10.5px] font-semibold" style={{ color: '#52607A' }}>
+        <li className="inline-flex items-center gap-1 rounded-full bg-[#E7F6EC] px-2 py-0.5" style={{ color: '#0F8A6A' }}>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+          Préparation existante
+        </li>
+        <li className="inline-flex items-center gap-1 rounded-full bg-[#FCEAEC] px-2 py-0.5" style={{ color: '#A91D2C' }}>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#C0112E]" />
+          Inscriptions ouvertes
+        </li>
       </ul>
-      {isMG ? (
-        <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
-          style={{ color: s.accent }}>
-          Découvrir la préparation <ChevronRight className="h-3.5 w-3.5" />
-        </span>
-      ) : (
-        <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
-          style={{ color: INK_MUTED }}>
-          Nous contacter pour s’inscrire <ChevronRight className="h-3.5 w-3.5" />
-        </span>
-      )}
+
+      {/* CTA bas de carte */}
+      <span className="mt-1 inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
+        style={{ color: isMG ? s.accent : '#7A8499' }}>
+        {isMG ? 'Découvrir la préparation' : 'Nous contacter pour s’inscrire'} <ChevronRight className="h-3.5 w-3.5" />
+      </span>
     </Link>
   );
 }
