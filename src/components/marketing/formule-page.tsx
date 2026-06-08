@@ -125,11 +125,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                     </div>
                   </div>
                 ))}
-                <div className="flex items-center gap-1">
-                  <p className="text-sm font-bold" style={{ color: NAVY }}>4,8/5</p>
-                  <div className="flex">{[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3" style={{ color: '#F59E0B' }} fill="currentColor" />)}</div>
-                  <p className="text-[10px]" style={{ color: INK_SOFT }}>sur plus de 500 avis</p>
-                </div>
+                {/* Trustpilot removed */}
               </div>
 
               {/* Price */}
@@ -336,9 +332,9 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           <h2 className="text-center text-xl font-black" style={{ color: NAVY }}>Ils ont réussi les EVC avec Major ECN</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {[
-              { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Lauréate EVC 2024', photo: '/temoignages/drfaten.png', quote: "\"Une méthode claire, des ressources complètes et un vrai suivi de progression. Je recommande !\"" },
-              { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg', quote: "\"Les corrections détaillées m'ont permis de comprendre mes erreurs et de gagner énormément en efficacité.\"" },
-              { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg', quote: "\"L'accompagnement des enseignants et la qualité des dossiers cliniques font vraiment la différence.\"" },
+              { name: 'Dr Haykel Abdelbaki', spec: 'Radiologie', year: "Lauréat EVC", photo: '/temoignages/dr-haykel-abdelbaki.jpg', quote: "\"Sérieux, qualité et accompagnement : les clés de ma réussite.\"" },
+              { name: "Dr Amélie Lamure", spec: "Anesthésie-Réanimation", year: "Lauréate EVC", photo: '/temoignages/dr-amelie-lamure.jpg', quote: "\"Une équipe présente, disponible et impliquée à chaque étape.\"" },
+              { name: 'Dr Leila Bettaieb', spec: "Médecine générale", year: "Lauréate EVC", photo: '/temoignages/dr-leila-bettaieb.jpg', quote: "\"Une méthode claire, de bons supports et un véritable accompagnement.\"" },
             ].map(t => (
               <div key={t.name} className="rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <div className="flex items-center gap-3">

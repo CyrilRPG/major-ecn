@@ -570,20 +570,20 @@ function WhyChoose() {
 function MultiSpecTestimonials() {
   const tm = [
     {
-      name: 'Dr Samy K.', spe: 'Cardiologie', photo: '/temoignages/drsamy.jpg',
-      quote: "J’ai pu reprendre les bases cardiologiques avec des cas calibrés EVC. Les corrigés étaient d’une précision impressionnante.",
+      name: 'Dr Samy KABAWEH', spe: 'Radiologie', photo: '/temoignages/drsamy.jpg',
+      quote: "Cette préparation m'a vraiment permis de franchir un cap.",
     },
     {
-      name: 'Dr Leila B.', spe: 'Pédiatrie', photo: '/temoignages/dr-leila-bettaieb.jpg',
-      quote: "La banque de cas pédiatriques couvre vraiment tout — vaccinations, urgences, neuro-pédiatrie. Une mine.",
+      name: 'Dr Leila Bettaieb', spe: 'Médecine générale', photo: '/temoignages/dr-leila-bettaieb.jpg',
+      quote: "Une méthode claire, de bons supports et un véritable accompagnement.",
     },
     {
-      name: 'Dr Bill B.', spe: 'Médecine Générale', photo: '/temoignages/drbilly.png',
-      quote: "Une préparation structurée et ciblée — j'ai retrouvé le jour J de nombreuses situations déjà travaillées.",
+      name: 'Dr Bill Baron WANKPO', spe: 'Médecine générale', photo: '/temoignages/drbilly.png',
+      quote: "Une préparation structurée et ciblée, utile bien au-delà du concours.",
     },
     {
-      name: 'Dr Haykel A.', spe: 'Anesthésie-Réanimation', photo: '/temoignages/dr-haykel-abdelbaki.jpg',
-      quote: "Les cas de déchocage et la révision transversale m’ont permis d’arriver très serein aux EVC.",
+      name: 'Dr Haykel Abdelbaki', spe: 'Radiologie', photo: '/temoignages/dr-haykel-abdelbaki.jpg',
+      quote: "Sérieux, qualité et accompagnement : les clés de ma réussite.",
     },
   ];
   return (

@@ -171,7 +171,7 @@ export function TarifsPageContent() {
               </div>
               <p className="mt-3 text-[36px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
               <ul className="mt-4 flex-1 space-y-1.5">
-                {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées', 'Supports de révision téléchargeables'].map(f => (
+                {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées'].map(f => (
                   <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: RED }} /> {f}
                   </li>
@@ -334,9 +334,9 @@ export function TarifsPageContent() {
           <div className="mt-8 grid gap-6 lg:grid-cols-[2fr_1fr]">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { name: 'Dr Faten Hnania', spec: 'Radiologie', year: 'Lauréate EVC 2024', photo: '/temoignages/drfaten.png' },
-                { name: 'Dr Samy Kabaweh', spec: 'Cardiologie', year: 'Lauréat EVC 2023', photo: '/temoignages/drsamy.jpg' },
-                { name: 'Dr Nada Al Ali', spec: 'Pédiatrie', year: 'Lauréate EVC 2023', photo: '/temoignages/dr-leila-bettaieb.jpg' },
+                { name: "Dr Faten Hnania", spec: "Médecine générale", year: "Lauréate EVC", photo: '/temoignages/drfaten.png' },
+                { name: 'Dr Samy KABAWEH', spec: 'Radiologie', year: "Lauréat EVC", photo: '/temoignages/drsamy.jpg' },
+                { name: "Dr Bill Baron WANKPO", spec: "Médecine générale", year: "Lauréat EVC", photo: '/temoignages/drbilly.png' },
               ].map(t => (
                 <div key={t.name} className="text-center">
                   <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-xl">

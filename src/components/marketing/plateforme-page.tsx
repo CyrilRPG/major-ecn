@@ -970,7 +970,7 @@ function BrandCredentialsSection() {
   const metrics = [
     { value: '15',     unit: 'ans',     label: "d'expertise dédiée aux EVC PAE",         tone: '#8B0E22' },
     { value: '9 000',  unit: '+',       label: 'médecins étrangers accompagnés',         tone: '#0F1F4D' },
-    { value: '45',     unit: '/45',     label: 'spécialités EDN couvertes',              tone: '#0F766E' },
+    { value: '45',     unit: '/45',     label: 'spécialités couvertes',              tone: '#0F766E' },
   ];
   const principes = [
     { Icon: Stethoscope,  t: 'Conçue par des praticiens hospitaliers',
@@ -1397,7 +1397,6 @@ function RecordedCoursesSection() {
     'Cours enregistrés accessibles 24h/24',
     'Sessions en direct avec nos enseignants',
     'Replays disponibles',
-    'Supports de cours téléchargeables',
   ];
   const schedule = [
     { t: 'Cardiologie',     d: 'Sam. 24/05 – 14h00' },
