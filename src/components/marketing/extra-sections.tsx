@@ -1469,9 +1469,9 @@ const TOOLS_GRID: ToolItem[] = [
 ];
 
 const TOOLS_BULLETS = [
-  { Icon: Check,        t: 'Tous vos sujets organisés' },
-  { Icon: Settings,     t: 'Outils méthodes intégrés' },
-  { Icon: FolderOpen,   t: 'Ressources organisées par spécialité' },
+  { Icon: Check,        t: "Tous vos sujets organises" },
+  { Icon: Settings,     t: "Outils methodes integres" },
+  { Icon: FolderOpen,   t: "Ressources organisees par specialite" },
 ];
 
 export function ToolsForProgressSection() {
