@@ -1509,7 +1509,7 @@ const TOOLS_BULLETS = [
 export function ToolsForProgressSection() {
   return (
     <section
-      className="relative py-16 sm:py-20 lg:py-24"
+      className="relative py-10 sm:py-12 lg:py-14"
       style={{ fontFamily: TOOLS_FONT, background: TOOLS_BG }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1547,7 +1547,7 @@ export function ToolsForProgressSection() {
 
         {/* Sous-section "Une plateforme pensée pour vous faire gagner du temps" */}
         <Reveal delay={0.1}>
-          <div className="mt-12 overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.20)]"
+          <div className="mt-8 overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_-30px_rgba(15,31,77,0.20)]"
             style={{ borderColor: TOOLS_BORDER }}>
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Gauche : titre + bullets */}
