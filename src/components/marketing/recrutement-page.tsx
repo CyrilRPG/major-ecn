@@ -8,6 +8,9 @@ import {
   Shield, ShieldCheck, Star, Stethoscope, Upload, Users, Video, X,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import {
+  AnimatedCounter, MeshGradient, NoiseTexture, SpotlightCard, GlassCard,
+} from './premium-ui';
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -397,49 +400,66 @@ export function RecrutementPageContent() {
         </div>
       </section>
 
-      {/* COMMENT POUVEZ-VOUS CONTRIBUER */}
-      <section className="bg-white py-14">
+      {/* COMMENT POUVEZ-VOUS CONTRIBUER — Cards SpotlightCard glassmorphism */}
+      <section className="relative py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-black" style={{ color: NAVY }}>Comment pouvez-vous contribuer ?</h2>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          <Reveal>
+            <div className="text-center">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: RED }}>Vos contributions</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl" style={{ color: NAVY }}>
+                Comment pouvez-vous contribuer ?
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-[14.5px]" style={{ color: INK_SOFT }}>
+                6 manières concrètes de participer à l&rsquo;excellence pédagogique de Major ECN.
+              </p>
+            </div>
+          </Reveal>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {[
-              { Icon: BookOpen, t: 'Enseignement' },
-              { Icon: ClipboardCheck, t: 'Création\nde QCM' },
-              { Icon: Stethoscope, t: 'Cas cliniques' },
-              { Icon: FileText, t: 'Fiches\npédagogiques' },
-              { Icon: Microscope, t: 'Relecture\nscientifique' },
-              { Icon: Monitor, t: 'Webinaires\npédagogiques' },
-            ].map(c => (
-              <div key={c.t} className="flex flex-col items-center gap-3 rounded-2xl border p-5 text-center" style={{ borderColor: BORDER }}>
-                <span className="flex h-14 w-14 items-center justify-center rounded-xl" style={{ background: '#F0F4FA', color: NAVY }}>
-                  <c.Icon className="h-6 w-6" />
-                </span>
-                <p className="text-sm font-bold whitespace-pre-line" style={{ color: NAVY }}>{c.t}</p>
-              </div>
+              { Icon: BookOpen, t: 'Enseignement', d: 'Animez des sessions' },
+              { Icon: ClipboardCheck, t: 'Création de QCM', d: 'Conception de QCM EVC' },
+              { Icon: Stethoscope, t: 'Cas cliniques', d: 'Rédigez des dossiers' },
+              { Icon: FileText, t: 'Fiches pédagogiques', d: 'Synthèses claires' },
+              { Icon: Microscope, t: 'Relecture scientifique', d: 'Validation contenus' },
+              { Icon: Monitor, t: 'Webinaires', d: 'Sessions live' },
+            ].map((c, i) => (
+              <Reveal key={c.t} delay={0.05 * i}>
+                <SpotlightCard spotlightColor="rgba(192,17,46,0.15)" className="h-full rounded-2xl border bg-white shadow-[0_8px_24px_-12px_rgba(15,31,77,0.12)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_36px_-12px_rgba(192,17,46,0.20)]" style={{ borderColor: BORDER }}>
+                  <div className="flex h-full flex-col items-center gap-3 p-5 text-center">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-2xl shadow-inner" style={{ background: 'linear-gradient(135deg, #F0F4FA 0%, #FCEAEC 100%)', color: RED }}>
+                      <c.Icon className="h-6 w-6" />
+                    </span>
+                    <p className="text-sm font-extrabold leading-tight" style={{ color: NAVY }}>{c.t}</p>
+                    <p className="text-[11px] leading-tight" style={{ color: INK_SOFT }}>{c.d}</p>
+                  </div>
+                </SpotlightCard>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="bg-white pb-14">
+      {/* STATS — 4 KPIs avec compteurs animés */}
+      <section className="relative pb-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              { Icon: Users, big: '9 000+', sub: 'médecins\naccompagnés' },
-              { Icon: GraduationCap, big: '45', sub: 'spécialités EVC\ncouvertes' },
-              { Icon: Calendar, big: 'Depuis 2011', sub: '' },
-              { Icon: Star, big: '15 ans', sub: 'd\'experience\npedagogique' },
-            ].map(s => (
-              <div key={s.big} className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
-                  <s.Icon className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="text-xl font-black" style={{ color: NAVY }}>{s.big}</p>
-                  <p className="text-xs whitespace-pre-line" style={{ color: INK_SOFT }}>{s.sub}</p>
-                </div>
-              </div>
+              { Icon: Users, end: 9000, suffix: '+', label: 'médecins accompagnés' },
+              { Icon: GraduationCap, end: 45, label: 'spécialités EVC couvertes' },
+              { Icon: Calendar, end: 2011, prefix: 'Depuis ', label: 'à vos côtés', skipAnimate: true },
+              { Icon: Star, end: 15, suffix: ' ans', label: "d'expérience pédagogique" },
+            ].map((s, i) => (
+              <Reveal key={s.label} delay={0.05 * i}>
+                <SpotlightCard spotlightColor="rgba(192,17,46,0.15)" className="rounded-2xl border bg-white p-5 shadow-[0_8px_24px_-12px_rgba(15,31,77,0.10)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_36px_-12px_rgba(192,17,46,0.20)]" style={{ borderColor: BORDER }}>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl" style={{ background: RED_SOFT, color: RED }}>
+                    <s.Icon className="h-5 w-5" />
+                  </span>
+                  <p className="mt-3 text-[26px] font-black leading-none tabular-nums" style={{ color: NAVY }}>
+                    {s.skipAnimate ? <>{s.prefix}{s.end}</> : <AnimatedCounter end={s.end} prefix={s.prefix} suffix={s.suffix} duration={1500} />}
+                  </p>
+                  <p className="mt-1 text-[12px] font-semibold leading-tight" style={{ color: INK_SOFT }}>{s.label}</p>
+                </SpotlightCard>
+              </Reveal>
             ))}
           </div>
         </div>
