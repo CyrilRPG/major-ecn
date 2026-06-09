@@ -5,12 +5,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight, Award, Brain, BookOpen, Calendar, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
+  ArrowRight, Award, Brain, BookOpen, Briefcase, Calendar, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CheckCircle2, ClipboardCheck, Clock, Compass, Eye, FileText, Globe, GraduationCap, Headphones,
-  Heart, HelpCircle, Layers3, LineChart, Lock, Mail, MessagesSquare, Monitor, Play, Quote,
+  Heart, HelpCircle, Layers3, LineChart, Lock, Mail, MessageCircle, MessagesSquare, Monitor, Play, Quote,
   ShieldCheck, Sparkles, Star, Target, TrendingUp, User, Users, Zap,
 } from 'lucide-react';
-import { FaqAccordion } from './faq-accordion';
+// FaqAccordion/FaqSidebar ne sont plus utilisés ici depuis la refonte
+// pixel-perfect de FAQSection (6 questions EVC PAE en cartes statiques).
 
 // Dégradés volontairement saturés et étendus pour des titres qui claquent.
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
@@ -942,54 +943,184 @@ export function AudienceSection() {
 
 // ============================================================================
 // FAQ — exactement le meme accordeon + sidebar que /faq (avec recherche
-// fonctionnelle, categories et questions toutes fermees par defaut).
+// pixel-perfect maquette : 6 questions EVC PAE + carte contact en bas.
+// Texte officiel arrêté par l'équipe Major ECN, ne pas modifier les libellés.
 // ============================================================================
-import { FaqSidebar } from './faq-accordion';
 
 const FQ_NAVY = '#14254E';
 const FQ_RED = '#C4112E';
 const FQ_RED_BG = '#FCE9EC';
 const FQ_INK_SOFT = '#5B6478';
+const FQ_INK = '#1F2937';
+const FQ_BORDER = '#ECEEF1';
+
+type FAQItem = {
+  Icon: typeof Users;
+  iconBg: string;
+  iconFg: string;
+  question: string;
+  answer: string;
+};
+
+const FAQ_ITEMS: FAQItem[] = [
+  {
+    Icon: Users,
+    iconBg: '#FDEEEF',
+    iconFg: '#C4112E',
+    question: 'Pour quel public ?',
+    answer:
+      'Cette préparation s’adresse aux médecins, chirurgiens-dentistes, pharmaciens et sages-femmes diplômés hors Union européenne préparant les Épreuves de Vérification des Connaissances (EVC) dans le cadre de la PAE.',
+  },
+  {
+    Icon: Calendar,
+    iconBg: '#E5F1FF',
+    iconFg: '#1E40AF',
+    question: 'Quand commencer sa préparation ?',
+    answer:
+      'Il est possible de commencer sa préparation à tout moment. La formule recommandée dépend principalement de votre spécialité, de votre niveau actuel et du temps dont vous disposez avant les EVC.',
+  },
+  {
+    Icon: Target,
+    iconBg: '#FFEAD9',
+    iconFg: '#E8742C',
+    question: 'Quelle formule choisir ?',
+    answer:
+      'La formule adaptée dépend de votre niveau de départ, de votre spécialité et de vos objectifs. Notre équipe peut vous orienter vers la formule la plus adaptée à votre situation.',
+  },
+  {
+    Icon: Monitor,
+    iconBg: '#E7F6EC',
+    iconFg: '#16793C',
+    question: 'La préparation est-elle accessible à distance ?',
+    answer:
+      'Oui. L’ensemble des ressources pédagogiques est accessible en ligne depuis votre ordinateur, votre tablette ou votre smartphone.',
+  },
+  {
+    Icon: Briefcase,
+    iconBg: '#F1E8FD',
+    iconFg: '#6D28D9',
+    question: 'Puis-je préparer les EVC tout en travaillant ?',
+    answer:
+      'Oui. De nombreux candidats suivent la préparation tout en exerçant une activité professionnelle. Les ressources sont accessibles 24h/24 et 7j/7.',
+  },
+  {
+    Icon: Headphones,
+    iconBg: '#FDEEEF',
+    iconFg: '#C4112E',
+    question: 'Puis-je échanger avec un conseiller avant mon inscription ?',
+    answer:
+      'Oui. Notre équipe est disponible pour répondre à vos questions et vous aider à choisir la formule la plus adaptée à votre profil.',
+  },
+];
+
+function FAQCard({ item }: { item: FAQItem }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen((v) => !v)}
+      className="group flex w-full items-start gap-4 rounded-2xl border bg-white p-5 text-left shadow-[0_1px_2px_rgba(15,31,77,0.04),0_10px_30px_-20px_rgba(15,31,77,0.18)] transition-all hover:-translate-y-0.5 hover:shadow-[0_3px_6px_rgba(15,31,77,0.06),0_18px_40px_-20px_rgba(15,31,77,0.25)] sm:p-6"
+      style={{ borderColor: FQ_BORDER }}
+      aria-expanded={open}
+    >
+      <span
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
+        style={{ background: item.iconBg, color: item.iconFg }}
+      >
+        <item.Icon className="h-6 w-6" strokeWidth={2.1} />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[18px] font-extrabold leading-snug sm:text-[19px]" style={{ color: FQ_NAVY }}>
+          {item.question}
+        </p>
+        {open && (
+          <p
+            className="mt-3 text-[14.5px] leading-relaxed sm:text-[15px]"
+            style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}
+          >
+            {item.answer}
+          </p>
+        )}
+      </div>
+      <ChevronDown
+        className={`mt-1 h-5 w-5 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+        style={{ color: FQ_RED }}
+        strokeWidth={2.4}
+      />
+    </button>
+  );
+}
 
 export function FAQSection() {
   return (
     <section id="faq" className="relative bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 
-        {/* En-tete centre du bloc */}
-        <div className="mx-auto mb-10 max-w-3xl text-center">
+        {/* En-tete centre du bloc — badge + titre 2 lignes + sous-titre */}
+        <div className="mx-auto mb-10 text-center">
           <span
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-bold"
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[12px] font-extrabold uppercase tracking-[0.14em]"
             style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.2)', color: FQ_RED }}
           >
             <HelpCircle className="h-4 w-4" />
-            FAQ
+            Questions fréquentes
           </span>
           <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
-            <span style={{ color: FQ_NAVY }}>Questions </span>
-            <span style={{ color: FQ_RED }}>fréquentes</span>
+            <span style={{ color: FQ_NAVY }}>Questions fréquentes</span>
+            <br />
+            <span style={{ color: FQ_NAVY }}>sur les </span>
+            <span style={{ color: FQ_RED }}>EVC (PAE)</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-            Retrouvez les réponses aux questions les plus courantes concernant
-            les EVC, la PAE, les PADHUE et la préparation Major ECN.
+          <p
+            className="mx-auto mt-4 max-w-2xl text-base leading-relaxed sm:text-[17px]"
+            style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}
+          >
+            Toutes les réponses aux questions les plus fréquentes concernant les
+            EVC et la Procédure d’Autorisation d’Exercice.
           </p>
         </div>
 
-        {/* Layout 2 colonnes identique a /faq */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr] lg:gap-8">
-          {/* Accordeon partage : recherche + tout ferme par defaut */}
-          <FaqAccordion />
-          {/* Sidebar partagee : 3 cartes fixes (contact, pourquoi, essai) */}
-          <FaqSidebar />
+        {/* Liste des 6 cartes FAQ */}
+        <div className="space-y-3.5">
+          {FAQ_ITEMS.map((it) => (
+            <FAQCard key={it.question} item={it} />
+          ))}
         </div>
 
-        <p className="mt-8 text-center text-[12.5px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
-          Vous voulez voir l’intégralité des questions classées par catégorie ?{' '}
-          <a href="/faq" className="font-bold underline" style={{ color: FQ_RED }}>
-            Consulter la FAQ complète
+        {/* Carte contact en bas — fond rosé + bouton rouge */}
+        <div
+          className="mt-6 flex flex-col items-start gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+          style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.18)' }}
+        >
+          <div className="flex items-start gap-3">
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+              style={{ background: '#FFFFFF', color: FQ_RED }}
+            >
+              <MessageCircle className="h-5 w-5" strokeWidth={2.2} />
+            </span>
+            <div>
+              <p className="text-[15px] font-extrabold sm:text-base" style={{ color: FQ_NAVY }}>
+                Vous ne trouvez pas la réponse à votre question&nbsp;?
+              </p>
+              <p className="mt-1 text-[13.5px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+                Notre équipe est là pour vous accompagner.
+              </p>
+            </div>
+          </div>
+          <a
+            href="/contact"
+            className="inline-flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3 text-[14px] font-extrabold text-white shadow-[0_12px_28px_-12px_rgba(196,17,46,0.55)] transition-transform hover:scale-[1.02]"
+            style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${FQ_RED} 100%)` }}
+          >
+            Nous contacter
+            <ArrowRight className="h-4 w-4" />
           </a>
-        </p>
+        </div>
       </div>
+
+      {/* Imports inutilisés conservés pour les autres sections du fichier. */}
+      <span hidden aria-hidden style={{ color: FQ_INK }} />
     </section>
   );
 }

@@ -15,6 +15,7 @@ const NAV = [
   { href: '/faq',         label: 'FAQ' },
   { href: '/blog',        label: 'Blog' },
   { href: '/recrutement', label: 'Recrutement' },
+  { href: '/contact',     label: 'Contact' },
 ];
 
 export function MarketingHeader() {
