@@ -1169,6 +1169,18 @@ export function FAQContactSection() {
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>
+
+        {/* Lien "Voir toute la FAQ" — vers la page dédiée /faq */}
+        <div className="mt-8 flex justify-center">
+          <a
+            href="/faq"
+            className="inline-flex items-center gap-2 rounded-xl border bg-white px-5 py-3 text-[13.5px] font-bold transition-colors hover:bg-[#FFF8F9]"
+            style={{ borderColor: FQ_BORDER, color: FQ_NAVY }}
+          >
+            Voir toute la FAQ
+            <ArrowRight className="h-4 w-4" style={{ color: FQ_RED }} />
+          </a>
+        </div>
       </div>
 
       {/* Imports inutilisés conservés pour les autres sections du fichier. */}

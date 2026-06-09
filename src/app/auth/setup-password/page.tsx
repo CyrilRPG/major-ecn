@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle2, KeyRound, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Eye, EyeOff, KeyRound, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { createClient } from '@/lib/supabase/client';
 
@@ -132,19 +132,17 @@ export default function SetupPasswordPage() {
 
           {(status === 'ready' || status === 'submitting' || status === 'error') && (
             <form onSubmit={onSubmit} className="mt-6 space-y-4">
-              <Field
+              <PasswordField
                 label="Nouveau mot de passe"
                 id="password"
-                type="password"
                 value={password}
                 onChange={setPassword}
                 autoFocus
                 placeholder="8 caractères minimum"
               />
-              <Field
+              <PasswordField
                 label="Confirmer le mot de passe"
                 id="confirm"
-                type="password"
                 value={confirm}
                 onChange={setConfirm}
               />
@@ -186,30 +184,48 @@ export default function SetupPasswordPage() {
   );
 }
 
-function Field({
-  label, id, type = 'text', value, onChange, autoFocus, placeholder,
+/**
+ * Champ mot de passe avec petit œil pour afficher/masquer la saisie.
+ * Chaque champ a son propre toggle indépendant.
+ */
+function PasswordField({
+  label, id, value, onChange, autoFocus, placeholder,
 }: {
   label: string;
   id: string;
-  type?: string;
   value: string;
   onChange: (v: string) => void;
   autoFocus?: boolean;
   placeholder?: string;
 }) {
+  const [visible, setVisible] = useState(false);
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="text-xs font-semibold text-(--color-ink)">{label}</label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        required
-        className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
-      />
+      <div className="relative">
+        <input
+          id={id}
+          type={visible ? 'text' : 'password'}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          autoFocus={autoFocus}
+          placeholder={placeholder}
+          required
+          autoComplete="new-password"
+          className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 pr-11 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+        />
+        <button
+          type="button"
+          onClick={() => setVisible((v) => !v)}
+          aria-label={visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+          aria-pressed={visible}
+          title={visible ? 'Masquer' : 'Afficher'}
+          tabIndex={-1}
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-(--color-ink-soft) transition-colors hover:bg-(--color-sand-100) hover:text-(--color-ink) focus:outline-none focus-visible:ring-2 focus-visible:ring-(--color-primary)/40"
+        >
+          {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
     </div>
   );
 }
