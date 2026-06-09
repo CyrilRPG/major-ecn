@@ -2036,9 +2036,27 @@ type FeaturedTestimony = {
   title: string;
   spec: string;
   paragraphs: string[];
+  /** Extension du fichier photo. Défaut: 'jpg'. */
+  photoExt?: 'jpg' | 'png';
 };
 
 const FEATURED: FeaturedTestimony[] = [
+  {
+    slug: "dr-ahmed-sifaoui",
+    initials: "AS",
+    name: "Dr Ahmed Sifaoui",
+    title: "Lauréat EVC Gériatrie 2025 — Voie externe",
+    spec: "Gériatrie",
+    photoExt: "png",
+    paragraphs: [
+      "Avant de commencer ma préparation aux EVC de gériatrie, plusieurs confrères qui avaient réussi les EVC m'avaient parlé de Major ECN. Leurs retours étaient très positifs et, au bout d'un moment, j'ai décidé de leur faire confiance et de m'inscrire à mon tour.",
+      "Quelques semaines après le début de ma préparation, nous avons appris une nouvelle qui a été un véritable choc pour beaucoup de candidats : la réduction très importante du nombre de postes pour la voie externe. Honnêtement, quand j'ai appris qu'il n'y avait plus qu'une trentaine de postes au niveau national, j'ai pris un coup au moral. Je me suis demandé plusieurs fois si cela valait encore la peine de continuer.",
+      "Heureusement, j'étais déjà engagé dans la préparation. Les cours continuaient, les enseignants étaient présents et il y avait toujours un objectif à atteindre. Finalement, cela m'a aidé à rester concentré malgré les doutes. J'ai alors décidé de me consacrer pleinement aux EVC : j'ai supprimé les réseaux sociaux, réduit les sorties au minimum et organisé mon quotidien autour de ma préparation.",
+      "S'il y a une chose que j'aimerais dire aux futurs candidats, c'est de faire attention à ce qu'ils lisent sur Internet. On voit parfois des messages expliquant que les EVC sont faciles ou qu'il est possible de réussir après seulement quelques jours de révision. J'ai vécu quelque chose de très différent : les EVC sont beaucoup plus exigeants. Avec un nombre de postes aussi limité, chaque point compte.",
+      "Ce que j'ai particulièrement apprécié chez Major ECN, c'est le fait de savoir exactement sur quoi concentrer mes efforts. Je savais quoi réviser, quand le réviser et comment avancer progressivement. Les cours, les fiches, les interrogations et les concours blancs m'ont permis de travailler de façon structurée sans perdre de temps.",
+      "Aujourd'hui, avec le recul, je peux dire que tous les sacrifices en valaient la peine. Je remercie sincèrement toute l'équipe Major ECN pour son accompagnement tout au long de cette préparation. Mon conseil aux futurs candidats : restez concentrés sur votre objectif, travaillez régulièrement et ne vous laissez pas décourager par ce que vous pouvez entendre autour de vous.",
+    ],
+  },
   {
     slug: 'dr-amelie-lamure',
     initials: 'AL',
@@ -2074,7 +2092,7 @@ const FEATURED: FeaturedTestimony[] = [
 
 /** Carte photo ronde 256px avec halo dégradé burgundy + fallback initiales si l'image
  *  n'est pas encore présente dans /public/temoignages/. */
-function FeaturedAvatar({ slug, initials }: { slug: string; initials: string }) {
+function FeaturedAvatar({ slug, initials, ext = 'jpg' }: { slug: string; initials: string; ext?: 'jpg' | 'png' }) {
   return (
     <div className="relative mx-auto" style={{ width: 'min(280px, 100%)', aspectRatio: '1 / 1' }}>
       {/* halo dégradé décoratif */}
@@ -2095,7 +2113,7 @@ function FeaturedAvatar({ slug, initials }: { slug: string; initials: string }) 
       <div className="absolute inset-1 overflow-hidden rounded-full bg-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`/temoignages/${slug}.jpg`}
+          src={`/temoignages/${slug}.${ext}`}
           alt=""
           className="h-full w-full object-cover"
           onError={(e) => {
@@ -2167,7 +2185,7 @@ export function FeaturedTestimonialsSection() {
                       'flex flex-col items-center gap-5 lg:sticky lg:top-24 ' + (reverse ? 'lg:order-2' : '')
                     }
                   >
-                    <FeaturedAvatar slug={t.slug} initials={t.initials} />
+                    <FeaturedAvatar slug={t.slug} initials={t.initials} ext={t.photoExt} />
 
                     <div className="text-center">
                       <p className="text-lg font-extrabold leading-tight" style={{ color: FT_NAVY }}>{t.name}</p>

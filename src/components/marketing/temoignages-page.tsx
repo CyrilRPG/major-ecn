@@ -160,6 +160,9 @@ type WrittenTesti = {
 const WRITTEN: WrittenTesti[] = [
   // Témoignages avec photo (issus de FEATURED_TESTIMONIES) -- carte avec
   // photo et lien "Lire le témoignage" actif.
+  { name: 'Dr Ahmed SIFAOUI',    spec: 'Gériatrie',                   initials: 'AS',
+    photo: '/temoignages/dr-ahmed-sifaoui.png', slug: 'dr-ahmed-sifaoui',
+    short: "Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit." },
   { name: 'Dr Haykel Abdelbaki', spec: 'Radiologie',                  initials: 'HA',
     photo: '/temoignages/dr-haykel-abdelbaki.jpg', slug: 'dr-haykel-abdelbaki',
     short: "Sérieux, qualité et accompagnement : les clés de ma réussite." },

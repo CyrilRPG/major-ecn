@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, Award, BookOpen, Calendar, ClipboardCheck, FileText, Sparkles, Trophy } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { Award, BookOpen, Calendar, ClipboardCheck, FileText, Lock, Sparkles, Trophy } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { AnnaleActionButton } from '@/components/espace-decouverte/annale-action-button';
 
 export const metadata = { title: 'Annales EVC' };
 
@@ -16,7 +16,31 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
 
   const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle();
   if (!m) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), m.id)) redirect('/facultes');
+  // Mode "Découverte" : on autorise la consultation de la liste des annales
+  // mais TOUS les boutons "Ouvrir" sont verrouillés (cadenas + popup tarifs).
+  const scope = parseScope(profile.permission_scope);
+  const hasFullAccess = canAccessCollege(scope, m.id);
+  const isDecouverte =
+    !hasFullAccess &&
+    scope.type === 'college' &&
+    scope.colleges.includes('col-decouverte');
+  if (!hasFullAccess && !isDecouverte) {
+    // Pas l'offre Découverte non plus → vrai blocage
+    return (
+      <div className="mx-auto w-full max-w-3xl px-5 py-12 text-center">
+        <div className="rounded-3xl border bg-white p-10 shadow-sm" style={{ borderColor: '#E5E9F0' }}>
+          <Lock className="mx-auto h-10 w-10" style={{ color: '#C0112E' }} />
+          <h1 className="mt-4 text-2xl font-black" style={{ color: '#0F1F4D' }}>
+            Cette préparation est verrouillée
+          </h1>
+          <p className="mt-3 text-sm" style={{ color: '#52607A' }}>
+            Choisissez une formule pour accéder aux annales de cette spécialité.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  const locked = isDecouverte;
 
   const { data: rowsRaw } = await supabase
     .from('medgen_annales')
@@ -225,14 +249,10 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
                             : 'Sujet disponible · corrigé à venir'}
                         </p>
                       </div>
-                      <Link
+                      <AnnaleActionButton
                         href={`/matieres/${matiere}/annales/${it.id}`}
-                        className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-3.5 py-2 text-xs font-semibold text-white shadow-(--shadow-soft) transition-transform hover:scale-105"
-                      >
-                        <FileText className="h-3.5 w-3.5" />
-                        Ouvrir
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
+                        locked={locked}
+                      />
                     </li>
                   );
                 })}
