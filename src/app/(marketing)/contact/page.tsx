@@ -6,7 +6,7 @@ import {
   TrendingUp, UserCheck,
 } from 'lucide-react';
 import { ContactForm } from '@/components/marketing/contact-form';
-import { FAQSection } from '@/components/marketing/manus-sections';
+import { FAQContactSection } from '@/components/marketing/manus-sections';
 
 export const metadata = {
   title: 'Nous contacter — Major ECN',
@@ -214,9 +214,10 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ============ Questions fréquentes (FAQSection partagée — même
-           design pixel-perfect que la home et les autres pages) ============ */}
-      <FAQSection />
+      {/* ============ Questions fréquentes (FAQContactSection pixel-perfect
+           — 6 questions EVC PAE, cartes fermées par défaut). Utilisée
+           UNIQUEMENT sur cette page. ============ */}
+      <FAQContactSection />
 
       {/* ============ CTA final ============ */}
       <section className="relative overflow-hidden py-14 sm:py-16 lg:py-20"

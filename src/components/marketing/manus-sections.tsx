@@ -10,8 +10,7 @@ import {
   Heart, HelpCircle, Layers3, LineChart, Lock, Mail, MessageCircle, MessagesSquare, Monitor, Play, Quote,
   ShieldCheck, Sparkles, Star, Target, TrendingUp, User, Users, Zap,
 } from 'lucide-react';
-// FaqAccordion/FaqSidebar ne sont plus utilisés ici depuis la refonte
-// pixel-perfect de FAQSection (6 questions EVC PAE en cartes statiques).
+import { FaqAccordion, FaqSidebar } from './faq-accordion';
 
 // Dégradés volontairement saturés et étendus pour des titres qui claquent.
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
@@ -1014,7 +1013,8 @@ const FAQ_ITEMS: FAQItem[] = [
 ];
 
 function FAQCard({ item }: { item: FAQItem }) {
-  const [open, setOpen] = useState(true);
+  // Cartes fermées par défaut — l'utilisateur clique pour révéler la réponse.
+  const [open, setOpen] = useState(false);
   return (
     <button
       type="button"
@@ -1051,7 +1051,59 @@ function FAQCard({ item }: { item: FAQItem }) {
   );
 }
 
+/**
+ * FAQSection (accueil + tarifs + formules) :
+ * accordéon partagé /faq + sidebar 3 cartes (contact, pourquoi, essai).
+ * Comportement identique à l'ancienne section, restauré à la demande.
+ */
 export function FAQSection() {
+  return (
+    <section id="faq" className="relative bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* En-tete centre du bloc */}
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-bold"
+            style={{ background: FQ_RED_BG, borderColor: 'rgba(196,17,46,0.2)', color: FQ_RED }}
+          >
+            <HelpCircle className="h-4 w-4" />
+            FAQ
+          </span>
+          <h2 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            <span style={{ color: FQ_NAVY }}>Questions </span>
+            <span style={{ color: FQ_RED }}>fréquentes</span>
+          </h2>
+          <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+            Retrouvez les réponses aux questions les plus courantes concernant
+            les EVC, la PAE, les PADHUE et la préparation Major ECN.
+          </p>
+        </div>
+
+        {/* Layout 2 colonnes identique a /faq */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr] lg:gap-8">
+          {/* Accordeon partage : recherche + tout ferme par defaut */}
+          <FaqAccordion />
+          {/* Sidebar partagee : 3 cartes fixes (contact, pourquoi, essai) */}
+          <FaqSidebar />
+        </div>
+
+        <p className="mt-8 text-center text-[12.5px]" style={{ color: FQ_INK_SOFT, fontFamily: MANROPE }}>
+          Vous voulez voir l’intégralité des questions classées par catégorie ?{' '}
+          <a href="/faq" className="font-bold underline" style={{ color: FQ_RED }}>
+            Consulter la FAQ complète
+          </a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * FAQContactSection — pixel-perfect maquette (6 questions EVC PAE).
+ * Utilisé UNIQUEMENT sur la page /contact. Cartes fermées par défaut.
+ */
+export function FAQContactSection() {
   return (
     <section id="faq" className="relative bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA }}>
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
