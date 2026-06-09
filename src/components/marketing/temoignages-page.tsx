@@ -304,7 +304,10 @@ function WrittenSection() {
 }
 
 /* ============ TÉMOIGNAGE À LA UNE ============ */
-const FEATURED = FEATURED_TESTIMONIES;
+// Seuls les témoignages avec photo apparaissent dans la section "rouge" mise
+// en avant. Les autres restent visibles uniquement dans la liste WRITTEN
+// (cartes initiales) et sur leur page individuelle /temoignages/<slug>.
+const FEATURED = FEATURED_TESTIMONIES.filter((t) => !!t.photo);
 
 function FeaturedCard({ t }: { t: Featured }) {
   return (
