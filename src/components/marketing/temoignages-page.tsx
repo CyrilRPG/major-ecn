@@ -259,7 +259,7 @@ function WrittenSection() {
                 <header className="flex items-start gap-3">
                   {w.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={w.photo} alt={w.name}
+                    <img src={w.photo} alt=""
                       className="h-11 w-11 shrink-0 rounded-full object-cover" />
                   ) : (
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-bold text-white"

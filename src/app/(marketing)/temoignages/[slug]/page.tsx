@@ -40,16 +40,19 @@ export default async function TestimonialPage({ params }: { params: Promise<{ sl
         <div className="mt-8 rounded-3xl p-6 sm:p-10"
           style={{ background: SOFT_BG, border: '1px solid #F3D9DD' }}>
           <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
-            <span className="relative block h-32 w-32 shrink-0 overflow-hidden rounded-full"
+            <span className="relative flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full"
               style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
-              <img
-                src={t.photo}
-                alt={t.name}
-                className="h-full w-full object-cover"
-              />
-              <span aria-hidden className="absolute inset-0 hidden items-center justify-center text-3xl font-black text-white">
-                {t.initials}
-              </span>
+              {t.photo ? (
+                <img
+                  src={t.photo}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <span aria-hidden className="text-3xl font-black text-white">
+                  {t.initials}
+                </span>
+              )}
             </span>
             <div>
               <p className="text-[10.5px] font-bold uppercase tracking-wider" style={{ color: RED }}>
