@@ -10,6 +10,9 @@ import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-lo
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
+/** Cours « Méthodologie EVC » dans le collège Découverte : on n'affiche
+ *  qu'une carte « Cours vidéo » marquée « À venir ». */
+const METHODOLOGIE_COURS_ID = '6b321ef6-ef8a-4174-945a-1e1c60f22c5d';
 
 type Action = {
   href: string;
@@ -74,6 +77,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
   // (la vidéo est remplacée par une carte cadenas → popup tarifs).
   const isDecouverte = c.matiere_id === DECOUVERTE_COLLEGE_ID;
+  // Cas spécial : cours « Méthodologie EVC » dans le collège Découverte —
+  // on n'affiche QU'une seule carte « Cours vidéo » avec un état « À venir ».
+  const isMethodologie = coursId === METHODOLOGIE_COURS_ID;
 
   // Pour les abonnés : critères d'allDone classiques (vidéo + fiche + QCM + flashcards).
   // Pour la Découverte : on retire la vidéo (verrouillée) et l'interrogation
@@ -85,9 +91,21 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
 
   // Cartes du parcours dans l'ordre pédagogique :
-  //  - Découverte : fiche → vidéo (LOCKED popup) → DP & QI → flashcards
-  //  - Standard   : fiche → vidéo → DP & QI → flashcards → interrogation
-  const actions: Action[] = isDecouverte
+  //  - Méthodologie : une seule carte « Cours vidéo » à venir
+  //  - Découverte   : fiche → vidéo (LOCKED popup) → DP & QI → flashcards
+  //  - Standard     : fiche → vidéo → DP & QI → flashcards → interrogation
+  const actions: Action[] = isMethodologie
+    ? [
+        {
+          // Cours vidéo « À venir » : carte non cliquable, badge orange.
+          href: '#video-coming-soon', label: 'Cours vidéo',
+          desc: 'Méthodologie EVC : ce qui est attendu et comment structurer vos réponses.',
+          Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+          available: false,
+          locked: true,
+        },
+      ]
+    : isDecouverte
     ? [
         {
           href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
@@ -166,7 +184,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={`grid gap-4 ${isMethodologie ? 'sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
         {actions.map((a) => {
           // Découverte : la carte « Cours vidéo » est verrouillée et ouvre la
           // popup tarifs (DiscoveryLockedCard est un client component).
@@ -180,6 +198,56 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
                 accent={a.accent}
                 bg={a.bg}
               />
+            );
+          }
+
+          // Méthodologie EVC (Découverte) : carte « Cours vidéo » non cliquable
+          // avec badge orange « À venir » au lieu de « Verrouillé ».
+          if (a.href === '#video-coming-soon') {
+            return (
+              <div
+                key={a.href}
+                aria-disabled
+                className="group relative flex min-h-[170px] cursor-not-allowed flex-col justify-between overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 opacity-90 shadow-(--shadow-soft)"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 opacity-50"
+                  style={{ background: `linear-gradient(135deg, transparent 55%, ${a.bg} 100%)` }}
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -right-6 bottom-0 select-none opacity-[0.08]"
+                  style={{ color: a.accent }}
+                >
+                  <a.Icon className="h-44 w-44" strokeWidth={1.4} />
+                </span>
+                <div className="relative flex items-start justify-between">
+                  <span
+                    className="flex h-12 w-12 items-center justify-center rounded-xl opacity-90"
+                    style={{ background: a.bg, color: a.accent }}
+                  >
+                    <a.Icon className="h-6 w-6" />
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em]"
+                    style={{ background: '#FEF3E2', color: '#D97706' }}
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    À venir
+                  </span>
+                </div>
+                <div className="relative mt-5">
+                  <h3 className="text-lg font-bold text-(--color-ink)">{a.label}</h3>
+                  <p className="mt-1.5 max-w-[80%] text-sm leading-relaxed text-(--color-ink-soft)">{a.desc}</p>
+                </div>
+                <span
+                  className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold"
+                  style={{ color: '#D97706' }}
+                >
+                  <Sparkles className="h-4 w-4" /> Bientôt disponible
+                </span>
+              </div>
             );
           }
 
