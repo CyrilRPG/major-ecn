@@ -379,7 +379,7 @@ function SectionMethode() {
 function SectionFAQ() {
   const items = [
     { q: 'Combien de temps faut-il pour préparer les EVC ?', a: "En moyenne 8 à 12 mois de travail régulier, en fonction de votre spécialité et de votre rythme." },
-    { q: 'Toutes les spécialités sont-elles obligatoires ?',  a: 'Oui, le programme officiel impose une connaissance transversale. Notre plateforme couvre les 45 spécialités.' },
+    { q: 'Toutes les spécialités sont-elles obligatoires ?',  a: 'Oui, le programme officiel impose une connaissance transversale.' },
     { q: 'Puis-je changer de spécialité en cours de route ?', a: "Tout à fait : vous gardez tout l'historique et l'algorithme s'adapte." },
   ];
   return (
