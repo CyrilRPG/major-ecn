@@ -30,11 +30,7 @@ function SidebarHelpCard({ isDecouverte = false }: { isDecouverte?: boolean }) {
           <div className="min-w-0 flex-1">
             <p className="text-[14px] font-bold text-[#0F1F4D]">Besoin d&rsquo;aide ?</p>
             <p className="mt-1 text-[11px] leading-snug text-[#52607A]">
-              {isDecouverte ? (
-                <>Forum réservé aux<br />élèves inscrits</>
-              ) : (
-                <>Notre équipe vous répond<br />7j/7 sur le forum</>
-              )}
+              Notre équipe vous répond<br />7j/7 sur le forum
             </p>
           </div>
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
@@ -50,7 +46,7 @@ function SidebarHelpCard({ isDecouverte = false }: { isDecouverte?: boolean }) {
             >
               <Lock className="h-3 w-3" />
               <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
-                Forum verrouillé
+                Forum
               </span>
             </button>
           ) : (

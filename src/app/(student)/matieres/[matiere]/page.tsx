@@ -85,7 +85,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     id: '__annales__',
     href: `/matieres/${matiere}/annales`,
     title: 'Annales EVC',
-    subtitle: 'Tous les sujets officiels 2009 → 2019, accessibles par année.',
+    subtitle: 'Tous les sujets officiels, accessibles par année.',
     leading: <RowIcon Icon={History} color="#6B1A2A" />,
     badge: 'Officiel',
   };

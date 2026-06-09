@@ -21,51 +21,12 @@ const GREEN = '#16793C';
 const GOLD = '#F5C84B';
 const BORDER = '#E5E9F0';
 
-const SPECIALTIES = [
-  'Médecine générale',
-  'Cardiologie',
-  'Pneumologie',
-  'Gastro-entérologie',
-  'Endocrinologie',
-  'Néphrologie',
-  'Neurologie',
-  'Rhumatologie',
-  'Hématologie',
-  'Médecine interne',
-  'Maladies infectieuses',
-  'Oncologie',
-  'Anesthésie-Réanimation',
-  'Médecine d’Urgence',
-  'Pédiatrie',
-  'Gériatrie',
-  'Psychiatrie',
-  'Radiologie',
-  'Médecine physique et réadaptation',
-  'Dermatologie',
-  'Ophtalmologie',
-  'ORL',
-  'Chirurgie viscérale & digestive',
-  'Chirurgie orthopédique',
-  'Chirurgie thoracique',
-  'Chirurgie urologique',
-  'Chirurgie vasculaire',
-  'Chirurgie plastique',
-  'Chirurgie pédiatrique',
-  'Neurochirurgie',
-  'Gynécologie-Obstétrique',
-  'Odontologie',
-  'Maïeutique (Sage-femme)',
-  'Pharmacie',
-  'Autre',
-];
-
 export function EspaceDecouverteForm() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [specialty, setSpecialty] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,7 +39,7 @@ export function EspaceDecouverteForm() {
       const res = await fetch('/api/espace-decouverte/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, phone, specialty }),
+        body: JSON.stringify({ firstName, lastName, email, phone }),
       });
       const j = (await res.json()) as {
         ok?: boolean;
@@ -196,8 +157,10 @@ export function EspaceDecouverteForm() {
         </p>
       </div>
 
-      {/* ============ CARTE FORMULAIRE — bordure dégradée premium ============ */}
-      <div className="relative mx-auto mt-12 max-w-2xl px-4 sm:px-6">
+      {/* ============ CARTE FORMULAIRE — bordure dégradée premium ============
+          Largeur : ~2/3 de la page sur desktop (max-w-4xl) au lieu d'un
+          formulaire serré. */}
+      <div className="relative mx-auto mt-12 w-full max-w-4xl px-4 sm:px-6">
         <div
           className="relative rounded-[28px] p-[1.5px] shadow-[0_30px_80px_-30px_rgba(15,31,77,0.35)]"
           style={{
@@ -245,32 +208,16 @@ export function EspaceDecouverteForm() {
               </div>
             </div>
 
-            {/* Formulaire */}
+            {/* Formulaire — grille 2 colonnes sur desktop pour tirer parti
+                de la largeur 2/3 page (max-w-4xl). */}
             <form onSubmit={handleSubmit} className="relative mt-6 space-y-3">
-              <Field icon={User} placeholder="Prénom" value={firstName} onChange={setFirstName} type="text" required />
-              <Field icon={User} placeholder="Nom" value={lastName} onChange={setLastName} type="text" required />
-              <Field icon={Mail} placeholder="Adresse email" value={email} onChange={setEmail} type="email" required />
-              <Field icon={Phone} placeholder="Téléphone" value={phone} onChange={setPhone} type="tel" />
-              {/* Select Spécialité */}
-              <div className="relative">
-                <GraduationCap className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" style={{ color: INK_SOFT }} />
-                <select
-                  value={specialty}
-                  onChange={(e) => setSpecialty(e.target.value)}
-                  className="w-full appearance-none rounded-xl border bg-white py-4 pl-12 pr-10 text-[15px] focus:outline-none focus:ring-2"
-                  style={{
-                    borderColor: BORDER,
-                    color: specialty ? INK : INK_SOFT,
-                    // @ts-expect-error custom CSS prop
-                    '--tw-ring-color': RED,
-                  }}
-                >
-                  <option value="">Spécialité préparée</option>
-                  {SPECIALTIES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-                <ArrowRight className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90" style={{ color: INK_SOFT }} />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Field icon={User} placeholder="Prénom" value={firstName} onChange={setFirstName} type="text" required />
+                <Field icon={User} placeholder="Nom" value={lastName} onChange={setLastName} type="text" required />
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Field icon={Mail} placeholder="Adresse email" value={email} onChange={setEmail} type="email" required />
+                <Field icon={Phone} placeholder="Téléphone" value={phone} onChange={setPhone} type="tel" />
               </div>
 
               {/* CTA premium */}
