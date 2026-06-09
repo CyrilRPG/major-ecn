@@ -576,7 +576,7 @@ function MgCTA() {
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white backdrop-blur">
-            <Sparkles className="h-3 w-3" /> Inscription ouverte — session 2026
+            <Sparkles className="h-3 w-3" /> Inscription ouverte — session 2026/2027
           </span>
           <h2 className="mt-5 text-3xl font-black leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl"
             style={{ letterSpacing: '-0.02em' }}>

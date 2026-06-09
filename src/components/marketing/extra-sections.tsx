@@ -14,7 +14,6 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
-import { InscriptionForm } from './inscription-form';
 
 const BORDEAUX = '#6B1A2A';
 const BORDEAUX_DEEP = '#4D121E';

@@ -65,21 +65,34 @@ export function EspaceDecouverteForm() {
   const [phone, setPhone] = useState('');
   const [specialty, setSpecialty] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!firstName || !lastName || !email) return;
     setSubmitting(true);
-    // Stocker localement les infos puis rediriger vers l'espace découverte
+    setError(null);
     try {
-      sessionStorage.setItem('major-ecn-espace-decouverte', JSON.stringify({
-        firstName, lastName, email, phone, specialty,
-        createdAt: new Date().toISOString(),
-      }));
-    } catch {
-      // localStorage non disponible — on continue quand même
+      const res = await fetch('/api/espace-decouverte/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, phone, specialty }),
+      });
+      const j = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        redirectTo?: string;
+      };
+      if (!res.ok || !j.ok) {
+        setError(j.error ?? "Erreur lors de l'inscription. Réessayez.");
+        setSubmitting(false);
+        return;
+      }
+      router.push(j.redirectTo ?? '/espace-decouverte/confirmation');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur réseau');
+      setSubmitting(false);
     }
-    router.push('/espace-decouverte/dashboard');
   }
 
   return (
@@ -143,9 +156,19 @@ export function EspaceDecouverteForm() {
               className="mt-2 flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 text-base font-extrabold uppercase tracking-wide text-white shadow-[0_10px_30px_-10px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.01] disabled:opacity-60"
               style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
             >
-              Accéder à l’espace découverte
-              <ArrowRight className="h-5 w-5" />
+              {submitting ? 'Création de votre compte…' : 'Accéder à l’espace découverte'}
+              {!submitting && <ArrowRight className="h-5 w-5" />}
             </button>
+
+            {error && (
+              <p
+                role="alert"
+                className="rounded-xl border bg-[#FEF2F2] px-3 py-2 text-[13px] font-medium"
+                style={{ color: RED, borderColor: '#FECACA' }}
+              >
+                {error}
+              </p>
+            )}
           </form>
 
           {/* 4 trust checks */}
