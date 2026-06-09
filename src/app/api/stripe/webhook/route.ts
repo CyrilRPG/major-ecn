@@ -82,6 +82,33 @@ export async function POST(req: Request) {
       }
       break;
     }
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated': {
+      // Safety net : si checkout.session.completed n'a pas appliqué cancel_at
+      // (race, retry, etc.), on le ré-applique ici à partir de la metadata
+      // attachée à la subscription elle-même.
+      const sub = event.data.object as Stripe.Subscription;
+      const meta = sub.metadata ?? {};
+      const cancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;
+      console.log('[stripe/webhook] subscription event', {
+        type: event.type,
+        subId: sub.id,
+        currentCancelAt: sub.cancel_at,
+        metaCancelAt: cancelAt,
+      });
+      if (cancelAt && (!sub.cancel_at || sub.cancel_at !== cancelAt)) {
+        try {
+          await stripe.subscriptions.update(sub.id, { cancel_at: cancelAt });
+          console.log('[stripe/webhook] subscription cancel_at re-applied', {
+            subId: sub.id,
+            cancelAt,
+          });
+        } catch (e) {
+          console.error('[stripe/webhook] cancel_at re-apply failed', e);
+        }
+      }
+      break;
+    }
     case 'checkout.session.async_payment_failed':
     case 'payment_intent.payment_failed': {
       console.warn('[stripe/webhook] payment failed', event.type, event.id);
@@ -101,6 +128,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const formuleId = metadata.formule as FormuleId | undefined;
   const firstName = metadata.first_name ?? '';
   const lastName = metadata.last_name ?? '';
+  const specialty = metadata.specialty ?? 'Médecine générale';
+  const voie = metadata.voie ?? '';
   const installments = Number(metadata.installments ?? '1') || 1;
   const cancelAt = metadata.cancel_at ? Number(metadata.cancel_at) : null;
   const amountTotalCents = session.amount_total ?? 0;
@@ -114,13 +143,26 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   // Pour les paiements en plusieurs fois (mode subscription) : applique le
   // cancel_at sur la subscription créée par Checkout pour garantir N
-  // facturations exactement.
-  if (session.mode === 'subscription' && session.subscription && cancelAt) {
+  // facturations exactement. Fallback : si cancel_at absent, on dérive
+  // depuis installments (sécurité si la metadata cancel_at est perdue).
+  if (session.mode === 'subscription' && session.subscription) {
     try {
       const stripe = getStripe();
       const subId = typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
-      await stripe.subscriptions.update(subId, { cancel_at: cancelAt });
-      console.log('[webhook] subscription cancel_at applied', { subId, cancelAt });
+      // Récupère l'état courant de la subscription pour vérifier cancel_at
+      const sub = await stripe.subscriptions.retrieve(subId);
+      const effectiveCancelAt =
+        cancelAt ??
+        (installments > 1
+          ? Math.floor(Date.now() / 1000) + (installments - 1) * 30 * 86400 + 2 * 86400
+          : null);
+
+      if (effectiveCancelAt && (!sub.cancel_at || sub.cancel_at !== effectiveCancelAt)) {
+        await stripe.subscriptions.update(subId, { cancel_at: effectiveCancelAt });
+        console.log('[webhook] subscription cancel_at applied', { subId, cancelAt: effectiveCancelAt });
+      } else {
+        console.log('[webhook] cancel_at already correct or N/A', { subId, currentCancelAt: sub.cancel_at });
+      }
     } catch (e) {
       console.error('[webhook] cancel_at update failed', e);
     }
@@ -133,9 +175,18 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     formuleId,
     installments,
     amountTotalCents,
+    specialty,
+    voie,
   });
 
   if (!result.ok) {
     throw new Error(`provisioning failed: ${result.error}`);
   }
+  console.log('[webhook] provisioning done', {
+    userId: result.userId,
+    isNew: result.isNew,
+    emailSent: result.emailSent,
+    emailVia: result.emailVia,
+    emailError: result.emailError,
+  });
 }

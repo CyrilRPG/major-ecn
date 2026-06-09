@@ -17,6 +17,7 @@ import {
   Stethoscope, User,
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
+import { InfoImportantePopup, FORMULE_COLORS } from './info-importante-popup';
 
 type Color = { deep: string; main: string };
 const DEFAULT_COLOR: Color = { deep: '#8B0E22', main: '#C0112E' };
@@ -52,8 +53,10 @@ export function CheckoutButton({
   const [rgpd, setRgpd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
-  async function handleCheckout(e: React.FormEvent) {
+  /** Étape 1 : validation locale du formulaire. Ouvre la popup info. */
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!firstName || !lastName || !email) {
       setError('Merci de renseigner prénom, nom et email.');
@@ -67,6 +70,13 @@ export function CheckoutButton({
       setError("Vous devez accepter la politique de confidentialité pour continuer.");
       return;
     }
+    setError(null);
+    setShowInfoPopup(true);
+  }
+
+  /** Étape 2 : déclenché après confirmation de la popup info. */
+  async function handleCheckout() {
+    setShowInfoPopup(false);
     setLoading(true);
     setError(null);
     try {
@@ -98,7 +108,7 @@ export function CheckoutButton({
   }
 
   return (
-    <form onSubmit={handleCheckout} className="space-y-3.5">
+    <form onSubmit={handleSubmit} className="space-y-3.5">
       {/* Section IDENTITÉ */}
       <SectionLabel n={1} title="Vos informations" />
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -224,6 +234,16 @@ export function CheckoutButton({
         <Sparkles className="h-3 w-3" style={{ color: color.main }} />
         Paiement traité par <strong style={{ color: '#635BFF' }}>Stripe</strong> · Aucune carte stockée chez nous
       </p>
+
+      {/* Popup "Information importante avant votre inscription" — affichée
+          systématiquement avant la redirection Stripe, dans la couleur
+          correspondant à la formule choisie. */}
+      <InfoImportantePopup
+        open={showInfoPopup}
+        onClose={() => setShowInfoPopup(false)}
+        onContinue={handleCheckout}
+        color={FORMULE_COLORS[formuleId]}
+      />
     </form>
   );
 }
