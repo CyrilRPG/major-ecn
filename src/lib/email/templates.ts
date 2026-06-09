@@ -383,5 +383,102 @@ export function contactMessageEmail({ name, email, phone, subject, message }: Co
 }
 
 /* ============================================================
+   Confirmation d'achat — envoyé après paiement Stripe réussi
+   ============================================================ */
+type PurchaseConfirmationArgs = {
+  firstName: string;
+  formuleName: string;
+  amountEuros: number;
+  /** 1 = paiement intégral, 3 ou 4 = paiement en plusieurs fois. */
+  installments: number;
+  /** URL de setup-password (compte créé via admin SDK). */
+  setupUrl: string;
+};
+
+export function purchaseConfirmationEmail({
+  firstName,
+  formuleName,
+  amountEuros,
+  installments,
+  setupUrl,
+}: PurchaseConfirmationArgs) {
+  const subject = `✅ Confirmation d'inscription — ${formuleName} | Major ECN`;
+  const installmentsText =
+    installments > 1
+      ? ` (en ${installments} mensualités de ${(amountEuros / installments).toFixed(2)} €)`
+      : '';
+  const intro = `Votre paiement pour la <strong>${escapeHtml(formuleName)}</strong> a bien été enregistré (montant : <strong>${amountEuros.toFixed(2)} €</strong>${escapeHtml(installmentsText)}).<br /><br />Votre compte étudiant a été créé automatiquement. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder immédiatement à la plateforme.`;
+  const bodyHtml = `
+    <p style="margin:0 0 8px;font-size:13px;color:#9AA1AE;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">
+      Bienvenue chez Major ECN
+    </p>
+    <h1 style="margin:0 0 16px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-size:24px;line-height:1.25;color:#0F1F4D;font-weight:800;letter-spacing:-0.02em;">
+      Activez votre compte étudiant
+    </h1>
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#2D2D2D;">
+      Bonjour <strong style="color:#2D2D2D;">${escapeHtml(firstName || '')}</strong>,<br />
+      ${intro}
+    </p>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px;background:#FDEEEF;border:1px solid #F5D0D5;border-radius:14px;padding:18px 20px;">
+      <tr>
+        <td>
+          <p style="margin:0 0 8px;font-size:12px;color:#9AA1AE;text-transform:uppercase;letter-spacing:0.06em;">Récapitulatif</p>
+          <p style="margin:0;font-size:15px;font-weight:700;color:#0F1F4D;">${escapeHtml(formuleName)}</p>
+          <p style="margin:6px 0 0;font-size:13px;color:#5A5A5A;">
+            Montant total : <strong style="color:#C0112E;">${amountEuros.toFixed(2)} €</strong>${escapeHtml(installmentsText)}
+          </p>
+          <p style="margin:4px 0 0;font-size:12px;color:#7A7A7A;">
+            Accès complet à la <strong>Médecine Générale (Voie interne + Voie externe)</strong>.
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 8px;">
+      <tr>
+        <td>
+          <a href="${escapeAttr(setupUrl)}"
+             style="display:inline-block;padding:14px 28px;background:linear-gradient(90deg,#8B0E22 0%,#C0112E 100%);color:#FFFFFF;font-size:15px;font-weight:700;border-radius:12px;text-decoration:none;">
+            Activer mon compte
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <p style="margin:18px 0 0;font-size:12px;color:#7A7A7A;line-height:1.6;">
+      Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br />
+      <a href="${escapeAttr(setupUrl)}" style="color:#C0112E;word-break:break-all;text-decoration:underline;">${escapeHtml(setupUrl)}</a>
+    </p>
+
+    <p style="margin:24px 0 0;font-size:13px;color:#5A5A5A;line-height:1.6;">
+      Une question sur votre préparation ? Écrivez-nous à
+      <a href="mailto:contact@major-ecn.fr" style="color:#C0112E;text-decoration:none;font-weight:600;">contact@major-ecn.fr</a>.
+    </p>`;
+
+  const html = layout({
+    subject,
+    eyebrow: 'Confirmation de paiement',
+    title: 'Activez votre compte étudiant',
+    bodyHtml,
+  });
+
+  const text = [
+    `Bonjour ${firstName || ''},`,
+    ``,
+    `Votre paiement pour la ${formuleName} a bien été enregistré.`,
+    `Montant total : ${amountEuros.toFixed(2)} €${installmentsText}.`,
+    ``,
+    `Accès complet à la Médecine Générale (Voie interne + Voie externe).`,
+    ``,
+    `Activez votre compte : ${setupUrl}`,
+    ``,
+    `L'équipe Major ECN`,
+  ].join('\n');
+
+  return { subject, html, text };
+}
+
+/* ============================================================
    Welcome (existant) — voir welcomeEmail() au-dessus
    ============================================================ */
