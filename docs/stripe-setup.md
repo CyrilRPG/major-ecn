@@ -1,131 +1,154 @@
 # Configuration Stripe — Major ECN
 
-Guide pas à pas pour configurer Stripe en **mode test** sur ce projet.
+Guide pour configurer Stripe sur ce projet.
 
-## 1. Récupère tes clés API en mode TEST
+> ✅ **Les 3 produits + prix ont été créés en mode LIVE via MCP** (voir section 1 ci-dessous).
+> Reste à faire côté toi : webhook + variables d'env Vercel + (optionnel) duplication en TEST.
 
-1. Va sur [dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys)
-2. Active le toggle "Test mode" en haut à droite du dashboard
-3. Récupère :
-   - **Publishable key** (commence par `pk_test_...`)
-   - **Secret key** (commence par `sk_test_...`)
-4. Ajoute-les dans `.env.local` :
-   ```bash
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-   STRIPE_SECRET_KEY=sk_test_...
-   ```
+---
 
-## 2. Crée les 3 produits + prix en mode TEST
+## 1. Produits + prix créés en mode LIVE ✅
 
-Dans le dashboard Stripe (mode test activé) → **Produits** → **Ajouter un produit**.
+Compte Stripe : `acct_1RbKygFAa1EUmjlQ` (Major ECN)
 
-### Produit 1 — Formule Essentielle
-- **Nom** : `Formule Essentielle`
-- **Description** : `Préparation EVC - Formule Essentielle. Accès à la plateforme Major ECN : QCM, flashcards, fiches synthétiques, méthode EVC, accès Médecine Générale.`
-- **Prix** : `495.00 EUR` — paiement unique (one-time)
-- Copie le `price_id` (commence par `price_...`) dans :
-  ```bash
-  STRIPE_PRICE_ESSENTIELLE=price_...
-  ```
+| Formule | Product ID | Price ID | Montant |
+|---|---|---|---|
+| **Formule Essentielle** | `prod_Ufl575jJV7LB8K` | `price_1TgPZ2FAa1EUmjlQnSJrYsP0` | 495,00 € |
+| **Formule Intensive** | `prod_Ufl5XKehCtyXHx` | `price_1TgPZ3FAa1EUmjlQFtDoaKxg` | 995,00 € |
+| **Programme Approfondi** | `prod_Ufl5Z8p4n3KkGS` | `price_1TgPZ4FAa1EUmjlQMknZ29bL` | 2 395,00 € |
 
-### Produit 2 — Formule Intensive
-- **Nom** : `Formule Intensive`
-- **Description** : `Préparation EVC - Formule Intensive. Tout l'Essentielle + cas cliniques approfondis, épreuves blanches inspirées des EVC, suivi personnalisé.`
-- **Prix** : `995.00 EUR` — paiement unique
-- Copie le `price_id` :
-  ```bash
-  STRIPE_PRICE_INTENSIVE=price_...
-  ```
+Tous en EUR, paiement unique (one-time). Visibles sur [dashboard.stripe.com/products](https://dashboard.stripe.com/products).
 
-### Produit 3 — Programme Approfondi
-- **Nom** : `Programme Approfondi`
-- **Description** : `Préparation EVC - Programme Approfondi. Plateforme EVC accès illimité + accompagnement individuel + sessions live et replays.`
-- **Prix** : `2395.00 EUR` — paiement unique
-- Copie le `price_id` :
-  ```bash
-  STRIPE_PRICE_PROGRAMME=price_...
-  ```
+---
 
-## 3. Configure le webhook
+## 2. Variables d'environnement à configurer sur Vercel
 
-Le webhook reçoit la notification de paiement réussi et provisionne automatiquement
-le compte étudiant avec accès à la Médecine Générale (voie interne + voie externe).
+Va dans **Project Settings → Environment Variables** et ajoute pour `Production` :
 
-### En LOCAL (développement)
+```bash
+# Clés API LIVE (récupérables sur https://dashboard.stripe.com/apikeys)
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
 
-1. Installe le CLI Stripe : `brew install stripe/stripe-cli/stripe` (Mac)
-   ou télécharge depuis [stripe.com/docs/stripe-cli](https://stripe.com/docs/stripe-cli).
-2. Connecte-toi : `stripe login`
-3. Lance l'écoute :
-   ```bash
-   stripe listen --forward-to localhost:3000/api/stripe/webhook
-   ```
-4. Copie le `webhook signing secret` (commence par `whsec_...`) affiché et
-   ajoute-le à `.env.local` :
-   ```bash
-   STRIPE_WEBHOOK_SECRET=whsec_...
-   ```
+# Webhook (à créer à l'étape 3)
+STRIPE_WEBHOOK_SECRET=whsec_...
 
-### En PRODUCTION (Vercel)
+# IDs des prix LIVE (déjà créés ✅)
+STRIPE_PRICE_ESSENTIELLE=price_1TgPZ2FAa1EUmjlQnSJrYsP0
+STRIPE_PRICE_INTENSIVE=price_1TgPZ3FAa1EUmjlQFtDoaKxg
+STRIPE_PRICE_PROGRAMME=price_1TgPZ4FAa1EUmjlQMknZ29bL
+```
 
-1. Va dans [dashboard.stripe.com/test/webhooks](https://dashboard.stripe.com/test/webhooks)
-2. Clique **"Ajouter un endpoint"**
-3. URL : `https://major-ecn.fr/api/stripe/webhook` (adapte au domaine prod)
-4. Événements à écouter :
+Et redéploie l'app sur Vercel.
+
+---
+
+## 3. Créer le webhook (étape manuelle dashboard)
+
+Le MCP Stripe n'expose pas la création de webhook, à faire à la main :
+
+1. Va sur [dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
+2. Clique **"Add endpoint"**
+3. **Endpoint URL** : `https://major-ecn.fr/api/stripe/webhook`
+   (ou ton vrai domaine de prod)
+4. **Description** : `Provisioning auto comptes étudiants Major ECN`
+5. **Events to send** — coche :
    - `checkout.session.completed`
    - `checkout.session.async_payment_succeeded`
    - `checkout.session.async_payment_failed` (optionnel)
-5. Copie le **Signing secret** et configure-le côté Vercel :
-   - Project Settings → Environment Variables → `STRIPE_WEBHOOK_SECRET`
+   - `payment_intent.payment_failed` (optionnel)
+6. Clique **"Add endpoint"**
+7. Sur la page de l'endpoint créé, clique **"Reveal signing secret"**
+8. Copie le secret (commence par `whsec_...`) et colle-le dans Vercel sous `STRIPE_WEBHOOK_SECRET`
+9. Redéploie l'app
 
-## 4. Activer le paiement en plusieurs fois
+---
 
-Stripe gère nativement les paiements en N fois (3x, 4x) pour les cartes
-éligibles en France (Visa / Mastercard certaines).
+## 4. Tester un paiement en mode LIVE
 
-C'est configuré dans `src/app/api/stripe/checkout/route.ts` via
-`payment_method_options.card.installments.enabled`. L'utilisateur choisit
-le nombre de fois côté UI, et Stripe propose le plan adapté pendant le
-checkout.
+⚠️ **Mode LIVE = vrais paiements.** Pour tester sans payer :
+1. Crée une carte de test gratuite : passe en mode TEST sur le dashboard, génère des cartes test
+2. OU utilise une vraie petite carte avec un coupon promo 100% (Section 5)
 
-> **Important** : les installments natifs nécessitent que ton compte Stripe
-> soit éligible (France, EUR, KYC validé). Si tu veux un split garanti
-> (mensualités), il faudra créer des prix de type `recurring` (subscription).
+### Cartes de test (uniquement avec clés `sk_test_...`)
+- `4242 4242 4242 4242` — paiement réussi
+- `4000 0000 0000 9995` — paiement refusé
+- Date d'expiration : n'importe quelle future
+- CVC : 3 chiffres au hasard
 
-## 5. Tester un paiement
+---
 
-1. Va sur `/formules/essentielle` (ou autre formule)
-2. Remplis l'email + clique "Commencer maintenant"
-3. Sur le checkout Stripe, utilise une carte de test :
-   - **4242 4242 4242 4242** — paiement réussi
-   - **4000 0000 0000 9995** — paiement refusé
-   - Date d'expiration : n'importe quelle date future
-   - CVC : n'importe quel 3 chiffres
-4. Après paiement, tu seras redirigé sur `/merci`
-5. Vérifie que :
-   - L'email de confirmation arrive (si Resend configuré)
-   - Le user a été créé dans Supabase (table `auth.users`)
-   - Le profile a `role = 'student'` et le bon `permission_scope`
+## 5. (Optionnel) Configuration mode TEST pour développement
 
-## 6. Variables d'environnement requises
+Pour pouvoir tester sans risque côté dev :
 
-| Variable | Description |
-|---|---|
-| `STRIPE_SECRET_KEY` | Clé secrète (sk_test_... en test, sk_live_... en prod) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Clé publique (pk_test_... en test) |
-| `STRIPE_WEBHOOK_SECRET` | Signing secret du webhook |
-| `STRIPE_PRICE_ESSENTIELLE` | price_id de la Formule Essentielle |
-| `STRIPE_PRICE_INTENSIVE` | price_id de la Formule Intensive |
-| `STRIPE_PRICE_PROGRAMME` | price_id du Programme Approfondi |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clé service_role Supabase (requise pour le provisioning) |
-| `RESEND_API_KEY` | API key Resend pour les emails (optionnel mais recommandé) |
+1. Active le toggle **"Test mode"** en haut à droite du dashboard
+2. Récupère les clés test (`sk_test_...` / `pk_test_...`)
+3. Crée 3 produits IDENTIQUES en mode test (même noms, même prix)
+4. Copie les nouveaux `price_id` (commencent par `price_...`)
+5. Configure ces clés/IDs dans `.env.local` (jamais en commit)
+6. Pour les webhooks locaux : `stripe listen --forward-to localhost:3000/api/stripe/webhook`
 
-## 7. Passer en mode LIVE (production)
+---
 
-Quand tu es prêt à encaisser de vrais paiements :
+## 6. Activer le paiement en plusieurs fois (installments)
 
-1. Dans le dashboard Stripe, désactive le toggle "Test mode"
-2. Récupère les nouvelles clés `sk_live_...` et `pk_live_...`
-3. Refais les étapes 2 et 3 en mode LIVE (produits, prix, webhook)
-4. Mets à jour `.env` en prod avec les clés LIVE
-5. Vérifie le webhook en envoyant un événement test depuis le dashboard
+Déjà configuré dans `src/app/api/stripe/checkout/route.ts`. L'utilisateur choisit
+1x / 3x / 4x dans le `CheckoutButton`, et Stripe propose le plan adapté pendant
+le checkout pour les cartes éligibles (Visa / Mastercard FR).
+
+> Note : les installments natifs Stripe nécessitent que ton compte soit
+> éligible (France, EUR, KYC validé). Vérifie dans
+> [dashboard.stripe.com/settings/payment_methods](https://dashboard.stripe.com/settings/payment_methods)
+> que "Pay in installments" est activé.
+
+---
+
+## 7. Flow utilisateur complet
+
+1. Visiteur va sur `/formules/essentielle` (ou autre formule)
+2. Section **"Choisir cette formule"** : remplit prénom + nom + email + choisit 1×/3×/4×
+3. Clique **"Commencer maintenant"** → `POST /api/stripe/checkout`
+4. Redirigé vers Stripe Checkout (locale FR, installments proposés si éligible)
+5. Paie → redirigé sur `/merci`
+6. Stripe envoie un événement `checkout.session.completed` au webhook
+7. Le webhook déclenche `provisionStudentAccount` :
+   - Crée le user dans `auth.users`
+   - Configure `profile.role = 'student'`
+   - Configure `permission_scope.colleges = [MG Voie interne, MG Voie externe]`
+   - Génère un lien magic-link pour `/auth/setup-password`
+8. Envoie l'email de confirmation (`purchaseConfirmationEmail`) avec récap +
+   lien d'activation
+9. L'utilisateur clique le lien → définit son mot de passe → accède à la plateforme
+
+---
+
+## 8. Vérifier que tout fonctionne
+
+Une fois le webhook configuré et déployé :
+
+1. Va sur https://major-ecn.fr/formules/essentielle
+2. Section "Choisir cette formule" : remplis avec un email réel + carte test
+3. Paie
+4. Vérifie :
+   - ✅ Redirection sur `/merci`
+   - ✅ Email reçu (vérifie le subject "✅ Confirmation d'inscription")
+   - ✅ User créé dans Supabase (`auth.users` + `profiles` avec role=student)
+   - ✅ `permission_scope` contient les 2 collèges MG
+   - ✅ Lien d'activation fonctionne → accès à la plateforme MG
+
+---
+
+## 9. Variables d'environnement complètes
+
+| Variable | Description | Statut |
+|---|---|---|
+| `STRIPE_SECRET_KEY` | Clé secrète (sk_live_... en prod) | ⏳ À configurer Vercel |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Clé publique (pk_live_...) | ⏳ À configurer Vercel |
+| `STRIPE_WEBHOOK_SECRET` | Signing secret du webhook | ⏳ À créer (étape 3) |
+| `STRIPE_PRICE_ESSENTIELLE` | `price_1TgPZ2FAa1EUmjlQnSJrYsP0` | ✅ Créé |
+| `STRIPE_PRICE_INTENSIVE` | `price_1TgPZ3FAa1EUmjlQFtDoaKxg` | ✅ Créé |
+| `STRIPE_PRICE_PROGRAMME` | `price_1TgPZ4FAa1EUmjlQMknZ29bL` | ✅ Créé |
+| `SUPABASE_SERVICE_ROLE_KEY` | Pour provisioning | ⏳ Doit déjà être configuré |
+| `RESEND_API_KEY` | Pour les emails | ⏳ Recommandé pour la prod |
+| `NEXT_PUBLIC_SITE_URL` | https://major-ecn.fr | ⏳ Doit déjà être configuré |
