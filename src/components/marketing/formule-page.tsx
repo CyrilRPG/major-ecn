@@ -11,6 +11,9 @@ import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
 import { CheckoutButton } from './checkout-button';
 import { CallbackRequestForm } from './callback-request-form';
+import {
+  AnimatedCounter, MeshGradient, NoiseTexture, SpotlightCard,
+} from './premium-ui';
 import type { FormuleId } from '@/lib/stripe';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
@@ -18,6 +21,15 @@ const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', 
   intensive: 'intensive',
   approfondi: 'programme-approfondi',
 };
+
+/** Assombrit/éclaircit une couleur hex. */
+function shadeFormule(hex: string, amount: number): string {
+  const m = hex.replace('#', '').match(/.{1,2}/g);
+  if (!m) return hex;
+  const [r, g, b] = m.map((h) => parseInt(h, 16));
+  const fn = (cc: number) => Math.max(0, Math.min(255, Math.round(cc + (amount * 255) / 100)));
+  return '#' + [fn(r), fn(g), fn(b)].map((cc) => cc.toString(16).padStart(2, '0')).join('');
+}
 
 const NAVY = '#0F1F4D';
 const INK = '#1F2937';
@@ -88,10 +100,20 @@ const SPECIALTIES = ['Médecine Générale', 'Pédiatrie', 'Cardiologie', 'Pneum
 export function FormulePageContent({ variant }: { variant: Variant }) {
   const c = CONFIGS[variant];
 
+  // Couleurs mesh par variant
+  const meshColors = {
+    essentielle: ['rgba(46,125,50,0.15)', 'rgba(15,31,77,0.10)', 'rgba(46,125,50,0.10)', 'rgba(245,200,75,0.10)'],
+    intensive:   ['rgba(192,17,46,0.18)', 'rgba(15,31,77,0.12)', 'rgba(192,17,46,0.10)', 'rgba(245,200,75,0.10)'],
+    approfondi:  ['rgba(124,58,237,0.18)', 'rgba(15,31,77,0.12)', 'rgba(124,58,237,0.10)', 'rgba(245,200,75,0.10)'],
+  }[variant];
+
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 40%, #FFFFFF 100%)' }}>
+      <MeshGradient colors={meshColors} />
+      <NoiseTexture opacity={0.025} />
+
       {/* Breadcrumb */}
-      <div className="bg-white pt-4 pb-0">
+      <div className="relative pt-5 pb-0">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <p className="text-xs" style={{ color: INK_SOFT }}>
             <Link href="/" className="hover:underline">Accueil</Link>
@@ -102,75 +124,104 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         </div>
       </div>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-white">
+      {/* HERO premium ultra-poussé */}
+      <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-0">
-            <div className="py-12 lg:py-20 lg:pr-12">
-              <span className="inline-block rounded px-3 py-1 text-xs font-bold uppercase tracking-wider text-white"
-                style={{ background: c.color }}>{c.label}</span>
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
+            <div className="py-12 lg:py-20">
+              <Reveal>
+                <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.20)]"
+                  style={{ background: `linear-gradient(90deg, ${c.color} 0%, ${shadeFormule(c.color, -20)} 100%)` }}>
+                  <Trophy className="h-3.5 w-3.5" />
+                  {c.label}
+                </span>
+              </Reveal>
               {c.badge && (
-                <p className="mt-2 flex items-center gap-1.5 text-xs font-bold" style={{ color: c.color }}>
-                  <span>&#128293;</span> {c.badge}
-                </p>
+                <Reveal delay={0.1}>
+                  <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border bg-white/80 px-3 py-1 text-xs font-bold backdrop-blur-sm" style={{ borderColor: c.color, color: c.color }}>
+                    <Star className="h-3 w-3" fill="currentColor" /> {c.badge}
+                  </p>
+                </Reveal>
               )}
-              <h1 className="mt-4 text-2xl font-black leading-[1.15] tracking-tight whitespace-pre-line sm:text-3xl lg:text-4xl"
-                style={{ color: NAVY }}>{c.tagline}</h1>
-              <p className="mt-4 text-sm leading-relaxed" style={{ color: INK_SOFT }}>{c.desc}</p>
+              <Reveal delay={0.15}>
+                <h1 className="mt-5 text-balance text-3xl font-black leading-[1.06] tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
+                  style={{ color: NAVY }}>{c.tagline}</h1>
+              </Reveal>
+              <Reveal delay={0.2}>
+                <p className="mt-5 text-[15.5px] leading-relaxed sm:text-base" style={{ color: INK_SOFT }}>{c.desc}</p>
+              </Reveal>
 
-              {/* Stats */}
-              <div className="mt-6 flex flex-wrap gap-5">
-                {[
-                  { Icon: Users, t: '+ 9 000', s: 'médecins\naccompagnés' },
-                  { Icon: GraduationCap, t: '45+', s: 'spécialités\npréparées' },
-                  { Icon: Calendar, t: 'Depuis', s: '2011' },
-                ].map(st => (
-                  <div key={st.t} className="flex items-center gap-2">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: c.colorSoft, color: c.color }}>
-                      <st.Icon className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-black" style={{ color: NAVY }}>{st.t}</p>
-                      <p className="text-[10px] whitespace-pre-line" style={{ color: INK_SOFT }}>{st.s}</p>
+              {/* Stats premium animés */}
+              <Reveal delay={0.3}>
+                <div className="mt-8 grid grid-cols-3 gap-3">
+                  {[
+                    { Icon: Users, end: 9000, suffix: '+', label: 'médecins' },
+                    { Icon: GraduationCap, end: 45, suffix: '+', label: 'spécialités' },
+                    { Icon: Calendar, end: 15, suffix: ' ans', label: 'd’expertise' },
+                  ].map((st) => (
+                    <div key={st.label} className="rounded-2xl border bg-white/80 p-3.5 backdrop-blur-sm" style={{ borderColor: BORDER }}>
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: c.colorSoft, color: c.color }}>
+                        <st.Icon className="h-4 w-4" />
+                      </span>
+                      <p className="mt-2 text-[20px] font-black leading-none tabular-nums" style={{ color: c.color }}>
+                        <AnimatedCounter end={st.end} suffix={st.suffix} duration={1500} />
+                      </p>
+                      <p className="mt-0.5 text-[11px]" style={{ color: INK_SOFT }}>{st.label}</p>
                     </div>
+                  ))}
+                </div>
+              </Reveal>
+
+              {/* Price card */}
+              <Reveal delay={0.35}>
+                <div className="mt-8 rounded-2xl border bg-white/90 p-5 backdrop-blur-sm shadow-[0_12px_36px_-12px_rgba(15,31,77,0.15)]" style={{ borderColor: BORDER }}>
+                  {c.pricePrefix && <p className="text-xs font-bold uppercase tracking-wider" style={{ color: INK_SOFT }}>{c.pricePrefix}</p>}
+                  <div className="flex items-baseline gap-3">
+                    <p className="text-5xl font-black leading-none" style={{ color: c.color }}>{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
+                    {variant !== 'approfondi' && (
+                      <span className="text-sm font-medium" style={{ color: INK_SOFT }}>paiement unique</span>
+                    )}
                   </div>
-                ))}
-                {/* Trustpilot removed */}
-              </div>
+                  {variant !== 'approfondi' && (
+                    <p className="mt-2 text-[13px] font-semibold" style={{ color: INK }}>
+                      ou <strong style={{ color: c.color }}>{Math.round(parseInt(c.price.replace(/\s/g, ''), 10) / 3)} €/mois</strong> en 3 fois sans frais
+                    </p>
+                  )}
+                  {variant === 'approfondi' && (
+                    <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la spécialité préparée.</p>
+                  )}
+                </div>
+              </Reveal>
 
-              {/* Price */}
-              <div className="mt-6">
-                {c.pricePrefix && <p className="text-sm" style={{ color: INK_SOFT }}>{c.pricePrefix}</p>}
-                <p className="text-4xl font-black" style={{ color: c.color }}>{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-3">
-                <a href="#choisir-formule" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white"
-                  style={{ background: c.color }}>
-                  {c.cta} <ArrowRight className="h-4 w-4" />
-                </a>
-                {c.ctaSecondary && (
-                  <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-bold"
-                    style={{ borderColor: c.color, color: c.color }}>
-                    {c.ctaSecondary}
-                  </Link>
-                )}
-              </div>
+              <Reveal delay={0.4}>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href="#choisir-formule" className="group inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.30)] transition-transform hover:scale-[1.02]"
+                    style={{ background: `linear-gradient(90deg, ${shadeFormule(c.color, -20)} 0%, ${c.color} 100%)` }}>
+                    {c.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </a>
+                  {c.ctaSecondary && (
+                    <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3.5 text-sm font-extrabold transition-colors hover:bg-[#FAFBFD]"
+                      style={{ borderColor: c.color, color: c.color }}>
+                      {c.ctaSecondary}
+                    </Link>
+                  )}
+                </div>
+              </Reveal>
               {variant !== 'approfondi' && (
-                <Link href="/tarifs" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: INK_SOFT }}>
-                  Comparer les formules <ArrowRight className="h-3 w-3" />
+                <Link href="/tarifs" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold hover:underline" style={{ color: INK_SOFT }}>
+                  Comparer les 3 formules <ArrowRight className="h-3 w-3" />
                 </Link>
-              )}
-              {variant === 'approfondi' && (
-                <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la spécialité préparée.</p>
               )}
             </div>
             <div className="relative hidden lg:block">
-              <img src={c.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
-              {/* Side badges */}
-              <div className="absolute right-4 top-8 flex flex-col gap-2">
+              <SpotlightCard spotlightColor={`${c.color}25`} className="relative overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '4/5' }}>
+                <img src={c.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <div aria-hidden className="absolute inset-0" style={{ background: `linear-gradient(135deg, transparent 0%, ${c.color}20 100%)` }} />
+              </SpotlightCard>
+              {/* Side badges flottants premium */}
+              <div className="pointer-events-none absolute right-4 top-8 flex flex-col gap-2">
                 {['Accès 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsécurisé', 'Support réactif\n7j/7'].map(b => (
-                  <span key={b} className="rounded-lg bg-white/95 px-3 py-2 text-[10px] font-bold leading-tight whitespace-pre-line shadow-sm"
+                  <span key={b} className="rounded-lg bg-white/95 px-3 py-2 text-[10px] font-bold leading-tight whitespace-pre-line shadow-md backdrop-blur"
                     style={{ color: NAVY }}>{b}</span>
                 ))}
               </div>
