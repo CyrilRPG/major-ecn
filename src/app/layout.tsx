@@ -3,6 +3,7 @@ import { Manrope, Fraunces, IBM_Plex_Mono, Plus_Jakarta_Sans } from 'next/font/g
 import { ThemeProvider } from '@/components/theme-provider';
 import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { AntiCopyShield } from '@/components/anti-copy-shield';
 import './globals.css';
 
 const sans = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
           </QueryProvider>
         </ThemeProvider>
+        <AntiCopyShield />
       </body>
     </html>
   );

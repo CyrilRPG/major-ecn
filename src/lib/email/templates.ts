@@ -17,10 +17,10 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
   const title = isProf ? 'Activez votre espace professeur' : 'Activez votre compte étudiant';
   const intro = isProf
     ? `Votre compte intervenant Major ECN est créé. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder à l’espace « Questions / Réponses » où vous serez notifié des questions de vos élèves.`
-    : `Votre inscription à Major ECN est enregistrée. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe — vous accéderez immédiatement à la plateforme et accédez à votre formule.`;
+    : `Votre inscription à l’espace découverte Major ECN est enregistrée. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder immédiatement à votre aperçu de la plateforme.`;
   const subject = isProf
     ? '🩺 Activez votre espace professeur — Major ECN'
-    : '🎓 Bienvenue chez Major ECN — activez votre compte';
+    : '🎓 Bienvenue chez Major ECN — activez votre espace découverte';
 
   const html = `<!doctype html>
 <html lang="fr">
@@ -36,14 +36,14 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid #ECEEF1;border-radius:20px;overflow:hidden;">
             <!-- Brand bar -->
             <tr>
-              <td style="background:#0E1626;padding:24px 28px;text-align:center;">
+              <td style="background-color:#0E1626;padding:24px 28px;text-align:center;" bgcolor="#0E1626">
                 <span style="font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.02em;color:#FFFFFF;">
                   Major <span style="color:#C84A5A;">ECN</span>
                 </span>
               </td>
             </tr>
             <!-- Tricolour rule (arc-en-ciel) -->
-            <tr><td style="height:3px;background:linear-gradient(90deg,#6B1A2A 0%,#3B82F6 50%,#14B8A6 100%);font-size:0;line-height:0;">&nbsp;</td></tr>
+            <tr><td style="height:3px;background-color:#6B1A2A;background:linear-gradient(90deg,#6B1A2A 0%,#3B82F6 50%,#14B8A6 100%);font-size:0;line-height:0;" bgcolor="#6B1A2A">&nbsp;</td></tr>
 
             <!-- Body -->
             <tr>
@@ -59,13 +59,13 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
                   ${escapeHtml(intro)}
                 </p>
 
-                <!-- Button -->
-                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 22px;">
+                <!-- Button (bulletproof : bgcolor + solid fallback + gradient) -->
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 22px;">
                   <tr>
-                    <td style="background:linear-gradient(90deg,#6B1A2A 0%,#8B2A3A 100%);border-radius:12px;">
-                      <a href="${escapeAttr(setupUrl)}"
-                         style="display:inline-block;padding:14px 26px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-weight:800;font-size:15px;color:#FFFFFF;text-decoration:none;">
-                        Choisir mon mot de passe →
+                    <td align="center" bgcolor="#6B1A2A" style="background-color:#6B1A2A;background:linear-gradient(90deg,#6B1A2A 0%,#8B2A3A 100%);border-radius:12px;mso-padding-alt:0;">
+                      <a href="${escapeAttr(setupUrl)}" target="_blank" rel="noopener"
+                         style="display:inline-block;padding:16px 32px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-weight:800;font-size:16px;color:#FFFFFF;text-decoration:none;border-radius:12px;mso-line-height-rule:exactly;line-height:20px;">
+                        <span style="color:#FFFFFF;">Choisir mon mot de passe →</span>
                       </a>
                     </td>
                   </tr>
@@ -74,16 +74,26 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
                 <p style="margin:0 0 6px;font-size:12px;line-height:1.6;color:#7A7A7A;">
                   Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :
                 </p>
-                <p style="margin:0 0 26px;word-break:break-all;font-family:'IBM Plex Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;color:#6B1A2A;">
-                  ${escapeHtml(setupUrl)}
+                <p style="margin:0 0 26px;word-break:break-all;font-family:'IBM Plex Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;">
+                  <a href="${escapeAttr(setupUrl)}" style="color:#6B1A2A;text-decoration:underline;font-weight:600;">${escapeHtml(setupUrl)}</a>
                 </p>
 
                 ${isProf ? '' : `
-                <div style="background:#F9F0F2;border:1px solid #F2D5DA;border-radius:14px;padding:14px 16px;margin:0 0 22px;">
-                  <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#6B1A2A;">✓ Votre espace découverte est actif</p>
-                  <p style="margin:0;font-size:12px;line-height:1.6;color:#5A5A5A;">
-                    Accès complet à 4 200+ QCM, flashcards, annales et IA pédagogique. Sans engagement,
-                    annulation instantanée.
+                <div style="background-color:#F9F0F2;border:1px solid #F2D5DA;border-radius:14px;padding:16px 18px;margin:0 0 22px;">
+                  <p style="margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6B1A2A;">
+                    ✓ Votre espace découverte est actif
+                  </p>
+                  <p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#3D3D3D;">
+                    Aperçu concret de la plateforme et de notre méthode de préparation aux EVC :
+                  </p>
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                    <tr><td style="padding:3px 0;font-size:13px;color:#3D3D3D;line-height:1.55;"><strong style="color:#6B1A2A;">•</strong> 10 QCM EVC</td></tr>
+                    <tr><td style="padding:3px 0;font-size:13px;color:#3D3D3D;line-height:1.55;"><strong style="color:#6B1A2A;">•</strong> 1 cas clinique</td></tr>
+                    <tr><td style="padding:3px 0;font-size:13px;color:#3D3D3D;line-height:1.55;"><strong style="color:#6B1A2A;">•</strong> 1 fiche pédagogique</td></tr>
+                    <tr><td style="padding:3px 0;font-size:13px;color:#3D3D3D;line-height:1.55;"><strong style="color:#6B1A2A;">•</strong> 10 flashcards</td></tr>
+                  </table>
+                  <p style="margin:10px 0 0;font-size:12px;line-height:1.55;color:#6B6B6B;font-style:italic;">
+                    Sans carte bancaire · Sans engagement.
                   </p>
                 </div>`}
 
@@ -96,7 +106,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
 
             <!-- Footer -->
             <tr>
-              <td style="padding:18px 28px;background:#FAFAF8;border-top:1px solid #ECEEF1;">
+              <td style="padding:18px 28px;background-color:#FAFAF8;border-top:1px solid #ECEEF1;" bgcolor="#FAFAF8">
                 <p style="margin:0;font-size:11px;color:#9AA1AE;text-align:center;">
                   © Major ECN — Préparation EVC.<br />
                   Vous recevez cet email parce qu’un compte a été créé avec cette adresse.
@@ -186,11 +196,11 @@ function layout({ subject, eyebrow, title, bodyHtml }: { subject: string; eyebro
 }
 
 function buttonHtml(href: string, label: string): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 22px;">
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 22px;">
     <tr>
-      <td style="background:linear-gradient(90deg,#6B1A2A 0%,#8B2A3A 100%);border-radius:12px;">
-        <a href="${escapeAttr(href)}" style="display:inline-block;padding:14px 26px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-weight:800;font-size:15px;color:#FFFFFF;text-decoration:none;">
-          ${escapeHtml(label)} →
+      <td align="center" bgcolor="#6B1A2A" style="background-color:#6B1A2A;background:linear-gradient(90deg,#6B1A2A 0%,#8B2A3A 100%);border-radius:12px;">
+        <a href="${escapeAttr(href)}" target="_blank" rel="noopener" style="display:inline-block;padding:16px 32px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-weight:800;font-size:16px;color:#FFFFFF;text-decoration:none;border-radius:12px;mso-line-height-rule:exactly;line-height:20px;">
+          <span style="color:#FFFFFF;">${escapeHtml(label)} →</span>
         </a>
       </td>
     </tr>
@@ -435,12 +445,12 @@ export function purchaseConfirmationEmail({
       </tr>
     </table>
 
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 8px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 8px;">
       <tr>
-        <td>
-          <a href="${escapeAttr(setupUrl)}"
-             style="display:inline-block;padding:14px 28px;background:linear-gradient(90deg,#8B0E22 0%,#C0112E 100%);color:#FFFFFF;font-size:15px;font-weight:700;border-radius:12px;text-decoration:none;">
-            Activer mon compte
+        <td align="center" bgcolor="#8B0E22" style="background-color:#8B0E22;background:linear-gradient(90deg,#8B0E22 0%,#C0112E 100%);border-radius:12px;">
+          <a href="${escapeAttr(setupUrl)}" target="_blank" rel="noopener"
+             style="display:inline-block;padding:16px 32px;color:#FFFFFF;font-size:16px;font-weight:800;border-radius:12px;text-decoration:none;font-family:'Plus Jakarta Sans','Manrope',sans-serif;mso-line-height-rule:exactly;line-height:20px;">
+            <span style="color:#FFFFFF;">Activer mon compte</span>
           </a>
         </td>
       </tr>

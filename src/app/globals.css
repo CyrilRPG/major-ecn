@@ -390,3 +390,42 @@ body::after {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
 }
+
+/* ============================================================
+   Anti-copie : désactive la sélection / le copier-coller sur
+   l'ensemble du site, sauf champs de formulaire et éléments
+   éditables (pour ne pas casser les inputs).
+   ============================================================ */
+html, body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;       /* iOS long-press menu */
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable=""],
+.allow-select,
+.allow-select * {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* Bloque le drag-image sur les <img> (sinon on peut tirer une image hors du site). */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
+@media print {
+  body { display: none !important; }
+}

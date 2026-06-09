@@ -306,6 +306,10 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         </section>
       )}
 
+      {/* CHOISIR CETTE FORMULE — checkout Stripe ou formulaire de rappel.
+          PLACÉ JUSTE APRÈS « Pourquoi choisir » pour conversion maximale. */}
+      <PaymentSection variant={variant} c={c} />
+
       {/* SPECIALTIES */}
       <section className="bg-[#F8F9FC] py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -413,11 +417,6 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           </div>
         </div>
       </section>
-
-      {/* CHOISIR CETTE FORMULE — checkout Stripe (essentielle, intensive)
-          OU formulaire de rappel (programme approfondi sur-mesure)
-          DÉPLACÉ AVANT la FAQ pour conversion optimale */}
-      <PaymentSection variant={variant} c={c} />
 
       {/* FAQ */}
       <FAQSection />
