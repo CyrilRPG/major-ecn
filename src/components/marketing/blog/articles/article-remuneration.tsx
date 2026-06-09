@@ -43,7 +43,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/practitioners/practitioner-male-tablet.jpg"
                 alt="Médecin PADHUE consultant une tablette en milieu hospitalier"
-                className="absolute inset-0 h-full w-full select-none object-cover"
+                className="absolute inset-0 h-full w-full select-none object-contain"
                 style={{ objectPosition: '70% 35%' }}
                 decoding="async"
                 fetchPriority="high"
@@ -405,7 +405,7 @@ function Section({
                 <img
                   src={illustrationImage}
                   alt={illustrationAlt ?? title}
-                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  className="absolute inset-0 h-full w-full select-none object-contain"
                   style={{ objectPosition: illustrationFocus ?? '50% 30%' }}
                   loading="lazy"
                   decoding="async"

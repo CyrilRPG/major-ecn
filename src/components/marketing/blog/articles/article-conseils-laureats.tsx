@@ -321,7 +321,7 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               <img
                 src="/blog/reussir-evc-asian-laptop.jpg"
                 alt="Médecin préparant les Épreuves de Vérification des Connaissances (EVC) avec méthode"
-                className="absolute inset-0 h-full w-full select-none object-cover"
+                className="absolute inset-0 h-full w-full select-none object-contain"
                 style={{ objectPosition: '55% 30%' }}
                 decoding="async"
                 fetchPriority="high"

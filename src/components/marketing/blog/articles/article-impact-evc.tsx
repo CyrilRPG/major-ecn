@@ -81,7 +81,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/medecins-essentiels-doctor-patient.jpg"
                 alt="Médecin PADHUE en consultation avec une patiente"
-                className="absolute inset-0 h-full w-full select-none object-cover"
+                className="absolute inset-0 h-full w-full select-none object-contain"
                 style={{ objectPosition: '60% 35%' }}
                 decoding="async"
                 fetchPriority="high"
@@ -203,7 +203,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
                 <img
                   src="/blog/medecins-essentiels-corridor.jpg"
                   alt="Équipe médicale en mouvement dans un couloir d'hôpital"
-                  className="absolute inset-0 h-full w-full select-none object-cover"
+                  className="absolute inset-0 h-full w-full select-none object-contain"
                   style={{ objectPosition: '50% 60%' }}
                   loading="lazy"
                   decoding="async"

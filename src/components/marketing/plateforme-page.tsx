@@ -10,10 +10,10 @@ import {
   ArrowRight, Award, Bell, BookOpen, Brain, Calendar, CalendarCheck, CalendarDays,
   Check, CheckCircle2, ChevronRight, ClipboardCheck, ClipboardList, Clock, Command,
   Compass, FileText, Folder, GraduationCap, Heart, Home, Laptop, LayoutDashboard, Layers3,
-  Lightbulb, PanelLeft, Search,
+  Lightbulb, Lock, PanelLeft, Search, Shield,
   Library, LineChart, ListChecks, MapPin, MessageCircle, Play, Quote, Radio,
-  RefreshCcw, Rocket, Settings, Sparkles, Stethoscope, Target, TrendingUp, Trophy,
-  UserCheck, Users, Video,
+  RefreshCcw, Rocket, Settings, Sparkles, Star, Stethoscope, Target, TrendingUp, Trophy,
+  UserCheck, Users, Video, Zap,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Reveal } from './reveal';
@@ -1570,54 +1570,79 @@ function PlatformToolsSection() {
   );
 }
 
-/* ============ CTA banner final ============ */
+/* ============ CTA banner final — pixel-perfect maquette ============ */
 function PlateformeCta() {
+  const GOLD = '#F5C84B';
   return (
     <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16" style={{ fontFamily: FONT }}>
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] p-1.5"
-        style={{ background: 'linear-gradient(135deg,#D4AF37 0%,#8B5A1A 30%,#C0112E 60%,#0F1F4D 100%)' }}>
-        <div className="relative overflow-hidden rounded-[22px] px-6 py-10 text-white sm:px-10 sm:py-12 lg:px-14 lg:py-14"
-          style={{ background: 'linear-gradient(120deg,#0A1838 0%,#5C1827 55%,#8B0E22 100%)' }}>
-          {/* Halos décoratifs */}
-          <span aria-hidden className="pointer-events-none absolute -right-32 -top-32 h-[420px] w-[420px] rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(closest-side, rgba(212,175,55,0.32), rgba(212,175,55,0))' }} />
-          <span aria-hidden className="pointer-events-none absolute -left-24 -bottom-32 h-[420px] w-[420px] rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.32), rgba(255,255,255,0))' }} />
+      {/* Bordure dorée fine 1px tout autour */}
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] p-px"
+        style={{ background: `linear-gradient(135deg, ${GOLD} 0%, rgba(245,200,75,0.3) 35%, rgba(245,200,75,0.15) 70%, ${GOLD} 100%)` }}>
+        <div className="relative overflow-hidden rounded-[27px] px-7 py-9 text-white sm:px-12 sm:py-12 lg:px-14 lg:py-14"
+          style={{ background: 'linear-gradient(115deg, #1A0A1A 0%, #2C0810 35%, #5C0E18 70%, #B0151F 100%)' }}>
 
-          <div className="relative grid items-center gap-7 lg:grid-cols-[1.6fr_1fr]">
+          <div className="relative grid items-center gap-10 lg:grid-cols-[1.55fr_1fr]">
+            {/* GAUCHE : badge + titre + paragraphe */}
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em] backdrop-blur"
-                style={{ color: '#F5D597' }}>
-                Découvrir la plateforme · sans carte bancaire
+              {/* Badge "ESPACE DÉCOUVERTE · ACCÈS ILLIMITÉ" avec étoile dorée */}
+              <span className="inline-flex items-center gap-2.5 rounded-full border bg-black/35 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] backdrop-blur"
+                style={{ borderColor: 'rgba(245,200,75,0.25)', color: GOLD }}>
+                <Star className="h-3.5 w-3.5" fill="currentColor" />
+                Espace découverte · Accès illimité
               </span>
-              <h2 className="mt-4 text-[26px] font-black leading-[1.1] sm:text-[34px] lg:text-[40px]"
-                style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>
-                Rejoignez la plateforme utilisée par les médecins admis aux EVC.
+
+              {/* Titre */}
+              <h2 className="mt-6 text-[28px] font-black leading-[1.08] tracking-tight sm:text-[38px] lg:text-[46px]"
+                style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>
+                Plus de 9 000 médecins
+                <br />
+                <span style={{ color: GOLD }}>accompagnés depuis 2011.</span>
               </h2>
-              <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-white/85">
-                Activez votre accès en moins de 2 minutes. Toute la plateforme,
-                tous les outils, tous les contenus — sans engagement.
+
+              {/* Paragraphe */}
+              <p className="mt-5 max-w-xl text-[14.5px] leading-relaxed text-white/85">
+                Découvrez une méthode de préparation développée au fil de 15 années
+                d&rsquo;accompagnement des candidats aux{' '}
+                <strong style={{ color: GOLD }}>Épreuves de Vérification des Connaissances (EVC).</strong>
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-4 text-[12.5px] font-semibold text-white/85">
-                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: '#D4AF37' }} /> Accès immédiat</span>
-                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: '#D4AF37' }} /> Sans engagement</span>
-                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: '#D4AF37' }} /> Annulation en 1 clic</span>
+
+              {/* 3 mini-features avec icônes circulaires */}
+              <div className="mt-7 grid gap-5 sm:grid-cols-3">
+                {[
+                  { Icon: Zap,    t: 'Accès immédiat',            s: 'Activez votre espace en moins de 2 minutes.' },
+                  { Icon: Shield, t: 'Sans engagement',           s: 'Découvrez Major ECN librement.' },
+                  { Icon: GraduationCap, t: "Accès illimité à l’espace découverte", s: "Consultez les ressources mises à disposition à votre rythme." },
+                ].map((f) => (
+                  <div key={f.t} className="flex items-start gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border"
+                      style={{ borderColor: 'rgba(245,200,75,0.25)', background: 'rgba(0,0,0,0.30)', color: GOLD }}>
+                      <f.Icon className="h-4.5 w-4.5" />
+                    </span>
+                    <div>
+                      <p className="text-[12.5px] font-extrabold leading-tight text-white">{f.t}</p>
+                      <p className="mt-1 text-[11.5px] leading-snug text-white/75">{f.s}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 lg:items-end">
+            {/* DROITE : 2 boutons + mention */}
+            <div className="flex flex-col gap-3 lg:items-stretch">
               <a href="/espace-decouverte"
-                className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-[14px] font-extrabold shadow-[0_20px_50px_-15px_rgba(0,0,0,0.4)] transition-transform hover:scale-[1.02]"
-                style={{ color: '#8B0E22' }}>
+                className="group inline-flex items-center justify-between gap-4 rounded-full bg-white px-7 py-4 text-[14.5px] font-extrabold shadow-[0_20px_50px_-15px_rgba(0,0,0,0.45)] transition-transform hover:scale-[1.02]"
+                style={{ color: '#B0151F' }}>
                 Découvrir Major ECN
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </a>
               <a href="/methode"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 px-5 py-3 text-[13px] font-bold text-white/90 transition-colors hover:bg-white/10">
+                className="inline-flex items-center justify-center rounded-full border-2 px-6 py-4 text-[14px] font-extrabold text-white transition-colors hover:bg-white/10"
+                style={{ borderColor: 'rgba(255,255,255,0.30)' }}>
                 Voir la méthode
               </a>
-              <p className="text-right text-[10.5px] text-white/55">
-                Activation en moins de 2 minutes
+              <p className="flex items-center justify-center gap-1.5 pt-1 text-[12px] text-white/70">
+                <Lock className="h-3.5 w-3.5" />
+                Aucune carte bancaire requise
               </p>
             </div>
           </div>
