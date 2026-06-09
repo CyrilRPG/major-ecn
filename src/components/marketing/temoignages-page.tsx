@@ -72,12 +72,54 @@ function TemoignagesHeader() {
 
 /* ============ TÉMOIGNAGES VIDÉO ============ */
 const REAL_VIDEOS = [
-  { name: 'Dr Sami KABAWEH',       spec: 'Radiodiagnostic & imagerie médicale', year: 'Lauréat EVC',      videoSrc: '/temoignages/T1 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)' },
-  { name: 'Dr Karim KHIAREDDINE',  spec: 'Anesthésie réanimation',              year: 'Lauréat EVC', videoSrc: '/temoignages/T2 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)' },
-  { name: 'Dr Ely Cheikh SY',      spec: 'Endocrinologie & métabolisme',        year: 'Lauréat EVC', videoSrc: '/temoignages/T3 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)' },
-  { name: 'Dr Ahmed SIFAOUI',      spec: 'Gériatrie',                           year: 'Lauréat EVC', videoSrc: '/temoignages/T4 Final V2.mp4', bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)' },
-  { name: 'Dr Ahena HAROUN',       spec: 'Chirurgie viscérale & digestive',      year: 'Lauréate EVC',     videoSrc: '/temoignages/T5 FINAL V2.mp4', bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)' },
+  { name: "Dr Sami KABAWEH",       spec: "Radiodiagnostic & imagerie médicale", year: "Lauréat EVC",        videoSrc: "/temoignages/T1 FINAL V2.mp4", bgGrad: "linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)" },
+  { name: "Dr Karim KHIAREDDINE",  spec: "Anesthésie réanimation",              year: "Lauréat EVC 2025",   videoSrc: "/temoignages/T2 FINAL V2.mp4", bgGrad: "linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)" },
+  { name: "Dr Ely Cheikh SY",      spec: "Endocrinologie & métabolisme",        year: "Lauréat EVC 2025",   videoSrc: "/temoignages/T3 FINAL V2.mp4", bgGrad: "linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)" },
+  { name: "Dr Ahmed SIFAOUI",      spec: "Gériatrie",                           year: "Lauréat EVC 2025",   videoSrc: "/temoignages/T4 Final V2.mp4", bgGrad: "linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)" },
+  { name: "Dr Ahena HAROUN",       spec: "Chirurgie viscérale & digestive",     year: "Lauréate EVC 2024",  videoSrc: "/temoignages/T5 FINAL V2.mp4", bgGrad: "linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)" },
 ];
+type RealVideo = (typeof REAL_VIDEOS)[number];
+
+function VideoCard({ v }: { v: RealVideo }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  return (
+    <article className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
+      <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: v.bgGrad }}>
+        <video
+          src={v.videoSrc}
+          controls
+          playsInline
+          preload="metadata"
+          aria-label={`Témoignage vidéo de ${v.name}`}
+          className="absolute inset-0 h-full w-full bg-black object-contain"
+          onLoadedData={(e) => { e.currentTarget.currentTime = 3; }}
+          onPlay={(e) => {
+            if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0;
+            setIsPlaying(true);
+          }}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+        >
+          Votre navigateur ne supporte pas la lecture vidéo.
+        </video>
+        {!isPlaying && (
+          <span
+            className="pointer-events-none absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-lg"
+            style={{ background: RED }}
+          >
+            <Trophy className="h-3 w-3" />
+            {v.year}
+          </span>
+        )}
+      </div>
+      <div className="p-3">
+        <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>{v.name}</p>
+        <p className="mt-0.5 text-[12px] font-bold" style={{ color: RED }}>{v.spec}</p>
+      </div>
+    </article>
+  );
+}
+
 function VideosSection() {
   return (
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
@@ -95,30 +137,7 @@ function VideosSection() {
 
           <div className="mt-8 flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide sm:justify-center sm:overflow-visible sm:flex-wrap">
             {REAL_VIDEOS.map((v) => (
-              <article key={v.name} className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
-                <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: v.bgGrad }}>
-                  <video
-                    src={v.videoSrc}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    aria-label={`Témoignage vidéo de ${v.name}`}
-                    className="absolute inset-0 h-full w-full bg-black object-contain"
-                    onLoadedData={(e) => { e.currentTarget.currentTime = 3; }} onPlay={(e) => { if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0; }}
-                  >
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                </div>
-                <div className="p-3">
-                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>{v.name}</p>
-                  <p className="mt-0.5 text-[12px] font-bold" style={{ color: RED }}>{v.spec}</p>
-                  <p className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide"
-                    style={{ background: SOFT_BG, color: RED }}>
-                    <ShieldCheck className="h-3 w-3" />
-                    {v.year}
-                  </p>
-                </div>
-              </article>
+              <VideoCard key={v.name} v={v} />
             ))}
           </div>
         </div>

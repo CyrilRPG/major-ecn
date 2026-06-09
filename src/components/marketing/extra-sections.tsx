@@ -9,9 +9,10 @@ import {
   Activity, ArrowRight, Award, Baby, BarChart3, Bell, BookOpen, Brain, BrainCircuit, Calendar, CalendarCheck, CalendarDays,
   CalendarClock, Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, Folder, FolderOpen, GraduationCap, Heart, Lightbulb,
   Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, Settings, ShieldCheck,
-  Smartphone, Sparkles, Smile, Stethoscope, Target, TrendingUp, Trophy, UserCheck, Users, Video, Zap,
+  Smartphone, Sparkles, Smile, Stethoscope, Target, Trophy, TrendingUp, UserCheck, Users, Video, Zap,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Reveal } from './reveal';
 import { InscriptionForm } from './inscription-form';
 
@@ -712,20 +713,22 @@ const TEAM_STATS = [
   { Icon: ShieldCheck, big: '35+',   label: 'enseignants',            sub: 'PH specialistes et CCA' },
 ];
 
-/** Collage maquette : 2 bandes larges parallelo, N&B, decalees */
+/** Collage maquette : 4 bandes larges parallelo, N&B, decalees */
 function TeamPhotoCollage() {
   const slices = [
-    { src: '/team/enseignante-1.jpg', mt: 0 },
-    { src: '/team/enseignant-2.jpg', mt: -24 },
+    { src: "/team/enseignante-1.jpg", mt: 0 },
+    { src: "/team/enseignant-2.jpg", mt: -20 },
+    { src: "/team/enseignante-3.jpg", mt: 6 },
+    { src: "/team/enseignant-4.png", mt: -14 },
   ];
   return (
     <div className="flex items-center justify-center">
-      <div className="flex gap-1" style={{ height: '260px' }}>
+      <div className="flex gap-0.5" style={{ height: "260px" }}>
         {slices.map((s, i) => (
-          <div key={i} className="relative w-[110px] overflow-hidden"
-            style={{ clipPath: 'polygon(12% 0%, 100% 0%, 88% 100%, 0% 100%)', marginTop: `${s.mt}px` }}>
+          <div key={i} className="relative w-[70px] overflow-hidden"
+            style={{ clipPath: "polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%)", marginTop: `${s.mt}px` }}>
             <img src={s.src} alt="" className="h-full w-full object-cover object-top"
-              style={{ filter: 'grayscale(100%) contrast(1.1)' }} />
+              style={{ filter: "grayscale(100%) contrast(1.1)" }} />
           </div>
         ))}
       </div>
@@ -1779,10 +1782,10 @@ const TV_CARDS = [
   {
     spec: 'Radiodiagnostic & imagerie médicale',
     accent: TV_RED,
-    name: 'Dr Sami KABAWEH',
-    country: '',
-    flag: '',
-    year: 'Lauréat EVC',
+    name: "Dr Sami KABAWEH",
+    country: "",
+    flag: "",
+    year: "Lauréat EVC",
     duration: '',
     quote: 'Une préparation qui m’a fait franchir un cap : méthode claire, fiches synthétiques et examens blancs proches du jour J.',
     bgGrad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
@@ -1792,10 +1795,10 @@ const TV_CARDS = [
   {
     spec: 'Anesthésie réanimation',
     accent: TV_RED,
-    name: 'Dr Karim KHIAREDDINE',
-    country: '',
-    flag: '',
-    year: 'Lauréat EVC',
+    name: "Dr Karim KHIAREDDINE",
+    country: "",
+    flag: "",
+    year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Dans une spécialité exigeante, la méthodologie Major ECN m’a permis de structurer mes révisions et d’aborder le concours avec sérénité.',
     bgGrad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)',
@@ -1805,10 +1808,10 @@ const TV_CARDS = [
   {
     spec: 'Endocrinologie & métabolisme',
     accent: TV_RED,
-    name: 'Dr Ely Cheikh SY',
-    country: '',
-    flag: '',
-    year: 'Lauréat EVC',
+    name: "Dr Ely Cheikh SY",
+    country: "",
+    flag: "",
+    year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne grâce à un accompagnement structuré.',
     bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
@@ -1818,10 +1821,10 @@ const TV_CARDS = [
   {
     spec: 'Gériatrie',
     accent: TV_RED,
-    name: 'Dr Ahmed SIFAOUI',
-    country: '',
-    flag: '',
-    year: 'Lauréat EVC',
+    name: "Dr Ahmed SIFAOUI",
+    country: "",
+    flag: "",
+    year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Un accompagnement humain et exigeant, des supports clairs et un suivi qui fait toute la différence dans la durée.',
     bgGrad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)',
@@ -1831,10 +1834,10 @@ const TV_CARDS = [
   {
     spec: 'Chirurgie viscérale & digestive',
     accent: TV_RED,
-    name: 'Dr Ahena HAROUN',
-    country: '',
-    flag: '',
-    year: 'Lauréate EVC',
+    name: "Dr Ahena HAROUN",
+    country: "",
+    flag: "",
+    year: "Lauréate EVC 2024",
     duration: '',
     quote: 'Major ECN a structuré toute ma préparation : la méthode, les cas cliniques et les corrections détaillées font la différence.',
     bgGrad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)',
@@ -1842,6 +1845,48 @@ const TV_CARDS = [
     videoSrc: '/temoignages/T5 FINAL V2.mp4',
   },
 ];
+
+type TVCard = (typeof TV_CARDS)[number];
+
+function VideoTestimonialCard({ card }: { card: TVCard }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  return (
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white" style={{ borderColor: "#ECECEF" }}>
+      <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: card.bgGrad }}>
+        <video
+          src={card.videoSrc}
+          controls
+          playsInline
+          preload="metadata"
+          aria-label={`Témoignage vidéo de ${card.name}`}
+          className="absolute inset-0 h-full w-full bg-black object-contain"
+          onLoadedData={(e) => { e.currentTarget.currentTime = 3; }}
+          onPlay={(e) => {
+            if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0;
+            setIsPlaying(true);
+          }}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+        >
+          Votre navigateur ne supporte pas la lecture vidéo.
+        </video>
+        {!isPlaying && (
+          <span
+            className="pointer-events-none absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-lg"
+            style={{ background: TV_RED }}
+          >
+            <Trophy className="h-3 w-3" />
+            {card.year}
+          </span>
+        )}
+      </div>
+      <div className="flex-1 p-3">
+        <p className="text-[14px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{card.name}</p>
+        <p className="mt-0.5 text-[12px] font-bold" style={{ color: TV_RED }}>{card.spec}</p>
+      </div>
+    </article>
+  );
+}
 
 export function TestimonialsVideoSection() {
   return (
@@ -1873,30 +1918,7 @@ export function TestimonialsVideoSection() {
         <div className="mt-12 grid grid-cols-5 gap-4">
           {TV_CARDS.map((c, i) => (
             <Reveal key={c.name} delay={i * 0.06}>
-              <article className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white" style={{ borderColor: '#ECECEF' }}>
-                <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: c.bgGrad }}>
-                  <video
-                    src={c.videoSrc}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    aria-label={`Témoignage vidéo de ${c.name}`}
-                    className="absolute inset-0 h-full w-full bg-black object-contain"
-                    onLoadedData={(e) => { e.currentTarget.currentTime = 3; }} onPlay={(e) => { if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0; }}
-                  >
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                </div>
-                <div className="flex-1 p-3">
-                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{c.name}</p>
-                  <p className="mt-0.5 text-[12px] font-bold" style={{ color: TV_RED }}>{c.spec}</p>
-                  <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide"
-                    style={{ background: TV_PINK_BG, color: TV_RED }}>
-                    <ShieldCheck className="h-3 w-3" />
-                    {c.year}
-                  </p>
-                </div>
-              </article>
+              <VideoTestimonialCard card={c} />
             </Reveal>
           ))}
         </div>
