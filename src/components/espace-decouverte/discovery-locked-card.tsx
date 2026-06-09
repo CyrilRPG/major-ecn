@@ -1,27 +1,30 @@
 'use client';
 
 /**
- * Carte verrouillée dans le parcours Découverte.
+ * Carte verrouillée dans le parcours Découverte (Cours vidéo).
  * Visuellement identique aux autres cartes du parcours, mais elle déclenche
  * la modale LockedContentModal au clic (au lieu de naviguer vers le contenu).
+ *
+ * NB. L'icône est hard-codée (MonitorPlay) car les fonctions React (Lucide
+ * icons inclus) ne sont PAS sérialisables au passage server → client.
+ * Passer `Icon: LucideIcon` en prop ferait planter le rendu Server Component.
  */
 import { useState } from 'react';
-import { ArrowRight, Lock, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Lock, MonitorPlay } from 'lucide-react';
 import { LockedContentModal } from './locked-content-modal';
 
 export function DiscoveryLockedCard({
   label,
   desc,
-  Icon,
   accent,
   bg,
 }: {
   label: string;
   desc: string;
-  Icon: LucideIcon;
   accent: string;
   bg: string;
 }) {
+  const Icon = MonitorPlay;
   const [open, setOpen] = useState(false);
   return (
     <>

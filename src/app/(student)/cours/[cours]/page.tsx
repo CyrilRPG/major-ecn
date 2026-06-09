@@ -194,7 +194,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
                 key={a.href}
                 label={a.label}
                 desc={a.desc}
-                Icon={a.Icon}
                 accent={a.accent}
                 bg={a.bg}
               />
