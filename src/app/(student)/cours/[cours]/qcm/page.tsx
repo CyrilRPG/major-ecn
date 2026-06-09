@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Trophy } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Trophy } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
+import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 
 export default async function CoursQcmListPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -78,6 +79,18 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
             const qCount = s.qcm_questions?.length ?? 0;
             const dp = isDp(s.label);
             const entr = isEntrainement(s.label);
+            // Série SANS question = verrouillée (Découverte) → cadenas + popup tarifs.
+            if (qCount === 0) {
+              return (
+                <li key={s.id}>
+                  <LockedSerieButton
+                    label={s.label}
+                    idx={idx}
+                    kind={entr ? 'entrainement' : dp ? 'dp' : 'qcm'}
+                  />
+                </li>
+              );
+            }
             // Vert pour Entraînement, rouge pour DP, bleu pour QCM standard.
             const theme = entr
               ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }
