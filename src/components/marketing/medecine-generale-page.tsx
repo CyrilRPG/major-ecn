@@ -80,7 +80,7 @@ function MgHero() {
             <p className="mt-5 max-w-xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
               Nouveau&nbsp;! Épreuves de Vérification des Connaissances (EVC) en
               Médecine Générale chez les PADHUE — préparation intégrale, calibrée
-              sur le référentiel CMG et les attentes du jury 2026-2027.
+              sur le référentiel CMG et les attentes du jury 2026.
             </p>
 
             <p className="mt-5 text-[14px] leading-relaxed" style={{ color: INK_SOFT }}>
@@ -134,7 +134,7 @@ function MgHero() {
                 </span>
                 <span className="absolute right-5 top-5 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-md backdrop-blur"
                   style={{ color: NAVY }}>
-                  <Sparkles className="h-3.5 w-3.5" style={{ color: '#E8742C' }} /> EVC (PAE) 2027
+                  <Sparkles className="h-3.5 w-3.5" style={{ color: '#E8742C' }} /> EVC (PAE) 2026
                 </span>
                 <span className="absolute bottom-5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl border border-white bg-white/95 px-3 py-1.5 text-[11px] font-bold shadow-md backdrop-blur"
                   style={{ color: NAVY }}>
@@ -576,7 +576,7 @@ function MgCTA() {
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white backdrop-blur">
-            <Sparkles className="h-3 w-3" /> Inscription ouverte — session 2026/2027
+            <Sparkles className="h-3 w-3" /> Inscription ouverte — session 2026
           </span>
           <h2 className="mt-5 text-3xl font-black leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl"
             style={{ letterSpacing: '-0.02em' }}>

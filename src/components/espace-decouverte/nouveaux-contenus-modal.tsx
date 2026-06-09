@@ -136,32 +136,72 @@ export function NouveauxContenusModal({
 }
 
 /**
- * Bandeau version : à afficher en permanence côté étudiant (dashboard / layout).
- * Dismissable, mémoire locale.
+ * Bandeau version compacte : pour la sidebar du dashboard étudiant.
+ * Dismissable.
  */
 export function NouveauxContenusBanner() {
   const [open, setOpen] = useState(true);
   if (!open) return null;
   return (
-    <section className="bg-white py-4 sm:py-5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div
-          className="relative overflow-hidden rounded-2xl border p-5 sm:p-6"
-          style={{
-            background: 'linear-gradient(to bottom right, #F0F4FA, white, #F0F4FA)',
-            borderColor: '#D4DBE8',
-          }}
-        >
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-            aria-label="Fermer"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <NouveauxContenusContent />
-        </div>
+    <div
+      className="relative overflow-hidden rounded-2xl border p-4"
+      style={{
+        background: 'linear-gradient(to bottom right, #F0F4FA, white, #F0F4FA)',
+        borderColor: '#D4DBE8',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+      }}
+    >
+      <button
+        onClick={() => setOpen(false)}
+        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+        aria-label="Fermer"
+      >
+        <X className="h-4 w-4" />
+      </button>
+      <NouveauxContenusCompact />
+    </div>
+  );
+}
+
+/** Version ultra-compacte pour la sidebar (titres réduits, pas de grille 5 col). */
+function NouveauxContenusCompact() {
+  return (
+    <>
+      <div className="flex items-start gap-2 mb-3 pr-6">
+        <span className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[10px] font-black uppercase tracking-wider text-white" style={{ background: BLUE }}>
+          <Info className="h-3 w-3" />
+          INFO
+        </span>
       </div>
-    </section>
+
+      <h3 className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>
+        Nouveaux contenus <span style={{ color: GREEN }}>en cours d&rsquo;intégration</span>
+      </h3>
+      <p className="mt-2 text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>
+        De nouveaux dossiers cliniques, QCM, fiches et flashcards sont actuellement ajoutés
+        à la plateforme après validation par notre équipe pédagogique.
+      </p>
+
+      <div className="mt-3 rounded-lg p-2.5" style={{ background: SOFT_BG }}>
+        <p className="text-[11.5px] leading-tight" style={{ color: NAVY_DEEP }}>
+          De nouveaux contenus seront mis à disposition <strong>dans les prochains jours.</strong>
+        </p>
+      </div>
+
+      <ul className="mt-3 space-y-1.5">
+        {CONTENU_LIST.map((c) => (
+          <li key={c.t} className="flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: BLUE }}>
+            <CheckCircle2 className="h-3 w-3 shrink-0" />
+            {c.t}
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-3 flex items-center justify-center gap-1 text-[11px] font-bold" style={{ color: NAVY }}>
+        <Heart className="h-3 w-3" fill={RED} style={{ color: RED }} />
+        Merci de votre confiance.
+      </p>
+      <p className="text-center text-[10px]" style={{ color: '#64748B' }}>L&rsquo;équipe Major ECN</p>
+    </>
   );
 }

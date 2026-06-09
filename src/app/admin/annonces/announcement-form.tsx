@@ -125,7 +125,7 @@ export function AnnouncementForm(props: Mode) {
         </Field>
 
         <Field label="Titre" className="sm:col-span-2">
-          <input value={title} onChange={(e) => setTitle(e.target.value)} className={inputCls} placeholder="EVC (PAE) 2027" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} className={inputCls} placeholder="EVC (PAE) 2026" />
         </Field>
 
         <Field label="Icône">
@@ -377,9 +377,9 @@ function Field({ label, children, className = '' }: { label: string; children: R
 function defaultDataFor(kind: AnnouncementInput['kind']): Record<string, unknown> {
   switch (kind) {
     case 'countdown':
-      return { target_date: '2027-10-12', suffix_top: 'Il vous reste', suffix_bottom: 'avant l’épreuve écrite', unit: 'jours' };
+      return { target_date: '2026-10-12', suffix_top: 'Il vous reste', suffix_bottom: 'avant l’épreuve écrite', unit: 'jours' };
     case 'event_list':
-      return { events: [{ label: 'Épreuve écrite', date: '2027-10-12', icon: 'calendar_check' }] };
+      return { events: [{ label: 'Épreuve écrite', date: '2026-10-12', icon: 'calendar_check' }] };
     case 'info':
       return { body: '', cta_label: '', cta_href: '', cta_external: true };
     case 'stat':

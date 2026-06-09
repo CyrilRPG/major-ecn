@@ -297,9 +297,6 @@ export default async function AccueilPage() {
       {/* ============ COLONNE PRINCIPALE ============ */}
       <div className="flex min-w-0 flex-col gap-4">
 
-        {/* ---- Bandeau Information importante (nouveaux contenus) — visible pour tous ---- */}
-        <NouveauxContenusBanner />
-
         {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -563,6 +560,7 @@ export default async function AccueilPage() {
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
         <AnnouncementsWidget />
+        <NouveauxContenusBanner />
       </aside>
     </div>
   );
