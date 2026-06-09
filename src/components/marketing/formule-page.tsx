@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
-  FileText, GraduationCap, Heart, Layers3, LineChart, MessageCircle, Phone, Play,
-  Shield, ShieldCheck, Star, Stethoscope, Target, TrendingUp, Trophy, Users, Video,
+  FileText, GraduationCap, Heart, Layers3, LineChart, Lock, MessageCircle,
+  Phone, Play, Quote, Shield, ShieldCheck, Star, Stethoscope, Target,
+  TrendingUp, Trophy, Users, Video,
 } from 'lucide-react';
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
@@ -372,95 +373,13 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         </div>
       </section>
 
+      {/* CHOISIR CETTE FORMULE — checkout Stripe (essentielle, intensive)
+          OU formulaire de rappel (programme approfondi sur-mesure)
+          DÉPLACÉ AVANT la FAQ pour conversion optimale */}
+      <PaymentSection variant={variant} c={c} />
+
       {/* FAQ */}
       <FAQSection />
-
-      {/* CHOISIR CETTE FORMULE — checkout Stripe (essentielle, intensive)
-          OU formulaire de rappel (programme approfondi sur-mesure) */}
-      <section id="choisir-formule" className="py-14" style={{ background: variant === 'approfondi' ? '#1E40AF' : variant === 'intensive' ? '#C0112E' : '#2E7D32' }}>
-        <div className="mx-auto grid max-w-5xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:px-8">
-          {/* Gauche : récap formule */}
-          <div className="text-center text-white lg:text-left">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-white/80">
-              {c.label}
-            </p>
-            <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
-              {variant === 'approfondi' ? 'Échanger avec un conseiller' : 'Choisir cette formule'}
-            </h2>
-            <p className="mt-3 text-sm text-white/85">
-              {variant === 'approfondi'
-                ? "Programme sur-mesure : un conseiller vous rappelle pour cadrer votre préparation."
-                : "Accès immédiat à la plateforme après votre inscription et activation par email."}
-            </p>
-            <p className="mt-6 text-5xl font-black">{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
-            {variant === 'approfondi' && (
-              <p className="mt-2 text-xs text-white/70">*Tarif variable selon la spécialité préparée.</p>
-            )}
-            <ul className="mt-6 space-y-2 text-sm text-white/90">
-              {variant === 'approfondi'
-                ? [
-                    'Reprise structurée des spécialités majeures',
-                    'Échanges réguliers avec les enseignants',
-                    'Épreuves blanches et suivi personnalisé',
-                    'Un conseiller vous rappelle sous 24 h ouvrées',
-                  ].map((t) => (
-                    <li key={t} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-white" /> {t}</li>
-                  ))
-                : [
-                    'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
-                    'QCM, fiches, flashcards, méthodologie EVC',
-                    'Email de confirmation + activation immédiate du compte',
-                    'Paiement en 1, 3 ou 4 fois — sécurisé via Stripe',
-                  ].map((t) => (
-                    <li key={t} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-white" /> {t}</li>
-                  ))}
-            </ul>
-          </div>
-
-          {/* Droite : carte paiement Stripe OU carte demande de rappel */}
-          <div className="rounded-3xl bg-white p-6 shadow-2xl sm:p-7">
-            {variant === 'approfondi' ? (
-              <>
-                <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: '#52607A' }}>
-                  Demande de rappel
-                </p>
-                <h3 className="mt-1 text-xl font-black" style={{ color: NAVY }}>
-                  Soyez rappelé sous 24 h ouvrées
-                </h3>
-                <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT }}>
-                  Un conseiller pédagogique vous appelle au numéro indiqué pour
-                  établir un programme sur-mesure et répondre à vos questions.
-                </p>
-                <div className="mt-5">
-                  <CallbackRequestForm
-                    color={{ deep: '#1E3A8A', main: '#1E40AF' }}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: '#52607A' }}>
-                  Inscription &amp; paiement
-                </p>
-                <h3 className="mt-1 text-xl font-black" style={{ color: NAVY }}>
-                  Créez votre compte en 30 secondes
-                </h3>
-                <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT }}>
-                  Vos informations servent à créer votre compte étudiant et à vous envoyer
-                  votre lien d&rsquo;activation par email.
-                </p>
-                <div className="mt-5">
-                  <CheckoutButton
-                    formuleId={VARIANT_TO_FORMULE_ID[variant]}
-                    label={`Payer ${c.price} € et créer mon compte`}
-                    color={{ deep: variant === 'intensive' ? '#8B0E22' : '#1B5E20', main: c.color }}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
 
       {/* TRUST BADGES */}
       <section className="bg-white py-6 border-t" style={{ borderColor: BORDER }}>
@@ -475,5 +394,215 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         </div>
       </section>
     </div>
+  );
+}
+
+/* ============================================================
+   PaymentSection — bloc premium d'achat/rappel pour les formules.
+   Design pixel-perfect très travaillé pour inspirer confiance sur
+   gros montants : trust badges, social proof, breakdown, garanties.
+   ============================================================ */
+type PaymentCfg = {
+  color: string;
+  colorSoft: string;
+  label: string;
+  price: string;
+  cta: string;
+  ctaSecondary?: string;
+};
+
+function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
+  const isApprofondi = variant === 'approfondi';
+
+  // Palette par variant
+  const palette = {
+    essentielle:  { bgDeep: '#0B3D0F', bgMain: '#16793C', accentLight: '#A7F3D0' },
+    intensive:    { bgDeep: '#3A0612', bgMain: '#8B0E22', accentLight: '#FECDD3' },
+    approfondi:   { bgDeep: '#0A1A4D', bgMain: '#1E40AF', accentLight: '#BFDBFE' },
+  }[variant];
+
+  const ctaColor = isApprofondi
+    ? { deep: '#1E3A8A', main: '#1E40AF' }
+    : variant === 'intensive'
+      ? { deep: '#8B0E22', main: '#C0112E' }
+      : { deep: '#1B5E20', main: '#16793C' };
+
+  return (
+    <section id="choisir-formule" className="relative overflow-hidden py-16 sm:py-20"
+      style={{
+        background: `linear-gradient(135deg, ${palette.bgDeep} 0%, ${palette.bgMain} 60%, ${palette.bgDeep} 100%)`,
+      }}>
+      {/* Décor : halos subtils */}
+      <div aria-hidden className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full opacity-30 blur-3xl"
+        style={{ background: palette.accentLight }} />
+      <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full opacity-20 blur-3xl"
+        style={{ background: palette.accentLight }} />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        {/* Header section */}
+        <div className="text-center text-white">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] backdrop-blur">
+            {isApprofondi ? '📞 Programme sur-mesure' : '🔒 Paiement 100 % sécurisé'}
+          </span>
+          <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl">
+            {isApprofondi
+              ? 'Échanger avec un conseiller'
+              : (<>Rejoignez les médecins<br className="hidden sm:block" /> qui réussissent les EVC</>)}
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-[17px] text-white/85">
+            {isApprofondi
+              ? "Programme entièrement personnalisé. Un conseiller pédagogique vous rappelle sous 24 h ouvrées pour cadrer votre préparation."
+              : (
+                <>
+                  Activation immédiate après paiement · Email de bienvenue avec votre lien d&rsquo;accès ·{' '}
+                  Satisfait ou remboursé sous 14 jours
+                </>
+              )}
+          </p>
+        </div>
+
+        {/* Grille 2 colonnes : récap + formulaire */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
+          {/* COLONNE GAUCHE : récap + arguments + social proof */}
+          <div className="space-y-5">
+            {/* Récap formule + prix */}
+            <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-6 backdrop-blur sm:p-7">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: palette.accentLight }}>
+                {c.label}
+              </p>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-5xl font-black text-white sm:text-6xl">
+                  {c.price} €{isApprofondi ? '*' : ''}
+                </span>
+                {!isApprofondi && (
+                  <span className="text-sm font-medium text-white/75">paiement unique</span>
+                )}
+              </div>
+              {isApprofondi && (
+                <p className="mt-2 text-xs text-white/70">*Tarif variable selon la spécialité.</p>
+              )}
+              {!isApprofondi && (
+                <p className="mt-2 text-sm font-bold text-white">
+                  ou {Math.round(parseInt(c.price.replace(' ', '').replace(',', ''), 10) / 3)} €/mois en 3 fois ·{' '}
+                  {Math.round(parseInt(c.price.replace(' ', '').replace(',', ''), 10) / 4)} €/mois en 4 fois
+                </p>
+              )}
+
+              <span className="my-5 block h-px w-full bg-white/15" />
+
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: palette.accentLight }}>
+                Ce qui est inclus
+              </p>
+              <ul className="mt-3 space-y-2.5">
+                {(isApprofondi
+                  ? [
+                      'Reprise structurée des spécialités majeures',
+                      'Échanges réguliers avec les enseignants',
+                      'Épreuves blanches et suivi personnalisé',
+                      'Accompagnement individuel haut niveau',
+                      'Rappel sous 24 h ouvrées',
+                    ]
+                  : [
+                      'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
+                      'QCM, fiches, flashcards, méthodologie EVC',
+                      'Annales corrigées des sessions précédentes',
+                      'Email de confirmation + activation immédiate',
+                      'Paiement en 1, 3 ou 4 fois sans frais',
+                    ]
+                ).map((t) => (
+                  <li key={t} className="flex items-start gap-2.5 text-[14px] text-white">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: palette.accentLight }} strokeWidth={3} />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Social proof */}
+            <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-5 backdrop-blur sm:p-6">
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15">
+                  <Quote className="h-5 w-5" style={{ color: palette.accentLight }} fill="currentColor" />
+                </span>
+                <div>
+                  <p className="text-[14px] leading-relaxed text-white">
+                    « Major ECN m&rsquo;a permis de réussir les EVC dès la première tentative.
+                    Une méthode claire, un suivi de qualité et de vrais résultats. »
+                  </p>
+                  <p className="mt-2 text-[12px] font-bold text-white">
+                    Dr A. Sifaoui · <span className="font-normal" style={{ color: palette.accentLight }}>Lauréat EVC Gériatrie 2025</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Garanties */}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { Icon: ShieldCheck, t: 'Paiement sécurisé', s: 'Stripe certifié' },
+                { Icon: Trophy,      t: 'Satisfait',          s: 'ou remboursé 14 j' },
+                { Icon: Clock,       t: 'Accès immédiat',     s: 'activation email' },
+              ].map((g) => (
+                <div key={g.t} className="rounded-2xl border border-white/15 bg-white/[0.06] p-3 text-center backdrop-blur">
+                  <g.Icon className="mx-auto h-5 w-5" style={{ color: palette.accentLight }} />
+                  <p className="mt-2 text-[11.5px] font-extrabold leading-tight text-white">{g.t}</p>
+                  <p className="text-[10px] leading-tight text-white/70">{g.s}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* COLONNE DROITE : formulaire de paiement ou rappel */}
+          <div className="rounded-3xl border border-white/30 bg-white p-6 shadow-2xl sm:p-8">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl"
+                style={{ background: '#FCEAEC', color: ctaColor.main }}>
+                {isApprofondi ? <Phone className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
+              </span>
+              <div>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em]" style={{ color: INK_SOFT }}>
+                  {isApprofondi ? 'Demande de rappel' : `Étape ${variant === 'essentielle' ? '1/1' : '1/1'} — Paiement`}
+                </p>
+                <p className="text-[15px] font-black" style={{ color: NAVY }}>
+                  {isApprofondi
+                    ? 'Soyez rappelé sous 24 h ouvrées'
+                    : 'Créez votre compte étudiant'}
+                </p>
+              </div>
+            </div>
+            <p className="mt-3 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+              {isApprofondi
+                ? 'Un conseiller pédagogique vous appelle au numéro indiqué pour établir un programme sur-mesure et répondre à toutes vos questions.'
+                : (
+                  <>
+                    Remplissez ce formulaire en 30 secondes, puis effectuez votre paiement
+                    sur la page sécurisée Stripe. Vous recevrez immédiatement votre email
+                    d&rsquo;activation pour accéder à la plateforme.
+                  </>
+                )}
+            </p>
+
+            <div className="mt-6">
+              {isApprofondi ? (
+                <CallbackRequestForm color={ctaColor} />
+              ) : (
+                <CheckoutButton
+                  formuleId={VARIANT_TO_FORMULE_ID[variant]}
+                  label={`Payer ${c.price} € et créer mon compte`}
+                  color={ctaColor}
+                />
+              )}
+            </div>
+
+            {/* Mentions légales bas */}
+            <p className="mt-5 text-center text-[10.5px]" style={{ color: '#7A8499' }}>
+              En procédant au {isApprofondi ? 'rappel' : 'paiement'}, vous acceptez les{' '}
+              <Link href="/cgu" className="font-semibold underline" style={{ color: ctaColor.main }}>CGU</Link>
+              {' '}de Major ECN.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

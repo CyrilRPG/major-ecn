@@ -6,9 +6,10 @@
  * Envoie la demande à /api/callback-request qui notifie l'équipe par email.
  */
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowRight, CheckCircle2, GraduationCap, Loader2, Mail, MessageCircle,
-  Phone, PhoneCall, User,
+  Phone, PhoneCall, Stethoscope, User,
 } from 'lucide-react';
 
 const RED = '#C0112E';
@@ -17,18 +18,8 @@ const INK = '#1F2937';
 const INK_SOFT = '#52607A';
 const BORDER = '#E5E9F0';
 
-const SPECIALTIES = [
-  'Médecine générale', 'Cardiologie', 'Pneumologie', 'Gastro-entérologie',
-  'Endocrinologie', 'Néphrologie', 'Neurologie', 'Rhumatologie', 'Hématologie',
-  'Médecine interne', 'Maladies infectieuses', 'Oncologie',
-  'Anesthésie-Réanimation', "Médecine d’Urgence", 'Pédiatrie', 'Gériatrie',
-  'Psychiatrie', 'Radiologie', 'Médecine physique et réadaptation',
-  'Dermatologie', 'Ophtalmologie', 'ORL', 'Chirurgie viscérale & digestive',
-  'Chirurgie orthopédique', 'Chirurgie thoracique', 'Chirurgie urologique',
-  'Chirurgie vasculaire', 'Chirurgie plastique', 'Chirurgie pédiatrique',
-  'Neurochirurgie', 'Gynécologie-Obstétrique', 'Odontologie',
-  'Maïeutique (Sage-femme)', 'Pharmacie', 'Autre',
-];
+const SPECIALTIES = ['Médecine générale'] as const;
+const PROMOTIONS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
 
 type Props = {
   /** Couleur principale du bouton CTA. */
@@ -42,8 +33,10 @@ export function CallbackRequestForm({
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [specialty, setSpecialty] = useState('');
+  const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
+  const [promotion, setPromotion] = useState<string>('');
   const [message, setMessage] = useState('');
+  const [rgpd, setRgpd] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +47,10 @@ export function CallbackRequestForm({
       setError('Merci de renseigner prénom, nom, email et téléphone.');
       return;
     }
+    if (!rgpd) {
+      setError("Vous devez accepter la politique de confidentialité pour continuer.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -61,7 +58,7 @@ export function CallbackRequestForm({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName, lastName, email, phone, specialty, message,
+          firstName, lastName, email, phone, specialty, promotion, message,
           source: 'programme-approfondi',
         }),
       });
@@ -114,23 +111,23 @@ export function CallbackRequestForm({
       <Input icon={Phone} type="tel"   placeholder="Téléphone (sera rappelé)" value={phone} onChange={setPhone} required />
 
       {/* Spécialité */}
-      <div className="relative">
-        <GraduationCap className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: '#7A8499' }} />
-        <select
-          value={specialty}
-          onChange={(e) => setSpecialty(e.target.value)}
-          className="w-full appearance-none rounded-xl border bg-white py-3 pl-10 pr-3 text-[13.5px] focus:outline-none focus:ring-2"
-          style={{
-            borderColor: BORDER,
-            color: specialty ? INK : '#94A3B8',
-            // @ts-expect-error custom CSS prop
-            '--tw-ring-color': RED,
-          }}
-        >
-          <option value="">Spécialité préparée</option>
-          {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-      </div>
+      <Select
+        icon={Stethoscope}
+        value={specialty}
+        onChange={setSpecialty}
+        options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
+      />
+
+      {/* Promotion */}
+      <Select
+        icon={GraduationCap}
+        value={promotion}
+        onChange={setPromotion}
+        options={[
+          { value: '', label: 'Promotion (D2 / D3 / D4 / PAE)' },
+          ...PROMOTIONS.map((p) => ({ value: p, label: p })),
+        ]}
+      />
 
       {/* Message */}
       <div className="relative">
@@ -149,6 +146,26 @@ export function CallbackRequestForm({
           }}
         />
       </div>
+
+      {/* RGPD */}
+      <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border bg-[#FCFCFD] p-3.5"
+        style={{ borderColor: rgpd ? color.main : '#E5E9F0' }}>
+        <input
+          type="checkbox"
+          checked={rgpd}
+          onChange={(e) => setRgpd(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 rounded"
+          style={{ accentColor: color.main }}
+        />
+        <span className="text-[12px] leading-relaxed" style={{ color: INK }}>
+          J&rsquo;accepte que mes données personnelles soient collectées pour traiter ma
+          demande, conformément à la{' '}
+          <Link href="/confidentialite" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
+            politique de confidentialité
+          </Link>{' '}
+          de Major ECN. <span className="text-[11px]" style={{ color: '#7A8499' }}>(obligatoire)</span>
+        </span>
+      </label>
 
       <button
         type="submit"
@@ -171,6 +188,39 @@ export function CallbackRequestForm({
         Un conseiller vous rappelle sous 24 h ouvrées · Aucun paiement à ce stade
       </p>
     </form>
+  );
+}
+
+function Select({
+  icon: Icon,
+  value,
+  onChange,
+  options,
+}: {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: '#7A8499' }} />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full appearance-none rounded-xl border bg-white py-3 pl-10 pr-9 text-[13.5px] focus:outline-none focus:ring-2"
+        style={{
+          borderColor: BORDER,
+          color: value ? INK : '#94A3B8',
+          // @ts-expect-error custom CSS prop
+          '--tw-ring-color': RED,
+        }}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </div>
   );
 }
 
