@@ -195,17 +195,22 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
               <div className="mt-2 text-[#F59E0B]">★★★★★</div>
               <Quote className="mt-2 h-4 w-4 text-[#C0001F]" />
               <p className="mt-1 text-[11.5px] italic leading-relaxed text-[#1A2233]">
-                « Grâce à Major ECN, j&rsquo;ai pu structurer mes révisions, comprendre la
-                méthodologie et prendre confiance. Les corrections détaillées et les cas
-                cliniques m&rsquo;ont vraiment fait progresser. »
+                « Une préparation structurée et ciblée, utile bien au-delà du concours.
+                Les examens blancs réalisés dans des conditions proches du concours m&rsquo;ont
+                beaucoup aidé à aborder le jour J avec davantage de confiance. »
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE4E8] text-[10px] font-extrabold text-[#C0001F]">
-                  SK
-                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/temoignages/drbilly.png"
+                  alt="Dr Bill Baron WANKPO"
+                  className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-[#FFE4E8]"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div>
-                  <p className="text-[11.5px] font-bold text-[#1A2233]">Dr. S. K.</p>
-                  <p className="text-[9.5px] text-[#9AA1AE]">Admis EVC Médecine Générale - Session 2024</p>
+                  <p className="text-[11.5px] font-bold text-[#1A2233]">Dr Bill Baron WANKPO</p>
+                  <p className="text-[9.5px] text-[#9AA1AE]">Lauréat EVC Médecine Générale</p>
                 </div>
               </div>
               <div className="mt-2 flex justify-center gap-1">

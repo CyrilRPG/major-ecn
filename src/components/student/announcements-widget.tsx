@@ -1,8 +1,8 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import {
-  ArrowRight, BarChart3, Calendar, CalendarCheck, CalendarDays, ExternalLink,
-  Medal, Megaphone, Trophy, UserCheck, type LucideIcon,
+  ArrowRight, BarChart3, Bell, Calendar, CalendarCheck, CalendarDays, ExternalLink,
+  Info, Medal, Megaphone, Trophy, UserCheck, type LucideIcon,
 } from 'lucide-react';
 
 /** Représente un bloc personnalisable affiché à droite de l'accueil. */
@@ -87,34 +87,67 @@ export async function AnnouncementsWidget() {
 function AnnouncementCard({ a }: { a: Announcement }) {
   const Icon = pickIcon(a.icon_key);
   const tone = BADGE_TONES[a.badge_tone ?? 'red'];
+  const subtitle = (a.data as { subtitle?: string }).subtitle;
+  // Lorsque l'icône est `user_check` avec ton bleu, on affiche un petit badge "i"
+  // en overlay sur l'icône utilisateur (pixel-perfect maquette).
+  const showInfoOverlay = a.icon_key === 'user_check' && a.badge_tone === 'blue';
 
   return (
-    <article className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-      {/* Header : icône en pastille + titre + badge éventuel */}
-      <header className="flex items-start gap-3">
+    <article className="rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+      {/* Header : icône en pastille + titre/subtitle + badge éventuel */}
+      <header className="flex items-start gap-3.5">
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
           style={{ background: tone.bg, color: tone.fg }}
         >
-          <Icon className="h-4.5 w-4.5" />
+          <Icon className="h-5 w-5" strokeWidth={2.2} />
+          {showInfoOverlay && (
+            <span
+              aria-hidden
+              className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full ring-2"
+              style={{
+                background: tone.fg,
+                color: tone.bg,
+                // @ts-expect-error custom CSS prop
+                '--tw-ring-color': '#FFFFFF',
+              }}
+            >
+              <Info className="h-2.5 w-2.5" strokeWidth={3} />
+            </span>
+          )}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-[15px] font-extrabold leading-tight text-(--color-primary)">
+          <h3 className="text-[17px] font-black leading-tight tracking-tight text-(--color-ink)">
             {a.title}
           </h3>
+          {subtitle && (
+            <p className="mt-0.5 text-[17px] font-black leading-tight tracking-tight text-(--color-primary)">
+              {subtitle}
+            </p>
+          )}
         </div>
         {a.badge_label && (
           <span
-            className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-[12px] font-bold"
             style={{ background: tone.bg, color: tone.fg }}
           >
+            {showInfoOverlay && <Info className="h-3 w-3" strokeWidth={3} />}
             {a.badge_label}
           </span>
         )}
       </header>
 
+      {/* Trait d'accent rouge sous le header (pixel-perfect maquette) */}
+      {subtitle && (
+        <span
+          aria-hidden
+          className="mt-3 block h-[3px] w-12 rounded-full"
+          style={{ background: 'var(--color-primary)' }}
+        />
+      )}
+
       {/* Body — varie selon le kind */}
-      <div className="mt-3">
+      <div className="mt-4">
         {a.kind === 'countdown'   && <CountdownBody data={a.data} />}
         {a.kind === 'event_list'  && <EventListBody data={a.data} />}
         {a.kind === 'info'        && <InfoBody data={a.data} />}
@@ -173,24 +206,45 @@ function EventListBody({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-type InfoData = { body?: string; cta_label?: string; cta_href?: string; cta_external?: boolean };
+type InfoData = {
+  body?: string;
+  cta_label?: string;
+  cta_href?: string;
+  cta_external?: boolean;
+  footer_note?: string;
+};
 function InfoBody({ data }: { data: Record<string, unknown> }) {
   const d = data as InfoData;
   return (
     <div>
       {d.body && (
-        <p className="text-sm leading-relaxed text-(--color-ink-soft)">{d.body}</p>
+        <p className="text-[14.5px] leading-relaxed text-(--color-ink-soft)">{d.body}</p>
       )}
       {d.cta_label && d.cta_href && (
         <a
           href={d.cta_href}
           target={d.cta_external ? '_blank' : undefined}
           rel={d.cta_external ? 'noopener noreferrer' : undefined}
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.01]"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-(--color-primary) px-4 py-3.5 text-[15px] font-extrabold text-white shadow-[0_12px_30px_-10px_rgba(192,17,46,0.45)] transition-transform hover:scale-[1.01]"
         >
           {d.cta_label}
-          {d.cta_external ? <ExternalLink className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+          {d.cta_external ? <ExternalLink className="h-4 w-4" strokeWidth={2.5} /> : <ArrowRight className="h-4 w-4" strokeWidth={2.5} />}
         </a>
+      )}
+      {d.footer_note && (
+        <div
+          className="mt-4 flex items-start gap-3 rounded-2xl border px-4 py-3"
+          style={{ background: '#EAF1FB', borderColor: 'rgba(30,64,175,0.15)' }}
+        >
+          <Bell
+            className="mt-0.5 h-5 w-5 shrink-0"
+            style={{ color: '#1E40AF' }}
+            strokeWidth={2}
+          />
+          <p className="text-[12.5px] leading-relaxed" style={{ color: '#1F2937' }}>
+            {d.footer_note}
+          </p>
+        </div>
       )}
     </div>
   );

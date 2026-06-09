@@ -438,10 +438,10 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               </p>
               <ul className="mt-3 grid grid-cols-1 gap-2.5">
                 {[
-                  { big: '2 288',  sub: 'flashcards' },
-                  { big: '5 000+', sub: 'QCM disponibles' },
-                  { big: '50+',    sub: 'concours blancs' },
-                  { big: '45+',    sub: 'spécialités préparées' },
+                  { big: '4 500+', sub: 'flashcards' },
+                  { big: '10 000+',sub: 'QCM disponibles' },
+                  { big: '60+',    sub: 'concours blancs' },
+                  { big: '45',     sub: 'spécialités préparées' },
                   { big: '9 000+', sub: 'médecins formés' },
                 ].map((s) => (
                   <li key={s.sub} className="flex items-baseline justify-between border-b pb-2 last:border-b-0 last:pb-0"
