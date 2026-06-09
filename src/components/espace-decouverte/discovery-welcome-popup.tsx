@@ -24,8 +24,10 @@ import {
 
 const STORAGE_KEY = 'major-ecn:welcome-decouverte-dismissed';
 
-const PURPLE = '#7C3AED';
-const PURPLE_DEEP = '#5B21B6';
+/* Palette bleue alignée sur l'icône des poumons (navy/médium blue). */
+const BLUE = '#2563EB';        // bleu principal
+const BLUE_DEEP = '#1E40AF';   // bleu foncé pour les états hover/dark
+const BLUE_LIGHT = '#93C5FD';  // bleu clair pour les accents secondaires
 const NAVY = '#0F1F4D';
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
@@ -78,7 +80,7 @@ export function DiscoveryWelcomePopup() {
               className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full"
               style={{
                 background:
-                  'radial-gradient(circle at 50% 50%, rgba(196,181,253,0.45) 0%, rgba(237,233,254,0.65) 60%, rgba(245,243,255,0) 100%)',
+                  'radial-gradient(circle at 50% 50%, rgba(147,197,253,0.45) 0%, rgba(219,234,254,0.65) 60%, rgba(239,246,255,0) 100%)',
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -88,23 +90,23 @@ export function DiscoveryWelcomePopup() {
                 className="h-24 w-24 object-contain"
               />
             </span>
-            {/* Accents flottants violets */}
+            {/* Accents flottants bleus */}
             <Sparkles
               aria-hidden
               className="absolute -left-2 top-2 h-4 w-4"
-              style={{ color: PURPLE }}
+              style={{ color: BLUE }}
               strokeWidth={2.4}
             />
             <Sparkles
               aria-hidden
               className="absolute -right-1 bottom-4 h-3.5 w-3.5"
-              style={{ color: '#A78BFA' }}
+              style={{ color: BLUE_LIGHT }}
               strokeWidth={2.4}
             />
             <span
               aria-hidden
               className="absolute -top-1 right-0 flex h-7 w-7 items-center justify-center rounded-full"
-              style={{ background: PURPLE, color: '#FFFFFF', boxShadow: '0 6px 20px -8px rgba(124,58,237,0.5)' }}
+              style={{ background: BLUE, color: '#FFFFFF', boxShadow: '0 6px 20px -8px rgba(37,99,235,0.5)' }}
             >
               <HelpCircle className="h-3.5 w-3.5" strokeWidth={2.6} />
             </span>
@@ -122,14 +124,14 @@ export function DiscoveryWelcomePopup() {
           </h2>
           <p
             className="mt-1 text-[26px] font-black leading-tight tracking-tight sm:text-[30px]"
-            style={{ color: PURPLE }}
+            style={{ color: BLUE }}
           >
             Pneumologie
           </p>
           <span
             aria-hidden
             className="mx-auto mt-2 block h-[3px] w-16 rounded-full"
-            style={{ background: PURPLE }}
+            style={{ background: BLUE }}
           />
         </div>
 
@@ -209,14 +211,14 @@ export function DiscoveryWelcomePopup() {
           </li>
         </ul>
 
-        {/* Box d'information violette */}
+        {/* Box d'information bleue */}
         <div
           className="mt-5 flex items-start gap-3 rounded-2xl border p-4"
-          style={{ background: '#F5F3FF', borderColor: '#DDD6FE' }}
+          style={{ background: '#EFF6FF', borderColor: '#BFDBFE' }}
         >
           <span
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-            style={{ background: '#FFFFFF', color: PURPLE }}
+            style={{ background: '#FFFFFF', color: BLUE }}
           >
             <Lightbulb className="h-4 w-4" strokeWidth={2.4} />
           </span>
@@ -250,13 +252,13 @@ export function DiscoveryWelcomePopup() {
             checked={neverShow}
             onChange={(e) => setNeverShow(e.target.checked)}
             className="h-4 w-4 cursor-pointer rounded"
-            style={{ accentColor: PURPLE }}
+            style={{ accentColor: BLUE }}
           />
           Ne plus afficher ce message
         </label>
 
         {/* Pour les linters strict-null sur les imports inutilisés */}
-        <span hidden style={{ color: NAVY, borderColor: BORDER, background: PURPLE_DEEP }} aria-hidden />
+        <span hidden style={{ color: NAVY, borderColor: BORDER, background: BLUE_DEEP }} aria-hidden />
       </div>
     </div>
   );
