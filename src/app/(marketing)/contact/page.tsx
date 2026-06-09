@@ -40,7 +40,7 @@ const FEATURES = [
   { Icon: Clock,       title: 'Réponse sous 24 h', sub: 'par un membre de l’équipe Major ECN.', tone: RED },
   { Icon: UserCheck,   title: 'Suivi sur mesure',  sub: 'orientation vers la formule adaptée.', tone: '#2563EB' },
   { Icon: Stethoscope, title: 'Spécialistes EVC',  sub: 'enseignants & praticiens en activité.', tone: '#0F8A6A' },
-  { Icon: Sparkles,    title: 'Sans engagement',   sub: 'essai gratuit 2 jours, sans CB.',       tone: '#E8742C' },
+  { Icon: Sparkles,    title: 'Sans engagement',   sub: "Espace découverte gratuit, sans CB.",       tone: '#E8742C' },
 ];
 
 const TRUST_AVATARS = [
@@ -288,7 +288,7 @@ export default function ContactPage() {
               </Link>
               <Link href="/inscription"
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur transition-transform hover:scale-[1.02]">
-                Démarrer mon essai gratuit
+                Découvrir l'espace gratuit
               </Link>
             </div>
           </div>

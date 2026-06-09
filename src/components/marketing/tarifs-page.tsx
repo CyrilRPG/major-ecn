@@ -150,7 +150,7 @@ export function TarifsPageContent() {
               <Link href="/formules/essentielle" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white" style={{ background: GREEN }}>
                 Commencer avec Essentielle <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>2 jours d{"'"}essai gratuit &#183; Sans engagement</p>
+              <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>Espace découverte gratuit &#183; Sans engagement</p>
             </div>
 
             {/* Intensive */}

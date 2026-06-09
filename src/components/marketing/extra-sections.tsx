@@ -1005,7 +1005,7 @@ export function TarifsBlock() {
             Votre réussite aux EVC commence ici
           </h2>
           <p className="mt-4 text-base text-white/70 sm:text-lg">
-            Choisissez la formule adaptée à vos objectifs. 2 jours d’essai gratuit, sans engagement.
+            Choisissez la formule adaptée à vos objectifs. Sans engagement.
           </p>
         </Reveal>
 
@@ -1070,7 +1070,7 @@ export function TarifsBlock() {
         </div>
 
         <p className="mt-10 text-center text-xs text-white/55">
-          ✓ Essai gratuit 2 jours · Accès complet · Zéro engagement · Annulation instantanée
+          ✓ Espace découverte gratuit · Accès complet · Zéro engagement · Annulation instantanée
         </p>
       </div>
     </section>

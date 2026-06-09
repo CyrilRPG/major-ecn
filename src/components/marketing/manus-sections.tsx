@@ -996,10 +996,10 @@ export function FAQSection() {
 
 
 // ============================================================================
-// FREE TRIAL CTA — bannière mise en avant de l'essai 2 jours
+// FREE TRIAL CTA — bannière mise en avant de l'espace découverte
 // ============================================================================
 /* FreeTrialBanner — pixel-perfect maquette designer.
-   Gauche : badge gradient red→orange, titre navy + « pendant 2 jours. »
+   Gauche : badge gradient red→orange, titre navy + « sans engagement. »
    en dégradé, 4 atouts à coches rouges. Droite : carte blanche formulaire
    email. Dessous : 3 cartes réassurance. */
 const FT_NAVY = '#0F1B3D';
@@ -1055,12 +1055,12 @@ export function FreeTrialBanner() {
             </span>
 
             <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.75rem]">
-              <span className="block" style={{ backgroundImage: "linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Testez Major ECN</span>
+              <span className="block" style={{ backgroundImage: "linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 50%, #C0112E 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Découvrez Major ECN</span>
               <span
                 className="block bg-clip-text text-transparent"
                 style={{ backgroundImage: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 45%, ${FT_ORANGE} 100%)` }}
               >
-                pendant 2 jours.
+                sans engagement.
               </span>
             </h2>
 
@@ -1105,7 +1105,7 @@ export function FreeTrialBanner() {
               </span>
               <div>
                 <p className="text-xl font-extrabold leading-tight" style={{ color: FT_NAVY }}>
-                  Commencez votre essai gratuit
+                  Accédez à l'espace découverte
                 </p>
                 <p className="mt-0.5 text-sm text-[#6B7280]" style={{ fontFamily: MANROPE }}>
                   Accédez à Major ECN pendant 2 jours, sans engagement.
@@ -1136,7 +1136,7 @@ export function FreeTrialBanner() {
                 className="mt-4 flex w-full items-center justify-center gap-2.5 rounded-xl py-4 text-base font-extrabold text-white shadow-[0_12px_30px_-10px_rgba(122,19,32,0.6)] transition-transform hover:scale-[1.01]"
                 style={{ background: `linear-gradient(90deg, ${FT_RED_DEEP} 0%, ${FT_RED} 100%)` }}
               >
-                Démarrer mon essai gratuit
+                Découvrir l'espace gratuit
                 <ArrowRight className="h-5 w-5" />
               </button>
             </form>

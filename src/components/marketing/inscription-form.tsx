@@ -260,7 +260,7 @@ export function InscriptionForm({ colleges = [] }: { colleges?: { id: string; no
         style={{ fontFamily: JAKARTA }}
       >
         {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
-        {status === 'submitting' ? 'Création de votre compte…' : 'Démarrer mes 2 jours gratuits'}
+        {status === 'submitting' ? 'Création de votre compte…' : 'Accéder à l\'espace découverte'}
         {status !== 'submitting' && <ArrowRight className="h-5 w-5" />}
       </motion.button>
 
