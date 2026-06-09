@@ -9,6 +9,10 @@ import {
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
 import { EspaceDecouverteSection } from './extra-sections';
+import {
+  AnimatedCounter, ComparisonTable, GlassCard, MarqueeScroll,
+  MeshGradient, NoiseTexture, SpotlightCard,
+} from './premium-ui';
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -29,55 +33,104 @@ const SPECIALTIES = [
 
 export function TarifsPageContent() {
   return (
-    <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 35%, #FFF8F9 70%, #FFFFFF 100%)' }}>
-      {/* Décor global — halos subtils en arrière-plan */}
-      <div aria-hidden className="pointer-events-none absolute -right-32 top-0 h-[480px] w-[480px] rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(192,17,46,0.25), transparent 70%)' }} />
-      <div aria-hidden className="pointer-events-none absolute -left-40 top-[40%] h-[420px] w-[420px] rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(15,31,77,0.20), transparent 70%)' }} />
-      <div aria-hidden className="pointer-events-none absolute right-0 bottom-[20%] h-[380px] w-[380px] rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.20), transparent 70%)' }} />
+    <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 30%, #FFF8F9 60%, #FAFBFF 90%, #FFFFFF 100%)' }}>
+      {/* Mesh gradient global animé */}
+      <MeshGradient />
+      <NoiseTexture opacity={0.025} />
 
-      {/* ═══ HERO premium ═══ */}
-      <section className="relative pt-10 pb-12 sm:pt-14 sm:pb-16">
+      {/* ═══ MARQUEE en tout en haut ═══ */}
+      <div className="relative border-y bg-gradient-to-r from-[#0F1F4D] via-[#1A2F70] to-[#0F1F4D] py-3 text-white" style={{ borderColor: 'rgba(255,255,255,0.10)' }}>
+        <MarqueeScroll
+          items={[
+            '✦ 9 000+ médecins accompagnés',
+            '✦ 45 spécialités EVC préparées',
+            '✦ Depuis 2011',
+            '✦ Plateforme certifiée Stripe',
+            '✦ Données chiffrées AES-256',
+            '✦ RGPD conformité totale',
+            '✦ Voie interne et voie externe',
+          ]}
+          speed={45}
+          className="text-white/90"
+        />
+      </div>
+
+      {/* ═══ HERO ultra-premium ═══ */}
+      <section className="relative pt-12 pb-14 sm:pt-16 sm:pb-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* Badge top — gradient avec ombre */}
-          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-full border bg-white/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-[0_10px_30px_-15px_rgba(15,31,77,0.20)] backdrop-blur-sm" style={{ borderColor: BORDER, color: NAVY }}>
-            <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> 45 spécialités EVC</span>
-            <span style={{ color: RED }}>&#8226;</span>
-            <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" style={{ color: RED }} /> Plus de 9 000 médecins accompagnés</span>
-            <span style={{ color: RED }}>&#8226;</span>
-            <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" style={{ color: RED }} /> Depuis 2011</span>
-          </div>
+          {/* Badge top — étoile + texte */}
+          <Reveal>
+            <div className="flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border bg-white/85 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] shadow-[0_10px_30px_-12px_rgba(192,17,46,0.30)] backdrop-blur-sm" style={{ borderColor: 'rgba(192,17,46,0.20)', color: RED }}>
+                <Star className="h-3.5 w-3.5" fill="currentColor" />
+                Préparation EVC nº 1 en France
+              </span>
+            </div>
+          </Reveal>
 
-          {/* Titre avec gradient + tracking serré */}
-          <h1 className="mt-9 text-center text-[2rem] font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
-            <span style={{ color: NAVY }}>Tarifs des préparations</span>{' '}
-            <span style={{ backgroundImage: 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
-              EVC (PAE)
-            </span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-center text-[15.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-            Préparations destinées aux médecins diplômés hors Union Européenne préparant les{' '}
-            <strong style={{ color: NAVY }}>Épreuves de Vérification des Connaissances (EVC)</strong> dans le cadre de la
-            Procédure d{"'"}Autorisation d{"'"}Exercice (PAE).
-          </p>
+          {/* Titre ultra premium avec text-balance */}
+          <Reveal delay={0.1}>
+            <h1 className="mt-7 text-balance text-center text-[2.25rem] font-black leading-[1.04] tracking-tight sm:text-[3.25rem] lg:text-[4rem]">
+              <span style={{ color: NAVY }}>Tarifs des préparations</span>
+              <br />
+              <span style={{ backgroundImage: 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 45%, #E8742C 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+                EVC (PAE)
+              </span>
+            </h1>
+          </Reveal>
 
-          {/* 3 mini KPIs en pillules */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
-            {[
-              { Icon: Users, big: 'Plus de 9 000', sub: 'médecins accompagnés' },
-              { Icon: GraduationCap, big: '45 spécialités', sub: 'préparées' },
-              { Icon: Calendar, big: 'Depuis 2011', sub: 'à vos côtés' },
-            ].map(s => (
-              <div key={s.big} className="flex items-center gap-2.5 rounded-2xl border bg-white px-4 py-2.5 shadow-[0_4px_16px_-6px_rgba(15,31,77,0.10)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-6px_rgba(15,31,77,0.18)]" style={{ borderColor: BORDER }}>
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: RED_SOFT, color: RED }}>
-                  <s.Icon className="h-4.5 w-4.5" />
-                </span>
-                <div className="text-left">
-                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: RED }}>{s.big}</p>
-                  <p className="text-[11.5px] leading-tight" style={{ color: INK_SOFT }}>{s.sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Reveal delay={0.2}>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-[15.5px] leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
+              Préparations destinées aux médecins diplômés hors Union Européenne préparant les{' '}
+              <strong style={{ color: NAVY }}>Épreuves de Vérification des Connaissances (EVC)</strong> dans le cadre de la
+              Procédure d{"'"}Autorisation d{"'"}Exercice (PAE).
+            </p>
+          </Reveal>
+
+          {/* 3 KPIs avec compteurs animés */}
+          <Reveal delay={0.3}>
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              {[
+                { Icon: Users, end: 9000, suffix: '+', label: 'médecins accompagnés', accent: RED },
+                { Icon: GraduationCap, end: 45, label: 'spécialités préparées', accent: PURPLE },
+                { Icon: Calendar, end: 15, suffix: ' ans', label: "d'expertise EVC", accent: GREEN },
+              ].map((s, i) => (
+                <SpotlightCard
+                  key={i}
+                  spotlightColor={`${s.accent}22`}
+                  className="rounded-2xl border bg-white shadow-[0_8px_28px_-12px_rgba(15,31,77,0.12)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_40px_-12px_rgba(15,31,77,0.20)]"
+                  style={{ borderColor: BORDER }}
+                >
+                  <div className="p-5">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-2xl" style={{ background: `${s.accent}15`, color: s.accent }}>
+                        <s.Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <p className="text-[26px] font-black leading-none tabular-nums" style={{ color: s.accent }}>
+                          <AnimatedCounter end={s.end} suffix={s.suffix} duration={1500} />
+                        </p>
+                        <p className="mt-1 text-[12px] font-semibold leading-tight" style={{ color: INK_SOFT }}>{s.label}</p>
+                      </div>
+                    </div>
+                  </div>
+                </SpotlightCard>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Trust badges row certif */}
+          <Reveal delay={0.4}>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[12px] font-semibold" style={{ color: INK_SOFT }}>
+              <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" style={{ color: RED }} /> Paiement Stripe certifié</span>
+              <span aria-hidden style={{ color: BORDER }}>·</span>
+              <span className="flex items-center gap-1.5"><Shield className="h-3.5 w-3.5" style={{ color: RED }} /> RGPD conforme</span>
+              <span aria-hidden style={{ color: BORDER }}>·</span>
+              <span className="flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" style={{ color: RED }} /> Activation immédiate</span>
+              <span aria-hidden style={{ color: BORDER }}>·</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: RED }} /> Données chiffrées AES-256</span>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -134,93 +187,165 @@ export function TarifsPageContent() {
         </div>
       </section>
 
-      {/* ═══ 3 FORMULES ═══ */}
-      <section className="bg-white pb-10">
+      {/* ═══ 3 FORMULES — Cards SpotlightCard premium ═══ */}
+      <section className="relative pb-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-5 md:grid-cols-3 items-stretch">
-            {/* Essentielle */}
-            <div className="flex flex-col rounded-2xl border p-5" style={{ borderColor: BORDER }}>
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: GREEN_SOFT, color: GREEN }}>
-                  <BookOpen className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: GREEN }}>FORMULE</p>
-                  <p className="text-[16px] font-black leading-none" style={{ color: GREEN }}>ESSENTIELLE</p>
+            {/* Essentielle — Spotlight + lift hover */}
+            <SpotlightCard spotlightColor={`${GREEN}22`} className="rounded-3xl border-2 bg-white p-px shadow-[0_10px_30px_-15px_rgba(46,125,50,0.20)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_45px_-15px_rgba(46,125,50,0.30)]" style={{ borderColor: 'rgba(46,125,50,0.18)' }}>
+              <div className="flex h-full flex-col rounded-[calc(1.5rem-1px)] p-6 sm:p-7">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: GREEN_SOFT, color: GREEN }}>
+                    <BookOpen className="h-4.5 w-4.5" />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.14em]" style={{ color: GREEN }}>FORMULE</p>
+                    <p className="text-[18px] font-black leading-none" style={{ color: GREEN }}>ESSENTIELLE</p>
+                  </div>
                 </div>
-              </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
-              <p className="mt-3 text-[36px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
-              <ul className="mt-4 flex-1 space-y-1.5">
-                {["Plateforme EVC accès illimité", "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: GREEN }} /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/formules/essentielle" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white" style={{ background: GREEN }}>
-                Commencer avec Essentielle <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>Espace découverte gratuit &#183; Sans engagement</p>
-            </div>
-
-            {/* Intensive */}
-            <div className="relative flex flex-col rounded-2xl border p-5" style={{ borderColor: BORDER }}>
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: RED_SOFT, color: RED }}>
-                  <Target className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: RED }}>FORMULE</p>
-                  <p className="text-[16px] font-black leading-none" style={{ color: RED }}>INTENSIVE</p>
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
+                <div className="mt-4 flex items-baseline gap-2">
+                  <p className="text-[40px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
+                  <span className="text-[12px]" style={{ color: INK_SOFT }}>paiement unique</span>
                 </div>
+                <p className="mt-1 text-[11.5px]" style={{ color: INK_SOFT }}>ou <strong style={{ color: GREEN }}>165 €/mois</strong> en 3 fois</p>
+                <ul className="mt-5 flex-1 space-y-2">
+                  {["Plateforme EVC accès illimité", "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
+                    <li key={f} className="flex items-start gap-2 text-[13.5px]" style={{ color: INK }}>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full" style={{ background: GREEN_SOFT, color: GREEN }}>
+                        <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/formules/essentielle" className="group/btn mt-6 flex items-center justify-center gap-2 rounded-xl py-3 text-[13.5px] font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(46,125,50,0.55)] transition-transform hover:scale-[1.02]" style={{ background: `linear-gradient(90deg, #1B5E20 0%, ${GREEN} 100%)` }}>
+                  Commencer avec Essentielle <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+                </Link>
+                <p className="mt-2 text-center text-[11px]" style={{ color: INK_SOFT }}>Espace découverte gratuit &#183; Sans engagement</p>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Révisions ciblées EVC</p>
-              <p className="mt-1 text-[13px] font-semibold" style={{ color: INK }}>Deux parcours au choix :</p>
-              <div className="mt-1.5 flex gap-2">
-                <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE INTERNE &#8594;</span>
-                <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE EXTERNE &#8594;</span>
-              </div>
-              <p className="mt-3 text-[36px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
-              <ul className="mt-4 flex-1 space-y-1.5">
-                {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées'].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: RED }} /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/formules/intensive" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white" style={{ background: RED }}>
-                Choisir Intensive <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+            </SpotlightCard>
 
-            {/* Programme Approfondi */}
-            <div className="flex flex-col rounded-2xl border-2 p-5 shadow-lg" style={{ borderColor: PURPLE }}>
-              <span className="self-start inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: '#F59E0B' }}>
-                <Star className="h-3 w-3" fill="currentColor" /> REMISE À NIVEAU APPROFONDIE
+            {/* Intensive — Badge RECOMMANDÉ + scale up */}
+            <SpotlightCard spotlightColor={`${RED}25`} className="relative rounded-3xl p-px shadow-[0_15px_40px_-15px_rgba(192,17,46,0.30)] transition-all hover:-translate-y-1.5 hover:shadow-[0_25px_55px_-15px_rgba(192,17,46,0.40)] lg:-mt-3 lg:scale-[1.03]" style={{ background: `linear-gradient(135deg, ${RED} 0%, #8B0E22 100%)` }}>
+              {/* Badge "RECOMMANDÉ" */}
+              <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-white shadow-lg" style={{ background: `linear-gradient(90deg, #E8742C 0%, ${RED} 100%)` }}>
+                ⭐ Recommandé
               </span>
-              <div className="mt-2.5 flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: PURPLE_SOFT, color: PURPLE }}>
-                  <GraduationCap className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: PURPLE }}>PROGRAMME</p>
-                  <p className="text-[16px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
+              <div className="flex h-full flex-col rounded-[calc(1.5rem-1px)] bg-white p-6 sm:p-7">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: RED_SOFT, color: RED }}>
+                    <Target className="h-4.5 w-4.5" />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.14em]" style={{ color: RED }}>FORMULE</p>
+                    <p className="text-[18px] font-black leading-none" style={{ color: RED }}>INTENSIVE</p>
+                  </div>
                 </div>
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Révisions ciblées EVC</p>
+                <p className="mt-2 text-[12.5px] font-semibold" style={{ color: INK }}>Deux parcours au choix :</p>
+                <div className="mt-1.5 flex gap-2">
+                  <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE INTERNE</span>
+                  <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE EXTERNE</span>
+                </div>
+                <div className="mt-4 flex items-baseline gap-2">
+                  <p className="text-[40px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
+                  <span className="text-[12px]" style={{ color: INK_SOFT }}>paiement unique</span>
+                </div>
+                <p className="mt-1 text-[11.5px]" style={{ color: INK_SOFT }}>ou <strong style={{ color: RED }}>332 €/mois</strong> en 3 fois</p>
+                <ul className="mt-5 flex-1 space-y-2">
+                  {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées'].map(f => (
+                    <li key={f} className="flex items-start gap-2 text-[13.5px]" style={{ color: INK }}>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
+                        <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/formules/intensive" className="group/btn mt-6 flex items-center justify-center gap-2 rounded-xl py-3 text-[13.5px] font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]" style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}>
+                  Choisir Intensive <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+                </Link>
+                <p className="mt-2 text-center text-[11px]" style={{ color: INK_SOFT }}>La plus choisie par nos candidats</p>
               </div>
-              <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
-              <p className="mt-3 text-[12px]" style={{ color: INK_SOFT }}>A partir de</p>
-              <p className="text-[36px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
-              <ul className="mt-4 flex-1 space-y-1.5">
-                {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: PURPLE }} /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/formules/programme-approfondi" className="mt-5 flex items-center justify-center gap-2 rounded-xl border-2 py-2.5 text-[13px] font-bold" style={{ borderColor: PURPLE, color: PURPLE }}>
-                Découvrir le programme <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+            </SpotlightCard>
+
+            {/* Programme Approfondi — Spotlight + glassmorphism violet */}
+            <SpotlightCard spotlightColor={`${PURPLE}20`} className="relative rounded-3xl border-2 bg-white p-px shadow-[0_10px_30px_-15px_rgba(124,58,237,0.25)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_45px_-15px_rgba(124,58,237,0.35)]" style={{ borderColor: PURPLE }}>
+              <div className="flex h-full flex-col rounded-[calc(1.5rem-1px)] p-6 sm:p-7">
+                <span className="self-start inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-white shadow-md" style={{ background: 'linear-gradient(90deg, #F59E0B 0%, #E8742C 100%)' }}>
+                  <Star className="h-3 w-3" fill="currentColor" /> REMISE À NIVEAU APPROFONDIE
+                </span>
+                <div className="mt-3 flex items-center gap-2.5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: PURPLE_SOFT, color: PURPLE }}>
+                    <GraduationCap className="h-4.5 w-4.5" />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.14em]" style={{ color: PURPLE }}>PROGRAMME</p>
+                    <p className="text-[18px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
+                <p className="mt-4 text-[12px]" style={{ color: INK_SOFT }}>À partir de</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-[40px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
+                  <span className="text-[12px]" style={{ color: INK_SOFT }}>sur-mesure</span>
+                </div>
+                <p className="mt-1 text-[11.5px]" style={{ color: INK_SOFT }}>Conseiller dédié <strong style={{ color: PURPLE }}>· rappel sous 24 h</strong></p>
+                <ul className="mt-5 flex-1 space-y-2">
+                  {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
+                    <li key={f} className="flex items-start gap-2 text-[13.5px]" style={{ color: INK }}>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full" style={{ background: PURPLE_SOFT, color: PURPLE }}>
+                        <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                      </span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/formules/programme-approfondi" className="group/btn mt-6 flex items-center justify-center gap-2 rounded-xl border-2 py-3 text-[13.5px] font-extrabold transition-all hover:bg-[#EDE9FE]" style={{ borderColor: PURPLE, color: PURPLE }}>
+                  Découvrir le programme <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+                </Link>
+                <p className="mt-2 text-center text-[11px]" style={{ color: INK_SOFT }}>Programme sur-mesure · Conseiller dédié</p>
+              </div>
+            </SpotlightCard>
+          </div>
+
+          {/* ═══ TABLEAU COMPARATIF PREMIUM ═══ */}
+          <div className="mt-16">
+            <Reveal>
+              <div className="text-center">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: RED }}>Comparatif détaillé</p>
+                <h2 className="mt-2 text-[26px] font-black leading-tight sm:text-3xl" style={{ color: NAVY }}>
+                  Choisissez la formule qui vous ressemble
+                </h2>
+              </div>
+            </Reveal>
+            <div className="mt-8">
+              <ComparisonTable
+                highlightCol={1}
+                accentColor={RED}
+                columns={[
+                  { label: 'Essentielle',  price: '495 €',   sub: 'paiement unique' },
+                  { label: 'Intensive',    price: '995 €',   sub: 'paiement unique' },
+                  { label: 'Approfondi',   price: '2 395 €', sub: 'sur-mesure' },
+                ]}
+                rows={[
+                  { feature: 'Plateforme EVC — accès illimité',          values: [true, true, true] },
+                  { feature: 'QCM corrigés et justifiés',                values: [true, true, true] },
+                  { feature: 'Fiches synthétiques',                       values: [true, true, true] },
+                  { feature: 'Flashcards adaptatives',                    values: [true, true, true] },
+                  { feature: 'Dossiers et exercices corrigés',           values: [true, true, true] },
+                  { feature: 'Suivi de progression',                      values: [true, true, true] },
+                  { feature: 'Séance(s) vidéo de méthodologie',          values: ['1', 'Avancée', 'Illimitées'] },
+                  { feature: '+ 20 h de révision ciblée',                values: [false, true, true] },
+                  { feature: 'QCM supplémentaires expliqués',            values: [false, true, true] },
+                  { feature: 'Épreuves blanches',                         values: [false, '2', 'Multiples'] },
+                  { feature: 'Reprise approfondie des spécialités',      values: [false, false, true] },
+                  { feature: 'Interrogations régulières',                values: [false, false, true] },
+                  { feature: 'Accompagnement pédagogique personnalisé',  values: [false, false, true] },
+                  { feature: 'Conseiller dédié + rappel téléphonique',   values: [false, false, true] },
+                ]}
+              />
             </div>
           </div>
         </div>
