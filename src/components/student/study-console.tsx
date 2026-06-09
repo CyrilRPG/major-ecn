@@ -4,10 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ClipboardCheck, FileText, Layers3, MessageCircle,
+  ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
   MonitorPlay, Telescope, X, type LucideIcon,
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
+import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 import { cn } from '@/lib/utils';
 
 export type Availability = {
@@ -51,6 +52,7 @@ export function StudyConsole({
   context,
   availability,
   mastery,
+  isDecouverte = false,
   children,
 }: {
   coursId: string;
@@ -58,10 +60,14 @@ export function StudyConsole({
   context: string;
   availability: Availability;
   mastery: number;
+  /** Mode Découverte : verrouille l'onglet "Cours vidéo" (popup tarifs au clic
+   *  au lieu de naviguer vers /video). */
+  isDecouverte?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [lockedOpen, setLockedOpen] = useState(false);
 
   const base = `/cours/${coursId}`;
   const after = pathname.startsWith(base) ? pathname.slice(base.length) : '';
@@ -122,17 +128,17 @@ export function StudyConsole({
         <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((t) => {
             const active = activeSeg === t.seg;
-            return (
-              <Link
-                key={t.key}
-                href={`${base}${t.seg ? `/${t.seg}` : ''}`}
-                className={cn(
-                  'group relative flex items-center gap-1.5 whitespace-nowrap px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
-                  active
-                    ? 'text-[#E4002B] font-bold'
-                    : 'text-(--color-ink-soft) hover:text-(--color-ink)',
-                )}
-              >
+            // Mode Découverte : l'onglet "Cours vidéo" est un cadenas qui ouvre
+            // la popup tarifs au lieu de naviguer vers /video.
+            const isLockedVideo = isDecouverte && t.seg === 'video';
+            const commonInnerClasses = cn(
+              'group relative flex items-center gap-1.5 whitespace-nowrap px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
+              active
+                ? 'text-[#E4002B] font-bold'
+                : 'text-(--color-ink-soft) hover:text-(--color-ink)',
+            );
+            const inner = (
+              <>
                 <t.Icon className="h-4 w-4 shrink-0" />
                 {active ? (
                   <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
@@ -141,20 +147,54 @@ export function StudyConsole({
                 ) : (
                   <span>{t.label}</span>
                 )}
-                {!t.available && t.seg && (
-                  <span
-                    className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-[#E4002B]' : 'bg-(--color-ink-muted)')}
-                    title="Bientôt disponible"
+                {isLockedVideo ? (
+                  <Lock
+                    className="h-3 w-3 shrink-0"
+                    style={{ color: '#C0112E' }}
+                    aria-hidden
                   />
+                ) : (
+                  !t.available && t.seg && (
+                    <span
+                      className={cn('h-1.5 w-1.5 rounded-full', active ? 'bg-[#E4002B]' : 'bg-(--color-ink-muted)')}
+                      title="Bientôt disponible"
+                    />
+                  )
                 )}
                 {active && (
                   <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]" />
                 )}
+              </>
+            );
+            if (isLockedVideo) {
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => setLockedOpen(true)}
+                  aria-label={`${t.label} — verrouillé`}
+                  className={commonInnerClasses}
+                >
+                  {inner}
+                </button>
+              );
+            }
+            return (
+              <Link
+                key={t.key}
+                href={`${base}${t.seg ? `/${t.seg}` : ''}`}
+                className={commonInnerClasses}
+              >
+                {inner}
               </Link>
             );
           })}
         </div>
       </div>
+
+      {/* Popup "Ce contenu est réservé" — déclenchée par l'onglet Cours vidéo
+          verrouillé en mode Découverte. */}
+      <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
 
       {/* Viewer — when assistant is docked, leave room on large screens */}
       <div className={cn('transition-[padding]', assistantOpen && 'lg:pr-[380px]')}>{children}</div>

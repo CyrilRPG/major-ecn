@@ -62,6 +62,10 @@ export default async function CoursLayout({
     ((flashCount ?? 0) > 0 ? 1 : 0);
   const mastery = Math.round((done / 4) * 100);
 
+  // Mode Découverte : l'onglet "Cours vidéo" devient un cadenas qui ouvre
+  // LockedContentModal au lieu de naviguer vers /video.
+  const isDecouverte = c.matiere_id === 'col-decouverte';
+
   return (
     <StudyConsole
       coursId={coursId}
@@ -69,6 +73,7 @@ export default async function CoursLayout({
       context={`${c.matieres.nom} · Programme EVC`}
       availability={availability}
       mastery={mastery}
+      isDecouverte={isDecouverte}
     >
       {children}
     </StudyConsole>
