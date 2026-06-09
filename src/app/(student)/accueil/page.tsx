@@ -9,6 +9,7 @@ import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
 import { DiscoveryUpgradeCta } from '@/components/espace-decouverte/discovery-upgrade-cta';
+import { DiscoveryGateLink } from '@/components/espace-decouverte/discovery-gate-link';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
@@ -60,6 +61,10 @@ export default async function AccueilPage() {
   }
 
   const scope = parseScope(profile.permission_scope);
+  // Mode Découverte : tous les liens qui pointent vers des pages interdites
+  // (entraînement ciblé, révisions transversales, …) sont verrouillés
+  // (cadenas + popup tarifs au clic) au lieu d'être de vraies navigations.
+  const isDecouverte = scope.type === 'college' && scope.colleges.includes('col-decouverte');
   const supabase = await createClient();
 
   const [
@@ -308,13 +313,15 @@ export default async function AccueilPage() {
               Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.
             </p>
           </div>
-          <Link
+          <DiscoveryGateLink
             href="/revisions-transversales"
+            locked={isDecouverte}
             className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
             style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+            ariaLabel="Reprendre l'entraînement — Découverte verrouillé"
           >
             <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
-          </Link>
+          </DiscoveryGateLink>
         </header>
 
         {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
@@ -329,9 +336,13 @@ export default async function AccueilPage() {
                 </p>
               </div>
             </div>
-            <Link href="/revisions-transversales" className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline">
+            <DiscoveryGateLink
+              href="/revisions-transversales"
+              locked={isDecouverte}
+              className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline"
+            >
               Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            </DiscoveryGateLink>
           </KpiCard>
 
           <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
@@ -352,9 +363,13 @@ export default async function AccueilPage() {
           <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
             <p className="text-4xl font-black tabular-nums text-(--color-ink)">{sessionsCount}</p>
             <p className="text-xs text-(--color-ink-soft)">sur {itemsTotal} QCM</p>
-            <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]">
+            <DiscoveryGateLink
+              href="/entrainement"
+              locked={isDecouverte}
+              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]"
+            >
               Commencer un entraînement <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            </DiscoveryGateLink>
           </KpiCard>
 
           <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
@@ -364,9 +379,13 @@ export default async function AccueilPage() {
             <p className="text-xs text-(--color-ink-soft)">
               {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
             </p>
-            <Link href="/entrainement" className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]">
+            <DiscoveryGateLink
+              href="/entrainement"
+              locked={isDecouverte}
+              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
+            >
               Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            </DiscoveryGateLink>
           </KpiCard>
         </section>
 
@@ -389,11 +408,14 @@ export default async function AccueilPage() {
               <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
               <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
             </ul>
-            <Link href="/revisions-transversales"
+            <DiscoveryGateLink
+              href="/revisions-transversales"
+              locked={isDecouverte}
               className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
-              style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}>
+              style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+            >
               <Play className="h-4 w-4" /> Commencer maintenant
-            </Link>
+            </DiscoveryGateLink>
           </Card>
 
           {/* Évolution */}
@@ -435,9 +457,13 @@ export default async function AccueilPage() {
               <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
               <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats récents</p>
             </div>
-            <Link href="/entrainement" className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex">
+            <DiscoveryGateLink
+              href="/entrainement"
+              locked={isDecouverte}
+              className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex"
+            >
               Voir mes lacunes <ArrowRight className="ml-0.5 h-3.5 w-3.5" />
-            </Link>
+            </DiscoveryGateLink>
           </div>
           {priorities.length === 0 ? (
             <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
