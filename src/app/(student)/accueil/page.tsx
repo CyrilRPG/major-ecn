@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
+import { DiscoveryUpgradeCta } from '@/components/espace-decouverte/discovery-upgrade-cta';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
@@ -560,6 +561,10 @@ export default async function AccueilPage() {
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
         <AnnouncementsWidget />
+        {/* CTA permanent vers /tarifs pour les utilisateurs en Découverte. */}
+        {scope.type === 'college' && scope.colleges.includes('col-decouverte') && (
+          <DiscoveryUpgradeCta />
+        )}
         <NouveauxContenusBanner />
       </aside>
     </div>

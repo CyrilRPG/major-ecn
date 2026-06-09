@@ -1,35 +1,39 @@
 import Link from 'next/link';
-import { ArrowRight, Mail, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Trophy } from 'lucide-react';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
 import type { Profile } from '@/lib/auth/get-profile';
-
-const INSCRIPTION_EMAIL = 'contact@major-ecn.fr';
-const SUBJECT = encodeURIComponent('Passage à l’abonnement Major ECN');
 
 type Variant = 'banner' | 'card' | 'inline';
 
 const COPY: Record<string, { eyebrow: string; titre: string; sous: string }> = {
   default: {
-    eyebrow: 'Essai gratuit',
+    eyebrow: 'Espace découverte',
     titre: 'Débloquez toute la plateforme',
-    sous: 'Accédez à l’intégralité des QCM, flashcards, annales et au suivi IA — sans limite de temps.',
+    sous: 'Accédez à l’intégralité des QCM, flashcards, annales, cas cliniques et méthodologie EVC.',
   },
   cours: {
-    eyebrow: 'Continuer ce cours',
+    eyebrow: 'Parcours Découverte terminé',
     titre: 'Tout le contenu de ce collège, sans limite',
-    sous: 'Annales, examens blancs, tuteur dédié, analytics — passez Essentiel, Premium ou Intensif.',
+    sous: 'Cours vidéo, annales, examens blancs, suivi pédagogique et méthodologie EVC pour toutes les spécialités.',
   },
   fin: {
     eyebrow: 'Bravo pour cette session',
     titre: 'Et si la prochaine, c’était sans limite ?',
-    sous: 'Choisissez votre formule (Essentiel, Premium ou Intensif) et accédez à 4 200+ QCM.',
+    sous: 'Choisissez votre formule et accédez à l’intégralité de notre préparation EVC.',
   },
 };
 
+/** Tarifs officiels — alignés sur le site vitrine (/tarifs et /formules). */
+const FORMULES: { name: string; price: string; href: string; tone: string }[] = [
+  { name: 'Essentielle', price: '495 €',         href: '/tarifs', tone: '#16793C' },
+  { name: 'Intensive',   price: '995 €',         href: '/tarifs', tone: '#C0112E' },
+  { name: 'Approfondi',  price: 'à partir de 2 395 €', href: '/tarifs', tone: '#1E40AF' },
+];
+
 /**
- * Pousse l'inscription vers les formules payantes (Essentiel/Premium/Intensif).
- * Visible sur la version gratuite/essai de la plateforme. Met en avant l'email
- * `contact@major-ecn.fr` pour les demandes d'inscription.
+ * Pousse l'inscription vers les formules payantes du site vitrine.
+ * Visible sur la version Découverte (trial_until set). Renvoie systématiquement
+ * vers /tarifs (pas d'email mailto).
  */
 export function UpgradeBanner({
   variant = 'banner',
@@ -46,7 +50,6 @@ export function UpgradeBanner({
   if (profile && isSubscriber(profile)) return null;
 
   const c = COPY[context];
-  const mailHref = `mailto:${INSCRIPTION_EMAIL}?subject=${SUBJECT}`;
   const expired = !!profile && isTrialExpired(profile);
   const daysLeft = profile ? trialDaysLeft(profile) : 0;
 
@@ -57,13 +60,13 @@ export function UpgradeBanner({
         <span className="flex-1 text-(--color-ink)">
           <span className="font-semibold">{c.titre}</span> · {c.sous}
         </span>
-        <a
-          href={mailHref}
+        <Link
+          href="/tarifs"
           className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-1.5 text-xs font-bold text-white"
         >
-          <Mail className="h-3.5 w-3.5" />
-          {INSCRIPTION_EMAIL}
-        </a>
+          Voir les formules
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
       </div>
     );
   }
@@ -77,41 +80,50 @@ export function UpgradeBanner({
       }
     >
       <div aria-hidden className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-(--color-primary)/15 blur-3xl" />
-      <div className="relative grid items-center gap-5 lg:grid-cols-[1.5fr_1fr]">
+      <div className="relative grid items-center gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div>
           <p className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary) px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
-            <Sparkles className="h-3 w-3" />
+            {context === 'cours' ? <Trophy className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
             {expired
-              ? 'Essai expiré'
+              ? 'Espace découverte expiré'
               : daysLeft > 0
-              ? `Essai gratuit · ${daysLeft} j restant${daysLeft > 1 ? 's' : ''}`
+              ? `Découverte · ${daysLeft} j restant${daysLeft > 1 ? 's' : ''}`
               : c.eyebrow}
           </p>
           <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-(--color-ink) sm:text-2xl">
             {c.titre}
           </h3>
           <p className="mt-1.5 text-sm leading-relaxed text-(--color-ink-soft)">{c.sous}</p>
-          <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-(--color-ink-soft)">
-            <li>✓ Essentiel 49 €/mois</li>
-            <li>✓ Premium 89 €/mois</li>
-            <li>✓ Intensif 149 €/mois</li>
-            <li>✓ Sans engagement</li>
+
+          {/* Vrais tarifs du site vitrine */}
+          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {FORMULES.map((f) => (
+              <li key={f.name}
+                className="rounded-xl border border-(--color-border) bg-(--color-surface) px-3 py-2"
+              >
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.1em]" style={{ color: f.tone }}>
+                  {f.name}
+                </p>
+                <p className="mt-0.5 text-[15px] font-black tabular-nums text-(--color-ink)">
+                  {f.price}
+                </p>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="flex flex-col gap-2.5">
-          <a
-            href={mailHref}
+          <Link
+            href="/tarifs"
             className="group inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.025]"
           >
-            <Mail className="h-4 w-4" />
-            {INSCRIPTION_EMAIL}
+            Voir toutes les formules
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
+          </Link>
           <Link
-            href="/"
+            href="/tarifs"
             className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-2.5 text-xs font-semibold text-(--color-ink) hover:border-(--color-primary)/40"
           >
-            Voir les formules en détail
+            Comparer les tarifs en détail
           </Link>
         </div>
       </div>

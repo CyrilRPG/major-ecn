@@ -1,13 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, Sparkles, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
+import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
+const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 
 type Action = {
   href: string;
@@ -69,51 +71,89 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
       .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
   ]);
-  const allDone =
-    !!cpRow?.video_watched && !!cpRow?.fiche_read &&
-    (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0;
+  // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
+  // (la vidéo est remplacée par une carte cadenas → popup tarifs).
+  const isDecouverte = c.matiere_id === DECOUVERTE_COLLEGE_ID;
+
+  // Pour les abonnés : critères d'allDone classiques (vidéo + fiche + QCM + flashcards).
+  // Pour la Découverte : on retire la vidéo (verrouillée) et l'interrogation
+  // (supprimée). allDone = fiche lue + au moins 1 QCM + au moins 1 flashcard.
+  const allDone = isDecouverte
+    ? !!cpRow?.fiche_read && (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0
+    : !!cpRow?.video_watched && !!cpRow?.fiche_read &&
+      (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0;
   const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
 
-  // 5 cartes du parcours dans l'ordre pédagogique :
-  // fiche → vidéo → DP & QI → flashcards → interrogation.
-  const actions: Action[] = [
-    {
-      href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
-      desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
-      Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
-      available: (c.fiches ?? []).some((f) => !!f.storage_path),
-    },
-    {
-      href: `/cours/${coursId}/video`, label: 'Cours vidéo',
-      desc: 'Le cours filmé, aligné sur les recommandations HAS.',
-      Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
-      available: (c.videos ?? []).some((v) => !!v.storage_path),
-    },
-    {
-      href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
-      desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
-      Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-      available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
-    },
-    {
-      href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
-      desc: 'Révisez et mémorisez les points clés du programme.',
-      Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
-      available: (c.flashcards?.length ?? 0) > 0,
-    },
-    {
-      href: `/cours/${coursId}/interrogation`,
-      label: 'Interrogation',
-      desc: interrogationUnlocked
-        ? 'Test final du parcours — signez le certificat à l\'issue.'
-        : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
-      Icon: interrogationUnlocked ? Award : Lock,
-      accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
-      bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
-      available: interrogationUnlocked,
-      locked: !interrogationUnlocked,
-    },
-  ];
+  // Cartes du parcours dans l'ordre pédagogique :
+  //  - Découverte : fiche → vidéo (LOCKED popup) → DP & QI → flashcards
+  //  - Standard   : fiche → vidéo → DP & QI → flashcards → interrogation
+  const actions: Action[] = isDecouverte
+    ? [
+        {
+          href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+          desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
+          Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
+          available: (c.fiches ?? []).some((f) => !!f.storage_path),
+        },
+        {
+          // Cours vidéo verrouillé — clic = popup LockedContentModal.
+          href: '#locked-video', label: 'Cours vidéo',
+          desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+          Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+          available: false,
+          locked: true,
+        },
+        {
+          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+          desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+        },
+        {
+          href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
+          desc: 'Révisez et mémorisez les points clés du programme.',
+          Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+          available: (c.flashcards?.length ?? 0) > 0,
+        },
+      ]
+    : [
+        {
+          href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+          desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
+          Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
+          available: (c.fiches ?? []).some((f) => !!f.storage_path),
+        },
+        {
+          href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+          desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+          Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+          available: (c.videos ?? []).some((v) => !!v.storage_path),
+        },
+        {
+          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+          desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+        },
+        {
+          href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
+          desc: 'Révisez et mémorisez les points clés du programme.',
+          Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+          available: (c.flashcards?.length ?? 0) > 0,
+        },
+        {
+          href: `/cours/${coursId}/interrogation`,
+          label: 'Interrogation',
+          desc: interrogationUnlocked
+            ? 'Test final du parcours — signez le certificat à l\'issue.'
+            : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
+          Icon: interrogationUnlocked ? Award : Lock,
+          accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
+          bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
+          available: interrogationUnlocked,
+          locked: !interrogationUnlocked,
+        },
+      ];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-6 lg:px-8">
@@ -128,6 +168,21 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
       <div className="grid gap-4 sm:grid-cols-2">
         {actions.map((a) => {
+          // Découverte : la carte « Cours vidéo » est verrouillée et ouvre la
+          // popup tarifs (DiscoveryLockedCard est un client component).
+          if (isDecouverte && a.href === '#locked-video') {
+            return (
+              <DiscoveryLockedCard
+                key={a.href}
+                label={a.label}
+                desc={a.desc}
+                Icon={a.Icon}
+                accent={a.accent}
+                bg={a.bg}
+              />
+            );
+          }
+
           const Tag = a.locked ? 'div' : Link;
           const tagProps = a.locked
             ? { 'aria-disabled': true as const }
@@ -202,9 +257,47 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         })}
       </div>
 
-      <div className="mt-8">
-        <UpgradeBanner context="cours" profile={profile} />
-      </div>
+      {/* Bandeau "tout le contenu de ce collège" (UpgradeBanner) :
+          - Affiché à la fin du parcours seulement (allDone) en Découverte ;
+          - Affiché en permanence pour les autres contextes (essai standard). */}
+      {(!isDecouverte || allDone) && (
+        <div className="mt-8">
+          <UpgradeBanner context="cours" profile={profile} />
+        </div>
+      )}
+
+      {/* CTA secondaire toujours visible en Découverte (mini-bannière /tarifs)
+          pour offrir un accès rapide à l'achat même en cours de parcours. */}
+      {isDecouverte && !allDone && (
+        <div className="mt-8 overflow-hidden rounded-2xl border bg-[linear-gradient(135deg,#FFF1F3_0%,#FDE7E9_100%)] p-5 shadow-(--shadow-soft) sm:p-6"
+          style={{ borderColor: 'rgba(192,17,46,0.20)' }}
+        >
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                style={{ background: '#FDEEEF', color: '#C0112E' }}
+              >
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
+                  Vous testez l’aperçu Découverte
+                </p>
+                <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#52607A' }}>
+                  Déverrouillez la totalité de la plateforme et préparez sereinement vos EVC.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/tarifs"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white shadow-[0_10px_25px_-10px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]"
+              style={{ background: 'linear-gradient(90deg,#8B0E22 0%,#C0112E 100%)' }}
+            >
+              Voir les formules <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

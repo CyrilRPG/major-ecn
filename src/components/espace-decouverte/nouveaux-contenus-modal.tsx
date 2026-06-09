@@ -197,6 +197,16 @@ function NouveauxContenusCompact() {
         ))}
       </ul>
 
+      {/* CTA conversion compact vers /tarifs */}
+      <Link
+        href="/tarifs"
+        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[11.5px] font-extrabold text-white shadow-[0_8px_22px_-10px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.01]"
+        style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}
+      >
+        Découvrir nos formules
+        <ArrowRight className="h-3 w-3" />
+      </Link>
+
       <p className="mt-3 flex items-center justify-center gap-1 text-[11px] font-bold" style={{ color: NAVY }}>
         <Heart className="h-3 w-3" fill={RED} style={{ color: RED }} />
         Merci de votre confiance.
