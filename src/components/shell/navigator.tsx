@@ -3,10 +3,14 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, ChevronRight, FileText, Home, MessagesSquare, RefreshCcw, Target } from 'lucide-react';
+import {
+  ArrowRight, CalendarDays, ChevronRight, FileText, Home, Lock, MessagesSquare,
+  RefreshCcw, Sparkles, Target, Trophy,
+} from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
+import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 
 /** Active pill : dégradé rouge → orange identique sur tous les items
  *  (top-level et sub-items). Reflète la maquette du client. */
@@ -37,7 +41,52 @@ function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   );
 }
 
-export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role?: 'student' | 'admin' | 'professor' }) {
+/** Encadré Découverte compact pour la sidebar — dégradé doré + CTA blanc
+ *  vers /tarifs. Affiché au-dessus d'Accueil quand le profil est en mode
+ *  Découverte. */
+function DiscoverySidebarCta() {
+  return (
+    <Link
+      href="/tarifs"
+      className="group mb-2 flex items-center gap-2.5 rounded-xl border px-2.5 py-2.5 transition-all hover:scale-[1.01]"
+      style={{
+        background: 'linear-gradient(135deg, rgba(245,200,75,0.18) 0%, rgba(192,17,46,0.22) 100%)',
+        borderColor: 'rgba(245,200,75,0.32)',
+      }}
+    >
+      <span
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+        style={{
+          background: 'linear-gradient(135deg, #F5C84B 0%, #E8742C 100%)',
+          color: '#1F2937',
+        }}
+      >
+        <Trophy className="h-4 w-4" strokeWidth={2.5} />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[12.5px] font-extrabold leading-tight text-white">
+          Espace découverte
+        </p>
+        <p className="text-[10.5px] leading-tight text-white/70">
+          Voir les formules
+        </p>
+      </div>
+      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
+
+export function Navigator({
+  tree,
+  role = 'student',
+  isDecouverte = false,
+}: {
+  tree: NavCollege[];
+  role?: 'student' | 'admin' | 'professor';
+  /** Mode Découverte : Entraînement / Révisions / Agenda / Annales EVC
+   *  deviennent des boutons cadenas qui ouvrent LockedContentModal. */
+  isDecouverte?: boolean;
+}) {
   // Pour les profs : seulement les collèges/cours, pas Accueil/Agenda/etc.
   const isProf = role === 'professor';
   const pathname = usePathname();
@@ -74,6 +123,9 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
       return n;
     });
 
+  /** State du popup "Ce contenu est réservé" en mode Découverte. */
+  const [lockedOpen, setLockedOpen] = useState(false);
+
   const homeActive = pathname === '/accueil';
   const trainActive = pathname.startsWith('/entrainement');
   const transversalActive = pathname.startsWith('/revisions-transversales');
@@ -81,12 +133,34 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
 
   const topLevelClass = (active: boolean) =>
     cn(
-      'mb-1 flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-medium transition-colors',
+      'mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium transition-colors',
       active ? ACTIVE_GRADIENT : 'text-white/85 hover:bg-white/10 hover:text-white',
     );
 
+  /** Helper : rendu d'un item top-level verrouillé en Découverte.
+   *  Apparence : icône grisée + badge cadenas rouge + clic = popup. */
+  const renderLockedTop = (Icon: typeof Target, label: string) => (
+    <button
+      type="button"
+      onClick={() => setLockedOpen(true)}
+      className="mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white/80"
+    >
+      <Icon className="h-[18px] w-[18px] shrink-0" />
+      <span className="flex-1 truncate">{label}</span>
+      <span
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+        style={{ background: 'rgba(192,17,46,0.20)', color: '#FCA5A5' }}
+      >
+        <Lock className="h-3 w-3" />
+      </span>
+    </button>
+  );
+
   return (
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
+      {/* Encadré Espace découverte — juste au-dessus de Accueil. */}
+      {isDecouverte && !isProf && <DiscoverySidebarCta />}
+
       {/* Accueil : présent pour tous, mais redirige vers la page d'accueil
           adaptée au rôle (ProfWelcome pour les profs). */}
       <Link href="/accueil" className={topLevelClass(homeActive)}>
@@ -96,20 +170,30 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
 
       {!isProf && (
         <>
-          <Link href="/entrainement" className={topLevelClass(trainActive)}>
-            <Target className="h-[18px] w-[18px] shrink-0" />
-            Entraînement ciblé
-          </Link>
+          {isDecouverte ? (
+            <>
+              {renderLockedTop(Target, 'Entraînement ciblé')}
+              {renderLockedTop(RefreshCcw, 'Révisions transversales')}
+              {renderLockedTop(CalendarDays, 'Agenda')}
+            </>
+          ) : (
+            <>
+              <Link href="/entrainement" className={topLevelClass(trainActive)}>
+                <Target className="h-[18px] w-[18px] shrink-0" />
+                Entraînement ciblé
+              </Link>
 
-          <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
-            <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
-            Révisions transversales
-          </Link>
+              <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
+                <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
+                Révisions transversales
+              </Link>
 
-          <Link href="/agenda" className={topLevelClass(agendaActive)}>
-            <CalendarDays className="h-[18px] w-[18px] shrink-0" />
-            Agenda
-          </Link>
+              <Link href="/agenda" className={topLevelClass(agendaActive)}>
+                <CalendarDays className="h-[18px] w-[18px] shrink-0" />
+                Agenda
+              </Link>
+            </>
+          )}
         </>
       )}
 
@@ -144,34 +228,51 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
             {o && (
               <>
                 {/* Annales EVC : entrée transversale, en tête du sous-menu
-                    du collège. Cliquable, surlignée quand on est dessus. */}
-                <Link
-                  href={`/matieres/${col.id}/annales`}
-                  className={cn(
-                    'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
-                    col.id === activeAnnaleCollege
-                      ? `${ACTIVE_GRADIENT} font-medium`
-                      : 'text-white/75 hover:bg-white/10 hover:text-white',
-                  )}
-                >
-                  <FileText
+                    du collège. En Découverte → cadenas + popup. */}
+                {isDecouverte ? (
+                  <button
+                    type="button"
+                    onClick={() => setLockedOpen(true)}
+                    className="flex w-full items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 text-left text-white/55 transition-colors hover:bg-white/10 hover:text-white/80"
+                  >
+                    <FileText className="h-3.5 w-3.5 shrink-0 text-white/45" />
+                    <span className="flex-1 truncate">Annales EVC</span>
+                    <span
+                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
+                      style={{ background: 'rgba(192,17,46,0.20)', color: '#FCA5A5' }}
+                    >
+                      <Lock className="h-2.5 w-2.5" />
+                    </span>
+                  </button>
+                ) : (
+                  <Link
+                    href={`/matieres/${col.id}/annales`}
                     className={cn(
-                      'h-3.5 w-3.5 shrink-0',
-                      col.id === activeAnnaleCollege ? 'text-white' : 'text-white/55',
-                    )}
-                  />
-                  <span className="flex-1 truncate">Annales EVC</span>
-                  <span
-                    className={cn(
-                      'rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider',
+                      'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                       col.id === activeAnnaleCollege
-                        ? 'bg-white/15 text-white'
-                        : 'bg-white/10 text-white/60',
+                        ? `${ACTIVE_GRADIENT} font-medium`
+                        : 'text-white/75 hover:bg-white/10 hover:text-white',
                     )}
                   >
-                    Officiel
-                  </span>
-                </Link>
+                    <FileText
+                      className={cn(
+                        'h-3.5 w-3.5 shrink-0',
+                        col.id === activeAnnaleCollege ? 'text-white' : 'text-white/55',
+                      )}
+                    />
+                    <span className="flex-1 truncate">Annales EVC</span>
+                    <span
+                      className={cn(
+                        'rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider',
+                        col.id === activeAnnaleCollege
+                          ? 'bg-white/15 text-white'
+                          : 'bg-white/10 text-white/60',
+                      )}
+                    >
+                      Officiel
+                    </span>
+                  </Link>
+                )}
 
                 {col.cours.map((c) => (
                   <Link
@@ -193,6 +294,11 @@ export function Navigator({ tree, role = 'student' }: { tree: NavCollege[]; role
           </div>
         );
       })}
+
+      {/* Popup "Ce contenu est réservé" (LockedContentModal) — affichée
+          quand l'utilisateur Découverte clique sur Entraînement/Révisions/
+          Agenda/Annales EVC dans le menu. */}
+      <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
     </nav>
   );
 }

@@ -67,13 +67,24 @@ export function StudyConsole({
   const after = pathname.startsWith(base) ? pathname.slice(base.length) : '';
   const activeSeg = after.split('/')[1] ?? '';
 
-  const tabs: Tab[] = [
-    { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
-    { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
-    { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
-    { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
-    { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
-  ];
+  /** Si AUCUN contenu pédagogique n'est encore disponible pour ce cours
+   *  (cas typique de « Méthodologie EVC » côté Découverte), on n'affiche
+   *  QUE l'onglet Aperçu — les autres tabs (Fiche, Vidéo, QCM, Flashcards)
+   *  sont masquées pour ne pas exposer des liens menant à des pages vides. */
+  const hasAnyContent =
+    availability.fiche || availability.video || availability.qcm || availability.flashcards;
+
+  const tabs: Tab[] = hasAnyContent
+    ? [
+        { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
+        { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
+        { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
+        { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
+        { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
+      ]
+    : [
+        { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
+      ];
 
   return (
     <div className="relative">

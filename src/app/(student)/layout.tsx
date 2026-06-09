@@ -7,6 +7,7 @@ import { AppShell } from '@/components/shell/app-shell';
 import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
 import { getNavigatorTree } from '@/lib/data/navigator';
+import { parseScope } from '@/lib/auth/permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +16,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const isImpersonating = cookieStore.has('impersonator_id');
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
   const tree = await getNavigatorTree(profile);
+  // Détection mode Découverte : utilisé pour verrouiller Entraînement,
+  // Révisions, Agenda et Annales EVC dans le menu sidebar + afficher
+  // l'encadré Découverte au-dessus d'Accueil.
+  const scopeForNav = parseScope(profile.permission_scope);
+  const isDecouverte =
+    scopeForNav.type === 'college' &&
+    scopeForNav.colleges.includes('col-decouverte');
 
   // Delta hebdo « +X% cette semaine » pour la carte Progression globale :
   // ratio des cours touchés dans les 7 derniers jours sur le total des cours
@@ -175,7 +183,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
     <div className="flex h-screen flex-col">
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="min-h-0 flex-1">
-        <AppShell profile={profile} tree={tree} weeklyProgressDelta={weeklyProgressDelta}>
+        <AppShell profile={profile} tree={tree} weeklyProgressDelta={weeklyProgressDelta} isDecouverte={isDecouverte}>
           {optionalPending.length > 0 && !onFormPage && (
             <SatisfactionBanner form={optionalPending[0]} />
           )}

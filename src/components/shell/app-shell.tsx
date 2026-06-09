@@ -52,11 +52,16 @@ export function AppShell({
   profile,
   tree,
   weeklyProgressDelta,
+  isDecouverte = false,
   children,
 }: {
   profile: Profile;
   tree: NavCollege[];
   weeklyProgressDelta?: number | null;
+  /** Mode Découverte : verrouille Entraînement / Révisions / Agenda /
+   *  Annales EVC dans le menu + affiche l'encadré Découverte au-dessus
+   *  d'Accueil. */
+  isDecouverte?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -100,7 +105,7 @@ export function AppShell({
         </button>
       </div>
       <div className="flex-1 overflow-y-auto pt-3">
-        <Navigator tree={tree} role={profile.role as 'student' | 'admin' | 'professor'} />
+        <Navigator tree={tree} role={profile.role as 'student' | 'admin' | 'professor'} isDecouverte={isDecouverte} />
       </div>
       <SidebarHelpCard />
     </div>
