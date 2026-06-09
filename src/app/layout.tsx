@@ -26,16 +26,37 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.fr'),
   title: { default: 'Major ECN — Préparez les EVC avec excellence', template: '%s · Major ECN' },
   description:
     "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
+  icons: {
+    icon: '/major-ecn-logo.png',
+    apple: '/major-ecn-logo.png',
+    shortcut: '/major-ecn-logo.png',
+  },
   openGraph: {
     title: 'Major ECN — Préparez les EVC avec excellence',
     description:
       "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
-    images: ['/major-ecn-logo.png'],
+    images: [
+      {
+        url: '/major-ecn-logo.png',
+        width: 1024,
+        height: 1024,
+        alt: 'Major ECN — Logo',
+      },
+    ],
     type: 'website',
     locale: 'fr_FR',
+    siteName: 'Major ECN',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Major ECN — Préparez les EVC avec excellence',
+    description:
+      "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
+    images: ['/major-ecn-logo.png'],
   },
 };
 
