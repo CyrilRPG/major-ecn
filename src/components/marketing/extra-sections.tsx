@@ -832,59 +832,136 @@ export function PedagogicalTeamSection() {
 }
 
 /* ============================================================
-   9. FinalCtaBlock — bloc CTA réutilisable (inscription + trust badges)
+   9. EspaceDecouverteSection — pixel-perfect maquette designer
+   « Découvrez la plateforme Major ECN » + CTA vers /espace-decouverte
    ============================================================ */
-export function FinalCtaBlock({ colleges }: { colleges?: { id: string; nom: string }[] }) {
+const ED_RED = "#C0112E";
+const ED_NAVY = "#0F1F4D";
+const ED_INK_SOFT = "#52607A";
+
+const ED_FEATURES = [
+  { Icon: ClipboardCheck, color: "#C0112E", bg: "#FDEEEF",
+    bold: "10 QCM EVC",        rest: " avec correction détaillée" },
+  { Icon: Stethoscope, color: "#2563EB", bg: "#E5F1FF",
+    bold: "1 cas clinique",    rest: " corrigé et expliqué" },
+  { Icon: FileText, color: "#16793C", bg: "#E7F6EC",
+    bold: "1 fiche pédagogique", rest: " complète" },
+  { Icon: Layers3, color: "#7C3AED", bg: "#F1E8FD",
+    bold: "10 flashcards",      rest: " avec rappels de cours" },
+  { Icon: TrendingUp, color: "#E8742C", bg: "#FFEAD9",
+    bold: "Aperçu du suivi",    rest: " de progression" },
+];
+
+const ED_BOTTOM_STATS = [
+  { Icon: GraduationCap, color: "#2563EB", bg: "#E5F1FF", t: "45 spécialités préparées" },
+  { Icon: Calendar,      color: "#16793C", bg: "#E7F6EC", t: "Depuis 2011" },
+  { Icon: Users,         color: "#7C3AED", bg: "#F1E8FD", t: "Plus de 9 000 médecins accompagnés" },
+];
+
+export function EspaceDecouverteSection() {
   return (
-    <section id="cta" className="bg-white py-20 lg:py-28">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-[#E8E7E3] bg-gradient-to-br from-white to-[#FAFAF8] p-9 text-center shadow-sm sm:p-12">
-          <div
-            aria-hidden
-            className="absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full blur-[100px]"
-            style={{ background: 'rgba(107,26,42,0.18)' }}
-          />
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em]"
-            style={{ background: 'rgba(107,26,42,0.10)', color: BORDEAUX }}
-          >
-            <ClipboardCheck className="h-3.5 w-3.5" /> Prêt à commencer ?
-          </span>
-          <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight gradient-vivid sm:text-4xl lg:text-5xl">
-            Rejoignez les candidats{' '}
-            <br className="hidden sm:block" />
-            qui ont réussi avec Major ECN
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-[#5A5A5A]">
-            Accès immédiat à la plateforme, 2 jours d’essai gratuit, sans engagement.
-          </p>
+    <section id="espace-decouverte" className="bg-white py-16 sm:py-20 lg:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl border bg-white p-6 shadow-sm sm:p-10 lg:p-14" style={{ borderColor: "#E5E9F0" }}>
+          {/* Grille 2 col : image / contenu */}
+          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+            {/* Image laptop + phone */}
+            <Reveal>
+              <div className="relative">
+                <img
+                  src="/plateforme/espace-decouverte-mockup.png"
+                  alt="Aperçu de la plateforme Major ECN — laptop & mobile"
+                  className="w-full h-auto"
+                />
+              </div>
+            </Reveal>
 
-          <InscriptionForm colleges={colleges ?? []} />
+            {/* Contenu droite */}
+            <Reveal delay={0.1}>
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white"
+                style={{ background: ED_RED }}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Espace découverte
+              </span>
 
-          <p className="mt-4 text-xs text-[#7A7A7A]">
-            ✓ Essai gratuit 2 jours · Essentiel &amp; Premium : accès immédiat par email d’activation.
-            Intensif : un conseiller vous rappelle sous 24 h.
-          </p>
+              <h2 className="mt-5 text-3xl font-black leading-[1.08] tracking-tight sm:text-4xl lg:text-[2.75rem]">
+                <span style={{ color: ED_NAVY }}>Découvrez la plateforme</span>{" "}
+                <span style={{ color: ED_RED }}>Major ECN</span>
+              </h2>
+
+              <p className="mt-4 max-w-lg text-base leading-relaxed sm:text-lg" style={{ color: ED_INK_SOFT }}>
+                Accédez à un aperçu concret de notre environnement de travail
+                et de nos ressources pédagogiques.
+              </p>
+
+              {/* 5 features */}
+              <ul className="mt-7 space-y-1">
+                {ED_FEATURES.map((f, i) => (
+                  <li key={f.bold}>
+                    <div className="flex items-center gap-4 py-3.5">
+                      <span
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                        style={{ background: f.bg, color: f.color }}
+                      >
+                        <f.Icon className="h-5 w-5" />
+                      </span>
+                      <p className="text-[15px] sm:text-base" style={{ color: ED_NAVY }}>
+                        <span className="font-extrabold">{f.bold}</span>
+                        <span style={{ color: ED_INK_SOFT }}>{f.rest}</span>
+                      </p>
+                    </div>
+                    {i < ED_FEATURES.length - 1 && (
+                      <span className="block h-px w-full" style={{ background: "#EEF1F6" }} />
+                    )}
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA principal */}
+              <Link
+                href="/espace-decouverte"
+                className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-2xl px-8 py-4 text-base font-extrabold uppercase tracking-wide text-white shadow-[0_10px_30px_-10px_rgba(192,17,46,0.6)] transition-transform hover:scale-[1.01]"
+                style={{ background: ED_RED }}
+              >
+                Découvrir Major ECN
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+
+              <p className="mt-4 text-xs leading-snug" style={{ color: ED_INK_SOFT }}>
+                Espace découverte basé sur des contenus de <span className="font-semibold">Médecine Générale</span>.
+                <br />
+                Les préparations sont disponibles dans les <span className="font-semibold">45 spécialités EVC</span>.
+              </p>
+            </Reveal>
+          </div>
+
+          {/* Séparateur + 3 stats bas */}
+          <div className="mt-10 border-t pt-8 sm:mt-14" style={{ borderColor: "#EEF1F6" }}>
+            <ul className="grid gap-6 sm:grid-cols-3">
+              {ED_BOTTOM_STATS.map((s) => (
+                <li key={s.t} className="flex items-center justify-center gap-3">
+                  <span
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                    style={{ background: s.bg, color: s.color }}
+                  >
+                    <s.Icon className="h-5 w-5" />
+                  </span>
+                  <span className="text-[15px] font-bold" style={{ color: ED_NAVY }}>{s.t}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-
-        <ul className="mt-10 grid grid-cols-2 gap-3 text-center text-[11px] font-semibold text-[#5A5A5A] sm:grid-cols-3 lg:grid-cols-6">
-          {[
-            { Icon: ShieldCheck,    t: 'Contenu certifié par des spécialistes' },
-            { Icon: TrendingUp,     t: 'Progression · Suivi structuré' },
-            { Icon: Activity,       t: 'Accès 24h/24, 7j/7' },
-            { Icon: BookOpen,       t: 'Méthodologie · Approche EVC' },
-            { Icon: Users,          t: 'PH spécialistes & CCA' },
-            { Icon: ClipboardCheck, t: 'Mis à jour chaque trimestre' },
-          ].map((b) => (
-            <li key={b.t} className="flex flex-col items-center gap-1.5 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4">
-              <b.Icon className="h-4 w-4 text-[#6B1A2A]" />
-              {b.t}
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
+}
+
+/** @deprecated Conservé pour compatibilité — préfère EspaceDecouverteSection. */
+export function FinalCtaBlock({ colleges: _colleges }: { colleges?: { id: string; nom: string }[] }) {
+  return <EspaceDecouverteSection />;
 }
 
 /* ============================================================

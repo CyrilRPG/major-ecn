@@ -7,7 +7,8 @@ import {
   Smartphone, Sparkles, Star, Stethoscope, Target, TrendingUp, Trophy, Users, Video, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
-import { FAQSection, FreeTrialBanner } from './manus-sections';
+import { FAQSection } from './manus-sections';
+import { EspaceDecouverteSection } from './extra-sections';
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -374,9 +375,9 @@ export function TarifsPageContent() {
         </div>
       </section>
 
-      {/* ═══ FAQ + CTA ═══ */}
+      {/* ═══ FAQ + Espace Découverte ═══ */}
       <FAQSection />
-      <FreeTrialBanner />
+      <EspaceDecouverteSection />
     </div>
   );
 }

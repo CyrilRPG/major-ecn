@@ -120,11 +120,11 @@ function PlateformeHero_PhotoShowcase() {
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <a
-              href="/inscription"
+              href="/espace-decouverte"
               className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-[14.5px] font-extrabold text-white shadow-[0_18px_38px_-14px_rgba(228,0,43,0.55)] transition-transform hover:scale-[1.02]"
               style={{ background: REAL_ACTIVE_GRADIENT }}
             >
-              Démarrer l&rsquo;essai gratuit <ArrowRight className="h-4 w-4" />
+              Découvrir Major ECN <ArrowRight className="h-4 w-4" />
             </a>
             <a
               href="/methode"
@@ -520,10 +520,10 @@ function PlateformeHero() {
                   </p>
 
                   <div className="mt-5 flex flex-wrap items-center gap-3">
-                    <a href="/inscription"
+                    <a href="/espace-decouverte"
                       className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-extrabold text-white shadow-[0_14px_30px_-12px_rgba(228,0,43,0.55)] transition-transform hover:scale-[1.02]"
                       style={{ background: REAL_ACTIVE_GRADIENT }}>
-                      Démarrer l&rsquo;essai gratuit <ArrowRight className="h-4 w-4" />
+                      Découvrir Major ECN <ArrowRight className="h-4 w-4" />
                     </a>
                     <a href="/methode"
                       className="inline-flex items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-[13.5px] font-extrabold transition-colors hover:bg-(--color-sand-100)"
@@ -1607,10 +1607,10 @@ function PlateformeCta() {
             </div>
 
             <div className="flex flex-col gap-3 lg:items-end">
-              <a href="/inscription"
+              <a href="/espace-decouverte"
                 className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-[14px] font-extrabold shadow-[0_20px_50px_-15px_rgba(0,0,0,0.4)] transition-transform hover:scale-[1.02]"
                 style={{ color: '#8B0E22' }}>
-                Démarrer l&rsquo;essai gratuit
+                Découvrir Major ECN
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </a>
               <a href="/methode"
@@ -1690,7 +1690,6 @@ export function PlateformePageContent() {
   return (
     <div className="overflow-x-hidden">
       <PlateformeHero />
-      <NouveauxContenusBanner />
       <BrandCredentialsSection />
       <HowDailySection />
       <CorrectorExampleSection />

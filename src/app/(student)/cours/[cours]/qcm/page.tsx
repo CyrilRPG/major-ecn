@@ -5,6 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 
 export default async function CoursQcmListPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -135,6 +136,16 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
             );
           })}
         </ul>
+      )}
+
+      {/* Entraînements verrouillés (MG uniquement) — template vert trophée + cadenas.
+          Au clic, popup "Information importante - Nouveaux contenus en cours". */}
+      {/^m[eé]decine\s+g[eé]n[eé]rale/i.test(c.matieres.nom) && (
+        <LockedTrainingsList
+          startIndex={series?.length ?? 0}
+          title="Entraînements à venir"
+          subtitle="De nouveaux entraînements sont en cours d’intégration par l’équipe pédagogique."
+        />
       )}
     </div>
   );

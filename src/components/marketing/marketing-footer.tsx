@@ -53,7 +53,7 @@ const COLS: { title: string; links: { label: string; href: string; Icon: React.C
       { label: "La plateforme",                 href: "/plateforme",  Icon: Stethoscope },
       { label: "Équipe pédagogique",  href: "/#equipe",     Icon: Users },
       { label: "Tarifs & formules",             href: "/tarifs",      Icon: Trophy },
-      { label: "Démarrer l’essai gratuit", href: "/inscription", Icon: Sparkles },
+      { label: "Espace découverte gratuit", href: "/espace-decouverte", Icon: Sparkles },
     ],
   },
   {
@@ -112,12 +112,12 @@ export function MarketingFooter() {
           {/* CTAs */}
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
-              href="/inscription"
+              href="/espace-decouverte"
               className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
               style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
             >
               <Sparkles className="h-4 w-4" />
-              D&eacute;marrer l&rsquo;essai gratuit
+              Espace d&eacute;couverte gratuit
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link

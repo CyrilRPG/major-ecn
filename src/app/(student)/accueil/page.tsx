@@ -7,6 +7,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
+import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
@@ -295,6 +296,9 @@ export default async function AccueilPage() {
     <div className="mx-auto grid w-full max-w-[1640px] gap-4 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_340px]">
       {/* ============ COLONNE PRINCIPALE ============ */}
       <div className="flex min-w-0 flex-col gap-4">
+
+        {/* ---- Bandeau Information importante (nouveaux contenus) — visible pour tous ---- */}
+        <NouveauxContenusBanner />
 
         {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

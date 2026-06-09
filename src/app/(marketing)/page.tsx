@@ -1,8 +1,7 @@
-import { createClient } from '@/lib/supabase/server';
 import { ManusHero } from '@/components/marketing/manus-hero';
-import { ExperienceSection, FAQSection, FreeTrialBanner } from '@/components/marketing/manus-sections';
+import { ExperienceSection, FAQSection } from '@/components/marketing/manus-sections';
 import {
-  BeyondPlatformSection, FinalCtaBlock, PedagogicalTeamSection,
+  BeyondPlatformSection, EspaceDecouverteSection, PedagogicalTeamSection,
   SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection,
   ToolsForProgressSection, ToolsGridSection, ToutRegroupeSection,
 } from '@/components/marketing/extra-sections';
@@ -14,10 +13,6 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const { data: collegesRaw } = await supabase.from('matieres').select('id, nom').order('nom');
-  const colleges = collegesRaw ?? [];
-
   return (
     <>
       {/* 1) HERO */}
@@ -53,11 +48,8 @@ export default async function HomePage() {
       {/* 9) FAQ */}
       <FAQSection />
 
-      {/* 10) Testez Major ECN pendant 2 jours */}
-      <FreeTrialBanner />
-
-      {/* 11) Rejoignez les candidats — CTA final (inscription) */}
-      <FinalCtaBlock colleges={colleges} />
+      {/* 10) Découvrez la plateforme Major ECN — Espace Découverte */}
+      <EspaceDecouverteSection />
     </>
   );
 }
