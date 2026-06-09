@@ -1,21 +1,27 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Send, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Lock, Send, X } from 'lucide-react';
 import { askQuestionAction } from '@/app/(student)/forum/actions';
+import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 
 export function AskTeacherButton({
   coursId,
   aiContext,
+  isDecouverte = false,
 }: {
   coursId?: string | null;
-  /** Conversation IA précédente (texte multiligne) — sera transférée au prof. */
+  /** Conversation précédente (texte multiligne) — sera transférée au professeur. */
   aiContext?: string | null;
+  /** Mode Découverte : le bouton "Envoyer au professeur" devient un cadenas
+   *  qui ouvre LockedContentModal au lieu d'envoyer la question. */
+  isDecouverte?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [body, setBody] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [lockedOpen, setLockedOpen] = useState(false);
   const [pending, start] = useTransition();
 
   const onSubmit = (e: React.FormEvent) => {
@@ -54,7 +60,7 @@ export function AskTeacherButton({
       {done ? (
         <p className="flex items-center gap-2 text-sm font-semibold text-[#1F6B43]">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
-          Question envoyée au prof. Vous serez notifié·e dès qu’il répond.
+          Question envoyée au professeur. Vous serez notifié·e dès qu’il répond.
         </p>
       ) : (
         <form onSubmit={onSubmit} className="space-y-2">
@@ -73,7 +79,7 @@ export function AskTeacherButton({
             </button>
           </div>
           <p className="text-[11px] text-(--color-ink-soft)">
-            La conversation avec l’IA est automatiquement jointe pour donner du contexte au prof.
+            La conversation est automatiquement jointe pour donner du contexte au professeur.
           </p>
           <textarea
             value={body}
@@ -87,16 +93,31 @@ export function AskTeacherButton({
               <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" /> {error}
             </p>
           )}
-          <button
-            type="submit"
-            disabled={pending || body.trim().length < 8}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-2 text-xs font-bold text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
-          >
-            {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-            Envoyer au prof
-          </button>
+          {isDecouverte ? (
+            // Mode Découverte : bouton verrouillé → ouvre popup tarifs
+            // au lieu d'envoyer la question au professeur.
+            <button
+              type="button"
+              onClick={() => setLockedOpen(true)}
+              aria-label="Envoyer au professeur — verrouillé Découverte"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-2 text-xs font-bold text-white opacity-90 transition-transform hover:scale-[1.01]"
+            >
+              <Lock className="h-3.5 w-3.5" />
+              Envoyer au professeur
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={pending || body.trim().length < 8}
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-2 text-xs font-bold text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
+            >
+              {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+              Envoyer au professeur
+            </button>
+          )}
         </form>
       )}
+      <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
     </div>
   );
 }

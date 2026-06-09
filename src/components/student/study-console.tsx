@@ -221,7 +221,7 @@ export function StudyConsole({
             </button>
           </div>
           <div className="min-h-0 flex-1">
-            <CourseChatbot coursId={coursId} coursTitre={titre} />
+            <CourseChatbot coursId={coursId} coursTitre={titre} isDecouverte={isDecouverte} />
           </div>
         </aside>
       )}

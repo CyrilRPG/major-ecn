@@ -12,10 +12,13 @@ export function CourseChatbot({
   coursId,
   coursTitre,
   onClose,
+  isDecouverte = false,
 }: {
   coursId: string;
   coursTitre: string;
   onClose?: () => void;
+  /** Mode Découverte : le bouton "Envoyer au professeur" devient un cadenas. */
+  isDecouverte?: boolean;
 }) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -111,7 +114,7 @@ export function CourseChatbot({
               </div>
               {isAssistant && !isFirst && isLastAssistant && !loading && (
                 <div className="mt-1.5 max-w-[85%]">
-                  <AskTeacherButton coursId={coursId} aiContext={conversationContext} />
+                  <AskTeacherButton coursId={coursId} aiContext={conversationContext} isDecouverte={isDecouverte} />
                 </div>
               )}
             </div>
