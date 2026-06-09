@@ -341,38 +341,57 @@ export function RecrutementPageContent() {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div style={{ fontFamily: FONT }}>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-white">
+    <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 30%, #FFF8F9 60%, #FFFFFF 100%)' }}>
+      {/* Décor global */}
+      <div aria-hidden className="pointer-events-none absolute -right-32 top-0 h-[480px] w-[480px] rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(192,17,46,0.22), transparent 70%)' }} />
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-[35%] h-[420px] w-[420px] rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(15,31,77,0.18), transparent 70%)' }} />
+      <div aria-hidden className="pointer-events-none absolute right-0 bottom-[10%] h-[380px] w-[380px] rounded-full opacity-15 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%)' }} />
+
+      {/* HERO premium */}
+      <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-0">
             <div className="py-16 lg:py-24 lg:pr-12">
-              <p className="text-sm font-bold uppercase tracking-wider" style={{ color: RED }}>RECRUTEMENT MAJOR ECN</p>
-              <h1 className="mt-4 text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl" style={{ color: NAVY }}>
-                Participez à la réussite<br />
-                <span style={{ color: RED }}>des candidats EVC</span>
+              {/* Badge top avec icône */}
+              <span className="inline-flex items-center gap-2 rounded-full border bg-white/80 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] shadow-[0_8px_24px_-12px_rgba(192,17,46,0.30)] backdrop-blur-sm" style={{ borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
+                <Users className="h-3.5 w-3.5" />
+                Recrutement Major ECN
+              </span>
+              <h1 className="mt-5 text-[2rem] font-black leading-[1.06] tracking-tight sm:text-4xl lg:text-[3.25rem]">
+                <span style={{ color: NAVY }}>Participez à la réussite</span><br />
+                <span style={{ backgroundImage: 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+                  des candidats EVC
+                </span>
               </h1>
-              <p className="mt-5 text-base leading-relaxed" style={{ color: INK_SOFT }}>
+              <p className="mt-6 text-[15.5px] leading-relaxed" style={{ color: INK_SOFT }}>
                 Depuis 2011, Major ECN développe des ressources pédagogiques
                 utilisées par des milliers de professionnels de santé préparant les{' '}
                 <strong style={{ color: NAVY }}>Épreuves de Vérification des Connaissances</strong>.
               </p>
-              <p className="mt-4 text-sm" style={{ color: INK }}>
-                Enseignement · Création de contenus pédagogiques<br />
-                Relecture scientifique · Accompagnement des candidats EVC
-              </p>
+              <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                {['Enseignement', 'Création de contenus pédagogiques', 'Relecture scientifique', 'Accompagnement candidats EVC'].map((t) => (
+                  <div key={t} className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-[13px] font-semibold" style={{ borderColor: BORDER, color: NAVY }}>
+                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: RED }} />
+                    {t}
+                  </div>
+                ))}
+              </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <button onClick={() => setModalOpen(true)} className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white" style={{ background: RED }}>
-                  Déposer ma candidature <ArrowRight className="h-4 w-4" />
+                <button onClick={() => setModalOpen(true)} className="group inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_12px_32px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.02]" style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}>
+                  Déposer ma candidature <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
-                <a href="#pourquoi-rejoindre" className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-bold" style={{ borderColor: BORDER, color: NAVY }}>
+                <a href="#pourquoi-rejoindre" className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3.5 text-sm font-extrabold transition-colors hover:bg-[#FCEAEC]" style={{ borderColor: 'rgba(192,17,46,0.25)', color: RED }}>
                   Découvrir Major ECN <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
             </div>
             <div className="relative hidden lg:block">
-              <img src="/recrutement/hero-recrutement.jpg" alt="Équipe médicale en réunion"
-                className="absolute inset-0 h-full w-full object-cover" />
+              {/* Image avec overlay subtil et coins arrondis */}
+              <div className="absolute inset-0 overflow-hidden rounded-l-3xl shadow-2xl">
+                <img src="/recrutement/hero-recrutement.jpg" alt="Équipe médicale en réunion"
+                  className="h-full w-full object-cover" />
+                <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(135deg, transparent 0%, rgba(15,31,77,0.10) 100%)' }} />
+              </div>
             </div>
           </div>
         </div>

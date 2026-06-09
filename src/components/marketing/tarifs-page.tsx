@@ -29,11 +29,17 @@ const SPECIALTIES = [
 
 export function TarifsPageContent() {
   return (
-    <div style={{ fontFamily: FONT }}>
-      {/* ═══ HERO ═══ */}
-      <section className="bg-white pt-6 pb-10">
+    <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 35%, #FFF8F9 70%, #FFFFFF 100%)' }}>
+      {/* Décor global — halos subtils en arrière-plan */}
+      <div aria-hidden className="pointer-events-none absolute -right-32 top-0 h-[480px] w-[480px] rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(192,17,46,0.25), transparent 70%)' }} />
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-[40%] h-[420px] w-[420px] rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(15,31,77,0.20), transparent 70%)' }} />
+      <div aria-hidden className="pointer-events-none absolute right-0 bottom-[20%] h-[380px] w-[380px] rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.20), transparent 70%)' }} />
+
+      {/* ═══ HERO premium ═══ */}
+      <section className="relative pt-10 pb-12 sm:pt-14 sm:pb-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-3 rounded-full border px-5 py-2 text-[11px] font-bold uppercase tracking-wider" style={{ borderColor: BORDER, color: NAVY }}>
+          {/* Badge top — gradient avec ombre */}
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-full border bg-white/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-[0_10px_30px_-15px_rgba(15,31,77,0.20)] backdrop-blur-sm" style={{ borderColor: BORDER, color: NAVY }}>
             <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> 45 spécialités EVC</span>
             <span style={{ color: RED }}>&#8226;</span>
             <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" style={{ color: RED }} /> Plus de 9 000 médecins accompagnés</span>
@@ -41,28 +47,33 @@ export function TarifsPageContent() {
             <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" style={{ color: RED }} /> Depuis 2011</span>
           </div>
 
-          <h1 className="mt-7 text-center text-3xl font-black tracking-tight sm:text-4xl lg:text-[2.8rem]" style={{ color: NAVY }}>
-            Tarifs des préparations <span style={{ color: RED }}>EVC (PAE)</span>
+          {/* Titre avec gradient + tracking serré */}
+          <h1 className="mt-9 text-center text-[2rem] font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+            <span style={{ color: NAVY }}>Tarifs des préparations</span>{' '}
+            <span style={{ backgroundImage: 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+              EVC (PAE)
+            </span>
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-[15px] leading-relaxed" style={{ color: INK_SOFT }}>
+          <p className="mx-auto mt-5 max-w-2xl text-center text-[15.5px] leading-relaxed" style={{ color: INK_SOFT }}>
             Préparations destinées aux médecins diplômés hors Union Européenne préparant les{' '}
             <strong style={{ color: NAVY }}>Épreuves de Vérification des Connaissances (EVC)</strong> dans le cadre de la
             Procédure d{"'"}Autorisation d{"'"}Exercice (PAE).
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
+          {/* 3 mini KPIs en pillules */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
             {[
               { Icon: Users, big: 'Plus de 9 000', sub: 'médecins accompagnés' },
               { Icon: GraduationCap, big: '45 spécialités', sub: 'préparées' },
               { Icon: Calendar, big: 'Depuis 2011', sub: 'à vos côtés' },
             ].map(s => (
-              <div key={s.big} className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
-                  <s.Icon className="h-4 w-4" />
+              <div key={s.big} className="flex items-center gap-2.5 rounded-2xl border bg-white px-4 py-2.5 shadow-[0_4px_16px_-6px_rgba(15,31,77,0.10)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-6px_rgba(15,31,77,0.18)]" style={{ borderColor: BORDER }}>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: RED_SOFT, color: RED }}>
+                  <s.Icon className="h-4.5 w-4.5" />
                 </span>
                 <div className="text-left">
-                  <p className="text-[13px] font-extrabold" style={{ color: RED }}>{s.big}</p>
-                  <p className="text-[11px]" style={{ color: INK_SOFT }}>{s.sub}</p>
+                  <p className="text-[14px] font-extrabold leading-tight" style={{ color: RED }}>{s.big}</p>
+                  <p className="text-[11.5px] leading-tight" style={{ color: INK_SOFT }}>{s.sub}</p>
                 </div>
               </div>
             ))}
