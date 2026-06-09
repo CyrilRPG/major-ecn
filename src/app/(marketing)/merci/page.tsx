@@ -1,12 +1,154 @@
+/**
+ * Page de remerciement après paiement Stripe.
+ *
+ * Comportement robuste : la page agit comme un FILET DE SÉCURITÉ pour le
+ * webhook.
+ *   1. Récupère la session Checkout via session_id en query string
+ *   2. Vérifie que le paiement est confirmé (paid / complete)
+ *   3. Appelle `provisionStudentAccount` (création user + email + lien)
+ *      → idempotent : si le webhook a déjà tourné, on no-op proprement
+ *   4. Pour les paiements en plusieurs fois : applique cancel_at sur la
+ *      subscription pour garantir l'arrêt à N facturations
+ *
+ * → Garantit que le user reçoit son email d'activation même si le webhook
+ *   Stripe ne s'est jamais déclenché (clé webhook manquante, retry échoué…).
+ */
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Mail, PartyPopper, Sparkles } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CheckCircle2, Mail, PartyPopper, Sparkles } from 'lucide-react';
+import { getStripe } from '@/lib/stripe';
+import type { FormuleId } from '@/lib/stripe';
+import { provisionStudentAccount } from '@/lib/stripe/provisioning';
 
 export const metadata = {
   title: 'Merci pour votre inscription — Major ECN',
   description: 'Votre paiement a été enregistré. Activez votre compte étudiant pour commencer.',
 };
 
-export default function MerciPage() {
+export const dynamic = 'force-dynamic';
+
+type ProvisioningStatus =
+  | { ok: true; email: string; isNew: boolean; emailSent: boolean; emailVia: 'resend' | 'supabase' | null }
+  | { ok: false; reason: string };
+
+async function provisionFromSession(sessionId: string): Promise<ProvisioningStatus> {
+  // Logger structuré : visible dans les Logs Vercel pour identifier d'où
+  // vient le mail (webhook vs page merci) en cas de doublon.
+  // eslint-disable-next-line no-console
+  const log = (label: string, data: Record<string, unknown> = {}) =>
+    console.log(`[merci-provision] ${label}`, JSON.stringify({ sessionId, ...data }));
+
+  let stripe;
+  try {
+    stripe = getStripe();
+  } catch (e) {
+    log('stripe-config-error', { error: e instanceof Error ? e.message : String(e) });
+    return { ok: false, reason: 'Stripe non configuré.' };
+  }
+
+  let session;
+  try {
+    session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['subscription'],
+    });
+  } catch (e) {
+    log('session-retrieve-error', { error: e instanceof Error ? e.message : String(e) });
+    return { ok: false, reason: 'Session de paiement introuvable.' };
+  }
+
+  log('session-retrieved', {
+    status: session.status,
+    payment_status: session.payment_status,
+    mode: session.mode,
+    amount_total: session.amount_total,
+    has_subscription: !!session.subscription,
+    metadata: session.metadata,
+  });
+
+  // On n'agit que si le paiement est confirmé.
+  const paid = session.payment_status === 'paid' || session.status === 'complete';
+  if (!paid) {
+    return { ok: false, reason: 'Le paiement n\'est pas encore confirmé.' };
+  }
+
+  const email = session.customer_email ?? session.customer_details?.email ?? '';
+  const meta = session.metadata ?? {};
+  const formuleId = meta.formule as FormuleId | undefined;
+  const installments = Number(meta.installments ?? '1') || 1;
+  const cancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;
+
+  if (!email) return { ok: false, reason: 'Email manquant sur la session.' };
+  if (!formuleId) return { ok: false, reason: 'Formule manquante sur la session.' };
+
+  // Pour les paiements 3x/4x : applique cancel_at sur la subscription
+  // (filet de sécurité si le webhook a planté). Idempotent.
+  if (session.mode === 'subscription' && session.subscription) {
+    const subId =
+      typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
+    try {
+      const sub = await stripe.subscriptions.retrieve(subId);
+      const effectiveCancelAt =
+        cancelAt ??
+        (installments > 1
+          ? Math.floor(Date.now() / 1000) + (installments - 1) * 30 * 86400 + 2 * 86400
+          : null);
+      if (effectiveCancelAt && (!sub.cancel_at || sub.cancel_at !== effectiveCancelAt)) {
+        await stripe.subscriptions.update(subId, { cancel_at: effectiveCancelAt });
+        log('cancel-at-applied', { subId, cancelAt: effectiveCancelAt });
+      } else {
+        log('cancel-at-skip', { subId, currentCancelAt: sub.cancel_at });
+      }
+    } catch (e) {
+      log('cancel-at-error', { error: e instanceof Error ? e.message : String(e) });
+    }
+  }
+
+  // Provisioning du compte étudiant — IDEMPOTENT : si le user existe déjà,
+  // on lui renvoie un nouveau magic-link sans dupliquer le compte.
+  const result = await provisionStudentAccount({
+    email,
+    firstName: meta.first_name ?? '',
+    lastName: meta.last_name ?? '',
+    formuleId,
+    installments,
+    amountTotalCents: session.amount_total ?? 0,
+    specialty: meta.specialty ?? 'Médecine générale',
+    voie: meta.voie ?? '',
+  });
+
+  if (!result.ok) {
+    log('provisioning-error', { error: result.error });
+    return { ok: false, reason: result.error };
+  }
+  log('provisioning-success', {
+    userId: result.userId,
+    isNew: result.isNew,
+    emailSent: result.emailSent,
+    emailVia: result.emailVia,
+    emailError: result.emailError,
+  });
+  return {
+    ok: true,
+    email,
+    isNew: result.isNew,
+    emailSent: result.emailSent,
+    emailVia: result.emailVia,
+  };
+}
+
+export default async function MerciPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session_id?: string }>;
+}) {
+  const { session_id } = await searchParams;
+  const status: ProvisioningStatus | null = session_id
+    ? await provisionFromSession(session_id)
+    : null;
+
+  const emailFailed = status?.ok === true && !status.emailSent;
+  const provisioningError = status?.ok === false;
+  const recipientEmail = status?.ok === true ? status.email : null;
+
   return (
     <section className="bg-[#F8FAFC] py-16 sm:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
@@ -23,29 +165,62 @@ export default function MerciPage() {
             </p>
           </div>
 
-          {/* Card "Vérifiez votre email" */}
-          <div className="mt-8 flex items-start gap-4 rounded-2xl border bg-white p-5 sm:p-6" style={{ borderColor: '#E5E9F0', background: '#FDFDFE' }}>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: '#FDEEEF', color: '#C0112E' }}>
-              <Mail className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
-                Vérifiez votre boîte mail
-              </p>
-              <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#52607A' }}>
-                Nous venons de vous envoyer un email avec votre récapitulatif de paiement
-                et un lien pour <strong>choisir votre mot de passe</strong>. Cliquez sur ce
-                lien pour activer votre compte et accéder à la plateforme.
-              </p>
-              <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
-                Si vous ne le recevez pas dans les 5 prochaines minutes, vérifiez vos spams
-                ou contactez-nous à{' '}
-                <a href="mailto:contact@major-ecn.fr" className="font-semibold" style={{ color: '#C0112E' }}>
-                  contact@major-ecn.fr
-                </a>.
-              </p>
+          {emailFailed || provisioningError ? (
+            /* Cas d'échec : email ou provisioning KO → message clair + contact */
+            <div
+              className="mt-8 flex items-start gap-4 rounded-2xl border p-5 sm:p-6"
+              style={{ borderColor: '#F5C2C7', background: '#FFF6F7' }}
+            >
+              <span
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                style={{ background: '#FDE3E5', color: '#C0112E' }}
+              >
+                <AlertTriangle className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#7C0F1F' }}>
+                  Votre paiement est bien enregistré, mais l&rsquo;email d&rsquo;activation n&rsquo;a pas pu partir
+                </p>
+                <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#5C0E18' }}>
+                  Pas d&rsquo;inquiétude : votre achat est validé côté Stripe. Écrivez-nous
+                  rapidement à{' '}
+                  <a href="mailto:contact@major-ecn.fr" className="font-semibold underline" style={{ color: '#C0112E' }}>
+                    contact@major-ecn.fr
+                  </a>{' '}
+                  {recipientEmail ? <>(en précisant l&rsquo;email <strong>{recipientEmail}</strong>)</> : null} ; nous
+                  activerons votre accès manuellement sous 24&nbsp;h.
+                </p>
+                <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
+                  Vous pouvez aussi cliquer sur « Mot de passe oublié&nbsp;? » depuis la
+                  page de connexion pour vous renvoyer un lien d&rsquo;activation.
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Cas nominal : email envoyé */
+            <div className="mt-8 flex items-start gap-4 rounded-2xl border bg-white p-5 sm:p-6" style={{ borderColor: '#E5E9F0', background: '#FDFDFE' }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: '#FDEEEF', color: '#C0112E' }}>
+                <Mail className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
+                  Vérifiez votre boîte mail
+                </p>
+                <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#52607A' }}>
+                  Nous venons de vous envoyer un email avec votre récapitulatif de paiement
+                  et un lien pour <strong>choisir votre mot de passe</strong>. Cliquez sur ce
+                  lien pour activer votre compte et accéder à la plateforme.
+                </p>
+                <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
+                  Si vous ne le recevez pas dans les 5 prochaines minutes, vérifiez vos spams
+                  ou contactez-nous à{' '}
+                  <a href="mailto:contact@major-ecn.fr" className="font-semibold" style={{ color: '#C0112E' }}>
+                    contact@major-ecn.fr
+                  </a>.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* 3 bullets */}
           <ul className="mt-6 space-y-3">

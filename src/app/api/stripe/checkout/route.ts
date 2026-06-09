@@ -116,11 +116,24 @@ export async function POST(req: Request) {
       // → garantit exactement N facturations (J0, J30, J60, J90…)
       const now = Math.floor(Date.now() / 1000);
       const cancelAt = now + (installments - 1) * 30 * 86400 + 2 * 86400;
+      const endDateFr = new Date(cancelAt * 1000).toLocaleDateString('fr-FR', {
+        day: 'numeric', month: 'long', year: 'numeric',
+      });
+      const totalFr = (formule.amountCents / 100).toFixed(2).replace('.', ',');
+      const monthlyFr = (monthlyCents / 100).toFixed(2).replace('.', ',');
 
       // On récupère le product_id du price one-shot pour réutiliser la
       // même fiche produit côté Stripe (pas de doublon).
       const oneshot = await stripe.prices.retrieve(priceId);
       const productId = typeof oneshot.product === 'string' ? oneshot.product : oneshot.product.id;
+
+      // Description ULTRA-CLAIRE visible dans le récap Stripe Checkout :
+      // l'utilisateur doit voir "fin de prélèvement le DD MMM YYYY" et le
+      // total cumulé pour comprendre que ce n'est PAS un abonnement infini.
+      const planDescription =
+        `${formule.name} — Paiement en ${installments} fois sans frais. ` +
+        `${installments} prélèvements de ${monthlyFr} € (total ${totalFr} €). ` +
+        `Plan se termine automatiquement le ${endDateFr}. Aucun renouvellement.`;
 
       const session = await stripe.checkout.sessions.create({
         mode: 'subscription',
@@ -144,10 +157,18 @@ export async function POST(req: Request) {
         phone_number_collection: { enabled: true },
         metadata: { ...commonMetadata, cancel_at: String(cancelAt) },
         subscription_data: {
-          description: `Major ECN — ${formule.name} (${installments}× ${(monthlyCents / 100).toFixed(2)} €)`,
-          // cancel_at sera appliqué par le webhook après création de la
-          // subscription (Stripe Checkout ne le supporte pas en preset).
-          metadata: { ...commonMetadata, cancel_at: String(cancelAt) },
+          description: planDescription,
+          // cancel_at sera appliqué par le webhook OU par la page /merci
+          // après création de la subscription (Stripe Checkout ne supporte
+          // pas cancel_at en preset).
+          metadata: { ...commonMetadata, cancel_at: String(cancelAt), end_date_fr: endDateFr },
+        },
+        // Message custom affiché dans le récap Stripe Checkout (sous le
+        // total, dans la sidebar de la page de paiement).
+        custom_text: {
+          submit: {
+            message: `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`,
+          },
         },
       });
 

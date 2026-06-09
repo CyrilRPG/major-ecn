@@ -123,42 +123,96 @@ export async function POST(req: Request) {
     );
   }
 
-  // Magic-link + email branded (Resend) avec fallback Supabase si pas de clé.
+  // Logger structuré pour les Logs Vercel — facilite le diagnostic si
+  // l'email ne part pas (Resend KO ? Supabase KO ? domain non vérifié ?).
+  // eslint-disable-next-line no-console
+  const log = (label: string, data: Record<string, unknown> = {}) =>
+    console.log(`[create-professor] ${label}`, JSON.stringify({ email, ...data }));
+  log('start', {
+    hasResendKey: !!process.env.RESEND_API_KEY,
+    emailFrom: process.env.EMAIL_FROM ?? '(fallback resend.dev sandbox)',
+  });
+
+  // Magic-link via Supabase admin SDK
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: link } = await (admin as any).auth.admin.generateLink({
+  const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
     type: 'invite',
     email,
     options: { redirectTo },
   });
+  if (linkErr) log('generate-link-error', { error: linkErr.message });
+
   // On pointe vers notre propre route /auth/confirm (SSR-safe) en utilisant
   // le `hashed_token` plutôt que l'URL Supabase brute (qui casse en PKCE).
   const hashedToken = link?.properties?.hashed_token as string | undefined;
   const setupUrl = hashedToken
     ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=invite&next=${encodeURIComponent('/auth/setup-password')}`
     : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
-  const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
-  const sent = await sendEmail({ to: email, subject, html, text });
-  if (!sent.ok) {
-    // Fallback Supabase si RESEND_API_KEY absente ; sinon on remonte l'erreur
-    // au front pour pouvoir diagnostiquer (domaine non vérifié, clé invalide, etc.)
-    if (sent.error.includes('RESEND_API_KEY non configurée')) {
-      await admin.auth.admin.inviteUserByEmail(email, {
+  log('setup-url-built', { viaHashedToken: !!hashedToken });
+
+  // STRATÉGIE D'ENVOI (identique à /api/espace-decouverte/signup) :
+  //   1) Tentative Resend (template Major ECN branded)
+  //   2) Fallback Supabase `inviteUserByEmail` si Resend KO (peu importe la
+  //      cause : clé absente, domaine non vérifié, 4xx/5xx…)
+  let emailVia: 'resend' | 'supabase' | null = null;
+  let emailError: string | null = null;
+
+  // -- Tentative 1 : Resend
+  try {
+    const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
+    const sent = await sendEmail({ to: email, subject, html, text });
+    if (sent.ok) {
+      emailVia = 'resend';
+      log('email-sent-resend', { id: sent.id });
+    } else {
+      emailError = sent.error;
+      log('email-fail-resend', { error: sent.error });
+    }
+  } catch (e) {
+    emailError = e instanceof Error ? e.message : 'Erreur Resend inconnue';
+    log('email-fail-resend-throw', { error: emailError });
+  }
+
+  // -- Tentative 2 : Supabase inviteUserByEmail (toujours dispo si user existe)
+  if (!emailVia) {
+    try {
+      const { error: invErr } = await admin.auth.admin.inviteUserByEmail(email, {
         data: { first_name, last_name, role: 'professor' },
         redirectTo,
       });
-      return NextResponse.json({
-        ok: true,
-        id: created.user.id,
-        warning: 'RESEND_API_KEY absente — email envoyé via Supabase Auth (template par défaut).',
-      });
+      if (invErr) {
+        emailError = (emailError ?? '') + ' | Supabase: ' + invErr.message;
+        log('email-fail-supabase', { error: invErr.message });
+      } else {
+        emailVia = 'supabase';
+        emailError = null;
+        log('email-sent-supabase');
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Erreur Supabase inconnue';
+      emailError = (emailError ?? '') + ' | Supabase: ' + msg;
+      log('email-fail-supabase-throw', { error: msg });
     }
-    // Erreur Resend réelle (4xx/5xx). Le prof est créé mais sans email.
+  }
+
+  log('end', { emailVia, emailError });
+
+  if (!emailVia) {
     return NextResponse.json({
       ok: true,
       id: created.user.id,
-      warning: `Profil créé, mais l'email Resend n'a pas pu être envoyé : ${sent.error}`,
+      warning:
+        `Profil professeur créé, mais l'email d'activation n'a pas pu être envoyé : ${emailError ?? 'erreur inconnue'}. ` +
+        `Communiquez ce lien au professeur pour qu'il puisse activer son compte : ${setupUrl}`,
     });
   }
 
-  return NextResponse.json({ ok: true, id: created.user.id });
+  return NextResponse.json({
+    ok: true,
+    id: created.user.id,
+    emailVia,
+    ...(emailVia === 'supabase'
+      ? { warning: 'Email envoyé via Supabase Auth (template standard, Resend a échoué).' }
+      : {}),
+  });
 }
