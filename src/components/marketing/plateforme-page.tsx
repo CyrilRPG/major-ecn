@@ -1588,8 +1588,7 @@ function PlateformeCta() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.22em] backdrop-blur"
                 style={{ color: '#F5D597' }}>
-                <Sparkles className="h-3 w-3" style={{ color: '#D4AF37' }} />
-                Essai gratuit · sans carte bancaire
+                Découvrir la plateforme · sans carte bancaire
               </span>
               <h2 className="mt-4 text-[26px] font-black leading-[1.1] sm:text-[34px] lg:text-[40px]"
                 style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>

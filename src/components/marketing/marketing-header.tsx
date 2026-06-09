@@ -76,12 +76,11 @@ export function MarketingHeader() {
             Se connecter
           </Link>
           <Link
-            href="/inscription"
+            href="/espace-decouverte"
             className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
           >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Essai gratuit</span>
-            <span className="sm:hidden">Essai</span>
+            <span className="hidden sm:inline">Découvrir la plateforme</span>
+            <span className="sm:hidden">Découvrir</span>
           </Link>
           <button
             type="button"
@@ -107,11 +106,11 @@ export function MarketingHeader() {
             </Link>
           ))}
           <Link
-            href="/inscription"
+            href="/espace-decouverte"
             onClick={() => setOpen(false)}
             className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-primary)"
           >
-            Essai gratuit
+            Découvrir la plateforme
           </Link>
           <Link
             href="/login"

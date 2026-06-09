@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, Calendar, ChevronDown, GraduationCap, Layers3, MessageCircle, Search,
+  ArrowRight, Calendar, ChevronDown, ClipboardCheck, FileText,
+  GraduationCap, Layers3, MessageCircle, Rocket, Search,
   Sparkles, Stethoscope, TrendingUp,
 } from 'lucide-react';
 import { FAQ_CATEGORIES, type FaqCategory, type FaqQA } from '@/lib/data/faq-categories';
@@ -235,23 +236,69 @@ export function FaqSidebar() {
         </ul>
       </div>
 
-      {/* Carte 3 — Espace découverte */}
-      <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#C0112E] via-[#8B0E22] to-[#0F1F4D] p-5 text-white shadow-[0_24px_60px_-24px_rgba(192,17,46,0.55)] sm:p-6"
-        style={{ borderColor: 'rgba(255,255,255,0.18)' }}>
-        <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-3xl" />
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.22em] backdrop-blur">
-          <Sparkles className="h-3 w-3" /> Essai gratuit
+      {/* Carte 3 — Accès gratuit (pixel-perfect maquette) */}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-white shadow-[0_24px_60px_-24px_rgba(192,17,46,0.55)] sm:p-7"
+        style={{
+          background:
+            'linear-gradient(135deg, #C0112E 0%, #8B0E22 55%, #0F1F4D 100%)',
+        }}>
+        <span aria-hidden className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
+        <span aria-hidden className="absolute -bottom-12 -left-10 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
+
+        {/* Badge ACCÈS GRATUIT */}
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] backdrop-blur">
+          <Rocket className="h-3 w-3" /> Accès gratuit
         </span>
-        <p className="mt-3 text-base font-extrabold leading-tight">
-          Tester Major ECN pendant 2&nbsp;jours
+
+        {/* Titre */}
+        <p className="mt-4 text-[19px] font-extrabold leading-tight sm:text-xl">
+          Découvrez la plateforme Major&nbsp;ECN
         </p>
-        <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/85">
-          Accès complet à la plateforme, sans carte bancaire.
+        <p className="mt-2 text-[13px] leading-relaxed text-white/85">
+          Explorez gratuitement notre environnement
+          de préparation EVC et découvrez notre méthode de travail.
         </p>
-        <Link href="/inscription"
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow-md transition-transform hover:scale-[1.02]"
+
+        {/* 4 stats inline avec icônes */}
+        <ul className="mt-5 grid grid-cols-4 gap-2 border-y border-white/15 py-4">
+          {[
+            { Icon: Layers3,        n: '10', l: 'flashcards' },
+            { Icon: ClipboardCheck, n: '10', l: 'QCM corrigés' },
+            { Icon: Stethoscope,    n: '1',  l: 'cas clinique corrigé' },
+            { Icon: FileText,       n: '1',  l: 'fiche de cours' },
+          ].map((s, i) => (
+            <li key={i} className="flex items-center gap-1.5">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/15">
+                <s.Icon className="h-3.5 w-3.5 text-white" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[14px] font-extrabold leading-none">{s.n}</p>
+                <p className="mt-0.5 text-[10px] leading-tight text-white/85">{s.l}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* Sous-bloc 45+ spécialités */}
+        <div className="mt-4 flex items-start gap-2.5">
+          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15">
+            <GraduationCap className="h-3.5 w-3.5 text-white" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[13px] font-extrabold leading-tight">45+ spécialités préparées</p>
+            <p className="mt-1 text-[11.5px] leading-tight text-white/80">
+              Contenus de démonstration proposés en{' '}
+              <span style={{ color: '#FFD54A' }} className="font-semibold">Médecine Générale</span>.
+            </p>
+          </div>
+        </div>
+
+        {/* CTA blanc */}
+        <Link href="/espace-decouverte"
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-[13.5px] font-extrabold shadow-md transition-transform hover:scale-[1.02]"
           style={{ color: RED }}>
-          Démarrer l’essai <ArrowRight className="h-4 w-4" />
+          Accéder gratuitement à la plateforme
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </div>
