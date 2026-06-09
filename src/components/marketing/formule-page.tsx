@@ -9,6 +9,7 @@ import {
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
 import { CheckoutButton } from './checkout-button';
+import { CallbackRequestForm } from './callback-request-form';
 import type { FormuleId } from '@/lib/stripe';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
@@ -374,7 +375,8 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       {/* FAQ */}
       <FAQSection />
 
-      {/* CHOISIR CETTE FORMULE — checkout Stripe pixel-perfect */}
+      {/* CHOISIR CETTE FORMULE — checkout Stripe (essentielle, intensive)
+          OU formulaire de rappel (programme approfondi sur-mesure) */}
       <section id="choisir-formule" className="py-14" style={{ background: variant === 'approfondi' ? '#1E40AF' : variant === 'intensive' ? '#C0112E' : '#2E7D32' }}>
         <div className="mx-auto grid max-w-5xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:px-8">
           {/* Gauche : récap formule */}
@@ -383,46 +385,79 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
               {c.label}
             </p>
             <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
-              Choisir cette formule
+              {variant === 'approfondi' ? 'Échanger avec un conseiller' : 'Choisir cette formule'}
             </h2>
             <p className="mt-3 text-sm text-white/85">
-              Accès immédiat a la plateforme après votre inscription et activation par email.
+              {variant === 'approfondi'
+                ? "Programme sur-mesure : un conseiller vous rappelle pour cadrer votre préparation."
+                : "Accès immédiat à la plateforme après votre inscription et activation par email."}
             </p>
             <p className="mt-6 text-5xl font-black">{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
             {variant === 'approfondi' && (
               <p className="mt-2 text-xs text-white/70">*Tarif variable selon la spécialité préparée.</p>
             )}
             <ul className="mt-6 space-y-2 text-sm text-white/90">
-              {['Accès complet a la Médecine Générale (Voie interne + Voie externe)', 'QCM, fiches, flashcards, méthodologie EVC', 'Email de confirmation + activation immédiate du compte', 'Paiement en 1, 3 ou 4 fois — sécurisé via Stripe'].map((t) => (
-                <li key={t} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-white" /> {t}</li>
-              ))}
+              {variant === 'approfondi'
+                ? [
+                    'Reprise structurée des spécialités majeures',
+                    'Échanges réguliers avec les enseignants',
+                    'Épreuves blanches et suivi personnalisé',
+                    'Un conseiller vous rappelle sous 24 h ouvrées',
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-white" /> {t}</li>
+                  ))
+                : [
+                    'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
+                    'QCM, fiches, flashcards, méthodologie EVC',
+                    'Email de confirmation + activation immédiate du compte',
+                    'Paiement en 1, 3 ou 4 fois — sécurisé via Stripe',
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-white" /> {t}</li>
+                  ))}
             </ul>
-            {c.ctaSecondary && (
-              <Link href="/contact" className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-2.5 text-sm font-bold text-white">
-                {c.ctaSecondary}
-              </Link>
-            )}
           </div>
 
-          {/* Droite : carte de paiement Stripe */}
+          {/* Droite : carte paiement Stripe OU carte demande de rappel */}
           <div className="rounded-3xl bg-white p-6 shadow-2xl sm:p-7">
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: '#52607A' }}>
-              Inscription &amp; paiement
-            </p>
-            <h3 className="mt-1 text-xl font-black" style={{ color: NAVY }}>
-              Créez votre compte en 30 secondes
-            </h3>
-            <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT }}>
-              Vos informations servent a créer votre compte étudiant et a vous envoyer
-              votre lien d&rsquo;activation.
-            </p>
-            <div className="mt-5">
-              <CheckoutButton
-                formuleId={VARIANT_TO_FORMULE_ID[variant]}
-                label={c.cta}
-                color={{ deep: variant === 'approfondi' ? '#1E3A8A' : variant === 'intensive' ? '#8B0E22' : '#1B5E20', main: c.color }}
-              />
-            </div>
+            {variant === 'approfondi' ? (
+              <>
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: '#52607A' }}>
+                  Demande de rappel
+                </p>
+                <h3 className="mt-1 text-xl font-black" style={{ color: NAVY }}>
+                  Soyez rappelé sous 24 h ouvrées
+                </h3>
+                <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT }}>
+                  Un conseiller pédagogique vous appelle au numéro indiqué pour
+                  établir un programme sur-mesure et répondre à vos questions.
+                </p>
+                <div className="mt-5">
+                  <CallbackRequestForm
+                    color={{ deep: '#1E3A8A', main: '#1E40AF' }}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: '#52607A' }}>
+                  Inscription &amp; paiement
+                </p>
+                <h3 className="mt-1 text-xl font-black" style={{ color: NAVY }}>
+                  Créez votre compte en 30 secondes
+                </h3>
+                <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT }}>
+                  Vos informations servent à créer votre compte étudiant et à vous envoyer
+                  votre lien d&rsquo;activation par email.
+                </p>
+                <div className="mt-5">
+                  <CheckoutButton
+                    formuleId={VARIANT_TO_FORMULE_ID[variant]}
+                    label={`Payer ${c.price} € et créer mon compte`}
+                    color={{ deep: variant === 'intensive' ? '#8B0E22' : '#1B5E20', main: c.color }}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
