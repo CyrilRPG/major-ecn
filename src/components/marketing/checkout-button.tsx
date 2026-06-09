@@ -195,7 +195,7 @@ export function CheckoutButton({
         {[
           { Icon: ShieldCheck, t: 'Paiement sécurisé', s: '256-bit SSL' },
           { Icon: Lock,        t: 'Stripe certifié',   s: 'PCI DSS' },
-          { Icon: CheckCircle2, t: 'Satisfait',        s: '14 j remb.' },
+          { Icon: CheckCircle2, t: 'Données chiffrées', s: 'AES-256' },
         ].map((b) => (
           <div key={b.t} className="flex flex-col items-center rounded-xl border p-2.5 text-center" style={{ borderColor: '#E5E9F0', background: '#FAFBFD' }}>
             <b.Icon className="h-4 w-4" style={{ color: color.main }} />

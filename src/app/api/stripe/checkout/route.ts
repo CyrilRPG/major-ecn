@@ -35,6 +35,9 @@ type Body = {
   email?: string;
   firstName?: string;
   lastName?: string;
+  phone?: string;
+  specialty?: string;
+  promotion?: string;
   installments?: number;
 };
 
@@ -89,10 +92,76 @@ export async function POST(req: Request) {
   const cancelUrl = `${base}/annule`;
 
   try {
-    // Note: Stripe installments (paiement en plusieurs fois sans frais via
-    // certaines cartes) est activé via payment_method_options.card.installments.
-    // Pour un vrai split en N paiements via Subscriptions, il faudrait créer
-    // des prix dédiés. Ici on opte pour un one-shot + hint installments.
+    const commonMetadata = {
+      formule: formule.id,
+      first_name: body.firstName ?? '',
+      last_name: body.lastName ?? '',
+      phone: body.phone ?? '',
+      specialty: body.specialty ?? '',
+      promotion: body.promotion ?? '',
+      installments: String(installments),
+      source: 'major-ecn-tarifs',
+    };
+
+    if (installments > 1) {
+      // ============================================================
+      // PAIEMENT EN PLUSIEURS FOIS (3x ou 4x) — vrai split via
+      // subscription mode + cancel_at après N cycles mensuels.
+      // Le 1er paiement = à la souscription, puis 1/mois pendant N mois.
+      // ============================================================
+      const monthlyCents = Math.round(formule.amountCents / installments);
+
+      // cancel_at = maintenant + (N-1) mois + 2 jours de buffer
+      // → garantit exactement N facturations (J0, J30, J60, J90…)
+      const now = Math.floor(Date.now() / 1000);
+      const cancelAt = now + (installments - 1) * 30 * 86400 + 2 * 86400;
+
+      // On récupère le product_id du price one-shot pour réutiliser la
+      // même fiche produit côté Stripe (pas de doublon).
+      const oneshot = await stripe.prices.retrieve(priceId);
+      const productId = typeof oneshot.product === 'string' ? oneshot.product : oneshot.product.id;
+
+      const session = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        line_items: [
+          {
+            price_data: {
+              currency: 'eur',
+              product: productId,
+              unit_amount: monthlyCents,
+              recurring: { interval: 'month' },
+            },
+            quantity: 1,
+          },
+        ],
+        customer_email: body.email || undefined,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        locale: 'fr',
+        allow_promotion_codes: true,
+        billing_address_collection: 'auto',
+        phone_number_collection: { enabled: true },
+        metadata: { ...commonMetadata, cancel_at: String(cancelAt) },
+        subscription_data: {
+          description: `Major ECN — ${formule.name} (${installments}× ${(monthlyCents / 100).toFixed(2)} €)`,
+          // cancel_at sera appliqué par le webhook après création de la
+          // subscription (Stripe Checkout ne le supporte pas en preset).
+          metadata: { ...commonMetadata, cancel_at: String(cancelAt) },
+        },
+      });
+
+      return NextResponse.json({
+        url: session.url,
+        sessionId: session.id,
+        testMode: isTestMode(),
+        mode: 'subscription',
+        monthlyAmount: monthlyCents / 100,
+      });
+    }
+
+    // ============================================================
+    // PAIEMENT COMPTANT (1 fois) — mode payment classique
+    // ============================================================
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
@@ -102,31 +171,11 @@ export async function POST(req: Request) {
       locale: 'fr',
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-      // Activer la collecte du téléphone (optionnel mais utile pour SAV)
       phone_number_collection: { enabled: true },
-      // Active les installments quand l'utilisateur en choisit
-      payment_method_options:
-        installments > 1
-          ? {
-              card: { installments: { enabled: true } },
-            }
-          : undefined,
-      // Metadata utilisée par le webhook pour provisionner le compte
-      metadata: {
-        formule: formule.id,
-        first_name: body.firstName ?? '',
-        last_name: body.lastName ?? '',
-        installments: String(installments),
-        source: 'major-ecn-tarifs',
-      },
+      metadata: commonMetadata,
       payment_intent_data: {
-        metadata: {
-          formule: formule.id,
-          first_name: body.firstName ?? '',
-          last_name: body.lastName ?? '',
-          installments: String(installments),
-        },
-        description: `Major ECN — ${formule.name} (${installments > 1 ? `${installments}× ` : ''}paiement)`,
+        metadata: commonMetadata,
+        description: `Major ECN — ${formule.name} (paiement comptant)`,
       },
     });
 
@@ -134,9 +183,11 @@ export async function POST(req: Request) {
       url: session.url,
       sessionId: session.id,
       testMode: isTestMode(),
+      mode: 'payment',
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Erreur lors de la création de la session';
+    console.error('[stripe/checkout] error', e);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

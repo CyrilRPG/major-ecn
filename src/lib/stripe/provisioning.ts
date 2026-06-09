@@ -150,10 +150,20 @@ export async function provisionStudentAccount(
     installments: input.installments ?? 1,
     setupUrl,
   });
-  await sendEmail({ to: input.email, subject, html, text }).catch(() => {
-    // Email failure ne doit pas bloquer le provisioning — Stripe a déjà
-    // encaissé. On log côté serveur si Resend est configuré.
+  console.log('[provisioning] sending purchase confirmation email', {
+    to: input.email,
+    subject,
+    setupUrlPrefix: setupUrl.slice(0, 60) + '…',
   });
+  const sendResult = await sendEmail({ to: input.email, subject, html, text });
+  if (!sendResult.ok) {
+    console.error('[provisioning] email send FAILED', {
+      to: input.email,
+      error: sendResult.error,
+    });
+  } else {
+    console.log('[provisioning] email sent OK', { to: input.email, id: sendResult.id });
+  }
 
   return { ok: true, userId, isNew };
 }

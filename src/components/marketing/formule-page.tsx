@@ -385,7 +385,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       <section className="bg-white py-6 border-t" style={{ borderColor: BORDER }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-6 text-center text-xs" style={{ color: INK_SOFT }}>
-            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x ou 3x', 'Satisfait ou remboursé sous 14 jours', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
+            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x ou 3x', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
               <span key={b} className="flex items-center gap-1.5">
                 <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {b}
               </span>
@@ -393,6 +393,46 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+/* ============================================================
+   SocialProofCard — citation variant-dependent
+   ============================================================ */
+const SOCIAL_PROOFS: Record<Variant, { quote: string; name: string; role: string }> = {
+  essentielle: {
+    quote: "« Une préparation sérieuse, des supports clairs et synthétiques qui m’ont permis d’aller à l’essentiel sans me disperser. J’ai réussi les EVC d’odontologie 2025. »",
+    name: "Dr Lilia Ouled Ben Ahmed",
+    role: "Lauréate des EVC d’odontologie 2025",
+  },
+  intensive: {
+    quote: "« Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne. La méthodologie de Major ECN a fait toute la différence. »",
+    name: "Dr SY Ely Cheikh Ibrahima",
+    role: "Lauréat des EVC Endocrinologie-Diabétologie 2025",
+  },
+  approfondi: {
+    quote: "« Major ECN m’a permis de réussir les EVC dès la première tentative. Une méthode claire, un suivi de qualité et de vrais résultats. »",
+    name: "Dr Ahmed Sifaoui",
+    role: "Lauréat EVC Gériatrie 2025 — Voie externe",
+  },
+};
+
+function SocialProofCard({ variant, accentLight }: { variant: Variant; accentLight: string }) {
+  const sp = SOCIAL_PROOFS[variant];
+  return (
+    <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-5 backdrop-blur sm:p-6">
+      <div className="flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15">
+          <Quote className="h-5 w-5" style={{ color: accentLight }} fill="currentColor" />
+        </span>
+        <div>
+          <p className="text-[14px] leading-relaxed text-white">{sp.quote}</p>
+          <p className="mt-2 text-[12px] font-bold text-white">
+            {sp.name} · <span className="font-normal" style={{ color: accentLight }}>{sp.role}</span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -455,7 +495,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
               : (
                 <>
                   Activation immédiate après paiement · Email de bienvenue avec votre lien d&rsquo;accès ·{' '}
-                  Satisfait ou remboursé sous 14 jours
+                  Paiement sécurisé Stripe
                 </>
               )}
           </p>
@@ -518,29 +558,14 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
               </ul>
             </div>
 
-            {/* Social proof */}
-            <div className="rounded-3xl border border-white/15 bg-white/[0.06] p-5 backdrop-blur sm:p-6">
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15">
-                  <Quote className="h-5 w-5" style={{ color: palette.accentLight }} fill="currentColor" />
-                </span>
-                <div>
-                  <p className="text-[14px] leading-relaxed text-white">
-                    « Major ECN m&rsquo;a permis de réussir les EVC dès la première tentative.
-                    Une méthode claire, un suivi de qualité et de vrais résultats. »
-                  </p>
-                  <p className="mt-2 text-[12px] font-bold text-white">
-                    Dr A. Sifaoui · <span className="font-normal" style={{ color: palette.accentLight }}>Lauréat EVC Gériatrie 2025</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Social proof — varie selon la formule */}
+            <SocialProofCard variant={variant} accentLight={palette.accentLight} />
 
             {/* Garanties */}
             <div className="grid grid-cols-3 gap-3">
               {[
                 { Icon: ShieldCheck, t: 'Paiement sécurisé', s: 'Stripe certifié' },
-                { Icon: Trophy,      t: 'Satisfait',          s: 'ou remboursé 14 j' },
+                { Icon: Trophy,      t: 'Qualité reconnue',   s: 'depuis 2011' },
                 { Icon: Clock,       t: 'Accès immédiat',     s: 'activation email' },
               ].map((g) => (
                 <div key={g.t} className="rounded-2xl border border-white/15 bg-white/[0.06] p-3 text-center backdrop-blur">
