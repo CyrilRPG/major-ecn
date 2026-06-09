@@ -7,6 +7,7 @@ import {
   HelpCircle, Lightbulb, MessageCircle, RefreshCcw, Stethoscope, Target,
   TrendingUp, X,
 } from 'lucide-react';
+import { DiscoveryWelcomePopup } from '@/components/espace-decouverte/discovery-welcome-popup';
 
 const STORAGE_KEY = 'major-ecn:conseils-dismissed';
 // Charte cohérente avec le menu (rouge-orange officiel Major ECN)
@@ -33,7 +34,7 @@ const STARTER_SPECIALTIES = [
   { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#A56831', bg: '#F7DFCA' },
 ];
 
-export function ConseilsCenter() {
+export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolean }) {
   // 'popup' = grand popup d'accueil ; 'panel' = panneau latéral compact ;
   // 'closed' = bouton seul dans le header.
   const [mode, setMode] = useState<'popup' | 'panel' | 'closed'>('closed');
@@ -49,11 +50,15 @@ export function ConseilsCenter() {
   }, []);
 
   // À la première ouverture, montre le grand popup (sauf si déjà fermé une fois).
+  // Les utilisateurs Découverte ont leur propre popup d'accueil dédié
+  // (DiscoveryWelcomePopup) → on n'affiche PAS le grand popup Conseils
+  // standard pour cette population.
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (isDecouverte) return;
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (!dismissed) setMode('popup');
-  }, []);
+  }, [isDecouverte]);
 
   const closePopup = () => {
     if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
@@ -62,8 +67,11 @@ export function ConseilsCenter() {
 
   return (
     <>
+      {/* Popup d'accueil spécifique Découverte (sa propre dismissal en
+          localStorage : `major-ecn:welcome-decouverte-dismissed`). */}
+      {isDecouverte && <DiscoveryWelcomePopup />}
 
-      {mode === 'popup' && (
+      {mode === 'popup' && !isDecouverte && (
         <PopupOverlay
           onClose={closePopup}
           neverShow={neverShow}
