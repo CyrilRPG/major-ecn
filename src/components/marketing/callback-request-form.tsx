@@ -8,18 +8,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, CheckCircle2, GraduationCap, Loader2, Mail, MessageCircle,
+  ArrowRight, CheckCircle2, Loader2, Mail, MessageCircle,
   Phone, PhoneCall, Stethoscope, User,
 } from 'lucide-react';
 
 const RED = '#C0112E';
-const NAVY = '#0F1F4D';
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
 const BORDER = '#E5E9F0';
 
 const SPECIALTIES = ['Médecine générale'] as const;
-const PROMOTIONS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
 
 type Props = {
   /** Couleur principale du bouton CTA. */
@@ -34,7 +32,6 @@ export function CallbackRequestForm({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
-  const [promotion, setPromotion] = useState<string>('');
   const [message, setMessage] = useState('');
   const [rgpd, setRgpd] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -58,7 +55,7 @@ export function CallbackRequestForm({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName, lastName, email, phone, specialty, promotion, message,
+          firstName, lastName, email, phone, specialty, message,
           source: 'programme-approfondi',
         }),
       });
@@ -116,17 +113,6 @@ export function CallbackRequestForm({
         value={specialty}
         onChange={setSpecialty}
         options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
-      />
-
-      {/* Promotion */}
-      <Select
-        icon={GraduationCap}
-        value={promotion}
-        onChange={setPromotion}
-        options={[
-          { value: '', label: 'Promotion (D2 / D3 / D4 / PAE)' },
-          ...PROMOTIONS.map((p) => ({ value: p, label: p })),
-        ]}
       />
 
       {/* Message */}

@@ -37,7 +37,8 @@ type Body = {
   lastName?: string;
   phone?: string;
   specialty?: string;
-  promotion?: string;
+  /** Voie de concours pour la Formule Intensive : 'interne' | 'externe' | ''. */
+  voie?: string;
   installments?: number;
 };
 
@@ -98,7 +99,7 @@ export async function POST(req: Request) {
       last_name: body.lastName ?? '',
       phone: body.phone ?? '',
       specialty: body.specialty ?? '',
-      promotion: body.promotion ?? '',
+      voie: body.voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
     };

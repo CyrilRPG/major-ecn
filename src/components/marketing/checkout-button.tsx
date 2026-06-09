@@ -4,16 +4,16 @@
  * Bouton de checkout Stripe pour une formule.
  *
  * Champs : Prénom, Nom, Email, Téléphone, Spécialité (MG only pour
- * l'instant), Promotion (D2/D3/D4/PAE/Autre), Toggle 1x/3x/4x,
- * Checkbox RGPD obligatoire.
+ * l'instant), Voie interne / Voie externe (Intensive uniquement),
+ * Toggle 1x/3x/4x, Checkbox RGPD obligatoire.
  *
  * Appelle /api/stripe/checkout puis redirige vers Stripe Checkout.
  */
 import { useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, Calendar, Check, CheckCircle2, CreditCard,
-  GraduationCap, Loader2, Lock, Mail, Phone, ShieldCheck, Sparkles,
+  ArrowRight, Calendar, Check, CheckCircle2,
+  GitFork, Loader2, Lock, Mail, Phone, ShieldCheck, Sparkles,
   Stethoscope, User,
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
@@ -30,19 +30,24 @@ type Props = {
 };
 
 const SPECIALTIES = ['Médecine générale'] as const;
-const PROMOTIONS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
+const VOIES = [
+  { value: 'interne', label: 'Voie interne (QCM)' },
+  { value: 'externe', label: 'Voie externe (Questions ouvertes)' },
+] as const;
 
 export function CheckoutButton({
   formuleId,
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
 }: Props) {
+  const isIntensive = formuleId === 'intensive';
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
-  const [promotion, setPromotion] = useState<string>('');
+  const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
   const [rgpd, setRgpd] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,6 +57,10 @@ export function CheckoutButton({
     e.preventDefault();
     if (!firstName || !lastName || !email) {
       setError('Merci de renseigner prénom, nom et email.');
+      return;
+    }
+    if (isIntensive && !voie) {
+      setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
     }
     if (!rgpd) {
@@ -71,7 +80,7 @@ export function CheckoutButton({
           lastName,
           phone,
           specialty,
-          promotion,
+          voie: isIntensive ? voie : '',
           installments,
         }),
       });
@@ -107,15 +116,20 @@ export function CheckoutButton({
         onChange={setSpecialty}
         options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
       />
-      <Select
-        icon={GraduationCap}
-        value={promotion}
-        onChange={setPromotion}
-        options={[
-          { value: '', label: 'Promotion (D2 / D3 / D4 / PAE)' },
-          ...PROMOTIONS.map((p) => ({ value: p, label: p })),
-        ]}
-      />
+      {/* Voie interne / externe — Intensive uniquement.
+          Le parcours pédagogique diffère selon le format de concours
+          du candidat. */}
+      {isIntensive && (
+        <Select
+          icon={GitFork}
+          value={voie}
+          onChange={setVoie}
+          options={[
+            { value: '', label: 'Choisissez votre voie de concours' },
+            ...VOIES.map((v) => ({ value: v.value, label: v.label })),
+          ]}
+        />
+      )}
 
       {/* Section PAIEMENT */}
       <SectionLabel n={3} title="Mode de paiement" />
