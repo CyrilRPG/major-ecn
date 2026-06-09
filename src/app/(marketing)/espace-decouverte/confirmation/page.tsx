@@ -1,12 +1,19 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Lock, Mail, Sparkles } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CheckCircle2, Lock, Mail, Sparkles } from 'lucide-react';
 
 export const metadata = {
   title: 'Inscription confirmée — Major ECN',
   description: 'Votre compte Espace Découverte est en cours d\'activation.',
 };
 
-export default function ConfirmationPage() {
+export default async function ConfirmationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ email_failed?: string }>;
+}) {
+  const sp = await searchParams;
+  const emailFailed = sp.email_failed === '1';
+
   return (
     <section className="bg-[#F8FAFC] py-16 sm:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
@@ -23,29 +30,69 @@ export default function ConfirmationPage() {
             </p>
           </div>
 
-          {/* Vérifiez votre email */}
-          <div className="mt-8 flex items-start gap-4 rounded-2xl border p-5 sm:p-6" style={{ borderColor: '#E5E9F0', background: '#FDFDFE' }}>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: '#FDEEEF', color: '#C0112E' }}>
-              <Mail className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
-                Vérifiez votre boîte mail
-              </p>
-              <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#52607A' }}>
-                Nous venons de vous envoyer un email avec un lien pour <strong>choisir
-                votre mot de passe</strong>. Cliquez sur ce lien pour activer votre compte
-                et accéder à l&rsquo;espace découverte.
-              </p>
-              <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
-                Si vous ne recevez rien dans les 5 prochaines minutes, vérifiez vos
-                spams ou écrivez-nous à{' '}
-                <a href="mailto:contact@major-ecn.fr" className="font-semibold" style={{ color: '#C0112E' }}>
-                  contact@major-ecn.fr
-                </a>.
-              </p>
+          {emailFailed ? (
+            /* CAS : email d'activation non délivré → on bascule sur un encart d'alerte */
+            <div
+              className="mt-8 flex items-start gap-4 rounded-2xl border p-5 sm:p-6"
+              style={{ borderColor: '#F5C2C7', background: '#FFF6F7' }}
+            >
+              <span
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                style={{ background: '#FDE3E5', color: '#C0112E' }}
+              >
+                <AlertTriangle className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#7C0F1F' }}>
+                  Votre compte est créé, mais l&rsquo;email d&rsquo;activation n&rsquo;a pas pu partir
+                </p>
+                <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#5C0E18' }}>
+                  Pas d&rsquo;inquiétude : votre compte est bien enregistré. Écrivez-nous
+                  rapidement à{' '}
+                  <a href="mailto:contact@major-ecn.fr" className="font-semibold underline" style={{ color: '#C0112E' }}>
+                    contact@major-ecn.fr
+                  </a>{' '}
+                  en précisant votre nom et votre email, nous activerons votre accès
+                  manuellement (souvent en moins de 24 h).
+                </p>
+                <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
+                  Vous pouvez également cliquer sur « Mot de passe oublié&nbsp;? » depuis la
+                  page de connexion pour vous renvoyer un lien d&rsquo;activation.
+                </p>
+                <Link
+                  href="/login"
+                  className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-extrabold underline"
+                  style={{ color: '#C0112E' }}
+                >
+                  Aller à la page de connexion <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            /* CAS NOMINAL : email envoyé */
+            <div className="mt-8 flex items-start gap-4 rounded-2xl border p-5 sm:p-6" style={{ borderColor: '#E5E9F0', background: '#FDFDFE' }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: '#FDEEEF', color: '#C0112E' }}>
+                <Mail className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
+                  Vérifiez votre boîte mail
+                </p>
+                <p className="mt-2 text-[14px] leading-relaxed" style={{ color: '#52607A' }}>
+                  Nous venons de vous envoyer un email avec un lien pour <strong>choisir
+                  votre mot de passe</strong>. Cliquez sur ce lien pour activer votre compte
+                  et accéder à l&rsquo;espace découverte.
+                </p>
+                <p className="mt-3 text-[13px] leading-relaxed" style={{ color: '#7A8499' }}>
+                  Si vous ne recevez rien dans les 5 prochaines minutes, vérifiez vos
+                  spams ou écrivez-nous à{' '}
+                  <a href="mailto:contact@major-ecn.fr" className="font-semibold" style={{ color: '#C0112E' }}>
+                    contact@major-ecn.fr
+                  </a>.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Ce qui vous attend */}
           <div className="mt-6">
