@@ -151,56 +151,43 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 <p className="mt-5 text-[15.5px] leading-relaxed sm:text-base" style={{ color: INK_SOFT }}>{c.desc}</p>
               </Reveal>
 
-              {/* Stats premium animés */}
+              {/* Stats premium animés — labels originaux */}
               <Reveal delay={0.3}>
-                <div className="mt-8 grid grid-cols-3 gap-3">
+                <div className="mt-6 flex flex-wrap gap-5">
                   {[
-                    { Icon: Users, end: 9000, suffix: '+', label: 'médecins' },
-                    { Icon: GraduationCap, end: 45, suffix: '+', label: 'spécialités' },
-                    { Icon: Calendar, end: 15, suffix: ' ans', label: 'd’expertise' },
+                    { Icon: Users, t: '+ 9 000', s: 'médecins\naccompagnés' },
+                    { Icon: GraduationCap, t: '45+', s: 'spécialités\npréparées' },
+                    { Icon: Calendar, t: 'Depuis', s: '2011' },
                   ].map((st) => (
-                    <div key={st.label} className="rounded-2xl border bg-white/80 p-3.5 backdrop-blur-sm" style={{ borderColor: BORDER }}>
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: c.colorSoft, color: c.color }}>
+                    <div key={st.t} className="flex items-center gap-2">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: c.colorSoft, color: c.color }}>
                         <st.Icon className="h-4 w-4" />
                       </span>
-                      <p className="mt-2 text-[20px] font-black leading-none tabular-nums" style={{ color: c.color }}>
-                        <AnimatedCounter end={st.end} suffix={st.suffix} duration={1500} />
-                      </p>
-                      <p className="mt-0.5 text-[11px]" style={{ color: INK_SOFT }}>{st.label}</p>
+                      <div>
+                        <p className="text-sm font-black" style={{ color: NAVY }}>{st.t}</p>
+                        <p className="text-[10px] whitespace-pre-line" style={{ color: INK_SOFT }}>{st.s}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </Reveal>
 
-              {/* Price card */}
+              {/* Price — restauré original */}
               <Reveal delay={0.35}>
-                <div className="mt-8 rounded-2xl border bg-white/90 p-5 backdrop-blur-sm shadow-[0_12px_36px_-12px_rgba(15,31,77,0.15)]" style={{ borderColor: BORDER }}>
-                  {c.pricePrefix && <p className="text-xs font-bold uppercase tracking-wider" style={{ color: INK_SOFT }}>{c.pricePrefix}</p>}
-                  <div className="flex items-baseline gap-3">
-                    <p className="text-5xl font-black leading-none" style={{ color: c.color }}>{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
-                    {variant !== 'approfondi' && (
-                      <span className="text-sm font-medium" style={{ color: INK_SOFT }}>paiement unique</span>
-                    )}
-                  </div>
-                  {variant !== 'approfondi' && (
-                    <p className="mt-2 text-[13px] font-semibold" style={{ color: INK }}>
-                      ou <strong style={{ color: c.color }}>{Math.round(parseInt(c.price.replace(/\s/g, ''), 10) / 3)} €/mois</strong> en 3 fois sans frais
-                    </p>
-                  )}
-                  {variant === 'approfondi' && (
-                    <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la spécialité préparée.</p>
-                  )}
+                <div className="mt-6">
+                  {c.pricePrefix && <p className="text-sm" style={{ color: INK_SOFT }}>{c.pricePrefix}</p>}
+                  <p className="text-4xl font-black" style={{ color: c.color }}>{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
                 </div>
               </Reveal>
 
               <Reveal delay={0.4}>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <a href="#choisir-formule" className="group inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.30)] transition-transform hover:scale-[1.02]"
-                    style={{ background: `linear-gradient(90deg, ${shadeFormule(c.color, -20)} 0%, ${c.color} 100%)` }}>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <a href="#choisir-formule" className="group inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_-12px_rgba(0,0,0,0.30)] transition-transform hover:scale-[1.02]"
+                    style={{ background: c.color }}>
                     {c.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </a>
                   {c.ctaSecondary && (
-                    <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3.5 text-sm font-extrabold transition-colors hover:bg-[#FAFBFD]"
+                    <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-bold"
                       style={{ borderColor: c.color, color: c.color }}>
                       {c.ctaSecondary}
                     </Link>
@@ -208,16 +195,19 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 </div>
               </Reveal>
               {variant !== 'approfondi' && (
-                <Link href="/tarifs" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold hover:underline" style={{ color: INK_SOFT }}>
-                  Comparer les 3 formules <ArrowRight className="h-3 w-3" />
+                <Link href="/tarifs" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: INK_SOFT }}>
+                  Comparer les formules <ArrowRight className="h-3 w-3" />
                 </Link>
+              )}
+              {variant === 'approfondi' && (
+                <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>*Tarif variable selon la spécialité préparée.</p>
               )}
             </div>
             <div className="relative hidden lg:block">
-              <SpotlightCard spotlightColor={`${c.color}25`} className="relative overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '4/5' }}>
+              <div className="relative overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '4/5' }}>
                 <img src={c.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
                 <div aria-hidden className="absolute inset-0" style={{ background: `linear-gradient(135deg, transparent 0%, ${c.color}20 100%)` }} />
-              </SpotlightCard>
+              </div>
               {/* Side badges flottants premium */}
               <div className="pointer-events-none absolute right-4 top-8 flex flex-col gap-2">
                 {['Accès 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsécurisé', 'Support réactif\n7j/7'].map(b => (
