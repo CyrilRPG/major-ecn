@@ -12,11 +12,9 @@ const SocialFacebook = (p: React.SVGProps<SVGSVGElement>) => (
     <path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9v-2.9h2.5V9.8c0-2.46 1.46-3.82 3.7-3.82 1.07 0 2.2.19 2.2.19v2.42h-1.24c-1.22 0-1.6.76-1.6 1.54v1.86h2.72l-.44 2.9h-2.28v6.98A10 10 0 0 0 22 12z" />
   </svg>
 );
-const SocialInstagram = (p: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden {...p}>
-    <rect x="3" y="3" width="18" height="18" rx="5" />
-    <circle cx="12" cy="12" r="4" />
-    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+const SocialTiktok = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...p}>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05 6.33 6.33 0 0 0-5.16 9.78 6.33 6.33 0 0 0 11.39-3.78V8.66a8.27 8.27 0 0 0 4.82 1.54v-3.4a4.85 4.85 0 0 1-.94-.11z" />
   </svg>
 );
 const SocialYoutube = (p: React.SVGProps<SVGSVGElement>) => (
@@ -296,10 +294,10 @@ export function MarketingFooter() {
 
           <div className="flex items-center gap-2" aria-label="R&eacute;seaux sociaux Major ECN">
             {[
-              { Icon: SocialFacebook,  href: "https://www.facebook.com/profile.php?id=100054443651379",  label: "Facebook" },
-              { Icon: SocialInstagram, href: "https://www.instagram.com/majorecn/",                     label: "Instagram" },
-              { Icon: SocialYoutube,   href: "https://www.youtube.com/@MAJORECN/shorts",                label: "YouTube" },
-              { Icon: SocialLinkedin,  href: "https://www.linkedin.com/company/major-ecn/",             label: "LinkedIn" },
+              { Icon: SocialFacebook, href: "https://www.facebook.com/p/MAJOR-ECN-100054443651379/", label: "Facebook" },
+              { Icon: SocialYoutube,  href: "https://youtube.com/@majorecn",                         label: "YouTube" },
+              { Icon: SocialTiktok,   href: "https://www.tiktok.com/@majorecn",                      label: "TikTok" },
+              { Icon: SocialLinkedin, href: "https://www.linkedin.com/company/major-ecn/",           label: "LinkedIn" },
             ].map((s) => (
               <a
                 key={s.label}
