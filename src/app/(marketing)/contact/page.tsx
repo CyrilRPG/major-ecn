@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import {
-  ArrowRight, BookOpen, Calendar, ChevronRight, Clock,
-  HelpCircle, Layers3, MessageSquare, Sparkles, Stethoscope, Target,
-  TrendingUp, UserCheck, Users,
+  ArrowRight, ChevronRight, Clock,
+  MessageSquare, Sparkles, Stethoscope, Target,
+  TrendingUp, UserCheck,
 } from 'lucide-react';
 import { ContactForm } from '@/components/marketing/contact-form';
+import { FAQSection } from '@/components/marketing/manus-sections';
 
 export const metadata = {
   title: 'Nous contacter — Major ECN',
@@ -56,13 +57,6 @@ const STEPS = [
   { n: '02', Icon: Clock,         title: 'Réponse sous 24 h', sub: 'Notre équipe vous recontacte par email et/ou téléphone.' },
   { n: '03', Icon: Target,        title: 'Conseil personnalisé', sub: 'Bilan rapide de votre niveau et orientation vers la formule adaptée.' },
   { n: '04', Icon: Sparkles,      title: 'Démarrage', sub: 'Accès à la plateforme et lancement de votre préparation EVC.' },
-];
-
-const QUICK_FAQ = [
-  { q: 'Pour quel public ?',           a: 'PADHUE, médecins UE, étudiants, dentistes, pharmaciens et sages-femmes.', Icon: Users,        tone: RED },
-  { q: 'Combien de temps de prépa ?',  a: 'En général de 4 à 12 mois selon votre niveau et vos disponibilités.',     Icon: Calendar,     tone: '#2563EB' },
-  { q: 'Quelles spécialités ?',        a: 'Plus de 45 spécialités sont préparées chez Major ECN.',                   Icon: Layers3,      tone: '#7C3AED' },
-  { q: 'Possible depuis l’étranger ?', a: '100 % en ligne, accessible depuis la France et l’international.',         Icon: BookOpen,     tone: '#0F8A6A' },
 ];
 
 /* ============================================================
@@ -220,44 +214,9 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ============ Questions fréquentes ============ */}
-      <section className="relative bg-white py-14 sm:py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em]"
-              style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
-              <HelpCircle className="h-3 w-3" /> Questions fréquentes
-            </span>
-            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl" style={gradientText(GRAD_NAVY_RED)}>
-              Questions fréquentes sur les EVC (PAE)
-            </h2>
-            <p className="mt-3 text-[15px]" style={{ color: INK_SOFT }}>
-              Toutes les réponses se trouvent peut-être déjà dans notre FAQ.
-            </p>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {QUICK_FAQ.map((f, i) => (
-              <div key={i} className="flex h-full flex-col gap-2 rounded-2xl border bg-white p-5 shadow-sm" style={{ borderColor: BORDER }}>
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{ background: `${f.tone}14`, color: f.tone }}>
-                  <f.Icon className="h-5 w-5" />
-                </span>
-                <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>{f.q}</p>
-                <p className="text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>{f.a}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 flex justify-center">
-            <Link href="/faq"
-              className="inline-flex items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-[#FFF8F9]"
-              style={{ borderColor: BORDER, color: NAVY }}>
-              Voir toute la FAQ <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ============ Questions fréquentes (FAQSection partagée — même
+           design pixel-perfect que la home et les autres pages) ============ */}
+      <FAQSection />
 
       {/* ============ CTA final ============ */}
       <section className="relative overflow-hidden py-14 sm:py-16 lg:py-20"
