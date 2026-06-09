@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, MessageCircle, X } from 'lucide-react';
+import { ArrowRight, Lock, MessageCircle, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { Navigator } from './navigator';
 import { TopBar } from './top-bar';
@@ -11,6 +11,7 @@ import { CommandPalette } from './command-palette';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
+import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 
 // Dégradé navy → indigo profond → bordeaux sombre (de haut en bas).
 // Apporte de la chaleur tout en gardant le côté sérieux du navy.
@@ -18,33 +19,57 @@ const SIDEBAR_BG =
   'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 /** Carte « Besoin d'aide ? » — style maquette designer.
- *  Carte blanche en bas de la sidebar, propose le forum (mention chat). */
-function SidebarHelpCard() {
+ *  Carte blanche en bas de la sidebar, propose le forum (mention chat).
+ *  En mode Découverte, le forum est verrouillé (cadenas + popup tarifs). */
+function SidebarHelpCard({ isDecouverte = false }: { isDecouverte?: boolean }) {
+  const [lockedOpen, setLockedOpen] = useState(false);
   return (
-    <div className="m-3 rounded-2xl bg-white px-4 pt-3.5 pb-4">
-      <div className="flex items-start gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[14px] font-bold text-[#0F1F4D]">Besoin d&rsquo;aide ?</p>
-          <p className="mt-1 text-[11px] leading-snug text-[#52607A]">
-            Notre équipe vous répond<br />7j/7 sur le forum
-          </p>
+    <>
+      <div className="m-3 rounded-2xl bg-white px-4 pt-3.5 pb-4">
+        <div className="flex items-start gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[14px] font-bold text-[#0F1F4D]">Besoin d&rsquo;aide ?</p>
+            <p className="mt-1 text-[11px] leading-snug text-[#52607A]">
+              {isDecouverte ? (
+                <>Forum réservé aux<br />élèves inscrits</>
+              ) : (
+                <>Notre équipe vous répond<br />7j/7 sur le forum</>
+              )}
+            </p>
+          </div>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
+            <MessageCircle className="h-4 w-4" />
+          </span>
         </div>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
-          <MessageCircle className="h-4 w-4" />
+        <span className="mt-3 block rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[2px]">
+          {isDecouverte ? (
+            <button
+              type="button"
+              onClick={() => setLockedOpen(true)}
+              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-bold text-[#E4002B] transition-colors hover:bg-[#FFE4E8]"
+            >
+              <Lock className="h-3 w-3" />
+              <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
+                Forum verrouillé
+              </span>
+            </button>
+          ) : (
+            <Link
+              href="/forum"
+              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-bold text-[#E4002B] transition-colors hover:bg-[#FFE4E8]"
+            >
+              <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
+                Accéder au forum
+              </span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          )}
         </span>
       </div>
-      <span className="mt-3 block rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] p-[2px]">
-        <Link
-          href="/forum"
-          className="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-white px-3 py-2 text-[12.5px] font-bold text-[#E4002B] transition-colors hover:bg-[#FFE4E8]"
-        >
-          <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
-            Accéder au forum
-          </span>
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </span>
-    </div>
+      {/* Popup "Ce contenu est réservé" — déclenchée par le bouton cadenas
+          en mode Découverte. */}
+      <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
+    </>
   );
 }
 
@@ -107,7 +132,7 @@ export function AppShell({
       <div className="flex-1 overflow-y-auto pt-3">
         <Navigator tree={tree} role={profile.role as 'student' | 'admin' | 'professor'} isDecouverte={isDecouverte} />
       </div>
-      <SidebarHelpCard />
+      <SidebarHelpCard isDecouverte={isDecouverte} />
     </div>
   );
 

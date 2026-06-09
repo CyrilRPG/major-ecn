@@ -184,7 +184,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         </div>
       )}
 
-      <div className={`grid gap-4 ${isMethodologie ? 'sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
+      <div className={`grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
         {actions.map((a) => {
           // Découverte : la carte « Cours vidéo » est verrouillée et ouvre la
           // popup tarifs (DiscoveryLockedCard est un client component).
