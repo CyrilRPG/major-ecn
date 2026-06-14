@@ -15,6 +15,7 @@ import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { EditProfileDialog } from '@/components/admin/edit-profile-dialog';
+import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 
 export type Student = {
   id: string;
@@ -174,6 +175,10 @@ export function StudentsTable({
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                      />
+                      <ResendActivationButton
+                        userId={s.id}
+                        displayName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
                       />
                       <ToggleActiveButton
                         userId={s.id}

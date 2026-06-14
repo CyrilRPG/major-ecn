@@ -19,6 +19,7 @@
  *     - Tentative 2 : Supabase `inviteUserByEmail` en fallback
  */
 
+import { createClient as createSupabasePublicClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { purchaseConfirmationEmail } from '@/lib/email/templates';
@@ -214,38 +215,60 @@ export async function provisionStudentAccount(
     log('email-fail-resend-throw', { error: emailError });
   }
 
-  // -- Tentative 2 : Supabase inviteUserByEmail (SMTP intégré, toujours dispo)
+  // -- Tentative 2 : Supabase reset-password via le SMTP intégré.
+  //    On utilise un client public (anon key) car les méthodes auth user-facing
+  //    comme resetPasswordForEmail/signInWithOtp NE déclenchent PAS l'envoi
+  //    d'email quand elles sont appelées via le service-role client.
   if (!emailVia) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { error: invErr } = await (admin as any).auth.admin.inviteUserByEmail(
-        input.email,
-        { redirectTo },
-      );
-      if (invErr) {
-        // Si l'utilisateur existe déjà, on retente avec un magic-link.
-        if (/already|exist/i.test(invErr.message ?? '')) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { error: mlErr } = await (admin as any).auth.signInWithOtp({
-            email: input.email,
-            options: { emailRedirectTo: redirectTo },
-          });
-          if (!mlErr) {
-            emailVia = 'supabase';
-            emailError = null;
-            log('email-sent-supabase-magiclink');
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (!url || !anonKey) {
+        throw new Error('NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY manquantes — fallback Supabase impossible.');
+      }
+      const publicClient = createSupabasePublicClient(url, anonKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+
+      // Pour un nouveau user → invite (le compte vient d'être créé sans confirm).
+      // Pour un user existant → recovery (toujours valide, renvoie un lien set-password).
+      if (isNew) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: invErr } = await (admin as any).auth.admin.inviteUserByEmail(
+          input.email,
+          { redirectTo },
+        );
+        if (invErr) {
+          // En cas de "user already registered", on bascule sur recovery.
+          if (/already|exist/i.test(invErr.message ?? '')) {
+            const { error: rpErr } = await publicClient.auth.resetPasswordForEmail(input.email, { redirectTo });
+            if (!rpErr) {
+              emailVia = 'supabase';
+              emailError = null;
+              log('email-sent-supabase-recovery-fallback');
+            } else {
+              emailError = (emailError ?? '') + ' | Supabase: ' + rpErr.message;
+              log('email-fail-supabase-recovery', { error: rpErr.message });
+            }
           } else {
-            emailError = (emailError ?? '') + ' | Supabase: ' + mlErr.message;
-            log('email-fail-supabase-magiclink', { error: mlErr.message });
+            emailError = (emailError ?? '') + ' | Supabase: ' + invErr.message;
+            log('email-fail-supabase-invite', { error: invErr.message });
           }
         } else {
-          emailError = (emailError ?? '') + ' | Supabase: ' + invErr.message;
-          log('email-fail-supabase', { error: invErr.message });
+          emailVia = 'supabase';
+          emailError = null;
+          log('email-sent-supabase-invite');
         }
       } else {
-        emailVia = 'supabase';
-        emailError = null;
-        log('email-sent-supabase-invite');
+        const { error: rpErr } = await publicClient.auth.resetPasswordForEmail(input.email, { redirectTo });
+        if (!rpErr) {
+          emailVia = 'supabase';
+          emailError = null;
+          log('email-sent-supabase-recovery');
+        } else {
+          emailError = (emailError ?? '') + ' | Supabase: ' + rpErr.message;
+          log('email-fail-supabase-recovery', { error: rpErr.message });
+        }
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Erreur Supabase inconnue';

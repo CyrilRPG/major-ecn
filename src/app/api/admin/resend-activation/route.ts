@@ -1,0 +1,126 @@
+/**
+ * POST /api/admin/resend-activation
+ *
+ * Renvoie un email d'activation (set-password) à un user existant.
+ * Utile pour débloquer un étudiant qui n'a pas reçu son email après
+ * un paiement Stripe (Resend non configuré, fallback Supabase rate-limité, etc.).
+ *
+ * Body : { userId: string }
+ * Réservé aux admins.
+ */
+import { NextResponse } from 'next/server';
+import { createClient as createSupabasePublicClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { sendEmail, siteUrl } from '@/lib/email/send';
+import { purchaseConfirmationEmail } from '@/lib/email/templates';
+import { FORMULES, type FormuleId } from '@/lib/stripe';
+
+type ScopeWithFormule = { paid_formule?: string; paid_offer?: string };
+
+export async function POST(req: Request) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+
+  const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+  if (me?.role !== 'admin') {
+    return NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 });
+  }
+
+  const body = (await req.json().catch(() => ({}))) as { userId?: string };
+  if (!body.userId) return NextResponse.json({ error: 'userId manquant' }, { status: 400 });
+
+  let admin;
+  try { admin = createAdminClient(); } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Service indisponible' }, { status: 500 });
+  }
+
+  // 1) Récupérer email + first_name + formule éventuelle pour personnaliser.
+  const { data: prof } = await admin
+    .from('profiles')
+    .select('id, email, first_name, last_name, permission_scope')
+    .eq('id', body.userId)
+    .maybeSingle();
+  if (!prof?.email) return NextResponse.json({ error: 'Profil introuvable ou sans email' }, { status: 404 });
+
+  const scope = (prof.permission_scope ?? {}) as ScopeWithFormule;
+  const formuleId = scope.paid_formule as FormuleId | undefined;
+  const formule = formuleId && formuleId in FORMULES ? FORMULES[formuleId] : null;
+
+  const base = siteUrl();
+  const redirectTo = `${base}/auth/setup-password`;
+
+  // 2) Génère un lien recovery (valide pour tout user existant).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
+    type: 'recovery',
+    email: prof.email,
+    options: { redirectTo },
+  });
+  if (linkErr) {
+    return NextResponse.json({ error: `generateLink: ${linkErr.message}` }, { status: 500 });
+  }
+  const hashedToken = link?.properties?.hashed_token as string | undefined;
+  const setupUrl = hashedToken
+    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=recovery&next=${encodeURIComponent('/auth/setup-password')}`
+    : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
+
+  // 3) Tentative 1 : Resend avec le template d'achat (si on a une formule)
+  //    sinon un template "activation" générique.
+  let emailVia: 'resend' | 'supabase' | null = null;
+  let emailError: string | null = null;
+
+  try {
+    const subject = formule
+      ? `Votre lien d'activation — ${formule.name} | Major ECN`
+      : `Votre lien d'activation — Major ECN`;
+    if (formule) {
+      const tmpl = purchaseConfirmationEmail({
+        firstName: prof.first_name ?? '',
+        formuleName: formule.name,
+        amountEuros: formule.amountCents / 100,
+        installments: 1,
+        setupUrl,
+      });
+      const r = await sendEmail({ to: prof.email, subject: tmpl.subject, html: tmpl.html, text: tmpl.text });
+      if (r.ok) { emailVia = 'resend'; }
+      else { emailError = r.error; }
+    } else {
+      const r = await sendEmail({
+        to: prof.email,
+        subject,
+        html: `<p>Bonjour,</p><p>Voici votre lien d'activation : <a href="${setupUrl}">${setupUrl}</a>.</p>`,
+        text: `Votre lien d'activation : ${setupUrl}`,
+      });
+      if (r.ok) { emailVia = 'resend'; }
+      else { emailError = r.error; }
+    }
+  } catch (e) {
+    emailError = e instanceof Error ? e.message : 'Resend erreur';
+  }
+
+  // 4) Tentative 2 : Supabase resetPasswordForEmail (public client, SMTP Supabase).
+  if (!emailVia) {
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (!url || !anonKey) throw new Error('NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY manquantes.');
+      const publicClient = createSupabasePublicClient(url, anonKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+      const { error: rpErr } = await publicClient.auth.resetPasswordForEmail(prof.email, { redirectTo });
+      if (!rpErr) { emailVia = 'supabase'; emailError = null; }
+      else { emailError = (emailError ?? '') + ' | Supabase: ' + rpErr.message; }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Erreur Supabase';
+      emailError = (emailError ?? '') + ' | Supabase: ' + msg;
+    }
+  }
+
+  if (!emailVia) {
+    return NextResponse.json({ ok: false, error: emailError ?? 'Aucun email envoyé' }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, via: emailVia, to: prof.email, setupUrl });
+}
