@@ -36,7 +36,7 @@ const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
   lastName: z.string().trim().min(1, 'Nom requis').max(100),
   email: z.string().trim().email('Email invalide'),
-  phone: z.string().trim().max(40).optional(),
+  phone: z.string().trim().min(6, 'Téléphone requis').max(40),
   specialty: z.string().trim().max(100).optional(),
 });
 
@@ -108,9 +108,20 @@ export async function POST(req: Request) {
   let isNew = false;
 
   if (found) {
-    userId = found.id;
-    log('user-existing', { userId });
-  } else {
+    // Email déjà utilisé : on N'ÉCRASE PAS le compte existant. On renvoie une
+    // erreur claire avec une invitation à se connecter directement.
+    log('user-existing-block', { userId: found.id });
+    return NextResponse.json(
+      {
+        ok: false,
+        existingAccount: true,
+        error: 'Un compte existe déjà avec cet email. Connectez-vous directement pour accéder à votre espace.',
+      },
+      { status: 409 },
+    );
+  }
+
+  {
     const { data: created, error: cErr } = await admin.auth.admin.createUser({
       email,
       email_confirm: false,
@@ -123,11 +134,21 @@ export async function POST(req: Request) {
     });
     if (cErr || !created?.user) {
       const msg = cErr?.message ?? 'Échec de la création';
-      const friendly = /already|exist|duplicate/i.test(msg)
-        ? "Un compte existe déjà avec cet email — vérifiez votre boîte mail."
-        : msg;
       log('user-create-error', { msg });
-      return NextResponse.json({ error: friendly }, { status: 400 });
+      // Race condition / pagination listUsers : si le user existait déjà
+      // sans qu'on l'ait trouvé, on renvoie le même flag existingAccount
+      // pour que la page d'inscription propose « Se connecter ».
+      if (/already|exist|duplicate/i.test(msg)) {
+        return NextResponse.json(
+          {
+            ok: false,
+            existingAccount: true,
+            error: 'Un compte existe déjà avec cet email. Connectez-vous directement pour accéder à votre espace.',
+          },
+          { status: 409 },
+        );
+      }
+      return NextResponse.json({ error: msg }, { status: 400 });
     }
     userId = created.user.id;
     isNew = true;

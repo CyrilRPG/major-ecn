@@ -29,12 +29,18 @@ export function EspaceDecouverteForm() {
   const [phone, setPhone] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [existingAccount, setExistingAccount] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!firstName || !lastName || !email) return;
+    if (!phone.trim()) {
+      setError('Le numéro de téléphone est obligatoire.');
+      return;
+    }
     setSubmitting(true);
     setError(null);
+    setExistingAccount(false);
     try {
       const res = await fetch('/api/espace-decouverte/signup', {
         method: 'POST',
@@ -44,9 +50,11 @@ export function EspaceDecouverteForm() {
       const j = (await res.json()) as {
         ok?: boolean;
         error?: string;
+        existingAccount?: boolean;
         redirectTo?: string;
       };
       if (!res.ok || !j.ok) {
+        if (j.existingAccount) setExistingAccount(true);
         setError(j.error ?? "Erreur lors de l'inscription. Réessayez.");
         setSubmitting(false);
         return;
@@ -217,7 +225,7 @@ export function EspaceDecouverteForm() {
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field icon={Mail} placeholder="Adresse email" value={email} onChange={setEmail} type="email" required />
-                <Field icon={Phone} placeholder="Téléphone" value={phone} onChange={setPhone} type="tel" />
+                <Field icon={Phone} placeholder="Téléphone" value={phone} onChange={setPhone} type="tel" required />
               </div>
 
               {/* CTA premium */}
@@ -241,7 +249,7 @@ export function EspaceDecouverteForm() {
                 {!submitting && <ArrowRight className="relative h-5 w-5 transition-transform group-hover:translate-x-0.5" />}
               </button>
 
-              {error && (
+              {error && !existingAccount && (
                 <p
                   role="alert"
                   className="rounded-xl border bg-[#FEF2F2] px-3 py-2 text-[13px] font-medium"
@@ -249,6 +257,28 @@ export function EspaceDecouverteForm() {
                 >
                   {error}
                 </p>
+              )}
+
+              {existingAccount && (
+                <div
+                  role="alert"
+                  className="flex flex-col gap-3 rounded-xl border-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                  style={{ borderColor: '#FECACA', background: '#FFF1F2' }}
+                >
+                  <p className="text-[13.5px] font-semibold leading-snug" style={{ color: RED_DEEP }}>
+                    Un compte existe déjà avec <span className="font-mono">{email}</span>.
+                    <br className="hidden sm:block" />
+                    <span className="font-normal">Connectez-vous directement pour accéder à votre espace.</span>
+                  </p>
+                  <Link
+                    href="/login"
+                    className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-[13px] font-bold transition-colors hover:bg-[#FFF5F5]"
+                    style={{ color: RED, border: `1.5px solid ${RED}` }}
+                  >
+                    Se connecter
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               )}
             </form>
 
