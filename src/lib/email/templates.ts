@@ -509,5 +509,65 @@ export function purchaseConfirmationEmail({
 }
 
 /* ============================================================
+   Reset password — déclenché depuis /forgot-password
+   ============================================================ */
+type ResetPasswordArgs = {
+  firstName?: string | null;
+  resetUrl: string;
+};
+export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
+  const subject = '🔐 Réinitialisation de votre mot de passe — Major ECN';
+  const intro =
+    `Vous avez demandé à réinitialiser votre mot de passe Major ECN. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.<br /><br />` +
+    `Le lien est valable <strong>1 heure</strong>. Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email — votre mot de passe actuel reste inchangé.`;
+  const bodyHtml = `
+    <p style="margin:0 0 8px;font-size:13px;color:#9AA1AE;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">
+      Sécurité du compte
+    </p>
+    <h1 style="margin:0 0 16px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-size:24px;line-height:1.25;color:#0F1F4D;font-weight:800;letter-spacing:-0.02em;">
+      Réinitialisez votre mot de passe
+    </h1>
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#2D2D2D;">
+      Bonjour <strong style="color:#2D2D2D;">${escapeHtml(firstName ?? '')}</strong>,<br />
+      ${intro}
+    </p>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 8px;">
+      <tr>
+        <td align="center" bgcolor="#8B0E22" style="background-color:#8B0E22;background:linear-gradient(90deg,#8B0E22 0%,#C0112E 100%);border-radius:12px;">
+          <a href="${escapeAttr(resetUrl)}" target="_blank" rel="noopener"
+             style="display:inline-block;padding:16px 32px;color:#FFFFFF;font-size:16px;font-weight:800;border-radius:12px;text-decoration:none;font-family:'Plus Jakarta Sans','Manrope',sans-serif;mso-line-height-rule:exactly;line-height:20px;">
+            <span style="color:#FFFFFF;">Choisir un nouveau mot de passe</span>
+          </a>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:18px 0 0;font-size:12px;color:#7A7A7A;line-height:1.6;">
+      Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br />
+      <a href="${escapeAttr(resetUrl)}" style="color:#C0112E;word-break:break-all;text-decoration:underline;">${escapeHtml(resetUrl)}</a>
+    </p>
+    <p style="margin:24px 0 0;font-size:13px;color:#5A5A5A;line-height:1.6;">
+      Besoin d'aide ? Écrivez-nous à
+      <a href="mailto:contact@major-ecn.fr" style="color:#C0112E;text-decoration:none;font-weight:600;">contact@major-ecn.fr</a>.
+    </p>`;
+  const html = layout({
+    subject,
+    eyebrow: 'Sécurité du compte',
+    title: 'Réinitialisez votre mot de passe',
+    bodyHtml,
+  });
+  const text = [
+    `Bonjour ${firstName ?? ''},`,
+    ``,
+    `Vous avez demandé à réinitialiser votre mot de passe Major ECN.`,
+    `Choisissez votre nouveau mot de passe : ${resetUrl}`,
+    ``,
+    `Le lien est valable 1 heure. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email — votre mot de passe actuel reste inchangé.`,
+    ``,
+    `— L'équipe Major ECN`,
+  ].join('\n');
+  return { subject, html, text };
+}
+
+/* ============================================================
    Welcome (existant) — voir welcomeEmail() au-dessus
    ============================================================ */

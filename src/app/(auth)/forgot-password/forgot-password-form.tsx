@@ -6,7 +6,6 @@ import { AlertCircle, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createClient } from '@/lib/supabase/client';
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
@@ -23,12 +22,19 @@ export function ForgotPasswordForm() {
       return;
     }
     setPending(true);
-    const supabase = createClient();
-    const redirectTo = `${window.location.origin}/auth/confirm?next=/auth/setup-password`;
-    const { error } = await supabase.auth.resetPasswordForEmail(trimmed, { redirectTo });
+    // On passe par notre API qui envoie un mail Resend (template Major ECN)
+    // au lieu d'appeler supabase.auth.resetPasswordForEmail() côté client
+    // (qui déclencherait le mail Supabase générique avec un lien qui ne
+    // pointe pas vers le bon écran).
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmed }),
+    });
     setPending(false);
-    if (error) {
-      setError(error.message);
+    const j = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+    if (!res.ok || !j.ok) {
+      setError(j.error ?? 'Erreur lors de l\'envoi de l\'email. Réessayez.');
       return;
     }
     setDone(true);
