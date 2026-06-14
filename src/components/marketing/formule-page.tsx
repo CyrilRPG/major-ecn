@@ -467,6 +467,12 @@ function SocialProofCard({ variant, accentLight }: { variant: Variant; accentLig
           <Quote className="h-5 w-5" style={{ color: accentLight }} fill="currentColor" />
         </span>
         <div>
+          {/* 5 étoiles jaunes au-dessus de la citation (cf. design /formules) */}
+          <div className="mb-2 flex gap-0.5" aria-label="Note 5 sur 5">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star key={i} className="h-4 w-4" style={{ color: '#F59E0B' }} fill="currentColor" />
+            ))}
+          </div>
           <p className="text-[14px] leading-relaxed text-white">{sp.quote}</p>
           <p className="mt-2 text-[12px] font-bold text-white">
             {sp.name} · <span className="font-normal" style={{ color: accentLight }}>{sp.role}</span>
