@@ -18,6 +18,7 @@ import { AlertTriangle, ArrowRight, CheckCircle2, Mail, PartyPopper, Sparkles } 
 import { getStripe } from '@/lib/stripe';
 import type { FormuleId } from '@/lib/stripe';
 import { provisionStudentAccount } from '@/lib/stripe/provisioning';
+import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 
 export const metadata = {
   title: 'Merci pour votre inscription — Major ECN',
@@ -79,27 +80,17 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
   if (!email) return { ok: false, reason: 'Email manquant sur la session.' };
   if (!formuleId) return { ok: false, reason: 'Formule manquante sur la session.' };
 
-  // Pour les paiements 3x/4x : applique cancel_at sur la subscription
-  // (filet de sécurité si le webhook a planté). Idempotent.
-  if (session.mode === 'subscription' && session.subscription) {
+  // Pour les paiements 3x/4x : borne le plan à exactement N prélèvements via un
+  // SubscriptionSchedule (filet de sécurité si le webhook a planté). Idempotent.
+  if (session.mode === 'subscription' && session.subscription && installments > 1) {
     const subId =
       typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
-    try {
-      const sub = await stripe.subscriptions.retrieve(subId);
-      const effectiveCancelAt =
-        cancelAt ??
-        (installments > 1
-          ? Math.floor(Date.now() / 1000) + (installments - 1) * 30 * 86400 + 2 * 86400
-          : null);
-      if (effectiveCancelAt && (!sub.cancel_at || sub.cancel_at !== effectiveCancelAt)) {
-        await stripe.subscriptions.update(subId, { cancel_at: effectiveCancelAt });
-        log('cancel-at-applied', { subId, cancelAt: effectiveCancelAt });
-      } else {
-        log('cancel-at-skip', { subId, currentCancelAt: sub.cancel_at });
-      }
-    } catch (e) {
-      log('cancel-at-error', { error: e instanceof Error ? e.message : String(e) });
-    }
+    const r = await ensureInstallmentPlanEnds({
+      subscriptionId: subId,
+      installments,
+      fallbackCancelAt: cancelAt,
+    });
+    log('installment-plan-bounded', { ...r });
   }
 
   // Provisioning du compte étudiant — IDEMPOTENT : si le user existe déjà,
