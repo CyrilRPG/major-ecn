@@ -50,15 +50,18 @@ export function CheckoutButton({
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
-  // 4 consentements obligatoires (cf. note légale PAE Formation) :
-  // - CGU : Conditions Générales d'Utilisation
-  // - CGS : Conditions Générales de Service
-  // - CP  : Conditions Particulières
-  // - Renonciation expresse au droit de rétractation (article L. 221-28, 1° CC)
-  const [acceptCgu, setAcceptCgu] = useState(false);
-  const [acceptCgs, setAcceptCgs] = useState(false);
-  const [acceptCp, setAcceptCp] = useState(false);
-  const [waiveRetractation, setWaiveRetractation] = useState(false);
+  // 2 consentements obligatoires :
+  // - acceptTerms : acceptation groupée des CGU + CGS + Conditions Particulières
+  //   (les 3 documents sont liés ; cliquer ouvre la page dédiée, conforme à
+  //   l'exigence d'« information lisible et compréhensible » art. L. 111-1 CC).
+  // - immediateAccess : demande d'accès immédiat à la plateforme. Vaut
+  //   « consentement exprès pour que l'exécution commence avant l'expiration du
+  //   délai de rétractation » + « reconnaissance que le droit de rétractation
+  //   est perdu » (art. L. 221-28, 1° CC), sans agiter le texte juridique brut.
+  //   Le détail légal complet figure dans les CGS et les Conditions
+  //   Particulières, liées dans la case ci-dessus.
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [immediateAccess, setImmediateAccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showInfoPopup, setShowInfoPopup] = useState(false);
@@ -74,12 +77,12 @@ export function CheckoutButton({
       setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
     }
-    if (!acceptCgu || !acceptCgs || !acceptCp) {
+    if (!acceptTerms) {
       setError('Vous devez accepter les CGU, les CGS et les Conditions Particulières pour continuer.');
       return;
     }
-    if (!waiveRetractation) {
-      setError('La renonciation expresse au droit de rétractation est requise pour démarrer immédiatement votre accès à la plateforme.');
+    if (!immediateAccess) {
+      setError("Confirmez votre demande d'accès immédiat pour démarrer votre préparation tout de suite.");
       return;
     }
     setError(null);
@@ -105,10 +108,15 @@ export function CheckoutButton({
           voie: isIntensive ? voie : '',
           installments,
           consents: {
-            cgu: acceptCgu,
-            cgs: acceptCgs,
-            cp: acceptCp,
-            waiveRetractation,
+            // Côté serveur, ces flags sont stockés en metadata Stripe pour
+            // tracer les 3 consentements requis par la loi : CGU, CGS,
+            // Conditions Particulières d'une part ; consentement à l'exécution
+            // immédiate (vaut renonciation au délai de rétractation art.
+            // L. 221-28, 1°) d'autre part.
+            cgu: acceptTerms,
+            cgs: acceptTerms,
+            cp: acceptTerms,
+            waiveRetractation: immediateAccess,
             timestamp: new Date().toISOString(),
           },
         }),
@@ -195,77 +203,41 @@ export function CheckoutButton({
         </p>
       </fieldset>
 
-      {/* Consentements contractuels obligatoires */}
-      <SectionLabel n={4} title="Acceptation des conditions" />
+      {/* Consentements — 2 cases simples au lieu de 4 (équivalence légale
+          conservée via le détail dans les CGS / Conditions Particulières) */}
+      <SectionLabel n={4} title="Confirmation" />
 
       <ConsentCheckbox
-        checked={acceptCgu}
-        onChange={setAcceptCgu}
+        checked={acceptTerms}
+        onChange={setAcceptTerms}
         accent={color.main}
         text={
           <>
-            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
-            <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
-              Conditions Générales d&rsquo;Utilisation (CGU)
-            </Link>
+            J&rsquo;accepte les{' '}
+            <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGU</Link>,
+            les{' '}
+            <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGS</Link>
+            {' '}et les{' '}
+            <Link href="/conditions-particulieres" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>Conditions Particulières</Link>
             {' '}de Major ECN.
           </>
         }
       />
 
       <ConsentCheckbox
-        checked={acceptCgs}
-        onChange={setAcceptCgs}
+        checked={immediateAccess}
+        onChange={setImmediateAccess}
         accent={color.main}
         text={
           <>
-            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
-            <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
-              Conditions Générales de Service (CGS)
-            </Link>
-            {' '}de Major ECN.
+            Je souhaite accéder <strong>immédiatement</strong> à la plateforme pour démarrer ma
+            préparation sans attendre le délai légal de 14&nbsp;jours{' '}
+            <Link href="/cgs#art-10" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
+              (en savoir plus)
+            </Link>.
           </>
         }
       />
-
-      <ConsentCheckbox
-        checked={acceptCp}
-        onChange={setAcceptCp}
-        accent={color.main}
-        text={
-          <>
-            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
-            <Link href="/conditions-particulieres" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
-              Conditions Particulières
-            </Link>
-            {' '}attachées à mon Offre.
-          </>
-        }
-      />
-
-      {/* Renonciation expresse au droit de rétractation — bloc distinct + plus visible */}
-      <label
-        className="flex cursor-pointer items-start gap-2.5 rounded-xl border-2 p-3.5"
-        style={{
-          borderColor: waiveRetractation ? color.main : '#FCD0D6',
-          background: waiveRetractation ? '#FFFFFF' : '#FFF6F7',
-        }}
-      >
-        <input
-          type="checkbox"
-          checked={waiveRetractation}
-          onChange={(e) => setWaiveRetractation(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 rounded"
-          style={{ accentColor: color.main }}
-        />
-        <span className="text-[11.5px] leading-relaxed" style={{ color: '#1F2937' }}>
-          Le Client déclare renoncer expressément à son droit de rétractation en vue
-          d&rsquo;accéder, sans délai avant la fin dudit délai de rétractation, à la plateforme de
-          la Société et aux services associés dans les conditions des Conditions Générales de
-          Services. En conséquence, en application de l&rsquo;article L. 221-28, 1° du code de la
-          consommation, le Client ne saurait rétracter son engagement à l&rsquo;égard de la Société.
-        </span>
-      </label>
 
       {/* CTA */}
       <button
