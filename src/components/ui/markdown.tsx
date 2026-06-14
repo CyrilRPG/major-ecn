@@ -76,6 +76,20 @@ const COMPONENTS: Components = {
   td: ({ children }) => (
     <td className="border border-(--color-border) px-2 py-1 align-top">{children}</td>
   ),
+  // Image : on respecte la TAILLE NATURELLE de l'image, sans forcer ni width
+  // ni height. Seule contrainte : ne pas dépasser la largeur du conteneur
+  // (max-w-full) — la hauteur s'auto-ajuste pour préserver le ratio natif.
+  // eslint-disable-next-line jsx-a11y/alt-text, @next/next/no-img-element
+  img: ({ src, alt, title }) => (
+    <img
+      src={typeof src === 'string' ? src : undefined}
+      alt={alt ?? ''}
+      title={title}
+      loading="lazy"
+      decoding="async"
+      className="my-2 block h-auto max-w-full rounded-lg border border-(--color-border)"
+    />
+  ),
 };
 
 export function Markdown({
