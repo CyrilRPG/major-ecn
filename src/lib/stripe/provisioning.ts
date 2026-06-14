@@ -209,14 +209,20 @@ export async function provisionStudentAccount(
     return { ok: true, userId, isNew, emailSent: true, emailVia: null, emailError: null };
   }
 
-  // 5) Générer le lien d'invitation pour setup-password
-  //    - Nouveau user → invite link
-  //    - User existant → magiclink (un nouveau lien valable 24 h)
+  // 5) Générer le lien set-password.
+  //    On utilise TOUJOURS type='recovery' :
+  //     - pour un nouveau user : fonctionne aussi (Supabase crée un recovery
+  //       token qui confirme l'email au verifyOtp)
+  //     - pour un user existant déjà confirmé : c'est LE bon type (magiclink
+  //       pour un confirmé crée parfois en interne un recovery_token, et
+  //       le mismatch type=magiclink dans l'URL vs token_type=recovery_token
+  //       en DB fait planter verifyOtp avec "invalid or expired").
+  //    Recovery est le seul type stable cross-état (nouveau / confirmé).
   const base = siteUrl();
   const redirectTo = `${base}/auth/setup-password`;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
-    type: isNew ? 'invite' : 'magiclink',
+    type: 'recovery',
     email: input.email,
     options: { redirectTo },
   });
@@ -224,7 +230,7 @@ export async function provisionStudentAccount(
 
   const hashedToken = link?.properties?.hashed_token as string | undefined;
   const setupUrl = hashedToken
-    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=${isNew ? 'invite' : 'magiclink'}&next=${encodeURIComponent('/auth/setup-password')}`
+    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=recovery&next=${encodeURIComponent('/auth/setup-password')}`
     : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
 
   // 5) Envoi de l'email : Resend (template custom) puis Supabase en fallback
