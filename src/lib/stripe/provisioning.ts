@@ -36,6 +36,10 @@ export type ProvisioningInput = {
   specialty?: string;
   /** Voie de concours pour la Formule Intensive ('interne' / 'externe' / ''). */
   voie?: string;
+  /** ID de session Stripe — clé de déduplication d'envoi d'email. */
+  sessionId?: string;
+  /** Source de l'appel : webhook OU /merci. Utile pour le log d'audit. */
+  source?: 'webhook' | 'merci';
 };
 
 export type ProvisioningResult =
@@ -164,7 +168,48 @@ export async function provisionStudentAccount(
   }
   log('profile-upserted');
 
-  // 4) Générer le lien d'invitation pour setup-password
+  // 4) DÉDUPLICATION D'ENVOI D'EMAIL :
+  //    Si on a un sessionId, on tente d'insérer dans stripe_provisioning_log.
+  //    INSERT ON CONFLICT DO NOTHING : seul le PREMIER à insérer (webhook ou
+  //    /merci) déclenchera l'envoi. L'autre verra le conflict et skipera
+  //    l'envoi — évitant ainsi qu'un 2e generateLink invalide le token du
+  //    premier email reçu par l'utilisateur.
+  let weOwnTheEmailSend = true;
+  if (input.sessionId) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: claimed, error: claimErr } = await (admin as any)
+      .from('stripe_provisioning_log')
+      .insert({
+        session_id: input.sessionId,
+        user_id: userId,
+        email: input.email,
+        source: input.source ?? 'merci',
+      })
+      .select('session_id')
+      .maybeSingle();
+    // Postgres renvoie 23505 (unique_violation) si la ligne existe déjà.
+    const isConflict = claimErr && (
+      claimErr.code === '23505'
+      || /duplicate|already exists/i.test(claimErr.message ?? '')
+    );
+    if (claimErr && !isConflict) {
+      log('dedup-claim-error', { msg: claimErr.message });
+    } else if (isConflict || !claimed) {
+      weOwnTheEmailSend = false;
+      log('dedup-already-sent', { sessionId: input.sessionId, source: input.source });
+    } else {
+      log('dedup-claimed', { sessionId: input.sessionId, source: input.source });
+    }
+  }
+
+  if (!weOwnTheEmailSend) {
+    // Quelqu'un d'autre (webhook ou /merci, l'autre côté de la race) a déjà
+    // envoyé l'email. On retourne ok sans regénérer de token pour ne pas
+    // invalider celui du 1er email.
+    return { ok: true, userId, isNew, emailSent: true, emailVia: null, emailError: null };
+  }
+
+  // 5) Générer le lien d'invitation pour setup-password
   //    - Nouveau user → invite link
   //    - User existant → magiclink (un nouveau lien valable 24 h)
   const base = siteUrl();
@@ -279,6 +324,15 @@ export async function provisionStudentAccount(
 
   const emailSent = !!emailVia;
   log('end', { emailSent, emailVia, emailError, isNew });
+
+  // Met à jour la ligne de dédup avec le résultat de l'envoi (audit + debug).
+  if (input.sessionId) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin as any)
+      .from('stripe_provisioning_log')
+      .update({ email_via: emailVia, email_error: emailError })
+      .eq('session_id', input.sessionId);
+  }
 
   return { ok: true, userId, isNew, emailSent, emailVia, emailError };
 }

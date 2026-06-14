@@ -177,6 +177,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     amountTotalCents,
     specialty,
     voie,
+    sessionId: session.id,
+    source: 'webhook',
   });
 
   if (!result.ok) {
