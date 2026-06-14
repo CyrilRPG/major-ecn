@@ -67,6 +67,14 @@ export async function POST(req: Request) {
     );
   }
 
+  // Téléphone obligatoire pour toute offre payante.
+  if (!body.phone || body.phone.trim().length < 6) {
+    return NextResponse.json(
+      { error: 'Le numéro de téléphone est obligatoire pour souscrire une offre payante.' },
+      { status: 400 },
+    );
+  }
+
   const installments =
     typeof body.installments === 'number' && isValidInstallmentPlan(body.installments)
       ? body.installments

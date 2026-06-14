@@ -8,6 +8,7 @@ import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { ProfProfile } from '@/components/professor/prof-profile';
 import { ProfileEditor } from '@/components/profile/profile-editor';
 import { PasswordChanger } from '@/components/profile/password-changer';
+import { DeleteAccountButton } from '@/components/profile/delete-account-button';
 import { getNavigatorTree } from '@/lib/data/navigator';
 
 export const metadata = { title: 'Mon profil' };
@@ -48,43 +49,61 @@ export default async function ProfilPage() {
         </div>
       </header>
 
-      {/* ABONNEMENT / ESSAI */}
-      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
-            <Sparkles className="h-5 w-5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-              Formule
-            </p>
-            <p className="mt-0.5 font-display text-lg font-semibold text-(--color-ink)">
-              {offerLabel(scope.offer)}
-            </p>
-            <p className="mt-1 text-sm text-(--color-ink-soft)">
-              {subscriber ? (
-                'Abonné — accès complet, sans limite de temps.'
-              ) : expired ? (
-                'Essai gratuit expiré. Passez à l’abonnement pour continuer sans limite.'
-              ) : (
-                <>Essai gratuit actif — il vous reste <span className="font-semibold text-(--color-primary)">{days} jour{days > 1 ? 's' : ''}</span>.</>
-              )}
-            </p>
-          </div>
-          <span
-            className={
-              'rounded-full px-2.5 py-1 text-xs font-semibold ' +
-              (subscriber
-                ? 'bg-[color-mix(in_srgb,#2E8B57_12%,var(--color-surface))] text-[#1F6B43]'
-                : expired
-                ? 'bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))] text-(--color-danger)'
-                : 'bg-(--color-primary-soft) text-(--color-primary)')
-            }
-          >
-            {subscriber ? 'Abonné' : expired ? 'Expiré' : `${days} j`}
-          </span>
-        </div>
-      </section>
+      {/* STATUT — affiche un label dépendant du rôle + flag espace_decouverte
+          + paid_formule, plutôt que d'écrire « Essentiel » à tout le monde. */}
+      {(() => {
+        const raw = (profile.permission_scope ?? {}) as {
+          espace_decouverte?: boolean;
+          paid_formule?: string;
+        };
+        let statusLabel: string = offerLabel(scope.offer);
+        let statusDescription: React.ReactNode = (
+          subscriber
+            ? 'Abonné — accès complet, sans limite de temps.'
+            : expired
+            ? 'Essai gratuit expiré. Passez à l’abonnement pour continuer sans limite.'
+            : <>Essai gratuit actif — il vous reste <span className="font-semibold text-(--color-primary)">{days} jour{days > 1 ? 's' : ''}</span>.</>
+        );
+        let badgeText: string = subscriber ? 'Abonné' : expired ? 'Expiré' : `${days} j`;
+        let badgeTone: 'success' | 'danger' | 'primary' = subscriber ? 'success' : expired ? 'danger' : 'primary';
+        if (profile.role === 'admin') {
+          statusLabel = 'Administrateur';
+          statusDescription = 'Accès complet à l’administration de la plateforme.';
+          badgeText = 'Admin';
+          badgeTone = 'primary';
+        } else if (raw.espace_decouverte === true && !raw.paid_formule) {
+          statusLabel = 'Espace Découverte';
+          statusDescription = 'Aperçu gratuit de la plateforme — passez à une formule pour débloquer l’ensemble des contenus.';
+          badgeText = 'Découverte';
+          badgeTone = 'primary';
+        } else if (!raw.paid_formule && scope.offer === 'decouverte') {
+          statusLabel = 'Espace Découverte';
+          statusDescription = 'Aperçu gratuit de la plateforme.';
+          badgeText = 'Découverte';
+          badgeTone = 'primary';
+        }
+        const badgeClass =
+          badgeTone === 'success'
+            ? 'bg-[color-mix(in_srgb,#2E8B57_12%,var(--color-surface))] text-[#1F6B43]'
+            : badgeTone === 'danger'
+            ? 'bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))] text-(--color-danger)'
+            : 'bg-(--color-primary-soft) text-(--color-primary)';
+        return (
+          <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">Statut</p>
+                <p className="mt-0.5 font-display text-lg font-semibold text-(--color-ink)">{statusLabel}</p>
+                <p className="mt-1 text-sm text-(--color-ink-soft)">{statusDescription}</p>
+              </div>
+              <span className={'rounded-full px-2.5 py-1 text-xs font-semibold ' + badgeClass}>{badgeText}</span>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* INFOS PERSO */}
       <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
@@ -138,6 +157,26 @@ export default async function ProfilPage() {
 
       {/* CTA upgrade if applicable */}
       <UpgradeBanner context="default" profile={profile} />
+
+      {/* SUPPRESSION DU COMPTE — bloc danger explicite */}
+      <section className="mt-6 rounded-2xl border border-(--color-danger)/30 bg-[color-mix(in_srgb,var(--color-danger)_4%,var(--color-surface))] p-5 sm:p-6">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-(--color-danger)">
+          Zone dangereuse
+        </p>
+        <p className="mt-2 text-sm text-(--color-ink-soft)">
+          Vous pouvez supprimer définitivement votre compte et l’ensemble de vos données. Cette
+          action est irréversible.
+          {profile.role === 'admin' && (
+            <>
+              <br /><span className="font-semibold text-(--color-danger)">Les administrateurs ne
+              peuvent pas se supprimer eux-mêmes depuis cet écran.</span>
+            </>
+          )}
+        </p>
+        <div className="mt-3">
+          <DeleteAccountButton disabled={profile.role === 'admin'} />
+        </div>
+      </section>
     </div>
   );
 }

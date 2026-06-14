@@ -67,6 +67,10 @@ export function CheckoutButton({
       setError('Merci de renseigner prénom, nom et email.');
       return;
     }
+    if (!phone.trim()) {
+      setError('Le numéro de téléphone est obligatoire pour une offre payante.');
+      return;
+    }
     if (isIntensive && !voie) {
       setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
@@ -132,7 +136,7 @@ export function CheckoutButton({
         <Input icon={User} placeholder="Nom" value={lastName} onChange={setLastName} required />
       </div>
       <Input icon={Mail} type="email" placeholder="Adresse email" value={email} onChange={setEmail} required />
-      <Input icon={Phone} type="tel" placeholder="Téléphone (optionnel)" value={phone} onChange={setPhone} />
+      <Input icon={Phone} type="tel" placeholder="Téléphone" value={phone} onChange={setPhone} required />
 
       {/* Section PRÉPARATION */}
       <SectionLabel n={2} title="Votre préparation" />

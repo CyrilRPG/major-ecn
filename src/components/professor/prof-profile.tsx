@@ -3,6 +3,7 @@ import type { Profile } from '@/lib/auth/get-profile';
 import type { NavCollege } from '@/lib/data/navigator';
 import { ProfileEditor } from '@/components/profile/profile-editor';
 import { PasswordChanger } from '@/components/profile/password-changer';
+import { DeleteAccountButton } from '@/components/profile/delete-account-button';
 import { PseudoEditor } from '@/components/student/pseudo-editor';
 import {
   CONTENT_TYPES, CONTENT_TYPE_LABEL, PERMISSION_LEVEL_LABEL,
@@ -168,6 +169,20 @@ export function ProfProfile({
           Mettez à jour votre mot de passe à tout moment. Minimum 8 caractères.
         </p>
         <PasswordChanger />
+      </section>
+
+      {/* Zone dangereuse */}
+      <section className="mt-6 rounded-2xl border border-(--color-danger)/30 bg-[color-mix(in_srgb,var(--color-danger)_4%,var(--color-surface))] p-5 sm:p-6">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-(--color-danger)">
+          Zone dangereuse
+        </p>
+        <p className="mt-2 text-sm text-(--color-ink-soft)">
+          Supprimer définitivement votre compte professeur. Vos réponses au forum restent en place
+          (auteur anonymisé).
+        </p>
+        <div className="mt-3">
+          <DeleteAccountButton />
+        </div>
       </section>
     </div>
   );

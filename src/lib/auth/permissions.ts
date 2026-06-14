@@ -2,13 +2,19 @@ import type { Offer, PermissionScope } from '@/types/domain';
 
 function parseOffer(raw: unknown): Offer {
   if (raw && typeof raw === 'object') {
-    const o = (raw as { offer?: unknown }).offer;
+    const r = raw as { offer?: unknown; espace_decouverte?: unknown; paid_formule?: unknown };
+    const o = r.offer;
+    if (o === 'decouverte') return 'decouverte';
     if (o === 'premium') return 'premium';
     if (o === 'intensif') return 'intensif';
     // 'basic' is the legacy value — treated as 'essentiel'.
     if (o === 'essentiel' || o === 'basic') return 'essentiel';
+    // Inférence : si flagué « espace découverte » SANS achat payé, on
+    // bascule sur 'decouverte' (gère les vieux profils créés avant que
+    // l'offer ait été nettoyée).
+    if (r.espace_decouverte === true && !r.paid_formule) return 'decouverte';
   }
-  return 'essentiel';
+  return 'decouverte';
 }
 
 export function parseScope(raw: unknown): PermissionScope {
@@ -80,9 +86,10 @@ export function canAccessFaculte(scope: PermissionScope, _faculteId: string): bo
 }
 
 export function offerLabel(offer: Offer): string {
-  if (offer === 'premium') return 'Premium';
-  if (offer === 'intensif') return 'Intensif';
-  return 'Essentiel';
+  if (offer === 'decouverte') return 'Espace Découverte';
+  if (offer === 'premium') return 'Formule Intensive';
+  if (offer === 'intensif') return 'Programme Approfondi';
+  return 'Formule Essentielle';
 }
 
 export function describeScope(scope: PermissionScope): string {

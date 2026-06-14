@@ -95,19 +95,17 @@ export async function provisionStudentAccount(
     emailFrom: process.env.EMAIL_FROM ?? '(fallback resend.dev sandbox)',
   });
 
-  // Permission scope : pour l'instant, accès Découverte uniquement.
-  // La formule réellement achetée est conservée dans `paid_offer` et
-  // `paid_formule` pour pouvoir débloquer le contenu plus tard.
+  // Permission scope : pour l'instant, accès à l'Espace Découverte UNIQUEMENT
+  // pour tous les acheteurs. La formule réellement achetée est conservée dans
+  // paid_offer / paid_formule pour pouvoir débloquer l'accès complet plus tard
+  // (depuis l'admin) quand le contenu MG sera finalisé. Côté UI : on affiche
+  // bien le nom de la formule payée, pas « Découverte ».
+  const offerForFormule = MAP_OFFER[input.formuleId];
   const permission_scope = {
     type: 'college' as const,
     colleges: [DECOUVERTE_COLLEGE_ID],
-    offer: 'essentiel' as const,
-    espace_decouverte: true,
-    /* Marqueurs de la formule réellement payée — l'admin pourra basculer
-       l'accès complet (MG voie interne + voie externe) une fois le contenu
-       finalisé. Côté UI : permet de différencier un "vrai" abonné d'un
-       utilisateur Découverte gratuit. */
-    paid_offer: MAP_OFFER[input.formuleId],
+    offer: offerForFormule,
+    paid_offer: offerForFormule,
     paid_formule: input.formuleId,
     paid_specialty: input.specialty ?? 'Médecine générale',
     paid_voie: input.voie ?? null,

@@ -16,11 +16,16 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, promotion, offer, permission_type, colleges } = parsed.data;
+  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours } = parsed.data;
   const permission_scope =
     permission_type === 'all'
       ? { type: 'all' as const, offer }
-      : { type: 'college' as const, colleges: colleges ?? [], offer };
+      : {
+          type: 'college' as const,
+          colleges: colleges ?? [],
+          offer,
+          ...(cours && cours.length > 0 ? { cours } : {}),
+        };
 
   const { error } = await supabase
     .from('profiles')
@@ -28,7 +33,6 @@ export async function PATCH(req: Request) {
       first_name,
       last_name,
       phone: phone ?? null,
-      promotion,
       permission_scope,
     })
     .eq('id', id);

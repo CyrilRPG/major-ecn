@@ -15,11 +15,18 @@ export async function POST(req: Request) {
   const parsed = AddStudentSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
 
-  const { first_name, last_name, email, phone, promotion, offer, permission_type, colleges } = parsed.data;
+  const { first_name, last_name, email, phone, offer, permission_type, colleges, cours } = parsed.data;
   const permission_scope =
     permission_type === 'all'
       ? { type: 'all' as const, offer }
-      : { type: 'college' as const, colleges: colleges ?? [], offer };
+      : {
+          type: 'college' as const,
+          colleges: colleges ?? [],
+          offer,
+          // cours[] : présent UNIQUEMENT s'il y a des restrictions par matière
+          // (sinon accès à tous les cours du/des collège(s) sélectionnés).
+          ...(cours && cours.length > 0 ? { cours } : {}),
+        };
 
   let admin;
   try {
@@ -45,7 +52,6 @@ export async function POST(req: Request) {
       last_name,
       email,
       phone: phone ?? null,
-      promotion,
       permission_scope,
       role: 'student',
     })

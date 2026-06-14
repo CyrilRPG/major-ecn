@@ -1,29 +1,31 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Pencil, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader,
+  DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { UpdateStudentSchema, type UpdateStudentInput } from '@/lib/schemas/student';
 import { parseScope } from '@/lib/auth/permissions';
 
-const PROMOTIONS: UpdateStudentInput['promotion'][] = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
+const MG_COLLEGE_IDS = new Set(['col-medecine-generale', 'col-medecine-generale-voie-externe']);
+
+// 'decouverte' n'est pas une formule administrable depuis l'admin :
+// si le scope DB indique decouverte, on l'aligne par défaut sur essentiel
+// (mais on conserve les autres champs paid_* tels quels).
+function adminOfferFrom(rawOffer: string): UpdateStudentInput['offer'] {
+  if (rawOffer === 'premium' || rawOffer === 'intensif' || rawOffer === 'essentiel') return rawOffer;
+  return 'essentiel';
+}
 
 export type EditStudentTarget = {
   id: string;
@@ -31,16 +33,17 @@ export type EditStudentTarget = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
-  promotion: string | null;
   permission_scope: unknown;
 };
 
 export function EditStudentDialog({
   student,
   colleges,
+  coursByCollege,
 }: {
   student: EditStudentTarget;
   colleges: { id: string; nom: string }[];
+  coursByCollege?: Record<string, { id: string; titre: string }[]>;
 }) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -48,15 +51,18 @@ export function EditStudentDialog({
   const [pending, start] = useTransition();
 
   const initialScope = parseScope(student.permission_scope);
-  const defaultPromotion = (PROMOTIONS as string[]).includes(student.promotion ?? '')
-    ? (student.promotion as UpdateStudentInput['promotion'])
-    : 'D2';
+  // Reprend la liste cours[] si elle existe sur l'ancien scope.
+  const initialCours =
+    initialScope.type === 'college' && 'cours' in initialScope && Array.isArray(initialScope.cours)
+      ? (initialScope.cours as string[])
+      : [];
 
   const {
     register,
     control,
     handleSubmit,
     watch,
+    setValue,
     reset,
     formState: { errors, isDirty },
   } = useForm<UpdateStudentInput>({
@@ -66,14 +72,32 @@ export function EditStudentDialog({
       first_name: student.first_name ?? '',
       last_name: student.last_name ?? '',
       phone: student.phone ?? '',
-      promotion: defaultPromotion,
-      offer: initialScope.offer,
+      offer: adminOfferFrom(initialScope.offer),
       permission_type: initialScope.type,
       colleges: initialScope.type === 'college' ? initialScope.colleges : [],
+      cours: initialCours,
     },
   });
 
   const permissionType = watch('permission_type');
+  const selectedColleges = watch('colleges') ?? [];
+
+  useEffect(() => {
+    if (!coursByCollege) return;
+    const current = (watch('cours') ?? []) as string[];
+    const allowedCoursIds = new Set(
+      selectedColleges
+        .filter((c) => MG_COLLEGE_IDS.has(c))
+        .flatMap((c) => (coursByCollege[c] ?? []).map((x) => x.id)),
+    );
+    const filtered = current.filter((id) => allowedCoursIds.has(id));
+    if (filtered.length !== current.length) {
+      setValue('cours', filtered, { shouldValidate: false, shouldDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedColleges.join(',')]);
+
+  const mgCollegesSelected = selectedColleges.filter((id) => MG_COLLEGE_IDS.has(id));
 
   const onSubmit = (data: UpdateStudentInput) => {
     setSubmitError(null);
@@ -97,10 +121,7 @@ export function EditStudentDialog({
   return (
     <Dialog
       open={open}
-      onOpenChange={(o) => {
-        setOpen(o);
-        if (!o) setSubmitError(null);
-      }}
+      onOpenChange={(o) => { setOpen(o); if (!o) setSubmitError(null); }}
     >
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Modifier le profil" title="Modifier le profil">
@@ -108,7 +129,7 @@ export function EditStudentDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Pencil className="h-5 w-5 text-(--color-accent)" />
@@ -140,33 +161,13 @@ export function EditStudentDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="edit-phone">Téléphone</Label>
-              <Input id="edit-phone" {...register('phone')} placeholder="06 12 34 56 78" />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="edit-promotion">Promotion</Label>
-              <Controller
-                name="promotion"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {PROMOTIONS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="edit-phone">Téléphone</Label>
+            <Input id="edit-phone" {...register('phone')} placeholder="06 12 34 56 78" />
           </div>
 
           <div className="space-y-2">
             <Label>Formule souscrite</Label>
-            <p className="text-xs text-(--color-ink-soft)">
-              Quel type d’offre l’élève a-t-il souscrit&nbsp;?
-            </p>
             <Controller
               name="offer"
               control={control}
@@ -174,15 +175,15 @@ export function EditStudentDialog({
                 <RadioGroup value={field.value} onValueChange={field.onChange}>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
                     <RadioGroupItem value="essentiel" />
-                    <span className="text-sm">Essentiel — 49 €/mois · accès aux QCM, flashcards et suivi de base</span>
+                    <span className="text-sm">Formule Essentielle — 495 € · QCM, flashcards, fiches synthétiques, méthode EVC</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
                     <RadioGroupItem value="premium" />
-                    <span className="text-sm">Premium — 89 €/mois · IA pédagogique, examens blancs, tuteur dédié</span>
+                    <span className="text-sm">Formule Intensive — 995 € · Essentielle + cas cliniques, épreuves blanches, suivi</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
                     <RadioGroupItem value="intensif" />
-                    <span className="text-sm">Intensif — 149 €/mois · sessions 1:1, plan sur-mesure, garantie</span>
+                    <span className="text-sm">Programme Approfondi — 2 395 € · Plateforme + accompagnement individuel + sessions live</span>
                   </label>
                 </RadioGroup>
               )}
@@ -237,6 +238,55 @@ export function EditStudentDialog({
               </div>
             )}
           </div>
+
+          {permissionType === 'college' && mgCollegesSelected.length > 0 && coursByCollege && (
+            <div className="space-y-2 rounded-xl border-2 border-dashed border-(--color-border) bg-(--color-surface-soft) p-3">
+              <Label>Matières au sein de Médecine Générale</Label>
+              <p className="text-xs text-(--color-ink-soft)">
+                Sans sélection : accès à <strong>toutes</strong> les matières du/des collège(s) MG choisi(s).
+                Cochez pour restreindre à certaines matières précises.
+              </p>
+              <Controller
+                name="cours"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-3">
+                    {mgCollegesSelected.map((collegeId) => {
+                      const cours = coursByCollege[collegeId] ?? [];
+                      if (cours.length === 0) return null;
+                      const collegeNom = colleges.find((c) => c.id === collegeId)?.nom ?? collegeId;
+                      return (
+                        <div key={collegeId}>
+                          <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-(--color-ink-muted)">
+                            {collegeNom}
+                          </p>
+                          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                            {cours.map((c) => {
+                              const checked = field.value?.includes(c.id) ?? false;
+                              return (
+                                <label key={c.id} className="flex items-center gap-2 text-[13px]">
+                                  <Checkbox
+                                    checked={checked}
+                                    onCheckedChange={(v) => {
+                                      const set = new Set(field.value ?? []);
+                                      if (v) set.add(c.id);
+                                      else set.delete(c.id);
+                                      field.onChange(Array.from(set));
+                                    }}
+                                  />
+                                  {c.titre}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              />
+            </div>
+          )}
 
           {submitError && (
             <p className="text-sm text-(--color-danger) bg-red-500/10 border border-(--color-danger)/30 rounded-lg px-3 py-2">

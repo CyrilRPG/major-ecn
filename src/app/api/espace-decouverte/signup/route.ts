@@ -88,7 +88,7 @@ export async function POST(req: Request) {
   const permission_scope = {
     type: 'college' as const,
     colleges: [DECOUVERTE_COLLEGE_ID],
-    offer: 'essentiel' as const,
+    offer: 'decouverte' as const, // était 'essentiel' → bug : un user découverte est désormais bien typé.
     espace_decouverte: true,
     specialty_wish: specialty || null,
   };

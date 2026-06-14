@@ -1,9 +1,15 @@
-export type Offer = 'essentiel' | 'premium' | 'intensif';
-export const OFFERS: Offer[] = ['essentiel', 'premium', 'intensif'];
+// 'decouverte' = espace découverte gratuit (signup sans paiement).
+// Les 3 autres correspondent aux formules payantes :
+//   essentiel  ← Formule Essentielle
+//   premium    ← Formule Intensive
+//   intensif   ← Programme Approfondi
+export type Offer = 'decouverte' | 'essentiel' | 'premium' | 'intensif';
+export const OFFERS: Offer[] = ['decouverte', 'essentiel', 'premium', 'intensif'];
 export const OFFER_LABEL: Record<Offer, string> = {
-  essentiel: 'Essentiel',
-  premium: 'Premium',
-  intensif: 'Intensif',
+  decouverte: 'Espace Découverte',
+  essentiel: 'Formule Essentielle',
+  premium: 'Formule Intensive',
+  intensif: 'Programme Approfondi',
 };
 
 export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[]; /** Optionnel : liste d'IDs de cours auxquels l'accès est restreint au sein des collèges sélectionnés. Vide ou absent = tous les cours du/des collège(s). */ cours?: string[] }) & {

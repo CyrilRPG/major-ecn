@@ -18,18 +18,31 @@ export default async function ElevesPage() {
       .order('last_name'),
     supabase
       .from('facultes')
-      .select('semestres(matieres(id, nom, order_index))')
+      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
   ]);
 
-  const colleges = (
-    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null }[] }[] } | null)
-      ?.semestres ?? [])
+  type MatRaw = {
+    id: string; nom: string; order_index: number | null;
+    cours?: { id: string; titre: string; order_index: number | null }[] | null;
+  };
+  const matieres = (
+    ((fac as unknown as { semestres?: { matieres?: MatRaw[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-    .map((m) => ({ id: m.id, nom: m.nom }));
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+
+  const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom }));
+  const coursByCollege: Record<string, { id: string; titre: string }[]> = Object.fromEntries(
+    matieres.map((m) => [
+      m.id,
+      (m.cours ?? [])
+        .slice()
+        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .map((c) => ({ id: c.id, titre: c.titre })),
+    ]),
+  );
 
   const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
 
@@ -43,7 +56,7 @@ export default async function ElevesPage() {
             {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
           </p>
         </div>
-        <AddStudentDialog colleges={colleges} />
+        <AddStudentDialog colleges={colleges} coursByCollege={coursByCollege} />
       </header>
 
       <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} collegeMap={collegeMap} colleges={colleges} />
