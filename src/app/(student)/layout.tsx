@@ -19,10 +19,15 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // Détection mode Découverte : utilisé pour verrouiller Entraînement,
   // Révisions, Agenda et Annales EVC dans le menu sidebar + afficher
   // l'encadré Découverte au-dessus d'Accueil.
+  // Critère : un user est Découverte SSI il a accès à col-decouverte ET
+  // n'a aucune formule payée (paid_formule absent). Les acheteurs ont la
+  // formule sur leur profil → on ne leur affiche pas les locks « Découverte ».
   const scopeForNav = parseScope(profile.permission_scope);
+  const rawScope = (profile.permission_scope ?? {}) as { paid_formule?: string };
   const isDecouverte =
     scopeForNav.type === 'college' &&
-    scopeForNav.colleges.includes('col-decouverte');
+    scopeForNav.colleges.includes('col-decouverte') &&
+    !rawScope.paid_formule;
 
   // Delta hebdo « +X% cette semaine » pour la carte Progression globale :
   // ratio des cours touchés dans les 7 derniers jours sur le total des cours
