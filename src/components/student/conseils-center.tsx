@@ -30,8 +30,10 @@ const STARTER_SPECIALTIES = [
   { image: '/flashcards-decor/pneumo.png',    label: 'Pneumologie',    color: '#3164A5', bg: '#CADEF7' },
   { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#31A571', bg: '#CAF7E3' },
   { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#6C31A5', bg: '#E1CAF7' },
-  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#B45309', bg: '#FEF3C7' },
-  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#0F7C4F', bg: '#D1FAE5' },
+  // imageScale > 1 : ces 2 illustrations ont une marge transparente importante
+  // → on les zoome côté CSS pour qu'elles remplissent visuellement le carré.
+  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#B45309', bg: '#FEF3C7', imageScale: 1.9 },
+  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#0F7C4F', bg: '#D1FAE5', imageScale: 1.9 },
 ];
 
 export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolean }) {
@@ -141,16 +143,21 @@ function PopupOverlay({
             Si vous ne savez pas par où commencer, nous vous recommandons de débuter par
             les <strong className="text-(--color-ink)">spécialités les plus transversales</strong> :
           </p>
-          <div className="mt-4 grid grid-cols-3 gap-4 sm:grid-cols-6">
+          <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {STARTER_SPECIALTIES.map((s, i) => (
               <div key={s.label} className="flex flex-col items-center text-center">
-                <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl p-1.5"
+                <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl p-1.5"
                   style={{ background: s.bg }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.image} alt="" className="h-full w-full object-contain" />
+                  <img
+                    src={s.image}
+                    alt=""
+                    className="h-full w-full object-contain"
+                    style={s.imageScale ? { transform: `scale(${s.imageScale})` } : undefined}
+                  />
                 </span>
-                <p className="mt-2 text-[11px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
-                <p className="text-[12px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
+                <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
+                <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -304,16 +311,21 @@ function SectionDemarrer() {
         Si vous ne savez pas par où commencer, nous vous recommandons de débuter par les
         <strong className="text-(--color-ink)"> spécialités les plus transversales </strong> :
       </p>
-      <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {STARTER_SPECIALTIES.map((s, i) => (
           <div key={s.label} className="flex flex-col items-center text-center">
-            <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl p-1"
+            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1"
               style={{ background: s.bg }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={s.image} alt="" className="h-full w-full object-contain" />
+              <img
+                src={s.image}
+                alt=""
+                className="h-full w-full object-contain"
+                style={s.imageScale ? { transform: `scale(${s.imageScale})` } : undefined}
+              />
             </span>
-            <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
-            <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
+            <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
+            <p className="text-[10px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
           </div>
         ))}
       </div>
