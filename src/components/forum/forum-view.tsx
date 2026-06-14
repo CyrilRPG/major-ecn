@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import {
-  CheckCircle2, ChevronDown, ChevronUp, Clock, Eye, EyeOff, GraduationCap, Lock,
-  Loader2, MessageCircleQuestion, MessagesSquare, Pencil, Reply, Search, Send,
-  Sparkles, Stethoscope, Unlock, Users,
+  CheckCircle2, ChevronDown, ChevronUp, Clock, Eye, EyeOff, FolderClosed,
+  FolderOpen, GraduationCap, Lock, Loader2, MessageCircleQuestion, MessagesSquare,
+  Pencil, Reply, Search, Send, Sparkles, Stethoscope, Unlock, Users,
 } from 'lucide-react';
 import { Markdown } from '@/components/ui/markdown';
 import { ForumQuestionForm } from '@/components/student/forum-question-form';
@@ -84,12 +84,134 @@ export function ForumView({
       {rows.length === 0 ? (
         <EmptyState role={role} activeTab={activeTab} />
       ) : (
-        <div className="mt-6 space-y-3">
-          {rows.map((r) => (
-            <QuestionCard key={r.id} q={r} role={role} currentUserId={currentUserId} />
-          ))}
-        </div>
+        <MatieresAccordion rows={rows} role={role} currentUserId={currentUserId} activeMatiere={activeMatiere} />
       )}
+    </div>
+  );
+}
+
+/* ───────────────────── Groupement par matière (accordéons fermés) ───────────────────── */
+type MatiereGroup = { id: string; nom: string; rows: ForumQuestionRow[] };
+
+function MatieresAccordion({
+  rows, role, currentUserId, activeMatiere,
+}: {
+  rows: ForumQuestionRow[];
+  role: Role;
+  currentUserId: string;
+  activeMatiere: string | null;
+}) {
+  // Construction des groupes. Une question sans matière (cours hors cours)
+  // est placée dans un groupe « Hors matière » distinct.
+  const groups: MatiereGroup[] = (() => {
+    const byId = new Map<string, MatiereGroup>();
+    for (const r of rows) {
+      const id = r.matiere_id ?? '__nomat__';
+      const nom = r.matiere_nom ?? 'Hors matière';
+      const g = byId.get(id) ?? { id, nom, rows: [] };
+      g.rows.push(r);
+      byId.set(id, g);
+    }
+    return Array.from(byId.values()).sort((a, b) => {
+      // Hors matière toujours en dernier
+      if (a.id === '__nomat__') return 1;
+      if (b.id === '__nomat__') return -1;
+      return a.nom.localeCompare(b.nom, 'fr');
+    });
+  })();
+
+  // Si on a un filtre matière déjà actif dans l'URL, on ouvre ce groupe.
+  // Sinon : tous fermés par défaut. L'état est conservé pendant la session.
+  const [open, setOpen] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {};
+    if (activeMatiere) init[activeMatiere] = true;
+    return init;
+  });
+
+  const toggle = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }));
+  const openAll = () => setOpen(Object.fromEntries(groups.map((g) => [g.id, true])));
+  const closeAll = () => setOpen({});
+
+  return (
+    <div className="mt-6 space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-[12px] font-semibold text-(--color-ink-muted)">
+          {groups.length} matière{groups.length > 1 ? 's' : ''} avec questions
+        </p>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={openAll}
+            className="rounded-full border border-(--color-border) bg-(--color-surface) px-3 py-1 text-[11px] font-semibold text-(--color-ink-soft) transition-colors hover:text-(--color-ink)"
+          >
+            Tout déplier
+          </button>
+          <button
+            type="button"
+            onClick={closeAll}
+            className="rounded-full border border-(--color-border) bg-(--color-surface) px-3 py-1 text-[11px] font-semibold text-(--color-ink-soft) transition-colors hover:text-(--color-ink)"
+          >
+            Tout replier
+          </button>
+        </div>
+      </div>
+
+      {groups.map((g) => {
+        const isOpen = !!open[g.id];
+        const answered = g.rows.filter((r) => (r.forum_answers ?? []).length > 0).length;
+        const pending = g.rows.length - answered;
+        return (
+          <section
+            key={g.id}
+            className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)"
+          >
+            <button
+              type="button"
+              onClick={() => toggle(g.id)}
+              className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-(--color-surface-soft) sm:px-5 sm:py-4"
+              aria-expanded={isOpen}
+            >
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                  isOpen
+                    ? 'bg-[linear-gradient(135deg,#FDE7E9,#FFEAD9)] text-(--color-primary)'
+                    : 'bg-(--color-sand-100) text-(--color-ink-soft)'
+                }`}
+              >
+                {isOpen
+                  ? <FolderOpen className="h-5 w-5" />
+                  : <FolderClosed className="h-5 w-5" />}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[14.5px] font-extrabold text-(--color-ink)">{g.nom}</p>
+                <p className="mt-0.5 text-[11.5px] text-(--color-ink-muted)">
+                  {g.rows.length} question{g.rows.length > 1 ? 's' : ''}
+                  {pending > 0 && (
+                    <> · <span className="font-semibold text-[#B26A00]">{pending} en attente</span></>
+                  )}
+                  {answered > 0 && (
+                    <> · <span className="font-semibold text-[#16793C]">{answered} répondue{answered > 1 ? 's' : ''}</span></>
+                  )}
+                </p>
+              </div>
+              <span
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-(--color-border) bg-(--color-surface) text-(--color-ink-soft)"
+                aria-hidden
+              >
+                {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </span>
+            </button>
+
+            {isOpen && (
+              <div className="space-y-3 border-t border-(--color-border) bg-(--color-surface-soft) p-3 sm:p-4">
+                {g.rows.map((r) => (
+                  <QuestionCard key={r.id} q={r} role={role} currentUserId={currentUserId} />
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   );
 }
