@@ -40,7 +40,7 @@ Ajoute ces 3 variables, en cochant **Production**, **Preview** et **Development*
 |---|---|---|
 | `RESEND_API_KEY` | `re_xxxxxxxxxxxxxxxx` | **Obligatoire** |
 | `EMAIL_FROM` | `Major ECN <noreply@majorecn.fr>` | Optionnel — voir étape 4 |
-| `NEXT_PUBLIC_SITE_URL` | `https://major-ecn.vercel.app` | **Obligatoire** (déjà fait) |
+| `NEXT_PUBLIC_SITE_URL` | `https://major-ecn.fr` | **Obligatoire** (déjà fait) |
 
 ⚠️ Si `EMAIL_FROM` n'est pas défini, le code utilise l'adresse sandbox
 `Major ECN <onboarding@resend.dev>` qui marche **immédiatement** sans
@@ -155,7 +155,7 @@ Renvoie un JSON :
 {
   "resend_api_key_set": true,
   "email_from": "Major ECN <onboarding@resend.dev>",
-  "site_url": "https://major-ecn.vercel.app",
+  "site_url": "https://major-ecn.fr",
   "fallback_in_use": true,
   "note": "..."
 }

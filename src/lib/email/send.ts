@@ -45,7 +45,7 @@ export type SendResult =
  *  Cascade :
  *   1. NEXT_PUBLIC_SITE_URL (priorité, ex: domaine custom https://major-ecn.fr)
  *   2. VERCEL_PROJECT_PRODUCTION_URL (auto-injectée par Vercel sur les builds
- *      de production — sans schéma, ex: "major-ecn.vercel.app")
+ *      de production — sans schéma, ex: "major-ecn.fr")
  *   3. VERCEL_URL (auto-injectée par Vercel — URL du déploiement courant)
  *   4. localhost (dev uniquement) */
 export function siteUrl(): string {

@@ -27,7 +27,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.fr'),
   title: { default: 'Major ECN — Préparez les EVC avec excellence', template: '%s · Major ECN' },
   description:
     "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
