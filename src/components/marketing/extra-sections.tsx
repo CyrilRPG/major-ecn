@@ -9,7 +9,7 @@ import {
   Activity, ArrowRight, Award, Baby, BarChart3, Bell, BookOpen, Brain, BrainCircuit, Calendar, CalendarCheck, CalendarDays,
   CalendarClock, Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, Folder, FolderOpen, GraduationCap, Heart, Lightbulb,
   Layers3, LineChart, ListChecks, MapPin, MessageCircle, Microscope, Pill, Play, Quote, Radio, Scissors, Settings, ShieldCheck,
-  Smartphone, Sparkles, Smile, Stethoscope, Target, Trophy, TrendingUp, UserCheck, Users, Video, Zap,
+  Smartphone, Sparkles, Smile, Stethoscope, Target, Trophy, TrendingUp, UserCheck, Users, Video, Zap, type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -1459,185 +1459,157 @@ const TT_CARDS = [
 
 
 /* ============================================================
-   TOOLS-FOR-PROGRESS Section — « Tous les outils pour réussir
-   votre préparation EVC ». 8 cartes en grille 4x2, fond rose dégradé,
-   sous-section plateforme. Pixel-perfect maquette IMG_2266.
+   TOOLS-FOR-PROGRESS Section — « Une plateforme intelligente qui
+   s'adapte à votre niveau et à votre progression ». Rangée de 7
+   fonctionnalités (cours en direct, replays, fiches, QCM, cas
+   cliniques, flashcards, suivi) + bloc rose « gagner du temps ».
+   Pixel-perfect maquette.
    ============================================================ */
 const TOOLS_RED       = '#C0112E';
 const TOOLS_RED_SOFT  = '#FCEAEC';
-const TOOLS_INK       = '#0F172A';
-const TOOLS_INK_SOFT  = '#475569';
-const TOOLS_BORDER    = '#E5E9F0';
+const TOOLS_NAVY      = '#0F1F4D';
+const TOOLS_ORANGE    = '#E8742C';
+const TOOLS_INK_SOFT  = '#52607A';
+const TOOLS_BORDER    = '#E9EDF3';
 const TOOLS_FONT      = "'Plus Jakarta Sans', sans-serif";
-/* Dégradé de fond rose chaud → blanc → rose (subtil, comme la maquette). */
-const TOOLS_BG = 'linear-gradient(180deg, #FFF6F7 0%, #FFF2F4 50%, #FFF6F7 100%)';
-/* Dégradé du titre principal — même palette que « Ils racontent leur expérience ». */
-const TOOLS_GRAD_TITLE = 'linear-gradient(90deg, #6B1A2A 0%, #C0112E 50%, #E8742C 100%)';
 
-type ToolItem = {
-  Icon: typeof Target;
-  title: string;
-  desc: string;
-  badge?: string;
-  /** Carte mise en avant : fond degrade rouge, titre + texte blancs. */
-  featured?: boolean;
-};
-
-function ToolMiniCard({ t }: { t: ToolItem }) {
-  if (t.featured) {
-    return (
-      <div className="flex h-full flex-col gap-2.5 rounded-2xl border p-5 text-white shadow-[0_14px_36px_-18px_rgba(192,17,46,0.45)] transition-shadow hover:shadow-[0_22px_50px_-22px_rgba(192,17,46,0.55)]"
-        style={{
-          background: 'linear-gradient(135deg, #C0112E 0%, #8B0E22 60%, #6B1A2A 100%)',
-          borderColor: 'rgba(255,255,255,0.18)',
-        }}>
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
-            <t.Icon className="h-5 w-5" />
-          </span>
-          <h3 className="text-[14.5px] font-extrabold leading-tight text-white">{t.title}</h3>
-        </div>
-        <p className="text-[12.5px] leading-relaxed text-white/85">{t.desc}</p>
-      </div>
-    );
-  }
-  return (
-    <div className="flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-5 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.18)] transition-shadow hover:shadow-[0_18px_40px_-22px_rgba(192,17,46,0.25)]"
-      style={{ borderColor: TOOLS_BORDER }}>
-      <div className="flex items-center gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-          style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
-          <t.Icon className="h-5 w-5" />
-        </span>
-        <h3 className="text-[14.5px] font-extrabold leading-tight" style={{ color: TOOLS_INK }}>
-          {t.title}
-        </h3>
-      </div>
-      <p className="text-[12.5px] leading-relaxed" style={{ color: TOOLS_INK_SOFT }}>
-        {t.desc}
-      </p>
-      {t.badge && (
-        <span className="mt-auto inline-flex items-center gap-1 self-start rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[10px] font-bold"
-          style={{ color: '#0F8A6A' }}>
-          <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
-          {t.badge}
-        </span>
-      )}
-    </div>
-  );
-}
-
-const TOOLS_GRID: ToolItem[] = [
-  { Icon: ShieldCheck,  title: 'Méthodologie EVC',
-    desc: "Méthode de réponse adaptée aux attentes réelles du jury EVC, calibrée sur les épreuves récentes." },
-  { Icon: BookOpen,     title: 'QCM & annales EVC',
-    desc: "Banque de QCM, annales et exercices corrigés pour un entraînement ciblé sur les EVC." },
-  { Icon: FolderOpen,   title: 'Cas cliniques corrigés',
-    desc: "Dossiers progressifs corrigés pour développer votre raisonnement clinique étape par étape." },
-  { Icon: ClipboardList,title: 'Interrogations & épreuves blanches',
-    desc: "Évaluez régulièrement votre niveau dans des conditions proches de l’examen avec correction." },
-  { Icon: Layers3,      title: 'Tous vos contenus au même endroit',
-    desc: "Cours, études, QCM, fiches : tout est centralisé sur la plateforme Major ECN.", featured: true },
-  { Icon: Play,         title: 'Cours & replays accessibles',
-    desc: "Retrouvez vos séances enregistrées et toutes vos ressources pédagogiques en ligne.",
-    badge: 'Disponible en ligne' },
-  { Icon: Users,        title: 'Échanges avec l’équipe pédagogique',
-    desc: "Bénéficiez d’un accompagnement dans la préparation et la résolution des questions techniques." },
-  { Icon: TrendingUp,   title: 'Suivi de progression',
-    desc: "Analyse automatique de vos performances pour ajuster vos révisions et votre préparation." },
+/* Les 7 fonctionnalités de la plateforme. `live` → badge LIVE rouge sur l'icône. */
+const PLATFORM_FEATURES: { Icon: LucideIcon; live?: boolean; title: string; sub: string }[] = [
+  { Icon: Video,       live: true, title: 'Cours en direct*', sub: 'Animés par des spécialistes' },
+  { Icon: Play,        title: 'Replays*',                     sub: 'Disponibles selon votre formule' },
+  { Icon: FileText,    title: 'Fiches de cours',              sub: 'Complètes et structurées' },
+  { Icon: ListChecks,  title: 'QCM corrigés & annales',       sub: 'Classés par item et spécialité' },
+  { Icon: Stethoscope, title: 'Cas cliniques corrigés',       sub: 'Corrigés étape par étape' },
+  { Icon: Layers3,     title: 'Flashcards',                   sub: 'Révision active' },
+  { Icon: TrendingUp,  title: 'Suivi intelligent',            sub: 'Personnalisé selon vos résultats' },
 ];
 
-const TOOLS_BULLETS = [
-  { Icon: Check,        t: "Tous vos sujets organises" },
-  { Icon: Settings,     t: "Outils methodes integres" },
-  { Icon: FolderOpen,   t: "Ressources organisees par specialite" },
+/* Les 3 bénéfices « gagner du temps » du bloc rose. */
+const TIME_BENEFITS: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: Folder,  title: 'Contenus classés',
+    desc: 'Par spécialité, item et thématique pour retrouver rapidement ce dont vous avez besoin.' },
+  { Icon: Layers3, title: 'Toutes vos ressources réunies',
+    desc: 'Cours, fiches, QCM, cas cliniques, annales, flashcards et outils pédagogiques centralisés.' },
+  { Icon: Clock,   title: 'Plus de temps pour réviser',
+    desc: 'Moins de temps à chercher vos ressources, plus de temps à progresser efficacement.' },
 ];
 
 export function ToolsForProgressSection() {
   return (
-    <section
-      className="relative py-8 sm:py-10"
-      style={{ fontFamily: TOOLS_FONT, background: TOOLS_BG }}
-    >
+    <section className="relative bg-white py-14 sm:py-16 lg:py-20" style={{ fontFamily: TOOLS_FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Titre + sous-titre */}
-        <Reveal className="text-center">
-          <h2 className="mx-auto max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-[2.6rem]"
-            style={{
-              backgroundImage: TOOLS_GRAD_TITLE,
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              color: 'transparent',
-            }}
-          >
-            Tous les outils pour réussir votre préparation EVC
+        {/* En-tête */}
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] shadow-sm"
+            style={{ borderColor: 'rgba(192,17,46,0.30)', color: TOOLS_RED }}>
+            <Brain className="h-3.5 w-3.5" /> Plateforme intelligente et adaptative
+          </span>
+          <h2 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-[2.7rem]"
+            style={{ color: TOOLS_NAVY }}>
+            Une plateforme intelligente qui s&rsquo;adapte<br className="hidden sm:block" />
+            à <span style={{ color: TOOLS_RED }}>votre niveau</span> et à{' '}
+            <span style={{ color: TOOLS_ORANGE }}>votre progression.</span>
           </h2>
-          <p className="mx-auto mt-4 flex items-center justify-center gap-2 text-[13.5px] font-semibold sm:text-[14.5px]"
-            style={{ color: TOOLS_INK_SOFT }}>
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full"
-              style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
-              <Check className="h-3 w-3" />
-            </span>
-            Une préparation complète pour les Épreuves de Vérification des Connaissances (EVC) dans le cadre de la PAE.
+          <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-[16px]" style={{ color: TOOLS_INK_SOFT }}>
+            Major ECN <strong style={{ color: TOOLS_RED }}>analyse automatiquement</strong> vos résultats pour
+            personnaliser vos révisions, identifier vos priorités et vous proposer un{' '}
+            <strong style={{ color: TOOLS_RED }}>parcours de préparation adapté</strong> jusqu&rsquo;aux Épreuves de
+            Vérification des Connaissances (EVC).
           </p>
         </Reveal>
 
-        {/* Grille 8 cartes (4×2) */}
-        <div className="mt-10 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-          {TOOLS_GRID.map((t) => (
-            <Reveal key={t.title}>
-              <ToolMiniCard t={t} />
-            </Reveal>
-          ))}
-        </div>
-
-        {/* Sous-section "Une plateforme pensée pour vous faire gagner du temps" */}
-        <div className="mt-6">
-          <div className="overflow-hidden rounded-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              {/* Gauche : titre + bullets */}
-              <div className="flex flex-col justify-center p-5 sm:p-6">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: TOOLS_RED, color: '#fff' }}>
-                    <Zap className="h-5 w-5" />
+        {/* Carte des 7 fonctionnalités */}
+        <Reveal delay={0.05}>
+          <div className="mt-10 rounded-[28px] border bg-white p-6 shadow-[0_30px_80px_-40px_rgba(15,31,77,0.25)] sm:p-8"
+            style={{ borderColor: TOOLS_BORDER }}>
+            <div className="grid grid-cols-2 gap-y-8 sm:grid-cols-4 lg:grid-cols-7 lg:gap-y-0">
+              {PLATFORM_FEATURES.map((f, i) => (
+                <div
+                  key={f.title}
+                  className={'flex flex-col items-center px-2 text-center lg:px-4' + (i > 0 ? ' lg:border-l lg:border-[#F1DEE1]' : '')}
+                >
+                  <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl"
+                    style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
+                    <f.Icon className="h-6 w-6" />
+                    {f.live && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-md px-1.5 py-[1.5px] text-[8px] font-black uppercase leading-none tracking-wide text-white shadow-sm"
+                        style={{ background: TOOLS_RED }}>
+                        LIVE
+                      </span>
+                    )}
                   </span>
-                  <h3 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-[1.75rem]"
-                    style={{ color: TOOLS_INK }}>
-                    Une plateforme pensée pour<br />
-                    vous faire <span style={{ color: TOOLS_RED }}>gagner du temps</span>
+                  <p className="mt-3.5 text-[14px] font-extrabold leading-tight" style={{ color: TOOLS_NAVY }}>{f.title}</p>
+                  <p className="mt-1.5 text-[12px] leading-snug" style={{ color: TOOLS_INK_SOFT }}>{f.sub}</p>
+                  <span className="mt-3 block h-[3px] w-7 rounded-full" style={{ background: TOOLS_RED }} />
+                </div>
+              ))}
+            </div>
+            <p className="mt-7 text-center text-[12px] leading-relaxed" style={{ color: '#8A93A3' }}>
+              * Les cours en direct interactifs et l&rsquo;accès aux replays dépendent de la formule de préparation choisie.
+            </p>
+          </div>
+        </Reveal>
+
+        {/* Bloc rose — « gagner du temps » */}
+        <Reveal delay={0.1}>
+          <div className="mt-6 overflow-hidden rounded-[28px] border"
+            style={{ background: 'linear-gradient(135deg,#FDECEE 0%,#FCE3E6 100%)', borderColor: '#F7D2D7' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
+              {/* Gauche : texte + bénéfices */}
+              <div className="flex flex-col p-6 sm:p-9 lg:p-10">
+                <div className="flex items-center gap-3.5">
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-[0_16px_36px_-14px_rgba(192,17,46,0.6)]"
+                    style={{ background: `linear-gradient(135deg, ${TOOLS_RED} 0%, #8B0E22 100%)` }}>
+                    <Zap className="h-7 w-7 fill-current" />
+                  </span>
+                  <h3 className="text-2xl font-black leading-[1.08] tracking-tight sm:text-[1.95rem]" style={{ color: TOOLS_NAVY }}>
+                    Tout est organisé pour<br />
+                    vous faire <span style={{ color: TOOLS_RED }}>gagner du temps.</span>
                   </h3>
                 </div>
-                <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {TOOLS_BULLETS.map((b) => (
-                    <li key={b.t} className="flex items-center gap-2.5 text-[13.5px]" style={{ color: TOOLS_INK }}>
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: TOOLS_RED_SOFT, color: TOOLS_RED }}>
-                        <Check className="h-3.5 w-3.5" />
+                <p className="mt-5 text-[15px] leading-relaxed" style={{ color: TOOLS_INK_SOFT }}>
+                  Une seule plateforme. Une seule connexion.<br />
+                  Toute votre <strong style={{ color: TOOLS_RED }}>préparation EVC</strong> au même endroit.
+                </p>
+
+                <ul className="mt-6 flex flex-col gap-5">
+                  {TIME_BENEFITS.map((b) => (
+                    <li key={b.title} className="flex items-start gap-3.5">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+                        style={{ background: '#FFFFFF', color: TOOLS_RED, boxShadow: '0 0 0 1px #F7D2D7 inset' }}>
+                        <b.Icon className="h-5 w-5" />
                       </span>
-                      <span className="font-semibold">{b.t}</span>
+                      <div>
+                        <p className="text-[15px] font-extrabold" style={{ color: TOOLS_NAVY }}>{b.title}</p>
+                        <p className="mt-0.5 text-[13px] leading-relaxed" style={{ color: TOOLS_INK_SOFT }}>{b.desc}</p>
+                      </div>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-5 rounded-full inline-flex items-center gap-1.5 border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em]"
-                  style={{ borderColor: TOOLS_BORDER, color: TOOLS_INK_SOFT }}>
-                  Préparation EVC · PAE · PADHUE · Médecins diplômés hors Union Européenne
+
+                <p className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-extrabold uppercase tracking-[0.12em]"
+                  style={{ color: TOOLS_NAVY }}>
+                  <span style={{ color: TOOLS_RED }}>★</span>
+                  <span>Préparation EVC</span><span style={{ color: TOOLS_RED }}>•</span>
+                  <span>PAE</span><span style={{ color: TOOLS_RED }}>•</span>
+                  <span>PADHUE</span><span style={{ color: TOOLS_RED }}>•</span>
+                  <span>Médecines diplômées hors UE</span><span style={{ color: TOOLS_RED }}>•</span>
+                  <span>45+ spécialités</span>
                 </p>
               </div>
 
-              {/* Droite : aperçu plateforme — hauteur contrainte */}
-              <div className="relative bg-gradient-to-br from-[#F0F4FA] via-[#FCEAEC] to-[#FFF6F7] flex items-end justify-center overflow-hidden" style={{ maxHeight: '260px' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* Droite : laptop + smartphone (image conservée) */}
+              <div className="relative flex items-center justify-center p-6 sm:p-8 lg:p-0">
                 <img
                   src="/plateforme/laptop-phone-dashboard.png"
-                  alt="Aperçu de la plateforme Major ECN sur ordinateur portable et smartphone"
-                  className="relative z-10 w-full max-w-[480px] select-none drop-shadow-xl mt-4"
+                  alt="Plateforme Major ECN sur ordinateur portable et smartphone"
+                  className="w-full max-w-[560px] select-none object-contain drop-shadow-2xl"
                   decoding="async"
                 />
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

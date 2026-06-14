@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
-  FileText, GraduationCap, Heart, Layers3, LineChart, MessageCircle, Play, Shield, ShieldCheck,
-  Smartphone, Sparkles, Star, Stethoscope, Target, TrendingUp, Trophy, Users, Video, Zap,
+  FileText, GraduationCap, Headphones, Heart, Layers3, LineChart, Lock, MessageCircle, Play,
+  Radio, RotateCcw, Shield, ShieldCheck, Smartphone, Sparkles, Star, Stethoscope, Target,
+  TrendingUp, Trophy, Users, Video, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
@@ -165,121 +166,158 @@ export function TarifsPageContent() {
       <section className="relative pb-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-5 md:grid-cols-3 items-stretch">
-            {/* Essentielle — Spotlight + lift hover (texte original) */}
+            {/* Essentielle */}
             <SpotlightCard spotlightColor={`${GREEN}22`} className="rounded-2xl border bg-white shadow-[0_8px_24px_-12px_rgba(46,125,50,0.20)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_36px_-12px_rgba(46,125,50,0.30)]" style={{ borderColor: BORDER }}>
-              <div className="flex h-full flex-col p-5">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: GREEN_SOFT, color: GREEN }}>
-                    <BookOpen className="h-4 w-4" />
+              <div className="flex h-full flex-col p-6">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: GREEN_SOFT, color: GREEN }}>
+                    <BookOpen className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: GREEN }}>FORMULE</p>
-                    <p className="text-[16px] font-black leading-none" style={{ color: GREEN }}>ESSENTIELLE</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: GREEN }}>FORMULE</p>
+                    <p className="text-[19px] font-black leading-none" style={{ color: GREEN }}>ESSENTIELLE</p>
                   </div>
                 </div>
-                <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
-                <p className="mt-3 text-[36px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
-                <ul className="mt-4 flex-1 space-y-1.5">
-                  {["Plateforme EVC accès illimité", "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression', '1 séance vidéo de méthodologie EVC'].map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: GREEN }} /> {f}
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
+                <p className="mt-3 text-[40px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
+                <ul className="mt-5 space-y-2.5">
+                  {['Plateforme EVC accès illimité', "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression'].map(f => (
+                    <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
+                      <CheckCircle2 className="mt-px h-[18px] w-[18px] shrink-0" style={{ color: GREEN }} /> {f}
                     </li>
                   ))}
                 </ul>
-                <Link href="/formules/essentielle" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white transition-transform hover:scale-[1.02]" style={{ background: GREEN }}>
-                  Commencer avec Essentielle <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-4 flex items-center gap-2.5 rounded-xl px-3.5 py-3" style={{ background: GREEN_SOFT }}>
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white" style={{ background: GREEN }}>
+                    <Play className="h-3.5 w-3.5" fill="currentColor" />
+                  </span>
+                  <p className="text-[13px] font-semibold" style={{ color: '#1B5E20' }}>1 séance vidéo de méthodologie EVC</p>
+                </div>
+                <Link href="/formules/essentielle" className="mt-auto flex items-center justify-center gap-2 rounded-xl py-3.5 text-[14px] font-bold text-white transition-transform hover:scale-[1.02]" style={{ background: GREEN }}>
+                  Commencer avec Essentielle <ArrowRight className="h-4 w-4" />
                 </Link>
-                <p className="mt-1.5 text-center text-[11px]" style={{ color: INK_SOFT }}>Espace découverte gratuit &#183; Sans engagement</p>
+                <p className="mt-2 text-center text-[12px]" style={{ color: INK_SOFT }}>Espace découverte gratuit &#183; Sans engagement</p>
               </div>
             </SpotlightCard>
 
-            {/* Intensive — texte original, pas plus mis en avant que les autres */}
+            {/* Intensive */}
             <SpotlightCard spotlightColor={`${RED}22`} className="rounded-2xl border bg-white shadow-[0_8px_24px_-12px_rgba(192,17,46,0.20)] transition-all hover:-translate-y-1 hover:shadow-[0_16px_36px_-12px_rgba(192,17,46,0.30)]" style={{ borderColor: BORDER }}>
-              <div className="flex h-full flex-col p-5">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: RED_SOFT, color: RED }}>
-                    <Target className="h-4 w-4" />
+              <div className="flex h-full flex-col p-6">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
+                    <Target className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: RED }}>FORMULE</p>
-                    <p className="text-[16px] font-black leading-none" style={{ color: RED }}>INTENSIVE</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: RED }}>FORMULE</p>
+                    <p className="text-[19px] font-black leading-none" style={{ color: RED }}>INTENSIVE</p>
                   </div>
                 </div>
-                <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Révisions ciblées EVC</p>
-                <p className="mt-1 text-[13px] font-semibold" style={{ color: INK }}>Deux parcours au choix :</p>
-                <div className="mt-1.5 flex gap-2">
-                  <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE INTERNE &#8594;</span>
-                  <span className="rounded-full border px-2.5 py-0.5 text-[11px] font-bold" style={{ borderColor: RED, color: RED }}>VOIE EXTERNE &#8594;</span>
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Révisions ciblées EVC</p>
+                <p className="mt-3 text-[13px] font-semibold" style={{ color: INK }}>Deux parcours au choix :</p>
+                <div className="mt-2 flex gap-2.5">
+                  <Link href="/formules/intensive" className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-[11.5px] font-bold transition-colors hover:bg-[#FDE8EC]" style={{ borderColor: RED, color: RED }}>VOIE INTERNE <ArrowRight className="h-3 w-3" /></Link>
+                  <Link href="/formules/intensive" className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-[11.5px] font-bold transition-colors hover:bg-[#FDE8EC]" style={{ borderColor: RED, color: RED }}>VOIE EXTERNE <ArrowRight className="h-3 w-3" /></Link>
                 </div>
-                <p className="mt-3 text-[36px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
-                <ul className="mt-4 flex-1 space-y-1.5">
+                <p className="mt-3 text-[40px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
+                <ul className="mt-5 space-y-2.5">
                   {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées'].map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: RED }} /> {f}
+                    <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
+                      <CheckCircle2 className="mt-px h-[18px] w-[18px] shrink-0" style={{ color: RED }} /> {f}
                     </li>
                   ))}
                 </ul>
-                <Link href="/formules/intensive" className="mt-5 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white transition-transform hover:scale-[1.02]" style={{ background: RED }}>
-                  Choisir Intensive <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-4 space-y-2.5">
+                  <div className="flex items-start gap-2.5 rounded-xl px-3.5 py-3" style={{ background: RED_SOFT }}>
+                    <Radio className="mt-0.5 h-[18px] w-[18px] shrink-0" style={{ color: RED }} />
+                    <div>
+                      <p className="text-[13px] font-extrabold" style={{ color: RED }}>Séances de révision en direct &amp; replays disponibles</p>
+                      <p className="mt-0.5 text-[12px] leading-snug" style={{ color: INK_SOFT }}>Accédez aux séances en direct et aux replays disponibles.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5 rounded-xl px-3.5 py-3" style={{ background: RED_SOFT }}>
+                    <Play className="mt-0.5 h-[18px] w-[18px] shrink-0" style={{ color: RED }} />
+                    <div>
+                      <p className="text-[13px] font-extrabold" style={{ color: RED }}>Corrections commentées en replay</p>
+                      <p className="mt-0.5 text-[12px] leading-snug" style={{ color: INK_SOFT }}>Disponible en direct ou en replay selon le calendrier.</p>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/formules/intensive" className="mt-auto flex items-center justify-center gap-2 rounded-xl py-3.5 text-[14px] font-bold text-white transition-transform hover:scale-[1.02]" style={{ background: RED }}>
+                  Choisir Intensive <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </SpotlightCard>
 
-            {/* Programme Approfondi — texte original */}
+            {/* Programme Approfondi */}
             <SpotlightCard spotlightColor={`${PURPLE}20`} className="rounded-2xl border-2 bg-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-[0_16px_36px_-12px_rgba(124,58,237,0.30)]" style={{ borderColor: PURPLE }}>
-              <div className="flex h-full flex-col p-5">
-                <span className="self-start inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase text-white" style={{ background: '#F59E0B' }}>
+              <div className="flex h-full flex-col p-6">
+                <span className="self-start inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase text-white" style={{ background: 'linear-gradient(90deg, #F59E0B 0%, #F97316 100%)' }}>
                   <Star className="h-3 w-3" fill="currentColor" /> REMISE À NIVEAU APPROFONDIE
                 </span>
-                <div className="mt-2.5 flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: PURPLE_SOFT, color: PURPLE }}>
-                    <GraduationCap className="h-4 w-4" />
+                <div className="mt-3 flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: PURPLE_SOFT, color: PURPLE }}>
+                    <GraduationCap className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: PURPLE }}>PROGRAMME</p>
-                    <p className="text-[16px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: PURPLE }}>PROGRAMME</p>
+                    <p className="text-[19px] font-black leading-none" style={{ color: PURPLE }}>APPROFONDI</p>
                   </div>
                 </div>
-                <p className="mt-2 text-[13px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
-                <p className="mt-3 text-[12px]" style={{ color: INK_SOFT }}>A partir de</p>
-                <p className="text-[36px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
-                <ul className="mt-4 flex-1 space-y-1.5">
-                  {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise a niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches', 'Séances de révision dédiées', 'Accompagnement pédagogique personnalisé'].map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[13px]" style={{ color: INK }}>
-                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: PURPLE }} /> {f}
+                <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
+                <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>À partir de</p>
+                <p className="mt-0.5 text-[40px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
+                <ul className="mt-5 space-y-2.5">
+                  {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches'].map(f => (
+                    <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
+                      <CheckCircle2 className="mt-px h-[18px] w-[18px] shrink-0" style={{ color: PURPLE }} /> {f}
                     </li>
                   ))}
                 </ul>
-                <Link href="/formules/programme-approfondi" className="mt-5 flex items-center justify-center gap-2 rounded-xl border-2 py-2.5 text-[13px] font-bold transition-transform hover:scale-[1.02]" style={{ borderColor: PURPLE, color: PURPLE }}>
-                  Découvrir le programme <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-4 space-y-2.5">
+                  <div className="flex items-start gap-2.5 rounded-xl px-3.5 py-3" style={{ background: PURPLE_SOFT }}>
+                    <Radio className="mt-0.5 h-[18px] w-[18px] shrink-0" style={{ color: PURPLE }} />
+                    <div>
+                      <p className="text-[13px] font-extrabold" style={{ color: PURPLE }}>Cours en direct &amp; replays disponibles</p>
+                      <p className="mt-0.5 text-[12px] leading-snug" style={{ color: INK_SOFT }}>Assistez aux cours en direct et retrouvez-les en replay.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5 rounded-xl px-3.5 py-3" style={{ background: PURPLE_SOFT }}>
+                    <RotateCcw className="mt-0.5 h-[18px] w-[18px] shrink-0" style={{ color: PURPLE }} />
+                    <div>
+                      <p className="text-[13px] font-extrabold" style={{ color: PURPLE }}>Accès à tous les replays</p>
+                      <p className="mt-0.5 text-[12px] leading-snug" style={{ color: INK_SOFT }}>Retrouvez toutes les séances disponibles en replay.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5 rounded-xl px-3.5 py-3" style={{ background: PURPLE_SOFT }}>
+                    <MessageCircle className="mt-0.5 h-[18px] w-[18px] shrink-0" style={{ color: PURPLE }} />
+                    <div>
+                      <p className="text-[13px] font-extrabold" style={{ color: PURPLE }}>Échanges avec les enseignants</p>
+                      <p className="mt-0.5 text-[12px] leading-snug" style={{ color: INK_SOFT }}>Posez vos questions en direct ou via les replays et le forum.</p>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/formules/programme-approfondi" className="mt-auto flex items-center justify-center gap-2 rounded-xl border-2 py-3.5 text-[14px] font-bold transition-transform hover:scale-[1.02]" style={{ borderColor: PURPLE, color: PURPLE }}>
+                  Découvrir le programme <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </SpotlightCard>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ TRUST BADGES ═══ */}
-      <section className="bg-[#F8F9FC] py-6">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-5 text-center">
-            {[
-              { Icon: Zap, t: 'Accès immédiat', sub: 'après inscription' },
-              { Icon: Shield, t: 'Sans carte', sub: 'bancaire' },
-              { Icon: Check, t: 'Sans', sub: 'engagement' },
-              { Icon: Clock, t: 'Annulation', sub: 'instantanée' },
-              { Icon: ShieldCheck, t: 'Paiement', sub: 'sécurisé' },
-            ].map(b => (
-              <div key={b.t} className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: RED_SOFT, color: RED }}>
-                  <b.Icon className="h-3.5 w-3.5" />
-                </span>
-                <div className="text-left">
-                  <p className="text-[12px] font-bold" style={{ color: NAVY }}>{b.t}</p>
-                  <p className="text-[10px]" style={{ color: INK_SOFT }}>{b.sub}</p>
+          {/* Bandeau réassurance — PH/CCA · méthodologie · paiement · support */}
+          <div className="mt-6 rounded-2xl border bg-[#F8F9FC] px-4 py-5 sm:px-6" style={{ borderColor: BORDER }}>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { Icon: Users, t: 'Cours animés par des praticiens hospitaliers (PH), des chefs de clinique–assistants (CCA) et des médecins spécialistes.' },
+                { Icon: ShieldCheck, t: 'Méthodologie éprouvée depuis 15 ans' },
+                { Icon: Lock, t: 'Paiement sécurisé en plusieurs fois' },
+                { Icon: Headphones, t: 'Support réactif à votre écoute' },
+              ].map((b, i) => (
+                <div key={i} className={'flex items-start gap-3 lg:px-5' + (i > 0 ? ' lg:border-l lg:border-[#E5E9F0]' : '')}>
+                  <b.Icon className="mt-0.5 h-6 w-6 shrink-0" style={{ color: PURPLE }} />
+                  <p className="text-[12.5px] font-semibold leading-snug" style={{ color: NAVY }}>{b.t}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -72,14 +72,75 @@ export async function AnnouncementsWidget() {
     .order('order_index', { ascending: true });
 
   const items = ((data ?? []) as unknown as Announcement[]) ?? [];
-  if (items.length === 0) return null;
 
   return (
     <aside className="space-y-3" aria-label="Annonces et informations EVC">
+      {/* Annonce officielle EVC Médecine Générale — Session 2026 (toujours affichée). */}
+      <MgEvc2026Card />
       {items.map((it) => (
         <AnnouncementCard key={it.id} a={it} />
       ))}
     </aside>
+  );
+}
+
+/* ------------ Carte statique : EVC Médecine Générale — Session 2026 ------------
+ * Annonce officielle ajoutée en dur (hors système d'annonces DB) pour garantir
+ * son affichage : période d'inscription + nombre de postes par voie d'accès. */
+function MgEvc2026Card() {
+  return (
+    <article className="rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+      <header className="flex items-start gap-3.5">
+        <span
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+          style={{ background: '#FCEAEC', color: '#A91D2C' }}
+        >
+          <CalendarCheck className="h-5 w-5" strokeWidth={2.2} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-[17px] font-black leading-tight tracking-tight text-(--color-ink)">
+            Médecine Générale
+          </h3>
+          <p className="mt-0.5 text-[17px] font-black leading-tight tracking-tight text-(--color-primary)">
+            EVC — Session 2026
+          </p>
+        </div>
+      </header>
+
+      <span
+        aria-hidden
+        className="mt-3 block h-[3px] w-12 rounded-full"
+        style={{ background: 'var(--color-primary)' }}
+      />
+
+      {/* Période d'inscription */}
+      <div className="mt-4">
+        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
+          Période d&rsquo;inscription
+        </p>
+        <p className="mt-1 text-[14.5px] leading-relaxed text-(--color-ink-soft)">
+          Du <strong className="text-(--color-ink)">mercredi 17 juin 2026 à 14&nbsp;h</strong> (heure de Paris)
+          au <strong className="text-(--color-ink)">jeudi 16 juillet 2026 inclus, à 17&nbsp;h</strong>.
+        </p>
+      </div>
+
+      {/* Nombre de postes */}
+      <div className="mt-4 border-t border-(--color-border) pt-4">
+        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
+          Nombre de postes
+        </p>
+        <div className="mt-2 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-(--color-border) px-3 py-2.5">
+            <p className="text-[11px] font-semibold text-(--color-ink-soft)">Voie externe</p>
+            <p className="text-2xl font-black tabular-nums text-(--color-primary)">35</p>
+          </div>
+          <div className="rounded-2xl border border-(--color-border) px-3 py-2.5">
+            <p className="text-[11px] font-semibold text-(--color-ink-soft)">Voie interne</p>
+            <p className="text-2xl font-black tabular-nums text-(--color-primary)">89</p>
+          </div>
+        </div>
+      </div>
+    </article>
   );
 }
 

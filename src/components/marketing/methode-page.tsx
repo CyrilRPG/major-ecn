@@ -7,10 +7,11 @@
  * outils 8 cartes, témoignages, pour qui.
  */
 import {
-  AlertCircle, ArrowRight, Award, Bell, BookOpen, Brain, CalendarCheck, CalendarDays,
-  Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, Compass, FileText, FolderOpen,
-  GraduationCap, Heart, Home, Lightbulb, ListChecks, MessageCircle, Quote, Settings, Shield,
-  ShieldCheck, Sparkles, Target, TrendingUp, Trophy, UserCheck, Users, Zap,
+  AlertCircle, ArrowRight, Award, Bell, BookOpen, Brain, CalendarDays,
+  Check, CheckCircle2, ClipboardCheck, ClipboardList, Clock, FileText, FolderOpen,
+  GraduationCap, Heart, Home, Lightbulb, ListChecks, MessageCircle, PieChart, Play, Quote,
+  Radio, Settings, Shield, ShieldCheck, Sparkles, Target, TrendingUp, Trophy, UserCheck,
+  Users, Video, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
 
@@ -471,34 +472,96 @@ function MethodologyAndSkillsSection() {
 /* ============ 6. OUTILS CONCRETS ============ */
 function ToolsSection() {
   const tools = [
-    { Icon: ListChecks,    bg: '#FCEAEC', fg: RED,        t: 'QCM corrigés', s: 'et justifiés' },
-    { Icon: ClipboardList, bg: '#FFEDD5', fg: '#EA580C', t: 'Cas cliniques', s: 'corrigés' },
-    { Icon: BookOpen,      bg: '#FEF3C7', fg: '#A16207', t: 'Flashcards',    s: 'de révision' },
-    { Icon: Trophy,        bg: '#EDE9FE', fg: '#6D28D9', t: 'Concours',      s: 'blancs' },
-    { Icon: TrendingUp,    bg: '#DBEAFE', fg: '#2563EB', t: 'Statistiques de', s: 'progression' },
-    { Icon: Compass,       bg: '#CCFBF1', fg: '#0F766E', t: 'Révision',      s: 'transversale' },
-    { Icon: CalendarCheck, bg: '#FFE4E6', fg: '#BE123C', t: 'Planification', s: 'des révisions' },
-    { Icon: Bell,          bg: '#FCE7F3', fg: '#DB2777', t: 'Actualités',    s: 'CNG' },
+    { Icon: ListChecks,    bg: '#FCEAEC', fg: RED,        t: 'QCM corrigés',    s: 'et justifiés' },
+    { Icon: ClipboardList, bg: '#FFEDD5', fg: '#EA580C',  t: 'Cas cliniques',   s: 'corrigés' },
+    { Icon: BookOpen,      bg: '#FEF3C7', fg: '#D97706',  t: 'Flashcards',      s: 'de révision' },
+    { Icon: Trophy,        bg: '#EDE9FE', fg: '#7C3AED',  t: 'Concours',        s: 'blancs' },
+    { Icon: TrendingUp,    bg: '#DBEAFE', fg: '#2563EB',  t: 'Statistiques de', s: 'progression' },
+    { Icon: PieChart,      bg: '#CCFBF1', fg: '#0D9488',  t: 'Révision',        s: 'transversale' },
+    { Icon: CalendarDays,  bg: '#FFE4E6', fg: '#E11D48',  t: 'Planification',   s: 'des révisions' },
+    { Icon: Bell,          bg: '#FCE7F3', fg: '#DB2777',  t: 'Actualités',      s: 'EVC & CNG' },
+  ];
+  const live = [
+    { Icon: Radio,        t: 'En direct',                        d: 'Posez vos questions en temps réel et interagissez avec nos intervenants.' },
+    { Icon: Users,        t: 'PH, CCA &\nmédecins spécialistes', d: 'Cours animés par des PH, CCA et médecins spécialistes de leur discipline.' },
+    { Icon: Play,         t: 'Replays disponibles*',             d: 'Revoyez les cours quand vous voulez et révisez à votre rythme.' },
+    { Icon: CalendarDays, t: 'Selon votre formule',              d: 'Accès aux cours en direct et aux replays selon la formule choisie.' },
   ];
   return (
     <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border p-6 sm:p-8" style={{ borderColor: BORDER, background: SOFT_BG }}>
+        <div className="rounded-[28px] border bg-white p-5 shadow-[0_30px_80px_-50px_rgba(15,31,77,0.20)] sm:p-7 lg:p-8" style={{ borderColor: '#EDEFF3' }}>
           <h2 className="text-2xl font-black tracking-tight sm:text-[1.65rem]" style={gradientText(GRAD_RED_PURPLE)}>
             5. Une méthode qui s&rsquo;appuie sur des outils concrets
           </h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
+
+          {/* 8 tuiles outils */}
+          <div className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-4 lg:grid-cols-8">
             {tools.map((t) => (
-              <div key={t.t} className="rounded-2xl bg-white p-4 text-center" style={{ border: `1px solid ${BORDER}` }}>
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: t.bg, color: t.fg }}>
-                  <t.Icon className="h-5 w-5" />
+              <div key={t.t} className="flex flex-col items-center rounded-2xl border bg-white px-3 py-5 text-center shadow-[0_8px_24px_-20px_rgba(15,31,77,0.25)]" style={{ borderColor: '#EEF0F4' }}>
+                <span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: t.bg, color: t.fg }}>
+                  <t.Icon className="h-6 w-6" />
                 </span>
-                <p className="mt-2 text-[12.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{t.t}</p>
+                <p className="mt-3 text-[12.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{t.t}</p>
                 <p className="text-[12.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{t.s}</p>
               </div>
             ))}
           </div>
+
+          {/* Bloc rose — Cours en direct & replays */}
+          <div className="mt-6 rounded-3xl border p-6 sm:p-7 lg:p-8" style={{ background: '#FFF1F2', borderColor: '#F8D4D9' }}>
+            <div className="grid grid-cols-1 gap-7 lg:grid-cols-[0.95fr_1.5fr] lg:gap-8">
+              {/* Gauche — intro */}
+              <div className="flex gap-4">
+                <div className="flex shrink-0 flex-col items-start gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-white" style={{ background: RED }}>
+                    <span className="h-1.5 w-1.5 rounded-full bg-white" /> LIVE
+                  </span>
+                  <span className="flex h-[72px] w-[72px] items-center justify-center rounded-2xl" style={{ background: '#FCE0E4', color: RED }}>
+                    <Video className="h-9 w-9" />
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-xl font-black leading-tight sm:text-[1.4rem]" style={{ color: RED }}>
+                    Cours en direct &amp; replays*
+                  </h3>
+                  <p className="mt-1.5 text-[14.5px] font-extrabold" style={{ color: NAVY }}>
+                    Animés par des PH, CCA et médecins spécialistes
+                  </p>
+                  <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+                    Participez à des cours en direct pour approfondir les sujets clés des EVC,
+                    poser vos questions en temps réel et échanger avec des PH, CCA et médecins spécialistes.
+                  </p>
+                  <p className="mt-2.5 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+                    Les replays sont disponibles selon la formule choisie.
+                  </p>
+                </div>
+              </div>
+
+              {/* Droite — 4 mini-colonnes */}
+              <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:grid-cols-4 lg:gap-x-0 lg:border-l lg:pl-8" style={{ borderColor: '#F3CDD2' }}>
+                {live.map((f, i) => (
+                  <div
+                    key={f.t}
+                    className={'flex flex-col items-center px-1 text-center lg:px-4' + (i > 0 ? ' lg:border-l lg:border-[#F3CDD2]' : '')}
+                  >
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#FCE0E4', color: RED }}>
+                      <f.Icon className="h-5 w-5" />
+                    </span>
+                    <p className="mt-2.5 whitespace-pre-line text-[13px] font-extrabold leading-tight" style={{ color: NAVY }}>{f.t}</p>
+                    <span className="mt-2 block h-[2px] w-6 rounded-full" style={{ background: RED }} />
+                    <p className="mt-2 text-[12px] leading-snug" style={{ color: INK_SOFT }}>{f.d}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Note de bas de section */}
+        <p className="mt-3 px-1 text-[12px] leading-relaxed" style={{ color: INK_MUTED }}>
+          * Les cours en direct et les replays sont proposés selon la formule choisie.
+        </p>
       </div>
     </section>
   );
