@@ -18,6 +18,7 @@ import { NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { provisionStudentAccount } from '@/lib/stripe/provisioning';
+import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import type { FormuleId } from '@/lib/stripe';
 
 export const dynamic = 'force-dynamic';
@@ -84,28 +85,27 @@ export async function POST(req: Request) {
     }
     case 'customer.subscription.created':
     case 'customer.subscription.updated': {
-      // Safety net : si checkout.session.completed n'a pas appliqué cancel_at
-      // (race, retry, etc.), on le ré-applique ici à partir de la metadata
-      // attachée à la subscription elle-même.
+      // Filet de sécurité : si checkout.session.completed n'a pas borné le plan
+      // (race, retry, etc.), on le borne ici à partir de la metadata attachée à
+      // la subscription elle-même (paiement en plusieurs fois → schedule).
       const sub = event.data.object as Stripe.Subscription;
       const meta = sub.metadata ?? {};
-      const cancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;
+      const installments = Number(meta.installments ?? '1') || 1;
+      const fallbackCancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;
       console.log('[stripe/webhook] subscription event', {
         type: event.type,
         subId: sub.id,
+        installments,
         currentCancelAt: sub.cancel_at,
-        metaCancelAt: cancelAt,
+        currentSchedule: sub.schedule,
       });
-      if (cancelAt && (!sub.cancel_at || sub.cancel_at !== cancelAt)) {
-        try {
-          await stripe.subscriptions.update(sub.id, { cancel_at: cancelAt });
-          console.log('[stripe/webhook] subscription cancel_at re-applied', {
-            subId: sub.id,
-            cancelAt,
-          });
-        } catch (e) {
-          console.error('[stripe/webhook] cancel_at re-apply failed', e);
-        }
+      if (installments > 1) {
+        const r = await ensureInstallmentPlanEnds({
+          subscriptionId: sub.id,
+          installments,
+          fallbackCancelAt,
+        });
+        console.log('[stripe/webhook] installment plan bounded', r);
       }
       break;
     }
@@ -141,31 +141,18 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     throw new Error('metadata.formule manquant — provisioning impossible.');
   }
 
-  // Pour les paiements en plusieurs fois (mode subscription) : applique le
-  // cancel_at sur la subscription créée par Checkout pour garantir N
-  // facturations exactement. Fallback : si cancel_at absent, on dérive
-  // depuis installments (sécurité si la metadata cancel_at est perdue).
-  if (session.mode === 'subscription' && session.subscription) {
-    try {
-      const stripe = getStripe();
-      const subId = typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
-      // Récupère l'état courant de la subscription pour vérifier cancel_at
-      const sub = await stripe.subscriptions.retrieve(subId);
-      const effectiveCancelAt =
-        cancelAt ??
-        (installments > 1
-          ? Math.floor(Date.now() / 1000) + (installments - 1) * 30 * 86400 + 2 * 86400
-          : null);
-
-      if (effectiveCancelAt && (!sub.cancel_at || sub.cancel_at !== effectiveCancelAt)) {
-        await stripe.subscriptions.update(subId, { cancel_at: effectiveCancelAt });
-        console.log('[webhook] subscription cancel_at applied', { subId, cancelAt: effectiveCancelAt });
-      } else {
-        console.log('[webhook] cancel_at already correct or N/A', { subId, currentCancelAt: sub.cancel_at });
-      }
-    } catch (e) {
-      console.error('[webhook] cancel_at update failed', e);
-    }
+  // Pour les paiements en plusieurs fois (mode subscription) : on borne le plan
+  // à exactement N prélèvements via un SubscriptionSchedule (end_behavior cancel),
+  // pour garantir qu'il s'arrête tout seul et ne se renouvelle pas à l'infini.
+  if (session.mode === 'subscription' && session.subscription && installments > 1) {
+    const subId =
+      typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
+    const r = await ensureInstallmentPlanEnds({
+      subscriptionId: subId,
+      installments,
+      fallbackCancelAt: cancelAt,
+    });
+    console.log('[webhook] installment plan bounded', r);
   }
 
   const result = await provisionStudentAccount({
