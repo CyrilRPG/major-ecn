@@ -50,18 +50,12 @@ export function CheckoutButton({
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
-  // 2 consentements obligatoires :
-  // - acceptTerms : acceptation groupée des CGU + CGS + Conditions Particulières
-  //   (les 3 documents sont liés ; cliquer ouvre la page dédiée, conforme à
-  //   l'exigence d'« information lisible et compréhensible » art. L. 111-1 CC).
-  // - immediateAccess : demande d'accès immédiat à la plateforme. Vaut
-  //   « consentement exprès pour que l'exécution commence avant l'expiration du
-  //   délai de rétractation » + « reconnaissance que le droit de rétractation
-  //   est perdu » (art. L. 221-28, 1° CC), sans agiter le texte juridique brut.
-  //   Le détail légal complet figure dans les CGS et les Conditions
-  //   Particulières, liées dans la case ci-dessus.
+  // Case unique : acceptation groupée des CGU + CGS + Conditions Particulières.
+  // Les 3 documents intègrent en clair le consentement à l'exécution immédiate
+  // et la renonciation au délai de rétractation (art. L. 221-28, 1° CC) — voir
+  // notamment CGS §10.1 et Conditions Particulières §Observations. Cocher la
+  // case vaut donc acceptation simultanée de ces stipulations contractuelles.
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [immediateAccess, setImmediateAccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showInfoPopup, setShowInfoPopup] = useState(false);
@@ -79,10 +73,6 @@ export function CheckoutButton({
     }
     if (!acceptTerms) {
       setError('Vous devez accepter les CGU, les CGS et les Conditions Particulières pour continuer.');
-      return;
-    }
-    if (!immediateAccess) {
-      setError("Confirmez votre demande d'accès immédiat pour démarrer votre préparation tout de suite.");
       return;
     }
     setError(null);
@@ -108,15 +98,14 @@ export function CheckoutButton({
           voie: isIntensive ? voie : '',
           installments,
           consents: {
-            // Côté serveur, ces flags sont stockés en metadata Stripe pour
-            // tracer les 3 consentements requis par la loi : CGU, CGS,
-            // Conditions Particulières d'une part ; consentement à l'exécution
-            // immédiate (vaut renonciation au délai de rétractation art.
-            // L. 221-28, 1°) d'autre part.
+            // Une seule case côté UI ; côté serveur on stocke un flag par
+            // document (CGU/CGS/CP) + renonciation rétractation, tous sur
+            // la même valeur. La renonciation est intégrée dans les CGS et
+            // Conditions Particulières acceptées (CGS §10.1 et CP).
             cgu: acceptTerms,
             cgs: acceptTerms,
             cp: acceptTerms,
-            waiveRetractation: immediateAccess,
+            waiveRetractation: acceptTerms,
             timestamp: new Date().toISOString(),
           },
         }),
@@ -203,8 +192,9 @@ export function CheckoutButton({
         </p>
       </fieldset>
 
-      {/* Consentements — 2 cases simples au lieu de 4 (équivalence légale
-          conservée via le détail dans les CGS / Conditions Particulières) */}
+      {/* Consentement — case unique. L'acceptation des CGS et des
+          Conditions Particulières emporte consentement à l'exécution
+          immédiate (CGS §10.1, CP §Observations). */}
       <SectionLabel n={4} title="Confirmation" />
 
       <ConsentCheckbox
@@ -220,21 +210,6 @@ export function CheckoutButton({
             {' '}et les{' '}
             <Link href="/conditions-particulieres" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>Conditions Particulières</Link>
             {' '}de Major ECN.
-          </>
-        }
-      />
-
-      <ConsentCheckbox
-        checked={immediateAccess}
-        onChange={setImmediateAccess}
-        accent={color.main}
-        text={
-          <>
-            Je souhaite accéder <strong>immédiatement</strong> à la plateforme pour démarrer ma
-            préparation sans attendre le délai légal de 14&nbsp;jours{' '}
-            <Link href="/cgs#art-10" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
-              (en savoir plus)
-            </Link>.
           </>
         }
       />
