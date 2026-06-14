@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import {
   AlertTriangle, ArrowRight, BadgeCheck, BookOpen, Building2, Check, CheckCircle2,
-  ChevronDown, ClipboardCheck, Clock, FileBadge, FileCheck2, FileText, FileWarning,
+  ChevronDown, ClipboardCheck, Clock, FileBadge, FileCheck2, FileText,
   GraduationCap, Globe2, IdCard, Languages, Lightbulb, ListChecks, Lock, Phone,
   ScrollText, ShieldCheck, Smartphone, Sparkles, Stethoscope, Users,
 } from 'lucide-react';
-import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
+import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 import { getRelatedArticles } from '@/lib/data/blog-articles';
@@ -355,7 +355,7 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
         </section>
 
         {/* Bandeau final */}
-        <FinalBanner />
+        <ArticleFinalCta />
       </div>
     </main>
   );
@@ -478,28 +478,3 @@ function RelatedRow({ currentSlug }: { currentSlug: string }) {
   );
 }
 
-function FinalBanner() {
-  return (
-    <section className="mt-8 overflow-hidden rounded-2xl bg-[linear-gradient(90deg,#0F1F4D_0%,#5C1827_60%,#C0112E_100%)] p-5 text-white sm:p-6">
-      <div className="grid items-center gap-3 lg:grid-cols-[auto_1fr_auto]">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
-          <FileWarning className="h-5 w-5" />
-        </span>
-        <div>
-          <p className="text-[14px] font-extrabold leading-tight">Réussir les EVC avec Major ECN</p>
-          <p className="mt-1 text-[12px] text-white/80">
-            Depuis plus de 15 ans, Major ECN accompagne les médecins PADHUE dans leur préparation
-            aux EVC grâce à une plateforme complète : QCM corrigés, cas cliniques, flashcards,
-            épreuves blanches et méthodologie spécifique EVC.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[11px] text-white/85">
-          <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-[#F5D597]" /> Méthodologie spécifique EVC</span>
-          <span className="inline-flex items-center gap-1"><FileText className="h-3 w-3 text-[#F5D597]" /> Plateforme n°1 EVC PAE</span>
-          <span className="inline-flex items-center gap-1"><Users className="h-3 w-3 text-[#F5D597]" /> Équipe pédagogique médicale</span>
-          <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[#F5D597]" /> Résultats prouvés</span>
-        </div>
-      </div>
-    </section>
-  );
-}

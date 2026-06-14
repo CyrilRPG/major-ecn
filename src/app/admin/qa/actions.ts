@@ -9,7 +9,16 @@ import { forumNewAnswerEmail } from '@/lib/email/templates';
 
 type Result = { ok: true } | { error: string };
 
-function professorName(p: { first_name: string | null; last_name: string | null; email: string | null }) {
+function professorName(p: { first_name: string | null; last_name: string | null; email: string | null; pseudo?: string | null; role?: string | null }) {
+  // 1) Pseudo public (ex: "Professeur Cardiologie") s'il est défini.
+  const pseudo = (p.pseudo ?? '').trim();
+  if (pseudo) return pseudo;
+  // 2) Si admin sans pseudo : "Admin Major ECN" générique.
+  if (p.role === 'admin') {
+    const full = `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim();
+    return full || 'Admin Major ECN';
+  }
+  // 3) Sinon nom complet → fallback email → générique.
   const full = `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim();
   return full || p.email || 'Équipe Major ECN';
 }

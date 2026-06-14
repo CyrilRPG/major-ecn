@@ -1,6 +1,9 @@
-import { CheckCircle2, GraduationCap, Mail, MinusCircle, Phone, Shield, User, XCircle } from 'lucide-react';
+import { CheckCircle2, GraduationCap, KeyRound, Mail, MinusCircle, Phone, Shield, User, UserCircle2, XCircle } from 'lucide-react';
 import type { Profile } from '@/lib/auth/get-profile';
 import type { NavCollege } from '@/lib/data/navigator';
+import { ProfileEditor } from '@/components/profile/profile-editor';
+import { PasswordChanger } from '@/components/profile/password-changer';
+import { PseudoEditor } from '@/components/student/pseudo-editor';
 import {
   CONTENT_TYPES, CONTENT_TYPE_LABEL, PERMISSION_LEVEL_LABEL,
   type ContentType, type PermissionLevel, type ProfessorScope,
@@ -136,12 +139,35 @@ export function ProfProfile({
           <Info label="Email"     value={profile.email ?? '—'}       icon={<Mail className="h-3.5 w-3.5" />} mono />
           <Info label="Téléphone" value={profile.phone ?? 'Non renseigné'} icon={<Phone className="h-3.5 w-3.5" />} />
         </dl>
-        <p className="mt-3 text-xs text-(--color-ink-muted)">
-          Pour modifier ces informations, contactez l&rsquo;administration via{' '}
-          <a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">
-            contact@major-ecn.fr
-          </a>.
+        <ProfileEditor initial={{ first_name: profile.first_name, last_name: profile.last_name, phone: profile.phone }} />
+      </section>
+
+      {/* Pseudo public — affiché sur le forum et la messagerie */}
+      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          <UserCircle2 className="h-3 w-3" />
+          Pseudo public
         </p>
+        <p className="mt-2 text-sm text-(--color-ink-soft)">
+          Affiché sur le forum et la messagerie à la place de votre nom complet. Exemples&nbsp;:
+          <span className="ml-1 italic">Professeur Cardiologie, Professeur Pédiatrie…</span>
+          Votre nom réel reste visible uniquement côté administration.
+        </p>
+        <div className="mt-4">
+          <PseudoEditor initial={profile.pseudo ?? ''} />
+        </div>
+      </section>
+
+      {/* Sécurité */}
+      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          <KeyRound className="h-3 w-3" />
+          Sécurité
+        </p>
+        <p className="mt-2 text-sm text-(--color-ink-soft)">
+          Mettez à jour votre mot de passe à tout moment. Minimum 8 caractères.
+        </p>
+        <PasswordChanger />
       </section>
     </div>
   );

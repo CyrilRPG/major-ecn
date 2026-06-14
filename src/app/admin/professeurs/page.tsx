@@ -1,11 +1,8 @@
 import { GraduationCap, MailX } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { initials } from '@/lib/utils';
 import { AddProfessorDialog } from '@/components/admin/professors/add-professor-dialog';
-import { DeleteAccountButton } from '@/components/admin/delete-account-button';
+import { ProfessorsList, type ProfessorRow } from '@/components/admin/professors/professors-list';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { CONTENT_TYPE_LABEL, CONTENT_TYPES, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 
@@ -69,7 +66,7 @@ export default async function ProfessorsPage() {
 
   const [{ data: profs }, { data: fac }] = await Promise.all([
     admin.from('profiles')
-      .select('id, first_name, last_name, email, phone, permission_scope, created_at')
+      .select('id, first_name, last_name, email, phone, address, pseudo, cv_url, certificat_scolarite_url, carte_pro_url, permission_scope, created_at, is_active')
       .eq('role', 'professor')
       .order('last_name'),
     admin.from('facultes')
@@ -99,10 +96,13 @@ export default async function ProfessorsPage() {
     Object.values(coursByCollege).flat().map((c) => [c.id, c.titre]),
   );
 
-  const rows = (profs ?? []) as Array<{
+  const rows = (profs ?? []) as unknown as Array<{
     id: string; first_name: string | null; last_name: string | null;
     email: string | null; phone: string | null;
+    address: string | null; pseudo: string | null;
+    cv_url: string | null; certificat_scolarite_url: string | null; carte_pro_url: string | null;
     permission_scope: unknown; created_at: string;
+    is_active: boolean | null;
   }>;
 
   return (
@@ -129,47 +129,31 @@ export default async function ProfessorsPage() {
           </p>
         </div>
       ) : (
-        <ul className="space-y-3">
-          {rows.map((p) => {
-            const scope = (p.permission_scope ?? {}) as ProfScope;
-            const tags = describeScope(scope, collegeMap, coursMap);
-            return (
-              <li key={p.id} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-                <div className="flex flex-wrap items-start gap-4">
-                  <Avatar className="h-11 w-11 shrink-0">
-                    <AvatarFallback>{initials(p.first_name, p.last_name)}</AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-(--color-ink)">{p.first_name} {p.last_name}</p>
-                    <p className="truncate font-mono text-xs text-(--color-ink-soft)">{p.email}</p>
-                    {p.phone && (
-                      <p className="mt-0.5 text-xs text-(--color-ink-muted)">{p.phone}</p>
-                    )}
-                  </div>
-                  <div className="flex shrink-0 flex-wrap items-center gap-1 max-w-full">
-                    <Badge variant="primary">Professeur</Badge>
-                    <DeleteAccountButton
-                      userId={p.id}
-                      displayName={`${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || p.email || 'professeur'}
-                    />
-                  </div>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1 border-t border-(--color-border) pt-3">
-                  {tags.map((t, i) => (
-                    <Badge key={i} variant={t.tone}>{t.label}</Badge>
-                  ))}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <ProfessorsList
+          rows={rows.map<ProfessorRow>((p) => ({
+            id: p.id,
+            first_name: p.first_name,
+            last_name: p.last_name,
+            email: p.email,
+            phone: p.phone,
+            address: p.address,
+            pseudo: p.pseudo,
+            cv_url: p.cv_url,
+            certificat_scolarite_url: p.certificat_scolarite_url,
+            carte_pro_url: p.carte_pro_url,
+            created_at: p.created_at,
+            is_active: p.is_active !== false,
+            tags: describeScope((p.permission_scope ?? {}) as ProfScope, collegeMap, coursMap),
+          }))}
+        />
       )}
 
       {/* Footnote */}
       <p className="mt-6 flex items-start gap-2 text-xs text-(--color-ink-muted)">
         <MailX className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        Pour révoquer l’accès d’un professeur, supprimez son compte côté Supabase Auth — toutes ses
-        réponses au forum restent en place (auteur passe sur « ancien intervenant »).
+        Utilisez le bouton « Désactiver » pour révoquer l’accès sans perdre les contributions du
+        professeur. La suppression définitive (icône poubelle) supprime le compte et conserve les
+        messages forum sous l’auteur « ancien intervenant ».
       </p>
     </main>
   );

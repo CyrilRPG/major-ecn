@@ -32,7 +32,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
           subtitle="La France fait appel à de nombreux médecins titulaires de diplômes obtenus hors de l'Union européenne (PADHUE). Avant d'exercer pleinement, ces praticiens passent par les Épreuves de Vérification des Connaissances (EVC), première étape de la Procédure d'Autorisation d'Exercice (PAE)."
           rightArea={
             <div
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border lg:aspect-auto lg:h-48"
+              className="relative w-full overflow-hidden rounded-2xl border"
               style={{
                 borderColor: '#E5E9F0',
                 boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
@@ -43,8 +43,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/practitioners/practitioner-male-tablet.jpg"
                 alt="Médecin PADHUE consultant une tablette en milieu hospitalier"
-                className="absolute inset-0 h-full w-full select-none object-contain"
-                style={{ objectPosition: '70% 35%' }}
+                className="block h-auto w-full select-none"
                 decoding="async"
                 fetchPriority="high"
               />
@@ -101,7 +100,6 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#EDE9FE 0%,#FDE7E9 100%)"
               illustrationImage="/blog/practitioners/practitioner-male-glasses.jpg"
               illustrationAlt="Médecin PADHUE souriant en blouse blanche, exercant en France"
-              illustrationFocus="50% 25%"
             >
               <p>
                 Le sigle PADHUE désigne les Praticiens à Diplôme Hors Union Européenne :
@@ -133,7 +131,6 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#E7F6EC 0%,#DCFCE7 100%)"
               illustrationImage="/blog/practitioners/practitioner-female-desk.jpg"
               illustrationAlt="Faisant Fonction d'Interne (FFI) en service hospitalier"
-              illustrationFocus="50% 30%"
               right
             >
               <p>
@@ -170,7 +167,6 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)"
               illustrationImage="/blog/practitioners/practitioner-female-laptop.jpg"
               illustrationAlt="Praticien Attaché Associé (PAA) consultant un dossier patient"
-              illustrationFocus="50% 25%"
             >
               <p>
                 Une fois les EVC validées, le médecin PADHUE peut accéder au statut de
@@ -205,7 +201,6 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               illustrationBg="linear-gradient(135deg,#FDE7E9 0%,#EDE9FE 100%)"
               illustrationImage="/blog/practitioners/practitioner-male-tie.jpg"
               illustrationAlt="Praticien Hospitalier (PH) titulaire en milieu hospitalier"
-              illustrationFocus="60% 25%"
               right
             >
               <p>
@@ -361,12 +356,12 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
 function Section({
   num, icon: Icon, accent, bg, title, children,
   illustrationBg, illustrationIcon: IIcon, illustrationImage, illustrationAlt,
-  illustrationFocus, right = false, soft = false,
+  right = false, soft = false,
 }: {
   num: number; icon: React.ElementType; accent: string; bg: string;
   title: string; children: React.ReactNode;
   illustrationBg?: string; illustrationIcon?: React.ElementType;
-  illustrationImage?: string; illustrationAlt?: string; illustrationFocus?: string;
+  illustrationImage?: string; illustrationAlt?: string;
   right?: boolean;
   soft?: boolean;
 }) {
@@ -396,17 +391,16 @@ function Section({
         </div>
         {hasIllustration && (
           <div
-            className={`order-1 ${right ? 'lg:order-2' : ''} hidden h-44 overflow-hidden rounded-xl border lg:block`}
+            className={`order-1 ${right ? 'lg:order-2' : ''} hidden overflow-hidden rounded-xl border lg:block`}
             style={{ background: illustrationBg, borderColor: '#ECEEF1' }}
           >
             {illustrationImage ? (
-              <div className="relative h-full w-full">
+              <div className="relative w-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={illustrationImage}
                   alt={illustrationAlt ?? title}
-                  className="absolute inset-0 h-full w-full select-none object-contain"
-                  style={{ objectPosition: illustrationFocus ?? '50% 30%' }}
+                  className="block h-auto w-full select-none"
                   loading="lazy"
                   decoding="async"
                 />
@@ -417,7 +411,7 @@ function Section({
                 />
               </div>
             ) : IIcon ? (
-              <div className="flex h-full w-full items-center justify-center">
+              <div className="flex h-44 w-full items-center justify-center">
                 <IIcon className="h-12 w-12 text-[#1A2233]/30" />
               </div>
             ) : null}

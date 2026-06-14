@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {
-  ArrowRight, BookOpen, ClipboardCheck, FileText, GraduationCap, Layers3,
+  AlertCircle, ArrowRight, BookOpen, ClipboardCheck, FileText, GraduationCap, Layers3,
   MessagesSquare, Pencil, Sparkles, Stethoscope,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
@@ -19,8 +19,39 @@ export function ProfWelcome({
   const firstName = profile.first_name?.trim() || profile.email?.split('@')[0] || 'Professeur';
   const totalItems = tree.reduce((acc, c) => acc + c.cours.length, 0);
 
+  // Champs obligatoires côté enseignant (Nom, Prénom, Tel, Adresse).
+  // Les documents (CV / certif / carte pro) sont contextuels — on les liste
+  // dans le détail mais ils ne déclenchent pas seuls la bannière.
+  const missing: string[] = [];
+  if (!profile.first_name?.trim()) missing.push('prénom');
+  if (!profile.last_name?.trim()) missing.push('nom');
+  if (!profile.phone?.trim()) missing.push('téléphone');
+  if (!profile.address?.trim()) missing.push('adresse postale');
+  if (!profile.cv_url && !profile.certificat_scolarite_url && !profile.carte_pro_url) {
+    missing.push('CV / certificat / carte pro');
+  }
+
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      {missing.length > 0 && (
+        <div className="mb-6 flex flex-wrap items-start gap-3 rounded-2xl border border-[#B26A00]/30 bg-[#FEF3E2] p-4 sm:p-5">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#B26A00]" />
+          <div className="min-w-0 flex-1">
+            <p className="text-[14px] font-extrabold text-[#7A4400]">Complétez votre dossier enseignant</p>
+            <p className="mt-1 text-[12.5px] leading-relaxed text-[#7A4400]/90">
+              Pour finaliser votre inscription, renseignez&nbsp;: <span className="font-semibold">{missing.join(', ')}</span>.
+              Vos informations restent confidentielles et ne sont consultables que par l&rsquo;équipe administrative.
+            </p>
+          </div>
+          <Link
+            href="/profil"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#B26A00] px-3.5 py-2 text-[12.5px] font-extrabold text-white hover:scale-[1.02] transition-transform"
+          >
+            Compléter mon profil
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      )}
       {/* ───── En-tête de bienvenue ───── */}
       <header className="mb-8 overflow-hidden rounded-3xl border border-(--color-border) bg-[linear-gradient(135deg,#0E1626_0%,#2D0518_100%)] p-6 text-white sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-start justify-between gap-6">

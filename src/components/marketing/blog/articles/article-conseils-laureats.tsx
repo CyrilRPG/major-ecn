@@ -310,7 +310,7 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               className="pointer-events-none absolute -inset-x-3 -bottom-4 -z-10 h-20 rounded-[60px] opacity-50 blur-2xl"
               style={{ background: 'radial-gradient(closest-side, rgba(192,17,46,0.30) 0%, transparent 70%)' }} />
 
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border shadow-md"
+            <div className="relative w-full overflow-hidden rounded-3xl border shadow-md"
               style={{
                 borderColor: BORDER,
                 background:
@@ -321,8 +321,7 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               <img
                 src="/blog/reussir-evc-asian-laptop.jpg"
                 alt="Médecin préparant les Épreuves de Vérification des Connaissances (EVC) avec méthode"
-                className="absolute inset-0 h-full w-full select-none object-contain"
-                style={{ objectPosition: '55% 30%' }}
+                className="block h-auto w-full select-none"
                 decoding="async"
                 fetchPriority="high"
               />

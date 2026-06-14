@@ -9,12 +9,14 @@ import {
 export async function requireUser() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user || !profile) redirect('/login');
+  if (profile.is_active === false) redirect('/login?disabled=1');
   return { user, profile };
 }
 
 export async function requireAdmin() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user) redirect('/login');
+  if (profile?.is_active === false) redirect('/login?disabled=1');
   if (profile?.role !== 'admin') {
     // Profs are redirected to their Q&R panel; everyone else to /app.
     redirect(profile?.role === 'professor' ? '/admin/qa' : '/app');
@@ -26,6 +28,7 @@ export async function requireAdmin() {
 export async function requireStaff() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user) redirect('/login');
+  if (profile?.is_active === false) redirect('/login?disabled=1');
   if (!profile || (profile.role !== 'admin' && profile.role !== 'professor')) redirect('/app');
   return { user, profile, isAdmin: profile.role === 'admin' };
 }

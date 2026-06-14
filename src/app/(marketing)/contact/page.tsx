@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import {
-  ArrowRight, ChevronRight, Clock,
+  ArrowRight, ChevronRight, Clock, FileText,
   MessageSquare, Sparkles, Stethoscope, Target,
   TrendingUp, UserCheck,
 } from 'lucide-react';
@@ -142,32 +142,42 @@ export default function ContactPage() {
             {/* RIGHT — CTA card + formulaire */}
             <div className="flex flex-col gap-5">
               {/* CTA "Prêt à commencer ?" */}
-              <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#0F1F4D] via-[#142454] to-[#0A1838] p-5 text-white shadow-[0_24px_60px_-24px_rgba(15,31,77,0.55)] sm:p-6"
+              <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-[#0F1F4D] via-[#142454] to-[#0A1838] p-6 text-white shadow-[0_24px_60px_-24px_rgba(15,31,77,0.55)] sm:p-7"
                 style={{ borderColor: 'rgba(255,255,255,0.18)' }}>
-                <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#C0112E]/30 blur-3xl" />
-                <div className="flex items-start gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur">
+                <span aria-hidden className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#C0112E]/30 blur-3xl" />
+                <div className="flex items-start gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
                     <Sparkles className="h-5 w-5" style={{ color: '#F5D597' }} />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/80">Prêt à commencer&nbsp;?</p>
-                    <p className="text-lg font-extrabold leading-tight sm:text-xl">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.22em]" style={{ color: '#F5D597' }}>
+                      Prêt à commencer&nbsp;?
+                    </p>
+                    <p className="mt-2 text-xl font-extrabold leading-tight sm:text-2xl">
                       Prêt à commencer votre préparation&nbsp;?
                     </p>
-                    <p className="mt-1 text-[13px] leading-relaxed text-white/85">
-                      Découvrez nos formules ou testez la plateforme dès maintenant.
+                    <p className="mt-2 text-[13.5px] leading-relaxed text-white/70">
+                      Découvrez nos formules ou explorez la plateforme dès maintenant.
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2.5">
-                  <Link href="/inscription"
-                    className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold shadow transition-transform hover:scale-[1.02]"
-                    style={{ color: RED }}>
-                    <Sparkles className="h-4 w-4" /> Essai gratuit
-                  </Link>
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Link href="/plateforme"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-[13px] font-bold text-white backdrop-blur transition-transform hover:scale-[1.02]">
-                    Découvrir la plateforme <ArrowRight className="h-4 w-4" />
+                    className="group inline-flex items-center justify-between gap-2 rounded-2xl bg-white px-4 py-3 text-[14px] font-extrabold shadow-lg transition-transform hover:scale-[1.02]"
+                    style={{ color: RED }}>
+                    <span className="inline-flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" />
+                      Découvrir la plateforme
+                    </span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                  <Link href="/formules"
+                    className="group inline-flex items-center justify-between gap-2 rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-[14px] font-extrabold text-white backdrop-blur transition-transform hover:scale-[1.02]">
+                    <span className="inline-flex items-center gap-2">
+                      <FileText className="h-4 w-4" style={{ color: '#F5D597' }} />
+                      Voir les formules
+                    </span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </div>

@@ -13,6 +13,8 @@ import { EditStudentDialog } from './edit-student-dialog';
 import { initials } from '@/lib/utils';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
+import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
+import { EditProfileDialog } from '@/components/admin/edit-profile-dialog';
 
 export type Student = {
   id: string;
@@ -20,8 +22,12 @@ export type Student = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
+  address?: string | null;
+  pseudo?: string | null;
   promotion: string | null;
   permission_scope: unknown;
+  is_active?: boolean | null;
+  created_at?: string;
 };
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
@@ -148,10 +154,31 @@ export function StudentsTable({
                         <Award className="h-3.5 w-3.5" />
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
+                      <EditProfileDialog
+                        role="student"
+                        profile={{
+                          id: s.id,
+                          first_name: s.first_name,
+                          last_name: s.last_name,
+                          email: s.email,
+                          phone: s.phone,
+                          address: s.address ?? null,
+                          pseudo: s.pseudo ?? null,
+                          cv_url: null,
+                          certificat_scolarite_url: null,
+                          carte_pro_url: null,
+                          created_at: s.created_at,
+                        }}
+                      />
                       <EditStudentDialog student={s} colleges={colleges} />
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                      />
+                      <ToggleActiveButton
+                        userId={s.id}
+                        displayName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                        isActive={s.is_active !== false}
                       />
                       <DeleteAccountButton
                         userId={s.id}

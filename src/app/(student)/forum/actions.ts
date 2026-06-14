@@ -219,7 +219,11 @@ export async function postProfessorAnswerAction(input: z.infer<typeof AnswerSche
     }
   }
 
-  const profName = [profile.first_name, profile.last_name].filter(Boolean).join(' ').trim() || profile.email || 'Professeur';
+  // Préférence : pseudo public (« Professeur Cardiologie »), sinon nom complet.
+  const profName = (profile.pseudo ?? '').trim()
+    || [profile.first_name, profile.last_name].filter(Boolean).join(' ').trim()
+    || profile.email
+    || 'Professeur';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: insErr } = await (admin as any).from('forum_answers').insert({
@@ -244,6 +248,66 @@ export async function postProfessorAnswerAction(input: z.infer<typeof AnswerSche
       ? `Forum : réponse postée + question rendue publique « ${(q.body as string).slice(0, 60)}… »`
       : `Forum : réponse postée à « ${(q.body as string).slice(0, 60)}… »`,
   });
+
+  revalidatePath('/forum');
+  revalidatePath('/admin/qa');
+  return { ok: true };
+}
+
+/* ============================================================
+   Threading : reply dans le même thread (élève ou prof)
+   ============================================================ */
+
+const ReplySchema = z.object({
+  questionId: z.string().uuid(),
+  body: z.string().min(1, 'Réponse trop courte.').max(8000),
+});
+
+/**
+ * Ajoute une reply dans le thread d'une question existante. Permet à l'élève
+ * de relancer dans la même discussion (au lieu de créer une nouvelle question)
+ * et aux profs/admins d'ajouter du contexte.
+ */
+export async function addReplyAction(input: z.infer<typeof ReplySchema>): Promise<{ ok: true } | { error: string }> {
+  const parsed = ReplySchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
+
+  const { user, profile } = await requireUser();
+  const supabase = await createClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: q } = await (supabase as any)
+    .from('forum_questions')
+    .select('id, student_id, matiere_id, is_public, body')
+    .eq('id', parsed.data.questionId)
+    .maybeSingle();
+  if (!q) return { error: 'Question introuvable.' };
+
+  // L'élève ne peut répondre que sur SA question (privée ou publique).
+  if (profile.role === 'student' && q.student_id !== user.id) {
+    return { error: 'Vous ne pouvez répondre que dans vos propres discussions.' };
+  }
+  if (profile.role === 'professor') {
+    const scope = getProfessorScope(profile.permission_scope);
+    if (!profCanAccessForumMatiere(scope, q.matiere_id)) {
+      return { error: 'Vous n\'avez pas accès au collège de cette question.' };
+    }
+  }
+
+  const authorName = (profile.pseudo ?? '').trim()
+    || [profile.first_name, profile.last_name].filter(Boolean).join(' ').trim()
+    || profile.email
+    || (profile.role === 'student' ? 'Étudiant' : 'Équipe Major ECN');
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error: insErr } = await (supabase as any).from('forum_replies').insert({
+    question_id: parsed.data.questionId,
+    author_id: user.id,
+    author_role: profile.role,
+    author_name: authorName,
+    body: parsed.data.body,
+  });
+  if (insErr) return { error: insErr.message };
 
   revalidatePath('/forum');
   revalidatePath('/admin/qa');

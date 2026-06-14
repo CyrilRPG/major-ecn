@@ -7,7 +7,7 @@ import { ForumView, type ForumQuestionRow, type ForumCollege } from '@/component
 
 export const metadata = { title: 'Forum questions / réponses' };
 
-type SearchParams = { matiere?: string; q?: string; filter?: string };
+type SearchParams = { matiere?: string; q?: string; filter?: string; tab?: string };
 
 export default async function ForumPage({
   searchParams,
@@ -61,17 +61,28 @@ export default async function ForumPage({
     }
   }
 
+  // ─── Onglet public/privé ───
+  // - student : 'public' = questions publiques (de tout le monde), 'private' = MES questions à moi
+  // - staff : 'public' = questions publiques, 'private' = questions privées (toutes confondues)
+  const tab: 'public' | 'private' = sp.tab === 'private' ? 'private' : 'public';
+
   // ─── Récupération des questions selon le rôle ───
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = (supabase as any)
     .from('forum_questions')
-    .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_name)')
+    .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_name), forum_replies(id, body, created_at, author_role, author_name)')
     .order('created_at', { ascending: false })
     .limit(500);
 
   if (role === 'student') {
-    // Élève : ses propres questions OU les questions publiques
-    query = query.or(`student_id.eq.${user.id},is_public.eq.true`);
+    // Élève :
+    //  - onglet "public" : les questions publiques (de tout le monde, dont les siennes promues)
+    //  - onglet "privé"  : SES propres questions, qu'elles soient publiques ou non
+    if (tab === 'public') {
+      query = query.eq('is_public', true);
+    } else {
+      query = query.eq('student_id', user.id);
+    }
   } else if (role === 'professor') {
     // Prof : questions des collèges accessibles (matiere_id IN profIds)
     if (profAccessibleMatiereIds === null || (Array.isArray(profAccessibleMatiereIds) && profAccessibleMatiereIds.length === 0)) {
@@ -81,8 +92,14 @@ export default async function ForumPage({
       query = query.in('matiere_id', profAccessibleMatiereIds);
     }
     // 'all' → pas de filtre supplémentaire (admin-like)
+    // Onglet appliqué aussi pour le prof : public seul / privé seul.
+    if (tab === 'public') query = query.eq('is_public', true);
+    else query = query.eq('is_public', false);
+  } else {
+    // Admin : tout, filtré par l'onglet (public uniquement / privé uniquement).
+    if (tab === 'public') query = query.eq('is_public', true);
+    else query = query.eq('is_public', false);
   }
-  // Admin : tout (pas de filtre)
 
   if (sp.matiere) query = query.eq('matiere_id', sp.matiere);
 
@@ -123,6 +140,7 @@ export default async function ForumPage({
       activeMatiere={sp.matiere ?? null}
       activeQuery={sp.q ?? null}
       activeFilter={(sp.filter as 'all' | 'pending' | 'answered' | 'public' | 'private' | undefined) ?? 'all'}
+      activeTab={tab}
     />
   );
 }

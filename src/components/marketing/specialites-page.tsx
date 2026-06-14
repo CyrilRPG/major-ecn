@@ -10,7 +10,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import {
-  Activity, Apple, ArrowRight, Award, Baby, Bandage, Beaker, Bone, Brain, BriefcaseMedical,
+  Activity, Apple, ArrowRight, Award, Baby, Bandage, Beaker, Bone, BookOpen, Brain, BriefcaseMedical,
   Check, CheckCircle2, ChevronRight, Compass, Dna, Droplet, Ear, Eye,
   FlaskConical, Footprints, Gauge, GraduationCap, Heart, HeartPulse, Hospital, Layers3,
   Microscope, Pill, Pipette, Quote, Radio, Scissors, ScanSearch, Search, Shield, Smile,
@@ -291,26 +291,30 @@ function SpecialitesHero() {
    ============================================================ */
 function MetricsStrip() {
   const metrics = [
-    { Icon: Trophy,        big: '45+',   label: 'spécialités couvertes', tone: RED },
-    { Icon: GraduationCap, big: '100%',  label: 'des programmes officiels', tone: '#0F8A6A' },
-    { Icon: UserCheck,     big: '100%',  label: 'correcteurs spécialistes', tone: '#2563EB' },
-    { Icon: TrendingUp,    big: '+15 ans', label: 'd’expérience PADHUE', tone: '#7C3AED' },
-    { Icon: Award,         big: '100%',  label: 'préparation EVC officielle', tone: '#E8742C' },
+    { Icon: Trophy,     big: '45+',                 sub: 'spécialités couvertes',                       tone: RED },
+    { Icon: BookOpen,   big: 'Référentiels\nactualisés', sub: 'HAS, collèges et recommandations récentes', tone: '#0F8A6A' },
+    { Icon: UserCheck,  big: '100%',                sub: 'correcteurs spécialistes',                    tone: '#2563EB' },
+    { Icon: TrendingUp, big: '+15 ans',             sub: 'd’expérience PADHUE',                         tone: '#7C3AED' },
+    { Icon: Target,     big: 'Méthodologie\nEVC',   sub: '15 ans d’amélioration continue',              tone: '#E8742C' },
   ];
   return (
     <section className="relative" style={{ fontFamily: FONT, background: SOFT_BG }}>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {metrics.map((m, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-sm" style={{ borderColor: BORDER }}>
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+              <div key={i} className="flex flex-col gap-4 rounded-2xl border bg-white p-5 shadow-sm" style={{ borderColor: BORDER }}>
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl"
                   style={{ background: `${m.tone}14`, color: m.tone }}>
-                  <m.Icon className="h-5 w-5" />
+                  <m.Icon className="h-6 w-6" strokeWidth={2.2} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-lg font-black leading-tight" style={{ color: NAVY }}>{m.big}</p>
-                  <p className="text-[11.5px] font-semibold" style={{ color: INK_SOFT }}>{m.label}</p>
+                  <p className="whitespace-pre-line text-[20px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>
+                    {m.big}
+                  </p>
+                  <p className="mt-1.5 text-[13px] font-medium leading-snug" style={{ color: INK_SOFT }}>
+                    {m.sub}
+                  </p>
                 </div>
               </div>
             ))}

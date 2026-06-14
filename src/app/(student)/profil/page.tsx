@@ -1,4 +1,4 @@
-import { CalendarClock, GraduationCap, Mail, Phone, Sparkles, User } from 'lucide-react';
+import { CalendarClock, GraduationCap, KeyRound, Mail, Phone, Sparkles, User } from 'lucide-react';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
@@ -6,6 +6,8 @@ import { generatePseudo } from '@/lib/auth/pseudo';
 import { PseudoEditor } from '@/components/student/pseudo-editor';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { ProfProfile } from '@/components/professor/prof-profile';
+import { ProfileEditor } from '@/components/profile/profile-editor';
+import { PasswordChanger } from '@/components/profile/password-changer';
 import { getNavigatorTree } from '@/lib/data/navigator';
 
 export const metadata = { title: 'Mon profil' };
@@ -105,12 +107,19 @@ export default async function ProfilPage() {
             />
           )}
         </dl>
-        <p className="mt-3 text-xs text-(--color-ink-muted)">
-          Pour modifier votre prénom, nom, email ou téléphone, écrivez à{' '}
-          <a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">
-            contact@major-ecn.fr
-          </a>.
+        <ProfileEditor initial={{ first_name: profile.first_name, last_name: profile.last_name, phone: profile.phone }} />
+      </section>
+
+      {/* SÉCURITÉ */}
+      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          <KeyRound className="h-3 w-3" />
+          Sécurité
         </p>
+        <p className="mt-2 text-sm text-(--color-ink-soft)">
+          Mettez à jour votre mot de passe à tout moment. Minimum 8 caractères.
+        </p>
+        <PasswordChanger />
       </section>
 
       {/* PSEUDO */}

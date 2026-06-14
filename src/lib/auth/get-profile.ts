@@ -6,6 +6,11 @@ import type { Tables } from '@/types/database';
 export type Profile = Tables<'profiles'> & {
   pseudo: string | null;
   trial_until: string | null;
+  is_active: boolean | null;
+  address: string | null;
+  cv_url: string | null;
+  certificat_scolarite_url: string | null;
+  carte_pro_url: string | null;
 };
 
 export async function getCurrentUserAndProfile() {

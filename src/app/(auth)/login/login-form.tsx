@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,7 +22,10 @@ export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get('next') || '/app';
-  const [authError, setAuthError] = useState<string | null>(null);
+  const disabled = params.get('disabled') === '1';
+  const [authError, setAuthError] = useState<string | null>(
+    disabled ? 'Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.' : null,
+  );
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -33,10 +37,23 @@ export function LoginForm() {
   async function onSubmit(values: FormData) {
     setAuthError(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword(values);
+    const { data, error } = await supabase.auth.signInWithPassword(values);
     if (error) {
       setAuthError(error.message === 'Invalid login credentials' ? 'Email ou mot de passe incorrect.' : error.message);
       return;
+    }
+    // Vérifier que le compte n'a pas été désactivé par un admin.
+    if (data.user) {
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('is_active')
+        .eq('id', data.user.id)
+        .maybeSingle<{ is_active: boolean | null }>();
+      if (prof?.is_active === false) {
+        await supabase.auth.signOut();
+        setAuthError('Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.');
+        return;
+      }
     }
     router.push(next);
     router.refresh();
@@ -50,7 +67,16 @@ export function LoginForm() {
         {errors.email && <p className="text-xs text-(--color-danger)">{errors.email.message}</p>}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password">Mot de passe</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Mot de passe</Label>
+          <Link
+            href="/forgot-password"
+            className="text-xs font-semibold text-(--color-primary) hover:underline"
+            tabIndex={-1}
+          >
+            Mot de passe oublié&nbsp;?
+          </Link>
+        </div>
         <div className="relative">
           <Input
             id="password"

@@ -13,7 +13,7 @@ export default async function ElevesPage() {
   const [{ data: students }, { data: fac }] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, first_name, last_name, email, phone, promotion, permission_scope, role')
+      .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at')
       .eq('role', 'student')
       .order('last_name'),
     supabase
@@ -46,7 +46,7 @@ export default async function ElevesPage() {
         <AddStudentDialog colleges={colleges} />
       </header>
 
-      <StudentsTable students={students ?? []} collegeMap={collegeMap} colleges={colleges} />
+      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} collegeMap={collegeMap} colleges={colleges} />
     </main>
   );
 }

@@ -6,7 +6,7 @@ import {
   ListChecks, MapPin, Phone, Phone as Phone2, Quote, ScrollText, Sparkles,
   Stethoscope, Target, Trophy, Users,
 } from 'lucide-react';
-import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
+import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 import { getRelatedArticles } from '@/lib/data/blog-articles';
@@ -69,9 +69,27 @@ const ENVOI_STEPS: Array<{ Icon: typeof BookOpen; t: string; key?: boolean }> = 
 ];
 
 const TESTIMONIALS = [
-  { initials: 'YK', name: 'Dr. Y. K.', spec: 'Admis EVC Médecine Générale Session 2024', text: 'Une préparation complète, des QCM de qualité et un suivi irréprochable. J\'ai obtenu les EVC dès ma 1re tentative !' },
-  { initials: 'SR', name: 'Dr. S. R.', spec: 'Admise EVC Pédiatrie Session 2024',         text: 'Les cas cliniques et les fiches m\'ont permis d\'être prête le jour J. Merci à toute l\'équipe Major ECN !' },
-  { initials: 'MT', name: 'Dr. M. T.', spec: 'Admis EVC Cardiologie Session 2024',        text: 'La plateforme est intuitive, les corrections détaillées et très pédagogiques. Je recommande à 100 %.' },
+  {
+    initials: 'SE',
+    name: 'Dr. SY Ely Cheikh Ibrahima',
+    spec: 'Lauréat EVC Endocrinologie-Diabétologie 2025',
+    photo: '/temoignages/dr-sy-ely-cheikh-ibrahima.jpg',
+    text: "J'ai particulièrement apprécié la qualité de l'accompagnement, la disponibilité de l'équipe et le suivi tout au long de la préparation. J'ai obtenu plus de 17/20 de moyenne et réussi les EVC.",
+  },
+  {
+    initials: 'LO',
+    name: 'Dr. Lilia Ouled Ben Ahmed',
+    spec: 'Lauréate EVC Odontologie 2025',
+    photo: '/temoignages/dr-lilia-ouled-ben-ahmed.jpg',
+    text: "Les supports sont clairs, synthétiques et permettent d'aller à l'essentiel sans se disperser. Cette préparation m'a permis d'aborder les épreuves avec davantage de confiance.",
+  },
+  {
+    initials: 'AS',
+    name: 'Dr. Ahmed SIFAOUI',
+    spec: 'Lauréat EVC Gériatrie 2025',
+    photo: '/temoignages/dr-ahmed-sifaoui.png',
+    text: "Ce que j'ai particulièrement apprécié chez Major ECN, c'est le fait de savoir exactement sur quoi concentrer mes efforts. Je savais quoi réviser, quand le réviser et comment avancer progressivement.",
+  },
 ];
 
 const FAQS = [
@@ -567,13 +585,17 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
               <article key={t.initials} className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
                 <Quote className="h-5 w-5 text-[#F59E0B]" />
                 <p className="mt-2 text-[12.5px] italic leading-relaxed text-[#1A2233]">« {t.text} »</p>
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE4E8] text-[10px] font-extrabold text-[#C0001F]">
-                    {t.initials}
-                  </span>
-                  <div>
-                    <p className="text-[12px] font-bold text-[#1A2233]">{t.name}</p>
-                    <p className="text-[10px] text-[#9AA1AE]">{t.spec}</p>
+                <div className="mt-3 flex items-center gap-2.5">
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={36}
+                    height={36}
+                    className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-[#FFE4E8]"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-[12px] font-bold leading-tight text-[#1A2233]">{t.name}</p>
+                    <p className="text-[10px] leading-tight text-[#9AA1AE]">{t.spec}</p>
                   </div>
                 </div>
               </article>
@@ -622,27 +644,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         </section>
 
         {/* Bandeau final */}
-        <section className="mt-8 overflow-hidden rounded-2xl bg-[linear-gradient(90deg,#0F1F4D_0%,#5C1827_60%,#C0112E_100%)] p-5 text-white sm:p-6">
-          <div className="grid items-center gap-3 lg:grid-cols-[auto_1fr_auto]">
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
-              <ScrollText className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-[14px] font-extrabold leading-tight">Réussir les EVC avec Major ECN</p>
-              <p className="mt-1 text-[12px] text-white/80">
-                Depuis plus de 15 ans, Major ECN accompagne les médecins PADHUE dans leur préparation
-                aux Épreuves de Vérification des Connaissances (EVC) grâce à une plateforme complète
-                comprenant QCM corrigés, cas cliniques, flashcards, épreuves blanches et méthodologie spécifique EVC.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[11px] text-white/85">
-              <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-[#F5D597]" /> Méthodologie spécifique EVC</span>
-              <span className="inline-flex items-center gap-1"><FileText className="h-3 w-3 text-[#F5D597]" /> Plateforme n°1 EVC PAE</span>
-              <span className="inline-flex items-center gap-1"><Users className="h-3 w-3 text-[#F5D597]" /> Équipe pédagogique experte</span>
-              <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[#F5D597]" /> Résultats prouvés</span>
-            </div>
-          </div>
-        </section>
+        <ArticleFinalCta />
       </div>
     </main>
   );
@@ -650,15 +652,20 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
 
 /* ─────────────── helpers ─────────────── */
 
-/* Image hero : placeholder illustratif (gradient + icone livre) en attendant
- * la photo definitive. Superposition d'un badge vert "Etape essentielle de
- * la PAE" en haut a droite, conforme a la maquette designer. */
+/* Image hero : photo médecin préparant son dossier en ligne, avec un badge
+ * vert "Étape essentielle de la PAE" en haut à droite. */
 function HeroBookImage() {
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)] lg:aspect-auto lg:h-56">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <BookOpen className="h-16 w-16 text-[#1E4D8B]/40" />
-      </div>
+    <div className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)]"
+      style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)' }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/blog/practitioners/practitioner-female-laptop.jpg"
+        alt="Médecin PADHUE préparant son dossier d'inscription aux EVC en ligne"
+        className="block h-auto w-full select-none"
+        decoding="async"
+        fetchPriority="high"
+      />
       {/* Badge "Etape essentielle de la PAE" — coin haut-droit (maquette). */}
       <div className="absolute right-3 top-3 flex max-w-[60%] items-start gap-1.5 rounded-xl border border-[#16793C]/30 bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
         <ShieldCheckIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16793C]" />

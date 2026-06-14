@@ -5,7 +5,7 @@ import {
   FileText, GraduationCap, HeartHandshake, MapPin, Phone, Quote, ScrollText,
   ShieldCheck, Sparkles, Stethoscope, TrendingUp, Users, Users2,
 } from 'lucide-react';
-import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
+import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 
 const KPI_CARDS = [
@@ -70,7 +70,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
           subtitle="Les Épreuves de Vérification des Connaissances (EVC) jouent un rôle clé dans l'intégration des médecins PADHUE et contribuent au renforcement de l'offre de soins sur l'ensemble du territoire français."
           rightArea={
             <div
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border lg:aspect-auto lg:h-52"
+              className="relative w-full overflow-hidden rounded-2xl border"
               style={{
                 borderColor: '#E5E9F0',
                 boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
@@ -81,8 +81,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/medecins-essentiels-doctor-patient.jpg"
                 alt="Médecin PADHUE en consultation avec une patiente"
-                className="absolute inset-0 h-full w-full select-none object-contain"
-                style={{ objectPosition: '60% 35%' }}
+                className="block h-auto w-full select-none"
                 decoding="async"
                 fetchPriority="high"
               />
@@ -192,7 +191,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
             {/* Colonne 2 : photo équipe médicale en mouvement (couloir CHU) + citation */}
             <div className="flex flex-col gap-3">
               <div
-                className="relative aspect-[4/3] overflow-hidden rounded-xl border"
+                className="relative overflow-hidden rounded-xl border"
                 style={{
                   borderColor: '#ECEEF1',
                   background: 'linear-gradient(135deg,#F0F4FA 0%,#E5F1FF 100%)',
@@ -203,8 +202,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
                 <img
                   src="/blog/medecins-essentiels-corridor.jpg"
                   alt="Équipe médicale en mouvement dans un couloir d'hôpital"
-                  className="absolute inset-0 h-full w-full select-none object-contain"
-                  style={{ objectPosition: '50% 60%' }}
+                  className="block h-auto w-full select-none"
                   loading="lazy"
                   decoding="async"
                 />
@@ -363,27 +361,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
         </section>
 
         {/* Bandeau final */}
-        <section className="mt-8 overflow-hidden rounded-2xl bg-[linear-gradient(90deg,#0F1F4D_0%,#5C1827_60%,#C0112E_100%)] p-5 text-white sm:p-6">
-          <div className="grid items-center gap-3 lg:grid-cols-[auto_1fr_auto]">
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
-              <ScrollText className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-[14px] font-extrabold leading-tight">Réussir les EVC avec Major-ECN</p>
-              <p className="mt-1 text-[12px] text-white/80">
-                Depuis plus de 15 ans, Major-ECN accompagne les médecins PADHUE dans leur préparation
-                aux Épreuves de Vérification des Connaissances (EVC) grâce à une plateforme complète :
-                QCM corrigés, cas cliniques, flashcards, épreuves blanches et méthodologie spécifique EVC.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[11px] text-white/85">
-              <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-[#F5D597]" /> Méthodologie spécifique EVC</span>
-              <span className="inline-flex items-center gap-1"><FileText className="h-3 w-3 text-[#F5D597]" /> Plateforme n°1 EVC PAE</span>
-              <span className="inline-flex items-center gap-1"><Users className="h-3 w-3 text-[#F5D597]" /> Équipe pédagogique médicale</span>
-              <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[#F5D597]" /> Résultats prouvés</span>
-            </div>
-          </div>
-        </section>
+        <ArticleFinalCta />
 
         <p className="mt-3 text-center text-[10px] italic text-[#9AA1AE]">
           Major ECN — Organisme de formation spécialisé dans la préparation des Épreuves de

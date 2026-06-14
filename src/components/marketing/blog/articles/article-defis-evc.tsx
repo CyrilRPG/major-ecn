@@ -5,7 +5,7 @@ import {
   ClipboardCheck, Clock, Compass, FileText, GraduationCap, Lightbulb, MessageCircle,
   Quote, Sparkles, Target, Trophy, Users, Users2,
 } from 'lucide-react';
-import { ArticleHeader, ARTICLE_FONT } from '../article-shell';
+import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 
 const DEFIS = [
@@ -224,31 +224,7 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
         </div>
 
         {/* Bandeau final pleine largeur */}
-        <section className="mt-8 overflow-hidden rounded-2xl bg-[linear-gradient(90deg,#0F1F4D_0%,#5C1827_60%,#C0112E_100%)] p-5 text-white sm:p-6">
-          <div className="grid items-center gap-3 lg:grid-cols-[auto_1fr_auto]">
-            <Image
-              src="/major-ecn-logo.png"
-              alt="Major ECN"
-              width={56}
-              height={28}
-              className="h-7 w-auto [filter:brightness(0)_invert(1)]"
-            />
-            <div>
-              <p className="text-[14px] font-extrabold leading-tight">
-                Major ECN, votre allié pour réussir les EVC PAE
-              </p>
-              <p className="mt-1 text-[12px] text-white/80">
-                Rejoignez plus de 9 000 médecins qui nous font confiance pour réussir leur parcours.
-              </p>
-            </div>
-            <Link
-              href="/plateforme"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-extrabold text-white shadow-sm hover:scale-[1.02]"
-            >
-              Découvrir la préparation EVC <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </section>
+        <ArticleFinalCta />
       </div>
     </main>
   );
