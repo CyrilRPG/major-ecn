@@ -239,7 +239,7 @@ export async function provisionStudentAccount(
 
   const formule = FORMULES[input.formuleId];
 
-  // -- Tentative 1 : Resend
+  // -- Tentative 1 : Resend (avec PJ légales : CGU, CGS, CP au format PDF)
   try {
     const { subject, html, text } = purchaseConfirmationEmail({
       firstName: input.firstName ?? '',
@@ -248,12 +248,21 @@ export async function provisionStudentAccount(
       installments: input.installments ?? 1,
       setupUrl,
     });
+    // Les PDFs sont hébergés côté public/legal — Resend les téléchargera
+    // côté serveur via `path` et les attachera au mail.
+    const base = siteUrl();
+    const attachments = [
+      { filename: 'CGU - Major ECN.pdf', path: `${base}/legal/cgu.pdf` },
+      { filename: 'CGS - Major ECN.pdf', path: `${base}/legal/cgs.pdf` },
+      { filename: 'Conditions Particulières - Major ECN.pdf', path: `${base}/legal/conditions-particulieres.pdf` },
+    ];
     log('email-resend-attempt', {
       to: input.email,
       subject,
       setupUrlPrefix: setupUrl.slice(0, 60) + '…',
+      attachments: attachments.length,
     });
-    const sendResult = await sendEmail({ to: input.email, subject, html, text });
+    const sendResult = await sendEmail({ to: input.email, subject, html, text, attachments });
     if (sendResult.ok) {
       emailVia = 'resend';
       log('email-sent-resend', { id: sendResult.id });

@@ -272,9 +272,13 @@ export function MarketingFooter() {
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]" style={{ color: INK_SOFT }}>
               <li><Link href="/mentions-legales" className="hover:underline">Mentions l&eacute;gales</Link></li>
               <li aria-hidden>|</li>
-              <li><Link href="/confidentialite" className="hover:underline">Politique de confidentialit&eacute;</Link></li>
+              <li><Link href="/confidentialite" className="hover:underline">Confidentialit&eacute;</Link></li>
               <li aria-hidden>|</li>
               <li><Link href="/cgu" className="hover:underline">CGU</Link></li>
+              <li aria-hidden>|</li>
+              <li><Link href="/cgs" className="hover:underline">CGS</Link></li>
+              <li aria-hidden>|</li>
+              <li><Link href="/conditions-particulieres" className="hover:underline">Conditions particuli&egrave;res</Link></li>
             </ul>
           </div>
 

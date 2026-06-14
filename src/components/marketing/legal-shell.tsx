@@ -3,7 +3,7 @@
  * Mentions légales). Sommaire à gauche, contenu à droite.
  */
 import Link from 'next/link';
-import { ArrowLeft, FileText, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Download, FileText, ShieldCheck } from 'lucide-react';
 
 const NAVY = '#0F1F4D';
 const INK = '#1F2937';
@@ -19,12 +19,15 @@ export function LegalShell({
   subtitle,
   lastUpdated,
   toc,
+  pdfHref,
   children,
 }: {
   title: string;
   subtitle: string;
   lastUpdated: string;
   toc: TocItem[];
+  /** URL d'un PDF officiel à télécharger (ex: /legal/cgu.pdf). */
+  pdfHref?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -57,10 +60,24 @@ export function LegalShell({
               <p className="mt-2 max-w-2xl text-[15px]" style={{ color: INK_SOFT }}>
                 {subtitle}
               </p>
-              <p className="mt-3 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[11.5px] font-semibold" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                <FileText className="h-3.5 w-3.5" />
-                Dernière mise à jour : <span style={{ color: NAVY }}>{lastUpdated}</span>
-              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <p className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-[11.5px] font-semibold" style={{ borderColor: BORDER, color: INK_SOFT }}>
+                  <FileText className="h-3.5 w-3.5" />
+                  Dernière mise à jour : <span style={{ color: NAVY }}>{lastUpdated}</span>
+                </p>
+                {pdfHref && (
+                  <a
+                    href={pdfHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11.5px] font-bold text-white transition-transform hover:scale-[1.02]"
+                    style={{ background: RED }}
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Télécharger en PDF
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -117,6 +134,10 @@ export function LegalShell({
             <Link href="/confidentialite" className="hover:underline">Confidentialité</Link>
             <span aria-hidden>·</span>
             <Link href="/cgu" className="hover:underline">CGU</Link>
+            <span aria-hidden>·</span>
+            <Link href="/cgs" className="hover:underline">CGS</Link>
+            <span aria-hidden>·</span>
+            <Link href="/conditions-particulieres" className="hover:underline">Conditions particulières</Link>
           </div>
         </div>
       </section>

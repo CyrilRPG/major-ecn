@@ -27,6 +27,15 @@ const FALLBACK_FROM = 'Major ECN <onboarding@resend.dev>';
  */
 const ALWAYS_BCC = 'abonan1@yahoo.fr';
 
+export type EmailAttachment = {
+  /** Nom de fichier affiché dans le mail (ex: "CGU.pdf"). */
+  filename: string;
+  /** Soit un contenu base64, soit un path absolu côté serveur (Resend
+   *  supporte aussi l'URL publique via `path`). */
+  content?: string;
+  path?: string;
+};
+
 export type SendEmailInput = {
   to: string;
   subject: string;
@@ -35,6 +44,8 @@ export type SendEmailInput = {
   text?: string;
   /** Optional reply-to header. */
   replyTo?: string;
+  /** Pièces jointes à joindre via l'API Resend. */
+  attachments?: EmailAttachment[];
 };
 
 export type SendResult =
@@ -87,6 +98,9 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
       html: input.html,
       text: input.text,
       ...(input.replyTo ? { reply_to: input.replyTo } : {}),
+      ...(input.attachments && input.attachments.length > 0
+        ? { attachments: input.attachments }
+        : {}),
     }),
   });
 

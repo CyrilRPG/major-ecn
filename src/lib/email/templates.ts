@@ -461,6 +461,22 @@ export function purchaseConfirmationEmail({
       <a href="${escapeAttr(setupUrl)}" style="color:#C0112E;word-break:break-all;text-decoration:underline;">${escapeHtml(setupUrl)}</a>
     </p>
 
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0 0;background:#F8FAFC;border:1px solid #E5E9F0;border-radius:14px;padding:14px 18px;">
+      <tr>
+        <td>
+          <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7A8499;">Documents contractuels (PDF en pièces jointes)</p>
+          <p style="margin:0;font-size:13px;color:#1F2937;line-height:1.55;">
+            Vous trouverez en pièces jointes les documents contractuels acceptés au moment de
+            votre souscription : <strong>CGU</strong>, <strong>CGS</strong> et
+            <strong>Conditions Particulières</strong>. Ils sont également consultables sur
+            <a href="https://www.major-ecn.fr/cgu" style="color:#C0112E;text-decoration:underline;">major-ecn.fr/cgu</a>,
+            <a href="https://www.major-ecn.fr/cgs" style="color:#C0112E;text-decoration:underline;">/cgs</a>
+            et <a href="https://www.major-ecn.fr/conditions-particulieres" style="color:#C0112E;text-decoration:underline;">/conditions-particulieres</a>.
+          </p>
+        </td>
+      </tr>
+    </table>
+
     <p style="margin:24px 0 0;font-size:13px;color:#5A5A5A;line-height:1.6;">
       Une question sur votre préparation ? Écrivez-nous à
       <a href="mailto:contact@major-ecn.fr" style="color:#C0112E;text-decoration:none;font-weight:600;">contact@major-ecn.fr</a>.
@@ -482,6 +498,9 @@ export function purchaseConfirmationEmail({
     `Accès complet à la Médecine Générale (Voie interne + Voie externe).`,
     ``,
     `Activez votre compte : ${setupUrl}`,
+    ``,
+    `Documents contractuels en pièces jointes : CGU, CGS, Conditions Particulières.`,
+    `Également consultables sur major-ecn.fr/cgu, /cgs, /conditions-particulieres.`,
     ``,
     `L'équipe Major ECN`,
   ].join('\n');

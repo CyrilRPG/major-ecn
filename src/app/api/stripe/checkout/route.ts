@@ -30,6 +30,14 @@ import {
 } from '@/lib/stripe';
 import { siteUrl } from '@/lib/email/send';
 
+type Consents = {
+  cgu?: boolean;
+  cgs?: boolean;
+  cp?: boolean;
+  waiveRetractation?: boolean;
+  timestamp?: string;
+};
+
 type Body = {
   formule?: string;
   email?: string;
@@ -40,6 +48,7 @@ type Body = {
   /** Voie de concours pour la Formule Intensive : 'interne' | 'externe' | ''. */
   voie?: string;
   installments?: number;
+  consents?: Consents;
 };
 
 export async function POST(req: Request) {
@@ -92,6 +101,16 @@ export async function POST(req: Request) {
   const successUrl = `${base}/merci?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${base}/annule`;
 
+  // Sécurité légale : refuse la création de session si les consentements
+  // contractuels n'ont pas été cochés côté client (anti-bypass UI).
+  const c = body.consents ?? {};
+  if (!c.cgu || !c.cgs || !c.cp || !c.waiveRetractation) {
+    return NextResponse.json(
+      { error: 'Acceptation des CGU, CGS, Conditions Particulières et renonciation au droit de rétractation requises.' },
+      { status: 400 },
+    );
+  }
+
   try {
     const commonMetadata = {
       formule: formule.id,
@@ -102,6 +121,13 @@ export async function POST(req: Request) {
       voie: body.voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
+      // Traçabilité des consentements (horodatés) — auditable depuis Stripe
+      // dashboard ainsi que via le webhook côté serveur.
+      consent_cgu: c.cgu ? '1' : '0',
+      consent_cgs: c.cgs ? '1' : '0',
+      consent_cp: c.cp ? '1' : '0',
+      consent_waive_retractation: c.waiveRetractation ? '1' : '0',
+      consent_timestamp: c.timestamp ?? new Date().toISOString(),
     };
 
     if (installments > 1) {

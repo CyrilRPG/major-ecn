@@ -50,7 +50,15 @@ export function CheckoutButton({
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
-  const [rgpd, setRgpd] = useState(false);
+  // 4 consentements obligatoires (cf. note légale PAE Formation) :
+  // - CGU : Conditions Générales d'Utilisation
+  // - CGS : Conditions Générales de Service
+  // - CP  : Conditions Particulières
+  // - Renonciation expresse au droit de rétractation (article L. 221-28, 1° CC)
+  const [acceptCgu, setAcceptCgu] = useState(false);
+  const [acceptCgs, setAcceptCgs] = useState(false);
+  const [acceptCp, setAcceptCp] = useState(false);
+  const [waiveRetractation, setWaiveRetractation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showInfoPopup, setShowInfoPopup] = useState(false);
@@ -66,8 +74,12 @@ export function CheckoutButton({
       setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
     }
-    if (!rgpd) {
-      setError("Vous devez accepter la politique de confidentialité pour continuer.");
+    if (!acceptCgu || !acceptCgs || !acceptCp) {
+      setError('Vous devez accepter les CGU, les CGS et les Conditions Particulières pour continuer.');
+      return;
+    }
+    if (!waiveRetractation) {
+      setError('La renonciation expresse au droit de rétractation est requise pour démarrer immédiatement votre accès à la plateforme.');
       return;
     }
     setError(null);
@@ -92,6 +104,13 @@ export function CheckoutButton({
           specialty,
           voie: isIntensive ? voie : '',
           installments,
+          consents: {
+            cgu: acceptCgu,
+            cgs: acceptCgs,
+            cp: acceptCp,
+            waiveRetractation,
+            timestamp: new Date().toISOString(),
+          },
         }),
       });
       const j = (await res.json()) as { url?: string; error?: string };
@@ -176,23 +195,75 @@ export function CheckoutButton({
         </p>
       </fieldset>
 
-      {/* RGPD */}
-      <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border bg-[#FCFCFD] p-3.5"
-        style={{ borderColor: rgpd ? color.main : '#E5E9F0' }}>
+      {/* Consentements contractuels obligatoires */}
+      <SectionLabel n={4} title="Acceptation des conditions" />
+
+      <ConsentCheckbox
+        checked={acceptCgu}
+        onChange={setAcceptCgu}
+        accent={color.main}
+        text={
+          <>
+            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
+            <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
+              Conditions Générales d&rsquo;Utilisation (CGU)
+            </Link>
+            {' '}de Major ECN.
+          </>
+        }
+      />
+
+      <ConsentCheckbox
+        checked={acceptCgs}
+        onChange={setAcceptCgs}
+        accent={color.main}
+        text={
+          <>
+            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
+            <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
+              Conditions Générales de Service (CGS)
+            </Link>
+            {' '}de Major ECN.
+          </>
+        }
+      />
+
+      <ConsentCheckbox
+        checked={acceptCp}
+        onChange={setAcceptCp}
+        accent={color.main}
+        text={
+          <>
+            J&rsquo;ai pris connaissance et j&rsquo;accepte les{' '}
+            <Link href="/conditions-particulieres" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
+              Conditions Particulières
+            </Link>
+            {' '}attachées à mon Offre.
+          </>
+        }
+      />
+
+      {/* Renonciation expresse au droit de rétractation — bloc distinct + plus visible */}
+      <label
+        className="flex cursor-pointer items-start gap-2.5 rounded-xl border-2 p-3.5"
+        style={{
+          borderColor: waiveRetractation ? color.main : '#FCD0D6',
+          background: waiveRetractation ? '#FFFFFF' : '#FFF6F7',
+        }}
+      >
         <input
           type="checkbox"
-          checked={rgpd}
-          onChange={(e) => setRgpd(e.target.checked)}
+          checked={waiveRetractation}
+          onChange={(e) => setWaiveRetractation(e.target.checked)}
           className="mt-0.5 h-4 w-4 shrink-0 rounded"
           style={{ accentColor: color.main }}
         />
-        <span className="text-[12px] leading-relaxed" style={{ color: '#1F2937' }}>
-          J&rsquo;accepte que mes données personnelles soient collectées pour traiter mon
-          inscription, conformément à la{' '}
-          <Link href="/confidentialite" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>
-            politique de confidentialité
-          </Link>{' '}
-          de Major ECN. <span className="text-[11px]" style={{ color: '#7A8499' }}>(obligatoire)</span>
+        <span className="text-[11.5px] leading-relaxed" style={{ color: '#1F2937' }}>
+          Le Client déclare renoncer expressément à son droit de rétractation en vue
+          d&rsquo;accéder, sans délai avant la fin dudit délai de rétractation, à la plateforme de
+          la Société et aux services associés dans les conditions des Conditions Générales de
+          Services. En conséquence, en application de l&rsquo;article L. 221-28, 1° du code de la
+          consommation, le Client ne saurait rétracter son engagement à l&rsquo;égard de la Société.
         </span>
       </label>
 
@@ -249,6 +320,34 @@ export function CheckoutButton({
 }
 
 /* ============================================================ */
+function ConsentCheckbox({
+  checked,
+  onChange,
+  accent,
+  text,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  accent: string;
+  text: React.ReactNode;
+}) {
+  return (
+    <label
+      className="flex cursor-pointer items-start gap-2.5 rounded-xl border bg-white p-3"
+      style={{ borderColor: checked ? accent : '#E5E9F0' }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 shrink-0 rounded"
+        style={{ accentColor: accent }}
+      />
+      <span className="text-[12px] leading-relaxed" style={{ color: '#1F2937' }}>{text}</span>
+    </label>
+  );
+}
+
 function SectionLabel({ n, title }: { n: number; title: string }) {
   return (
     <div className="flex items-center gap-2 pt-1">
