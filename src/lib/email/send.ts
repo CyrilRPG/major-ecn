@@ -53,15 +53,21 @@ export type SendResult =
   | { ok: false; error: string };
 
 /** Base URL publique de l'app pour construire les liens d'email.
+ *
+ *  Le domaine canonique de production est **https://major-ecn.fr** : tous les
+ *  emails transactionnels (activation, réinitialisation de mot de passe…)
+ *  doivent y pointer, jamais sur une URL Vercel temporaire dont les cookies
+ *  ne sont pas partagés avec le domaine custom.
+ *
  *  Cascade :
- *   1. NEXT_PUBLIC_SITE_URL (priorité, ex: domaine custom https://major-ecn.fr)
- *   2. VERCEL_PROJECT_PRODUCTION_URL (auto-injectée par Vercel sur les builds
- *      de production — sans schéma, ex: "major-ecn.fr")
- *   3. VERCEL_URL (auto-injectée par Vercel — URL du déploiement courant)
- *   4. localhost (dev uniquement) */
+ *   1. NEXT_PUBLIC_SITE_URL (override explicite, utile en preview/staging).
+ *   2. NODE_ENV === 'production' → https://major-ecn.fr (forcé canonique).
+ *   3. VERCEL_PROJECT_PRODUCTION_URL / VERCEL_URL (previews uniquement).
+ *   4. localhost (dev uniquement). */
 export function siteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL;
-  if (env) return env.replace(/\/+$/, '');
+  if (env && env.trim().length > 0) return env.replace(/\/+$/, '');
+  if (process.env.NODE_ENV === 'production') return 'https://major-ecn.fr';
   const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL;
   if (prod) return `https://${prod.replace(/\/+$/, '')}`;
   const v = process.env.VERCEL_URL;
