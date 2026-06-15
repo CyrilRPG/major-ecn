@@ -32,9 +32,89 @@ const COUNTRIES = [
 
 type ModalStep = 1 | 2 | 3;
 
+type DocKey = 'cv' | 'lettre' | 'diplomes' | 'publications';
+const DOC_SLOTS: { key: DocKey; title: string; desc: string; color: string }[] = [
+  { key: 'cv', title: 'CV à jour *', desc: 'Votre curriculum vitae actualisé', color: RED },
+  { key: 'lettre', title: 'Lettre de motivation (facultatif)', desc: 'Expliquez vos motivations et vos centres d’intérêt', color: '#F59E0B' },
+  { key: 'diplomes', title: 'Diplômes et titres (facultatif)', desc: 'Copies de vos diplômes et titres universitaires', color: '#7C3AED' },
+  { key: 'publications', title: 'Publications / travaux (facultatif)', desc: 'Articles, travaux, publications ou communications', color: '#2563EB' },
+];
+
+/** Lit un fichier et renvoie son contenu base64 (sans préfixe data URI). */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result).split(',')[1] ?? '');
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
 function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [step, setStep] = useState<ModalStep>(1);
+  const [form, setForm] = useState({ first: '', last: '', email: '', phone: '', message: '' });
+  const [docs, setDocs] = useState<Record<DocKey, File | null>>({ cv: null, lettre: null, diplomes: null, publications: null });
+  const [attested, setAttested] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errMsg, setErrMsg] = useState('');
+
+  const submit = async () => {
+    if (!form.first.trim() || !form.last.trim() || !form.email.trim()) {
+      setErrMsg('Renseignez vos prénom, nom et email (étape 1).'); setStatus('error'); setStep(1); return;
+    }
+    if (!docs.cv) { setErrMsg('Le CV est obligatoire pour soumettre votre candidature.'); setStatus('error'); return; }
+    if (!attested) { setErrMsg('Veuillez attester l’exactitude des informations fournies.'); setStatus('error'); return; }
+    const chosen = DOC_SLOTS
+      .map((slot) => ({ slot, file: docs[slot.key] }))
+      .filter((x): x is { slot: typeof DOC_SLOTS[number]; file: File } => x.file != null);
+    if (chosen.reduce((t, x) => t + x.file.size, 0) > 4 * 1024 * 1024) {
+      setErrMsg('Documents trop volumineux (4 Mo au total maximum).'); setStatus('error'); return;
+    }
+    setStatus('submitting'); setErrMsg('');
+    try {
+      const attachments = await Promise.all(
+        chosen.map(async (x) => ({ filename: `${x.slot.key.toUpperCase()} - ${x.file.name}`, content: await fileToBase64(x.file) })),
+      );
+      const res = await fetch('/api/recrutement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${form.first} ${form.last}`.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+          attachments,
+        }),
+      });
+      const j = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !j.ok) { setErrMsg(j.error ?? 'Erreur à l’envoi. Réessayez.'); setStatus('error'); return; }
+      setStatus('success');
+    } catch {
+      setErrMsg('Connexion impossible. Réessayez dans un instant.'); setStatus('error');
+    }
+  };
+
   if (!open) return null;
+
+  if (status === 'success') {
+    return (
+      <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-12 backdrop-blur-sm">
+        <div className="relative w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl" style={{ fontFamily: FONT }}>
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full" style={{ background: '#E7F6EC', color: '#0F8A6A' }}>
+            <CheckCircle2 className="h-8 w-8" />
+          </span>
+          <h2 className="mt-5 text-xl font-black" style={{ color: NAVY }}>Candidature envoyée !</h2>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: INK_SOFT }}>
+            Merci, votre candidature et vos documents ont bien été transmis à l’équipe Major ECN.
+            Nous vous recontacterons dans les meilleurs délais.
+          </p>
+          <button onClick={onClose} className="mt-6 rounded-xl px-6 py-3 text-sm font-bold text-white" style={{ background: RED }}>
+            Fermer
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-12 backdrop-blur-sm">
@@ -82,19 +162,19 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Prénom *</label>
-                <input placeholder="Votre prénom" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
+                <input value={form.first} onChange={(e) => setForm((f) => ({ ...f, first: e.target.value }))} placeholder="Votre prénom" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Nom *</label>
-                <input placeholder="Votre nom" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
+                <input value={form.last} onChange={(e) => setForm((f) => ({ ...f, last: e.target.value }))} placeholder="Votre nom" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>E-mail *</label>
-                <input type="email" placeholder="exemple@email.com" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
+                <input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="exemple@email.com" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Téléphone *</label>
-                <input placeholder="06 12 34 56 78" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
+                <input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="06 12 34 56 78" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Pays de résidence *</label>
@@ -270,27 +350,31 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <p className="text-xs" style={{ color: INK_SOFT }}>Formats acceptés : PDF, DOC, DOCX (Taille max. 10 Mo par fichier)</p>
 
             <div className="mt-4 space-y-3">
-              {[
-                { title: 'CV à jour *', desc: 'Votre curriculum vitae actualisé', color: RED },
-                { title: 'Lettre de motivation (facultatif)', desc: 'Expliquez vos motivations et vos centres d\'interet', color: '#F59E0B' },
-                { title: 'Diplômes et titres (facultatif)', desc: 'Copies de vos diplômes et titres universitaires', color: '#7C3AED' },
-                { title: 'Publications / travaux (facultatif)', desc: 'Articles, travaux, publications ou communications', color: '#2563EB' },
-              ].map(d => (
-                <div key={d.title} className="flex items-center justify-between rounded-xl border p-4" style={{ borderColor: BORDER }}>
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: `${d.color}15`, color: d.color }}>
-                      <FileText className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold" style={{ color: INK }}>{d.title}</p>
-                      <p className="text-xs" style={{ color: INK_SOFT }}>{d.desc}</p>
+              {DOC_SLOTS.map((d) => {
+                const f = docs[d.key];
+                return (
+                  <div key={d.key} className="flex items-center justify-between gap-3 rounded-xl border p-4" style={{ borderColor: f ? d.color : BORDER }}>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg" style={{ background: `${d.color}15`, color: d.color }}>
+                        <FileText className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold" style={{ color: INK }}>{d.title}</p>
+                        <p className="truncate text-xs" style={{ color: f ? d.color : INK_SOFT }}>{f ? f.name : d.desc}</p>
+                      </div>
                     </div>
+                    <label className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors hover:bg-gray-50" style={{ borderColor: BORDER, color: INK }}>
+                      <Upload className="h-3.5 w-3.5" /> {f ? 'Remplacer' : 'Ajouter un fichier'}
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                        className="hidden"
+                        onChange={(e) => { const file = e.currentTarget.files?.[0] ?? null; setDocs((prev) => ({ ...prev, [d.key]: file })); }}
+                      />
+                    </label>
                   </div>
-                  <button className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold" style={{ borderColor: BORDER, color: INK }}>
-                    <Upload className="h-3.5 w-3.5" /> Ajouter un fichier
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <h4 className="mt-6 text-sm font-black" style={{ color: NAVY }}>Disponibilités</h4>
@@ -305,12 +389,15 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             </div>
 
             <h4 className="mt-6 text-sm font-bold" style={{ color: INK }}>Un message pour notre équipe (facultatif)</h4>
-            <textarea placeholder="Précisez vos attentes, vos domaines d\'interet ou toute information utile..."
+            <textarea
+              value={form.message}
+              onChange={(e) => setForm((f) => ({ ...f, message: e.target.value.slice(0, 1000) }))}
+              placeholder="Précisez vos attentes, vos domaines d'intérêt ou toute information utile..."
               className="mt-2 w-full rounded-lg border px-4 py-3 text-sm" style={{ borderColor: BORDER, minHeight: '100px' }} />
-            <p className="mt-1 text-right text-xs" style={{ color: INK_SOFT }}>0/1000</p>
+            <p className="mt-1 text-right text-xs" style={{ color: INK_SOFT }}>{form.message.length}/1000</p>
 
             <label className="mt-4 flex items-start gap-2 text-sm" style={{ color: INK }}>
-              <input type="checkbox" className="mt-1 rounded" style={{ accentColor: RED }} />
+              <input type="checkbox" checked={attested} onChange={(e) => setAttested(e.target.checked)} className="mt-1 rounded" style={{ accentColor: RED }} />
               <span>J'atteste sur l'honneur l'exactitude des informations fournies. *
                 <br /><span className="text-xs" style={{ color: INK_SOFT }}>En soumettant ce formulaire, j'accepte que Major ECN utilise mes données pour traiter ma candidature.</span>
               </span>
@@ -323,12 +410,18 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
               </p>
             </div>
 
+            {status === 'error' && (
+              <p className="mt-4 rounded-xl border px-4 py-3 text-[13px]" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#FCEAEC', color: RED }}>
+                {errMsg}
+              </p>
+            )}
+
             <div className="mt-4 flex items-center justify-between">
-              <button onClick={() => setStep(2)} className="inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold" style={{ borderColor: BORDER, color: NAVY }}>
+              <button type="button" onClick={() => setStep(2)} className="inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold" style={{ borderColor: BORDER, color: NAVY }}>
                 ← Précédent
               </button>
-              <button className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white" style={{ background: RED }}>
-                Soumettre ma candidature <Send className="h-4 w-4" />
+              <button type="button" onClick={submit} disabled={status === 'submitting'} className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white disabled:opacity-60" style={{ background: RED }}>
+                {status === 'submitting' ? 'Envoi…' : <>Soumettre ma candidature <Send className="h-4 w-4" /></>}
               </button>
             </div>
           </div>

@@ -49,7 +49,7 @@ const PROCESS_STEPS = [
   {
     n: '05',
     Icon: Trophy,
-    title: 'Concours blancs',
+    title: 'Épreuves blanches',
     desc: 'Conditions réelles, copies notées et corrigées par les enseignants.',
   },
   {
@@ -202,7 +202,7 @@ export function MethodologySection() {
    ============================================================ */
 const ECOSYSTEM_BLOCKS = [
   { Icon: Video,         t: 'Webinars live',          d: 'Sessions hebdomadaires de méthodologie et cas cliniques.', tag: 'Chaque mardi 20h' },
-  { Icon: CalendarClock, t: 'Événements',             d: 'Concours blancs, conférences avec des experts EVC.',       tag: '1× par mois' },
+  { Icon: CalendarClock, t: 'Épreuves blanches',      d: 'Épreuves blanches, conférences avec des experts EVC.',       tag: '1× par mois' },
   { Icon: GraduationCap, t: 'Sessions méthodologie',  d: 'Ateliers en petit groupe sur le raisonnement clinique.',   tag: 'À la demande' },
   { Icon: Activity,      t: 'Activité continue',      d: 'Nouveau contenu chaque semaine, mises à jour 2026.',       tag: 'Programme vivant' },
 ];
@@ -976,7 +976,7 @@ const PLANS = [
   {
     name: 'Premium', price: '89', period: '/mois',
     desc: 'La préparation complète recommandée.',
-    features: ['Tout Essentiel +', 'IA pédagogique avancée', 'Analytics détaillés', 'Examens blancs illimités', 'Tuteur dédié', 'Mode concours'],
+    features: ['Tout Essentiel +', 'IA pédagogique avancée', 'Analytics détaillés', 'Épreuves blanches illimitées', 'Tuteur dédié', 'Mode concours'],
     cta: 'Choisir Premium', highlighted: true, badge: 'Le plus populaire',
   },
   {

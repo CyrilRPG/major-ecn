@@ -16,10 +16,19 @@ export async function POST(req: Request) {
     );
   }
 
-  const { name, email, phone, subject, message, company } = parsed.data;
+  const { name, email, phone, subject, message, company, attachments } = parsed.data;
 
   // Honeypot : si rempli, on fait semblant d'accepter sans rien envoyer.
   if (company) return NextResponse.json({ ok: true });
+
+  // Garde-fou taille : la requête serverless (Vercel) plafonne à ~4,5 Mo.
+  const totalB64 = (attachments ?? []).reduce((s, a) => s + a.content.length, 0);
+  if (totalB64 > 6_000_000) {
+    return NextResponse.json(
+      { error: `Pièces jointes trop volumineuses (4 Mo max). Envoyez-les directement à ${CONTACT_EMAIL}.` },
+      { status: 413 },
+    );
+  }
 
   const { subject: mailSubject, html, text } = contactMessageEmail({
     name, email, phone: phone || null, subject, message,
@@ -32,6 +41,8 @@ export async function POST(req: Request) {
     text,
     // Répondre au message renvoie directement vers l'expéditeur.
     replyTo: email,
+    // Pièces jointes (CV, diplômes…) transmises via l'API Resend.
+    ...(attachments && attachments.length > 0 ? { attachments } : {}),
   });
 
   if (!sent.ok) {

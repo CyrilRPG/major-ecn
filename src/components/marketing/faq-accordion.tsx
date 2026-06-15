@@ -224,7 +224,7 @@ export function FaqSidebar() {
             { Icon: GraduationCap, t: '+45 spécialités préparées' },
             { Icon: Stethoscope,   t: 'Correcteurs spécialistes en activité' },
             { Icon: Layers3,       t: 'Révisions transversales & flashcards' },
-            { Icon: TrendingUp,    t: 'Concours blancs corrigés EVC' },
+            { Icon: TrendingUp,    t: 'Épreuves blanches corrigées EVC' },
           ].map((it, i) => (
             <li key={i} className="flex items-start gap-2.5">
               <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ background: '#FCEAEC', color: RED }}>

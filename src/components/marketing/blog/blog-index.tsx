@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRight, BookmarkPlus, BookOpen, Building2, ClipboardCheck, Clock,
   Compass, Euro, FileText, GraduationCap, Globe2, Layers3, Lightbulb,
-  Newspaper, Search, Stethoscope,
+  Newspaper, Search,
 } from 'lucide-react';
 import {
-  BLOG_ARTICLES, BLOG_CATEGORIES, BLOG_TOP_THEMES,
+  BLOG_ARTICLES, BLOG_CATEGORIES, BLOG_TOP_THEMES, BLOG_CATEGORY_IMAGE,
   type BlogArticleMeta, type BlogCategory,
 } from '@/lib/data/blog-articles';
 import { NewsletterForm } from './newsletter-form';
@@ -195,20 +196,28 @@ function FeaturedCard({ article }: { article: BlogArticleMeta }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
       <div className="grid items-stretch gap-0 sm:grid-cols-[1fr_1.2fr]">
-        {/* Visuel placeholder coloré + grands éléments décoratifs */}
-        <div
-          className="relative flex aspect-[5/4] items-center justify-center sm:aspect-auto"
-          style={{ background: 'linear-gradient(135deg, #F6F7F9 0%, #ECEEF1 100%)' }}
-        >
-          <div className="absolute inset-6 rounded-xl border border-[#DDE1E7] bg-white shadow-sm" />
-          <div className="absolute right-10 top-12 h-16 w-12 rotate-6 rounded-md border border-[#DDE1E7] bg-white shadow-sm" />
-          <div className="absolute bottom-10 right-16 h-10 w-10 rounded-full bg-[#1A2233]" />
-          <Stethoscope className="absolute left-12 top-14 h-8 w-8 text-[#9AA1AE]" />
-          <div className="relative z-10 flex flex-col items-center text-center">
-            <div className="rounded-md border border-[#DDE1E7] bg-white px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.18em] text-[#1A2233]">
-              Dossier Candidature EVC
-            </div>
-          </div>
+        {/* Visuel « à la une » — photo pertinente recadrée (jamais déformée) */}
+        <div className="relative aspect-[5/4] overflow-hidden sm:aspect-auto">
+          <Image
+            src={BLOG_CATEGORY_IMAGE[article.category]}
+            alt={article.title}
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="(max-width:640px) 100vw, (max-width:1024px) 45vw, 520px"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 45%, rgba(15,31,77,0.20) 100%)' }}
+          />
+          <span
+            className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.18em] backdrop-blur"
+            style={{ color: c.fg, boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
+          >
+            <CategoryIcon cat={article.category} className="h-3 w-3" />
+            {c.label}
+          </span>
         </div>
         {/* Contenu */}
         <div className="flex flex-col justify-center p-6 sm:p-7 lg:p-8">

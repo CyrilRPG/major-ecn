@@ -22,6 +22,20 @@ export const BLOG_CATEGORIES: Record<BlogCategory, { label: string; tone: string
   'conseils-methodologie':{ label: 'Conseils & Méthodologie', tone: 'amber',bg: '#FEF3C7', fg: '#92400E' },
 };
 
+/**
+ * Image de couverture par catégorie — toutes les photos du blog sont au format
+ * carré (1:1). Utilisé pour les vignettes (« à la une », articles similaires)
+ * afin d'afficher un visuel pertinent par thématique plutôt qu'un placeholder.
+ */
+export const BLOG_CATEGORY_IMAGE: Record<BlogCategory, string> = {
+  'epreuves-evc':          '/blog/medecins-essentiels-doctor-patient.jpg',
+  'candidature-dossier':   '/blog/practitioners/practitioner-female-laptop.jpg',
+  'exercice-medical':      '/blog/medecins-essentiels-corridor.jpg',
+  'carriere-remuneration': '/blog/practitioners/practitioner-male-tie.jpg',
+  'medecins-etrangers':    '/blog/practitioners/practitioner-male-glasses.jpg',
+  'conseils-methodologie': '/blog/reussir-evc-asian-laptop.jpg',
+};
+
 export type BlogArticleMeta = {
   slug: string;
   title: string;

@@ -76,10 +76,31 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
           article={article}
           subtitle="CHU, établissements privés, ESPIC et structures agréées : découvrez où effectuer votre Parcours de Consolidation des Compétences (PCC) après les Épreuves de Vérification des Connaissances (EVC) et comment obtenir votre autorisation d'exercice."
           rightArea={
-            <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#DBEAFE_0%,#E7F6EC_100%)] lg:aspect-auto lg:h-48">
-              <div className="flex h-full items-center justify-center">
-                <Building2 className="h-16 w-16 text-[#1E4D8B]/40" />
-              </div>
+            <div
+              className="relative w-full overflow-hidden rounded-2xl border"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/medecins-essentiels-corridor.jpg"
+                alt="Équipe médicale dans un couloir de CHU, structure d'accueil pour le PCC"
+                className="block h-auto w-full select-none"
+                decoding="async"
+                fetchPriority="high"
+              />
+              <span aria-hidden className="pointer-events-none absolute inset-0"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 40%, rgba(15,31,77,0.18) 100%)' }} />
+              <span
+                className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] backdrop-blur"
+                style={{ color: '#1E4D8B', boxShadow: '0 6px 14px -8px rgba(15,31,77,0.20)' }}
+              >
+                <Building2 className="h-2.5 w-2.5" />
+                Structures d&rsquo;accueil PAE
+              </span>
             </div>
           }
         />

@@ -156,7 +156,7 @@ function MgMetrics() {
   const metrics = [
     { Icon: CheckCircle2, value: '100%', label: 'des items CMG couverts', tone: RED },
     { Icon: UserCheck,    value: '100%', label: 'correcteurs MG enseignants', tone: '#0F8A6A' },
-    { Icon: ListChecks,   value: '1 800+', label: 'QCM ciblés EVC', tone: '#2563EB' },
+    { Icon: ListChecks,   value: '10 000+', label: 'QCM ciblés EVC', tone: '#2563EB' },
     { Icon: FileText,     value: '120+', label: 'cas cliniques cabinet & hôpital', tone: '#7C3AED' },
   ];
   return (
@@ -254,7 +254,7 @@ function MgAccompagnement() {
   const right = [
     { Icon: Users,       title: 'Groupes restreints',      text: 'Maximum 25 candidats par session de correction live.' },
     { Icon: CalendarCheck,title: 'Sessions de révision',    text: 'Trois sessions intensives par mois en visio interactive.' },
-    { Icon: Award,        title: 'Concours blancs EVC',     text: 'Format identique à l’épreuve, corrigés détaillés et classement national.' },
+    { Icon: Award,        title: 'Épreuves blanches inspirées des EVC',     text: 'Format identique à l’épreuve, corrigés détaillés et classement national.' },
   ];
 
   return (
@@ -355,7 +355,7 @@ function MgProgramme() {
     { Icon: BookOpen, title: 'Cours synthétiques',
       text: 'Fiches référentielles 2 à 6 pages, alignées CMG, mises à jour à chaque session.' },
     { Icon: ListChecks, title: 'QCM ciblés EVC',
-      text: 'Banque de 1 800+ QCM calibrés EVC avec explications détaillées.' },
+      text: 'Banque de 10 000+ QCM calibrés EVC avec explications détaillées.' },
     { Icon: ClipboardCheck, title: 'Cas cliniques corrigés',
       text: '120+ cas cliniques de consultation ou d’hospitalisation, corrigés ligne par ligne.' },
     { Icon: Clock, title: 'Révision active',

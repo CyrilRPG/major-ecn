@@ -100,7 +100,7 @@ const FAQS = [
   ['Quels documents fournir pour son dossier ?', 'Diplôme ou titre permettant d\'exercer, pièce d\'identité, traductions certifiées si nécessaire, formulaire de candidature et tout justificatif demandé par l\'ARS.'],
   ['Où envoyer son dossier EVC ?', 'La candidature se réalise en ligne directement sur la plateforme officielle du CNG pendant la période d\'inscription indiquée dans l\'arrêté d\'ouverture.'],
   ['Comment se déroulent les épreuves ?', 'Deux épreuves écrites de 2 heures chacune, anonymes, notées sur 20 et affectées du coefficient 1.'],
-  ['Comment bien préparer les EVC ?', 'Une préparation structurée combinant cours synthétiques, QCM corrigés, cas cliniques progressifs et concours blancs maximise vos chances de réussite.'],
+  ['Comment bien préparer les EVC ?', 'Une préparation structurée combinant cours synthétiques, QCM corrigés, cas cliniques progressifs et épreuves blanches maximise vos chances de réussite.'],
 ];
 
 export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta }) {

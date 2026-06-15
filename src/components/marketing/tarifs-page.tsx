@@ -220,7 +220,7 @@ export function TarifsPageContent() {
                 </div>
                 <p className="mt-3 text-[40px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
                 <ul className="mt-5 space-y-2.5">
-                  {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches', 'Corrections détaillées'].map(f => (
+                  {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches inspirées des EVC', 'Corrections détaillées'].map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
                       <CheckCircle2 className="mt-px h-[18px] w-[18px] shrink-0" style={{ color: RED }} /> {f}
                     </li>
@@ -267,7 +267,7 @@ export function TarifsPageContent() {
                 <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>À partir de</p>
                 <p className="mt-0.5 text-[40px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
                 <ul className="mt-5 space-y-2.5">
-                  {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches'].map(f => (
+                  {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches inspirées des EVC'].map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
                       <CheckCircle2 className="mt-px h-[18px] w-[18px] shrink-0" style={{ color: PURPLE }} /> {f}
                     </li>

@@ -437,9 +437,9 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               </p>
               <ul className="mt-3 grid grid-cols-1 gap-2.5">
                 {[
-                  { big: '4 500+', sub: 'flashcards' },
+                  { big: '10 000+', sub: 'flashcards' },
                   { big: '10 000+',sub: 'QCM disponibles' },
-                  { big: '60+',    sub: 'concours blancs' },
+                  { big: '60+',    sub: 'épreuves blanches' },
                   { big: '45',     sub: 'spécialités préparées' },
                   { big: '9 000+', sub: 'médecins formés' },
                 ].map((s) => (

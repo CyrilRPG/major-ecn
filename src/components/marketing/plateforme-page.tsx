@@ -515,7 +515,7 @@ function PlateformeHero() {
                   </h1>
                   <p className="mt-4 max-w-xl text-[14px] leading-relaxed sm:text-[15px]" style={{ color: INK_SOFT }}>
                     Fiches synthétiques, vidéos par PH spécialistes, QCM au format EVC,
-                    flashcards et concours blancs — tout est orchestré dans un seul
+                    flashcards et épreuves blanches — tout est orchestré dans un seul
                     espace pour vous porter jusqu&rsquo;au jour J.
                   </p>
 
@@ -731,13 +731,13 @@ function ShieldDot({ className = '' }: { className?: string }) {
 // Ancien mock dashboard (HTML reconstruit) — conservé pour référence mais
 // désactivé : la maquette demande une vraie capture d'écran en plein cadre.
 function PlateformeHero_LegacyMock() {
-  const tabs = ['Tableau de bord', 'QCM', 'Cas cliniques', 'Cours Live', 'Concours blancs', 'Actualités CNG', 'Ressources'];
+  const tabs = ['Tableau de bord', 'QCM', 'Cas cliniques', 'Cours Live', 'Épreuves blanches', 'Actualités CNG', 'Ressources'];
   const sideItems = [
     { L: LayoutDashboard, n: 'Tableau de bord', active: true },
     { L: ListChecks,      n: 'QCM' },
     { L: ClipboardCheck,  n: 'Cas cliniques' },
     { L: Video,           n: 'Cours Live', badge: 'Live' },
-    { L: Trophy,          n: 'Concours blancs' },
+    { L: Trophy,          n: 'Épreuves blanches' },
     { L: Layers3,         n: 'Flashcards' },
     { L: TrendingUp,      n: 'Statistiques' },
     { L: Bell,            n: 'Actualités CNG' },
@@ -1525,7 +1525,7 @@ function PlatformToolsSection() {
     { Icon: ClipboardList, bg: '#FCEAEC', fg: RED,         t: 'QCM corrigés',          d: 'Des milliers de QCM classés par thèmes et sujets récents.' },
     { Icon: Users,         bg: '#FFEDD5', fg: '#EA580C',   t: 'Cas cliniques corrigés',d: 'Des cas cliniques complets et réalistes, corrigés et commentés.' },
     { Icon: Layers3,       bg: '#FEF3C7', fg: '#A16207',   t: 'Flashcards',            d: 'Des cartes de révision intelligentes pour mémoriser efficacement.' },
-    { Icon: Trophy,        bg: '#EDE9FE', fg: '#6D28D9',   t: 'Concours blancs',       d: 'Entraînez-vous dans les conditions réelles des épreuves.' },
+    { Icon: Trophy,        bg: '#EDE9FE', fg: '#6D28D9',   t: 'Épreuves blanches',       d: 'Entraînez-vous dans les conditions réelles des épreuves.' },
     { Icon: TrendingUp,    bg: '#DCFCE7', fg: '#16A34A',   t: 'Statistiques & progression', d: 'Suivez vos performances et identifiez vos axes d\'amélioration.' },
     { Icon: Bell,          bg: '#DBEAFE', fg: '#2563EB',   t: 'Actualités CNG',        d: 'Toutes les informations officielles mises à jour en temps réel.' },
     { Icon: FileText,      bg: '#CCFBF1', fg: '#0F766E',   t: 'Ressources & guides',   d: 'Guides, fiches mémo et ressources utiles à votre préparation.' },

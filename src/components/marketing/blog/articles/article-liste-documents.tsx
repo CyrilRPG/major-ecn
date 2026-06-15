@@ -3,12 +3,12 @@ import {
   AlertTriangle, ArrowRight, BadgeCheck, BookOpen, Building2, Check, CheckCircle2,
   ChevronDown, ClipboardCheck, Clock, FileBadge, FileCheck2, FileText,
   GraduationCap, Globe2, IdCard, Languages, Lightbulb, ListChecks, Lock, Phone,
-  ScrollText, ShieldCheck, Smartphone, Sparkles, Stethoscope, Users,
+  ShieldCheck, Smartphone, Sparkles, Stethoscope, Users,
 } from 'lucide-react';
 import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
-import { getRelatedArticles } from '@/lib/data/blog-articles';
+import { getRelatedArticles, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
 import Link from 'next/link';
 
 const INFO_CARDS = [
@@ -365,18 +365,21 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
 
 function HeroVisual() {
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_50%,#EDE9FE_100%)] lg:aspect-auto lg:h-52">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative h-32 w-44">
-          <span className="absolute left-0 top-2 flex h-28 w-32 rotate-[-3deg] items-center justify-center rounded-md bg-white shadow-md">
-            <FileText className="h-9 w-9 text-[#C0001F]/30" />
-          </span>
-          <span className="absolute right-0 bottom-0 flex h-24 w-28 rotate-[4deg] items-center justify-center rounded-md bg-white shadow-md">
-            <ScrollText className="h-8 w-8 text-[#1E4D8B]/30" />
-          </span>
-        </div>
-      </div>
-      <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-md bg-white/95 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wider text-[#1A2233]">
+    <div
+      className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_50%,#EDE9FE_100%)]"
+      style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)' }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/blog/practitioners/practitioner-female-desk.jpg"
+        alt="Médecin PADHUE constituant son dossier de candidature aux EVC à son bureau"
+        className="block h-auto w-full select-none"
+        decoding="async"
+        fetchPriority="high"
+      />
+      <span aria-hidden className="pointer-events-none absolute inset-0"
+        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 40%, rgba(15,31,77,0.16) 100%)' }} />
+      <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-md bg-white/95 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wider text-[#1A2233] backdrop-blur">
         <ShieldCheck className="h-3 w-3 text-[#C0001F]" />
         Dossier de candidature
       </span>
@@ -459,9 +462,13 @@ function RelatedRow({ currentSlug }: { currentSlug: string }) {
             className="group overflow-hidden rounded-xl border border-[#ECEEF1] bg-white transition-all hover:-translate-y-0.5 hover:shadow-md"
           >
             <div className="relative aspect-[16/9] bg-[linear-gradient(135deg,#FFF1F3_0%,#EDE9FE_100%)]">
-              <span className="absolute inset-0 flex items-center justify-center">
-                <Stethoscope className="h-10 w-10 text-[#9AA1AE]/40" />
-              </span>
+              <Image
+                src={BLOG_CATEGORY_IMAGE[a.category]}
+                alt=""
+                fill
+                className="object-cover object-center"
+                sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 240px"
+              />
             </div>
             <div className="p-3">
               <p className="line-clamp-3 text-[12.5px] font-bold leading-snug text-[#1A2233] group-hover:text-[#C0001F]">

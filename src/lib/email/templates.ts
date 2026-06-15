@@ -393,6 +393,48 @@ export function contactMessageEmail({ name, email, phone, subject, message }: Co
 }
 
 /* ============================================================
+   Candidature — formulaire de recrutement de la vitrine
+   ============================================================ */
+type RecrutementArgs = {
+  name: string;
+  email: string;
+  phone: string | null;
+  message: string | null;
+  attachmentNames: string[];
+};
+export function recrutementEmail({ name, email, phone, message, attachmentNames }: RecrutementArgs) {
+  const mailSubject = `🎓 Nouvelle candidature — ${name}`;
+  const bodyHtml = `
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4A5568;">
+      Nouvelle candidature reçue via le formulaire de recrutement de la vitrine.
+    </p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 18px;">
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Nom</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(name)}</td></tr>
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Email</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-family:monospace;">${escapeHtml(email)}</td></tr>
+      ${phone ? `<tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Téléphone</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(phone)}</td></tr>` : ''}
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Documents</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${attachmentNames.length ? escapeHtml(attachmentNames.join(', ')) : 'Aucun'}</td></tr>
+    </table>
+    ${message ? `<div style="margin:0 0 8px;padding:16px 18px;background:#FAFAF8;border:1px solid #ECEEF1;border-radius:12px;">
+      <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7A7A7A;">Message</p>
+      <p style="margin:0;font-size:14px;line-height:1.6;color:#2D2D2D;white-space:pre-wrap;">${escapeHtml(message)}</p>
+    </div>` : ''}
+    <p style="margin:18px 0 0;font-size:13px;color:#7A7A7A;">
+      Répondez directement à cet email pour contacter ${escapeHtml(name)}. Les documents sont joints à ce message.
+    </p>`;
+  const html = layout({ subject: mailSubject, eyebrow: 'Formulaire de recrutement', title: 'Nouvelle candidature', bodyHtml });
+  const text = [
+    `Nouvelle candidature`,
+    `Nom : ${name}`,
+    `Email : ${email}`,
+    phone ? `Téléphone : ${phone}` : '',
+    `Documents : ${attachmentNames.length ? attachmentNames.join(', ') : 'Aucun'}`,
+    '',
+    message ?? '',
+  ].filter(Boolean).join('\n');
+  return { subject: mailSubject, html, text };
+}
+
+/* ============================================================
    Confirmation d'achat — envoyé après paiement Stripe réussi
    ============================================================ */
 type PurchaseConfirmationArgs = {

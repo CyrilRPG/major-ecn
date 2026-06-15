@@ -50,7 +50,7 @@ const ADVANTAGES = [
   { Icon: TrendingUp,   t: 'Méthodologie éprouvée et adaptée aux EVC' },
   { Icon: GraduationCap, t: 'Enseignants experts dans leur spécialité' },
   { Icon: FileText,     t: 'Ressources complètes et actualisées' },
-  { Icon: ClipboardCheckIcon, t: 'Entraînements intensifs et examens blancs' },
+  { Icon: ClipboardCheckIcon, t: 'Entraînements intensifs et épreuves blanches' },
   { Icon: ShieldCheck,  t: 'Suivi personnalisé et motivation au quotidien' },
 ];
 

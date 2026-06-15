@@ -152,7 +152,7 @@ function MethodeHero() {
                 {[
                   { Icon: BookOpen, label: 'Méthodologie EVC',  bg: '#EDE9FE', fg: '#6D28D9' },
                   { Icon: Brain,    label: 'Raisonnement clinique', bg: '#FCE7F3', fg: '#BE185D' },
-                  { Icon: Trophy,   label: 'Concours blancs',   bg: '#DCFCE7', fg: '#16A34A' },
+                  { Icon: Trophy,   label: 'Épreuves blanches',   bg: '#DCFCE7', fg: '#16A34A' },
                 ].map((b) => (
                   <span key={b.label}
                     className="inline-flex items-center gap-2.5 rounded-2xl border bg-white/95 px-3.5 py-2 text-[12.5px] font-extrabold backdrop-blur"
@@ -180,7 +180,7 @@ const STEPS = [
   { n: '02', Icon: Lightbulb,  fg: '#BE185D', titre: 'Comprendre la\nméthodologie EVC',       desc: 'Raisonnement clinique, logique de correction et attentes du jury.' },
   { n: '03', Icon: Zap,        fg: '#6D28D9', titre: 'Entraînements\nciblés',                 desc: 'QCM et cas cliniques adaptés aux points faibles identifiés.' },
   { n: '04', Icon: BookOpen,   fg: '#2563EB', titre: 'Annales & cas\ncliniques corrigés',     desc: "Travail sur des situations proches des épreuves et corrigées en détail." },
-  { n: '05', Icon: Trophy,     fg: '#0F766E', titre: 'Concours blancs',                        desc: "Mise en situation réelle avec conditions d'examen et corrections détaillées." },
+  { n: '05', Icon: Trophy,     fg: '#0F766E', titre: 'Épreuves blanches',                        desc: "Mise en situation réelle avec conditions d'examen et corrections détaillées." },
   { n: '06', Icon: TrendingUp, fg: '#16A34A', titre: 'Consolidation &\nrappels',               desc: 'Révision transversale, mémorisation active et rappels réguliers.' },
 ];
 function StepsSection() {

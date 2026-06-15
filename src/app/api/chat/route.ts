@@ -27,8 +27,8 @@ import { callClaude, FAST_MODEL } from '@/lib/ai/anthropic';
 // erreur API…). Le prompt principal interdit explicitement à Claude
 // d'utiliser ce genre de formulation.
 const ABSTENTION =
-  "Je n'ai pas réussi à formuler la réponse — réessaie ou passe par le " +
-  'forum pour qu\'un prof te réponde.';
+  "Je n'ai pas réussi à formuler la réponse — réessayez ou passez par le " +
+  'forum pour qu\'un professeur puisse vous répondre.';
 
 const SYSTEM_PROMPT = `Tu es un médecin enseignant qui aide un étudiant
 en médecine à réviser pour les EVC. Tu réponds à TOUTES ses questions
@@ -219,8 +219,8 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({
       reply:
-        "Ce cours n'a pas encore de contenu pédagogique indexé. Pose ta " +
-        'question sur le forum pour qu\'un prof te réponde.',
+        "Ce cours n'a pas encore de contenu pédagogique indexé. Posez votre " +
+        'question sur le forum pour qu\'un professeur puisse vous répondre.',
       mode: 'no_content',
     });
   }
