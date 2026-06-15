@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, FileText, IdCard, Loader2, Pencil, ShieldCheck, UserCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  CONTENT_TYPES, CONTENT_TYPE_LABEL,
+  PERMISSION_LEVELS, PERMISSION_LEVEL_LABEL,
+  type ContentType, type PermissionLevel,
+} from '@/lib/schemas/professor';
 
 export type EditProfileFields = {
   id: string;
@@ -26,12 +33,47 @@ export type EditProfileFields = {
 
 type Role = 'professor' | 'student';
 
+type ProfessorScopeProps = {
+  permission_scope: unknown;
+  colleges: { id: string; nom: string }[];
+  coursByCollege: Record<string, { id: string; titre: string }[]>;
+};
+
+type ScopeShape = {
+  type?: 'all' | 'college';
+  colleges?: string[];
+  cours?: string[];
+  content_permissions?: Partial<Record<ContentType, PermissionLevel>>;
+  content_types?: ContentType[];
+};
+
+function initialScope(raw: unknown): {
+  permission_type: 'all' | 'college';
+  colleges: string[];
+  cours: string[];
+  perms: Partial<Record<ContentType, PermissionLevel>>;
+} {
+  const s = (raw ?? {}) as ScopeShape;
+  const fromOld: Partial<Record<ContentType, PermissionLevel>> = {};
+  if (!s.content_permissions && Array.isArray(s.content_types)) {
+    for (const t of s.content_types) fromOld[t] = 'rw';
+  }
+  return {
+    permission_type: s.type === 'college' ? 'college' : 'all',
+    colleges: Array.isArray(s.colleges) ? s.colleges : [],
+    cours: Array.isArray(s.cours) ? s.cours : [],
+    perms: s.content_permissions ?? fromOld,
+  };
+}
+
 export function EditProfileDialog({
   profile,
   role,
+  professorScope,
 }: {
   profile: EditProfileFields;
   role: Role;
+  professorScope?: ProfessorScopeProps;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -48,6 +90,33 @@ export function EditProfileDialog({
   const [cvUrl, setCvUrl] = useState(profile.cv_url ?? '');
   const [certifUrl, setCertifUrl] = useState(profile.certificat_scolarite_url ?? '');
   const [carteProUrl, setCarteProUrl] = useState(profile.carte_pro_url ?? '');
+
+  // Spécialités & accès (professeurs uniquement)
+  const showScope = role === 'professor' && !!professorScope;
+  const allColleges = professorScope?.colleges ?? [];
+  const coursByCollege = professorScope?.coursByCollege ?? {};
+  const singleCollegeMode = allColleges.length === 1;
+  const init = initialScope(professorScope?.permission_scope);
+  const [permType, setPermType] = useState<'all' | 'college'>(
+    singleCollegeMode ? 'college' : init.permission_type,
+  );
+  const [scopeColleges, setScopeColleges] = useState<string[]>(
+    singleCollegeMode ? [allColleges[0].id] : init.colleges,
+  );
+  const [scopeCours, setScopeCours] = useState<string[]>(init.cours);
+  const [perms, setPerms] = useState<Partial<Record<ContentType, PermissionLevel>>>(init.perms);
+
+  // Réinitialise les champs d'accès quand on rouvre (pour refléter d'éventuels
+  // changements en base via une autre session admin).
+  useEffect(() => {
+    if (!open || !showScope) return;
+    const fresh = initialScope(professorScope?.permission_scope);
+    setPermType(singleCollegeMode ? 'college' : fresh.permission_type);
+    setScopeColleges(singleCollegeMode ? [allColleges[0].id] : fresh.colleges);
+    setScopeCours(fresh.cours);
+    setPerms(fresh.perms);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const displayName = `${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || profile.email || (role === 'professor' ? 'professeur' : 'élève');
   const dossierComplet = role === 'professor'
@@ -79,6 +148,29 @@ export function EditProfileDialog({
         setError(j.error ?? 'Erreur lors de la mise à jour.');
         return;
       }
+
+      // Sauvegarde des accès professeur (collèges, cours, permissions par
+      // type de contenu). Réplique immédiate sur les guards SSR via
+      // profiles.permission_scope.
+      if (showScope) {
+        const scopeRes = await fetch('/api/admin/update-professor-scope', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: profile.id,
+            permission_type: permType,
+            colleges: permType === 'college' ? scopeColleges : [],
+            cours: permType === 'college' ? scopeCours : [],
+            content_permissions: perms,
+          }),
+        });
+        if (!scopeRes.ok) {
+          const j = (await scopeRes.json().catch(() => ({}))) as { error?: string };
+          setError(j.error ?? 'Identité enregistrée, mais erreur sur les accès.');
+          return;
+        }
+      }
+
       setSuccess(true);
       router.refresh();
       setTimeout(() => { setSuccess(false); setOpen(false); }, 900);
@@ -126,6 +218,142 @@ export function EditProfileDialog({
                 <Field label="CV (PDF)" full><Input value={cvUrl} onChange={(e) => setCvUrl(e.target.value)} placeholder="https://…/cv.pdf" /></Field>
                 <Field label="Certificat de scolarité (internes)"><Input value={certifUrl} onChange={(e) => setCertifUrl(e.target.value)} placeholder="https://…/certif.pdf" /></Field>
                 <Field label="Carte pro / justificatif d'exercice"><Input value={carteProUrl} onChange={(e) => setCarteProUrl(e.target.value)} placeholder="https://…/carte.pdf" /></Field>
+              </div>
+            </Section>
+          )}
+
+          {showScope && (
+            <Section title="Spécialités & accès" icon={<ShieldCheck className="h-4 w-4" />}>
+              <p className="text-xs text-(--color-ink-soft)">
+                Choisissez les collèges, items et niveaux d’accès par type de contenu. Les
+                modifications prennent effet immédiatement sur les pages admin de ce professeur.
+              </p>
+
+              {/* Collèges */}
+              {allColleges.length > 1 ? (
+                <div className="mt-3 space-y-2">
+                  <Label>Collèges accessibles</Label>
+                  <RadioGroup value={permType} onValueChange={(v) => setPermType(v as 'all' | 'college')}>
+                    <label className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) px-3 py-2.5 cursor-pointer hover:border-(--color-primary)/40">
+                      <RadioGroupItem value="all" />
+                      <span className="text-sm">Toute l’offre (tous les collèges)</span>
+                    </label>
+                    <label className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) px-3 py-2.5 cursor-pointer hover:border-(--color-primary)/40">
+                      <RadioGroupItem value="college" />
+                      <span className="text-sm">Collèges spécifiques</span>
+                    </label>
+                  </RadioGroup>
+                  {permType === 'college' && (
+                    <div className="ml-1 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {allColleges.map((c) => {
+                        const checked = scopeColleges.includes(c.id);
+                        return (
+                          <label key={c.id} className="flex items-center gap-2 text-sm">
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => {
+                                const set = new Set(scopeColleges);
+                                if (v) set.add(c.id); else set.delete(c.id);
+                                setScopeColleges(Array.from(set));
+                              }}
+                            />
+                            {c.nom}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ) : allColleges.length === 1 ? (
+                <div className="mt-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 text-sm">
+                  <span className="font-semibold text-(--color-ink)">Collège :</span>{' '}
+                  <span className="text-(--color-ink-soft)">{allColleges[0].nom}</span>
+                </div>
+              ) : null}
+
+              {/* Items */}
+              {permType === 'college' && scopeColleges.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  <Label>Items accessibles</Label>
+                  <p className="text-xs text-(--color-ink-muted)">
+                    Cochez les items à autoriser. Tout décocher = aucun item ; tout cocher = tous
+                    les items du collège.
+                  </p>
+                  <div className="space-y-3">
+                    {scopeColleges.map((collegeId) => {
+                      const college = allColleges.find((c) => c.id === collegeId);
+                      const courses = coursByCollege[collegeId] ?? [];
+                      if (!college) return null;
+                      const collegeCoursIds = courses.map((c) => c.id);
+                      const allChecked = courses.length > 0 && collegeCoursIds.every((id) => scopeCours.includes(id));
+                      return (
+                        <div key={collegeId} className="rounded-xl border border-(--color-border) bg-(--color-surface) p-3">
+                          <div className="mb-2 flex items-center justify-between gap-2">
+                            <p className="text-sm font-semibold text-(--color-ink)">{college.nom}</p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const set = new Set(scopeCours);
+                                if (allChecked) collegeCoursIds.forEach((id) => set.delete(id));
+                                else collegeCoursIds.forEach((id) => set.add(id));
+                                setScopeCours(Array.from(set));
+                              }}
+                              className="text-xs font-medium text-(--color-primary) hover:underline"
+                            >
+                              {allChecked ? 'Tout décocher' : 'Tout cocher'}
+                            </button>
+                          </div>
+                          {courses.length === 0 ? (
+                            <p className="text-xs text-(--color-ink-muted)">Aucun cours dans ce collège.</p>
+                          ) : (
+                            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                              {courses.map((c) => {
+                                const checked = scopeCours.includes(c.id);
+                                return (
+                                  <label key={c.id} className="flex items-center gap-2 text-xs">
+                                    <Checkbox
+                                      checked={checked}
+                                      onCheckedChange={(v) => {
+                                        const set = new Set(scopeCours);
+                                        if (v) set.add(c.id); else set.delete(c.id);
+                                        setScopeCours(Array.from(set));
+                                      }}
+                                    />
+                                    <span className="truncate">{c.titre}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Permissions par type de contenu */}
+              <div className="mt-4 space-y-2">
+                <Label>Permissions par type de contenu</Label>
+                <div className="overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface)">
+                  {CONTENT_TYPES.map((t, i) => (
+                    <div
+                      key={t}
+                      className={`flex items-center justify-between gap-3 px-3 py-2.5 ${i > 0 ? 'border-t border-(--color-border)' : ''}`}
+                    >
+                      <span className="text-sm font-medium text-(--color-ink)">{CONTENT_TYPE_LABEL[t]}</span>
+                      <select
+                        value={perms[t] ?? 'none'}
+                        onChange={(e) => setPerms({ ...perms, [t]: e.target.value as PermissionLevel })}
+                        className="rounded-md border border-(--color-border) bg-(--color-surface) px-2 py-1 text-xs"
+                      >
+                        {PERMISSION_LEVELS.map((lvl) => (
+                          <option key={lvl} value={lvl}>{PERMISSION_LEVEL_LABEL[lvl]}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Section>
           )}

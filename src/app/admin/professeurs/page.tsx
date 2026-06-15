@@ -130,6 +130,8 @@ export default async function ProfessorsPage() {
         </div>
       ) : (
         <ProfessorsList
+          colleges={colleges}
+          coursByCollege={coursByCollege}
           rows={rows.map<ProfessorRow>((p) => ({
             id: p.id,
             first_name: p.first_name,
@@ -143,6 +145,7 @@ export default async function ProfessorsPage() {
             carte_pro_url: p.carte_pro_url,
             created_at: p.created_at,
             is_active: p.is_active !== false,
+            permission_scope: p.permission_scope,
             tags: describeScope((p.permission_scope ?? {}) as ProfScope, collegeMap, coursMap),
           }))}
         />

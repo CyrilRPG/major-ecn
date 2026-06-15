@@ -23,10 +23,19 @@ export type ProfessorRow = {
   carte_pro_url: string | null;
   created_at: string;
   is_active: boolean;
+  permission_scope: unknown;
   tags: { label: string; tone: 'muted' | 'primary' }[];
 };
 
-export function ProfessorsList({ rows }: { rows: ProfessorRow[] }) {
+export function ProfessorsList({
+  rows,
+  colleges,
+  coursByCollege,
+}: {
+  rows: ProfessorRow[];
+  colleges: { id: string; nom: string }[];
+  coursByCollege: Record<string, { id: string; titre: string }[]>;
+}) {
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
@@ -96,6 +105,7 @@ export function ProfessorsList({ rows }: { rows: ProfessorRow[] }) {
                         carte_pro_url: p.carte_pro_url,
                         created_at: p.created_at,
                       }}
+                      professorScope={{ permission_scope: p.permission_scope, colleges, coursByCollege }}
                     />
                     <ToggleActiveButton userId={p.id} displayName={displayName} isActive={p.is_active} />
                     <DeleteAccountButton userId={p.id} displayName={displayName} />

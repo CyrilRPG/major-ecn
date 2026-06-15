@@ -38,6 +38,17 @@ export const AddProfessorSchema = z.object({
 
 export type AddProfessorInput = z.infer<typeof AddProfessorSchema>;
 
+/** Modification d'un professeur existant — accès (collèges + cours + permissions par type). */
+export const UpdateProfessorScopeSchema = z.object({
+  userId: z.string().uuid('userId invalide'),
+  permission_type: z.enum(['all', 'college']),
+  colleges: z.array(z.string()).optional(),
+  cours: z.array(z.string()).optional(),
+  content_permissions: z.record(z.enum(CONTENT_TYPES), z.enum(PERMISSION_LEVELS)).optional(),
+});
+
+export type UpdateProfessorScopeInput = z.infer<typeof UpdateProfessorScopeSchema>;
+
 /** Forme stockée dans profiles.permission_scope pour les professeurs. */
 export type ProfessorScope = {
   role: 'professor';
