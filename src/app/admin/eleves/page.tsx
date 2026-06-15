@@ -15,7 +15,8 @@ export default async function ElevesPage() {
       .from('profiles')
       .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at')
       .eq('role', 'student')
-      .order('last_name'),
+      // Tri décroissant par date d'inscription (les plus récents en premier).
+      .order('created_at', { ascending: false, nullsFirst: false }),
     supabase
       .from('facultes')
       .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')

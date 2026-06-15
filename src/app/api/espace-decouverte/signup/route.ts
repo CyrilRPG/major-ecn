@@ -37,10 +37,16 @@ const Schema = z.object({
   lastName: z.string().trim().min(1, 'Nom requis').max(100),
   email: z.string().trim().email('Email invalide'),
   phone: z.string().trim().min(6, 'Téléphone requis').max(40),
-  specialty: z.string().trim().max(100).optional(),
+  specialty: z.string().trim().min(1, 'Spécialité requise').max(120),
+  voie: z.string().trim().max(40).optional().or(z.literal('')),
+  session: z.string().trim().min(1, 'Session requise').max(20),
+  country: z.string().trim().min(1, 'Pays de résidence requis').max(80),
+  passedEvc: z.string().trim().min(1, 'Réponse EVC requise').max(10),
 });
 
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
+/** Spécialité déclenchant le sous-champ Voie interne/externe. */
+const MG_NAME = 'Médecine générale';
 
 /** Petit logger structuré pour faciliter la lecture des Logs Vercel. */
 function log(label: string, payload: Record<string, unknown> = {}) {
@@ -67,7 +73,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { firstName, lastName, email, phone, specialty } = parsed.data;
+  const { firstName, lastName, email, phone, specialty, voie, session, country, passedEvc } = parsed.data;
   log('start', {
     email,
     hasResendKey: !!process.env.RESEND_API_KEY,
@@ -91,6 +97,15 @@ export async function POST(req: Request) {
     offer: 'decouverte' as const, // était 'essentiel' → bug : un user découverte est désormais bien typé.
     espace_decouverte: true,
     specialty_wish: specialty || null,
+    // Informations d'inscription saisies dans le formulaire découverte —
+    // affichées côté admin (liste élèves).
+    signup: {
+      specialty,
+      voie: specialty === MG_NAME ? (voie || null) : null,
+      session,
+      country,
+      passed_evc: passedEvc,
+    },
   };
 
   // 1) Recherche d'un user existant avec cet email

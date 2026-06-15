@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  ArrowRight, Check, GraduationCap, Info, Mail, Phone, Rocket, Shield,
-  Sparkles, Tag, User,
+  ArrowRight, Calendar, Check, ClipboardCheck, GraduationCap, Info, Mail, MapPin,
+  Phone, Rocket, Route, Shield, Sparkles, Stethoscope, Tag, User,
 } from 'lucide-react';
 import { MeshGradient, NoiseTexture } from './premium-ui';
 
@@ -21,23 +21,98 @@ const GREEN = '#16793C';
 const GOLD = '#F5C84B';
 const BORDER = '#E5E9F0';
 
+/** Spécialité « Médecine générale » — déclenche le champ Voie interne/externe. */
+const MG_NAME = 'Médecine générale';
+
+/* Liste EXACTE des spécialités de /specialites (specialites-page.tsx),
+ * dans le même ordre (par famille). À garder synchronisée. */
+const SPECIALITES = [
+  'Médecine générale',
+  'Cardiologie et maladies vasculaires',
+  'Pneumologie',
+  'Gastro-entérologie et hépatologie',
+  'Endocrinologie et métabolisme',
+  'Néphrologie',
+  'Neurologie',
+  'Hématologie',
+  'Rhumatologie',
+  'Dermatologie et vénéréologie',
+  'Oncologie',
+  'Médecine interne',
+  'Réanimation médicale',
+  'Gériatrie',
+  'Médecine physique et de réadaptation',
+  'Médecine du travail',
+  'Psychiatrie',
+  'Anesthésie-réanimation',
+  'Gynécologie médicale',
+  'Santé publique et médecine sociale',
+  'Chirurgie générale',
+  'Chirurgie viscérale et digestive',
+  'Chirurgie orthopédique et traumatologie',
+  'Chirurgie thoracique et cardio-vasculaire',
+  'Chirurgie vasculaire',
+  'Chirurgie urologique',
+  'Neurochirurgie',
+  'Chirurgie plastique, reconstructrice et esthétique',
+  'Chirurgie maxillo-faciale et stomatologie',
+  'Chirurgie infantile',
+  'Chirurgie orale',
+  'Gynécologie obstétrique',
+  'ORL et chirurgie cervico-faciale',
+  'Ophtalmologie',
+  'Pédiatrie',
+  'Radiodiagnostic et imagerie médicale',
+  'Médecine nucléaire',
+  'Biologie médicale (médecin)',
+  'Biologie médicale (pharmacien)',
+  'Anatomie et cytologie pathologiques',
+  'Génétique médicale',
+  'Pharmacie polyvalente',
+  'Odontologie',
+  'Orthopédie dento-faciale',
+  'Sage-femme',
+];
+
+const VOIES = ['Voie interne', 'Voie externe'];
+const SESSIONS = ['2026', '2027', '2028', '2029', '2030', '2031', '2032'];
+const EVC_OPTIONS = ['Oui', 'Non'];
+const COUNTRIES = [
+  'France', 'Algérie', 'Maroc', 'Tunisie', 'Liban', 'Syrie', 'Égypte', 'Irak',
+  'Jordanie', 'Libye', 'Mauritanie', 'Sénégal', 'Cameroun', "Côte d'Ivoire",
+  'Mali', 'Congo (RDC)', 'Congo (Brazzaville)', 'Gabon', 'Madagascar', 'Bénin',
+  'Burkina Faso', 'Tchad', 'Niger', 'Togo', 'Guinée', 'Djibouti', 'Comores',
+  'Haïti', 'Roumanie', 'Moldavie', 'Ukraine', 'Russie', 'Géorgie', 'Arménie',
+  'Brésil', 'Colombie', 'Venezuela', 'Chili', 'Argentine', 'Mexique',
+  'Iran', 'Afghanistan', 'Pakistan', 'Inde', 'Bangladesh', 'Sri Lanka',
+  'Turquie', 'Albanie', 'Kosovo', 'Serbie', 'Bosnie-Herzégovine',
+  'Chine', 'Vietnam', 'Cambodge', 'Philippines', 'Autre',
+];
+
 export function EspaceDecouverteForm() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [specialty, setSpecialty] = useState('');
+  const [voie, setVoie] = useState('');
+  const [session, setSession] = useState('');
+  const [country, setCountry] = useState('');
+  const [passedEvc, setPassedEvc] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingAccount, setExistingAccount] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!firstName || !lastName || !email) return;
-    if (!phone.trim()) {
-      setError('Le numéro de téléphone est obligatoire.');
-      return;
-    }
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) return;
+    if (!phone.trim()) { setError('Le numéro de téléphone est obligatoire.'); return; }
+    if (!specialty) { setError('Veuillez sélectionner votre spécialité visée.'); return; }
+    if (specialty === MG_NAME && !voie) { setError('Pour la médecine générale, précisez la voie (interne ou externe).'); return; }
+    if (!session) { setError('Veuillez sélectionner la session visée.'); return; }
+    if (!country) { setError('Veuillez indiquer votre pays de résidence.'); return; }
+    if (!passedEvc) { setError('Indiquez si vous avez déjà passé les EVC.'); return; }
     setSubmitting(true);
     setError(null);
     setExistingAccount(false);
@@ -45,7 +120,12 @@ export function EspaceDecouverteForm() {
       const res = await fetch('/api/espace-decouverte/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, phone }),
+        body: JSON.stringify({
+          firstName, lastName, email, phone,
+          specialty,
+          voie: specialty === MG_NAME ? voie : '',
+          session, country, passedEvc,
+        }),
       });
       const j = (await res.json()) as {
         ok?: boolean;
@@ -227,6 +307,42 @@ export function EspaceDecouverteForm() {
                 <Field icon={Mail} placeholder="Adresse email" value={email} onChange={setEmail} type="email" required />
                 <Field icon={Phone} placeholder="Téléphone" value={phone} onChange={setPhone} type="tel" required />
               </div>
+
+              {/* Spécialité visée */}
+              <SelectField
+                icon={Stethoscope}
+                placeholder="Spécialité visée"
+                value={specialty}
+                onChange={(v) => { setSpecialty(v); if (v !== MG_NAME) setVoie(''); }}
+                options={SPECIALITES}
+                required
+              />
+
+              {/* Voie — uniquement si Médecine générale */}
+              {specialty === MG_NAME && (
+                <SelectField
+                  icon={Route}
+                  placeholder="Voie (interne ou externe)"
+                  value={voie}
+                  onChange={setVoie}
+                  options={VOIES}
+                  required
+                />
+              )}
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <SelectField icon={Calendar} placeholder="Session visée" value={session} onChange={setSession} options={SESSIONS} required />
+                <SelectField icon={MapPin} placeholder="Pays de résidence" value={country} onChange={setCountry} options={COUNTRIES} required />
+              </div>
+
+              <SelectField
+                icon={ClipboardCheck}
+                placeholder="Avez-vous déjà passé les EVC ?"
+                value={passedEvc}
+                onChange={setPassedEvc}
+                options={EVC_OPTIONS}
+                required
+              />
 
               {/* CTA premium */}
               <button
@@ -436,6 +552,46 @@ function Field({ icon: Icon, placeholder, value, onChange, type, required }: Fie
           '--tw-ring-color': RED,
         }}
       />
+    </div>
+  );
+}
+
+type SelectFieldProps = {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  options: string[];
+  required?: boolean;
+};
+
+function SelectField({ icon: Icon, value, onChange, placeholder, options, required }: SelectFieldProps) {
+  return (
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" style={{ color: INK_SOFT }} />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        required={required}
+        className="w-full appearance-none rounded-xl border bg-white py-4 pl-12 pr-10 text-[15px] focus:outline-none focus:ring-2"
+        style={{
+          borderColor: BORDER,
+          color: value ? INK : '#94A3B8',
+          // @ts-expect-error custom CSS prop
+          '--tw-ring-color': RED,
+        }}
+      >
+        <option value="" disabled>{placeholder}</option>
+        {options.map((o) => (
+          <option key={o} value={o} style={{ color: INK }}>{o}</option>
+        ))}
+      </select>
+      <svg
+        aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_SOFT }}
+      >
+        <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </div>
   );
 }

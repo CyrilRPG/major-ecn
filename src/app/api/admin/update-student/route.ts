@@ -17,14 +17,27 @@ export async function PATCH(req: Request) {
   }
 
   const { id, first_name, last_name, phone, offer, permission_type, colleges, cours } = parsed.data;
+
+  // Préserve les métadonnées d'inscription (signup, specialty_wish, espace_decouverte)
+  // déjà stockées dans permission_scope : l'édition admin reconstruit le scope
+  // (type/collèges/offre) et ne doit pas effacer ces informations.
+  const { data: existing } = await supabase
+    .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
+  const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
+  const meta: Record<string, unknown> = {};
+  for (const k of ['signup', 'specialty_wish', 'espace_decouverte'] as const) {
+    if (prev[k] !== undefined) meta[k] = prev[k];
+  }
+
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer }
+      ? { type: 'all' as const, offer, ...meta }
       : {
           type: 'college' as const,
           colleges: colleges ?? [],
           offer,
           ...(cours && cours.length > 0 ? { cours } : {}),
+          ...meta,
         };
 
   const { error } = await supabase

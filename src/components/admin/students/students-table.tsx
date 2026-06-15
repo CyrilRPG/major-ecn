@@ -33,6 +33,22 @@ export type Student = {
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
+/** Infos d'inscription (formulaire Espace Découverte) stockées dans permission_scope.signup. */
+type SignupInfo = { specialty?: string; voie?: string | null; session?: string; country?: string; passed_evc?: string };
+function readSignup(scope: unknown): SignupInfo | null {
+  if (scope && typeof scope === 'object' && 'signup' in scope) {
+    const s = (scope as { signup?: unknown }).signup;
+    if (s && typeof s === 'object') return s as SignupInfo;
+  }
+  return null;
+}
+function fmtDate(iso?: string): string {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 export function StudentsTable({
   students,
   collegeMap,
@@ -90,19 +106,21 @@ export function StudentsTable({
             <TableHead className="hidden lg:table-cell">Téléphone</TableHead>
             <TableHead className="hidden sm:table-cell">Promotion</TableHead>
             <TableHead className="hidden md:table-cell">Accès</TableHead>
+            <TableHead className="hidden lg:table-cell">Inscription</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="py-10 text-center text-(--color-ink-soft)">
+              <TableCell colSpan={7} className="py-10 text-center text-(--color-ink-soft)">
                 Aucun élève ne correspond à ces filtres.
               </TableCell>
             </TableRow>
           ) : (
             filtered.map((s) => {
               const scope = parseScope(s.permission_scope);
+              const sg = readSignup(s.permission_scope);
               return (
                 <TableRow key={s.id}>
                   <TableCell>
@@ -112,6 +130,21 @@ export function StudentsTable({
                       </Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">{s.first_name} {s.last_name}</p>
+                        {sg && (sg.specialty || sg.session || sg.country) && (
+                          <p className="truncate text-[11px] text-(--color-ink-soft)" title={[
+                            sg.specialty ? `${sg.specialty}${sg.voie ? ` (${sg.voie})` : ''}` : null,
+                            sg.session ? `Session ${sg.session}` : null,
+                            sg.country,
+                            sg.passed_evc ? `EVC déjà passées : ${sg.passed_evc}` : null,
+                          ].filter(Boolean).join(' · ')}>
+                            {[
+                              sg.specialty ? `${sg.specialty}${sg.voie ? ` (${sg.voie})` : ''}` : null,
+                              sg.session ? `Session ${sg.session}` : null,
+                              sg.country,
+                              sg.passed_evc ? `EVC : ${sg.passed_evc}` : null,
+                            ].filter(Boolean).join(' · ')}
+                          </p>
+                        )}
                         <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">
                           {s.email}
                         </p>
@@ -142,6 +175,9 @@ export function StudentsTable({
                         ))
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    <span className="text-xs text-(--color-ink-soft)">{fmtDate(s.created_at)}</span>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1.5">
