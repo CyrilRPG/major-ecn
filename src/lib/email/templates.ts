@@ -126,6 +126,98 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
   return { subject, html, text };
 }
 
+/* ============================================================
+   Password reset — envoyé via /api/forgot-password
+   ============================================================ */
+type PasswordResetArgs = { firstName: string | null; resetUrl: string };
+
+export function passwordResetEmail({ firstName, resetUrl }: PasswordResetArgs): { subject: string; html: string; text: string } {
+  const subject = '🔐 Réinitialisation de votre mot de passe — Major ECN';
+  const hello = firstName ? `Bonjour ${firstName}` : 'Bonjour';
+
+  const html = `<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>${escapeHtml(subject)}</title>
+  </head>
+  <body style="margin:0;background:#FAFAF8;font-family:'Manrope',-apple-system,Segoe UI,Roboto,sans-serif;color:#2D2D2D;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAF8;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid #ECEEF1;border-radius:20px;overflow:hidden;">
+            <tr>
+              <td style="background:#0E1626;padding:24px 28px;text-align:center;">
+                <span style="font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.02em;color:#FFFFFF;">
+                  Major <span style="color:#C84A5A;">ECN</span>
+                </span>
+              </td>
+            </tr>
+            <tr><td style="height:3px;background:linear-gradient(90deg,#6B1A2A 0%,#3B82F6 50%,#14B8A6 100%);font-size:0;line-height:0;">&nbsp;</td></tr>
+            <tr>
+              <td style="padding:36px 28px 28px;">
+                <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#6B1A2A;">
+                  Réinitialisation
+                </p>
+                <h1 style="margin:0 0 14px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-size:26px;line-height:1.18;font-weight:800;letter-spacing:-0.02em;color:#2D2D2D;">
+                  Choisissez un nouveau mot de passe
+                </h1>
+                <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#4A5568;">
+                  ${escapeHtml(hello)},<br />
+                  Vous avez demandé à réinitialiser votre mot de passe sur Major ECN.
+                  Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
+                  Ce lien est valable&nbsp;<strong>1&nbsp;heure</strong>.
+                </p>
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 22px;">
+                  <tr>
+                    <td style="background:linear-gradient(90deg,#6B1A2A 0%,#8B2A3A 100%);border-radius:12px;">
+                      <a href="${escapeAttr(resetUrl)}"
+                         style="display:inline-block;padding:14px 26px;font-family:'Plus Jakarta Sans','Manrope',sans-serif;font-weight:800;font-size:15px;color:#FFFFFF;text-decoration:none;">
+                        Réinitialiser mon mot de passe →
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:0 0 6px;font-size:12px;line-height:1.6;color:#7A7A7A;">
+                  Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :
+                </p>
+                <p style="margin:0 0 26px;word-break:break-all;font-family:'IBM Plex Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;color:#6B1A2A;">
+                  ${escapeHtml(resetUrl)}
+                </p>
+                <div style="background:#F9F0F2;border:1px solid #F2D5DA;border-radius:14px;padding:14px 16px;margin:0 0 22px;">
+                  <p style="margin:0;font-size:12px;line-height:1.6;color:#5A5A5A;">
+                    Vous n'êtes pas à l'origine de cette demande&nbsp;? Ignorez simplement ce
+                    message&nbsp;: votre mot de passe actuel reste inchangé.
+                  </p>
+                </div>
+                <p style="margin:0;font-size:12px;line-height:1.6;color:#7A7A7A;">
+                  Besoin d'aide&nbsp;? Écrivez à
+                  <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
+                </p>
+              </td>
+            </tr>
+            <tr><td style="border-top:1px solid #ECEEF1;padding:18px 28px;text-align:center;font-size:11px;color:#9AA1AE;">
+              © Major ECN — Préparation aux Épreuves de Vérification des Connaissances (EVC / PAE).
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+
+  const text =
+    `${hello},\n\n` +
+    `Vous avez demandé à réinitialiser votre mot de passe sur Major ECN.\n` +
+    `Cliquez sur le lien suivant pour en choisir un nouveau (valable 1 heure) :\n` +
+    `${resetUrl}\n\n` +
+    `Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n` +
+    `Besoin d'aide ? contact@major-ecn.fr`;
+
+  return { subject, html, text };
+}
+
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>
     c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;',

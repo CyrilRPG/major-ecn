@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, KeyRound, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
@@ -11,6 +11,12 @@ type Status = 'checking' | 'ready' | 'no-session' | 'submitting' | 'done' | 'err
 
 export default function SetupPasswordPage() {
   const router = useRouter();
+  const params = useSearchParams();
+  /** type=recovery quand l'utilisateur arrive depuis le mail de réinitialisation
+   *  ("mot de passe oublié"). Sans ce flag, on est en flow "activation de
+   *  compte" (invite professeur, signup étudiant). Les textes affichés et le
+   *  bouton final s'adaptent à ce contexte. */
+  const isRecovery = params.get('type') === 'recovery';
   const [status, setStatus] = useState<Status>('checking');
   const [message, setMessage] = useState<string>('');
   const [password, setPassword] = useState('');
@@ -71,7 +77,14 @@ export default function SetupPasswordPage() {
       return;
     }
     setStatus('done');
-    setTimeout(() => router.push('/accueil'), 1100);
+    if (isRecovery) {
+      // Recovery : on déconnecte la session de récupération et on renvoie sur /login
+      // pour que l'utilisateur se reconnecte proprement avec son nouveau mot de passe.
+      await supabase.auth.signOut().catch(() => {});
+      setTimeout(() => router.push('/login'), 1400);
+    } else {
+      setTimeout(() => router.push('/accueil'), 1100);
+    }
   };
 
   return (
@@ -91,19 +104,27 @@ export default function SetupPasswordPage() {
 
         <div className="rounded-3xl border border-(--color-border) bg-white p-7 shadow-(--shadow-lifted) sm:p-9">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary-soft) px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-(--color-primary)">
-            <ShieldCheck className="h-3.5 w-3.5" /> Activation du compte
+            <ShieldCheck className="h-3.5 w-3.5" /> {isRecovery ? 'Réinitialisation' : 'Activation du compte'}
           </span>
           <h1 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-(--color-ink) sm:text-3xl">
-            {status === 'done' ? 'Bienvenue !' : 'Choisissez votre mot de passe'}
+            {status === 'done'
+              ? (isRecovery ? 'Mot de passe mis à jour !' : 'Bienvenue !')
+              : (isRecovery ? 'Nouveau mot de passe' : 'Choisissez votre mot de passe')}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">
             {status === 'no-session'
               ? (message
-                  ? `Lien invalide : ${message}. Demandez un nouveau lien depuis la page d’inscription.`
-                  : 'Lien d’activation invalide ou expiré. Demandez un nouveau lien depuis la page d’inscription.')
+                  ? `Lien invalide : ${message}. Demandez un nouveau lien depuis la page « Mot de passe oublié ».`
+                  : (isRecovery
+                      ? 'Lien de réinitialisation invalide ou expiré. Demandez un nouveau lien depuis la page « Mot de passe oublié ».'
+                      : 'Lien d’activation invalide ou expiré. Demandez un nouveau lien depuis la page d’inscription.'))
               : status === 'done'
-              ? 'Votre mot de passe est créé. On vous redirige vers la plateforme…'
-              : 'Définissez un mot de passe sécurisé pour accéder à votre espace Major ECN.'}
+              ? (isRecovery
+                  ? 'Vous pouvez maintenant vous reconnecter avec votre nouveau mot de passe.'
+                  : 'Votre mot de passe est créé. On vous redirige vers la plateforme…')
+              : (isRecovery
+                  ? 'Choisissez un nouveau mot de passe sécurisé pour votre compte Major ECN.'
+                  : 'Définissez un mot de passe sécurisé pour accéder à votre espace Major ECN.')}
           </p>
 
           {status === 'checking' && (
@@ -162,7 +183,7 @@ export default function SetupPasswordPage() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.01] disabled:opacity-60"
               >
                 {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
-                Activer mon compte
+                {isRecovery ? 'Mettre à jour mon mot de passe' : 'Activer mon compte'}
               </button>
             </form>
           )}
@@ -170,7 +191,9 @@ export default function SetupPasswordPage() {
           {status === 'done' && (
             <div className="mt-6 flex items-center gap-2 rounded-xl border border-[#2E8B57]/30 bg-[color-mix(in_srgb,#2E8B57_10%,var(--color-surface))] px-3 py-2 text-sm text-[#1F6B43]">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
-              Mot de passe enregistré. Redirection en cours…
+              {isRecovery
+                ? 'Mot de passe mis à jour. Redirection vers la connexion…'
+                : 'Mot de passe enregistré. Redirection en cours…'}
             </div>
           )}
         </div>

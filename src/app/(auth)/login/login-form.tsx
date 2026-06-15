@@ -50,7 +50,15 @@ export function LoginForm() {
         {errors.email && <p className="text-xs text-(--color-danger)">{errors.email.message}</p>}
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password">Mot de passe</Label>
+        <div className="flex items-baseline justify-between gap-2">
+          <Label htmlFor="password">Mot de passe</Label>
+          <a
+            href="/auth/forgot-password"
+            className="text-[11.5px] font-semibold text-(--color-primary) hover:underline"
+          >
+            Mot de passe oublié&nbsp;?
+          </a>
+        </div>
         <div className="relative">
           <Input
             id="password"

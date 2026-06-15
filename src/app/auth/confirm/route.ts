@@ -32,8 +32,11 @@ export async function GET(req: Request) {
 
   if (error) {
     // On remonte l'erreur exacte dans l'URL pour aider au diagnostic côté UI.
+    // Attention : `next` peut déjà contenir une query (?type=recovery), on
+    // doit donc choisir le bon séparateur pour ne pas casser l'URL.
+    const sep = next.includes('?') ? '&' : '?';
     return NextResponse.redirect(
-      new URL(`${next}?error=${encodeURIComponent(error.message)}`, url.origin),
+      new URL(`${next}${sep}error=${encodeURIComponent(error.message)}`, url.origin),
     );
   }
 
