@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
   const [{ data: profile }, { data: fiches }] = await Promise.all([
-    supabase.from('profiles').select('first_name, last_name, email').eq('id', user.id).maybeSingle(),
+    supabase.from('profiles').select('first_name, last_name, email, role').eq('id', user.id).maybeSingle(),
     // Tolère plusieurs lignes éventuelles : on prend celle qui a un storage_path.
     supabase
       .from('fiches')
@@ -33,10 +33,31 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const fiche = fiches?.[0];
   if (!fiche?.storage_path) return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
 
+  // Téléchargement explicite : ?download=1 → attachment + PDF clair (sans
+  // filigrane). Réservé au staff (admin / professeur) ; pour un étudiant
+  // qui forgerait la query, on l'ignore silencieusement et on renvoie le
+  // PDF inline watermarké comme avant.
+  const isStaff = profile?.role === 'admin' || profile?.role === 'professor';
+  const wantsDownload = isStaff && new URL(req.url).searchParams.get('download') === '1';
+
   // Téléchargement du PDF original via service role (bypass RLS storage)
   const admin = createAdminClient();
   const { data: file, error: dlErr } = await admin.storage.from('fiches').download(fiche.storage_path);
   if (dlErr || !file) return NextResponse.json({ error: dlErr?.message ?? 'PDF indisponible' }, { status: 500 });
+
+  // Staff en mode téléchargement : PDF original, sans modification, en
+  // attachment. Pas besoin d'embarquer pdf-lib ni les watermarks dans ce
+  // chemin → on renvoie directement les bytes du fichier source.
+  if (wantsDownload) {
+    const bytesRaw = new Uint8Array(await file.arrayBuffer());
+    return new NextResponse(bytesRaw as unknown as BodyInit, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="fiche-${coursId}.pdf"`,
+        'Cache-Control': 'private, no-store',
+      },
+    });
+  }
 
   const bytes = new Uint8Array(await file.arrayBuffer());
   const pdf = await PDFDocument.load(bytes);

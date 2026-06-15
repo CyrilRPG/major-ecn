@@ -32,6 +32,9 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   const pdfUrl: string | null = fiche?.storage_path ? `/api/fiches/${coursId}/pdf` : null;
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
   const canEdit = profile.role === 'admin' || profile.role === 'professor';
+  // Téléchargement réservé au staff (admin + professeur) pour la diffusion
+  // pédagogique interne. Les étudiants restent en consultation seule.
+  const canDownload = canEdit;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
@@ -49,7 +52,7 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
         )}
       </div>
       {pdfUrl ? (
-        <PdfViewer src={pdfUrl} coursId={coursId} initiallyRead={initiallyRead} />
+        <PdfViewer src={pdfUrl} coursId={coursId} initiallyRead={initiallyRead} canDownload={canDownload} />
       ) : (
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState

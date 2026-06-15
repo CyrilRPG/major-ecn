@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 import dynamic from 'next/dynamic';
-import { Check, Loader2, Lock, Maximize2, Minimize2, ZoomIn, ZoomOut } from 'lucide-react';
+import { Check, Download, Loader2, Lock, Maximize2, Minimize2, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 
@@ -22,7 +22,18 @@ const ZOOM_MIN = 0.6;
 const ZOOM_MAX = 2.4;
 const ZOOM_STEP = 0.2;
 
-export function PdfViewer({ src, coursId, initiallyRead }: { src: string; coursId: string; initiallyRead: boolean }) {
+export function PdfViewer({
+  src,
+  coursId,
+  initiallyRead,
+  canDownload = false,
+}: {
+  src: string;
+  coursId: string;
+  initiallyRead: boolean;
+  /** Affiche le bouton de téléchargement (admin / professeur uniquement). */
+  canDownload?: boolean;
+}) {
   const [read, setRead] = useState(initiallyRead);
   const [pending, start] = useTransition();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -82,7 +93,7 @@ export function PdfViewer({ src, coursId, initiallyRead }: { src: string; coursI
       >
         <p className="hidden items-center gap-1.5 text-xs text-(--color-ink-soft) sm:flex">
           <Lock className="h-3.5 w-3.5" />
-          Fiche consultable en ligne uniquement.
+          {canDownload ? 'Téléchargement réservé au staff.' : 'Fiche consultable en ligne uniquement.'}
         </p>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <div className="flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-1">
@@ -94,6 +105,20 @@ export function PdfViewer({ src, coursId, initiallyRead }: { src: string; coursI
               <ZoomIn />
             </Button>
           </div>
+          {canDownload && (
+            <Button
+              size="sm"
+              variant="secondary"
+              asChild
+              title="Télécharger la fiche (sans filigrane)"
+              aria-label="Télécharger la fiche"
+            >
+              <a href={`${src}?download=1`} download>
+                <Download />
+                <span className="hidden sm:inline">Télécharger</span>
+              </a>
+            </Button>
+          )}
           <Button size="sm" variant="secondary" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Quitter le plein écran' : 'Plein écran'}>
             {isFullscreen ? <Minimize2 /> : <Maximize2 />}
             <span className="hidden sm:inline">{isFullscreen ? 'Quitter' : 'Plein écran'}</span>
