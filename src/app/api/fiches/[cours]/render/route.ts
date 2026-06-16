@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { renderFicheHtml, PDF_MARGINS_MM } from '@/lib/fiches/render-html';
+import { createElement } from 'react';
+import { wrapFicheHtml, PDF_MARGINS_MM } from '@/lib/fiches/render-html';
+import { FicheDocument } from '@/lib/fiches/fiche-document';
 import { launchBrowser } from '@/lib/fiches/chromium';
 import type { FicheData } from '@/lib/fiches/types';
 
@@ -85,7 +87,13 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
 
   // — Rendu HTML (polices servies depuis CETTE déploiement → fidélité garantie).
   const origin = new URL(req.url).origin;
-  const html = renderFicheHtml(fiche, {
+  // React SSR via import dynamique : évite d'importer statiquement
+  // react-dom/server dans le graphe de l'app (interdit par Turbopack).
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const bodyHtml = renderToStaticMarkup(createElement(FicheDocument, { fiche }));
+  const html = wrapFicheHtml(bodyHtml, {
+    matiere: fiche.matiere,
+    nomCours: fiche.nom_cours,
     fontBaseUrl: `${origin}/fonts/fiches`,
     forPdf: true,
   });

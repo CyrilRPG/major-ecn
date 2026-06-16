@@ -1,17 +1,13 @@
-import 'server-only';
-
 /**
- * Sérialisation serveur d'une `FicheData` → document HTML autonome, destiné à
- * Chromium (Playwright/puppeteer) pour le rendu PDF.
+ * Assemblage du document HTML d'une fiche (sans React) : on enveloppe le corps
+ * déjà rendu (`bodyHtml`) avec le CSS de la charte + les overrides Chromium.
  *
- * Utilise le MÊME composant <FicheDocument /> que l'aperçu en direct, donc le
- * PDF est identique à l'aperçu. Le CSS (charte vendorisée) est injecté inline,
- * et les URL de polices `url("fonts/…")` sont réécrites vers `fontBaseUrl`.
+ * La transformation `<FicheDocument /> → bodyHtml` (React SSR) est faite côté
+ * route via un import dynamique de `react-dom/server`, afin de ne PAS importer
+ * statiquement `react-dom/server` dans le graphe de l'app (interdit par
+ * Turbopack en App Router).
  */
-import { renderToStaticMarkup } from 'react-dom/server';
-import { FicheDocument } from './fiche-document';
 import { ficheCss } from './css';
-import type { FicheData } from './types';
 
 /** Marges PDF (mm) — identiques au générateur (pdf_generator.py). */
 export const PDF_MARGINS_MM = { top: 24, right: 18, bottom: 22, left: 18 } as const;
@@ -35,25 +31,22 @@ section:last-child { page-break-after: auto; }
 </style>`;
 }
 
-export type RenderHtmlOptions = {
+export type WrapHtmlOptions = {
+  matiere: string;
+  nomCours: string;
   /** Base URL des polices (ex. `https://site/fonts/fiches` ou `/fonts/fiches`). */
   fontBaseUrl: string;
-  logoUrl?: string;
-  watermarkUrl?: string;
   /** true = injecte les overrides Chromium (pour le rendu PDF). */
   forPdf?: boolean;
 };
 
-/** Construit le document HTML complet d'une fiche. */
-export function renderFicheHtml(fiche: FicheData, opts: RenderHtmlOptions): string {
-  const body = renderToStaticMarkup(
-    <FicheDocument fiche={fiche} logoUrl={opts.logoUrl} watermarkUrl={opts.watermarkUrl} />,
-  );
+/** Enveloppe le corps HTML d'une fiche dans un document HTML autonome. */
+export function wrapFicheHtml(bodyHtml: string, opts: WrapHtmlOptions): string {
   const css = ficheCss(opts.fontBaseUrl);
   const overrides = opts.forPdf ? chromiumOverrides() : '';
   return (
     `<!doctype html><html lang="fr"><head><meta charset="utf-8"/>` +
-    `<title>${escapeHtml(fiche.matiere)} — ${escapeHtml(fiche.nom_cours)}</title>` +
-    `<style>${css}</style>${overrides}</head><body>${body}</body></html>`
+    `<title>${escapeHtml(opts.matiere)} — ${escapeHtml(opts.nomCours)}</title>` +
+    `<style>${css}</style>${overrides}</head><body>${bodyHtml}</body></html>`
   );
 }
