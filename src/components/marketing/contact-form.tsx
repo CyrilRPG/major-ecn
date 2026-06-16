@@ -5,6 +5,10 @@ import {
   ArrowRight, Baby, BriefcaseMedical, CheckCircle2, ChevronDown, GraduationCap, Info,
   Loader2, Mail, MessageSquare, Paperclip, Phone, Pill, Stethoscope, User,
 } from 'lucide-react';
+import { TurnstileWidget } from './turnstile-widget';
+
+/** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
+const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -111,6 +115,8 @@ export function ContactForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [profession, setProfession] = useState('');
   const [profOpen, setProfOpen] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaNonce, setCaptchaNonce] = useState(0);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -121,6 +127,12 @@ export function ContactForm() {
 
     if (!profession) {
       setErrMsg('Veuillez sélectionner votre profession.');
+      setStatus('error');
+      return;
+    }
+
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setErrMsg('Merci de valider le test anti-robot.');
       setStatus('error');
       return;
     }
@@ -145,6 +157,7 @@ export function ContactForm() {
         subject: [specialite, profession].filter(Boolean).join(' · ') || 'Demande de contact',
         message: String(fd.get('message') ?? '').trim(),
         company: String(fd.get('company') ?? ''),
+        turnstileToken: captchaToken,
         ...(attachments.length > 0 ? { attachments } : {}),
       };
       const res = await fetch('/api/contact', {
@@ -156,12 +169,16 @@ export function ContactForm() {
       if (!res.ok || !j.ok) {
         setErrMsg(j.error ?? 'Erreur à l’envoi. Réessayez.');
         setStatus('error');
+        setCaptchaToken('');
+        setCaptchaNonce((n) => n + 1);
         return;
       }
       setStatus('success');
     } catch {
       setErrMsg(`Connexion impossible. Écrivez-nous à ${CONTACT_EMAIL}.`);
       setStatus('error');
+      setCaptchaToken('');
+      setCaptchaNonce((n) => n + 1);
     }
   };
 
@@ -330,6 +347,13 @@ export function ContactForm() {
           </p>
         </div>
       </div>
+
+      {/* Captcha anti-robot (Cloudflare Turnstile) */}
+      {TURNSTILE_ENABLED && (
+        <div className="mt-5 flex justify-center">
+          <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
+        </div>
+      )}
 
       {status === 'error' && (
         <p className="mt-4 rounded-xl border bg-[#FCEAEC] px-4 py-3 text-[13px]" style={{ borderColor: 'rgba(192,17,46,0.22)', color: RED_DEEP }}>

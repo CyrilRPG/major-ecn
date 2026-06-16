@@ -9,6 +9,10 @@ import {
 } from 'lucide-react';
 import { Reveal } from './reveal';
 import { SpotlightCard } from './premium-ui';
+import { TurnstileWidget } from './turnstile-widget';
+
+/** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
+const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -55,6 +59,8 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [form, setForm] = useState({ first: '', last: '', email: '', phone: '', message: '' });
   const [docs, setDocs] = useState<Record<DocKey, File | null>>({ cv: null, lettre: null, diplomes: null, publications: null });
   const [attested, setAttested] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaNonce, setCaptchaNonce] = useState(0);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errMsg, setErrMsg] = useState('');
 
@@ -64,6 +70,7 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
     }
     if (!docs.cv) { setErrMsg('Le CV est obligatoire pour soumettre votre candidature.'); setStatus('error'); return; }
     if (!attested) { setErrMsg('Veuillez attester l’exactitude des informations fournies.'); setStatus('error'); return; }
+    if (TURNSTILE_ENABLED && !captchaToken) { setErrMsg('Merci de valider le test anti-robot.'); setStatus('error'); return; }
     const chosen = DOC_SLOTS
       .map((slot) => ({ slot, file: docs[slot.key] }))
       .filter((x): x is { slot: typeof DOC_SLOTS[number]; file: File } => x.file != null);
@@ -83,14 +90,20 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
           email: form.email.trim(),
           phone: form.phone.trim(),
           message: form.message.trim(),
+          turnstileToken: captchaToken,
           attachments,
         }),
       });
       const j = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
-      if (!res.ok || !j.ok) { setErrMsg(j.error ?? 'Erreur à l’envoi. Réessayez.'); setStatus('error'); return; }
+      if (!res.ok || !j.ok) {
+        setErrMsg(j.error ?? 'Erreur à l’envoi. Réessayez.'); setStatus('error');
+        setCaptchaToken(''); setCaptchaNonce((n) => n + 1);
+        return;
+      }
       setStatus('success');
     } catch {
       setErrMsg('Connexion impossible. Réessayez dans un instant.'); setStatus('error');
+      setCaptchaToken(''); setCaptchaNonce((n) => n + 1);
     }
   };
 
@@ -409,6 +422,13 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
                 Toutes les candidatures sont étudiées avec attention. Nous vous recontacterons dans les meilleurs délais.
               </p>
             </div>
+
+            {/* Captcha anti-robot (Cloudflare Turnstile) */}
+            {TURNSTILE_ENABLED && (
+              <div className="mt-4 flex justify-center">
+                <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
+              </div>
+            )}
 
             {status === 'error' && (
               <p className="mt-4 rounded-xl border px-4 py-3 text-[13px]" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#FCEAEC', color: RED }}>

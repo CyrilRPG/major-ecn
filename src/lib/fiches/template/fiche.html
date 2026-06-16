@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ fiche.matiere }} — {{ fiche.nom_cours }}</title>
+  <style>{{ css | safe }}</style>
+</head>
+<body>
+
+  {# Filigrane discret répété au centre de chaque page (masqué sous la
+     page de garde, qui est opaque et de z-index supérieur). #}
+  {% if watermark_uri %}
+  <div class="page-watermark"><img src="{{ watermark_uri }}" alt="" /></div>
+  {% endif %}
+
+  {# Sources des chaînes dynamiques (en-tête / pied de page) #}
+  <span class="string-source string-source--cours">{{ fiche.nom_cours }}</span>
+  <span class="string-source string-source--footer">Major ECN&nbsp;&middot;&nbsp;{{ fiche.annee }}</span>
+
+  {# ── 1. PAGE DE GARDE (inclut le plan des grandes parties) ── #}
+  {% include 'cover.html' %}
+
+  {# ── 2. CORPS DE LA FICHE (tableaux structurés) ── #}
+  {% for partie in fiche.parties %}
+  <section class="partie-page{% if loop.first %} partie-page--first{% endif %}"
+           id="partie-{{ loop.index }}">
+
+    {% for sp in partie.sous_parties %}
+    {# Les figures sont intégrées dans la cellule de la dernière ligne,
+       afin qu'elles ne se retrouvent jamais seules sur une page. #}
+    {% set ns = namespace(target=-1) %}
+    {% for row in sp.rows %}
+      {% if row.kind == 'normal' %}{% set ns.target = loop.index0 %}{% endif %}
+    {% endfor %}
+    {% if ns.target == -1 and sp.rows %}{% set ns.target = (sp.rows | length) - 1 %}{% endif %}
+    <table class="fiche-table">
+      <colgroup>
+        <col class="ft-col-concept" />
+        <col class="ft-col-detail" />
+      </colgroup>
+      {# En-tête de tableau répété en haut de chaque page occupée par le
+         tableau : bannière de grande partie + titre de sous-partie. #}
+      <thead>
+        <tr class="ft-banner-row">
+          <td colspan="2">
+            <span class="partie-banner-num">{{ partie.numero }}</span>
+            <span class="partie-banner-title{% if not loop.first %} partie-banner-title--repeat{% endif %}">{{ partie.titre }}</span>
+          </td>
+        </tr>
+        <tr class="ft-head-row">
+          <th class="ft-tag">{{ partie.numero }}</th>
+          <th class="ft-subtitle">
+            <span class="ft-subtitle-text">{{ sp.lettre }}.&nbsp;&nbsp;{{ sp.titre }}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in sp.rows %}
+        {% if row.kind == 'normal' %}
+        <tr>
+          <td class="ft-concept">{{ row.concept | md_inline }}</td>
+          <td class="ft-detail content">
+            {{ row.detail_md | md }}
+            {% if loop.index0 == ns.target %}
+              {% for img in sp.images %}{% set uri = img.saved_path | file_uri %}
+              {% if uri %}<figure class="ft-figure">
+                <img src="{{ uri }}" alt="{{ img.description }}" />
+                <figcaption>Figure&nbsp;{{ img.figure_number }} —
+                  {{ img.description }}</figcaption>
+              </figure>{% endif %}{% endfor %}
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr class="ft-reflexe ft-reflexe--{{ row.kind }}">
+          <td colspan="2">
+            <span class="ft-reflexe-label">{{ reflexe_labels.get(row.kind, '') }}</span>
+            <span class="ft-reflexe-body content">{{ row.detail_md | md }}</span>
+            {% if loop.index0 == ns.target %}
+              {% for img in sp.images %}{% set uri = img.saved_path | file_uri %}
+              {% if uri %}<figure class="ft-figure">
+                <img src="{{ uri }}" alt="{{ img.description }}" />
+                <figcaption>Figure&nbsp;{{ img.figure_number }} —
+                  {{ img.description }}</figcaption>
+              </figure>{% endif %}{% endfor %}
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+
+  </section>
+  {% endfor %}
+
+  {# ── 3. SYNTHÈSE & CHIFFRES-CLÉS ── #}
+  {% if fiche.tableaux or fiche.chiffres_cles %}
+  <section class="page synthese-page">
+    <div class="partie-banner partie-banner--plain">
+      <span class="partie-banner-title">Synthèse — Tableaux de révision</span>
+    </div>
+
+    {% if fiche.chiffres_cles %}
+    <div class="synthese-bloc">
+      <h3 class="synthese-titre">Chiffres-clés à connaître</h3>
+      <div class="table-synthese table-chiffres content">{{ fiche.chiffres_cles.markdown | md }}</div>
+    </div>
+    {% endif %}
+
+    {% for tab in fiche.tableaux %}
+    <div class="synthese-bloc">
+      <h3 class="synthese-titre">{{ tab.titre }}</h3>
+      <div class="table-synthese content">{{ tab.markdown | md }}</div>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ── 4. FICHE ÉCLAIR ── #}
+  {% if fiche.fiche_eclair_md or fiche.points_cles %}
+  <section class="page eclair-page">
+    <div class="eclair-card">
+      <div class="eclair-eyebrow">Révision express</div>
+      <h2 class="eclair-title">Fiche éclair</h2>
+      <p class="eclair-sub">{{ fiche.nom_cours }}</p>
+      <div class="eclair-rule"></div>
+
+      {% if fiche.fiche_eclair_md %}
+      <div class="eclair-body content">{{ fiche.fiche_eclair_md | md }}</div>
+      {% endif %}
+
+      {% if fiche.points_cles %}
+      <h3 class="eclair-points-titre">À retenir absolument</h3>
+      <ul class="eclair-points">
+        {% for point in fiche.points_cles %}<li>{{ point | md_inline }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+
+      <div class="eclair-footer">
+        {% if logo_uri %}<img src="{{ logo_uri }}" alt="Major ECN" class="eclair-logo" />{% endif %}
+        <div class="eclair-footer-text">Major ECN&nbsp;&middot;&nbsp;{{ fiche.annee }}</div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+</body>
+</html>

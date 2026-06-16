@@ -11,9 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar } from '@/components/ui/avatar';
+import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
+import { effectiveSeed } from '@/lib/avatar';
 import { createClient } from '@/lib/supabase/client';
-import { initials } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 
 export function UserMenu({ profile }: { profile: Profile }) {
@@ -28,7 +29,7 @@ export function UserMenu({ profile }: { profile: Profile }) {
     <DropdownMenu>
       <DropdownMenuTrigger className="focus-ring rounded-full">
         <Avatar className="h-9 w-9 cursor-pointer hover:ring-2 hover:ring-(--color-primary-soft) transition">
-          <AvatarFallback>{initials(profile.first_name, profile.last_name)}</AvatarFallback>
+          <DrawnAvatar seed={effectiveSeed(profile.id, profile.avatar_seed)} size={36} />
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">

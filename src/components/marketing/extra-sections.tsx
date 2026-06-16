@@ -958,6 +958,43 @@ export function EspaceDecouverteSection() {
   );
 }
 
+/* ============================================================
+   Dernier CTA — bande finale « Découvrir gratuitement la plateforme »
+   ============================================================ */
+export function FinalDiscoverCtaSection() {
+  return (
+    <section
+      className="relative isolate overflow-hidden bg-[#0F1F4D] py-20 text-white lg:py-28"
+      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+    >
+      <div aria-hidden className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[#C0112E]/30 blur-[120px]" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-32 right-1/4 -z-10 h-[360px] w-[560px] rounded-full bg-[#3B82F6]/15 blur-[120px]" />
+      <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+        <Reveal>
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5" /> Sans carte bancaire · Sans engagement
+          </span>
+          <h2 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl">
+            Prêt à découvrir Major ECN&nbsp;?
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg" style={{ fontFamily: "'Manrope', sans-serif" }}>
+            Accédez gratuitement à un aperçu concret de la plateforme et de notre
+            méthode de préparation aux EVC, avant de choisir votre formule.
+          </p>
+          <Link
+            href="/espace-decouverte"
+            className="mt-9 inline-flex items-center justify-center gap-3 rounded-2xl px-9 py-4 text-base font-extrabold uppercase tracking-wide text-white shadow-[0_14px_40px_-12px_rgba(192,17,46,0.7)] transition-transform hover:scale-[1.02]"
+            style={{ background: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)' }}
+          >
+            Découvrir gratuitement la plateforme
+            <ArrowRight className="h-5 w-5" />
+          </Link>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /** @deprecated Conservé pour compatibilité — préfère EspaceDecouverteSection. */
 export function FinalCtaBlock({ colleges: _colleges }: { colleges?: { id: string; nom: string }[] }) {
   return <EspaceDecouverteSection />;
@@ -1807,6 +1844,15 @@ export function TestimonialsTextSection() {
             Voir tous les témoignages
             <ArrowRight className="h-4 w-4" />
           </Link>
+          <Link
+            href="/espace-decouverte"
+            className="inline-flex items-center gap-2.5 rounded-2xl border-2 bg-white px-7 py-3.5 text-sm font-extrabold transition-transform hover:scale-[1.02]"
+            style={{ borderColor: TT_RED, color: TT_RED }}
+          >
+            <Sparkles className="h-4 w-4" />
+            Découvrir gratuitement la plateforme
+            <ArrowRight className="h-4 w-4" />
+          </Link>
           <p className="flex items-center gap-2 text-xs" style={{ color: TT_INK_SOFT }}>
             <ShieldCheck className="h-3.5 w-3.5" style={{ color: TT_RED }} />
             Témoignages authentiques de médecins ayant préparé les EVC avec Major ECN.
@@ -1977,6 +2023,15 @@ export function TestimonialsVideoSection() {
             style={{ background: `linear-gradient(90deg, ${TV_BURGUNDY} 0%, ${TV_RED} 100%)` }}
           >
             Voir tous les témoignages
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/espace-decouverte"
+            className="inline-flex items-center gap-2.5 rounded-2xl border-2 bg-white px-7 py-3.5 text-sm font-extrabold transition-transform hover:scale-[1.02]"
+            style={{ borderColor: TV_RED, color: TV_RED }}
+          >
+            <Sparkles className="h-4 w-4" />
+            Découvrir gratuitement la plateforme
             <ArrowRight className="h-4 w-4" />
           </Link>
           <p className="flex items-center gap-2 text-xs" style={{ color: TV_INK_SOFT }}>

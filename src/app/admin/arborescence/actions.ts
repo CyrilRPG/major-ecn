@@ -381,3 +381,42 @@ export async function deleteSlot(id: string): Promise<{ ok: boolean; error?: str
     return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
   }
 }
+
+/** Réordonne un contenu (slot) au sein de son item : échange la position avec
+ *  le contenu voisin (haut / bas). C'est cet ordre qui pilote l'affichage des
+ *  cartes côté élève sur l'accueil du parcours. */
+export async function moveSlot(
+  id: string,
+  direction: 'up' | 'down',
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const admin = await requireAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const a = admin as any;
+    const { data: cur } = await a
+      .from('cours_content_slots')
+      .select('id, cours_id, position')
+      .eq('id', id)
+      .maybeSingle();
+    if (!cur) return { ok: false, error: 'Contenu introuvable' };
+
+    const { data: siblings } = await a
+      .from('cours_content_slots')
+      .select('id, position')
+      .eq('cours_id', cur.cours_id)
+      .order('position', { ascending: true });
+    const list = (siblings ?? []) as { id: string; position: number }[];
+    const idx = list.findIndex((s) => s.id === id);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (idx < 0 || swapIdx < 0 || swapIdx >= list.length) return { ok: true };
+
+    const other = list[swapIdx];
+    await a.from('cours_content_slots').update({ position: other.position }).eq('id', cur.id);
+    await a.from('cours_content_slots').update({ position: cur.position }).eq('id', other.id);
+    revalidatePath('/admin/arborescence');
+    revalidatePath('/admin/contenu');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
+  }
+}

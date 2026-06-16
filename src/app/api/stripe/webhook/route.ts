@@ -130,6 +130,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const lastName = metadata.last_name ?? '';
   const specialty = metadata.specialty ?? 'Médecine générale';
   const voie = metadata.voie ?? '';
+  const phone = metadata.phone ?? session.customer_details?.phone ?? '';
   const installments = Number(metadata.installments ?? '1') || 1;
   const cancelAt = metadata.cancel_at ? Number(metadata.cancel_at) : null;
   const amountTotalCents = session.amount_total ?? 0;
@@ -164,6 +165,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     amountTotalCents,
     specialty,
     voie,
+    phone,
     sessionId: session.id,
     source: 'webhook',
   });

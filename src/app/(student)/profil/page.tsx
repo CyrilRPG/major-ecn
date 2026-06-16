@@ -1,9 +1,11 @@
-import { CalendarClock, GraduationCap, KeyRound, Mail, Phone, Sparkles, User } from 'lucide-react';
+import { CalendarCheck, CalendarClock, GraduationCap, KeyRound, Mail, Phone, Sparkles, User } from 'lucide-react';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
 import { generatePseudo } from '@/lib/auth/pseudo';
 import { PseudoEditor } from '@/components/student/pseudo-editor';
+import { AvatarPicker } from '@/components/student/avatar-picker';
+import { effectiveSeed } from '@/lib/avatar';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { ProfProfile } from '@/components/professor/prof-profile';
 import { ProfileEditor } from '@/components/profile/profile-editor';
@@ -139,6 +141,34 @@ export default async function ProfilPage() {
           Mettez à jour votre mot de passe à tout moment. Minimum 8 caractères.
         </p>
         <PasswordChanger />
+      </section>
+
+      {/* PRÉSENCES */}
+      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          Présences
+        </p>
+        <p className="mt-2 mb-4 text-sm text-(--color-ink-soft)">
+          Retrouvez l’historique de vos émargements aux sessions Zoom (date, heure, intervenant).
+        </p>
+        <a
+          href="/presences"
+          className="inline-flex items-center gap-2 rounded-xl bg-(--color-primary) px-4 py-2.5 text-sm font-bold text-white hover:opacity-90"
+        >
+          <CalendarCheck className="h-4 w-4" /> Voir mes présences
+        </a>
+      </section>
+
+      {/* AVATAR */}
+      <section className="mb-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          Votre avatar
+        </p>
+        <p className="mt-2 mb-4 text-sm text-(--color-ink-soft)">
+          Un avatar dessiné vous a été attribué au hasard. Choisissez celui qui vous ressemble — ou
+          régénérez-en de nouveaux.
+        </p>
+        <AvatarPicker initialSeed={effectiveSeed(profile.id, profile.avatar_seed)} />
       </section>
 
       {/* PSEUDO */}

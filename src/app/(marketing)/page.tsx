@@ -1,9 +1,9 @@
 import { ManusHero } from '@/components/marketing/manus-hero';
 import { ExperienceSection, FAQSection } from '@/components/marketing/manus-sections';
 import {
-  BeyondPlatformSection, EspaceDecouverteSection, PedagogicalTeamSection,
-  SpecialtiesSection, TestimonialsTextSection, TestimonialsVideoSection,
-  ToolsForProgressSection, ToolsGridSection, ToutRegroupeSection,
+  BeyondPlatformSection, EspaceDecouverteSection, FinalDiscoverCtaSection,
+  PedagogicalTeamSection, SpecialtiesSection, TestimonialsTextSection,
+  TestimonialsVideoSection, ToolsForProgressSection, ToutRegroupeSection,
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
@@ -18,38 +18,38 @@ export default async function HomePage() {
       {/* 1) HERO */}
       <ManusHero />
 
-      {/* 2) Bien plus qu'une plateforme de cours (8 cartes) */}
+      {/* 2) Bien plus qu'une plateforme de cours */}
       <BeyondPlatformSection />
 
-      {/* 3) Tous les outils pour réussir votre préparation EVC (6 cartes) */}
+      {/* 3) Plateforme intelligente et adaptative */}
       <ToolsForProgressSection />
 
-      {/* 4) Tous les outils pour structurer votre progression aux EVC (restauré) */}
-      <ToolsGridSection />
-
-      {/* 5) Témoignages texte de lauréats (cartes courtes) */}
-      <TestimonialsTextSection />
-
-      {/* 6) Témoignages vidéo */}
+      {/* 4) Témoignages vidéo */}
       <TestimonialsVideoSection />
 
-      {/* 7) Préparation EVC (PAE) adaptée à votre spécialité */}
+      {/* 5) Préparation adaptée à votre spécialité */}
       <SpecialtiesSection />
 
-      {/* 8) Une équipe qui connaît les attentes des EVC */}
+      {/* 6) Équipe pédagogique */}
       <PedagogicalTeamSection />
 
-      {/* 9) Tout est regroupé au même endroit — bloc 8 cartes outils */}
+      {/* 7) Tout est regroupé au même endroit */}
       <ToutRegroupeSection />
 
-      {/* 10) À l'intérieur de Major ECN */}
+      {/* 8) À l'intérieur de Major ECN (captures de la plateforme) */}
       <ExperienceSection />
 
-      {/* 9) FAQ */}
+      {/* 9) Témoignages écrits */}
+      <TestimonialsTextSection />
+
+      {/* 10) Espace découverte gratuit */}
+      <EspaceDecouverteSection />
+
+      {/* 11) FAQ */}
       <FAQSection />
 
-      {/* 10) Découvrez la plateforme Major ECN — Espace Découverte */}
-      <EspaceDecouverteSection />
+      {/* 12) Dernier CTA — Découvrir gratuitement la plateforme */}
+      <FinalDiscoverCtaSection />
     </>
   );
 }

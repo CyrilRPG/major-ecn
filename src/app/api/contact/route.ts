@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { ContactSchema } from '@/lib/schemas/contact';
 import { sendEmail } from '@/lib/email/send';
 import { contactMessageEmail } from '@/lib/email/templates';
+import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 
 /** Adresse de réception des messages de contact Major ECN. */
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
@@ -16,10 +17,16 @@ export async function POST(req: Request) {
     );
   }
 
-  const { name, email, phone, subject, message, company, attachments } = parsed.data;
+  const { name, email, phone, subject, message, company, attachments, turnstileToken } = parsed.data;
 
   // Honeypot : si rempli, on fait semblant d'accepter sans rien envoyer.
   if (company) return NextResponse.json({ ok: true });
+
+  // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
+  const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
+  if (!captcha.ok) {
+    return NextResponse.json({ error: captcha.error }, { status: 400 });
+  }
 
   // Garde-fou taille : la requête serverless (Vercel) plafonne à ~4,5 Mo.
   const totalB64 = (attachments ?? []).reduce((s, a) => s + a.content.length, 0);

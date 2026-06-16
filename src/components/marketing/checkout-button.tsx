@@ -9,15 +9,29 @@
  *
  * Appelle /api/stripe/checkout puis redirige vers Stripe Checkout.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight, Calendar, Check, CheckCircle2,
-  GitFork, Loader2, Lock, Mail, Phone, ShieldCheck, Sparkles,
-  Stethoscope, User,
+  GitFork, Loader2, Lock, LogIn, Mail, Phone, ShieldCheck, Sparkles,
+  Stethoscope, User, UserCheck,
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
+import { createClient } from '@/lib/supabase/client';
 import { InfoImportantePopup, FORMULE_COLORS } from './info-importante-popup';
+import { TurnstileWidget } from './turnstile-widget';
+
+type ProfileRow = {
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  phone: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission_scope: Record<string, any> | null;
+};
+
+/** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
+const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 type Color = { deep: string; main: string };
 const DEFAULT_COLOR: Color = { deep: '#8B0E22', main: '#C0112E' };
@@ -41,7 +55,9 @@ export function CheckoutButton({
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
 }: Props) {
-  const isIntensive = formuleId === 'intensive';
+  // Voie de concours (interne / externe) demandée pour la Formule Intensive ET
+  // la Formule Essentielle.
+  const needsVoie = formuleId === 'intensive' || formuleId === 'essentielle';
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -56,9 +72,114 @@ export function CheckoutButton({
   // notamment CGS §10.1 et Conditions Particulières §Observations. Cocher la
   // case vaut donc acceptation simultanée de ces stipulations contractuelles.
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showInfoPopup, setShowInfoPopup] = useState(false);
+
+  // ── Mise à niveau Découverte → payant via connexion ──────────────
+  // Si l'étudiant est connecté (ou se connecte), on pré-remplit et verrouille
+  // ses informations : il ne lui reste qu'à choisir le mode de paiement et
+  // accepter les conditions. Aucun nouveau compte, aucune ressaisie.
+  const [accountMode, setAccountMode] = useState(false);
+  const [accountLabel, setAccountLabel] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  /** Pré-remplit + verrouille le formulaire à partir du profil connecté. */
+  async function applyAccount(
+    supabase: ReturnType<typeof createClient>,
+    user: { id: string; email?: string | null },
+  ) {
+    const { data: prof } = await supabase
+      .from('profiles')
+      .select('first_name, last_name, email, phone, permission_scope')
+      .eq('id', user.id)
+      .maybeSingle<ProfileRow>();
+    const ps = (prof?.permission_scope ?? {}) as Record<string, unknown>;
+    const signup = (ps.signup ?? {}) as Record<string, unknown>;
+    setFirstName(prof?.first_name ?? '');
+    setLastName(prof?.last_name ?? '');
+    setEmail(prof?.email ?? user.email ?? '');
+    setPhone(prof?.phone ?? '');
+    const existingVoie = (signup.voie ?? ps.paid_voie ?? '') as string;
+    if (existingVoie) setVoie(existingVoie);
+    const label =
+      `${prof?.first_name ?? ''} ${prof?.last_name ?? ''}`.trim() ||
+      (prof?.email ?? user.email ?? '');
+    setAccountLabel(label);
+    setAccountMode(true);
+    setShowLogin(false);
+  }
+
+  // Au montage : si une session existe déjà, on bascule en mode « connecté ».
+  useEffect(() => {
+    let cancelled = false;
+    try {
+      const supabase = createClient();
+      supabase.auth
+        .getUser()
+        .then(({ data }) => {
+          if (cancelled || !data.user) return;
+          void applyAccount(supabase, data.user);
+        })
+        .catch(() => {});
+    } catch {
+      // Supabase non configuré (env absente) : le formulaire reste en mode invité.
+    }
+    return () => {
+      cancelled = true;
+    };
+    // applyAccount n'utilise que des setters stables — montage unique.
+  }, []);
+
+  /** Connexion inline (encart « Vous avez déjà un compte ? »). */
+  async function handleLogin() {
+    setLoginError(null);
+    if (!loginEmail || !loginPassword) {
+      setLoginError('Email et mot de passe requis.');
+      return;
+    }
+    setLoginLoading(true);
+    try {
+      const supabase = createClient();
+      const { data, error: err } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      });
+      if (err || !data.user) {
+        setLoginError(
+          err?.message === 'Invalid login credentials'
+            ? 'Email ou mot de passe incorrect.'
+            : err?.message ?? 'Connexion impossible.',
+        );
+        return;
+      }
+      await applyAccount(supabase, data.user);
+      setLoginEmail('');
+      setLoginPassword('');
+    } catch {
+      setLoginError('Erreur réseau, réessayez.');
+    } finally {
+      setLoginLoading(false);
+    }
+  }
+
+  /** Quitte le mode « connecté » sans déconnecter du site : permet de saisir
+   *  une autre identité (création d'un nouveau compte). */
+  function exitAccountMode() {
+    setAccountMode(false);
+    setAccountLabel('');
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPhone('');
+    setVoie('');
+  }
 
   /** Étape 1 : validation locale du formulaire. Ouvre la popup info. */
   function handleSubmit(e: React.FormEvent) {
@@ -71,12 +192,16 @@ export function CheckoutButton({
       setError('Le numéro de téléphone est obligatoire pour une offre payante.');
       return;
     }
-    if (isIntensive && !voie) {
+    if (needsVoie && !voie) {
       setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
     }
     if (!acceptTerms) {
       setError('Vous devez accepter les CGU, les CGS et les Conditions Particulières pour continuer.');
+      return;
+    }
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setError('Merci de valider le test anti-robot.');
       return;
     }
     setError(null);
@@ -99,7 +224,7 @@ export function CheckoutButton({
           lastName,
           phone,
           specialty,
-          voie: isIntensive ? voie : '',
+          voie: needsVoie ? voie : '',
           installments,
           consents: {
             // Une seule case côté UI ; côté serveur on stocke un flag par
@@ -112,31 +237,105 @@ export function CheckoutButton({
             waiveRetractation: acceptTerms,
             timestamp: new Date().toISOString(),
           },
+          turnstileToken: captchaToken,
         }),
       });
       const j = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !j.url) {
         setError(j.error ?? 'Erreur lors de la création de la session de paiement.');
+        setCaptchaToken('');
+        setCaptchaNonce((n) => n + 1);
         setLoading(false);
         return;
       }
       window.location.href = j.url;
     } catch (e2) {
       setError(e2 instanceof Error ? e2.message : 'Erreur réseau');
+      setCaptchaToken('');
+      setCaptchaNonce((n) => n + 1);
       setLoading(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3.5">
+      {/* Mise à niveau : connexion pour pré-remplir (compte Découverte → payant) */}
+      {accountMode ? (
+        <div
+          className="flex items-center justify-between gap-2 rounded-xl border px-3 py-2.5"
+          style={{ background: '#F0FDF4', borderColor: '#BBF7D0' }}
+        >
+          <span className="flex items-center gap-2 text-[12.5px] font-semibold" style={{ color: '#15803D' }}>
+            <UserCheck className="h-4 w-4 shrink-0" />
+            <span className="truncate">Connecté : {accountLabel}</span>
+          </span>
+          <button
+            type="button"
+            onClick={exitAccountMode}
+            className="shrink-0 text-[11.5px] font-semibold underline"
+            style={{ color: '#7A8499' }}
+          >
+            Ce n&rsquo;est pas vous&nbsp;?
+          </button>
+        </div>
+      ) : (
+        <div className="rounded-xl border px-3 py-2.5" style={{ background: '#FAFBFD', borderColor: '#E5E9F0' }}>
+          {!showLogin ? (
+            <button
+              type="button"
+              onClick={() => setShowLogin(true)}
+              className="flex w-full items-center justify-center gap-2 text-[12.5px] font-semibold"
+              style={{ color: color.main }}
+            >
+              <LogIn className="h-4 w-4" />
+              Vous avez déjà un compte&nbsp;? Connectez-vous pour aller plus vite
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-[12px] font-extrabold" style={{ color: '#0F1F4D' }}>
+                Connexion à votre compte Major ECN
+              </p>
+              <Input icon={Mail} type="email" placeholder="Adresse email" value={loginEmail} onChange={setLoginEmail} />
+              <Input icon={Lock} type="password" placeholder="Mot de passe" value={loginPassword} onChange={setLoginPassword} />
+              {loginError && (
+                <p className="text-[11.5px] font-medium" style={{ color: '#C0112E' }}>{loginError}</p>
+              )}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleLogin}
+                  disabled={loginLoading}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-[12.5px] font-extrabold text-white disabled:opacity-60"
+                  style={{ background: color.main }}
+                >
+                  {loginLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
+                  {loginLoading ? 'Connexion…' : 'Se connecter'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowLogin(false); setLoginError(null); }}
+                  className="text-[11.5px] font-semibold underline"
+                  style={{ color: '#7A8499' }}
+                >
+                  Annuler
+                </button>
+              </div>
+              <p className="text-[11px]" style={{ color: '#7A8499' }}>
+                Pas encore de compte&nbsp;? Remplissez simplement le formulaire ci-dessous.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Section IDENTITÉ */}
       <SectionLabel n={1} title="Vos informations" />
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-        <Input icon={User} placeholder="Prénom" value={firstName} onChange={setFirstName} required />
-        <Input icon={User} placeholder="Nom" value={lastName} onChange={setLastName} required />
+        <Input icon={User} placeholder="Prénom" value={firstName} onChange={setFirstName} required locked={accountMode && !!firstName} />
+        <Input icon={User} placeholder="Nom" value={lastName} onChange={setLastName} required locked={accountMode && !!lastName} />
       </div>
-      <Input icon={Mail} type="email" placeholder="Adresse email" value={email} onChange={setEmail} required />
-      <Input icon={Phone} type="tel" placeholder="Téléphone" value={phone} onChange={setPhone} required />
+      <Input icon={Mail} type="email" placeholder="Adresse email" value={email} onChange={setEmail} required locked={accountMode && !!email} />
+      <Input icon={Phone} type="tel" placeholder="Téléphone" value={phone} onChange={setPhone} required locked={accountMode && !!phone} />
 
       {/* Section PRÉPARATION */}
       <SectionLabel n={2} title="Votre préparation" />
@@ -146,14 +345,15 @@ export function CheckoutButton({
         onChange={setSpecialty}
         options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
       />
-      {/* Voie interne / externe — Intensive uniquement.
+      {/* Voie interne / externe — Formules Intensive et Essentielle.
           Le parcours pédagogique diffère selon le format de concours
           du candidat. */}
-      {isIntensive && (
+      {needsVoie && (
         <Select
           icon={GitFork}
           value={voie}
           onChange={setVoie}
+          disabled={accountMode && !!voie}
           options={[
             { value: '', label: 'Choisissez votre voie de concours' },
             ...VOIES.map((v) => ({ value: v.value, label: v.label })),
@@ -217,6 +417,13 @@ export function CheckoutButton({
           </>
         }
       />
+
+      {/* Captcha anti-robot (Cloudflare Turnstile) */}
+      {TURNSTILE_ENABLED && (
+        <div className="flex justify-center">
+          <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
+        </div>
+      )}
 
       {/* CTA */}
       <button
@@ -316,6 +523,7 @@ function Input({
   value,
   onChange,
   required,
+  locked,
 }: {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   type?: string;
@@ -323,6 +531,8 @@ function Input({
   value: string;
   onChange: (v: string) => void;
   required?: boolean;
+  /** Champ pré-rempli depuis le compte connecté : lecture seule. */
+  locked?: boolean;
 }) {
   return (
     <div className="relative">
@@ -333,14 +543,21 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="w-full rounded-xl border bg-white py-3 pl-10 pr-3 text-[13.5px] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2"
+        readOnly={locked}
+        aria-readonly={locked}
+        tabIndex={locked ? -1 : undefined}
+        className={`w-full rounded-xl border py-3 pl-10 text-[13.5px] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 ${locked ? 'cursor-not-allowed pr-9' : 'pr-3'}`}
         style={{
           borderColor: '#E5E9F0',
-          color: '#1F2937',
+          background: locked ? '#F1F5F9' : 'white',
+          color: locked ? '#475569' : '#1F2937',
           // @ts-expect-error custom CSS prop
           '--tw-ring-color': '#C0112E',
         }}
       />
+      {locked && (
+        <Lock className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2" style={{ color: '#94A3B8' }} />
+      )}
     </div>
   );
 }
@@ -350,11 +567,14 @@ function Select({
   value,
   onChange,
   options,
+  disabled,
 }: {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
+  /** Pré-rempli depuis le compte connecté : non modifiable. */
+  disabled?: boolean;
 }) {
   return (
     <div className="relative">
@@ -362,10 +582,12 @@ function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none rounded-xl border bg-white py-3 pl-10 pr-9 text-[13.5px] focus:outline-none focus:ring-2"
+        disabled={disabled}
+        className={`w-full appearance-none rounded-xl border py-3 pl-10 pr-9 text-[13.5px] focus:outline-none focus:ring-2 ${disabled ? 'cursor-not-allowed' : ''}`}
         style={{
           borderColor: '#E5E9F0',
-          color: value ? '#1F2937' : '#94A3B8',
+          background: disabled ? '#F1F5F9' : 'white',
+          color: value ? (disabled ? '#475569' : '#1F2937') : '#94A3B8',
           // @ts-expect-error custom CSS prop
           '--tw-ring-color': '#C0112E',
         }}
@@ -374,7 +596,11 @@ function Select({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
-      <Check className="pointer-events-none absolute right-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rotate-90 opacity-50" />
+      {disabled ? (
+        <Lock className="pointer-events-none absolute right-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2" style={{ color: '#94A3B8' }} />
+      ) : (
+        <Check className="pointer-events-none absolute right-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rotate-90 opacity-50" />
+      )}
     </div>
   );
 }

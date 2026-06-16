@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
-  MonitorPlay, Telescope, X, type LucideIcon,
+  MonitorPlay, NotebookPen, Telescope, X, type LucideIcon,
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
@@ -87,9 +87,11 @@ export function StudyConsole({
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
+        { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ]
     : [
         { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
+        { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ];
 
   return (

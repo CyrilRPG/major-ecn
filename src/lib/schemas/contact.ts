@@ -16,6 +16,8 @@ export const ContactSchema = z.object({
   attachments: z.array(ContactAttachmentSchema).max(8).optional(),
   // Honeypot anti-spam : doit rester vide.
   company: z.string().max(0).optional().or(z.literal('')),
+  // Token captcha Cloudflare Turnstile (vérifié côté serveur).
+  turnstileToken: z.string().optional(),
 });
 
 export type ContactInput = z.infer<typeof ContactSchema>;

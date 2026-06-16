@@ -3,12 +3,12 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  BookOpen, ChevronDown, ChevronRight, Copy, FileText, Layers3,
+  BookOpen, ChevronDown, ChevronRight, ChevronUp, Copy, FileText, Layers3,
   ListChecks, Loader2, Lock, MoveRight, Pencil, Plus, Trash2, Video, X,
 } from 'lucide-react';
 import {
   addSlot, createCollege, createItem, deleteCollege, deleteItem, deleteSlot,
-  duplicateItem, moveItem, renameCollege, renameItem, updateCollegePermission,
+  duplicateItem, moveItem, moveSlot, renameCollege, renameItem, updateCollegePermission,
   updateCollegeAccessType, updateCoursAccessType,
 } from './actions';
 
@@ -399,11 +399,12 @@ function ItemRow({
             Contenus de cet item
           </p>
           <ul className="space-y-1.5">
-            {item.slots.map((s) => {
+            {item.slots.map((s, si) => {
               const Icon = SLOT_ICONS[s.content_type];
               const tone = SLOT_COLORS[s.content_type];
               return (
                 <li key={s.id} className="flex items-center gap-2 rounded-md border border-(--color-border) bg-white px-2.5 py-1.5">
+                  <span className="text-[10px] font-bold tabular-nums text-(--color-ink-muted)">{si + 1}</span>
                   <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: tone.bg, color: tone.fg }}>
                     <Icon className="h-3 w-3" />
                   </span>
@@ -411,6 +412,23 @@ function ItemRow({
                   <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: tone.fg }}>
                     {SLOT_LABELS[s.content_type]}
                   </span>
+                  {/* Réordonner : pilote l'ordre d'affichage côté élève. */}
+                  <button
+                    onClick={() => onRun(async () => await moveSlot(s.id, 'up'))}
+                    disabled={pending || si === 0}
+                    className="text-(--color-ink-soft) hover:text-(--color-primary) disabled:opacity-30"
+                    title="Monter"
+                  >
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => onRun(async () => await moveSlot(s.id, 'down'))}
+                    disabled={pending || si === item.slots.length - 1}
+                    className="text-(--color-ink-soft) hover:text-(--color-primary) disabled:opacity-30"
+                    title="Descendre"
+                  >
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
                   <button
                     onClick={() => {
                       if (confirm(`Retirer le contenu « ${s.label} » ?`)) {

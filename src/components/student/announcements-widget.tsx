@@ -71,7 +71,11 @@ export async function AnnouncementsWidget() {
     .eq('visible', true)
     .order('order_index', { ascending: true });
 
-  const items = ((data ?? []) as unknown as Announcement[]) ?? [];
+  const allItems = ((data ?? []) as unknown as Announcement[]) ?? [];
+  // Anti-doublon : la carte statique `MgEvc2026Card` affiche déjà le « Nombre
+  // de postes » (Voie externe / interne). On masque donc toute annonce DB qui
+  // ferait doublon avec cette rubrique (ex. « Nombre de postes EVC 2026 »).
+  const items = allItems.filter((it) => !/nombre\s+de\s+postes/i.test(it.title));
 
   return (
     <aside className="space-y-3" aria-label="Annonces et informations EVC">

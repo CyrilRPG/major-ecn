@@ -29,6 +29,7 @@ import {
   isTestMode,
 } from '@/lib/stripe';
 import { siteUrl } from '@/lib/email/send';
+import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 
 type Consents = {
   cgu?: boolean;
@@ -49,6 +50,7 @@ type Body = {
   voie?: string;
   installments?: number;
   consents?: Consents;
+  turnstileToken?: string;
 };
 
 export async function POST(req: Request) {
@@ -57,6 +59,12 @@ export async function POST(req: Request) {
     body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: 'Corps de requête invalide (JSON attendu)' }, { status: 400 });
+  }
+
+  // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
+  const captcha = await verifyTurnstile(body.turnstileToken, clientIp(req));
+  if (!captcha.ok) {
+    return NextResponse.json({ error: captcha.error }, { status: 400 });
   }
 
   const formule = getFormule(body.formule ?? '');

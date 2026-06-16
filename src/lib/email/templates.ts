@@ -611,5 +611,140 @@ export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
 }
 
 /* ============================================================
+   Récap interne — nouvelle inscription Espace Découverte (gratuit)
+   Envoyé à contact@major-ecn.fr + abonan1@yahoo.fr à chaque création
+   de compte découverte, avec toutes les infos saisies.
+   ============================================================ */
+type DecouverteSignupNotificationArgs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  specialty?: string | null;
+  voie?: string | null;
+  session?: string | null;
+  country?: string | null;
+  passedEvc?: string | null;
+};
+export function decouverteSignupNotificationEmail({
+  firstName,
+  lastName,
+  email,
+  phone,
+  specialty,
+  voie,
+  session,
+  country,
+  passedEvc,
+}: DecouverteSignupNotificationArgs) {
+  const fullName = `${firstName} ${lastName}`.trim();
+  const subject = `🆕 Inscription Découverte : ${fullName || email}`;
+  const row = (label: string, value: string | null | undefined) =>
+    value
+      ? `<tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">${escapeHtml(label)}</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(value)}</td></tr>`
+      : '';
+  const bodyHtml = `
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4A5568;">
+      Un nouvel étudiant vient de créer un compte <strong>Espace Découverte</strong> (gratuit).
+    </p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 18px;">
+      ${row('Prénom', firstName)}
+      ${row('Nom', lastName)}
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Email</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-family:monospace;">${escapeHtml(email)}</td></tr>
+      ${row('Téléphone', phone)}
+      ${row('Spécialité', specialty)}
+      ${row('Voie', voie)}
+      ${row('Session', session)}
+      ${row('Pays de résidence', country)}
+      ${row('A passé les EVC', passedEvc)}
+    </table>
+    <p style="margin:0;font-size:13px;color:#7A7A7A;">
+      Récapitulatif automatique — aucune action requise.
+    </p>`;
+  const html = layout({ subject, eyebrow: 'Inscription — Espace Découverte', title: 'Nouvelle inscription Découverte', bodyHtml });
+  const text = [
+    `Nouvelle inscription Espace Découverte (gratuit)`,
+    `Nom : ${fullName}`,
+    `Email : ${email}`,
+    phone ? `Téléphone : ${phone}` : '',
+    specialty ? `Spécialité : ${specialty}` : '',
+    voie ? `Voie : ${voie}` : '',
+    session ? `Session : ${session}` : '',
+    country ? `Pays : ${country}` : '',
+    passedEvc ? `A passé les EVC : ${passedEvc}` : '',
+  ].filter(Boolean).join('\n');
+  return { subject, html, text };
+}
+
+/* ============================================================
+   Récap interne — nouvelle souscription payante (après paiement Stripe)
+   Envoyé à contact@major-ecn.fr + abonan1@yahoo.fr une seule fois
+   (déduplication via stripe_provisioning_log).
+   ============================================================ */
+type PurchaseNotificationArgs = {
+  firstName?: string | null;
+  lastName?: string | null;
+  email: string;
+  phone?: string | null;
+  formuleName: string;
+  amountEuros: number;
+  /** 1 = paiement comptant, 3 ou 4 = paiement en plusieurs fois. */
+  installments: number;
+  specialty?: string | null;
+  voie?: string | null;
+};
+export function purchaseNotificationEmail({
+  firstName,
+  lastName,
+  email,
+  phone,
+  formuleName,
+  amountEuros,
+  installments,
+  specialty,
+  voie,
+}: PurchaseNotificationArgs) {
+  const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
+  const subject = `💳 Souscription payante : ${formuleName} — ${fullName || email}`;
+  const paymentLabel =
+    installments > 1
+      ? `${amountEuros.toFixed(2)} € en ${installments}× (${(amountEuros / installments).toFixed(2)} €/mois)`
+      : `${amountEuros.toFixed(2)} € (comptant)`;
+  const row = (label: string, value: string | null | undefined) =>
+    value
+      ? `<tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">${escapeHtml(label)}</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(value)}</td></tr>`
+      : '';
+  const bodyHtml = `
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4A5568;">
+      Un étudiant vient de souscrire à une <strong>offre payante</strong>.
+    </p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 18px;">
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Formule</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:700;">${escapeHtml(formuleName)}</td></tr>
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Montant</td><td style="padding:6px 0;font-size:13px;color:#C0112E;font-weight:700;">${escapeHtml(paymentLabel)}</td></tr>
+      ${row('Prénom', firstName)}
+      ${row('Nom', lastName)}
+      <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Email</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-family:monospace;">${escapeHtml(email)}</td></tr>
+      ${row('Téléphone', phone)}
+      ${row('Spécialité', specialty)}
+      ${row('Voie', voie)}
+    </table>
+    <p style="margin:0;font-size:13px;color:#7A7A7A;">
+      Récapitulatif automatique — paiement confirmé côté Stripe.
+    </p>`;
+  const html = layout({ subject, eyebrow: 'Souscription payante', title: 'Nouvelle souscription payante', bodyHtml });
+  const text = [
+    `Nouvelle souscription payante`,
+    `Formule : ${formuleName}`,
+    `Montant : ${paymentLabel}`,
+    fullName ? `Nom : ${fullName}` : '',
+    `Email : ${email}`,
+    phone ? `Téléphone : ${phone}` : '',
+    specialty ? `Spécialité : ${specialty}` : '',
+    voie ? `Voie : ${voie}` : '',
+  ].filter(Boolean).join('\n');
+  return { subject, html, text };
+}
+
+/* ============================================================
    Welcome (existant) — voir welcomeEmail() au-dessus
    ============================================================ */

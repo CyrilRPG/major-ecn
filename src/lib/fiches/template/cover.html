@@ -1,0 +1,49 @@
+{# Page de garde — design « médical sobre ». Variables : fiche, logo_uri, legend. #}
+<section class="cover">
+
+  {# Bande verticale bleu nuit signature #}
+  <div class="cover-band"></div>
+
+  <div class="cover-content">
+
+    {# ── Identité du cours ── #}
+    <div class="cover-head">
+      {% if logo_uri %}
+      <img class="cover-logo" src="{{ logo_uri }}" alt="Major ECN" />
+      {% endif %}
+      <div class="cover-matiere">{{ fiche.matiere }}</div>
+      <h1 class="cover-title">{{ fiche.nom_cours }}</h1>
+      <div class="cover-year">Année&nbsp;{{ fiche.annee }}</div>
+      {% if fiche.item %}<div class="cover-item">{{ fiche.item }}</div>{% endif %}
+    </div>
+
+    {# ── Plan : grandes parties uniquement ── #}
+    <div class="cover-plan">
+      <div class="cover-section-label">Plan du cours</div>
+      <ol class="cover-plan-list">
+        {% for partie in fiche.plan %}
+        <li class="cover-plan-item">
+          <a class="cover-plan-link" href="#partie-{{ loop.index }}">
+            <span class="cover-plan-num">{{ partie.numero }}</span>
+            <span class="cover-plan-text">{{ partie.titre }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+
+    {# ── Légende des marqueurs ── #}
+    <div class="cover-legend">
+      <div class="cover-section-label">Légende</div>
+      <div class="cover-legend-items">
+        {% for entry in legend %}
+        <span class="cover-legend-item">
+          <span class="cover-legend-sym cover-legend-sym--{{ loop.index }}">{{ entry.symbol }}</span>
+          <span class="cover-legend-text">{{ entry.label }}</span>
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</section>

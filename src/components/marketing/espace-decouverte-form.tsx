@@ -8,6 +8,7 @@ import {
   Phone, Rocket, Route, Shield, Sparkles, Stethoscope, Tag, User,
 } from 'lucide-react';
 import { MeshGradient, NoiseTexture } from './premium-ui';
+import { TurnstileWidget } from './turnstile-widget';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -20,6 +21,9 @@ const PURPLE_BG = '#F1E8FD';
 const GREEN = '#16793C';
 const GOLD = '#F5C84B';
 const BORDER = '#E5E9F0';
+
+/** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
+const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 /** Spécialité « Médecine générale » — déclenche le champ Voie interne/externe. */
 const MG_NAME = 'Médecine générale';
@@ -100,6 +104,9 @@ export function EspaceDecouverteForm() {
   const [session, setSession] = useState('');
   const [country, setCountry] = useState('');
   const [passedEvc, setPassedEvc] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaNonce, setCaptchaNonce] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingAccount, setExistingAccount] = useState(false);
@@ -113,6 +120,8 @@ export function EspaceDecouverteForm() {
     if (!session) { setError('Veuillez sélectionner la session visée.'); return; }
     if (!country) { setError('Veuillez indiquer votre pays de résidence.'); return; }
     if (!passedEvc) { setError('Indiquez si vous avez déjà passé les EVC.'); return; }
+    if (!acceptTerms) { setError('Vous devez accepter les CGU et les CGS pour créer votre compte.'); return; }
+    if (TURNSTILE_ENABLED && !captchaToken) { setError('Merci de valider le test anti-robot.'); return; }
     setSubmitting(true);
     setError(null);
     setExistingAccount(false);
@@ -125,6 +134,8 @@ export function EspaceDecouverteForm() {
           specialty,
           voie: specialty === MG_NAME ? voie : '',
           session, country, passedEvc,
+          consents: { cgu: acceptTerms, cgs: acceptTerms, timestamp: new Date().toISOString() },
+          turnstileToken: captchaToken,
         }),
       });
       const j = (await res.json()) as {
@@ -136,12 +147,20 @@ export function EspaceDecouverteForm() {
       if (!res.ok || !j.ok) {
         if (j.existingAccount) setExistingAccount(true);
         setError(j.error ?? "Erreur lors de l'inscription. Réessayez.");
+        setCaptchaToken('');
+        setCaptchaNonce((n) => n + 1);
         setSubmitting(false);
         return;
       }
-      router.push(j.redirectTo ?? '/espace-decouverte/confirmation');
+      {
+        const base = j.redirectTo ?? '/espace-decouverte/confirmation';
+        const sep = base.includes('?') ? '&' : '?';
+        router.push(`${base}${sep}email=${encodeURIComponent(email)}`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur réseau');
+      setCaptchaToken('');
+      setCaptchaNonce((n) => n + 1);
       setSubmitting(false);
     }
   }
@@ -343,6 +362,34 @@ export function EspaceDecouverteForm() {
                 options={EVC_OPTIONS}
                 required
               />
+
+              {/* Acceptation CGU + CGS (obligatoire) */}
+              <label
+                className="flex cursor-pointer items-start gap-2.5 rounded-xl border bg-white p-3.5"
+                style={{ borderColor: acceptTerms ? RED : BORDER }}
+              >
+                <input
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded"
+                  style={{ accentColor: RED }}
+                />
+                <span className="text-[12.5px] leading-relaxed" style={{ color: INK }}>
+                  J&rsquo;accepte les{' '}
+                  <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: RED }}>CGU</Link>
+                  {' '}et les{' '}
+                  <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: RED }}>CGS</Link>
+                  {' '}de Major ECN. <span className="text-[11px]" style={{ color: INK_SOFT }}>(obligatoire)</span>
+                </span>
+              </label>
+
+              {/* Captcha anti-robot (Cloudflare Turnstile) */}
+              {TURNSTILE_ENABLED && (
+                <div className="flex justify-center pt-1">
+                  <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
+                </div>
+              )}
 
               {/* CTA premium */}
               <button

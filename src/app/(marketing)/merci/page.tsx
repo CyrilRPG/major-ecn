@@ -104,6 +104,7 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
     amountTotalCents: session.amount_total ?? 0,
     specialty: meta.specialty ?? 'Médecine générale',
     voie: meta.voie ?? '',
+    phone: meta.phone ?? session.customer_details?.phone ?? '',
     sessionId,
     source: 'merci',
   });

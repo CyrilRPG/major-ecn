@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { ContactAttachmentSchema } from '@/lib/schemas/contact';
 import { sendEmail } from '@/lib/email/send';
 import { recrutementEmail } from '@/lib/email/templates';
+import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 
 /** Adresse de réception des candidatures (recrutement) Major ECN. */
 const RECRUIT_EMAIL = 'contact@major-ecn.fr';
@@ -13,6 +14,7 @@ const RecrutementSchema = z.object({
   phone: z.string().max(40).optional().or(z.literal('')),
   message: z.string().max(2000).optional().or(z.literal('')),
   attachments: z.array(ContactAttachmentSchema).max(8).optional(),
+  turnstileToken: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -25,7 +27,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const { name, email, phone, message, attachments } = parsed.data;
+  const { name, email, phone, message, attachments, turnstileToken } = parsed.data;
+
+  // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
+  const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
+  if (!captcha.ok) {
+    return NextResponse.json({ error: captcha.error }, { status: 400 });
+  }
 
   // Garde-fou taille : la requête serverless (Vercel) plafonne à ~4,5 Mo.
   const totalB64 = (attachments ?? []).reduce((s, a) => s + a.content.length, 0);

@@ -1,5 +1,6 @@
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { FileText } from 'lucide-react';
+import { FileText, Pencil } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -30,12 +31,23 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   // est gérée côté route via Supabase cookies.
   const pdfUrl: string | null = fiche?.storage_path ? `/api/fiches/${coursId}/pdf` : null;
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
+  const canEdit = profile.role === 'admin' || profile.role === 'professor';
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
-      {fiche?.pages && (
-        <p className="mb-2 text-xs text-(--color-ink-soft) sm:mb-3 sm:text-sm">{fiche.pages} pages</p>
-      )}
+      <div className="mb-2 flex items-center gap-3 sm:mb-3">
+        {fiche?.pages && (
+          <p className="text-xs text-(--color-ink-soft) sm:text-sm">{fiche.pages} pages</p>
+        )}
+        {canEdit && (
+          <Link
+            href={`/cours/${coursId}/fiche/edit`}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
+          >
+            <Pencil className="h-3.5 w-3.5" /> Éditer la fiche
+          </Link>
+        )}
+      </div>
       {pdfUrl ? (
         <PdfViewer src={pdfUrl} coursId={coursId} initiallyRead={initiallyRead} />
       ) : (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, CalendarDays, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, Receipt, ScrollText, Users } from 'lucide-react';
+import { BarChart3, CalendarDays, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Receipt, ScrollText, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -19,6 +19,7 @@ const ALL_ITEMS: Item[] = [
   { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
   { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },
+  { href: '/admin/popups', label: 'Popups', Icon: MonitorPlay, adminOnly: true },
   { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
   { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
   { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },

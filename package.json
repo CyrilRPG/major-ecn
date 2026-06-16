@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "generate-pdfs": "python3 scripts/generate-pdfs.py",
+    "create-admin": "tsx scripts/create-admin.ts",
     "upload-fiches": "tsx scripts/upload-fiches.ts",
     "seed-fiches": "pnpm generate-pdfs && pnpm upload-fiches"
   },
@@ -29,6 +30,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@sparticuz/chromium": "^149.0.0",
     "@stripe/stripe-js": "^9.7.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
@@ -44,6 +46,7 @@
     "papaparse": "^5.5.3",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.7.284",
+    "puppeteer-core": "^25.1.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.75.0",

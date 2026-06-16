@@ -16,6 +16,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendEmail } from '@/lib/email/send';
+import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
@@ -27,6 +28,7 @@ const Schema = z.object({
   specialty: z.string().trim().max(120).optional(),
   message: z.string().trim().max(2000).optional(),
   source: z.string().trim().max(80).optional(),
+  turnstileToken: z.string().optional(),
 });
 
 function escapeHtml(s: string): string {
@@ -45,7 +47,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const { firstName, lastName, email, phone, specialty, message, source } = parsed.data;
+  const { firstName, lastName, email, phone, specialty, message, source, turnstileToken } = parsed.data;
+
+  // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
+  const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
+  if (!captcha.ok) {
+    return NextResponse.json({ error: captcha.error }, { status: 400 });
+  }
 
   const subject = `📞 Demande de rappel — ${firstName} ${lastName} (${specialty ?? 'spécialité non précisée'})`;
 

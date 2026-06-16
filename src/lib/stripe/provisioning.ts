@@ -21,8 +21,8 @@
 
 import { createClient as createSupabasePublicClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendEmail, siteUrl } from '@/lib/email/send';
-import { purchaseConfirmationEmail } from '@/lib/email/templates';
+import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 
 export type ProvisioningInput = {
@@ -32,6 +32,8 @@ export type ProvisioningInput = {
   formuleId: FormuleId;
   installments?: number;
   amountTotalCents?: number;
+  /** Téléphone collecté au checkout (récap interne). */
+  phone?: string;
   /** Spécialité préparée (pour l'instant toujours Médecine générale). */
   specialty?: string;
   /** Voie de concours pour la Formule Intensive ('interne' / 'externe' / ''). */
@@ -101,16 +103,6 @@ export async function provisionStudentAccount(
   // (depuis l'admin) quand le contenu MG sera finalisé. Côté UI : on affiche
   // bien le nom de la formule payée, pas « Découverte ».
   const offerForFormule = MAP_OFFER[input.formuleId];
-  const permission_scope = {
-    type: 'college' as const,
-    colleges: [DECOUVERTE_COLLEGE_ID],
-    offer: offerForFormule,
-    paid_offer: offerForFormule,
-    paid_formule: input.formuleId,
-    paid_specialty: input.specialty ?? 'Médecine générale',
-    paid_voie: input.voie ?? null,
-    paid_at: new Date().toISOString(),
-  };
 
   // 1) Existe-t-il déjà un user avec cet email ?
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -145,16 +137,48 @@ export async function provisionStudentAccount(
     log('user-created', { userId });
   }
 
-  // 3) Upsert du profile
+  // 3) Récupère le profil existant pour préserver les données d'un compte
+  //    Découverte qui passe en payant (mise à niveau) : on ne veut pas écraser
+  //    le bloc `signup` (spécialité, voie, session, pays…) ni vider le prénom /
+  //    nom / téléphone déjà renseignés si le checkout ne les a pas transmis.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existingProfile } = await (admin as any)
+    .from('profiles')
+    .select('first_name, last_name, phone, permission_scope')
+    .eq('id', userId)
+    .maybeSingle();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const prevScope = (existingProfile?.permission_scope ?? {}) as Record<string, any>;
+  const firstName = input.firstName || existingProfile?.first_name || '';
+  const lastName = input.lastName || existingProfile?.last_name || '';
+  const phone = input.phone || existingProfile?.phone || null;
+
+  // On part du scope existant (préserve `signup`, `espace_decouverte`,
+  // `specialty_wish`…) puis on superpose les marqueurs d'achat.
+  const permission_scope = {
+    ...prevScope,
+    type: 'college' as const,
+    colleges: [DECOUVERTE_COLLEGE_ID],
+    offer: offerForFormule,
+    paid_offer: offerForFormule,
+    paid_formule: input.formuleId,
+    paid_specialty: input.specialty ?? 'Médecine générale',
+    paid_voie: input.voie ?? null,
+    paid_at: new Date().toISOString(),
+  };
+
+  // 4) Upsert du profile
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: pErr } = await (admin as any)
     .from('profiles')
     .upsert(
       {
         id: userId,
-        first_name: input.firstName ?? '',
-        last_name: input.lastName ?? '',
+        first_name: firstName,
+        last_name: lastName,
         email: input.email,
+        phone,
         role: 'student',
         permission_scope,
       },
@@ -207,6 +231,33 @@ export async function provisionStudentAccount(
     return { ok: true, userId, isNew, emailSent: true, emailVia: null, emailError: null };
   }
 
+  // Récap interne (contact@ + abonan1@) — envoyé une seule fois grâce à la
+  // déduplication ci-dessus. N'interrompt jamais le provisioning.
+  try {
+    const formuleForNotif = FORMULES[input.formuleId];
+    const notif = purchaseNotificationEmail({
+      firstName: firstName || null,
+      lastName: lastName || null,
+      email: input.email,
+      phone: phone,
+      formuleName: formuleForNotif.name,
+      amountEuros: (input.amountTotalCents ?? formuleForNotif.amountCents) / 100,
+      installments: input.installments ?? 1,
+      specialty: input.specialty ?? 'Médecine générale',
+      voie: input.voie || null,
+    });
+    const n = await sendEmail({
+      to: INTERNAL_NOTIFY_EMAILS,
+      subject: notif.subject,
+      html: notif.html,
+      text: notif.text,
+      replyTo: input.email,
+    });
+    log('internal-notify', { ok: n.ok, error: n.ok ? null : n.error });
+  } catch (e) {
+    log('internal-notify-throw', { error: e instanceof Error ? e.message : 'unknown' });
+  }
+
   // 5) Générer le lien set-password.
   //    On utilise TOUJOURS type='recovery' :
   //     - pour un nouveau user : fonctionne aussi (Supabase crée un recovery
@@ -240,7 +291,7 @@ export async function provisionStudentAccount(
   // -- Tentative 1 : Resend (avec PJ légales : CGU, CGS, CP au format PDF)
   try {
     const { subject, html, text } = purchaseConfirmationEmail({
-      firstName: input.firstName ?? '',
+      firstName,
       formuleName: formule.name,
       amountEuros: (input.amountTotalCents ?? formule.amountCents) / 100,
       installments: input.installments ?? 1,

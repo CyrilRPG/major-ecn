@@ -11,6 +11,7 @@ export type Profile = Tables<'profiles'> & {
   cv_url: string | null;
   certificat_scolarite_url: string | null;
   carte_pro_url: string | null;
+  avatar_seed: string | null;
 };
 
 export async function getCurrentUserAndProfile() {

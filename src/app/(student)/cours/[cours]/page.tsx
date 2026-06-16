@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, Sparkles, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
+import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
@@ -94,7 +95,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   //  - Méthodologie : une seule carte « Cours vidéo » à venir
   //  - Découverte   : fiche → vidéo (LOCKED popup) → DP & QI → flashcards
   //  - Standard     : fiche → vidéo → DP & QI → flashcards → interrogation
-  const actions: Action[] = isMethodologie
+  let actions: Action[] = isMethodologie
     ? [
         {
           // Cours vidéo « À venir » : carte non cliquable, badge orange.
@@ -132,6 +133,12 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           desc: 'Révisez et mémorisez les points clés du programme.',
           Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
           available: (c.flashcards?.length ?? 0) > 0,
+        },
+        {
+          href: `/cours/${coursId}/notes`, label: 'Prise de notes',
+          desc: 'Vos notes personnelles sur cet item — sauvegardées et imprimables.',
+          Icon: NotebookPen, accent: '#CA8A04', bg: '#FEF9C3',
+          available: true,
         },
       ]
     : [
@@ -171,10 +178,73 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           available: interrogationUnlocked,
           locked: !interrogationUnlocked,
         },
+        {
+          href: `/cours/${coursId}/notes`, label: 'Prise de notes',
+          desc: 'Vos notes personnelles sur cet item — sauvegardées et imprimables.',
+          Icon: NotebookPen, accent: '#CA8A04', bg: '#FEF9C3',
+          available: true,
+        },
       ];
+
+  // Ordre d'affichage personnalisé par l'admin (arborescence → cours_content_slots).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: slotRows } = await (supabase as any)
+    .from('cours_content_slots')
+    .select('content_type, position')
+    .eq('cours_id', coursId)
+    .order('position', { ascending: true });
+  const slotOrder = new Map<string, number>();
+  ((slotRows ?? []) as { content_type: string; position: number }[]).forEach((s, i) => {
+    if (!slotOrder.has(s.content_type)) slotOrder.set(s.content_type, i);
+  });
+  if (slotOrder.size > 0) {
+    const typeOf = (href: string): string | null =>
+      href.endsWith('/fiche') ? 'fiche'
+      : href.endsWith('/video') ? 'video'
+      : href.endsWith('/qcm') ? 'qcm'
+      : href.endsWith('/flashcards') ? 'flashcards'
+      : null;
+    actions = actions
+      .map((a, i) => ({ a, i }))
+      .sort((x, y) => {
+        const tx = typeOf(x.a.href);
+        const ty = typeOf(y.a.href);
+        const rx = tx && slotOrder.has(tx) ? (slotOrder.get(tx) as number) : 100 + x.i;
+        const ry = ty && slotOrder.has(ty) ? (slotOrder.get(ty) as number) : 100 + y.i;
+        return rx - ry || x.i - y.i;
+      })
+      .map((r) => r.a);
+  }
+
+  // Popups vidéo de l'item (actives, non encore vues par l'élève).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any;
+  const { data: popupRows } = await sb
+    .from('item_popups')
+    .select('id, title, video_path')
+    .eq('cours_id', coursId)
+    .eq('active', true);
+  let itemPopups: ItemPopup[] = [];
+  const pRows = (popupRows ?? []) as { id: string; title: string | null; video_path: string }[];
+  if (pRows.length > 0) {
+    const { data: seen } = await sb
+      .from('popup_views')
+      .select('popup_id')
+      .eq('user_id', user.id)
+      .in('popup_id', pRows.map((r) => r.id));
+    const seenSet = new Set(((seen ?? []) as { popup_id: string }[]).map((s) => s.popup_id));
+    itemPopups = pRows
+      .filter((r) => !seenSet.has(r.id))
+      .map((r) => ({
+        id: r.id,
+        title: r.title,
+        videoUrl: supabase.storage.from('item-popups').getPublicUrl(r.video_path).data.publicUrl,
+      }));
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-6 lg:px-8">
+      {itemPopups.length > 0 && <ItemPopups popups={itemPopups} />}
       {c.description && (
         <div className="mb-6 rounded-2xl border border-(--color-border) bg-gradient-to-br from-(--color-primary-soft) to-transparent p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)">

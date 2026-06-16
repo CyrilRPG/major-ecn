@@ -11,6 +11,10 @@ import {
   ArrowRight, CheckCircle2, Loader2, Mail, MessageCircle,
   Phone, PhoneCall, Stethoscope, User,
 } from 'lucide-react';
+import { TurnstileWidget } from './turnstile-widget';
+
+/** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
+const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const RED = '#C0112E';
 const INK = '#1F2937';
@@ -34,6 +38,8 @@ export function CallbackRequestForm({
   const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
   const [message, setMessage] = useState('');
   const [rgpd, setRgpd] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaNonce, setCaptchaNonce] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +54,10 @@ export function CallbackRequestForm({
       setError("Vous devez accepter la politique de confidentialité pour continuer.");
       return;
     }
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setError('Merci de valider le test anti-robot.');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -57,11 +67,14 @@ export function CallbackRequestForm({
         body: JSON.stringify({
           firstName, lastName, email, phone, specialty, message,
           source: 'programme-approfondi',
+          turnstileToken: captchaToken,
         }),
       });
       const j = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok || !j.ok) {
         setError(j.error ?? 'Erreur lors de l’envoi. Réessayez ou écrivez-nous à contact@major-ecn.fr.');
+        setCaptchaToken('');
+        setCaptchaNonce((n) => n + 1);
         setSubmitting(false);
         return;
       }
@@ -69,6 +82,8 @@ export function CallbackRequestForm({
       setSubmitting(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur réseau');
+      setCaptchaToken('');
+      setCaptchaNonce((n) => n + 1);
       setSubmitting(false);
     }
   }
@@ -152,6 +167,13 @@ export function CallbackRequestForm({
           de Major ECN. <span className="text-[11px]" style={{ color: '#7A8499' }}>(obligatoire)</span>
         </span>
       </label>
+
+      {/* Captcha anti-robot (Cloudflare Turnstile) */}
+      {TURNSTILE_ENABLED && (
+        <div className="flex justify-center">
+          <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
+        </div>
+      )}
 
       <button
         type="submit"

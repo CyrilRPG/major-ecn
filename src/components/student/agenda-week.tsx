@@ -302,16 +302,7 @@ export function AgendaWeek({
                   </p>
                 )}
                 {selectedPlatform.zoom_url && (
-                  <a
-                    href={selectedPlatform.zoom_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
-                  >
-                    <Video className="h-4 w-4" />
-                    Rejoindre le cours sur Zoom
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+                  <ZoomJoinBlock key={selectedPlatform.id} event={selectedPlatform} />
                 )}
               </div>
             </>
@@ -333,6 +324,61 @@ export function AgendaWeek({
         initial={editing}
         onClose={() => { setCreatingFor(null); setEditing(null); }}
       />
+    </div>
+  );
+}
+
+/* ───────────── Émargement obligatoire avant d'ouvrir le lien Zoom ───────── */
+function ZoomJoinBlock({ event }: { event: PlatformEvent }) {
+  const [checked, setChecked] = useState(false);
+  const [busy, setBusy] = useState(false);
+  if (!event.zoom_url) return null;
+  const url = event.zoom_url;
+
+  async function join() {
+    if (!checked || busy) return;
+    setBusy(true);
+    try {
+      await fetch('/api/presences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId: event.id }),
+      });
+    } catch {
+      /* on ouvre le lien quoi qu'il arrive — l'émargement est best-effort */
+    }
+    setBusy(false);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  return (
+    <div className="mt-2 space-y-2.5">
+      <label
+        className="flex cursor-pointer items-start gap-2.5 rounded-xl border p-3"
+        style={{ borderColor: checked ? 'var(--color-primary)' : 'var(--color-border)' }}
+      >
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => setChecked(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0"
+          style={{ accentColor: 'var(--color-primary)' }}
+        />
+        <span className="text-[13px] leading-snug text-(--color-ink)">
+          J’émarge ma présence à cette session{' '}
+          <span className="font-semibold text-(--color-danger)">(obligatoire)</span>.
+        </span>
+      </label>
+      <button
+        type="button"
+        onClick={join}
+        disabled={!checked || busy}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <Video className="h-4 w-4" />
+        {busy ? 'Émargement…' : 'Rejoindre le cours sur Zoom'}
+        <ExternalLink className="h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }

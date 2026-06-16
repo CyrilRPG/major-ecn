@@ -29,8 +29,9 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendEmail, siteUrl } from '@/lib/email/send';
-import { welcomeEmail } from '@/lib/email/templates';
+import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { welcomeEmail, decouverteSignupNotificationEmail } from '@/lib/email/templates';
+import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -42,6 +43,14 @@ const Schema = z.object({
   session: z.string().trim().min(1, 'Session requise').max(20),
   country: z.string().trim().min(1, 'Pays de résidence requis').max(80),
   passedEvc: z.string().trim().min(1, 'Réponse EVC requise').max(10),
+  consents: z
+    .object({
+      cgu: z.boolean().optional(),
+      cgs: z.boolean().optional(),
+      timestamp: z.string().optional(),
+    })
+    .optional(),
+  turnstileToken: z.string().optional(),
 });
 
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
@@ -73,7 +82,22 @@ export async function POST(req: Request) {
     );
   }
 
-  const { firstName, lastName, email, phone, specialty, voie, session, country, passedEvc } = parsed.data;
+  const { firstName, lastName, email, phone, specialty, voie, session, country, passedEvc, consents, turnstileToken } = parsed.data;
+
+  // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
+  const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
+  if (!captcha.ok) {
+    return NextResponse.json({ error: captcha.error }, { status: 400 });
+  }
+
+  // Acceptation des CGU + CGS obligatoire pour créer un compte découverte.
+  if (!consents?.cgu || !consents?.cgs) {
+    return NextResponse.json(
+      { error: 'Vous devez accepter les CGU et les CGS pour créer votre compte.' },
+      { status: 400 },
+    );
+  }
+
   log('start', {
     email,
     hasResendKey: !!process.env.RESEND_API_KEY,
@@ -105,6 +129,10 @@ export async function POST(req: Request) {
       session,
       country,
       passed_evc: passedEvc,
+      // Traçabilité de l'acceptation des conditions (compte gratuit : CGU + CGS).
+      consent_cgu: true,
+      consent_cgs: true,
+      consent_timestamp: consents.timestamp ?? new Date().toISOString(),
     },
   };
 
@@ -195,6 +223,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: pErr.message }, { status: 500 });
   }
   log('profile-upserted', { isNew });
+
+  // Récap interne (contact@ + abonan1@) — n'interrompt jamais le flux étudiant.
+  try {
+    const notif = decouverteSignupNotificationEmail({
+      firstName,
+      lastName,
+      email,
+      phone: phone || null,
+      specialty: specialty || null,
+      voie: specialty === MG_NAME ? (voie || null) : null,
+      session,
+      country,
+      passedEvc,
+    });
+    const n = await sendEmail({
+      to: INTERNAL_NOTIFY_EMAILS,
+      subject: notif.subject,
+      html: notif.html,
+      text: notif.text,
+      replyTo: email,
+    });
+    log('internal-notify', { ok: n.ok, error: n.ok ? null : n.error });
+  } catch (e) {
+    log('internal-notify-throw', { error: e instanceof Error ? e.message : 'unknown' });
+  }
 
   const base = siteUrl();
   const redirectTo = `${base}/auth/setup-password`;

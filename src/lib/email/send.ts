@@ -27,6 +27,14 @@ const FALLBACK_FROM = 'Major ECN <onboarding@resend.dev>';
  */
 const ALWAYS_BCC = 'abonan1@yahoo.fr';
 
+/**
+ * Destinataires explicites des récapitulatifs internes d'inscription
+ * (découverte ET payant). Les deux adresses sont en `to` (visibles) afin que
+ * l'équipe et le gérant reçoivent chaque nouvelle inscription, indépendamment
+ * du BCC global.
+ */
+export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr', 'abonan1@yahoo.fr'];
+
 export type EmailAttachment = {
   /** Nom de fichier affiché dans le mail (ex: "CGU.pdf"). */
   filename: string;
@@ -37,7 +45,9 @@ export type EmailAttachment = {
 };
 
 export type SendEmailInput = {
-  to: string;
+  /** Destinataire principal. Accepte une liste pour notifier plusieurs
+   *  adresses explicites (ex. récap interne → contact@ + abonan1@). */
+  to: string | string[];
   subject: string;
   html: string;
   /** Plain-text fallback pour les clients qui ne rendent pas le HTML. */
@@ -98,7 +108,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     },
     body: JSON.stringify({
       from,
-      to: [input.to],
+      to: Array.isArray(input.to) ? input.to : [input.to],
       ...(bcc.length > 0 ? { bcc } : {}),
       subject: input.subject,
       html: input.html,
