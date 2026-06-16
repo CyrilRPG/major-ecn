@@ -36,10 +36,12 @@ export async function POST(req: Request) {
   }
 
   // Garde-fou taille : la requête serverless (Vercel) plafonne à ~4,5 Mo.
+  // 3 Mo de fichiers ≈ 4,2 M caractères base64 → on borne ici pour rester sous
+  // le plafond et renvoyer un message clair (visible côté formulaire).
   const totalB64 = (attachments ?? []).reduce((s, a) => s + a.content.length, 0);
-  if (totalB64 > 6_000_000) {
+  if (totalB64 > 4_300_000) {
     return NextResponse.json(
-      { error: `Documents trop volumineux (4 Mo max). Envoyez-les directement à ${RECRUIT_EMAIL}.` },
+      { error: `Documents trop volumineux (3 Mo max au total). Envoyez-les directement à ${RECRUIT_EMAIL}.` },
       { status: 413 },
     );
   }

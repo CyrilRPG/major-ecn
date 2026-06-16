@@ -3,7 +3,7 @@ import { ExperienceSection, FAQSection } from '@/components/marketing/manus-sect
 import {
   BeyondPlatformSection, EspaceDecouverteSection, FinalDiscoverCtaSection,
   PedagogicalTeamSection, SpecialtiesSection, TestimonialsTextSection,
-  TestimonialsVideoSection, ToolsForProgressSection, ToutRegroupeSection,
+  TestimonialsVideoSection, ToolsForProgressSection, ToolsGridSection, ToutRegroupeSection,
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
@@ -23,6 +23,11 @@ export default async function HomePage() {
 
       {/* 3) Plateforme intelligente et adaptative */}
       <ToolsForProgressSection />
+
+      {/* 3 bis) Tous les outils pour structurer votre progression aux EVC
+          (réintégrée à sa place d'origine, juste après « Plateforme
+          intelligente et adaptative »). */}
+      <ToolsGridSection />
 
       {/* 4) Témoignages vidéo */}
       <TestimonialsVideoSection />

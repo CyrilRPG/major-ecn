@@ -74,8 +74,11 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
     const chosen = DOC_SLOTS
       .map((slot) => ({ slot, file: docs[slot.key] }))
       .filter((x): x is { slot: typeof DOC_SLOTS[number]; file: File } => x.file != null);
-    if (chosen.reduce((t, x) => t + x.file.size, 0) > 4 * 1024 * 1024) {
-      setErrMsg('Documents trop volumineux (4 Mo au total maximum).'); setStatus('error'); return;
+    // Limite à 3 Mo au total : une fois encodés en base64 (~+33 %) + le JSON,
+    // la requête reste sous le plafond ~4,5 Mo des fonctions serverless (Vercel).
+    if (chosen.reduce((t, x) => t + x.file.size, 0) > 3 * 1024 * 1024) {
+      setErrMsg('Vos documents dépassent 3 Mo au total. Compressez votre PDF ou envoyez-les directement à contact@major-ecn.fr.');
+      setStatus('error'); return;
     }
     setStatus('submitting'); setErrMsg('');
     try {
@@ -94,6 +97,13 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
           attachments,
         }),
       });
+      // 413 : corps de requête trop volumineux (notre garde-fou OU le plafond
+      // serverless de Vercel, qui peut répondre sans JSON). Message clair visible.
+      if (res.status === 413) {
+        setErrMsg('Vos documents sont trop volumineux (3 Mo max au total). Compressez votre PDF ou envoyez-les directement à contact@major-ecn.fr.');
+        setStatus('error'); setCaptchaToken(''); setCaptchaNonce((n) => n + 1);
+        return;
+      }
       const j = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !j.ok) {
         setErrMsg(j.error ?? 'Erreur à l’envoi. Réessayez.'); setStatus('error');
@@ -360,7 +370,7 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <h3 className="text-base font-black" style={{ color: NAVY }}>Documents et disponibilités</h3>
             <div className="mt-1 h-0.5 w-10" style={{ background: RED }} />
             <p className="mt-2 text-xs font-bold" style={{ color: INK }}>Documents à joindre *</p>
-            <p className="text-xs" style={{ color: INK_SOFT }}>Formats acceptés : PDF, DOC, DOCX (Taille max. 10 Mo par fichier)</p>
+            <p className="text-xs" style={{ color: INK_SOFT }}>Formats acceptés : PDF, DOC, DOCX — 3 Mo au total maximum. Au-delà, écrivez-nous à contact@major-ecn.fr.</p>
 
             <div className="mt-4 space-y-3">
               {DOC_SLOTS.map((d) => {
