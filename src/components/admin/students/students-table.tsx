@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Award, Search } from 'lucide-react';
+import { Award, Download, Mail, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -10,8 +10,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ImpersonateAction } from './impersonate-action';
 import { EditStudentDialog } from './edit-student-dialog';
+import { BulkEmailDialog } from './bulk-email-dialog';
 import { initials } from '@/lib/utils';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
+import type { Offer } from '@/types/domain';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { EditProfileDialog } from '@/components/admin/edit-profile-dialog';
@@ -33,14 +35,40 @@ export type Student = {
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
-/** Infos d'inscription (formulaire Espace Découverte) stockées dans permission_scope.signup. */
-type SignupInfo = { specialty?: string; voie?: string | null; session?: string; country?: string; passed_evc?: string };
-function readSignup(scope: unknown): SignupInfo | null {
-  if (scope && typeof scope === 'object' && 'signup' in scope) {
-    const s = (scope as { signup?: unknown }).signup;
-    if (s && typeof s === 'object') return s as SignupInfo;
-  }
-  return null;
+/** Catégories d'abonnement (ordre d'affichage). */
+const OFFER_CATS: { value: Offer; label: string }[] = [
+  { value: 'decouverte', label: 'Découverte' },
+  { value: 'essentiel', label: 'Essentiel' },
+  { value: 'intensif', label: 'Approfondi' },
+  { value: 'premium', label: 'Premium / Intensive' },
+];
+
+type RawScope = {
+  paid_specialty?: string;
+  specialty_wish?: string | null;
+  paid_at?: string;
+  paid_offer?: string;
+  signup?: { specialty?: string; voie?: string | null; session?: string; country?: string; passed_evc?: string };
+};
+function rawScope(s: Student): RawScope {
+  return (s.permission_scope ?? {}) as RawScope;
+}
+function specialtyOf(s: Student): string {
+  const r = rawScope(s);
+  return (r.signup?.specialty || r.paid_specialty || r.specialty_wish || '').toString().trim();
+}
+function voieOf(s: Student): string {
+  return (rawScope(s).signup?.voie ?? '').toString().trim();
+}
+function offerOf(s: Student): Offer {
+  return parseScope(s.permission_scope).offer;
+}
+function isPaid(s: Student): boolean {
+  const r = rawScope(s);
+  return offerOf(s) !== 'decouverte' || !!r.paid_at || !!r.paid_offer;
+}
+function isActive(s: Student): boolean {
+  return s.is_active !== false;
 }
 function fmtDate(iso?: string): string {
   if (!iso) return '—';
@@ -48,64 +76,222 @@ function fmtDate(iso?: string): string {
   if (Number.isNaN(d.getTime())) return '—';
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
 }
+function withinPeriod(iso: string | undefined, period: string): boolean {
+  if (period === 'all') return true;
+  if (!iso) return false;
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return false;
+  const now = Date.now();
+  const days = period === '7' ? 7 : period === '30' ? 30 : period === '90' ? 90 : period === '365' ? 365 : 0;
+  return now - t <= days * 86_400_000;
+}
 
 export function StudentsTable({
   students,
-  collegeMap,
   colleges,
 }: {
   students: Student[];
-  collegeMap: Record<string, string>;
   colleges: { id: string; nom: string }[];
 }) {
   const [q, setQ] = useState('');
-  const [promo, setPromo] = useState<string>('all');
-  const [permission, setPermission] = useState<string>('all');
+  const [promo, setPromo] = useState('all');
+  const [specialty, setSpecialty] = useState('all');
+  const [offer, setOffer] = useState<'all' | Offer>('all');
+  const [payment, setPayment] = useState('all'); // all | paid | free
+  const [period, setPeriod] = useState('all'); // all | 7 | 30 | 90 | 365
+  const [access, setAccess] = useState('all'); // all | active | expired
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [emailOpen, setEmailOpen] = useState(false);
+
+  /** Liste triée des spécialités présentes. */
+  const specialties = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of students) { const sp = specialtyOf(s); if (sp) set.add(sp); }
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
+  }, [students]);
+
+  /** Compte par catégorie d'abonnement (sur l'ensemble). */
+  const offerCounts = useMemo(() => {
+    const m: Record<string, number> = {};
+    for (const s of students) { const o = offerOf(s); m[o] = (m[o] ?? 0) + 1; }
+    return m;
+  }, [students]);
 
   const filtered = useMemo(() => {
     return students.filter((s) => {
-      const full = `${s.first_name ?? ''} ${s.last_name ?? ''} ${s.email ?? ''}`.toLowerCase();
+      const full = `${s.first_name ?? ''} ${s.last_name ?? ''} ${s.email ?? ''} ${specialtyOf(s)}`.toLowerCase();
       if (q && !full.includes(q.toLowerCase())) return false;
       if (promo !== 'all' && s.promotion !== promo) return false;
-      const scope = parseScope(s.permission_scope);
-      if (permission === 'all-access' && scope.type !== 'all') return false;
-      if (permission === 'restricted' && scope.type === 'all') return false;
+      if (specialty !== 'all' && specialtyOf(s) !== specialty) return false;
+      if (offer !== 'all' && offerOf(s) !== offer) return false;
+      if (payment === 'paid' && !isPaid(s)) return false;
+      if (payment === 'free' && isPaid(s)) return false;
+      if (access === 'active' && !isActive(s)) return false;
+      if (access === 'expired' && isActive(s)) return false;
+      if (!withinPeriod(s.created_at, period)) return false;
       return true;
     });
-  }, [students, q, promo, permission]);
+  }, [students, q, promo, specialty, offer, payment, access, period]);
+
+  const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
+  const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
+  const selectedInFilter = filteredIds.filter((id) => selected.has(id));
+
+  function toggleAll() {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (allSelected) filteredIds.forEach((id) => n.delete(id));
+      else filteredIds.forEach((id) => n.add(id));
+      return n;
+    });
+  }
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id); else n.add(id);
+      return n;
+    });
+  }
+
+  /** Destinataires du message groupé : la sélection si non vide, sinon la liste filtrée. */
+  const emailTargets = selectedInFilter.length > 0 ? selectedInFilter : filteredIds;
+  const emailContext =
+    selectedInFilter.length > 0
+      ? `${selectedInFilter.length} élève(s) sélectionné(s)`
+      : `${filteredIds.length} élève(s) (liste filtrée)`;
+
+  async function exportXlsx() {
+    const XLSX = await import('xlsx');
+    const rows = filtered.map((s) => ({
+      'Nom': s.last_name ?? '',
+      'Prénom': s.first_name ?? '',
+      'Spécialité': specialtyOf(s) || '—',
+      'Voie': voieOf(s),
+      'Abonnement': offerLabel(offerOf(s)),
+      'Paiement': isPaid(s) ? 'Payé' : 'Gratuit (Découverte)',
+      'Accès': isActive(s) ? 'Actif' : 'Expiré / Inactif',
+      'Promotion': s.promotion ?? '',
+      'Adresse': s.address ?? '',
+      'Téléphone': s.phone ?? '',
+      'Email': s.email ?? '',
+      'Inscription': fmtDate(s.created_at),
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [
+      { wch: 16 }, { wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 20 }, { wch: 18 },
+      { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
+    XLSX.writeFile(wb, `eleves-major-ecn-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  }
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <div className="relative flex-1">
+      {/* Catégories d'abonnement (cliquables → filtre). */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        <CategoryChip label={`Tous (${students.length})`} active={offer === 'all'} onClick={() => setOffer('all')} />
+        {OFFER_CATS.map((c) => (
+          <CategoryChip
+            key={c.value}
+            label={`${c.label} (${offerCounts[c.value] ?? 0})`}
+            active={offer === c.value}
+            onClick={() => setOffer(c.value)}
+          />
+        ))}
+      </div>
+
+      {/* Recherche + filtres */}
+      <div className="mb-3 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
+        <div className="relative flex-1 min-w-[220px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-(--color-ink-soft)" />
-          <Input className="pl-9" placeholder="Rechercher un élève (nom, prénom, email)…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <Input className="pl-9" placeholder="Rechercher (nom, prénom, email, spécialité)…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <Select value={specialty} onValueChange={setSpecialty}>
+          <SelectTrigger className="w-full lg:w-52"><SelectValue placeholder="Spécialité" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes spécialités</SelectItem>
+            {specialties.map((sp) => <SelectItem key={sp} value={sp}>{sp}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={offer} onValueChange={(v) => setOffer(v as 'all' | Offer)}>
+          <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Abonnement" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous abonnements</SelectItem>
+            {OFFER_CATS.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={payment} onValueChange={setPayment}>
+          <SelectTrigger className="w-full lg:w-40"><SelectValue placeholder="Paiement" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tout paiement</SelectItem>
+            <SelectItem value="paid">Payé</SelectItem>
+            <SelectItem value="free">Gratuit (Découverte)</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={access} onValueChange={setAccess}>
+          <SelectTrigger className="w-full lg:w-36"><SelectValue placeholder="Accès" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tout accès</SelectItem>
+            <SelectItem value="active">Actif</SelectItem>
+            <SelectItem value="expired">Expiré / Inactif</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={period} onValueChange={setPeriod}>
+          <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Inscription" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toute date</SelectItem>
+            <SelectItem value="7">7 derniers jours</SelectItem>
+            <SelectItem value="30">30 derniers jours</SelectItem>
+            <SelectItem value="90">90 derniers jours</SelectItem>
+            <SelectItem value="365">Cette année</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={promo} onValueChange={setPromo}>
-          <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="Promotion" /></SelectTrigger>
+          <SelectTrigger className="w-full lg:w-32"><SelectValue placeholder="Promo" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toutes promos</SelectItem>
             {PROMOS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={permission} onValueChange={setPermission}>
-          <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder="Permissions" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes permissions</SelectItem>
-            <SelectItem value="all-access">Toute l’offre</SelectItem>
-            <SelectItem value="restricted">Restreintes</SelectItem>
-          </SelectContent>
-        </Select>
+      </div>
+
+      {/* Barre d'actions */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-(--color-ink-soft)">
+          {filtered.length} résultat{filtered.length > 1 ? 's' : ''}
+          {selectedInFilter.length > 0 && ` · ${selectedInFilter.length} sélectionné(s)`}
+        </span>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setEmailOpen(true)}
+            disabled={emailTargets.length === 0}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-2 text-xs font-bold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            {selectedInFilter.length > 0 ? `Message groupé (${selectedInFilter.length})` : 'Message à la liste'}
+          </button>
+          <button
+            onClick={exportXlsx}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100) disabled:opacity-50"
+          >
+            <Download className="h-3.5 w-3.5" /> Exporter Excel
+          </button>
+        </div>
       </div>
 
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-8">
+              <input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Tout sélectionner" className="h-4 w-4" />
+            </TableHead>
             <TableHead>Élève</TableHead>
+            <TableHead className="hidden lg:table-cell">Spécialité</TableHead>
             <TableHead className="hidden md:table-cell">Email</TableHead>
             <TableHead className="hidden lg:table-cell">Téléphone</TableHead>
-            <TableHead className="hidden sm:table-cell">Promotion</TableHead>
-            <TableHead className="hidden md:table-cell">Accès</TableHead>
+            <TableHead className="hidden md:table-cell">Abonnement</TableHead>
             <TableHead className="hidden lg:table-cell">Inscription</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -113,16 +299,26 @@ export function StudentsTable({
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="py-10 text-center text-(--color-ink-soft)">
+              <TableCell colSpan={8} className="py-10 text-center text-(--color-ink-soft)">
                 Aucun élève ne correspond à ces filtres.
               </TableCell>
             </TableRow>
           ) : (
             filtered.map((s) => {
               const scope = parseScope(s.permission_scope);
-              const sg = readSignup(s.permission_scope);
+              const sp = specialtyOf(s);
+              const voie = voieOf(s);
               return (
-                <TableRow key={s.id}>
+                <TableRow key={s.id} data-state={selected.has(s.id) ? 'selected' : undefined}>
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      checked={selected.has(s.id)}
+                      onChange={() => toggleOne(s.id)}
+                      aria-label={`Sélectionner ${s.first_name ?? ''} ${s.last_name ?? ''}`}
+                      className="h-4 w-4"
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3 min-w-0">
                       <Avatar className="h-9 w-9 shrink-0">
@@ -130,50 +326,27 @@ export function StudentsTable({
                       </Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">{s.first_name} {s.last_name}</p>
-                        {sg && (sg.specialty || sg.session || sg.country) && (
-                          <p className="truncate text-[11px] text-(--color-ink-soft)" title={[
-                            sg.specialty ? `${sg.specialty}${sg.voie ? ` (${sg.voie})` : ''}` : null,
-                            sg.session ? `Session ${sg.session}` : null,
-                            sg.country,
-                            sg.passed_evc ? `EVC déjà passées : ${sg.passed_evc}` : null,
-                          ].filter(Boolean).join(' · ')}>
-                            {[
-                              sg.specialty ? `${sg.specialty}${sg.voie ? ` (${sg.voie})` : ''}` : null,
-                              sg.session ? `Session ${sg.session}` : null,
-                              sg.country,
-                              sg.passed_evc ? `EVC : ${sg.passed_evc}` : null,
-                            ].filter(Boolean).join(' · ')}
-                          </p>
-                        )}
-                        <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">
-                          {s.email}
+                        <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">{s.email}</p>
+                        <p className="truncate text-[11px] text-(--color-ink-soft) lg:hidden">
+                          {sp ? `${sp}${voie ? ` (${voie})` : ''}` : '—'}
                         </p>
-                        <div className="mt-1 flex flex-wrap items-center gap-1 sm:hidden">
-                          {s.promotion && <Badge variant="outline">{s.promotion}</Badge>}
-                          <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>
-                            {offerLabel(scope.offer)}
-                          </Badge>
+                        <div className="mt-1 flex flex-wrap items-center gap-1 md:hidden">
+                          {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
+                          <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
                         </div>
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    <span className="text-sm">{sp ? `${sp}${voie ? ` (${voie})` : ''}` : '—'}</span>
+                  </TableCell>
                   <TableCell className="hidden font-mono text-xs text-(--color-ink-soft) md:table-cell">{s.email}</TableCell>
                   <TableCell className="hidden text-(--color-ink-soft) lg:table-cell">{s.phone ?? 'Non renseigné'}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    {s.promotion && <Badge variant="outline">{s.promotion}</Badge>}
-                  </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <div className="flex flex-wrap items-center gap-1">
-                      <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>
-                        {offerLabel(scope.offer)}
-                      </Badge>
-                      {scope.type === 'all' ? (
-                        <Badge variant="muted">Tous collèges</Badge>
-                      ) : (
-                        scope.colleges.map((c) => (
-                          <Badge key={c} variant="muted">{collegeMap[c] ?? c}</Badge>
-                        ))
-                      )}
+                      <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
+                      {isPaid(s) ? <Badge variant="muted">Payé</Badge> : <Badge variant="muted">Gratuit</Badge>}
+                      {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
                     </div>
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
@@ -233,6 +406,29 @@ export function StudentsTable({
           )}
         </TableBody>
       </Table>
+
+      <BulkEmailDialog
+        open={emailOpen}
+        onClose={() => setEmailOpen(false)}
+        studentIds={emailTargets}
+        contextLabel={emailContext}
+      />
     </>
+  );
+}
+
+function CategoryChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+        active
+          ? 'border-(--color-primary) bg-(--color-primary) text-white'
+          : 'border-(--color-border) bg-(--color-surface) text-(--color-ink) hover:bg-(--color-sand-100)'
+      }`}
+    >
+      {label}
+    </button>
   );
 }

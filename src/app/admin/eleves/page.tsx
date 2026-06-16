@@ -45,8 +45,6 @@ export default async function ElevesPage() {
     ]),
   );
 
-  const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
-
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-(--color-border) pb-5">
@@ -60,7 +58,7 @@ export default async function ElevesPage() {
         <AddStudentDialog colleges={colleges} coursByCollege={coursByCollege} />
       </header>
 
-      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} collegeMap={collegeMap} colleges={colleges} />
+      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} />
     </main>
   );
 }
