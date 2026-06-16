@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { watermarkPdf } from '@/lib/fiches/watermark';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -8,9 +9,10 @@ export const dynamic = 'force-dynamic';
 /**
  * GET /api/fiches/[coursId]/download
  *
- * Télécharge le PDF original (sans watermark) de la fiche, en pièce jointe.
- * RÉSERVÉ aux administrateurs et professeurs — les étudiants n'y ont pas accès
- * (ils consultent uniquement la version watermarkée via /api/fiches/[cours]/pdf).
+ * Télécharge le PDF de la fiche, en pièce jointe. RÉSERVÉ au staff :
+ *  - ADMIN      → PDF original, SANS watermark.
+ *  - PROFESSEUR → PDF watermarké à son identité (comme la consultation élève).
+ * Les étudiants n'ont pas accès au téléchargement.
  */
 export async function GET(_req: Request, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
@@ -20,7 +22,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, first_name, last_name, email')
     .eq('id', user.id)
     .maybeSingle();
   if (!profile || (profile.role !== 'admin' && profile.role !== 'professor')) {
@@ -52,7 +54,16 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
   if (error || !file) {
     return NextResponse.json({ error: error?.message ?? 'PDF indisponible' }, { status: 500 });
   }
-  const bytes = new Uint8Array(await file.arrayBuffer());
+  let bytes: Uint8Array = new Uint8Array(await file.arrayBuffer());
+
+  // Professeur → watermark à son identité ; admin → original sans watermark.
+  if (profile.role === 'professor') {
+    bytes = await watermarkPdf(bytes, {
+      firstName: profile.first_name,
+      lastName: profile.last_name,
+      email: profile.email ?? user.email,
+    });
+  }
 
   const matiere = (c as { matieres?: { nom?: string } | null } | null)?.matieres?.nom;
   const titre = (c as { titre?: string } | null)?.titre ?? 'cours';
