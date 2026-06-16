@@ -27,13 +27,13 @@ const FONT = "'Plus Jakarta Sans', sans-serif";
 /* ============ HEADER ============ */
 function TemoignagesHeader() {
   return (
-    <section className="bg-white pt-12 pb-10 sm:pt-16 sm:pb-12" style={{ fontFamily: FONT }}>
+    <section className="bg-white pt-10 pb-8 sm:pt-16 sm:pb-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em]"
+        <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.18em]"
           style={{ background: '#FCEAEC', borderColor: 'rgba(192,17,46,0.22)', color: RED }}>
           <Trophy className="h-3.5 w-3.5" /> Témoignages de lauréats
         </span>
-        <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]"
+        <h1 className="mx-auto mt-4 max-w-4xl text-[26px] font-black leading-[1.1] tracking-tight sm:mt-5 sm:text-5xl lg:text-[3.5rem]"
           style={{
             backgroundImage: 'linear-gradient(90deg, #0F1F4D 0%, #6B1A2A 45%, #C0112E 100%)',
             WebkitBackgroundClip: 'text', backgroundClip: 'text',
@@ -41,25 +41,25 @@ function TemoignagesHeader() {
           }}>
           Leur histoire, leur réussite
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
+        <p className="mx-auto mt-4 max-w-2xl text-[14px] leading-relaxed sm:mt-5 sm:text-[17px]" style={{ color: INK_SOFT }}>
           Des médecins qui ont préparé les EVC avec Major ECN racontent,
           sans filtre, leur parcours et ce qui les a aidés à réussir.
         </p>
 
         {/* Trust row */}
-        <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4 lg:gap-10">
+        <div className="mt-8 grid grid-cols-1 gap-4 text-left sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-10">
           {[
             { Icon: Calendar, big: 'Depuis 2011',                sub: 'au service des candidats EVC' },
             { Icon: Users,    big: '+45 spécialités préparées',  sub: 'toutes disciplines' },
             { Icon: ShieldCheck, big: 'Voie interne et voie externe', sub: 'accompagnement dédié' },
             { Icon: Trophy,   big: 'Parcours authentiques',      sub: 'témoignages vérifiés' },
           ].map((t) => (
-            <div key={t.big} className="flex items-center gap-3 text-left">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: RED }}>
+            <div key={t.big} className="flex items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:h-11 sm:w-11" style={{ background: '#FCEAEC', color: RED }}>
                 <t.Icon className="h-5 w-5" />
               </span>
-              <div>
-                <p className="text-[13px] font-extrabold leading-tight" style={{ color: NAVY }}>{t.big}</p>
+              <div className="min-w-0">
+                <p className="text-[12.5px] font-extrabold leading-tight sm:text-[13px]" style={{ color: NAVY }}>{t.big}</p>
                 <p className="text-[11px] leading-tight" style={{ color: INK_SOFT }}>{t.sub}</p>
               </div>
             </div>
@@ -83,7 +83,7 @@ type RealVideo = (typeof REAL_VIDEOS)[number];
 function VideoCard({ v }: { v: RealVideo }) {
   const [isPlaying, setIsPlaying] = useState(false);
   return (
-    <article className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
+    <article className="snap-start shrink-0 w-[170px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
       <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: v.bgGrad }}>
         <video
           src={v.videoSrc}
@@ -122,20 +122,23 @@ function VideoCard({ v }: { v: RealVideo }) {
 
 function VideosSection() {
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
+    <section className="bg-white py-8 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border bg-white p-6 sm:p-8" style={{ borderColor: BORDER }}>
+        <div className="rounded-2xl border bg-white p-4 sm:rounded-3xl sm:p-8" style={{ borderColor: BORDER }}>
           <div className="text-center">
             <h2 className="inline-flex items-center gap-2 text-lg font-extrabold tracking-tight" style={{ color: NAVY }}>
               <Play className="h-5 w-5" style={{ color: RED }} fill="currentColor" />
-              <span className="text-[12px] uppercase tracking-[0.2em]" style={{ color: NAVY }}>Témoignages vidéo</span>
+              <span className="text-[11px] uppercase tracking-[0.18em] sm:text-[12px] sm:tracking-[0.2em]" style={{ color: NAVY }}>Témoignages vidéo</span>
             </h2>
-            <p className="mt-2 text-[14px]" style={{ color: INK_SOFT }}>
+            <p className="mt-2 text-[13px] sm:text-[14px]" style={{ color: INK_SOFT }}>
               Découvrez le parcours de nos lauréats en vidéo
             </p>
           </div>
 
-          <div className="mt-8 flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide sm:justify-center sm:overflow-visible sm:flex-wrap">
+          <div
+            className="mt-6 flex gap-4 overflow-x-auto pb-4 pl-1 -mx-1 snap-x snap-mandatory sm:mt-8 sm:mx-0 sm:pl-0 sm:gap-5 sm:justify-center sm:overflow-visible sm:flex-wrap"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
             {REAL_VIDEOS.map((v) => (
               <VideoCard key={v.name} v={v} />
             ))}
@@ -223,36 +226,48 @@ function WrittenSection() {
   const list = tab === 'Tous' ? WRITTEN : WRITTEN.filter((w) => w.spec === tab);
 
   return (
-    <section className="bg-white py-10 sm:py-12" style={{ fontFamily: FONT }}>
+    <section className="bg-white py-8 sm:py-12" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] font-extrabold" style={{ color: NAVY }}>
+          <h2 className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] font-extrabold sm:text-[12px] sm:tracking-[0.2em]" style={{ color: NAVY }}>
             <MessageCircle className="h-4 w-4" style={{ color: RED }} />
             Témoignages écrits
           </h2>
-          <p className="mt-2 text-[14px]" style={{ color: INK_SOFT }}>
+          <p className="mt-2 text-[13px] sm:text-[14px]" style={{ color: INK_SOFT }}>
             Lisez les parcours et conseils de nos lauréats
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-2 rounded-2xl border bg-white p-2" style={{ borderColor: BORDER }}>
+        {/* Tabs — scroll horizontal sur mobile, wrap sur >= sm. */}
+        <div
+          className="mt-6 -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:mt-7 sm:flex-wrap sm:justify-center sm:overflow-visible sm:rounded-2xl sm:border sm:bg-white sm:p-2 sm:pb-2"
+          style={{ borderColor: BORDER, scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {SPECIALTIES.map((s) => (
-            <button key={s} onClick={() => setTab(s)}
-              className={'rounded-xl px-3.5 py-2 text-[12.5px] font-bold transition-colors ' + (tab === s ? 'text-white' : 'hover:bg-[#FCEAEC]')}
-              style={tab === s ? { background: RED, color: 'white' } : { color: INK_SOFT }}>
+            <button
+              key={s}
+              onClick={() => setTab(s)}
+              className={
+                'shrink-0 whitespace-nowrap rounded-xl border px-3 py-1.5 text-[12px] font-bold transition-colors sm:border-0 sm:px-3.5 sm:py-2 sm:text-[12.5px] ' +
+                (tab === s ? 'text-white' : 'hover:bg-[#FCEAEC]')
+              }
+              style={
+                tab === s
+                  ? { background: RED, color: 'white', borderColor: RED }
+                  : { color: INK_SOFT, borderColor: BORDER }
+              }
+            >
               {s}
             </button>
           ))}
-          <button className="rounded-xl px-3.5 py-2 text-[12.5px] font-bold" style={{ color: INK_SOFT }}>Plus ▾</button>
         </div>
 
-        {/* Grid */}
-        <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Grid — 1 colonne sur mobile pour respirer, 2 sur sm, 3 md, 4 lg. */}
+        <div className="mt-6 grid gap-4 sm:mt-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {list.map((w) => (
             <Reveal key={w.name}>
-              <article className="flex h-full flex-col rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
-                <header className="flex items-start gap-3">
+              <article className="flex h-full flex-col rounded-2xl border bg-white p-4 sm:p-5" style={{ borderColor: BORDER }}>
+                <header className="flex flex-wrap items-center gap-3">
                   {w.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={w.photo} alt=""
@@ -263,16 +278,16 @@ function WrittenSection() {
                       {w.initials}
                     </span>
                   )}
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold"
-                    style={{ background: '#FCEAEC', color: RED }}>
-                    {w.spec === 'Pédiatrie' && <Heart className="h-2.5 w-2.5" />}
-                    {w.spec === 'Cardiologie' && <Heart className="h-2.5 w-2.5" />}
-                    {w.spec === 'Radiologie' && <Trophy className="h-2.5 w-2.5" />}
-                    {w.spec === 'Gériatrie' && <Heart className="h-2.5 w-2.5" />}
-                    {w.spec.split('-').join('-­')}
+                  <span
+                    className="inline-flex max-w-full items-center gap-1 break-words rounded-full px-2 py-0.5 text-[10.5px] font-bold leading-tight"
+                    style={{ background: '#FCEAEC', color: RED, wordBreak: 'break-word' }}
+                  >
+                    {(w.spec === 'Pédiatrie' || w.spec === 'Cardiologie' || w.spec === 'Gériatrie') && <Heart className="h-2.5 w-2.5 shrink-0" />}
+                    {w.spec === 'Radiologie' && <Trophy className="h-2.5 w-2.5 shrink-0" />}
+                    <span className="break-words">{w.spec}</span>
                   </span>
                 </header>
-                <p className="mt-3 text-[14.5px] font-extrabold leading-tight" style={{ color: NAVY }}>{w.name}</p>
+                <p className="mt-3 break-words text-[14px] font-extrabold leading-tight sm:text-[14.5px]" style={{ color: NAVY }}>{w.name}</p>
                 <p className="mt-0.5 text-[12px]" style={{ color: INK_SOFT }}>Lauréat des EVC</p>
                 <p className="mt-1 text-[12px]" style={{ color: '#F59E0B' }}>★★★★★</p>
                 <div className="mt-3 flex items-start gap-2">
@@ -307,11 +322,11 @@ const FEATURED = FEATURED_TESTIMONIES.filter((t) => !!t.photo);
 
 function FeaturedCard({ t }: { t: Featured }) {
   return (
-    <div className="rounded-3xl p-6 sm:p-8 grid gap-6 lg:grid-cols-[260px_1fr_280px] items-center"
+    <div className="grid items-center gap-6 rounded-2xl p-5 sm:rounded-3xl sm:p-7 md:grid-cols-[200px_1fr] md:gap-7 lg:grid-cols-[260px_1fr_280px] lg:p-8"
       style={{ background: SOFT_BG, border: `1px solid #F3D9DD` }}>
       {/* Left avatar + name */}
       <div className="text-center">
-        <span className="relative mx-auto block h-32 w-32 overflow-hidden rounded-full"
+        <span className="relative mx-auto block h-24 w-24 overflow-hidden rounded-full sm:h-32 sm:w-32"
           style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}>
           <img
             src={t.photo}
@@ -331,26 +346,26 @@ function FeaturedCard({ t }: { t: Featured }) {
             {t.initials}
           </span>
         </span>
-        <p className="mt-4 text-[10.5px] font-bold uppercase tracking-wider" style={{ color: RED }}>
+        <p className="mt-3 text-[10.5px] font-bold uppercase tracking-wider sm:mt-4" style={{ color: RED }}>
           Témoignage à la une
         </p>
-        <p className="mt-1 text-base font-extrabold" style={{ color: NAVY }}>{t.name}</p>
-        <span className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10.5px] font-bold"
-          style={{ background: 'white', color: RED, border: `1px solid #F3D9DD` }}>
-          <Trophy className="h-3 w-3" /> {t.spec}
+        <p className="mt-1 break-words text-[15px] font-extrabold sm:text-base" style={{ color: NAVY }}>{t.name}</p>
+        <span className="mt-2 inline-flex max-w-full items-center gap-1 break-words rounded-full px-2.5 py-0.5 text-[10.5px] font-bold leading-tight"
+          style={{ background: 'white', color: RED, border: `1px solid #F3D9DD`, wordBreak: 'break-word' }}>
+          <Trophy className="h-3 w-3 shrink-0" /> <span className="break-words">{t.spec}</span>
         </span>
         <p className="mt-1 text-[11px]" style={{ color: INK_SOFT }}>{t.role}</p>
       </div>
 
       {/* Center — quote + paragraphs */}
-      <div>
-        <Quote className="h-6 w-6" style={{ color: RED }} fill="currentColor" />
-        <p className="mt-2 text-xl font-black leading-tight" style={{ color: NAVY }}>
+      <div className="text-center md:text-left">
+        <Quote className="mx-auto h-5 w-5 sm:h-6 sm:w-6 md:mx-0" style={{ color: RED }} fill="currentColor" />
+        <p className="mt-2 text-[17px] font-black leading-tight sm:text-xl" style={{ color: NAVY }}>
           &ldquo;{t.quote}&rdquo;
         </p>
         {/* Extrait : 2 premiers paragraphes + lien vers la page complète. */}
         {t.paragraphs.slice(0, 2).map((p, i) => (
-          <p key={i} className={(i === 0 ? 'mt-4 ' : 'mt-3 ') + 'text-[13.5px] leading-relaxed'} style={{ color: INK_SOFT }}>
+          <p key={i} className={(i === 0 ? 'mt-3 sm:mt-4 ' : 'mt-3 ') + 'text-[13px] leading-relaxed sm:text-[13.5px]'} style={{ color: INK_SOFT }}>
             {p}
           </p>
         ))}
@@ -364,7 +379,7 @@ function FeaturedCard({ t }: { t: Featured }) {
         <div className="mt-5">
           <Link
             href={`/temoignages/${t.slug}`}
-            className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02] sm:w-auto sm:py-2.5"
             style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
           >
             Lire le témoignage complet <ArrowRight className="h-4 w-4" />
@@ -412,17 +427,17 @@ function TrustRowBis() {
     { Icon: GraduationCap, big: 'Toutes disciplines',     sub: 'médecins, pharmaciens, odontologistes et sages-femmes' },
   ];
   return (
-    <section className="bg-white py-8" style={{ fontFamily: FONT }}>
+    <section className="bg-white py-6 sm:py-8" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl p-6 sm:p-7 grid grid-cols-2 gap-6 sm:grid-cols-4" style={{ background: SOFT_BG, border: `1px solid #F3D9DD` }}>
+        <div className="grid grid-cols-1 gap-4 rounded-2xl p-5 sm:grid-cols-2 sm:gap-6 sm:p-7 lg:grid-cols-4" style={{ background: SOFT_BG, border: `1px solid #F3D9DD` }}>
           {items.map((i) => (
             <div key={i.big} className="flex items-start gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: RED }}>
                 <i.Icon className="h-5 w-5" />
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[13px] font-extrabold leading-tight" style={{ color: NAVY }}>{i.big}</p>
-                <p className="text-[11px] leading-tight" style={{ color: INK_SOFT }}>{i.sub}</p>
+                <p className="text-[11px] leading-snug" style={{ color: INK_SOFT }}>{i.sub}</p>
               </div>
             </div>
           ))}
@@ -435,20 +450,20 @@ function TrustRowBis() {
 /* ============ CTA INSCRIPTION ============ */
 function TemoignagesCta() {
   return (
-    <section className="px-4 sm:px-6 lg:px-8 pb-16" style={{ fontFamily: FONT }}>
-      <div className="mx-auto max-w-7xl rounded-2xl p-6 sm:p-7 grid items-center gap-4 sm:grid-cols-[1fr_auto_auto]"
+    <section className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16" style={{ fontFamily: FONT }}>
+      <div className="mx-auto grid max-w-7xl items-center gap-4 rounded-2xl p-5 sm:p-7 md:grid-cols-[1fr_auto_auto]"
         style={{ background: '#FFF1F3', border: `1px solid #F3D9DD` }}>
         <div>
-          <h3 className="text-lg font-extrabold" style={{ color: NAVY }}>Vous préparez les EVC&nbsp;?</h3>
-          <p className="mt-1 text-[13.5px]" style={{ color: INK_SOFT }}>
+          <h3 className="text-[17px] font-extrabold sm:text-lg" style={{ color: NAVY }}>Vous préparez les EVC&nbsp;?</h3>
+          <p className="mt-1 text-[13px] sm:text-[13.5px]" style={{ color: INK_SOFT }}>
             Rejoignez un accompagnement conçu par des experts pour maximiser vos chances de réussite.
           </p>
         </div>
-        <a href="/tarifs" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white"
+        <a href="/tarifs" className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white md:w-auto"
           style={{ background: RED }}>
           Découvrir nos préparations <ArrowRight className="h-4 w-4" />
         </a>
-        <span aria-hidden className="hidden sm:flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: 'white', border: `1px solid #F3D9DD` }}>
+        <span aria-hidden className="hidden md:flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: 'white', border: `1px solid #F3D9DD` }}>
           <BookOpen className="h-5 w-5" style={{ color: RED }} />
         </span>
       </div>
