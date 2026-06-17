@@ -173,9 +173,18 @@ def upsert_fiche_row(cours_id: str, *, titre: str, content_html: str,
         "cours_id": cours_id, "titre": titre, "content_html": content_html,
         "content_format": "html", "storage_path": storage_path, "pages": pages,
     }
-    status, body = _req("POST", url, headers=headers,
-                        body=json.dumps(payload).encode("utf-8"))
-    if status >= 400:
+    body_bytes = json.dumps(payload).encode("utf-8")
+    delay = 2.0
+    for attempt in range(5):
+        status, body = _req("POST", url, headers=headers, body=body_bytes, timeout=180.0)
+        if status < 400:
+            return
+        # 5xx / statement timeout (57014) : transitoire → retry
+        if status >= 500 or b"57014" in body:
+            if attempt < 4:
+                time.sleep(delay)
+                delay *= 2
+                continue
         raise RuntimeError(f"Upsert échec ({status}) : {body[:300].decode('utf-8', 'replace')}")
 
 
