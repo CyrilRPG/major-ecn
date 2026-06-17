@@ -9,6 +9,7 @@ import { initials } from '@/lib/utils';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { EditProfileDialog } from '@/components/admin/edit-profile-dialog';
+import { ImpersonateAction } from '@/components/admin/students/impersonate-action';
 
 export type ProfessorRow = {
   id: string;
@@ -90,6 +91,7 @@ export function ProfessorsList({
                     <Badge variant={p.is_active ? 'primary' : 'muted'}>
                       {p.is_active ? 'Professeur' : 'Désactivé'}
                     </Badge>
+                    <ImpersonateAction studentId={p.id} studentName={displayName} />
                     <EditProfileDialog
                       role="professor"
                       profile={{

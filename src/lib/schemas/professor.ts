@@ -33,7 +33,11 @@ export const AddProfessorSchema = z.object({
   /** Restriction supplémentaire à un sous-ensemble de cours (items) au sein des collèges
    *  sélectionnés. Vide = tous les cours des collèges. */
   cours: z.array(z.string()).optional(),
-  content_permissions: z.record(z.enum(CONTENT_TYPES), z.enum(PERMISSION_LEVELS)).optional(),
+  // Clé en `z.string()` (et non `z.enum(CONTENT_TYPES)`) : en Zod v4 un record à
+  // clé enum devient EXHAUSTIF (toutes les clés requises) et rejette un objet
+  // partiel — ce qui faisait échouer l'édition des permissions. La route filtre
+  // de toute façon sur CONTENT_TYPES.
+  content_permissions: z.record(z.string(), z.enum(PERMISSION_LEVELS)).optional(),
 });
 
 export type AddProfessorInput = z.infer<typeof AddProfessorSchema>;
@@ -44,7 +48,8 @@ export const UpdateProfessorScopeSchema = z.object({
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
   cours: z.array(z.string()).optional(),
-  content_permissions: z.record(z.enum(CONTENT_TYPES), z.enum(PERMISSION_LEVELS)).optional(),
+  // cf. AddProfessorSchema : clé string pour autoriser un record partiel (Zod v4).
+  content_permissions: z.record(z.string(), z.enum(PERMISSION_LEVELS)).optional(),
 });
 
 export type UpdateProfessorScopeInput = z.infer<typeof UpdateProfessorScopeSchema>;
