@@ -6,9 +6,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
-  // Chromium (rendu PDF des fiches) : @sparticuz/chromium embarque un binaire
-  // qui doit rester externe au bundle Next, sinon le rendu échoue sur Vercel.
-  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas
+  // le binaire (téléchargé au cold-start depuis Github), mais on garde quand
+  // même `serverExternalPackages` pour ne pas faire passer puppeteer-core et
+  // le SDK chromium-min par le bundler Turbopack (qui sinon tente de tracer
+  // tout l'arbre de deps).
+  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core"],
   // Vercel ne bundle pas les fichiers hors src/public par défaut.
   // On force l'inclusion des PDFs d'annales pour que la route watermark
   // puisse les lire en runtime (process.cwd()/data/medgen-annales).

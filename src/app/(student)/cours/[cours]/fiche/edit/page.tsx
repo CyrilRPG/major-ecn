@@ -2,8 +2,6 @@ import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { FicheHtmlEditor } from '@/components/fiches/fiche-html-editor';
-import { FicheEditor } from '@/components/fiches/fiche-editor';
-import { emptyFiche, type FicheData } from '@/lib/fiches/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,48 +31,33 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
     .maybeSingle();
   if (!c) notFound();
 
-  // content_html / content_json / extracted_text ne sont pas dans les types
-  // générés → accès souple.
+  // content_html n'est pas dans les types générés → accès souple.
   const { data: ficheRow } = await supabase
     .from('fiches')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .select('content_html, content_json' as any)
+    .select('content_html' as any)
     .eq('cours_id', coursId)
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  const row = ficheRow as {
-    content_html?: string | null;
-    content_json?: FicheData;
-  } | null;
+  const row = ficheRow as { content_html?: string | null } | null;
   const annee = process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026';
   const nomCours = c.titre ?? 'Fiche';
 
-  // 1) content_html déjà présent → éditeur HTML WYSIWYG.
-  if (row?.content_html && typeof row.content_html === 'string' && row.content_html.trim()) {
-    return (
-      <FicheHtmlEditor
-        coursId={coursId}
-        initialHtml={row.content_html}
-        nomCours={nomCours}
-        annee={annee}
-      />
-    );
-  }
+  // Si une source HTML existe déjà → on l'ouvre ; sinon page vierge.
+  // Le legacy content_json n'est plus utilisé (la base contient 0 ligne avec
+  // ce champ rempli — vérifié 2026-06-17). Les fiches existantes sont soit
+  // déjà en HTML, soit régénérées via le générateur Python qui produit
+  // directement content_html.
+  const initialHtml = (row?.content_html && typeof row.content_html === 'string' && row.content_html.trim())
+    ? row.content_html
+    : `<h1>${escapeHtml(nomCours)}</h1><p></p>`;
 
-  // 2) content_json legacy → éditeur structuré (rétrocompat).
-  if (row?.content_json && typeof row.content_json === 'object') {
-    return <FicheEditor coursId={coursId} initial={row.content_json} />;
-  }
-
-  // 3) Page vierge → éditeur HTML WYSIWYG (le nouveau standard).
-  const seedHtml = `<h1>${escapeHtml(nomCours)}</h1><p></p>`;
-  void emptyFiche; // import gardé pour compat future (legacy editor types)
   return (
     <FicheHtmlEditor
       coursId={coursId}
-      initialHtml={seedHtml}
+      initialHtml={initialHtml}
       nomCours={nomCours}
       annee={annee}
     />
