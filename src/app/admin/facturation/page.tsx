@@ -1,7 +1,7 @@
 import { ClipboardList, FileText, Layers3, MessageSquare, Receipt } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { BILLING_EUR, DECOUVERTE_COLLEGE_ID } from '@/lib/ai/cost';
+import { BILLING_EUR } from '@/lib/ai/cost';
 
 export const metadata = { title: 'Facturation IA' };
 export const dynamic = 'force-dynamic';
@@ -20,37 +20,25 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, fichesRes, flashRes, seriesRes, aiRes] = await Promise.all([
-    a.from('cours').select('id, titre, matiere_id, matieres(nom)'),
-    a.from('fiches').select('cours_id, storage_path, content_html'),
-    a.from('flashcards').select('cours_id'),
-    a.from('qcm_series').select('cours_id, type, qcm_questions(id)'),
+  // Présence de contenu calculée côté serveur (fonction SQL) : robuste, bornée,
+  // pas de limite de pagination ni d'embed lourd.
+  const [coursRes, aiRes] = await Promise.all([
+    a.rpc('admin_facturation_lines'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat'),
   ]);
-
-  // Présence de contenu par cours.
-  const ficheSet = new Set<string>();
-  for (const f of fichesRes.data ?? []) if (f.storage_path || f.content_html) ficheSet.add(f.cours_id);
-  const flashSet = new Set<string>();
-  for (const f of flashRes.data ?? []) flashSet.add(f.cours_id);
-  const qcmSet = new Set<string>();
-  for (const s of seriesRes.data ?? []) {
-    if (s.type === 'qcm' && (s.qcm_questions?.length ?? 0) > 0) qcmSet.add(s.cours_id);
-  }
 
   type Item = { label: string; price: number; tone: 'fiche' | 'qcm' | 'flash' };
   type Line = { id: string; titre: string; matiere: string; decouverte: boolean; items: Item[]; subtotal: number };
   const lines: Line[] = [];
   for (const c of coursRes.data ?? []) {
-    const decouverte = c.matiere_id === DECOUVERTE_COLLEGE_ID;
+    const decouverte = !!c.is_decouverte || c.matiere_nom === 'Découverte';
     const items: Item[] = [];
-    if (ficheSet.has(c.id)) items.push({ label: 'Fiche', price: BILLING_EUR.fiche, tone: 'fiche' });
-    if (!decouverte && qcmSet.has(c.id)) items.push({ label: 'QCM + DP', price: BILLING_EUR.qcm_per_course, tone: 'qcm' });
-    if (!decouverte && flashSet.has(c.id)) items.push({ label: 'Flashcards', price: BILLING_EUR.flashcards_per_course, tone: 'flash' });
+    if (c.has_fiche) items.push({ label: 'Fiche', price: BILLING_EUR.fiche, tone: 'fiche' });
+    if (!decouverte && c.has_qcm) items.push({ label: 'QCM + DP', price: BILLING_EUR.qcm_per_course, tone: 'qcm' });
+    if (!decouverte && c.has_flash) items.push({ label: 'Flashcards', price: BILLING_EUR.flashcards_per_course, tone: 'flash' });
     const subtotal = items.reduce((s, i) => s + i.price, 0);
     if (subtotal > 0) {
-      const matiere = (Array.isArray(c.matieres) ? c.matieres[0]?.nom : c.matieres?.nom) ?? '—';
-      lines.push({ id: c.id, titre: c.titre, matiere, decouverte, items, subtotal });
+      lines.push({ id: c.cours_id, titre: c.titre, matiere: c.matiere_nom ?? '—', decouverte, items, subtotal });
     }
   }
   lines.sort((x, y) => x.matiere.localeCompare(y.matiere) || x.titre.localeCompare(y.titre));
