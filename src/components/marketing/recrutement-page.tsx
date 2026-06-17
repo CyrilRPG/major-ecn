@@ -555,7 +555,7 @@ export function RecrutementPageContent() {
           <div className="flex flex-wrap items-center justify-center gap-8">
             {[
               { Icon: Users, big: '9 000+', sub: 'médecins\naccompagnés' },
-              { Icon: GraduationCap, big: '45', sub: 'spécialités EVC\ncouvertes' },
+              { Icon: GraduationCap, big: 'Toutes', sub: 'les spécialités EVC\ncouvertes' },
               { Icon: Calendar, big: 'Depuis 2011', sub: '' },
               { Icon: Star, big: '15 ans', sub: "d'experience\npedagogique" },
             ].map(s => (

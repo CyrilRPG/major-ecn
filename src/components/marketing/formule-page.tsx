@@ -156,7 +156,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 <div className="mt-6 flex flex-wrap gap-5">
                   {[
                     { Icon: Users, t: '+ 9 000', s: 'médecins\naccompagnés' },
-                    { Icon: GraduationCap, t: '45+', s: 'spécialités\npréparées' },
+                    { Icon: GraduationCap, t: 'Toutes', s: 'les spécialités\npréparées' },
                     { Icon: Calendar, t: 'Depuis', s: '2011' },
                   ].map((st) => (
                     <div key={st.t} className="flex items-center gap-2">
@@ -315,7 +315,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-2">
             <div>
-              <h2 className="text-xl font-black" style={{ color: NAVY }}>Plus de 45 spécialités préparées</h2>
+              <h2 className="text-xl font-black" style={{ color: NAVY }}>Toutes les spécialités préparées</h2>
               <div className="mt-5 flex flex-wrap gap-3">
                 {SPECIALTIES.map(s => (
                   <span key={s} className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"

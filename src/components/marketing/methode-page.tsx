@@ -640,7 +640,7 @@ function ForWhomSection() {
     { Icon: UserCheck,     bg: '#EDE9FE', fg: '#6D28D9', t: 'Candidats souhaitant structurer efficacement leur préparation',
       d: 'Une méthode claire pour travailler mieux et progresser plus vite.' },
     { Icon: Heart,         bg: '#DCFCE7', fg: '#16A34A', t: 'Médecins préparant une spécialité EVC',
-      d: 'Médecine générale, gériatrie, cardiologie, radiologie, pédiatrie et plus de 45 spécialités.' },
+      d: 'Médecine générale, gériatrie, cardiologie, radiologie, pédiatrie et toutes les spécialités.' },
   ];
   return (
     <section className="bg-white py-10 pb-20 sm:pb-24" style={{ fontFamily: FONT }}>

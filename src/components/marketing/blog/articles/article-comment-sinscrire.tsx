@@ -552,7 +552,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                 première étape de la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
               </p>
               <ul className="mt-3 grid grid-cols-2 gap-1.5 text-[11.5px] text-[#1A2233]">
-                {['Plus de 15 ans d\'expérience', 'Plus de 9 000 médecins accompagnés', '45 spécialités médicales', 'QCM corrigés et commentés', 'Cas cliniques progressifs', 'Flashcards', 'Révisions transversales', 'Épreuves blanches', 'Accompagnement pédagogique personnalisé'].map((b) => (
+                {['Plus de 15 ans d\'expérience', 'Plus de 9 000 médecins accompagnés', 'toutes les spécialités médicales', 'QCM corrigés et commentés', 'Cas cliniques progressifs', 'Flashcards', 'Révisions transversales', 'Épreuves blanches', 'Accompagnement pédagogique personnalisé'].map((b) => (
                   <li key={b} className="flex items-start gap-1.5"><Check className="mt-0.5 h-3 w-3 text-[#C0001F]" /> {b}</li>
                 ))}
               </ul>

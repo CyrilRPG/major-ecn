@@ -284,7 +284,7 @@ const MEDICAL_COLS = [
 ];
 
 const FOOTER_BADGES = [
-  { Icon: Users,        title: '45 spécialités EVC couvertes',                desc: 'De la médecine générale aux spécialités les plus pointues.' },
+  { Icon: Users,        title: 'toutes les spécialités EVC couvertes',                desc: 'De la médecine générale aux spécialités les plus pointues.' },
   { Icon: BookOpen,     title: 'Ressources dédiées EVC (PAE)',                desc: 'Des contenus spécifiques à chaque discipline.' },
   { Icon: Target,       title: 'Préparation EVC adaptée aux attentes des jurys', desc: 'Méthodologie, entraînements et cas cliniques ciblés.' },
 ];
@@ -303,7 +303,7 @@ export function SpecialtiesSection() {
             style={{ background: RED_BG, color: RED }}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            45 spécialités EVC couvertes
+            toutes les spécialités EVC couvertes
           </span>
           <h2 className="mt-5 text-3xl font-black leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]"
             style={{
@@ -708,7 +708,7 @@ const TEAM_CARDS = [
 const TEAM_STATS = [
   { Icon: Calendar,    big: '15',    label: "ans d'experience",       sub: 'au service de votre reussite' },
   { Icon: Users,       big: '9 000+', label: 'medecins accompagnes',  sub: 'depuis 2011' },
-  { Icon: Stethoscope, big: '45',    label: 'specialites couvertes',  sub: 'toutes les disciplines EVC' },
+  { Icon: Stethoscope, big: 'Toutes',    label: 'les spécialités couvertes',  sub: 'toutes les disciplines EVC' },
   { Icon: ShieldCheck, big: '35+',   label: 'enseignants',            sub: 'PH specialistes et CCA' },
 ];
 
@@ -852,7 +852,7 @@ const ED_FEATURES = [
 ];
 
 const ED_BOTTOM_STATS = [
-  { Icon: GraduationCap, color: "#2563EB", bg: "#E5F1FF", t: "45 spécialités préparées" },
+  { Icon: GraduationCap, color: "#2563EB", bg: "#E5F1FF", t: "toutes les spécialités préparées" },
   { Icon: Calendar,      color: "#16793C", bg: "#E7F6EC", t: "Depuis 2011" },
   { Icon: Users,         color: "#7C3AED", bg: "#F1E8FD", t: "Plus de 9 000 médecins accompagnés" },
 ];
@@ -931,7 +931,7 @@ export function EspaceDecouverteSection() {
               <p className="mt-4 text-xs leading-snug" style={{ color: ED_INK_SOFT }}>
                 Espace découverte basé sur des contenus de <span className="font-semibold">Médecine Générale</span>.
                 <br />
-                Les préparations sont disponibles dans les <span className="font-semibold">45 spécialités EVC</span>.
+                Les préparations sont disponibles dans les <span className="font-semibold">toutes les spécialités EVC</span>.
               </p>
             </Reveal>
           </div>
@@ -1631,7 +1631,7 @@ export function ToolsForProgressSection() {
                   <span>PAE</span><span style={{ color: TOOLS_RED }}>•</span>
                   <span>PADHUE</span><span style={{ color: TOOLS_RED }}>•</span>
                   <span>Médecines diplômées hors UE</span><span style={{ color: TOOLS_RED }}>•</span>
-                  <span>45+ spécialités</span>
+                  <span>toutes les spécialités</span>
                 </p>
               </div>
 

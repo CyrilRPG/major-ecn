@@ -678,7 +678,7 @@ function PlateformeHero() {
                     { Icon: Layers3,       v: '10 000+', l: 'flashcards', c: '#7C3AED' },
                     { Icon: ClipboardCheck, v: '10 000+', l: 'QCM', c: '#C0112E' },
                     { Icon: Trophy,        v: 'Inspirées', l: 'des EVC', c: '#16A34A' },
-                    { Icon: GraduationCap, v: '45+', l: 'spécialités préparées', c: '#2563EB' },
+                    { Icon: GraduationCap, v: 'Toutes', l: 'les spécialités préparées', c: '#2563EB' },
                   ].map(s => (
                     <div key={s.l} className="flex items-center gap-2">
                       <span className="flex h-5 w-5 items-center justify-center rounded" style={{ background: `${s.c}1A`, color: s.c }}>
@@ -936,7 +936,7 @@ function BrandCredentialsSection() {
   const metrics = [
     { value: '15',     unit: 'ans',     label: "d'expertise dédiée aux EVC PAE",         tone: '#8B0E22' },
     { value: '9 000',  unit: '+',       label: 'médecins étrangers accompagnés',         tone: '#0F1F4D' },
-    { value: '45',     unit: '/45',     label: 'spécialités couvertes',              tone: '#0F766E' },
+    { value: 'Toutes',  unit: '',     label: 'les spécialités couvertes',              tone: '#0F766E' },
   ];
   const principes = [
     { Icon: Stethoscope,  t: 'Conçue par des praticiens hospitaliers',
@@ -1305,7 +1305,7 @@ function TransversalRevisionSection() {
           </span>
           <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-[2.25rem]"
             style={{ ...gradientText(GRAD_BURGUNDY), fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>
-            La révision qui relie 45 spécialités entre elles
+            La révision qui relie toutes les spécialités entre elles
           </h2>
           <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
             Une médecine ne se compartimente pas. L&rsquo;algorithme tisse les liens entre items
@@ -1316,7 +1316,7 @@ function TransversalRevisionSection() {
           <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
             <div>
               <p className="text-[13px]" style={{ color: INK_SOFT }}>
-                Notre système identifie automatiquement les liens entre plus de 45 spécialités
+                Notre système identifie automatiquement les liens entre toutes les spécialités
                 pour optimiser votre préparation.
               </p>
               <ul className="mt-5 space-y-2.5">

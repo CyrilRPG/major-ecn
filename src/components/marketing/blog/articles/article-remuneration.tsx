@@ -290,7 +290,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
                     complète et ciblée.
                   </p>
                   <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {['45 spécialités couvertes', 'QCM corrigés', 'Cas cliniques', 'Révisions transversales', 'Épreuves blanches'].map((b) => (
+                    {['toutes les spécialités couvertes', 'QCM corrigés', 'Cas cliniques', 'Révisions transversales', 'Épreuves blanches'].map((b) => (
                       <span key={b} className="rounded-lg bg-[#FDE7E9] px-2.5 py-1.5 text-center text-[11px] font-semibold text-[#C0001F]">{b}</span>
                     ))}
                   </div>

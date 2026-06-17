@@ -50,7 +50,7 @@ function TemoignagesHeader() {
         <div className="mt-8 grid grid-cols-1 gap-4 text-left sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-10">
           {[
             { Icon: Calendar, big: 'Depuis 2011',                sub: 'au service des candidats EVC' },
-            { Icon: Users,    big: '+45 spécialités préparées',  sub: 'toutes disciplines' },
+            { Icon: Users,    big: 'toutes les spécialités préparées',  sub: 'toutes disciplines' },
             { Icon: ShieldCheck, big: 'Voie interne et voie externe', sub: 'accompagnement dédié' },
             { Icon: Trophy,   big: 'Parcours authentiques',      sub: 'témoignages vérifiés' },
           ].map((t) => (

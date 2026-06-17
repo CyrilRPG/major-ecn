@@ -55,7 +55,7 @@ const ENGAGEMENT_STEPS = [
 ];
 
 const SIDEBAR_BULLETS = [
-  '45 spécialités médicales',
+  'toutes les spécialités médicales',
   'Plus de 9 000 médecins accompagnés',
   'QCM corrigés et commentés',
   'Cas cliniques progressifs',

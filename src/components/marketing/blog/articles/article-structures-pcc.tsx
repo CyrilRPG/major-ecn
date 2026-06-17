@@ -402,7 +402,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
             <PrepCtaCard
               title="Préparation EVC PADHUE : l'expertise Major ECN depuis 15 ans"
               bullets={[
-                '45 spécialités médicales',
+                'toutes les spécialités médicales',
                 'QCM corrigés et commentés',
                 'Cas cliniques progressifs',
                 'Révisions transversales',

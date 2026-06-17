@@ -502,7 +502,7 @@ export function EspaceDecouverteForm() {
                   <ul className="mt-3 space-y-2 text-[13px] leading-relaxed" style={{ color: INK }}>
                     {[
                       <>L&rsquo;espace découverte est actuellement présenté à travers des contenus de <strong>Médecine Générale</strong>.</>,
-                      <>Major ECN accompagne les candidats aux EVC dans <strong>45 spécialités</strong>.</>,
+                      <>Major ECN accompagne les candidats aux EVC dans <strong>toutes les spécialités</strong>.</>,
                       <>La plateforme <strong>s&rsquo;enrichit progressivement</strong> de nouveaux contenus et fonctionnalités.</>,
                       <>Si votre spécialité n&rsquo;est pas encore disponible dans l&rsquo;environnement de démonstration, vous bénéficiez néanmoins de l&rsquo;ensemble des <strong>ressources pédagogiques</strong> prévues dans votre préparation.</>,
                     ].map((item, i) => (

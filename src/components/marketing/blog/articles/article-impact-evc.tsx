@@ -262,7 +262,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
                 d&rsquo;Autorisation d&rsquo;Exercice (PAE).
               </p>
               <ul className="mt-3 grid grid-cols-2 gap-1.5 text-[11.5px] text-[#1A2233]">
-                {['45 spécialités médicales', 'Révisions transversales', 'QCM corrigés et commentés', 'Épreuves blanches', 'Cas cliniques progressifs', 'Accompagnement pédagogique personnalisé', 'Flashcards'].map((b) => (
+                {['toutes les spécialités médicales', 'Révisions transversales', 'QCM corrigés et commentés', 'Épreuves blanches', 'Cas cliniques progressifs', 'Accompagnement pédagogique personnalisé', 'Flashcards'].map((b) => (
                   <li key={b} className="flex items-start gap-1.5"><Check className="mt-0.5 h-3 w-3 text-[#C0001F]" /> {b}</li>
                 ))}
               </ul>

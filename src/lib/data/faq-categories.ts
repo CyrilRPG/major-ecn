@@ -68,7 +68,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     title: 'Questions sur les spécialités',
     qas: [
       { q: "Quelles spécialités sont préparées ?",
-        a: "Plus de 45 spécialités médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique sont préparées." },
+        a: "Toutes les spécialités médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique sont préparées." },
       { q: "Ma spécialité n'apparaît pas sur le site. Que faire ?",
         a: "Nous vous invitons à contacter notre équipe afin d'obtenir des informations sur votre spécialité." },
       { q: "Préparez-vous la médecine générale ?",
@@ -193,8 +193,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       { q: "Préparez-vous l'hématologie ?", a: "Oui." },
       { q: "Préparez-vous l'hépato-gastroentérologie ?", a: "Oui." },
       { q: "Préparez-vous la réanimation ?", a: "Oui." },
-      { q: "Préparez-vous plus de 45 spécialités ?",
-        a: "Oui. Major ECN accompagne les candidats dans plus de 45 spécialités médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique." },
+      { q: "Préparez-vous toutes les spécialités ?",
+        a: "Oui. Major ECN accompagne les candidats dans toutes les spécialités médicales, chirurgicales, odontologiques, pharmaceutiques et de maïeutique." },
     ],
   },
 ];

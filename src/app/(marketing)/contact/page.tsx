@@ -132,7 +132,7 @@ export default function ContactPage() {
                       +9 000&nbsp;médecins accompagnés
                     </p>
                     <p className="text-[11.5px] leading-tight" style={{ color: INK_SOFT }}>
-                      depuis plus de 15 ans dans 45+ spécialités.
+                      depuis plus de 15 ans dans toutes les spécialités.
                     </p>
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export default function ContactPage() {
               Prêt à réussir les EVC <span style={{ color: '#F5D597' }}>dans votre spécialité&nbsp;?</span>
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-white/85">
-              Plus de 45&nbsp;spécialités préparées par Major ECN, dont la médecine
+              Toutes les spécialités préparées par Major ECN, dont la médecine
               générale, la pédiatrie, la cardiologie et la chirurgie.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">

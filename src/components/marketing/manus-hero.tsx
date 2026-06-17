@@ -29,7 +29,7 @@ type HeroStat = {
 };
 
 const STATS: HeroStat[] = [
-  { Icon: BookOpen, big: '45', sub: 'SPÉCIALITÉS COUVERTES',
+  { Icon: BookOpen, big: 'TOUTES', sub: 'LES SPÉCIALITÉS COUVERTES',
     desc: 'Couverture complète pour toutes les étapes de votre préparation.' },
   { live: true, big: 'COURS EN DIRECT*', sub: 'AVEC SPÉCIALISTES & REPLAYS*', small: true,
     desc: 'Interagissez en direct avec nos experts et révisez où et quand vous voulez.' },
@@ -170,7 +170,7 @@ export function ManusHero() {
               className="absolute -left-4 top-10 hidden items-center gap-2 rounded-full border border-[#E8E7E3] bg-white px-4 py-2.5 text-sm font-bold shadow-2xl sm:inline-flex"
               style={{ color: RED }}
             >
-              <Stethoscope className="h-4 w-4" /> 45 spécialités
+              <Stethoscope className="h-4 w-4" /> toutes les spécialités
             </motion.span>
             <motion.span
               aria-hidden

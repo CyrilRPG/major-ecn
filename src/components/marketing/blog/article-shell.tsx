@@ -173,7 +173,7 @@ function RelatedFooter({ currentSlug }: { currentSlug: string }) {
 export function PrepCtaCard({
   title = 'Préparez efficacement les EVC avec Major ECN',
   bullets = [
-    '45 spécialités couvertes',
+    'toutes les spécialités couvertes',
     'QCM corrigés',
     'Révisions transversales',
     'Cas cliniques',

@@ -13,7 +13,7 @@ import {
   Activity, Apple, ArrowRight, Award, Baby, Bandage, Beaker, Bone, BookOpen, Brain, BriefcaseMedical,
   Check, CheckCircle2, ChevronRight, Compass, Dna, Droplet, Ear, Eye,
   FlaskConical, Footprints, Gauge, GraduationCap, Heart, HeartPulse, Hospital, Layers3,
-  Microscope, Pill, Pipette, Quote, Radio, Scissors, ScanSearch, Search, Shield, Smile,
+  Microscope, Pill, Pipette, Quote, Radio, Scissors, ScanSearch, Search, Shield, Siren, Smile,
   Sparkles, Stethoscope, Syringe, Target, TestTube, TrendingUp, Trophy,
   UserCheck, Users, Wind, Zap,
   type LucideIcon,
@@ -41,7 +41,7 @@ const gradientText = (grad: string) => ({
 });
 
 /* ============================================================
-   Données — 45+ spécialités, classées par famille
+   Données — toutes les spécialités, classées par famille
    ============================================================ */
 type Family =
   | 'Médecine'
@@ -72,6 +72,8 @@ const SPECIALITIES: Speciality[] = [
   // ====== MÉDECINE ======
   { slug: "medecine-generale", name: "Médecine générale", family: "Médecine", Icon: Stethoscope, accent: ACCENTS.red,
     description: "Préparation complète aux EVC en médecine générale, calibrée sur le référentiel CMG et les recommandations HAS. Cas cliniques de consultation, suivi des maladies chroniques, prévention et coordination ville-hôpital." },
+  { slug: "medecine-d-urgence", name: "Médecine d’urgence", family: "Médecine", Icon: Siren, accent: ACCENTS.red,
+    description: "Préparation complète aux EVC en médecine d’urgence : prise en charge des urgences vitales, pathologies aiguës, traumatologie, régulation médicale et protocoles de prise en charge." },
   { slug: "cardiologie-et-maladies-vasculaires", name: "Cardiologie et maladies vasculaires", family: "Médecine", Icon: HeartPulse, accent: ACCENTS.red,
     description: "Programme cardiovasculaire couvrant les syndromes coronariens, l'insuffisance cardiaque, les arythmies, l'HTA et les maladies vasculaires périphériques selon les recommandations actualisées." },
   { slug: "pneumologie", name: "Pneumologie", family: "Médecine", Icon: Wind, accent: ACCENTS.cyan,
@@ -200,7 +202,7 @@ function SpecialitesHero() {
             <h1 className="mt-5 text-4xl font-black leading-[1.02] tracking-tight sm:text-5xl lg:text-[3.6rem]"
               style={gradientText(GRAD_NAVY_RED)}>
               Préparations EVC dans{' '}
-              <span style={gradientText(GRAD_BURGUNDY)}>45+&nbsp;spécialités</span>
+              <span style={gradientText(GRAD_BURGUNDY)}>Toutes&nbsp;les&nbsp;spécialités</span>
             </h1>
 
             <p className="mt-5 max-w-xl text-base leading-relaxed sm:text-[17px]" style={{ color: INK_SOFT }}>
@@ -291,7 +293,7 @@ function SpecialitesHero() {
    ============================================================ */
 function MetricsStrip() {
   const metrics = [
-    { Icon: Trophy,     big: '45+',                 sub: 'spécialités couvertes',                       tone: RED },
+    { Icon: Trophy,     big: 'Toutes',              sub: 'les spécialités couvertes',                       tone: RED },
     { Icon: BookOpen,   big: 'Référentiels\nactualisés', sub: 'HAS, collèges et recommandations récentes', tone: '#0F8A6A' },
     { Icon: UserCheck,  big: '100%',                sub: 'correcteurs spécialistes',                    tone: '#2563EB' },
     { Icon: TrendingUp, big: '+15 ans',             sub: 'd’expérience PADHUE',                         tone: '#7C3AED' },

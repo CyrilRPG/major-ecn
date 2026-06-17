@@ -781,7 +781,7 @@ export function TransformationSection() {
 const STATS = [
   { n: '18',     suf: '',  l: 'Ans d’expérience',         sub: 'auprès des candidats EVC' },
   { n: '8 000',  suf: '+', l: 'Candidats accompagnés',    sub: 'sur le programme' },
-  { n: '45',     suf: '',  l: 'Spécialités couvertes',    sub: 'l’intégralité du programme' },
+  { n: 'Toutes', suf: '',  l: 'les spécialités couvertes',    sub: 'l’intégralité du programme' },
   { n: 'PH',     suf: '',  l: 'Spécialistes & CCA',       sub: 'praticiens hospitaliers + chefs de clinique' },
   { n: '',       suf: '',  l: 'Suivi structuré',          sub: 'progression mesurée à chaque session' },
   { n: '',       suf: '',  l: 'Méthodologie EVC',         sub: 'raisonnement clinique au cœur de la prépa' },

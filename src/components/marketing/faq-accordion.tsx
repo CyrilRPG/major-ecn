@@ -221,7 +221,7 @@ export function FaqSidebar() {
         <ul className="mt-3 space-y-2.5">
           {[
             { Icon: Calendar,      t: 'Depuis 2011, +15 ans d’expérience' },
-            { Icon: GraduationCap, t: '+45 spécialités préparées' },
+            { Icon: GraduationCap, t: 'toutes les spécialités préparées' },
             { Icon: Stethoscope,   t: 'Correcteurs spécialistes en activité' },
             { Icon: Layers3,       t: 'Révisions transversales & flashcards' },
             { Icon: TrendingUp,    t: 'Épreuves blanches corrigées EVC' },
@@ -279,13 +279,13 @@ export function FaqSidebar() {
           ))}
         </ul>
 
-        {/* Sous-bloc 45+ spécialités */}
+        {/* Sous-bloc toutes les spécialités */}
         <div className="mt-4 flex items-start gap-2.5">
           <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15">
             <GraduationCap className="h-3.5 w-3.5 text-white" />
           </span>
           <div className="min-w-0">
-            <p className="text-[13px] font-extrabold leading-tight">45+ spécialités préparées</p>
+            <p className="text-[13px] font-extrabold leading-tight">toutes les spécialités préparées</p>
             <p className="mt-1 text-[11.5px] leading-tight text-white/80">
               Contenus de démonstration proposés en{' '}
               <span style={{ color: '#FFD54A' }} className="font-semibold">Médecine Générale</span>.

@@ -44,7 +44,7 @@ export function TarifsPageContent() {
         <MarqueeScroll
           items={[
             '✦ 9 000+ médecins accompagnés',
-            '✦ 45 spécialités EVC préparées',
+            '✦ toutes les spécialités EVC préparées',
             '✦ Depuis 2011',
             '✦ Voie interne et voie externe',
             '✦ Médecine, Pharmacie, Odontologie, Sage-femme',
@@ -60,7 +60,7 @@ export function TarifsPageContent() {
           {/* Badge top — original */}
           <Reveal>
             <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-full border bg-white/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-[0_10px_30px_-15px_rgba(15,31,77,0.20)] backdrop-blur-sm" style={{ borderColor: BORDER, color: NAVY }}>
-              <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> 45 spécialités EVC</span>
+              <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" style={{ color: RED }} /> toutes les spécialités EVC</span>
               <span style={{ color: RED }}>&#8226;</span>
               <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" style={{ color: RED }} /> Plus de 9 000 médecins accompagnés</span>
               <span style={{ color: RED }}>&#8226;</span>
@@ -91,7 +91,7 @@ export function TarifsPageContent() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
               {[
                 { Icon: Users, big: 'Plus de 9 000', sub: 'médecins accompagnés' },
-                { Icon: GraduationCap, big: '45 spécialités', sub: 'préparées' },
+                { Icon: GraduationCap, big: 'toutes les spécialités', sub: 'préparées' },
                 { Icon: Calendar, big: 'Depuis 2011', sub: 'à vos côtés' },
               ].map(s => (
                 <div key={s.big} className="flex items-center gap-2.5 rounded-2xl border bg-white px-4 py-2.5 shadow-[0_4px_16px_-6px_rgba(15,31,77,0.10)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-6px_rgba(15,31,77,0.18)]" style={{ borderColor: BORDER }}>
@@ -115,7 +115,7 @@ export function TarifsPageContent() {
           <div className="rounded-2xl border p-5" style={{ borderColor: BORDER }}>
             <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.14em]" style={{ color: NAVY }}>
               <Stethoscope className="mr-1.5 inline h-4 w-4" style={{ color: RED }} />
-              Plus de 45 spécialités préparées
+              Toutes les spécialités préparées
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               {SPECIALTIES.map(s => (
@@ -128,7 +128,7 @@ export function TarifsPageContent() {
             </div>
             <div className="mt-4 text-center">
               <Link href="/specialites" className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-bold text-white" style={{ background: GREEN }}>
-                Découvrir les 45 spécialités préparées <ArrowRight className="h-3.5 w-3.5" />
+                Découvrir toutes les spécialités préparées <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </div>
@@ -393,7 +393,7 @@ export function TarifsPageContent() {
             {[
               { Icon: Calendar, t: '15 ANS', sub: "D'EXPÉRIENCE", d: 'Depuis 2011, au service des médecins étrangers.' },
               { Icon: Users, t: '+ DE 9 000', sub: 'MÉDECINS ACCOMPAGNÉS', d: 'Toutes spécialités confondues.' },
-              { Icon: GraduationCap, t: '45 SPÉCIALITÉS', sub: 'PRÉPARÉES', d: 'Médecine générale et spécialités médicales, chirurgicales.' },
+              { Icon: GraduationCap, t: 'TOUTES LES SPÉCIALITÉS', sub: 'PRÉPARÉES', d: 'Médecine générale et spécialités médicales, chirurgicales.' },
               { Icon: Trophy, t: 'ENSEIGNANTS', sub: 'EXPÉRIMENTÉS', d: 'PH et CCA presents depuis plusieurs annees.' },
               { Icon: ClipboardCheck, t: 'DOSSIERS CLINIQUES', sub: 'QCM ET ÉVALUATIONS', d: 'Contenus fiables, à jour et conformes aux EVC.' },
             ].map(s => (

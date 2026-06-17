@@ -39,7 +39,7 @@ const INK_SOFT = '#4B5563';
 const TRUST = [
   { Icon: Calendar,      t: "Depuis 2011" },
   { Icon: Users,         t: "9 000+ médecins accompagnés" },
-  { Icon: ShieldCheck,   t: "45 spécialités couvertes" },
+  { Icon: ShieldCheck,   t: "toutes les spécialités couvertes" },
   { Icon: GraduationCap, t: "PH spécialistes & CCA" },
 ];
 
@@ -69,7 +69,7 @@ const COLS: { title: string; links: { label: string; href: string; Icon: React.C
 const BOTTOM_BADGES = [
   { Icon: Users,         label: "Depuis 2011" },
   { Icon: Award,         label: "9 000+ médecins accompagnés" },
-  { Icon: ShieldCheck,   label: "45 spécialités couvertes" },
+  { Icon: ShieldCheck,   label: "toutes les spécialités couvertes" },
   { Icon: GraduationCap, label: "PH spécialistes & CCA" },
 ];
 

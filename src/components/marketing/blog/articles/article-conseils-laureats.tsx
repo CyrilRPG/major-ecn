@@ -208,7 +208,7 @@ const SECTIONS: Section[] = [
           ))}
         </div>
         <p className="mt-3">
-          Notre plateforme couvre plus de 45 spécialités et reste accessible à
+          Notre plateforme couvre toutes les spécialités et reste accessible à
           tout moment, en ligne, depuis la France comme à l’international.
         </p>
       </>
@@ -440,7 +440,7 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
                   { big: '10 000+', sub: 'flashcards' },
                   { big: '10 000+',sub: 'QCM disponibles' },
                   { big: '60+',    sub: 'épreuves blanches' },
-                  { big: '45',     sub: 'spécialités préparées' },
+                  { big: 'Toutes',     sub: 'les spécialités préparées' },
                   { big: '9 000+', sub: 'médecins formés' },
                 ].map((s) => (
                   <li key={s.sub} className="flex items-baseline justify-between border-b pb-2 last:border-b-0 last:pb-0"
