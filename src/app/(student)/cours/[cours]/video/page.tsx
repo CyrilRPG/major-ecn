@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { FileText, PlayCircle } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
@@ -24,6 +24,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  profPageReadGuard(profile, 'video', `/cours/${coursId}`);
 
   const video = c.videos?.[0];
   let signedUrl: string | null = null;

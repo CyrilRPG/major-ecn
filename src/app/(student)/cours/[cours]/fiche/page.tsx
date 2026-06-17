@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Download, FileText, Pencil } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canWrite } from '@/lib/schemas/professor';
 
 export default async function CoursFichePage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -24,6 +25,8 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  // Professeur sans droit de lecture « fiche » : accès interdit (onglet déjà masqué).
+  profPageReadGuard(profile, 'fiche', `/cours/${coursId}`);
 
   const fiche = c.fiches?.[0];
   // PDF watermarké à la volée avec l'identité de l'utilisateur connecté
@@ -31,7 +34,8 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   // est gérée côté route via Supabase cookies.
   const pdfUrl: string | null = fiche?.storage_path ? `/api/fiches/${coursId}/pdf` : null;
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
-  const canEdit = profile.role === 'admin' || profile.role === 'professor';
+  const canEdit = profile.role === 'admin'
+    || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'fiche'));
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">

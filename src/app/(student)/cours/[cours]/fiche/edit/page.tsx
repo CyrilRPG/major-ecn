@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, profPageWriteGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { FicheWysiwygEditor } from '@/components/fiches/fiche-wysiwyg-editor';
 
@@ -22,6 +22,8 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
   if (profile.role !== 'admin' && profile.role !== 'professor') {
     redirect(`/cours/${coursId}/fiche`);
   }
+  // Professeur sans droit d'écriture « fiche » : pas d'accès à l'éditeur.
+  profPageWriteGuard(profile, 'fiche', `/cours/${coursId}/fiche`);
 
   const supabase = await createClient();
   const { data: c } = await supabase

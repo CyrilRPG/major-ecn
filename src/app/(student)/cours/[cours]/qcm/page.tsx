@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Trophy } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
@@ -20,6 +20,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const { data: series } = await supabase
     .from('qcm_series')

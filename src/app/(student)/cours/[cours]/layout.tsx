@@ -1,8 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudyConsole } from '@/components/student/study-console';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canRead } from '@/lib/schemas/professor';
 
 export default async function CoursLayout({
   children,
@@ -41,6 +42,19 @@ export default async function CoursLayout({
     flashcards: (c.flashcards?.length ?? 0) > 0,
   };
 
+  // Visibilité des onglets pour les PROFESSEURS : un type de contenu sans droit
+  // de lecture (`content_permissions` = 'none' ou absent) est totalement masqué
+  // (onglet ET contenu). Les élèves/admin voient tout (visibility undefined).
+  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
+  const visibility = profScope
+    ? {
+        fiche: canRead(profScope, 'fiche'),
+        video: canRead(profScope, 'video'),
+        qcm: canRead(profScope, 'qcm'),
+        flashcards: canRead(profScope, 'flashcards'),
+      }
+    : undefined;
+
   const cp = c.course_progress?.[0];
   const [{ count: qcmCount }, { count: flashCount }] = await Promise.all([
     supabase
@@ -74,6 +88,7 @@ export default async function CoursLayout({
       availability={availability}
       mastery={mastery}
       isDecouverte={isDecouverte}
+      visibility={visibility}
     >
       {children}
     </StudyConsole>

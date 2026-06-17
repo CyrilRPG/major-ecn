@@ -53,6 +53,7 @@ export function StudyConsole({
   availability,
   mastery,
   isDecouverte = false,
+  visibility,
   children,
 }: {
   coursId: string;
@@ -63,6 +64,11 @@ export function StudyConsole({
   /** Mode Découverte : verrouille l'onglet "Cours vidéo" (popup tarifs au clic
    *  au lieu de naviguer vers /video). */
   isDecouverte?: boolean;
+  /** Visibilité par onglet (clé = type de contenu). `false` masque totalement
+   *  l'onglet. Utilisé pour les professeurs : un type sans droit de lecture
+   *  (`content_permissions` = 'none') ne doit pas apparaître du tout. Absent /
+   *  undefined = visible (élèves, admin). */
+  visibility?: Partial<Record<string, boolean>>;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -128,7 +134,7 @@ export function StudyConsole({
 
         {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
         <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {tabs.map((t) => {
+          {tabs.filter((t) => visibility?.[t.key] !== false).map((t) => {
             const active = activeSeg === t.seg;
             // Mode Découverte : l'onglet "Cours vidéo" est un cadenas qui ouvre
             // la popup tarifs au lieu de naviguer vers /video.

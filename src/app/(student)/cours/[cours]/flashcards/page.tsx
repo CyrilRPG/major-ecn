@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { Layers3 } from 'lucide-react';
-import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
@@ -20,6 +20,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  profPageReadGuard(profile, 'flashcards', `/cours/${coursId}`);
 
   const { data: cards } = await supabase
     .from('flashcards')

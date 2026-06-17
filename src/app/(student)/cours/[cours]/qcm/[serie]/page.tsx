@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser, getProfessorScope, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
@@ -17,6 +17,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const { data: serie } = await supabase
     .from('qcm_series')

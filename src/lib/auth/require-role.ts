@@ -86,6 +86,30 @@ export function assertCanRead(scope: ProfessorScope | null, type: ContentType) {
   }
 }
 
+/**
+ * Guard de PAGE pour un professeur : redirige s'il n'a pas le droit de LECTURE
+ * sur ce type de contenu (`content_permissions` = 'none' ou absent). Sans effet
+ * pour les élèves et admins. À placer en tête des pages de contenu d'un cours.
+ */
+export function profPageReadGuard(
+  profile: { role?: string | null; permission_scope?: unknown },
+  type: ContentType,
+  redirectTo: string,
+) {
+  if (profile.role !== 'professor') return;
+  if (!canRead(getProfessorScope(profile.permission_scope), type)) redirect(redirectTo);
+}
+
+/** Idem mais pour l'ÉCRITURE (édition) — pour les pages d'édition réservées. */
+export function profPageWriteGuard(
+  profile: { role?: string | null; permission_scope?: unknown },
+  type: ContentType,
+  redirectTo: string,
+) {
+  if (profile.role !== 'professor') return;
+  if (!canWrite(getProfessorScope(profile.permission_scope), type)) redirect(redirectTo);
+}
+
 /** Vérifie qu'un prof a accès au cours (et à son collège). Renvoie true/false. */
 export function profCanAccessCours(scope: ProfessorScope | null, collegeId: string, coursId: string): boolean {
   if (scope === null) return true; // admin
