@@ -3,22 +3,20 @@
 /**
  * Éditeur de fiche WYSIWYG « in-place » — fidélité 100 % avec le PDF.
  *
- * Principe : au lieu de ré-interpréter le HTML dans un schéma (Tiptap), on
- * édite DIRECTEMENT le rendu réel de la fiche. Le conteneur `.fiche-paper`
- * reçoit le `content_html` (fragment de corps) et la VRAIE charte CSS
- * (`ficheCss`, identique à celle utilisée par Chromium au rendu PDF). Le
- * professeur tape/supprime/met en forme le texte exactement comme dans Word ;
- * la mise en page (tableaux concept|détail, encadrés, bannières) ne bouge pas.
+ * Le rendu éditable vit dans un IFRAME isolé : on y injecte la VRAIE charte CSS
+ * (`ficheCss`, identique à celle utilisée par Chromium au rendu PDF) et le corps
+ * de la fiche en `contenteditable`. L'isolation garantit que ni le CSS de l'app
+ * (Tailwind) ni la charte (sélecteurs globaux `* {}`, `body`, `table`…) ne se
+ * polluent — donc « ce que le prof voit = le PDF ».
  *
- * - Mise en forme : `document.execCommand` (gras, italique, souligné, listes,
- *   couleurs, alignement) sur la sélection courante.
- * - Structure : boutons qui insèrent/suppriment des lignes et encadrés au bon
- *   format charte, à l'emplacement du curseur.
- * - Sauvegarde : on sérialise le DOM édité (nettoyé) → autosave `/html`.
+ * - Mise en forme : `execCommand` sur le document de l'iframe (gras, italique,
+ *   souligné, couleurs charte, listes, alignement, marqueurs ★ ◆ ⚠).
+ * - Structure : insertion/suppression de lignes et encadrés au format charte.
+ * - Sauvegarde : on sérialise le corps de l'iframe (nettoyé) → autosave `/html`.
  * - Publier : `/render-html` (Chromium) reconvertit le HTML en PDF.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Bold, Italic, Underline as UnderlineIcon, List, ListOrdered,
   Image as ImageIcon, Loader2, FileDown, Eye, AlignLeft, AlignCenter,
@@ -29,7 +27,6 @@ import { ficheCss } from '@/lib/fiches/css';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
-/** Couleurs sémantiques de la charte proposées dans la palette. */
 const COLORS = [
   { label: 'Encre', value: '#1F2A38' },
   { label: 'Bleu nuit', value: '#1C2E49' },
@@ -45,42 +42,45 @@ export function FicheWysiwygEditor({
   nomCours: string;
   annee: string;
 }) {
-  const paperRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [save, setSave] = useState<SaveState>('idle');
   const [publishing, setPublishing] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  // Injection initiale du HTML (une seule fois — l'éditeur est non contrôlé :
-  // React ne ré-écrit jamais le DOM édité, sinon il effacerait les frappes).
-  useEffect(() => {
-    if (paperRef.current && !paperRef.current.dataset.loaded) {
-      paperRef.current.innerHTML = normalizeInbound(initialHtml);
-      paperRef.current.dataset.loaded = '1';
-    }
-    return () => { if (timer.current) clearTimeout(timer.current); };
-  }, [initialHtml]);
+  // Document de l'iframe (construit une seule fois). La charte + le corps de la
+  // fiche, isolés du reste de l'app.
+  const srcDoc = useMemo(
+    () => buildSrcDoc(initialHtml),
+    [initialHtml],
+  );
 
-  /** Sérialise le DOM édité en HTML propre (prêt pour le stockage + Chromium). */
+  const doc = () => frameRef.current?.contentDocument ?? null;
+  const win = () => frameRef.current?.contentWindow ?? null;
+
+  /** Ajuste la hauteur de l'iframe à son contenu (la page externe scrolle). */
+  const fitHeight = useCallback(() => {
+    const d = doc();
+    if (d && frameRef.current) {
+      frameRef.current.style.height = `${d.documentElement.scrollHeight + 8}px`;
+    }
+  }, []);
+
+  /** Sérialise le corps de l'iframe en HTML propre (stockage + Chromium). */
   const serialize = useCallback((): string => {
-    const node = paperRef.current;
-    if (!node) return '';
-    const clone = node.cloneNode(true) as HTMLElement;
-    // Retire les artefacts d'édition.
-    clone.querySelectorAll('[contenteditable]').forEach((el) =>
-      el.removeAttribute('contenteditable'));
-    clone.querySelectorAll('.fiche-row-tools, .fiche-empty-hint').forEach((el) => el.remove());
+    const d = doc();
+    if (!d?.body) return '';
+    const clone = d.body.cloneNode(true) as HTMLElement;
+    clone.removeAttribute('contenteditable');
+    clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
     let html = clone.innerHTML;
-    // Normalise les balises produites par execCommand vers la charte
-    // (<b>→<strong>, <i>→<em>) pour que les styles charte s'appliquent au PDF.
     html = html
       .replace(/<b(\s[^>]*)?>/gi, '<strong>').replace(/<\/b>/gi, '</strong>')
       .replace(/<i(\s[^>]*)?>/gi, '<em>').replace(/<\/i>/gi, '</em>');
     return html;
   }, []);
 
-  /** Autosave debounced du contenu courant. */
   const scheduleSave = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
     setSave('saving');
@@ -96,64 +96,83 @@ export function FicheWysiwygEditor({
     }, 1200);
   }, [coursId, serialize]);
 
-  // ── Commandes de mise en forme (execCommand sur la sélection) ────────────
+  // Branche les écouteurs une fois l'iframe chargée.
+  const onFrameLoad = useCallback(() => {
+    const d = doc();
+    if (!d) return;
+    d.body.setAttribute('contenteditable', 'true');
+    d.body.spellcheck = true;
+    d.addEventListener('input', () => { scheduleSave(); fitHeight(); });
+    fitHeight();
+  }, [scheduleSave, fitHeight]);
+
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+
+  // ── Mise en forme (execCommand dans l'iframe) ────────────────────────────
   const exec = useCallback((cmd: string, value?: string) => {
-    paperRef.current?.focus();
-    document.execCommand(cmd, false, value);
-    scheduleSave();
-  }, [scheduleSave]);
+    const d = doc();
+    if (!d) return;
+    d.body.focus();
+    d.execCommand(cmd, false, value);
+    scheduleSave(); fitHeight();
+  }, [scheduleSave, fitHeight]);
 
   const setColor = useCallback((color: string) => {
-    paperRef.current?.focus();
-    document.execCommand('styleWithCSS', false, 'true');
-    document.execCommand('foreColor', false, color);
+    const d = doc();
+    if (!d) return;
+    d.body.focus();
+    d.execCommand('styleWithCSS', false, 'true');
+    d.execCommand('foreColor', false, color);
     scheduleSave();
   }, [scheduleSave]);
 
   const insertImage = useCallback(() => {
     const url = window.prompt('URL de l’image (https://… ou data:image/…)');
     if (!url) return;
-    paperRef.current?.focus();
-    document.execCommand('insertHTML', false,
+    const d = doc();
+    d?.body.focus();
+    d?.execCommand('insertHTML', false,
       `<figure class="ft-figure ft-figure--large"><img src="${escapeAttr(url)}" alt=""/></figure>`);
-    scheduleSave();
-  }, [scheduleSave]);
+    scheduleSave(); fitHeight();
+  }, [fitHeight, scheduleSave]);
 
-  // ── Opérations de structure (au niveau de la ligne sélectionnée) ─────────
+  // ── Opérations de structure ──────────────────────────────────────────────
   const currentRow = (): HTMLTableRowElement | null => {
-    const sel = window.getSelection();
-    let n = sel?.anchorNode ?? null;
-    while (n && n !== paperRef.current) {
+    const sel = win()?.getSelection();
+    let n: Node | null = sel?.anchorNode ?? null;
+    const body = doc()?.body ?? null;
+    while (n && n !== body) {
       if (n instanceof HTMLTableRowElement) return n;
       n = n.parentNode;
     }
     return null;
   };
 
-  const insertRow = useCallback((kind: 'normal' | 'a_retenir' | 'piege' | 'mnemo') => {
+  const insertRow = useCallback((kind: keyof typeof ROW_TEMPLATES) => {
+    const d = doc();
+    if (!d) return;
     const row = currentRow();
     const html = ROW_TEMPLATES[kind];
-    if (row && row.parentElement) {
+    if (row?.parentElement) {
       row.insertAdjacentHTML('afterend', html);
     } else {
-      // Pas de tableau ciblé : on insère un mini-tableau autonome au curseur.
-      paperRef.current?.focus();
-      document.execCommand('insertHTML', false,
+      d.body.focus();
+      d.execCommand('insertHTML', false,
         `<table class="fiche-table"><colgroup><col class="ft-col-concept"/><col class="ft-col-detail"/></colgroup><tbody>${html}</tbody></table>`);
     }
-    scheduleSave();
-  }, [scheduleSave]);
+    scheduleSave(); fitHeight();
+  }, [fitHeight, scheduleSave]);
 
   const deleteRow = useCallback(() => {
     const row = currentRow();
     if (!row) { setMsg('Place le curseur dans la ligne à supprimer.'); return; }
-    if (row.closest('thead')) { setMsg('Cette ligne d’en-tête ne peut pas être supprimée ici.'); return; }
+    if (row.closest('thead')) { setMsg('Cette ligne d’en-tête ne peut pas être supprimée.'); return; }
     if (!window.confirm('Supprimer cette ligne ?')) return;
     row.remove();
-    scheduleSave();
-  }, [scheduleSave]);
+    scheduleSave(); fitHeight();
+  }, [fitHeight, scheduleSave]);
 
-  // ── Publication / aperçu PDF ─────────────────────────────────────────────
+  // ── Publication / aperçu ─────────────────────────────────────────────────
   async function renderPdf(savePdf: boolean) {
     const setBusy = savePdf ? setPublishing : setPreviewing;
     setBusy(true); setMsg(null);
@@ -199,7 +218,7 @@ export function FicheWysiwygEditor({
         <Div />
         <Grp>
           {COLORS.map((c) => (
-            <button key={c.value} type="button" title={c.label} onClick={() => setColor(c.value)}
+            <button key={c.value} type="button" title={c.label} onMouseDown={(e) => e.preventDefault()} onClick={() => setColor(c.value)}
               className="h-6 w-6 rounded-full border border-(--color-border)" style={{ background: c.value }} />
           ))}
         </Grp>
@@ -218,7 +237,6 @@ export function FicheWysiwygEditor({
         <Grp>
           <Tb onClick={insertImage} title="Insérer une image"><ImageIcon className="h-4 w-4" /></Tb>
         </Grp>
-        {/* Marqueurs charte ★ ◆ ⚠ */}
         <Div />
         <Grp>
           <Tb onClick={() => exec('insertText', '★ ')} title="Marqueur ★ (déjà tombé)"><Star className="h-4 w-4" /></Tb>
@@ -227,7 +245,7 @@ export function FicheWysiwygEditor({
         </Grp>
       </div>
 
-      {/* Barre « structure » */}
+      {/* Barre structure */}
       <div className="flex flex-wrap items-center gap-2 border-b border-(--color-border) bg-(--color-sand-50) px-3 py-1.5 text-xs">
         <span className="font-semibold text-(--color-ink-soft)">Structure :</span>
         <TxtBtn onClick={() => insertRow('normal')} icon={<Plus className="h-3.5 w-3.5" />}>Ligne concept/détail</TxtBtn>
@@ -240,26 +258,31 @@ export function FicheWysiwygEditor({
         </span>
       </div>
 
-      {/* Surface d'édition = rendu réel de la fiche (A4) */}
+      {/* Surface = iframe isolée (rendu réel de la fiche) */}
       <div className="flex-1 overflow-y-auto py-6">
-        <div
-          ref={paperRef}
-          contentEditable
-          suppressContentEditableWarning
-          spellCheck
-          onInput={scheduleSave}
-          className="fiche-paper mx-auto bg-white shadow-(--shadow-lifted) outline-none"
+        <iframe
+          ref={frameRef}
+          title="Aperçu éditable de la fiche"
+          onLoad={onFrameLoad}
+          srcDoc={srcDoc}
+          className="mx-auto block w-[210mm] max-w-full border-0 bg-white shadow-(--shadow-lifted)"
         />
       </div>
-
-      <style>{ficheCss('/fonts/fiches')}</style>
-      <style>{EDITOR_OVERRIDES}</style>
     </div>
   );
 }
 
-/* ─────────────────────────── templates de lignes ────────────────────────── */
-const ROW_TEMPLATES: Record<'normal' | 'a_retenir' | 'piege' | 'mnemo', string> = {
+/* ─────────────────────────── construction iframe ─────────────────────────── */
+function buildSrcDoc(initialHtml: string): string {
+  const css = ficheCss('/fonts/fiches');
+  return (
+    `<!doctype html><html lang="fr"><head><meta charset="utf-8"/>` +
+    `<style>${css}</style><style>${IFRAME_OVERRIDES}</style></head>` +
+    `<body contenteditable="true" spellcheck="true">${normalizeInbound(initialHtml)}</body></html>`
+  );
+}
+
+const ROW_TEMPLATES = {
   normal:
     '<tr><td class="ft-concept">Concept</td><td class="ft-detail content"><p>Détail…</p></td></tr>',
   a_retenir:
@@ -268,26 +291,36 @@ const ROW_TEMPLATES: Record<'normal' | 'a_retenir' | 'piege' | 'mnemo', string> 
     '<tr class="ft-reflexe ft-reflexe--piege"><td colspan="2"><span class="ft-reflexe-label">Piège</span><span class="ft-reflexe-body content"><p>…</p></span></td></tr>',
   mnemo:
     '<tr class="ft-reflexe ft-reflexe--mnemo"><td colspan="2"><span class="ft-reflexe-label">Moyen mnémotechnique</span><span class="ft-reflexe-body content"><p>…</p></span></td></tr>',
-};
+} as const;
 
-/* ───────────────────────────── helpers HTML ─────────────────────────────── */
+// Surcharges écran (dans l'iframe uniquement) : on simule les marges de page,
+// on masque la page de garde (auto-générée, non éditable ici) et le filigrane.
+const IFRAME_OVERRIDES = `
+html, body { background: #fff; }
+body { padding: 16mm 18mm 20mm 18mm; box-sizing: border-box; }
+.cover, .page-watermark, .string-source { display: none !important; }
+.partie-page--first { break-before: auto; }
+td:hover { box-shadow: inset 0 0 0 1px rgba(28,46,73,0.15); }
+:focus { outline: none; }
+`;
+
+/* ───────────────────────────── helpers ──────────────────────────────────── */
 function escapeAttr(s: string): string {
   return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-/** Nettoie le HTML entrant : si c'est un document complet (généré par le
- *  pipeline Python), on n'en garde que le corps ; on retire le filigrane et
- *  les sources de chaîne (artefacts d'impression inutiles à l'écran). */
+/** Si l'HTML reçu est un document complet (pipeline Python), on n'en garde que
+ *  le corps ; on retire un éventuel <style> inline (la charte est fournie à
+ *  part). */
 function normalizeInbound(html: string): string {
   let body = html;
   const m = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   if (m) body = m[1];
-  // Retire un éventuel <style> inline (la charte est fournie séparément).
   body = body.replace(/<style[\s\S]*?<\/style>/gi, '');
-  return body.trim() || '<p></p>';
+  return body.trim() || '<p>Commencez à rédiger la fiche…</p>';
 }
 
-/* ───────────────────────────── sous-composants UI ───────────────────────── */
+/* ───────────────────────────── UI ────────────────────────────────────────── */
 function Grp({ children }: { children: React.ReactNode }) {
   return <div className="flex items-center gap-0.5">{children}</div>;
 }
@@ -330,25 +363,3 @@ function SaveBadge({ state }: { state: SaveState }) {
   const s = map[state];
   return s ? <span className={`text-xs font-semibold ${s.c}`}>{s.t}</span> : null;
 }
-
-/* ──────────────────────── overrides CSS éditeur (écran) ──────────────────── */
-// La charte est conçue pour l'impression A4. À l'écran, on neutralise les
-// règles plein-page et on simule la page (largeur A4 + marges + ombre), sans
-// jamais toucher au style du CONTENU (tableaux, encadrés, puces, figures…),
-// pour garantir « ce que je vois = le PDF ».
-const EDITOR_OVERRIDES = `
-.fiche-paper {
-  width: 210mm;
-  min-height: 297mm;
-  padding: 18mm 18mm 22mm 18mm;
-  box-sizing: border-box;
-}
-.fiche-paper .page-watermark { display: none; }
-.fiche-paper .string-source { display: none; }
-/* La page de garde garde son design mais n'occupe pas une page entière à l'écran. */
-.fiche-paper .cover { height: auto; min-height: 0; page-break-after: unset; margin-bottom: 8mm; }
-.fiche-paper [contenteditable] { outline: none; }
-.fiche-paper:focus { outline: none; }
-/* Repère visuel discret de la cellule survolée (aide à l'édition). */
-.fiche-paper td:hover { box-shadow: inset 0 0 0 1px rgba(28,46,73,0.18); }
-`;
