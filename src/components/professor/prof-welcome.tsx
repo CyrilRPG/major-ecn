@@ -7,6 +7,7 @@ import { iconFromKey } from '@/lib/icons';
 import type { Profile } from '@/lib/auth/get-profile';
 import type { NavCollege } from '@/lib/data/navigator';
 import { ProfDocumentUpload } from '@/components/professor/prof-document-upload';
+import { ProfTutorialPopup } from '@/components/professor/prof-tutorial-popup';
 
 /**
  * Page d'accueil dédiée aux professeurs.
@@ -34,6 +35,7 @@ export function ProfWelcome({
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <ProfTutorialPopup />
       {missing.length > 0 && (
         <div className="mb-6 flex flex-wrap items-start gap-3 rounded-2xl border border-[#B26A00]/30 bg-[#FEF3E2] p-4 sm:p-5">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#B26A00]" />
