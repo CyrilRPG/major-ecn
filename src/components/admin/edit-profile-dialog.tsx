@@ -16,6 +16,7 @@ import {
   PERMISSION_LEVELS, PERMISSION_LEVEL_LABEL,
   type ContentType, type PermissionLevel,
 } from '@/lib/schemas/professor';
+import { ProfDocumentUpload } from '@/components/professor/prof-document-upload';
 
 export type EditProfileFields = {
   id: string;
@@ -87,9 +88,6 @@ export function EditProfileDialog({
   const [phone, setPhone] = useState(profile.phone ?? '');
   const [address, setAddress] = useState(profile.address ?? '');
   const [pseudo, setPseudo] = useState(profile.pseudo ?? '');
-  const [cvUrl, setCvUrl] = useState(profile.cv_url ?? '');
-  const [certifUrl, setCertifUrl] = useState(profile.certificat_scolarite_url ?? '');
-  const [carteProUrl, setCarteProUrl] = useState(profile.carte_pro_url ?? '');
 
   // Spécialités & accès (professeurs uniquement)
   const showScope = role === 'professor' && !!professorScope;
@@ -120,7 +118,8 @@ export function EditProfileDialog({
 
   const displayName = `${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || profile.email || (role === 'professor' ? 'professeur' : 'élève');
   const dossierComplet = role === 'professor'
-    ? Boolean(firstName && lastName && email && phone && address && (cvUrl || certifUrl || carteProUrl))
+    ? Boolean(firstName && lastName && email && phone && address
+        && (profile.cv_url || profile.certificat_scolarite_url || profile.carte_pro_url))
     : Boolean(firstName && lastName && email);
 
   const submit = () => {
@@ -138,9 +137,6 @@ export function EditProfileDialog({
           phone,
           address,
           pseudo,
-          cv_url: cvUrl,
-          certificat_scolarite_url: certifUrl,
-          carte_pro_url: carteProUrl,
         }),
       });
       if (!res.ok) {
@@ -211,13 +207,15 @@ export function EditProfileDialog({
           {role === 'professor' && (
             <Section title="Documents" icon={<FileText className="h-4 w-4" />}>
               <p className="text-xs text-(--color-ink-soft)">
-                Collez l&rsquo;URL du document (PDF) hébergé sur le bucket admin. Le téléversement direct
-                arrive prochainement.
+                Téléversez directement les documents (PDF ou image). Stockage privé, accessible à
+                l&rsquo;admin et au professeur concerné.
               </p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <Field label="CV (PDF)" full><Input value={cvUrl} onChange={(e) => setCvUrl(e.target.value)} placeholder="https://…/cv.pdf" /></Field>
-                <Field label="Certificat de scolarité (internes)"><Input value={certifUrl} onChange={(e) => setCertifUrl(e.target.value)} placeholder="https://…/certif.pdf" /></Field>
-                <Field label="Carte pro / justificatif d'exercice"><Input value={carteProUrl} onChange={(e) => setCarteProUrl(e.target.value)} placeholder="https://…/carte.pdf" /></Field>
+                <div className="sm:col-span-2">
+                  <ProfDocumentUpload kind="cv" label="CV" targetUserId={profile.id} currentValue={profile.cv_url} />
+                </div>
+                <ProfDocumentUpload kind="certificat" label="Certificat de scolarité (internes)" targetUserId={profile.id} currentValue={profile.certificat_scolarite_url} />
+                <ProfDocumentUpload kind="carte_pro" label="Carte pro / justificatif" targetUserId={profile.id} currentValue={profile.carte_pro_url} />
               </div>
             </Section>
           )}

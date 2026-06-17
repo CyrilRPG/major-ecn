@@ -6,6 +6,7 @@ import {
 import { iconFromKey } from '@/lib/icons';
 import type { Profile } from '@/lib/auth/get-profile';
 import type { NavCollege } from '@/lib/data/navigator';
+import { ProfDocumentUpload } from '@/components/professor/prof-document-upload';
 
 /**
  * Page d'accueil dédiée aux professeurs.
@@ -82,6 +83,20 @@ export function ProfWelcome({
           </div>
         </div>
       </header>
+
+      {/* ───── Mes documents administratifs ───── */}
+      <section className="mb-8 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
+        <div className="mb-3 flex items-center gap-2">
+          <FileText className="h-4 w-4 text-(--color-ink-soft)" />
+          <h2 className="text-[15px] font-bold text-(--color-ink)">Mes documents</h2>
+          <span className="text-[12px] text-(--color-ink-muted)">— téléversez directement, stockage privé</span>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <ProfDocumentUpload kind="cv" label="CV" targetUserId={profile.id} currentValue={profile.cv_url} />
+          <ProfDocumentUpload kind="certificat" label="Certificat de scolarité" targetUserId={profile.id} currentValue={profile.certificat_scolarite_url} />
+          <ProfDocumentUpload kind="carte_pro" label="Carte pro / justificatif" targetUserId={profile.id} currentValue={profile.carte_pro_url} />
+        </div>
+      </section>
 
       {/* ───── Forum + Accès rapide ───── */}
       <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
