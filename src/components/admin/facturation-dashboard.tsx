@@ -229,7 +229,7 @@ export function FacturationDashboard({
                   {pieData.map((d) => <Cell key={d.key} fill={d.color} />)}
                 </Pie>
                 <Tooltip
-                  formatter={(v: number, n) => [eur(v), n as string]}
+                  formatter={(v, n) => [eur(Number(v) || 0), String(n)]}
                   contentStyle={{ borderRadius: 12, border: '1px solid #ECEEF1', fontSize: 12 }}
                 />
               </PieChart>
@@ -257,7 +257,7 @@ export function FacturationDashboard({
               <BarChart data={barData} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
                 <XAxis type="number" tickFormatter={(v) => eur0(v)} tick={{ fontSize: 11, fill: '#9AA1AE' }} axisLine={false} tickLine={false} />
                 <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
-                <Tooltip formatter={(v: number) => [eur(v), 'Coût']} cursor={{ fill: 'rgba(0,0,0,0.04)' }}
+                <Tooltip formatter={(v) => [eur(Number(v) || 0), 'Coût']} cursor={{ fill: 'rgba(0,0,0,0.04)' }}
                   contentStyle={{ borderRadius: 12, border: '1px solid #ECEEF1', fontSize: 12 }} />
                 <Bar dataKey="value" radius={[0, 6, 6, 0]} fill="#E4002B" maxBarSize={26} />
               </BarChart>
