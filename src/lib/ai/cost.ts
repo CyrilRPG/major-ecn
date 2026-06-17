@@ -27,3 +27,24 @@ export const PRICE_EUR = {
   flashcards: 5,
   qcm: 3,
 } as const;
+
+/**
+ * Tarification de la facturation IA, calculée en direct sur le contenu
+ * réellement disponible (et non par génération) :
+ *  - tous les QCM + DP d'un cours        → 3 €
+ *  - une fiche                            → 10 €
+ *  - toutes les flashcards d'un cours     → 5 €
+ *  - une réponse de l'assistant IA        → 0,10 €
+ * Règle Découverte : pour les cours du collège Découverte, on ne facture que
+ * la fiche (QCM / flashcards non comptés).
+ */
+export const BILLING_EUR = {
+  qcm_per_course: 3,
+  fiche: 10,
+  flashcards_per_course: 5,
+  ai_response: 0.1,
+} as const;
+
+/** Identifiant du collège « Découverte » (facturation : fiche seule). */
+export const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
+
