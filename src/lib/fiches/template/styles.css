@@ -490,9 +490,13 @@ tr { break-inside: avoid; }
   padding-left: 3mm;
 }
 .content li { margin: 1.3mm 0; }
+/* Puces par défaut : niveau 1 = disque plein, niveau 2+ = cercle creux
+   (contour, intérieur blanc). Jamais de carré (on force « circle » au-delà
+   du niveau 2). Marqueur en bleu nuit ≈ noir. */
+.content ul { list-style-type: disc; }
+.content ul ul { list-style-type: circle; }
+.content ul ul ul { list-style-type: circle; }
 .content li::marker { color: var(--navy); }
-.content ul ul li::marker { color: var(--gold); }
-.content ul ul ul li::marker { color: var(--pearl); }
 
 .content a { color: var(--navy); text-decoration: none; }
 .content code {
@@ -533,23 +537,32 @@ thead { display: table-header-group; }
 /* La figure est dans la cellule de la dernière ligne : jamais seule, jamais
    coupée (la ligne entière, indivisible, se déplace si besoin). */
 .ft-figure {
-  margin: 3mm 0 1mm 0;
+  margin: 2mm 0;
   text-align: center;
 }
 .ft-figure img {
   max-width: 100%;
-  max-height: 62mm;
   border: 0.8pt solid var(--line);
   padding: 1.4mm;
   background: #fff;
 }
-.ft-figure figcaption {
-  font-family: var(--serif-soft);
-  font-style: italic;
-  font-size: 9pt;
-  color: #6B7280;
-  margin-top: 1.8mm;
+
+/* Petites figures (max(w, h) < 900 px) : flottent à droite (3ᵉ colonne),
+   le texte de la cellule s'écoule à leur gauche et remplit l'espace. */
+.ft-figure--small {
+  float: right;
+  width: 50mm;
+  margin: 0.5mm 0 2.5mm 5mm;
 }
+.ft-figure--small img { max-height: 58mm; }
+
+/* Grandes figures : pleine largeur, sous le texte (jamais flottées). */
+.ft-figure--large {
+  clear: both;
+  width: 100%;
+  margin: 3.5mm 0 1mm 0;
+}
+.ft-figure--large img { max-height: 95mm; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    4. SYNTHÈSE & CHIFFRES-CLÉS
