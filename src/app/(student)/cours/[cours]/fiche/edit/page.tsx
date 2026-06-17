@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { FicheHtmlEditor } from '@/components/fiches/fiche-html-editor';
+import { FicheWysiwygEditor } from '@/components/fiches/fiche-wysiwyg-editor';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +55,7 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
     : `<h1>${escapeHtml(nomCours)}</h1><p></p>`;
 
   return (
-    <FicheHtmlEditor
+    <FicheWysiwygEditor
       coursId={coursId}
       initialHtml={initialHtml}
       nomCours={nomCours}

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDropzone } from '@/components/admin/content/file-dropzone';
+import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
@@ -135,24 +136,21 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           <TabsContent value="fiche">
             <Card>
               <CardHeader>
-                <CardTitle>Fiche de cours (PDF)</CardTitle>
+                <CardTitle>Fiche de cours (HTML)</CardTitle>
                 <CardDescription>
                   {can.fiche.write
-                    ? 'Le résumé visible par les étudiants côté lecteur de fiche.'
+                    ? 'Déposez la fiche en HTML : elle est convertie automatiquement en PDF (charte Major ECN) pour les étudiants. Vous pouvez ensuite l’éditer visuellement.'
                     : 'Lecture seule — vous pouvez consulter mais pas modifier la fiche.'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {can.fiche.write ? (
-                  <FileDropzone
-                    bucket="fiches"
-                    table="fiches"
+                  <FicheHtmlUpload
                     coursId={coursId}
-                    rowId={fiche?.id}
-                    existingPath={fiche?.storage_path}
-                    accept="application/pdf"
-                    label={fiche?.storage_path ? 'PDF téléversé, le remplacer' : 'Glisse un PDF ici'}
-                    hint={fiche?.pages ? `${fiche.pages} pages déclarées.` : 'Le nombre de pages est lu automatiquement.'}
+                    nomCours={c.titre ?? 'Fiche'}
+                    annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
+                    existing={!!fiche?.storage_path}
+                    pages={fiche?.pages}
                   />
                 ) : (
                   <p className="text-sm text-(--color-ink-soft)">

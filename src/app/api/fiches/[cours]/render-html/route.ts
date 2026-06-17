@@ -117,6 +117,19 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
     await page.evaluate(
       () => (document as unknown as { fonts: { ready: Promise<unknown> } }).fonts.ready,
     );
+    // La fiche éclair doit tenir sur UNE page : on la réduit via `zoom` (qui,
+    // contrairement à `transform`, réduit aussi la hauteur de mise en page).
+    await page.evaluate((margins: number[]) => {
+      const [topMm, bottomMm] = margins;
+      const mmToPx = (mm: number) => (mm * 96) / 25.4;
+      const avail = mmToPx(297 - topMm - bottomMm) - 4;
+      document.querySelectorAll('.eclair-card').forEach((el) => {
+        const card = el as HTMLElement;
+        card.style.zoom = '1';
+        const h = card.getBoundingClientRect().height;
+        if (h > avail) card.style.zoom = String(Math.max(0.5, avail / h));
+      });
+    }, [MARGIN_MM.top, MARGIN_MM.bottom]);
     const out = await page.pdf({
       format: 'A4',
       printBackground: true,
