@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { VideoPlayer } from '@/components/student/video-player';
+import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
+import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursVideoPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -18,7 +20,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
     .select(`
       id, titre, matiere_id,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
-      videos(id, storage_path)
+      videos(id, storage_path, bunny_video_id)
     `)
     .eq('id', coursId)
     .maybeSingle();
@@ -26,16 +28,21 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
 
-  const video = c.videos?.[0];
+  const video = c.videos?.[0] as { storage_path?: string | null; bunny_video_id?: string | null } | undefined;
+  // Priorité à Bunny Stream si une vidéo y est associée ; sinon bucket Supabase.
+  const bunnyId = video?.bunny_video_id ?? null;
+  const embedUrl = bunnyId && getBunnyConfig() ? bunnyEmbedUrl(bunnyId) : null;
   let signedUrl: string | null = null;
-  if (video?.storage_path) {
+  if (!bunnyId && video?.storage_path) {
     const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
     signedUrl = data?.signedUrl ?? null;
   }
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
-      {signedUrl ? (
+      {embedUrl ? (
+        <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} />
+      ) : signedUrl ? (
         <VideoPlayer src={signedUrl} coursId={coursId} />
       ) : (
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">

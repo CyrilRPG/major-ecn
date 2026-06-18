@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDropzone } from '@/components/admin/content/file-dropzone';
+import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
 import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
@@ -37,7 +38,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     .select(`
       id, titre, description, matiere_id,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
-      videos(id, storage_path),
+      videos(id, storage_path, bunny_video_id),
       fiches(id, storage_path, pages),
       qcm_series(id, type, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
@@ -110,21 +111,40 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                     : 'Lecture seule — vous pouvez consulter mais pas modifier la vidéo.'}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-5">
                 {can.video.write ? (
-                  <FileDropzone
-                    bucket="videos"
-                    table="videos"
-                    coursId={coursId}
-                    rowId={video?.id}
-                    existingPath={video?.storage_path}
-                    accept="video/mp4,video/webm,video/ogg"
-                    label={video?.storage_path ? 'Vidéo téléversée, la remplacer' : 'Glisse une vidéo MP4 ici'}
-                    hint="Format conseillé : H.264 / AAC, 1080p."
-                  />
+                  <>
+                    {/* Hébergement recommandé : Bunny Stream (CDN, streaming adaptatif). */}
+                    <div>
+                      <p className="mb-2 text-[13px] font-semibold text-(--color-ink)">Bunny Stream (recommandé)</p>
+                      <BunnyVideoUpload
+                        coursId={coursId}
+                        defaultTitle={c.titre ?? 'Vidéo du cours'}
+                        existingBunnyId={(video as { bunny_video_id?: string | null } | undefined)?.bunny_video_id ?? null}
+                      />
+                    </div>
+                    {/* Repli : hébergement direct dans le bucket Supabase. */}
+                    <details className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
+                      <summary className="cursor-pointer text-[12.5px] font-semibold text-(--color-ink-soft)">
+                        Alternative : héberger sur Supabase (fichier direct)
+                      </summary>
+                      <div className="pt-3">
+                        <FileDropzone
+                          bucket="videos"
+                          table="videos"
+                          coursId={coursId}
+                          rowId={video?.id}
+                          existingPath={video?.storage_path}
+                          accept="video/mp4,video/webm,video/ogg"
+                          label={video?.storage_path ? 'Vidéo téléversée, la remplacer' : 'Glisse une vidéo MP4 ici'}
+                          hint="Format conseillé : H.264 / AAC, 1080p."
+                        />
+                      </div>
+                    </details>
+                  </>
                 ) : (
                   <p className="text-sm text-(--color-ink-soft)">
-                    {video?.storage_path ? 'Vidéo présente.' : 'Aucune vidéo téléversée.'}
+                    {(video as { bunny_video_id?: string | null } | undefined)?.bunny_video_id || video?.storage_path ? 'Vidéo présente.' : 'Aucune vidéo téléversée.'}
                   </p>
                 )}
               </CardContent>
