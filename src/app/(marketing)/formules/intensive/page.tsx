@@ -1,6 +1,7 @@
 import { FormulePageContent } from '@/components/marketing/formule-page';
 
 export const metadata = {
+  alternates: { canonical: '/formules/intensive' },
   title: 'Formule Intensive - Major ECN',
   description: 'Finalisez votre preparation dans les derniers mois avant les EVC. Revisions guidees et corrections detaillees. 995 euros.',
 };

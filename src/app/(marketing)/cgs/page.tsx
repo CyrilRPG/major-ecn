@@ -3,6 +3,7 @@ import {
 } from '@/components/marketing/legal-shell';
 
 export const metadata = {
+  alternates: { canonical: '/cgs' },
   title: 'Conditions Générales de Service — Major ECN',
   description:
     "Conditions Générales de Service de Major ECN (PAE Formation) : objet des Offres, accès à la Plateforme, Coaching, Channel, durée, prix, paiement, droit de rétractation, propriété intellectuelle, responsabilité, médiation.",

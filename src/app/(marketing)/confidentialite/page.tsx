@@ -3,6 +3,7 @@ import {
 } from '@/components/marketing/legal-shell';
 
 export const metadata = {
+  alternates: { canonical: '/confidentialite' },
   title: 'Politique de confidentialité — Major ECN',
   description:
     "Politique de confidentialité de la plateforme Major ECN (PAE Formation) : informations collectées, conservation, utilisation, droits RGPD, sécurité.",

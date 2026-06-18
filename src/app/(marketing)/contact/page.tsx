@@ -9,6 +9,7 @@ import { ContactForm } from '@/components/marketing/contact-form';
 import { FAQContactSection } from '@/components/marketing/manus-sections';
 
 export const metadata = {
+  alternates: { canonical: '/contact' },
   title: 'Nous contacter — Major ECN',
   description:
     "Besoin d'informations sur votre préparation EVC (PAE) ? L'équipe Major ECN vous répond sous 24 h ouvrées : choix de la formule, spécialité, suivi personnalisé.",

@@ -3,6 +3,7 @@ import {
 } from '@/components/marketing/legal-shell';
 
 export const metadata = {
+  alternates: { canonical: '/cgu' },
   title: 'Conditions Générales d’Utilisation — Major ECN',
   description:
     "Conditions Générales d’Utilisation de la plateforme Major ECN (PAE Formation) — accès au site, obligations des utilisateurs, propriété intellectuelle, données personnelles, médiation.",

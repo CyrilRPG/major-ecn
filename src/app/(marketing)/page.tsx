@@ -7,6 +7,7 @@ import {
 } from '@/components/marketing/extra-sections';
 
 export const metadata = {
+  alternates: { canonical: '/' },
   title: 'Major ECN — Préparation EVC (PAE) pour médecins étrangers',
   description:
     'Plateforme de préparation aux Épreuves de Vérification des Connaissances (EVC) pour médecins étrangers dans le cadre de la Procédure d’Autorisation d’Exercice (PAE). toutes les spécialités, 9 000+ médecins accompagnés, 15 ans d’expérience.',

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 export const metadata = {
+  alternates: { canonical: '/inscription' },
   title: 'Espace découverte — Major ECN',
   description: 'Accédez à un aperçu concret de la plateforme Major ECN, sans carte bancaire.',
 };

@@ -3,6 +3,7 @@ import {
 } from '@/components/marketing/legal-shell';
 
 export const metadata = {
+  alternates: { canonical: '/conditions-particulieres' },
   title: 'Conditions Particulières — Major ECN',
   description:
     "Modèle des Conditions Particulières — Major ECN (PAE Formation). Soumises aux Conditions Générales de Service. Désignation du Client, Offre choisie, date d'effet, exécution immédiate et renonciation au droit de rétractation.",

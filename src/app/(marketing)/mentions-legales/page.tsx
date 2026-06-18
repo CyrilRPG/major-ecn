@@ -3,6 +3,7 @@ import {
 } from '@/components/marketing/legal-shell';
 
 export const metadata = {
+  alternates: { canonical: '/mentions-legales' },
   title: 'Mentions légales — Major ECN',
   description:
     "Mentions légales du site major-ecn.fr : éditeur, hébergeur, directeur de publication et coordonnées de contact.",

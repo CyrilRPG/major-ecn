@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getArticleBySlug, BLOG_ARTICLES } from '@/lib/data/blog-articles';
+import { getArticleBySlug, BLOG_ARTICLES, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
+import { JsonLd, articleSchema, breadcrumbSchema } from '@/components/seo/json-ld';
 import { ArticleRemuneration } from '@/components/marketing/blog/articles/article-remuneration';
 import { ArticleStructuresPcc } from '@/components/marketing/blog/articles/article-structures-pcc';
 import { ArticleDefisEvc } from '@/components/marketing/blog/articles/article-defis-evc';
@@ -19,6 +20,13 @@ export async function generateMetadata({
   return {
     title: `${a.title} — Blog Major ECN`,
     description: a.excerpt,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title: a.title,
+      description: a.excerpt,
+      type: 'article',
+      url: `/blog/${slug}`,
+    },
   };
 }
 
@@ -26,11 +34,7 @@ export function generateStaticParams() {
   return BLOG_ARTICLES.map((a) => ({ slug: a.slug }));
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const article = getArticleBySlug(slug);
-  if (!article) notFound();
-
+function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArticleBySlug>>) {
   switch (slug) {
     case 'remuneration-medecin-etranger-france':
       return <ArticleRemuneration article={article} />;
@@ -49,4 +53,30 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     default:
       return <ArticleGeneric article={article} />;
   }
+}
+
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = getArticleBySlug(slug);
+  if (!article) notFound();
+
+  return (
+    <>
+      <JsonLd data={[
+        articleSchema({
+          title: article.title,
+          description: article.excerpt,
+          slug,
+          image: BLOG_CATEGORY_IMAGE[article.category],
+          datePublished: article.publishedAt,
+        }),
+        breadcrumbSchema([
+          { name: 'Accueil', path: '/' },
+          { name: 'Blog', path: '/blog' },
+          { name: article.title, path: `/blog/${slug}` },
+        ]),
+      ]} />
+      {articleBody(slug, article)}
+    </>
+  );
 }
