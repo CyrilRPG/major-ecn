@@ -33,6 +33,8 @@ export type EditStudentTarget = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
+  address?: string | null;
+  pseudo?: string | null;
   permission_scope: unknown;
   can_download?: boolean | null;
 };
@@ -50,6 +52,10 @@ export function EditStudentDialog({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
   const [pending, start] = useTransition();
+  // Champs d'identité (sauvegardés via /api/admin/update-profile).
+  const [email, setEmail] = useState(student.email ?? '');
+  const [address, setAddress] = useState(student.address ?? '');
+  const [pseudo, setPseudo] = useState(student.pseudo ?? '');
 
   const initialScope = parseScope(student.permission_scope);
   // Reprend la liste cours[] si elle existe sur l'ancien scope.
@@ -65,7 +71,7 @@ export function EditStudentDialog({
     watch,
     setValue,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<UpdateStudentInput>({
     resolver: zodResolver(UpdateStudentSchema),
     defaultValues: {
@@ -104,6 +110,26 @@ export function EditStudentDialog({
   const onSubmit = (data: UpdateStudentInput) => {
     setSubmitError(null);
     start(async () => {
+      // 1) Identité (nom, prénom, email, téléphone, adresse, pseudo).
+      const pRes = await fetch('/api/admin/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: data.id,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          email,
+          phone: data.phone ?? '',
+          address,
+          pseudo,
+        }),
+      });
+      if (!pRes.ok) {
+        const j = (await pRes.json().catch(() => ({}))) as { error?: string };
+        setSubmitError(j.error ?? "Erreur lors de la mise à jour de l'identité.");
+        return;
+      }
+      // 2) Accès (formule, collèges, cours) + permission de téléchargement.
       const res = await fetch('/api/admin/update-student', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -111,7 +137,7 @@ export function EditStudentDialog({
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
-        setSubmitError(j.error ?? 'Erreur lors de la mise à jour.');
+        setSubmitError(j.error ?? 'Identité enregistrée, mais erreur sur les accès.');
         return;
       }
       setOpen(false);
@@ -145,9 +171,9 @@ export function EditStudentDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register('id')} />
 
-          <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2.5 text-xs text-(--color-ink-soft)">
-            Email <span className="font-mono text-(--color-ink)">{student.email}</span>{' '}
-            <span className="opacity-70">(non modifiable depuis cet écran)</span>
+          <div className="space-y-1.5">
+            <Label htmlFor="edit-email">Email</Label>
+            <Input id="edit-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom.nom@exemple.com" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -163,9 +189,20 @@ export function EditStudentDialog({
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-phone">Téléphone</Label>
+              <Input id="edit-phone" {...register('phone')} placeholder="06 12 34 56 78" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-pseudo">Pseudo (forum)</Label>
+              <Input id="edit-pseudo" value={pseudo} onChange={(e) => setPseudo(e.target.value)} placeholder="prenom.nom" />
+            </div>
+          </div>
+
           <div className="space-y-1.5">
-            <Label htmlFor="edit-phone">Téléphone</Label>
-            <Input id="edit-phone" {...register('phone')} placeholder="06 12 34 56 78" />
+            <Label htmlFor="edit-address">Adresse postale</Label>
+            <Input id="edit-address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="N° rue, code postal, ville" />
           </div>
 
           <div className="space-y-2">
@@ -314,7 +351,7 @@ export function EditStudentDialog({
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={pending}>Annuler</Button>
-            <Button type="submit" disabled={pending || !isDirty}>
+            <Button type="submit" disabled={pending}>
               {pending ? <Loader2 className="animate-spin" /> : <Save />}
               Enregistrer
             </Button>

@@ -14,6 +14,7 @@ import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
+import { VignetteEditorDialog } from '@/components/admin/content/vignette-editor-dialog';
 
 type Question = {
   id: string;
@@ -56,6 +57,7 @@ export function QcmSession({
   editable?: boolean;
 }) {
   const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
+  const [editingVignette, setEditingVignette] = useState(false);
   const isTraining = mode === 'training';
   const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
@@ -241,6 +243,16 @@ export function QcmSession({
               {vignette ? 'Contexte clinique du dossier' : 'Pas de contexte clinique'}
             </span>
             <span className="flex items-center gap-2">
+              {editable && serieId && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setEditingVignette(true); }}
+                  className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white px-2 py-0.5 text-[11px] font-semibold text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-primary)"
+                  title="Modifier le contexte clinique (mode prof)"
+                >
+                  <Pencil className="h-3 w-3" /> Éditer
+                </button>
+              )}
               {vignette && (
                 <span className="text-[11px] font-medium text-(--color-primary-deep) underline-offset-2 group-open:no-underline group-[:not([open])]:underline">
                   <span className="group-open:hidden">Afficher</span>
@@ -288,7 +300,7 @@ export function QcmSession({
                   images: it.images ?? [],
                 })),
               })}
-              title="Modifier cette question et le contexte clinique (mode prof)"
+              title="Modifier cette question (mode prof)"
               className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-primary)"
             >
               <Pencil className="h-3 w-3" /> Éditer
@@ -389,15 +401,23 @@ export function QcmSession({
 
       {/* Dialog d'édition prof (vue étudiant → édition directe) */}
       {editable && serieId && (
-        <QcmQuestionEditor
-          open={!!editingQ}
-          onOpenChange={(v) => { if (!v) setEditingQ(null); }}
-          coursId={coursId}
-          serieId={serieId}
-          initial={editingQ}
-          vignette={vignette}
-          showVignette
-        />
+        <>
+          <QcmQuestionEditor
+            open={!!editingQ}
+            onOpenChange={(v) => { if (!v) setEditingQ(null); }}
+            coursId={coursId}
+            serieId={serieId}
+            initial={editingQ}
+          />
+          <VignetteEditorDialog
+            open={editingVignette}
+            onOpenChange={setEditingVignette}
+            coursId={coursId}
+            serieId={serieId}
+            initial={vignette}
+            onSaved={() => router.refresh()}
+          />
+        </>
       )}
     </div>
   );
