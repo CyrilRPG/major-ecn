@@ -2,9 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
+  },
+  // Tree-shaking ciblé des grosses librairies (icônes / animation / charts) :
+  // n'embarque que les symboles réellement importés → moins de JS livré.
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],
   },
   // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas
   // le binaire (téléchargé au cold-start depuis Github), mais on garde quand

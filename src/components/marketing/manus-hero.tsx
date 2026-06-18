@@ -140,8 +140,8 @@ export function ManusHero() {
 
           {/* ============ DROITE — aperçu plateforme (HTML) ============ */}
           <motion.div
-            initial={{ opacity: 0, x: 50, scale: 0.96 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
+            initial={{ x: 40, scale: 0.97 }}
+            animate={{ x: 0, scale: 1 }}
             transition={{ duration: 1.1, ease: 'easeOut', delay: 0.15 }}
             className="relative"
           >
