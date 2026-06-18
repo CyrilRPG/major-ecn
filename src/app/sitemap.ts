@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { BLOG_ARTICLES } from '@/lib/data/blog-articles';
 import { FEATURED_TESTIMONIES } from '@/lib/data/featured-testimonies';
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.fr').replace(/\/$/, '');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
 
 /** Pages vitrine statiques, avec priorité/fréquence indicatives pour le crawl. */
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [

@@ -13,7 +13,7 @@ export function JsonLd({ data }: { data: Record<string, unknown> | Record<string
   );
 }
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.fr').replace(/\/$/, '');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
 
 /** Organisation Major ECN (logo, réseaux, contact). */
 export function organizationSchema(): Record<string, unknown> {

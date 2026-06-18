@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://major-ecn.fr').replace(/\/$/, '');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
 
 /**
  * robots.txt — autorise le crawl du site vitrine, bloque l'application
