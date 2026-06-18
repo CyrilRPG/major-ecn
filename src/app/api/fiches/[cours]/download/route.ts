@@ -22,12 +22,19 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, first_name, last_name, email')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .select('role, first_name, last_name, email, can_download' as any)
     .eq('id', user.id)
     .maybeSingle();
-  if (!profile || (profile.role !== 'admin' && profile.role !== 'professor')) {
+  // Par défaut, seul l'admin télécharge. Un prof ou un élève (client) ne peut
+  // télécharger que si l'admin lui a explicitement accordé la permission
+  // (profiles.can_download = true).
+  const p = profile as ({ role?: string; first_name?: string; last_name?: string; email?: string; can_download?: boolean } | null);
+  const isAdmin = p?.role === 'admin';
+  const allowed = isAdmin || p?.can_download === true;
+  if (!p || !allowed) {
     return NextResponse.json(
-      { error: 'Téléchargement réservé aux administrateurs et professeurs' },
+      { error: 'Téléchargement non autorisé. Demandez l’accès à un administrateur.' },
       { status: 403 },
     );
   }
@@ -56,12 +63,13 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
   }
   let bytes: Uint8Array = new Uint8Array(await file.arrayBuffer());
 
-  // Professeur → watermark à son identité ; admin → original sans watermark.
-  if (profile.role === 'professor') {
+  // Admin → original sans filigrane. Tout autre utilisateur autorisé (prof ou
+  // élève) → PDF filigrané à son identité, pour la traçabilité.
+  if (!isAdmin) {
     bytes = await watermarkPdf(bytes, {
-      firstName: profile.first_name,
-      lastName: profile.last_name,
-      email: profile.email ?? user.email,
+      firstName: p.first_name,
+      lastName: p.last_name,
+      email: p.email ?? user.email,
     });
   }
 

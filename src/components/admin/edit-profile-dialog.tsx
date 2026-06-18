@@ -29,6 +29,7 @@ export type EditProfileFields = {
   cv_url: string | null;
   certificat_scolarite_url: string | null;
   carte_pro_url: string | null;
+  can_download?: boolean | null;
   created_at?: string;
 };
 
@@ -88,6 +89,7 @@ export function EditProfileDialog({
   const [phone, setPhone] = useState(profile.phone ?? '');
   const [address, setAddress] = useState(profile.address ?? '');
   const [pseudo, setPseudo] = useState(profile.pseudo ?? '');
+  const [canDownload, setCanDownload] = useState<boolean>(!!profile.can_download);
 
   // Spécialités & accès (professeurs uniquement)
   const showScope = role === 'professor' && !!professorScope;
@@ -137,6 +139,7 @@ export function EditProfileDialog({
           phone,
           address,
           pseudo,
+          can_download: canDownload,
         }),
       });
       if (!res.ok) {
@@ -202,6 +205,15 @@ export function EditProfileDialog({
               </Field>
               <Field label="Adresse postale" full><Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="N° rue, code postal, ville" /></Field>
             </div>
+            <label className="mt-3 flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
+              <Checkbox checked={canDownload} onCheckedChange={(v) => setCanDownload(!!v)} />
+              <span>
+                <span className="block text-sm font-semibold text-(--color-ink)">Autoriser le téléchargement des fichiers</span>
+                <span className="block text-[12px] text-(--color-ink-soft)">
+                  Désactivé par défaut. Si activé, {role === 'professor' ? 'ce professeur' : 'cet utilisateur'} peut télécharger les PDF (filigranés à son identité). L’admin télécharge toujours.
+                </span>
+              </span>
+            </label>
           </Section>
 
           {role === 'professor' && (

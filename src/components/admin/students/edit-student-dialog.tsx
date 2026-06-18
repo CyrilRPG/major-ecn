@@ -34,6 +34,7 @@ export type EditStudentTarget = {
   email: string | null;
   phone: string | null;
   permission_scope: unknown;
+  can_download?: boolean | null;
 };
 
 export function EditStudentDialog({
@@ -76,6 +77,7 @@ export function EditStudentDialog({
       permission_type: initialScope.type,
       colleges: initialScope.type === 'college' ? initialScope.colleges : [],
       cours: initialCours,
+      can_download: student.can_download ?? false,
     },
   });
 
@@ -287,6 +289,22 @@ export function EditStudentDialog({
               />
             </div>
           )}
+
+          <Controller
+            control={control}
+            name="can_download"
+            render={({ field }) => (
+              <label className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
+                <Checkbox checked={!!field.value} onCheckedChange={(v) => field.onChange(!!v)} />
+                <span>
+                  <span className="block text-sm font-semibold text-(--color-ink)">Autoriser le téléchargement des fichiers</span>
+                  <span className="block text-[12px] text-(--color-ink-soft)">
+                    Par défaut désactivé. Si activé, cet élève peut télécharger les PDF (filigranés à son identité).
+                  </span>
+                </span>
+              </label>
+            )}
+          />
 
           {submitError && (
             <p className="text-sm text-(--color-danger) bg-red-500/10 border border-(--color-danger)/30 rounded-lg px-3 py-2">

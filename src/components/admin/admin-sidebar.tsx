@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, CalendarDays, ClipboardList, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Receipt, ScrollText, Users } from 'lucide-react';
+import { BarChart3, CalendarDays, ClipboardList, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Receipt, ScrollText, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -25,6 +25,7 @@ const ALL_ITEMS: Item[] = [
   { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
   { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
   { href: '/admin/logs', label: 'Logs', Icon: ScrollText, adminOnly: true },
+  { href: '/accueil', label: 'Vue étudiant', Icon: Eye, adminOnly: true },
 ];
 
 type ProfScopeRaw = {
@@ -81,15 +82,8 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
             </Link>
           ))}
         </nav>
-        <div className="mt-auto space-y-1 border-t border-white/10 p-3">
-          <Link
-            href="/accueil"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <GraduationCap className="h-4 w-4" />
-            Vue étudiant
-          </Link>
-          <div className="flex justify-end px-1 pt-1">
+        <div className="mt-auto border-t border-white/10 p-3">
+          <div className="flex justify-end px-1">
             <UserMenu profile={profile} />
           </div>
         </div>

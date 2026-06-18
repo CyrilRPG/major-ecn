@@ -28,6 +28,7 @@ export const UpdateStudentSchema = z.object({
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
   cours: z.array(z.string()).optional(),
+  can_download: z.boolean().optional(),
 });
 
 export type AddStudentInput = z.infer<typeof AddStudentSchema>;

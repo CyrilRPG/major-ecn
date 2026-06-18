@@ -16,7 +16,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours } = parsed.data;
+  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours, can_download } = parsed.data;
 
   // Préserve les métadonnées d'inscription (signup, specialty_wish, espace_decouverte)
   // déjà stockées dans permission_scope : l'édition admin reconstruit le scope
@@ -47,7 +47,8 @@ export async function PATCH(req: Request) {
       last_name,
       phone: phone ?? null,
       permission_scope,
-    })
+      ...(can_download === undefined ? {} : { can_download }),
+    } as never)
     .eq('id', id);
 
   if (error) {

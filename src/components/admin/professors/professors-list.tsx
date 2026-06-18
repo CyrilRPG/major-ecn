@@ -105,6 +105,7 @@ export function ProfessorsList({
                         cv_url: p.cv_url,
                         certificat_scolarite_url: p.certificat_scolarite_url,
                         carte_pro_url: p.carte_pro_url,
+                        can_download: (p as { can_download?: boolean | null }).can_download ?? null,
                         created_at: p.created_at,
                       }}
                       professorScope={{ permission_scope: p.permission_scope, colleges, coursByCollege }}

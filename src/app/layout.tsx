@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AntiCopyShield } from '@/components/anti-copy-shield';
+import { CookieConsentBanner } from '@/components/cookie-consent-banner';
 import './globals.css';
 
 const sans = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </QueryProvider>
         </ThemeProvider>
         <AntiCopyShield />
+        <CookieConsentBanner />
       </body>
     </html>
   );

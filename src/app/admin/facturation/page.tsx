@@ -21,7 +21,7 @@ export default async function AdminFacturationPage() {
 
   const [coursRes, aiRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
-    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat'),
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
   ]);
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(

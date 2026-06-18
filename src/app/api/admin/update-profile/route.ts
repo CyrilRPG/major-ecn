@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as { userId?: string } & Record<string, unknown>;
   if (!body.userId) return NextResponse.json({ error: 'userId manquant' }, { status: 400 });
 
-  const patch: Record<string, string | null> = {};
+  const patch: Record<string, string | boolean | null> = {};
   for (const k of STRING_FIELDS) {
     const v = body[k];
     if (typeof v === 'string') {
@@ -28,6 +28,10 @@ export async function POST(req: Request) {
       if (trimmed.length > 500) return NextResponse.json({ error: `${k} trop long` }, { status: 400 });
       patch[k] = trimmed || null;
     }
+  }
+  // Permission de téléchargement (booléen) accordée par l'admin.
+  if (typeof body.can_download === 'boolean') {
+    patch.can_download = body.can_download;
   }
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ error: 'Aucun champ à mettre à jour' }, { status: 400 });

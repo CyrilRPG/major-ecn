@@ -107,6 +107,10 @@ export function EspaceDecouverteForm() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaNonce, setCaptchaNonce] = useState(0);
+  // Anti-spam : honeypot (champ caché rempli uniquement par les bots) +
+  // horodatage d'affichage (piège temporel).
+  const [hp, setHp] = useState('');
+  const [renderedAt] = useState(() => Date.now());
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingAccount, setExistingAccount] = useState(false);
@@ -136,6 +140,8 @@ export function EspaceDecouverteForm() {
           session, country, passedEvc,
           consents: { cgu: acceptTerms, cgs: acceptTerms, timestamp: new Date().toISOString() },
           turnstileToken: captchaToken,
+          hp,
+          elapsedMs: Date.now() - renderedAt,
         }),
       });
       const j = (await res.json()) as {
@@ -383,6 +389,21 @@ export function EspaceDecouverteForm() {
                   {' '}de Major ECN. <span className="text-[11px]" style={{ color: INK_SOFT }}>(obligatoire)</span>
                 </span>
               </label>
+
+              {/* Honeypot anti-spam : invisible pour les humains, rempli par les bots. */}
+              <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                <label>
+                  Ne pas remplir
+                  <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                  />
+                </label>
+              </div>
 
               {/* Captcha anti-robot (Cloudflare Turnstile) */}
               {TURNSTILE_ENABLED && (

@@ -36,6 +36,9 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
   const canEdit = profile.role === 'admin'
     || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'fiche'));
+  // Téléchargement : admin toujours ; prof/élève seulement si l'admin l'a autorisé.
+  const canDownload = profile.role === 'admin'
+    || (profile as { can_download?: boolean }).can_download === true;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
@@ -43,9 +46,9 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
         {fiche?.pages && (
           <p className="text-xs text-(--color-ink-soft) sm:text-sm">{fiche.pages} pages</p>
         )}
-        {canEdit && (
+        {(canEdit || canDownload) && (
           <div className="ml-auto flex items-center gap-2">
-            {fiche?.storage_path && (
+            {canDownload && fiche?.storage_path && (
               <a
                 href={`/api/fiches/${coursId}/download`}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
@@ -53,12 +56,14 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
                 <Download className="h-3.5 w-3.5" /> Télécharger
               </a>
             )}
+            {canEdit && (
             <Link
               href={`/cours/${coursId}/fiche/edit`}
               className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
             >
               <Pencil className="h-3.5 w-3.5" /> Éditer la fiche
             </Link>
+            )}
           </div>
         )}
       </div>

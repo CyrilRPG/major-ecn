@@ -32,6 +32,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { welcomeEmail, decouverteSignupNotificationEmail } from '@/lib/email/templates';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
+import { spamCheck } from '@/lib/anti-spam';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -51,6 +52,9 @@ const Schema = z.object({
     })
     .optional(),
   turnstileToken: z.string().optional(),
+  // Anti-spam (honeypot + piège temporel).
+  hp: z.string().optional(),
+  elapsedMs: z.number().optional(),
 });
 
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
@@ -82,7 +86,19 @@ export async function POST(req: Request) {
     );
   }
 
-  const { firstName, lastName, email, phone, specialty, voie, session, country, passedEvc, consents, turnstileToken } = parsed.data;
+  const { firstName, lastName, email, phone, specialty, voie, session, country, passedEvc, consents, turnstileToken, hp, elapsedMs } = parsed.data;
+
+  // Anti-spam (honeypot + piège temporel) : fonctionne même sans Turnstile.
+  // On répond une fausse réussite (drop silencieux) pour ne pas guider le bot,
+  // sans rien créer en base.
+  const spam = spamCheck({ hp, elapsedMs });
+  if (!spam.ok) {
+    log('spam-dropped', { reason: spam.reason });
+    return NextResponse.json({
+      ok: true, isNew: false, emailSent: false, emailVia: null, emailError: null,
+      redirectTo: '/espace-decouverte/confirmation',
+    });
+  }
 
   // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
   const captcha = await verifyTurnstile(turnstileToken, clientIp(req));

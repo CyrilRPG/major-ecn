@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Loader2, Plus, Trash2, Upload, X } from 'lucide-react';
+import { Loader2, Plus, Stethoscope, Trash2, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
-import { upsertQcmQuestionAction, uploadQcmImageAction } from '@/app/admin/contenu/[cours]/qcm-actions';
+import { upsertQcmQuestionAction, uploadQcmImageAction, updateSerieVignetteAction } from '@/app/admin/contenu/[cours]/qcm-actions';
 
 export type QcmItemDraft = {
   lettre: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -41,24 +42,31 @@ function defaultDraft(): QcmQuestionDraft {
 }
 
 export function QcmQuestionEditor({
-  open, onOpenChange, coursId, serieId, initial,
+  open, onOpenChange, coursId, serieId, initial, vignette, showVignette,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   coursId: string;
   serieId: string;
   initial?: QcmQuestionDraft | null;
+  /** Contexte clinique partagé du DP/série (édité ici, depuis le bouton unique). */
+  vignette?: string | null;
+  /** Affiche la section « contexte clinique » (DP / série). */
+  showVignette?: boolean;
 }) {
+  const router = useRouter();
   const [draft, setDraft] = useState<QcmQuestionDraft>(initial ?? defaultDraft());
+  const [vignetteText, setVignetteText] = useState(vignette ?? '');
   const [pending, start] = useTransition();
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
       setDraft(initial ? { ...initial, items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })) } : defaultDraft());
+      setVignetteText(vignette ?? '');
       setErr(null);
     }
-  }, [open, initial]);
+  }, [open, initial, vignette]);
 
   const updateItem = (idx: number, patch: Partial<QcmItemDraft>) => {
     setDraft((d) => ({ ...d, items: d.items.map((it, i) => i === idx ? { ...it, ...patch } : it) }));
@@ -96,8 +104,17 @@ export function QcmQuestionEditor({
             })),
         },
       });
-      if ('error' in res) setErr(res.error);
-      else onOpenChange(false);
+      if ('error' in res) { setErr(res.error); return; }
+      // Sauvegarde du contexte clinique partagé (DP) si modifié — même bouton.
+      if (showVignette && (vignetteText ?? '').trim() !== (vignette ?? '').trim()) {
+        const vres = await updateSerieVignetteAction({ serieId, coursId, vignette: vignetteText });
+        if ('error' in vres) {
+          setErr('Question enregistrée, mais erreur sur le contexte clinique : ' + vres.error);
+          return;
+        }
+      }
+      router.refresh();
+      onOpenChange(false);
     });
   };
 
@@ -112,6 +129,27 @@ export function QcmQuestionEditor({
         </DialogHeader>
 
         <div className="space-y-5">
+          {/* Contexte clinique partagé du DP (édité depuis le même bouton). */}
+          {showVignette && (
+            <div className="space-y-1.5 rounded-xl border border-(--color-primary)/30 bg-(--color-primary-soft)/30 p-3">
+              <Label htmlFor="q-vignette" className="flex items-center gap-1.5">
+                <Stethoscope className="h-3.5 w-3.5 text-(--color-primary)" />
+                Contexte clinique du dossier (optionnel)
+              </Label>
+              <Textarea
+                id="q-vignette"
+                rows={4}
+                value={vignetteText}
+                onChange={(e) => setVignetteText(e.target.value)}
+                placeholder="Vignette commune à toutes les questions du DP, affichée au-dessus de chaque question. Laissez vide pour la retirer."
+                className="bg-white"
+              />
+              <p className="text-[11px] text-(--color-ink-muted)">
+                Partagé par toutes les questions de cette série (DP). Modifié ici pour tout le dossier.
+              </p>
+            </div>
+          )}
+
           {/* Énoncé */}
           <div className="space-y-1.5">
             <Label htmlFor="q-enonce">Énoncé</Label>
