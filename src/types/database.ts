@@ -59,9 +59,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'matieres_semestre_id_fkey'; columns: ['semestre_id']; isOneToOne: false; referencedRelation: 'semestres'; referencedColumns: ['id'] }];
       };
       profiles: {
-        Row: { created_at: string; email: string | null; first_name: string | null; id: string; last_name: string | null; permission_scope: Json; phone: string | null; promotion: string | null; role: string };
-        Insert: { created_at?: string; email?: string | null; first_name?: string | null; id: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string };
-        Update: { created_at?: string; email?: string | null; first_name?: string | null; id?: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string };
+        Row: { created_at: string; email: string | null; first_name: string | null; id: string; last_name: string | null; permission_scope: Json; phone: string | null; promotion: string | null; role: string; is_active: boolean | null; active_session_id: string | null; can_download: boolean | null };
+        Insert: { created_at?: string; email?: string | null; first_name?: string | null; id: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null };
+        Update: { created_at?: string; email?: string | null; first_name?: string | null; id?: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null };
         Relationships: [];
       };
       qcm_attempts: {
@@ -137,9 +137,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'semestres_faculte_id_fkey'; columns: ['faculte_id']; isOneToOne: false; referencedRelation: 'facultes'; referencedColumns: ['id'] }];
       };
       videos: {
-        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string };
-        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string };
-        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string };
+        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null };
+        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null };
+        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null };
         Relationships: [{ foreignKeyName: 'videos_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
     };
