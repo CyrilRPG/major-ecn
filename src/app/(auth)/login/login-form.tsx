@@ -23,8 +23,13 @@ export function LoginForm() {
   const params = useSearchParams();
   const next = params.get('next') || '/app';
   const disabled = params.get('disabled') === '1';
+  const otherDevice = params.get('reason') === 'autre-appareil';
   const [authError, setAuthError] = useState<string | null>(
-    disabled ? 'Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.' : null,
+    disabled
+      ? 'Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.'
+      : otherDevice
+        ? 'Vous avez été déconnecté : ce compte vient d’être utilisé sur un autre appareil. Un seul appareil peut être connecté à la fois.'
+        : null,
   );
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,6 +60,10 @@ export function LoginForm() {
         return;
       }
     }
+    // Session unique : enregistre cet appareil comme seul autorisé (déconnecte
+    // les autres). Best-effort — ne bloque jamais la connexion.
+    try { await fetch('/api/auth/register-device', { method: 'POST' }); } catch { /* ignore */ }
+
     router.push(next);
     router.refresh();
   }

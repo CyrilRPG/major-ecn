@@ -195,16 +195,17 @@ function FeaturedCard({ article }: { article: BlogArticleMeta }) {
   const c = BLOG_CATEGORIES[article.category];
   return (
     <article className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
-      <div className="grid items-stretch gap-0 sm:grid-cols-[1fr_1.2fr]">
-        {/* Visuel « à la une » — photo pertinente recadrée (jamais déformée) */}
-        <div className="relative aspect-[5/4] overflow-hidden sm:aspect-auto">
+      <div className="grid items-stretch gap-0 sm:grid-cols-[0.85fr_1.15fr]">
+        {/* Visuel « à la une » — photo carrée (1:1), affichée sans déformation
+            ni tranche : conteneur carré, centré verticalement, recadrage doux. */}
+        <div className="relative aspect-square self-center overflow-hidden">
           <Image
             src={BLOG_CATEGORY_IMAGE[article.category]}
             alt={article.title}
             fill
             priority
             className="object-cover object-center"
-            sizes="(max-width:640px) 100vw, (max-width:1024px) 45vw, 520px"
+            sizes="(max-width:640px) 100vw, (max-width:1024px) 40vw, 360px"
           />
           <span
             aria-hidden

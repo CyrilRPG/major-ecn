@@ -466,6 +466,13 @@ function SpecCard({ s }: { s: Speciality }) {
         style={{ color: '#475569' }}>
         {s.description}
       </p>
+      {/* « … » : la préparation ne se limite pas à la description ci-dessus */}
+      <p className="-mt-1 inline-flex items-center gap-1.5 text-[11px] font-extrabold leading-none"
+        style={{ color: isMG ? s.accent : '#94A3B8' }}
+        title="Et bien plus encore">
+        <span className="text-[17px] leading-none tracking-tight">…</span>
+        <span className="uppercase tracking-[0.06em]">et bien plus encore</span>
+      </p>
 
       {/* 4. CTA bas de carte */}
       <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"

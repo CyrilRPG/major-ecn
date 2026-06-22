@@ -12,6 +12,24 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],
   },
+  // Redirections 301 permanentes : anciennes URL (ancien site / liens externes
+  // indexés) → URL actuelles. Préserve le SEO (le « jus » des liens est transféré)
+  // et corrige les liens cassés. À compléter avec les URL listées dans Google
+  // Search Console (rapport « Pages » → indexées + 404).
+  async redirects() {
+    return [
+      // Lien cassé signalé : ancienne URL de l'article « documents de candidature ».
+      { source: "/evc-pae-documents-candidature", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
+      { source: "/evc-pae-liste-documents", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
+      // Anciennes URL d'articles potentiellement à la racine → /blog/<slug>.
+      { source: "/comment-reussir-les-evc-conseils-laureats", destination: "/blog/comment-reussir-les-evc-conseils-laureats", permanent: true },
+      { source: "/comment-se-presenter-aux-evc", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
+      { source: "/decryptage-defis-evc", destination: "/blog/decryptage-defis-evc", permanent: true },
+      { source: "/remuneration-medecin-etranger-france", destination: "/blog/remuneration-medecin-etranger-france", permanent: true },
+      { source: "/structures-accueil-laureats-pae", destination: "/blog/structures-accueil-laureats-pae", permanent: true },
+      { source: "/impact-evc-acces-soins", destination: "/blog/impact-evc-acces-soins", permanent: true },
+    ];
+  },
   // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas
   // le binaire (téléchargé au cold-start depuis Github), mais on garde quand
   // même `serverExternalPackages` pour ne pas faire passer puppeteer-core et

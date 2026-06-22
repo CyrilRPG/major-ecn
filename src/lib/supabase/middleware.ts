@@ -34,6 +34,37 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Session unique : un seul appareil connecté par compte. Si l'identifiant
+  // d'appareil (cookie httpOnly) ne correspond pas au dernier enregistré en
+  // base, on déconnecte cet appareil. Exclu en impersonation admin. Fail-open.
+  if (user && isProtectedRoute && !request.cookies.get('impersonator_id')) {
+    try {
+      const device = request.cookies.get('mecn_device')?.value ?? null;
+      // active_session_id pas encore dans les types générés → accès souple.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: prof } = await (supabase as any)
+        .from('profiles')
+        .select('active_session_id')
+        .eq('id', user.id)
+        .maybeSingle();
+      const active = (prof as { active_session_id?: string | null } | null)?.active_session_id ?? null;
+      if (active && device !== active) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/login';
+        url.search = '';
+        url.searchParams.set('reason', 'autre-appareil');
+        const res = NextResponse.redirect(url);
+        // Expire la session Supabase (cookies sb-*) + le cookie d'appareil.
+        for (const c of request.cookies.getAll()) {
+          if (c.name.startsWith('sb-') || c.name === 'mecn_device') {
+            res.cookies.set(c.name, '', { path: '/', maxAge: 0 });
+          }
+        }
+        return res;
+      }
+    } catch { /* fail-open : ne jamais verrouiller en cas d'erreur */ }
+  }
+
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/app';
