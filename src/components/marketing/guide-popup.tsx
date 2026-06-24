@@ -327,13 +327,8 @@ export function GuidePopup() {
       }
 
       markDownloaded();
-      setSubmitted(true);
       trackEvent('guide_downloaded');
-
-      const link = document.createElement('a');
-      link.href = '/guides/guide-methodologie-evc-2026.pdf';
-      link.download = 'Guide_Methodologie_EVC_2026_Major_ECN.pdf';
-      link.click();
+      window.location.href = '/guide-methodologie-evc-2026/merci';
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue. Veuillez réessayer.');
     } finally {
@@ -632,7 +627,7 @@ export function GuidePopup() {
             >
               <div className="relative h-[280px] w-[200px]">
                 <Image
-                  src="/guides/guide-cover-placeholder.svg"
+                  src="/guides/guide-cover.png"
                   alt="Guide Méthodologie EVC 2026 — Major ECN"
                   fill
                   className="object-contain drop-shadow-2xl"

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendEmail } from '@/lib/email/send';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
@@ -33,6 +34,25 @@ export async function POST(req: Request) {
 
   const { firstName, lastName, email, phone, specialty, voie, abVariant, ctaVariant } = parsed.data;
 
+  // ── Save lead to Supabase ──
+  try {
+    const admin = createAdminClient();
+    await admin.from('guide_leads').insert({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      specialty,
+      voie,
+      ab_variant: abVariant,
+      cta_variant: ctaVariant,
+    });
+  } catch {
+    // Non-blocking: log but don't fail the request
+    console.error('[guide-download] Failed to save lead to Supabase');
+  }
+
+  // ── Email to admin (lead notification) ──
   const subject = `📘 Guide EVC 2026 téléchargé — ${firstName} ${lastName || ''}`.trim();
 
   const rows: [string, string][] = [
@@ -46,7 +66,7 @@ export async function POST(req: Request) {
     ['Variante CTA', ctaVariant || '—'],
   ];
 
-  const html = `<!doctype html>
+  const adminHtml = `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8" /><title>${escapeHtml(subject)}</title></head>
 <body style="margin:0;background:#FAFAF8;font-family:'Manrope',-apple-system,Segoe UI,Roboto,sans-serif;color:#2D2D2D;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAF8;padding:32px 16px;">
@@ -80,23 +100,96 @@ export async function POST(req: Request) {
   </table>
 </body></html>`;
 
-  const text = [
+  const adminText = [
     'Nouveau lead — Guide Méthodologie EVC 2026',
     '',
     ...rows.map(([k, v]) => `${k} : ${v}`),
   ].join('\n');
 
-  const sent = await sendEmail({
-    to: CONTACT_EMAIL,
-    subject,
-    html,
-    text,
-    replyTo: email,
-  });
+  // ── Email to user (guide delivery) ──
+  const userSubject = `Votre Guide Méthodologie EVC 2026 — Major ECN`;
+  const guideUrl = 'https://major-ecn.fr/guides/guide-methodologie-evc-2026.pdf';
 
-  if (!sent.ok) {
+  const userHtml = `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8" /><title>${escapeHtml(userSubject)}</title></head>
+<body style="margin:0;background:#FAFAF8;font-family:'Manrope',-apple-system,Segoe UI,Roboto,sans-serif;color:#2D2D2D;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAF8;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid #ECEEF1;border-radius:20px;overflow:hidden;">
+        <tr><td style="background:#0F1F4D;padding:24px 28px;text-align:center;">
+          <img src="https://major-ecn.fr/major-ecn-logo.png" alt="Major ECN" width="120" style="display:block;margin:0 auto;filter:brightness(0) invert(1);" />
+        </td></tr>
+        <tr><td style="height:3px;background:linear-gradient(90deg,#6B1A2A 0%,#C0112E 50%,#E8742C 100%);font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr><td style="padding:32px 28px;">
+          <h1 style="margin:0 0 16px;font-size:22px;font-weight:800;color:#0F1F4D;text-align:center;">
+            Votre Guide Méthodologie EVC 2026
+          </h1>
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#1F2937;">
+            Bonjour ${escapeHtml(firstName)},
+          </p>
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#1F2937;">
+            Nous vous remercions pour votre confiance. Votre <strong>Guide Méthodologie EVC 2026</strong> (36 pages) est prêt à être téléchargé.
+          </p>
+          <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#1F2937;">
+            Ce guide vous apporte les méthodes, les réflexes et les conseils les plus utiles pour mieux comprendre les attentes des EVC et structurer votre préparation.
+          </p>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
+            <tr><td style="background:#C0112E;border-radius:12px;padding:14px 32px;">
+              <a href="${guideUrl}" style="color:#FFFFFF;font-size:16px;font-weight:700;text-decoration:none;display:inline-block;">
+                📥 Télécharger mon guide
+              </a>
+            </td></tr>
+          </table>
+          <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#7A7A7A;text-align:center;">
+            PDF • 36 pages • Téléchargement immédiat
+          </p>
+          <hr style="border:none;border-top:1px solid #ECEEF1;margin:24px 0;" />
+          <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#0F1F4D;">
+            Pour aller plus loin
+          </p>
+          <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#3A4556;">
+            Ce guide vous apporte une méthode de travail solide. Pour transformer cette méthode en véritables automatismes, Major ECN met à votre disposition une plateforme complète avec des QCM, des cas cliniques, des corrections détaillées et un suivi personnalisé.
+          </p>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+            <tr><td style="border:2px solid #0F1F4D;border-radius:12px;padding:12px 28px;">
+              <a href="https://major-ecn.fr/plateforme" style="color:#0F1F4D;font-size:14px;font-weight:700;text-decoration:none;">
+                Découvrir la plateforme →
+              </a>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="background:#F8F9FC;padding:16px 28px;text-align:center;">
+          <p style="margin:0;font-size:11px;color:#9AA1AE;">
+            Major ECN — La méthode qui fait la différence aux EVC.<br/>
+            © 2026 Major ECN — <a href="https://major-ecn.fr" style="color:#9AA1AE;">major-ecn.fr</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+  const userText = [
+    `Bonjour ${firstName},`,
+    '',
+    'Votre Guide Méthodologie EVC 2026 est prêt à être téléchargé.',
+    '',
+    `Télécharger : ${guideUrl}`,
+    '',
+    'Nous vous souhaitons une excellente préparation !',
+    '',
+    'Major ECN — major-ecn.fr',
+  ].join('\n');
+
+  // Send both emails in parallel
+  const [adminResult, userResult] = await Promise.all([
+    sendEmail({ to: CONTACT_EMAIL, subject, html: adminHtml, text: adminText, replyTo: email }),
+    sendEmail({ to: email, subject: userSubject, html: userHtml, text: userText }),
+  ]);
+
+  if (!adminResult.ok && !userResult.ok) {
     return NextResponse.json(
-      { error: `Envoi impossible pour le moment. Réessayez plus tard.`, detail: sent.error },
+      { error: 'Envoi impossible pour le moment. Réessayez plus tard.', detail: adminResult.error },
       { status: 502 },
     );
   }

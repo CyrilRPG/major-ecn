@@ -40,6 +40,12 @@ export type Database = {
         Update: { cours_id?: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre?: string };
         Relationships: [{ foreignKeyName: 'fiches_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
+      guide_leads: {
+        Row: { id: string; first_name: string; last_name: string; email: string; phone: string; specialty: string | null; voie: string | null; ab_variant: string | null; cta_variant: string | null; created_at: string };
+        Insert: { id?: string; first_name: string; last_name?: string; email: string; phone: string; specialty?: string | null; voie?: string | null; ab_variant?: string | null; cta_variant?: string | null; created_at?: string };
+        Update: { id?: string; first_name?: string; last_name?: string; email?: string; phone?: string; specialty?: string | null; voie?: string | null; ab_variant?: string | null; cta_variant?: string | null; created_at?: string };
+        Relationships: [];
+      };
       flashcard_reviews: {
         Row: { difficulty: string; flashcard_id: string; id: string; reviewed_at: string; user_id: string; weight: number };
         Insert: { difficulty: string; flashcard_id: string; id?: string; reviewed_at?: string; user_id: string; weight: number };
