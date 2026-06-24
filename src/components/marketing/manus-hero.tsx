@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, BadgeCheck, BookOpen, FileText, Sparkles, Stethoscope, Trophy, Users, Video, type LucideIcon,
+  ArrowRight, BadgeCheck, BookOpen, Download, FileText, Sparkles, Stethoscope, Users, Video, type LucideIcon,
 } from 'lucide-react';
 
 /**
@@ -113,22 +113,23 @@ export function ManusHero() {
             </div>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:gap-4">
-              <Link
-                href="/inscription"
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-4 text-base font-extrabold text-white shadow-[0_14px_36px_-12px_rgba(192,17,46,0.6)] transition-transform hover:scale-[1.02]"
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-guide-popup'))}
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-4 text-base font-extrabold text-white shadow-[0_14px_36px_-12px_rgba(192,17,46,0.6)] transition-transform hover:scale-[1.02] cursor-pointer"
                 style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}
               >
-                <Sparkles className="h-5 w-5" />
-                Découvrir la plateforme
+                <Download className="h-5 w-5" />
+                Télécharger gratuitement le guide
                 <ArrowRight className="h-5 w-5" />
-              </Link>
+              </button>
               <Link
-                href="/temoignages"
+                href="/espace-decouverte"
                 className="inline-flex items-center justify-center gap-2.5 rounded-xl border-2 px-7 py-4 text-base font-bold transition-colors hover:bg-[#FBEEEF]"
                 style={{ borderColor: '#E7C9CD', color: NAVY }}
               >
-                <Trophy className="h-5 w-5" style={{ color: RED }} />
-                Découvrir leurs témoignages
+                <Sparkles className="h-5 w-5" style={{ color: RED }} />
+                Découvrir la plateforme
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
