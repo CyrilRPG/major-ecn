@@ -50,7 +50,7 @@ export function GuideHero() {
               style={{ background: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)' }}
             >
               <Download className="h-5 w-5" />
-              Télécharger gratuitement le guide
+              Télécharger gratuitement le guide méthodologique
               <ArrowRight className="h-5 w-5" />
             </button>
 
@@ -64,14 +64,16 @@ export function GuideHero() {
 
           {/* Right column — Book cover */}
           <div className="flex flex-col items-center">
-            <Image
-              src="/guides/guide-cover.png"
-              alt="Guide Méthodologie EVC 2026 — Major ECN"
-              width={520}
-              height={700}
-              className="h-auto w-full max-w-[380px] drop-shadow-xl"
-              priority
-            />
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <Image
+                src="/guides/guide-cover.png"
+                alt="Guide Méthodologie EVC 2026 — Major ECN"
+                width={520}
+                height={700}
+                className="h-auto w-full max-w-[340px] drop-shadow-xl"
+                priority
+              />
+            </div>
             <p className="mt-3 text-center text-[14px] italic text-[#9AA1AE]">
               <span className="font-semibold text-[#C0001F]">36 pages</span> de conseils et de méthodes concrètes
             </p>

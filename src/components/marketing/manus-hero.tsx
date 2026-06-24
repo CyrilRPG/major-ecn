@@ -120,11 +120,11 @@ export function ManusHero() {
                 style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}
               >
                 <Download className="h-5 w-5" />
-                Télécharger gratuitement le guide
+                Télécharger gratuitement le guide méthodologique
                 <ArrowRight className="h-5 w-5" />
               </button>
               <Link
-                href="/espace-decouverte"
+                href="/inscription"
                 className="inline-flex items-center justify-center gap-2.5 rounded-xl border-2 px-7 py-4 text-base font-bold transition-colors hover:bg-[#FBEEEF]"
                 style={{ borderColor: '#E7C9CD', color: NAVY }}
               >

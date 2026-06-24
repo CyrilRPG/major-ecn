@@ -1,13 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { LogIn, Menu, Sparkles, X } from 'lucide-react';
+import { ChevronDown, LogIn, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 
-const NAV = [
-  { href: '/methode',     label: 'Méthode' },
+type NavItem =
+  | { href: string; label: string }
+  | { label: string; children: { href: string; label: string }[] };
+
+const NAV: NavItem[] = [
+  {
+    label: 'Méthode',
+    children: [
+      { href: '/methode', label: 'Notre méthode' },
+      { href: '/guide-methodologie-evc-2026', label: 'Guide méthodologique gratuit' },
+    ],
+  },
   { href: '/plateforme',  label: 'Plateforme' },
   { href: '/specialites', label: 'Spécialités' },
   { href: '/temoignages', label: 'Témoignages' },
@@ -18,9 +28,77 @@ const NAV = [
   { href: '/contact',     label: 'Contact' },
 ];
 
+function DesktopDropdown({ item, tight }: { item: Extract<NavItem, { children: any[] }>; tight?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          'flex items-center gap-1 rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
+          tight ? 'px-2' : 'px-2.5',
+        )}
+      >
+        {item.label}
+        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-180')} />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-xl border border-(--color-border) bg-white py-1 shadow-lg">
+          {item.children.map((c) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2.5 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+            >
+              {c.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NavItems({ tight }: { tight?: boolean }) {
+  return (
+    <>
+      {NAV.map((n) => {
+        if ('children' in n) {
+          return <DesktopDropdown key={n.label} item={n} tight={tight} />;
+        }
+        return (
+          <Link
+            key={n.href}
+            href={n.href}
+            className={cn(
+              'rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
+              tight ? 'px-2' : 'px-2.5',
+            )}
+          >
+            {n.label}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 export function MarketingHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [methodeOpen, setMethodeOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -35,7 +113,7 @@ export function MarketingHeader() {
         'sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300',
         scrolled
           ? 'border-b border-(--color-border) bg-white/85 backdrop-blur-xl'
-          : 'border-b border-transparent bg-white/0',
+          : 'border-b border-transparent bg-white/80 backdrop-blur-sm',
       )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
@@ -44,28 +122,11 @@ export function MarketingHeader() {
         </Link>
 
         <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="rounded-lg px-2.5 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-            >
-              {n.label}
-            </Link>
-          ))}
+          <NavItems />
         </nav>
 
-        {/* Nav réduite pour lg (sans xl) — colonne plus serrée */}
         <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="rounded-lg px-2 py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-            >
-              {n.label}
-            </Link>
-          ))}
+          <NavItems tight />
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
@@ -77,7 +138,7 @@ export function MarketingHeader() {
             Se connecter
           </Link>
           <Link
-            href="/espace-decouverte"
+            href="/inscription"
             className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
           >
             <span className="hidden sm:inline">Découvrir la plateforme</span>
@@ -96,18 +157,48 @@ export function MarketingHeader() {
 
       {open && (
         <nav className="border-t border-(--color-border) bg-white px-4 py-3 lg:hidden">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {NAV.map((n) => {
+            if ('children' in n) {
+              return (
+                <div key={n.label}>
+                  <button
+                    type="button"
+                    onClick={() => setMethodeOpen((v) => !v)}
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                  >
+                    {n.label}
+                    <ChevronDown className={cn('h-4 w-4 transition-transform', methodeOpen && 'rotate-180')} />
+                  </button>
+                  {methodeOpen && (
+                    <div className="ml-4 space-y-0.5">
+                      {n.children.map((c) => (
+                        <Link
+                          key={c.href}
+                          href={c.href}
+                          onClick={() => setOpen(false)}
+                          className="block rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                        >
+                          {c.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+              >
+                {n.label}
+              </Link>
+            );
+          })}
           <Link
-            href="/espace-decouverte"
+            href="/inscription"
             onClick={() => setOpen(false)}
             className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-primary)"
           >

@@ -143,7 +143,7 @@ export function GuidePopup() {
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const [abForm, setAbForm] = useState<'A' | 'B'>('A');
-  const [abCta, setAbCta] = useState<string>('Recevoir gratuitement le guide');
+  const [abCta, setAbCta] = useState<string>('Télécharger gratuitement le guide méthodologique');
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -175,8 +175,8 @@ export function GuidePopup() {
   useEffect(() => {
     setAbForm(getOrSetABVariant(LS_KEY_AB_FORM, ['A', 'B']) as 'A' | 'B');
     setAbCta(getOrSetABVariant(LS_KEY_AB_CTA, [
-      'Recevoir gratuitement le guide',
-      'Obtenir mon guide gratuit',
+      'Télécharger gratuitement le guide méthodologique',
+      'Obtenir mon guide méthodologique gratuit',
     ]));
   }, []);
 
@@ -611,7 +611,7 @@ export function GuidePopup() {
                   style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
                 >
                   <Download className="h-4 w-4" />
-                  Télécharger gratuitement le guide
+                  Télécharger gratuitement le guide méthodologique
                 </button>
                 <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-gray-400">
                   <Shield className="h-3 w-3" />

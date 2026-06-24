@@ -185,7 +185,7 @@ export function GuideForm({ onSuccess, compact }: Props) {
         ) : (
           <Download className="h-5 w-5" />
         )}
-        {loading ? 'Envoi en cours...' : 'Télécharger le guide gratuitement'}
+        {loading ? 'Envoi en cours...' : 'Télécharger gratuitement le guide méthodologique'}
       </button>
     </form>
   );
