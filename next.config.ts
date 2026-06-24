@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
       { source: "/remuneration-medecin-etranger-france", destination: "/blog/remuneration-medecin-etranger-france", permanent: true },
       { source: "/structures-accueil-laureats-pae", destination: "/blog/structures-accueil-laureats-pae", permanent: true },
       { source: "/impact-evc-acces-soins", destination: "/blog/impact-evc-acces-soins", permanent: true },
+      // Ancien chemin « Nos conseils » indexé par Google — redirige vers le blog.
+      { source: "/nos-conseils", destination: "/blog", permanent: true },
+      { source: "/nos-conseils/:slug*", destination: "/blog", permanent: true },
     ];
   },
   // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas

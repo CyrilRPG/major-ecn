@@ -11,7 +11,8 @@ export type BlogCategory =
   | 'exercice-medical'
   | 'carriere-remuneration'
   | 'medecins-etrangers'
-  | 'conseils-methodologie';
+  | 'conseils-methodologie'
+  | 'specialites';
 
 export const BLOG_CATEGORIES: Record<BlogCategory, { label: string; tone: string; bg: string; fg: string }> = {
   'epreuves-evc':         { label: 'Épreuves EVC',           tone: 'red',    bg: '#FDE7E9', fg: '#C0001F' },
@@ -20,6 +21,7 @@ export const BLOG_CATEGORIES: Record<BlogCategory, { label: string; tone: string
   'carriere-remuneration':{ label: 'Carrière & Rémunération', tone: 'orange',bg: '#FEF3E2', fg: '#B26A00' },
   'medecins-etrangers':   { label: 'Médecins étrangers',     tone: 'violet', bg: '#EDE9FE', fg: '#6D28D9' },
   'conseils-methodologie':{ label: 'Conseils & Méthodologie', tone: 'amber',bg: '#FEF3C7', fg: '#92400E' },
+  'specialites':          { label: 'Spécialités EVC',        tone: 'indigo',bg: '#EEF2FF', fg: '#3730A3' },
 };
 
 /**
@@ -34,6 +36,7 @@ export const BLOG_CATEGORY_IMAGE: Record<BlogCategory, string> = {
   'carriere-remuneration': '/blog/practitioners/practitioner-male-tie.jpg',
   'medecins-etrangers':    '/blog/practitioners/practitioner-male-glasses.jpg',
   'conseils-methodologie': '/blog/reussir-evc-asian-laptop.jpg',
+  'specialites':           '/blog/medecins-essentiels-doctor-patient.jpg',
 };
 
 export type BlogArticleMeta = {
@@ -117,6 +120,16 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: 'EVC PADHUE 2026 : le nombre de postes par spécialité peut tromper. Ratio candidats/postes, effet de troupeau, données CNG — comment vraiment choisir.',
     category: 'epreuves-evc',
     readingMinutes: 8,
+    readers: 0,
+    publishedAt: '2026-06-24',
+    featured: true,
+  },
+  {
+    slug: 'evc-medecine-interne-polyvalente-mipic-2026',
+    title: 'EVC Médecine Interne Polyvalente et Immunologie Clinique (MIPIC) 2026 : tout comprendre avant de choisir cette spécialité',
+    excerpt: 'EVC Médecine Interne Polyvalente et Immunologie Clinique (MIPIC) 2026 : ce que change le CNG, postes ouverts, calendrier PAE et programme pour les PADHUE.',
+    category: 'specialites',
+    readingMinutes: 9,
     readers: 0,
     publishedAt: '2026-06-24',
     featured: true,

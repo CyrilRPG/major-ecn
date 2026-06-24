@@ -10,6 +10,7 @@ import { ArticleListeDocuments } from '@/components/marketing/blog/articles/arti
 import { ArticleCommentSinscrire } from '@/components/marketing/blog/articles/article-comment-sinscrire';
 import { ArticleConseilsLaureats } from '@/components/marketing/blog/articles/article-conseils-laureats';
 import { ArticleRatioPostes } from '@/components/marketing/blog/articles/article-ratio-postes';
+import { ArticleMipic } from '@/components/marketing/blog/articles/article-mipic';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 
 export async function generateMetadata({
@@ -53,6 +54,8 @@ function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArt
       return <ArticleConseilsLaureats article={article} />;
     case 'evc-ratio-candidats-postes-choix-specialite-2026':
       return <ArticleRatioPostes article={article} />;
+    case 'evc-medecine-interne-polyvalente-mipic-2026':
+      return <ArticleMipic article={article} />;
     default:
       return <ArticleGeneric article={article} />;
   }

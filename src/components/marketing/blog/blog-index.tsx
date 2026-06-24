@@ -3,7 +3,7 @@ import Image from 'next/image';
 import {
   ArrowRight, BookmarkPlus, BookOpen, Building2, ClipboardCheck, Clock,
   Compass, Euro, FileText, GraduationCap, Globe2, Layers3, Lightbulb,
-  Newspaper, Search,
+  Newspaper, Search, Stethoscope,
 } from 'lucide-react';
 import {
   BLOG_ARTICLES, BLOG_CATEGORIES, BLOG_TOP_THEMES, BLOG_CATEGORY_IMAGE,
@@ -22,6 +22,7 @@ function CategoryIcon({ cat, className = 'h-6 w-6' }: { cat: BlogCategory; class
     'carriere-remuneration':  Euro,
     'medecins-etrangers':     Globe2,
     'conseils-methodologie':  Lightbulb,
+    'specialites':            Stethoscope,
   };
   const Icon = map[cat];
   return <Icon className={className} />;
