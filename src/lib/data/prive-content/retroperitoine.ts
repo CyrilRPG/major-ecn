@@ -1,0 +1,323 @@
+import type { PriveCourseContent } from '../prive-courses';
+
+const content: PriveCourseContent = {
+  fiche: {
+    parties: [
+      {
+        numero: 'I',
+        titre: 'Rappels anatomiques',
+        sous_parties: [
+          {
+            titre: 'Architecture interne du rein',
+            rows: [
+              { concept: '◆ Les 5 structures internes du rein', detail_md: "De la peripherie vers le centre :\n1. **Cortex renal** (peripherique)\n2. **Colonne renale** = Colonne de Bertin (entre les pyramides)\n3. **Pyramide renale** = Pyramide de Malpighi (zone medullaire)\n4. **Papille** (sommet de la pyramide, s'ouvre dans le calice)\n5. **Graisse sinusale** (dans le sinus renal)", kind: 'a_retenir' },
+              { concept: 'Cortex renal', detail_md: "· Zone **peripherique** du parenchyme renal\n· Contient les **glomerules** et les tubules contournes\n· Aspect plus **hypoechogene** que la medullaire en echographie", kind: 'normal' },
+              { concept: 'Colonne de Bertin', detail_md: "· = **colonne renale**\n· Prolongement du cortex **entre** les pyramides renales\n· Tissu cortical qui s'enfonce dans la medullaire", kind: 'normal' },
+              { concept: 'Pyramide de Malpighi', detail_md: "· = **pyramide renale**\n· Zone **medullaire** du parenchyme renal\n· Base peripherique, sommet = **papille** qui s'ouvre dans un calice\n· Contient les anses de Henle et les canaux collecteurs", kind: 'normal' },
+              { concept: 'Graisse sinusale', detail_md: "· Graisse situee dans le **sinus renal** (au centre)\n· Entoure les structures du hile (vaisseaux, cavites pyelo-calicielles)\n· **Hyperechogene** en echographie (blanc)", kind: 'normal' },
+            ],
+          },
+        ],
+      },
+      {
+        numero: 'II',
+        titre: 'Explorations radiologiques',
+        sous_parties: [
+          {
+            titre: 'Les 4 modalites d\'imagerie renale',
+            rows: [
+              { concept: '◆ Les 4 modalites', detail_md: "1. **Radiologie standard / ASP** (Abdomen Sans Preparation)\n2. **Echographie**\n3. **Scanner** (TDM)\n4. **IRM** (tres rare, pour pathologies tumorales)", kind: 'a_retenir' },
+              { concept: '◆ Examens de 1ere intention', detail_md: "**ASP + echographie** = examens de 1ere intention\n· Accessibles, pas chers, rapides\n· Toujours demander les DEUX en 1ere intention", kind: 'a_retenir' },
+              { concept: 'Examen de 2eme intention', detail_md: "**Scanner** (uroscanner) = examen de 2eme intention\n· Plus precis, mais irradiant et necessite souvent une injection de PCI", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Radiologie standard (ASP)',
+            rows: [
+              { concept: 'Principe de l\'ASP', detail_md: "· Radiographie de face, **debout ou couche**\n· On regarde les **reins** et la **vessie**\n· Les reins se projettent au niveau de **L2**", kind: 'normal' },
+              { concept: '◆ Calcul a l\'ASP', detail_md: "Un calcul apparait comme une **opacite** (blanc) sur l'ASP\n· Exemples : calcul reno-ureteral, calculs coralliformes\n· Les calculs coralliformes sont tres gros, en forme de corail, tres douloureux", kind: 'a_retenir' },
+              { concept: '⚠ ASP et femme enceinte', detail_md: "L'ASP utilise des **rayons X** → **contre-indique chez la femme enceinte**\n· Contrairement a l'echographie qui n'a aucune contre-indication", kind: 'piege' },
+            ],
+          },
+          {
+            titre: 'Echographie renale',
+            rows: [
+              { concept: '◆ Avantages de l\'echographie', detail_md: "· **Aucune contre-indication** (meme femme enceinte)\n· Examen de **1ere intention**\n· Sonde **convexe** utilisee\n· Image typique : coupe foie-rein droit", kind: 'a_retenir' },
+              { concept: '◆ Differenciation cortico-medullaire', detail_md: "· Cortex = **hypoechogene** (noir)\n· Medullaire = **hyperechogene** (blanc)\n· Cette differenciation est un signe important : sa perte = souffrance renale", kind: 'a_retenir' },
+              { concept: '◆ Cavites pyelo-calicielles (CPC)', detail_md: "· Normalement **fines** et **anechogenes** (noires)\n· Si **visibles** et dilatees = **pathologie** (obstruction)\n· Leur dilatation est un signe d'alerte majeur", kind: 'a_retenir' },
+              { concept: '⚠ Visibilite des ureteres en echo', detail_md: "Les ureteres sont fins et anechogenes :\n· Visibles au **pyelon** (jonction pyelo-ureterale)\n· Visibles a la **vessie** (jonction uretero-vesicale)\n· **PAS visibles a l'etage lombaire** (piege classique !)", kind: 'piege' },
+              { concept: 'Hile renal vasculaire', detail_md: "· Visible en **coupe axiale**\n· Permet d'identifier les vaisseaux renaux (artere et veine renales)", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Scanner (Uroscanner)',
+            rows: [
+              { concept: '◆ Les 4 acquisitions du scanner', detail_md: "1. **Sans injection** : recherche de calculs (hyperdenses = tres blancs)\n2. **Temps arteriel** (secretoire) : rehaussement du parenchyme renal\n3. **Temps portal** (excretoire) : etude des CPC, ureteres, vessie\n4. **Temps tardif** : complement d'etude si necessaire", kind: 'a_retenir' },
+              { concept: 'Acquisition sans injection', detail_md: "· Renseigne specifiquement sur les **calculs**\n· Les calculs apparaissent **hyperdenses** (tres blancs)\n· Sensibilite proche de **100%** pour les calculs", kind: 'normal' },
+              { concept: 'Temps secretoire (arteriel)', detail_md: "· **Rehaussement du parenchyme** renal apres injection\n· Un foyer de nephrite apparait comme une **plage moins rehaussee**\n· Permet d'etudier la vascularisation renale", kind: 'normal' },
+              { concept: 'Temps excretoire (portal)', detail_md: "· Etude des **cavites pyelo-calicielles**, **ureteres** et **vessie**\n· Le produit de contraste est excrete dans les voies urinaires\n· Visualisation de l'ensemble de l'arbre urinaire", kind: 'normal' },
+              { concept: '⚠ Seule CI du scanner injecte', detail_md: "**Allergie au produit de contraste iode** (PCI)\n· **TOUJOURS** demander au patient avant l'injection !\n· En cas d'allergie → alternatives : biopsie, IRM", kind: 'piege' },
+            ],
+          },
+          {
+            titre: 'Uro-IRM',
+            rows: [
+              { concept: 'Indications de l\'IRM', detail_md: "· Utilisee pour les **tumeurs** (pathologies tumorales)\n· PAS pour les pathologies infectieuses/inflammatoires\n· Examen tres rare en pratique courante", kind: 'normal' },
+              { concept: 'Contre-indications de l\'IRM', detail_md: "· Pas de grosses CI sauf **femme enceinte en debut de grossesse**\n· Pas d'irradiation (pas de rayons X)\n· Pas de PCI (gadolinium = autre type de produit de contraste)", kind: 'normal' },
+            ],
+          },
+        ],
+      },
+      {
+        numero: 'III',
+        titre: 'Aspects pathologiques',
+        sous_parties: [
+          {
+            titre: 'Obstruction des voies urinaires superieures — Generalites',
+            rows: [
+              { concept: '◆ Mecanisme de l\'obstruction', detail_md: "Obstruction de l'**uretere** (par calcul ou tumeur) → **colique nephretique**\n· Douleur aigue, intense, lombaire, irradiant vers les organes genitaux externes", kind: 'a_retenir' },
+              { concept: '◆ 3 objectifs de la radiologie', detail_md: "1. **QUOI** bloque ? (nature de l'obstacle : calcul, tumeur...)\n2. **OU** est l'obstacle ? (localisation dans l'uretere)\n3. **D'OU** retentissement sur le rein ? (signes de souffrance renale)", kind: 'a_retenir' },
+              { concept: '◆ Signes de souffrance renale (retentissement)', detail_md: "· **Rein dilate** (hydronephrose)\n· **Perte de l'index cortico-medullaire**\n· Ces signes = **urgence** → risque de destruction renale", kind: 'a_retenir' },
+            ],
+          },
+          {
+            titre: 'Obstruction — Strategie d\'imagerie',
+            rows: [
+              { concept: '◆ 1ere intention : ASP + echographie EN URGENCE', detail_md: "· **ASP** : recherche d'un calcul (opacite)\n· **Echographie** : recherche dilatation des CPC et de l'uretere\n· Calcul en echo = image **hyperechogene avec cone d'ombre posterieur**", kind: 'a_retenir' },
+              { concept: '◆ 2eme intention : scanner', detail_md: "· **Sans injection d'abord** : recherche de calculs (hyperdenses, sensibilite ~100%)\n· Si calcul obstructif retrouve → **diagnostic de colique nephretique** pose\n· Si **pas de calcul** → injection (uroscanner complet)\n· Pour pyelo obstructive/abces : on injecte systematiquement", kind: 'a_retenir' },
+              { concept: 'Scanner injecte : signes d\'obstruction', detail_md: "· **Retard de secretion** si calcul bloquant (rein ne secrete pas le PCI normalement)\n· **Dilatation des CPC en amont** de l'obstacle\n· Parfois infiltration de la graisse peri-renale", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Obstruction — Etiologies',
+            rows: [
+              { concept: '◆ Etiologies des obstacles ureteraux', detail_md: "1. **Lithiase** ++++ (de loin la plus frequente)\n2. **Tumeur urotheliale**\n3. **BK** (infectieux, tuberculose urinaire)\n4. **Stenose post-traumatique**\n5. **Syndrome de jonction pyelo-ureterale**\n6. **Reflux vesico-ureteral** (RVU)\n7. **Lesion extrinseque** (fibrose retroperitoneale, neoplasie genitale)", kind: 'a_retenir' },
+              { concept: 'Tumeur urotheliale', detail_md: "· Necessite **injection** (la tumeur ne se rehausse pas comme le parenchyme normal)\n· Aspect : **formation tissulaire** dans un uretere dilate\n· Diagnostic differentiel avec les calculs : le calcul est hyperdense sans injection", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Infection urinaire — Strategie d\'imagerie',
+            rows: [
+              { concept: '◆ Pas d\'imagerie immediate', detail_md: "En cas d'infection urinaire simple :\n· Diagnostic = **clinique + ECBU** (pas d'imagerie en 1ere intention)\n· Si **pas d'amelioration** sous traitement → imagerie pour rechercher des **complications**", kind: 'a_retenir' },
+              { concept: 'Complications a rechercher', detail_md: "· **Abces renal**\n· **Prostatite** (chez l'homme)\n· Extension aux organes de voisinage", kind: 'normal' },
+              { concept: '⚠ Echographie souvent normale dans la pyelonephrite', detail_md: "· Le foyer de nephrite est **invisible** en echo (sauf si enorme)\n· Si enorme : **dedifferenciation cortico-medullaire** visible\n· L'echo normale n'exclut PAS une pyelonephrite !", kind: 'piege' },
+              { concept: 'Abces renal en echographie', detail_md: "· Lesion **ronde**, **hypoechogene**\n· **Infiltration** du tissu autour\n· Doppler couleur : bleu = flux vers la sonde, rouge = flux s'eloignant, pas de couleur = stase (zone avasculaire)", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Infection urinaire — Scanner et cystographie',
+            rows: [
+              { concept: '◆ Scanner injecte pour complications infectieuses', detail_md: "· Indique pour rechercher un **abces** et evaluer son **extension**\n· Rein droit : atteinte du **foie** ?\n· Rein gauche : atteinte de la **rate** ?\n· **Muscles** atteints ?", kind: 'a_retenir' },
+              { concept: '⚠ Distinction kyste vs abces', detail_md: "Le **contexte clinique** est primordial :\n· **Pyelonephrite** + syndrome inflammatoire + traitement inefficace → **abces**\n· Bilan de routine sans symptomes → **kyste**\n· L'abces a un contenu **heterogene**, infiltre, et le rein est **tres gros**", kind: 'piege' },
+              { concept: 'Cystographie retrograde', detail_md: "· Specifique a la **pediatrie** (enfants avec pyelonephrites a repetition)\n· Recherche et caracterise le **reflux vesico-ureteral** (RVU)\n· Technique : pose sonde urinaire, remplissage vessie avec PCI sous controle radio, **3 fois**\n· Permet la **gradation du RVU**", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Tumeur du rein — Strategie diagnostique',
+            rows: [
+              { concept: '◆ Strategie diagnostique des tumeurs renales', detail_md: "1. **1ere intention** : ASP + echographie\n2. **2eme intention** : TDM injectee = uroscanner\n· Si pas de CI → uroscanner → si insuffisant (rare) → biopsie\n· Si CI uroscanner → biopsie → si insuffisant → IRM", kind: 'a_retenir' },
+            ],
+          },
+          {
+            titre: 'Tumeur du rein — Kyste renal simple',
+            rows: [
+              { concept: '◆ Kyste renal simple', detail_md: "· Tumeur **benigne**, tres **frequente** (surtout avec l'age)\n· Pas de potentiel malin → pas de traitement necessaire", kind: 'a_retenir' },
+              { concept: '◆ Kyste simple en echographie', detail_md: "· **Anechogene** (noir pur)\n· Contenu **propre** (homogene)\n· Forme **arrondie**\n· **Renforcement posterieur** (signe typique d'une structure liquidienne)", kind: 'a_retenir' },
+              { concept: 'Kyste simple au scanner', detail_md: "· **Hypodense** (densite liquidienne)\n· **Sans rehaussement tissulaire** apres injection de PCI", kind: 'normal' },
+              { concept: 'Kyste simple en IRM', detail_md: "· **Hypersignal T2** (liquide = blanc en T2)\n· **Hyposignal T1** (liquide = noir en T1)\n· **Sans rehaussement** apres injection de gadolinium", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Tumeur du rein — Angiomyolipome',
+            rows: [
+              { concept: '◆ Angiomyolipome', detail_md: "· Tumeur **benigne**, reconnaissable au scanner\n· Contient de la **graisse** → densite negative au scanner\n· **Isodense a la graisse mesenterique** (-100 a -50 UH)\n· Nature graisseuse confirmee si densite < **-20/-10 UH**", kind: 'a_retenir' },
+              { concept: '⚠ Diagnostic differentiel : liposarcome retroperitoneal', detail_md: "· Tumeur **maligne**, agressive\n· Contient aussi de la graisse MAIS deborde **au-dela du rein**\n· Angiomyolipome = intra-renal / Liposarcome = deborde en retroperitoine", kind: 'piege' },
+              { concept: 'Complication de l\'angiomyolipome', detail_md: "· Susceptible de se **rompre** → **saignement** (hemorragie retroperitoneale)\n· Risque augmente pour les angiomyolipomes de grande taille (> 4 cm)", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Tumeur du rein — Cancer du rein',
+            rows: [
+              { concept: '◆ Presentation du cancer du rein', detail_md: "· Souvent **asymptomatique** → decouverte **fortuite** (echo ou scanner pour autre raison)\n· Au stade avance : **hematurie macroscopique** (sang visible dans les urines)\n· L'imagerie sert au **diagnostic** ET a l'**evaluation de l'extension**", kind: 'a_retenir' },
+            ],
+          },
+          {
+            titre: 'Traumatismes du rein',
+            rows: [
+              { concept: '◆ Traumatismes renaux', detail_md: "· **Rares**, surviennent lors de choc/deceleration (**AVP** = accident voie publique)\n· Examen de reference = **URO-SCANNER** (ASP et radio standard sont inutiles !)", kind: 'a_retenir' },
+              { concept: '◆ 3 acquisitions essentielles du scanner traumatique', detail_md: "1. **Temps arteriel** : etude du parenchyme et du pedicule vasculaire\n2. **Temps portal** : etude de la capsule renale\n3. **Temps tardif** : recherche de fuite urinaire (extravasation de PCI)\n· Permet de definir les **differents grades** de traumatisme renal", kind: 'a_retenir' },
+              { concept: '⚠ ASP inutile dans les traumatismes renaux', detail_md: "Contrairement a la colique nephretique, l'ASP et la radio standard ne servent a **rien** dans les traumatismes renaux\n→ Aller directement a l'**uroscanner**", kind: 'piege' },
+            ],
+          },
+        ],
+      },
+      {
+        numero: 'IV',
+        titre: 'Les glandes surrenales',
+        sous_parties: [
+          {
+            titre: 'Rappels anatomiques et explorations',
+            rows: [
+              { concept: 'Anatomie des surrenales', detail_md: "· Situees juste **au-dessus des reins**\n· Vascularisees par les arteres et veines surrenales\n· Forme de **Y inverse** ou **V**", kind: 'normal' },
+              { concept: '◆ Examen de reference pour les surrenales', detail_md: "**Scanner et IRM** = examens de reference\n· **JAMAIS echographie** ni radio non injectee (surrenales invisibles)\n· **Exception** : echographie possible chez le **nourrisson < 2 mois**", kind: 'a_retenir' },
+              { concept: '⚠ Surrenales invisibles en echo', detail_md: "Les surrenales sont **invisibles** en echographie chez l'adulte et en radiographie non injectee\n· Seul le nourrisson < 2 mois permet une etude echographique\n· Ne pas prescrire echo/radio pour explorer les surrenales !", kind: 'piege' },
+            ],
+          },
+          {
+            titre: 'Aspect normal des surrenales',
+            rows: [
+              { concept: '◆ Mensurations normales des surrenales', detail_md: "· Forme **Y inverse** ou **V**\n· Aspect **fin** et regulier\n· **Corps < 8 mm**\n· **Bras** (externe et interne) **< 3 mm** chacun", kind: 'a_retenir' },
+            ],
+          },
+          {
+            titre: 'Adenome surrenalien',
+            rows: [
+              { concept: '◆ Adenome surrenalien', detail_md: "· Tumeur **benigne**, **frequente**\n· **Hypodense** au scanner\n· Critere diagnostic : densite **< +10 UH** → diagnostic d'adenome\n· **Pas besoin d'injection** pour poser le diagnostic !", kind: 'a_retenir' },
+              { concept: 'Mnemo adenome surrenalien', detail_md: "\"**A-10**\" : Adenome si densite < +10 UH\n→ Scanner sans injection suffit pour le diagnostic", kind: 'mnemo' },
+            ],
+          },
+          {
+            titre: 'Hyperplasie bilaterale des surrenales',
+            rows: [
+              { concept: 'Hyperplasie bilaterale', detail_md: "· Pathologie **benigne**\n· **Pas de nodule** discernable\n· Glandes **epaissies aux bras** (> 3 mm bilateralement)\n· Aspect diffus et symetrique", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Tumeurs malignes des surrenales',
+            rows: [
+              { concept: 'Carcinome surrenalien', detail_md: "· Tumeur **tres rare**\n· Lesion **heterogene**, **peu rehaussee** apres injection\n· Siege sur la surrenale, peut envahir le rein adjacent\n· Souvent de grande taille au diagnostic", kind: 'normal' },
+              { concept: 'Metastases surrenaliennes', detail_md: "· Les surrenales sont un site frequent de **metastases** (poumon, sein, rein, melanome...)\n· Souvent bilaterales\n· Aspect variable au scanner, generalement rehaussees apres injection", kind: 'normal' },
+            ],
+          },
+          {
+            titre: 'Cas clinique : bifidite ureterale',
+            rows: [
+              { concept: 'Bifidite ureterale', detail_md: "· **Anomalie congenitale**, viable\n· Predispose a davantage d'**infections urinaires**\n· Deux formes possibles", kind: 'normal' },
+              { concept: '◆ 2 types de bifidite ureterale', detail_md: "· **Bifidite incomplete** : les 2 ureteres fusionnent **avant** la vessie (jonction au niveau **L5-S1**)\n· **Bifidite complete** : les 2 ureteres restent **separes** jusqu'a la vessie (2 meats ureteraux)", kind: 'a_retenir' },
+            ],
+          },
+        ],
+      },
+    ],
+    points_cles: [
+      "1ere intention pour explorer les reins = ASP + echographie (accessibles, rapides, pas chers)",
+      "2eme intention = uroscanner (scanner sans puis avec injection de PCI)",
+      "L'echographie n'a aucune contre-indication (meme femme enceinte) ; l'ASP est contre-indique chez la femme enceinte (rayons X)",
+      "En echographie : cortex hypoechogene, medullaire hyperechogene ; CPC visibles = dilatees = pathologie",
+      "Ureteres visibles en echo au pyelon et a la vessie, mais PAS a l'etage lombaire",
+      "Scanner sans injection : calculs hyperdenses (sensibilite ~100%) ; seule CI = allergie PCI",
+      "Obstruction ureterale : 1ere cause = lithiase ; signes de retentissement = dilatation CPC + perte index cortico-medullaire",
+      "Pyelonephrite : pas d'imagerie immediate (clinique + ECBU d'abord) ; echo souvent normale ; scanner injecte si complications",
+      "Kyste simple : anechogene, propre, arrondi, renforcement posterieur (echo) ; hypodense sans rehaussement (scanner)",
+      "Angiomyolipome : tumeur benigne graisseuse (densite < -20/-10 UH) ; DD = liposarcome retroperitoneal (malin, deborde au-dela du rein)",
+      "Adenome surrenalien : densite < +10 UH au scanner sans injection → diagnostic pose",
+      "Surrenales invisibles en echo et radio non injectee (sauf nourrisson < 2 mois) ; examen de reference = scanner/IRM",
+      "Traumatismes renaux : uroscanner = examen de reference (ASP inutile) ; 3 acquisitions (arteriel, portal, tardif)",
+    ],
+    chiffres_cles: {
+      titre: 'Chiffres cles — Retroperitoine et semiologie radiologique',
+      markdown: "| Parametre | Valeur |\n|---|---|\n| Projection des reins | **L2** |\n| Surrenale — corps | **< 8 mm** |\n| Surrenale — bras | **< 3 mm** chacun |\n| Adenome surrenalien — densite | **< +10 UH** |\n| Angiomyolipome — densite graisseuse | **< -20/-10 UH** |\n| Angiomyolipome — isodense a graisse | **-100 a -50 UH** |\n| Sensibilite scanner pour calculs | **~100%** |\n| Concentration maximale urines | **1200 mOsm/L** |\n| Bifidite incomplete — jonction | **L5-S1** |",
+    },
+  },
+  flashcards: [
+    { recto: "Quelles sont les 5 structures de l'architecture interne du rein ?", verso: "1. <b>Cortex renal</b> (peripherique)\n2. <b>Colonne renale</b> = Colonne de Bertin\n3. <b>Pyramide renale</b> = Pyramide de Malpighi\n4. <b>Papille</b> (sommet de la pyramide)\n5. <b>Graisse sinusale</b> (dans le sinus renal)", order_index: 1 },
+    { recto: "Quel est l'autre nom de la colonne renale ?", verso: "<b>Colonne de Bertin</b>\n· Prolongement du cortex entre les pyramides renales", order_index: 2 },
+    { recto: "Quel est l'autre nom de la pyramide renale ?", verso: "<b>Pyramide de Malpighi</b>\n· Zone medullaire du parenchyme renal\n· Base peripherique, sommet = papille", order_index: 3 },
+    { recto: "Ou s'ouvre la papille renale ?", verso: "La papille s'ouvre dans le <b>calice</b>\n· Elle correspond au sommet de la pyramide de Malpighi", order_index: 4 },
+    { recto: "Quelles sont les 4 modalites d'imagerie pour explorer les reins ?", verso: "1. <b>Radiologie standard / ASP</b>\n2. <b>Echographie</b>\n3. <b>Scanner</b> (TDM)\n4. <b>IRM</b> (tres rare, pour tumeurs)", order_index: 5 },
+    { recto: "Quels sont les examens de 1ere intention pour explorer les reins ?", verso: "<b>ASP + echographie</b>\n· Accessibles, pas chers, rapides\n· Toujours demander les DEUX", order_index: 6 },
+    { recto: "Quel est l'examen de 2eme intention pour explorer les reins ?", verso: "Le <b>scanner</b> (uroscanner)\n· Plus precis que l'ASP et l'echographie\n· Necessite souvent une injection de PCI", order_index: 7 },
+    { recto: "L'ASP est-il un examen realise debout ou couche ?", verso: "L'ASP peut etre realise <b>debout ou couche</b>\n· C'est une radiographie de face", order_index: 8 },
+    { recto: "A quel niveau vertebral se projettent les reins sur l'ASP ?", verso: "Au niveau de <b>L2</b>", order_index: 9 },
+    { recto: "Comment apparait un calcul urinaire sur l'ASP ?", verso: "Sous forme d'une <b>opacite</b> (blanc)\n· Exception : certains calculs sont radiotransparents (acide urique pur)", order_index: 10 },
+    { recto: "Qu'est-ce qu'un calcul coralliforme ?", verso: "Un calcul <b>tres gros</b>, en forme de <b>corail</b>\n· Moule les cavites pyelo-calicielles\n· Tres douloureux", order_index: 11 },
+    { recto: "L'ASP est-il contre-indique chez la femme enceinte ?", verso: "<b>Oui</b>, car l'ASP utilise des <b>rayons X</b>\n· Contrairement a l'echographie qui n'a aucune CI", order_index: 12 },
+    { recto: "L'echographie renale a-t-elle des contre-indications ?", verso: "<b>Non</b>, aucune contre-indication\n· Peut etre realisee meme chez la <b>femme enceinte</b>\n· Examen de 1ere intention", order_index: 13 },
+    { recto: "Quelle sonde utilise-t-on pour l'echographie renale ?", verso: "Une sonde <b>convexe</b>\n· Image typique = coupe foie-rein droit", order_index: 14 },
+    { recto: "Comment apparait le cortex renal en echographie ?", verso: "<b>Hypoechogene</b> (noir)\n· A differencier de la medullaire qui est hyperechogene", order_index: 15 },
+    { recto: "Comment apparait la medullaire renale en echographie ?", verso: "<b>Hyperechogene</b> (blanc)\n· A differencier du cortex qui est hypoechogene", order_index: 16 },
+    { recto: "Qu'est-ce que la differenciation cortico-medullaire ?", verso: "La distinction echographique entre :\n· <b>Cortex</b> = hypoechogene (noir)\n· <b>Medullaire</b> = hyperechogene (blanc)\nSa perte = signe de <b>souffrance renale</b>", order_index: 17 },
+    { recto: "Comment apparaissent les CPC normales en echographie ?", verso: "<b>Fines</b> et <b>anechogenes</b> (noires)\n· Si visibles et dilatees = <b>pathologie</b> (obstruction)", order_index: 18 },
+    { recto: "Que signifie la visibilite des CPC en echographie ?", verso: "Si les CPC sont <b>visibles et dilatees</b>, c'est un signe de <b>pathologie</b>\n· Normalement elles sont fines et a peine visibles\n· Dilatation = obstruction en aval", order_index: 19 },
+    { recto: "Ou sont visibles les ureteres en echographie ?", verso: "· Au <b>pyelon</b> (jonction pyelo-ureterale)\n· A la <b>vessie</b> (jonction uretero-vesicale)\n· <b>PAS visibles a l'etage lombaire</b>", order_index: 20 },
+    { recto: "VRAI ou FAUX : les ureteres sont visibles a l'etage lombaire en echographie", verso: "<b>FAUX</b>\n· Les ureteres ne sont PAS visibles a l'etage lombaire\n· Visibles uniquement au pyelon et a la vessie", order_index: 21 },
+    { recto: "En quelle coupe voit-on le hile renal vasculaire en echographie ?", verso: "En <b>coupe axiale</b>\n· Permet d'identifier l'artere et la veine renales", order_index: 22 },
+    { recto: "Quelles sont les 4 acquisitions d'un uroscanner ?", verso: "1. <b>Sans injection</b> (calculs)\n2. <b>Temps arteriel</b> (secretoire, parenchyme)\n3. <b>Temps portal</b> (excretoire, CPC/ureteres/vessie)\n4. <b>Temps tardif</b>", order_index: 23 },
+    { recto: "Que recherche-t-on specifiquement sur l'acquisition sans injection du scanner ?", verso: "Les <b>calculs</b>\n· Apparaissent <b>hyperdenses</b> (tres blancs)\n· Sensibilite proche de <b>100%</b>", order_index: 24 },
+    { recto: "Comment apparait un foyer de nephrite au temps secretoire du scanner ?", verso: "Comme une <b>plage moins rehaussee</b> que le parenchyme normal\n· Le parenchyme sain se rehausse normalement\n· Le foyer infecte se rehausse moins", order_index: 25 },
+    { recto: "Que permet d'etudier le temps excretoire du scanner ?", verso: "Les <b>cavites pyelo-calicielles</b>, les <b>ureteres</b> et la <b>vessie</b>\n· Le PCI est excrete dans les voies urinaires\n· Visualise tout l'arbre urinaire", order_index: 26 },
+    { recto: "Quelle est la seule contre-indication du scanner injecte ?", verso: "L'<b>allergie au produit de contraste iode</b> (PCI)\n· TOUJOURS demander au patient avant l'injection !", order_index: 27 },
+    { recto: "L'IRM renale est-elle utilisee pour les pathologies infectieuses ?", verso: "<b>Non</b>\n· L'IRM est reservee aux <b>pathologies tumorales</b>\n· Pas pour l'infectieux/inflammatoire", order_index: 28 },
+    { recto: "L'IRM renale a-t-elle des contre-indications ?", verso: "Pas de grosses CI sauf la <b>femme enceinte en debut de grossesse</b>\n· Pas d'irradiation (pas de rayons X)\n· Produit de contraste = gadolinium (pas d'iode)", order_index: 29 },
+    { recto: "Quel est le mecanisme de la colique nephretique ?", verso: "<b>Obstruction de l'uretere</b> (par calcul ou tumeur)\n· Douleur aigue, intense, lombaire\n· Irradie vers les organes genitaux externes", order_index: 30 },
+    { recto: "Quels sont les 3 objectifs de la radiologie en cas d'obstruction ureterale ?", verso: "1. <b>QUOI</b> bloque ? (nature : calcul, tumeur...)\n2. <b>OU</b> est l'obstacle ? (localisation)\n3. <b>D'OU</b> retentissement sur le rein ? (souffrance)", order_index: 31 },
+    { recto: "Quels sont les signes de souffrance renale en cas d'obstruction ?", verso: "· <b>Rein dilate</b> (hydronephrose)\n· <b>Perte de l'index cortico-medullaire</b>\n· Ces signes = <b>urgence</b> (risque de destruction renale)", order_index: 32 },
+    { recto: "Quel est le bilan d'imagerie de 1ere intention devant une colique nephretique ?", verso: "<b>ASP + echographie EN URGENCE</b>\n· ASP : recherche opacite (calcul)\n· Echo : recherche dilatation CPC et uretere", order_index: 33 },
+    { recto: "Comment apparait un calcul en echographie ?", verso: "Image <b>hyperechogene</b> avec <b>cone d'ombre posterieur</b>\n· C'est le signe typique d'un calcul en echo", order_index: 34 },
+    { recto: "Quelle est la strategie d'imagerie de 2eme intention devant une obstruction ureterale ?", verso: "· <b>Scanner sans injection</b> d'abord (recherche calculs)\n· Si calcul obstructif → diagnostic pose\n· Si pas de calcul → <b>injection</b> (uroscanner complet)", order_index: 35 },
+    { recto: "Quelle est la sensibilite du scanner sans injection pour les calculs ?", verso: "Sensibilite proche de <b>100%</b>\n· Les calculs apparaissent hyperdenses (tres blancs)\n· Examen de reference pour les calculs", order_index: 36 },
+    { recto: "Quand injecte-t-on le PCI dans le cadre d'une obstruction ureterale ?", verso: "· Si <b>pas de calcul</b> visible sans injection → injection pour chercher autre cause\n· Si <b>pyelonephrite obstructive</b> ou <b>abces</b> → injection systematique", order_index: 37 },
+    { recto: "Quels sont les signes scanographiques d'une obstruction ureterale ?", verso: "· <b>Retard de secretion</b> du cote obstrue\n· <b>Dilatation des CPC en amont</b> de l'obstacle\n· Infiltration de la graisse peri-renale", order_index: 38 },
+    { recto: "Quelle est l'etiologie la plus frequente d'obstacle ureteral ?", verso: "La <b>lithiase</b> (de loin la plus frequente)\n· Suivie par les tumeurs urotheliales, le BK, les stenoses post-traumatiques...", order_index: 39 },
+    { recto: "Citer les 7 etiologies d'obstacles ureteraux", verso: "1. <b>Lithiase</b> ++++\n2. <b>Tumeur urotheliale</b>\n3. <b>BK</b> (tuberculose urinaire)\n4. <b>Stenose post-traumatique</b>\n5. <b>Syndrome de jonction pyelo-ureterale</b>\n6. <b>Reflux vesico-ureteral</b>\n7. <b>Lesion extrinseque</b> (fibrose, neoplasie)", order_index: 40 },
+    { recto: "Comment differencier une tumeur urotheliale d'un calcul au scanner ?", verso: "· <b>Calcul</b> : hyperdense <b>sans injection</b>\n· <b>Tumeur</b> : necessite <b>injection</b>, ne se rehausse pas comme le parenchyme normal, apparait comme une formation tissulaire dans l'uretere dilate", order_index: 41 },
+    { recto: "Faut-il prescrire une imagerie immediatement en cas d'infection urinaire ?", verso: "<b>Non</b>\n· Diagnostic = <b>clinique + ECBU</b> (pas d'imagerie initiale)\n· Imagerie seulement si <b>pas d'amelioration</b> sous traitement", order_index: 42 },
+    { recto: "Quelles complications recherche-t-on a l'imagerie en cas de pyelonephrite non amelioree ?", verso: "· <b>Abces renal</b>\n· <b>Prostatite</b> (chez l'homme)\n· Extension aux organes de voisinage", order_index: 43 },
+    { recto: "VRAI ou FAUX : une echographie normale exclut une pyelonephrite", verso: "<b>FAUX</b>\n· L'echographie est souvent <b>normale</b> dans la pyelonephrite\n· Le foyer de nephrite est invisible sauf s'il est enorme", order_index: 44 },
+    { recto: "Quel signe echographique peut-on voir dans une pyelonephrite severe ?", verso: "Une <b>dedifferenciation cortico-medullaire</b>\n· Seulement si le foyer est enorme\n· La plupart du temps, l'echo est normale", order_index: 45 },
+    { recto: "Comment apparait un abces renal en echographie ?", verso: "· Lesion <b>ronde</b>\n· <b>Hypoechogene</b>\n· <b>Infiltration</b> du tissu autour\n· Zone avasculaire au Doppler couleur", order_index: 46 },
+    { recto: "Que signifient les couleurs au Doppler couleur ?", verso: "· <b>Bleu</b> = flux <b>vers</b> la sonde\n· <b>Rouge</b> = flux <b>s'eloignant</b> de la sonde\n· <b>Pas de couleur</b> = stase (zone avasculaire)", order_index: 47 },
+    { recto: "Pourquoi realise-t-on un scanner injecte en cas de complication infectieuse renale ?", verso: "Pour rechercher un <b>abces</b> et evaluer son <b>extension</b> :\n· Rein droit → atteinte du <b>foie</b> ?\n· Rein gauche → atteinte de la <b>rate</b> ?\n· <b>Muscles</b> atteints ?", order_index: 48 },
+    { recto: "Comment distinguer un kyste d'un abces renal ?", verso: "Le <b>contexte clinique</b> est primordial :\n· Pyelonephrite + syndrome inflammatoire + ttt inefficace → <b>abces</b>\n· Bilan routine sans symptomes → <b>kyste</b>\n· Abces : contenu <b>heterogene</b>, infiltre, rein <b>tres gros</b>", order_index: 49 },
+    { recto: "Qu'est-ce que la cystographie retrograde ?", verso: "Technique specifique a la <b>pediatrie</b> :\n· Pose sonde urinaire, remplissage vessie avec PCI sous controle radio, <b>3 fois</b>\n· Recherche et caracterise le <b>reflux vesico-ureteral</b> (RVU)", order_index: 50 },
+    { recto: "Chez qui realise-t-on une cystographie retrograde ?", verso: "Chez les <b>enfants</b> ayant des <b>pyelonephrites a repetition</b>\n· Specifique a la pediatrie\n· Pour rechercher un reflux vesico-ureteral", order_index: 51 },
+    { recto: "Quelle est la strategie diagnostique de 1ere intention devant une tumeur du rein ?", verso: "<b>ASP + echographie</b>\n· Comme pour la plupart des pathologies renales\n· 2eme intention = TDM injectee (uroscanner)", order_index: 52 },
+    { recto: "Quelle est la strategie si le patient a une CI a l'uroscanner pour une tumeur renale ?", verso: "CI uroscanner → <b>biopsie</b>\n· Si biopsie insuffisante → <b>IRM</b>\n(Sans CI : uroscanner → si insuffisant → biopsie)", order_index: 53 },
+    { recto: "Le kyste renal simple est-il frequent ou rare ?", verso: "Tres <b>frequent</b>\n· Tumeur benigne\n· Frequence augmente avec l'<b>age</b>", order_index: 54 },
+    { recto: "Comment apparait un kyste renal simple en echographie ?", verso: "· <b>Anechogene</b> (noir pur)\n· Contenu <b>propre</b> (homogene)\n· Forme <b>arrondie</b>\n· <b>Renforcement posterieur</b>", order_index: 55 },
+    { recto: "Qu'est-ce que le renforcement posterieur en echographie ?", verso: "Signe typique d'une structure <b>liquidienne</b>\n· Le faisceau d'ultrasons traverse le liquide sans attenuation\n· Il renforce le signal en arriere de la structure\n· Signe typique du <b>kyste</b>", order_index: 56 },
+    { recto: "Comment apparait un kyste renal simple au scanner ?", verso: "· <b>Hypodense</b> (densite liquidienne)\n· <b>Sans rehaussement</b> apres injection de PCI\n· Paroi fine et reguliere", order_index: 57 },
+    { recto: "Comment apparait un kyste renal simple en IRM ?", verso: "· <b>Hypersignal T2</b> (liquide = blanc en T2)\n· <b>Hyposignal T1</b> (liquide = noir en T1)\n· <b>Sans rehaussement</b> apres injection de gadolinium", order_index: 58 },
+    { recto: "Qu'est-ce qu'un angiomyolipome ?", verso: "· Tumeur <b>benigne</b> du rein\n· Contient de la <b>graisse</b>\n· Reconnaissable au scanner par sa densite negative", order_index: 59 },
+    { recto: "Quelle est la densite d'un angiomyolipome au scanner ?", verso: "· <b>Isodense a la graisse mesenterique</b> : -100 a -50 UH\n· Nature graisseuse confirmee si densite <b>< -20/-10 UH</b>", order_index: 60 },
+    { recto: "A quelle densite (UH) confirme-t-on la nature graisseuse d'un angiomyolipome ?", verso: "Densite <b>< -20/-10 UH</b>\n· La graisse a une densite negative au scanner\n· L'angiomyolipome est isodense a la graisse mesenterique (-100 a -50 UH)", order_index: 61 },
+    { recto: "Quel est le diagnostic differentiel principal de l'angiomyolipome ?", verso: "Le <b>liposarcome retroperitoneal</b>\n· Tumeur <b>maligne</b>, agressive\n· Contient aussi de la graisse\n· Deborde <b>au-dela du rein</b> (angiomyolipome = intra-renal)", order_index: 62 },
+    { recto: "Comment differencier angiomyolipome et liposarcome ?", verso: "· <b>Angiomyolipome</b> = benin, <b>intra-renal</b>\n· <b>Liposarcome</b> = malin, deborde <b>au-dela du rein</b> en retroperitoine\n· Les deux contiennent de la graisse", order_index: 63 },
+    { recto: "Quelle est la complication principale de l'angiomyolipome ?", verso: "<b>Rupture</b> → <b>saignement</b> (hemorragie retroperitoneale)\n· Risque augmente pour les tumeurs > 4 cm", order_index: 64 },
+    { recto: "Comment se presente le cancer du rein au debut ?", verso: "Souvent <b>asymptomatique</b>\n· Decouverte <b>fortuite</b> lors d'une echo ou scanner pour autre raison", order_index: 65 },
+    { recto: "Quel est le symptome du cancer du rein au stade avance ?", verso: "<b>Hematurie macroscopique</b>\n· Sang visible dans les urines\n· Signe tardif", order_index: 66 },
+    { recto: "A quoi sert l'imagerie dans le cancer du rein ?", verso: "2 roles :\n1. <b>Diagnostic</b> de la tumeur\n2. <b>Evaluation de l'extension</b> (locale, ganglionnaire, metastatique)", order_index: 67 },
+    { recto: "Les traumatismes renaux sont-ils frequents ou rares ?", verso: "<b>Rares</b>\n· Surviennent lors de choc/deceleration\n· Cause principale : <b>AVP</b> (accident voie publique)", order_index: 68 },
+    { recto: "Quel est l'examen de reference pour les traumatismes renaux ?", verso: "L'<b>uroscanner</b>\n· L'ASP et la radio standard sont <b>inutiles</b> dans ce contexte", order_index: 69 },
+    { recto: "VRAI ou FAUX : l'ASP est utile dans les traumatismes renaux", verso: "<b>FAUX</b>\n· L'ASP est inutile dans les traumatismes renaux\n· Aller directement a l'<b>uroscanner</b>", order_index: 70 },
+    { recto: "Quelles sont les 3 acquisitions essentielles du scanner dans les traumatismes renaux ?", verso: "1. <b>Temps arteriel</b> : parenchyme et pedicule vasculaire\n2. <b>Temps portal</b> : capsule renale\n3. <b>Temps tardif</b> : recherche de fuite urinaire (extravasation PCI)", order_index: 71 },
+    { recto: "Ou se situent les glandes surrenales ?", verso: "Juste <b>au-dessus des reins</b>\n· Vascularisees par les arteres et veines surrenales", order_index: 72 },
+    { recto: "Quelle est la forme normale des glandes surrenales ?", verso: "Forme de <b>Y inverse</b> ou <b>V</b>\n· Aspect fin et regulier", order_index: 73 },
+    { recto: "Quel est l'examen de reference pour explorer les surrenales ?", verso: "<b>Scanner et IRM</b>\n· JAMAIS echo ni radio non injectee chez l'adulte\n· Les surrenales sont invisibles en echo et radio", order_index: 74 },
+    { recto: "VRAI ou FAUX : l'echographie peut explorer les surrenales chez l'adulte", verso: "<b>FAUX</b>\n· Les surrenales sont <b>invisibles</b> en echo chez l'adulte\n· Exception : echographie possible chez le <b>nourrisson < 2 mois</b>", order_index: 75 },
+    { recto: "Chez quel patient l'echographie peut-elle explorer les surrenales ?", verso: "Chez le <b>nourrisson de moins de 2 mois</b>\n· C'est la seule exception\n· Chez l'adulte, les surrenales sont invisibles en echo", order_index: 76 },
+    { recto: "Quelles sont les mensurations normales du corps de la surrenale ?", verso: "<b>< 8 mm</b>\n· Si > 8 mm → suspecter une pathologie (hyperplasie, adenome, tumeur)", order_index: 77 },
+    { recto: "Quelles sont les mensurations normales des bras de la surrenale ?", verso: "<b>< 3 mm</b> chacun (bras externe et interne)\n· Epaississement bilateral des bras → hyperplasie bilaterale", order_index: 78 },
+    { recto: "Qu'est-ce qu'un adenome surrenalien ?", verso: "· Tumeur <b>benigne</b> et <b>frequente</b>\n· <b>Hypodense</b> au scanner\n· Diagnostic si densite <b>< +10 UH</b>", order_index: 79 },
+    { recto: "Quel est le critere diagnostique scanographique de l'adenome surrenalien ?", verso: "Densite <b>< +10 UH</b> au scanner sans injection\n· Pas besoin d'injection pour poser le diagnostic !", order_index: 80 },
+    { recto: "Faut-il injecter du PCI pour diagnostiquer un adenome surrenalien ?", verso: "<b>Non</b>\n· Le scanner <b>sans injection</b> suffit\n· Densite < +10 UH → diagnostic d'adenome pose", order_index: 81 },
+    { recto: "Qu'est-ce que l'hyperplasie bilaterale des surrenales ?", verso: "· Pathologie <b>benigne</b>\n· <b>Pas de nodule</b> discernable\n· Glandes <b>epaissies aux bras</b> (> 3 mm bilateralement)\n· Aspect diffus et symetrique", order_index: 82 },
+    { recto: "Comment differencier un adenome surrenalien d'une hyperplasie bilaterale ?", verso: "· <b>Adenome</b> : nodule <b>unique</b>, hypodense < +10 UH\n· <b>Hyperplasie</b> : pas de nodule, epaississement <b>diffus et bilateral</b> des bras", order_index: 83 },
+    { recto: "Qu'est-ce qu'un carcinome surrenalien ?", verso: "· Tumeur <b>maligne</b> et <b>tres rare</b>\n· Lesion heterogene, peu rehaussee apres injection\n· Souvent de grande taille au diagnostic", order_index: 84 },
+    { recto: "Les surrenales sont-elles un site frequent de metastases ?", verso: "<b>Oui</b>\n· Site frequent de metastases (poumon, sein, rein, melanome...)\n· Souvent bilaterales", order_index: 85 },
+    { recto: "Qu'est-ce que la bifidite ureterale ?", verso: "· <b>Anomalie congenitale</b>, viable\n· Predispose a davantage d'<b>infections urinaires</b>\n· 2 formes : incomplete et complete", order_index: 86 },
+    { recto: "Quelle est la difference entre bifidite incomplete et complete ?", verso: "· <b>Incomplete</b> : les 2 ureteres <b>fusionnent avant</b> la vessie (jonction au niveau L5-S1)\n· <b>Complete</b> : les 2 ureteres restent <b>separes</b> jusqu'a la vessie (2 meats)", order_index: 87 },
+    { recto: "A quel niveau anatomique se fait la jonction dans une bifidite incomplete ?", verso: "Au niveau de <b>L5-S1</b>\n· Les 2 ureteres fusionnent avant d'atteindre la vessie", order_index: 88 },
+    { recto: "VRAI ou FAUX : le cancer du rein est souvent symptomatique au debut", verso: "<b>FAUX</b>\n· Le cancer du rein est souvent <b>asymptomatique</b> au debut\n· Decouverte fortuite lors d'examens d'imagerie pour autre raison", order_index: 89 },
+    { recto: "Quelle pathologie recherche la cystographie retrograde ?", verso: "Le <b>reflux vesico-ureteral</b> (RVU)\n· Permet aussi de le <b>grader</b>\n· Specifique a la pediatrie", order_index: 90 },
+    { recto: "VRAI ou FAUX : l'echographie est l'examen de reference pour les traumatismes renaux", verso: "<b>FAUX</b>\n· L'examen de reference est l'<b>uroscanner</b>\n· L'echo et l'ASP sont insuffisants pour les traumatismes renaux", order_index: 91 },
+    { recto: "Quel examen realiser en cas de contre-indication a l'uroscanner pour une tumeur renale ?", verso: "Une <b>biopsie</b>\n· Si biopsie insuffisante → <b>IRM</b>", order_index: 92 },
+    { recto: "Resumer les examens de reference selon la pathologie renale", verso: "· <b>Calcul/colique nephretique</b> : ASP + echo (1ere), scanner sans injection (2eme)\n· <b>Infection</b> : clinique + ECBU, scanner injecte si complication\n· <b>Tumeur</b> : ASP + echo (1ere), uroscanner (2eme)\n· <b>Traumatisme</b> : uroscanner directement\n· <b>Surrenales</b> : scanner/IRM", order_index: 93 },
+    { recto: "Quels sont les 4 signes echographiques du kyste simple ?", verso: "1. <b>Anechogene</b> (noir pur)\n2. Contenu <b>propre</b>\n3. Forme <b>arrondie</b>\n4. <b>Renforcement posterieur</b>", order_index: 94 },
+    { recto: "VRAI ou FAUX : un angiomyolipome peut saigner spontanement", verso: "<b>VRAI</b>\n· L'angiomyolipome est susceptible de se <b>rompre</b> → saignement\n· Risque augmente si taille > 4 cm", order_index: 95 },
+    { recto: "VRAI ou FAUX : le liposarcome retroperitoneal est une tumeur benigne", verso: "<b>FAUX</b>\n· Le liposarcome est une tumeur <b>maligne</b> et <b>agressive</b>\n· Il deborde au-dela du rein (contrairement a l'angiomyolipome qui est benin et intra-renal)", order_index: 96 },
+  ],
+  annales: [],
+};
+
+export default content;
