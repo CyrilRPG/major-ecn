@@ -229,6 +229,8 @@ tr { break-inside: avoid; }
   right: 0;
   bottom: 0;
   padding: 30mm 24mm 24mm 26mm;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Identité du cours ── */
@@ -287,6 +289,8 @@ tr { break-inside: avoid; }
 .cover-plan {
   clear: both;
   margin-top: 13mm;
+  flex: 1;
+  overflow: hidden;
 }
 .cover-plan-list {
   list-style: none;
@@ -317,10 +321,7 @@ tr { break-inside: avoid; }
 
 /* ── Légende des marqueurs ── */
 .cover-legend {
-  position: absolute;
-  left: 26mm;
-  right: 24mm;
-  bottom: 24mm;
+  flex-shrink: 0;
   padding-top: 6mm;
   border-top: 0.8pt solid var(--line);
 }

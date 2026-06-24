@@ -112,6 +112,16 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     popularRank: 5,
   },
   {
+    slug: 'evc-ratio-candidats-postes-choix-specialite-2026',
+    title: 'EVC 2026 : pourquoi le nombre de postes ne doit pas (à lui seul) guider ton choix de spécialité',
+    excerpt: 'EVC PADHUE 2026 : le nombre de postes par spécialité peut tromper. Ratio candidats/postes, effet de troupeau, données CNG — comment vraiment choisir.',
+    category: 'epreuves-evc',
+    readingMinutes: 8,
+    readers: 0,
+    publishedAt: '2026-06-24',
+    featured: true,
+  },
+  {
     slug: 'impact-evc-acces-soins',
     title: 'EVC PAE : pourquoi les médecins diplômés hors UE sont essentiels à l\'accès aux soins en France',
     excerpt: 'Les Épreuves de Vérification des Connaissances (EVC) jouent un rôle clé dans l\'intégration des médecins PADHUE et contribuent au renforcement de l\'offre de soins sur l\'ensemble du territoire français.',

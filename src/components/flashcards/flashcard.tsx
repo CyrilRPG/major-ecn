@@ -110,9 +110,10 @@ function Face({
         </span>
       </div>
       <div className="relative z-20 flex flex-1 items-center justify-center px-4 py-4 sm:px-8 sm:py-6">
-        <p className="max-w-full text-center text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-balance sm:max-w-[80%] sm:text-xl md:text-2xl lg:text-3xl">
-          {text}
-        </p>
+        <p
+          className="max-w-full text-center text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-balance sm:max-w-[80%] sm:text-xl md:text-2xl lg:text-3xl"
+          dangerouslySetInnerHTML={{ __html: text.replace(/</g, '&lt;').replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>').replace(/&lt;i&gt;/g, '<i>').replace(/&lt;\/i&gt;/g, '</i>').replace(/&lt;sub&gt;/g, '<sub>').replace(/&lt;\/sub&gt;/g, '</sub>').replace(/&lt;sup&gt;/g, '<sup>').replace(/&lt;\/sup&gt;/g, '</sup>') }}
+        />
       </div>
       {/* Footer carte : empile en colonne sur mobile (texte au-dessus du
           bouton « Retourner la carte »), passe en row à partir de sm. */}
