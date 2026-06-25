@@ -126,7 +126,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
           desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
           Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
         },
         {
           href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
@@ -158,7 +158,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
           desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
           Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
         },
         {
           href: `/cours/${coursId}/flashcards`, label: 'Flashcards',

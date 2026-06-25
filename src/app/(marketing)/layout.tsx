@@ -1,6 +1,7 @@
 import { MarketingHeader } from '@/components/marketing/marketing-header';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
 import { GuidePopup } from '@/components/marketing/guide-popup';
+import { GuideFloatingButton } from '@/components/marketing/guide-floating-button';
 import { JsonLd, organizationSchema, webSiteSchema } from '@/components/seo/json-ld';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
@@ -11,6 +12,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <main className="flex-1">{children}</main>
       <MarketingFooter />
       <GuidePopup />
+      <GuideFloatingButton />
     </div>
   );
 }

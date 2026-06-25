@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Trophy } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Trophy, Sparkles } from 'lucide-react';
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -24,9 +24,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
 
   const { data: series } = await supabase
     .from('qcm_series')
-    .select('id, label, order_index, qcm_questions(id)')
+    .select('id, label, order_index, type, qcm_questions(id)')
     .eq('cours_id', coursId)
-    .eq('type', 'qcm')
+    .in('type', ['qcm', 'seance'])
     .order('order_index');
 
   const { data: sessions } = await supabase
@@ -44,6 +44,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
 
   const isDp = (label: string) => /^dp\s*\d/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
+  const isSeance = (s: { type?: string }) => s.type === 'seance';
 
   // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
   const scoreTheme = (correct: number, total: number) => {
@@ -92,8 +93,11 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
                 </li>
               );
             }
-            // Vert pour Entraînement, rouge pour DP, bleu pour QCM standard.
-            const theme = entr
+            const seance = isSeance(s);
+            // Violet pour Séance, vert pour Entraînement, rouge pour DP, bleu pour QCM standard.
+            const theme = seance
+              ? { bar: '#7C3AED', bg: '#F3EAFF', fg: '#5B21B6', Icon: Sparkles,      kindLabel: 'Séance du prof' }
+              : entr
               ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }
               : dp
               ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList,  kindLabel: 'DP' }

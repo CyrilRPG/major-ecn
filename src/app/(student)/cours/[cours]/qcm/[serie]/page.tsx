@@ -70,6 +70,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
   if (!session) notFound();
 
   const isAnnale = serie.type === 'annale';
+  const isSeance = serie.type === 'seance';
   const backHref = isAnnale ? `/cours/${coursId}/annales` : `/cours/${coursId}/qcm`;
 
   return (
@@ -78,7 +79,7 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
       coursId={coursId}
       serieId={serieId}
       serieLabel={serie.label}
-      serieKind={isAnnale ? 'annale' : 'qcm'}
+      serieKind={isSeance ? 'seance' : isAnnale ? 'annale' : 'qcm'}
       vignette={vignette}
       questions={enrichedQuestions}
       backHref={backHref}

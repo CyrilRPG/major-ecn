@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Pencil } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Eye, Pencil, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -44,7 +44,7 @@ export function QcmSession({
   coursId: string;
   serieId?: string;
   serieLabel: string;
-  serieKind: 'qcm' | 'annale';
+  serieKind: 'qcm' | 'annale' | 'seance';
   /** Vignette clinique commune à toutes les questions (DP / annale).
    *  Affichée dans un encadré séparé au-dessus de chaque question. */
   vignette?: string | null;
@@ -59,6 +59,7 @@ export function QcmSession({
   const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
   const [editingVignette, setEditingVignette] = useState(false);
   const isTraining = mode === 'training';
+  const isSeance = serieKind === 'seance';
   const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
   const [index, setIndex] = useState(0);
@@ -68,6 +69,9 @@ export function QcmSession({
   // QROC state
   const [qrocAnswers, setQrocAnswers] = useState<Record<string, string>>({});
   const [qrocOutcomes, setQrocOutcomes] = useState<Record<string, QrocOutcome>>({});
+  // Séance QROC: reveal + self-grade
+  const [seanceRevealed, setSeanceRevealed] = useState<Record<string, boolean>>({});
+  const [seanceSelfGrade, setSeanceSelfGrade] = useState<Record<string, 'bon' | 'faux'>>({});
   // Shared state
   const [questionCorrect, setQuestionCorrect] = useState<Record<string, boolean | null>>({});
   const [elapsed, setElapsed] = useState(0);
@@ -100,8 +104,11 @@ export function QcmSession({
   const total = questions.length;
   const q = questions[index];
   const isQroc = q.format === 'qroc';
+  const isSeanceQroc = isSeance && isQroc;
   const sel = selected[q.id] ?? new Set<string>();
-  const isValidated = isQroc ? qrocOutcomes[q.id] != null : validated[q.id] != null;
+  const isValidated = isSeanceQroc
+    ? seanceSelfGrade[q.id] != null
+    : isQroc ? qrocOutcomes[q.id] != null : validated[q.id] != null;
 
   const toggle = (lettre: string) => {
     if (isValidated) return;
@@ -112,7 +119,9 @@ export function QcmSession({
     });
   };
 
-  const canValidate = isQroc
+  const canValidate = isSeanceQroc
+    ? true
+    : isQroc
     ? (qrocAnswers[q.id] ?? '').trim().length > 0
     : sel.size > 0;
 
@@ -172,6 +181,34 @@ export function QcmSession({
     setSubmitting(false);
   };
 
+  const revealSeanceAnswer = () => {
+    setSeanceRevealed((prev) => ({ ...prev, [q.id]: true }));
+  };
+
+  const selfGradeSeance = async (grade: 'bon' | 'faux') => {
+    if (submitting) return;
+    setSubmitting(true);
+    const isCorrect = grade === 'bon';
+    setSeanceSelfGrade((prev) => ({ ...prev, [q.id]: grade }));
+    setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
+
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
+    if (user) {
+      await supabase.from('qcm_attempts').insert({
+        user_id: user.id,
+        session_id: sessionId,
+        question_id: q.id,
+        selected_items: [],
+        is_correct: isCorrect,
+        time_spent_seconds: timeSpent,
+        text_answer: (qrocAnswers[q.id] ?? '').trim(),
+      } as any);
+    }
+    setSubmitting(false);
+  };
+
   const next = async () => {
     if (index < total - 1) {
       setIndex((i) => i + 1);
@@ -189,6 +226,8 @@ export function QcmSession({
   const outcomes = validated[q.id];
   const qrocOutcome = qrocOutcomes[q.id] ?? null;
   const qOk = questionCorrect[q.id];
+  const isRevealed = seanceRevealed[q.id] ?? false;
+  const selfGrade = seanceSelfGrade[q.id] ?? null;
 
   const progressPct = useMemo(() => (index / total) * 100, [index, total]);
 
@@ -221,7 +260,7 @@ export function QcmSession({
 
       <div className="mb-1.5 flex items-center justify-between text-xs text-(--color-ink-soft)">
         <span className="truncate">
-          <span className="font-semibold text-(--color-ink)">{serieKind === 'annale' ? 'Annale' : 'Série'}</span> · {serieLabel}
+          <span className="font-semibold text-(--color-ink)">{serieKind === 'seance' ? 'Séance du prof' : serieKind === 'annale' ? 'Annale' : 'Série'}</span> · {serieLabel}
         </span>
         <span className="shrink-0">
           Q<span className="font-semibold text-(--color-ink)">{index + 1}</span>/{total}
@@ -236,10 +275,18 @@ export function QcmSession({
       {(vignette || (editable && serieId)) && (
         <details
           open
-          className="group mb-3 block rounded-xl border border-(--color-primary)/30 border-l-4 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5 shadow-sm open:bg-(--color-primary-soft)/30"
+          className={cn(
+            "group mb-3 block rounded-xl border border-l-4 p-3.5 shadow-sm",
+            isSeance
+              ? "border-[#7C3AED]/30 border-l-[#7C3AED] bg-[#F3EAFF]/40 open:bg-[#F3EAFF]/30"
+              : "border-(--color-primary)/30 border-l-(--color-primary) bg-(--color-primary-soft)/40 open:bg-(--color-primary-soft)/30"
+          )}
         >
           <summary className="flex cursor-pointer items-center justify-between gap-2 list-none [&::-webkit-details-marker]:hidden">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
+            <span className={cn(
+              "text-[10px] font-semibold uppercase tracking-[0.16em]",
+              isSeance ? "text-[#5B21B6]" : "text-(--color-primary-deep)"
+            )}>
               {vignette ? 'Contexte clinique du dossier' : 'Pas de contexte clinique'}
             </span>
             <span className="flex items-center gap-2">
@@ -277,8 +324,13 @@ export function QcmSession({
         className="relative mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
       >
         <div className="flex items-start justify-between gap-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-            {isQroc
+          <p className={cn(
+            "text-[10px] font-semibold uppercase tracking-[0.16em]",
+            isSeance ? "text-[#7C3AED]" : "text-(--color-accent-deep)"
+          )}>
+            {isSeanceQroc
+              ? `QROC Séance — Question ${index + 1}`
+              : isQroc
               ? `QROC — Question ${index + 1}`
               : vignette
                 ? `Question ${index + 1}`
@@ -338,8 +390,55 @@ export function QcmSession({
         </div>
       )}
 
-      {/* ─── QROC input ─── */}
-      {isQroc && (
+      {/* ─── QROC input (séance = reveal + self-grade) ─── */}
+      {isSeanceQroc ? (
+        <div className="space-y-3">
+          <div className={cn(
+            'rounded-xl border px-3.5 py-3 transition',
+            isRevealed ? 'border-[#7C3AED]/30 bg-[#F3EAFF]/50' : 'border-(--color-border) bg-(--color-surface)',
+          )}>
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted)">
+              Votre réponse (optionnel)
+            </label>
+            <textarea
+              value={qrocAnswers[q.id] ?? ''}
+              onChange={(e) => setQrocAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+              disabled={isRevealed}
+              placeholder="Rédigez votre réponse avant de révéler la correction…"
+              rows={3}
+              className="w-full resize-none bg-transparent text-sm leading-snug text-(--color-ink) placeholder:text-(--color-ink-muted)/50 focus:outline-none disabled:cursor-default"
+            />
+          </div>
+
+          {isRevealed && (q.correction_generale || q.reponse_attendue) && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="rounded-xl border-2 border-[#7C3AED]/40 bg-[#F3EAFF] p-4"
+            >
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#5B21B6]">
+                Correction du professeur
+              </p>
+              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+                {q.correction_generale || q.reponse_attendue}
+              </p>
+            </motion.div>
+          )}
+
+          {isRevealed && selfGrade && (
+            <div className={cn(
+              'flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm font-medium',
+              selfGrade === 'bon'
+                ? 'border-[#2E8B57]/40 bg-[color-mix(in_srgb,#2E8B57_12%,var(--color-surface))] text-[#1F6B43]'
+                : 'border-(--color-danger)/40 bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))] text-(--color-danger)',
+            )}>
+              {selfGrade === 'bon' ? <ThumbsUp className="h-4 w-4" /> : <ThumbsDown className="h-4 w-4" />}
+              {selfGrade === 'bon' ? 'Marqué comme bon' : 'Marqué comme faux'}
+            </div>
+          )}
+        </div>
+      ) : isQroc ? (
         <QrocItem
           value={qrocAnswers[q.id] ?? ''}
           onChange={(v) => setQrocAnswers((prev) => ({ ...prev, [q.id]: v }))}
@@ -347,10 +446,10 @@ export function QcmSession({
           reponseAttendue={q.reponse_attendue ?? null}
           disabled={isValidated}
         />
-      )}
+      ) : null}
 
       {/* ─── Feedback ─── */}
-      {isValidated && !isTraining && (
+      {isValidated && !isTraining && !isSeanceQroc && (
         <div
           className={cn(
             'mt-3 flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm',
@@ -375,7 +474,7 @@ export function QcmSession({
       )}
 
       {/* Corrigé général de la question — visible après validation, mode 'live'. */}
-      {isValidated && !isTraining && q.correction_generale && (
+      {isValidated && !isTraining && !isSeanceQroc && q.correction_generale && (
         <div className="mt-3 rounded-xl border border-(--color-border) bg-(--color-primary-soft)/40 p-3.5">
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
             Corrigé général
@@ -387,7 +486,30 @@ export function QcmSession({
       )}
 
       <div className="mt-4 flex items-center justify-end gap-3 pb-2">
-        {!isValidated ? (
+        {isSeanceQroc ? (
+          !isRevealed ? (
+            <Button onClick={revealSeanceAnswer} className="bg-[#7C3AED] hover:bg-[#6D28D9]">
+              <Eye className="h-4 w-4" />
+              Révéler la réponse
+            </Button>
+          ) : !selfGrade ? (
+            <>
+              <Button onClick={() => selfGradeSeance('faux')} variant="outline" className="border-red-300 text-red-600 hover:bg-red-50" disabled={submitting}>
+                <ThumbsDown className="h-4 w-4" />
+                Faux
+              </Button>
+              <Button onClick={() => selfGradeSeance('bon')} className="bg-[#2E8B57] hover:bg-[#256B45]" disabled={submitting}>
+                <ThumbsUp className="h-4 w-4" />
+                Bon
+              </Button>
+            </>
+          ) : (
+            <Button onClick={next}>
+              {index < total - 1 ? 'Question suivante' : 'Voir les résultats'}
+              <ArrowRight />
+            </Button>
+          )
+        ) : !isValidated ? (
           <Button onClick={validate} disabled={!canValidate || submitting}>
             Valider
           </Button>
