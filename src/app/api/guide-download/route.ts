@@ -128,7 +128,7 @@ export async function POST(req: Request) {
             Bonjour ${escapeHtml(firstName)},
           </p>
           <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#1F2937;">
-            Nous vous remercions pour votre confiance. Votre <strong>Guide Méthodologie EVC 2026</strong> (36 pages) est prêt à être téléchargé.
+            Nous vous remercions pour votre confiance. Votre <strong>Guide Méthodologie EVC 2026</strong> (39 pages) est prêt à être téléchargé.
           </p>
           <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#1F2937;">
             Ce guide vous apporte les méthodes, les réflexes et les conseils les plus utiles pour mieux comprendre les attentes des EVC et structurer votre préparation.
@@ -141,7 +141,7 @@ export async function POST(req: Request) {
             </td></tr>
           </table>
           <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#7A7A7A;text-align:center;">
-            PDF • 36 pages • Téléchargement immédiat
+            PDF • 39 pages • Téléchargement immédiat
           </p>
           <hr style="border:none;border-top:1px solid #ECEEF1;margin:24px 0;" />
           <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#0F1F4D;">

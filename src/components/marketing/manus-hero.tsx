@@ -120,7 +120,7 @@ export function ManusHero() {
                 style={{ background: `linear-gradient(90deg, #8B0E22 0%, ${RED} 100%)` }}
               >
                 <Download className="h-5 w-5" />
-                Télécharger gratuitement le guide méthodologique
+                Télécharger gratuitement le guide méthodologique EVC
                 <ArrowRight className="h-5 w-5" />
               </button>
               <Link

@@ -143,7 +143,7 @@ export function GuidePopup() {
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const [abForm, setAbForm] = useState<'A' | 'B'>('A');
-  const [abCta, setAbCta] = useState<string>('Télécharger gratuitement le guide méthodologique');
+  const [abCta, setAbCta] = useState<string>('Télécharger gratuitement le guide méthodologique EVC');
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -175,7 +175,7 @@ export function GuidePopup() {
   useEffect(() => {
     setAbForm(getOrSetABVariant(LS_KEY_AB_FORM, ['A', 'B']) as 'A' | 'B');
     setAbCta(getOrSetABVariant(LS_KEY_AB_CTA, [
-      'Télécharger gratuitement le guide méthodologique',
+      'Télécharger gratuitement le guide méthodologique EVC',
       'Obtenir mon guide méthodologique gratuit',
     ]));
   }, []);
@@ -407,7 +407,7 @@ export function GuidePopup() {
               📘 Guide Méthodologie EVC 2026 — Offert
             </h3>
             <p className="mt-1 text-sm" style={{ color: INK_SOFT }}>
-              36 pages de méthodologie, de pièges à éviter et de conseils pratiques pour optimiser votre préparation aux EVC.
+              39 pages de méthodologie, de pièges à éviter et de conseils pratiques pour optimiser votre préparation aux EVC.
             </p>
 
             <form onSubmit={handleFormSubmit} className="mt-5 space-y-3.5">
@@ -583,7 +583,7 @@ export function GuidePopup() {
                 </span>
 
                 <h3 id="guide-popup-title" className="mt-4 text-lg font-bold leading-snug sm:text-xl" style={{ color: NAVY }}>
-                  Votre guide Méthodologie EVC 2026 (36 pages)
+                  Votre guide Méthodologie EVC 2026 (39 pages)
                 </h3>
 
                 <p className="mt-2 text-sm leading-relaxed" style={{ color: INK_SOFT }}>
@@ -611,7 +611,7 @@ export function GuidePopup() {
                   style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
                 >
                   <Download className="h-4 w-4" />
-                  Télécharger gratuitement le guide méthodologique
+                  Télécharger gratuitement le guide méthodologique EVC
                 </button>
                 <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-gray-400">
                   <Shield className="h-3 w-3" />

@@ -22,7 +22,7 @@ export function GuideHero() {
           <div>
             <h1 className="text-[32px] font-black leading-[1.1] tracking-tight text-[#0F1F4D] sm:text-[40px] lg:text-[46px]">
               Téléchargez gratuitement le Guide Méthodologie EVC&nbsp;2026{' '}
-              <span className="text-[#C0001F]">(36&nbsp;pages)</span>
+              <span className="text-[#C0001F]">(39&nbsp;pages)</span>
             </h1>
             <p className="mt-4 text-[16px] leading-relaxed text-[#52607A]">
               La méthode complète pour gagner des points en voie externe et en voie interne.
@@ -50,7 +50,7 @@ export function GuideHero() {
               style={{ background: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)' }}
             >
               <Download className="h-5 w-5" />
-              Télécharger gratuitement le guide méthodologique
+              Télécharger gratuitement le guide méthodologique EVC
               <ArrowRight className="h-5 w-5" />
             </button>
 
@@ -75,7 +75,7 @@ export function GuideHero() {
               />
             </div>
             <p className="mt-3 text-center text-[14px] italic text-[#9AA1AE]">
-              <span className="font-semibold text-[#C0001F]">36 pages</span> de conseils et de méthodes concrètes
+              <span className="font-semibold text-[#C0001F]">39 pages</span> de conseils et de méthodes concrètes
             </p>
           </div>
         </div>

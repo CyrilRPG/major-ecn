@@ -46,11 +46,11 @@ export function GuideSuccessBlock() {
               style={{ background: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)' }}
             >
               <Download className="h-5 w-5" />
-              Télécharger gratuitement le guide méthodologique
+              Télécharger gratuitement le guide méthodologique EVC
             </button>
 
             <p className="mt-3 text-[13px] text-[#9AA1AE]">
-              PDF • 36 pages • Téléchargement immédiat
+              PDF • 39 pages • Téléchargement immédiat
             </p>
 
             <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-[#9AA1AE]">
