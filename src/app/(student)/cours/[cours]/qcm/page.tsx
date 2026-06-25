@@ -29,6 +29,15 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .in('type', ['qcm', 'seance'])
     .order('order_index');
 
+  // Séances du professeur : charger depuis le cours séance de la même matière
+  const { data: seanceSeries } = await supabase
+    .from('qcm_series')
+    .select('id, label, order_index, type, cours_id, qcm_questions(id)')
+    .eq('type', 'seance')
+    .neq('cours_id', coursId)
+    .in('cours_id', (await supabase.from('cours').select('id').eq('matiere_id', c.matiere_id)).data?.map((r) => r.id) ?? [])
+    .order('order_index');
+
   const { data: sessions } = await supabase
     .from('qcm_sessions')
     .select('id, serie_id, score_correct, score_total, finished_at')
@@ -65,6 +74,59 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           Chaque proposition est corrigée et justifiée immédiatement, au format EVC.
         </p>
       </div>
+
+      {/* ─── Séances du professeur (cross-cours, même matière) ─── */}
+      {seanceSeries && seanceSeries.length > 0 && (
+        <div className="mb-5">
+          <div className="mb-2.5 flex items-center gap-2.5 px-1">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F3EAFF] text-[#5B21B6]">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-[#5B21B6]">Séances du professeur</p>
+              <p className="text-[11px] text-[#7C3AED]/70">{seanceSeries.length} séries · Entraînement interactif avec correction</p>
+            </div>
+          </div>
+          <ul className="space-y-2">
+            {seanceSeries.map((s, idx) => {
+              const qCount = s.qcm_questions?.length ?? 0;
+              if (qCount === 0) return null;
+              const lr = lastBySerie.get(s.id);
+              const scoreT = lr ? scoreTheme(lr.score_correct, lr.score_total) : null;
+              return (
+                <li key={s.id}>
+                  <Link
+                    href={`/cours/${s.cours_id}/qcm/${s.id}`}
+                    className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-[#7C3AED]/20 bg-(--color-surface) px-4 py-3.5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
+                  >
+                    <span aria-hidden className="absolute inset-y-0 left-0 w-1.5 bg-[#7C3AED]" />
+                    <span className="ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F3EAFF] text-[#5B21B6]">
+                      <Sparkles className="h-5 w-5" />
+                    </span>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F3EAFF] font-mono text-xs font-bold text-[#5B21B6]">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[15px] font-semibold text-(--color-ink)">{s.label}</p>
+                      <p className="text-xs text-(--color-ink-muted)">{qCount} questions · environ {Math.max(1, qCount)} min</p>
+                    </div>
+                    {scoreT ? (
+                      <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums" style={{ background: scoreT.bg, color: scoreT.fg }}>
+                        {lr!.score_correct} / {lr!.score_total}
+                      </span>
+                    ) : (
+                      <span className="shrink-0 rounded-full bg-[#F3EAFF] px-2.5 py-1 text-xs font-semibold text-[#5B21B6]">
+                        Séance du prof
+                      </span>
+                    )}
+                    <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       {!series || series.length === 0 ? (
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
