@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ChevronRight, Clock, Eye, Calendar } from 'lucide-react';
+import { ArrowRight, ChevronRight, Clock, Calendar } from 'lucide-react';
 import { BLOG_CATEGORIES, getRelatedArticles, type BlogArticleMeta } from '@/lib/data/blog-articles';
+import { BlogViewCounter } from './blog-view-counter';
 
 export const ARTICLE_FONT = "'Plus Jakarta Sans', sans-serif";
 
@@ -77,12 +78,7 @@ export function ArticleHeader({
               <Clock className="h-3.5 w-3.5" />
               {article.readingMinutes} min de lecture
             </span>
-            {article.readers != null && (
-              <span className="inline-flex items-center gap-1.5">
-                <Eye className="h-3.5 w-3.5" />
-                {article.readers.toLocaleString('fr-FR')} lecteurs
-              </span>
-            )}
+            <BlogViewCounter slug={article.slug} />
             {article.publishedAt && (
               <span className="inline-flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" />
