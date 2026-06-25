@@ -29,14 +29,27 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .in('type', ['qcm', 'seance'])
     .order('order_index');
 
-  // Séances du professeur : charger depuis le cours séance de la même matière
-  const { data: seanceSeries } = await supabase
-    .from('qcm_series')
-    .select('id, label, order_index, type, cours_id, qcm_questions(id)')
-    .eq('type', 'seance')
-    .neq('cours_id', coursId)
-    .in('cours_id', (await supabase.from('cours').select('id').eq('matiere_id', c.matiere_id)).data?.map((r) => r.id) ?? [])
-    .order('order_index');
+  // Séances du professeur : chercher dans la matière-collège homonyme.
+  // Ex: cours "Pneumologie" dans "Médecine générale" → matière "Pneumologie" (col-pneumologie)
+  //     → cours "Séance du professeur - Pneumologie" → séance series.
+  // Aussi chercher dans la même matière (cas collèges individuels).
+  const { data: seanceCoursRows } = await supabase
+    .from('cours')
+    .select('id, matiere_id, matieres!inner(nom)')
+    .ilike('titre', 'Séance du professeur%');
+  const matchingSeanceCours = (seanceCoursRows ?? []).filter((sc) => {
+    const mNom = (sc.matieres as unknown as { nom: string })?.nom;
+    return mNom && (mNom === c.titre || sc.matiere_id === c.matiere_id);
+  });
+  const seanceCoursIds = matchingSeanceCours.map((sc) => sc.id).filter((id) => id !== coursId);
+  const { data: seanceSeries } = seanceCoursIds.length
+    ? await supabase
+        .from('qcm_series')
+        .select('id, label, order_index, type, cours_id, qcm_questions(id)')
+        .eq('type', 'seance')
+        .in('cours_id', seanceCoursIds)
+        .order('order_index')
+    : { data: [] as never[] };
 
   const { data: sessions } = await supabase
     .from('qcm_sessions')
