@@ -35,11 +35,18 @@ export default async function CoursLayout({
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
   if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
 
+  const isApprofondi = scope.offer === 'approfondi' || profile.role === 'admin';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: saVids } = isApprofondi
+    ? await (supabase as any).from('videos').select('id').eq('cours_id', coursId).eq('type', 'seance_approfondie').limit(1)
+    : { data: [] };
+
   const availability = {
     video: (c.videos ?? []).some((v) => !!v.storage_path),
     fiche: (c.fiches ?? []).some((f) => !!f.storage_path),
     qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
+    seanceApprofondie: isApprofondi && (saVids ?? []).length > 0,
   };
 
   // Visibilité des onglets pour les PROFESSEURS : un type de contenu sans droit

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
-  MonitorPlay, NotebookPen, Telescope, X, type LucideIcon,
+  MonitorPlay, NotebookPen, Sparkles, Telescope, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
@@ -16,6 +16,7 @@ export type Availability = {
   fiche: boolean;
   qcm: boolean;
   flashcards: boolean;
+  seanceApprofondie?: boolean;
 };
 
 type Tab = { key: string; label: string; seg: string; Icon: LucideIcon; available: boolean };
@@ -93,6 +94,9 @@ export function StudyConsole({
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
+        ...(availability.seanceApprofondie
+          ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
+          : []),
         { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ]
     : [

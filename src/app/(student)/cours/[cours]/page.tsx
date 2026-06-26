@@ -257,14 +257,15 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       : href.endsWith('/video') ? 'video'
       : href.endsWith('/qcm') ? 'qcm'
       : href.endsWith('/flashcards') ? 'flashcards'
+      : href.endsWith('/seance-approfondie') || href === '#locked-seance-approfondie' ? 'seance-approfondie'
       : null;
     actions = actions
       .map((a, i) => ({ a, i }))
       .sort((x, y) => {
         const tx = typeOf(x.a.href);
         const ty = typeOf(y.a.href);
-        const rx = tx && slotOrder.has(tx) ? (slotOrder.get(tx) as number) : 100 + x.i;
-        const ry = ty && slotOrder.has(ty) ? (slotOrder.get(ty) as number) : 100 + y.i;
+        const rx = tx === 'seance-approfondie' ? -1 : tx && slotOrder.has(tx) ? (slotOrder.get(tx) as number) : 100 + x.i;
+        const ry = ty === 'seance-approfondie' ? -1 : ty && slotOrder.has(ty) ? (slotOrder.get(ty) as number) : 100 + y.i;
         return rx - ry || x.i - y.i;
       })
       .map((r) => r.a);
