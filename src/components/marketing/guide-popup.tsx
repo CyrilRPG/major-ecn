@@ -134,7 +134,22 @@ function markDownloaded() {
   } catch {}
 }
 
-export function GuidePopup() {
+/** Déclenche le téléchargement du PDF du guide. Doit être appelé DANS le geste
+ *  utilisateur (clic « Télécharger ») pour être fiable sur tous les navigateurs,
+ *  y compris mobile. Le guide est un fichier statique : ce téléchargement ne
+ *  dépend ni de l'enregistrement du lead ni de l'envoi d'email. */
+function triggerGuideDownload() {
+  if (typeof document === 'undefined') return;
+  const a = document.createElement('a');
+  a.href = '/guides/guide-methodologie-evc-2026.pdf';
+  a.download = 'Guide_Methodologie_EVC_2026_Major_ECN.pdf';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+export function GuidePopup({ autoOpen = false }: { autoOpen?: boolean } = {}) {
   const [open, setOpen] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -190,8 +205,11 @@ export function GuidePopup() {
     return () => window.removeEventListener('open-guide-popup', handleManualOpen);
   }, [openPopup]);
 
-  // Automatic trigger logic
+  // Automatic trigger logic — désactivé par défaut (ouverture manuelle via le
+  // bouton « Télécharger » / l'événement open-guide-popup). N'auto-affiche le
+  // popup que si autoOpen est explicitement activé.
   useEffect(() => {
+    if (!autoOpen) return;
     if (!isEligible()) return;
 
     const startTime = Date.now();
@@ -240,7 +258,7 @@ export function GuidePopup() {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('mouseout', onMouseLeave);
     };
-  }, [openPopup]);
+  }, [openPopup, autoOpen]);
 
   // Focus trap + Escape key
   useEffect(() => {
@@ -279,7 +297,7 @@ export function GuidePopup() {
     };
   }, [open, closePopup]);
 
-  async function handleFormSubmit(e: React.FormEvent) {
+  function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -311,29 +329,27 @@ export function GuidePopup() {
     setSubmitting(true);
     trackEvent('guide_form_submitted', { ab_form: abForm, ab_cta: abCta });
 
-    try {
-      const res = await fetch('/api/guide-download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName, lastName, email, phone, specialty, voie,
-          abVariant: abForm, ctaVariant: abCta,
-        }),
-      });
+    // 1) Téléchargement immédiat, DANS le geste utilisateur (fiable partout, y
+    //    compris mobile). Le guide est un fichier statique : il ne doit jamais
+    //    dépendre de l'enregistrement du lead ni de l'envoi d'email.
+    triggerGuideDownload();
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Erreur lors de l\'envoi');
-      }
+    // 2) Capture du lead — best effort, n'empêche JAMAIS le téléchargement.
+    fetch('/api/guide-download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName, lastName, email, phone, specialty, voie,
+        abVariant: abForm, ctaVariant: abCta,
+      }),
+    }).catch(() => { /* réseau indisponible : le téléchargement est déjà lancé */ });
 
-      markDownloaded();
-      trackEvent('guide_downloaded');
-      window.location.href = '/guide-methodologie-evc-2026/merci';
-    } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue. Veuillez réessayer.');
-    } finally {
-      setSubmitting(false);
-    }
+    markDownloaded();
+    trackEvent('guide_downloaded');
+    // 3) État succès (avec lien de secours « cliquez ici »). On NE navigue PAS :
+    //    changer d'URL ici annulerait le téléchargement qui vient de démarrer.
+    setSubmitted(true);
+    setSubmitting(false);
   }
 
   if (!open) return null;
