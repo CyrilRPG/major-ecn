@@ -57,7 +57,7 @@ export function GuideHero() {
             <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#F8F9FC] px-4 py-3">
               <Users className="h-5 w-5 shrink-0 text-[#0F1F4D]" />
               <p className="text-[13px] text-[#52607A]">
-                Ce guide est utilisé par plus de <strong className="text-[#0F1F4D]">9 000 médecins</strong> pour réussir les EVC depuis 2011.
+                Ce guide rassemble les informations essentielles pour préparer efficacement les EVC 2026 et éviter les erreurs les plus fréquentes.
               </p>
             </div>
           </div>
