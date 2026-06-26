@@ -30,18 +30,18 @@ export function GuideForm({ onSuccess, compact }: Props) {
       ctaVariant: 'page',
     };
 
+    // Enregistrement du lead + email : best-effort, NE DOIT JAMAIS bloquer le
+    // téléchargement (le guide est un fichier statique auquel l'utilisateur a
+    // droit). On valide d'abord côté formulaire (champs requis), puis on lance
+    // la capture du lead sans attendre, et on déclenche le téléchargement.
     try {
-      const res = await fetch('/api/guide-download', {
+      void fetch('/api/guide-download', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
+      }).catch(() => {
+        /* réseau indisponible : on n'empêche pas le téléchargement pour autant */
       });
-      const json = await res.json();
-      if (!res.ok || !json.ok) {
-        setError(json.error ?? 'Une erreur est survenue. Réessayez.');
-        setLoading(false);
-        return;
-      }
 
       localStorage.setItem('guide-downloaded', '1');
 
@@ -56,8 +56,9 @@ export function GuideForm({ onSuccess, compact }: Props) {
         window.location.href = '/guide-methodologie-evc-2026/merci';
       }
     } catch {
-      setError('Erreur de connexion. Vérifiez votre connexion internet.');
-      setLoading(false);
+      // Même en cas d'erreur inattendue, on redirige vers la page « merci » qui
+      // propose un bouton de téléchargement direct (fallback fiable).
+      window.location.href = '/guide-methodologie-evc-2026/merci';
     }
   }
 

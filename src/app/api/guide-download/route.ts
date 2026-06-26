@@ -181,18 +181,18 @@ export async function POST(req: Request) {
     'Major ECN — major-ecn.fr',
   ].join('\n');
 
-  // Send both emails in parallel
+  // Send both emails in parallel. L'envoi d'email est SECONDAIRE : le guide est
+  // un fichier statique auquel l'utilisateur a droit dès qu'il a rempli le
+  // formulaire. On n'échoue donc JAMAIS la requête à cause d'un email (sinon le
+  // téléchargement côté site est bloqué). On journalise simplement les échecs.
   const [adminResult, userResult] = await Promise.all([
     sendEmail({ to: CONTACT_EMAIL, subject, html: adminHtml, text: adminText, replyTo: email }),
     sendEmail({ to: email, subject: userSubject, html: userHtml, text: userText }),
   ]);
 
-  if (!adminResult.ok && !userResult.ok) {
-    return NextResponse.json(
-      { error: 'Envoi impossible pour le moment. Réessayez plus tard.', detail: adminResult.error },
-      { status: 502 },
-    );
-  }
+  if (!adminResult.ok) console.error('[guide-download] email admin échoué :', adminResult.error);
+  if (!userResult.ok) console.error('[guide-download] email utilisateur échoué :', userResult.error);
 
-  return NextResponse.json({ ok: true });
+  // Toujours OK : le téléchargement doit fonctionner même si Resend est indisponible.
+  return NextResponse.json({ ok: true, emailSent: userResult.ok });
 }
