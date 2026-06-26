@@ -188,7 +188,7 @@ const SECTIONS: Section[] = [
           cadre de la PAE. Notre préparation s’appuie sur plusieurs outils
           complémentaires&nbsp;:
         </p>
-        <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
           {[
             { Icon: Play,            t: 'Cours enregistrés' },
             { Icon: ClipboardCheck,  t: 'QCM corrigés' },

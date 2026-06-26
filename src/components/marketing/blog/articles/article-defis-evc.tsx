@@ -91,7 +91,7 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
               <p className="mx-auto mt-1 max-w-2xl text-center text-[12.5px] text-[#52607A]">
                 Une préparation complète, structurée et efficace pour franchir cette étape décisive.
               </p>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+              <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
                 {ENGAGEMENT_STEPS.map((s, i) => (
                   <div key={s.t} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-3 text-center">
                     <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#FFE4E8] text-[#C0001F]">

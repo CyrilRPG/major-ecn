@@ -171,7 +171,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
                 sa formation par des enseignements universitaires ciblés. Une évaluation continue
                 ponctue ce parcours et conditionne la suite de la procédure.
               </p>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+              <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
                 {[
                   { Icon: GraduationCap, t: 'Suivi universitaire obligatoire' },
                   { Icon: Stethoscope,   t: 'Activité clinique encadrée' },
@@ -328,7 +328,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
                 Commission Nationale d&rsquo;Autorisation d&rsquo;Exercice (CNAE) instituée
                 auprès du Centre National de Gestion.
               </p>
-              <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+              <ol className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
                 {['Fin du PCC (2 ans validés)', 'Rapport d\'évaluation par le responsable de structure', 'Avis de la commission compétente', 'Saisine de la CNAE (évaluation finale)', 'Autorisation d\'exercice délivrée par le Ministère de la Santé'].map((s, i) => (
                   <li key={s} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-3 text-center">
                     <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-[#FDE7E9] text-[11px] font-extrabold text-[#C0001F]">{i + 1}</span>

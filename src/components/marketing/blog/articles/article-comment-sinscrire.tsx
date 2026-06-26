@@ -379,7 +379,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
               Votre dossier de candidature déposé sur la plateforme du CNG{' '}
               <span className="font-extrabold text-[#1E4D8B]">doit comporter</span> les pièces suivantes&nbsp;:
             </p>
-            <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
               {DOCS.map((d) => (
                 <li
                   key={d.t}

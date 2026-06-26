@@ -1389,7 +1389,7 @@ export function ToolsGridSection() {
               </div>
               <p className={descCls} style={descStyle}>Structurez votre préparation grâce à des objectifs de travail, un calendrier clair et un suivi de vos avancées.</p>
               <div className={widget} style={widgetStyle}>
-                <div className="grid grid-cols-7 gap-1 text-center">
+                <div className="grid grid-cols-7 gap-0.5 text-center text-[10px] sm:gap-1 sm:text-xs">
                   {[
                     { d: 'Lun', a: 'QCM', t: '30 min', c: '#1E40AF' },
                     { d: 'Mar', a: 'Dossier', t: '45 min', c: '#16793C' },
@@ -1559,7 +1559,7 @@ export function ToolsForProgressSection() {
         <Reveal delay={0.05}>
           <div className="mt-10 rounded-[28px] border bg-white p-6 shadow-[0_30px_80px_-40px_rgba(15,31,77,0.25)] sm:p-8"
             style={{ borderColor: TOOLS_BORDER }}>
-            <div className="grid grid-cols-2 gap-y-8 sm:grid-cols-4 lg:grid-cols-7 lg:gap-y-0">
+            <div className="grid grid-cols-2 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 lg:gap-y-0">
               {PLATFORM_FEATURES.map((f, i) => (
                 <div
                   key={f.title}
@@ -2009,7 +2009,7 @@ export function TestimonialsVideoSection() {
         </Reveal>
 
         {/* 5 videos cote a cote, hauteur identique */}
-        <div className="mt-12 grid grid-cols-5 gap-4">
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {TV_CARDS.map((c, i) => (
             <Reveal key={c.name} delay={i * 0.06}>
               <VideoTestimonialCard card={c} />

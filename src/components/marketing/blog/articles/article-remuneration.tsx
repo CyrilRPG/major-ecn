@@ -259,7 +259,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={7} icon={ShieldCheck} accent="#C0001F" bg="#FDE7E9"
               title="L'impact des EVC et de la PAE sur la rémunération"
             >
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 lg:grid-cols-5">
                 {['Réussite des EVC', 'Parcours PAE', 'Accès aux postes titulaires', 'Meilleure rémunération', 'Évolution professionnelle'].map((s, i) => (
                   <div key={s} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-3 text-center">
                     <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#FDE7E9] text-[12px] font-extrabold text-[#C0001F]">

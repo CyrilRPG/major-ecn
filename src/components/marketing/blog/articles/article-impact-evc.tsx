@@ -307,7 +307,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
 
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
             <h3 className="text-[15px] font-extrabold text-[#1A2233]">Les avantages d&rsquo;une préparation structurée</h3>
-            <div className="mt-4 grid gap-3 sm:grid-cols-5">
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
               {ADVANTAGES.map((a) => (
                 <div key={a.t} className="text-center">
                   <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#FFE4E8] text-[#C0001F]">
