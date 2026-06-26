@@ -53,6 +53,16 @@ export type BlogArticleMeta = {
 
 export const BLOG_ARTICLES: BlogArticleMeta[] = [
   {
+    slug: 'psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026',
+    title: 'Psychiatrie, Médecine Interne Polyvalente ou Médecine Générale — quelle spécialité choisir quand on est médecin généraliste PADHUE ?',
+    excerpt: 'Guide de décision pour les PADHUE généralistes qui préparent les EVC 2026 : arbre de décision, tableau comparatif, postes, format des épreuves et méthode en 4 étapes.',
+    category: 'specialites',
+    readingMinutes: 12,
+    readers: 0,
+    publishedAt: '2026-06-26',
+    featured: true,
+  },
+  {
     slug: 'comment-reussir-les-evc-conseils-laureats',
     title: 'Comment réussir les EVC : les conseils que les lauréats auraient aimé connaître plus tôt',
     excerpt: "Méthode, gestion du temps, examens blancs, posture face au correcteur : les leçons clés tirées des retours de candidats lauréats pour préparer efficacement les Épreuves de Vérification des Connaissances.",

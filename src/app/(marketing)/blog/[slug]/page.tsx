@@ -11,6 +11,7 @@ import { ArticleCommentSinscrire } from '@/components/marketing/blog/articles/ar
 import { ArticleConseilsLaureats } from '@/components/marketing/blog/articles/article-conseils-laureats';
 import { ArticleRatioPostes } from '@/components/marketing/blog/articles/article-ratio-postes';
 import { ArticleMipic } from '@/components/marketing/blog/articles/article-mipic';
+import { ArticleChoixSpecialitePadhue } from '@/components/marketing/blog/articles/article-choix-specialite-padhue';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 
 export async function generateMetadata({
@@ -56,6 +57,8 @@ function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArt
       return <ArticleRatioPostes article={article} />;
     case 'evc-medecine-interne-polyvalente-mipic-2026':
       return <ArticleMipic article={article} />;
+    case 'psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026':
+      return <ArticleChoixSpecialitePadhue article={article} />;
     default:
       return <ArticleGeneric article={article} />;
   }
