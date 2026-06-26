@@ -200,14 +200,14 @@ function EventFormDialog({
   const [err, setErr] = useState<string | null>(null);
   const [scopeType, setScopeType] = useState<'all' | 'college'>(initial?.scope_type ?? 'all');
   const [scopeColleges, setScopeColleges] = useState<string[]>(initial?.scope_colleges ?? []);
-  const [offers, setOffers] = useState<string[]>(initial?.required_offers ?? ['essentiel', 'premium', 'intensif']);
+  const [offers, setOffers] = useState<string[]>(initial?.required_offers ?? ['essentiel', 'intensif', 'approfondi']);
 
   // Réinitialise les états locaux à chaque ouverture
   useEffect(() => {
     if (!open) return;
     setScopeType(initial?.scope_type ?? 'all');
     setScopeColleges(initial?.scope_colleges ?? []);
-    setOffers(initial?.required_offers ?? ['essentiel', 'premium', 'intensif']);
+    setOffers(initial?.required_offers ?? ['essentiel', 'intensif', 'approfondi']);
     setErr(null);
   }, [open, initial]);
 
@@ -313,14 +313,14 @@ function EventFormDialog({
 
             <p className="mb-2 text-xs font-semibold text-(--color-ink)">Offres autorisées</p>
             <div className="mb-3 flex flex-wrap gap-2">
-              {(['essentiel', 'premium', 'intensif'] as const).map((o) => (
+              {(['essentiel', 'intensif', 'approfondi'] as const).map((o) => (
                 <label key={o} className={`cursor-pointer rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
                   offers.includes(o)
                     ? 'border-(--color-primary) bg-(--color-primary-soft) text-(--color-primary-deep)'
                     : 'border-(--color-border) text-(--color-ink-soft) hover:bg-(--color-surface)'
                 }`}>
                   <input type="checkbox" className="sr-only" checked={offers.includes(o)} onChange={() => toggleOffer(o)} />
-                  {o === 'essentiel' ? 'Essentiel' : o === 'premium' ? 'Premium' : 'Intensif'}
+                  {o === 'essentiel' ? 'Essentiel' : o === 'intensif' ? 'Intensif' : 'Approfondi'}
                 </label>
               ))}
             </div>

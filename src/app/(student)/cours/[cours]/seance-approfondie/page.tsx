@@ -13,7 +13,7 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
   const supabase = await createClient();
 
   const scope = parseScope(profile.permission_scope);
-  if (scope.offer !== 'intensif') redirect(`/cours/${coursId}`);
+  if (scope.offer !== 'approfondi' && profile.role !== 'admin') redirect(`/cours/${coursId}`);
 
   const { data: c } = await supabase
     .from('cours')

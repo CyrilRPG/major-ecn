@@ -6,7 +6,7 @@ export const PublicSignupSchema = z.object({
   email: z.string().email('Email invalide'),
   phone: z.string().max(40).optional().or(z.literal('')),
   promotion: z.enum(['D2', 'D3', 'D4', 'PAE', 'Autre']),
-  offer: z.enum(['essentiel', 'premium', 'intensif']),
+  offer: z.enum(['essentiel', 'intensif', 'approfondi']),
   colleges_wish: z.string().max(500).optional().or(z.literal('')),
 });
 

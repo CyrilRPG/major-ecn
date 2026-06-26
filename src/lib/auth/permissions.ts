@@ -5,8 +5,8 @@ function parseOffer(raw: unknown): Offer {
     const r = raw as { offer?: unknown; espace_decouverte?: unknown; paid_formule?: unknown };
     const o = r.offer;
     if (o === 'decouverte') return 'decouverte';
-    if (o === 'premium') return 'premium';
-    if (o === 'intensif') return 'intensif';
+    if (o === 'intensif' || o === 'premium') return 'intensif';
+    if (o === 'approfondi') return 'approfondi';
     // 'basic' is the legacy value — treated as 'essentiel'.
     if (o === 'essentiel' || o === 'basic') return 'essentiel';
     // Inférence : si flagué « espace découverte » SANS achat payé, on
@@ -87,8 +87,8 @@ export function canAccessFaculte(scope: PermissionScope, _faculteId: string): bo
 
 export function offerLabel(offer: Offer): string {
   if (offer === 'decouverte') return 'Espace Découverte';
-  if (offer === 'premium') return 'Formule Intensive';
-  if (offer === 'intensif') return 'Programme Approfondi';
+  if (offer === 'intensif') return 'Formule Intensive';
+  if (offer === 'approfondi') return 'Programme Approfondi';
   return 'Formule Essentielle';
 }
 

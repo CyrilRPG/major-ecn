@@ -21,7 +21,7 @@ const eventSchema = z.object({
   intervenant: z.string().max(180).optional().or(z.literal('')),
   zoom_url: z.string().url().max(500).optional().or(z.literal('')),
   notes: z.string().max(2000).optional().or(z.literal('')),
-  required_offers: z.array(z.enum(['essentiel', 'premium', 'intensif'])).min(1),
+  required_offers: z.array(z.enum(['essentiel', 'intensif', 'approfondi'])).min(1),
   scope_type: z.enum(['all', 'college']),
   scope_colleges: z.array(z.string().uuid()).default([]),
 });

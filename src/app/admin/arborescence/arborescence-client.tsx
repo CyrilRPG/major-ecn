@@ -36,9 +36,9 @@ const SLOT_COLORS = {
 } as const;
 
 const OFFER_LABELS: Record<string, string> = {
-  essentiel: 'Essentiel ou +',
-  premium:   'Premium ou +',
-  intensif:  'Intensif uniquement',
+  essentiel:  'Essentiel ou +',
+  intensif:   'Intensif ou +',
+  approfondi: 'Approfondi uniquement',
 };
 
 export function ArborescenceClient({ colleges }: { colleges: College[] }) {
@@ -243,7 +243,7 @@ function PermissionEditor({ college, onRun }: { college: College; onRun: (a: () 
         <select
           value={college.min_offer ?? ''}
           onChange={(e) => {
-            const v = (e.target.value || null) as 'essentiel' | 'premium' | 'intensif' | null;
+            const v = (e.target.value || null) as 'essentiel' | 'intensif' | 'approfondi' | null;
             onRun(async () => await updateCollegePermission(college.id, v));
           }}
           className="bg-transparent text-[11px] font-medium text-(--color-ink) outline-none"
@@ -251,8 +251,8 @@ function PermissionEditor({ college, onRun }: { college: College; onRun: (a: () 
         >
           <option value="">Accès libre</option>
           <option value="essentiel">{OFFER_LABELS.essentiel}</option>
-          <option value="premium">{OFFER_LABELS.premium}</option>
           <option value="intensif">{OFFER_LABELS.intensif}</option>
+          <option value="approfondi">{OFFER_LABELS.approfondi}</option>
         </select>
       </span>
       {/* Périmètre */}
@@ -476,10 +476,10 @@ function CreateCollegeForm({
   onCancel, onCreate,
 }: {
   onCancel: () => void;
-  onCreate: (input: { nom: string; min_offer: 'essentiel' | 'premium' | 'intensif' | null }) => void;
+  onCreate: (input: { nom: string; min_offer: 'essentiel' | 'intensif' | 'approfondi' | null }) => void;
 }) {
   const [nom, setNom] = useState('');
-  const [offer, setOffer] = useState<'' | 'essentiel' | 'premium' | 'intensif'>('');
+  const [offer, setOffer] = useState<'' | 'essentiel' | 'intensif' | 'approfondi'>('');
   return (
     <div className="rounded-2xl border border-(--color-primary)/40 bg-(--color-primary-soft)/30 p-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -489,13 +489,13 @@ function CreateCollegeForm({
           className="flex-1 min-w-[200px] rounded-md border border-(--color-border) bg-white px-3 py-2 text-sm outline-none focus:border-(--color-primary)"
         />
         <select
-          value={offer} onChange={(e) => setOffer(e.target.value as 'essentiel'|'premium'|'intensif'|'')}
+          value={offer} onChange={(e) => setOffer(e.target.value as 'essentiel'|'intensif'|'approfondi'|'')}
           className="rounded-md border border-(--color-border) bg-white px-2 py-2 text-sm outline-none"
         >
           <option value="">Accès libre</option>
           <option value="essentiel">Essentiel ou +</option>
-          <option value="premium">Premium ou +</option>
-          <option value="intensif">Intensif uniquement</option>
+          <option value="intensif">Intensif ou +</option>
+          <option value="approfondi">Approfondi uniquement</option>
         </select>
         <button
           onClick={() => nom.trim() && onCreate({ nom, min_offer: (offer || null) })}

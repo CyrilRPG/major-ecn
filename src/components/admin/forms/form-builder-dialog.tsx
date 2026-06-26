@@ -19,8 +19,8 @@ import { createSatisfactionFormAction } from '@/app/admin/formulaires/actions';
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
 const OFFERS = [
   { value: 'essentiel', label: 'Essentiel' },
-  { value: 'premium', label: 'Premium' },
   { value: 'intensif', label: 'Intensif' },
+  { value: 'approfondi', label: 'Approfondi' },
 ];
 
 function makeKey(label: string, fallback: string): string {

@@ -147,11 +147,11 @@ export function AddStudentDialog({
                     <span className="text-sm">Formule Essentielle — 495 € · QCM, flashcards, fiches synthétiques, méthode EVC</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="premium" />
+                    <RadioGroupItem value="intensif" />
                     <span className="text-sm">Formule Intensive — 995 € · Essentielle + cas cliniques, épreuves blanches, suivi</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft)">
-                    <RadioGroupItem value="intensif" />
+                    <RadioGroupItem value="approfondi" />
                     <span className="text-sm">Programme Approfondi — 2 395 € · Plateforme + accompagnement individuel + sessions live</span>
                   </label>
                 </RadioGroup>

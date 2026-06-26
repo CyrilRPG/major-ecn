@@ -44,7 +44,7 @@ export default async function FormulairesAdminPage() {
   const rows = (forms ?? []) as unknown as FormRow[];
 
   const offerLabel = (o: string | null) =>
-    !o ? 'Toutes les formules' : ({ essentiel: 'Essentiel', premium: 'Premium', intensif: 'Intensif' } as Record<string, string>)[o] ?? o;
+    !o ? 'Toutes les formules' : ({ essentiel: 'Essentiel', intensif: 'Intensif', approfondi: 'Approfondi' } as Record<string, string>)[o] ?? o;
   const collegeLabel = (c: string | null) =>
     !c ? 'Tous les élèves' : c === 'all-access' ? 'Toute l’offre uniquement' : collegeMap[c] ?? c;
 

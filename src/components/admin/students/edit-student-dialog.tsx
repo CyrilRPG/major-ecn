@@ -23,7 +23,7 @@ const MG_COLLEGE_IDS = new Set(['col-medecine-generale', 'col-medecine-generale-
 // si le scope DB indique decouverte, on l'aligne par défaut sur essentiel
 // (mais on conserve les autres champs paid_* tels quels).
 function adminOfferFrom(rawOffer: string): UpdateStudentInput['offer'] {
-  if (rawOffer === 'premium' || rawOffer === 'intensif' || rawOffer === 'essentiel') return rawOffer;
+  if (rawOffer === 'intensif' || rawOffer === 'approfondi' || rawOffer === 'essentiel') return rawOffer;
   return 'essentiel';
 }
 
@@ -217,11 +217,11 @@ export function EditStudentDialog({
                     <span className="text-sm">Formule Essentielle — 495 € · QCM, flashcards, fiches synthétiques, méthode EVC</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
-                    <RadioGroupItem value="premium" />
+                    <RadioGroupItem value="intensif" />
                     <span className="text-sm">Formule Intensive — 995 € · Essentielle + cas cliniques, épreuves blanches, suivi</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
-                    <RadioGroupItem value="intensif" />
+                    <RadioGroupItem value="approfondi" />
                     <span className="text-sm">Programme Approfondi — 2 395 € · Plateforme + accompagnement individuel + sessions live</span>
                   </label>
                 </RadioGroup>

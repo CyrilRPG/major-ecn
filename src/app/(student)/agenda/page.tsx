@@ -37,7 +37,7 @@ export default async function AgendaPage() {
     college: string | null; intervenant: string | null; zoom_url: string | null; notes: string | null;
     required_offers: string[] | null; scope_type: 'all' | 'college'; scope_colleges: string[] | null;
   }>).filter((e) => {
-    const offers = e.required_offers ?? ['essentiel', 'premium', 'intensif'];
+    const offers = e.required_offers ?? ['essentiel', 'intensif', 'approfondi'];
     if (!offers.includes(scope.offer)) return false;
     if (e.scope_type === 'college') {
       const ids = e.scope_colleges ?? [];

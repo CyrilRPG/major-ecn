@@ -3,7 +3,7 @@ import { z } from 'zod';
 // Côté admin / création student : on accepte les 3 formules payantes
 // (Essentielle / Intensive / Programme Approfondi). 'decouverte' est
 // un signup public sans intervention admin, on l'exclut ici.
-const AdminOffer = z.enum(['essentiel', 'premium', 'intensif']);
+const AdminOffer = z.enum(['essentiel', 'intensif', 'approfondi']);
 
 export const AddStudentSchema = z.object({
   first_name: z.string().min(1, 'Prénom requis'),

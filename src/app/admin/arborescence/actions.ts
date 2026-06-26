@@ -37,7 +37,7 @@ export async function createCollege(input: {
   nom: string;
   icon_key?: string;
   color_hex?: string;
-  min_offer?: 'essentiel' | 'premium' | 'intensif' | null;
+  min_offer?: 'essentiel' | 'intensif' | 'approfondi' | null;
 }): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
   try {
     const admin = await requireAdminClient();
@@ -106,7 +106,7 @@ export async function renameCollege(id: string, nom: string): Promise<{ ok: bool
 
 export async function updateCollegePermission(
   id: string,
-  min_offer: 'essentiel' | 'premium' | 'intensif' | null,
+  min_offer: 'essentiel' | 'intensif' | 'approfondi' | null,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
     const admin = await requireAdminClient();

@@ -38,8 +38,8 @@ const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 const OFFER_CATS: { value: Offer; label: string }[] = [
   { value: 'decouverte', label: 'Découverte' },
   { value: 'essentiel', label: 'Essentiel' },
-  { value: 'intensif', label: 'Approfondi' },
-  { value: 'premium', label: 'Premium / Intensive' },
+  { value: 'intensif', label: 'Intensif' },
+  { value: 'approfondi', label: 'Approfondi' },
 ];
 
 type RawScope = {

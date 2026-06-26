@@ -82,7 +82,7 @@ export function AnnouncementForm(props: Mode) {
       visible,
       order_index: orderIndex,
       data,
-      min_offer: minOffer ? (minOffer as 'essentiel' | 'premium' | 'intensif') : null,
+      min_offer: minOffer ? (minOffer as 'essentiel' | 'intensif' | 'approfondi') : null,
       target_scope: targetScope,
       target_colleges: targetScope === 'college' ? Array.from(targetColleges) : [],
     };
@@ -165,8 +165,8 @@ export function AnnouncementForm(props: Mode) {
               <select value={minOffer} onChange={(e) => setMinOffer(e.target.value)} className={inputCls}>
                 <option value="">Toutes les offres</option>
                 <option value="essentiel">Essentiel ou +</option>
-                <option value="premium">Premium ou +</option>
-                <option value="intensif">Intensif uniquement</option>
+                <option value="intensif">Intensif ou +</option>
+                <option value="approfondi">Approfondi uniquement</option>
               </select>
             </Field>
             <Field label="Périmètre">

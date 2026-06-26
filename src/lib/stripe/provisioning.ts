@@ -10,7 +10,7 @@
  *      - permission_scope = accès Découverte uniquement (col-decouverte)
  *        → l'utilisateur ne voit pour l'instant que le contenu Découverte
  *      - paid_offer (metadata.permission_scope.paid_offer) = 'essentiel' |
- *        'premium' | 'intensif' selon la formule réellement achetée
+ *        'intensif' | 'approfondi' selon la formule réellement achetée
  *      - paid_formule (idem) = identifiant exact de la formule achetée
  *      - specialty (en metadata) = "Médecine générale"
  *      - voie (Intensive uniquement) en metadata
@@ -55,10 +55,10 @@ export type ProvisioningResult =
     }
   | { ok: false; error: string };
 
-const MAP_OFFER: Record<FormuleId, 'essentiel' | 'premium' | 'intensif'> = {
+const MAP_OFFER: Record<FormuleId, 'essentiel' | 'intensif' | 'approfondi'> = {
   essentielle: 'essentiel',
-  intensive: 'premium',
-  'programme-approfondi': 'intensif',
+  intensive: 'intensif',
+  'programme-approfondi': 'approfondi',
 };
 
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';

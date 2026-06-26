@@ -76,10 +76,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
       .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
   ]);
-  // Séance approfondie : uniquement pour l'offre Programme Approfondi (intensif).
-  const isIntensif = scope.offer === 'intensif';
+  const isApprofondi = scope.offer === 'approfondi' || profile.role === 'admin';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: seanceApprofondieVideos } = isIntensif
+  const { data: seanceApprofondieVideos } = isApprofondi
     ? await (supabase as any)
         .from('videos')
         .select('id, bunny_video_id, titre')
@@ -90,7 +89,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
   // Vérifier si toutes les séances du prof sont terminées (pour débloquer séance approfondie).
   let allSeancesCompleted = false;
-  if (hasSeanceApprofondie && isIntensif) {
+  if (hasSeanceApprofondie && isApprofondi) {
     const { data: seanceSeries } = await supabase
       .from('qcm_series')
       .select('id')
@@ -180,7 +179,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     : (() => {
         const standardActions: Action[] = [];
         // Séance approfondie en 1ère position (visible uniquement Programme Approfondi).
-        if (hasSeanceApprofondie && isIntensif) {
+        if (hasSeanceApprofondie && isApprofondi) {
           standardActions.push({
             href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
             label: 'Séance approfondie',

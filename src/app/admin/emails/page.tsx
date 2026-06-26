@@ -6,7 +6,7 @@ import type { Offer } from '@/types/domain';
 import { CopyButton } from '@/components/admin/copy-button';
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
-const OFFER_OPTIONS: Offer[] = ['essentiel', 'premium', 'intensif'];
+const OFFER_OPTIONS: Offer[] = ['essentiel', 'intensif', 'approfondi'];
 
 type SearchParams = {
   promo?: string;

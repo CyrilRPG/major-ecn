@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   const { first_name, last_name, email, phone, promotion, offer, colleges_wish } = parsed.data;
 
   // Intensif : pas de création de compte automatique — l'équipe rappelle l'élève.
-  if (offer === 'intensif') {
+  if (offer === 'approfondi') {
     return NextResponse.json({
       ok: true,
       flow: 'callback',
