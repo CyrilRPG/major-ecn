@@ -226,7 +226,7 @@ export function StudyConsole({
             <button
               type="button"
               onClick={() => setAssistantOpen(false)}
-              aria-label="Fermer l’assistant"
+              aria-label="Fermer l'assistant"
               className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) focus-ring"
             >
               <X className="h-4 w-4" />

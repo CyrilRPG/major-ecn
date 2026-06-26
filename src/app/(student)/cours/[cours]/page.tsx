@@ -144,14 +144,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     : isDecouverte
     ? [
         {
-          href: `/cours/${coursId}/fiche`, label: ‘Fiche de cours exhaustive’,
-          desc: "L’intégralité du programme, hiérarchisée rang A / rang B.",
-          Icon: FileText, accent: ‘#2563EB’, bg: ‘#EFF6FF’,
+          href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+          desc: "L'intégralité du programme, hiérarchisée rang A / rang B.",
+          Icon: FileText, accent: '#2563EB', bg: '#EFF6FF',
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
         },
         {
           // Cours vidéo verrouillé — clic = popup LockedContentModal.
-          href: ‘#locked-video’, label: ‘Cours vidéo’,
+          href: '#locked-video', label: 'Cours vidéo',
           desc: 'Le cours filmé, aligné sur les recommandations HAS.',
           Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
           available: false,
@@ -195,13 +195,13 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         }
         standardActions.push(
           {
-            href: `/cours/${coursId}/fiche`, label: ‘Fiche de cours exhaustive’,
-            desc: "L’intégralité du programme, hiérarchisée rang A / rang B.",
-            Icon: FileText, accent: ‘#2563EB’, bg: ‘#EFF6FF’,
+            href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+            desc: "L'intégralité du programme, hiérarchisée rang A / rang B.",
+            Icon: FileText, accent: '#2563EB', bg: '#EFF6FF',
             available: (c.fiches ?? []).some((f) => !!f.storage_path),
           },
           {
-            href: `/cours/${coursId}/video`, label: ‘Cours vidéo’,
+            href: `/cours/${coursId}/video`, label: 'Cours vidéo',
             desc: 'Le cours filmé, aligné sur les recommandations HAS.',
             Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
             available: (c.videos ?? []).some((v) => !!v.storage_path),
