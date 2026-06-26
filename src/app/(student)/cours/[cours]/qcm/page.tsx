@@ -19,14 +19,19 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .eq('id', coursId)
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  const scope = parseScope(profile.permission_scope);
+  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
+
+  // Séances du professeur réservées à l'offre Programme Approfondi (intensif).
+  const showSeances = scope.offer === 'intensif';
+  const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
 
   const { data: series } = await supabase
     .from('qcm_series')
     .select('id, label, order_index, type, qcm_questions(id)')
     .eq('cours_id', coursId)
-    .in('type', ['qcm', 'seance'])
+    .in('type', seriesTypes)
     .order('order_index');
 
   const { data: sessions } = await supabase

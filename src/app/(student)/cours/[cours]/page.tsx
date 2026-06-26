@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, Video, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
+import { LockedSeanceApprofondieCard } from '@/components/student/locked-seance-approfondie-card';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
@@ -75,6 +76,41 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
       .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
   ]);
+  // Séance approfondie : uniquement pour l'offre Programme Approfondi (intensif).
+  const isIntensif = scope.offer === 'intensif';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: seanceApprofondieVideos } = isIntensif
+    ? await (supabase as any)
+        .from('videos')
+        .select('id, bunny_video_id, titre')
+        .eq('cours_id', coursId)
+        .eq('type', 'seance_approfondie')
+    : { data: [] };
+  const hasSeanceApprofondie = (seanceApprofondieVideos ?? []).length > 0;
+
+  // Vérifier si toutes les séances du prof sont terminées (pour débloquer séance approfondie).
+  let allSeancesCompleted = false;
+  if (hasSeanceApprofondie && isIntensif) {
+    const { data: seanceSeries } = await supabase
+      .from('qcm_series')
+      .select('id')
+      .eq('cours_id', coursId)
+      .eq('type', 'seance');
+    const seanceIds = (seanceSeries ?? []).map((s) => s.id);
+    if (seanceIds.length > 0) {
+      const { data: completedSessions } = await supabase
+        .from('qcm_sessions')
+        .select('serie_id')
+        .eq('user_id', user.id)
+        .in('serie_id', seanceIds)
+        .not('finished_at', 'is', null);
+      const completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
+      allSeancesCompleted = seanceIds.every((id) => completedSerieIds.has(id));
+    } else {
+      allSeancesCompleted = true;
+    }
+  }
+
   // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
   // (la vidéo est remplacée par une carte cadenas → popup tarifs).
   const isDecouverte = c.matiere_id === DECOUVERTE_COLLEGE_ID;
@@ -110,7 +146,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     ? [
         {
           href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
-          desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
+          desc: "L’intégralité du programme, hiérarchisée rang A / rang B.",
           Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
         },
@@ -141,50 +177,69 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           available: true,
         },
       ]
-    : [
-        {
-          href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
-          desc: 'L’intégralité du programme, hiérarchisée rang A / rang B.',
-          Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
-          available: (c.fiches ?? []).some((f) => !!f.storage_path),
-        },
-        {
-          href: `/cours/${coursId}/video`, label: 'Cours vidéo',
-          desc: 'Le cours filmé, aligné sur les recommandations HAS.',
-          Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
-          available: (c.videos ?? []).some((v) => !!v.storage_path),
-        },
-        {
-          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
-          desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
-          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
-        },
-        {
-          href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
-          desc: 'Révisez et mémorisez les points clés du programme.',
-          Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
-          available: (c.flashcards?.length ?? 0) > 0,
-        },
-        {
-          href: `/cours/${coursId}/interrogation`,
-          label: 'Interrogation',
-          desc: interrogationUnlocked
-            ? 'Test final du parcours — signez le certificat à l\'issue.'
-            : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
-          Icon: interrogationUnlocked ? Award : Lock,
-          accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
-          bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
-          available: interrogationUnlocked,
-          locked: !interrogationUnlocked,
-        },
-        {
-          href: `/cours/${coursId}/notes`, label: 'Prise de notes',
-          desc: 'Vos notes personnelles sur cet item — sauvegardées et imprimables.',
-          Icon: NotebookPen, accent: '#CA8A04', bg: '#FEF9C3',
-          available: true,
-        },
-      ];
+    : (() => {
+        const standardActions: Action[] = [];
+        // Séance approfondie en 1ère position (visible uniquement Programme Approfondi).
+        if (hasSeanceApprofondie && isIntensif) {
+          standardActions.push({
+            href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
+            label: 'Séance approfondie',
+            desc: allSeancesCompleted
+              ? 'Cours vidéo approfondis par le professeur pour aller plus loin.'
+              : 'Complétez d\'abord toutes les séances du professeur (DP & QI) pour débloquer les vidéos.',
+            Icon: allSeancesCompleted ? Video : Lock,
+            accent: '#7C3AED',
+            bg: '#F3EAFF',
+            available: allSeancesCompleted,
+            locked: !allSeancesCompleted,
+          });
+        }
+        standardActions.push(
+          {
+            href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+            desc: "L’intégralité du programme, hiérarchisée rang A / rang B.",
+            Icon: FileText, accent: '#7C3AED', bg: '#F1E8FD',
+            available: (c.fiches ?? []).some((f) => !!f.storage_path),
+          },
+          {
+            href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+            desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+            Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+            available: (c.videos ?? []).some((v) => !!v.storage_path),
+          },
+          {
+            href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+            desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+            Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+            available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+          },
+          {
+            href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
+            desc: 'Révisez et mémorisez les points clés du programme.',
+            Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+            available: (c.flashcards?.length ?? 0) > 0,
+          },
+          {
+            href: `/cours/${coursId}/interrogation`,
+            label: 'Interrogation',
+            desc: interrogationUnlocked
+              ? 'Test final du parcours — signez le certificat à l\'issue.'
+              : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
+            Icon: interrogationUnlocked ? Award : Lock,
+            accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
+            bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
+            available: interrogationUnlocked,
+            locked: !interrogationUnlocked,
+          },
+          {
+            href: `/cours/${coursId}/notes`, label: 'Prise de notes',
+            desc: 'Vos notes personnelles sur cet item — sauvegardées et imprimables.',
+            Icon: NotebookPen, accent: '#CA8A04', bg: '#FEF9C3',
+            available: true,
+          },
+        );
+        return standardActions;
+      })();
 
   // Ordre d'affichage personnalisé par l'admin (arborescence → cours_content_slots).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -256,6 +311,19 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
       <div className={`grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
         {actions.map((a) => {
+          // Séance approfondie verrouillée → popup invitation DP/QI.
+          if (a.href === '#locked-seance-approfondie') {
+            return (
+              <LockedSeanceApprofondieCard
+                key={a.href}
+                label={a.label}
+                desc={a.desc}
+                accent={a.accent}
+                bg={a.bg}
+              />
+            );
+          }
+
           // Découverte : la carte « Cours vidéo » est verrouillée et ouvre la
           // popup tarifs (DiscoveryLockedCard est un client component).
           if (isDecouverte && a.href === '#locked-video') {
@@ -418,7 +486,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               </span>
               <div>
                 <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
-                  Vous testez l’aperçu Découverte
+                  Vous testez l'aperçu Découverte
                 </p>
                 <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#52607A' }}>
                   Déverrouillez la totalité de la plateforme et préparez sereinement vos EVC.

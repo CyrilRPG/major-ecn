@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Command as CmdIcon, Lightbulb, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
+import { PlatformTimer } from '@/components/student/platform-timer';
 import type { Profile } from '@/lib/auth/get-profile';
 
 function contextLabel(pathname: string): string {
@@ -57,6 +58,8 @@ export function TopBar({
           <CmdIcon className="h-2.5 w-2.5" />K
         </kbd>
       </button>
+
+      {profile.role === 'student' && <PlatformTimer />}
 
       {profile.role !== 'professor' && (
         <button

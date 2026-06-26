@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, ClipboardList, FileText, History, Layers3, PlayCircle } from 'lucide-react';
+import { ArrowLeft, ClipboardList, FileText, History, Layers3, PlayCircle, Video } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
@@ -17,6 +17,7 @@ import { GenerateButton } from '@/components/admin/generate-buttons';
 import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
 import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
+import { BunnyLinkPaste } from '@/components/admin/content/bunny-link-paste';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -54,6 +55,16 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
+
+  // Vidéos séance approfondie (via colonne type)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: saVideoRows } = await (supabase as any)
+    .from('videos')
+    .select('id, titre, bunny_video_id')
+    .eq('cours_id', coursId)
+    .eq('type', 'seance_approfondie')
+    .order('created_at', { ascending: true });
+  const seanceApprofondieVideos = (saVideoRows ?? []) as { id: string; titre: string; bunny_video_id: string | null }[];
 
   // Charge le détail complet des séries QCM (questions + items + images + corrigé général)
   // pour l'éditeur intégré côté admin. Une seule requête supplémentaire.
@@ -98,6 +109,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           {can.fiche.read && <TabsTrigger value="fiche"><FileText className="h-4 w-4 mr-1.5" /> Fiche</TabsTrigger>}
           {(can.qcm.read || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
           {can.flashcards.read && <TabsTrigger value="flashcards"><Layers3 className="h-4 w-4 mr-1.5" /> Flashcards</TabsTrigger>}
+          {can.video.read && <TabsTrigger value="seance-approfondie"><Video className="h-4 w-4 mr-1.5" /> Seance approfondie</TabsTrigger>}
         </TabsList>
 
         {can.video.read && (
@@ -296,6 +308,35 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                       </li>
                     ))}
                   </ul>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+        {can.video.read && (
+          <TabsContent value="seance-approfondie">
+            <Card>
+              <CardHeader>
+                <CardTitle>Videos Seance Approfondie</CardTitle>
+                <CardDescription>
+                  {can.video.write
+                    ? 'Collez un lien Bunny.net Stream pour ajouter une video de seance approfondie. Ces videos ne sont visibles que par les abonnes Programme Approfondi.'
+                    : 'Lecture seule.'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {can.video.write ? (
+                  <BunnyLinkPaste
+                    coursId={coursId}
+                    videoType="seance_approfondie"
+                    existingVideos={seanceApprofondieVideos}
+                  />
+                ) : (
+                  <p className="text-sm text-(--color-ink-soft)">
+                    {seanceApprofondieVideos.length > 0
+                      ? `${seanceApprofondieVideos.length} video(s) de seance approfondie.`
+                      : 'Aucune video de seance approfondie.'}
+                  </p>
                 )}
               </CardContent>
             </Card>

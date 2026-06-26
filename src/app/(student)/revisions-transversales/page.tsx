@@ -157,9 +157,28 @@ async function buildState(userId: string, firstName: string): Promise<State> {
     n <= 15 ? { daily: 35, recommended: 60,    intensive: null  } :
               { daily: 40, recommended: 75,    intensive: 120   };
 
-  // "Meilleure période" — on met une valeur statique en attendant un vrai
-  // calcul de série consécutive. (Cf. discussion : pas prioritaire.)
-  const bestStreakDays = 42;
+  // Meilleure période de régularité : on calcule la plus longue série
+  // de jours consécutifs avec au moins une session complétée.
+  let bestStreakDays = 0;
+  if (sessions.length > 0) {
+    const sessionDates = new Set(
+      sessions.map((s) => s.completed_at.slice(0, 10)),
+    );
+    const sortedDates = [...sessionDates].sort();
+    let streak = 1;
+    let maxStreak = 1;
+    for (let i = 1; i < sortedDates.length; i++) {
+      const prev = new Date(sortedDates[i - 1]).getTime();
+      const curr = new Date(sortedDates[i]).getTime();
+      if (curr - prev === 86_400_000) {
+        streak++;
+        if (streak > maxStreak) maxStreak = streak;
+      } else {
+        streak = 1;
+      }
+    }
+    bestStreakDays = maxStreak;
+  }
 
   return {
     firstName,
