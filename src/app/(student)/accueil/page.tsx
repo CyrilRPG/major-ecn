@@ -127,13 +127,19 @@ export default async function AccueilPage() {
     .filter((m) => canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
-  /* ---- Progression couverture (vidéo + fiche) ---- */
+  /* ---- Progression couverture (vidéo + fiche + QCM + flashcards) ---- */
+  const coursWithQcm = new Set<string>();
+  const coursWithFc = new Set<string>();
+  for (const a of attempts) coursWithQcm.add(a.qcm_questions.qcm_series.cours.id);
+  for (const r of reviews) coursWithFc.add(r.flashcards.cours.id);
+
   let stepsDone = 0, stepsTotal = 0;
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
       const cp = c.course_progress?.[0];
-      stepsTotal += 2;
-      stepsDone += (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
+      stepsTotal += 4;
+      stepsDone += (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0)
+        + (coursWithQcm.has(c.id) ? 1 : 0) + (coursWithFc.has(c.id) ? 1 : 0);
     }
   }
   const globalProgress = stepsTotal > 0 ? Math.round((stepsDone / stepsTotal) * 100) : 0;
@@ -151,9 +157,10 @@ export default async function AccueilPage() {
   const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
 
   /* ---- Temps de révision (estimé à partir de time_spent_seconds + reviews) ---- */
+  const MAX_SECONDS_PER_Q = 600; // cap 10 min — au-delà c'est un onglet oublié
   const secondsThisWeek =
     attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now))
-      .reduce((s, a) => s + (a.time_spent_seconds ?? 0), 0)
+      .reduce((s, a) => s + Math.min(a.time_spent_seconds ?? 0, MAX_SECONDS_PER_Q), 0)
     + reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length * 15; // ~15s/flashcard
   const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
   const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
@@ -178,6 +185,7 @@ export default async function AccueilPage() {
     id: string; titre: string; matiereNom: string;
     attempts: number; correct: number;
     videoDone: boolean; ficheDone: boolean;
+    hasFc: boolean;
   };
   const perCours = new Map<string, CoursStats>();
   for (const m of colleges) {
@@ -187,6 +195,7 @@ export default async function AccueilPage() {
         id: c.id, titre: c.titre, matiereNom: m.nom,
         attempts: 0, correct: 0,
         videoDone: !!cp?.video_watched, ficheDone: !!cp?.fiche_read,
+        hasFc: false,
       });
     }
   }
@@ -197,11 +206,15 @@ export default async function AccueilPage() {
     e.attempts++;
     if (a.is_correct) e.correct++;
   }
+  for (const r of reviews) {
+    const e = perCours.get(r.flashcards.cours.id);
+    if (e) e.hasFc = true;
+  }
   const coursScored = [...perCours.values()].map((c) => {
     const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
-    const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0)) / 2 * 100;
+    const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0) + (c.attempts > 0 ? 1 : 0) + (c.hasFc ? 1 : 0)) / 4 * 100;
     const value = c.attempts > 0
-      ? Math.round(successPct * 0.5 + coverage * 0.5)
+      ? Math.round(successPct * 0.7 + coverage * 0.3)
       : Math.round(coverage);
     return { id: c.id, titre: c.titre, matiereNom: c.matiereNom, value, attempts: c.attempts };
   });
@@ -361,8 +374,8 @@ export default async function AccueilPage() {
           </KpiCard>
 
           <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
-            <p className="text-4xl font-black tabular-nums text-(--color-ink)">{sessionsCount}</p>
-            <p className="text-xs text-(--color-ink-soft)">sur {itemsTotal} QCM</p>
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">{totalAttempts}</p>
+            <p className="text-xs text-(--color-ink-soft)">questions sur {itemsTotal} · {sessionsCount} séries</p>
             <DiscoveryGateLink
               href="/entrainement"
               locked={isDecouverte}
