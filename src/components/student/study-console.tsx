@@ -90,13 +90,13 @@ export function StudyConsole({
   const tabs: Tab[] = hasAnyContent
     ? [
         { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
+        ...(availability.seanceApprofondie
+          ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
+          : []),
         { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
-        ...(availability.seanceApprofondie
-          ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
-          : []),
         { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ]
     : [
