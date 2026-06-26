@@ -57,7 +57,7 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
 
   type SAVideo = { id: string; titre: string; bunny_video_id: string | null };
   const saVideos = (videos ?? []) as SAVideo[];
-  const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID;
+  const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID ?? '691475';
 
   if (saVideos.length === 0) {
     return (
