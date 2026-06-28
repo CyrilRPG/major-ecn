@@ -90,37 +90,28 @@ export function BunnyVideoPlayer({
             aria-hidden="true"
             className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
           >
-            <div
-              className="absolute"
-              style={{
-                top: '50%',
-                left: '50%',
-                width: '250%',
-                height: '250%',
-                transform: 'translate(-50%, -50%) rotate(-25deg)',
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignContent: 'center',
-                justifyContent: 'center',
-                gap: '40px 56px',
-              }}
-            >
-              {Array.from({ length: 60 }, (_, i) => (
-                <span
-                  key={i}
-                  className="whitespace-nowrap text-[11px] sm:text-[13px] font-semibold"
-                  style={{
-                    opacity: 0.22,
-                    color: i % 2 === 0 ? '#1a1a1a' : '#ffffff',
-                    textShadow: i % 2 === 0
-                      ? '0 0 4px rgba(255,255,255,0.9), 1px 1px 2px rgba(255,255,255,0.7)'
-                      : '0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.7)',
-                  }}
-                >
-                  {watermarkText}
-                </span>
-              ))}
-            </div>
+            {[
+              { top: '12%', left: '15%' },
+              { top: '50%', left: '55%' },
+              { top: '82%', left: '25%' },
+            ].map((pos, i) => (
+              <span
+                key={i}
+                className="absolute whitespace-nowrap text-[11px] sm:text-[13px] font-semibold"
+                style={{
+                  top: pos.top,
+                  left: pos.left,
+                  transform: 'rotate(-20deg)',
+                  opacity: 0.18,
+                  color: i % 2 === 0 ? '#1a1a1a' : '#ffffff',
+                  textShadow: i % 2 === 0
+                    ? '0 0 4px rgba(255,255,255,0.9), 1px 1px 2px rgba(255,255,255,0.7)'
+                    : '0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.7)',
+                }}
+              >
+                {watermarkText}
+              </span>
+            ))}
           </div>
         )}
       </div>
