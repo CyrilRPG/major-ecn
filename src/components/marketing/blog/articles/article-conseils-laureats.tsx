@@ -319,7 +319,7 @@ export function ArticleConseilsLaureats({ article }: { article: BlogArticleMeta 
               }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/blog/reussir-evc-asian-laptop.jpg"
+                src="/blog/medecin-asiatique-laptop.jpg"
                 alt="Médecin préparant les Épreuves de Vérification des Connaissances (EVC) avec méthode"
                 className="block w-full h-auto select-none"
                 decoding="async"

@@ -24,19 +24,14 @@ export const BLOG_CATEGORIES: Record<BlogCategory, { label: string; tone: string
   'specialites':          { label: 'Spécialités EVC',        tone: 'indigo',bg: '#EEF2FF', fg: '#3730A3' },
 };
 
-/**
- * Image de couverture par catégorie — toutes les photos du blog sont au format
- * carré (1:1). Utilisé pour les vignettes (« à la une », articles similaires)
- * afin d'afficher un visuel pertinent par thématique plutôt qu'un placeholder.
- */
 export const BLOG_CATEGORY_IMAGE: Record<BlogCategory, string> = {
-  'epreuves-evc':          '/blog/medecins-essentiels-doctor-patient.jpg',
-  'candidature-dossier':   '/blog/practitioners/practitioner-female-laptop.jpg',
-  'exercice-medical':      '/blog/medecins-essentiels-corridor.jpg',
-  'carriere-remuneration': '/blog/practitioners/practitioner-male-tie.jpg',
-  'medecins-etrangers':    '/blog/practitioners/practitioner-male-glasses.jpg',
-  'conseils-methodologie': '/blog/reussir-evc-asian-laptop.jpg',
-  'specialites':           '/blog/medecins-essentiels-doctor-patient.jpg',
+  'epreuves-evc':          '/blog/hopital-necker.jpg',
+  'candidature-dossier':   '/blog/medecin-femme-documents-laptop.jpg',
+  'exercice-medical':      '/blog/couloir-hopital.jpg',
+  'carriere-remuneration': '/blog/medecin-barbu-bras-croises.jpg',
+  'medecins-etrangers':    '/blog/medecin-femme-tresses-laptop.jpg',
+  'conseils-methodologie': '/blog/medecin-asiatique-laptop.jpg',
+  'specialites':           '/blog/medecin-tablette.jpg',
 };
 
 export type BlogArticleMeta = {

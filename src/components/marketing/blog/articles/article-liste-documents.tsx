@@ -371,8 +371,8 @@ function HeroVisual() {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/blog/practitioners/practitioner-female-desk.jpg"
-        alt="Médecin PADHUE constituant son dossier de candidature aux EVC à son bureau"
+        src="/blog/illustration-dossier-cng.png"
+        alt="Illustration de la plateforme CNG pour la candidature EVC"
         className="block w-full h-auto select-none"
         decoding="async"
         fetchPriority="high"

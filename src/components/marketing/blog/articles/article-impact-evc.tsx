@@ -79,7 +79,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/blog/medecins-essentiels-doctor-patient.jpg"
+                src="/blog/consultation-medecin-patiente.jpg"
                 alt="Médecin PADHUE en consultation avec une patiente"
                 className="block w-full h-auto select-none"
                 decoding="async"
@@ -200,7 +200,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/blog/medecins-essentiels-corridor.jpg"
+                  src="/blog/couloir-hopital.jpg"
                   alt="Équipe médicale en mouvement dans un couloir d'hôpital"
                   className="block h-auto w-full select-none"
                   loading="lazy"

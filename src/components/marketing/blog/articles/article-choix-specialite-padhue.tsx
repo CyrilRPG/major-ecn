@@ -164,6 +164,25 @@ export function ArticleChoixSpecialitePadhue({ article }: { article: BlogArticle
         <ArticleHeader
           article={article}
           subtitle="Guide de d&eacute;cision pour les PADHUE g&eacute;n&eacute;ralistes qui pr&eacute;parent les EVC 2026 (voie interne et voie externe) &mdash; par l'&eacute;quipe de pr&eacute;paration EVC / PAE Major ECN."
+          rightArea={
+            <div
+              className="relative w-full overflow-hidden rounded-2xl border"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#EEF2FF 0%,#EDE9FE 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/medecin-souriant-couloir.jpg"
+                alt="Médecin souriant dans un couloir d'hôpital, confiant dans son choix de spécialité"
+                className="block w-full h-auto select-none"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
+          }
         />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">

@@ -95,6 +95,25 @@ export function ArticleMipic({ article }: { article: BlogArticleMeta }) {
         <ArticleHeader
           article={article}
           subtitle="Tu te prépares aux EVC 2026 et tu hésites à candidater en médecine interne polyvalente ? Ce guide Major ECN fait le point sur la préparation EVC médecine interne polyvalente : ce que change le CNG avec la MIPIC, le calendrier de la session, et ce qu'un médecin PADHUE doit savoir avant d'engager sa préparation PAE pour le concours EVC 2026."
+          rightArea={
+            <div
+              className="relative w-full overflow-hidden rounded-2xl border"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#EEF2FF 0%,#E5F1FF 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/medecin-tablette.jpg"
+                alt="Médecin consultant une tablette pour la spécialité MIPIC"
+                className="block w-full h-auto select-none"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
+          }
         />
 
         {/* En bref */}

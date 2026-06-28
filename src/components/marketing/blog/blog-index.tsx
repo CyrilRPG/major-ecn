@@ -197,7 +197,7 @@ function FeaturedCard({ article }: { article: BlogArticleMeta }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
       <div className="grid items-stretch gap-0 sm:grid-cols-[0.85fr_1.15fr]">
-        <div className="relative aspect-square self-center overflow-hidden">
+        <div className="relative aspect-[4/3] self-center overflow-hidden">
           <Image
             src={BLOG_CATEGORY_IMAGE[article.category]}
             alt={article.title}

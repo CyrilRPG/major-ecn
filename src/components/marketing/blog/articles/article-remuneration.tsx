@@ -41,8 +41,8 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/blog/practitioners/practitioner-male-tablet.jpg"
-                alt="Médecin PADHUE consultant une tablette en milieu hospitalier"
+                src="/blog/medecin-scrubs-bureau.png"
+                alt="Médecin en blouse au bureau consultant ses documents de rémunération"
                 className="block w-full h-auto select-none"
                 decoding="async"
                 fetchPriority="high"

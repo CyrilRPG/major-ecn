@@ -660,8 +660,8 @@ function HeroBookImage() {
       style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/blog/practitioners/practitioner-female-laptop.jpg"
-        alt="Médecin PADHUE préparant son dossier d'inscription aux EVC en ligne"
+        src="/blog/illustration-qui-peut-evc.png"
+        alt="Illustration d'un médecin PADHUE préparant son inscription aux EVC"
         className="block w-full h-auto select-none"
         decoding="async"
         fetchPriority="high"

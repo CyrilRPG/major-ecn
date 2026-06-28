@@ -76,6 +76,25 @@ export function ArticleRatioPostes({ article }: { article: BlogArticleMeta }) {
         <ArticleHeader
           article={article}
           subtitle="Le nombre de postes par spécialité peut tromper. Ratio candidats/postes, effet de troupeau, données CNG — comment vraiment choisir sa spécialité EVC en 2026."
+          rightArea={
+            <div
+              className="relative w-full overflow-hidden rounded-2xl border"
+              style={{
+                borderColor: '#E5E9F0',
+                boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)',
+                background: 'linear-gradient(135deg,#FDE7E9 0%,#E5F1FF 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/blog/medecin-documents-stress.jpg"
+                alt="Médecin consultant des données sur les postes EVC"
+                className="block w-full h-auto select-none"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
+          }
         />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
