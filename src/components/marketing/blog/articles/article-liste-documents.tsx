@@ -373,7 +373,8 @@ function HeroVisual() {
       <img
         src="/blog/illustration-dossier-cng.png"
         alt="Illustration de la plateforme CNG pour la candidature EVC"
-        className="block w-full h-auto select-none"
+        className="block w-full select-none object-cover object-center"
+        style={{ aspectRatio: '4/3' }}
         decoding="async"
         fetchPriority="high"
       />
