@@ -373,7 +373,7 @@ function HeroVisual() {
       <img
         src="/blog/practitioners/practitioner-female-desk.jpg"
         alt="Médecin PADHUE constituant son dossier de candidature aux EVC à son bureau"
-        className="block aspect-[4/3] w-full object-cover object-top select-none"
+        className="block w-full h-auto select-none"
         decoding="async"
         fetchPriority="high"
       />

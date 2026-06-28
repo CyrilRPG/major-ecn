@@ -113,6 +113,7 @@ export default async function TransversalSessionPage({
     const m = q.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
     if (!canAccessCollege(scope, m.id)) return false;
+    if (!q.qcm_items || q.qcm_items.length === 0) return false;
     return true;
   });
 

@@ -81,7 +81,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/medecins-essentiels-doctor-patient.jpg"
                 alt="Médecin PADHUE en consultation avec une patiente"
-                className="block aspect-[4/3] w-full object-cover object-top select-none"
+                className="block w-full h-auto select-none"
                 decoding="async"
                 fetchPriority="high"
               />

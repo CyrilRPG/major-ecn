@@ -662,7 +662,7 @@ function HeroBookImage() {
       <img
         src="/blog/practitioners/practitioner-female-laptop.jpg"
         alt="Médecin PADHUE préparant son dossier d'inscription aux EVC en ligne"
-        className="block aspect-[4/3] w-full object-cover object-top select-none"
+        className="block w-full h-auto select-none"
         decoding="async"
         fetchPriority="high"
       />

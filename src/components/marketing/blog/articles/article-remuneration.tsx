@@ -43,7 +43,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               <img
                 src="/blog/practitioners/practitioner-male-tablet.jpg"
                 alt="Médecin PADHUE consultant une tablette en milieu hospitalier"
-                className="block aspect-[4/3] w-full object-cover object-top select-none"
+                className="block w-full h-auto select-none"
                 decoding="async"
                 fetchPriority="high"
               />
