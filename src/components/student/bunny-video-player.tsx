@@ -93,24 +93,29 @@ export function BunnyVideoPlayer({
             <div
               className="absolute"
               style={{
-                /* Rotate around center and make large enough to cover corners */
                 top: '50%',
                 left: '50%',
-                width: '200%',
-                height: '200%',
-                transform: 'translate(-50%, -50%) rotate(-30deg)',
+                width: '250%',
+                height: '250%',
+                transform: 'translate(-50%, -50%) rotate(-25deg)',
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignContent: 'center',
                 justifyContent: 'center',
-                gap: '48px 64px',
+                gap: '40px 56px',
               }}
             >
-              {Array.from({ length: 40 }, (_, i) => (
+              {Array.from({ length: 60 }, (_, i) => (
                 <span
                   key={i}
-                  className="whitespace-nowrap text-white text-[11px] sm:text-xs font-medium"
-                  style={{ opacity: 0.12 }}
+                  className="whitespace-nowrap text-[11px] sm:text-[13px] font-semibold"
+                  style={{
+                    opacity: 0.22,
+                    color: i % 2 === 0 ? '#1a1a1a' : '#ffffff',
+                    textShadow: i % 2 === 0
+                      ? '0 0 4px rgba(255,255,255,0.9), 1px 1px 2px rgba(255,255,255,0.7)'
+                      : '0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.7)',
+                  }}
                 >
                   {watermarkText}
                 </span>
