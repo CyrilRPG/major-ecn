@@ -2,8 +2,16 @@
 
 import { createClient } from '@/lib/supabase/server';
 
+export type TransversalKind =
+  | 'daily'
+  | 'recommended'
+  | 'intensive'
+  | 'reevaluation'
+  | 'reevaluation_deep'
+  | 'bilan_global';
+
 export type RecordTransversalSessionInput = {
-  kind: 'daily' | 'recommended' | 'intensive' | 'reevaluation';
+  kind: TransversalKind;
   qcm_count: number;
   score_correct: number;
   /** ratio correct/total par cours_id, ex. { "1111...": 0.66 } */

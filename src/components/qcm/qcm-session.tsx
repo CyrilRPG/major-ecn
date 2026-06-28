@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -77,6 +77,8 @@ export function QcmSession({
   const [elapsed, setElapsed] = useState(0);
   const [perQuestionStart, setPerQuestionStart] = useState(Date.now());
   const [submitting, setSubmitting] = useState(false);
+  // Ref to scroll bottom buttons into view after QROC reveal on mobile
+  const bottomActionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setInterval(() => setElapsed((s) => s + 1), 1000);
@@ -183,6 +185,11 @@ export function QcmSession({
 
   const revealSeanceAnswer = () => {
     setSeanceRevealed((prev) => ({ ...prev, [q.id]: true }));
+    // After the correction content expands (framer-motion ~250ms), scroll the
+    // action buttons into view so mobile users can reach Bon/Faux.
+    setTimeout(() => {
+      bottomActionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 320);
   };
 
   const selfGradeSeance = async (grade: 'bon' | 'faux') => {
@@ -485,7 +492,7 @@ export function QcmSession({
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-end gap-3 pb-2">
+      <div ref={bottomActionsRef} className="mt-4 flex items-center justify-end gap-3 pb-6">
         {isSeanceQroc ? (
           !isRevealed ? (
             <Button onClick={revealSeanceAnswer} className="bg-[#7C3AED] hover:bg-[#6D28D9]">

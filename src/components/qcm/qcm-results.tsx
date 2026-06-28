@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { ArrowLeft, ArrowRight, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
+import { ArrowLeft, ArrowRight, RefreshCw, RotateCcw, TrendingDown, TrendingUp } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,6 +25,9 @@ export function QcmResults({
   retryHref,
   reviewWrongHref,
   reviewAllHref,
+  nextSerieHref,
+  allSeriesDone,
+  seriesListHref,
 }: {
   scoreCorrect: number;
   scoreTotal: number;
@@ -37,6 +40,9 @@ export function QcmResults({
   retryHref: string;
   reviewWrongHref?: string;
   reviewAllHref?: string;
+  nextSerieHref?: string | null;
+  allSeriesDone?: boolean;
+  seriesListHref?: string;
 }) {
   const ratio = scoreTotal > 0 ? scoreCorrect / scoreTotal : 0;
   const pct = Math.round(ratio * 100);
@@ -205,12 +211,26 @@ export function QcmResults({
       )}
 
       <div className="mt-8 flex items-center justify-end gap-3">
-        <Button asChild>
+        <Button asChild variant="outline">
           <Link href={coursHref}>
             Retour au parcours
-            <ArrowRight />
           </Link>
         </Button>
+        {allSeriesDone && seriesListHref ? (
+          <Button asChild variant="primary">
+            <Link href={seriesListHref}>
+              <RotateCcw className="h-4 w-4" />
+              Recommencer les séries
+            </Link>
+          </Button>
+        ) : nextSerieHref ? (
+          <Button asChild variant="primary">
+            <Link href={nextSerieHref}>
+              Série suivante
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        ) : null}
       </div>
     </div>
   );

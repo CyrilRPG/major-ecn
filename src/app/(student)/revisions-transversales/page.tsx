@@ -201,11 +201,14 @@ export default async function RevisionsTransversalesPage() {
   const firstName = profile.first_name || 'étudiant';
   const s = await buildState(user.id, firstName);
 
-  // États visuels selon les jours d'absence
-  const isInterrupted = s.daysSinceLast >= 14;            // rouge
-  const isAlert     = !isInterrupted && s.daysSinceLast >= 2;  // orange
-  const isUpToDate  = s.daysSinceLast <= 1 && s.totalRevisions > 0; // vert
-  // 1er jour ou jamais : on reste sur l'état "neutre" sans bandeau spécial.
+  // États visuels selon les jours d'absence (spec section 5)
+  const isBilanGlobal     = s.daysSinceLast >= 60;
+  const isAbsenceProlongee = !isBilanGlobal && s.daysSinceLast >= 30;
+  const isInterrupted     = !isBilanGlobal && !isAbsenceProlongee && s.daysSinceLast >= 14;
+  const isWeekAlert       = !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && s.daysSinceLast >= 7;
+  const isAlert           = !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && !isWeekAlert && s.daysSinceLast >= 2;
+  const isUpToDate        = s.daysSinceLast <= 1 && s.totalRevisions > 0;
+  const needsReevaluation = isBilanGlobal || isAbsenceProlongee || isInterrupted;
 
   return (
     <div className="mx-auto grid w-full max-w-[1640px] gap-6 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_320px]">
@@ -225,7 +228,7 @@ export default async function RevisionsTransversalesPage() {
           </Link>
         </header>
 
-        {/* ============ KPI 4 cards ============ */}
+        {/* ============ KPI 4 cards — spec section 2 zone 2 ============ */}
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard
             Icon={Calendar}
@@ -234,10 +237,10 @@ export default async function RevisionsTransversalesPage() {
             value={`${s.revisions30d} / 30`}
             hint="derniers jours"
             bar={Math.min(100, (s.revisions30d / 30) * 100)}
-            barColor={isInterrupted ? '#A91D2C' : isAlert ? '#E8742C' : '#6D28D9'}
+            barColor={needsReevaluation ? '#A91D2C' : isWeekAlert || isAlert ? '#E8742C' : '#6D28D9'}
             footer={
-              isInterrupted ? <span className="text-(--color-danger) font-bold">Régularité interrompue</span> :
-              isAlert       ? <span className="text-[#B45B00] font-bold">À reprendre rapidement</span> :
+              needsReevaluation ? <span className="text-(--color-danger) font-bold">Régularité interrompue</span> :
+              isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">À reprendre rapidement</span> :
                               <span className="text-(--color-success) font-bold">Excellente régularité</span>
             }
           />
@@ -248,8 +251,8 @@ export default async function RevisionsTransversalesPage() {
             value={lastRevisionLabel(s.lastRevision, s.daysSinceLast)}
             hint={s.lastRevision ? s.lastRevision.toLocaleDateString('fr-FR') : '—'}
             footer={
-              isInterrupted ? <span className="text-(--color-danger) font-bold">Seuil dépassé</span> :
-              isAlert       ? <span className="text-[#B45B00] font-bold">Une reprise s'impose</span> :
+              needsReevaluation ? <span className="text-(--color-danger) font-bold">Seuil dépassé</span> :
+              isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">Une reprise s&apos;impose</span> :
               isUpToDate    ? <span className="text-(--color-success) font-bold">Parfait, continuez !</span> :
                               <span className="text-(--color-ink-muted)">—</span>
             }
@@ -272,32 +275,37 @@ export default async function RevisionsTransversalesPage() {
           />
         </section>
 
-        {/* ============ BANDEAU D'ÉTAT ============ */}
-        {isInterrupted ? (
+        {/* ============ BANDEAU D'ÉTAT — spec section 5 ============ */}
+        {isBilanGlobal ? (
+          <BannerBilanGlobal days={s.daysSinceLast} />
+        ) : isAbsenceProlongee ? (
+          <BannerAbsenceProlongee days={s.daysSinceLast} />
+        ) : isInterrupted ? (
           <BannerInterrupted days={s.daysSinceLast} />
+        ) : isWeekAlert ? (
+          <BannerWeekAlert days={s.daysSinceLast} hasIntensive={s.sessionSizes.intensive != null} />
         ) : isAlert ? (
           <BannerAlert days={s.daysSinceLast} />
         ) : isUpToDate ? (
           <BannerUpToDate />
         ) : null}
 
-        {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============
-              En mode interrompu : la carte « recommandée » est seule (pas de
-              daily) → on la pose côte à côte avec la table des spécialités
-              pour éviter l'espace vide à droite.
-              Sinon : layout classique daily + recommended, puis intensive,
-              puis la table en pleine largeur dessous. */}
-        {isInterrupted ? (
+        {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============ */}
+        {needsReevaluation ? (
           <section className="grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
             <RevisionCard
-              kind="recommended"
-              tint="#FFEAD9" tintFg="#E8742C"
-              title="Révision recommandée"
-              count={75}
-              estMin={75}
-              cta="Faire la révision recommandée"
-              ctaTone="orange"
-              hint="Pour retrouver un bon niveau de régularité"
+              kind={isBilanGlobal ? 'bilan_global' : isAbsenceProlongee ? 'reevaluation_deep' : 'reevaluation'}
+              tint="#FCEAEC" tintFg="#A91D2C"
+              title={isBilanGlobal ? 'Bilan global' : isAbsenceProlongee ? 'Réévaluation approfondie' : 'Réévaluation'}
+              count={isBilanGlobal ? 75 : isAbsenceProlongee ? 50 : 30}
+              estMin={isBilanGlobal ? 60 : isAbsenceProlongee ? 40 : 20}
+              cta={isBilanGlobal ? 'Lancer le bilan global' : isAbsenceProlongee ? 'Lancer la réévaluation approfondie' : 'Lancer la réévaluation'}
+              ctaTone="red"
+              hint={isBilanGlobal
+                ? 'Pour faire le point sur votre niveau actuel'
+                : isAbsenceProlongee
+                ? 'Pour évaluer votre niveau après cette interruption'
+                : 'Pour vérifier le maintien de vos acquis'}
               tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
             />
             <SpecialtiesPanel specs={s.specs} />
@@ -318,7 +326,7 @@ export default async function RevisionsTransversalesPage() {
                 <RevisionCard
                   kind="recommended"
                   tint="#FFEAD9" tintFg="#E8742C"
-                  title="Révision recommandée (optionnelle)"
+                  title="Révision recommandée"
                   count={s.sessionSizes.recommended}
                   estMin={35}
                   cta="Faire la révision recommandée"
@@ -329,7 +337,7 @@ export default async function RevisionsTransversalesPage() {
               )}
             </section>
 
-            {!isAlert && s.sessionSizes.intensive && (
+            {s.sessionSizes.intensive && (
               <RevisionCard
                 kind="intensive"
                 tint="#FCEAEC" tintFg="#A91D2C"
@@ -338,7 +346,7 @@ export default async function RevisionsTransversalesPage() {
                 estMin={Math.round(s.sessionSizes.intensive * 0.6)}
                 cta="Lancer la révision intensive"
                 ctaTone="red"
-                hint="Idéale le week-end ou avant une période d'examens."
+                hint="Pour les périodes de révision approfondie ou les week-ends"
               />
             )}
 
@@ -369,9 +377,9 @@ export default async function RevisionsTransversalesPage() {
           </h3>
           <p className="mt-2 text-sm font-semibold text-(--color-ink)">La régularité est la clé !</p>
           <p className="mt-1.5 text-xs leading-relaxed text-(--color-ink-soft)">
-            {isInterrupted
+            {needsReevaluation
               ? 'Reprenez une révision transversale dès aujourd\'hui pour entretenir durablement vos connaissances.'
-              : isAlert
+              : isWeekAlert || isAlert
               ? 'Vous êtes sur la bonne voie. Une révision quotidienne permet de mieux retenir sur le long terme.'
               : 'Révisez chaque jour un peu pour mieux retenir sur le long terme.'}
           </p>
@@ -403,7 +411,7 @@ export default async function RevisionsTransversalesPage() {
             </ul>
           )}
           <Link href="#history" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline">
-            Voir tout l'historique <ArrowRight className="h-3 w-3" />
+            Voir tout l&apos;historique <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
       </aside>
@@ -481,13 +489,13 @@ function BannerAlert({ days }: { days: number }) {
     <section className="rounded-2xl border bg-[#FFF7E6] p-5 sm:p-6" style={{ borderColor: '#F5D596' }}>
       <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#A91D2C', color: 'white' }}>
+          <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#E8742C', color: 'white' }}>
             <AlertTriangle className="h-5 w-5" />
           </span>
           <div>
             <p className="text-base font-bold text-(--color-ink)">
-              Vous n'avez pas effectué de révision transversale depuis{' '}
-              <span className="text-[#A91D2C]">{days} jours</span>.
+              Vous n&apos;avez pas effectué de révision transversale depuis{' '}
+              <span className="text-[#E8742C]">{days} jours</span>.
             </p>
             <p className="mt-1 text-sm text-(--color-ink-soft)">
               Une reprise est recommandée pour maintenir vos acquis.
@@ -496,34 +504,29 @@ function BannerAlert({ days }: { days: number }) {
         </div>
         <Link
           href="/revisions-transversales/session?kind=daily"
-          className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#A91D2C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+          className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#E8742C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
         >
-          Commencer ma révision du jour <ArrowRight className="h-4 w-4" />
+          Reprendre ma révision du jour <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
-      <p className="mt-4 flex items-center justify-center gap-2 border-t border-[#F5D596]/60 pt-3 text-xs text-(--color-ink-soft)">
-        <Lightbulb className="h-3.5 w-3.5 text-[#E8742C]" />
-        Une révision quotidienne est idéale pour garder vos connaissances actives.
-      </p>
     </section>
   );
 }
 
-function BannerInterrupted({ days }: { days: number }) {
+function BannerWeekAlert({ days, hasIntensive }: { days: number; hasIntensive: boolean }) {
   return (
-    <section className="rounded-2xl border bg-[#FCEAEC] p-5 sm:p-6" style={{ borderColor: '#F3B5BC' }}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <section className="rounded-2xl border bg-[#FFF7E6] p-5 sm:p-6" style={{ borderColor: '#F5D596' }}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#A91D2C', color: 'white' }}>
             <AlertTriangle className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-base font-bold text-(--color-ink)">Maintien des acquis interrompu</p>
+            <p className="text-base font-bold text-(--color-ink)">
+              Attention : aucune révision transversale depuis <span className="text-[#A91D2C]">{days} jours</span>.
+            </p>
             <p className="mt-1 text-sm text-(--color-ink-soft)">
-              Vous n'avez effectué aucune révision transversale depuis{' '}
-              <span className="font-bold text-[#A91D2C]">{Number.isFinite(days) ? `${days} jours` : 'longtemps'}</span>.
-              <br />
-              Vos anciennes spécialités ne sont plus suffisamment entretenues.
+              Vous continuez peut-être à avancer dans la formation, mais vos anciennes spécialités ne sont plus suffisamment entretenues.
             </p>
           </div>
         </div>
@@ -532,16 +535,112 @@ function BannerInterrupted({ days }: { days: number }) {
             href="/revisions-transversales/session?kind=daily"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#A91D2C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
           >
-            Reprendre ma révision <ArrowRight className="h-4 w-4" />
+            Reprendre ma révision du jour <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            href="/revisions-transversales/session?kind=reevaluation"
+            href="/revisions-transversales/session?kind=recommended"
             className="inline-flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-colors hover:bg-white"
-            style={{ borderColor: '#A91D2C', color: '#A91D2C' }}
+            style={{ borderColor: '#E8742C', color: '#E8742C' }}
           >
-            Lancer une réévaluation complète <ArrowRight className="h-4 w-4" />
+            Faire une révision recommandée <ArrowRight className="h-4 w-4" />
           </Link>
+          {hasIntensive && (
+            <Link
+              href="/revisions-transversales/session?kind=intensive"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-colors hover:bg-white"
+              style={{ borderColor: '#A91D2C', color: '#A91D2C' }}
+            >
+              Faire une révision intensive <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function BannerInterrupted({ days }: { days: number }) {
+  return (
+    <section className="rounded-2xl border bg-[#FCEAEC] p-5 sm:p-6" style={{ borderColor: '#F3B5BC' }}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#A91D2C', color: 'white' }}>
+            <AlertTriangle className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-base font-bold text-(--color-ink)">Maintien des acquis interrompu</p>
+            <p className="mt-1 text-sm text-(--color-ink-soft)">
+              Vous n&apos;avez pas entretenu vos acquis depuis plus de{' '}
+              <span className="font-bold text-[#A91D2C]">{Number.isFinite(days) ? `${days} jours` : 'longtemps'}</span>.
+              <br />
+              Une réévaluation est nécessaire avant de débloquer de nouveaux contenus.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/revisions-transversales/session?kind=reevaluation"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#A91D2C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+        >
+          Lancer la réévaluation <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function BannerAbsenceProlongee({ days }: { days: number }) {
+  return (
+    <section className="rounded-2xl border bg-[#FCEAEC] p-5 sm:p-6" style={{ borderColor: '#F3B5BC' }}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#A91D2C', color: 'white' }}>
+            <AlertTriangle className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-base font-bold text-(--color-ink)">Absence prolongée de révision transversale</p>
+            <p className="mt-1 text-sm text-(--color-ink-soft)">
+              Vous n&apos;avez pas entretenu vos acquis depuis plus de{' '}
+              <span className="font-bold text-[#A91D2C]">{days} jours</span>.
+              <br />
+              Une réévaluation approfondie est nécessaire pour faire le point sur votre niveau actuel.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/revisions-transversales/session?kind=reevaluation_deep"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#A91D2C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+        >
+          Lancer la réévaluation approfondie <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function BannerBilanGlobal({ days }: { days: number }) {
+  return (
+    <section className="rounded-2xl border bg-[#FCEAEC] p-5 sm:p-6" style={{ borderColor: '#F3B5BC' }}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full" style={{ background: '#A91D2C', color: 'white' }}>
+            <AlertTriangle className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-base font-bold text-(--color-ink)">Bilan global recommandé</p>
+            <p className="mt-1 text-sm text-(--color-ink-soft)">
+              Vous n&apos;avez pas entretenu vos acquis depuis plus de{' '}
+              <span className="font-bold text-[#A91D2C]">{Number.isFinite(days) ? `${days} jours` : 'longtemps'}</span>.
+              <br />
+              Un bilan global est recommandé afin d&apos;identifier les spécialités à reprendre en priorité.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/revisions-transversales/session?kind=bilan_global"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#A91D2C] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+        >
+          Lancer le bilan global <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </section>
   );
@@ -550,7 +649,7 @@ function BannerInterrupted({ days }: { days: number }) {
 function RevisionCard({
   kind, tint, tintFg, title, count, estMin, cta, ctaTone, hint, tags,
 }: {
-  kind: 'daily' | 'recommended' | 'intensive';
+  kind: string;
   tint: string; tintFg: string;
   title: string; count: number; estMin: number;
   cta: string; ctaTone: 'purple' | 'orange' | 'red';
@@ -563,6 +662,8 @@ function RevisionCard({
     red:    { bg: '#A91D2C', shadow: 'shadow-[0_10px_24px_-12px_rgba(169,29,44,0.55)]' },
   }[ctaTone];
 
+  const isReeval = kind === 'reevaluation' || kind === 'reevaluation_deep' || kind === 'bilan_global';
+
   return (
     <article className="flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
       <header className="flex items-start gap-4">
@@ -570,6 +671,7 @@ function RevisionCard({
           {kind === 'daily' && <Sparkles className="h-6 w-6" />}
           {kind === 'recommended' && <Target className="h-6 w-6" />}
           {kind === 'intensive' && <BookOpen className="h-6 w-6" />}
+          {isReeval && <AlertTriangle className="h-6 w-6" />}
         </span>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-(--color-ink)">{title}</p>
@@ -766,5 +868,12 @@ function relativeDate(d: Date): string {
 }
 
 function kindLabel(k: string): string {
-  return { daily: 'Révision du jour', recommended: 'Révision recommandée', intensive: 'Révision intensive', reevaluation: 'Réévaluation' }[k] ?? 'Révision';
+  return {
+    daily: 'Révision du jour',
+    recommended: 'Révision recommandée',
+    intensive: 'Révision intensive',
+    reevaluation: 'Réévaluation',
+    reevaluation_deep: 'Réévaluation approfondie',
+    bilan_global: 'Bilan global',
+  }[k] ?? 'Révision';
 }

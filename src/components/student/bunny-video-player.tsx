@@ -8,8 +8,19 @@ import { createClient } from '@/lib/supabase/client';
  * Lecteur vidéo Bunny Stream (iframe embed). Suit la progression via le
  * protocole player.js (implémenté par le lecteur Bunny) pour marquer le cours
  * comme « vu » à 80 %, avec un bouton manuel de secours.
+ *
+ * `watermarkText` — si fourni, un filigrane semi-transparent se superpose à la
+ * vidéo (pointer-events: none) pour décourager les captures d'écran.
  */
-export function BunnyVideoPlayer({ embedUrl, coursId }: { embedUrl: string; coursId: string }) {
+export function BunnyVideoPlayer({
+  embedUrl,
+  coursId,
+  watermarkText,
+}: {
+  embedUrl: string;
+  coursId: string;
+  watermarkText?: string;
+}) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [done, setDone] = useState(false);
   const markedRef = useRef(false);
@@ -74,6 +85,39 @@ export function BunnyVideoPlayer({ embedUrl, coursId }: { embedUrl: string; cour
           allowFullScreen
           className="absolute inset-0 h-full w-full border-0"
         />
+        {watermarkText && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
+          >
+            <div
+              className="absolute"
+              style={{
+                /* Rotate around center and make large enough to cover corners */
+                top: '50%',
+                left: '50%',
+                width: '200%',
+                height: '200%',
+                transform: 'translate(-50%, -50%) rotate(-30deg)',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignContent: 'center',
+                justifyContent: 'center',
+                gap: '48px 64px',
+              }}
+            >
+              {Array.from({ length: 40 }, (_, i) => (
+                <span
+                  key={i}
+                  className="whitespace-nowrap text-white text-[11px] sm:text-xs font-medium"
+                  style={{ opacity: 0.12 }}
+                >
+                  {watermarkText}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="mt-2 flex items-center justify-end">
         {done ? (

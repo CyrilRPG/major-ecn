@@ -7,13 +7,16 @@ import {
   TransversalSession,
   type TransversalQuestion,
 } from '@/components/student/transversal-session';
+import type { TransversalKind } from './actions';
 
-type Kind = 'daily' | 'recommended' | 'intensive' | 'reevaluation';
+const VALID_KINDS: TransversalKind[] = ['daily', 'recommended', 'intensive', 'reevaluation', 'reevaluation_deep', 'bilan_global'];
 
 /** Tailles de session selon le `kind` demandé et le nb de spé étudiées. */
-function sessionSize(kind: Kind, nbSpecs: number): number {
+function sessionSize(kind: TransversalKind, nbSpecs: number): number {
   if (kind === 'intensive') return 120;
-  if (kind === 'reevaluation') return 75;
+  if (kind === 'reevaluation') return 30;
+  if (kind === 'reevaluation_deep') return 50;
+  if (kind === 'bilan_global') return 75;
   if (kind === 'recommended') {
     if (nbSpecs <= 5) return 30;
     if (nbSpecs <= 10) return 50;
@@ -51,9 +54,9 @@ export default async function TransversalSessionPage({
   const { user, profile } = await requireUser();
   const scope = parseScope(profile.permission_scope);
   const sp = await searchParams;
-  const kind: Kind = (['daily', 'recommended', 'intensive', 'reevaluation'].includes(sp.kind ?? '')
+  const kind: TransversalKind = (VALID_KINDS.includes(sp.kind as TransversalKind)
     ? sp.kind
-    : 'daily') as Kind;
+    : 'daily') as TransversalKind;
 
   const supabase = await createClient();
 

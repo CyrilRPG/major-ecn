@@ -60,6 +60,41 @@ export default async function ResultsPage({
   const retryHref = `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${session.serie_id}`;
   const reviewBase = `/cours/${coursId}/resultats/${sessionId}/revoir`;
 
+  // --- Série suivante logic ---
+  // Fetch all series of the same type for this course, ordered by order_index
+  const serieType = session.qcm_series.type;
+  const { data: allSeries } = await supabase
+    .from('qcm_series')
+    .select('id, order_index')
+    .eq('cours_id', coursId)
+    .eq('type', serieType)
+    .order('order_index');
+
+  // Fetch all completed sessions for this user in these series
+  const serieIds = (allSeries ?? []).map((s) => s.id);
+  const { data: completedSessions } = serieIds.length > 0
+    ? await supabase
+        .from('qcm_sessions')
+        .select('serie_id')
+        .eq('user_id', user.id)
+        .not('finished_at', 'is', null)
+        .in('serie_id', serieIds)
+    : { data: [] };
+
+  const completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
+
+  // Find next uncompleted serie: first look after the current one by order_index, then wrap around
+  const currentOrderIndex = (allSeries ?? []).find((s) => s.id === session.serie_id)?.order_index ?? 0;
+  const afterCurrent = (allSeries ?? []).filter((s) => s.order_index > currentOrderIndex && !completedSerieIds.has(s.id));
+  const beforeCurrent2 = (allSeries ?? []).filter((s) => s.order_index <= currentOrderIndex && s.id !== session.serie_id && !completedSerieIds.has(s.id));
+  const nextUncompleted = afterCurrent[0] ?? beforeCurrent2[0] ?? null;
+
+  const allSeriesDone = nextUncompleted === null;
+  const seriesListHref = `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}`;
+  const nextSerieHref = nextUncompleted
+    ? `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${nextUncompleted.id}`
+    : null;
+
   return (
     <QcmResults
       scoreCorrect={session.score_correct}
@@ -73,6 +108,9 @@ export default async function ResultsPage({
       retryHref={retryHref}
       reviewWrongHref={isAnnale ? `${reviewBase}?filter=wrong` : undefined}
       reviewAllHref={isAnnale ? `${reviewBase}?filter=all` : undefined}
+      nextSerieHref={nextSerieHref}
+      allSeriesDone={allSeriesDone}
+      seriesListHref={seriesListHref}
     />
   );
 }

@@ -58,6 +58,7 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
   type SAVideo = { id: string; titre: string; bunny_video_id: string | null };
   const saVideos = (videos ?? []) as SAVideo[];
   const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID ?? '691475';
+  const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
   if (saVideos.length === 0) {
     return (
@@ -111,7 +112,7 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
                 {v.titre}
               </h2>
               {embed ? (
-                <BunnyVideoPlayer embedUrl={embed} coursId={coursId} />
+                <BunnyVideoPlayer embedUrl={embed} coursId={coursId} watermarkText={watermarkText} />
               ) : (
                 <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
                   <EmptyState

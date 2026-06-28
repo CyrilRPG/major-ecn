@@ -12,7 +12,7 @@ import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
 export default async function CoursVideoPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
-  const { profile } = await requireUser();
+  const { user, profile } = await requireUser();
   const supabase = await createClient();
 
   const { data: c } = await supabase
@@ -32,6 +32,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
   // Priorité à Bunny Stream si une vidéo y est associée ; sinon bucket Supabase.
   const bunnyId = video?.bunny_video_id ?? null;
   const embedUrl = bunnyId && getBunnyConfig() ? bunnyEmbedUrl(bunnyId) : null;
+  const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
   let signedUrl: string | null = null;
   if (!bunnyId && video?.storage_path) {
     const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
@@ -41,7 +42,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
       {embedUrl ? (
-        <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} />
+        <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
       ) : signedUrl ? (
         <VideoPlayer src={signedUrl} coursId={coursId} />
       ) : (
