@@ -90,17 +90,30 @@ export default async function TransversalSessionPage({
         des révisions transversales (rien à réviser pour le moment). */
   if (studiedCoursIds.size === 0) redirect('/revisions-transversales');
 
-  /* 4) Toutes les questions EDN accessibles dans les cours étudiés. */
+  /* 4) Questions EDN accessibles dans les cours étudiés.
+        On filtre directement en base via .in() sur les cours étudiés
+        pour éviter de charger les 16 000+ questions. */
+  const coursIdsArr = Array.from(studiedCoursIds);
+
+  const { data: seriesRaw } = await supabase
+    .from('qcm_series')
+    .select('id')
+    .in('cours_id', coursIdsArr);
+  const serieIds = (seriesRaw ?? []).map((s) => s.id);
+
+  if (serieIds.length === 0) redirect('/revisions-transversales');
+
   const { data: allQRaw } = await supabase
     .from('qcm_questions')
     .select('id, enonce, order_index, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .in('serie_id', serieIds)
     .order('order_index');
 
   const allQ = ((allQRaw ?? []) as unknown as QRow[]).filter((q) => {
     const m = q.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
     if (!canAccessCollege(scope, m.id)) return false;
-    return studiedCoursIds.has(q.qcm_series.cours_id);
+    return true;
   });
 
   if (allQ.length === 0) redirect('/revisions-transversales');
