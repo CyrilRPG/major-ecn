@@ -26,14 +26,12 @@ const SECTIONS: { id: Section; label: string; Icon: typeof Lightbulb }[] = [
 
 /** Spécialités du popup : chacune avec son image adaptée (uploadée par le client). */
 const STARTER_SPECIALTIES = [
-  { image: '/flashcards-decor/cardio.png',    label: 'Cardiologie',    color: '#A53134', bg: '#F7CACB' },
-  { image: '/flashcards-decor/pneumo.png',    label: 'Pneumologie',    color: '#3164A5', bg: '#CADEF7' },
-  { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#31A571', bg: '#CAF7E3' },
-  { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#6C31A5', bg: '#E1CAF7' },
-  // imageScale > 1 : ces 2 illustrations ont une marge transparente importante
-  // → on les zoome côté CSS pour qu'elles remplissent visuellement le carré.
-  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#B45309', bg: '#FEF3C7', imageScale: 1.9 },
-  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#0F7C4F', bg: '#D1FAE5', imageScale: 1.9 },
+  { image: '/flashcards-decor/cardio.png',    label: 'Cardiologie',    color: '#840000', bg: '#FBCCCC' },
+  { image: '/flashcards-decor/pneumo.png',    label: 'Pneumologie',    color: '#214980', bg: '#D8E6F9' },
+  { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#2D6B51', bg: '#DAF0E7' },
+  { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#583474', bg: '#EADEF4' },
+  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#845D40', bg: '#FBEDE3' },
+  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#84470E', bg: '#FBE6D2' },
 ];
 
 export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolean }) {
@@ -153,7 +151,6 @@ function PopupOverlay({
                     src={s.image}
                     alt=""
                     className="h-full w-full object-contain"
-                    style={s.imageScale ? { transform: `scale(${s.imageScale})` } : undefined}
                   />
                 </span>
                 <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
@@ -321,7 +318,6 @@ function SectionDemarrer() {
                 src={s.image}
                 alt=""
                 className="h-full w-full object-contain"
-                style={s.imageScale ? { transform: `scale(${s.imageScale})` } : undefined}
               />
             </span>
             <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
