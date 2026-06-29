@@ -36,8 +36,8 @@ const THEMES: Record<string, FlashcardTheme> = {
   // bg / accent calibrés sur la teinte dominante de chaque illustration (analyse Pillow).
   'Cardiologie':               { bg: '#FBCCCC', accent: '#840000', Icon: HeartArt,           image: '/flashcards-decor/cardio.png' },
   'Pneumologie':               { bg: '#D8E6F9', accent: '#214980', Icon: LungsArt,          image: '/flashcards-decor/pneumo.png' },
-  'Néphrologie':               { bg: '#FBE6D2', accent: '#84470E', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
-  'Urologie':                  { bg: '#FBE6D2', accent: '#84470E', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
+  'Néphrologie':               { bg: '#C2E7D6', accent: '#00572F', Icon: KidneyArt,         image: '/flashcards-decor/nephro.png' },
+  'Urologie':                  { bg: '#C2E7D6', accent: '#00572F', Icon: KidneyArt,         image: '/flashcards-decor/urologie.png' },
   'Gastro-entérologie':        { bg: '#E1F4E1', accent: '#3D743F', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
   'Gastroentérologie':         { bg: '#E1F4E1', accent: '#3D743F', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },
   'Hépato-gastro':             { bg: '#E1F4E1', accent: '#3D743F', Icon: StomachArt,        image: '/flashcards-decor/hepato.png' },

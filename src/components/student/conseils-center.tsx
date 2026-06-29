@@ -31,7 +31,7 @@ const STARTER_SPECIALTIES = [
   { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#2D6B51', bg: '#DAF0E7' },
   { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#583474', bg: '#EADEF4' },
   { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#845D40', bg: '#FBEDE3' },
-  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#84470E', bg: '#FBE6D2' },
+  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#00572F', bg: '#C2E7D6' },
 ];
 
 export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolean }) {
