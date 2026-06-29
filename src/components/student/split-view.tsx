@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
-  BookMarked, Columns2, FileText, MonitorPlay,
-  NotebookPen, X, type LucideIcon,
+  BookMarked, ClipboardCheck, Columns2, FileText, Layers3, Lock, MonitorPlay,
+  NotebookPen, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotesEditor } from './notes-editor';
@@ -12,7 +12,7 @@ import { NotesEditor } from './notes-editor';
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export type SplitContentType = 'fiche' | 'fiche-express' | 'video' | 'notes';
+export type SplitContentType = 'fiche' | 'fiche-express' | 'video' | 'qcm' | 'flashcards' | 'seance-approfondie' | 'notes';
 
 type SplitCtx = {
   active: SplitContentType | null;
@@ -23,13 +23,19 @@ type SplitCtx = {
   coursId: string;
   hasFiche: boolean;
   hasVideo: boolean;
+  hasQcm: boolean;
+  hasFlashcards: boolean;
+  hasSeanceApprofondie: boolean;
+  locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 };
 
 const SplitContext = createContext<SplitCtx>({
   active: null, open: () => {}, close: () => {},
   splitPct: 50, setSplitPct: () => {},
-  coursId: '', hasFiche: false, hasVideo: false, notesHtml: '',
+  coursId: '', hasFiche: false, hasVideo: false,
+  hasQcm: false, hasFlashcards: false, hasSeanceApprofondie: false,
+  locked: {}, notesHtml: '',
 });
 export const useSplitView = () => useContext(SplitContext);
 
@@ -41,6 +47,9 @@ const SPLIT_OPTIONS: { type: SplitContentType; label: string; Icon: LucideIcon }
   { type: 'fiche', label: 'Fiche de cours', Icon: FileText },
   { type: 'fiche-express', label: 'Fiche Express', Icon: BookMarked },
   { type: 'video', label: 'Vidéo', Icon: MonitorPlay },
+  { type: 'seance-approfondie', label: 'Séance approf.', Icon: Video },
+  { type: 'qcm', label: 'DP · QI', Icon: ClipboardCheck },
+  { type: 'flashcards', label: 'Flashcards', Icon: Layers3 },
   { type: 'notes', label: 'Prise de notes', Icon: NotebookPen },
 ];
 
@@ -136,6 +145,16 @@ function VideoPanel({ coursId }: { coursId: string }) {
 /*  Split panel content                                                */
 /* ------------------------------------------------------------------ */
 
+function EmbedPanel({ coursId, path, title }: { coursId: string; path: string; title: string }) {
+  return (
+    <iframe
+      src={`/cours/${coursId}/${path}?embed=1`}
+      title={title}
+      className="h-full w-full border-0"
+    />
+  );
+}
+
 function SplitPanelContent({ coursId, type, notesHtml }: { coursId: string; type: SplitContentType; notesHtml: string }) {
   switch (type) {
     case 'fiche':
@@ -144,6 +163,12 @@ function SplitPanelContent({ coursId, type, notesHtml }: { coursId: string; type
       return <iframe src={`/api/fiches/${coursId}/express`} title="Fiche Express" className="h-full w-full border-0" />;
     case 'video':
       return <VideoPanel coursId={coursId} />;
+    case 'seance-approfondie':
+      return <EmbedPanel coursId={coursId} path="seance-approfondie" title="Séance approfondie" />;
+    case 'qcm':
+      return <EmbedPanel coursId={coursId} path="qcm" title="DP · QI" />;
+    case 'flashcards':
+      return <EmbedPanel coursId={coursId} path="flashcards" title="Flashcards" />;
     case 'notes':
       return (
         <div className="h-full overflow-y-auto p-3">
@@ -164,6 +189,10 @@ function SplitPanel({
   onClose,
   hasFiche,
   hasVideo,
+  hasQcm,
+  hasFlashcards,
+  hasSeanceApprofondie,
+  locked,
   notesHtml,
 }: {
   coursId: string;
@@ -172,34 +201,50 @@ function SplitPanel({
   onClose: () => void;
   hasFiche: boolean;
   hasVideo: boolean;
+  hasQcm: boolean;
+  hasFlashcards: boolean;
+  hasSeanceApprofondie: boolean;
+  locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 }) {
   const available = SPLIT_OPTIONS.filter((o) => {
     if (o.type === 'fiche' || o.type === 'fiche-express') return hasFiche;
     if (o.type === 'video') return hasVideo;
-    return true; // notes always available
+    if (o.type === 'qcm') return hasQcm;
+    if (o.type === 'flashcards') return hasFlashcards;
+    if (o.type === 'seance-approfondie') return hasSeanceApprofondie;
+    return true;
   });
+
+  const isTypeLocked = locked[type] === true;
 
   return (
     <div className="flex h-full flex-col border-l border-(--color-border) bg-(--color-surface)">
       {/* Toolbar */}
-      <div className="flex items-center gap-1 border-b border-(--color-border) px-2 py-1.5">
-        {available.map((o) => (
-          <button
-            key={o.type}
-            type="button"
-            onClick={() => onChangeType(o.type)}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors',
-              type === o.type
-                ? 'bg-(--color-primary)/10 text-(--color-primary) font-bold'
-                : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)',
-            )}
-          >
-            <o.Icon className="h-3.5 w-3.5" />
-            <span className="hidden xl:inline">{o.label}</span>
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center gap-1 border-b border-(--color-border) px-2 py-1.5">
+        {available.map((o) => {
+          const oLocked = locked[o.type] === true;
+          return (
+            <button
+              key={o.type}
+              type="button"
+              onClick={() => !oLocked && onChangeType(o.type)}
+              disabled={oLocked}
+              className={cn(
+                'flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors',
+                oLocked
+                  ? 'opacity-50 cursor-not-allowed text-(--color-ink-muted)'
+                  : type === o.type
+                  ? 'bg-(--color-primary)/10 text-(--color-primary) font-bold'
+                  : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)',
+              )}
+            >
+              <o.Icon className="h-3.5 w-3.5" />
+              <span className="hidden xl:inline">{o.label}</span>
+              {oLocked && <Lock className="h-3 w-3 shrink-0" style={{ color: '#C0112E' }} />}
+            </button>
+          );
+        })}
         <button
           type="button"
           onClick={onClose}
@@ -211,7 +256,16 @@ function SplitPanel({
       </div>
       {/* Content */}
       <div className="min-h-0 flex-1">
-        <SplitPanelContent coursId={coursId} type={type} notesHtml={notesHtml} />
+        {isTypeLocked ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+            <Lock className="h-8 w-8 text-(--color-ink-muted)" />
+            <p className="text-sm font-semibold text-(--color-ink-soft)">
+              Contenu réservé à une formule supérieure
+            </p>
+          </div>
+        ) : (
+          <SplitPanelContent coursId={coursId} type={type} notesHtml={notesHtml} />
+        )}
       </div>
     </div>
   );
@@ -222,11 +276,12 @@ function SplitPanel({
 /* ------------------------------------------------------------------ */
 
 export function SplitViewToggle() {
-  const { active, open, close } = useSplitView();
+  const { active, open, close, locked } = useSplitView();
+  const defaultType = SPLIT_OPTIONS.find((o) => locked[o.type] !== true)?.type ?? 'notes';
   return (
     <button
       type="button"
-      onClick={() => (active ? close() : open('fiche'))}
+      onClick={() => (active ? close() : open(defaultType as SplitContentType))}
       title={active ? 'Fermer la vue partagée' : 'Ouvrir la vue partagée'}
       aria-label="Vue partagée"
       className={cn(
@@ -247,7 +302,7 @@ export function SplitViewToggle() {
 /* ------------------------------------------------------------------ */
 
 export function SplitLayout({ children }: { children: React.ReactNode }) {
-  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, notesHtml } = useSplitView();
+  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, locked, notesHtml } = useSplitView();
 
   if (!active) return <>{children}</>;
 
@@ -265,6 +320,10 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
           onClose={close}
           hasFiche={hasFiche}
           hasVideo={hasVideo}
+          hasQcm={hasQcm}
+          hasFlashcards={hasFlashcards}
+          hasSeanceApprofondie={hasSeanceApprofondie}
+          locked={locked}
           notesHtml={notesHtml}
         />
       </div>
@@ -280,12 +339,20 @@ export function SplitViewProvider({
   coursId,
   hasFiche,
   hasVideo,
+  hasQcm = false,
+  hasFlashcards = false,
+  hasSeanceApprofondie = false,
+  locked = {},
   notesHtml,
   children,
 }: {
   coursId: string;
   hasFiche: boolean;
   hasVideo: boolean;
+  hasQcm?: boolean;
+  hasFlashcards?: boolean;
+  hasSeanceApprofondie?: boolean;
+  locked?: Partial<Record<string, boolean>>;
   notesHtml: string;
   children: React.ReactNode;
 }) {
@@ -305,7 +372,7 @@ export function SplitViewProvider({
   }, [active, close]);
 
   return (
-    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, notesHtml }}>
+    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, locked, notesHtml }}>
       {children}
     </SplitContext.Provider>
   );

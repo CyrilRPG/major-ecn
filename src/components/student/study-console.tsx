@@ -56,6 +56,7 @@ export function StudyConsole({
   mastery,
   isDecouverte = false,
   visibility,
+  locked,
   children,
 }: {
   coursId: string;
@@ -71,6 +72,9 @@ export function StudyConsole({
    *  (`content_permissions` = 'none') ne doit pas apparaître du tout. Absent /
    *  undefined = visible (élèves, admin). */
   visibility?: Partial<Record<string, boolean>>;
+  /** Onglets verrouillés par la formule. `true` = cadenas + popup au clic.
+   *  L'onglet reste affiché (pas masqué). */
+  locked?: Partial<Record<string, boolean>>;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -143,26 +147,26 @@ export function StudyConsole({
         <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.filter((t) => visibility?.[t.key] !== false).map((t) => {
             const active = activeSeg === t.seg;
-            // Mode Découverte : l'onglet "Cours vidéo" est un cadenas qui ouvre
-            // la popup tarifs au lieu de naviguer vers /video.
-            const isLockedVideo = isDecouverte && t.seg === 'video';
+            const isLocked = locked?.[t.key] === true || (isDecouverte && t.seg === 'video');
             const commonInnerClasses = cn(
               'group relative flex items-center gap-1.5 whitespace-nowrap px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
-              active
+              isLocked
+                ? 'text-(--color-ink-muted) opacity-60'
+                : active
                 ? 'text-[#E4002B] font-bold'
                 : 'text-(--color-ink-soft) hover:text-(--color-ink)',
             );
             const inner = (
               <>
                 <t.Icon className="h-4 w-4 shrink-0" />
-                {active ? (
+                {active && !isLocked ? (
                   <span className="bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent">
                     {t.label}
                   </span>
                 ) : (
                   <span>{t.label}</span>
                 )}
-                {isLockedVideo ? (
+                {isLocked ? (
                   <Lock
                     className="h-3 w-3 shrink-0"
                     style={{ color: '#C0112E' }}
@@ -176,12 +180,12 @@ export function StudyConsole({
                     />
                   )
                 )}
-                {active && (
+                {active && !isLocked && (
                   <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]" />
                 )}
               </>
             );
-            if (isLockedVideo) {
+            if (isLocked) {
               return (
                 <button
                   key={t.key}
