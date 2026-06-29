@@ -81,24 +81,25 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
   const isApprofondi = scope.offer === 'approfondi' || isAdmin;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: seanceApprofondieVideos } = isApprofondi
-    ? await (supabase as any)
-        .from('videos')
-        .select('id, bunny_video_id, titre')
-        .eq('cours_id', coursId)
-        .eq('type', 'seance_approfondie')
-    : { data: [] };
+  const [{ data: seanceApprofondieVideos }, { data: seanceSeries }] = isApprofondi
+    ? await Promise.all([
+        (supabase as any)
+          .from('videos')
+          .select('id, bunny_video_id, titre')
+          .eq('cours_id', coursId)
+          .eq('type', 'seance_approfondie'),
+        supabase
+          .from('qcm_series')
+          .select('id')
+          .eq('cours_id', coursId)
+          .eq('type', 'seance'),
+      ])
+    : [{ data: [] }, { data: [] }];
   const hasSeanceApprofondie = (seanceApprofondieVideos ?? []).length > 0;
 
-  // Vérifier si toutes les séances du prof sont terminées (pour débloquer séance approfondie).
   let allSeancesCompleted = false;
   if (hasSeanceApprofondie && isApprofondi) {
-    const { data: seanceSeries } = await supabase
-      .from('qcm_series')
-      .select('id')
-      .eq('cours_id', coursId)
-      .eq('type', 'seance');
-    const seanceIds = (seanceSeries ?? []).map((s) => s.id);
+    const seanceIds = (seanceSeries ?? []).map((s: { id: string }) => s.id);
     if (seanceIds.length > 0) {
       const { data: completedSessions } = await supabase
         .from('qcm_sessions')
@@ -107,7 +108,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         .in('serie_id', seanceIds)
         .not('finished_at', 'is', null);
       const completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
-      allSeancesCompleted = seanceIds.every((id) => completedSerieIds.has(id));
+      allSeancesCompleted = seanceIds.every((id: string) => completedSerieIds.has(id));
     } else {
       allSeancesCompleted = true;
     }

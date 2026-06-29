@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 /**
  * Page Témoignages — refonte pixel-perfect (maquette designer).
  * Header + trust row + témoignages vidéo + témoignages écrits filtrables +
@@ -269,8 +269,7 @@ function WrittenSection() {
               <article className="flex h-full flex-col rounded-2xl border bg-white p-4 sm:p-5" style={{ borderColor: BORDER }}>
                 <header className="flex flex-wrap items-center gap-3">
                   {w.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={w.photo} alt=""
+                    <Image src={w.photo} alt="" width={44} height={44}
                       className="h-11 w-11 shrink-0 rounded-full object-cover" />
                   ) : (
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-bold text-white"

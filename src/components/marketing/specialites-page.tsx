@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 /**
  * Page Spécialités — catalogue pixel-perfect (maquette designer).
  * 7 sections : hero + bandeau "toutes proposées", strip métriques,
@@ -278,7 +278,7 @@ function SpecialitesHero() {
 
               {/* Mini visuel plateforme */}
               <div className="mt-5 overflow-hidden rounded-2xl border" style={{ borderColor: BORDER }}>
-                <img src="/accueil.png" alt="Aperçu plateforme Major ECN" className="block aspect-[16/9] w-full object-cover object-top" />
+                <Image src="/accueil.png" alt="Aperçu plateforme Major ECN" width={1200} height={675} className="block aspect-[16/9] w-full object-cover object-top" sizes="(max-width: 1280px) 100vw, 600px" />
               </div>
             </div>
           </Reveal>
@@ -544,7 +544,7 @@ function WhyChoose() {
         {/* Aperçu plateforme */}
         <Reveal delay={0.1}>
           <div className="mt-10 overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-30px_rgba(15,31,77,0.30)]" style={{ borderColor: BORDER }}>
-            <img src="/entrainement.png" alt="Aperçu de l’entraînement Major ECN" className="block w-full object-cover" />
+            <Image src="/entrainement.png" alt="Aperçu de l’entraînement Major ECN" width={1200} height={750} className="block w-full object-cover" sizes="(max-width: 1280px) 100vw, 1200px" />
           </div>
         </Reveal>
       </div>
@@ -596,7 +596,7 @@ function MultiSpecTestimonials() {
                   « {t.quote} »
                 </p>
                 <div className="mt-auto flex items-center gap-3 pt-4">
-                  <img src={t.photo} alt="" className="h-10 w-10 rounded-full object-cover" />
+                  <Image src={t.photo} alt="" width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
                   <div>
                     <p className="text-[13px] font-extrabold" style={{ color: NAVY }}>{t.name}</p>
                     <p className="text-[11.5px] font-semibold" style={{ color: RED }}>{t.spe}</p>

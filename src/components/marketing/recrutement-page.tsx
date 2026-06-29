@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
 import {
@@ -512,8 +512,8 @@ export function RecrutementPageContent() {
             <div className="relative hidden lg:block">
               {/* Image avec overlay subtil et coins arrondis */}
               <div className="absolute inset-0 overflow-hidden rounded-l-3xl shadow-2xl">
-                <img src="/recrutement/hero-recrutement.jpg" alt="Équipe médicale en réunion"
-                  className="h-full w-full object-cover" />
+                <Image src="/recrutement/hero-recrutement.jpg" alt="Équipe médicale en réunion"
+                  fill className="object-cover" sizes="(max-width: 1024px) 0px, 50vw" priority />
                 <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(135deg, transparent 0%, rgba(15,31,77,0.10) 100%)' }} />
               </div>
             </div>

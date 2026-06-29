@@ -17,15 +17,16 @@ export default async function AnnaleDetailPage({
   const { profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle();
+  const [{ data: m }, { data: row }] = await Promise.all([
+    supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle(),
+    supabase
+      .from('medgen_annales')
+      .select('id, annee, type, label, sujet_path, corrige_path')
+      .eq('id', id)
+      .maybeSingle(),
+  ]);
   if (!m) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), m.id)) redirect('/facultes');
-
-  const { data: row } = await supabase
-    .from('medgen_annales')
-    .select('id, annee, type, label, sujet_path, corrige_path')
-    .eq('id', id)
-    .maybeSingle();
   if (!row) notFound();
 
   const sujetUrl = `/api/medgen-annales/${row.id}/pdf?type=sujet`;

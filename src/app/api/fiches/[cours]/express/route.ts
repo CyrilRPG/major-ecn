@@ -41,9 +41,6 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
   const pageCount = srcPdf.getPageCount();
   if (pageCount === 0) return NextResponse.json({ error: 'PDF vide' }, { status: 404 });
 
-  // Pick last page, or second-to-last if last page appears blank.
-  // Heuristic: extract the last page into its own PDF and check the byte
-  // size — a blank/near-empty page produces a very small PDF (<2 KB).
   let targetIdx = pageCount - 1;
   if (pageCount >= 2) {
     try {
@@ -51,7 +48,12 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
       const [p] = await probe.copyPages(srcPdf, [targetIdx]);
       probe.addPage(p);
       const probeBytes = await probe.save();
-      if (probeBytes.byteLength < 2000) {
+      const raw = new TextDecoder('latin1').decode(probeBytes);
+      let charCount = 0;
+      const re = /\(([^)]*)\)/g;
+      let m;
+      while ((m = re.exec(raw)) !== null) charCount += m[1].length;
+      if (charCount < 200) {
         targetIdx = pageCount - 2;
       }
     } catch {

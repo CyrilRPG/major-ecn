@@ -1,7 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import type { ReactNode } from 'react';
+import { useRef, useEffect, useState, type ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -11,20 +10,40 @@ type Props = {
   once?: boolean;
 };
 
-/**
- * Lightweight scroll-triggered reveal — matches the Manus design pattern
- * (initial fade + rise from 32px, smooth ease, in-view once).
- */
 export function Reveal({ children, delay = 0, y = 32, className, once = true }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          if (once) obs.disconnect();
+        } else if (!once) {
+          setVisible(false);
+        }
+      },
+      { rootMargin: '-60px' },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [once]);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: '-60px' }}
-      transition={{ duration: 0.7, delay, ease: [0.23, 1, 0.32, 1] }}
+    <div
+      ref={ref}
       className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : `translateY(${y}px)`,
+        transition: `opacity 0.7s cubic-bezier(0.23,1,0.32,1) ${delay}s, transform 0.7s cubic-bezier(0.23,1,0.32,1) ${delay}s`,
+        willChange: 'opacity, transform',
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -34,18 +34,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const supabase = await createClient();
   const totalCours = tree.reduce((acc, c) => acc + c.cours.length, 0);
   const days7Ago = new Date(Date.now() - 7 * 86_400_000).toISOString();
-  const { data: recentProgress } = await supabase
-    .from('course_progress')
-    .select('cours_id')
-    .eq('user_id', user.id)
-    .gte('last_seen_at', days7Ago);
-  const touchedThisWeek = new Set((recentProgress ?? []).map((r) => r.cours_id)).size;
-  const weeklyProgressDelta = totalCours > 0
-    ? Math.min(100, Math.round((touchedThisWeek / totalCours) * 100))
-    : 0;
 
-  // Détection des formulaires en attente pour cet utilisateur
-  const [{ data: forms }, { data: responses }] = await Promise.all([
+  const [{ data: recentProgress }, { data: forms }, { data: responses }] = await Promise.all([
+    supabase
+      .from('course_progress')
+      .select('cours_id')
+      .eq('user_id', user.id)
+      .gte('last_seen_at', days7Ago),
     supabase
       .from('satisfaction_forms')
       .select('id, title, intro_text, mandatory, target_promo, target_offer, target_college')
@@ -56,6 +51,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
       .select('form_id')
       .eq('user_id', user.id),
   ]);
+  const touchedThisWeek = new Set((recentProgress ?? []).map((r) => r.cours_id)).size;
+  const weeklyProgressDelta = totalCours > 0
+    ? Math.min(100, Math.round((touchedThisWeek / totalCours) * 100))
+    : 0;
   const answeredIds = new Set((responses ?? []).map((r) => r.form_id));
   const pending = (forms ?? [])
     .filter((f) => !answeredIds.has(f.id))

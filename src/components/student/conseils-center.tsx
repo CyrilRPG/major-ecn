@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   AlertCircle, ArrowRight, BookOpen, ChevronRight, Compass, Heart,
@@ -114,8 +115,7 @@ function PopupOverlay({
         {/* Header : logo Major ECN officiel + titre */}
         <div className="flex flex-col items-start gap-4 pr-8 sm:flex-row sm:items-center">
           <div className="hidden h-20 w-28 shrink-0 items-center justify-center rounded-2xl bg-[#FCEAEC] p-2 sm:flex">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/major-ecn-logo.png" alt="Major ECN" className="h-full w-full object-contain" />
+            <Image src="/major-ecn-logo.png" alt="Major ECN" width={112} height={80} className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">

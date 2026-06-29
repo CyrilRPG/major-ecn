@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
@@ -205,7 +205,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             </div>
             <div className="relative hidden lg:block">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '4/5' }}>
-                <img src={c.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <Image src={c.hero} alt="" fill className="object-cover" sizes="(max-width: 1024px) 0px, 40vw" priority />
                 <div aria-hidden className="absolute inset-0" style={{ background: `linear-gradient(135deg, transparent 0%, ${c.color}20 100%)` }} />
               </div>
               {/* Side badges flottants premium */}
@@ -334,7 +334,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             <div>
               <h3 className="text-lg font-black" style={{ color: NAVY }}>Une plateforme pensée pour votre réussite</h3>
               <div className="mt-4 rounded-xl overflow-hidden border" style={{ borderColor: BORDER }}>
-                <img src="/accueil.png" alt="Apercu plateforme" className="w-full" />
+                <Image src="/accueil.png" alt="Apercu plateforme" width={1200} height={750} className="w-full" sizes="(max-width: 1280px) 100vw, 600px" />
               </div>
               <ul className="mt-4 space-y-1.5">
                 {['Tous les contenus réunis au même endroit', 'Accessible 24h/24 et 7j/7', 'Compatible ordinateur, tablette et mobile', 'Mises a jour pédagogiques régulières', 'Interface simple et intuitive'].map(b => (
@@ -394,7 +394,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
               <div key={t.name} className="rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <div className="flex items-center gap-3">
                   <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
-                    <img src={t.photo} alt={t.name} className="h-full w-full object-cover" />
+                    <Image src={t.photo} alt={t.name} fill className="object-cover" sizes="56px" />
                     <span className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-white shadow">
                       <Play className="h-2.5 w-2.5" style={{ color: c.color }} fill="currentColor" />
                     </span>

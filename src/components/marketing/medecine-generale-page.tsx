@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 /**
  * Page Spécialité — Médecine Générale (pixel-perfect).
  * 8 sections : hero stéthoscope, métriques, domaines couverts,
@@ -325,7 +325,7 @@ function MgAccompagnement() {
         {/* visuel plateforme */}
         <Reveal delay={0.12}>
           <div className="mt-10 overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-30px_rgba(15,31,77,0.30)]" style={{ borderColor: BORDER }}>
-            <img src="/cours.png" alt="Aperçu des cours Major ECN" className="block w-full object-cover" />
+            <Image src="/cours.png" alt="Aperçu des cours Major ECN" width={1200} height={750} className="block w-full object-cover" sizes="(max-width: 1280px) 100vw, 1200px" />
           </div>
         </Reveal>
       </div>
@@ -491,7 +491,7 @@ function MgTestimonial() {
                 <Quote className="h-3 w-3" /> Ils ont choisi Major ECN
               </span>
               <div className="mt-5 flex items-center gap-4">
-                <img src="/temoignages/drbilly.png" alt="Dr Bill Baron WANKPO" className="h-16 w-16 rounded-full object-cover" />
+                <Image src="/temoignages/drbilly.png" alt="Dr Bill Baron WANKPO" width={64} height={64} className="h-16 w-16 rounded-full object-cover" />
                 <div>
                   <p className="text-base font-extrabold" style={{ color: NAVY }}>Dr Bill Baron WANKPO</p>
                   <p className="text-[12.5px] font-semibold" style={{ color: RED }}>Lauréat des EVC de Médecine Générale</p>

@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 /**
  * Sections additionnelles inspirées de la maquette designer (HeroIconic).
  * Reprennent le code couleur Manus (bordeaux + cream) déjà en place, restent
@@ -726,8 +726,8 @@ function TeamPhotoCollage() {
         {slices.map((s, i) => (
           <div key={i} className="relative w-[70px] overflow-hidden"
             style={{ clipPath: "polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%)", marginTop: `${s.mt}px` }}>
-            <img src={s.src} alt="" className="h-full w-full object-cover object-top"
-              style={{ filter: "grayscale(100%) contrast(1.1)" }} />
+            <Image src={s.src} alt="" fill className="object-cover object-top"
+              style={{ filter: "grayscale(100%) contrast(1.1)" }} sizes="70px" />
           </div>
         ))}
       </div>

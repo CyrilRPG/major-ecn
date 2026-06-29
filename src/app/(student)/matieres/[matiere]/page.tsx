@@ -34,21 +34,23 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     canAccessCours(scope, matiere, c.id, (c as { access_type?: 'all' | 'specific' }).access_type ?? 'all')
   );
   const coursIds = cours.map((c) => c.id);
-  const { data: attempts } = coursIds.length
-    ? await supabase
-        .from('qcm_attempts')
-        .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id))')
-        .eq('user_id', user.id)
-        .in('qcm_questions.qcm_series.cours_id', coursIds)
-    : { data: [] as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }[] };
-
-  const { data: reviews } = coursIds.length
-    ? await supabase
-        .from('flashcard_reviews')
-        .select('id, flashcard_id, flashcards!inner(cours_id)')
-        .eq('user_id', user.id)
-        .in('flashcards.cours_id', coursIds)
-    : { data: [] as unknown as { flashcards: { cours_id: string } }[] };
+  const [{ data: attempts }, { data: reviews }] = coursIds.length
+    ? await Promise.all([
+        supabase
+          .from('qcm_attempts')
+          .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id))')
+          .eq('user_id', user.id)
+          .in('qcm_questions.qcm_series.cours_id', coursIds),
+        supabase
+          .from('flashcard_reviews')
+          .select('id, flashcard_id, flashcards!inner(cours_id)')
+          .eq('user_id', user.id)
+          .in('flashcards.cours_id', coursIds),
+      ])
+    : [
+        { data: [] as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }[] },
+        { data: [] as unknown as { flashcards: { cours_id: string } }[] },
+      ];
 
   const coursQcmHit = new Set<string>();
   for (const a of attempts ?? []) coursQcmHit.add(a.qcm_questions.qcm_series.cours_id);

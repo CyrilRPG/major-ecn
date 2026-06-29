@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
@@ -380,7 +380,7 @@ export function TarifsPageContent() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-black tracking-tight" style={{ color: NAVY }}>DÉCOUVREZ LA PLATEFORME MAJOR ECN</h2>
           <div className="mt-6 overflow-hidden rounded-2xl border shadow-lg" style={{ borderColor: BORDER }}>
-            <img src="/accueil.png" alt="Apercu plateforme Major ECN" className="w-full" />
+            <Image src="/accueil.png" alt="Apercu plateforme Major ECN" width={1200} height={750} className="w-full" sizes="(max-width: 1280px) 100vw, 1200px" />
           </div>
         </div>
       </section>
@@ -423,7 +423,7 @@ export function TarifsPageContent() {
               ].map(t => (
                 <div key={t.name} className="text-center">
                   <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-xl">
-                    <img src={t.photo} alt={t.name} className="h-full w-full object-cover" />
+                    <Image src={t.photo} alt={t.name} fill className="object-cover" sizes="80px" />
                     <span className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-full bg-white shadow">
                       <Play className="h-2.5 w-2.5" style={{ color: RED }} fill="currentColor" />
                     </span>

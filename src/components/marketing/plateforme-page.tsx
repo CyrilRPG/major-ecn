@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import { useState } from 'react';
 /**
  * Page Plateforme — refonte pixel-perfect (maquette designer).
@@ -1671,7 +1671,7 @@ function NouveauxContenusBanner() {
           </div>
           <div className="grid gap-6 lg:grid-cols-[200px_1fr] lg:items-center">
             <div className="hidden lg:block">
-              <img src="/plateforme/integration-contenus.png" alt="" className="w-full" />
+              <Image src="/plateforme/integration-contenus.png" alt="" width={200} height={200} className="w-full" />
             </div>
             <div>
               <h3 className="text-xl font-black sm:text-2xl" style={{ color: "#0F172A" }}>
