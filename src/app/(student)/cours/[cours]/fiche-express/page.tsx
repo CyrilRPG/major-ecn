@@ -4,7 +4,8 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 
 export default async function FicheExpressPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -24,7 +25,7 @@ export default async function FicheExpressPage({ params }: { params: Promise<{ c
   if (!c || !c.matieres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !getContentAccess(scope.offer).ficheExpress) redirect(`/cours/${coursId}`);
+  if (profile.role !== 'admin' && !(await fetchContentAccess(scope.offer)).ficheExpress) redirect(`/cours/${coursId}`);
 
   const fiche = c.fiches?.[0];
   const hasFiche = !!fiche?.storage_path;

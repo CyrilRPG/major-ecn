@@ -4,7 +4,8 @@ import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lo
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 
@@ -24,7 +25,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const isAdmin = profile.role === 'admin';
-  const access = isAdmin ? undefined : getContentAccess(scope.offer);
+  const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
 

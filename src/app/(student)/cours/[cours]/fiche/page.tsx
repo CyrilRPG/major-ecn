@@ -5,7 +5,8 @@ import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/re
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { PdfViewer } from '@/components/student/pdf-viewer';
-import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 import { canWrite } from '@/lib/schemas/professor';
 
 export default async function CoursFichePage({ params }: { params: Promise<{ cours: string }> }) {
@@ -26,7 +27,7 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !getContentAccess(scope.offer).fiche) redirect(`/cours/${coursId}`);
+  if (profile.role !== 'admin' && !(await fetchContentAccess(scope.offer)).fiche) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'fiche', `/cours/${coursId}`);
 
   const fiche = c.fiches?.[0];

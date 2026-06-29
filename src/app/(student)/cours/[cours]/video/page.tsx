@@ -8,7 +8,8 @@ import { EmptyState } from '@/components/empty-state';
 import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
-import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 
 export default async function CoursVideoPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -27,7 +28,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !getContentAccess(scope.offer).video) redirect(`/cours/${coursId}`);
+  if (profile.role !== 'admin' && !(await fetchContentAccess(scope.offer)).video) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
 
   const video = c.videos?.[0] as { storage_path?: string | null; bunny_video_id?: string | null } | undefined;

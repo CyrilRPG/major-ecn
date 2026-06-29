@@ -3,7 +3,8 @@ import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudyConsole } from '@/components/student/study-console';
 import { SplitViewProvider } from '@/components/student/split-view';
-import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 import { canRead } from '@/lib/schemas/professor';
 
 export default async function CoursLayout({
@@ -51,7 +52,7 @@ export default async function CoursLayout({
   };
 
   const isAdmin = profile.role === 'admin';
-  const access = isAdmin ? undefined : getContentAccess(scope.offer);
+  const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
   const visibility = profScope
     ? {
