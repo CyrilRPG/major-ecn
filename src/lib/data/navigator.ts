@@ -9,6 +9,10 @@ export type NavCours = {
   id: string;
   titre: string;
   progress: number; // 0..100 (video + fiche coarse)
+  hasFiche: boolean;
+  hasVideo: boolean;
+  hasQcm: boolean;
+  hasFlashcards: boolean;
 };
 export type NavCollege = {
   id: string;
@@ -34,6 +38,10 @@ type Row = {
                     titre: string;
                     order_index: number | null;
                     course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
+                    fiches: { storage_path: string | null }[] | null;
+                    videos: { storage_path: string | null }[] | null;
+                    qcm_series: { type: string }[] | null;
+                    flashcards: { id: string }[] | null;
                   }[]
                 | null;
             }[]
@@ -54,7 +62,8 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
     .from('facultes')
     .select(
       `semestres(matieres(id, nom, icon_key, color_hex, order_index,
-         cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
+         cours(id, titre, order_index, course_progress(video_watched, fiche_read),
+               fiches(storage_path), videos(storage_path), qcm_series(type), flashcards(id))))`,
     )
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
@@ -76,7 +85,15 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
         .map((c) => {
           const cp = c.course_progress?.[0];
           const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
-          return { id: c.id, titre: c.titre, progress: Math.round((done / 2) * 100) };
+          return {
+            id: c.id,
+            titre: c.titre,
+            progress: Math.round((done / 2) * 100),
+            hasFiche: (c.fiches ?? []).some((f) => !!f.storage_path),
+            hasVideo: (c.videos ?? []).some((v) => !!v.storage_path),
+            hasQcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+            hasFlashcards: (c.flashcards?.length ?? 0) > 0,
+          };
         }),
     }))
     // Évite d'afficher des collèges désormais vides (cours tous filtrés).

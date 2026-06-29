@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
+import { SplitViewToggle } from './split-view';
 import { cn } from '@/lib/utils';
 
 export type Availability = {
@@ -94,6 +95,7 @@ export function StudyConsole({
           ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
           : []),
         { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
+        { key: 'fiche-express', label: 'Fiche Express', seg: 'fiche-express', Icon: Sparkles, available: availability.fiche },
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
@@ -115,6 +117,7 @@ export function StudyConsole({
             <p className="truncate text-[11px] font-medium text-(--color-ink-muted) sm:text-xs">{context}</p>
             <h1 className="truncate text-sm font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
+          <SplitViewToggle />
           <button
             type="button"
             onClick={() => setAssistantOpen((v) => !v)}

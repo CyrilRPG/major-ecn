@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudyConsole } from '@/components/student/study-console';
+import { SplitViewProvider } from '@/components/student/split-view';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { canRead } from '@/lib/schemas/professor';
 
@@ -87,6 +88,15 @@ export default async function CoursLayout({
   // LockedContentModal au lieu de naviguer vers /video.
   const isDecouverte = c.matiere_id === 'col-decouverte';
 
+  // Notes for the split-view panel (best-effort, empty string if none)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: noteRow } = await (supabase as any)
+    .from('course_notes')
+    .select('content')
+    .eq('user_id', user.id)
+    .eq('cours_id', coursId)
+    .maybeSingle();
+
   return (
     <StudyConsole
       coursId={coursId}
@@ -97,7 +107,14 @@ export default async function CoursLayout({
       isDecouverte={isDecouverte}
       visibility={visibility}
     >
-      {children}
+      <SplitViewProvider
+        coursId={coursId}
+        hasFiche={availability.fiche}
+        hasVideo={availability.video}
+        notesHtml={(noteRow?.content as string) ?? ''}
+      >
+        {children}
+      </SplitViewProvider>
     </StudyConsole>
   );
 }

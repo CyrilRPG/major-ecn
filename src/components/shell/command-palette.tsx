@@ -3,15 +3,42 @@
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
-import { BookOpen, Layers3, Search } from 'lucide-react';
+import { BookOpen, ClipboardCheck, FileText, Layers3, MonitorPlay, Search, Zap } from 'lucide-react';
 import type { NavCollege } from '@/lib/data/navigator';
+
+type Kind = 'cours' | 'college' | 'fiche' | 'video' | 'qcm' | 'flashcards';
 
 type Flat = {
   id: string;
   href: string;
   label: string;
   hint: string;
-  kind: 'college' | 'cours';
+  kind: Kind;
+};
+
+const CONTENT_TYPES = [
+  { kind: 'fiche' as const, label: 'Fiche', flag: 'hasFiche' as const, seg: 'fiche' },
+  { kind: 'video' as const, label: 'Vidéo', flag: 'hasVideo' as const, seg: 'video' },
+  { kind: 'qcm' as const, label: 'DP · QI', flag: 'hasQcm' as const, seg: 'qcm' },
+  { kind: 'flashcards' as const, label: 'Flashcards', flag: 'hasFlashcards' as const, seg: 'flashcards' },
+] as const;
+
+const ICON: Record<Kind, typeof BookOpen> = {
+  college: BookOpen,
+  cours: Layers3,
+  fiche: FileText,
+  video: MonitorPlay,
+  qcm: ClipboardCheck,
+  flashcards: Zap,
+};
+
+const GROUP_LABEL: Record<Kind, string> = {
+  cours: 'Items',
+  college: 'Collèges',
+  fiche: 'Fiches de cours',
+  video: 'Vidéos',
+  qcm: 'DP · QI',
+  flashcards: 'Flashcards',
 };
 
 export function CommandPalette({
@@ -31,6 +58,17 @@ export function CommandPalette({
       out.push({ id: col.id, href: `/matieres/${col.id}`, label: col.nom, hint: 'Collège', kind: 'college' });
       for (const c of col.cours) {
         out.push({ id: c.id, href: `/cours/${c.id}`, label: c.titre, hint: col.nom, kind: 'cours' });
+        for (const ct of CONTENT_TYPES) {
+          if (c[ct.flag]) {
+            out.push({
+              id: `${c.id}-${ct.kind}`,
+              href: `/cours/${c.id}/${ct.seg}`,
+              label: `${ct.label} · ${c.titre}`,
+              hint: col.nom,
+              kind: ct.kind,
+            });
+          }
+        }
       }
     }
     return out;
@@ -41,9 +79,9 @@ export function CommandPalette({
     router.push(href);
   };
 
-  const ICON = { college: BookOpen, cours: Layers3 } as const;
-
   if (!open) return null;
+
+  const ORDER: Kind[] = ['cours', 'fiche', 'video', 'qcm', 'flashcards', 'college'];
 
   return (
     <div
@@ -60,7 +98,7 @@ export function CommandPalette({
           <Search className="h-4 w-4 text-(--color-ink-muted)" />
           <Command.Input
             autoFocus
-            placeholder="Rechercher un collège, un item…"
+            placeholder="Rechercher un item, une fiche, une vidéo…"
             className="h-12 w-full bg-transparent text-sm text-(--color-ink) outline-none placeholder:text-(--color-ink-muted)"
           />
           <kbd className="hidden rounded border border-(--color-border) px-1.5 py-0.5 text-[10px] text-(--color-ink-muted) sm:block">
@@ -71,15 +109,14 @@ export function CommandPalette({
           <Command.Empty className="px-3 py-8 text-center text-sm text-(--color-ink-muted)">
             Aucun résultat.
           </Command.Empty>
-          {(['cours', 'college'] as const).map((kind) => {
+          {ORDER.map((kind) => {
             const group = items.filter((i) => i.kind === kind);
             if (group.length === 0) return null;
             const Icon = ICON[kind];
-            const heading = kind === 'cours' ? 'Items' : 'Collèges';
             return (
               <Command.Group
                 key={kind}
-                heading={heading}
+                heading={GROUP_LABEL[kind]}
                 className="px-1 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted) [&_[cmdk-group-items]]:mt-1"
               >
                 {group.map((i) => (
