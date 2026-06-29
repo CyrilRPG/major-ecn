@@ -38,10 +38,6 @@ type Row = {
                     titre: string;
                     order_index: number | null;
                     course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
-                    fiches: { storage_path: string | null }[] | null;
-                    videos: { storage_path: string | null }[] | null;
-                    qcm_series: { type: string }[] | null;
-                    flashcards: { id: string }[] | null;
                   }[]
                 | null;
             }[]
@@ -58,18 +54,32 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
   const supabase = await createClient();
   const scope = parseScope(profile.permission_scope);
 
+  // 1. Tree query (lean — proven stable)
   const { data } = await supabase
     .from('facultes')
     .select(
       `semestres(matieres(id, nom, icon_key, color_hex, order_index,
-         cours(id, titre, order_index, course_progress(video_watched, fiche_read),
-               fiches(storage_path), videos(storage_path), qcm_series(type), flashcards(id))))`,
+         cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
     )
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
 
   const row = data as unknown as Row | null;
   const colleges = (row?.semestres ?? []).flatMap((s) => s.matieres ?? []);
+  const coursIds = colleges.flatMap((m) => (m.cours ?? []).map((c) => c.id));
+
+  // 2. Content availability — flat query, no deep nesting
+  const [ficheRes, videoRes, qcmRes, flashRes] = await Promise.all([
+    supabase.from('fiches').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds),
+    supabase.from('videos').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds),
+    supabase.from('qcm_series').select('cours_id').eq('type', 'qcm').in('cours_id', coursIds),
+    supabase.from('flashcards').select('cours_id').in('cours_id', coursIds),
+  ]);
+
+  const ficheSet = new Set((ficheRes.data ?? []).map((r) => r.cours_id));
+  const videoSet = new Set((videoRes.data ?? []).map((r) => r.cours_id));
+  const qcmSet = new Set((qcmRes.data ?? []).map((r) => r.cours_id));
+  const flashSet = new Set((flashRes.data ?? []).map((r) => r.cours_id));
 
   return colleges
     .filter((m) => canAccessCollege(scope, m.id))
@@ -89,10 +99,10 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
             id: c.id,
             titre: c.titre,
             progress: Math.round((done / 2) * 100),
-            hasFiche: (c.fiches ?? []).some((f) => !!f.storage_path),
-            hasVideo: (c.videos ?? []).some((v) => !!v.storage_path),
-            hasQcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
-            hasFlashcards: (c.flashcards?.length ?? 0) > 0,
+            hasFiche: ficheSet.has(c.id),
+            hasVideo: videoSet.has(c.id),
+            hasQcm: qcmSet.has(c.id),
+            hasFlashcards: flashSet.has(c.id),
           };
         }),
     }))
