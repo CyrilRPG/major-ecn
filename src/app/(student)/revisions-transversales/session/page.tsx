@@ -119,7 +119,8 @@ export default async function TransversalSessionPage({
 
   if (allQ.length === 0) redirect('/revisions-transversales');
 
-  const N = Math.min(sessionSize(kind, studiedCoursIds.size), allQ.length);
+  const targetN = sessionSize(kind, studiedCoursIds.size);
+  const N = Math.min(targetN, allQ.length);
 
   /* 5) Sélection : priorité aux questions déjà ratées (tri par nb d'échecs),
         puis on complète avec des questions du périmètre étudié.
@@ -160,5 +161,5 @@ export default async function TransversalSessionPage({
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
 
-  return <TransversalSession questions={questions} kind={kind} />;
+  return <TransversalSession questions={questions} kind={kind} targetCount={targetN} />;
 }

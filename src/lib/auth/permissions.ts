@@ -85,6 +85,32 @@ export function canAccessFaculte(scope: PermissionScope, _faculteId: string): bo
   return scope.type === 'all' || scope.type === 'college';
 }
 
+export type ContentAccess = {
+  fiche: boolean;
+  ficheExpress: boolean;
+  video: boolean;
+  qcm: boolean;
+  entrainement: boolean;
+  seanceProf: boolean;
+  flashcards: boolean;
+  interrogation: boolean;
+  seanceApprofondie: boolean;
+  notes: boolean;
+};
+
+export function getContentAccess(offer: Offer): ContentAccess {
+  switch (offer) {
+    case 'essentiel':
+      return { fiche: false, ficheExpress: false, video: false, qcm: true, entrainement: true, seanceProf: false, flashcards: false, interrogation: false, seanceApprofondie: false, notes: true };
+    case 'intensif':
+      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
+    case 'approfondi':
+      return { fiche: true, ficheExpress: true, video: false, qcm: true, entrainement: false, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
+    default:
+      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
+  }
+}
+
 export function offerLabel(offer: Offer): string {
   if (offer === 'decouverte') return 'Espace Découverte';
   if (offer === 'intensif') return 'Formule Intensive';

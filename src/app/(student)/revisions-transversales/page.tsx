@@ -250,10 +250,10 @@ export default async function RevisionsTransversalesPage() {
               La révision transversale ne modifie pas le statut officiel des spécialités.
             </p>
           </div>
-          <Link href="#help" className="hidden shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline sm:inline-flex">
+          <a href="#priorites" className="hidden shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline sm:inline-flex">
             <HelpCircle className="h-3.5 w-3.5" />
-            Comment ça fonctionne ?
-          </Link>
+            Mes priorités
+          </a>
         </header>
 
         {/* ============ KPI 4 cards — spec section 2 zone 2 ============ */}
@@ -386,7 +386,7 @@ export default async function RevisionsTransversalesPage() {
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-4">
         {/* Priorités pédagogiques */}
-        <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+        <div id="priorites" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
           <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
             <Target className="h-4 w-4 text-(--color-primary)" /> Priorités pédagogiques
           </h3>
@@ -414,7 +414,7 @@ export default async function RevisionsTransversalesPage() {
         </div>
 
         {/* Historique récent */}
-        <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+        <div id="history" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
           <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
             <ClipboardList className="h-4 w-4 text-(--color-primary)" /> Historique récent
           </h3>

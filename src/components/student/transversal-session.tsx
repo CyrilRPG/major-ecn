@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CalendarPlus, CheckCircle2, AlertTriangle, XCircle, MessageCircle, RefreshCcw, RotateCcw, Eye, Shield, Zap } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, CalendarPlus, CheckCircle2, AlertTriangle, XCircle, MessageCircle, RefreshCcw, RotateCcw, Eye, Shield, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
@@ -28,9 +28,11 @@ function isReevaluationKind(k: TransversalKind) {
 export function TransversalSession({
   questions,
   kind,
+  targetCount,
 }: {
   questions: TransversalQuestion[];
   kind: TransversalKind;
+  targetCount?: number;
 }) {
   const [index, setIndex] = useState(0);
   const [sel, setSel] = useState<Set<string>>(new Set());
@@ -40,7 +42,9 @@ export function TransversalSession({
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [recorded, setRecorded] = useState(false);
+  const [recordError, setRecordError] = useState(false);
   const [showCorrections, setShowCorrections] = useState(false);
+  const [startedAt] = useState(() => new Date().toISOString());
 
   const total = questions.length;
   const q = questions[index];
@@ -53,13 +57,16 @@ export function TransversalSession({
     for (const [cid, v] of Object.entries(perCours)) {
       specialty_scores[cid] = v.t > 0 ? v.c / v.t : 0;
     }
-    void recordTransversalSession({
+    recordTransversalSession({
       kind,
       qcm_count: total,
       score_correct: score,
       specialty_scores,
-    });
-  }, [isFinished, recorded, total, perCours, score, kind]);
+      started_at: startedAt,
+    }).then((res) => {
+      if (!res.ok) setRecordError(true);
+    }).catch(() => setRecordError(true));
+  }, [isFinished, recorded, total, perCours, score, kind, startedAt]);
 
   if (isFinished) {
     if (showCorrections) {
@@ -72,9 +79,11 @@ export function TransversalSession({
         kind={kind}
         perCours={perCours}
         questions={questions}
+        recordError={recordError}
         onRestart={() => {
           setIndex(0); setSel(new Set()); setOutcomes(null);
           setScore(0); setPerCours({}); setDone(false); setRecorded(false);
+          setRecordError(false);
         }}
         onShowCorrections={() => setShowCorrections(true)}
       />
@@ -146,6 +155,13 @@ export function TransversalSession({
         <span className="shrink-0">Q<span className="font-semibold text-(--color-ink)">{index + 1}</span>/{total}</span>
       </div>
       <Progress value={(index / total) * 100} className="mb-3" />
+
+      {targetCount && total < targetCount && index === 0 && (
+        <div className="mb-3 flex items-center gap-2 rounded-lg border border-[#E8742C]/30 bg-[#FFF7E6] px-3 py-2 text-xs text-[#B45B00]">
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+          Session adaptée : {total} QCM disponibles sur les {targetCount} prévus. Révisez davantage de spécialités pour débloquer plus de questions.
+        </div>
+      )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
@@ -276,18 +292,18 @@ function getReevaluationMessages(tier: ScoreTier, kind: TransversalKind) {
 function getWeakSpecialties(
   perCours: Record<string, { c: number; t: number }>,
   questions: TransversalQuestion[],
-): { name: string; pct: number }[] {
+): { name: string; pct: number; coursId: string }[] {
   const courseNames = new Map<string, string>();
   for (const q of questions) {
     if (!courseNames.has(q.cours_id)) courseNames.set(q.cours_id, q.college);
   }
 
-  const weak: { name: string; pct: number }[] = [];
+  const weak: { name: string; pct: number; coursId: string }[] = [];
   for (const [cid, v] of Object.entries(perCours)) {
     if (v.t === 0) continue;
     const pct = Math.round((v.c / v.t) * 100);
     if (pct < 75) {
-      weak.push({ name: courseNames.get(cid) ?? cid, pct });
+      weak.push({ name: courseNames.get(cid) ?? cid, pct, coursId: cid });
     }
   }
   return weak.sort((a, b) => a.pct - b.pct);
@@ -299,6 +315,7 @@ function CompletionScreen({
   kind,
   perCours,
   questions,
+  recordError,
   onRestart,
   onShowCorrections,
 }: {
@@ -307,6 +324,7 @@ function CompletionScreen({
   kind: TransversalKind;
   perCours: Record<string, { c: number; t: number }>;
   questions: TransversalQuestion[];
+  recordError: boolean;
   onRestart: () => void;
   onShowCorrections: () => void;
 }) {
@@ -371,6 +389,13 @@ function CompletionScreen({
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-(--color-ink-soft)">
           {messages.body}
         </p>
+
+        {recordError && (
+          <p className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-[#FCEAEC] px-3 py-2 text-xs font-medium text-[#A91D2C]">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+            Erreur lors de l&apos;enregistrement de la session. Vos résultats n&apos;ont pas été sauvegardés.
+          </p>
+        )}
       </div>
 
       {/* Weak specialties */}
@@ -415,17 +440,17 @@ function CompletionScreen({
           </Button>
         )}
 
-        {/* Orange/Red: consolidation/renforcement buttons */}
+        {/* Orange/Red: consolidation/renforcement buttons → link to weakest specialty */}
         {tier === 'orange' && weakSpecs.length > 0 && (
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#E8742C] border-[#E8742C] hover:bg-[#FFF7E6]">
-            <Link href="/revisions-transversales">
+            <Link href={`/cours/${weakSpecs[0].coursId}`}>
               <Shield className="h-4 w-4" /> Consolider la spécialité
             </Link>
           </Button>
         )}
         {tier === 'red' && weakSpecs.length > 0 && (
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#A91D2C] border-[#A91D2C] hover:bg-[#FCEAEC]">
-            <Link href="/revisions-transversales">
+            <Link href={`/cours/${weakSpecs[0].coursId}`}>
               <Zap className="h-4 w-4" /> Renforcement approfondi
             </Link>
           </Button>

@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Award, ArrowRight, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, Video, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, Video, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canAccessCours, parseScope, getContentAccess } from '@/lib/auth/permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -76,7 +76,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
       .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
   ]);
-  const isApprofondi = scope.offer === 'approfondi' || profile.role === 'admin';
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : getContentAccess(scope.offer);
+  const isApprofondi = scope.offer === 'approfondi' || isAdmin;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: seanceApprofondieVideos } = isApprofondi
     ? await (supabase as any)
@@ -117,13 +119,12 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // on n'affiche QU'une seule carte « Cours vidéo » avec un état « À venir ».
   const isMethodologie = coursId === METHODOLOGIE_COURS_ID;
 
-  // Pour les abonnés : critères d'allDone classiques (vidéo + fiche + QCM + flashcards).
-  // Pour la Découverte : on retire la vidéo (verrouillée) et l'interrogation
-  // (supprimée). allDone = fiche lue + au moins 1 QCM + au moins 1 flashcard.
   const allDone = isDecouverte
     ? !!cpRow?.fiche_read && (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0
-    : !!cpRow?.video_watched && !!cpRow?.fiche_read &&
-      (qcmAttempts ?? 0) > 0 && (flashReviews ?? 0) > 0;
+    : (!access || access.video ? !!cpRow?.video_watched : true)
+      && (!access || access.fiche ? !!cpRow?.fiche_read : true)
+      && (qcmAttempts ?? 0) > 0
+      && (!access || access.flashcards ? (flashReviews ?? 0) > 0 : true);
   const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
 
   // Cartes du parcours dans l'ordre pédagogique :
@@ -147,6 +148,12 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
           desc: "L'intégralité du programme, hiérarchisée rang A / rang B.",
           Icon: FileText, accent: '#2563EB', bg: '#EFF6FF',
+          available: (c.fiches ?? []).some((f) => !!f.storage_path),
+        },
+        {
+          href: `/cours/${coursId}/fiche-express`, label: 'Fiche Express',
+          desc: "L'essentiel du cours en un coup d'œil — la page de synthèse.",
+          Icon: BookMarked, accent: '#0891B2', bg: '#ECFEFF',
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
         },
         {
@@ -178,7 +185,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       ]
     : (() => {
         const standardActions: Action[] = [];
-        // Séance approfondie en 1ère position (visible uniquement Programme Approfondi).
         if (hasSeanceApprofondie && isApprofondi) {
           standardActions.push({
             href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
@@ -193,43 +199,71 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             locked: !allSeancesCompleted,
           });
         }
+        if (!access || access.fiche) {
+          standardActions.push(
+            {
+              href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
+              desc: "L'intégralité du programme, hiérarchisée rang A / rang B.",
+              Icon: FileText, accent: '#2563EB', bg: '#EFF6FF',
+              available: (c.fiches ?? []).some((f) => !!f.storage_path),
+            },
+          );
+        }
+        if (!access || access.ficheExpress) {
+          standardActions.push(
+            {
+              href: `/cours/${coursId}/fiche-express`, label: 'Fiche Express',
+              desc: "L'essentiel du cours en un coup d'œil — la page de synthèse.",
+              Icon: BookMarked, accent: '#0891B2', bg: '#ECFEFF',
+              available: (c.fiches ?? []).some((f) => !!f.storage_path),
+            },
+          );
+        }
+        if (!access || access.video) {
+          standardActions.push(
+            {
+              href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+              desc: 'Le cours filmé, aligné sur les recommandations HAS.',
+              Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
+              available: (c.videos ?? []).some((v) => !!v.storage_path),
+            },
+          );
+        }
         standardActions.push(
-          {
-            href: `/cours/${coursId}/fiche`, label: 'Fiche de cours exhaustive',
-            desc: "L'intégralité du programme, hiérarchisée rang A / rang B.",
-            Icon: FileText, accent: '#2563EB', bg: '#EFF6FF',
-            available: (c.fiches ?? []).some((f) => !!f.storage_path),
-          },
-          {
-            href: `/cours/${coursId}/video`, label: 'Cours vidéo',
-            desc: 'Le cours filmé, aligné sur les recommandations HAS.',
-            Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
-            available: (c.videos ?? []).some((v) => !!v.storage_path),
-          },
           {
             href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
             desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
             Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
             available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
           },
-          {
-            href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
-            desc: 'Révisez et mémorisez les points clés du programme.',
-            Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
-            available: (c.flashcards?.length ?? 0) > 0,
-          },
-          {
-            href: `/cours/${coursId}/interrogation`,
-            label: 'Interrogation',
-            desc: interrogationUnlocked
-              ? 'Test final du parcours — signez le certificat à l\'issue.'
-              : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
-            Icon: interrogationUnlocked ? Award : Lock,
-            accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
-            bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
-            available: interrogationUnlocked,
-            locked: !interrogationUnlocked,
-          },
+        );
+        if (!access || access.flashcards) {
+          standardActions.push(
+            {
+              href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
+              desc: 'Révisez et mémorisez les points clés du programme.',
+              Icon: Layers3, accent: '#16A34A', bg: '#E7F6EC',
+              available: (c.flashcards?.length ?? 0) > 0,
+            },
+          );
+        }
+        if (!access || access.interrogation) {
+          standardActions.push(
+            {
+              href: `/cours/${coursId}/interrogation`,
+              label: 'Interrogation',
+              desc: interrogationUnlocked
+                ? 'Test final du parcours — signez le certificat à l\'issue.'
+                : 'Terminez vidéo, fiche, QCM et flashcards pour débloquer le test final.',
+              Icon: interrogationUnlocked ? Award : Lock,
+              accent: interrogationUnlocked ? '#7C3AED' : '#9AA3B8',
+              bg: interrogationUnlocked ? '#EDE9FE' : '#F1F5F9',
+              available: interrogationUnlocked,
+              locked: !interrogationUnlocked,
+            },
+          );
+        }
+        standardActions.push(
           {
             href: `/cours/${coursId}/notes`, label: 'Prise de notes',
             desc: 'Vos notes personnelles sur cet item — sauvegardées et imprimables.',
@@ -253,7 +287,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   });
   if (slotOrder.size > 0) {
     const typeOf = (href: string): string | null =>
-      href.endsWith('/fiche') ? 'fiche'
+      href.endsWith('/fiche-express') ? 'fiche-express'
+      : href.endsWith('/fiche') ? 'fiche'
       : href.endsWith('/video') ? 'video'
       : href.endsWith('/qcm') ? 'qcm'
       : href.endsWith('/flashcards') ? 'flashcards'

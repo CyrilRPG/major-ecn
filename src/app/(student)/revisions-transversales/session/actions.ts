@@ -16,6 +16,8 @@ export type RecordTransversalSessionInput = {
   score_correct: number;
   /** ratio correct/total par cours_id, ex. { "1111...": 0.66 } */
   specialty_scores: Record<string, number>;
+  /** ISO timestamp of when the session started */
+  started_at: string;
 };
 
 export async function recordTransversalSession(
@@ -26,13 +28,11 @@ export async function recordTransversalSession(
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const now = new Date().toISOString();
-  // La table `transversal_sessions` n'est pas (encore) dans les types Database
-  // générés ; on cast pour autoriser l'insert.
   const { error } = await (supabase as unknown as {
     from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: { message: string } | null }> };
   }).from('transversal_sessions').insert({
     user_id: user.id,
-    started_at: now,
+    started_at: input.started_at,
     completed_at: now,
     qcm_count: input.qcm_count,
     score_correct: input.score_correct,

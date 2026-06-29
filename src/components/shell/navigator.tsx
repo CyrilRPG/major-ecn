@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ArrowRight, CalendarDays, ChevronRight, FileText, Home, Lock, MessagesSquare,
-  MousePointerClick, RefreshCcw, Sparkles, Target, Trophy, X,
+  MousePointerClick, NotebookPen, RefreshCcw, Sparkles, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
@@ -171,6 +171,7 @@ export function Navigator({
   const trainActive = pathname.startsWith('/entrainement');
   const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
+  const notesActive = pathname.startsWith('/notes');
 
   const topLevelClass = (active: boolean) =>
     cn(
@@ -216,6 +217,7 @@ export function Navigator({
               {renderLockedTop(Target, 'Entraînement ciblé')}
               {renderLockedTop(RefreshCcw, 'Révisions transversales')}
               {renderLockedTop(CalendarDays, 'Agenda')}
+              {renderLockedTop(NotebookPen, 'Prises de notes')}
             </>
           ) : (
             <>
@@ -232,6 +234,11 @@ export function Navigator({
               <Link href="/agenda" className={topLevelClass(agendaActive)}>
                 <CalendarDays className="h-[18px] w-[18px] shrink-0" />
                 Agenda
+              </Link>
+
+              <Link href="/notes" className={topLevelClass(notesActive)}>
+                <NotebookPen className="h-[18px] w-[18px] shrink-0" />
+                Prises de notes
               </Link>
             </>
           )}

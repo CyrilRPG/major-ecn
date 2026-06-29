@@ -4,7 +4,7 @@ import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lo
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 
@@ -23,7 +23,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
-  const showSeances = scope.offer === 'approfondi' || profile.role === 'admin';
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : getContentAccess(scope.offer);
+  const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
 
   const { data: rawSeries } = await supabase
@@ -32,11 +34,14 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .eq('cours_id', coursId)
     .in('type', seriesTypes)
     .order('order_index');
-  const series = (rawSeries ?? []).sort((a, b) => {
-    const ta = a.type === 'seance' ? 0 : 1;
-    const tb = b.type === 'seance' ? 0 : 1;
-    return ta !== tb ? ta - tb : a.order_index - b.order_index;
-  });
+  const hideEntrainement = access && !access.entrainement;
+  const series = (rawSeries ?? [])
+    .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
+    .sort((a, b) => {
+      const ta = a.type === 'seance' ? 0 : 1;
+      const tb = b.type === 'seance' ? 0 : 1;
+      return ta !== tb ? ta - tb : a.order_index - b.order_index;
+    });
 
   const { data: sessions } = await supabase
     .from('qcm_sessions')

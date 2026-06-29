@@ -4,12 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
-  MonitorPlay, NotebookPen, Sparkles, Telescope, Video, X, type LucideIcon,
+  BookMarked, ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
+  MonitorPlay, NotebookPen, Telescope, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
-import { SplitViewToggle } from './split-view';
+import { SplitViewToggle, SplitLayout } from './split-view';
 import { cn } from '@/lib/utils';
 
 export type Availability = {
@@ -95,7 +95,7 @@ export function StudyConsole({
           ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
           : []),
         { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
-        { key: 'fiche-express', label: 'Fiche Express', seg: 'fiche-express', Icon: Sparkles, available: availability.fiche },
+        { key: 'fiche-express', label: 'Fiche Express', seg: 'fiche-express', Icon: BookMarked, available: availability.fiche },
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
@@ -212,7 +212,9 @@ export function StudyConsole({
       <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
 
       {/* Viewer — when assistant is docked, leave room on large screens */}
-      <div className={cn('transition-[padding]', assistantOpen && 'lg:pr-[380px]')}>{children}</div>
+      <div className={cn('transition-[padding]', assistantOpen && 'lg:pr-[380px]')}>
+        <SplitLayout>{children}</SplitLayout>
+      </div>
 
       {/* Non-modal assistant dock: no backdrop, platform stays usable */}
       {assistantOpen && (

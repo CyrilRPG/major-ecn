@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { BookOpen, ClipboardCheck, FileText, Layers3, MonitorPlay, Search, Zap } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 
 type Kind = 'cours' | 'college' | 'fiche' | 'video' | 'qcm' | 'flashcards';
@@ -41,6 +42,14 @@ const GROUP_LABEL: Record<Kind, string> = {
   flashcards: 'Flashcards',
 };
 
+const FILTER_OPTIONS: { kind: Kind | 'all'; label: string }[] = [
+  { kind: 'all', label: 'Tous' },
+  { kind: 'fiche', label: 'Fiches' },
+  { kind: 'video', label: 'Vidéos' },
+  { kind: 'qcm', label: 'DP · QI' },
+  { kind: 'flashcards', label: 'Flashcards' },
+];
+
 export function CommandPalette({
   tree,
   open,
@@ -51,6 +60,7 @@ export function CommandPalette({
   onOpenChange: (v: boolean) => void;
 }) {
   const router = useRouter();
+  const [filter, setFilter] = useState<Kind | 'all'>('all');
 
   const items = useMemo<Flat[]>(() => {
     const out: Flat[] = [];
@@ -74,19 +84,27 @@ export function CommandPalette({
     return out;
   }, [tree]);
 
+  const filteredItems = useMemo(() => {
+    if (filter === 'all') return items;
+    return items.filter((i) => i.kind === filter);
+  }, [items, filter]);
+
   const go = (href: string) => {
     onOpenChange(false);
+    setFilter('all');
     router.push(href);
   };
 
   if (!open) return null;
 
-  const ORDER: Kind[] = ['cours', 'fiche', 'video', 'qcm', 'flashcards', 'college'];
+  const ORDER: Kind[] = filter === 'all'
+    ? ['cours', 'fiche', 'video', 'qcm', 'flashcards', 'college']
+    : [filter];
 
   return (
     <div
       className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 p-4 pt-[12vh]"
-      onClick={() => onOpenChange(false)}
+      onClick={() => { onOpenChange(false); setFilter('all'); }}
     >
       <Command
         label="Recherche globale"
@@ -105,12 +123,32 @@ export function CommandPalette({
             Esc
           </kbd>
         </div>
+
+        {/* Filter chips */}
+        <div className="flex gap-1.5 border-b border-(--color-border) px-4 py-2">
+          {FILTER_OPTIONS.map((f) => (
+            <button
+              key={f.kind}
+              type="button"
+              onClick={() => setFilter(f.kind)}
+              className={cn(
+                'rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+                filter === f.kind
+                  ? 'bg-(--color-primary) text-white'
+                  : 'bg-(--color-sand-100) text-(--color-ink-soft) hover:bg-(--color-sand-200)',
+              )}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
         <Command.List className="max-h-[50vh] overflow-y-auto p-2">
           <Command.Empty className="px-3 py-8 text-center text-sm text-(--color-ink-muted)">
             Aucun résultat.
           </Command.Empty>
           {ORDER.map((kind) => {
-            const group = items.filter((i) => i.kind === kind);
+            const group = filteredItems.filter((i) => i.kind === kind);
             if (group.length === 0) return null;
             const Icon = ICON[kind];
             return (

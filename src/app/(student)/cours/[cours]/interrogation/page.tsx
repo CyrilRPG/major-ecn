@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canAccessCours, parseScope, getContentAccess } from '@/lib/auth/permissions';
 import { InterrogationSession, type IQuestion } from './interrogation-session';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
@@ -21,8 +21,7 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   if (!canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
-  // L'interrogation s'appuie sur les QCM/flashcards : on la réserve aux profs
-  // ayant le droit de lecture QCM (cohérent avec l'onglet QCM masqué).
+  if (profile.role !== 'admin' && !getContentAccess(scope.offer).interrogation) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   // Verrouillage : tout doit être fait (sauf bypass Pneumo).

@@ -1,22 +1,20 @@
 'use client';
 
-/**
- * Éditeur de prise de notes par item : zone de saisie riche (contentEditable)
- * avec barre d'outils (gras, italique, souligné, couleurs, titres, listes),
- * bouton « Enregistrer » et impression. Le contenu (HTML) est persisté par
- * utilisateur + item ; on le retrouve au retour sur l'onglet.
- */
-import { useEffect, useRef, useState } from 'react';
-import { Bold, Italic, Underline, List, ListOrdered, Heading2, Highlighter, Printer, Save, Loader2, Eraser } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Bold, Italic, Underline, List, ListOrdered, Heading2, Highlighter, Printer, Save, Loader2, Eraser, Check, AlertCircle } from 'lucide-react';
 
 const COLORS = ['#1F2937', '#C0112E', '#1D4ED8', '#15803D', '#B45309', '#7C3AED'];
 const HIGHLIGHTS = ['#FEF08A', '#BBF7D0', '#BFDBFE', '#FBCFE8'];
+const AUTOSAVE_DELAY = 2000;
 
 export function NotesEditor({ coursId, initialHtml }: { coursId: string; initialHtml: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'saved' | 'error'>('idle');
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
+  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedHtml = useRef(initialHtml || '');
 
   useEffect(() => {
     if (ref.current && !ref.current.innerHTML) {
@@ -24,30 +22,76 @@ export function NotesEditor({ coursId, initialHtml }: { coursId: string; initial
     }
   }, [initialHtml]);
 
-  function exec(cmd: string, value?: string) {
-    ref.current?.focus();
-    // execCommand reste le moyen le plus simple et fiable pour gras/souligné/
-    // couleurs dans un contentEditable (déprécié mais supporté partout).
-    document.execCommand(cmd, false, value);
-    setDirty(true);
-  }
-
-  async function save() {
+  const save = useCallback(async () => {
     if (!ref.current) return;
+    const html = ref.current.innerHTML;
+    if (html === lastSavedHtml.current) {
+      setDirty(false);
+      return;
+    }
     setSaving(true);
+    setStatus('idle');
     try {
       const res = await fetch(`/api/cours/${coursId}/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: ref.current.innerHTML }),
+        body: JSON.stringify({ content: html }),
       });
       if (res.ok) {
+        lastSavedHtml.current = html;
         setDirty(false);
+        setStatus('saved');
         setSavedAt(new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+      } else {
+        setStatus('error');
       }
+    } catch {
+      setStatus('error');
     } finally {
       setSaving(false);
     }
+  }, [coursId]);
+
+  const scheduleAutosave = useCallback(() => {
+    if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+    autosaveTimer.current = setTimeout(() => { save(); }, AUTOSAVE_DELAY);
+  }, [save]);
+
+  // Ctrl+S / Cmd+S
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+        save();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [save]);
+
+  // Save on unmount / page leave if dirty
+  useEffect(() => {
+    const handler = () => { if (dirty && ref.current) save(); };
+    window.addEventListener('beforeunload', handler);
+    return () => {
+      window.removeEventListener('beforeunload', handler);
+      if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+      handler();
+    };
+  }, [dirty, save]);
+
+  function exec(cmd: string, value?: string) {
+    ref.current?.focus();
+    document.execCommand(cmd, false, value);
+    setDirty(true);
+    scheduleAutosave();
+  }
+
+  function handleInput() {
+    setDirty(true);
+    setStatus('idle');
+    scheduleAutosave();
   }
 
   function printNotes() {
@@ -93,13 +137,27 @@ export function NotesEditor({ coursId, initialHtml }: { coursId: string; initial
         <TBtn onClick={() => exec('removeFormat')} title="Effacer la mise en forme"><Eraser className="h-4 w-4" /></TBtn>
 
         <div className="ml-auto flex items-center gap-2">
-          {savedAt && !dirty && <span className="text-xs text-(--color-ink-soft)">Enregistré à {savedAt}</span>}
-          {dirty && <span className="text-xs text-(--color-warning, #B45309)">Modifications non enregistrées</span>}
+          {status === 'saved' && !dirty && (
+            <span className="flex items-center gap-1 text-xs text-green-600">
+              <Check className="h-3 w-3" /> Enregistré{savedAt ? ` à ${savedAt}` : ''}
+            </span>
+          )}
+          {status === 'error' && (
+            <span className="flex items-center gap-1 text-xs text-red-600">
+              <AlertCircle className="h-3 w-3" /> Erreur de sauvegarde
+            </span>
+          )}
+          {dirty && status !== 'error' && (
+            <span className="text-xs text-(--color-ink-muted)">
+              {saving ? 'Enregistrement…' : 'Sauvegarde auto'}
+            </span>
+          )}
           <TBtn onClick={printNotes} title="Imprimer"><Printer className="h-4 w-4" /></TBtn>
           <button
             type="button"
-            onClick={save}
-            disabled={saving}
+            onClick={() => { if (autosaveTimer.current) clearTimeout(autosaveTimer.current); save(); }}
+            disabled={saving || !dirty}
+            title="Ctrl+S"
             className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-1.5 text-xs font-bold text-white hover:opacity-90 disabled:opacity-60"
           >
             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
@@ -113,7 +171,7 @@ export function NotesEditor({ coursId, initialHtml }: { coursId: string; initial
         ref={ref}
         contentEditable
         suppressContentEditableWarning
-        onInput={() => setDirty(true)}
+        onInput={handleInput}
         data-placeholder="Prenez vos notes ici…"
         className="notes-area min-h-[50vh] w-full px-4 py-3 text-[15px] leading-relaxed text-(--color-ink) focus:outline-none"
       />

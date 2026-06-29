@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
-  Columns2, FileText, GripVertical, Layers3, MonitorPlay,
-  NotebookPen, Sparkles, X, type LucideIcon,
+  BookMarked, Columns2, FileText, MonitorPlay,
+  NotebookPen, X, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotesEditor } from './notes-editor';
@@ -18,9 +18,19 @@ type SplitCtx = {
   active: SplitContentType | null;
   open: (type: SplitContentType) => void;
   close: () => void;
+  splitPct: number;
+  setSplitPct: (pct: number) => void;
+  coursId: string;
+  hasFiche: boolean;
+  hasVideo: boolean;
+  notesHtml: string;
 };
 
-const SplitContext = createContext<SplitCtx>({ active: null, open: () => {}, close: () => {} });
+const SplitContext = createContext<SplitCtx>({
+  active: null, open: () => {}, close: () => {},
+  splitPct: 50, setSplitPct: () => {},
+  coursId: '', hasFiche: false, hasVideo: false, notesHtml: '',
+});
 export const useSplitView = () => useContext(SplitContext);
 
 /* ------------------------------------------------------------------ */
@@ -29,7 +39,7 @@ export const useSplitView = () => useContext(SplitContext);
 
 const SPLIT_OPTIONS: { type: SplitContentType; label: string; Icon: LucideIcon }[] = [
   { type: 'fiche', label: 'Fiche de cours', Icon: FileText },
-  { type: 'fiche-express', label: 'Fiche Express', Icon: Sparkles },
+  { type: 'fiche-express', label: 'Fiche Express', Icon: BookMarked },
   { type: 'video', label: 'Vidéo', Icon: MonitorPlay },
   { type: 'notes', label: 'Prise de notes', Icon: NotebookPen },
 ];
@@ -233,7 +243,37 @@ export function SplitViewToggle() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Provider — wraps the course content area                           */
+/*  SplitLayout — wraps children with split flex when active           */
+/* ------------------------------------------------------------------ */
+
+export function SplitLayout({ children }: { children: React.ReactNode }) {
+  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, notesHtml } = useSplitView();
+
+  if (!active) return <>{children}</>;
+
+  return (
+    <div className="flex h-[calc(100dvh-140px)]">
+      <div className="min-w-0 overflow-y-auto" style={{ width: `${splitPct}%` }}>
+        {children}
+      </div>
+      <Divider onResize={setSplitPct} />
+      <div className="min-w-0" style={{ width: `${100 - splitPct}%` }}>
+        <SplitPanel
+          coursId={coursId}
+          type={active}
+          onChangeType={open}
+          onClose={close}
+          hasFiche={hasFiche}
+          hasVideo={hasVideo}
+          notesHtml={notesHtml}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Provider — pure context, no layout                                 */
 /* ------------------------------------------------------------------ */
 
 export function SplitViewProvider({
@@ -255,7 +295,6 @@ export function SplitViewProvider({
   const open = useCallback((type: SplitContentType) => setActive(type), []);
   const close = useCallback(() => setActive(null), []);
 
-  // Close split on Escape
   useEffect(() => {
     if (!active) return;
     const handler = (e: KeyboardEvent) => {
@@ -266,28 +305,8 @@ export function SplitViewProvider({
   }, [active, close]);
 
   return (
-    <SplitContext.Provider value={{ active, open, close }}>
-      {active ? (
-        <div className="flex h-[calc(100dvh-140px)]">
-          <div className="min-w-0 overflow-y-auto" style={{ width: `${splitPct}%` }}>
-            {children}
-          </div>
-          <Divider onResize={setSplitPct} />
-          <div className="min-w-0" style={{ width: `${100 - splitPct}%` }}>
-            <SplitPanel
-              coursId={coursId}
-              type={active}
-              onChangeType={setActive}
-              onClose={close}
-              hasFiche={hasFiche}
-              hasVideo={hasVideo}
-              notesHtml={notesHtml}
-            />
-          </div>
-        </div>
-      ) : (
-        children
-      )}
+    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, notesHtml }}>
+      {children}
     </SplitContext.Provider>
   );
 }

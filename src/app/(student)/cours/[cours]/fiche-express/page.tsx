@@ -1,10 +1,10 @@
 import { notFound, redirect } from 'next/navigation';
-import { FileText, Sparkles } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
 
 export default async function FicheExpressPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -22,19 +22,15 @@ export default async function FicheExpressPage({ params }: { params: Promise<{ c
     .maybeSingle();
 
   if (!c || !c.matieres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  const scope = parseScope(profile.permission_scope);
+  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !getContentAccess(scope.offer).ficheExpress) redirect(`/cours/${coursId}`);
 
   const fiche = c.fiches?.[0];
   const hasFiche = !!fiche?.storage_path;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">
-      <div className="mb-3 flex items-center gap-2">
-        <Sparkles className="h-4 w-4 text-amber-500" />
-        <p className="text-xs font-semibold text-(--color-ink-soft) sm:text-sm">
-          Synthèse condensée — dernière page de la fiche de cours
-        </p>
-      </div>
       {hasFiche ? (
         <PdfViewer src={`/api/fiches/${coursId}/express`} coursId={coursId} initiallyRead={true} />
       ) : (

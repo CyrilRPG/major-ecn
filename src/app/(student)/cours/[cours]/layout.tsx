@@ -3,7 +3,7 @@ import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { StudyConsole } from '@/components/student/study-console';
 import { SplitViewProvider } from '@/components/student/split-view';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, getContentAccess } from '@/lib/auth/permissions';
 import { canRead } from '@/lib/schemas/professor';
 
 export default async function CoursLayout({
@@ -50,9 +50,8 @@ export default async function CoursLayout({
     seanceApprofondie: isApprofondi && (saVids ?? []).length > 0,
   };
 
-  // Visibilité des onglets pour les PROFESSEURS : un type de contenu sans droit
-  // de lecture (`content_permissions` = 'none' ou absent) est totalement masqué
-  // (onglet ET contenu). Les élèves/admin voient tout (visibility undefined).
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : getContentAccess(scope.offer);
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
   const visibility = profScope
     ? {
@@ -61,7 +60,14 @@ export default async function CoursLayout({
         qcm: canRead(profScope, 'qcm'),
         flashcards: canRead(profScope, 'flashcards'),
       }
-    : undefined;
+    : isAdmin
+    ? undefined
+    : {
+        fiche: access!.fiche,
+        'fiche-express': access!.ficheExpress,
+        video: access!.video,
+        flashcards: access!.flashcards,
+      } as Partial<Record<string, boolean>>;
 
   const cp = c.course_progress?.[0];
   const [{ count: qcmCount }, { count: flashCount }] = await Promise.all([
@@ -77,12 +83,13 @@ export default async function CoursLayout({
       .eq('flashcards.cours_id', coursId),
   ]);
 
-  const done =
-    (cp?.video_watched ? 1 : 0) +
-    (cp?.fiche_read ? 1 : 0) +
-    ((qcmCount ?? 0) > 0 ? 1 : 0) +
-    ((flashCount ?? 0) > 0 ? 1 : 0);
-  const mastery = Math.round((done / 4) * 100);
+  let done = 0;
+  let total = 0;
+  if (!access || access.video) { total++; if (cp?.video_watched) done++; }
+  if (!access || access.fiche) { total++; if (cp?.fiche_read) done++; }
+  total++; if ((qcmCount ?? 0) > 0) done++;
+  if (!access || access.flashcards) { total++; if ((flashCount ?? 0) > 0) done++; }
+  const mastery = total > 0 ? Math.round((done / total) * 100) : 0;
 
   // Mode Découverte : l'onglet "Cours vidéo" devient un cadenas qui ouvre
   // LockedContentModal au lieu de naviguer vers /video.
@@ -98,23 +105,23 @@ export default async function CoursLayout({
     .maybeSingle();
 
   return (
-    <StudyConsole
+    <SplitViewProvider
       coursId={coursId}
-      titre={c.titre}
-      context={`${c.matieres.nom} · Programme EVC`}
-      availability={availability}
-      mastery={mastery}
-      isDecouverte={isDecouverte}
-      visibility={visibility}
+      hasFiche={availability.fiche}
+      hasVideo={availability.video}
+      notesHtml={(noteRow?.content as string) ?? ''}
     >
-      <SplitViewProvider
+      <StudyConsole
         coursId={coursId}
-        hasFiche={availability.fiche}
-        hasVideo={availability.video}
-        notesHtml={(noteRow?.content as string) ?? ''}
+        titre={c.titre}
+        context={`${c.matieres.nom} · Programme EVC`}
+        availability={availability}
+        mastery={mastery}
+        isDecouverte={isDecouverte}
+        visibility={visibility}
       >
         {children}
-      </SplitViewProvider>
-    </StudyConsole>
+      </StudyConsole>
+    </SplitViewProvider>
   );
 }
