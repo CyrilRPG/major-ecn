@@ -6,13 +6,7 @@ import { FacturationDashboard, type CourseLine } from '@/components/admin/factur
 export const metadata = { title: 'Facturation IA' };
 export const dynamic = 'force-dynamic';
 
-/**
- * Facturation IA — tableau de bord d'analyse des coûts, calculé en direct sur le
- * contenu réellement disponible. Périmètre actuel : Cardiologie, Découverte et
- * Médecine générale (voie interne). La voie externe n'est pas comptée (copie de
- * la voie interne). Tarifs : fiche 10 €, QCM + DP d'un cours 3 €, flashcards
- * d'un cours 5 €, réponse de l'assistant IA 0,10 €. Découverte : fiche seule.
- */
+/** Facturation IA — calculé en direct sur le contenu disponible. */
 export default async function AdminFacturationPage() {
   await requireAdmin();
   const admin = createAdminClient();

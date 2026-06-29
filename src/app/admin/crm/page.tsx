@@ -4,86 +4,75 @@ import { CrmPanel } from './crm-panel';
 
 export const metadata = { title: 'CRM pédagogique' };
 
+type Offer = 'essentiel' | 'intensif' | 'approfondi';
+
+function extractOffer(scope: unknown): Offer | null {
+  if (!scope || typeof scope !== 'object') return null;
+  const s = scope as Record<string, unknown>;
+  const o = s.offer;
+  if (o === 'essentiel' || o === 'basic') return 'essentiel';
+  if (o === 'intensif' || o === 'premium') return 'intensif';
+  if (o === 'approfondi') return 'approfondi';
+  return null;
+}
+
 export default async function CrmPage() {
   await requireAdmin();
   const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any;
 
   const { data: students } = await supabase
     .from('profiles')
-    .select('id, first_name, last_name, email, phone, promotion, created_at, is_active')
+    .select('id, first_name, last_name, email, phone, promotion, created_at, is_active, permission_scope')
     .eq('role', 'student')
     .order('last_name');
 
-  const studentIds = (students ?? []).map((s) => s.id);
+  const paidStudents = (students ?? [])
+    .map((s) => ({ ...s, offer: extractOffer(s.permission_scope) }))
+    .filter((s): s is typeof s & { offer: Offer } => s.offer !== null);
+
+  const studentIds = paidStudents.map((s) => s.id);
 
   const [{ data: sessionsRaw }, { data: notesRaw }, { data: alertsRaw }, { data: evalsRaw }] = await Promise.all([
-    studentIds.length ? (supabase as unknown as {
-      from: (t: string) => {
-        select: (s: string) => {
-          in: (k: string, v: string[]) => {
-            order: (k: string, o: { ascending: boolean }) => Promise<{
-              data: { user_id: string; completed_at: string; score_correct: number; qcm_count: number }[] | null;
-            }>;
-          };
-        };
-      };
-    }).from('transversal_sessions')
-      .select('user_id, completed_at, score_correct, qcm_count')
-      .in('user_id', studentIds)
-      .order('completed_at', { ascending: false })
-    : Promise.resolve({ data: [] }),
-    studentIds.length ? (supabase as unknown as {
-      from: (t: string) => {
-        select: (s: string) => {
-          in: (k: string, v: string[]) => {
-            order: (k: string, o: { ascending: boolean }) => Promise<{
-              data: { id: string; user_id: string; contact_type: string; motif: string; observations: string | null; difficultes: string | null; actions_recommandees: string | null; relance_date: string | null; created_at: string }[] | null;
-            }>;
-          };
-        };
-      };
-    }).from('pedagogical_notes')
-      .select('id, user_id, contact_type, motif, observations, difficultes, actions_recommandees, relance_date, created_at')
-      .in('user_id', studentIds)
-      .order('created_at', { ascending: false })
-    : Promise.resolve({ data: [] }),
-    studentIds.length ? (supabase as unknown as {
-      from: (t: string) => {
-        select: (s: string) => {
-          in: (k: string, v: string[]) => Promise<{
-            data: { user_id: string; priority: number; resolved_at: string | null }[] | null;
-          }>;
-        };
-      };
-    }).from('admin_alerts')
-      .select('user_id, priority, resolved_at')
-      .in('user_id', studentIds)
-    : Promise.resolve({ data: [] }),
-    studentIds.length ? (supabase as unknown as {
-      from: (t: string) => {
-        select: (s: string) => {
-          in: (k: string, v: string[]) => {
-            order: (k: string, o: { ascending: boolean }) => Promise<{
-              data: { user_id: string; matiere_id: string; status: string; created_at: string }[] | null;
-            }>;
-          };
-        };
-      };
-    }).from('specialty_evaluations')
-      .select('user_id, matiere_id, status, created_at')
-      .in('user_id', studentIds)
-      .order('created_at', { ascending: false })
-    : Promise.resolve({ data: [] }),
+    studentIds.length
+      ? sb.from('transversal_sessions')
+          .select('user_id, completed_at, score_correct, qcm_count')
+          .in('user_id', studentIds)
+          .order('completed_at', { ascending: false })
+      : Promise.resolve({ data: [] }),
+    studentIds.length
+      ? sb.from('pedagogical_notes')
+          .select('id, user_id, contact_type, motif, observations, difficultes, actions_recommandees, relance_date, created_at')
+          .in('user_id', studentIds)
+          .order('created_at', { ascending: false })
+      : Promise.resolve({ data: [] }),
+    studentIds.length
+      ? sb.from('admin_alerts')
+          .select('user_id, priority, resolved_at')
+          .in('user_id', studentIds)
+      : Promise.resolve({ data: [] }),
+    studentIds.length
+      ? sb.from('specialty_evaluations')
+          .select('user_id, matiere_id, status, created_at')
+          .in('user_id', studentIds)
+          .order('created_at', { ascending: false })
+      : Promise.resolve({ data: [] }),
   ]);
 
-  const sessions = (sessionsRaw ?? []) as { user_id: string; completed_at: string; score_correct: number; qcm_count: number }[];
-  const notes = (notesRaw ?? []) as { id: string; user_id: string; contact_type: string; motif: string; observations: string | null; difficultes: string | null; actions_recommandees: string | null; relance_date: string | null; created_at: string }[];
-  const alerts = (alertsRaw ?? []) as { user_id: string; priority: number; resolved_at: string | null }[];
-  const evals = (evalsRaw ?? []) as { user_id: string; matiere_id: string; status: string; created_at: string }[];
+  type Session = { user_id: string; completed_at: string };
+  type Note = { id: string; user_id: string; contact_type: string; motif: string; observations: string | null; difficultes: string | null; actions_recommandees: string | null; relance_date: string | null; created_at: string };
+  type AlertRow = { user_id: string; priority: number; resolved_at: string | null };
+  type EvalRow = { user_id: string; matiere_id: string; status: string };
+
+  const sessions = (sessionsRaw ?? []) as Session[];
+  const notes = (notesRaw ?? []) as Note[];
+  const alerts = (alertsRaw ?? []) as AlertRow[];
+  const evals = (evalsRaw ?? []) as EvalRow[];
 
   const days30Ago = new Date(Date.now() - 30 * 86_400_000).toISOString();
 
-  const enriched = (students ?? []).map((s) => {
+  const enriched = paidStudents.map((s) => {
     const userSessions = sessions.filter((ss) => ss.user_id === s.id);
     const last = userSessions[0];
     const rev30 = userSessions.filter((ss) => ss.completed_at >= days30Ago).length;
@@ -98,7 +87,13 @@ export default async function CrmPage() {
     const userNotes = notes.filter((n) => n.user_id === s.id);
 
     return {
-      ...s,
+      id: s.id,
+      first_name: s.first_name,
+      last_name: s.last_name,
+      email: s.email,
+      phone: s.phone,
+      promotion: s.promotion,
+      offer: s.offer,
       lastRevision: last ? new Date(last.completed_at) : null,
       revisions30d: rev30,
       alertsPending: userAlerts.filter((a) => !a.resolved_at).length,
@@ -108,16 +103,15 @@ export default async function CrmPage() {
     };
   });
 
-  return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-      <header className="mb-8 border-b border-(--color-border) pb-5">
-        <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
-        <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">CRM pédagogique</h1>
-        <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Suivi individuel de {enriched.length} candidat{enriched.length > 1 ? 's' : ''}
-        </p>
-      </header>
-      <CrmPanel students={enriched} />
-    </main>
-  );
+  const stats = {
+    total: enriched.length,
+    essentiel: enriched.filter((s) => s.offer === 'essentiel').length,
+    intensif: enriched.filter((s) => s.offer === 'intensif').length,
+    approfondi: enriched.filter((s) => s.offer === 'approfondi').length,
+    alertsPending: enriched.reduce((sum, s) => sum + s.alertsPending, 0),
+    redSpecs: enriched.reduce((sum, s) => sum + s.redSpecs, 0),
+    inactive30d: enriched.filter((s) => !s.lastRevision || (Date.now() - s.lastRevision.getTime()) > 30 * 86_400_000).length,
+  };
+
+  return <CrmPanel students={enriched} stats={stats} />;
 }

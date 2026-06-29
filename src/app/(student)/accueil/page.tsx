@@ -61,10 +61,8 @@ export default async function AccueilPage() {
   }
 
   const scope = parseScope(profile.permission_scope);
-  // Mode Découverte : tous les liens qui pointent vers des pages interdites
-  // (entraînement ciblé, révisions transversales, …) sont verrouillés
-  // (cadenas + popup tarifs au clic) au lieu d'être de vraies navigations.
-  const isDecouverte = scope.type === 'college' && scope.colleges.includes('col-decouverte');
+  const isPaidFormula = scope.offer !== 'decouverte';
+  const isDecouverte = !isPaidFormula && scope.type === 'college' && scope.colleges.includes('col-decouverte');
   const supabase = await createClient();
 
   const [
@@ -74,6 +72,7 @@ export default async function AccueilPage() {
     { data: edn },
     { count: flashcardsTotal },
     { count: qcmQuestionsTotal },
+    { data: platformTimeRows },
   ] = await Promise.all([
     supabase
       .from('qcm_attempts')
@@ -102,6 +101,12 @@ export default async function AccueilPage() {
     supabase.from('qcm_questions')
       .select('id, qcm_series!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))', { count: 'exact', head: true })
       .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from('platform_time_tracking')
+      .select('total_seconds')
+      .eq('user_id', user.id)
+      .gte('session_date', new Date(Date.now() - 7 * 86_400_000).toISOString().slice(0, 10)),
   ]);
 
   const inEdn = (f: string) => f === EDN_FACULTE_ID;
@@ -156,12 +161,9 @@ export default async function AccueilPage() {
   const sessionsCount = sessions.length;
   const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
 
-  /* ---- Temps de révision (estimé à partir de time_spent_seconds + reviews) ---- */
-  const MAX_SECONDS_PER_Q = 600; // cap 10 min — au-delà c'est un onglet oublié
-  const secondsThisWeek =
-    attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now))
-      .reduce((s, a) => s + Math.min(a.time_spent_seconds ?? 0, MAX_SECONDS_PER_Q), 0)
-    + reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length * 15; // ~15s/flashcard
+  /* ---- Temps de révision (mesuré par le heartbeat plateforme) ---- */
+  const secondsThisWeek = ((platformTimeRows ?? []) as { total_seconds: number }[])
+    .reduce((sum, r) => sum + r.total_seconds, 0);
   const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
   const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
   const goalSeconds = 6 * 3600;
@@ -600,11 +602,8 @@ export default async function AccueilPage() {
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
         <AnnouncementsWidget />
-        {/* CTA permanent vers /tarifs pour les utilisateurs en Découverte. */}
-        {scope.type === 'college' && scope.colleges.includes('col-decouverte') && (
-          <DiscoveryUpgradeCta />
-        )}
-        <NouveauxContenusBanner />
+        {isDecouverte && <DiscoveryUpgradeCta />}
+        {isDecouverte && <NouveauxContenusBanner />}
       </aside>
     </div>
   );

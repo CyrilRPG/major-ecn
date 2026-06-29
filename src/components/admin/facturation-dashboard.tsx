@@ -128,8 +128,9 @@ export function FacturationDashboard({
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight text-(--color-ink)">Facturation IA</h1>
           <p className="text-sm text-(--color-ink-soft)">
-            Analyse des coûts du contenu disponible. Périmètre : Cardiologie, Découverte et Médecine générale (voie
-            interne). Fiche 10 € · QCM + DP 3 € · Flashcards 5 € · Réponse IA 0,10 €.
+            Analyse des coûts du contenu généré par IA sur la plateforme. Inclut tous les collèges actifs.
+            Fiche 10 € · QCM + DP 3 €/cours · Flashcards 5 €/cours · Réponse IA 0,10 €.
+            Découverte : fiche seule facturée. Les séances approfondies (vidéo) ne sont pas comptées.
           </p>
         </div>
       </header>

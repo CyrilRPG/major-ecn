@@ -23,11 +23,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // n'a aucune formule payée (paid_formule absent). Les acheteurs ont la
   // formule sur leur profil → on ne leur affiche pas les locks « Découverte ».
   const scopeForNav = parseScope(profile.permission_scope);
-  const rawScope = (profile.permission_scope ?? {}) as { paid_formule?: string };
   const isDecouverte =
+    scopeForNav.offer === 'decouverte' &&
     scopeForNav.type === 'college' &&
-    scopeForNav.colleges.includes('col-decouverte') &&
-    !rawScope.paid_formule;
+    scopeForNav.colleges.includes('col-decouverte');
 
   // Delta hebdo « +X% cette semaine » pour la carte Progression globale :
   // ratio des cours touchés dans les 7 derniers jours sur le total des cours
