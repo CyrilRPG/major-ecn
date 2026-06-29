@@ -20,6 +20,7 @@ export type NavCollege = {
   iconKey: string | null;
   colorHex: string | null;
   cours: NavCours[];
+  children?: NavCollege[];
 };
 
 type Row = {
@@ -32,6 +33,7 @@ type Row = {
               icon_key: string | null;
               color_hex: string | null;
               order_index: number | null;
+              parent_matiere_id: string | null;
               cours:
                 | {
                     id: string;
@@ -58,7 +60,7 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
   const { data } = await supabase
     .from('facultes')
     .select(
-      `semestres(matieres(id, nom, icon_key, color_hex, order_index,
+      `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
          cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
     )
     .eq('id', EDN_FACULTE_ID)
@@ -81,31 +83,57 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
   const qcmSet = new Set((qcmRes.data ?? []).map((r) => r.cours_id));
   const flashSet = new Set((flashRes.data ?? []).map((r) => r.cours_id));
 
+  const buildCours = (m: (typeof colleges)[number]) =>
+    [...(m.cours ?? [])]
+      .filter((c) => canAccessCours(scope, m.id, c.id))
+      .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+      .map((c) => {
+        const cp = c.course_progress?.[0];
+        const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
+        return {
+          id: c.id,
+          titre: c.titre,
+          progress: Math.round((done / 2) * 100),
+          hasFiche: ficheSet.has(c.id),
+          hasVideo: videoSet.has(c.id),
+          hasQcm: qcmSet.has(c.id),
+          hasFlashcards: flashSet.has(c.id),
+        };
+      });
+
+  const childMap = new Map<string, typeof colleges>();
+  for (const m of colleges) {
+    if (m.parent_matiere_id) {
+      const arr = childMap.get(m.parent_matiere_id) ?? [];
+      arr.push(m);
+      childMap.set(m.parent_matiere_id, arr);
+    }
+  }
+
   return colleges
-    .filter((m) => canAccessCollege(scope, m.id))
+    .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-    .map((m) => ({
-      id: m.id,
-      nom: m.nom,
-      iconKey: m.icon_key,
-      colorHex: m.color_hex,
-      cours: [...(m.cours ?? [])]
-        .filter((c) => canAccessCours(scope, m.id, c.id))
+    .map((m) => {
+      const children = (childMap.get(m.id) ?? [])
+        .filter((ch) => canAccessCollege(scope, ch.id))
         .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-        .map((c) => {
-          const cp = c.course_progress?.[0];
-          const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
-          return {
-            id: c.id,
-            titre: c.titre,
-            progress: Math.round((done / 2) * 100),
-            hasFiche: ficheSet.has(c.id),
-            hasVideo: videoSet.has(c.id),
-            hasQcm: qcmSet.has(c.id),
-            hasFlashcards: flashSet.has(c.id),
-          };
-        }),
-    }))
-    // Évite d'afficher des collèges désormais vides (cours tous filtrés).
-    .filter((m) => m.cours.length > 0);
+        .map((ch) => ({
+          id: ch.id,
+          nom: ch.nom,
+          iconKey: ch.icon_key,
+          colorHex: ch.color_hex,
+          cours: buildCours(ch),
+        }))
+        .filter((ch) => ch.cours.length > 0);
+
+      return {
+        id: m.id,
+        nom: m.nom,
+        iconKey: m.icon_key,
+        colorHex: m.color_hex,
+        cours: buildCours(m),
+        ...(children.length > 0 ? { children } : {}),
+      };
+    })
+    .filter((m) => m.cours.length > 0 || (m.children && m.children.length > 0));
 }

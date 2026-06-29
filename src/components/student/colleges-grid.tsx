@@ -12,6 +12,7 @@ type CollegeRow = {
   icon_key: string | null;
   color_hex: string | null;
   order_index: number | null;
+  parent_matiere_id: string | null;
   cours?: { course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
 };
 
@@ -20,7 +21,7 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
   const { data } = await supabase
     .from('facultes')
     .select(
-      `semestres(matieres(id, nom, icon_key, color_hex, order_index,
+      `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
          cours(id, course_progress(video_watched, fiche_read))))`,
     )
     .eq('id', EDN_FACULTE_ID)
@@ -30,7 +31,7 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
     ((data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .filter((m) => canAccessCollege(scope, m.id))
+    .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   return (

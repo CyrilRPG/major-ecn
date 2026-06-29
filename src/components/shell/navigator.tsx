@@ -114,6 +114,12 @@ export function Navigator({
       ) {
         set.add(col.id);
       }
+      for (const sub of col.children ?? []) {
+        if (sub.cours.some((c) => c.id === activeCoursId)) {
+          set.add(col.id);
+          set.add(sub.id);
+        }
+      }
     }
     return set;
   }, [tree, activeCollegeId, activeCoursId, activeAnnaleCollege]);
@@ -371,6 +377,48 @@ export function Navigator({
                     <ProgressDot value={c.progress} active={c.id === activeCoursId} />
                   </Link>
                 ))}
+
+                {col.children?.map((sub) => {
+                  const SubIcon = iconFromKey(sub.iconKey ?? undefined);
+                  const so = isOpen(sub.id);
+                  return (
+                    <div key={sub.id}>
+                      <button
+                        type="button"
+                        onClick={() => toggle(sub.id)}
+                        className="group flex w-full items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 text-left text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                      >
+                        <ChevronRight
+                          className={cn(
+                            'h-3.5 w-3.5 shrink-0 text-white/40 transition-transform',
+                            so && 'rotate-90',
+                          )}
+                        />
+                        <SubIcon className="h-4 w-4 shrink-0 text-white/80" />
+                        <span className="flex-1 truncate text-[14px] font-medium">{sub.nom}</span>
+                        <span className="rounded-full bg-white/10 px-1.5 py-px text-[10px] font-semibold tabular-nums text-white/60">
+                          {sub.cours.length}
+                        </span>
+                      </button>
+                      {so &&
+                        sub.cours.map((sc) => (
+                          <Link
+                            key={sc.id}
+                            href={`/cours/${sc.id}`}
+                            className={cn(
+                              'flex items-center gap-2 rounded-lg py-1.5 pl-[3.75rem] pr-2.5 transition-colors',
+                              sc.id === activeCoursId
+                                ? `${ACTIVE_GRADIENT} font-medium`
+                                : 'text-white/65 hover:bg-white/10 hover:text-white',
+                            )}
+                          >
+                            <span className="flex-1 truncate text-[13px]">{sc.titre}</span>
+                            <ProgressDot value={sc.progress} active={sc.id === activeCoursId} />
+                          </Link>
+                        ))}
+                    </div>
+                  );
+                })}
               </>
             )}
           </div>
