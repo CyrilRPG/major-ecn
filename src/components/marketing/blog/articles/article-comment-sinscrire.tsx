@@ -652,22 +652,20 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
 
 /* ─────────────── helpers ─────────────── */
 
-/* Image hero : photo médecin préparant son dossier en ligne, avec un badge
- * vert "Étape essentielle de la PAE" en haut à droite. */
 function HeroBookImage() {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#E5F1FF_0%,#FFE4E8_100%)]"
-      style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)' }}>
+    <div className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1]"
+      style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)', height: 210 }}>
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,#E5F1FF_0%,#F0E4FF_50%,#FFE4E8_100%)]" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/blog/illustration-qui-peut-evc.png"
         alt="Illustration d'un médecin PADHUE préparant son inscription aux EVC"
-        className="block w-full h-auto select-none"
+        className="absolute bottom-0 right-2 h-[85%] w-auto select-none object-contain"
         decoding="async"
         fetchPriority="high"
       />
-      {/* Badge "Etape essentielle de la PAE" — coin haut-droit (maquette). */}
-      <div className="absolute right-3 top-3 flex max-w-[60%] items-start gap-1.5 rounded-xl border border-[#16793C]/30 bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
+      <div className="absolute left-3 top-3 flex max-w-[60%] items-start gap-1.5 rounded-xl border border-[#16793C]/30 bg-white/95 px-2.5 py-1.5 shadow-sm backdrop-blur">
         <ShieldCheckIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16793C]" />
         <p className="text-[9.5px] font-semibold leading-snug text-[#1A2233]">
           <span className="font-extrabold text-[#16793C]">Étape essentielle</span> de la Procédure d&rsquo;Autorisation d&rsquo;Exercice (PAE) en France
