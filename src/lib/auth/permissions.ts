@@ -2,17 +2,14 @@ import type { Offer, PermissionScope } from '@/types/domain';
 
 function parseOffer(raw: unknown): Offer {
   if (raw && typeof raw === 'object') {
-    const r = raw as { offer?: unknown; espace_decouverte?: unknown; paid_formule?: unknown };
+    const r = raw as { offer?: unknown; espace_decouverte?: unknown; paid_formule?: unknown; type?: unknown };
     const o = r.offer;
     if (o === 'decouverte') return 'decouverte';
     if (o === 'intensif' || o === 'premium') return 'intensif';
     if (o === 'approfondi') return 'approfondi';
-    // 'basic' is the legacy value — treated as 'essentiel'.
     if (o === 'essentiel' || o === 'basic') return 'essentiel';
-    // Inférence : si flagué « espace découverte » SANS achat payé, on
-    // bascule sur 'decouverte' (gère les vieux profils créés avant que
-    // l'offer ait été nettoyée).
     if (r.espace_decouverte === true && !r.paid_formule) return 'decouverte';
+    if (r.type === 'all') return 'approfondi';
   }
   return 'decouverte';
 }

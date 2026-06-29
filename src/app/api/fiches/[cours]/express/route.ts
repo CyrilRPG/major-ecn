@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PDFDocument, StandardFonts, degrees, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, degrees, rgb, PDFName, PDFRef, PDFRawStream, PDFArray, decodePDFRawStream } from 'pdf-lib';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -23,14 +23,14 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('fiches')
-      .select('storage_path, pages, content_json')
+      .select('storage_path, pages')
       .eq('cours_id', coursId)
       .not('storage_path', 'is', null)
       .order('created_at', { ascending: false })
       .limit(1),
   ]);
 
-  const fiche = (fiches as { storage_path: string; pages: number | null; content_json: unknown }[] | null)?.[0];
+  const fiche = (fiches as { storage_path: string; pages: number | null }[] | null)?.[0];
   if (!fiche?.storage_path) return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
 
   const admin = createAdminClient();
@@ -44,20 +44,41 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
 
   let targetIdx = pageCount - 1;
   if (pageCount >= 2) {
-    // Check the fiche's structured content to determine if the last page
-    // (typically the "fiche éclair") has enough text. The previous approach
-    // scanned raw PDF bytes but failed because content streams are compressed
-    // and binary image data produced false positives in the regex.
-    const content = fiche.content_json as {
-      fiche_eclair_md?: string;
-      points_cles?: string[];
-    } | null;
-    if (content) {
-      const eclairMd = (content.fiche_eclair_md ?? '').trim();
-      const pointsCles = (content.points_cles ?? []).join(' ').trim();
-      if (eclairMd.length + pointsCles.length < 200) {
-        targetIdx = pageCount - 2;
+    // Decode the last page's content stream and count text characters.
+    // If < 200 visible chars, the page is mostly empty → use previous page.
+    try {
+      const lastPageNode = srcPdf.getPage(pageCount - 1).node;
+      const contentsEntry = lastPageNode.get(PDFName.of('Contents'));
+      let decodedBytes = new Uint8Array(0);
+      if (contentsEntry) {
+        const ctx = srcPdf.context;
+        const resolved = contentsEntry instanceof PDFRef ? ctx.lookup(contentsEntry) : contentsEntry;
+        if (resolved instanceof PDFRawStream) {
+          decodedBytes = new Uint8Array(decodePDFRawStream(resolved).decode());
+        } else if (resolved instanceof PDFArray) {
+          const parts: Uint8Array[] = [];
+          for (let i = 0; i < resolved.size(); i++) {
+            const item = resolved.get(i);
+            const stream = item instanceof PDFRef ? ctx.lookup(item) : item;
+            if (stream instanceof PDFRawStream) {
+              parts.push(new Uint8Array(decodePDFRawStream(stream).decode()));
+            }
+          }
+          const total = parts.reduce((s, p) => s + p.length, 0);
+          decodedBytes = new Uint8Array(total);
+          let off = 0;
+          for (const p of parts) { decodedBytes.set(p, off); off += p.length; }
+        }
       }
+      const ops = Buffer.from(decodedBytes).toString('latin1');
+      let charCount = 0;
+      for (const m of ops.matchAll(/\(([^)]*)\)\s*Tj/g)) charCount += m[1].length;
+      for (const m of ops.matchAll(/\[([^\]]*)\]\s*TJ/g)) {
+        for (const tp of m[1].matchAll(/\(([^)]*)\)/g)) charCount += tp[1].length;
+      }
+      if (charCount < 200) targetIdx = pageCount - 2;
+    } catch {
+      // fallback: show last page
     }
   }
 

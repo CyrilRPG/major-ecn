@@ -256,8 +256,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
         </AppShell>
       </div>
       <ConseilsCenter isDecouverte={isDecouverte} />
-      {!isDecouverte && profile.role === 'student' && (scopeForNav.offer === 'essentiel' || scopeForNav.offer === 'intensif' || scopeForNav.offer === 'approfondi') && (
-        <StudentTutorialPopup offer={scopeForNav.offer} />
+      {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
+        <StudentTutorialPopup offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'} />
       )}
     </div>
   );
