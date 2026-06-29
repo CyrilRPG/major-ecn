@@ -25,9 +25,9 @@ export const BLOG_CATEGORIES: Record<BlogCategory, { label: string; tone: string
 };
 
 export const BLOG_CATEGORY_IMAGE: Record<BlogCategory, string> = {
-  'epreuves-evc':          '/blog/hopital-necker.jpg',
+  'epreuves-evc':          '/blog/couloir-hopital.jpg',
   'candidature-dossier':   '/blog/medecin-femme-documents-laptop.jpg',
-  'exercice-medical':      '/blog/couloir-hopital.jpg',
+  'exercice-medical':      '/blog/hopital-necker.jpg',
   'carriere-remuneration': '/blog/medecin-barbu-bras-croises.jpg',
   'medecins-etrangers':    '/blog/medecin-femme-tresses-laptop.jpg',
   'conseils-methodologie': '/blog/medecin-asiatique-laptop.jpg',

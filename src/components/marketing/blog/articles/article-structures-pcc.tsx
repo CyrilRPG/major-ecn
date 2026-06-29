@@ -86,8 +86,8 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/blog/couloir-hopital.jpg"
-                alt="Équipe médicale dans un couloir de CHU, structure d'accueil pour le PCC"
+                src="/blog/hopital-necker.jpg"
+                alt="Bâtiment hospitalier, structure d'accueil habilitée pour le PCC"
                 className="block w-full h-auto select-none"
                 decoding="async"
                 fetchPriority="high"
