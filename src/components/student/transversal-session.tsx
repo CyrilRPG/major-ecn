@@ -217,41 +217,59 @@ const TIER_CONFIG = {
 
 function getRevisionMessages(tier: ScoreTier) {
   if (tier === 'green') return {
-    title: 'Tres bonne revision',
-    body: 'Vos acquis ont ete entretenus aujourd\'hui.',
+    title: 'Très bonne révision',
+    body: 'Vos acquis ont été entretenus aujourd’hui.',
   };
   if (tier === 'orange') return {
-    title: 'Revision moyenne',
-    body: 'Revision effectuee, mais certaines reponses montrent des fragilites.',
+    title: 'Révision moyenne',
+    body: 'Révision effectuée, mais certaines réponses montrent des fragilités.',
   };
   return {
-    title: 'Revision insuffisante',
-    body: 'Cette revision montre des difficultes importantes. Certaines specialites doivent etre retravaillees.',
+    title: 'Révision insuffisante',
+    body: 'Cette révision montre des difficultés importantes. Certaines spécialités doivent être retravaillées.',
   };
 }
 
 function getReevaluationMessages(tier: ScoreTier, kind: TransversalKind) {
-  const prefix = kind === 'bilan_global' ? 'Bilan global'
-    : kind === 'reevaluation_deep' ? 'Reevaluation approfondie'
-    : 'Reevaluation';
-
-  if (tier === 'green') return {
-    title: `${prefix} reussie`,
-    body: kind === 'bilan_global'
-      ? 'Votre niveau global reste correct malgre l\'interruption. Nous vous recommandons de reprendre les revisions transversales regulierement.'
-      : 'Votre niveau de maintien des acquis est satisfaisant. Vous pouvez reprendre votre progression.',
+  if (tier === 'green') {
+    if (kind === 'bilan_global') return {
+      title: 'Bilan global satisfaisant',
+      body: 'Votre niveau global reste correct malgré l’interruption. Nous vous recommandons de reprendre les révisions transversales régulièrement.',
+    };
+    if (kind === 'reevaluation_deep') return {
+      title: 'Réévaluation approfondie satisfaisante',
+      body: 'Votre reprise est satisfaisante. Continuez avec des révisions transversales régulières.',
+    };
+    return {
+      title: 'Réévaluation réussie',
+      body: 'Votre niveau de maintien des acquis est satisfaisant. Vous pouvez reprendre votre progression.',
+    };
+  }
+  if (tier === 'orange') {
+    if (kind === 'bilan_global') return {
+      title: 'Bilan global fragile',
+      body: 'Plusieurs connaissances doivent être consolidées. Nous vous recommandons de reprendre progressivement les spécialités les plus faibles.',
+    };
+    if (kind === 'reevaluation_deep') return {
+      title: 'Réévaluation approfondie fragile',
+      body: 'Votre niveau reste partiel. Certaines spécialités nécessitent une consolidation.',
+    };
+    return {
+      title: 'Réévaluation fragile',
+      body: 'Vous pouvez reprendre votre progression, mais certaines spécialités doivent être consolidées.',
+    };
+  }
+  if (kind === 'bilan_global') return {
+    title: 'Bilan global insuffisant',
+    body: 'Votre niveau actuel montre un décrochage important. Un accompagnement pédagogique est recommandé.',
   };
-  if (tier === 'orange') return {
-    title: `${prefix} fragile`,
-    body: kind === 'bilan_global'
-      ? 'Plusieurs connaissances doivent etre consolidees. Nous vous recommandons de reprendre progressivement les specialites les plus faibles.'
-      : 'Vous pouvez reprendre votre progression, mais certaines specialites doivent etre consolidees.',
+  if (kind === 'reevaluation_deep') return {
+    title: 'Réévaluation approfondie insuffisante',
+    body: 'Votre niveau actuel est préoccupant. Un renforcement approfondi est recommandé sur les spécialités les plus faibles.',
   };
   return {
-    title: `${prefix} insuffisante`,
-    body: kind === 'bilan_global'
-      ? 'Votre niveau actuel montre un decrochage important. Un accompagnement pedagogique est recommande.'
-      : 'Votre niveau actuel montre des difficultes importantes. Vous pouvez continuer a travailler, mais un renforcement approfondi est fortement recommande.',
+    title: 'Réévaluation insuffisante',
+    body: 'Votre niveau actuel montre des difficultés importantes. Vous pouvez continuer à travailler, mais un renforcement approfondi est fortement recommandé.',
   };
 }
 
@@ -318,7 +336,7 @@ function CompletionScreen({
           Score : {pct} %
         </p>
         <p className="mt-1 text-sm text-(--color-ink-soft)">
-          {score}/{total} reponses correctes
+          {score}/{total} réponses correctes
         </p>
 
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-(--color-ink-soft)">
@@ -330,7 +348,7 @@ function CompletionScreen({
       {tier !== 'green' && weakSpecs.length > 0 && (
         <div className="mt-6 rounded-xl border p-4" style={{ borderColor: config.ringColor + '40', background: config.iconBg }}>
           <p className="text-sm font-bold" style={{ color: config.iconFg }}>
-            {tier === 'red' ? 'Specialites les plus faibles :' : 'Specialites a surveiller :'}
+            {tier === 'red' ? 'Spécialités les plus faibles :' : 'Spécialités à surveiller :'}
           </p>
           <ul className="mt-2 space-y-1.5">
             {weakSpecs.slice(0, 5).map((s) => (
@@ -372,7 +390,7 @@ function CompletionScreen({
         {tier === 'orange' && weakSpecs.length > 0 && (
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#E8742C] border-[#E8742C] hover:bg-[#FFF7E6]">
             <Link href="/revisions-transversales">
-              <Shield className="h-4 w-4" /> Consolider la specialite
+              <Shield className="h-4 w-4" /> Consolider la spécialité
             </Link>
           </Button>
         )}
@@ -482,11 +500,11 @@ function CorrectionsView({
 
 function kindLabel(k: TransversalKind): string {
   return {
-    daily: 'Revision du jour',
-    recommended: 'Revision recommandee',
-    intensive: 'Revision intensive',
-    reevaluation: 'Reevaluation',
-    reevaluation_deep: 'Reevaluation approfondie',
+    daily: 'Révision du jour',
+    recommended: 'Révision recommandée',
+    intensive: 'Révision intensive',
+    reevaluation: 'Réévaluation',
+    reevaluation_deep: 'Réévaluation approfondie',
     bilan_global: 'Bilan global',
-  }[k] ?? 'Revision';
+  }[k] ?? 'Révision';
 }

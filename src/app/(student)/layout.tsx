@@ -96,6 +96,46 @@ export default async function StudentLayout({ children }: { children: React.Reac
   }
 
   // ───────────────────────────────────────────────────────────────
+  // Section 15 — Blocage contenu : si l'étudiant n'a pas fait de
+  // révision transversale depuis 14+ jours et qu'il a déjà commencé
+  // au moins une session, il est bloqué vers les révisions transversales.
+  // Exceptions : la page de révisions elle-même, l'interrogation, l'auth.
+  // ───────────────────────────────────────────────────────────────
+  if (profile.role === 'student') {
+    const revisionPrefixes = ['/revisions-transversales', '/formulaires/', '/api/', '/logout'];
+    const isOnAllowed = revisionPrefixes.some((p) => pathname.startsWith(p));
+    if (!isOnAllowed) {
+      const { data: lastSession } = await (supabase as unknown as {
+        from: (t: string) => {
+          select: (s: string) => {
+            eq: (k: string, v: string) => {
+              not: (k: string, op: string, v: null) => {
+                order: (k: string, o: { ascending: boolean }) => {
+                  limit: (n: number) => Promise<{
+                    data: { completed_at: string }[] | null;
+                  }>;
+                };
+              };
+            };
+          };
+        };
+      }).from('transversal_sessions')
+        .select('completed_at')
+        .eq('user_id', user.id)
+        .not('completed_at', 'is', null)
+        .order('completed_at', { ascending: false })
+        .limit(1);
+      const lastCompletedAt = lastSession?.[0]?.completed_at;
+      if (lastCompletedAt) {
+        const daysSince = Math.floor((Date.now() - new Date(lastCompletedAt).getTime()) / 86_400_000);
+        if (daysSince >= 14) {
+          redirect('/revisions-transversales');
+        }
+      }
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────
   // Interrogation obligatoire : dès qu'un parcours est terminé
   // (vidéo + fiche + ≥1 QCM + ≥1 flashcard review) et que le certificat
   // n'a pas encore été signé, l'élève est redirigé vers l'interrogation

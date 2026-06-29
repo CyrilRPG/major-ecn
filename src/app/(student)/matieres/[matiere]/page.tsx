@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { History } from 'lucide-react';
+import { CheckCircle2, ClipboardCheck, History, RefreshCcw, ShieldCheck } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
@@ -80,6 +80,30 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     };
   });
 
+  // Check specialty evaluation status for this matière
+  const { data: evalData } = await (supabase as unknown as {
+    from: (t: string) => {
+      select: (s: string) => {
+        eq: (k: string, v: string) => {
+          eq: (k2: string, v2: string) => {
+            order: (k: string, o: { ascending: boolean }) => {
+              limit: (n: number) => Promise<{
+                data: { status: string; eval_type: string }[] | null;
+              }>;
+            };
+          };
+        };
+      };
+    };
+  }).from('specialty_evaluations')
+    .select('status, eval_type')
+    .eq('user_id', user.id)
+    .eq('matiere_id', matiere)
+    .order('created_at', { ascending: false })
+    .limit(1);
+  const latestEval = evalData?.[0] ?? null;
+  const evalStatus = latestEval?.status as string | null;
+
   // Sous-onglet « Annales » en tête de Médecine générale.
   const annaleRow: IndexRow = {
     id: '__annales__',
@@ -89,7 +113,56 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     leading: <RowIcon Icon={History} color="#6B1A2A" />,
     badge: 'Officiel',
   };
-  const rows = [annaleRow, ...coursRows];
+
+  // Evaluation / Consolidation / Renforcement cards based on status
+  const evalRow: IndexRow = {
+    id: '__evaluation__',
+    href: `/matieres/${matiere}/evaluation`,
+    title: 'Évaluation de fin de spécialité',
+    subtitle: evalStatus === 'validee'
+      ? 'Spécialité validée — vous pouvez repasser l\'évaluation.'
+      : 'Testez vos connaissances sur l\'ensemble de la spécialité.',
+    leading: <RowIcon Icon={ClipboardCheck} color="#6D28D9" />,
+    badge: evalStatus === 'validee' ? 'Validée' : evalStatus ? 'À refaire' : 'Nouveau',
+  };
+
+  const actionRows: IndexRow[] = [evalRow];
+
+  if (evalStatus === 'consolider') {
+    actionRows.push({
+      id: '__consolidation__',
+      href: `/matieres/${matiere}/consolidation`,
+      title: 'Consolidation',
+      subtitle: 'Revoyez les points faibles et repassez une mini-évaluation.',
+      leading: <RowIcon Icon={RefreshCcw} color="#E8742C" />,
+      badge: 'Recommandé',
+    });
+  }
+
+  if (evalStatus === 'renforcer') {
+    actionRows.push({
+      id: '__renforcement__',
+      href: `/matieres/${matiere}/renforcement`,
+      title: 'Renforcement approfondi',
+      subtitle: 'Parcours complet : fiches, flashcards, QCM et évaluation finale.',
+      leading: <RowIcon Icon={ShieldCheck} color="#A91D2C" />,
+      badge: 'Prioritaire',
+    });
+  }
+
+  if (evalStatus === 'validee') {
+    actionRows.push({
+      id: '__validated__',
+      href: '#',
+      title: 'Spécialité validée',
+      subtitle: 'Vous maîtrisez cette spécialité. Continuez les révisions transversales.',
+      leading: <RowIcon Icon={CheckCircle2} color="#16793C" />,
+      badge: 'Validée',
+      progress: 100,
+    });
+  }
+
+  const rows = [annaleRow, ...actionRows, ...coursRows];
 
   return (
     <>

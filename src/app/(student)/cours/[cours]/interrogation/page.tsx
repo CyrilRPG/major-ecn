@@ -5,7 +5,7 @@ import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permiss
 import { InterrogationSession, type IQuestion } from './interrogation-session';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
-const N_QUESTIONS = 10;
+const N_QUESTIONS = 15;
 
 export default async function InterrogationPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;

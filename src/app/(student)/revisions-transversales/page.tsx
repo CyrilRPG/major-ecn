@@ -118,6 +118,26 @@ async function buildState(userId: string, firstName: string): Promise<State> {
   const coursMap = new Map<string, CoursRow>();
   for (const c of (coursRaw ?? []) as unknown as CoursRow[]) coursMap.set(c.id, c);
 
+  // Official status from specialty_evaluations table (sections 9-12)
+  const { data: evalRows } = await (supabase as unknown as {
+    from: (t: string) => {
+      select: (s: string) => {
+        eq: (k: string, v: string) => {
+          order: (k: string, o: { ascending: boolean }) => Promise<{
+            data: { matiere_id: string; status: string; created_at: string }[] | null;
+          }>;
+        };
+      };
+    };
+  }).from('specialty_evaluations')
+    .select('matiere_id, status, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+  const officialStatus = new Map<string, string>();
+  for (const e of evalRows ?? []) {
+    if (!officialStatus.has(e.matiere_id)) officialStatus.set(e.matiere_id, e.status);
+  }
+
   const specs: SpecRow[] = [];
   for (const cid of studiedCoursIds) {
     const c = coursMap.get(cid);
@@ -127,11 +147,19 @@ async function buildState(userId: string, firstName: string): Promise<State> {
     const stat = perCours.get(cid);
     const total = stat?.total ?? 0;
     const ratio = total > 0 ? (stat!.correct / total) : 0;
-    const status: SpecRow['status'] =
-      total === 0 ? 'non_evaluee' :
-      ratio >= 0.75 ? 'validee' :
-      ratio >= 0.5  ? 'consolider' :
-                       'renforcer';
+
+    // Use official evaluation status if available, fallback to computed
+    const evalStatus = officialStatus.get(c.matiere_id);
+    let status: SpecRow['status'];
+    if (evalStatus === 'validee' || evalStatus === 'consolider' || evalStatus === 'renforcer') {
+      status = evalStatus;
+    } else {
+      status =
+        total === 0 ? 'non_evaluee' :
+        ratio >= 0.75 ? 'validee' :
+        ratio >= 0.5  ? 'consolider' :
+                         'renforcer';
+    }
     specs.push({
       cours_id: cid,
       titre: c.titre,
