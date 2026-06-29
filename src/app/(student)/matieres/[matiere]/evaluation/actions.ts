@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 
 export type EvalType = 'fin_specialite' | 'consolidation_mini_eval' | 'renforcement_eval' | 'reevaluation';
 
@@ -143,6 +144,11 @@ export async function checkAdminAlerts(userId: string): Promise<void> {
   }
 
   const redCount = [...latestByMatiere.values()].filter((s) => s === 'insuffisante').length;
+  const orangeCount = [...latestByMatiere.values()].filter((s) => s === 'fragile').length;
+
+  const { data: profileData } = await supa.from('profiles').select('first_name, last_name, email').eq('id', userId).maybeSingle();
+  const studentName = [profileData?.first_name, profileData?.last_name].filter(Boolean).join(' ') || 'Candidat';
+  const studentEmail = profileData?.email ?? '';
 
   if (redCount >= 3) {
     const redSpecs = [...latestByMatiere.entries()]
@@ -157,5 +163,62 @@ export async function checkAdminAlerts(userId: string): Promise<void> {
       motif: `${redCount} spécialités insuffisantes`,
       details: { red_specialties: redSpecs },
     });
+
+    await sendAlertEmail({
+      priority: 1,
+      studentName,
+      studentEmail,
+      motif: `${redCount} spécialités insuffisantes`,
+      details: `Spécialités en rouge : ${redSpecs.join(', ')}`,
+    });
+  } else if (orangeCount >= 2) {
+    await (supa as unknown as {
+      from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: { message: string } | null }> };
+    }).from('admin_alerts').insert({
+      user_id: userId,
+      priority: 2,
+      motif: `${orangeCount} spécialités fragiles`,
+      details: { orange_count: orangeCount },
+    });
   }
+}
+
+async function sendAlertEmail(input: {
+  priority: number;
+  studentName: string;
+  studentEmail: string;
+  motif: string;
+  details: string;
+}): Promise<void> {
+  const subject = `ALERTE MAJOR EVC — Priorité ${input.priority} — ${input.studentName}`;
+  const html = `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"/></head>
+<body style="font-family:sans-serif;margin:0;padding:24px;background:#F9FAFB">
+<div style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid #E5E7EB;padding:32px">
+  <p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:${input.priority === 1 ? '#A91D2C' : '#E8742C'};text-transform:uppercase;margin:0">
+    Alerte Priorité ${input.priority}
+  </p>
+  <h1 style="font-size:20px;color:#111;margin:12px 0 4px">${escapeHtml(input.studentName)}</h1>
+  <p style="font-size:14px;color:#6B7280;margin:0">${escapeHtml(input.studentEmail)}</p>
+  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
+  <p style="font-size:14px;color:#111;margin:0"><strong>Motif :</strong> ${escapeHtml(input.motif)}</p>
+  <p style="font-size:14px;color:#6B7280;margin:8px 0 0">${escapeHtml(input.details)}</p>
+  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
+  <p style="font-size:13px;color:#6B7280;margin:0">
+    <strong>Action recommandée :</strong> prise de contact pédagogique.
+  </p>
+</div>
+</body></html>`;
+  const text = `ALERTE MAJOR EVC — Priorité ${input.priority}\nCandidat : ${input.studentName} (${input.studentEmail})\nMotif : ${input.motif}\n${input.details}\nAction recommandée : prise de contact pédagogique.`;
+
+  await sendEmail({
+    to: INTERNAL_NOTIFY_EMAILS,
+    subject,
+    html,
+    text,
+  }).catch((err) => console.error('[AlertEmail] échec envoi', err));
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

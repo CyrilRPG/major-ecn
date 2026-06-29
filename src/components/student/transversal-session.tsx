@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, AlertTriangle, XCircle, RefreshCcw, RotateCcw, Eye, Shield, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarPlus, CheckCircle2, AlertTriangle, XCircle, MessageCircle, RefreshCcw, RotateCcw, Eye, Shield, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
@@ -310,11 +310,40 @@ function CompletionScreen({
   onRestart: () => void;
   onShowCorrections: () => void;
 }) {
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduling, setScheduling] = useState(false);
+  const [scheduled, setScheduled] = useState(false);
+
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   const tier = getScoreTier(pct);
   const config = TIER_CONFIG[tier];
   const isReeval = isReevaluationKind(kind);
   const messages = isReeval ? getReevaluationMessages(tier, kind) : getRevisionMessages(tier);
+
+  const handleSchedule = async () => {
+    if (!scheduleDate || scheduling) return;
+    setScheduling(true);
+    try {
+      const supabase = createClient();
+      const { data: { user: u } } = await supabase.auth.getUser();
+      if (u) {
+        await (supabase as unknown as {
+          from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: unknown }> };
+        }).from('user_agenda_events').insert({
+          user_id: u.id,
+          title: 'Révision transversale',
+          date: scheduleDate,
+          start_time: '09:00',
+          end_time: '10:00',
+          category: 'Révision',
+          color_key: 'purple',
+          notes: `Prochaine révision transversale programmée après ${kindLabel(kind)}`,
+        });
+        setScheduled(true);
+      }
+    } catch { /* non bloquant */ }
+    setScheduling(false);
+  };
   const weakSpecs = getWeakSpecialties(perCours, questions);
 
   return (
@@ -398,6 +427,41 @@ function CompletionScreen({
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#A91D2C] border-[#A91D2C] hover:bg-[#FCEAEC]">
             <Link href="/revisions-transversales">
               <Zap className="h-4 w-4" /> Renforcement approfondi
+            </Link>
+          </Button>
+        )}
+
+        {/* Programmer prochaine révision */}
+        {isReeval && !scheduled && (
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={scheduleDate}
+              onChange={(e) => setScheduleDate(e.target.value)}
+              min={new Date(Date.now() + 86_400_000).toISOString().slice(0, 10)}
+              className="flex-1 rounded-xl border px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#6D28D9]/30"
+            />
+            <Button
+              onClick={handleSchedule}
+              disabled={!scheduleDate || scheduling}
+              variant="outline"
+              className="shrink-0 rounded-xl py-2.5 text-sm font-bold text-[#6D28D9] border-[#6D28D9] hover:bg-[#F5F3FF]"
+            >
+              <CalendarPlus className="mr-1.5 h-4 w-4" /> Programmer
+            </Button>
+          </div>
+        )}
+        {isReeval && scheduled && (
+          <p className="flex items-center justify-center gap-2 rounded-xl border border-[#16793C]/30 bg-[#ECFDF3] px-4 py-2.5 text-sm font-medium text-[#16793C]">
+            <CheckCircle2 className="h-4 w-4" /> Révision programmée le {new Date(scheduleDate).toLocaleDateString('fr-FR')}
+          </p>
+        )}
+
+        {/* Demander un accompagnement — bilan global rouge */}
+        {kind === 'bilan_global' && tier === 'red' && (
+          <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#6D28D9] border-[#6D28D9] hover:bg-[#F5F3FF]">
+            <Link href="/contact">
+              <MessageCircle className="h-4 w-4" /> Demander un accompagnement
             </Link>
           </Button>
         )}

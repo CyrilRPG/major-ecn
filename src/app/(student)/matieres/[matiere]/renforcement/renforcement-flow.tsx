@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2,
-  FileText, Layers3, Shield, Zap,
+  FileText, Layers3, MessageCircle, Shield, Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -278,11 +278,18 @@ export function RenforcementFlow({
           </Button>
         )}
         {tier === 'red' && (
-          <Button asChild className="w-full rounded-xl py-3 text-sm font-bold" style={{ background: '#A91D2C' }}>
-            <Link href={`/matieres/${matiereId}/renforcement`}>
-              <Zap className="mr-2 h-4 w-4" /> Reprendre le renforcement
-            </Link>
-          </Button>
+          <>
+            <Button asChild className="w-full rounded-xl py-3 text-sm font-bold" style={{ background: '#A91D2C' }}>
+              <Link href={`/matieres/${matiereId}/renforcement`}>
+                <Zap className="mr-2 h-4 w-4" /> Reprendre le renforcement
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#6D28D9] border-[#6D28D9] hover:bg-[#F5F3FF]">
+              <Link href="/contact">
+                <MessageCircle className="mr-2 h-4 w-4" /> Demander un accompagnement
+              </Link>
+            </Button>
+          </>
         )}
         <Button asChild variant="ghost" className="w-full rounded-xl py-3 text-sm font-bold">
           <Link href="/accueil">Retour au dashboard</Link>

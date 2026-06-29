@@ -98,13 +98,20 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // ───────────────────────────────────────────────────────────────
   // Section 15 — Blocage contenu : si l'étudiant n'a pas fait de
   // révision transversale depuis 14+ jours et qu'il a déjà commencé
-  // au moins une session, il est bloqué vers les révisions transversales.
-  // Exceptions : la page de révisions elle-même, l'interrogation, l'auth.
+  // au moins une session, seuls les NOUVEAUX contenus sont bloqués.
+  // Restent accessibles : accueil, agenda, dashboard révisions,
+  // évaluations/consolidation/renforcement, corrections, fiches et
+  // flashcards de cours déjà ouverts, contact, formulaires.
   // ───────────────────────────────────────────────────────────────
   if (profile.role === 'student') {
-    const revisionPrefixes = ['/revisions-transversales', '/formulaires/', '/api/', '/logout'];
-    const isOnAllowed = revisionPrefixes.some((p) => pathname.startsWith(p));
-    if (!isOnAllowed) {
+    const alwaysAllowed = [
+      '/revisions-transversales', '/formulaires/', '/api/', '/logout',
+      '/accueil', '/agenda', '/contact', '/entrainement',
+    ];
+    const isOnAllowed = alwaysAllowed.some((p) => pathname === p || pathname.startsWith(p + '/') || pathname.startsWith(p));
+    const isOnMatieresSubpage = pathname.match(/^\/matieres\/[^/]+\/(evaluation|consolidation|renforcement)/);
+
+    if (!isOnAllowed && !isOnMatieresSubpage) {
       const { data: lastSession } = await (supabase as unknown as {
         from: (t: string) => {
           select: (s: string) => {
@@ -129,7 +136,20 @@ export default async function StudentLayout({ children }: { children: React.Reac
       if (lastCompletedAt) {
         const daysSince = Math.floor((Date.now() - new Date(lastCompletedAt).getTime()) / 86_400_000);
         if (daysSince >= 14) {
-          redirect('/revisions-transversales');
+          const coursMatch = pathname.match(/^\/cours\/([^/]+)/);
+          if (coursMatch) {
+            const { data: hasProgress } = await supabase
+              .from('course_progress')
+              .select('cours_id')
+              .eq('user_id', user.id)
+              .eq('cours_id', coursMatch[1])
+              .maybeSingle();
+            if (!hasProgress) {
+              redirect('/revisions-transversales');
+            }
+          } else {
+            redirect('/revisions-transversales');
+          }
         }
       }
     }
