@@ -80,21 +80,26 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-[20px] font-extrabold tracking-tight text-[#0F1F4D]">
-            <Zap className="mr-2 inline h-5 w-5 text-[#F59E0B]" />
-            Flashcards — {titre}
-          </h1>
-          <p className="mt-1 text-[13px] text-gray-500">
-            {idx + 1} / {total} · {remaining} restante{remaining !== 1 ? 's' : ''}
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C0112E]/10">
+            <Zap className="h-5 w-5 text-[#C0112E]" />
+          </div>
+          <div>
+            <h1 className="text-[20px] font-extrabold tracking-tight text-[#0F1F4D]">
+              Flashcards
+            </h1>
+            <p className="text-[13px] text-gray-500">
+              {idx + 1} / {total} · {remaining} restante{remaining !== 1 ? 's' : ''}
+            </p>
+          </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={shuffle} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50" title="Mélanger">
+          <button onClick={shuffle} className="rounded-xl border border-gray-200 p-2.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-[#C0112E]" title="Melanger">
             <Shuffle className="h-4 w-4" />
           </button>
-          <button onClick={reset} className="rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50" title="Recommencer">
+          <button onClick={reset} className="rounded-xl border border-gray-200 p-2.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-[#C0112E]" title="Recommencer">
             <RotateCcw className="h-4 w-4" />
           </button>
         </div>
@@ -111,26 +116,60 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
         />
       </div>
 
+      {/* Mastered counter */}
+      {mastered.size > 0 && (
+        <div className="mb-4 flex justify-center">
+          <span className="rounded-full bg-green-50 px-3 py-1 text-[12px] font-semibold text-green-700">
+            {mastered.size} maitrisee{mastered.size > 1 ? 's' : ''} sur {total}
+          </span>
+        </div>
+      )}
+
       {/* Card */}
       <div
         onClick={flip}
-        className={`relative min-h-[320px] cursor-pointer rounded-2xl border-2 p-8 shadow-sm transition-all ${
-          isMastered ? 'border-green-300 bg-green-50' : flipped ? 'border-[#C0112E]/30 bg-[#FFF5F6]' : 'border-gray-200 bg-white'
+        className={`relative cursor-pointer overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:shadow-md ${
+          isMastered ? 'border-green-300' : flipped ? 'border-[#C0112E]/20' : 'border-gray-200'
         }`}
         style={{ perspective: '1000px' }}
       >
-        <div className="absolute right-4 top-4 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-500">
-          {flipped ? 'VERSO' : 'RECTO'}
+        {/* Top border color indicator */}
+        <div
+          className="h-1 w-full"
+          style={{
+            background: isMastered
+              ? '#22C55E'
+              : flipped
+                ? '#C0112E'
+                : 'linear-gradient(90deg, #C0112E, #F97316)',
+          }}
+        />
+
+        {/* Badge */}
+        <div className="absolute right-4 top-5">
+          <span
+            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold tracking-wide ${
+              flipped
+                ? 'bg-[#C0112E]/10 text-[#C0112E]'
+                : 'bg-[#0F1F4D]/10 text-[#0F1F4D]'
+            }`}
+          >
+            {flipped ? 'VERSO' : 'RECTO'}
+          </span>
         </div>
 
-        <div className="flex min-h-[280px] items-center justify-center">
+        <div className="flex min-h-[320px] items-center justify-center px-8 py-10">
           <div
-            className={`text-center text-[16px] leading-relaxed ${flipped ? 'text-gray-700' : 'text-[#0F1F4D] font-bold text-[18px]'}`}
+            className={`text-center leading-relaxed ${
+              flipped
+                ? 'text-[16px] text-gray-700'
+                : 'text-[20px] font-bold text-[#0F1F4D]'
+            }`}
             dangerouslySetInnerHTML={{ __html: renderContent(flipped ? current.verso : current.recto) }}
           />
         </div>
 
-        <p className="mt-4 text-center text-[11px] text-gray-400">
+        <p className="pb-4 text-center text-[11px] text-gray-400">
           Cliquez ou appuyez sur Espace pour retourner
         </p>
       </div>
@@ -140,9 +179,9 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
         <button
           onClick={prev}
           disabled={idx === 0}
-          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-30"
+          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-30"
         >
-          <ArrowLeft className="h-4 w-4" /> Précédente
+          <ArrowLeft className="h-4 w-4" /> Precedente
         </button>
 
         <button
@@ -153,23 +192,33 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
-          {isMastered ? '✓ Maîtrisée' : 'Marquer maîtrisée'}
+          {isMastered ? 'Maitrisee' : 'Marquer maitrisee'}
         </button>
 
         <button
           onClick={next}
           disabled={idx === total - 1}
-          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-30"
+          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-30"
         >
           Suivante <ArrowRight className="h-4 w-4" />
         </button>
       </div>
 
       {/* Keyboard shortcuts */}
-      <div className="mt-6 flex flex-wrap justify-center gap-3 text-[11px] text-gray-400">
-        <span>← → Naviguer</span>
-        <span>Espace : Retourner</span>
-        <span>M : Maîtrisée</span>
+      <div className="mt-6 flex flex-wrap justify-center gap-4 rounded-xl bg-[#FAFBFE] px-4 py-3 text-[11px] text-gray-400">
+        <span className="flex items-center gap-1">
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">←</kbd>
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">→</kbd>
+          Naviguer
+        </span>
+        <span className="flex items-center gap-1">
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">Espace</kbd>
+          Retourner
+        </span>
+        <span className="flex items-center gap-1">
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">M</kbd>
+          Maitrisee
+        </span>
       </div>
     </div>
   );

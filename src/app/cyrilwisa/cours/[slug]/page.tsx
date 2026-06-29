@@ -2,21 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, BookOpen, FileText, Zap } from 'lucide-react';
+import { ArrowLeft, BookOpen, FileText, HelpCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CodeGate } from '@/components/prive/code-gate';
 import { PriveShell } from '@/components/prive/prive-shell';
 import { PriveFicheViewer } from '@/components/prive/prive-fiche';
 import { PriveFlashcardSession } from '@/components/prive/prive-flashcards';
-import { PriveAnnalesViewer } from '@/components/prive/prive-annales';
+import { PriveQcmViewer } from '@/components/prive/prive-annales';
 import { getCoursBySlug, getMatiereForCours } from '@/lib/data/prive-courses';
 import { getPriveContent } from '@/lib/data/prive-content';
 
-type Tab = 'fiche' | 'annales' | 'flashcards';
+type Tab = 'fiche' | 'qcm' | 'flashcards';
 
 const TABS: { key: Tab; label: string; Icon: typeof BookOpen }[] = [
   { key: 'fiche', label: 'Fiche de cours', Icon: BookOpen },
-  { key: 'annales', label: 'Annales', Icon: FileText },
+  { key: 'qcm', label: 'QCM', Icon: HelpCircle },
   { key: 'flashcards', label: 'Flashcards', Icon: Zap },
 ];
 
@@ -79,7 +79,7 @@ export default function PriveCoursPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
           <nav className="flex gap-1">
             {TABS.map((t) => {
-              if (t.key === 'annales' && !cours.hasAnnales) return null;
+              if (t.key === 'qcm' && !cours.hasAnnales) return null;
               const active = tab === t.key;
               return (
                 <button
@@ -104,13 +104,13 @@ export default function PriveCoursPage() {
       {!content ? (
         <div className="flex flex-col items-center gap-3 py-20 text-center">
           <BookOpen className="h-10 w-10 text-gray-300" />
-          <p className="text-[15px] font-medium text-gray-500">Contenu en cours de préparation</p>
-          <p className="text-[13px] text-gray-400">Les fiches et flashcards de ce cours seront bientôt disponibles.</p>
+          <p className="text-[15px] font-medium text-gray-500">Contenu en cours de preparation</p>
+          <p className="text-[13px] text-gray-400">Les fiches et flashcards de ce cours seront bientot disponibles.</p>
         </div>
       ) : (
         <>
           {tab === 'fiche' && <PriveFicheViewer fiche={content.fiche} titre={cours.titre} />}
-          {tab === 'annales' && <PriveAnnalesViewer annales={content.annales} titre={cours.titre} />}
+          {tab === 'qcm' && <PriveQcmViewer annales={content.annales} titre={cours.titre} />}
           {tab === 'flashcards' && <PriveFlashcardSession cards={content.flashcards} titre={cours.titre} />}
         </>
       )}

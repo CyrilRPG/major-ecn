@@ -29,23 +29,24 @@ export function CodeGate({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <div
-      className="flex min-h-screen items-center justify-center px-4"
-      style={{ background: 'linear-gradient(135deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)' }}
-    >
+    <div className="flex min-h-screen items-center justify-center bg-[#FAFBFE] px-4">
       <form
         onSubmit={handleSubmit}
-        className={`w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl ${shake ? 'animate-shake' : ''}`}
+        className={`w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 shadow-lg ${shake ? 'animate-shake' : ''}`}
       >
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-white/5">
-          <Lock className="h-7 w-7 text-white/60" />
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+          <Lock className="h-7 w-7 text-[#C0112E]" />
         </div>
 
-        <h1 className="text-center text-lg font-bold text-white">
-          Accès restreint
+        <p className="text-center text-xs font-bold uppercase tracking-[0.18em] text-[#C0112E]">
+          Major ECN
+        </p>
+
+        <h1 className="mt-2 text-center text-xl font-extrabold tracking-tight text-[#0F1F4D]">
+          Espace Nephrologie
         </h1>
-        <p className="mt-1 text-center text-sm text-white/40">
-          Veuillez entrer le code d'accès
+        <p className="mt-1 text-center text-sm text-gray-500">
+          Veuillez entrer le code d&apos;acces
         </p>
 
         <div className="mt-6">
@@ -53,12 +54,12 @@ export function CodeGate({ onSuccess }: { onSuccess: () => void }) {
             type="password"
             value={code}
             onChange={(e) => { setCode(e.target.value); setError(false); }}
-            placeholder="Code d'accès"
+            placeholder="Code d'acces"
             autoFocus
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-white placeholder:text-white/30 outline-none transition-colors focus:border-white/30"
+            className="w-full rounded-xl border border-gray-200 bg-[#FAFBFE] px-4 py-3 text-center text-sm text-[#0F1F4D] placeholder:text-gray-400 outline-none transition-colors focus:border-[#C0112E] focus:ring-2 focus:ring-[#C0112E]/20"
           />
           {error && (
-            <p className="mt-2 text-center text-xs font-medium text-red-400">
+            <p className="mt-2 text-center text-xs font-medium text-[#C0112E]">
               Code incorrect
             </p>
           )}
@@ -66,29 +67,17 @@ export function CodeGate({ onSuccess }: { onSuccess: () => void }) {
 
         <button
           type="submit"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
-          style={{ background: 'linear-gradient(90deg, #8B0E22, #C0112E)' }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#C0112E] px-6 py-3 text-sm font-bold text-white transition-all hover:bg-[#a00f27] hover:shadow-md"
         >
-          Accéder
+          Acceder
           <ArrowRight className="h-4 w-4" />
         </button>
 
-        <div className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-white/20">
+        <div className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-gray-400">
           <ShieldCheck className="h-3 w-3" />
           Espace confidentiel
         </div>
       </form>
-
-      <style jsx>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          20% { transform: translateX(-8px); }
-          40% { transform: translateX(8px); }
-          60% { transform: translateX(-6px); }
-          80% { transform: translateX(6px); }
-        }
-        .animate-shake { animation: shake 0.4s ease-in-out; }
-      `}</style>
     </div>
   );
 }

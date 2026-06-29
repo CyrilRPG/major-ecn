@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertTriangle, BookOpen, Brain, ChevronDown, Lightbulb, Star } from 'lucide-react';
+import { AlertTriangle, BookOpen, Brain, ChevronDown, FileText, Lightbulb, Star } from 'lucide-react';
 import type { PriveFiche } from '@/lib/data/prive-courses';
 
 function md(text: string) {
@@ -13,9 +13,9 @@ function md(text: string) {
 }
 
 const KIND_STYLES: Record<string, { bg: string; border: string; icon: typeof Star; label: string }> = {
-  a_retenir: { bg: '#FEF3C7', border: '#F59E0B', icon: Star, label: 'À retenir' },
-  piege: { bg: '#FEE2E2', border: '#EF4444', icon: AlertTriangle, label: 'Piège' },
-  mnemo: { bg: '#EDE9FE', border: '#8B5CF6', icon: Brain, label: 'Mnémo' },
+  a_retenir: { bg: '#FEF3C7', border: '#F59E0B', icon: Star, label: 'A retenir' },
+  piege: { bg: '#FEE2E2', border: '#EF4444', icon: AlertTriangle, label: 'Piege' },
+  mnemo: { bg: '#EDE9FE', border: '#8B5CF6', icon: Brain, label: 'Mnemo' },
 };
 
 function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: string } }) {
@@ -66,14 +66,23 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      {/* Header */}
       <div className="mb-6 flex items-center gap-3">
-        <BookOpen className="h-6 w-6 text-[#C0112E]" />
-        <h1 className="text-[22px] font-extrabold tracking-tight text-[#0F1F4D]">{titre}</h1>
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C0112E]/10">
+          <FileText className="h-5 w-5 text-[#C0112E]" />
+        </div>
+        <div>
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#C0112E]">Fiche de cours</p>
+          <h1 className="text-[22px] font-extrabold tracking-tight text-[#0F1F4D]">{titre}</h1>
+        </div>
       </div>
 
       {/* Table of contents */}
-      <nav className="mb-8 rounded-xl border border-gray-200 bg-white p-5">
-        <p className="mb-3 text-[12px] font-bold uppercase tracking-wider text-gray-400">Sommaire</p>
+      <nav className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <BookOpen className="h-4 w-4 text-[#C0112E]" />
+          <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F1F4D]">Sommaire</p>
+        </div>
         <ol className="space-y-1.5">
           {fiche.parties.map((p) => (
             <li key={p.numero}>
@@ -82,20 +91,23 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
                   const el = document.getElementById(`partie-${p.numero}`);
                   el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="text-[14px] font-medium text-[#0F1F4D] hover:text-[#C0112E] hover:underline"
+                className="flex items-center gap-2 text-[14px] font-medium text-[#0F1F4D] transition-colors hover:text-[#C0112E]"
               >
-                {p.numero}. {p.titre}
+                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#C0112E]/10 text-[11px] font-bold text-[#C0112E]">
+                  {p.numero}
+                </span>
+                {p.titre}
               </button>
               {p.sous_parties.length > 0 && (
-                <ol className="ml-5 mt-1 space-y-0.5">
+                <ol className="ml-7 mt-1 space-y-0.5">
                   {p.sous_parties.map((sp, i) => (
-                    <li key={i} className="text-[13px] text-gray-500 hover:text-[#C0112E]">
+                    <li key={i}>
                       <button
                         onClick={() => {
                           const el = document.getElementById(`sp-${p.numero}-${i}`);
                           el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }}
-                        className="hover:underline"
+                        className="text-[13px] text-gray-500 transition-colors hover:text-[#C0112E] hover:underline"
                       >
                         {sp.titre}
                       </button>
@@ -115,20 +127,20 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
           <section key={p.numero} id={`partie-${p.numero}`} className="mb-6">
             <button
               onClick={() => togglePart(p.numero)}
-              className="flex w-full items-center gap-3 rounded-xl bg-[#0F1F4D] px-5 py-4 text-left"
+              className="flex w-full items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 text-left shadow-sm transition-all hover:shadow-md"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-[14px] font-bold text-white">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C0112E] text-[14px] font-bold text-white">
                 {p.numero}
               </span>
-              <span className="flex-1 text-[16px] font-bold text-white">{p.titre}</span>
-              <ChevronDown className={`h-5 w-5 text-white/50 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+              <span className="flex-1 text-[16px] font-bold text-[#0F1F4D]">{p.titre}</span>
+              <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
             </button>
 
             {isExpanded && (
-              <div className="mt-3 space-y-4">
+              <div className="mt-3 space-y-4 border-l-2 border-[#C0112E]/20 pl-4">
                 {p.sous_parties.map((sp, spIdx) => (
-                  <div key={spIdx} id={`sp-${p.numero}-${spIdx}`} className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-                    <div className="border-b border-gray-200 bg-gray-50 px-5 py-3">
+                  <div key={spIdx} id={`sp-${p.numero}-${spIdx}`} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+                    <div className="border-b border-gray-200 bg-[#FAFBFE] px-5 py-3">
                       <h3 className="text-[15px] font-bold text-[#0F1F4D]">{sp.titre}</h3>
                     </div>
                     <div>
@@ -144,12 +156,12 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
         );
       })}
 
-      {/* Points clés */}
+      {/* Points cles */}
       {fiche.points_cles.length > 0 && (
-        <section className="mt-8 rounded-xl border-2 border-[#C0112E] bg-[#FFF5F6] p-6">
+        <section className="mt-8 rounded-2xl border-2 border-[#C0112E] bg-[#FFF5F6] p-6">
           <h2 className="mb-4 flex items-center gap-2 text-[16px] font-extrabold text-[#C0112E]">
             <Lightbulb className="h-5 w-5" />
-            Points clés
+            Points cles
           </h2>
           <ul className="space-y-2">
             {fiche.points_cles.map((pt, i) => (
@@ -162,9 +174,9 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
         </section>
       )}
 
-      {/* Chiffres clés */}
+      {/* Chiffres cles */}
       {fiche.chiffres_cles && (
-        <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6">
+        <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-[16px] font-extrabold text-[#0F1F4D]">{fiche.chiffres_cles.titre}</h2>
           <div
             className="prose prose-sm max-w-none"
