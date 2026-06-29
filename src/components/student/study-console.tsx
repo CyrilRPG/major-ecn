@@ -145,9 +145,15 @@ export function StudyConsole({
 
         {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
         <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {tabs.filter((t) => visibility?.[t.key] !== false).map((t) => {
+          {tabs.filter((t) => {
+            if (visibility?.[t.key] === false) return false;
+            // For non-découverte students, hide formula-locked tabs entirely
+            // (découverte keeps padlock UI for the upgrade upsell)
+            if (!isDecouverte && locked?.[t.key] === true) return false;
+            return true;
+          }).map((t) => {
             const active = activeSeg === t.seg;
-            const isLocked = locked?.[t.key] === true || (isDecouverte && t.seg === 'video');
+            const isLocked = isDecouverte && t.seg === 'video';
             const commonInnerClasses = cn(
               'group relative flex items-center gap-1.5 whitespace-nowrap px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',
               isLocked

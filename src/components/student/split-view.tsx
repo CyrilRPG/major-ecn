@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
-  BookMarked, ClipboardCheck, Columns2, FileText, Layers3, Lock, MonitorPlay,
-  NotebookPen, Video, X, type LucideIcon,
+  ArrowLeftRight, BookMarked, ChevronDown, ClipboardCheck, Columns2, FileText,
+  Layers3, Lock, MonitorPlay, NotebookPen, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotesEditor } from './notes-editor';
@@ -207,6 +207,9 @@ function SplitPanel({
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const available = SPLIT_OPTIONS.filter((o) => {
     if (o.type === 'fiche' || o.type === 'fiche-express') return hasFiche;
     if (o.type === 'video') return hasVideo;
@@ -216,39 +219,71 @@ function SplitPanel({
     return true;
   });
 
+  const current = SPLIT_OPTIONS.find((o) => o.type === type);
+  const CurrentIcon = current?.Icon ?? FileText;
   const isTypeLocked = locked[type] === true;
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [menuOpen]);
 
   return (
     <div className="flex h-full flex-col border-l border-(--color-border) bg-(--color-surface)">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 border-b border-(--color-border) px-2 py-1.5">
-        {available.map((o) => {
-          const oLocked = locked[o.type] === true;
-          return (
-            <button
-              key={o.type}
-              type="button"
-              onClick={() => !oLocked && onChangeType(o.type)}
-              disabled={oLocked}
-              className={cn(
-                'flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors',
-                oLocked
-                  ? 'opacity-50 cursor-not-allowed text-(--color-ink-muted)'
-                  : type === o.type
-                  ? 'bg-(--color-primary)/10 text-(--color-primary) font-bold'
-                  : 'text-(--color-ink-soft) hover:bg-(--color-sand-100)',
-              )}
-            >
-              <o.Icon className="h-3.5 w-3.5" />
-              <span className="hidden xl:inline">{o.label}</span>
-              {oLocked && <Lock className="h-3 w-3 shrink-0" style={{ color: '#C0112E' }} />}
-            </button>
-          );
-        })}
+      {/* Compact header: current label + Changer + Close */}
+      <div className="flex items-center gap-1.5 border-b border-(--color-border) px-2 py-1">
+        <CurrentIcon className="h-3.5 w-3.5 shrink-0 text-(--color-primary)" />
+        <span className="min-w-0 truncate text-xs font-bold text-(--color-ink)">
+          {current?.label ?? 'Split'}
+        </span>
+        <div className="relative ml-auto" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) transition-colors hover:border-(--color-primary)/40 hover:text-(--color-primary)"
+          >
+            <ArrowLeftRight className="h-3 w-3" />
+            Changer
+            <ChevronDown className={cn('h-3 w-3 transition-transform', menuOpen && 'rotate-180')} />
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) py-1 shadow-(--shadow-lifted)">
+              {available.map((o) => {
+                const oLocked = locked[o.type] === true;
+                return (
+                  <button
+                    key={o.type}
+                    type="button"
+                    onClick={() => {
+                      if (!oLocked) { onChangeType(o.type); setMenuOpen(false); }
+                    }}
+                    disabled={oLocked}
+                    className={cn(
+                      'flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors',
+                      oLocked
+                        ? 'opacity-40 cursor-not-allowed text-(--color-ink-muted)'
+                        : type === o.type
+                        ? 'bg-(--color-primary)/10 font-bold text-(--color-primary)'
+                        : 'font-medium text-(--color-ink-soft) hover:bg-(--color-sand-100)',
+                    )}
+                  >
+                    <o.Icon className="h-3.5 w-3.5 shrink-0" />
+                    {o.label}
+                    {oLocked && <Lock className="ml-auto h-3 w-3 shrink-0" style={{ color: '#C0112E' }} />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
         <button
           type="button"
           onClick={onClose}
-          className="ml-auto flex h-7 w-7 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100)"
+          className="flex h-6 w-6 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100)"
           aria-label="Fermer le panneau"
         >
           <X className="h-3.5 w-3.5" />

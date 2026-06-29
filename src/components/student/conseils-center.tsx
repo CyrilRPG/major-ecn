@@ -64,6 +64,7 @@ export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolea
   const closePopup = () => {
     if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
     setMode('closed');
+    window.dispatchEvent(new Event('mecn:welcome-closed'));
   };
 
   return (

@@ -20,16 +20,17 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
 
   const [{ data: profile }, { data: fiches }] = await Promise.all([
     supabase.from('profiles').select('first_name, last_name, email').eq('id', user.id).maybeSingle(),
-    supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
       .from('fiches')
-      .select('storage_path, pages')
+      .select('storage_path, pages, content_json')
       .eq('cours_id', coursId)
       .not('storage_path', 'is', null)
       .order('created_at', { ascending: false })
       .limit(1),
   ]);
 
-  const fiche = fiches?.[0];
+  const fiche = (fiches as { storage_path: string; pages: number | null; content_json: unknown }[] | null)?.[0];
   if (!fiche?.storage_path) return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
 
   const admin = createAdminClient();
@@ -43,21 +44,20 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
 
   let targetIdx = pageCount - 1;
   if (pageCount >= 2) {
-    try {
-      const probe = await PDFDocument.create();
-      const [p] = await probe.copyPages(srcPdf, [targetIdx]);
-      probe.addPage(p);
-      const probeBytes = await probe.save();
-      const raw = new TextDecoder('latin1').decode(probeBytes);
-      let charCount = 0;
-      const re = /\(([^)]*)\)/g;
-      let m;
-      while ((m = re.exec(raw)) !== null) charCount += m[1].length;
-      if (charCount < 200) {
+    // Check the fiche's structured content to determine if the last page
+    // (typically the "fiche éclair") has enough text. The previous approach
+    // scanned raw PDF bytes but failed because content streams are compressed
+    // and binary image data produced false positives in the regex.
+    const content = fiche.content_json as {
+      fiche_eclair_md?: string;
+      points_cles?: string[];
+    } | null;
+    if (content) {
+      const eclairMd = (content.fiche_eclair_md ?? '').trim();
+      const pointsCles = (content.points_cles ?? []).join(' ').trim();
+      if (eclairMd.length + pointsCles.length < 200) {
         targetIdx = pageCount - 2;
       }
-    } catch {
-      // If probing fails, use last page as-is
     }
   }
 

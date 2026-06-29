@@ -91,9 +91,9 @@ export function BunnyVideoPlayer({
             className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
           >
             {[
-              { top: '12%', left: '15%' },
-              { top: '50%', left: '55%' },
-              { top: '82%', left: '25%' },
+              { top: '12%', left: '15%', dark: true },
+              { top: '50%', left: '55%', dark: false },
+              { top: '82%', left: '25%', dark: true },
             ].map((pos, i) => (
               <span
                 key={i}
@@ -103,8 +103,8 @@ export function BunnyVideoPlayer({
                   left: pos.left,
                   transform: 'rotate(-20deg)',
                   opacity: 0.18,
-                  color: i % 2 === 0 ? '#1a1a1a' : '#ffffff',
-                  textShadow: i % 2 === 0
+                  color: pos.dark ? '#1a1a1a' : '#ffffff',
+                  textShadow: pos.dark
                     ? '0 0 4px rgba(255,255,255,0.9), 1px 1px 2px rgba(255,255,255,0.7)'
                     : '0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.7)',
                 }}

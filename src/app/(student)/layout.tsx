@@ -6,6 +6,7 @@ import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { AppShell } from '@/components/shell/app-shell';
 import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
+import { StudentTutorialPopup } from '@/components/student/student-tutorial-popup';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { parseScope } from '@/lib/auth/permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
@@ -255,6 +256,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
         </AppShell>
       </div>
       <ConseilsCenter isDecouverte={isDecouverte} />
+      {!isDecouverte && profile.role === 'student' && (scopeForNav.offer === 'essentiel' || scopeForNav.offer === 'intensif' || scopeForNav.offer === 'approfondi') && (
+        <StudentTutorialPopup offer={scopeForNav.offer} />
+      )}
     </div>
   );
 }
