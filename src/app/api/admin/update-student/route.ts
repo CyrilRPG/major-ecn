@@ -25,7 +25,10 @@ export async function PATCH(req: Request) {
     .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
   const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
   const meta: Record<string, unknown> = {};
-  for (const k of ['signup', 'specialty_wish', 'espace_decouverte'] as const) {
+  for (const k of [
+    'signup', 'specialty_wish', 'espace_decouverte',
+    'paid_offer', 'paid_formule', 'paid_specialty', 'paid_voie', 'paid_at',
+  ] as const) {
     if (prev[k] !== undefined) meta[k] = prev[k];
   }
 

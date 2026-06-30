@@ -58,7 +58,7 @@ export default async function ElevesPage() {
         <AddStudentDialog colleges={colleges} coursByCollege={coursByCollege} />
       </header>
 
-      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} />
+      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} coursByCollege={coursByCollege} />
     </main>
   );
 }

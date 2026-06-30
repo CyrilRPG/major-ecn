@@ -88,9 +88,11 @@ function withinPeriod(iso: string | undefined, period: string): boolean {
 export function StudentsTable({
   students,
   colleges,
+  coursByCollege,
 }: {
   students: Student[];
   colleges: { id: string; nom: string }[];
+  coursByCollege?: Record<string, { id: string; titre: string }[]>;
 }) {
   const [q, setQ] = useState('');
   const [promo, setPromo] = useState('all');
@@ -363,7 +365,7 @@ export function StudentsTable({
                         <Award className="h-3.5 w-3.5" />
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
-                      <EditStudentDialog student={s} colleges={colleges} />
+                      <EditStudentDialog student={s} colleges={colleges} coursByCollege={coursByCollege} />
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}

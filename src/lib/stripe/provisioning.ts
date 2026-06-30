@@ -62,6 +62,8 @@ const MAP_OFFER: Record<FormuleId, 'essentiel' | 'intensif' | 'approfondi'> = {
 };
 
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
+const MG_INTERNE_ID = 'col-medecine-generale';
+const MG_EXTERNE_ID = 'col-medecine-generale-voie-externe';
 
 /** Petit logger structuré pour faciliter la lecture des Logs Vercel. */
 function log(label: string, payload: Record<string, unknown> = {}) {
@@ -72,9 +74,8 @@ function log(label: string, payload: Record<string, unknown> = {}) {
 /**
  * Crée (ou récupère) un compte étudiant avec :
  *  - une trace claire de la formule achetée (paid_offer / paid_formule)
- *  - un accès plateforme limité à l'Espace Découverte pour l'instant
- *    (l'équipe Major ECN pourra étendre l'accès depuis l'admin une fois
- *     que tous les contenus payants seront publiés).
+ *  - accès automatique au collège MG correspondant à la voie choisie
+ *    (interne / externe) + toutes les spécialités transversales.
  */
 export async function provisionStudentAccount(
   input: ProvisioningInput,
@@ -97,11 +98,6 @@ export async function provisionStudentAccount(
     emailFrom: process.env.EMAIL_FROM ?? '(fallback resend.dev sandbox)',
   });
 
-  // Permission scope : pour l'instant, accès à l'Espace Découverte UNIQUEMENT
-  // pour tous les acheteurs. La formule réellement achetée est conservée dans
-  // paid_offer / paid_formule pour pouvoir débloquer l'accès complet plus tard
-  // (depuis l'admin) quand le contenu MG sera finalisé. Côté UI : on affiche
-  // bien le nom de la formule payée, pas « Découverte ».
   const offerForFormule = MAP_OFFER[input.formuleId];
 
   // 1) Existe-t-il déjà un user avec cet email ?
@@ -154,12 +150,41 @@ export async function provisionStudentAccount(
   const lastName = input.lastName || existingProfile?.last_name || '';
   const phone = input.phone || existingProfile?.phone || null;
 
+  // Construit la liste des collèges accessibles selon la voie choisie.
+  // On interroge la table matieres pour rester dynamique (nouvelles
+  // spécialités automatiquement incluses).
+  let colleges: string[] = [DECOUVERTE_COLLEGE_ID];
+  const voieValue = (input.voie ?? '').toLowerCase();
+
+  if (voieValue === 'interne' || voieValue === 'externe') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: allMatieres } = await (admin as any)
+      .from('matieres')
+      .select('id, parent_matiere_id');
+
+    const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
+
+    if (voieValue === 'interne') {
+      colleges = mats
+        .map((m) => m.id)
+        .filter((id) => id !== MG_EXTERNE_ID);
+    } else {
+      const interneChildIds = new Set(
+        mats.filter((m) => m.parent_matiere_id === MG_INTERNE_ID).map((m) => m.id),
+      );
+      colleges = mats
+        .map((m) => m.id)
+        .filter((id) => id !== MG_INTERNE_ID && !interneChildIds.has(id));
+    }
+    log('colleges-resolved', { voie: voieValue, count: colleges.length, colleges });
+  }
+
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
   // `specialty_wish`…) puis on superpose les marqueurs d'achat.
   const permission_scope = {
     ...prevScope,
     type: 'college' as const,
-    colleges: [DECOUVERTE_COLLEGE_ID],
+    colleges,
     offer: offerForFormule,
     paid_offer: offerForFormule,
     paid_formule: input.formuleId,
