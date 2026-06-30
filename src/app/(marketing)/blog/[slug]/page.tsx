@@ -12,6 +12,10 @@ import { ArticleConseilsLaureats } from '@/components/marketing/blog/articles/ar
 import { ArticleRatioPostes } from '@/components/marketing/blog/articles/article-ratio-postes';
 import { ArticleMipic } from '@/components/marketing/blog/articles/article-mipic';
 import { ArticleChoixSpecialitePadhue } from '@/components/marketing/blog/articles/article-choix-specialite-padhue';
+import { ArticleEchecEvc } from '@/components/marketing/blog/articles/article-echec-evc';
+import { Article7ErreursEvc } from '@/components/marketing/blog/articles/article-7-erreurs-evc';
+import { ArticleMentalEvc } from '@/components/marketing/blog/articles/article-mental-evc';
+import { ArticleOrganiserRevisionsEvc } from '@/components/marketing/blog/articles/article-organiser-revisions-evc';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 
 export async function generateMetadata({
@@ -59,6 +63,14 @@ function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArt
       return <ArticleMipic article={article} />;
     case 'psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026':
       return <ArticleChoixSpecialitePadhue article={article} />;
+    case 'pourquoi-des-medecins-echouent-aux-evc':
+      return <ArticleEchecEvc article={article} />;
+    case '7-erreurs-points-evc':
+      return <Article7ErreursEvc article={article} />;
+    case 'gerer-stress-motivation-evc':
+      return <ArticleMentalEvc article={article} />;
+    case 'organiser-revisions-evc':
+      return <ArticleOrganiserRevisionsEvc article={article} />;
     default:
       return <ArticleGeneric article={article} />;
   }
