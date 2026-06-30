@@ -40,10 +40,11 @@ export type BlogArticleMeta = {
   excerpt: string;
   category: BlogCategory;
   readingMinutes: number;
+  image?: string;
   readers?: number;
   publishedAt?: string;
   featured?: boolean;
-  popularRank?: number; // 1..5 — utilisé par l'aside « Articles les plus consultés »
+  popularRank?: number;
 };
 
 export const BLOG_ARTICLES: BlogArticleMeta[] = [
@@ -53,16 +54,18 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: 'Rétroplanning, phases de préparation, priorisation des thèmes : comment organiser ses révisions EVC 2026 jusqu\'au jour J. Méthode et planning gratuit.',
     category: 'conseils-methodologie',
     readingMinutes: 11,
+    image: '/blog/medecin-planning-revisions-evc.webp',
     readers: 0,
     publishedAt: '2026-06-30',
     featured: true,
   },
   {
     slug: 'gerer-stress-motivation-evc',
-    title: 'Gérer le stress et tenir jusqu’au bout des EVC',
-    excerpt: 'Motivation, stress, endurance : comment tenir sur la durée et garder le mental pour réussir les EVC 2026. Le côté psychologique de la préparation.',
+    title: "Gérer le stress et tenir jusqu'au bout des EVC",
+    excerpt: "Motivation, stress, endurance : comment tenir sur la durée et garder le mental pour réussir les EVC 2026. Le côté psychologique de la préparation.",
     category: 'conseils-methodologie',
     readingMinutes: 10,
+    image: '/blog/medecin-mental-evc.webp',
     readers: 0,
     publishedAt: '2026-06-30',
     featured: true,
@@ -73,6 +76,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: 'QCM mal lus, urgence vitale oubliée, copie en désordre : les 7 erreurs qui font perdre le plus de points aux EVC 2026, et comment les corriger. Guide gratuit.',
     category: 'conseils-methodologie',
     readingMinutes: 11,
+    image: '/blog/medecin-7-erreurs-evc.webp',
     readers: 0,
     publishedAt: '2026-06-30',
     featured: true,
@@ -82,7 +86,8 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     title: 'Pourquoi des médecins excellents échouent aux EVC (et comment ne pas en faire partie)',
     excerpt: 'Voie externe à 10 % de réussite : pourquoi des médecins compétents échouent aux EVC et la méthode pour réussir en 2026. Guide gratuit Major ECN.',
     category: 'conseils-methodologie',
-    readingMinutes: 10,
+    readingMinutes: 8,
+    image: '/blog/medecin-fenetre-echec-evc.webp',
     readers: 0,
     publishedAt: '2026-06-30',
     featured: true,
@@ -142,7 +147,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
   {
     slug: 'remuneration-medecin-etranger-france',
     title: 'Quelle rémunération pour un médecin étranger en pratiquant en France ?',
-    excerpt: 'Grilles salariales, différences selon les structures et perspectives d’évolution après la réussite des EVC.',
+    excerpt: "Grilles salariales, différences selon les structures et perspectives d'évolution après la réussite des EVC.",
     category: 'carriere-remuneration',
     readingMinutes: 9,
     readers: 4016,
@@ -151,8 +156,8 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
   },
   {
     slug: 'structures-accueil-laureats-pae',
-    title: 'Structures d’accueil pour les lauréats PAE : CHU, cliniques ou secteur privé ?',
-    excerpt: 'Comprendre les différences entre les principaux modes d’exercice après la réussite des EVC.',
+    title: "Structures d'accueil pour les lauréats PAE : CHU, cliniques ou secteur privé ?",
+    excerpt: "Comprendre les différences entre les principaux modes d'exercice après la réussite des EVC.",
     category: 'exercice-medical',
     readingMinutes: 12,
     readers: 3245,

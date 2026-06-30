@@ -88,7 +88,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           title: article.title,
           description: article.excerpt,
           slug,
-          image: BLOG_CATEGORY_IMAGE[article.category],
+          image: article.image ?? BLOG_CATEGORY_IMAGE[article.category],
           datePublished: article.publishedAt,
         }),
         breadcrumbSchema([
