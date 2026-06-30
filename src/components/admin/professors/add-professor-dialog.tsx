@@ -25,7 +25,7 @@ export function AddProfessorDialog({
   coursByCollege,
 }: {
   colleges: { id: string; nom: string }[];
-  coursByCollege: Record<string, { id: string; titre: string }[]>;
+  coursByCollege: Record<string, { id: string; titre: string; group?: string }[]>;
 }) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -231,26 +231,44 @@ export function AddProfessorDialog({
                             </div>
                             {courses.length === 0 ? (
                               <p className="text-xs text-(--color-ink-muted)">Aucun cours dans ce collège.</p>
-                            ) : (
-                              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                                {courses.map((c) => {
-                                  const checked = value.includes(c.id);
-                                  return (
-                                    <label key={c.id} className="flex items-center gap-2 text-xs">
-                                      <Checkbox
-                                        checked={checked}
-                                        onCheckedChange={(v) => {
-                                          const set = new Set(value);
-                                          if (v) set.add(c.id); else set.delete(c.id);
-                                          field.onChange(Array.from(set));
-                                        }}
-                                      />
-                                      <span className="truncate">{c.titre}</span>
-                                    </label>
-                                  );
-                                })}
-                              </div>
-                            )}
+                            ) : (() => {
+                              const groups: { label: string | null; items: typeof courses }[] = [];
+                              for (const c of courses) {
+                                const g = (c as { group?: string }).group ?? null;
+                                const last = groups[groups.length - 1];
+                                if (last && last.label === g) last.items.push(c);
+                                else groups.push({ label: g, items: [c] });
+                              }
+                              return (
+                                <div className="space-y-3">
+                                  {groups.map((g, gi) => (
+                                    <div key={gi}>
+                                      {g.label && (
+                                        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-(--color-primary)">{g.label}</p>
+                                      )}
+                                      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                                        {g.items.map((c) => {
+                                          const checked = value.includes(c.id);
+                                          return (
+                                            <label key={c.id} className="flex items-center gap-2 text-xs">
+                                              <Checkbox
+                                                checked={checked}
+                                                onCheckedChange={(v) => {
+                                                  const set = new Set(value);
+                                                  if (v) set.add(c.id); else set.delete(c.id);
+                                                  field.onChange(Array.from(set));
+                                                }}
+                                              />
+                                              <span className="truncate">{c.titre}</span>
+                                            </label>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              );
+                            })()}
                           </div>
                         );
                       })}

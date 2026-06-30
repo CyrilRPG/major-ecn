@@ -70,28 +70,41 @@ export default async function ProfessorsPage() {
       .eq('role', 'professor')
       .order('last_name'),
     admin.from('facultes')
-      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
+      .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
   ]);
 
-  type MatRaw = { id: string; nom: string; order_index: number | null; cours?: { id: string; titre: string; order_index: number | null }[] | null };
-  const matieres = (
+  type MatRaw = { id: string; nom: string; order_index: number | null; parent_matiere_id: string | null; cours?: { id: string; titre: string; order_index: number | null }[] | null };
+  const allMatieres = (
     ((fac as unknown as { semestres?: { matieres?: MatRaw[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
-  const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom }));
-  const collegeMap = Object.fromEntries(colleges.map((c) => [c.id, c.nom]));
-  const coursByCollege: Record<string, { id: string; titre: string }[]> = Object.fromEntries(
-    matieres.map((m) => [
-      m.id,
-      (m.cours ?? [])
-        .slice()
-        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-        .map((c) => ({ id: c.id, titre: c.titre })),
-    ]),
-  );
+
+  const topLevel = allMatieres.filter((m) => !m.parent_matiere_id);
+  const children = allMatieres.filter((m) => !!m.parent_matiere_id);
+
+  const colleges = topLevel.map((m) => ({ id: m.id, nom: m.nom }));
+  const collegeMap = Object.fromEntries(allMatieres.map((m) => [m.id, m.nom]));
+
+  const coursByCollege: Record<string, { id: string; titre: string; group?: string }[]> = {};
+  for (const m of topLevel) {
+    const ownCours = (m.cours ?? [])
+      .slice()
+      .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+      .map((c) => ({ id: c.id, titre: c.titre }));
+    const childCours = children
+      .filter((ch) => ch.parent_matiere_id === m.id)
+      .flatMap((ch) =>
+        (ch.cours ?? [])
+          .slice()
+          .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+          .map((c) => ({ id: c.id, titre: c.titre, group: ch.nom })),
+      );
+    coursByCollege[m.id] = [...ownCours, ...childCours];
+  }
+
   const coursMap = Object.fromEntries(
     Object.values(coursByCollege).flat().map((c) => [c.id, c.titre]),
   );

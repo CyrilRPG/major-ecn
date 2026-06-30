@@ -64,6 +64,19 @@ export async function POST(req: Request) {
     );
   }
 
+  // Auto-include child sub-matières so permission checks pass for nested matières
+  if (cleanedColleges.length > 0) {
+    const { data: childMats } = await admin
+      .from('matieres')
+      .select('id')
+      .in('parent_matiere_id', cleanedColleges);
+    if (childMats) {
+      for (const ch of childMats) {
+        if (!cleanedColleges.includes(ch.id)) cleanedColleges.push(ch.id);
+      }
+    }
+  }
+
   const base = origin(req);
   const redirectTo = `${base}/auth/setup-password`;
 

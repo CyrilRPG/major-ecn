@@ -61,7 +61,7 @@ export function TopBar({
 
       {profile.role === 'student' && <PlatformTimer />}
 
-      {profile.role !== 'professor' && (
+      {profile.role === 'student' && (
         <button
           type="button"
           onClick={() => window.dispatchEvent(new Event('conseils:open'))}
