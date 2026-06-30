@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import {
   BookOpen,
   Check,
@@ -12,7 +12,9 @@ import {
   XCircle,
   ArrowLeft,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
+import Image from 'next/image';
 import type { PriveAnnale, PriveAnnaleQuestion } from '@/lib/data/prive-courses';
 
 function md(text: string) {
@@ -22,12 +24,26 @@ function md(text: string) {
     .replace(/\n/g, '<br/>');
 }
 
+function hexToRgb(hex: string) {
+  const h = hex.replace('#', '');
+  return {
+    r: parseInt(h.substring(0, 2), 16),
+    g: parseInt(h.substring(2, 4), 16),
+    b: parseInt(h.substring(4, 6), 16),
+  };
+}
+
+function pastelBg(hex: string) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgb(${Math.round(r + (255 - r) * 0.85)}, ${Math.round(g + (255 - g) * 0.85)}, ${Math.round(b + (255 - b) * 0.85)})`;
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 type QueueEntry = {
-  questionIndex: number; // original index within the annale
+  questionIndex: number;
   question: PriveAnnaleQuestion;
 };
 
@@ -36,7 +52,7 @@ type SessionState = {
   totalQuestions: number;
   correctCount: number;
   firstTryCorrect: number;
-  attemptedOnce: Set<number>; // tracks which questions have been attempted at least once
+  attemptedOnce: Set<number>;
 };
 
 // ---------------------------------------------------------------------------
@@ -92,7 +108,6 @@ function useSpacedRepetition(annale: PriveAnnale) {
       newAttempted.add(removed.questionIndex);
 
       if (!isCorrect) {
-        // Reinsert after 3 positions (or at end if queue is short)
         const insertPos = Math.min(3, newQueue.length);
         newQueue.splice(insertPos, 0, removed);
       }
@@ -141,20 +156,26 @@ function useSpacedRepetition(annale: PriveAnnale) {
 
 function SeriesCard({
   annale,
-  index,
   onStart,
+  accentColor,
 }: {
   annale: PriveAnnale;
   index: number;
   onStart: () => void;
+  accentColor: string;
 }) {
+  const bg = pastelBg(accentColor);
   return (
     <button
       onClick={onStart}
-      className="flex w-full items-center gap-4 rounded-2xl border border-gray-200 bg-white px-6 py-5 text-left shadow-sm transition-all hover:border-[#C0112E]/30 hover:shadow-md"
+      className="group flex w-full items-center gap-4 rounded-2xl border bg-white px-6 py-5 text-left shadow-sm transition-all hover:shadow-md"
+      style={{ borderColor: accentColor + '25' }}
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#C0112E]/10">
-        <HelpCircle className="h-6 w-6 text-[#C0112E]" />
+      <div
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
+        style={{ background: bg }}
+      >
+        <HelpCircle className="h-6 w-6" style={{ color: accentColor }} />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-[15px] font-bold text-[#0F1F4D] truncate">
@@ -165,7 +186,7 @@ function SeriesCard({
           {annale.questions.length > 1 ? 's' : ''}
         </p>
       </div>
-      <ChevronDown className="h-5 w-5 -rotate-90 text-gray-400" />
+      <ChevronDown className="h-5 w-5 -rotate-90 text-gray-400 transition-transform group-hover:translate-x-0.5" />
     </button>
   );
 }
@@ -174,27 +195,32 @@ function ProgressBar({
   current,
   total,
   correctCount,
+  accentColor,
 }: {
   current: number;
   total: number;
   correctCount: number;
+  accentColor: string;
 }) {
   const pct = total > 0 ? ((total - current) / total) * 100 : 0;
   return (
     <div className="flex items-center gap-4">
       <div className="flex-1">
-        <div className="mb-1 flex items-center justify-between text-[12px]">
+        <div className="mb-1.5 flex items-center justify-between text-[12px]">
           <span className="font-semibold text-[#0F1F4D]">
             Question {total - current + (current > 0 ? 1 : 0)} / {total}
           </span>
-          <span className="rounded-full bg-green-100 px-2.5 py-0.5 font-semibold text-green-700">
+          <span
+            className="rounded-full px-2.5 py-0.5 font-semibold"
+            style={{ background: '#DCF1E2', color: '#15803D' }}
+          >
             {correctCount} acquise{correctCount > 1 ? 's' : ''}
           </span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
           <div
-            className="h-full rounded-full bg-[#C0112E] transition-all duration-500"
-            style={{ width: `${pct}%` }}
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${pct}%`, background: accentColor }}
           />
         </div>
       </div>
@@ -213,6 +239,7 @@ function QuestionView({
   onValidate,
   onNext,
   onQuit,
+  accentColor,
 }: {
   entry: QueueEntry;
   annale: PriveAnnale;
@@ -224,8 +251,10 @@ function QuestionView({
   onValidate: () => void;
   onNext: () => void;
   onQuit: () => void;
+  accentColor: string;
 }) {
   const q = entry.question;
+  const bg = pastelBg(accentColor);
 
   const scoreInfo = useMemo(() => {
     if (!lastResult) return null;
@@ -258,14 +287,49 @@ function QuestionView({
           current={session.queue.length}
           total={session.totalQuestions}
           correctCount={session.correctCount}
+          accentColor={accentColor}
         />
       </div>
 
-      {/* Question Card */}
-      <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+      {/* Question Card — premium design */}
+      <div
+        className="relative overflow-hidden rounded-2xl border shadow-lg"
+        style={{ borderColor: accentColor + '30' }}
+      >
+        {/* Watermark logo */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.015]"
+        >
+          <Image
+            src="/major-ecn-logo.png"
+            alt=""
+            width={300}
+            height={300}
+            className="h-auto w-[50%] max-w-[300px] object-contain"
+            priority={false}
+          />
+        </span>
+
+        {/* Left accent bar */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-1 sm:w-1.5"
+          style={{ background: accentColor }}
+        />
+
         {/* Question header */}
-        <div className="border-b border-gray-200 bg-[#FAFBFE] px-5 py-4">
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#C0112E] mb-1">
+        <div
+          className="relative border-b px-5 py-4 sm:px-6"
+          style={{
+            background: `linear-gradient(135deg, ${bg} 0%, #FFFFFF 80%)`,
+            borderColor: accentColor + '20',
+          }}
+        >
+          <p
+            className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em]"
+            style={{ color: accentColor }}
+          >
             Question {entry.questionIndex + 1}
           </p>
           <p
@@ -275,38 +339,32 @@ function QuestionView({
         </div>
 
         {/* Answer items */}
-        <div className="divide-y divide-gray-100">
+        <div className="relative divide-y divide-gray-100 bg-white">
           {q.items.map((item) => {
             const isSelected = selected.has(item.lettre);
             const isCorrect = item.is_correct;
             const inReview = phase === 'review';
 
-            let bg = '';
-            let ringClass = '';
+            let itemBg = '';
             if (inReview) {
-              if (isCorrect && isSelected) {
-                bg = 'bg-green-50';
-              } else if (isCorrect && !isSelected) {
-                bg = 'bg-green-50/60';
-              } else if (!isCorrect && isSelected) {
-                bg = 'bg-red-50';
-              }
+              if (isCorrect && isSelected) itemBg = 'bg-green-50';
+              else if (isCorrect && !isSelected) itemBg = 'bg-green-50/60';
+              else if (!isCorrect && isSelected) itemBg = 'bg-red-50';
             }
 
-            let circleClass =
-              'border-gray-300 text-gray-500';
+            let circleStyle = 'border-gray-300 text-gray-500';
             let circleContent: React.ReactNode = item.lettre;
 
             if (inReview) {
               if (isCorrect) {
-                circleClass = 'border-green-500 bg-green-500 text-white';
+                circleStyle = 'border-green-500 bg-green-500 text-white';
                 circleContent = <Check className="h-3.5 w-3.5" />;
               } else if (isSelected) {
-                circleClass = 'border-red-500 bg-red-500 text-white';
+                circleStyle = 'border-red-500 bg-red-500 text-white';
                 circleContent = <XIcon className="h-3.5 w-3.5" />;
               }
             } else if (isSelected) {
-              circleClass = 'border-[#C0112E] bg-[#C0112E] text-white';
+              circleStyle = 'text-white';
             }
 
             return (
@@ -314,12 +372,17 @@ function QuestionView({
                 key={item.lettre}
                 onClick={() => onToggle(item.lettre)}
                 disabled={inReview}
-                className={`flex w-full items-start gap-3 px-5 py-3 text-left transition-colors ${bg} ${
-                  !inReview ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default'
+                className={`flex w-full items-start gap-3 px-5 py-3.5 text-left transition-all sm:px-6 ${itemBg} ${
+                  !inReview ? 'hover:bg-gray-50/80 cursor-pointer' : 'cursor-default'
                 }`}
               >
                 <span
-                  className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[12px] font-bold transition-colors ${circleClass}`}
+                  className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[12px] font-bold transition-all ${circleStyle}`}
+                  style={
+                    !inReview && isSelected
+                      ? { background: accentColor, borderColor: accentColor }
+                      : undefined
+                  }
                 >
                   {circleContent}
                 </span>
@@ -327,7 +390,7 @@ function QuestionView({
                   className={`text-[13px] leading-relaxed ${
                     inReview
                       ? isCorrect
-                        ? 'text-green-800'
+                        ? 'text-green-800 font-medium'
                         : isSelected
                           ? 'text-red-800'
                           : 'text-gray-700'
@@ -343,37 +406,42 @@ function QuestionView({
 
         {/* Action area */}
         {phase === 'answering' ? (
-          <div className="border-t border-gray-200 px-5 py-4">
+          <div className="relative border-t border-gray-100 bg-white px-5 py-4 sm:px-6">
             <button
               onClick={onValidate}
               disabled={selected.size === 0}
-              className="w-full rounded-xl bg-[#C0112E] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#A00F27] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ background: accentColor }}
             >
               Valider
             </button>
           </div>
         ) : (
-          <div className="border-t border-gray-200">
+          <div className="relative border-t" style={{ borderColor: accentColor + '20' }}>
             {/* Score banner */}
             {scoreInfo && (
               <div
-                className={`flex items-center gap-2 px-5 py-3 ${
+                className={`flex items-center gap-2.5 px-5 py-3.5 sm:px-6 ${
                   scoreInfo.allCorrect ? 'bg-green-50' : 'bg-red-50'
                 }`}
               >
                 {scoreInfo.allCorrect ? (
                   <>
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span className="text-[13px] font-semibold text-green-700">
-                      Bonne r&eacute;ponse !
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    </div>
+                    <span className="text-[13px] font-bold text-green-700">
+                      Bonne réponse !
                     </span>
                   </>
                 ) : (
                   <>
-                    <XCircle className="h-4 w-4 text-red-600" />
-                    <span className="text-[13px] font-semibold text-red-700">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-100">
+                      <XCircle className="h-4 w-4 text-red-600" />
+                    </div>
+                    <span className="text-[13px] font-bold text-red-700">
                       {scoreInfo.userCorrect}/{scoreInfo.totalCorrect} bonne
-                      {scoreInfo.totalCorrect > 1 ? 's' : ''} r&eacute;ponse
+                      {scoreInfo.totalCorrect > 1 ? 's' : ''} réponse
                       {scoreInfo.totalCorrect > 1 ? 's' : ''}
                       {scoreInfo.userWrong > 0 &&
                         ` · ${scoreInfo.userWrong} erreur${scoreInfo.userWrong > 1 ? 's' : ''}`}
@@ -384,8 +452,9 @@ function QuestionView({
             )}
 
             {/* Correction */}
-            <div className="bg-blue-50 px-5 py-4">
-              <p className="mb-1 text-[12px] font-bold uppercase tracking-wider text-blue-600">
+            <div className="bg-blue-50/80 px-5 py-4 sm:px-6">
+              <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-blue-600">
+                <Sparkles className="h-3 w-3" />
                 Correction
               </p>
               <p
@@ -394,10 +463,10 @@ function QuestionView({
               />
             </div>
 
-            {/* Rappel de cours - ONLY shown after validation */}
+            {/* Rappel de cours */}
             {annale.rappel_cours && (
-              <div className="bg-[#F0FDF4] px-5 py-4 border-t border-green-100">
-                <div className="mb-2 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-green-700">
+              <div className="bg-[#F0FDF4] px-5 py-4 border-t border-green-100 sm:px-6">
+                <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-green-700">
                   <BookOpen className="h-3.5 w-3.5" />
                   Rappel de cours
                 </div>
@@ -409,16 +478,25 @@ function QuestionView({
             )}
 
             {/* Next question button */}
-            <div className="px-5 py-4 border-t border-gray-200">
+            <div className="bg-white px-5 py-4 border-t border-gray-100 sm:px-6">
               <button
                 onClick={onNext}
-                className="w-full rounded-xl bg-[#C0112E] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#A00F27]"
+                className="w-full rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{ background: accentColor }}
               >
                 Question suivante
               </button>
             </div>
           </div>
         )}
+
+        {/* Brand mark */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute bottom-1 left-1/2 z-20 hidden -translate-x-1/2 select-none text-[8px] font-bold uppercase tracking-[0.18em] text-gray-300 sm:block"
+        >
+          Major <span style={{ color: accentColor + '55' }}>ECN</span>
+        </span>
       </div>
     </div>
   );
@@ -429,44 +507,76 @@ function CompletionScreen({
   annaleTitle,
   onRestart,
   onBackToList,
+  accentColor,
 }: {
   session: SessionState;
   annaleTitle: string;
   onRestart: () => void;
   onBackToList: () => void;
+  accentColor: string;
 }) {
+  const pct = session.totalQuestions > 0
+    ? Math.round((session.firstTryCorrect / session.totalQuestions) * 100)
+    : 0;
+  const isGood = pct >= 80;
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white py-16 px-8 text-center shadow-sm">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle className="h-8 w-8 text-green-600" />
+      <div
+        className="relative flex flex-col items-center gap-4 overflow-hidden rounded-2xl border py-16 px-8 text-center shadow-lg"
+        style={{
+          borderColor: isGood ? '#15803D33' : accentColor + '33',
+          background: isGood
+            ? 'linear-gradient(135deg, #DCF1E2 0%, #FFFFFF 60%)'
+            : `linear-gradient(135deg, ${pastelBg(accentColor)} 0%, #FFFFFF 60%)`,
+        }}
+      >
+        {/* Watermark */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.02]"
+        >
+          <Image
+            src="/major-ecn-logo.png"
+            alt=""
+            width={300}
+            height={300}
+            className="h-auto w-[50%] max-w-[300px] object-contain"
+            priority={false}
+          />
+        </span>
+
+        <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full" style={{ background: isGood ? '#DCF1E2' : accentColor + '18' }}>
+          <CheckCircle className="h-8 w-8" style={{ color: isGood ? '#15803D' : accentColor }} />
         </div>
-        <div>
+        <div className="relative z-10">
           <h2 className="text-[22px] font-extrabold text-[#0F1F4D]">
-            S&eacute;rie termin&eacute;e !
+            Série terminée !
           </h2>
           <p className="mt-1 text-[15px] text-gray-500">{annaleTitle}</p>
         </div>
-        <div className="rounded-xl bg-[#FAFBFE] px-6 py-3">
+        <div className="relative z-10 rounded-xl border border-gray-100 bg-white/80 px-6 py-3 backdrop-blur">
           <p className="text-[14px] font-semibold text-[#0F1F4D]">
-            <span className="text-green-600">{session.firstTryCorrect}</span> /{' '}
+            <span style={{ color: isGood ? '#15803D' : accentColor }}>{session.firstTryCorrect}</span> /{' '}
             {session.totalQuestions} au premier essai
+            <span className="ml-2 text-[12px] text-gray-400">({pct}%)</span>
           </p>
         </div>
-        <div className="mt-4 flex flex-col gap-3 w-full max-w-xs">
+        <div className="relative z-10 mt-4 flex flex-col gap-3 w-full max-w-xs">
           <button
             onClick={onRestart}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C0112E] px-5 py-3 text-[14px] font-bold text-white transition-colors hover:bg-[#A00F27]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
+            style={{ background: accentColor }}
           >
             <RotateCcw className="h-4 w-4" />
             Recommencer
           </button>
           <button
             onClick={onBackToList}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-3 text-[14px] font-bold text-[#0F1F4D] transition-colors hover:bg-gray-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-3 text-[14px] font-bold text-[#0F1F4D] transition-all hover:bg-gray-50"
           >
             <ArrowLeft className="h-4 w-4" />
-            Choisir une autre s&eacute;rie
+            Choisir une autre série
           </button>
         </div>
       </div>
@@ -475,15 +585,17 @@ function CompletionScreen({
 }
 
 // ---------------------------------------------------------------------------
-// Session wrapper (manages one annale's session lifecycle)
+// Session wrapper
 // ---------------------------------------------------------------------------
 
 function QcmSession({
   annale,
   onQuit,
+  accentColor,
 }: {
   annale: PriveAnnale;
   onQuit: () => void;
+  accentColor: string;
 }) {
   const {
     currentEntry,
@@ -505,6 +617,7 @@ function QcmSession({
         annaleTitle={annale.titre}
         onRestart={restart}
         onBackToList={onQuit}
+        accentColor={accentColor}
       />
     );
   }
@@ -523,6 +636,7 @@ function QcmSession({
       onValidate={validate}
       onNext={nextQuestion}
       onQuit={onQuit}
+      accentColor={accentColor}
     />
   );
 }
@@ -534,10 +648,13 @@ function QcmSession({
 export function PriveQcmViewer({
   annales,
   titre,
+  themeColor,
 }: {
   annales: PriveAnnale[];
   titre: string;
+  themeColor?: string;
 }) {
+  const accent = themeColor ?? '#C0112E';
   const [activeAnnaleIdx, setActiveAnnaleIdx] = useState<number | null>(
     annales.length === 1 ? 0 : null
   );
@@ -548,33 +665,38 @@ export function PriveQcmViewer({
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-gray-300 bg-[#FAFBFE] py-16 text-center">
           <FileText className="h-8 w-8 text-gray-400" />
           <p className="text-[15px] font-medium text-gray-500">
-            Aucune s&eacute;rie QCM disponible pour ce cours.
+            Aucune série QCM disponible pour ce cours.
           </p>
         </div>
       </div>
     );
   }
 
-  // Active session
   if (activeAnnaleIdx !== null) {
     return (
       <QcmSession
         key={activeAnnaleIdx}
         annale={annales[activeAnnaleIdx]}
         onQuit={() => setActiveAnnaleIdx(null)}
+        accentColor={accent}
       />
     );
   }
 
-  // Series selection
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C0112E]/10">
-          <HelpCircle className="h-5 w-5 text-[#C0112E]" />
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-xl"
+          style={{ background: accent + '18' }}
+        >
+          <HelpCircle className="h-5 w-5" style={{ color: accent }} />
         </div>
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#C0112E]">
+          <p
+            className="text-[12px] font-semibold uppercase tracking-wider"
+            style={{ color: accent }}
+          >
             QCM
           </p>
           <h1 className="text-[22px] font-extrabold tracking-tight text-[#0F1F4D]">
@@ -584,9 +706,9 @@ export function PriveQcmViewer({
       </div>
 
       <p className="mb-4 text-[14px] text-gray-500">
-        Choisissez une s&eacute;rie pour commencer l&apos;entra&icirc;nement.
-        Chaque question r&eacute;apparait jusqu&apos;&agrave; ce que vous la
-        r&eacute;ussissiez.
+        Choisissez une série pour commencer l&apos;entraînement.
+        Chaque question réapparait jusqu&apos;à ce que vous la
+        réussissiez.
       </p>
 
       <div className="space-y-3">
@@ -596,6 +718,7 @@ export function PriveQcmViewer({
             annale={annale}
             index={idx}
             onStart={() => setActiveAnnaleIdx(idx)}
+            accentColor={accent}
           />
         ))}
       </div>

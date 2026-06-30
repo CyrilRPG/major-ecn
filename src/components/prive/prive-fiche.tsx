@@ -57,12 +57,12 @@ function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: st
 
   return (
     <div className="border-b border-gray-100 last:border-b-0">
-      <div className="grid grid-cols-[180px_1fr]">
-        <div className="border-r border-gray-100 bg-gray-50/50 px-4 py-3 text-[13px] font-semibold text-gray-700">
-          <span dangerouslySetInnerHTML={{ __html: md(row.concept) }} />
+      <div className="flex flex-col sm:flex-row">
+        <div className="shrink-0 border-b border-gray-100 bg-gray-50/50 px-4 py-2.5 sm:w-[180px] sm:border-b-0 sm:border-r sm:py-3">
+          <span className="text-[13px] font-semibold text-gray-700" dangerouslySetInnerHTML={{ __html: md(row.concept) }} />
         </div>
         <div
-          className="px-4 py-3 text-[13px] leading-relaxed text-gray-600"
+          className="min-w-0 flex-1 px-4 py-2.5 text-[13px] leading-relaxed text-gray-600 sm:py-3"
           dangerouslySetInnerHTML={{ __html: md(row.detail_md) }}
         />
       </div>

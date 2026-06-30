@@ -110,8 +110,8 @@ export default function PriveCoursPage() {
       ) : (
         <>
           {tab === 'fiche' && <PriveFicheViewer fiche={content.fiche} titre={cours.titre} />}
-          {tab === 'qcm' && <PriveQcmViewer annales={content.annales} titre={cours.titre} />}
-          {tab === 'flashcards' && <PriveFlashcardSession cards={content.flashcards} titre={cours.titre} />}
+          {tab === 'qcm' && <PriveQcmViewer annales={content.annales} titre={cours.titre} themeColor={matiere?.color} />}
+          {tab === 'flashcards' && <PriveFlashcardSession cards={content.flashcards} titre={cours.titre} themeColor={matiere?.color} />}
         </>
       )}
     </PriveShell>
