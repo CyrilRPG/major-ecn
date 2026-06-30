@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getArticleBySlug, BLOG_ARTICLES, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
+import { getArticleBySlug, getPublishedArticles, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
 import { JsonLd, articleSchema, breadcrumbSchema } from '@/components/seo/json-ld';
 import { ArticleRemuneration } from '@/components/marketing/blog/articles/article-remuneration';
 import { ArticleStructuresPcc } from '@/components/marketing/blog/articles/article-structures-pcc';
@@ -37,8 +37,10 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 3600;
+
 export function generateStaticParams() {
-  return BLOG_ARTICLES.map((a) => ({ slug: a.slug }));
+  return getPublishedArticles().map((a) => ({ slug: a.slug }));
 }
 
 function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArticleBySlug>>) {
@@ -80,6 +82,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) notFound();
+  const today = new Date().toISOString().slice(0, 10);
+  if (article.publishedAt && article.publishedAt > today) notFound();
 
   return (
     <>

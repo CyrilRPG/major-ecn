@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Clock } from 'lucide-react';
-import { BLOG_ARTICLES } from '@/lib/data/blog-articles';
+import { getPublishedArticles } from '@/lib/data/blog-articles';
 
 export function ArticleSidebarPopular({ currentSlug }: { currentSlug: string }) {
-  const popular = [...BLOG_ARTICLES]
+  const popular = [...getPublishedArticles()]
     .filter((a) => a.popularRank != null && a.slug !== currentSlug)
     .sort((a, b) => (a.popularRank ?? 99) - (b.popularRank ?? 99))
     .slice(0, 5);

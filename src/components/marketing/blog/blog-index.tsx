@@ -6,7 +6,7 @@ import {
   Newspaper, Search, Stethoscope,
 } from 'lucide-react';
 import {
-  BLOG_ARTICLES, BLOG_CATEGORIES, BLOG_TOP_THEMES, BLOG_CATEGORY_IMAGE,
+  getPublishedArticles, BLOG_CATEGORIES, BLOG_TOP_THEMES, BLOG_CATEGORY_IMAGE,
   type BlogArticleMeta, type BlogCategory,
 } from '@/lib/data/blog-articles';
 import { NewsletterForm } from './newsletter-form';
@@ -40,11 +40,12 @@ export async function BlogIndex({
   const sp = (await searchParamsPromise) ?? {};
   const activeCat = (sp.cat as BlogCategory | undefined) ?? null;
 
-  const featured = BLOG_ARTICLES.find((a) => a.featured) ?? BLOG_ARTICLES[0];
+  const articles = getPublishedArticles();
+  const featured = articles.find((a) => a.featured) ?? articles[0];
   const visibleArticles = activeCat
-    ? BLOG_ARTICLES.filter((a) => a.category === activeCat)
-    : BLOG_ARTICLES;
-  const popular = [...BLOG_ARTICLES]
+    ? articles.filter((a) => a.category === activeCat)
+    : articles;
+  const popular = [...articles]
     .filter((a) => a.popularRank != null)
     .sort((a, b) => (a.popularRank ?? 99) - (b.popularRank ?? 99))
     .slice(0, 5);

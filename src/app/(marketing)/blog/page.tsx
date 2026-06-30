@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { BlogIndex } from '@/components/marketing/blog/blog-index';
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   alternates: { canonical: '/blog' },
   title: 'Blog Major ECN — Conseils EVC PADHUE',

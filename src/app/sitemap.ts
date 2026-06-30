@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { BLOG_ARTICLES } from '@/lib/data/blog-articles';
+import { getPublishedArticles } from '@/lib/data/blog-articles';
 import { FEATURED_TESTIMONIES } from '@/lib/data/featured-testimonies';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }));
 
-  const blogEntries: MetadataRoute.Sitemap = BLOG_ARTICLES.map((a) => ({
+  const blogEntries: MetadataRoute.Sitemap = getPublishedArticles().map((a) => ({
     url: `${SITE_URL}/blog/${a.slug}`,
     lastModified: now,
     changeFrequency: 'monthly',

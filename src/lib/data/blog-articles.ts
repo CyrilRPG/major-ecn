@@ -56,7 +56,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 11,
     image: '/blog/medecin-planning-revisions-evc.webp',
     readers: 0,
-    publishedAt: '2026-06-30',
+    publishedAt: '2026-07-02',
     featured: true,
   },
   {
@@ -67,7 +67,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 10,
     image: '/blog/medecin-mental-evc.webp',
     readers: 0,
-    publishedAt: '2026-06-30',
+    publishedAt: '2026-07-04',
     featured: true,
   },
   {
@@ -78,7 +78,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 11,
     image: '/blog/medecin-7-erreurs-evc.webp',
     readers: 0,
-    publishedAt: '2026-06-30',
+    publishedAt: '2026-07-06',
     featured: true,
   },
   {
@@ -195,17 +195,27 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
   },
 ];
 
+function isPublished(a: BlogArticleMeta): boolean {
+  if (!a.publishedAt) return true;
+  const today = new Date().toISOString().slice(0, 10);
+  return a.publishedAt <= today;
+}
+
+export function getPublishedArticles(): BlogArticleMeta[] {
+  return BLOG_ARTICLES.filter(isPublished);
+}
+
 export function getArticleBySlug(slug: string): BlogArticleMeta | null {
   return BLOG_ARTICLES.find((a) => a.slug === slug) ?? null;
 }
 
 export function getRelatedArticles(slug: string, limit = 3): BlogArticleMeta[] {
   const current = getArticleBySlug(slug);
-  if (!current) return BLOG_ARTICLES.slice(0, limit);
-  return BLOG_ARTICLES
+  const published = getPublishedArticles();
+  if (!current) return published.slice(0, limit);
+  return published
     .filter((a) => a.slug !== slug)
     .sort((a, b) => {
-      // priorité : même catégorie d'abord, puis lecteurs DESC
       const aSame = a.category === current.category ? 0 : 1;
       const bSame = b.category === current.category ? 0 : 1;
       if (aSame !== bSame) return aSame - bSame;
