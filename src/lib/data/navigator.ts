@@ -8,7 +8,7 @@ export const EDN_FACULTE_ID = 'major-ecn';
 export type NavCours = {
   id: string;
   titre: string;
-  progress: number; // 0..100 (video + fiche coarse)
+  progress: number; // 0..100 weighted
   hasFiche: boolean;
   hasVideo: boolean;
   hasQcm: boolean;
@@ -83,19 +83,48 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
   const qcmSet = new Set((qcmRes.data ?? []).map((r) => r.cours_id));
   const flashSet = new Set((flashRes.data ?? []).map((r) => r.cours_id));
 
+  // User completion data for QCM and flashcards
+  const [qcmAttempts, flashReviews] = coursIds.length
+    ? await Promise.all([
+        supabase
+          .from('qcm_attempts')
+          .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id))')
+          .eq('user_id', profile.id)
+          .in('qcm_questions.qcm_series.cours_id', coursIds),
+        supabase
+          .from('flashcard_reviews')
+          .select('id, flashcard_id, flashcards!inner(cours_id)')
+          .eq('user_id', profile.id)
+          .in('flashcards.cours_id', coursIds),
+      ])
+    : [{ data: [] as { qcm_questions: { qcm_series: { cours_id: string } } }[] },
+       { data: [] as { flashcards: { cours_id: string } }[] }];
+
+  const qcmHitSet = new Set<string>();
+  for (const a of qcmAttempts.data ?? []) qcmHitSet.add((a as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }).qcm_questions.qcm_series.cours_id);
+  const flashHitSet = new Set<string>();
+  for (const r of flashReviews.data ?? []) flashHitSet.add((r as unknown as { flashcards: { cours_id: string } }).flashcards.cours_id);
+
   const buildCours = (m: (typeof colleges)[number]) =>
     [...(m.cours ?? [])]
       .filter((c) => canAccessCours(scope, m.id, c.id))
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
       .map((c) => {
         const cp = c.course_progress?.[0];
-        const done = (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
+        const hasVideo = videoSet.has(c.id);
+        const qcmDone = qcmHitSet.has(c.id) ? 1 : 0;
+        const ficheDone = cp?.fiche_read ? 1 : 0;
+        const flashDone = flashHitSet.has(c.id) ? 1 : 0;
+        const videoDone = cp?.video_watched ? 1 : 0;
+        const progress = hasVideo
+          ? qcmDone * 60 + ficheDone * 10 + flashDone * 15 + videoDone * 15
+          : qcmDone * 70 + ficheDone * 10 + flashDone * 20;
         return {
           id: c.id,
           titre: c.titre,
-          progress: Math.round((done / 2) * 100),
+          progress,
           hasFiche: ficheSet.has(c.id),
-          hasVideo: videoSet.has(c.id),
+          hasVideo,
           hasQcm: qcmSet.has(c.id),
           hasFlashcards: flashSet.has(c.id),
         };

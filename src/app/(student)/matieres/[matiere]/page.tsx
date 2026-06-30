@@ -57,16 +57,24 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   const coursFlashHit = new Set<string>();
   for (const r of reviews ?? []) coursFlashHit.add(r.flashcards.cours_id);
 
+  const { data: videoRows } = coursIds.length
+    ? await supabase.from('videos').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds)
+    : { data: [] as { cours_id: string }[] };
+  const videoAvailSet = new Set((videoRows ?? []).map((r) => r.cours_id));
+
   const Icon = iconFromKey(m.icon_key);
 
   const coursRows: IndexRow[] = cours.map((c, idx) => {
     const p = c.course_progress?.[0];
     const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
-    const steps =
-      (p?.video_watched ? 1 : 0) +
-      (p?.fiche_read ? 1 : 0) +
-      (coursQcmHit.has(c.id) ? 1 : 0) +
-      (coursFlashHit.has(c.id) ? 1 : 0);
+    const hasVideo = videoAvailSet.has(c.id);
+    const qcmDone = coursQcmHit.has(c.id) ? 1 : 0;
+    const ficheDone = p?.fiche_read ? 1 : 0;
+    const flashDone = coursFlashHit.has(c.id) ? 1 : 0;
+    const videoDone = p?.video_watched ? 1 : 0;
+    const progress = hasVideo
+      ? qcmDone * 60 + ficheDone * 10 + flashDone * 15 + videoDone * 15
+      : qcmDone * 70 + ficheDone * 10 + flashDone * 20;
     return {
       id: c.id,
       href: `/cours/${c.id}`,
@@ -78,7 +86,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
         </span>
       ),
       badge: hasContent && !p ? 'Nouveau' : undefined,
-      progress: Math.round((steps / 4) * 100),
+      progress,
     };
   });
 
