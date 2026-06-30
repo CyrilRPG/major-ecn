@@ -99,11 +99,11 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
 
           <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
             <Image
-              src="/blog/infographie-documents-evc.webp"
-              alt="Liste complète des documents à préparer pour les EVC : pièce d'identité, diplôme, diplôme de spécialité, traductions assermentées, attestation B2, documents liés au statut particulier"
-              width={1200}
-              height={1200}
-              className="w-full"
+              src="/blog/infographie-documents-inscription-evc.webp"
+              alt="Documents nécessaires pour l'inscription aux EVC : diplôme ou titre, pièce d'identité, traductions assermentées, formulaire d'inscription CNG, justificatifs complémentaires"
+              width={1587}
+              height={991}
+              className="w-full h-auto"
             />
           </div>
 
@@ -144,9 +144,9 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
           <Image
             src="/blog/infographie-justifier-francais-evc.webp"
             alt="Comment justifier de votre maîtrise du français : TCF/TEF niveau B2, DELF B2 ou DALF, baccalauréat français, diplôme universitaire français, études suivies en français, situation particulière"
-            width={1200}
-            height={1200}
-            className="w-full"
+            width={1177}
+            height={1336}
+            className="w-full h-auto"
           />
         </section>
 
@@ -191,9 +191,9 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
             <Image
               src="/blog/infographie-deroulement-evc.webp"
               alt="Comment se déroulent les EVC : voie concours (liste A) avec 2 épreuves écrites de 2h notées sur 20, et voie interne avec épreuve unique QCM de 2h"
-              width={1200}
-              height={1200}
-              className="w-full"
+              width={1402}
+              height={1122}
+              className="w-full h-auto"
             />
           </div>
 
@@ -335,7 +335,7 @@ function HeroVisual() {
         src="/blog/medecin-documents-evc-hero.webp"
         alt="Médecin consultant des documents pour sa candidature EVC"
         width={1600}
-        height={1067}
+        height={844}
         className="block w-full select-none object-cover object-center"
         priority
       />

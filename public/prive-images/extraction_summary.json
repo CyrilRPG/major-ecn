@@ -1,0 +1,2368 @@
+{
+  "appareil-genital-masculin": [
+    {
+      "file": "p3_img1.png",
+      "page": 3,
+      "width": 1242,
+      "height": 2164,
+      "size": 1612168
+    },
+    {
+      "file": "p4_img2.png",
+      "page": 4,
+      "width": 1193,
+      "height": 1734,
+      "size": 1177234
+    },
+    {
+      "file": "p5_img3.png",
+      "page": 5,
+      "width": 1242,
+      "height": 1537,
+      "size": 1282164
+    },
+    {
+      "file": "p5_img4.png",
+      "page": 5,
+      "width": 1141,
+      "height": 676,
+      "size": 1895298
+    },
+    {
+      "file": "p6_img5.png",
+      "page": 6,
+      "width": 1129,
+      "height": 847,
+      "size": 1909603
+    },
+    {
+      "file": "p6_img6.png",
+      "page": 6,
+      "width": 1242,
+      "height": 688,
+      "size": 870258
+    },
+    {
+      "file": "p7_img7.png",
+      "page": 7,
+      "width": 1202,
+      "height": 981,
+      "size": 537189
+    },
+    {
+      "file": "p7_img8.png",
+      "page": 7,
+      "width": 1227,
+      "height": 758,
+      "size": 460334
+    },
+    {
+      "file": "p8_img9.png",
+      "page": 8,
+      "width": 1021,
+      "height": 912,
+      "size": 1336412
+    },
+    {
+      "file": "p9_img10.png",
+      "page": 9,
+      "width": 1217,
+      "height": 833,
+      "size": 640735
+    },
+    {
+      "file": "p10_img11.png",
+      "page": 10,
+      "width": 1242,
+      "height": 959,
+      "size": 584633
+    },
+    {
+      "file": "p11_img12.png",
+      "page": 11,
+      "width": 1242,
+      "height": 1616,
+      "size": 1231007
+    },
+    {
+      "file": "p12_img13.png",
+      "page": 12,
+      "width": 1242,
+      "height": 1690,
+      "size": 2579069
+    },
+    {
+      "file": "p13_img14.png",
+      "page": 13,
+      "width": 1242,
+      "height": 779,
+      "size": 396859
+    },
+    {
+      "file": "p14_img15.png",
+      "page": 14,
+      "width": 1242,
+      "height": 1497,
+      "size": 674620
+    },
+    {
+      "file": "p14_img16.png",
+      "page": 14,
+      "width": 1242,
+      "height": 847,
+      "size": 372066
+    },
+    {
+      "file": "p15_img17.png",
+      "page": 15,
+      "width": 1201,
+      "height": 749,
+      "size": 412850
+    },
+    {
+      "file": "p16_img18.png",
+      "page": 16,
+      "width": 1146,
+      "height": 798,
+      "size": 949400
+    },
+    {
+      "file": "p16_img19.png",
+      "page": 16,
+      "width": 1177,
+      "height": 523,
+      "size": 1227792
+    },
+    {
+      "file": "p18_img20.png",
+      "page": 18,
+      "width": 602,
+      "height": 659,
+      "size": 595011
+    },
+    {
+      "file": "p18_img21.png",
+      "page": 18,
+      "width": 969,
+      "height": 740,
+      "size": 953665
+    },
+    {
+      "file": "p19_img22.png",
+      "page": 19,
+      "width": 710,
+      "height": 935,
+      "size": 946236
+    },
+    {
+      "file": "p20_img23.png",
+      "page": 20,
+      "width": 773,
+      "height": 542,
+      "size": 1122110
+    },
+    {
+      "file": "p21_img24.png",
+      "page": 21,
+      "width": 1204,
+      "height": 1461,
+      "size": 2151433
+    },
+    {
+      "file": "p22_img25.png",
+      "page": 22,
+      "width": 1242,
+      "height": 1159,
+      "size": 941157
+    },
+    {
+      "file": "p23_img26.png",
+      "page": 23,
+      "width": 1211,
+      "height": 1104,
+      "size": 1059723
+    },
+    {
+      "file": "p24_img27.png",
+      "page": 24,
+      "width": 1168,
+      "height": 629,
+      "size": 561014
+    },
+    {
+      "file": "p25_img28.png",
+      "page": 25,
+      "width": 1242,
+      "height": 755,
+      "size": 1173652
+    },
+    {
+      "file": "p25_img29.png",
+      "page": 25,
+      "width": 955,
+      "height": 627,
+      "size": 1105592
+    },
+    {
+      "file": "p26_img30.png",
+      "page": 26,
+      "width": 516,
+      "height": 542,
+      "size": 244390
+    },
+    {
+      "file": "p27_img31.png",
+      "page": 27,
+      "width": 1185,
+      "height": 1141,
+      "size": 270640
+    },
+    {
+      "file": "p28_img32.png",
+      "page": 28,
+      "width": 1153,
+      "height": 1713,
+      "size": 744323
+    }
+  ],
+  "histologie-appareil-genital": [
+    {
+      "file": "p1_img1.png",
+      "page": 1,
+      "width": 1259,
+      "height": 944,
+      "size": 1164410
+    },
+    {
+      "file": "p2_img2.png",
+      "page": 2,
+      "width": 1343,
+      "height": 1007,
+      "size": 1354194
+    },
+    {
+      "file": "p4_img3.png",
+      "page": 4,
+      "width": 1276,
+      "height": 1338,
+      "size": 1914190
+    },
+    {
+      "file": "p4_img4.png",
+      "page": 4,
+      "width": 1338,
+      "height": 1198,
+      "size": 1894467
+    },
+    {
+      "file": "p5_img5.png",
+      "page": 5,
+      "width": 1338,
+      "height": 1003,
+      "size": 1280271
+    },
+    {
+      "file": "p5_img6.png",
+      "page": 5,
+      "width": 1338,
+      "height": 1003,
+      "size": 1414265
+    },
+    {
+      "file": "p6_img7.png",
+      "page": 6,
+      "width": 1343,
+      "height": 1007,
+      "size": 1587976
+    },
+    {
+      "file": "p7_img8.png",
+      "page": 7,
+      "width": 1344,
+      "height": 1007,
+      "size": 1402555
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 1343,
+      "height": 1007,
+      "size": 1657125
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 1352,
+      "height": 1014,
+      "size": 1407678
+    },
+    {
+      "file": "p12_img11.png",
+      "page": 12,
+      "width": 1284,
+      "height": 1168,
+      "size": 806018
+    },
+    {
+      "file": "p13_img12.png",
+      "page": 13,
+      "width": 1284,
+      "height": 1346,
+      "size": 625174
+    },
+    {
+      "file": "p14_img13.png",
+      "page": 14,
+      "width": 1272,
+      "height": 859,
+      "size": 658390
+    },
+    {
+      "file": "p15_img14.png",
+      "page": 15,
+      "width": 1284,
+      "height": 983,
+      "size": 608217
+    },
+    {
+      "file": "p16_img15.png",
+      "page": 16,
+      "width": 1284,
+      "height": 974,
+      "size": 630740
+    },
+    {
+      "file": "p18_img16.png",
+      "page": 18,
+      "width": 1284,
+      "height": 964,
+      "size": 676321
+    },
+    {
+      "file": "p19_img17.png",
+      "page": 19,
+      "width": 934,
+      "height": 877,
+      "size": 488113
+    },
+    {
+      "file": "p21_img18.png",
+      "page": 21,
+      "width": 807,
+      "height": 837,
+      "size": 393704
+    },
+    {
+      "file": "p22_img19.png",
+      "page": 22,
+      "width": 883,
+      "height": 925,
+      "size": 502103
+    }
+  ],
+  "irc": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 841,
+      "height": 501,
+      "size": 92762
+    },
+    {
+      "file": "p3_img2.png",
+      "page": 3,
+      "width": 940,
+      "height": 346,
+      "size": 135325
+    },
+    {
+      "file": "p3_img3.png",
+      "page": 3,
+      "width": 844,
+      "height": 575,
+      "size": 133831
+    },
+    {
+      "file": "p4_img4.png",
+      "page": 4,
+      "width": 940,
+      "height": 431,
+      "size": 377614
+    },
+    {
+      "file": "p5_img5.png",
+      "page": 5,
+      "width": 940,
+      "height": 515,
+      "size": 147658
+    },
+    {
+      "file": "p5_img6.png",
+      "page": 5,
+      "width": 940,
+      "height": 404,
+      "size": 201010
+    },
+    {
+      "file": "p6_img7.png",
+      "page": 6,
+      "width": 777,
+      "height": 886,
+      "size": 723744
+    },
+    {
+      "file": "p7_img8.png",
+      "page": 7,
+      "width": 940,
+      "height": 758,
+      "size": 243062
+    },
+    {
+      "file": "p7_img9.png",
+      "page": 7,
+      "width": 778,
+      "height": 612,
+      "size": 181831
+    },
+    {
+      "file": "p8_img10.png",
+      "page": 8,
+      "width": 940,
+      "height": 423,
+      "size": 334090
+    },
+    {
+      "file": "p9_img11.png",
+      "page": 9,
+      "width": 940,
+      "height": 467,
+      "size": 270070
+    },
+    {
+      "file": "p9_img12.png",
+      "page": 9,
+      "width": 940,
+      "height": 377,
+      "size": 135929
+    },
+    {
+      "file": "p10_img13.png",
+      "page": 10,
+      "width": 940,
+      "height": 1104,
+      "size": 1431683
+    },
+    {
+      "file": "p15_img14.png",
+      "page": 15,
+      "width": 940,
+      "height": 513,
+      "size": 296947
+    },
+    {
+      "file": "p15_img15.png",
+      "page": 15,
+      "width": 479,
+      "height": 162,
+      "size": 68626
+    },
+    {
+      "file": "p17_img16.png",
+      "page": 17,
+      "width": 940,
+      "height": 508,
+      "size": 314119
+    },
+    {
+      "file": "p18_img17.png",
+      "page": 18,
+      "width": 545,
+      "height": 305,
+      "size": 90362
+    },
+    {
+      "file": "p19_img18.png",
+      "page": 19,
+      "width": 940,
+      "height": 525,
+      "size": 176418
+    },
+    {
+      "file": "p20_img19.png",
+      "page": 20,
+      "width": 940,
+      "height": 525,
+      "size": 202406
+    },
+    {
+      "file": "p22_img20.png",
+      "page": 22,
+      "width": 940,
+      "height": 581,
+      "size": 209684
+    },
+    {
+      "file": "p23_img21.png",
+      "page": 23,
+      "width": 266,
+      "height": 522,
+      "size": 113331
+    },
+    {
+      "file": "p24_img22.png",
+      "page": 24,
+      "width": 940,
+      "height": 602,
+      "size": 376368
+    },
+    {
+      "file": "p25_img23.png",
+      "page": 25,
+      "width": 807,
+      "height": 585,
+      "size": 212270
+    },
+    {
+      "file": "p26_img24.png",
+      "page": 26,
+      "width": 583,
+      "height": 369,
+      "size": 142310
+    },
+    {
+      "file": "p28_img25.png",
+      "page": 28,
+      "width": 940,
+      "height": 460,
+      "size": 262534
+    },
+    {
+      "file": "p29_img26.png",
+      "page": 29,
+      "width": 940,
+      "height": 529,
+      "size": 235380
+    }
+  ],
+  "andrologie": [
+    {
+      "file": "p3_img1.png",
+      "page": 3,
+      "width": 646,
+      "height": 450,
+      "size": 140214
+    },
+    {
+      "file": "p5_img2.png",
+      "page": 5,
+      "width": 586,
+      "height": 387,
+      "size": 250306
+    },
+    {
+      "file": "p6_img3.png",
+      "page": 6,
+      "width": 607,
+      "height": 293,
+      "size": 167599
+    },
+    {
+      "file": "p6_img4.png",
+      "page": 6,
+      "width": 568,
+      "height": 489,
+      "size": 513591
+    },
+    {
+      "file": "p7_img5.png",
+      "page": 7,
+      "width": 625,
+      "height": 453,
+      "size": 506177
+    },
+    {
+      "file": "p8_img6.png",
+      "page": 8,
+      "width": 608,
+      "height": 506,
+      "size": 535053
+    },
+    {
+      "file": "p8_img7.png",
+      "page": 8,
+      "width": 644,
+      "height": 313,
+      "size": 231336
+    },
+    {
+      "file": "p9_img8.png",
+      "page": 9,
+      "width": 658,
+      "height": 357,
+      "size": 109922
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 507,
+      "height": 264,
+      "size": 88936
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 488,
+      "height": 354,
+      "size": 300528
+    },
+    {
+      "file": "p11_img11.png",
+      "page": 11,
+      "width": 626,
+      "height": 399,
+      "size": 87950
+    },
+    {
+      "file": "p11_img12.png",
+      "page": 11,
+      "width": 495,
+      "height": 344,
+      "size": 44485
+    },
+    {
+      "file": "p12_img13.png",
+      "page": 12,
+      "width": 491,
+      "height": 342,
+      "size": 100574
+    },
+    {
+      "file": "p12_img14.png",
+      "page": 12,
+      "width": 298,
+      "height": 246,
+      "size": 79469
+    },
+    {
+      "file": "p12_img15.png",
+      "page": 12,
+      "width": 714,
+      "height": 474,
+      "size": 341864
+    },
+    {
+      "file": "p13_img16.png",
+      "page": 13,
+      "width": 607,
+      "height": 384,
+      "size": 45655
+    },
+    {
+      "file": "p14_img17.png",
+      "page": 14,
+      "width": 607,
+      "height": 440,
+      "size": 180581
+    },
+    {
+      "file": "p15_img18.png",
+      "page": 15,
+      "width": 618,
+      "height": 466,
+      "size": 172711
+    },
+    {
+      "file": "p15_img19.png",
+      "page": 15,
+      "width": 541,
+      "height": 248,
+      "size": 64889
+    }
+  ],
+  "regulation-potassium": [
+    {
+      "file": "p3_img1.png",
+      "page": 3,
+      "width": 757,
+      "height": 152,
+      "size": 67425
+    },
+    {
+      "file": "p5_img2.png",
+      "page": 5,
+      "width": 504,
+      "height": 346,
+      "size": 58136
+    },
+    {
+      "file": "p7_img3.png",
+      "page": 7,
+      "width": 865,
+      "height": 500,
+      "size": 253406
+    },
+    {
+      "file": "p8_img4.png",
+      "page": 8,
+      "width": 508,
+      "height": 294,
+      "size": 81655
+    },
+    {
+      "file": "p9_img5.png",
+      "page": 9,
+      "width": 454,
+      "height": 300,
+      "size": 69161
+    },
+    {
+      "file": "p10_img6.png",
+      "page": 10,
+      "width": 370,
+      "height": 352,
+      "size": 108524
+    },
+    {
+      "file": "p11_img7.png",
+      "page": 11,
+      "width": 532,
+      "height": 394,
+      "size": 94700
+    },
+    {
+      "file": "p12_img8.png",
+      "page": 12,
+      "width": 482,
+      "height": 201,
+      "size": 44707
+    },
+    {
+      "file": "p13_img9.png",
+      "page": 13,
+      "width": 438,
+      "height": 398,
+      "size": 104060
+    },
+    {
+      "file": "p14_img10.png",
+      "page": 14,
+      "width": 1184,
+      "height": 454,
+      "size": 323742
+    },
+    {
+      "file": "p15_img11.png",
+      "page": 15,
+      "width": 1143,
+      "height": 701,
+      "size": 199214
+    },
+    {
+      "file": "p16_img12.png",
+      "page": 16,
+      "width": 665,
+      "height": 461,
+      "size": 205851
+    },
+    {
+      "file": "p17_img13.png",
+      "page": 17,
+      "width": 1108,
+      "height": 741,
+      "size": 213168
+    },
+    {
+      "file": "p18_img14.png",
+      "page": 18,
+      "width": 705,
+      "height": 530,
+      "size": 195797
+    },
+    {
+      "file": "p19_img15.png",
+      "page": 19,
+      "width": 759,
+      "height": 584,
+      "size": 922045
+    },
+    {
+      "file": "p20_img16.png",
+      "page": 20,
+      "width": 749,
+      "height": 563,
+      "size": 84487
+    },
+    {
+      "file": "p21_img17.png",
+      "page": 21,
+      "width": 592,
+      "height": 643,
+      "size": 179135
+    },
+    {
+      "file": "p24_img18.png",
+      "page": 24,
+      "width": 1194,
+      "height": 877,
+      "size": 381501
+    }
+  ],
+  "filtration-glomerulaire": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 345,
+      "height": 213,
+      "size": 66635
+    },
+    {
+      "file": "p4_img2.png",
+      "page": 4,
+      "width": 1050,
+      "height": 938,
+      "size": 585458
+    },
+    {
+      "file": "p5_img3.png",
+      "page": 5,
+      "width": 1564,
+      "height": 1026,
+      "size": 427004
+    },
+    {
+      "file": "p6_img4.png",
+      "page": 6,
+      "width": 1426,
+      "height": 1018,
+      "size": 1141372
+    },
+    {
+      "file": "p6_img5.png",
+      "page": 6,
+      "width": 1446,
+      "height": 1004,
+      "size": 1815023
+    },
+    {
+      "file": "p7_img6.png",
+      "page": 7,
+      "width": 279,
+      "height": 186,
+      "size": 114086
+    },
+    {
+      "file": "p7_img7.png",
+      "page": 7,
+      "width": 980,
+      "height": 944,
+      "size": 893507
+    },
+    {
+      "file": "p8_img8.png",
+      "page": 8,
+      "width": 1546,
+      "height": 842,
+      "size": 807316
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 1512,
+      "height": 862,
+      "size": 1041750
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 1046,
+      "height": 816,
+      "size": 572420
+    },
+    {
+      "file": "p12_img11.png",
+      "page": 12,
+      "width": 780,
+      "height": 674,
+      "size": 551980
+    },
+    {
+      "file": "p13_img12.png",
+      "page": 13,
+      "width": 1502,
+      "height": 952,
+      "size": 263892
+    },
+    {
+      "file": "p14_img13.png",
+      "page": 14,
+      "width": 1538,
+      "height": 1166,
+      "size": 307980
+    },
+    {
+      "file": "p15_img14.png",
+      "page": 15,
+      "width": 1406,
+      "height": 1136,
+      "size": 779599
+    },
+    {
+      "file": "p17_img15.png",
+      "page": 17,
+      "width": 1538,
+      "height": 1082,
+      "size": 291104
+    },
+    {
+      "file": "p18_img16.png",
+      "page": 18,
+      "width": 1340,
+      "height": 458,
+      "size": 81781
+    },
+    {
+      "file": "p18_img17.png",
+      "page": 18,
+      "width": 1352,
+      "height": 496,
+      "size": 83211
+    },
+    {
+      "file": "p19_img18.png",
+      "page": 19,
+      "width": 600,
+      "height": 842,
+      "size": 532736
+    },
+    {
+      "file": "p21_img19.png",
+      "page": 21,
+      "width": 796,
+      "height": 988,
+      "size": 1753229
+    },
+    {
+      "file": "p24_img20.png",
+      "page": 24,
+      "width": 1420,
+      "height": 1146,
+      "size": 224598
+    },
+    {
+      "file": "p27_img21.png",
+      "page": 27,
+      "width": 1432,
+      "height": 1126,
+      "size": 1453066
+    }
+  ],
+  "clairance-renale": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 992,
+      "height": 686,
+      "size": 487180
+    },
+    {
+      "file": "p3_img2.png",
+      "page": 3,
+      "width": 920,
+      "height": 570,
+      "size": 221585
+    },
+    {
+      "file": "p4_img3.png",
+      "page": 4,
+      "width": 1092,
+      "height": 768,
+      "size": 324981
+    },
+    {
+      "file": "p5_img4.png",
+      "page": 5,
+      "width": 1115,
+      "height": 765,
+      "size": 325813
+    },
+    {
+      "file": "p6_img5.png",
+      "page": 6,
+      "width": 1016,
+      "height": 634,
+      "size": 358571
+    },
+    {
+      "file": "p7_img6.png",
+      "page": 7,
+      "width": 1131,
+      "height": 585,
+      "size": 360018
+    },
+    {
+      "file": "p7_img7.png",
+      "page": 7,
+      "width": 1047,
+      "height": 718,
+      "size": 473944
+    },
+    {
+      "file": "p8_img8.png",
+      "page": 8,
+      "width": 1024,
+      "height": 855,
+      "size": 379973
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 1087,
+      "height": 830,
+      "size": 363428
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 1131,
+      "height": 688,
+      "size": 321015
+    },
+    {
+      "file": "p10_img11.png",
+      "page": 10,
+      "width": 967,
+      "height": 703,
+      "size": 297979
+    },
+    {
+      "file": "p11_img12.png",
+      "page": 11,
+      "width": 1092,
+      "height": 722,
+      "size": 249254
+    },
+    {
+      "file": "p12_img13.png",
+      "page": 12,
+      "width": 1127,
+      "height": 662,
+      "size": 251908
+    },
+    {
+      "file": "p13_img14.png",
+      "page": 13,
+      "width": 1162,
+      "height": 629,
+      "size": 304799
+    },
+    {
+      "file": "p14_img15.png",
+      "page": 14,
+      "width": 1153,
+      "height": 832,
+      "size": 255823
+    },
+    {
+      "file": "p15_img16.png",
+      "page": 15,
+      "width": 1047,
+      "height": 746,
+      "size": 536106
+    },
+    {
+      "file": "p15_img17.png",
+      "page": 15,
+      "width": 1118,
+      "height": 536,
+      "size": 361810
+    },
+    {
+      "file": "p16_img18.png",
+      "page": 16,
+      "width": 1140,
+      "height": 394,
+      "size": 131070
+    },
+    {
+      "file": "p17_img19.png",
+      "page": 17,
+      "width": 1149,
+      "height": 661,
+      "size": 417266
+    },
+    {
+      "file": "p17_img20.png",
+      "page": 17,
+      "width": 1164,
+      "height": 688,
+      "size": 352442
+    },
+    {
+      "file": "p18_img21.png",
+      "page": 18,
+      "width": 1075,
+      "height": 589,
+      "size": 195363
+    },
+    {
+      "file": "p18_img22.png",
+      "page": 18,
+      "width": 1060,
+      "height": 625,
+      "size": 268453
+    }
+  ],
+  "medecine-nucleaire-ue5": [
+    {
+      "file": "p1_img1.png",
+      "page": 1,
+      "width": 778,
+      "height": 523,
+      "size": 161919
+    },
+    {
+      "file": "p1_img2.png",
+      "page": 1,
+      "width": 758,
+      "height": 393,
+      "size": 56432
+    },
+    {
+      "file": "p1_img3.png",
+      "page": 1,
+      "width": 699,
+      "height": 428,
+      "size": 48851
+    },
+    {
+      "file": "p1_img4.png",
+      "page": 1,
+      "width": 908,
+      "height": 677,
+      "size": 253849
+    },
+    {
+      "file": "p1_img5.png",
+      "page": 1,
+      "width": 908,
+      "height": 679,
+      "size": 486839
+    },
+    {
+      "file": "p1_img6.png",
+      "page": 1,
+      "width": 1428,
+      "height": 783,
+      "size": 985920
+    },
+    {
+      "file": "p1_img7.png",
+      "page": 1,
+      "width": 908,
+      "height": 681,
+      "size": 234489
+    },
+    {
+      "file": "p1_img8.png",
+      "page": 1,
+      "width": 1407,
+      "height": 1088,
+      "size": 360014
+    },
+    {
+      "file": "p1_img9.png",
+      "page": 1,
+      "width": 780,
+      "height": 326,
+      "size": 144000
+    },
+    {
+      "file": "p1_img10.png",
+      "page": 1,
+      "width": 524,
+      "height": 576,
+      "size": 263938
+    },
+    {
+      "file": "p1_img11.png",
+      "page": 1,
+      "width": 774,
+      "height": 328,
+      "size": 99970
+    },
+    {
+      "file": "p1_img12.png",
+      "page": 1,
+      "width": 796,
+      "height": 318,
+      "size": 161197
+    },
+    {
+      "file": "p1_img13.png",
+      "page": 1,
+      "width": 474,
+      "height": 474,
+      "size": 186943
+    },
+    {
+      "file": "p1_img14.png",
+      "page": 1,
+      "width": 610,
+      "height": 456,
+      "size": 53717
+    },
+    {
+      "file": "p1_img15.png",
+      "page": 1,
+      "width": 377,
+      "height": 398,
+      "size": 116915
+    },
+    {
+      "file": "p1_img16.png",
+      "page": 1,
+      "width": 479,
+      "height": 320,
+      "size": 121298
+    },
+    {
+      "file": "p1_img17.png",
+      "page": 1,
+      "width": 740,
+      "height": 556,
+      "size": 287230
+    },
+    {
+      "file": "p1_img18.png",
+      "page": 1,
+      "width": 660,
+      "height": 249,
+      "size": 134095
+    },
+    {
+      "file": "p1_img19.png",
+      "page": 1,
+      "width": 674,
+      "height": 500,
+      "size": 210410
+    },
+    {
+      "file": "p1_img20.png",
+      "page": 1,
+      "width": 703,
+      "height": 528,
+      "size": 105981
+    },
+    {
+      "file": "p1_img21.png",
+      "page": 1,
+      "width": 701,
+      "height": 521,
+      "size": 164058
+    }
+  ],
+  "bilan-sodium": [
+    {
+      "file": "p3_img1.png",
+      "page": 3,
+      "width": 576,
+      "height": 735,
+      "size": 233878
+    },
+    {
+      "file": "p4_img2.png",
+      "page": 4,
+      "width": 732,
+      "height": 258,
+      "size": 139539
+    },
+    {
+      "file": "p5_img3.png",
+      "page": 5,
+      "width": 939,
+      "height": 697,
+      "size": 548998
+    },
+    {
+      "file": "p6_img4.png",
+      "page": 6,
+      "width": 851,
+      "height": 726,
+      "size": 425376
+    },
+    {
+      "file": "p7_img5.png",
+      "page": 7,
+      "width": 678,
+      "height": 463,
+      "size": 126079
+    },
+    {
+      "file": "p8_img6.png",
+      "page": 8,
+      "width": 536,
+      "height": 367,
+      "size": 86320
+    },
+    {
+      "file": "p8_img7.png",
+      "page": 8,
+      "width": 773,
+      "height": 581,
+      "size": 395041
+    },
+    {
+      "file": "p9_img8.png",
+      "page": 9,
+      "width": 933,
+      "height": 717,
+      "size": 62934
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 526,
+      "height": 379,
+      "size": 175395
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 866,
+      "height": 642,
+      "size": 264451
+    },
+    {
+      "file": "p11_img11.png",
+      "page": 11,
+      "width": 688,
+      "height": 472,
+      "size": 236023
+    },
+    {
+      "file": "p11_img12.png",
+      "page": 11,
+      "width": 927,
+      "height": 695,
+      "size": 70464
+    },
+    {
+      "file": "p12_img13.png",
+      "page": 12,
+      "width": 536,
+      "height": 366,
+      "size": 84092
+    },
+    {
+      "file": "p12_img14.png",
+      "page": 12,
+      "width": 522,
+      "height": 392,
+      "size": 159101
+    },
+    {
+      "file": "p12_img15.png",
+      "page": 12,
+      "width": 580,
+      "height": 397,
+      "size": 122154
+    },
+    {
+      "file": "p13_img16.png",
+      "page": 13,
+      "width": 539,
+      "height": 379,
+      "size": 110177
+    },
+    {
+      "file": "p13_img17.png",
+      "page": 13,
+      "width": 598,
+      "height": 429,
+      "size": 115895
+    },
+    {
+      "file": "p14_img18.png",
+      "page": 14,
+      "width": 755,
+      "height": 525,
+      "size": 465878
+    },
+    {
+      "file": "p17_img19.png",
+      "page": 17,
+      "width": 939,
+      "height": 693,
+      "size": 461507
+    },
+    {
+      "file": "p19_img20.png",
+      "page": 19,
+      "width": 668,
+      "height": 679,
+      "size": 293940
+    },
+    {
+      "file": "p21_img21.png",
+      "page": 21,
+      "width": 978,
+      "height": 732,
+      "size": 71399
+    },
+    {
+      "file": "p22_img22.png",
+      "page": 22,
+      "width": 706,
+      "height": 560,
+      "size": 298274
+    },
+    {
+      "file": "p26_img23.png",
+      "page": 26,
+      "width": 972,
+      "height": 422,
+      "size": 160822
+    }
+  ],
+  "desordres-hydroelectrolytiques": [
+    {
+      "file": "p3_img1.png",
+      "page": 3,
+      "width": 841,
+      "height": 631,
+      "size": 270257
+    },
+    {
+      "file": "p4_img2.png",
+      "page": 4,
+      "width": 759,
+      "height": 623,
+      "size": 358856
+    },
+    {
+      "file": "p5_img3.png",
+      "page": 5,
+      "width": 567,
+      "height": 133,
+      "size": 62145
+    },
+    {
+      "file": "p6_img4.png",
+      "page": 6,
+      "width": 841,
+      "height": 631,
+      "size": 451539
+    },
+    {
+      "file": "p8_img5.png",
+      "page": 8,
+      "width": 723,
+      "height": 542,
+      "size": 82102
+    },
+    {
+      "file": "p9_img6.png",
+      "page": 9,
+      "width": 841,
+      "height": 631,
+      "size": 491424
+    },
+    {
+      "file": "p13_img7.png",
+      "page": 13,
+      "width": 841,
+      "height": 631,
+      "size": 397144
+    },
+    {
+      "file": "p13_img8.png",
+      "page": 13,
+      "width": 841,
+      "height": 631,
+      "size": 386740
+    },
+    {
+      "file": "p16_img9.png",
+      "page": 16,
+      "width": 841,
+      "height": 631,
+      "size": 357302
+    },
+    {
+      "file": "p18_img10.png",
+      "page": 18,
+      "width": 841,
+      "height": 631,
+      "size": 175945
+    },
+    {
+      "file": "p21_img11.png",
+      "page": 21,
+      "width": 787,
+      "height": 587,
+      "size": 225427
+    },
+    {
+      "file": "p26_img12.png",
+      "page": 26,
+      "width": 760,
+      "height": 570,
+      "size": 62724
+    },
+    {
+      "file": "p28_img13.png",
+      "page": 28,
+      "width": 760,
+      "height": 570,
+      "size": 91875
+    },
+    {
+      "file": "p28_img14.png",
+      "page": 28,
+      "width": 760,
+      "height": 570,
+      "size": 95646
+    },
+    {
+      "file": "p29_img15.png",
+      "page": 29,
+      "width": 759,
+      "height": 569,
+      "size": 83243
+    },
+    {
+      "file": "p29_img16.png",
+      "page": 29,
+      "width": 759,
+      "height": 569,
+      "size": 95494
+    },
+    {
+      "file": "p37_img17.png",
+      "page": 37,
+      "width": 755,
+      "height": 563,
+      "size": 224110
+    }
+  ],
+  "pharmacologie-ue5": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 348,
+      "height": 81,
+      "size": 25580
+    },
+    {
+      "file": "p2_img2.png",
+      "page": 2,
+      "width": 351,
+      "height": 99,
+      "size": 19010
+    },
+    {
+      "file": "p3_img3.png",
+      "page": 3,
+      "width": 351,
+      "height": 226,
+      "size": 55956
+    },
+    {
+      "file": "p4_img4.png",
+      "page": 4,
+      "width": 234,
+      "height": 306,
+      "size": 110030
+    },
+    {
+      "file": "p6_img5.png",
+      "page": 6,
+      "width": 269,
+      "height": 228,
+      "size": 98519
+    },
+    {
+      "file": "p12_img6.png",
+      "page": 12,
+      "width": 298,
+      "height": 253,
+      "size": 38971
+    },
+    {
+      "file": "p15_img7.png",
+      "page": 15,
+      "width": 340,
+      "height": 256,
+      "size": 63664
+    }
+  ],
+  "perinee-femme": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 707,
+      "height": 468,
+      "size": 193251
+    },
+    {
+      "file": "p3_img2.png",
+      "page": 3,
+      "width": 676,
+      "height": 733,
+      "size": 411682
+    },
+    {
+      "file": "p5_img3.png",
+      "page": 5,
+      "width": 967,
+      "height": 699,
+      "size": 749255
+    },
+    {
+      "file": "p6_img4.png",
+      "page": 6,
+      "width": 1076,
+      "height": 901,
+      "size": 359651
+    },
+    {
+      "file": "p6_img5.png",
+      "page": 6,
+      "width": 1192,
+      "height": 833,
+      "size": 762770
+    },
+    {
+      "file": "p7_img6.png",
+      "page": 7,
+      "width": 1067,
+      "height": 922,
+      "size": 592519
+    },
+    {
+      "file": "p7_img7.png",
+      "page": 7,
+      "width": 1188,
+      "height": 817,
+      "size": 1096217
+    }
+  ],
+  "petit-bassin": [
+    {
+      "file": "p2_img1.png",
+      "page": 2,
+      "width": 797,
+      "height": 740,
+      "size": 362803
+    },
+    {
+      "file": "p3_img2.png",
+      "page": 3,
+      "width": 657,
+      "height": 557,
+      "size": 363642
+    },
+    {
+      "file": "p4_img3.png",
+      "page": 4,
+      "width": 584,
+      "height": 624,
+      "size": 195497
+    },
+    {
+      "file": "p5_img4.png",
+      "page": 5,
+      "width": 697,
+      "height": 708,
+      "size": 326129
+    },
+    {
+      "file": "p7_img5.png",
+      "page": 7,
+      "width": 631,
+      "height": 768,
+      "size": 301295
+    },
+    {
+      "file": "p9_img6.png",
+      "page": 9,
+      "width": 521,
+      "height": 454,
+      "size": 168550
+    },
+    {
+      "file": "p10_img7.png",
+      "page": 10,
+      "width": 528,
+      "height": 341,
+      "size": 136713
+    },
+    {
+      "file": "p10_img8.png",
+      "page": 10,
+      "width": 527,
+      "height": 381,
+      "size": 147124
+    }
+  ],
+  "semiologie-urologique": [
+    {
+      "file": "p6_img1.png",
+      "page": 6,
+      "width": 118,
+      "height": 139,
+      "size": 30216
+    },
+    {
+      "file": "p6_img2.png",
+      "page": 6,
+      "width": 118,
+      "height": 132,
+      "size": 41870
+    },
+    {
+      "file": "p6_img3.png",
+      "page": 6,
+      "width": 117,
+      "height": 126,
+      "size": 39669
+    },
+    {
+      "file": "p7_img4.png",
+      "page": 7,
+      "width": 428,
+      "height": 249,
+      "size": 19427
+    },
+    {
+      "file": "p7_img5.png",
+      "page": 7,
+      "width": 252,
+      "height": 338,
+      "size": 79566
+    },
+    {
+      "file": "p8_img6.png",
+      "page": 8,
+      "width": 427,
+      "height": 249,
+      "size": 19527
+    },
+    {
+      "file": "p8_img7.png",
+      "page": 8,
+      "width": 325,
+      "height": 281,
+      "size": 43501
+    },
+    {
+      "file": "p9_img8.png",
+      "page": 9,
+      "width": 456,
+      "height": 421,
+      "size": 176721
+    },
+    {
+      "file": "p9_img9.png",
+      "page": 9,
+      "width": 709,
+      "height": 373,
+      "size": 535341
+    },
+    {
+      "file": "p10_img10.png",
+      "page": 10,
+      "width": 241,
+      "height": 259,
+      "size": 81541
+    },
+    {
+      "file": "p10_img11.png",
+      "page": 10,
+      "width": 363,
+      "height": 281,
+      "size": 123985
+    },
+    {
+      "file": "p10_img12.png",
+      "page": 10,
+      "width": 342,
+      "height": 236,
+      "size": 118473
+    },
+    {
+      "file": "p10_img13.png",
+      "page": 10,
+      "width": 622,
+      "height": 174,
+      "size": 49115
+    },
+    {
+      "file": "p13_img14.png",
+      "page": 13,
+      "width": 436,
+      "height": 234,
+      "size": 91571
+    },
+    {
+      "file": "p14_img15.png",
+      "page": 14,
+      "width": 750,
+      "height": 489,
+      "size": 321442
+    },
+    {
+      "file": "p14_img16.png",
+      "page": 14,
+      "width": 1068,
+      "height": 1152,
+      "size": 557148
+    },
+    {
+      "file": "p16_img17.png",
+      "page": 16,
+      "width": 1328,
+      "height": 816,
+      "size": 1786036
+    },
+    {
+      "file": "p17_img18.png",
+      "page": 17,
+      "width": 730,
+      "height": 448,
+      "size": 557874
+    },
+    {
+      "file": "p17_img19.png",
+      "page": 17,
+      "width": 737,
+      "height": 434,
+      "size": 523361
+    },
+    {
+      "file": "p18_img20.png",
+      "page": 18,
+      "width": 626,
+      "height": 530,
+      "size": 608271
+    },
+    {
+      "file": "p19_img21.png",
+      "page": 19,
+      "width": 1320,
+      "height": 928,
+      "size": 1459197
+    },
+    {
+      "file": "p20_img22.png",
+      "page": 20,
+      "width": 1238,
+      "height": 928,
+      "size": 643986
+    },
+    {
+      "file": "p22_img23.png",
+      "page": 22,
+      "width": 634,
+      "height": 602,
+      "size": 777974
+    },
+    {
+      "file": "p22_img24.png",
+      "page": 22,
+      "width": 1212,
+      "height": 740,
+      "size": 553823
+    }
+  ],
+  "ira-fonctionnelle": [
+    {
+      "file": "p10_img1.png",
+      "page": 10,
+      "width": 428,
+      "height": 326,
+      "size": 201606
+    },
+    {
+      "file": "p10_img2.png",
+      "page": 10,
+      "width": 694,
+      "height": 490,
+      "size": 115619
+    },
+    {
+      "file": "p12_img3.png",
+      "page": 12,
+      "width": 900,
+      "height": 570,
+      "size": 292776
+    },
+    {
+      "file": "p13_img4.png",
+      "page": 13,
+      "width": 934,
+      "height": 680,
+      "size": 137059
+    },
+    {
+      "file": "p15_img5.png",
+      "page": 15,
+      "width": 1320,
+      "height": 728,
+      "size": 139382
+    },
+    {
+      "file": "p16_img6.png",
+      "page": 16,
+      "width": 1320,
+      "height": 706,
+      "size": 155417
+    },
+    {
+      "file": "p17_img7.png",
+      "page": 17,
+      "width": 1320,
+      "height": 700,
+      "size": 306211
+    },
+    {
+      "file": "p18_img8.png",
+      "page": 18,
+      "width": 1320,
+      "height": 770,
+      "size": 540545
+    },
+    {
+      "file": "p18_img9.png",
+      "page": 18,
+      "width": 1286,
+      "height": 712,
+      "size": 334685
+    },
+    {
+      "file": "p19_img10.png",
+      "page": 19,
+      "width": 1320,
+      "height": 721,
+      "size": 508418
+    },
+    {
+      "file": "p19_img11.png",
+      "page": 19,
+      "width": 1320,
+      "height": 740,
+      "size": 296007
+    },
+    {
+      "file": "p20_img12.png",
+      "page": 20,
+      "width": 958,
+      "height": 522,
+      "size": 223896
+    },
+    {
+      "file": "p20_img13.png",
+      "page": 20,
+      "width": 1320,
+      "height": 573,
+      "size": 602293
+    },
+    {
+      "file": "p22_img14.png",
+      "page": 22,
+      "width": 978,
+      "height": 590,
+      "size": 171743
+    },
+    {
+      "file": "p23_img15.png",
+      "page": 23,
+      "width": 724,
+      "height": 388,
+      "size": 101784
+    },
+    {
+      "file": "p24_img16.png",
+      "page": 24,
+      "width": 951,
+      "height": 534,
+      "size": 109463
+    }
+  ],
+  "role-rein-equilibre-acido-basique": [],
+  "miction": [
+    {
+      "file": "p1_img1.png",
+      "page": 1,
+      "width": 1618,
+      "height": 1001,
+      "size": 648414
+    },
+    {
+      "file": "p1_img2.png",
+      "page": 1,
+      "width": 1121,
+      "height": 813,
+      "size": 203525
+    },
+    {
+      "file": "p1_img3.png",
+      "page": 1,
+      "width": 1106,
+      "height": 822,
+      "size": 367456
+    },
+    {
+      "file": "p1_img4.png",
+      "page": 1,
+      "width": 1146,
+      "height": 914,
+      "size": 425743
+    },
+    {
+      "file": "p1_img5.png",
+      "page": 1,
+      "width": 1090,
+      "height": 664,
+      "size": 310199
+    },
+    {
+      "file": "p1_img6.png",
+      "page": 1,
+      "width": 1390,
+      "height": 948,
+      "size": 638536
+    },
+    {
+      "file": "p1_img7.png",
+      "page": 1,
+      "width": 1084,
+      "height": 673,
+      "size": 355535
+    },
+    {
+      "file": "p1_img8.png",
+      "page": 1,
+      "width": 1338,
+      "height": 954,
+      "size": 336208
+    },
+    {
+      "file": "p1_img9.png",
+      "page": 1,
+      "width": 803,
+      "height": 759,
+      "size": 305710
+    },
+    {
+      "file": "p1_img10.png",
+      "page": 1,
+      "width": 969,
+      "height": 718,
+      "size": 368682
+    },
+    {
+      "file": "p1_img11.png",
+      "page": 1,
+      "width": 1282,
+      "height": 770,
+      "size": 328502
+    },
+    {
+      "file": "p1_img12.png",
+      "page": 1,
+      "width": 1508,
+      "height": 1116,
+      "size": 578852
+    },
+    {
+      "file": "p1_img13.png",
+      "page": 1,
+      "width": 1455,
+      "height": 992,
+      "size": 618705
+    },
+    {
+      "file": "p1_img14.png",
+      "page": 1,
+      "width": 1454,
+      "height": 1080,
+      "size": 635179
+    }
+  ],
+  "retroperitoine": [
+    {
+      "file": "p1_img1.png",
+      "page": 1,
+      "width": 326,
+      "height": 416,
+      "size": 95907
+    },
+    {
+      "file": "p1_img2.png",
+      "page": 1,
+      "width": 327,
+      "height": 377,
+      "size": 122788
+    },
+    {
+      "file": "p1_img3.png",
+      "page": 1,
+      "width": 654,
+      "height": 495,
+      "size": 261695
+    },
+    {
+      "file": "p1_img4.png",
+      "page": 1,
+      "width": 511,
+      "height": 128,
+      "size": 45043
+    },
+    {
+      "file": "p1_img5.png",
+      "page": 1,
+      "width": 1381,
+      "height": 450,
+      "size": 213542
+    },
+    {
+      "file": "p1_img6.png",
+      "page": 1,
+      "width": 777,
+      "height": 769,
+      "size": 459312
+    },
+    {
+      "file": "p1_img7.png",
+      "page": 1,
+      "width": 606,
+      "height": 449,
+      "size": 157736
+    },
+    {
+      "file": "p1_img8.png",
+      "page": 1,
+      "width": 386,
+      "height": 415,
+      "size": 135396
+    },
+    {
+      "file": "p1_img9.png",
+      "page": 1,
+      "width": 656,
+      "height": 403,
+      "size": 165715
+    },
+    {
+      "file": "p1_img10.png",
+      "page": 1,
+      "width": 308,
+      "height": 295,
+      "size": 72536
+    },
+    {
+      "file": "p1_img11.png",
+      "page": 1,
+      "width": 654,
+      "height": 433,
+      "size": 227476
+    },
+    {
+      "file": "p1_img12.png",
+      "page": 1,
+      "width": 651,
+      "height": 123,
+      "size": 39885
+    },
+    {
+      "file": "p1_img13.png",
+      "page": 1,
+      "width": 594,
+      "height": 561,
+      "size": 263731
+    },
+    {
+      "file": "p1_img14.png",
+      "page": 1,
+      "width": 595,
+      "height": 553,
+      "size": 186289
+    },
+    {
+      "file": "p1_img15.png",
+      "page": 1,
+      "width": 584,
+      "height": 390,
+      "size": 338920
+    },
+    {
+      "file": "p1_img16.png",
+      "page": 1,
+      "width": 951,
+      "height": 491,
+      "size": 593790
+    },
+    {
+      "file": "p1_img17.png",
+      "page": 1,
+      "width": 920,
+      "height": 722,
+      "size": 1066316
+    },
+    {
+      "file": "p1_img18.png",
+      "page": 1,
+      "width": 781,
+      "height": 800,
+      "size": 556795
+    },
+    {
+      "file": "p1_img19.png",
+      "page": 1,
+      "width": 759,
+      "height": 759,
+      "size": 451211
+    },
+    {
+      "file": "p1_img20.png",
+      "page": 1,
+      "width": 1156,
+      "height": 549,
+      "size": 846326
+    },
+    {
+      "file": "p1_img21.png",
+      "page": 1,
+      "width": 516,
+      "height": 717,
+      "size": 286587
+    },
+    {
+      "file": "p1_img22.png",
+      "page": 1,
+      "width": 1408,
+      "height": 431,
+      "size": 607346
+    },
+    {
+      "file": "p1_img23.png",
+      "page": 1,
+      "width": 976,
+      "height": 491,
+      "size": 558482
+    },
+    {
+      "file": "p1_img24.png",
+      "page": 1,
+      "width": 293,
+      "height": 174,
+      "size": 59958
+    },
+    {
+      "file": "p1_img25.png",
+      "page": 1,
+      "width": 454,
+      "height": 340,
+      "size": 115719
+    },
+    {
+      "file": "p1_img26.png",
+      "page": 1,
+      "width": 772,
+      "height": 628,
+      "size": 250223
+    },
+    {
+      "file": "p1_img27.png",
+      "page": 1,
+      "width": 452,
+      "height": 419,
+      "size": 101763
+    },
+    {
+      "file": "p1_img28.png",
+      "page": 1,
+      "width": 442,
+      "height": 274,
+      "size": 97294
+    },
+    {
+      "file": "p1_img29.png",
+      "page": 1,
+      "width": 372,
+      "height": 296,
+      "size": 108800
+    },
+    {
+      "file": "p1_img30.png",
+      "page": 1,
+      "width": 468,
+      "height": 237,
+      "size": 82113
+    },
+    {
+      "file": "p1_img31.png",
+      "page": 1,
+      "width": 423,
+      "height": 256,
+      "size": 79005
+    },
+    {
+      "file": "p1_img32.png",
+      "page": 1,
+      "width": 468,
+      "height": 210,
+      "size": 67253
+    },
+    {
+      "file": "p1_img33.png",
+      "page": 1,
+      "width": 289,
+      "height": 320,
+      "size": 103613
+    },
+    {
+      "file": "p1_img34.png",
+      "page": 1,
+      "width": 417,
+      "height": 297,
+      "size": 170598
+    },
+    {
+      "file": "p1_img35.png",
+      "page": 1,
+      "width": 464,
+      "height": 293,
+      "size": 122116
+    },
+    {
+      "file": "p1_img36.png",
+      "page": 1,
+      "width": 410,
+      "height": 269,
+      "size": 93169
+    },
+    {
+      "file": "p1_img37.png",
+      "page": 1,
+      "width": 467,
+      "height": 334,
+      "size": 121726
+    },
+    {
+      "file": "p1_img38.png",
+      "page": 1,
+      "width": 656,
+      "height": 631,
+      "size": 363492
+    },
+    {
+      "file": "p1_img39.png",
+      "page": 1,
+      "width": 641,
+      "height": 90,
+      "size": 38795
+    }
+  ]
+}

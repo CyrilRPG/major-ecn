@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { User, Stethoscope, Building2, TrendingUp, MapPin, BookOpen, Award, ShieldCheck, Briefcase, ListChecks, AlertTriangle } from 'lucide-react';
 import { ArticleHeader, PrepCtaCard, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
@@ -39,13 +40,13 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
                 background: 'linear-gradient(135deg,#E7F6EC 0%,#DBEAFE 100%)',
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/blog/medecin-scrubs-bureau.png"
+              <Image
+                src="/blog/remuneration-hero.webp"
                 alt="Médecin en blouse au bureau consultant ses documents de rémunération"
-                className="block w-full h-auto select-none"
-                decoding="async"
-                fetchPriority="high"
+                width={1600}
+                height={1067}
+                className="block w-full h-auto select-none object-contain"
+                priority
               />
               <span
                 aria-hidden
@@ -98,7 +99,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={1} icon={User} accent="#6D28D9" bg="#EDE9FE"
               title="Qui sont les médecins PADHUE ?"
               illustrationBg="linear-gradient(135deg,#EDE9FE 0%,#FDE7E9 100%)"
-              illustrationImage="/blog/practitioners/practitioner-male-glasses.jpg"
+              illustrationImage="/blog/remuneration-padhue.webp"
               illustrationAlt="Médecin PADHUE souriant en blouse blanche, exercant en France"
             >
               <p>
@@ -129,7 +130,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={3} icon={Award} accent="#6D28D9" bg="#EDE9FE"
               title="Faisant Fonction d'Interne (FFI)"
               illustrationBg="linear-gradient(135deg,#E7F6EC 0%,#DCFCE7 100%)"
-              illustrationImage="/blog/practitioners/practitioner-female-desk.jpg"
+              illustrationImage="/blog/remuneration-ffi.webp"
               illustrationAlt="Faisant Fonction d'Interne (FFI) en service hospitalier"
               right
             >
@@ -165,7 +166,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={4} icon={Stethoscope} accent="#16A34A" bg="#DCFCE7"
               title="Praticien Attaché Associé (PAA)"
               illustrationBg="linear-gradient(135deg,#DBEAFE 0%,#E7F6EC 100%)"
-              illustrationImage="/blog/practitioners/practitioner-female-laptop.jpg"
+              illustrationImage="/blog/remuneration-paa.webp"
               illustrationAlt="Praticien Attaché Associé (PAA) consultant un dossier patient"
             >
               <p>
@@ -199,7 +200,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               num={5} icon={Building2} accent="#C0001F" bg="#FDE7E9"
               title="Praticien Hospitalier (PH)"
               illustrationBg="linear-gradient(135deg,#FDE7E9 0%,#EDE9FE 100%)"
-              illustrationImage="/blog/practitioners/practitioner-male-tie.jpg"
+              illustrationImage="/blog/remuneration-ph.webp"
               illustrationAlt="Praticien Hospitalier (PH) titulaire en milieu hospitalier"
               right
             >

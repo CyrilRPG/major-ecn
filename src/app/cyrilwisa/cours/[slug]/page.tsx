@@ -11,6 +11,7 @@ import { PriveFlashcardSession } from '@/components/prive/prive-flashcards';
 import { PriveQcmViewer } from '@/components/prive/prive-annales';
 import { getCoursBySlug, getMatiereForCours } from '@/lib/data/prive-courses';
 import { getPriveContent } from '@/lib/data/prive-content';
+import { PRIVE_IMAGES } from '@/lib/data/prive-images-map';
 
 type Tab = 'fiche' | 'qcm' | 'flashcards';
 
@@ -109,7 +110,7 @@ export default function PriveCoursPage() {
         </div>
       ) : (
         <>
-          {tab === 'fiche' && <PriveFicheViewer fiche={content.fiche} titre={cours.titre} />}
+          {tab === 'fiche' && <PriveFicheViewer fiche={content.fiche} titre={cours.titre} images={PRIVE_IMAGES[slug] ?? []} />}
           {tab === 'qcm' && <PriveQcmViewer annales={content.annales} titre={cours.titre} themeColor={matiere?.color} />}
           {tab === 'flashcards' && <PriveFlashcardSession cards={content.flashcards} titre={cours.titre} themeColor={matiere?.color} />}
         </>

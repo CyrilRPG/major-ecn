@@ -1,0 +1,1144 @@
+MAJOR EVC 
+Révisions transversales, validations de spécialité, consolidation, renforcement approfondi, réévaluations, alertes et dashboard
+1. Principe général
+La plateforme doit distinguer 3 choses différentes :
+
+1. Progression dans la formation
+Le candidat avance dans les spécialités :
+
+cardiologie ;
+
+pneumologie ;
+
+neurologie ;
+
+pédiatrie ;
+
+gériatrie ;
+
+endocrinologie ;
+
+etc.
+
+Cela correspond au fait de regarder les cours, lire les fiches, faire les QCM d’entraînement, avancer dans les modules.
+
+2. Maintien des acquis
+Le candidat entretient les spécialités déjà étudiées grâce aux révisions transversales.
+
+Ces révisions ne servent pas à découvrir de nouveaux cours, mais à éviter l’oubli.
+
+3. Évaluations officielles
+Ce sont elles qui donnent le vrai statut pédagogique d’une spécialité :
+
+vert ;
+
+orange ;
+
+rouge.
+
+Les évaluations officielles sont :
+
+interrogation Major EVC de fin de spécialité ;
+
+mini-évaluation après consolidation ;
+
+nouvelle évaluation après renforcement approfondi ;
+
+réévaluation après absence ;
+
+épreuve blanche.
+
+2. Dashboard principal
+Le dashboard candidat doit afficher plusieurs zones.
+
+Zone 1 — Progression dans la formation
+Afficher :
+
+spécialités terminées ;
+
+spécialités en cours ;
+
+prochaines spécialités accessibles ;
+
+validations en attente.
+
+Exemple :
+
+Progression
+
+Spécialités terminées : 5
+Spécialités en cours : 2
+Validations en attente : 1
+Zone 2 — Maintien des acquis
+Ce bloc concerne uniquement les révisions transversales.
+
+Il ne doit pas donner l’impression que le candidat n’a pas travaillé s’il a avancé dans d’autres modules.
+
+Afficher :
+
+Maintien des acquis
+
+Révisions transversales réalisées : 18 / 30 derniers jours
+Dernière révision transversale : il y a 3 jours
+Meilleure période de régularité : 42 jours consécutifs
+Zone 3 — Révision du jour
+Afficher selon le nombre de spécialités déjà étudiées.
+
+1 à 5 spécialités étudiées
+Afficher seulement :
+
+Révision du jour
+25 QCM
+Temps estimé : 15 minutes
+Bouton :
+
+Commencer ma révision du jour
+6 à 10 spécialités étudiées
+Afficher :
+
+Révision du jour
+30 QCM
+Temps estimé : 15-20 minutes
+Bouton :
+
+Commencer ma révision du jour
+Puis bloc optionnel :
+
+Révision recommandée
+50 QCM
+Pour renforcer davantage vos acquis
+Bouton :
+
+Faire la révision recommandée
+11 à 15 spécialités étudiées
+Afficher :
+
+Révision du jour
+35 QCM
+Temps estimé : 20 minutes
+Bouton :
+
+Commencer ma révision du jour
+Puis :
+
+Révision recommandée
+60 QCM
+Recommandée à ce stade de votre progression
+Bouton :
+
+Faire la révision recommandée
+Plus de 15 spécialités étudiées
+Afficher :
+
+Révision du jour
+40 QCM
+Temps estimé : 20-25 minutes
+Bouton :
+
+Commencer ma révision du jour
+Puis :
+
+Révision recommandée
+75 QCM
+Pour entretenir plus largement les spécialités déjà étudiées
+Bouton :
+
+Faire la révision recommandée
+Puis :
+
+Révision intensive
+120 QCM
+Pour les périodes de révision approfondie ou les week-ends
+Bouton :
+
+Lancer la révision intensive
+Important :
+
+La révision intensive ne doit jamais être présentée comme obligatoire.
+
+3. Fonctionnement de la révision du jour
+La révision du jour pioche dans les spécialités déjà étudiées.
+
+Chaque QCM doit être tagué au minimum par spécialité :
+
+cardiologie ;
+
+pneumologie ;
+
+neurologie ;
+
+endocrinologie ;
+
+etc.
+
+Le système doit privilégier :
+
+QCM jamais vus ;
+
+QCM déjà ratés ;
+
+QCM anciens ;
+
+spécialités fragiles ;
+
+spécialités validées mais peu revues récemment.
+
+4. Fin de la révision du jour
+À la fin de la révision du jour, le candidat doit recevoir un retour.
+
+Important :
+
+Le score de révision est informatif.
+
+Il ne modifie pas officiellement le statut des spécialités.
+
+Score 75 à 100 %
+Affichage :
+
+Très bonne révision
+
+Score : 82 %
+
+Vos acquis ont été entretenus aujourd’hui.
+Couleur :
+
+🟢 Vert
+
+Boutons :
+
+Voir mes corrections
+Retour au dashboard
+Effet dashboard :
+
+la révision est comptabilisée dans les révisions transversales ;
+
+la date de dernière révision est mise à jour ;
+
+le compteur de régularité continue ;
+
+aucune spécialité ne change officiellement de statut.
+
+Score 50 à 74 %
+Affichage :
+
+Révision moyenne
+
+Score : 61 %
+
+Révision effectuée, mais certaines réponses montrent des fragilités.
+Couleur :
+
+🟠 Orange
+
+Afficher :
+
+Spécialités à surveiller :
+- Cardiologie
+- Endocrinologie
+Boutons :
+
+Voir mes corrections
+Retour au dashboard
+Si une spécialité affichée est déjà orange officiellement, afficher aussi :
+
+Consolider la spécialité
+Effet dashboard :
+
+la révision est comptabilisée ;
+
+le maintien des acquis est mis à jour ;
+
+les spécialités faibles apparaissent dans “Priorités pédagogiques” ;
+
+pas de changement officiel automatique du statut.
+
+Score 0 à 49 %
+Affichage :
+
+Révision insuffisante
+
+Score : 38 %
+
+Cette révision montre des difficultés importantes.
+Certaines spécialités doivent être retravaillées.
+Couleur :
+
+🔴 Rouge
+
+Afficher :
+
+Spécialités les plus faibles :
+- Cardiologie
+- Pneumologie
+Boutons :
+
+Voir mes corrections
+Retour au dashboard
+Si les spécialités concernées sont déjà orange ou rouge officiellement, afficher les boutons adaptés :
+
+Consolider la spécialité
+ou
+
+Renforcement approfondi
+Effet dashboard :
+
+la révision est tout de même comptabilisée si elle est terminée ;
+
+la plateforme ne bloque pas le candidat ;
+
+une alerte admin ne part pas automatiquement sur une seule mauvaise révision ;
+
+mais si plusieurs mauvais signaux s’accumulent, l’alerte admin peut être déclenchée.
+
+5. Compteur de maintien des acquis
+Il faut éviter les termes trop flous comme “série actuelle”.
+
+Utiliser des termes explicites.
+
+Données à enregistrer
+Le système doit enregistrer :
+
+last_transversal_revision_date
+transversal_revisions_last_30_days
+current_consecutive_transversal_revisions
+best_consecutive_transversal_revisions
+total_transversal_revisions
+Affichage normal
+Si le candidat révise régulièrement :
+
+Maintien des acquis
+
+Révisions transversales : 24 / 30 derniers jours
+Dernière révision transversale : aujourd’hui
+Meilleure période de régularité : 42 jours consécutifs
+Après 1 jour sans révision
+Exemple :
+
+Le candidat a fait 60 jours de révisions transversales régulières.
+
+Il rate 1 jour.
+
+Affichage :
+
+Maintien des acquis
+
+Révisions transversales : 29 / 30 derniers jours
+Dernière révision transversale : hier
+Meilleure période de régularité : 60 jours consécutifs
+Message léger :
+
+Votre révision du jour est disponible.
+Pas d’alerte forte.
+
+Pas de remise à zéro brutale affichée.
+
+Après 2 à 6 jours sans révision
+Affichage :
+
+Maintien des acquis
+
+Révisions transversales : 24 / 30 derniers jours
+Dernière révision transversale : il y a 4 jours
+Meilleure période de régularité : 60 jours consécutifs
+Message :
+
+Vous n’avez pas effectué de révision transversale depuis 4 jours.
+Une reprise est recommandée pour maintenir vos acquis.
+Bouton :
+
+Reprendre ma révision du jour
+Pas de blocage.
+
+Après 7 jours sans révision
+Affichage dashboard :
+
+Maintien des acquis
+
+Révisions transversales : 21 / 30 derniers jours
+Dernière révision transversale : il y a 7 jours
+Meilleure période de régularité : 60 jours consécutifs
+Alerte dashboard :
+
+Attention : aucune révision transversale depuis 7 jours.
+
+Vous continuez peut-être à avancer dans la formation, mais vos anciennes spécialités ne sont plus suffisamment entretenues.
+Boutons :
+
+Reprendre ma révision du jour
+Faire une révision recommandée
+Si le candidat a plus de 15 spécialités étudiées, afficher aussi :
+
+Faire une révision intensive
+Pas de blocage.
+
+Après 14 jours sans révision
+Dashboard :
+
+Maintien des acquis interrompu
+
+Dernière révision transversale : il y a 14 jours
+Révisions transversales : 16 / 30 derniers jours
+Meilleure période de régularité : 60 jours consécutifs
+Message :
+
+Vous n’avez pas entretenu vos acquis depuis plus de 14 jours.
+
+Une réévaluation est nécessaire avant de débloquer de nouveaux contenus.
+Bouton principal :
+
+Lancer la réévaluation
+Accès maintenu :
+
+anciens modules ;
+
+fiches ;
+
+flashcards ;
+
+QCM déjà accessibles ;
+
+corrections ;
+
+dashboard.
+
+Accès temporairement limité :
+
+nouveaux modules ;
+
+nouvelles spécialités ;
+
+nouveaux chapitres non encore ouverts.
+
+Important :
+
+La réévaluation ne doit pas bloquer durablement la plateforme.
+
+Une fois réalisée, l’accès aux nouveaux contenus est rétabli.
+
+Après 30 jours sans révision
+Dashboard :
+
+Absence prolongée de révision transversale
+
+Dernière révision transversale : il y a 30 jours
+Message :
+
+Vous n’avez pas entretenu vos acquis depuis plus de 30 jours.
+
+Une réévaluation approfondie est nécessaire pour faire le point sur votre niveau actuel.
+Bouton :
+
+Lancer la réévaluation approfondie
+Format :
+
+50 QCM.
+
+Après 60 jours sans révision
+Dashboard :
+
+Bilan global recommandé
+
+Dernière révision transversale : il y a 60 jours
+Message :
+
+Vous n’avez pas entretenu vos acquis depuis plus de 60 jours.
+
+Un bilan global est recommandé afin d’identifier les spécialités à reprendre en priorité.
+Bouton :
+
+Lancer le bilan global
+Format :
+
+75 à 100 QCM.
+
+6. Réévaluation après 14 jours
+Déclenchement :
+
+14 jours sans révision transversale.
+
+Format :
+
+30 QCM transversaux.
+
+Score 75 à 100 %
+Message :
+
+Réévaluation réussie
+
+Score : 82 %
+
+Votre niveau de maintien des acquis est satisfaisant.
+Vous pouvez reprendre votre progression.
+Effet :
+
+nouveaux contenus débloqués ;
+
+dashboard repasse en état normal ;
+
+date de révision transversale mise à jour ;
+
+pas d’alerte admin.
+
+Boutons :
+
+Reprendre ma progression
+Voir mes corrections
+Score 50 à 74 %
+Message :
+
+Réévaluation fragile
+
+Score : 58 %
+
+Vous pouvez reprendre votre progression, mais certaines spécialités doivent être consolidées.
+Effet :
+
+nouveaux contenus débloqués ;
+
+dashboard affiche les spécialités les plus faibles ;
+
+priorité pédagogique orange ;
+
+alerte admin Priorité 2 possible si autres critères présents.
+
+Boutons :
+
+Reprendre ma progression
+Consolider la spécialité
+Voir mes corrections
+Score 0 à 49 %
+Message :
+
+Réévaluation insuffisante
+
+Score : 38 %
+
+Votre niveau actuel montre des difficultés importantes.
+Vous pouvez continuer à travailler, mais un renforcement approfondi est fortement recommandé.
+Effet :
+
+nouveaux contenus débloqués après réalisation de la réévaluation ;
+
+la plateforme ne reste pas bloquée ;
+
+les spécialités faibles apparaissent en priorité forte ;
+
+alerte admin Priorité 1 si score rouge.
+
+Boutons :
+
+Reprendre ma progression
+Renforcement approfondi
+Voir mes corrections
+Dashboard après retour :
+
+Priorité pédagogique
+
+Cardiologie : niveau insuffisant
+Action recommandée : renforcement approfondi
+7. Réévaluation approfondie après 30 jours
+Déclenchement :
+
+30 jours sans révision transversale.
+
+Format :
+
+50 QCM.
+
+Score 75 à 100 %
+Message :
+
+Réévaluation approfondie satisfaisante
+
+Score : 80 %
+
+Votre reprise est satisfaisante.
+Continuez avec des révisions transversales régulières.
+Boutons :
+
+Reprendre ma progression
+Programmer ma prochaine révision
+Voir mes corrections
+Effet :
+
+accès rétabli ;
+
+pas d’alerte admin.
+
+Score 50 à 74 %
+Message :
+
+Réévaluation approfondie fragile
+
+Score : 58 %
+
+Votre niveau reste partiel.
+Certaines spécialités nécessitent une consolidation.
+Boutons :
+
+Consolider la spécialité
+Reprendre ma progression
+Voir mes corrections
+Effet :
+
+accès rétabli ;
+
+spécialités faibles affichées ;
+
+alerte admin Priorité 2.
+
+Score 0 à 49 %
+Message :
+
+Réévaluation approfondie insuffisante
+
+Score : 35 %
+
+Votre niveau actuel est préoccupant.
+Un renforcement approfondi est recommandé sur les spécialités les plus faibles.
+Boutons :
+
+Lancer un renforcement approfondi
+Voir mes corrections
+Reprendre ma progression
+Effet :
+
+accès rétabli après l’évaluation ;
+
+priorité pédagogique rouge ;
+
+alerte admin Priorité 1 ;
+
+email envoyé à l’équipe pédagogique.
+
+Email admin :
+
+ALERTE MAJOR EVC – Priorité 1
+
+Motif : réévaluation approfondie rouge
+
+Candidat : Dr X
+Score : 35 %
+Spécialités faibles : Cardiologie, Pneumologie, Endocrinologie
+
+Action recommandée : prise de contact pédagogique.
+8. Bilan global après 60 jours
+Déclenchement :
+
+60 jours sans révision transversale.
+
+Format :
+
+75 à 100 QCM.
+
+Score 75 à 100 %
+Message :
+
+Bilan global satisfaisant
+
+Votre niveau global reste correct malgré l’interruption.
+Nous vous recommandons de reprendre les révisions transversales régulièrement.
+Boutons :
+
+Reprendre ma progression
+Reprendre les révisions transversales
+Score 50 à 74 %
+Message :
+
+Bilan global fragile
+
+Plusieurs connaissances doivent être consolidées.
+Nous vous recommandons de reprendre progressivement les spécialités les plus faibles.
+Afficher :
+
+Spécialités prioritaires :
+1. Cardiologie
+2. Neurologie
+3. Endocrinologie
+Boutons :
+
+Consolider la spécialité prioritaire
+Reprendre ma progression
+Voir mes corrections
+Alerte admin :
+
+Priorité 2.
+
+Score 0 à 49 %
+Message :
+
+Bilan global insuffisant
+
+Votre niveau actuel montre un décrochage important.
+Un accompagnement pédagogique est recommandé.
+Boutons :
+
+Renforcement approfondi
+Demander un accompagnement
+Reprendre ma progression
+Effet :
+
+alerte admin Priorité 1 ;
+
+email automatique ;
+
+candidat ajouté dans “Candidats à contacter”.
+
+Dashboard candidat :
+
+Un accompagnement pédagogique peut vous être proposé afin de vous aider à reprendre efficacement votre préparation.
+9. Fin d’une spécialité
+Lorsqu’un candidat termine une spécialité, par exemple Cardiologie, une interrogation officielle Major EVC devient disponible.
+
+Elle doit être créée par l’équipe pédagogique.
+
+Elle n’est pas générée automatiquement par la plateforme.
+
+Format :
+
+15 QCM ;
+
+2 questions ouvertes ;
+
+éventuellement un mini-cas clinique ;
+
+durée : 15 à 20 minutes.
+
+Écran avant interrogation
+Message :
+
+Vous avez terminé le parcours Cardiologie.
+
+Une interrogation officielle Major EVC est disponible afin d’évaluer votre niveau et de valider cette spécialité.
+Boutons :
+
+Passer l’interrogation
+Plus tard
+Si “Plus tard” :
+
+Statut :
+
+Validation en attente
+Dashboard :
+
+Cardiologie terminée — interrogation non réalisée.
+Le candidat peut continuer à travailler.
+
+10. Résultat interrogation de fin de spécialité
+Score 75 à 100 %
+Statut :
+
+🟢 Spécialité validée.
+
+Message :
+
+Très bonne maîtrise de la spécialité.
+
+Votre niveau actuel permet de considérer ce module comme validé.
+Boutons :
+
+Retour au dashboard
+Continuer ma progression
+Voir mes corrections
+Effet dashboard :
+
+Cardiologie : validée
+Score 50 à 74 %
+Statut :
+
+🟠 Spécialité fragile.
+
+Message :
+
+Certaines notions nécessitent encore d’être consolidées.
+
+Votre niveau est encourageant, mais cette spécialité mérite un renforcement.
+Boutons :
+
+Consolider la spécialité
+Voir mes corrections
+Retour au dashboard
+Effet dashboard :
+
+Cardiologie : fragile
+Action recommandée : consolidation
+Score 0 à 49 %
+Statut :
+
+🔴 Spécialité insuffisamment maîtrisée.
+
+Message :
+
+Les connaissances essentielles ne sont pas encore suffisamment maîtrisées.
+
+Nous vous recommandons un renforcement approfondi.
+Boutons :
+
+Renforcement approfondi
+Voir mes corrections
+Retour au dashboard
+Effet dashboard :
+
+Cardiologie : insuffisamment maîtrisée
+Action recommandée : renforcement approfondi
+Si le candidat cumule 3 spécialités rouges :
+
+alerte admin Priorité 1.
+
+11. Bouton “Consolider la spécialité”
+Déclenchement :
+
+Bouton visible si la spécialité est orange.
+
+Écran d’entrée
+Titre :
+
+Consolidation Cardiologie
+Message :
+
+Cette session vise à renforcer les notions fragiles de la spécialité.
+
+Elle repose sur des QCM ciblés, notamment des questions jamais vues, anciennes ou déjà ratées.
+Contenu :
+
+40 QCM ciblés
+Temps estimé : 30 à 40 minutes
+Bouton :
+
+Commencer la consolidation
+Pendant la consolidation
+Le candidat fait 40 QCM.
+
+Sélection prioritaire :
+
+QCM ratés ;
+
+QCM jamais vus ;
+
+QCM anciens ;
+
+QCM moyens/difficiles.
+
+Fin des 40 QCM
+Message :
+
+Consolidation terminée.
+
+Pour vérifier votre progression, une mini-évaluation de 20 QCM vous est proposée.
+Boutons :
+
+Lancer la mini-évaluation
+Voir les corrections
+Retour au dashboard
+Important :
+
+La consolidation seule ne change pas le statut officiel.
+
+C’est la mini-évaluation qui change le statut.
+
+Mini-évaluation après consolidation
+Format :
+
+20 QCM.
+
+Score 75 à 100 %
+Message :
+
+Progression confirmée.
+
+Votre niveau est désormais satisfaisant.
+Statut :
+
+🟢 spécialité validée.
+
+Dashboard :
+
+Cardiologie : validée
+Boutons :
+
+Retour au dashboard
+Continuer ma progression
+Voir mes corrections
+Score 50 à 74 %
+Message :
+
+Progression partielle.
+
+La spécialité reste fragile.
+Nous vous recommandons de poursuivre les révisions.
+Statut :
+
+🟠 spécialité fragile.
+
+Dashboard :
+
+Cardiologie : fragile
+Action recommandée : refaire une consolidation ultérieurement
+Boutons :
+
+Refaire une consolidation plus tard
+Voir mes corrections
+Retour au dashboard
+Score 0 à 49 %
+Message :
+
+Les difficultés persistent.
+
+Un renforcement approfondi est recommandé.
+Statut :
+
+🔴 spécialité insuffisamment maîtrisée.
+
+Dashboard :
+
+Cardiologie : insuffisamment maîtrisée
+Action recommandée : renforcement approfondi
+Boutons :
+
+Lancer un renforcement approfondi
+Voir mes corrections
+Retour au dashboard
+Alerte admin possible si plusieurs rouges.
+
+12. Bouton “Renforcement approfondi”
+Déclenchement :
+
+Bouton visible si la spécialité est rouge.
+
+Écran d’entrée
+Titre :
+
+Renforcement approfondi — Cardiologie
+Message :
+
+Votre niveau actuel montre que les bases de cette spécialité doivent être retravaillées.
+
+Ce parcours vous aide à reprendre les points essentiels avant une nouvelle évaluation.
+Étapes affichées :
+
+1. Revoir les fiches essentielles
+2. Travailler les flashcards
+3. Faire une série renforcée de QCM
+4. Passer une nouvelle évaluation
+Bouton :
+
+Commencer le renforcement approfondi
+Étape 1 — Fiches
+Afficher :
+
+Revoir les fiches essentielles de Cardiologie
+Bouton :
+
+Ouvrir les fiches
+Statuts possibles :
+
+Non commencé
+En cours
+Terminé
+Étape 2 — Flashcards
+Afficher :
+
+Réactiver les notions clés
+Nombre recommandé :
+
+20 à 30 flashcards.
+
+Bouton :
+
+Faire les flashcards
+Étape 3 — QCM de renforcement
+Afficher :
+
+QCM de renforcement Cardiologie
+Nombre :
+
+50 QCM en V1.
+
+Option future :
+
+50 à 100 QCM selon la taille de la spécialité.
+
+Bouton :
+
+Commencer les QCM de renforcement
+Étape 4 — Nouvelle évaluation
+Après les QCM :
+
+Vous avez terminé le parcours de renforcement.
+
+Une nouvelle évaluation de 30 QCM est proposée pour mesurer votre progression.
+Bouton :
+
+Passer la nouvelle évaluation
+Résultat nouvelle évaluation
+Score 75 à 100 %
+Statut :
+
+🟢 spécialité validée.
+
+Message :
+
+Très bonne progression.
+
+Cette spécialité est désormais considérée comme validée.
+Boutons :
+
+Retour au dashboard
+Continuer ma progression
+Voir mes corrections
+Score 50 à 74 %
+Statut :
+
+🟠 spécialité fragile.
+
+Message :
+
+Votre niveau a progressé, mais certaines notions restent fragiles.
+
+Une consolidation est recommandée.
+Boutons :
+
+Consolider la spécialité
+Voir mes corrections
+Retour au dashboard
+Score 0 à 49 %
+Statut :
+
+🔴 spécialité toujours insuffisamment maîtrisée.
+
+Message :
+
+Votre niveau reste insuffisant sur cette spécialité.
+
+Nous vous recommandons de reprendre le parcours de renforcement ou de demander un accompagnement pédagogique.
+Boutons :
+
+Reprendre le renforcement
+Demander un accompagnement
+Voir mes corrections
+Retour au dashboard
+Alerte admin :
+
+Priorité 1 si réévaluation rouge ou cumul de rouges.
+
+13. Alertes administrateur
+Priorité 1
+Email automatique + ajout dans “Candidats à contacter”.
+
+Déclenchement si :
+
+plus de 21 jours sans activité globale ;
+
+3 spécialités rouges ou plus ;
+
+épreuve blanche < 40 % ;
+
+chute de 25 points ou plus entre deux évaluations ;
+
+réévaluation rouge ;
+
+bilan global rouge.
+
+Email :
+
+ALERTE MAJOR EVC — Priorité 1
+
+Candidat : Dr X
+Motif : 3 spécialités rouges
+
+Cardiologie : 42 %
+Pneumologie : 39 %
+Neurologie : 45 %
+
+Action recommandée :
+Prise de contact pédagogique.
+Priorité 2
+Email ou notification admin.
+
+Déclenchement si :
+
+2 spécialités oranges ou plus ;
+
+moins de 15 révisions transversales réalisées sur les 30 derniers jours ;
+
+épreuve blanche non réalisée depuis 30 jours ;
+
+réévaluation orange ;
+
+bilan global orange.
+
+14. CRM pédagogique
+Chaque candidat doit avoir une fiche de suivi.
+
+Champs à prévoir :
+
+Nom
+Email
+Spécialité préparée
+Dernière connexion
+Dernière révision transversale
+Révisions transversales sur 30 jours
+Spécialités rouges
+Spécialités oranges
+Épreuves blanches réalisées
+Alertes déclenchées
+Historique des contacts
+Note pédagogique interne
+L’admin doit pouvoir ajouter une note :
+
+Date
+Conseiller
+Type de contact : téléphone / visio / email / WhatsApp
+Motif
+Observations
+Difficultés identifiées
+Actions recommandées
+Date de relance prévue
+Exemple :
+
+Date : 12/06/2026
+
+Motif :
+3 spécialités rouges.
+
+Observation :
+Le candidat travaille à temps plein et manque de régularité.
+
+Actions recommandées :
+Révision transversale quotidienne + consolidation cardiologie.
+
+Relance prévue :
+26/06/2026.
+15. Règle finale de blocage
+Ne pas bloquer durablement le candidat.
+
+Blocage autorisé uniquement :
+
+après 14 jours sans révision transversale ;
+
+uniquement sur l’accès aux nouveaux contenus ;
+
+les anciens contenus restent accessibles ;
+
+le blocage est levé dès que la réévaluation est réalisée.
+
+Même si la réévaluation est rouge, le candidat peut reprendre sa progression, mais la plateforme affiche des alertes fortes et l’équipe pédagogique est prévenue.
+
+Objectif :
+
+guider, alerter, accompagner, sans créer de frustration excessive.
+
+POINT A PRENDRE EN COMPTE. 
+Toute modification d'une note de spécialité passe obligatoirement par une évaluation officielle.
+
+Les révisions transversales ne servent qu'à détecter un problème.
+
+La nouvelle note officielle n'est attribuée qu'après :
+
+une évaluation de fin de spécialité ;
+une mini-évaluation après consolidation ;
+une nouvelle évaluation après renforcement approfondi ;
+une réévaluation ciblée suite à une baisse détectée ;
+éventuellement une épreuve blanche spécialisée.
+
+

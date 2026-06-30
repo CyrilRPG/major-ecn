@@ -113,8 +113,30 @@ function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: st
   );
 }
 
-export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: string }) {
+function ImageGallery({ images }: { images: string[] }) {
+  if (images.length === 0) return null;
+  return (
+    <div className="my-4 space-y-3">
+      {images.map((src, i) => (
+        <FicheImage key={i} src={src} />
+      ))}
+    </div>
+  );
+}
+
+export function PriveFicheViewer({ fiche, titre, images = [] }: { fiche: PriveFiche; titre: string; images?: string[] }) {
   const [expandedParts, setExpandedParts] = useState<Set<string>>(() => new Set(fiche.parties.map((p) => p.numero)));
+
+  const imagesByPartie = (() => {
+    if (!images.length) return {};
+    const n = fiche.parties.length;
+    const perPart = Math.ceil(images.length / n);
+    const map: Record<string, string[]> = {};
+    fiche.parties.forEach((p, i) => {
+      map[p.numero] = images.slice(i * perPart, (i + 1) * perPart);
+    });
+    return map;
+  })();
 
   function togglePart(numero: string) {
     setExpandedParts((prev) => {
@@ -199,6 +221,7 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
             {isExpanded && (
               <div className="mt-3 space-y-4 border-l-2 border-[#C0112E]/20 pl-4">
                 {p.image_url && <FicheImage src={p.image_url} alt={p.titre} />}
+                <ImageGallery images={imagesByPartie[p.numero] ?? []} />
                 {p.sous_parties.map((sp, spIdx) => (
                   <div key={spIdx} id={`sp-${p.numero}-${spIdx}`} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
                     <div className="border-b border-gray-200 bg-[#FAFBFE] px-5 py-3">
