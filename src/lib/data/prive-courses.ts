@@ -17,17 +17,20 @@ export type PriveFicheRow = {
   concept: string;
   detail_md: string;
   kind: 'normal' | 'a_retenir' | 'piege' | 'mnemo';
+  image_url?: string;
 };
 
 export type PriveFicheSousPartie = {
   titre: string;
   rows: PriveFicheRow[];
+  image_url?: string;
 };
 
 export type PriveFichePartie = {
   numero: string;
   titre: string;
   sous_parties: PriveFicheSousPartie[];
+  image_url?: string;
 };
 
 export type PriveFiche = {

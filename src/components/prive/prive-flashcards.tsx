@@ -1,8 +1,21 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, RotateCcw, Shuffle, Zap } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ArrowLeft,
+  Check,
+  CheckCheck,
+  CheckCircle2,
+  Info,
+  Minus,
+  RefreshCw,
+  RotateCcw,
+  X,
+  Zap,
+} from 'lucide-react';
 import type { PriveFlashcard } from '@/lib/data/prive-courses';
+
+/* ─── helpers ─── */
 
 function renderContent(text: string) {
   return text
@@ -11,63 +24,201 @@ function renderContent(text: string) {
     .replace(/\n/g, '<br/>');
 }
 
-export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[]; titre: string }) {
-  const [queue, setQueue] = useState<PriveFlashcard[]>(() => [...cards]);
-  const [idx, setIdx] = useState(0);
+/* ─── difficulty config ─── */
+
+type Difficulty = 'a_revoir' | 'difficile' | 'bien' | 'parfait';
+
+const DIFFICULTIES: {
+  key: Difficulty;
+  label: string;
+  subtitle: string;
+  score: number;
+  weight: number;
+  reappearAfter: number;
+  accent: string;
+  bg: string;
+  icon: typeof X;
+}[] = [
+  {
+    key: 'a_revoir',
+    label: 'À revoir',
+    subtitle: 'Je ne la savais pas',
+    score: -5,
+    weight: 4,
+    reappearAfter: 3,
+    accent: '#E11D48',
+    bg: '#FCE7EB',
+    icon: X,
+  },
+  {
+    key: 'difficile',
+    label: 'Difficile',
+    subtitle: "J'hésite encore",
+    score: -3,
+    weight: 3,
+    reappearAfter: 5,
+    accent: '#E08900',
+    bg: '#FCEED1',
+    icon: Minus,
+  },
+  {
+    key: 'bien',
+    label: 'Bien',
+    subtitle: 'Je la savais',
+    score: 3,
+    weight: 2,
+    reappearAfter: 8,
+    accent: '#2563EB',
+    bg: '#DEEAFE',
+    icon: Check,
+  },
+  {
+    key: 'parfait',
+    label: 'Parfait',
+    subtitle: 'Connaissance solide',
+    score: 5,
+    weight: 1,
+    reappearAfter: 12,
+    accent: '#15803D',
+    bg: '#DCF1E2',
+    icon: CheckCheck,
+  },
+];
+
+const MASTERY_THRESHOLD = 5;
+
+/* ─── internal card state ─── */
+
+type QueueCard = {
+  card: PriveFlashcard;
+  score: number;
+};
+
+/* ─── component ─── */
+
+export function PriveFlashcardSession({
+  cards,
+  titre,
+}: {
+  cards: PriveFlashcard[];
+  titre: string;
+}) {
+  /* --- state --- */
+  const [queue, setQueue] = useState<QueueCard[]>(() =>
+    cards.map((c) => ({ card: c, score: 0 })),
+  );
   const [flipped, setFlipped] = useState(false);
-  const [mastered, setMastered] = useState<Set<number>>(new Set());
+  const [masteredCount, setMasteredCount] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const totalCards = cards.length;
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const current = queue[idx];
-  const total = queue.length;
-  const remaining = total - mastered.size;
+  /* current card */
+  const current = queue[0] ?? null;
+  const allMastered = queue.length === 0;
 
-  const flip = useCallback(() => setFlipped((f) => !f), []);
+  /* --- flip --- */
+  const flip = useCallback(() => {
+    if (isTransitioning) return;
+    setFlipped((f) => !f);
+  }, [isTransitioning]);
 
-  const next = useCallback(() => {
+  /* --- difficulty rating --- */
+  const rateDifficulty = useCallback(
+    (d: Difficulty) => {
+      if (!current || isTransitioning) return;
+      const diff = DIFFICULTIES.find((x) => x.key === d)!;
+      const newScore = current.score + diff.score;
+
+      setIsTransitioning(true);
+      setFlipped(false);
+
+      // Wait for flip-back animation before updating queue
+      setTimeout(() => {
+        setQueue((prev) => {
+          const rest = prev.slice(1);
+          if (newScore >= MASTERY_THRESHOLD) {
+            // Card mastered
+            setMasteredCount((c) => c + 1);
+            return rest;
+          }
+          // Insert back at reappearAfter position
+          const insertAt = Math.min(diff.reappearAfter, rest.length);
+          const updated: QueueCard = { card: current.card, score: newScore };
+          const next = [...rest];
+          next.splice(insertAt, 0, updated);
+          return next;
+        });
+        setIsTransitioning(false);
+      }, 350);
+    },
+    [current, isTransitioning],
+  );
+
+  /* --- restart --- */
+  const restart = useCallback(() => {
+    setQueue(cards.map((c) => ({ card: c, score: 0 })));
     setFlipped(false);
-    setIdx((i) => Math.min(i + 1, total - 1));
-  }, [total]);
-
-  const prev = useCallback(() => {
-    setFlipped(false);
-    setIdx((i) => Math.max(i - 1, 0));
-  }, []);
-
-  const markMastered = useCallback(() => {
-    setMastered((prev) => {
-      const next = new Set(prev);
-      if (next.has(current.order_index)) next.delete(current.order_index);
-      else next.add(current.order_index);
-      return next;
-    });
-  }, [current]);
-
-  const shuffle = useCallback(() => {
-    const shuffled = [...cards].sort(() => Math.random() - 0.5);
-    setQueue(shuffled);
-    setIdx(0);
-    setFlipped(false);
-    setMastered(new Set());
+    setMasteredCount(0);
+    setIsTransitioning(false);
   }, [cards]);
 
-  const reset = useCallback(() => {
-    setQueue([...cards]);
-    setIdx(0);
-    setFlipped(false);
-    setMastered(new Set());
-  }, [cards]);
-
+  /* --- keyboard --- */
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'm') markMastered();
+      if (allMastered) return;
+      // Only 1-4 when flipped
+      if (flipped && !isTransitioning) {
+        if (e.key === '1') {
+          e.preventDefault();
+          rateDifficulty('a_revoir');
+        }
+        if (e.key === '2') {
+          e.preventDefault();
+          rateDifficulty('difficile');
+        }
+        if (e.key === '3') {
+          e.preventDefault();
+          rateDifficulty('bien');
+        }
+        if (e.key === '4') {
+          e.preventDefault();
+          rateDifficulty('parfait');
+        }
+      }
     }
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [flip, next, prev, markMastered]);
+  }, [flipped, isTransitioning, allMastered, rateDifficulty]);
 
+  /* --- all mastered screen --- */
+  if (allMastered) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-green-200 bg-green-50/50 py-16">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle2 className="h-8 w-8 text-green-600" />
+          </div>
+          <h2 className="mb-1 text-xl font-bold text-[#0F1F4D]">
+            Deck acquis
+          </h2>
+          <p className="mb-6 text-sm text-gray-500">
+            Vous avez maîtrisé les {totalCards} carte
+            {totalCards > 1 ? 's' : ''} de ce deck.
+          </p>
+          <button
+            onClick={restart}
+            className="flex items-center gap-2 rounded-xl bg-[#C0112E] px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#A00F27]"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Recommencer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* --- no cards at all --- */
   if (!current) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -76,7 +227,7 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
     );
   }
 
-  const isMastered = mastered.has(current.order_index);
+  const progressPercent = (masteredCount / totalCards) * 100;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -91,133 +242,200 @@ export function PriveFlashcardSession({ cards, titre }: { cards: PriveFlashcard[
               Flashcards
             </h1>
             <p className="text-[13px] text-gray-500">
-              {idx + 1} / {total} · {remaining} restante{remaining !== 1 ? 's' : ''}
+              {masteredCount} / {totalCards} acquise
+              {masteredCount !== 1 ? 's' : ''}
             </p>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={shuffle} className="rounded-xl border border-gray-200 p-2.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-[#C0112E]" title="Melanger">
-            <Shuffle className="h-4 w-4" />
-          </button>
-          <button onClick={reset} className="rounded-xl border border-gray-200 p-2.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-[#C0112E]" title="Recommencer">
-            <RotateCcw className="h-4 w-4" />
-          </button>
         </div>
       </div>
 
       {/* Progress bar */}
       <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-gray-200">
         <div
-          className="h-full rounded-full transition-all"
-          style={{
-            width: `${((idx + 1) / total) * 100}%`,
-            background: 'linear-gradient(90deg, #C0112E, #F97316)',
-          }}
+          className="h-full rounded-full bg-green-500 transition-all duration-500"
+          style={{ width: `${progressPercent}%` }}
         />
       </div>
-
-      {/* Mastered counter */}
-      {mastered.size > 0 && (
-        <div className="mb-4 flex justify-center">
-          <span className="rounded-full bg-green-50 px-3 py-1 text-[12px] font-semibold text-green-700">
-            {mastered.size} maitrisee{mastered.size > 1 ? 's' : ''} sur {total}
-          </span>
-        </div>
-      )}
 
       {/* Card */}
       <div
+        ref={cardRef}
         onClick={flip}
-        className={`relative cursor-pointer overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:shadow-md ${
-          isMastered ? 'border-green-300' : flipped ? 'border-[#C0112E]/20' : 'border-gray-200'
-        }`}
-        style={{ perspective: '1000px' }}
+        className="relative cursor-pointer"
+        style={{ perspective: '1200px' }}
       >
-        {/* Top border color indicator */}
         <div
-          className="h-1 w-full"
+          className="relative w-full transition-transform"
           style={{
-            background: isMastered
-              ? '#22C55E'
-              : flipped
-                ? '#C0112E'
-                : 'linear-gradient(90deg, #C0112E, #F97316)',
+            transformStyle: 'preserve-3d',
+            transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transitionDuration: '0.5s',
+            transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
           }}
-        />
-
-        {/* Badge */}
-        <div className="absolute right-4 top-5">
-          <span
-            className={`rounded-lg px-2.5 py-1 text-[11px] font-bold tracking-wide ${
-              flipped
-                ? 'bg-[#C0112E]/10 text-[#C0112E]'
-                : 'bg-[#0F1F4D]/10 text-[#0F1F4D]'
-            }`}
-          >
-            {flipped ? 'VERSO' : 'RECTO'}
-          </span>
-        </div>
-
-        <div className="flex min-h-[320px] items-center justify-center px-8 py-10">
+        >
+          {/* ---- RECTO ---- */}
           <div
-            className={`text-center leading-relaxed ${
-              flipped
-                ? 'text-[16px] text-gray-700'
-                : 'text-[20px] font-bold text-[#0F1F4D]'
-            }`}
-            dangerouslySetInnerHTML={{ __html: renderContent(flipped ? current.verso : current.recto) }}
-          />
-        </div>
+            className="relative flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+            style={{
+              backfaceVisibility: 'hidden',
+              height: 'clamp(240px, 46vh, 520px)',
+            }}
+          >
+            {/* Left accent bar */}
+            <div className="absolute left-0 top-0 h-full w-[2px] bg-[#C0112E]" />
 
-        <p className="pb-4 text-center text-[11px] text-gray-400">
-          Cliquez ou appuyez sur Espace pour retourner
-        </p>
+            {/* Recto badge */}
+            <div className="flex items-center justify-between px-5 pt-4">
+              <span className="rounded-full bg-[#0F1F4D]/10 px-3 py-1 text-[11px] font-bold tracking-wide text-[#0F1F4D]">
+                RECTO
+              </span>
+              <span className="text-[13px] font-medium text-gray-400">
+                {masteredCount + 1} / {totalCards}
+              </span>
+            </div>
+
+            {/* Centered content */}
+            <div className="flex flex-1 items-center justify-center px-8">
+              <div
+                className="text-center text-xl leading-relaxed text-[#0F1F4D] md:text-2xl font-bold"
+                dangerouslySetInnerHTML={{
+                  __html: renderContent(current.card.recto),
+                }}
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+              <div className="flex items-center gap-1.5 text-[12px] text-gray-400">
+                <Info className="h-3.5 w-3.5" />
+                <span>Cliquez pour retourner</span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  flip();
+                }}
+                className="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Retourner
+              </button>
+            </div>
+          </div>
+
+          {/* ---- VERSO ---- */}
+          <div
+            className="absolute inset-0 flex w-full flex-col overflow-hidden rounded-2xl border border-[#C0112E]/20 bg-white shadow-sm"
+            style={{
+              backfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)',
+              height: 'clamp(240px, 46vh, 520px)',
+            }}
+          >
+            {/* Left accent bar */}
+            <div className="absolute left-0 top-0 h-full w-[2px] bg-[#C0112E]" />
+
+            {/* Verso badge */}
+            <div className="flex items-center justify-between px-5 pt-4">
+              <span className="rounded-full bg-[#C0112E]/10 px-3 py-1 text-[11px] font-bold tracking-wide text-[#C0112E]">
+                VERSO
+              </span>
+              <span className="text-[13px] font-medium text-gray-400">
+                {masteredCount + 1} / {totalCards}
+              </span>
+            </div>
+
+            {/* Centered content */}
+            <div className="flex flex-1 items-center justify-center overflow-y-auto px-8">
+              <div
+                className="text-center text-base leading-relaxed text-gray-700"
+                dangerouslySetInnerHTML={{
+                  __html: renderContent(current.card.verso),
+                }}
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+              <div className="flex items-center gap-1.5 text-[12px] text-gray-400">
+                <Info className="h-3.5 w-3.5" />
+                <span>Évaluez votre réponse ci-dessous</span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  flip();
+                }}
+                className="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Retourner
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Controls */}
-      <div className="mt-6 flex items-center justify-between">
-        <button
-          onClick={prev}
-          disabled={idx === 0}
-          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-30"
-        >
-          <ArrowLeft className="h-4 w-4" /> Precedente
-        </button>
-
-        <button
-          onClick={markMastered}
-          className={`rounded-xl px-5 py-2.5 text-[13px] font-bold transition-colors ${
-            isMastered
-              ? 'bg-green-100 text-green-700 hover:bg-green-200'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {isMastered ? 'Maitrisee' : 'Marquer maitrisee'}
-        </button>
-
-        <button
-          onClick={next}
-          disabled={idx === total - 1}
-          className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-30"
-        >
-          Suivante <ArrowRight className="h-4 w-4" />
-        </button>
+      {/* Difficulty buttons — only when flipped */}
+      <div
+        className="mt-4 overflow-hidden transition-all duration-300"
+        style={{
+          maxHeight: flipped ? '200px' : '0px',
+          opacity: flipped ? 1 : 0,
+        }}
+      >
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+          {DIFFICULTIES.map((d, i) => {
+            const Icon = d.icon;
+            return (
+              <button
+                key={d.key}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  rateDifficulty(d.key);
+                }}
+                disabled={isTransitioning}
+                className="flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3 transition-all hover:scale-[1.03] active:scale-[0.97] disabled:opacity-50"
+                style={{ backgroundColor: d.bg }}
+              >
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                  style={{
+                    boxShadow: `inset 0 0 0 2px ${d.accent}`,
+                  }}
+                >
+                  <Icon
+                    className="h-5 w-5"
+                    style={{ color: d.accent }}
+                    strokeWidth={2.5}
+                  />
+                </div>
+                <span
+                  className="text-[13px] font-bold"
+                  style={{ color: d.accent }}
+                >
+                  {d.label}
+                </span>
+                <span className="text-[11px] text-gray-500">
+                  {d.subtitle}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Keyboard shortcuts */}
       <div className="mt-6 flex flex-wrap justify-center gap-4 rounded-xl bg-[#FAFBFE] px-4 py-3 text-[11px] text-gray-400">
         <span className="flex items-center gap-1">
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">←</kbd>
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">→</kbd>
-          Naviguer
-        </span>
-        <span className="flex items-center gap-1">
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">Espace</kbd>
-          Retourner
-        </span>
-        <span className="flex items-center gap-1">
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">M</kbd>
-          Maitrisee
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">
+            1
+          </kbd>
+          -
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">
+            4
+          </kbd>
+          Évaluer (verso)
         </span>
       </div>
     </div>

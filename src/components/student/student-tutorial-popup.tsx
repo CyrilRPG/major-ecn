@@ -141,7 +141,7 @@ function buildSteps(flags: ContentFlags): Step[] {
       <>
         <strong>Vue partagée (Split)</strong> : étudiez deux contenus côte à côte
         (fiche + QCM, vidéo + notes…).{' '}
-        <strong>Assistant IA</strong>{' '}
+        <strong>Assistant</strong>{' '}
         <MessageCircle className="inline h-3 w-3 align-text-bottom" style={{ color: '#E4002B' }} />
         {' '}: posez vos questions sur le cours.{' '}
         <strong>Prise de notes</strong>{' '}

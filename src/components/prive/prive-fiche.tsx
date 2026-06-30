@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertTriangle, BookOpen, Brain, ChevronDown, FileText, Lightbulb, Star } from 'lucide-react';
+import { AlertTriangle, BookOpen, Brain, ChevronDown, FileText, ImageIcon, Lightbulb, Star } from 'lucide-react';
 import type { PriveFiche } from '@/lib/data/prive-courses';
 
 function md(text: string) {
@@ -18,7 +18,21 @@ const KIND_STYLES: Record<string, { bg: string; border: string; icon: typeof Sta
   mnemo: { bg: '#EDE9FE', border: '#8B5CF6', icon: Brain, label: 'Mnemo' },
 };
 
-function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: string } }) {
+function FicheImage({ src, alt }: { src: string; alt?: string }) {
+  return (
+    <figure className="my-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <img src={src} alt={alt ?? ''} className="w-full object-contain" loading="lazy" />
+      {alt && (
+        <figcaption className="flex items-center gap-1.5 border-t border-gray-100 px-4 py-2 text-[12px] text-gray-500">
+          <ImageIcon className="h-3 w-3 shrink-0" />
+          {alt}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: string; image_url?: string } }) {
   const style = KIND_STYLES[row.kind];
 
   if (style) {
@@ -36,19 +50,27 @@ function FicheRow({ row }: { row: { concept: string; detail_md: string; kind: st
           className="text-[14px] leading-relaxed text-gray-800"
           dangerouslySetInnerHTML={{ __html: md(row.detail_md) }}
         />
+        {row.image_url && <FicheImage src={row.image_url} />}
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-[180px_1fr] border-b border-gray-100 last:border-b-0">
-      <div className="border-r border-gray-100 bg-gray-50/50 px-4 py-3 text-[13px] font-semibold text-gray-700">
-        <span dangerouslySetInnerHTML={{ __html: md(row.concept) }} />
+    <div className="border-b border-gray-100 last:border-b-0">
+      <div className="grid grid-cols-[180px_1fr]">
+        <div className="border-r border-gray-100 bg-gray-50/50 px-4 py-3 text-[13px] font-semibold text-gray-700">
+          <span dangerouslySetInnerHTML={{ __html: md(row.concept) }} />
+        </div>
+        <div
+          className="px-4 py-3 text-[13px] leading-relaxed text-gray-600"
+          dangerouslySetInnerHTML={{ __html: md(row.detail_md) }}
+        />
       </div>
-      <div
-        className="px-4 py-3 text-[13px] leading-relaxed text-gray-600"
-        dangerouslySetInnerHTML={{ __html: md(row.detail_md) }}
-      />
+      {row.image_url && (
+        <div className="px-4 pb-3">
+          <FicheImage src={row.image_url} />
+        </div>
+      )}
     </div>
   );
 }
@@ -138,6 +160,7 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
 
             {isExpanded && (
               <div className="mt-3 space-y-4 border-l-2 border-[#C0112E]/20 pl-4">
+                {p.image_url && <FicheImage src={p.image_url} alt={p.titre} />}
                 {p.sous_parties.map((sp, spIdx) => (
                   <div key={spIdx} id={`sp-${p.numero}-${spIdx}`} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
                     <div className="border-b border-gray-200 bg-[#FAFBFE] px-5 py-3">
@@ -147,6 +170,11 @@ export function PriveFicheViewer({ fiche, titre }: { fiche: PriveFiche; titre: s
                       {sp.rows.map((row, rIdx) => (
                         <FicheRow key={rIdx} row={row} />
                       ))}
+                      {sp.image_url && (
+                        <div className="px-4 pb-4">
+                          <FicheImage src={sp.image_url} alt={sp.titre} />
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
