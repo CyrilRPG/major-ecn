@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   BookOpen,
   Check,
   CheckCircle,
-  ChevronDown,
   FileText,
   HelpCircle,
   X as XIcon,
   XCircle,
-  ArrowLeft,
   RotateCcw,
   Sparkles,
 } from 'lucide-react';
@@ -42,9 +40,14 @@ function pastelBg(hex: string) {
 // Types
 // ---------------------------------------------------------------------------
 
-type QueueEntry = {
-  questionIndex: number;
+type FlatQuestion = {
+  index: number;
   question: PriveAnnaleQuestion;
+  rappelCours: string;
+};
+
+type QueueEntry = {
+  flat: FlatQuestion;
 };
 
 type SessionState = {
@@ -56,11 +59,26 @@ type SessionState = {
 };
 
 // ---------------------------------------------------------------------------
-// Spaced-repetition session hook
+// Flatten all annales into one list
 // ---------------------------------------------------------------------------
 
-function useSpacedRepetition(annale: PriveAnnale) {
-  const [session, setSession] = useState<SessionState>(() => initSession(annale));
+function flattenAnnales(annales: PriveAnnale[]): FlatQuestion[] {
+  const out: FlatQuestion[] = [];
+  let idx = 0;
+  for (const a of annales) {
+    for (const q of a.questions) {
+      out.push({ index: idx++, question: q, rappelCours: a.rappel_cours });
+    }
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Spaced-repetition session hook (works on flat question list)
+// ---------------------------------------------------------------------------
+
+function useSpacedRepetition(questions: FlatQuestion[]) {
+  const [session, setSession] = useState<SessionState>(() => initSession(questions));
   const [phase, setPhase] = useState<'answering' | 'review'>('answering');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [lastResult, setLastResult] = useState<{
@@ -68,10 +86,10 @@ function useSpacedRepetition(annale: PriveAnnale) {
     question: PriveAnnaleQuestion;
   } | null>(null);
 
-  function initSession(a: PriveAnnale): SessionState {
+  function initSession(qs: FlatQuestion[]): SessionState {
     return {
-      queue: a.questions.map((q, i) => ({ questionIndex: i, question: q })),
-      totalQuestions: a.questions.length,
+      queue: qs.map((f) => ({ flat: f })),
+      totalQuestions: qs.length,
       correctCount: 0,
       firstTryCorrect: 0,
       attemptedOnce: new Set(),
@@ -81,7 +99,7 @@ function useSpacedRepetition(annale: PriveAnnale) {
   const currentEntry = session.queue[0] ?? null;
   const isFinished = session.queue.length === 0;
 
-  function toggleItem(lettre: string) {
+  const toggleItem = useCallback((lettre: string) => {
     if (phase !== 'answering') return;
     setSelected((prev) => {
       const next = new Set(prev);
@@ -89,11 +107,11 @@ function useSpacedRepetition(annale: PriveAnnale) {
       else next.add(lettre);
       return next;
     });
-  }
+  }, [phase]);
 
-  function validate() {
+  const validate = useCallback(() => {
     if (!currentEntry) return;
-    const q = currentEntry.question;
+    const q = currentEntry.flat.question;
     const isCorrect = q.items.every(
       (item) => selected.has(item.lettre) === item.is_correct
     );
@@ -103,9 +121,9 @@ function useSpacedRepetition(annale: PriveAnnale) {
     setSession((prev) => {
       const newQueue = [...prev.queue];
       const removed = newQueue.shift()!;
-      const wasFirstAttempt = !prev.attemptedOnce.has(removed.questionIndex);
+      const wasFirstAttempt = !prev.attemptedOnce.has(removed.flat.index);
       const newAttempted = new Set(prev.attemptedOnce);
-      newAttempted.add(removed.questionIndex);
+      newAttempted.add(removed.flat.index);
 
       if (!isCorrect) {
         const insertPos = Math.min(3, newQueue.length);
@@ -121,20 +139,20 @@ function useSpacedRepetition(annale: PriveAnnale) {
         attemptedOnce: newAttempted,
       };
     });
-  }
+  }, [currentEntry, selected]);
 
-  function nextQuestion() {
+  const nextQuestion = useCallback(() => {
     setSelected(new Set());
     setLastResult(null);
     setPhase('answering');
-  }
+  }, []);
 
-  function restart() {
-    setSession(initSession(annale));
+  const restart = useCallback(() => {
+    setSession(initSession(questions));
     setSelected(new Set());
     setLastResult(null);
     setPhase('answering');
-  }
+  }, [questions]);
 
   return {
     currentEntry,
@@ -153,43 +171,6 @@ function useSpacedRepetition(annale: PriveAnnale) {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
-
-function SeriesCard({
-  annale,
-  onStart,
-  accentColor,
-}: {
-  annale: PriveAnnale;
-  index: number;
-  onStart: () => void;
-  accentColor: string;
-}) {
-  const bg = pastelBg(accentColor);
-  return (
-    <button
-      onClick={onStart}
-      className="group flex w-full items-center gap-4 rounded-2xl border bg-white px-6 py-5 text-left shadow-sm transition-all hover:shadow-md"
-      style={{ borderColor: accentColor + '25' }}
-    >
-      <div
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
-        style={{ background: bg }}
-      >
-        <HelpCircle className="h-6 w-6" style={{ color: accentColor }} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[15px] font-bold text-[#0F1F4D] truncate">
-          {annale.titre}
-        </p>
-        <p className="mt-0.5 text-[13px] text-gray-500">
-          {annale.annee} · {annale.questions.length} question
-          {annale.questions.length > 1 ? 's' : ''}
-        </p>
-      </div>
-      <ChevronDown className="h-5 w-5 -rotate-90 text-gray-400 transition-transform group-hover:translate-x-0.5" />
-    </button>
-  );
-}
 
 function ProgressBar({
   current,
@@ -230,7 +211,7 @@ function ProgressBar({
 
 function QuestionView({
   entry,
-  annale,
+  titre,
   session,
   phase,
   selected,
@@ -238,11 +219,10 @@ function QuestionView({
   onToggle,
   onValidate,
   onNext,
-  onQuit,
   accentColor,
 }: {
   entry: QueueEntry;
-  annale: PriveAnnale;
+  titre: string;
   session: SessionState;
   phase: 'answering' | 'review';
   selected: Set<string>;
@@ -250,10 +230,9 @@ function QuestionView({
   onToggle: (lettre: string) => void;
   onValidate: () => void;
   onNext: () => void;
-  onQuit: () => void;
   accentColor: string;
 }) {
-  const q = entry.question;
+  const q = entry.flat.question;
   const bg = pastelBg(accentColor);
 
   const scoreInfo = useMemo(() => {
@@ -268,17 +247,24 @@ function QuestionView({
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <button
-          onClick={onQuit}
-          className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-semibold text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+      <div className="mb-6 flex items-center gap-3">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-xl"
+          style={{ background: accentColor + '18' }}
         >
-          <ArrowLeft className="h-4 w-4" />
-          Quitter
-        </button>
-        <p className="text-[13px] font-semibold text-[#0F1F4D]">
-          {annale.titre}
-        </p>
+          <HelpCircle className="h-5 w-5" style={{ color: accentColor }} />
+        </div>
+        <div>
+          <p
+            className="text-[12px] font-semibold uppercase tracking-wider"
+            style={{ color: accentColor }}
+          >
+            QCM
+          </p>
+          <h1 className="text-[18px] font-extrabold tracking-tight text-[#0F1F4D]">
+            {titre}
+          </h1>
+        </div>
       </div>
 
       {/* Progress */}
@@ -330,7 +316,7 @@ function QuestionView({
             className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em]"
             style={{ color: accentColor }}
           >
-            Question {entry.questionIndex + 1}
+            Question {entry.flat.index + 1}
           </p>
           <p
             className="text-[14px] font-bold leading-relaxed text-[#0F1F4D]"
@@ -464,7 +450,7 @@ function QuestionView({
             </div>
 
             {/* Rappel de cours */}
-            {annale.rappel_cours && (
+            {entry.flat.rappelCours && (
               <div className="bg-[#F0FDF4] px-5 py-4 border-t border-green-100 sm:px-6">
                 <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-green-700">
                   <BookOpen className="h-3.5 w-3.5" />
@@ -472,7 +458,7 @@ function QuestionView({
                 </div>
                 <div
                   className="text-[13px] leading-relaxed text-green-900"
-                  dangerouslySetInnerHTML={{ __html: md(annale.rappel_cours) }}
+                  dangerouslySetInnerHTML={{ __html: md(entry.flat.rappelCours) }}
                 />
               </div>
             )}
@@ -504,15 +490,13 @@ function QuestionView({
 
 function CompletionScreen({
   session,
-  annaleTitle,
+  titre,
   onRestart,
-  onBackToList,
   accentColor,
 }: {
   session: SessionState;
-  annaleTitle: string;
+  titre: string;
   onRestart: () => void;
-  onBackToList: () => void;
   accentColor: string;
 }) {
   const pct = session.totalQuestions > 0
@@ -551,9 +535,9 @@ function CompletionScreen({
         </div>
         <div className="relative z-10">
           <h2 className="text-[22px] font-extrabold text-[#0F1F4D]">
-            Série terminée !
+            QCM terminés !
           </h2>
-          <p className="mt-1 text-[15px] text-gray-500">{annaleTitle}</p>
+          <p className="mt-1 text-[15px] text-gray-500">{titre}</p>
         </div>
         <div className="relative z-10 rounded-xl border border-gray-100 bg-white/80 px-6 py-3 backdrop-blur">
           <p className="text-[14px] font-semibold text-[#0F1F4D]">
@@ -562,7 +546,7 @@ function CompletionScreen({
             <span className="ml-2 text-[12px] text-gray-400">({pct}%)</span>
           </p>
         </div>
-        <div className="relative z-10 mt-4 flex flex-col gap-3 w-full max-w-xs">
+        <div className="relative z-10 mt-4 w-full max-w-xs">
           <button
             onClick={onRestart}
             className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -571,73 +555,9 @@ function CompletionScreen({
             <RotateCcw className="h-4 w-4" />
             Recommencer
           </button>
-          <button
-            onClick={onBackToList}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-3 text-[14px] font-bold text-[#0F1F4D] transition-all hover:bg-gray-50"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Choisir une autre série
-          </button>
         </div>
       </div>
     </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Session wrapper
-// ---------------------------------------------------------------------------
-
-function QcmSession({
-  annale,
-  onQuit,
-  accentColor,
-}: {
-  annale: PriveAnnale;
-  onQuit: () => void;
-  accentColor: string;
-}) {
-  const {
-    currentEntry,
-    isFinished,
-    session,
-    phase,
-    selected,
-    lastResult,
-    toggleItem,
-    validate,
-    nextQuestion,
-    restart,
-  } = useSpacedRepetition(annale);
-
-  if (isFinished) {
-    return (
-      <CompletionScreen
-        session={session}
-        annaleTitle={annale.titre}
-        onRestart={restart}
-        onBackToList={onQuit}
-        accentColor={accentColor}
-      />
-    );
-  }
-
-  if (!currentEntry) return null;
-
-  return (
-    <QuestionView
-      entry={currentEntry}
-      annale={annale}
-      session={session}
-      phase={phase}
-      selected={selected}
-      lastResult={lastResult}
-      onToggle={toggleItem}
-      onValidate={validate}
-      onNext={nextQuestion}
-      onQuit={onQuit}
-      accentColor={accentColor}
-    />
   );
 }
 
@@ -655,73 +575,59 @@ export function PriveQcmViewer({
   themeColor?: string;
 }) {
   const accent = themeColor ?? '#C0112E';
-  const [activeAnnaleIdx, setActiveAnnaleIdx] = useState<number | null>(
-    annales.length === 1 ? 0 : null
-  );
+  const allQuestions = useMemo(() => flattenAnnales(annales), [annales]);
 
-  if (annales.length === 0) {
+  const {
+    currentEntry,
+    isFinished,
+    session,
+    phase,
+    selected,
+    lastResult,
+    toggleItem,
+    validate,
+    nextQuestion,
+    restart,
+  } = useSpacedRepetition(allQuestions);
+
+  if (annales.length === 0 || allQuestions.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-gray-300 bg-[#FAFBFE] py-16 text-center">
           <FileText className="h-8 w-8 text-gray-400" />
           <p className="text-[15px] font-medium text-gray-500">
-            Aucune série QCM disponible pour ce cours.
+            Aucun QCM disponible pour ce cours.
           </p>
         </div>
       </div>
     );
   }
 
-  if (activeAnnaleIdx !== null) {
+  if (isFinished) {
     return (
-      <QcmSession
-        key={activeAnnaleIdx}
-        annale={annales[activeAnnaleIdx]}
-        onQuit={() => setActiveAnnaleIdx(null)}
+      <CompletionScreen
+        session={session}
+        titre={titre}
+        onRestart={restart}
         accentColor={accent}
       />
     );
   }
 
+  if (!currentEntry) return null;
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <div className="mb-6 flex items-center gap-3">
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-xl"
-          style={{ background: accent + '18' }}
-        >
-          <HelpCircle className="h-5 w-5" style={{ color: accent }} />
-        </div>
-        <div>
-          <p
-            className="text-[12px] font-semibold uppercase tracking-wider"
-            style={{ color: accent }}
-          >
-            QCM
-          </p>
-          <h1 className="text-[22px] font-extrabold tracking-tight text-[#0F1F4D]">
-            {titre}
-          </h1>
-        </div>
-      </div>
-
-      <p className="mb-4 text-[14px] text-gray-500">
-        Choisissez une série pour commencer l&apos;entraînement.
-        Chaque question réapparait jusqu&apos;à ce que vous la
-        réussissiez.
-      </p>
-
-      <div className="space-y-3">
-        {annales.map((annale, idx) => (
-          <SeriesCard
-            key={idx}
-            annale={annale}
-            index={idx}
-            onStart={() => setActiveAnnaleIdx(idx)}
-            accentColor={accent}
-          />
-        ))}
-      </div>
-    </div>
+    <QuestionView
+      entry={currentEntry}
+      titre={titre}
+      session={session}
+      phase={phase}
+      selected={selected}
+      lastResult={lastResult}
+      onToggle={toggleItem}
+      onValidate={validate}
+      onNext={nextQuestion}
+      accentColor={accent}
+    />
   );
 }
