@@ -2,6 +2,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { FormulaPermissionsEditor } from '@/components/admin/formula-permissions-editor';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Configuration Permissions' };
 
 const CONTENT_LABELS: Record<string, string> = {
