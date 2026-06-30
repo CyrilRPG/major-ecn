@@ -130,6 +130,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: 'Tous les documents nécessaires pour votre inscription aux Épreuves de Vérification des Connaissances (EVC), les justificatifs acceptés, les exigences linguistiques, le nombre de tentatives autorisées et les règles essentielles pour constituer un dossier conforme.',
     category: 'candidature-dossier',
     readingMinutes: 11,
+    image: '/blog/medecin-documents-evc-hero.webp',
     readers: 2610,
     publishedAt: '2026-03-28',
     popularRank: 2,

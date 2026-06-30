@@ -26,24 +26,6 @@ const PARCOURS = [
   { Icon: BadgeCheck,     t: 'Autorisation d\'exercice' },
 ];
 
-const DOCS = [
-  'Pièce d\'identité valide (carte, passeport ou titre de séjour).',
-  'Diplôme d\'origine (doctorat, pharmacie, chirurgie dentaire ou sage-femme).',
-  'Passeport.',
-  'Titre de séjour en cours de validité.',
-  'Justificatif de statut (réfugié, apatride, bénéficiaire de l\'asile ou protection subsidiaire, le cas échéant).',
-  'Justificatif de résidence en France.',
-  'Tout document prouvant votre retour en France (pour les Français rappelés par les autorités).',
-];
-
-const LANG_DIPLOMAS = [
-  { Icon: Languages,    t: 'TCF ou TEF',                  s: 'Niveau minimum B2' },
-  { Icon: FileCheck2,    t: 'DELF B2',                     s: 'Diplôme d\'Études en Langue Française' },
-  { Icon: GraduationCap, t: 'Baccalauréat français',       s: 'Quelle que soit votre nationalité' },
-  { Icon: GraduationCap, t: 'Diplôme universitaire français', s: 'Équivalent ou supérieur à un Bac' },
-  { Icon: BookOpen,      t: 'Études en français',          s: 'Attestation de votre établissement' },
-  { Icon: ShieldCheck,   t: 'Statut particulier',          s: 'Tout document prouvant la maîtrise de la langue (réfugié, apatride, etc.)' },
-];
 
 const PROGRAMME = [
   { Icon: Stethoscope, label: 'Médecins',                bg: '#FCEAEC', fg: '#C0001F', items: ['Arrêté du 4 juillet 2003 (biologie médicale)', 'Arrêté du 22 sept. 2004 (DES médecine)', 'Arrêté du 22 sept. 2004 (DESC)'] },
@@ -115,17 +97,15 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
             </ul>
           </NumberedBox>
 
-          <NumberedBox num={2} title="Liste complète des documents à fournir">
-            <p className="text-[12.5px] text-[#52607A]">Préparez chaque pièce avec soin.</p>
-            <ul className="mt-3 space-y-2">
-              {DOCS.map((d) => (
-                <li key={d} className="flex items-start gap-2 text-[12.5px] text-[#1A2233]">
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16A34A]" />
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </NumberedBox>
+          <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
+            <Image
+              src="/blog/infographie-documents-evc.webp"
+              alt="Liste complète des documents à préparer pour les EVC : pièce d'identité, diplôme, diplôme de spécialité, traductions assermentées, attestation B2, documents liés au statut particulier"
+              width={1200}
+              height={1200}
+              className="w-full"
+            />
+          </div>
 
           <NumberedBox num={3} title="Documents rédigés dans une langue étrangère">
             <p className="text-[12.5px] text-[#1A2233]">Une traduction officielle est obligatoire.</p>
@@ -160,24 +140,15 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
         </section>
 
         {/* Section 4 : Niveau de français */}
-        <NumberedBlock num={4} title="Comment prouver votre niveau de français ?">
-          <p className="mb-3 text-[13px] text-[#52607A]">
-            Fournissez l&rsquo;un des justificatifs suivants :
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {LANG_DIPLOMAS.map((d) => (
-              <div key={d.t} className="flex items-start gap-3 rounded-xl bg-[#FAFBFE] p-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FFE4E8] text-[#C0001F]">
-                  <d.Icon className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-[12.5px] font-bold text-[#1A2233]">{d.t}</p>
-                  <p className="text-[11.5px] text-[#52607A]">{d.s}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </NumberedBlock>
+        <section className="mb-6 overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
+          <Image
+            src="/blog/infographie-justifier-francais-evc.webp"
+            alt="Comment justifier de votre maîtrise du français : TCF/TEF niveau B2, DELF B2 ou DALF, baccalauréat français, diplôme universitaire français, études suivies en français, situation particulière"
+            width={1200}
+            height={1200}
+            className="w-full"
+          />
+        </section>
 
         {/* Section 5 + 6 + 7 */}
         <section className="mb-6 grid gap-4 lg:grid-cols-3">
@@ -216,24 +187,15 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
           </NumberedBox>
 
           {/* Section 6 — épreuves */}
-          <NumberedBox num={6} title="Comment se déroulent les EVC ?">
-            <p className="text-[12.5px] text-[#52607A]">
-              Deux épreuves écrites, anonymes et indépendantes.
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <EpreuveCard label="Épreuve théorique" Icon={BookOpen} />
-              <EpreuveCard label="Épreuve pratique" Icon={Stethoscope} />
-            </div>
-            <p className="mt-3 text-[12.5px] text-[#1A2233]">
-              Vérifie vos connaissances scientifiques fondamentales à l&rsquo;exercice de la profession et de la spécialité choisie. Évalue votre capacité à mobiliser vos connaissances dans des situations cliniques ou professionnelles concrètes.
-            </p>
-            <div className="mt-3 inline-flex items-start gap-2 rounded-lg bg-[#FFF1F3] px-3 py-2 text-[11px] text-[#C0001F]">
-              <Lightbulb className="h-3.5 w-3.5 shrink-0" />
-              <span>
-                <strong>Bon à savoir :</strong> les sujets sont identiques pour tous les candidats d&rsquo;une même spécialité. L&rsquo;anonymat des copies garantit l&rsquo;impartialité des corrections.
-              </span>
-            </div>
-          </NumberedBox>
+          <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
+            <Image
+              src="/blog/infographie-deroulement-evc.webp"
+              alt="Comment se déroulent les EVC : voie concours (liste A) avec 2 épreuves écrites de 2h notées sur 20, et voie interne avec épreuve unique QCM de 2h"
+              width={1200}
+              height={1200}
+              className="w-full"
+            />
+          </div>
 
           {/* Section 7 — programme officiel */}
           <NumberedBox num={7} title="Programme officiel des EVC">
@@ -366,17 +328,16 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
 function HeroVisual() {
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1] bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_50%,#EDE9FE_100%)]"
+      className="relative w-full overflow-hidden rounded-2xl border border-[#ECEEF1]"
       style={{ boxShadow: '0 18px 40px -22px rgba(15,31,77,0.30)' }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/blog/illustration-dossier-cng.png"
-        alt="Illustration de la plateforme CNG pour la candidature EVC"
+      <Image
+        src="/blog/medecin-documents-evc-hero.webp"
+        alt="Médecin consultant des documents pour sa candidature EVC"
+        width={1600}
+        height={1067}
         className="block w-full select-none object-cover object-center"
-        style={{ aspectRatio: '4/3' }}
-        decoding="async"
-        fetchPriority="high"
+        priority
       />
       <span aria-hidden className="pointer-events-none absolute inset-0"
         style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 40%, rgba(15,31,77,0.16) 100%)' }} />
@@ -419,21 +380,6 @@ function NumberedBlock({ num, title, subtitle, children }: { num: number; title:
   );
 }
 
-function EpreuveCard({ label, Icon }: { label: string; Icon: React.ElementType }) {
-  return (
-    <div className="rounded-lg border border-[#ECEEF1] bg-[#FAFBFE] p-2.5 text-center">
-      <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-md bg-[#FFE4E8] text-[#C0001F]">
-        <Icon className="h-4 w-4" />
-      </span>
-      <p className="mt-1 text-[10.5px] font-bold text-[#1A2233]">{label}</p>
-      <div className="mt-1.5 flex justify-around text-[9px] text-[#52607A]">
-        <span><strong className="block text-[#1A2233]">2h</strong>Durée</span>
-        <span><strong className="block text-[#1A2233]">/20</strong>Notation</span>
-        <span><strong className="block text-[#1A2233]">Coef. 1</strong>Coefficient</span>
-      </div>
-    </div>
-  );
-}
 
 function ChevronRightCustom() {
   return <span className="text-[#9AA1AE]">→</span>;
