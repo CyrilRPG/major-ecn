@@ -4,12 +4,50 @@ import { useState } from 'react';
 import { AlertTriangle, BookOpen, Brain, ChevronDown, FileText, ImageIcon, Lightbulb, Star } from 'lucide-react';
 import type { PriveFiche } from '@/lib/data/prive-courses';
 
-function md(text: string) {
+function inlineMd(text: string) {
   return text
     .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code class="rounded bg-gray-100 px-1 py-0.5 text-[12px]">$1</code>')
-    .replace(/\n/g, '<br/>');
+    .replace(/`(.+?)`/g, '<code class="rounded bg-gray-100 px-1 py-0.5 text-[12px]">$1</code>');
+}
+
+function md(text: string) {
+  const lines = text.split('\n');
+  const out: string[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (lines[i].trim().startsWith('|')) {
+      const tableLines: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      const rows = tableLines
+        .filter((l) => !/^\|\s*-+/.test(l.trim()))
+        .map((l) =>
+          l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim())
+        );
+      if (rows.length > 0) {
+        const [header, ...body] = rows;
+        out.push(
+          '<table class="w-full text-[13px] border-collapse my-3 rounded-xl overflow-hidden border border-gray-200">' +
+            '<thead><tr>' +
+            header.map((h) => `<th class="bg-[#FAFBFE] px-4 py-2.5 text-left text-[12px] font-bold uppercase tracking-wider text-[#0F1F4D] border-b border-gray-200">${inlineMd(h)}</th>`).join('') +
+            '</tr></thead><tbody>' +
+            body.map((r, ri) =>
+              '<tr class="' + (ri % 2 ? 'bg-gray-50/50' : 'bg-white') + '">' +
+              r.map((c, ci) => `<td class="px-4 py-2.5 border-b border-gray-100 ${ci === 0 ? 'font-semibold text-gray-700' : 'text-gray-600'}">${inlineMd(c)}</td>`).join('') +
+              '</tr>'
+            ).join('') +
+            '</tbody></table>'
+        );
+      }
+    } else {
+      out.push(inlineMd(lines[i]) + (i < lines.length - 1 ? '<br/>' : ''));
+      i++;
+    }
+  }
+  return out.join('');
 }
 
 const KIND_STYLES: Record<string, { bg: string; border: string; icon: typeof Star; label: string }> = {
