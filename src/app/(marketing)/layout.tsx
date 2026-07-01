@@ -1,8 +1,7 @@
 import { MarketingHeader } from '@/components/marketing/marketing-header';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
-import { GuideFloatingButton } from '@/components/marketing/guide-floating-button';
 import { GuidePopup } from '@/components/marketing/guide-popup';
-import { ProfilFloatingButton } from '@/components/marketing/profil-evc/profil-floating-button';
+import { FloatingLauncher } from '@/components/marketing/profil-evc/floating-launcher';
 import { ProfilPopup } from '@/components/marketing/profil-evc/profil-popup';
 import { JsonLd, organizationSchema, webSiteSchema } from '@/components/seo/json-ld';
 
@@ -13,8 +12,8 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <MarketingHeader />
       <main className="flex-1">{children}</main>
       <MarketingFooter />
-      <GuideFloatingButton />
-      <ProfilFloatingButton />
+      {/* Lanceur flottant unique (speed-dial) : déploie Guide + Profil EVC. */}
+      <FloatingLauncher />
       {/* Popup du guide méthodologie — monté pour écouter l'événement
           open-guide-popup (boutons « Télécharger »). Auto-affichage désactivé. */}
       <GuidePopup />
