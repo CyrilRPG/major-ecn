@@ -17,6 +17,7 @@ import {
 } from '@/types/domain';
 import { createClient } from '@/lib/supabase/client';
 import { FlashcardEditDialog } from '@/components/admin/content/flashcard-edit-dialog';
+import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { useRouter } from 'next/navigation';
 
 export type FlashcardInput = {
@@ -195,14 +196,18 @@ export function FlashcardSession({
           theme={theme}
         />
         {editable && (
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setEditingCard(card); }}
-            title="Modifier cette flashcard (mode prof)"
-            className="absolute right-3 top-3 z-30 inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white/95 px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) shadow-sm hover:border-(--color-primary) hover:text-(--color-primary)"
-          >
-            <Pencil className="h-3 w-3" /> Éditer
-          </button>
+          <div className="absolute right-3 top-3 z-30">
+            <EditHintTooltip contentType="flashcard" align="right" message="Modifiez le recto et le verso de chaque flashcard en cliquant ici.">
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setEditingCard(card); }}
+                title="Modifier cette flashcard (mode prof)"
+                className="inline-flex items-center gap-1 rounded-md border border-(--color-border) bg-white/95 px-2 py-1 text-[11px] font-semibold text-(--color-ink-soft) shadow-sm hover:border-(--color-primary) hover:text-(--color-primary)"
+              >
+                <Pencil className="h-3 w-3" /> Éditer
+              </button>
+            </EditHintTooltip>
+          </div>
         )}
       </motion.div>
 

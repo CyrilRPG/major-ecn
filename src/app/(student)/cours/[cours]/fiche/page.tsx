@@ -8,6 +8,7 @@ import { PdfViewer } from '@/components/student/pdf-viewer';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 import { canWrite } from '@/lib/schemas/professor';
+import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 
 export default async function CoursFichePage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -59,12 +60,14 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
               </a>
             )}
             {canEdit && (
-            <Link
-              href={`/cours/${coursId}/fiche/edit`}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
-            >
-              <Pencil className="h-3.5 w-3.5" /> Éditer la fiche
-            </Link>
+            <EditHintTooltip contentType="fiche" message="Cliquez ici pour modifier directement le contenu de la fiche de cours.">
+              <Link
+                href={`/cours/${coursId}/fiche/edit`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
+              >
+                <Pencil className="h-3.5 w-3.5" /> Éditer la fiche
+              </Link>
+            </EditHintTooltip>
             )}
           </div>
         )}

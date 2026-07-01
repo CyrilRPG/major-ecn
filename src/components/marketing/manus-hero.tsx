@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, BadgeCheck, BookOpen, Download, FileText, Sparkles, Stethoscope, Users, Video, type LucideIcon,
+  ArrowRight, BadgeCheck, BarChart3, BookOpen, Download, FileText, Sparkles, Stethoscope, Users, Video, type LucideIcon,
 } from 'lucide-react';
 
 /**
@@ -132,6 +132,20 @@ export function ManusHero() {
                 Découvrir la plateforme
                 <ArrowRight className="h-5 w-5" />
               </Link>
+            </div>
+
+            {/* Bouton Profil EVC gratuit — sous le bouton Guide (diagnostic). */}
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-profil-popup'))}
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-7 py-4 text-base font-extrabold text-white shadow-[0_14px_36px_-12px_rgba(122,31,162,0.55)] transition-transform hover:scale-[1.02] cursor-pointer sm:w-auto"
+                style={{ background: 'linear-gradient(100deg, #6B0F2A 0%, #8B1550 45%, #7A1FA2 100%)' }}
+              >
+                <BarChart3 className="h-5 w-5" />
+                Découvrir gratuitement mon Profil EVC
+                <ArrowRight className="h-5 w-5" />
+              </button>
             </div>
 
             <p className="mt-6 max-w-2xl text-[12px] leading-relaxed text-[#9AA0AC]" style={{ fontFamily: "'Manrope', sans-serif" }}>

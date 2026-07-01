@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Trophy, Sparkles } from 'lucide-react';
-import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, Trophy, Sparkles } from 'lucide-react';
+import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccess } from '@/lib/auth/formula-permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
+import { canWrite } from '@/lib/schemas/professor';
+import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 
 export default async function CoursQcmListPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -25,6 +27,8 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const isAdmin = profile.role === 'admin';
+  const canEditQcm = isAdmin
+    || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'qcm'));
   const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
@@ -71,6 +75,18 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-5 lg:px-8">
+      {canEditQcm && (
+        <div className="mb-3 flex items-center justify-end">
+          <EditHintTooltip contentType="qcm" message="Gérez et modifiez les QCM de ce cours depuis le panneau d'administration.">
+            <Link
+              href={`/admin/contenu/${coursId}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
+            >
+              <Pencil className="h-3.5 w-3.5" /> Gérer les QCM
+            </Link>
+          </EditHintTooltip>
+        </div>
+      )}
       {/* Bandeau d'info : ampoule + tagline EVC. */}
       <div className="mb-4 flex items-center gap-3 rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3 shadow-(--shadow-soft)">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FEF3E2] text-[#B26A00]">

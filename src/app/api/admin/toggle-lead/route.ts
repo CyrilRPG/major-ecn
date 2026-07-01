@@ -12,15 +12,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 });
   }
 
-  const body = (await req.json().catch(() => ({}))) as { leadId?: string; active?: boolean };
+  const body = (await req.json().catch(() => ({}))) as { leadId?: string; active?: boolean; source?: 'methodologie' | 'diagnostic' };
   if (!body.leadId || typeof body.active !== 'boolean') {
     return NextResponse.json({ error: 'leadId / active manquants' }, { status: 400 });
   }
 
+  const table = body.source === 'diagnostic' ? 'diagnostic_leads' : 'guide_leads';
   const admin = createAdminClient();
-  const { error } = await admin
-    .from('guide_leads')
-    .update({ active: body.active } as never)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any)
+    .from(table)
+    .update({ active: body.active })
     .eq('id', body.leadId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
