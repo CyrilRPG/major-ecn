@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, Clock, Lock, Star, HelpCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ShieldCheck, Clock, Lock, Star, HelpCircle, Check } from 'lucide-react';
 import { DiagIcon } from './icons';
+import { ProfilQuestion2 } from './profil-question2';
 import { QUESTIONS, type Answers } from '@/lib/diagnostic/scoring';
 
 const RED = '#C0112E';
@@ -35,6 +36,15 @@ export function ProfilQuestions({
 
   const select = (value: string) => {
     setAnswers((prev) => ({ ...prev, [q.id]: { value, detail: prev[q.id]?.detail } }));
+  };
+  // Q2 adaptatif : pose ou efface la valeur selon l'avancement de la sélection.
+  const setValue = (value: string | null) => {
+    setAnswers((prev) => {
+      const nextA = { ...prev };
+      if (value) nextA[q.id] = { value };
+      else delete nextA[q.id];
+      return nextA;
+    });
   };
   const setDetail = (detail: string) => {
     setAnswers((prev) => ({ ...prev, [q.id]: { value: prev[q.id]?.value ?? '', detail } }));
@@ -71,30 +81,30 @@ export function ProfilQuestions({
             <ShieldCheck className="h-3.5 w-3.5" /> 100% confidentiel
           </span>
         </div>
-        {/* Étapes */}
+        {/* Étapes — 11 au total : l'étape 1 est le formulaire d'infos (déjà complété). */}
         <div className="mx-auto mt-3 flex max-w-5xl items-center gap-1.5">
-          {QUESTIONS.map((qq, i) => (
-            <div key={qq.id} className="flex flex-1 items-center">
-              <span
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-black transition-colors"
-                style={
-                  i < idx
-                    ? { background: RED, color: '#fff' }
-                    : i === idx
-                    ? { background: NAVY, color: '#fff' }
-                    : { background: '#EEF1F6', color: '#9AA1AE' }
-                }
-              >
-                {i + 1}
-              </span>
-              {i < total - 1 && (
-                <span className="h-[2px] flex-1" style={{ background: i < idx ? RED : '#EEF1F6' }} />
-              )}
-            </div>
-          ))}
+          {/* Étape 1 : infos (toujours cochée) */}
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ background: RED, color: '#fff' }}>
+            <Check className="h-3.5 w-3.5" strokeWidth={3} />
+          </span>
+          {QUESTIONS.map((qq, i) => {
+            const done = i < idx;
+            const active = i === idx;
+            return (
+              <div key={qq.id} className="flex flex-1 items-center">
+                <span className="h-[2px] flex-1" style={{ background: i <= idx ? RED : '#EEF1F6' }} />
+                <span
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-black transition-colors"
+                  style={done || active ? { background: RED, color: '#fff' } : { background: '#EEF1F6', color: '#9AA1AE' }}
+                >
+                  {done ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : i + 2}
+                </span>
+              </div>
+            );
+          })}
         </div>
         <p className="mx-auto mt-2 max-w-5xl text-center text-[11px] font-semibold" style={{ color: INK_SOFT }}>
-          Étape {idx + 1} sur {total}
+          Étape {idx + 2} sur 11
         </p>
       </div>
 
@@ -115,6 +125,11 @@ export function ProfilQuestions({
           </div>
           {q.hint && <p className="mt-2 text-[12.5px]" style={{ color: INK_SOFT }}>{q.hint}</p>}
 
+          {q.id === 'q2_activite' ? (
+            <div className="mt-4">
+              <ProfilQuestion2 value={current?.value} onChange={setValue} />
+            </div>
+          ) : (
           <div className="mt-4 space-y-4">
             {groups.map((g) => (
               <div key={g.name ?? 'default'}>
@@ -164,6 +179,7 @@ export function ProfilQuestions({
               </div>
             ))}
           </div>
+          )}
         </div>
 
         {/* Sidebar */}
