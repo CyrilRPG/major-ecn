@@ -150,33 +150,28 @@ export async function provisionStudentAccount(
   const lastName = input.lastName || existingProfile?.last_name || '';
   const phone = input.phone || existingProfile?.phone || null;
 
-  // Construit la liste des collèges accessibles selon la voie choisie.
-  // On interroge la table matieres pour rester dynamique (nouvelles
-  // spécialités automatiquement incluses).
+  // Accès accordé après achat : UNIQUEMENT le collège « Médecine générale » de
+  // la voie choisie (interne ou externe) + ses éventuelles sous-matières, plus
+  // l'Espace Découverte. Les autres collèges (Cardiologie, Pédiatrie, MIR,
+  // Pneumologie, Gériatrie, Neurologie…) NE sont PAS accordés.
   let colleges: string[] = [DECOUVERTE_COLLEGE_ID];
   const voieValue = (input.voie ?? '').toLowerCase();
 
   if (voieValue === 'interne' || voieValue === 'externe') {
+    const mgId = voieValue === 'externe' ? MG_EXTERNE_ID : MG_INTERNE_ID;
+
+    // Sous-matières éventuelles rattachées au collège MG choisi (ex. une
+    // spécialité placée sous « Médecine générale »). On interroge la table pour
+    // rester dynamique si de nouvelles sous-matières sont ajoutées.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: allMatieres } = await (admin as any)
       .from('matieres')
       .select('id, parent_matiere_id');
-
     const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
+    const childIds = mats.filter((m) => m.parent_matiere_id === mgId).map((m) => m.id);
 
-    if (voieValue === 'interne') {
-      colleges = mats
-        .map((m) => m.id)
-        .filter((id) => id !== MG_EXTERNE_ID);
-    } else {
-      const interneChildIds = new Set(
-        mats.filter((m) => m.parent_matiere_id === MG_INTERNE_ID).map((m) => m.id),
-      );
-      colleges = mats
-        .map((m) => m.id)
-        .filter((id) => id !== MG_INTERNE_ID && !interneChildIds.has(id));
-    }
-    log('colleges-resolved', { voie: voieValue, count: colleges.length, colleges });
+    colleges = [DECOUVERTE_COLLEGE_ID, mgId, ...childIds];
+    log('colleges-resolved', { voie: voieValue, mgId, count: colleges.length, colleges });
   }
 
   // On part du scope existant (préserve `signup`, `espace_decouverte`,

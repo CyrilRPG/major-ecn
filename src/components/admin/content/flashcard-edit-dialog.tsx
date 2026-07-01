@@ -3,13 +3,12 @@
 import { useEffect, useState, useTransition } from 'react';
 import { Loader2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
+import { FlashcardRichField } from './flashcard-rich-field';
 import { upsertFlashcardAction } from '@/app/admin/contenu/[cours]/qcm-actions';
+import { flashcardHasContent } from '@/lib/flashcards/rich-text';
 
 export function FlashcardEditDialog({
   open, onOpenChange, coursId, flashcardId, initialRecto, initialVerso, onSaved,
@@ -35,6 +34,8 @@ export function FlashcardEditDialog({
     }
   }, [open, initialRecto, initialVerso]);
 
+  const canSave = flashcardHasContent(recto) && flashcardHasContent(verso);
+
   const submit = () => {
     setErr(null);
     start(async () => {
@@ -50,27 +51,17 @@ export function FlashcardEditDialog({
         <DialogHeader>
           <DialogTitle>{flashcardId ? 'Modifier la flashcard' : 'Nouvelle flashcard'}</DialogTitle>
           <DialogDescription>
-            Recto : question / mot-clé. Verso : réponse complète.
+            Mettez en forme le texte (gras, italique, couleur) et ajoutez une image si besoin.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="fc-recto-d">Recto</Label>
-            <Input id="fc-recto-d" value={recto} onChange={(e) => setRecto(e.target.value)} placeholder="Glycolyse" />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="fc-verso-d">Verso</Label>
-            <Textarea
-              id="fc-verso-d" rows={5} value={verso}
-              onChange={(e) => setVerso(e.target.value)}
-              placeholder="Voie cytosolique convertissant le glucose en 2 pyruvates…"
-            />
-          </div>
+          <FlashcardRichField coursId={coursId} value={recto} onChange={setRecto} label="Recto" placeholder="Glycolyse" />
+          <FlashcardRichField coursId={coursId} value={verso} onChange={setVerso} label="Verso" placeholder="Voie cytosolique convertissant le glucose en 2 pyruvates…" />
           {err && <p className="rounded-lg bg-(--color-primary-soft) px-3 py-2 text-xs text-(--color-primary-deep)">{err}</p>}
         </div>
-        <div className="flex items-center justify-end gap-2 pt-3 border-t border-(--color-border)">
+        <div className="flex items-center justify-end gap-2 border-t border-(--color-border) pt-3">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={pending}>Annuler</Button>
-          <Button type="button" onClick={submit} disabled={pending || recto.trim().length < 2 || verso.trim().length < 2}>
+          <Button type="button" onClick={submit} disabled={pending || !canSave}>
             {pending ? <Loader2 className="animate-spin" /> : <Pencil />}
             {flashcardId ? 'Mettre à jour' : 'Créer'}
           </Button>

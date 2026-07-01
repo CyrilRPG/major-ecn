@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { assertCanWrite, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
+import { sanitizeFlashcardHtml, flashcardPlainText, flashcardHasContent } from '@/lib/flashcards/rich-text';
 
 /* ============================================================
    Création / édition / suppression manuelles de QCM
@@ -265,11 +266,6 @@ export async function deleteQcmQuestionAction(questionId: string, coursId: strin
 
 /* ───── Flashcards ───── */
 
-const FlashcardSchema = z.object({
-  recto: z.string().min(2, 'Recto requis'),
-  verso: z.string().min(2, 'Verso requis'),
-});
-
 export async function upsertFlashcardAction(input: {
   id?: string;
   coursId: string;
@@ -278,13 +274,17 @@ export async function upsertFlashcardAction(input: {
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
-  const parsed = FlashcardSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
+
+  // Nettoyage du HTML riche (gras / couleur / image) selon la liste blanche.
+  const recto = sanitizeFlashcardHtml(input.recto);
+  const verso = sanitizeFlashcardHtml(input.verso);
+  if (!flashcardHasContent(recto)) return { error: 'Le recto ne peut pas être vide.' };
+  if (!flashcardHasContent(verso)) return { error: 'Le verso ne peut pas être vide.' };
 
   const admin = createAdminClient();
   let id = input.id;
   if (id) {
-    const { error } = await admin.from('flashcards').update({ recto: input.recto.trim(), verso: input.verso.trim() }).eq('id', id);
+    const { error } = await admin.from('flashcards').update({ recto, verso }).eq('id', id);
     if (error) return { error: error.message };
   } else {
     const { data: last } = await admin.from('flashcards')
@@ -293,8 +293,8 @@ export async function upsertFlashcardAction(input: {
     const nextIdx = (last?.[0]?.order_index ?? -1) + 1;
     const { data, error } = await admin.from('flashcards').insert({
       cours_id: input.coursId,
-      recto: input.recto.trim(),
-      verso: input.verso.trim(),
+      recto,
+      verso,
       order_index: nextIdx,
     }).select('id').single();
     if (error || !data) return { error: error?.message ?? 'Échec de la création.' };
@@ -310,9 +310,13 @@ export async function upsertFlashcardAction(input: {
     coursId: input.coursId,
     coursTitre: ctx?.titre ?? null,
     matiereNom: ctx?.matieres?.nom ?? null,
-    description: input.id
-      ? `Modification de la flashcard : « ${input.recto.slice(0, 60)}${input.recto.length > 60 ? '…' : ''} »`
-      : `Création d'une flashcard : « ${input.recto.slice(0, 60)}${input.recto.length > 60 ? '…' : ''} »`,
+    description: (() => {
+      const preview = flashcardPlainText(recto).slice(0, 60);
+      const suffix = flashcardPlainText(recto).length > 60 ? '…' : '';
+      return input.id
+        ? `Modification de la flashcard : « ${preview}${suffix} »`
+        : `Création d'une flashcard : « ${preview}${suffix} »`;
+    })(),
   });
   revalidatePath(`/admin/contenu/${input.coursId}`);
   revalidatePath(`/cours/${input.coursId}/flashcards`);
@@ -432,6 +436,30 @@ export async function uploadQcmImageAction(formData: FormData): Promise<{ ok: tr
   const admin = createAdminClient();
   const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
   const path = `${crypto.randomUUID()}.${ext}`;
+  const { error } = await admin.storage.from('qcm-images').upload(path, file, {
+    contentType: file.type,
+    cacheControl: '3600',
+    upsert: false,
+  });
+  if (error) return { error: error.message };
+  const { data: pub } = admin.storage.from('qcm-images').getPublicUrl(path);
+  return { ok: true, url: pub.publicUrl };
+}
+
+/** Upload d'une image insérée dans une flashcard (recto / verso). Réutilise le
+ *  bucket public `qcm-images` (images de contenu). Gated sur l'accès flashcards. */
+export async function uploadFlashcardImageAction(formData: FormData): Promise<{ ok: true; url: string } | { error: string }> {
+  const { scope } = await requireContentEditor();
+  try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
+  const file = formData.get('file');
+  if (!(file instanceof File)) return { error: 'Fichier manquant.' };
+  if (file.size > 5 * 1024 * 1024) return { error: 'Image trop volumineuse (max 5 Mo).' };
+  if (!['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(file.type)) {
+    return { error: 'Format non supporté (PNG, JPEG, WEBP, GIF uniquement).' };
+  }
+  const admin = createAdminClient();
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
+  const path = `flashcards/${crypto.randomUUID()}.${ext}`;
   const { error } = await admin.storage.from('qcm-images').upload(path, file, {
     contentType: file.type,
     cacheControl: '3600',
