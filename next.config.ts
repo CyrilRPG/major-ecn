@@ -44,6 +44,7 @@ const nextConfig: NextConfig = {
   // puisse les lire en runtime (process.cwd()/data/medgen-annales).
   outputFileTracingIncludes: {
     '/api/medgen-annales/[id]/pdf': ['./data/medgen-annales/**/*'],
+    '/api/admin/campaign': ['./src/lib/email/campaigns/**/*'],
   },
   // Le tracing de Vercel embarquait des assets STATIQUES lourds (vidéos
   // témoignages, images formules, PDF d'annales racine) dans le bundle des

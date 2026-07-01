@@ -99,10 +99,10 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
 
           <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
             <Image
-              src="/blog/infographie-documents-inscription-evc.webp"
-              alt="Documents nécessaires pour l'inscription aux EVC : diplôme ou titre, pièce d'identité, traductions assermentées, formulaire d'inscription CNG, justificatifs complémentaires"
-              width={1587}
-              height={991}
+              src="/blog/infographie-documents-evc.webp"
+              alt="Liste complète des documents à préparer pour les EVC : pièce d'identité, diplôme, diplôme de spécialité, traductions assermentées, attestation B2, documents liés au statut particulier"
+              width={1444}
+              height={1089}
               className="w-full h-auto"
             />
           </div>
@@ -139,13 +139,13 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
           </NumberedBox>
         </section>
 
-        {/* Section 4 : Niveau de français */}
+        {/* Section 4 : Documents nécessaires pour l'inscription */}
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
           <Image
-            src="/blog/infographie-justifier-francais-evc.webp"
-            alt="Comment justifier de votre maîtrise du français : TCF/TEF niveau B2, DELF B2 ou DALF, baccalauréat français, diplôme universitaire français, études suivies en français, situation particulière"
-            width={1177}
-            height={1336}
+            src="/blog/infographie-documents-inscription-evc.webp"
+            alt="Documents nécessaires pour l'inscription aux EVC : diplôme ou titre, pièce d'identité, traductions assermentées, formulaire d'inscription CNG, justificatifs complémentaires"
+            width={1587}
+            height={991}
             className="w-full h-auto"
           />
         </section>

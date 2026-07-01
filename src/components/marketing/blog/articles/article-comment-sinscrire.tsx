@@ -98,7 +98,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                 alt="Illustration médecin PADHUE avec tablette"
                 width={1024}
                 height={1536}
-                className="h-auto w-3/4 select-none"
+                className="h-auto w-2/5 select-none"
               />
             </div>
           </NumberedBox>
@@ -126,19 +126,17 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
           </div>
         </section>
 
-        {/* Section 4 — Documents (infographie) */}
-        <section className="mb-6 overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
-          <Image
-            src="/blog/infographie-documents-evc.webp"
-            alt="Liste complète des documents à préparer pour les EVC : pièce d'identité, diplôme, diplôme de spécialité, traductions assermentées, attestation B2, documents liés au statut particulier"
-            width={1444}
-            height={1089}
-            className="w-full h-auto"
-          />
-        </section>
-
-        {/* Sections 5 + 6 — côte à côte (infographies) */}
+        {/* Sections 4 + 5 — côte à côte (infographies) */}
         <section className="mb-6 grid gap-4 lg:grid-cols-2">
+          <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
+            <Image
+              src="/blog/infographie-justifier-francais-evc.webp"
+              alt="Comment justifier de votre maîtrise du français : TCF/TEF niveau B2, DELF B2 ou DALF, baccalauréat français, diplôme universitaire français, études en français, situation particulière"
+              width={1177}
+              height={1336}
+              className="w-full h-auto"
+            />
+          </div>
           <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
             <Image
               src="/blog/infographie-tentatives-evc.webp"
@@ -148,20 +146,22 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
               className="w-full h-auto"
             />
           </div>
-          <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
-            <Image
-              src="/blog/infographie-envoi-dossier-evc.webp"
-              alt="Où envoyer son dossier de candidature : étapes de la candidature sur la plateforme du CNG"
-              width={1061}
-              height={1483}
-              className="w-full h-auto"
-            />
-          </div>
+        </section>
+
+        {/* Section 6 — envoi dossier (constrainte pour éviter le surdimensionnement) */}
+        <section className="mb-6 mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
+          <Image
+            src="/blog/infographie-envoi-dossier-evc.webp"
+            alt="Où envoyer son dossier de candidature : étapes de la candidature sur la plateforme du CNG"
+            width={1061}
+            height={1483}
+            className="w-full h-auto"
+          />
         </section>
 
         {/* Bloc Major ECN — pourquoi choisir + plateforme */}
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#FACBD0] bg-[#FFF1F3] p-5 sm:p-6">
-          <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+          <div className="grid gap-5 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
             <div>
               <div className="flex items-center gap-3">
                 <BrandLogo className="h-12 w-auto sm:h-14" />
@@ -179,30 +179,30 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                 ))}
               </ul>
             </div>
-            <div>
-              <div className="mb-3 flex justify-center">
-                <Image
-                  src="/blog/illustration-cng-laptop.webp"
-                  alt="Illustration inscription en ligne sur la plateforme du CNG"
-                  width={1024}
-                  height={1536}
-                  className="h-auto w-1/2 select-none"
-                />
-              </div>
-              <p className="mb-3 text-center text-[11.5px] font-bold text-[#1A2233]">Découvrez la plateforme Major ECN</p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <PlatformShot label="Tableau de bord"        src="/accueil.png" />
-                <PlatformShot label="Entraînement ciblé"     src="/entrainement.png" />
-                <PlatformShot label="Cours par item EDN"     src="/cours.png" />
-                <PlatformShot label="Annales EVC corrigées"  src="/annales.png" />
-              </div>
-              <ul className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10.5px] font-semibold text-[#52607A]">
-                <li className="inline-flex items-center gap-1"><Clock className="h-3 w-3 text-[#C0001F]" /> Accessible 24h/24</li>
-                <li className="inline-flex items-center gap-1"><FileText className="h-3 w-3 text-[#C0001F]" /> Suivi détaillé</li>
-                <li className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-[#C0001F]" /> Mises à jour régulières</li>
-                <li className="inline-flex items-center gap-1"><Phone className="h-3 w-3 text-[#C0001F]" /> Application mobile</li>
-              </ul>
+            <div className="flex justify-center">
+              <Image
+                src="/blog/illustration-cng-laptop.webp"
+                alt="Illustration inscription en ligne sur la plateforme du CNG"
+                width={1024}
+                height={1536}
+                className="h-auto w-3/4 select-none"
+              />
             </div>
+          </div>
+          <div className="mt-5 border-t border-[#FACBD0]/50 pt-4">
+            <p className="mb-3 text-center text-[11.5px] font-bold text-[#1A2233]">Découvrez la plateforme Major ECN</p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <PlatformShot label="Tableau de bord"        src="/accueil.png" />
+              <PlatformShot label="Entraînement ciblé"     src="/entrainement.png" />
+              <PlatformShot label="Cours par item EDN"     src="/cours.png" />
+              <PlatformShot label="Annales EVC corrigées"  src="/annales.png" />
+            </div>
+            <ul className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10.5px] font-semibold text-[#52607A]">
+              <li className="inline-flex items-center gap-1"><Clock className="h-3 w-3 text-[#C0001F]" /> Accessible 24h/24</li>
+              <li className="inline-flex items-center gap-1"><FileText className="h-3 w-3 text-[#C0001F]" /> Suivi détaillé de vos progrès</li>
+              <li className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-[#C0001F]" /> Mises à jour régulières</li>
+              <li className="inline-flex items-center gap-1"><Phone className="h-3 w-3 text-[#C0001F]" /> Application mobile</li>
+            </ul>
           </div>
         </section>
 
@@ -271,7 +271,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                 alt="Parcours de préparation structuré pour réussir les EVC"
                 width={1163}
                 height={1353}
-                className="h-auto w-2/3 select-none"
+                className="h-auto w-2/5 select-none"
               />
             </div>
             <Link
