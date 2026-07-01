@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendEmail } from '@/lib/email/send';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { enrollInCampaign } from '@/lib/email/campaign-enroll';
 
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
@@ -48,9 +49,10 @@ export async function POST(req: Request) {
       cta_variant: ctaVariant,
     });
   } catch {
-    // Non-blocking: log but don't fail the request
     console.error('[guide-download] Failed to save lead to Supabase');
   }
+
+  enrollInCampaign(email, firstName, 'guide_lead').catch(() => {});
 
   // ── Email to admin (lead notification) ──
   const subject = `📘 Guide EVC 2026 téléchargé — ${firstName} ${lastName || ''}`.trim();

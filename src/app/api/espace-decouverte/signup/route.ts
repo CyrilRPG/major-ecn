@@ -33,6 +33,7 @@ import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { welcomeEmail, decouverteSignupNotificationEmail } from '@/lib/email/templates';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { spamCheck } from '@/lib/anti-spam';
+import { enrollInCampaign } from '@/lib/email/campaign-enroll';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -239,6 +240,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: pErr.message }, { status: 500 });
   }
   log('profile-upserted', { isNew });
+
+  enrollInCampaign(email, firstName, 'espace_decouverte').catch(() => {});
 
   // Récap interne (contact@ + abonan1@) — n'interrompt jamais le flux étudiant.
   try {

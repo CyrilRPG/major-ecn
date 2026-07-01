@@ -1,53 +1,14 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { CAMPAIGNS, loadTemplate, sendCampaignEmail } from '@/lib/email/campaign';
+import type { CampaignKey } from '@/lib/email/campaign';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
 
-const CAMPAIGNS: Record<string, { file: string; subject: string }> = {
-  j1: {
-    file: 'j1.html',
-    subject: 'Pourquoi des médecins excellents échouent aux EVC ?',
-  },
-  j3: {
-    file: 'j3.html',
-    subject: 'Les 7 erreurs qui coûtent le plus de points aux EVC',
-  },
-  j5: {
-    file: 'j5.html',
-    subject: 'La méthode que suivent les candidats qui réussissent aux EVC',
-  },
-  j7: {
-    file: 'j7.html',
-    subject: 'Comment organiser efficacement ses révisions EVC ?',
-  },
-};
-
 const EXPLICIT_RECIPIENTS = ['abonan1@yahoo.fr', 'cyrilwisa@gmail.com'];
-
-const RESEND_URL = 'https://api.resend.com/emails';
-
-async function sendCampaign(to: string, subject: string, html: string): Promise<{ ok: boolean; error?: string }> {
-  const key = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM ?? 'Major ECN <contact@major-ecn.fr>';
-  if (!key) return { ok: false, error: 'RESEND_API_KEY non configurée' };
-
-  const res = await fetch(RESEND_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
-    body: JSON.stringify({ from, to: [to], subject, html }),
-  });
-
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    return { ok: false, error: `Resend ${res.status}: ${body.slice(0, 200)}` };
-  }
-  return { ok: true };
-}
 
 async function getAllRecipients(): Promise<string[]> {
   const admin = createAdminClient();
@@ -66,13 +27,14 @@ async function getAllRecipients(): Promise<string[]> {
     if (u.email) emailSet.add((u.email as string).trim().toLowerCase());
   }
 
-  const { data: leads } = await admin
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: leads } = await (admin as any)
     .from('guide_leads')
     .select('email, active')
     .eq('active', true);
 
-  for (const l of leads ?? []) {
-    if (l.email) emailSet.add((l.email as string).trim().toLowerCase());
+  for (const l of (leads ?? []) as { email: string }[]) {
+    if (l.email) emailSet.add(l.email.trim().toLowerCase());
   }
 
   return [...emailSet];
@@ -117,26 +79,23 @@ export async function POST(req: Request) {
   const campaignKey = body.campaign;
   const testEmail = body.test_email?.trim();
 
-  if (!campaignKey || !CAMPAIGNS[campaignKey]) {
+  if (!campaignKey || !CAMPAIGNS[campaignKey as CampaignKey]) {
     return NextResponse.json(
       { error: `Campaign invalide. Valeurs possibles : ${Object.keys(CAMPAIGNS).join(', ')}` },
       { status: 400 },
     );
   }
 
-  const campaign = CAMPAIGNS[campaignKey];
+  const campaign = CAMPAIGNS[campaignKey as CampaignKey];
   let html: string;
   try {
-    html = readFileSync(
-      join(process.cwd(), 'src', 'lib', 'email', 'campaigns', campaign.file),
-      'utf-8',
-    );
+    html = loadTemplate(campaignKey as CampaignKey);
   } catch {
     return NextResponse.json({ error: `Fichier template ${campaign.file} introuvable` }, { status: 500 });
   }
 
   if (testEmail) {
-    const result = await sendCampaign(testEmail, `[TEST] ${campaign.subject}`, html);
+    const result = await sendCampaignEmail(testEmail, `[TEST] ${campaign.subject}`, html);
     return NextResponse.json({ ok: result.ok, mode: 'test', to: testEmail, error: result.error });
   }
 
@@ -149,7 +108,7 @@ export async function POST(req: Request) {
   for (let i = 0; i < recipients.length; i += CHUNK) {
     const slice = recipients.slice(i, i + CHUNK);
     const results = await Promise.all(
-      slice.map((to) => sendCampaign(to, campaign.subject, html).catch(() => ({ ok: false, error: 'exception' }))),
+      slice.map((to) => sendCampaignEmail(to, campaign.subject, html).catch(() => ({ ok: false, error: 'exception' }))),
     );
     for (const r of results) {
       if (r.ok) sent++;
