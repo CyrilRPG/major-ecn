@@ -1,29 +1,45 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { isStudyRoute } from '@/lib/student/study-route';
 
 const HEARTBEAT_MS = 30_000;
 
+/**
+ * Compte le « Temps de révision » — mais UNIQUEMENT sur les pages d'étude
+ * réelle (fiche, vidéo, QCM, flashcards, entraînement, révisions transversales).
+ * Sur les pages de navigation (accueil, facultés, agenda…), aucun heartbeat
+ * n'est émis : ouvrir/parcourir la plateforme ne gonfle plus les statistiques.
+ */
 export function PlatformTimer() {
-  const sendHeartbeat = useCallback(async () => {
-    try {
-      await fetch('/api/student/heartbeat', { method: 'POST' });
-    } catch { /* offline */ }
-  }, []);
+  const pathname = usePathname();
+  const active = isStudyRoute(pathname);
+  const pathRef = useRef(pathname);
+  pathRef.current = pathname;
 
   useEffect(() => {
-    sendHeartbeat();
-    const interval = setInterval(sendHeartbeat, HEARTBEAT_MS);
-    return () => clearInterval(interval);
-  }, [sendHeartbeat]);
+    if (!active) return;
 
-  useEffect(() => {
+    const send = () => {
+      fetch('/api/student/heartbeat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: pathRef.current }),
+      }).catch(() => { /* offline */ });
+    };
+
+    send();
+    const interval = setInterval(send, HEARTBEAT_MS);
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') sendHeartbeat();
+      if (document.visibilityState === 'visible') send();
     };
     document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [sendHeartbeat]);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [active, pathname]);
 
   return null;
 }

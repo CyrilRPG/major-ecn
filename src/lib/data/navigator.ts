@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/lib/auth/get-profile';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
@@ -52,7 +53,7 @@ type Row = {
  * Flat Collège → Item hierarchy for the persistent navigator.
  * Scoped to the EDN programme faculté; course_progress is RLS-scoped to the user.
  */
-export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> {
+export const getNavigatorTree = cache(async (profile: Profile): Promise<NavCollege[]> => {
   const supabase = await createClient();
   const scope = parseScope(profile.permission_scope);
 
@@ -165,4 +166,4 @@ export async function getNavigatorTree(profile: Profile): Promise<NavCollege[]> 
       };
     })
     .filter((m) => m.cours.length > 0 || (m.children && m.children.length > 0));
-}
+});

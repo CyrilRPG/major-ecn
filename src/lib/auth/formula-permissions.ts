@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { getContentAccess, type ContentAccess } from './permissions';
 import type { Offer } from '@/types/domain';
@@ -30,7 +31,12 @@ function rowToAccess(row: Row): ContentAccess {
   };
 }
 
-export async function fetchContentAccess(offer: Offer): Promise<ContentAccess> {
+/**
+ * Mémoïsé par requête (React `cache`), keyé par `offer` : appelé depuis ~18
+ * endroits (layout + page + sous-pages d'un cours) qui interrogeaient tous
+ * `formula_permissions`. Le cache réduit à un seul accès DB par offre/requête.
+ */
+export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAccess> => {
   if (offer === 'decouverte') return getContentAccess(offer);
   try {
     const supabase = await createClient();
@@ -44,4 +50,4 @@ export async function fetchContentAccess(offer: Offer): Promise<ContentAccess> {
     // fallback to hardcoded
   }
   return getContentAccess(offer);
-}
+});

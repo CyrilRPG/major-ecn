@@ -35,6 +35,7 @@ type SessionRow = {
   qcm_series: { cours: { id: string; titre: string; matieres: { id: string; semestres: { faculte_id: string } } } };
 };
 type ReviewRow = {
+  flashcard_id: string;
   difficulty: string;
   reviewed_at: string;
   flashcards: { cours: { id: string; titre: string; matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
@@ -85,7 +86,7 @@ export default async function AccueilPage() {
       .not('finished_at', 'is', null),
     supabase
       .from('flashcard_reviews')
-      .select('difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
+      .select('flashcard_id, difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
       .eq('user_id', user.id)
       .order('reviewed_at', { ascending: false }),
     supabase
@@ -169,14 +170,10 @@ export default async function AccueilPage() {
   const goalSeconds = 6 * 3600;
 
   /* ---- Flashcards maîtrisées ---- */
-  const { data: fr2 } = await supabase
-    .from('flashcard_reviews')
-    .select('flashcard_id, difficulty, flashcards!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))')
-    .eq('user_id', user.id);
+  // Réutilise `reviews` (déjà chargé + filtré EDN plus haut) : évite un second
+  // scan complet de flashcard_reviews par rendu.
   const scoreByCard = new Map<string, number>();
-  type FR2 = { flashcard_id: string; difficulty: string; flashcards: { cours: { matieres: { semestres: { faculte_id: string } } } } };
-  for (const r of ((fr2 ?? []) as unknown as FR2[])) {
-    if (!inEdn(r.flashcards.cours.matieres.semestres.faculte_id)) continue;
+  for (const r of reviews) {
     scoreByCard.set(r.flashcard_id, (scoreByCard.get(r.flashcard_id) ?? 0) + (DIFFICULTY_SCORE[r.difficulty as Difficulty] ?? 0));
   }
   let fcMastered = 0;

@@ -1,14 +1,23 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { isStudyRoute } from '@/lib/student/study-route';
 
 export const runtime = 'nodejs';
 
 const HEARTBEAT_INTERVAL_S = 30;
 
-export async function POST() {
+export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
+
+  // Garde-fou serveur : ne comptabiliser le temps que sur les pages d'étude
+  // réelle. Le client n'émet déjà de heartbeat que sur ces pages ; cette
+  // vérification empêche toute comptabilisation parasite (navigation, onglets…).
+  const body = (await req.json().catch(() => ({}))) as { path?: string };
+  if (!isStudyRoute(body.path)) {
+    return NextResponse.json({ ok: true, ignored: true });
+  }
 
   const today = new Date().toISOString().slice(0, 10);
 
