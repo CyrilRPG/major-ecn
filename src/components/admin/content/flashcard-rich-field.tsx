@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Bold, Italic, ImagePlus, Baseline, Eraser, Loader2 } from 'lucide-react';
+import { Bold, Italic, Underline, ImagePlus, Baseline, Eraser, Loader2 } from 'lucide-react';
 import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
 import { uploadFlashcardImageAction } from '@/app/admin/contenu/[cours]/qcm-actions';
 
@@ -111,6 +111,9 @@ export function FlashcardRichField({ coursId, value, onChange, placeholder, labe
           </button>
           <button type="button" className={btn} title="Italique (Ctrl+I)" onMouseDown={(e) => e.preventDefault()} onClick={() => exec('italic')}>
             <Italic className="h-4 w-4" />
+          </button>
+          <button type="button" className={btn} title="Souligné (Ctrl+U)" onMouseDown={(e) => e.preventDefault()} onClick={() => exec('underline')}>
+            <Underline className="h-4 w-4" />
           </button>
 
           {/* Couleur du texte */}

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, Target } from 'lucide-r
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
+import { RichText } from '@/components/qcm/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -116,7 +117,7 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
-          {q.enonce}
+          <RichText html={q.enonce} />
         </h2>
       </div>
 

@@ -16,6 +16,7 @@ export function FlashcardEditor({ coursId, initial }: { coursId: string; initial
   const [verso, setVerso] = useState('');
   const [pending, start] = useTransition();
   const [editing, setEditing] = useState<FlashcardRow | null>(null);
+  const [adding, setAdding] = useState<{ orderIndex: number; position: number } | null>(null);
   const router = useRouter();
 
   const canAdd = flashcardHasContent(recto) && flashcardHasContent(verso);
@@ -66,7 +67,7 @@ export function FlashcardEditor({ coursId, initial }: { coursId: string; initial
         {initial.length === 0 ? (
           <p className="text-sm italic text-(--color-ink-soft)">Aucune flashcard pour ce cours.</p>
         ) : (
-          initial.map((c) => (
+          initial.map((c, idx) => (
             <div key={c.id} className="flex items-start gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
               <div className="min-w-0 flex-1 space-y-0.5">
                 <div
@@ -78,6 +79,9 @@ export function FlashcardEditor({ coursId, initial }: { coursId: string; initial
                   dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(c.verso) }}
                 />
               </div>
+              <Button variant="ghost" size="sm" onClick={() => setAdding({ orderIndex: c.order_index, position: idx })} disabled={pending} title="Ajouter une carte ici" className="text-(--color-primary)">
+                <Plus className="h-3.5 w-3.5" />
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => setEditing(c)} disabled={pending} title="Modifier">
                 <Pencil className="h-3.5 w-3.5" />
               </Button>
@@ -98,6 +102,16 @@ export function FlashcardEditor({ coursId, initial }: { coursId: string; initial
           initialRecto={editing.recto}
           initialVerso={editing.verso}
           onSaved={() => router.refresh()}
+        />
+      )}
+
+      {adding && (
+        <FlashcardEditDialog
+          open={!!adding}
+          onOpenChange={(v) => { if (!v) setAdding(null); }}
+          coursId={coursId}
+          insertAnchor={adding}
+          onSaved={() => { setAdding(null); router.refresh(); }}
         />
       )}
     </div>

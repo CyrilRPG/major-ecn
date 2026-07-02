@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
 import { QrocItem, type QrocOutcome } from './qroc-item';
 import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
+import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
@@ -368,9 +369,10 @@ export function QcmSession({
             </button>
           )}
         </div>
-        <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line">
-          {q.enonce}
-        </h2>
+        <h2
+          className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
+          dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }}
+        />
         {(q.images?.length ?? 0) > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {q.images!.map((src) => (
@@ -436,9 +438,10 @@ export function QcmSession({
                 </p>
               )}
               {(q.correction_generale || (isSeance && q.reponse_attendue)) && (
-                <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
-                  {q.correction_generale || q.reponse_attendue}
-                </p>
+                <div
+                  className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
+                  dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale || q.reponse_attendue || '') }}
+                />
               )}
             </motion.div>
           )}
@@ -496,9 +499,10 @@ export function QcmSession({
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">
             Corrigé général
           </p>
-          <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
-            {q.correction_generale}
-          </p>
+          <div
+            className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
+            dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale) }}
+          />
         </div>
       )}
 

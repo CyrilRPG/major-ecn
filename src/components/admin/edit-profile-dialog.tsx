@@ -325,10 +325,24 @@ export function EditProfileDialog({
                             }
                             return (
                               <div className="space-y-3">
-                                {groups.map((g, gi) => (
+                                {groups.map((g, gi) => {
+                                  const groupIds = g.items.map((c) => c.id);
+                                  const groupAllChecked = groupIds.length > 0 && groupIds.every((id) => scopeCours.includes(id));
+                                  return (
                                   <div key={gi}>
                                     {g.label && (
-                                      <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-(--color-primary)">{g.label}</p>
+                                      <label className="mb-1.5 flex items-center gap-2 cursor-pointer">
+                                        <Checkbox
+                                          checked={groupAllChecked}
+                                          onCheckedChange={(v) => {
+                                            const set = new Set(scopeCours);
+                                            if (v) groupIds.forEach((id) => set.add(id));
+                                            else groupIds.forEach((id) => set.delete(id));
+                                            setScopeCours(Array.from(set));
+                                          }}
+                                        />
+                                        <span className="text-[11px] font-semibold uppercase tracking-wide text-(--color-primary)">{g.label}</span>
+                                      </label>
                                     )}
                                     <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                                       {g.items.map((c) => {
@@ -349,7 +363,8 @@ export function EditProfileDialog({
                                       })}
                                     </div>
                                   </div>
-                                ))}
+                                  );
+                                })}
                               </div>
                             );
                           })()}

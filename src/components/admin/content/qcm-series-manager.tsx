@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { QcmQuestionEditor, type QcmQuestionDraft } from './qcm-question-editor';
 import { VignetteEditorDialog } from './vignette-editor-dialog';
+import { flashcardPlainText } from '@/lib/flashcards/rich-text';
 import {
   createQcmSerieAction,
   deleteQcmQuestionAction,
@@ -31,6 +32,7 @@ export function QcmSeriesManager({
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<{ serieId: string; q?: QcmQuestionDraft } | null>(null);
+  const [addingQuestion, setAddingQuestion] = useState<{ serieId: string; anchor: { questionId: string; position: number } } | null>(null);
   const [editingVignette, setEditingVignette] = useState<{ serieId: string; current: string | null } | null>(null);
   const [openSerie, setOpenSerie] = useState<Set<string>>(new Set());
   const [pending, start] = useTransition();
@@ -126,13 +128,23 @@ export function QcmSeriesManager({
                             {i + 1}
                           </span>
                           <p className="flex-1 text-(--color-ink) leading-snug">
-                            {q.enonce}
+                            {flashcardPlainText(q.enonce)}
                             <span className="ml-2 inline-flex items-center gap-1 text-[10px] text-(--color-ink-muted)">
                               {q.items.length} items · {q.items.filter((it) => it.is_correct).length} vrais
                               {(q.images?.length ?? 0) > 0 && ` · ${q.images.length} image${q.images.length > 1 ? 's' : ''}`}
                               {q.correction_generale && ' · corrigé'}
                             </span>
                           </p>
+                          {q.id && (
+                            <Button
+                              type="button" variant="ghost" size="sm"
+                              onClick={() => setAddingQuestion({ serieId: s.id, anchor: { questionId: q.id!, position: i } })}
+                              title="Ajouter une question ici"
+                              className="text-(--color-primary)"
+                            >
+                              <Plus className="h-3.5 w-3.5" />
+                            </Button>
+                          )}
                           <Button
                             type="button" variant="ghost" size="sm"
                             onClick={() => setEditingQuestion({ serieId: s.id, q })}
@@ -169,6 +181,19 @@ export function QcmSeriesManager({
           coursId={coursId}
           serieId={editingQuestion.serieId}
           initial={editingQuestion.q ?? null}
+          initialVignette={series.find((s) => s.id === editingQuestion.serieId)?.vignette ?? null}
+          onSaved={() => router.refresh()}
+        />
+      )}
+      {addingQuestion && (
+        <QcmQuestionEditor
+          open={!!addingQuestion}
+          onOpenChange={(v) => { if (!v) setAddingQuestion(null); }}
+          coursId={coursId}
+          serieId={addingQuestion.serieId}
+          insertAnchor={addingQuestion.anchor}
+          initialVignette={series.find((s) => s.id === addingQuestion.serieId)?.vignette ?? null}
+          onSaved={() => { setAddingQuestion(null); router.refresh(); }}
         />
       )}
       {editingVignette && (

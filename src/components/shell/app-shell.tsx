@@ -115,7 +115,9 @@ export function AppShell({
   const sidebar = (
     <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
       <div className="relative flex h-20 items-center justify-center border-b border-white/10 px-4">
-        <BrandLogo className="h-16 w-auto [filter:brightness(0)_invert(1)]" />
+        <Link href="/accueil" aria-label="Accueil" className="rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/40">
+          <BrandLogo className="h-16 w-auto [filter:brightness(0)_invert(1)]" />
+        </Link>
         <button
           type="button"
           onClick={() => setMobileOpen(false)}

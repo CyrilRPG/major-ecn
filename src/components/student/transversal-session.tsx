@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft, ArrowRight, CalendarPlus, CheckCircle2, AlertTr
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
+import { RichText } from '@/components/qcm/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -166,7 +167,7 @@ export function TransversalSession({
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
-          {q.enonce}
+          <RichText html={q.enonce} />
         </h2>
       </div>
 
@@ -539,7 +540,7 @@ function CorrectionsView({
               <span className="text-xs font-medium text-(--color-ink-muted)">{q.college}</span>
               <span className="text-xs font-bold text-(--color-ink)">Q{qi + 1}</span>
             </div>
-            <p className="text-sm font-semibold text-(--color-ink)">{q.enonce}</p>
+            <p className="text-sm font-semibold text-(--color-ink)"><RichText html={q.enonce} /></p>
             <div className="mt-3 space-y-1.5">
               {q.items.map((it) => (
                 <div
@@ -560,10 +561,10 @@ function CorrectionsView({
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className={cn(it.is_correct ? 'font-medium text-[#16793C]' : 'text-(--color-ink)')}>
-                        {it.enonce}
+                        <RichText html={it.enonce} />
                       </p>
                       {it.justification && (
-                        <p className="mt-1 text-xs text-(--color-ink-soft)">{it.justification}</p>
+                        <p className="mt-1 text-xs text-(--color-ink-soft)"><RichText html={it.justification} /></p>
                       )}
                     </div>
                   </div>

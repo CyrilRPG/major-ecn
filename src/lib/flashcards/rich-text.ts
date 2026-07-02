@@ -87,9 +87,20 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
 
     if (name === 'span') {
       const style = attrValue(inner, 'style') || '';
+      // Sous-ensemble de styles sûrs (aucun ne peut exécuter de script) :
+      // couleur + gras/italique/souligné — utile quand le navigateur produit
+      // des <span style> plutôt que des balises <b>/<i>/<u> (styleWithCSS).
+      const decls: string[] = [];
       const cm = style.match(/color\s*:\s*([^;]+)/i);
       const col = cm ? safeColor(cm[1]) : null;
-      out.push(col ? `<span style="color:${col}">` : '<span>');
+      if (col) decls.push(`color:${col}`);
+      const fw = style.match(/font-weight\s*:\s*([^;]+)/i);
+      if (fw && /^(bold(er)?|[5-9]00)$/i.test(fw[1].trim())) decls.push('font-weight:bold');
+      const fs = style.match(/font-style\s*:\s*([^;]+)/i);
+      if (fs && /^italic$/i.test(fs[1].trim())) decls.push('font-style:italic');
+      const td = style.match(/text-decoration(?:-line)?\s*:\s*([^;]+)/i);
+      if (td && /underline/i.test(td[1])) decls.push('text-decoration:underline');
+      out.push(decls.length ? `<span style="${decls.join(';')}">` : '<span>');
       continue;
     }
 

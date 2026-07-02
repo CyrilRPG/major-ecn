@@ -7,7 +7,7 @@ export async function POST() {
   const cookieStore = await cookies();
   const refresh = cookieStore.get('impersonator_refresh')?.value;
 
-  await supabase.auth.signOut();
+  await supabase.auth.signOut({ scope: 'local' });
 
   if (refresh) {
     const { error } = await supabase.auth.refreshSession({ refresh_token: refresh });

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, CheckCircle2, ChevronDown, ChevronUp, ClipboardList, Stethoscope } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { RichText } from './rich-text';
 import { createClient } from '@/lib/supabase/client';
 
 type TextQuestion = {
@@ -168,7 +169,7 @@ export function TextAnnaleViewer({
               </span>
             </div>
             <div className="mb-3 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
-              {q.enonce}
+              <RichText html={q.enonce} />
             </div>
             <label htmlFor={`answer-${q.id}`} className="block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
               Votre réponse

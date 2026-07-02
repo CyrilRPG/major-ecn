@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowRight, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { RichText } from '@/components/qcm/rich-text';
 import { cn } from '@/lib/utils';
 
 export type EngineQuestion = {
@@ -97,7 +98,7 @@ export function QcmEngine({
           {q.college}
         </p>
         <p className="mt-3 text-sm font-medium leading-relaxed text-(--color-ink) sm:text-base">
-          {q.enonce}
+          <RichText html={q.enonce} />
         </p>
 
         {/* Items */}
@@ -137,7 +138,7 @@ export function QcmEngine({
                    validated && picked && !correct ? <X className="h-3.5 w-3.5" /> :
                    it.lettre}
                 </span>
-                <span className="flex-1">{it.enonce}</span>
+                <span className="flex-1"><RichText html={it.enonce} /></span>
               </button>
             );
           })}
@@ -151,7 +152,7 @@ export function QcmEngine({
                 <span className={cn('mt-0.5 font-bold', it.is_correct ? 'text-[#16793C]' : 'text-[#A91D2C]')}>
                   {it.lettre}.
                 </span>
-                <span>{it.justification}</span>
+                <span><RichText html={it.justification} /></span>
               </div>
             ))}
           </div>

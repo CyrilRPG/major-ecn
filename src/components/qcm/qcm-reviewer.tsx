@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
+import { RichText } from './rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 
 type Question = {
@@ -98,7 +99,7 @@ export function QcmReviewer({
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
-          {q.enonce}
+          <RichText html={q.enonce} />
         </h2>
         <p className="mt-2 text-xs text-(--color-ink-muted)">
           {isQuestionCorrect ? 'Question juste — tes coches correspondent.' : 'Tu avais cette question fausse — revois bien les justifications.'}

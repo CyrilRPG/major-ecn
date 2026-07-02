@@ -4,13 +4,14 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { Loader2, Plus, Trash2, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
-import { upsertQcmQuestionAction, uploadQcmImageAction } from '@/app/admin/contenu/[cours]/qcm-actions';
+import { FlashcardRichField } from './flashcard-rich-field';
+import { upsertQcmQuestionAction, uploadQcmImageAction, updateSerieVignetteAction } from '@/app/admin/contenu/[cours]/qcm-actions';
+import { flashcardHasContent } from '@/lib/flashcards/rich-text';
 
 export type QcmItemDraft = {
   lettre: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -41,24 +42,38 @@ function defaultDraft(): QcmQuestionDraft {
 }
 
 export function QcmQuestionEditor({
-  open, onOpenChange, coursId, serieId, initial,
+  open, onOpenChange, coursId, serieId, initial, initialVignette, insertAnchor, onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   coursId: string;
   serieId: string;
   initial?: QcmQuestionDraft | null;
+  /** Vignette clinique actuelle de la série (partagée entre ses questions). */
+  initialVignette?: string | null;
+  /** En création : question à côté de laquelle insérer (choix de position). */
+  insertAnchor?: { questionId: string; position: number } | null;
+  onSaved?: () => void;
 }) {
   const [draft, setDraft] = useState<QcmQuestionDraft>(initial ?? defaultDraft());
+  const [vignetteEnabled, setVignetteEnabled] = useState(!!initialVignette);
+  const [vignette, setVignette] = useState(initialVignette ?? '');
+  const [atEnd, setAtEnd] = useState(false); // false = insérer ici, true = à la fin
   const [pending, start] = useTransition();
   const [err, setErr] = useState<string | null>(null);
+
+  const isCreate = !draft.id;
+  const showPositionChoice = isCreate && !!insertAnchor;
 
   useEffect(() => {
     if (open) {
       setDraft(initial ? { ...initial, items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })) } : defaultDraft());
+      setVignetteEnabled(!!initialVignette);
+      setVignette(initialVignette ?? '');
+      setAtEnd(false);
       setErr(null);
     }
-  }, [open, initial]);
+  }, [open, initial, initialVignette]);
 
   const updateItem = (idx: number, patch: Partial<QcmItemDraft>) => {
     setDraft((d) => ({ ...d, items: d.items.map((it, i) => i === idx ? { ...it, ...patch } : it) }));
@@ -76,28 +91,44 @@ export function QcmQuestionEditor({
 
   const onSubmit = () => {
     setErr(null);
+    const items = draft.items
+      .filter((it) => flashcardHasContent(it.enonce))
+      .map((it) => ({
+        lettre: it.lettre,
+        enonce: it.enonce,
+        is_correct: it.is_correct,
+        justification: it.justification,
+        images: it.images,
+      }));
+    if (!flashcardHasContent(draft.enonce)) { setErr('L’énoncé est requis.'); return; }
+    if (items.length < 2) { setErr('Au moins 2 items avec un énoncé.'); return; }
+    if (items.filter((i) => i.is_correct).length < 1) { setErr('Au moins un item doit être marqué comme correct.'); return; }
+
     start(async () => {
       const res = await upsertQcmQuestionAction({
         questionId: draft.id,
         serieId,
         coursId,
         question: {
-          enonce: draft.enonce.trim(),
-          correction_generale: draft.correction_generale.trim() || null,
+          enonce: draft.enonce,
+          correction_generale: draft.correction_generale || null,
           images: draft.images,
-          items: draft.items
-            .filter((it) => it.enonce.trim().length > 0)
-            .map((it) => ({
-              lettre: it.lettre,
-              enonce: it.enonce.trim(),
-              is_correct: it.is_correct,
-              justification: it.justification.trim(),
-              images: it.images,
-            })),
+          items,
         },
+        insertAfterQuestionId: showPositionChoice && !atEnd ? insertAnchor!.questionId : undefined,
       });
-      if ('error' in res) setErr(res.error);
-      else onOpenChange(false);
+      if ('error' in res) { setErr(res.error); return; }
+
+      // Vignette clinique (niveau série) : mise à jour si l'état a changé.
+      const nextVig = vignetteEnabled ? vignette.trim() : '';
+      const prevVig = (initialVignette ?? '').trim();
+      if (nextVig !== prevVig) {
+        const vr = await updateSerieVignetteAction({ serieId, coursId, vignette: nextVig });
+        if ('error' in vr) { setErr(vr.error); return; }
+      }
+
+      onSaved?.();
+      onOpenChange(false);
     });
   };
 
@@ -107,19 +138,40 @@ export function QcmQuestionEditor({
         <DialogHeader>
           <DialogTitle>{draft.id ? 'Modifier la question' : 'Nouvelle question'}</DialogTitle>
           <DialogDescription>
-            Énoncé, items A-E, justifications, corrigé général et images (arbres décisionnels, schémas, ECG…).
+            Énoncé, items A-E, justifications, corrigé général et images. Mise en forme possible (gras, italique, souligné, couleur, image).
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">
+          {/* Vignette clinique (optionnelle, niveau série / DP) */}
+          <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
+            <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-(--color-ink)">
+              <input
+                type="checkbox"
+                checked={vignetteEnabled}
+                onChange={(e) => setVignetteEnabled(e.target.checked)}
+                className="h-4 w-4 rounded border-(--color-border)"
+              />
+              Vignette clinique (contexte partagé — dossier progressif)
+            </label>
+            {vignetteEnabled && (
+              <Textarea
+                rows={4}
+                value={vignette}
+                onChange={(e) => setVignette(e.target.value)}
+                placeholder="Patient de 62 ans, tabagique, se présente aux urgences pour…"
+                className="mt-2 bg-white"
+              />
+            )}
+          </div>
+
           {/* Énoncé */}
           <div className="space-y-1.5">
-            <Label htmlFor="q-enonce">Énoncé</Label>
-            <Textarea
-              id="q-enonce"
-              rows={3}
+            <Label>Énoncé</Label>
+            <FlashcardRichField
+              coursId={coursId}
               value={draft.enonce}
-              onChange={(e) => setDraft((d) => ({ ...d, enonce: e.target.value }))}
+              onChange={(html) => setDraft((d) => ({ ...d, enonce: html }))}
               placeholder="Concernant l'asthme aigu grave, quelles affirmations sont vraies ?"
             />
           </div>
@@ -148,19 +200,19 @@ export function QcmQuestionEditor({
                     {it.lettre}
                   </span>
                   <div className="flex-1 space-y-2">
-                    <Textarea
-                      rows={2}
+                    <FlashcardRichField
+                      coursId={coursId}
                       value={it.enonce}
-                      onChange={(e) => updateItem(idx, { enonce: e.target.value })}
+                      onChange={(html) => updateItem(idx, { enonce: html })}
                       placeholder={`Énoncé de l'item ${it.lettre}…`}
-                      className="text-sm"
+                      minHeight={56}
                     />
-                    <Textarea
-                      rows={2}
+                    <FlashcardRichField
+                      coursId={coursId}
                       value={it.justification}
-                      onChange={(e) => updateItem(idx, { justification: e.target.value })}
+                      onChange={(html) => updateItem(idx, { justification: html })}
                       placeholder="Justification (explication détaillée affichée au corrigé)"
-                      className="text-xs bg-white"
+                      minHeight={56}
                     />
                     <ImageList
                       images={it.images}
@@ -195,19 +247,35 @@ export function QcmQuestionEditor({
 
           {/* Corrigé général */}
           <div className="space-y-1.5">
-            <Label htmlFor="q-correction">Corrigé général (optionnel)</Label>
-            <Textarea
-              id="q-correction"
-              rows={5}
+            <Label>Corrigé général (optionnel)</Label>
+            <FlashcardRichField
+              coursId={coursId}
               value={draft.correction_generale}
-              onChange={(e) => setDraft((d) => ({ ...d, correction_generale: e.target.value }))}
-              placeholder="Explication globale de la question, points clés, rappels physiopathologiques, arbre décisionnel textuel…"
-              className="bg-white"
+              onChange={(html) => setDraft((d) => ({ ...d, correction_generale: html }))}
+              placeholder="Explication globale de la question, points clés, rappels physiopathologiques…"
+              minHeight={110}
             />
             <p className="text-[11px] text-(--color-ink-muted)">
               Apparaît sous l&apos;ensemble des items au moment du corrigé, en plus des justifications par item.
             </p>
           </div>
+
+          {/* Position (en création à côté d'une question existante) */}
+          {showPositionChoice && (
+            <div className="space-y-1.5">
+              <Label>Position</Label>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <label className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm ${!atEnd ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
+                  <input type="radio" name="q-pos" checked={!atEnd} onChange={() => setAtEnd(false)} className="h-4 w-4" />
+                  Insérer ici (après la question n°{insertAnchor!.position + 1})
+                </label>
+                <label className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm ${atEnd ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
+                  <input type="radio" name="q-pos" checked={atEnd} onChange={() => setAtEnd(true)} className="h-4 w-4" />
+                  À la fin de la série
+                </label>
+              </div>
+            </div>
+          )}
         </div>
 
         {err && (

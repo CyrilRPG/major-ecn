@@ -44,8 +44,10 @@ export async function POST(req: Request) {
   cookieStore.set('impersonator_refresh', session.refresh_token, { path: '/', httpOnly: true, sameSite: 'lax' });
   if (name) cookieStore.set('impersonator_target_name', name, { path: '/', httpOnly: false, sameSite: 'lax' });
 
-  // Sign out admin, then sign in target via OTP token
-  await supabase.auth.signOut();
+  // Sign out admin locally only (scope: 'local' keeps the admin's refresh
+  // token valid server-side so we can restore the admin session on return),
+  // then sign in target via OTP token.
+  await supabase.auth.signOut({ scope: 'local' });
   const { error: vErr } = await supabase.auth.verifyOtp({
     type: 'magiclink',
     token_hash: data.properties.hashed_token,

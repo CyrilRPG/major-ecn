@@ -151,13 +151,28 @@ export async function upsertQcmQuestionAction(input: {
   serieId: string;
   coursId: string;
   question: QcmQuestionInput;
+  /** Insérer la nouvelle question juste après cette question (décale les suivantes).
+   *  null/undefined → ajout à la fin. Ignoré en édition. */
+  insertAfterQuestionId?: string | null;
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
 
   const parsed = QuestionSchema.safeParse(input.question);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
-  const q = parsed.data;
+  const raw = parsed.data;
+  // Le contenu peut être du HTML riche (gras/italique/souligné/couleur/image) :
+  // on l'assainit selon la même liste blanche que les flashcards.
+  const q = {
+    ...raw,
+    enonce: sanitizeFlashcardHtml(raw.enonce),
+    correction_generale: raw.correction_generale ? sanitizeFlashcardHtml(raw.correction_generale) : raw.correction_generale,
+    items: raw.items.map((it) => ({
+      ...it,
+      enonce: sanitizeFlashcardHtml(it.enonce),
+      justification: it.justification ? sanitizeFlashcardHtml(it.justification) : it.justification,
+    })),
+  };
   if (q.items.filter((i) => i.is_correct).length < 1) {
     return { error: 'Au moins un item doit être marqué comme correct.' };
   }
@@ -183,10 +198,28 @@ export async function upsertQcmQuestionAction(input: {
     await admin.from('qcm_items').delete().eq('question_id', questionId);
   } else {
     // INSERT question
-    const { data: last } = await admin.from('qcm_questions')
-      .select('order_index').eq('serie_id', input.serieId)
-      .order('order_index', { ascending: false }).limit(1);
-    const nextIdx = (last?.[0]?.order_index ?? -1) + 1;
+    let nextIdx: number;
+    let after: number | null = null;
+    if (input.insertAfterQuestionId) {
+      const { data: anchor } = await admin.from('qcm_questions')
+        .select('order_index').eq('id', input.insertAfterQuestionId).maybeSingle();
+      if (anchor) after = (anchor as { order_index: number }).order_index;
+    }
+    if (after != null) {
+      const { data: toShift } = await admin.from('qcm_questions')
+        .select('id, order_index').eq('serie_id', input.serieId)
+        .gt('order_index', after).order('order_index', { ascending: false });
+      for (const row of (toShift ?? []) as { id: string; order_index: number }[]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (admin as any).from('qcm_questions').update({ order_index: row.order_index + 1 }).eq('id', row.id);
+      }
+      nextIdx = after + 1;
+    } else {
+      const { data: last } = await admin.from('qcm_questions')
+        .select('order_index').eq('serie_id', input.serieId)
+        .order('order_index', { ascending: false }).limit(1);
+      nextIdx = (last?.[0]?.order_index ?? -1) + 1;
+    }
     // Lettres dans l'ordre attendu → "ACE" si A, C, E sont corrects
     const reponse = letters.filter((l) => q.items.find((it) => it.lettre === l)?.is_correct).join('');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,9 +257,13 @@ export async function upsertQcmQuestionAction(input: {
     coursId: input.coursId,
     coursTitre: ctx?.titre ?? null,
     matiereNom: ctx?.matieres?.nom ?? null,
-    description: input.questionId
-      ? `Modification de la question : « ${q.enonce.slice(0, 80)}${q.enonce.length > 80 ? '…' : ''} »`
-      : `Création d'une question : « ${q.enonce.slice(0, 80)}${q.enonce.length > 80 ? '…' : ''} »`,
+    description: (() => {
+      const preview = flashcardPlainText(q.enonce).slice(0, 80);
+      const suffix = flashcardPlainText(q.enonce).length > 80 ? '…' : '';
+      return input.questionId
+        ? `Modification de la question : « ${preview}${suffix} »`
+        : `Création d'une question : « ${preview}${suffix} »`;
+    })(),
   });
 
   revalidatePath(`/admin/contenu/${input.coursId}`);
@@ -271,6 +308,9 @@ export async function upsertFlashcardAction(input: {
   coursId: string;
   recto: string;
   verso: string;
+  /** Insérer la nouvelle carte juste après cette position (décale les suivantes).
+   *  null/undefined → ajout à la fin. Ignoré en édition. */
+  insertAfterOrderIndex?: number | null;
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
@@ -287,15 +327,28 @@ export async function upsertFlashcardAction(input: {
     const { error } = await admin.from('flashcards').update({ recto, verso }).eq('id', id);
     if (error) return { error: error.message };
   } else {
-    const { data: last } = await admin.from('flashcards')
-      .select('order_index').eq('cours_id', input.coursId)
-      .order('order_index', { ascending: false }).limit(1);
-    const nextIdx = (last?.[0]?.order_index ?? -1) + 1;
+    let newIdx: number;
+    if (input.insertAfterOrderIndex != null) {
+      // Insertion à une position précise : décale d'abord les cartes suivantes.
+      const after = input.insertAfterOrderIndex;
+      const { data: toShift } = await admin.from('flashcards')
+        .select('id, order_index').eq('cours_id', input.coursId)
+        .gt('order_index', after).order('order_index', { ascending: false });
+      for (const row of (toShift ?? []) as { id: string; order_index: number }[]) {
+        await admin.from('flashcards').update({ order_index: row.order_index + 1 }).eq('id', row.id);
+      }
+      newIdx = after + 1;
+    } else {
+      const { data: last } = await admin.from('flashcards')
+        .select('order_index').eq('cours_id', input.coursId)
+        .order('order_index', { ascending: false }).limit(1);
+      newIdx = (last?.[0]?.order_index ?? -1) + 1;
+    }
     const { data, error } = await admin.from('flashcards').insert({
       cours_id: input.coursId,
       recto,
       verso,
-      order_index: nextIdx,
+      order_index: newIdx,
     }).select('id').single();
     if (error || !data) return { error: error?.message ?? 'Échec de la création.' };
     id = data.id;

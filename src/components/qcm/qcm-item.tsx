@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ItemOutcome } from '@/lib/qcm/grade';
+import { sanitizeFlashcardHtml, flashcardPlainText } from '@/lib/flashcards/rich-text';
 
 /** Caractères avant troncature « voir plus » sur une justification d'item. */
 const JUSTIF_MAX = 280;
@@ -60,7 +61,7 @@ export function QcmItem({
           {item.lettre}
         </span>
         <span className="flex-1 text-sm leading-snug text-(--color-ink)">
-          {item.enonce}
+          <span className="[&_img]:my-1 [&_img]:max-h-40 [&_img]:rounded" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(item.enonce) }} />
           {(item.images?.length ?? 0) > 0 && (
             <span className="mt-2 flex flex-wrap gap-2">
               {item.images!.map((src) => (
@@ -106,11 +107,20 @@ export function QcmItem({
 /** Affiche la justification avec un « voir plus » si elle dépasse JUSTIF_MAX. */
 function JustificationText({ text }: { text: string }) {
   const [expanded, setExpanded] = useState(false);
-  const isLong = text.length > JUSTIF_MAX;
-  const display = !isLong || expanded ? text : text.slice(0, JUSTIF_MAX).trimEnd() + '…';
+  const plain = flashcardPlainText(text);
+  const isLong = plain.length > JUSTIF_MAX;
   return (
     <>
-      <p className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug">{display}</p>
+      {(!isLong || expanded) ? (
+        <div
+          className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug [&_img]:my-1 [&_img]:max-h-40 [&_img]:rounded"
+          dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(text) }}
+        />
+      ) : (
+        <p className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug">
+          {plain.slice(0, JUSTIF_MAX).trimEnd() + '…'}
+        </p>
+      )}
       {isLong && (
         <button
           type="button"

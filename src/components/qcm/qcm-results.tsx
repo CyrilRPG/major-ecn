@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, RefreshCw, RotateCcw, TrendingDown, TrendingUp }
 import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { RichText } from './rich-text';
 import { formatDuration } from '@/lib/utils';
 
 type FailedQuestion = { id: string; enonce: string };
@@ -202,7 +203,7 @@ export function QcmResults({
             <ul className="space-y-2">
               {failed.map((q) => (
                 <li key={q.id} className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3 text-sm text-(--color-ink)">
-                  {q.enonce}
+                  <RichText html={q.enonce} />
                 </li>
               ))}
             </ul>

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
+import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
 import { DiscoveryUpgradeCta } from '@/components/espace-decouverte/discovery-upgrade-cta';
@@ -72,7 +72,6 @@ export default async function AccueilPage() {
     { data: reviewsRaw },
     { data: edn },
     { count: flashcardsTotal },
-    { count: qcmQuestionsTotal },
     { data: platformTimeRows },
   ] = await Promise.all([
     supabase
@@ -99,9 +98,6 @@ export default async function AccueilPage() {
     supabase.from('flashcards')
       .select('id, cours!inner(matieres!inner(semestres!inner(faculte_id)))', { count: 'exact', head: true })
       .eq('cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
-    supabase.from('qcm_questions')
-      .select('id, qcm_series!inner(cours!inner(matieres!inner(semestres!inner(faculte_id))))', { count: 'exact', head: true })
-      .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('platform_time_tracking')
@@ -132,6 +128,18 @@ export default async function AccueilPage() {
     .flatMap((s) => s.matieres ?? [])
     .filter((m) => canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+
+  /* ---- Total de questions QCM auxquelles l'étudiant a accès ----
+     (dénominateur du compteur « QCM réalisés » : réalisées / accessibles) */
+  const accessibleCoursIds = colleges.flatMap((m) =>
+    (m.cours ?? []).filter((c) => canAccessCours(scope, m.id, c.id)).map((c) => c.id),
+  );
+  const { count: qcmAccessibleTotal } = accessibleCoursIds.length
+    ? await supabase
+        .from('qcm_questions')
+        .select('id, qcm_series!inner(cours_id)', { count: 'exact', head: true })
+        .in('qcm_series.cours_id', accessibleCoursIds)
+    : { count: 0 };
 
   /* ---- Progression couverture (vidéo + fiche + QCM + flashcards) ---- */
   const coursWithQcm = new Set<string>();
@@ -242,7 +250,7 @@ export default async function AccueilPage() {
 
   /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
   const itemsMastered = coursScored.filter((c) => c.value >= 75).length;
-  const itemsTotal = qcmQuestionsTotal ?? 0;
+  const itemsTotal = qcmAccessibleTotal ?? 0;
   // Total cours du programme (= dénominateur cohérent pour « items maîtrisés »)
   const coursTotalEdn = coursScored.length;
   const flashcardsTotalEdn = flashcardsTotal ?? 0;
@@ -388,8 +396,10 @@ export default async function AccueilPage() {
           </KpiCard>
 
           <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
-            <p className="text-4xl font-black tabular-nums text-(--color-ink)">{totalAttempts}</p>
-            <p className="text-xs text-(--color-ink-soft)">questions sur {itemsTotal} · {sessionsCount} séries</p>
+            <p className="text-4xl font-black tabular-nums text-(--color-ink)">
+              {totalAttempts}<span className="text-lg font-bold text-(--color-ink-soft)">/{itemsTotal}</span>
+            </p>
+            <p className="text-xs text-(--color-ink-soft)">questions réalisées · {sessionsCount} séries</p>
             <DiscoveryGateLink
               href="/entrainement"
               locked={isDecouverte}
