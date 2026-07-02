@@ -203,3 +203,34 @@ Sources : fiche de l'item + annales indexées.
 | Dermatologie | `col-dermatologie` | 12 | 12 | — | ✅ modèle |
 | Cardiologie | `col-mg-cardiologie` | à définir | — | — | 🚧 en cours |
 | … | | | | | |
+
+## ⚠️ Accès : propagation parent → sous‑collèges
+
+Un sous‑collège de Médecine générale (`parent_matiere_id = 'col-medecine-generale'`)
+est un `matiere` distinct : accorder le parent dans `permission_scope.colleges`
+n'ouvre PAS automatiquement l'enfant côté pages d'enforcement.
+
+- Le **provisioning Stripe** inclut déjà les enfants au moment de l'achat.
+- Le **navigator (sidebar)** hérite désormais des enfants d'un parent accessible.
+- Mais les élèves déjà provisionnés AVANT la création d'un nouveau sous‑collège
+  ne l'ont pas dans leur scope → **après avoir créé un nouveau sous‑collège MG,
+  relancer cette requête idempotente** pour propager le grant parent aux enfants :
+
+```sql
+with expanded as (
+  select p.id,
+    (select to_jsonb(array(select distinct e from (
+       select jsonb_array_elements_text(p.permission_scope->'colleges') as e
+       union
+       select m.id from matieres m
+       where m.parent_matiere_id in (select jsonb_array_elements_text(p.permission_scope->'colleges'))
+     ) s)) ) as new_colleges
+  from profiles p
+  where p.permission_scope->>'type' = 'college' and p.permission_scope ? 'colleges'
+    and exists (select 1 from matieres m
+      where m.parent_matiere_id in (select jsonb_array_elements_text(p.permission_scope->'colleges'))
+        and not (p.permission_scope->'colleges' ? m.id))
+)
+update profiles p set permission_scope = jsonb_set(p.permission_scope, '{colleges}', e.new_colleges)
+from expanded e where p.id = e.id;
+```

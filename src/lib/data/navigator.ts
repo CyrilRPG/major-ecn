@@ -106,9 +106,17 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
   const flashHitSet = new Set<string>();
   for (const r of flashReviews.data ?? []) flashHitSet.add((r as unknown as { flashcards: { cours_id: string } }).flashcards.cours_id);
 
+  // Un sous-collège hérite de l'accès de son collège parent : accorder
+  // « Médecine générale » ouvre automatiquement ses sous-collèges
+  // (Cardiologie, Dermatologie…) même si le scope ne liste que le parent.
+  const grantedCollegeId = (m: (typeof colleges)[number]): string =>
+    canAccessCollege(scope, m.id)
+      ? m.id
+      : (m.parent_matiere_id && canAccessCollege(scope, m.parent_matiere_id) ? m.parent_matiere_id : m.id);
+
   const buildCours = (m: (typeof colleges)[number]) =>
     [...(m.cours ?? [])]
-      .filter((c) => canAccessCours(scope, m.id, c.id))
+      .filter((c) => canAccessCours(scope, grantedCollegeId(m), c.id))
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
       .map((c) => {
         const cp = c.course_progress?.[0];
@@ -145,7 +153,8 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
     .map((m) => {
       const children = (childMap.get(m.id) ?? [])
-        .filter((ch) => canAccessCollege(scope, ch.id))
+        // héritage : le parent m est déjà accessible (filtre ci-dessus)
+        .filter((ch) => canAccessCollege(scope, ch.id) || canAccessCollege(scope, m.id))
         .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
         .map((ch) => ({
           id: ch.id,
