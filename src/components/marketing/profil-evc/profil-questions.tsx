@@ -33,9 +33,20 @@ export function ProfilQuestions({
   const total = QUESTIONS.length;
   const current = answers[q.id];
   const last = idx === total - 1;
+  const isMulti = q.multi === true;
+  const selectedValues = current?.values ?? [];
+  // Question répondue : valeur unique OU au moins une case cochée (choix multiple).
+  const answered = isMulti ? selectedValues.length > 0 : !!current?.value;
 
   const select = (value: string) => {
     setAnswers((prev) => ({ ...prev, [q.id]: { value, detail: prev[q.id]?.detail } }));
+  };
+  const toggleMulti = (value: string) => {
+    setAnswers((prev) => {
+      const cur = prev[q.id]?.values ?? [];
+      const nextVals = cur.includes(value) ? cur.filter((x) => x !== value) : [...cur, value];
+      return { ...prev, [q.id]: { value: '', values: nextVals } };
+    });
   };
   // Q2 adaptatif : pose ou efface la valeur selon l'avancement de la sélection.
   const setValue = (value: string | null) => {
@@ -51,7 +62,7 @@ export function ProfilQuestions({
   };
 
   const next = () => {
-    if (!current?.value) return;
+    if (!answered) return;
     if (last) { onComplete(answers); return; }
     setIdx((v) => Math.min(total - 1, v + 1));
   };
@@ -140,12 +151,12 @@ export function ProfilQuestions({
                 )}
                 <div className="space-y-2">
                   {g.options.map((opt) => {
-                    const active = current?.value === opt.value;
+                    const active = isMulti ? selectedValues.includes(opt.value) : current?.value === opt.value;
                     return (
                       <div key={opt.value}>
                         <button
                           type="button"
-                          onClick={() => select(opt.value)}
+                          onClick={() => (isMulti ? toggleMulti(opt.value) : select(opt.value))}
                           className="flex w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all"
                           style={{
                             borderColor: active ? RED : '#E7EAF0',
@@ -155,12 +166,21 @@ export function ProfilQuestions({
                           <span className="flex-1 text-[13.5px] font-semibold leading-snug" style={{ color: active ? RED_DEEP : INK }}>
                             {opt.label}
                           </span>
-                          <span
-                            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
-                            style={{ borderColor: active ? RED : '#CBD2DD' }}
-                          >
-                            {active && <span className="h-2.5 w-2.5 rounded-full" style={{ background: RED }} />}
-                          </span>
+                          {isMulti ? (
+                            <span
+                              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2"
+                              style={{ borderColor: active ? RED : '#CBD2DD', background: active ? RED : '#fff' }}
+                            >
+                              {active && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+                            </span>
+                          ) : (
+                            <span
+                              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
+                              style={{ borderColor: active ? RED : '#CBD2DD' }}
+                            >
+                              {active && <span className="h-2.5 w-2.5 rounded-full" style={{ background: RED }} />}
+                            </span>
+                          )}
                         </button>
                         {active && opt.detailPlaceholder && (
                           <input
@@ -228,7 +248,7 @@ export function ProfilQuestions({
           <button
             type="button"
             onClick={next}
-            disabled={!current?.value}
+            disabled={!answered}
             className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[14px] font-extrabold text-white shadow-lg transition-transform enabled:hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
           >

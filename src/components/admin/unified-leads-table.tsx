@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useTransition } from 'react';
-import { Loader2, Power, BookDown, BarChart3 } from 'lucide-react';
+import { Loader2, Power, BookDown, BarChart3, Search, X } from 'lucide-react';
 
 export type UnifiedLead = {
   id: string;
@@ -35,6 +35,7 @@ const PROFILE_COLORS: Record<string, { bg: string; fg: string }> = {
 export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[] }) {
   const [leads, setLeads] = useState(initialLeads);
   const [filter, setFilter] = useState<Filter>('all');
+  const [search, setSearch] = useState('');
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
@@ -55,10 +56,18 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     });
   };
 
-  const filtered = useMemo(
-    () => (filter === 'all' ? leads : leads.filter((l) => l.source === filter)),
-    [leads, filter],
-  );
+  const filtered = useMemo(() => {
+    let list = filter === 'all' ? leads : leads.filter((l) => l.source === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter((l) =>
+        `${l.first_name} ${l.last_name} ${l.email} ${l.phone ?? ''} ${l.specialty ?? ''} ${l.profile_label ?? ''}`
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+    return list;
+  }, [leads, filter, search]);
 
   const counts = useMemo(() => ({
     all: leads.length,
@@ -76,6 +85,30 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
 
   return (
     <>
+      {/* Recherche */}
+      <div className="mb-4">
+        <div className="relative max-w-md">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--color-ink-muted)" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Rechercher un lead (nom, e-mail, téléphone, spécialité…)"
+            className="w-full rounded-xl border border-(--color-border) bg-(--color-surface) py-2.5 pl-9 pr-9 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              aria-label="Effacer la recherche"
+              className="absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-(--color-ink-muted) transition-colors hover:bg-(--color-surface-soft) hover:text-(--color-ink)"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Filtres */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {TABS.map((t) => (

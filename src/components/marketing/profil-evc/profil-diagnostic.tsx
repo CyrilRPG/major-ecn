@@ -6,7 +6,7 @@ import { ProfilInfoForm, type DiagInfo } from './profil-info-form';
 import { ProfilQuestions } from './profil-questions';
 import { ProfilResult } from './profil-result';
 import {
-  computeScore, computeProfile, answerLabel, MAX_SCORE, type Answers, type ProfileKey,
+  computeScore, computeProfile, answerLabel, answerLabels, MAX_SCORE, type Answers, type ProfileKey,
 } from '@/lib/diagnostic/scoring';
 
 type Step = 'intro' | 'form' | 'questions' | 'result';
@@ -60,10 +60,14 @@ export function ProfilDiagnostic({
     // Enregistrement du lead (best-effort, n'interrompt jamais l'affichage du résultat).
     if (info) {
       const [firstName, ...rest] = info.fullName.split(' ');
-      const obstacle = answerLabel('q10_obstacle', finalAnswers['q10_obstacle']?.value ?? '');
+      const q10 = finalAnswers['q10_obstacle'];
+      const obstacle = q10?.values?.length
+        ? answerLabels('q10_obstacle', q10.values)
+        : answerLabel('q10_obstacle', q10?.value ?? '');
       const answersReadable: Record<string, string> = {};
       for (const [qid, a] of Object.entries(finalAnswers)) {
-        answersReadable[qid] = answerLabel(qid, a.value) + (a.detail ? ` — ${a.detail}` : '');
+        const label = a.values?.length ? answerLabels(qid, a.values) : answerLabel(qid, a.value);
+        answersReadable[qid] = label + (a.detail ? ` — ${a.detail}` : '');
       }
       fetch('/api/diagnostic-lead', {
         method: 'POST',

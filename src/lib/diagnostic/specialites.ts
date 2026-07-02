@@ -24,6 +24,7 @@ export const SPECIALITES: string[] = [
   'Médecine du travail',
   'Psychiatrie',
   'Anesthésie-réanimation',
+  'Gynécologie obstétrique',
   'Gynécologie médicale',
   'Santé publique et médecine sociale',
   // Chirurgie
@@ -38,7 +39,6 @@ export const SPECIALITES: string[] = [
   'Chirurgie maxillo-faciale et stomatologie',
   'Chirurgie infantile',
   'Chirurgie orale',
-  'Gynécologie obstétrique',
   'ORL et chirurgie cervico-faciale',
   'Ophtalmologie',
   // Pédiatrie

@@ -37,6 +37,8 @@ export type Question = {
   icon: string;
   /** Q10 = obstacle : 0 point, stocké pour personnalisation. */
   scored: boolean;
+  /** Choix multiple (cases à cocher) plutôt que réponse unique. */
+  multi?: boolean;
 };
 
 export const QUESTIONS: Question[] = [
@@ -199,8 +201,9 @@ export const QUESTIONS: Question[] = [
     maxPoints: 0,
     icon: 'AlertCircle',
     scored: false,
-    title: 'Quel est aujourd’hui votre plus grand obstacle pour réussir les EVC ?',
-    hint: 'Sélectionnez la réponse qui correspond le mieux à votre situation actuelle.',
+    multi: true,
+    title: 'Quels sont aujourd’hui vos plus grands obstacles pour réussir les EVC ?',
+    hint: 'Sélectionnez une ou plusieurs réponses (plusieurs choix possibles).',
     why: "Cette question nous permet d'identifier votre principal frein afin de vous proposer un accompagnement et des ressources adaptés à vos besoins prioritaires.",
     options: [
       { value: 'o_temps', label: 'Je manque de temps', points: 0 },
@@ -253,7 +256,7 @@ export const PROFILES: ProfileMeta[] = [
   { key: 'avancee', label: 'Préparation avancée', emoji: '⭐', min: 145, max: 163, color: '#1D4ED8', colorSoft: '#E5EDFF' },
 ];
 
-export type Answers = Record<string, { value: string; detail?: string }>;
+export type Answers = Record<string, { value: string; detail?: string; values?: string[] }>;
 
 /** Somme des points des réponses (les questions non scorées valent 0). */
 export function computeScore(answers: Answers): number {
@@ -298,4 +301,9 @@ export function computeProfile(score: number, answers: Answers): ProfileMeta {
 export function answerLabel(questionId: string, value: string): string {
   const q = QUESTIONS.find((qq) => qq.id === questionId);
   return q?.options.find((o) => o.value === value)?.label ?? '';
+}
+
+/** Libellés joints d'un ensemble de réponses (questions à choix multiple). */
+export function answerLabels(questionId: string, values: string[]): string {
+  return values.map((v) => answerLabel(questionId, v)).filter(Boolean).join(', ');
 }
