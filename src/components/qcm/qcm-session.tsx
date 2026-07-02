@@ -106,7 +106,11 @@ export function QcmSession({
   const total = questions.length;
   const q = questions[index];
   const isQroc = q.format === 'qroc';
-  const isSeanceQroc = isSeance && isQroc;
+  // Tous les QROC (séance ET séries de cours) fonctionnent en « révéler la
+  // réponse puis auto-évaluation Bon/Faux par l'élève » — pas de correction
+  // automatique. On garde la notation auto uniquement pour les épreuves
+  // chronométrées (annales, mode training) où le corrigé n'apparaît qu'à la fin.
+  const isSeanceQroc = isQroc && !isTraining;
   const sel = selected[q.id] ?? new Set<string>();
   const isValidated = isSeanceQroc
     ? seanceSelfGrade[q.id] != null
@@ -335,10 +339,8 @@ export function QcmSession({
             "text-[10px] font-semibold uppercase tracking-[0.16em]",
             isSeance ? "text-[#7C3AED]" : "text-(--color-accent-deep)"
           )}>
-            {isSeanceQroc
-              ? `QROC Séance — Question ${index + 1}`
-              : isQroc
-              ? `QROC — Question ${index + 1}`
+            {isQroc
+              ? `${isSeance ? 'QROC Séance' : 'QROC'} — Question ${index + 1}`
               : vignette
                 ? `Question ${index + 1}`
                 : 'Énoncé'}
@@ -425,11 +427,19 @@ export function QcmSession({
               className="rounded-xl border-2 border-[#7C3AED]/40 bg-[#F3EAFF] p-4"
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#5B21B6]">
-                Correction du professeur
+                {isSeance ? 'Correction du professeur' : 'Réponse et correction'}
               </p>
-              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
-                {q.correction_generale || q.reponse_attendue}
-              </p>
+              {!isSeance && q.reponse_attendue && (
+                <p className="mt-2 text-sm leading-relaxed text-(--color-ink)">
+                  <span className="font-semibold">Réponse attendue : </span>
+                  {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                </p>
+              )}
+              {(q.correction_generale || (isSeance && q.reponse_attendue)) && (
+                <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+                  {q.correction_generale || q.reponse_attendue}
+                </p>
+              )}
             </motion.div>
           )}
 
