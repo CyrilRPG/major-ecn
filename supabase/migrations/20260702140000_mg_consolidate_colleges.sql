@@ -1,8 +1,8 @@
 -- Consolidation Médecine générale : suppression du collège à plat
 -- « Médecine générale - Voie externe » (col-medecine-generale-voie-externe),
 -- redondant avec les sous-collèges de col-medecine-generale, et renommage de
--- ce dernier en « Médecine générale - Voie externe ». La distinction voie
--- interne / externe se fait désormais au niveau de l'accès étudiant (RLS).
+-- ce dernier en « Médecine générale ». La distinction voie interne / externe
+-- se fait désormais au niveau de l'accès étudiant (RLS), pas du collège.
 
 delete from public.qcm_items where question_id in (
   select q.id from public.qcm_questions q
@@ -25,4 +25,4 @@ update public.profiles
   where permission_scope ? 'colleges'
     and permission_scope->'colleges' ? 'col-medecine-generale-voie-externe';
 
-update public.matieres set nom = 'Médecine générale - Voie externe' where id = 'col-medecine-generale';
+update public.matieres set nom = 'Médecine générale' where id = 'col-medecine-generale';
