@@ -17,14 +17,26 @@ import { cn } from '@/lib/utils';
 
 const RED = '#C0112E';
 
-/** Affichage lecture seule de l'importance (étoiles rouges Major ECN). */
+/** Affichage lecture seule de l'importance : les 5 étoiles (remplies jusqu'à la
+ *  valeur) + le nombre « n/5 ». Toujours visible, y compris à 0. */
 export function ImportanceStars({ value, className }: { value: number; className?: string }) {
-  if (!value) return null;
+  const v = Math.max(0, Math.min(5, Math.round(value || 0)));
+  const active = v > 0;
   return (
-    <span className={cn('inline-flex items-center gap-0.5', className)} title={`Importance ${value}/5`}>
-      {Array.from({ length: value }).map((_, i) => (
-        <Star key={i} className="h-3.5 w-3.5" style={{ fill: RED, color: RED }} />
+    <span className={cn('inline-flex items-center gap-0.5', className)} title={`Importance ${v}/5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          className="h-3.5 w-3.5"
+          style={{ fill: n <= v ? RED : 'transparent', color: n <= v ? RED : '#D8B9C0' }}
+        />
       ))}
+      <span
+        className="ml-1 text-xs font-semibold tabular-nums"
+        style={{ color: active ? RED : 'var(--color-ink-muted)' }}
+      >
+        {v}/5
+      </span>
     </span>
   );
 }

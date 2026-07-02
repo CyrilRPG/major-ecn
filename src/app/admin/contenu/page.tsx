@@ -96,8 +96,8 @@ export default async function AdminContenuPage() {
                 >
                   <Icon className="h-5 w-5" />
                 </div>
-                <div>
-                  <h2 className="text-base font-semibold tracking-tight text-(--color-ink)">{m.nom}</h2>
+                <div className="min-w-0">
+                  <h2 className="text-base font-semibold tracking-tight text-(--color-ink) break-words">{m.nom}</h2>
                   <p className="text-xs text-(--color-ink-muted)">Collège EVC · {(m.cours ?? []).length} items</p>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default async function AdminContenuPage() {
                       />
                       <div className="relative z-10 flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <h3 className="font-semibold leading-snug text-(--color-ink)">{c.titre}</h3>
+                          <h3 className="font-semibold leading-snug text-(--color-ink) break-words">{c.titre}</h3>
                           <ImportanceStars value={importance} className="mt-1" />
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
