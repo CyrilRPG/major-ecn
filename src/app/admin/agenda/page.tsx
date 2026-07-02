@@ -40,9 +40,9 @@ export default async function AdminAgendaPage() {
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Agenda plateforme</h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Cours en visio, ECOS, concours blancs… Chaque évènement cible une offre
-          (essentiel / premium / intensif) et éventuellement certains collèges.
-          Seuls les étudiants concernés voient l’évènement dans leur agenda.
+          Cours en visio, ECOS, concours blancs… À chaque évènement, choisissez les
+          formules (essentiel / intensif / approfondi) et les spécialités concernées.
+          Seuls les étudiants ciblés voient l’évènement dans leur agenda.
         </p>
       </header>
       <AdminAgenda

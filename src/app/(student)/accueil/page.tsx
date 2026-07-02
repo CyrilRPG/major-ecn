@@ -167,7 +167,7 @@ export default async function AccueilPage() {
     .reduce((sum, r) => sum + r.total_seconds, 0);
   const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
   const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
-  const goalSeconds = 6 * 3600;
+  const goalSeconds = 25 * 3600;
 
   /* ---- Flashcards maîtrisées ---- */
   // Réutilise `reviews` (déjà chargé + filtré EDN plus haut) : évite un second
@@ -218,11 +218,26 @@ export default async function AccueilPage() {
     return { id: c.id, titre: c.titre, matiereNom: c.matiereNom, value, attempts: c.attempts };
   });
 
-  // À travailler en priorité : 5 cours les plus faibles (en privilégiant ceux
-  // qui ont déjà été abordés pour fournir un signal pertinent ; sinon tirés).
-  const priorities = [...coursScored]
-    .sort((a, b) => a.value - b.value)
-    .slice(0, 5);
+  // À travailler en priorité — sélection « intelligente » qui SUIT l'activité
+  // réelle de l'élève (et ne reste pas figée / arbitraire) :
+  //  1. cours réellement travaillés mais faibles (score bas) → vrais points
+  //     faibles ; le classement bouge quand l'élève progresse ;
+  //  2. cours non commencés dans les spécialités DÉJÀ entamées → on approfondit
+  //     ce que l'élève a commencé plutôt que de proposer du hasard ;
+  //  3. cours non commencés des autres spécialités → ouverture.
+  const engagedMatieres = new Set(
+    coursScored.filter((c) => c.attempts > 0).map((c) => c.matiereNom),
+  );
+  const engagedWeak = coursScored
+    .filter((c) => c.attempts > 0)
+    .sort((a, b) => a.value - b.value);
+  const untouchedInStarted = coursScored
+    .filter((c) => c.attempts === 0 && engagedMatieres.has(c.matiereNom))
+    .sort((a, b) => a.value - b.value);
+  const untouchedOther = coursScored
+    .filter((c) => c.attempts === 0 && !engagedMatieres.has(c.matiereNom))
+    .sort((a, b) => a.value - b.value);
+  const priorities = [...engagedWeak, ...untouchedInStarted, ...untouchedOther].slice(0, 5);
   const nextPriority = priorities[0] ?? null;
 
   /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
@@ -364,7 +379,7 @@ export default async function AccueilPage() {
             <p className="text-xs text-(--color-ink-soft)">cette semaine</p>
             <div className="mt-auto">
               <p className="rounded-md bg-[#DCFCE7] px-2 py-1 text-center text-[11px] font-bold text-[#16793C]">
-                Objectif conseillé : 6h / semaine
+                Objectif min. conseillé : 25h / semaine
               </p>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-(--color-sand-200)">
                 <div className="h-full rounded-full bg-[#16A34A]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />

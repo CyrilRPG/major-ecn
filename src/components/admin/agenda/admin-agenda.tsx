@@ -311,7 +311,7 @@ function EventFormDialog({
               Qui voit cet évènement ?
             </legend>
 
-            <p className="mb-2 text-xs font-semibold text-(--color-ink)">Offres autorisées</p>
+            <p className="mb-2 text-xs font-semibold text-(--color-ink)">Formules autorisées</p>
             <div className="mb-3 flex flex-wrap gap-2">
               {(['essentiel', 'intensif', 'approfondi'] as const).map((o) => (
                 <label key={o} className={`cursor-pointer rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
@@ -325,7 +325,7 @@ function EventFormDialog({
               ))}
             </div>
 
-            <p className="mb-2 text-xs font-semibold text-(--color-ink)">Périmètre</p>
+            <p className="mb-2 text-xs font-semibold text-(--color-ink)">Spécialités concernées</p>
             <div className="mb-3 flex gap-2">
               {(['all', 'college'] as const).map((t) => (
                 <button
@@ -338,14 +338,14 @@ function EventFormDialog({
                       : 'border-(--color-border) text-(--color-ink-soft) hover:bg-(--color-surface)'
                   }`}
                 >
-                  {t === 'all' ? 'Toute l’offre (intégral)' : 'Collèges spécifiques'}
+                  {t === 'all' ? 'Toutes les spécialités' : 'Spécialités ciblées'}
                 </button>
               ))}
             </div>
 
             {scopeType === 'college' && (
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Collèges ciblés</p>
+                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Spécialités ciblées</p>
                 <div className="grid max-h-44 grid-cols-2 gap-1.5 overflow-y-auto rounded-lg border border-(--color-border) bg-(--color-surface) p-2">
                   {colleges.map((c) => (
                     <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-(--color-surface-soft)">

@@ -41,12 +41,12 @@ export default async function AgendaPage() {
     if (!offers.includes(scope.offer)) return false;
     if (e.scope_type === 'college') {
       const ids = e.scope_colleges ?? [];
-      if (scope.type === 'all') return true;
-      if (ids.length === 0) return true;
+      if (ids.length === 0) return true; // aucune spécialité cochée → toutes
+      if (scope.type === 'all') return true; // accès intégral → voit tout
       return ids.some((cid) => scope.colleges.includes(cid));
     }
-    // 'all' = intégral : visible uniquement par les utilisateurs avec accès à toute l'offre
-    return scope.type === 'all';
+    // 'all' = toutes les spécialités : visible par tout élève de la bonne formule
+    return true;
   });
 
   const events = (userData ?? []) as UserEvent[];
