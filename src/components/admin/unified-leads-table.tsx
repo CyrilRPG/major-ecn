@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo, useTransition } from 'react';
-import { Loader2, Power, BookDown, BarChart3, Search, X } from 'lucide-react';
+import { Loader2, Power, BookDown, BarChart3, Search, X, Eye } from 'lucide-react';
+import { DiagnosticDetailsDialog } from './diagnostic-details-dialog';
 
 export type UnifiedLead = {
   id: string;
@@ -21,6 +22,7 @@ export type UnifiedLead = {
   profile_key?: string | null;
   session_evc?: string | null;
   obstacle?: string | null;
+  answers?: Record<string, string> | null;
 };
 
 type Filter = 'all' | 'methodologie' | 'diagnostic';
@@ -36,6 +38,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
   const [leads, setLeads] = useState(initialLeads);
   const [filter, setFilter] = useState<Filter>('all');
   const [search, setSearch] = useState('');
+  const [detailLead, setDetailLead] = useState<UnifiedLead | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
@@ -186,12 +189,24 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                       )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
-                      {l.source === 'diagnostic' && l.profile_label ? (
-                        <span className="inline-flex items-center gap-1.5">
-                          <span className="rounded-full px-2 py-0.5 text-xs font-bold" style={pc ? { background: pc.bg, color: pc.fg } : {}}>
-                            {l.profile_label}
-                          </span>
-                          <span className="text-xs font-semibold tabular-nums text-(--color-ink-muted)">{l.score}/{l.max_score}</span>
+                      {l.source === 'diagnostic' ? (
+                        <span className="inline-flex items-center gap-2">
+                          {l.profile_label && (
+                            <>
+                              <span className="rounded-full px-2 py-0.5 text-xs font-bold" style={pc ? { background: pc.bg, color: pc.fg } : {}}>
+                                {l.profile_label}
+                              </span>
+                              <span className="text-xs font-semibold tabular-nums text-(--color-ink-muted)">{l.score}/{l.max_score}</span>
+                            </>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setDetailLead(l)}
+                            className="inline-flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1 text-xs font-bold text-(--color-ink) transition-colors hover:border-(--color-primary) hover:text-(--color-primary)"
+                            title="Voir les réponses au diagnostic"
+                          >
+                            <Eye className="h-3.5 w-3.5" /> Détails
+                          </button>
                         </span>
                       ) : (
                         <span className="text-(--color-ink-muted)">—</span>
@@ -219,6 +234,8 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
           </table>
         </div>
       )}
+
+      <DiagnosticDetailsDialog lead={detailLead} onClose={() => setDetailLead(null)} />
     </>
   );
 }

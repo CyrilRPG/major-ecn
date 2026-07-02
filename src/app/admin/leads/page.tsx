@@ -48,6 +48,7 @@ export default async function LeadsPage() {
     profile_key: l.profile_key,
     session_evc: l.session_evc,
     obstacle: l.obstacle,
+    answers: l.answers ?? {},
   }));
 
   const leads = [...guideLeads, ...diagLeads].sort(
