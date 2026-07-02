@@ -15,26 +15,35 @@ type College = {
   icon_key: string | null;
   color_hex: string | null;
   order_index: number | null;
-  cours:
-    | {
-        id: string;
-        titre: string;
-        videos: { storage_path: string | null }[] | null;
-        fiches: { storage_path: string | null }[] | null;
-        qcm_series: { id: string; type: string }[] | null;
-        flashcards: { id: string }[] | null;
-      }[]
-    | null;
+  cours: { id: string; titre: string }[] | null;
 };
+
+type CountRow = {
+  cours_id: string;
+  has_video: boolean;
+  has_fiche: boolean;
+  qcm_count: number;
+  annale_count: number;
+  flashcard_count: number;
+  importance: number | null;
+};
+
+const EMPTY_COUNT = { has_video: false, has_fiche: false, qcm_count: 0, annale_count: 0, flashcard_count: 0, importance: 0 };
 
 export default async function AdminContenuPage() {
   const { scope } = await requireContentEditor();
   const supabase = await createClient();
+
+  // Requête « cœur » volontairement légère (id + titre uniquement). Les compteurs
+  // (vidéo/fiche/QCM/flashcards/importance) sont récupérés à part via une RPC
+  // agrégée : l'ancien embed profond (matieres→cours→qcm_series+flashcards, ~40k
+  // lignes évaluées par les policies RLS) dépassait le statement_timeout et
+  // renvoyait une page vide.
   const { data } = await supabase
     .from('facultes')
     .select(`
       semestres(matieres(id, nom, icon_key, color_hex, order_index,
-        cours(id, titre, videos(storage_path), fiches(storage_path), qcm_series(id, type), flashcards(id))))
+        cours(id, titre)))
     `)
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
@@ -52,17 +61,14 @@ export default async function AdminContenuPage() {
     // Cache les collèges qui n'ont plus aucun cours accessible
     .filter((m) => (m.cours ?? []).length > 0);
 
-  // Importance récupérée à part (requête découplée) : ainsi la grille se charge
-  // même si cette colonne récente n'est pas encore dans le cache de schéma.
-  const allCoursIds = colleges.flatMap((m) => (m.cours ?? []).map((c) => c.id));
-  const importanceMap = new Map<string, number>();
-  if (allCoursIds.length) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: impRows } = await (supabase as any)
-      .from('cours').select('id, importance').in('id', allCoursIds);
-    for (const r of (impRows ?? []) as { id: string; importance: number | null }[]) {
-      importanceMap.set(r.id, r.importance ?? 0);
-    }
+  // Compteurs agrégés (RPC SECURITY DEFINER réservée au staff) — tolérante :
+  // si elle échoue, la grille s'affiche quand même avec des compteurs à 0.
+  const countsMap = new Map<string, Omit<CountRow, 'cours_id'>>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: counts } = await (supabase as any).rpc('admin_content_counts');
+  for (const r of (counts ?? []) as CountRow[]) {
+    const { cours_id, ...rest } = r;
+    countsMap.set(cours_id, rest);
   }
 
   return (
@@ -97,11 +103,13 @@ export default async function AdminContenuPage() {
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {(m.cours ?? []).map((c) => {
-                  const hasVideo = (c.videos ?? []).some((v) => !!v.storage_path);
-                  const hasFiche = (c.fiches ?? []).some((f) => !!f.storage_path);
-                  const qcmCount = (c.qcm_series ?? []).filter((s) => s.type === 'qcm').length;
-                  const annaleCount = (c.qcm_series ?? []).filter((s) => s.type === 'annale').length;
-                  const fcCount = c.flashcards?.length ?? 0;
+                  const k = countsMap.get(c.id) ?? EMPTY_COUNT;
+                  const hasVideo = k.has_video;
+                  const hasFiche = k.has_fiche;
+                  const qcmCount = k.qcm_count;
+                  const annaleCount = k.annale_count;
+                  const fcCount = k.flashcard_count;
+                  const importance = k.importance ?? 0;
                   return (
                     <div
                       key={c.id}
@@ -115,10 +123,10 @@ export default async function AdminContenuPage() {
                       <div className="relative z-10 flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <h3 className="font-semibold leading-snug text-(--color-ink)">{c.titre}</h3>
-                          <ImportanceStars value={importanceMap.get(c.id) ?? 0} className="mt-1" />
+                          <ImportanceStars value={importance} className="mt-1" />
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
-                          <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importanceMap.get(c.id) ?? 0} />
+                          <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importance} />
                           <ChevronRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
                         </div>
                       </div>
