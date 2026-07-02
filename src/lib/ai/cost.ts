@@ -45,6 +45,48 @@ export const BILLING_EUR = {
   ai_response: 0.1,
 } as const;
 
+/**
+ * Seuils « cours complet » servant à la tarification PROPORTIONNELLE des
+ * spécialités de Médecine générale (contenu produit de façon incrémentale) :
+ *  - une spécialité complète = 200 flashcards → 5 € (proportionnel en deçà) ;
+ *  - une spécialité complète = 10 séries QCM/DP → 3 € (proportionnel en deçà) ;
+ *  - 1 fiche pour toute la spécialité → 10 €.
+ * Les autres collèges restent facturés au forfait par cours.
+ */
+export const BILLING_MG_THRESHOLDS = {
+  flashcards_full: 200,
+  qcm_series_full: 10,
+} as const;
+
+/** Prix € des contenus d'une ligne de facturation (voir admin_facturation_lines). */
+export function billingLinePrices(line: {
+  is_mg: boolean;
+  is_decouverte: boolean;
+  has_fiche: boolean;
+  n_series: number;
+  n_flash: number;
+}): { fiche: number; qcm: number; flash: number } {
+  const fiche = line.has_fiche ? BILLING_EUR.fiche : 0;
+  if (line.is_decouverte) return { fiche, qcm: 0, flash: 0 };
+  if (line.is_mg) {
+    const qcm = Math.min(
+      BILLING_EUR.qcm_per_course,
+      (BILLING_EUR.qcm_per_course * line.n_series) / BILLING_MG_THRESHOLDS.qcm_series_full,
+    );
+    const flash = Math.min(
+      BILLING_EUR.flashcards_per_course,
+      (BILLING_EUR.flashcards_per_course * line.n_flash) / BILLING_MG_THRESHOLDS.flashcards_full,
+    );
+    return { fiche, qcm: Math.round(qcm * 100) / 100, flash: Math.round(flash * 100) / 100 };
+  }
+  // Collèges hors MG : forfait par cours (binaire).
+  return {
+    fiche,
+    qcm: line.n_series > 0 ? BILLING_EUR.qcm_per_course : 0,
+    flash: line.n_flash > 0 ? BILLING_EUR.flashcards_per_course : 0,
+  };
+}
+
 /** Identifiant du collège « Découverte » (facturation : fiche seule). */
 export const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 

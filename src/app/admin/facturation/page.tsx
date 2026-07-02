@@ -1,6 +1,6 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { BILLING_EUR } from '@/lib/ai/cost';
+import { BILLING_EUR, billingLinePrices } from '@/lib/ai/cost';
 import { FacturationDashboard, type CourseLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
@@ -22,14 +22,24 @@ export default async function AdminFacturationPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c: any) => {
       const decouverte = !!c.is_decouverte || c.matiere_nom === 'Découverte';
+      const line = {
+        is_mg: !!c.is_mg,
+        is_decouverte: decouverte,
+        has_fiche: !!c.has_fiche,
+        n_series: Number(c.n_series ?? 0),
+        n_flash: Number(c.n_flash ?? 0),
+      };
+      const p = billingLinePrices(line);
       return {
-        id: c.cours_id as string,
+        id: c.line_id as string,
         titre: c.titre as string,
         matiere: (c.matiere_nom as string) ?? '—',
-        fiche: !!c.has_fiche,
-        // Règle Découverte : on ne facture que la fiche.
-        qcm: !decouverte && !!c.has_qcm,
-        flash: !decouverte && !!c.has_flash,
+        fichePrice: p.fiche,
+        qcmPrice: p.qcm,
+        flashPrice: p.flash,
+        nSeries: line.n_series,
+        nFlash: line.n_flash,
+        isMg: line.is_mg,
         decouverte,
       };
     },

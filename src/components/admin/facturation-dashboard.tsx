@@ -14,9 +14,13 @@ export type CourseLine = {
   id: string;
   titre: string;
   matiere: string;
-  fiche: boolean;
-  qcm: boolean;
-  flash: boolean;
+  /** Prix € déjà calculés (proportionnels pour Médecine générale). */
+  fichePrice: number;
+  qcmPrice: number;
+  flashPrice: number;
+  nSeries: number;
+  nFlash: number;
+  isMg: boolean;
   decouverte: boolean;
 };
 
@@ -58,26 +62,23 @@ export function FacturationDashboard({
 
   const data = useMemo(() => {
     const counts = {
-      fiche: lines.filter((l) => l.fiche).length,
-      qcm: lines.filter((l) => l.qcm).length,
-      flash: lines.filter((l) => l.flash).length,
+      fiche: lines.filter((l) => l.fichePrice > 0).length,
+      qcm: lines.filter((l) => l.qcmPrice > 0).length,
+      flash: lines.filter((l) => l.flashPrice > 0).length,
       ia: aiResponses,
     };
     const totals = {
-      fiche: counts.fiche * tarifs.fiche,
-      qcm: counts.qcm * tarifs.qcm,
-      flash: counts.flash * tarifs.flash,
-      ia: counts.ia * tarifs.ia,
+      fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
+      qcm: lines.reduce((s, l) => s + l.qcmPrice, 0),
+      flash: lines.reduce((s, l) => s + l.flashPrice, 0),
+      ia: aiResponses * tarifs.ia,
     };
     const grand = totals.fiche + totals.qcm + totals.flash + totals.ia;
 
     // Coût par collège (pour analyse).
     const byCollege = new Map<string, number>();
     for (const l of lines) {
-      const c =
-        (l.fiche ? tarifs.fiche : 0) +
-        (l.qcm ? tarifs.qcm : 0) +
-        (l.flash ? tarifs.flash : 0);
+      const c = l.fichePrice + l.qcmPrice + l.flashPrice;
       byCollege.set(l.matiere, (byCollege.get(l.matiere) ?? 0) + c);
     }
     if (totals.ia > 0) byCollege.set('Réponses IA', (byCollege.get('Réponses IA') ?? 0) + totals.ia);
@@ -102,18 +103,19 @@ export function FacturationDashboard({
   const rows = useMemo(() => {
     if (sel === 'ia') return [];
     const keep = (l: CourseLine) =>
-      sel === null ? l.fiche || l.qcm || l.flash : sel === 'fiche' ? l.fiche : sel === 'qcm' ? l.qcm : l.flash;
+      sel === null ? l.fichePrice > 0 || l.qcmPrice > 0 || l.flashPrice > 0
+        : sel === 'fiche' ? l.fichePrice > 0 : sel === 'qcm' ? l.qcmPrice > 0 : l.flashPrice > 0;
     return lines
       .filter(keep)
       .map((l) => {
         const items: { k: CatKey; price: number }[] = [];
-        if ((sel === null || sel === 'fiche') && l.fiche) items.push({ k: 'fiche', price: tarifs.fiche });
-        if ((sel === null || sel === 'qcm') && l.qcm) items.push({ k: 'qcm', price: tarifs.qcm });
-        if ((sel === null || sel === 'flash') && l.flash) items.push({ k: 'flash', price: tarifs.flash });
+        if ((sel === null || sel === 'fiche') && l.fichePrice > 0) items.push({ k: 'fiche', price: l.fichePrice });
+        if ((sel === null || sel === 'qcm') && l.qcmPrice > 0) items.push({ k: 'qcm', price: l.qcmPrice });
+        if ((sel === null || sel === 'flash') && l.flashPrice > 0) items.push({ k: 'flash', price: l.flashPrice });
         return { ...l, items, sub: items.reduce((s, i) => s + i.price, 0) };
       })
       .sort((a, b) => a.matiere.localeCompare(b.matiere) || a.titre.localeCompare(b.titre));
-  }, [lines, sel, tarifs]);
+  }, [lines, sel]);
 
   const activePalier = [...PALIERS].reverse().find((p) => data.grand >= p.seuil) ?? null;
   const nextPalier = PALIERS.find((p) => data.grand < p.seuil) ?? null;
@@ -130,7 +132,8 @@ export function FacturationDashboard({
           <p className="text-sm text-(--color-ink-soft)">
             Analyse des coûts du contenu généré par IA sur la plateforme. Inclut tous les collèges actifs.
             Fiche 10 € · QCM + DP 3 €/cours · Flashcards 5 €/cours · Réponse IA 0,10 €.
-            Découverte : fiche seule facturée. Les séances approfondies (vidéo) ne sont pas comptées.
+            Médecine générale : facturée par spécialité — 1 fiche (10 €) + QCM/DP au prorata (10 séries = 3 €)
+            + flashcards au prorata (200 = 5 €). Découverte : fiche seule facturée. Séances approfondies (vidéo) non comptées.
           </p>
         </div>
       </header>
@@ -367,7 +370,7 @@ export function FacturationDashboard({
                         {r.items.map((it) => (
                           <span key={it.k} className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
                             style={{ background: CAT[it.k].soft, color: CAT[it.k].color }}>
-                            {CAT[it.k].short} · {it.price} €
+                            {CAT[it.k].short} · {it.price % 1 === 0 ? it.price : it.price.toFixed(2)} €
                           </span>
                         ))}
                       </div>
