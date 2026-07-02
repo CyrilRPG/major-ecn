@@ -100,8 +100,16 @@ function extractTables(section, letters) {
   return tables;
 }
 
-function buildCover(meta) {
-  const plan = (meta.plan || '').split('||').map(s => s.trim()).filter(Boolean);
+// Sous-titre propre d'une table (ft-subtitle-text sans le préfixe « A. »).
+function subtitleOf(tableHtml) {
+  const m = /ft-subtitle-text">\s*([^<]*?)\s*<\/span>/.exec(tableHtml.replace(/&nbsp;/g, ' '));
+  return m ? m[1].replace(/^[A-Z]\.\s*/, '').replace(/\s+/g, ' ').trim() : '';
+}
+
+function buildCover(meta, derivedPlan) {
+  const plan = (derivedPlan && derivedPlan.length
+    ? derivedPlan
+    : (meta.plan || '').split('||').map(s => s.trim()).filter(Boolean));
   const planLi = plan.map((p, i) => `<li class="cover-plan-item"><a class="cover-plan-link" href="#partie-${i + 1}"><span class="cover-plan-num">${ROMAN[i]}</span><span class="cover-plan-text">${esc(p)}</span></a></li>`).join('\n');
   return `<section class="cover"><div class="cover-band"></div><div class="cover-content">
     <div class="cover-head"><img class="cover-logo" src="__LOGO__" alt="Major ECN">
@@ -144,12 +152,17 @@ const letterOrder = [];
 for (const t of coreTables) if (t.letter && !letterOrder.includes(t.letter)) letterOrder.push(t.letter);
 const seqLetters = ['A','B','C','D','E','F','G','H'];
 const parties = [];
+const derivedPlan = [];
 let idx = 0;
 for (const t of coreTables) {
   const li = letterOrder.indexOf(t.letter);
   const roman = ROMAN[li] || ROMAN[idx];
   const seqLetter = seqLetters[li] || 'A';
-  parties.push(`<section class="partie-page" id="partie-${(li < 0 ? idx : li) + 1}">${renumber(t.html, roman, comp.meta.title, seqLetter)}</section>`);
+  // Titre de la partie = son propre sous-titre (jamais le titre de la fiche),
+  // sinon on retombe sur le titre de l'item.
+  const bannerTitle = subtitleOf(t.html) || comp.meta.title;
+  derivedPlan[(li < 0 ? idx : li)] = bannerTitle;
+  parties.push(`<section class="partie-page" id="partie-${(li < 0 ? idx : li) + 1}">${renumber(t.html, roman, bannerTitle, seqLetter)}</section>`);
   idx++;
 }
 
@@ -160,7 +173,7 @@ const eclair = comp.eclair ? `<section class="page eclair-page"><div class="ecla
 const body = `<div class="page-watermark"><img src="__WATERMARK__" alt=""></div>
 <span class="string-source string-source--cours">${esc(comp.meta.title || '')}</span>
 <span class="string-source string-source--footer">Major ECN&nbsp;&middot;&nbsp;2025-2026</span>
-${buildCover(comp.meta)}
+${buildCover(comp.meta, derivedPlan.filter(Boolean))}
 ${parties.join('\n')}
 ${enrich}
 ${synthese}
