@@ -234,3 +234,13 @@ with expanded as (
 update profiles p set permission_scope = jsonb_set(p.permission_scope, '{colleges}', e.new_colleges)
 from expanded e where p.id = e.id;
 ```
+
+## ⭐ Règle des étoiles (★ « Déjà tombé aux EVC »)
+
+Les ★ ne doivent **JAMAIS** être inventées. On ne reprend que les ★ réellement
+présentes dans la **fiche d'origine** (PDF source dans `colleges-inputs/medecine
+generale/<Spécialité>/`). Les fiches PAE sources marquent leurs notions clés en
+**gras** / bloc « Notions clefs » / « +++ » — ce n'est PAS une ★ « déjà tombé ».
+→ En l'absence de ★ explicite dans la source, **aucune ★** dans l'item.
+Les ◆ (haut rendement) et ⚠ (piège) restent des annotations pédagogiques
+autorisées. La ★ de la **légende** (cover) est conservée.
