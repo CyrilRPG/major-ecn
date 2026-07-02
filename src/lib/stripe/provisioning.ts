@@ -251,6 +251,18 @@ export async function provisionStudentAccount(
     return { ok: true, userId, isNew, emailSent: true, emailVia: null, emailError: null };
   }
 
+  // Montant TOTAL réel affiché dans tous les emails.
+  // Piège Stripe : pour un paiement en plusieurs fois (mode subscription),
+  // `session.amount_total` correspond au montant d'UNE échéance, pas au total.
+  // On reconstruit donc le total = échéance × N. Pour un paiement comptant,
+  // `amount_total` EST déjà le total. Filet de sécurité : prix catalogue.
+  const installmentsN = input.installments ?? 1;
+  const rawCents = input.amountTotalCents ?? 0;
+  const totalCents = rawCents > 0
+    ? (installmentsN > 1 ? rawCents * installmentsN : rawCents)
+    : FORMULES[input.formuleId].amountCents;
+  const amountEurosTotal = totalCents / 100;
+
   // Récap interne (contact@ + abonan1@) — envoyé une seule fois grâce à la
   // déduplication ci-dessus. N'interrompt jamais le provisioning.
   try {
@@ -261,7 +273,7 @@ export async function provisionStudentAccount(
       email: input.email,
       phone: phone,
       formuleName: formuleForNotif.name,
-      amountEuros: (input.amountTotalCents ?? formuleForNotif.amountCents) / 100,
+      amountEuros: amountEurosTotal,
       installments: input.installments ?? 1,
       specialty: input.specialty ?? 'Médecine générale',
       voie: input.voie || null,
@@ -313,7 +325,7 @@ export async function provisionStudentAccount(
     const { subject, html, text } = purchaseConfirmationEmail({
       firstName,
       formuleName: formule.name,
-      amountEuros: (input.amountTotalCents ?? formule.amountCents) / 100,
+      amountEuros: amountEurosTotal,
       installments: input.installments ?? 1,
       setupUrl,
     });
