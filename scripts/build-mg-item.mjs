@@ -74,12 +74,23 @@ function sectionOf(topic) {
   if (ti < 0) { console.error('Thème introuvable dans la fiche source :', topic, '\nThèmes:', TOPICS.join(' | ')); process.exit(1); }
   const i = SRC.search(new RegExp('partie-banner-title[^>]*>' + esctRe(topic)));
   const j = ti + 1 < TOPICS.length ? SRC.search(new RegExp('partie-banner-title[^>]*>' + esctRe(TOPICS[ti + 1]))) : SRC.length;
-  return SRC.slice(i - 400, j);
+  // Borne inférieure du thème précédent (pour ne jamais déborder sur la section d'avant).
+  const prev = ti > 0 ? SRC.search(new RegExp('partie-banner-title[^>]*>' + esctRe(TOPICS[ti - 1]))) : 0;
+  // Certaines fiches enveloppent la banner du thème DANS la 1re <table class="fiche-table">.
+  // On recule alors jusqu'à ce <table> pour ne pas tronquer la 1re sous-partie (ex. « A. »).
+  let start = i - 400;
+  const opens = [...SRC.slice(0, i).matchAll(/<table class="fiche-table"[^>]*>/g)];
+  const lastOpen = opens.length ? opens[opens.length - 1].index : -1;
+  const closesBetween = lastOpen >= 0 ? (SRC.slice(lastOpen, i).match(/<\/table>/g) || []).length : 0;
+  // Si la dernière <table> avant la banner n'est pas fermée avant la banner => la banner est
+  // dans cette table : on la prend en entier (bornée par le thème précédent).
+  if (lastOpen > prev && closesBetween === 0 && lastOpen < start) start = lastOpen;
+  return SRC.slice(start, j);
 }
 
 function extractTables(section, letters) {
   const tables = [];
-  const re = /<table class="fiche-table">[\s\S]*?<\/table>/g;
+  const re = /<table class="fiche-table"[^>]*>[\s\S]*?<\/table>/g;
   let m;
   while ((m = re.exec(section))) {
     const sub = /ft-subtitle-text">\s*([A-Z])\./.exec(m[0].replace(/&nbsp;/g, ' '));
