@@ -97,6 +97,7 @@ export function FacturationDashboard({
 
   const barData = Array.from(data.byCollege.entries())
     .map(([name, value]) => ({ name, value }))
+    .filter((d) => d.value > 0)
     .sort((a, b) => b.value - a.value);
 
   // Courses du tableau selon la catégorie sélectionnée.
