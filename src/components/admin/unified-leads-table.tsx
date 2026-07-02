@@ -156,7 +156,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Téléphone</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Spécialité</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Source</th>
-                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Profil / Score</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Profil</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Date</th>
                 <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Actif</th>
               </tr>
@@ -192,12 +192,9 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                       {l.source === 'diagnostic' ? (
                         <span className="inline-flex items-center gap-2">
                           {l.profile_label && (
-                            <>
-                              <span className="rounded-full px-2 py-0.5 text-xs font-bold" style={pc ? { background: pc.bg, color: pc.fg } : {}}>
-                                {l.profile_label}
-                              </span>
-                              <span className="text-xs font-semibold tabular-nums text-(--color-ink-muted)">{l.score}/{l.max_score}</span>
-                            </>
+                            <span className="rounded-full px-2 py-0.5 text-xs font-bold" style={pc ? { background: pc.bg, color: pc.fg } : {}}>
+                              {l.profile_label}
+                            </span>
                           )}
                           <button
                             type="button"

@@ -71,10 +71,6 @@ export function DiagnosticDetailsDialog({ lead, onClose }: { lead: UnifiedLead |
             <span className="inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm font-extrabold" style={{ background: soft, color }}>
               {lead.profile_label || '—'}
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-xl bg-white/12 px-3 py-1.5 text-sm font-bold">
-              <span className="text-[17px] font-black tabular-nums">{lead.score ?? 0}</span>
-              <span className="text-xs opacity-75">/ {lead.max_score ?? 163} pts</span>
-            </span>
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-white/75">
             <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1.5 hover:text-white"><Mail className="h-3.5 w-3.5" /> {lead.email}</a>

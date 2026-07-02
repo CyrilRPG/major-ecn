@@ -102,11 +102,5 @@ export function ProfilDiagnostic({
       />
     );
   }
-  return (
-    <ProfilResult
-      profileKey={result!.profileKey}
-      score={result!.score}
-      maxScore={MAX_SCORE}
-    />
-  );
+  return <ProfilResult profileKey={result!.profileKey} />;
 }

@@ -115,7 +115,7 @@ export function ProfilQuestions({
           })}
         </div>
         <p className="mx-auto mt-2 max-w-5xl text-center text-[11px] font-semibold" style={{ color: INK_SOFT }}>
-          Étape {idx + 2} sur 11
+          Étape {idx + 2} sur {total + 1}
         </p>
       </div>
 
@@ -124,7 +124,7 @@ export function ProfilQuestions({
         {/* Question */}
         <div>
           <p className="text-[11px] font-black uppercase tracking-wider" style={{ color: RED }}>
-            Question {q.index} / 11
+            Question {q.index} / {total + 1}
           </p>
           <div className="mt-2 flex items-start gap-3">
             <span className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white" style={{ background: `linear-gradient(150deg, ${NAVY}, ${RED})` }}>

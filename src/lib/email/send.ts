@@ -20,20 +20,19 @@ const RESEND_URL = 'https://api.resend.com/emails';
 const FALLBACK_FROM = 'Major ECN <onboarding@resend.dev>';
 
 /**
- * Copie cachée (BCC) ajoutée à TOUS les mails envoyés depuis la plateforme.
- * Champ `bcc` Resend : n'apparaît pas dans les en-têtes reçus → invisible
- * côté étudiant/destinataire principal. Configurable via la variable
- * d'environnement EMAIL_BCC (séparée par virgules pour plusieurs adresses).
+ * Copie cachée (BCC) ajoutée à TOUS les mails. AUCUNE adresse privée n'est
+ * codée en dur : le BCC provient uniquement de la variable d'environnement
+ * EMAIL_BCC (CSV) si elle est définie, sinon aucun BCC. Objectif : ne jamais
+ * exposer d'adresse personnelle dans les emails envoyés aux étudiants.
  */
-const ALWAYS_BCC = 'abonan1@yahoo.fr';
+const ALWAYS_BCC = '';
 
 /**
- * Destinataires explicites des récapitulatifs internes d'inscription
- * (découverte ET payant). Les deux adresses sont en `to` (visibles) afin que
- * l'équipe et le gérant reçoivent chaque nouvelle inscription, indépendamment
- * du BCC global.
+ * Destinataires des récapitulatifs internes (inscriptions, souscriptions,
+ * diagnostics…). Adresse OFFICIELLE Major ECN uniquement — jamais d'adresse
+ * privée. Ajouter d'autres destinataires internes via EMAIL_BCC si besoin.
  */
-export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr', 'abonan1@yahoo.fr'];
+export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr'];
 
 export type EmailAttachment = {
   /** Nom de fichier affiché dans le mail (ex: "CGU.pdf"). */

@@ -26,18 +26,13 @@ function triggerGuideDownload() {
 
 export function ProfilResult({
   profileKey,
-  score,
-  maxScore,
 }: {
   profileKey: ProfileKey;
-  score: number;
-  maxScore: number;
 }) {
   const meta = PROFILES.find((p) => p.key === profileKey)!;
   const content = PROFILES_CONTENT[profileKey];
   const color = meta.color;
   const soft = meta.colorSoft;
-  const pct = Math.round((score / maxScore) * 100);
 
   return (
     <div className="w-full" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: INK }}>
@@ -62,22 +57,11 @@ export function ProfilResult({
               ))}
             </h1>
 
-            {/* Score + profil */}
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span
-                className="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-white shadow-lg"
-                style={{ background: `linear-gradient(90deg, ${NAVY}, ${color})` }}
-              >
-                <span className="text-2xl font-black tabular-nums">{score}</span>
-                <span className="text-xs font-semibold opacity-80">/ {maxScore} points</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-extrabold" style={{ background: soft, color }}>
+            {/* Profil (sans score chiffré — on conserve les couleurs) */}
+            <div className="mt-5">
+              <span className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-[15px] font-extrabold shadow-sm" style={{ background: soft, color }}>
                 {meta.emoji} {meta.label}
               </span>
-            </div>
-            {/* Barre de score */}
-            <div className="mt-4 h-2.5 w-full max-w-md overflow-hidden rounded-full bg-black/8">
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${NAVY})` }} />
             </div>
 
             <div className="mt-6 space-y-3">

@@ -232,6 +232,25 @@ export const QUESTIONS: Question[] = [
       { value: 'pr_aucune', label: "Je n'ai jamais suivi de préparation spécifique aux EVC", points: 0 },
     ],
   },
+  {
+    id: 'q12_source',
+    index: 12,
+    step: 11,
+    maxPoints: 0,
+    icon: 'Megaphone',
+    scored: false,
+    title: 'Comment avez-vous connu Major ECN ?',
+    hint: 'Sélectionnez votre réponse.',
+    why: "Cette information nous aide à comprendre comment vous nous avez découverts et à améliorer notre accompagnement.",
+    options: [
+      { value: 'src_youtube', label: 'YouTube', points: 0 },
+      { value: 'src_reco', label: 'Recommandations (bouche-à-oreille)', points: 0 },
+      { value: 'src_reseaux', label: 'Autres réseaux sociaux', points: 0, detailPlaceholder: 'Lequel ? (Instagram, TikTok, Facebook, LinkedIn…)' },
+      { value: 'src_hopital', label: 'Milieu hospitalier', points: 0 },
+      { value: 'src_internet', label: 'Recherche internet', points: 0 },
+      { value: 'src_autre', label: 'Autre', points: 0, detailPlaceholder: 'Précisez' },
+    ],
+  },
 ];
 
 export const MAX_SCORE = 163;
