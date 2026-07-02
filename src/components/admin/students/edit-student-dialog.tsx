@@ -17,7 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { UpdateStudentSchema, type UpdateStudentInput } from '@/lib/schemas/student';
 import { parseScope } from '@/lib/auth/permissions';
 
-const MG_COLLEGE_IDS = new Set(['col-medecine-generale', 'col-medecine-generale-voie-externe']);
+const MG_COLLEGE_IDS = new Set(['col-medecine-generale']);
 
 // 'decouverte' n'est pas une formule administrable depuis l'admin :
 // si le scope DB indique decouverte, on l'aligne par défaut sur essentiel

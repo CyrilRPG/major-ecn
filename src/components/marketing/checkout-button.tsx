@@ -55,9 +55,10 @@ export function CheckoutButton({
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
 }: Props) {
-  // Voie de concours (interne / externe) demandée pour la Formule Intensive ET
-  // la Formule Essentielle.
-  const needsVoie = formuleId === 'intensive' || formuleId === 'essentielle';
+  // Voie de concours (interne / externe) demandée pour toutes les formules
+  // payantes : elle détermine l'accès aux séries de Médecine générale
+  // (interne → pas de QROC ; externe → pas de QCM/DP hors « Révisions »).
+  const needsVoie = formuleId === 'intensive' || formuleId === 'essentielle' || formuleId === 'programme-approfondi';
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

@@ -12,8 +12,14 @@ export const OFFER_LABEL: Record<Offer, string> = {
   approfondi: 'Programme Approfondi',
 };
 
+export type Voie = 'interne' | 'externe';
+
 export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[]; /** Optionnel : liste d'IDs de cours auxquels l'accès est restreint au sein des collèges sélectionnés. Vide ou absent = tous les cours du/des collège(s). */ cours?: string[] }) & {
   offer: Offer;
+  /** Voie de concours (Médecine générale) : détermine l'accès aux séries.
+   *  'interne' → pas de QROC ; 'externe' → pas de QCM/DP (sauf item Révisions).
+   *  null/absent → aucune restriction de voie. Appliqué côté DB (RLS). */
+  voie?: Voie | null;
 };
 
 export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';

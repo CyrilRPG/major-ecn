@@ -14,22 +14,31 @@ function parseOffer(raw: unknown): Offer {
   return 'decouverte';
 }
 
+function parseVoie(raw: unknown): 'interne' | 'externe' | null {
+  if (raw && typeof raw === 'object') {
+    const v = (raw as { paid_voie?: unknown; voie?: unknown }).paid_voie ?? (raw as { voie?: unknown }).voie;
+    if (v === 'interne' || v === 'externe') return v;
+  }
+  return null;
+}
+
 export function parseScope(raw: unknown): PermissionScope {
   const offer = parseOffer(raw);
+  const voie = parseVoie(raw);
   if (raw && typeof raw === 'object' && 'type' in raw) {
     const t = (raw as { type: unknown }).type;
-    if (t === 'all') return { type: 'all', offer };
+    if (t === 'all') return { type: 'all', offer, voie };
     if (t === 'college') {
       const cs = (raw as { colleges?: unknown }).colleges;
       const list = Array.isArray(cs) ? cs.filter((x): x is string => typeof x === 'string') : [];
       const co = (raw as { cours?: unknown }).cours;
       const cours = Array.isArray(co) ? co.filter((x): x is string => typeof x === 'string') : undefined;
-      return { type: 'college', colleges: list, offer, ...(cours && cours.length > 0 ? { cours } : {}) };
+      return { type: 'college', colleges: list, offer, voie, ...(cours && cours.length > 0 ? { cours } : {}) };
     }
     // Legacy faculty-scoped accounts → full access (single EVC faculté now).
-    if (t === 'faculty') return { type: 'all', offer };
+    if (t === 'faculty') return { type: 'all', offer, voie };
   }
-  return { type: 'all', offer };
+  return { type: 'all', offer, voie };
 }
 
 /**
@@ -102,7 +111,10 @@ export function getContentAccess(offer: Offer): ContentAccess {
     case 'intensif':
       return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
     case 'approfondi':
-      return { fiche: true, ficheExpress: true, video: false, qcm: true, entrainement: false, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
+      // « Tout sauf cours vidéo » (+ restriction voie sur les séries MG,
+      // appliquée par la RLS). Séances prof/approfondies incluses ; entraînement
+      // ciblé conservé (QCM pour la voie interne, QROC pour la voie externe).
+      return { fiche: true, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
     default:
       return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
   }

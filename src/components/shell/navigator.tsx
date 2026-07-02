@@ -261,6 +261,9 @@ export function Navigator({
         const Icon = iconFromKey(col.iconKey ?? undefined);
         const o = isOpen(col.id);
         const isDecouverteCol = col.id === decouverteColId;
+        // Compteur : items directs + items de tous les sous-collèges (sinon un
+        // collège dont tout le contenu est réparti en sous-matières affiche 0).
+        const colTotal = col.cours.length + (col.children?.reduce((n, s) => n + s.cours.length, 0) ?? 0);
         return (
           <div key={col.id} className={isDecouverteCol ? 'relative' : undefined}>
             <button
@@ -280,7 +283,7 @@ export function Navigator({
               <Icon className="h-[18px] w-[18px] shrink-0 text-white" />
               <span className="flex-1 truncate">{col.nom}</span>
               <span className="rounded-full bg-white/10 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white/70">
-                {col.cours.length}
+                {colTotal}
               </span>
             </button>
 

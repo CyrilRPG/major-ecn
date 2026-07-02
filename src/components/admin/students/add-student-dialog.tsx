@@ -19,7 +19,7 @@ import { AddStudentSchema, type AddStudentInput } from '@/lib/schemas/student';
 // IDs des collèges de médecine générale (cf. base de données). Quand l'admin
 // sélectionne l'un de ces collèges en accès « spécifique », on lui propose de
 // restreindre l'accès à certaines matières (cours) au sein du collège.
-const MG_COLLEGE_IDS = new Set(['col-medecine-generale', 'col-medecine-generale-voie-externe']);
+const MG_COLLEGE_IDS = new Set(['col-medecine-generale']);
 
 export function AddStudentDialog({
   colleges,
