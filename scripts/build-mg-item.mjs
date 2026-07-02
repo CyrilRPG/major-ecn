@@ -102,7 +102,7 @@ function extractTables(section, letters) {
 
 // Sous-titre propre d'une table (ft-subtitle-text sans le préfixe « A. »).
 function subtitleOf(tableHtml) {
-  const m = /ft-subtitle-text">\s*([^<]*?)\s*<\/span>/.exec(tableHtml.replace(/&nbsp;/g, ' '));
+  const m = /ft-subtitle-text"[^>]*>\s*([^<]*?)\s*<\/span>/.exec(tableHtml.replace(/&nbsp;/g, ' '));
   return m ? m[1].replace(/^[A-Z]\.\s*/, '').replace(/\s+/g, ' ').trim() : '';
 }
 
@@ -128,7 +128,7 @@ function buildCover(meta, derivedPlan) {
 function renumber(table, roman, title, letter) {
   return table
     .replace(/(<span class="partie-banner-num">)[^<]*(<\/span>)/g, `$1${roman}$2`)
-    .replace(/(<span class="partie-banner-title(?:[^"]*)">)[^<]*(<\/span>)/g, `$1${esc(title)}$2`)
+    .replace(/(<span class="partie-banner-title[^"]*"[^>]*>)[^<]*(<\/span>)/g, `$1${esc(title)}$2`)
     .replace(/(<th class="ft-tag">)[^<]*(<\/th>)/g, `$1${roman}$2`)
     .replace(/(<span class="ft-subtitle-text">\s*)[A-Z](\.)/g, `$1${letter}$2`);
 }

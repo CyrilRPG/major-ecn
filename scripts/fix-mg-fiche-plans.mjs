@@ -52,7 +52,7 @@ function fixBody(html, ficheTitle) {
     const idm = /^<section class="partie-page" id="partie-(\d+)"/.exec(seg);
     if (!idm) return seg; // préambule (cover), enrich (sans id), synthèse/éclair : intacts
     const n = parseInt(idm[1], 10);
-    const sm = /ft-subtitle-text">\s*([^<]*?)\s*<\/span>/.exec(seg);
+    const sm = /ft-subtitle-text"[^>]*>\s*([^<]*?)\s*<\/span>/.exec(seg);
     if (!sm) return seg; // pas de sous-titre → on laisse tel quel
     const sub = sm[1]
       .replace(/&nbsp;/g, ' ')
@@ -61,8 +61,9 @@ function fixBody(html, ficheTitle) {
       .trim();
     if (!sub) return seg;
     subtitles[n - 1] = sub;
-    // Remplace tous les titres de bannière de CETTE partie (principale + --repeat)
-    return seg.replace(/(<span class="partie-banner-title[^"]*">)[^<]*(<\/span>)/g, `$1${sub}$2`);
+    // Remplace tous les titres de bannière de CETTE partie (principale + --repeat,
+    // avec ou sans style inline).
+    return seg.replace(/(<span class="partie-banner-title[^"]*"[^>]*>)[^<]*(<\/span>)/g, `$1${sub}$2`);
   }).join('');
 
   const planLi = subtitles
