@@ -19,7 +19,6 @@ type College = {
     | {
         id: string;
         titre: string;
-        importance: number | null;
         videos: { storage_path: string | null }[] | null;
         fiches: { storage_path: string | null }[] | null;
         qcm_series: { id: string; type: string }[] | null;
@@ -35,7 +34,7 @@ export default async function AdminContenuPage() {
     .from('facultes')
     .select(`
       semestres(matieres(id, nom, icon_key, color_hex, order_index,
-        cours(id, titre, importance, videos(storage_path), fiches(storage_path), qcm_series(id, type), flashcards(id))))
+        cours(id, titre, videos(storage_path), fiches(storage_path), qcm_series(id, type), flashcards(id))))
     `)
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
@@ -52,6 +51,19 @@ export default async function AdminContenuPage() {
     }))
     // Cache les collèges qui n'ont plus aucun cours accessible
     .filter((m) => (m.cours ?? []).length > 0);
+
+  // Importance récupérée à part (requête découplée) : ainsi la grille se charge
+  // même si cette colonne récente n'est pas encore dans le cache de schéma.
+  const allCoursIds = colleges.flatMap((m) => (m.cours ?? []).map((c) => c.id));
+  const importanceMap = new Map<string, number>();
+  if (allCoursIds.length) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: impRows } = await (supabase as any)
+      .from('cours').select('id, importance').in('id', allCoursIds);
+    for (const r of (impRows ?? []) as { id: string; importance: number | null }[]) {
+      importanceMap.set(r.id, r.importance ?? 0);
+    }
+  }
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -103,10 +115,10 @@ export default async function AdminContenuPage() {
                       <div className="relative z-10 flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <h3 className="font-semibold leading-snug text-(--color-ink)">{c.titre}</h3>
-                          <ImportanceStars value={c.importance ?? 0} className="mt-1" />
+                          <ImportanceStars value={importanceMap.get(c.id) ?? 0} className="mt-1" />
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
-                          <ItemImportanceButton coursId={c.id} titre={c.titre} importance={c.importance ?? 0} />
+                          <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importanceMap.get(c.id) ?? 0} />
                           <ChevronRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
                         </div>
                       </div>
