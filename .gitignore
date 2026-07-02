@@ -47,3 +47,6 @@ Annales/
 __pycache__/
 *.pyc
 .claude/
+
+# artefacts de build fiches (images data-URI volumineuses)
+scripts/mg-fiches-data/**/.build-*.html
