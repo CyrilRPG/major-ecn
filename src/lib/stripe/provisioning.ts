@@ -61,9 +61,7 @@ const MAP_OFFER: Record<FormuleId, 'essentiel' | 'intensif' | 'approfondi'> = {
   'programme-approfondi': 'approfondi',
 };
 
-const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 const MG_INTERNE_ID = 'col-medecine-generale';
-const MG_EXTERNE_ID = 'col-medecine-generale-voie-externe';
 
 /** Petit logger structuré pour faciliter la lecture des Logs Vercel. */
 function log(label: string, payload: Record<string, unknown> = {}) {
@@ -150,29 +148,24 @@ export async function provisionStudentAccount(
   const lastName = input.lastName || existingProfile?.last_name || '';
   const phone = input.phone || existingProfile?.phone || null;
 
-  // Accès accordé après achat : UNIQUEMENT le collège « Médecine générale » de
-  // la voie choisie (interne ou externe) + ses éventuelles sous-matières, plus
-  // l'Espace Découverte. Les autres collèges (Cardiologie, Pédiatrie, MIR,
-  // Pneumologie, Gériatrie, Neurologie…) NE sont PAS accordés.
-  let colleges: string[] = [DECOUVERTE_COLLEGE_ID];
-  const voieValue = (input.voie ?? '').toLowerCase();
+  // Accès accordé après achat : STRICTEMENT « Médecine générale - Voie interne »
+  // (col-medecine-generale) + ses sous-collèges (Cardiologie, Dermatologie…).
+  // NI la voie externe, NI l'Espace Découverte, NI aucune autre spécialité — quel
+  // que soit la voie transmise au checkout. Le contenu est ensuite borné par la
+  // formule (offer) achetée.
+  const mgId = MG_INTERNE_ID;
 
-  if (voieValue === 'interne' || voieValue === 'externe') {
-    const mgId = voieValue === 'externe' ? MG_EXTERNE_ID : MG_INTERNE_ID;
+  // Sous-collèges rattachés à Médecine générale (interrogés dynamiquement pour
+  // rester à jour quand de nouveaux sous-collèges sont ajoutés).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allMatieres } = await (admin as any)
+    .from('matieres')
+    .select('id, parent_matiere_id');
+  const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
+  const childIds = mats.filter((m) => m.parent_matiere_id === mgId).map((m) => m.id);
 
-    // Sous-matières éventuelles rattachées au collège MG choisi (ex. une
-    // spécialité placée sous « Médecine générale »). On interroge la table pour
-    // rester dynamique si de nouvelles sous-matières sont ajoutées.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: allMatieres } = await (admin as any)
-      .from('matieres')
-      .select('id, parent_matiere_id');
-    const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
-    const childIds = mats.filter((m) => m.parent_matiere_id === mgId).map((m) => m.id);
-
-    colleges = [DECOUVERTE_COLLEGE_ID, mgId, ...childIds];
-    log('colleges-resolved', { voie: voieValue, mgId, count: colleges.length, colleges });
-  }
+  const colleges: string[] = [mgId, ...childIds];
+  log('colleges-resolved', { mgId, count: colleges.length, colleges });
 
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
   // `specialty_wish`…) puis on superpose les marqueurs d'achat.
