@@ -150,6 +150,11 @@ export function StudyConsole({
             // For non-découverte students, hide formula-locked tabs entirely
             // (découverte keeps padlock UI for the upgrade upsell)
             if (!isDecouverte && locked?.[t.key] === true) return false;
+            // Onglet « Cours vidéo » masqué s'il n'y a pas de vidéo classique
+            // pour ce cours (ex. items de médecine générale sans vidéo). Les
+            // vidéos de type « Séance approfondie » ont leur propre onglet.
+            // Exception : Découverte garde le cadenas d'upsell.
+            if (t.key === 'video' && !t.available && !isDecouverte) return false;
             return true;
           }).map((t) => {
             const active = activeSeg === t.seg;
