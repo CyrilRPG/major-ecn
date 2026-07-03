@@ -3,6 +3,11 @@ import { createClient } from '@/lib/supabase/server';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { fetchContentAccess, OFFER_LABELS, unlockedLabels } from '@/lib/auth/formula-permissions';
+
+// Formules proposées à la création d'un élève (les 3 offres payantes). Ce que
+// chacune débloque est lu depuis la Config Permissions (table formula_permissions).
+const ADMIN_OFFERS = ['essentiel', 'intensif', 'approfondi'] as const;
 
 export const metadata = { title: 'Élèves' };
 
@@ -19,13 +24,13 @@ export default async function ElevesPage() {
       .order('created_at', { ascending: false, nullsFirst: false }),
     supabase
       .from('facultes')
-      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
+      .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
   ]);
 
   type MatRaw = {
-    id: string; nom: string; order_index: number | null;
+    id: string; nom: string; order_index: number | null; parent_matiere_id: string | null;
     cours?: { id: string; titre: string; order_index: number | null }[] | null;
   };
   const matieres = (
@@ -34,7 +39,16 @@ export default async function ElevesPage() {
     .flatMap((s) => s.matieres ?? [])
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
-  const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom }));
+  const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
+
+  // Formules + contenus débloqués, d'après la Config Permissions.
+  const offers = await Promise.all(
+    ADMIN_OFFERS.map(async (offer) => ({
+      id: offer,
+      label: OFFER_LABELS[offer],
+      unlocks: unlockedLabels(await fetchContentAccess(offer)),
+    })),
+  );
   const coursByCollege: Record<string, { id: string; titre: string }[]> = Object.fromEntries(
     matieres.map((m) => [
       m.id,
@@ -55,7 +69,7 @@ export default async function ElevesPage() {
             {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
           </p>
         </div>
-        <AddStudentDialog colleges={colleges} coursByCollege={coursByCollege} />
+        <AddStudentDialog colleges={colleges} offers={offers} />
       </header>
 
       <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} coursByCollege={coursByCollege} />

@@ -51,3 +51,30 @@ export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAcc
   }
   return getContentAccess(offer);
 });
+
+/** Libellés des formules (offres) — alignés sur la page Config Permissions. */
+export const OFFER_LABELS: Record<Offer, string> = {
+  decouverte: 'Espace Découverte',
+  essentiel: 'Formule Essentielle',
+  intensif: 'Formule Intensive',
+  approfondi: 'Programme Approfondi',
+};
+
+/** Contenus configurables (ordre + libellé) — alignés sur Config Permissions. */
+export const CONTENT_ACCESS_LABELS: { key: keyof ContentAccess; label: string }[] = [
+  { key: 'fiche', label: 'Fiche de cours' },
+  { key: 'ficheExpress', label: 'Fiche Express' },
+  { key: 'video', label: 'Résumé vidéo' },
+  { key: 'qcm', label: 'QCM / DP / QROC' },
+  { key: 'entrainement', label: 'QCM Entraînement' },
+  { key: 'seanceProf', label: 'Séance du professeur' },
+  { key: 'flashcards', label: 'Flashcards' },
+  { key: 'interrogation', label: 'Interrogation' },
+  { key: 'seanceApprofondie', label: 'Séance approfondie' },
+  { key: 'notes', label: 'Prise de notes' },
+];
+
+/** Liste des contenus débloqués par une formule (d'après la config). */
+export function unlockedLabels(access: ContentAccess): string[] {
+  return CONTENT_ACCESS_LABELS.filter(({ key }) => access[key]).map(({ label }) => label);
+}

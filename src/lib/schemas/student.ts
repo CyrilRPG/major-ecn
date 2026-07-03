@@ -17,6 +17,9 @@ export const AddStudentSchema = z.object({
    *  pour restreindre l'accès à certaines matières au sein des Médecines
    *  Générales (voie interne / voie externe) par exemple. */
   cours: z.array(z.string()).optional(),
+  /** Voie de concours pour la Médecine générale : détermine l'accès aux séries
+   *  QCM/QROC via la RLS (comme après paiement Stripe). */
+  voie: z.enum(['interne', 'externe']).optional().nullable(),
 });
 
 export const UpdateStudentSchema = z.object({
@@ -29,6 +32,7 @@ export const UpdateStudentSchema = z.object({
   colleges: z.array(z.string()).optional(),
   cours: z.array(z.string()).optional(),
   can_download: z.boolean().optional(),
+  voie: z.enum(['interne', 'externe']).optional().nullable(),
 });
 
 export type AddStudentInput = z.infer<typeof AddStudentSchema>;

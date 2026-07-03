@@ -153,8 +153,11 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
     .map((m) => {
       const children = (childMap.get(m.id) ?? [])
-        // héritage : le parent m est déjà accessible (filtre ci-dessus)
-        .filter((ch) => canAccessCollege(scope, ch.id) || canAccessCollege(scope, m.id))
+        // Chaque sous-collège (spécialité MG) est filtré individuellement selon
+        // le scope : accorder « Médecine générale » sans lister explicitement une
+        // spécialité ne l'ouvre plus. Permet de restreindre les spécialités
+        // accordées à un élève (le provisioning liste toujours les spécialités).
+        .filter((ch) => canAccessCollege(scope, ch.id))
         .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
         .map((ch) => ({
           id: ch.id,
