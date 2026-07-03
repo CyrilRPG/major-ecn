@@ -20,9 +20,13 @@ export async function POST(req: Request) {
   // lisent la RLS (current_voie()) ET parseScope côté client, exactement comme
   // après un paiement Stripe. Filtre les séries QCM/QROC vues par l'élève.
   const voieFields = voie ? { paid_voie: voie } : {};
+  // Médecine générale accordée → spécialité = « Médecine générale » (affichée
+  // dans la liste des élèves), comme après paiement Stripe.
+  const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');
+  const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer, ...voieFields }
+      ? { type: 'all' as const, offer, ...specialtyFields, ...voieFields }
       : {
           type: 'college' as const,
           colleges: colleges ?? [],
@@ -30,6 +34,7 @@ export async function POST(req: Request) {
           // cours[] : présent UNIQUEMENT s'il y a des restrictions par matière
           // (sinon accès à tous les cours du/des collège(s) sélectionnés).
           ...(cours && cours.length > 0 ? { cours } : {}),
+          ...specialtyFields,
           ...voieFields,
         };
 

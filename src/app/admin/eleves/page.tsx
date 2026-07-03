@@ -24,14 +24,13 @@ export default async function ElevesPage() {
       .order('created_at', { ascending: false, nullsFirst: false }),
     supabase
       .from('facultes')
-      .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')
+      .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
   ]);
 
   type MatRaw = {
     id: string; nom: string; order_index: number | null; parent_matiere_id: string | null;
-    cours?: { id: string; titre: string; order_index: number | null }[] | null;
   };
   const matieres = (
     ((fac as unknown as { semestres?: { matieres?: MatRaw[] }[] } | null)?.semestres ?? [])
@@ -49,15 +48,6 @@ export default async function ElevesPage() {
       unlocks: unlockedLabels(await fetchContentAccess(offer)),
     })),
   );
-  const coursByCollege: Record<string, { id: string; titre: string }[]> = Object.fromEntries(
-    matieres.map((m) => [
-      m.id,
-      (m.cours ?? [])
-        .slice()
-        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-        .map((c) => ({ id: c.id, titre: c.titre })),
-    ]),
-  );
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -72,7 +62,7 @@ export default async function ElevesPage() {
         <AddStudentDialog colleges={colleges} offers={offers} />
       </header>
 
-      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} coursByCollege={coursByCollege} />
+      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} />
     </main>
   );
 }

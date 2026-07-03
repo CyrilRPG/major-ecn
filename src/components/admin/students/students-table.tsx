@@ -44,6 +44,7 @@ const OFFER_CATS: { value: Offer; label: string }[] = [
 
 type RawScope = {
   paid_specialty?: string;
+  paid_voie?: string | null;
   specialty_wish?: string | null;
   paid_at?: string;
   paid_offer?: string;
@@ -54,10 +55,14 @@ function rawScope(s: Student): RawScope {
 }
 function specialtyOf(s: Student): string {
   const r = rawScope(s);
-  return (r.signup?.specialty || r.paid_specialty || r.specialty_wish || '').toString().trim();
+  // La spécialité fixée par l'admin / Stripe (paid_specialty) est prioritaire
+  // sur le souhait déclaré à l'inscription (signup) : ainsi accorder Médecine
+  // générale affiche bien « Médecine générale ».
+  return (r.paid_specialty || r.signup?.specialty || r.specialty_wish || '').toString().trim();
 }
 function voieOf(s: Student): string {
-  return (rawScope(s).signup?.voie ?? '').toString().trim();
+  const r = rawScope(s);
+  return (r.paid_voie || r.signup?.voie || '').toString().trim();
 }
 function offerOf(s: Student): Offer {
   return parseScope(s.permission_scope).offer;
@@ -88,11 +93,11 @@ function withinPeriod(iso: string | undefined, period: string): boolean {
 export function StudentsTable({
   students,
   colleges,
-  coursByCollege,
+  offers,
 }: {
   students: Student[];
-  colleges: { id: string; nom: string }[];
-  coursByCollege?: Record<string, { id: string; titre: string }[]>;
+  colleges: { id: string; nom: string; parentId?: string | null }[];
+  offers: { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] }[];
 }) {
   const [q, setQ] = useState('');
   const [promo, setPromo] = useState('all');
@@ -365,7 +370,7 @@ export function StudentsTable({
                         <Award className="h-3.5 w-3.5" />
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
-                      <EditStudentDialog student={s} colleges={colleges} coursByCollege={coursByCollege} />
+                      <EditStudentDialog student={s} colleges={colleges} offers={offers} />
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}

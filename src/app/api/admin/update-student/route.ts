@@ -16,31 +16,36 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours, can_download } = parsed.data;
+  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours, can_download, voie } = parsed.data;
 
   // Préserve les métadonnées d'inscription (signup, specialty_wish, espace_decouverte)
   // déjà stockées dans permission_scope : l'édition admin reconstruit le scope
   // (type/collèges/offre) et ne doit pas effacer ces informations.
+  // paid_voie / paid_specialty sont RECALCULÉS depuis le formulaire (l'admin peut
+  // changer la voie / accorder ou retirer Médecine générale), pas préservés.
   const { data: existing } = await supabase
     .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
   const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
   const meta: Record<string, unknown> = {};
-  for (const k of [
-    'signup', 'specialty_wish', 'espace_decouverte',
-    'paid_offer', 'paid_formule', 'paid_specialty', 'paid_voie', 'paid_at',
-  ] as const) {
+  for (const k of ['signup', 'specialty_wish', 'espace_decouverte', 'paid_offer', 'paid_formule', 'paid_at'] as const) {
     if (prev[k] !== undefined) meta[k] = prev[k];
   }
 
+  const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');
+  const voieFields = voie ? { paid_voie: voie } : {};
+  const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
+
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer, ...meta }
+      ? { type: 'all' as const, offer, ...meta, ...specialtyFields, ...voieFields }
       : {
           type: 'college' as const,
           colleges: colleges ?? [],
           offer,
           ...(cours && cours.length > 0 ? { cours } : {}),
           ...meta,
+          ...specialtyFields,
+          ...voieFields,
         };
 
   const { error } = await supabase
