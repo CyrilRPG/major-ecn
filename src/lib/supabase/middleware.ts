@@ -3,6 +3,20 @@ import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/types/database';
 
 export async function updateSession(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const isAuthRoute = path === '/login' || path === '/signup';
+  const isProtectedRoute = path.startsWith('/app') || path.startsWith('/accueil') || path.startsWith('/entrainement') || path.startsWith('/agenda') || path.startsWith('/admin') || path.startsWith('/cours') || path.startsWith('/facultes') || path.startsWith('/matieres');
+
+  // Pages PUBLIQUES (vitrine, blog, guide, etc.) : aucun appel Supabase.
+  // Auparavant `auth.getUser()` (round-trip vers l'API Auth + Postgres) était
+  // exécuté à CHAQUE requête, y compris sur l'accueil et le blog. Sous la charge
+  // d'un crawler ou d'un pic de trafic, cela saturait la base et provoquait des
+  // 504 MIDDLEWARE_INVOCATION_TIMEOUT sur tout le site. Les pages publiques
+  // n'ont pas besoin de session : on renvoie immédiatement sans toucher la base.
+  if (!isProtectedRoute && !isAuthRoute) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(
@@ -23,9 +37,6 @@ export async function updateSession(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
-  const isAuthRoute = path === '/login' || path === '/signup';
-  const isProtectedRoute = path.startsWith('/app') || path.startsWith('/accueil') || path.startsWith('/entrainement') || path.startsWith('/agenda') || path.startsWith('/admin') || path.startsWith('/cours') || path.startsWith('/facultes') || path.startsWith('/matieres');
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
