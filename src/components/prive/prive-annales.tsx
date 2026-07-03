@@ -118,30 +118,35 @@ function useSpacedRepetition(questions: FlatQuestion[]) {
     setLastResult({ isCorrect, question: q });
     setPhase('review');
 
+    // On ne modifie PAS la file ici : le choix « Facile / Difficile » (rate)
+    // décide si la question réapparaît. On enregistre juste la réussite au 1er
+    // essai (pour le score final).
     setSession((prev) => {
-      const newQueue = [...prev.queue];
-      const removed = newQueue.shift()!;
-      const wasFirstAttempt = !prev.attemptedOnce.has(removed.flat.index);
+      const idx = currentEntry.flat.index;
+      if (prev.attemptedOnce.has(idx)) return prev;
       const newAttempted = new Set(prev.attemptedOnce);
-      newAttempted.add(removed.flat.index);
-
-      if (!isCorrect) {
-        const insertPos = Math.min(3, newQueue.length);
-        newQueue.splice(insertPos, 0, removed);
-      }
-
+      newAttempted.add(idx);
       return {
         ...prev,
-        queue: newQueue,
-        correctCount: prev.correctCount + (isCorrect ? 1 : 0),
-        firstTryCorrect:
-          prev.firstTryCorrect + (isCorrect && wasFirstAttempt ? 1 : 0),
         attemptedOnce: newAttempted,
+        firstTryCorrect: prev.firstTryCorrect + (isCorrect ? 1 : 0),
       };
     });
   }, [currentEntry, selected]);
 
-  const nextQuestion = useCallback(() => {
+  // Facile → la question est acquise (n'apparaît plus). Difficile → réapparaît
+  // 3 questions plus loin. Aucun autre bouton.
+  const rate = useCallback((difficulty: 'facile' | 'difficile') => {
+    setSession((prev) => {
+      const newQueue = [...prev.queue];
+      const removed = newQueue.shift();
+      if (!removed) return prev;
+      if (difficulty === 'difficile') {
+        newQueue.splice(Math.min(3, newQueue.length), 0, removed);
+        return { ...prev, queue: newQueue };
+      }
+      return { ...prev, queue: newQueue, correctCount: prev.correctCount + 1 };
+    });
     setSelected(new Set());
     setLastResult(null);
     setPhase('answering');
@@ -163,7 +168,7 @@ function useSpacedRepetition(questions: FlatQuestion[]) {
     lastResult,
     toggleItem,
     validate,
-    nextQuestion,
+    rate,
     restart,
   };
 }
@@ -218,7 +223,7 @@ function QuestionView({
   lastResult,
   onToggle,
   onValidate,
-  onNext,
+  onRate,
   accentColor,
 }: {
   entry: QueueEntry;
@@ -229,7 +234,7 @@ function QuestionView({
   lastResult: { isCorrect: boolean; question: PriveAnnaleQuestion } | null;
   onToggle: (lettre: string) => void;
   onValidate: () => void;
-  onNext: () => void;
+  onRate: (difficulty: 'facile' | 'difficile') => void;
   accentColor: string;
 }) {
   const q = entry.flat.question;
@@ -463,14 +468,23 @@ function QuestionView({
               </div>
             )}
 
-            {/* Next question button */}
-            <div className="bg-white px-5 py-4 border-t border-gray-100 sm:px-6">
+            {/* Auto-évaluation : Facile → acquise · Difficile → réapparaît (3). */}
+            <div className="grid grid-cols-2 gap-2.5 border-t border-gray-100 bg-white px-5 py-4 sm:px-6">
               <button
-                onClick={onNext}
-                className="w-full rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
-                style={{ background: accentColor }}
+                onClick={() => onRate('facile')}
+                className="flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-[14px] font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ backgroundColor: '#DCF1E2', borderColor: '#15803D30', color: '#15803D' }}
               >
-                Question suivante
+                <Check className="h-4 w-4" strokeWidth={2.5} />
+                Facile
+              </button>
+              <button
+                onClick={() => onRate('difficile')}
+                className="flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-[14px] font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ backgroundColor: '#FCE7EB', borderColor: '#E11D4830', color: '#E11D48' }}
+              >
+                <RotateCcw className="h-4 w-4" strokeWidth={2.5} />
+                Difficile
               </button>
             </div>
           </div>
@@ -586,7 +600,7 @@ export function PriveQcmViewer({
     lastResult,
     toggleItem,
     validate,
-    nextQuestion,
+    rate,
     restart,
   } = useSpacedRepetition(allQuestions);
 
@@ -626,7 +640,7 @@ export function PriveQcmViewer({
       lastResult={lastResult}
       onToggle={toggleItem}
       onValidate={validate}
-      onNext={nextQuestion}
+      onRate={rate}
       accentColor={accent}
     />
   );

@@ -3,10 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Check,
-  CheckCheck,
   CheckCircle2,
   Info,
-  Minus,
   RefreshCw,
   RotateCcw,
   X,
@@ -39,73 +37,44 @@ function pastelBg(hex: string) {
 }
 
 /* ─── difficulty config ─── */
+/* Système simple : « Facile » → la carte est acquise (n'apparaît plus).
+ * « Difficile » → la carte réapparaît 3 cartes plus loin. Aucun autre bouton. */
 
-type Difficulty = 'a_revoir' | 'difficile' | 'bien' | 'parfait';
+type Difficulty = 'facile' | 'difficile';
+
+/** Nombre de cartes après lesquelles une carte « Difficile » réapparaît. */
+const REAPPEAR_AFTER = 3;
 
 const DIFFICULTIES: {
   key: Difficulty;
   label: string;
   subtitle: string;
-  score: number;
-  weight: number;
-  reappearAfter: number;
   accent: string;
   bg: string;
   icon: typeof X;
 }[] = [
   {
-    key: 'a_revoir',
-    label: 'À revoir',
-    subtitle: 'Je ne la savais pas',
-    score: -5,
-    weight: 4,
-    reappearAfter: 3,
-    accent: '#E11D48',
-    bg: '#FCE7EB',
-    icon: X,
+    key: 'facile',
+    label: 'Facile',
+    subtitle: 'Je la connais',
+    accent: '#15803D',
+    bg: '#DCF1E2',
+    icon: Check,
   },
   {
     key: 'difficile',
     label: 'Difficile',
-    subtitle: "J'hésite encore",
-    score: -3,
-    weight: 3,
-    reappearAfter: 5,
-    accent: '#E08900',
-    bg: '#FCEED1',
-    icon: Minus,
-  },
-  {
-    key: 'bien',
-    label: 'Bien',
-    subtitle: 'Je la savais',
-    score: 3,
-    weight: 2,
-    reappearAfter: 8,
-    accent: '#2563EB',
-    bg: '#DEEAFE',
-    icon: Check,
-  },
-  {
-    key: 'parfait',
-    label: 'Parfait',
-    subtitle: 'Connaissance solide',
-    score: 5,
-    weight: 1,
-    reappearAfter: 12,
-    accent: '#15803D',
-    bg: '#DCF1E2',
-    icon: CheckCheck,
+    subtitle: 'À revoir',
+    accent: '#E11D48',
+    bg: '#FCE7EB',
+    icon: RotateCcw,
   },
 ];
-
-const MASTERY_THRESHOLD = 5;
 
 /* ─── internal card state ─── */
 
 type QueueCard = {
   card: PriveFlashcard;
-  score: number;
 };
 
 /* ─── card face ─── */
@@ -249,7 +218,7 @@ export function PriveFlashcardSession({
 
   /* --- state --- */
   const [queue, setQueue] = useState<QueueCard[]>(() =>
-    cards.map((c) => ({ card: c, score: 0 })),
+    cards.map((c) => ({ card: c })),
   );
   const [flipped, setFlipped] = useState(false);
   const [masteredCount, setMasteredCount] = useState(0);
@@ -270,8 +239,6 @@ export function PriveFlashcardSession({
   const rateDifficulty = useCallback(
     (d: Difficulty) => {
       if (!current || isTransitioning) return;
-      const diff = DIFFICULTIES.find((x) => x.key === d)!;
-      const newScore = current.score + diff.score;
 
       setIsTransitioning(true);
       setFlipped(false);
@@ -279,14 +246,15 @@ export function PriveFlashcardSession({
       setTimeout(() => {
         setQueue((prev) => {
           const rest = prev.slice(1);
-          if (newScore >= MASTERY_THRESHOLD) {
+          // Facile → acquise (n'apparaît plus).
+          if (d === 'facile') {
             setMasteredCount((c) => c + 1);
             return rest;
           }
-          const insertAt = Math.min(diff.reappearAfter, rest.length);
-          const updated: QueueCard = { card: current.card, score: newScore };
+          // Difficile → réapparaît 3 cartes plus loin.
+          const insertAt = Math.min(REAPPEAR_AFTER, rest.length);
           const next = [...rest];
-          next.splice(insertAt, 0, updated);
+          next.splice(insertAt, 0, { card: current.card });
           return next;
         });
         setIsTransitioning(false);
@@ -297,7 +265,7 @@ export function PriveFlashcardSession({
 
   /* --- restart --- */
   const restart = useCallback(() => {
-    setQueue(cards.map((c) => ({ card: c, score: 0 })));
+    setQueue(cards.map((c) => ({ card: c })));
     setFlipped(false);
     setMasteredCount(0);
     setIsTransitioning(false);
@@ -308,10 +276,8 @@ export function PriveFlashcardSession({
     function handleKey(e: KeyboardEvent) {
       if (allMastered) return;
       if (flipped && !isTransitioning) {
-        if (e.key === '1') { e.preventDefault(); rateDifficulty('a_revoir'); }
+        if (e.key === '1') { e.preventDefault(); rateDifficulty('facile'); }
         if (e.key === '2') { e.preventDefault(); rateDifficulty('difficile'); }
-        if (e.key === '3') { e.preventDefault(); rateDifficulty('bien'); }
-        if (e.key === '4') { e.preventDefault(); rateDifficulty('parfait'); }
       }
     }
     window.addEventListener('keydown', handleKey);
@@ -440,7 +406,7 @@ export function PriveFlashcardSession({
           opacity: flipped ? 1 : 0,
         }}
       >
-        <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+        <div className="mx-auto grid max-w-md grid-cols-2 gap-2.5">
           {DIFFICULTIES.map((d) => {
             const Icon = d.icon;
             return (
@@ -484,14 +450,11 @@ export function PriveFlashcardSession({
       {/* Keyboard shortcuts */}
       <div className="mt-6 flex flex-wrap justify-center gap-4 rounded-xl bg-[#FAFBFE] px-4 py-3 text-[11px] text-gray-400">
         <span className="flex items-center gap-1">
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">
-            1
-          </kbd>
-          -
-          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">
-            4
-          </kbd>
-          Évaluer (verso)
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">1</kbd>
+          Facile
+          <span className="mx-1 text-gray-300">·</span>
+          <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-mono">2</kbd>
+          Difficile
         </span>
       </div>
     </div>
