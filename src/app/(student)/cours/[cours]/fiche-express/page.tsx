@@ -38,8 +38,8 @@ export default async function FicheExpressPage({ params }: { params: Promise<{ c
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState
             icon={FileText}
-            title="Fiche Express bientôt disponible"
-            description="La fiche de cours n'est pas encore publiée. La fiche express sera automatiquement générée une fois la fiche complète disponible."
+            title="Fiche éclair bientôt disponible"
+            description="La fiche de cours n'est pas encore publiée. La fiche éclair sera automatiquement générée une fois la fiche complète disponible."
           />
         </div>
       )}

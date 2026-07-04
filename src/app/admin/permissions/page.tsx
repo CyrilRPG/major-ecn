@@ -7,7 +7,7 @@ export const metadata = { title: 'Configuration Permissions' };
 
 const CONTENT_LABELS: Record<string, string> = {
   fiche: 'Fiche de cours',
-  fiche_express: 'Fiche Express',
+  fiche_express: 'Fiche éclair',
   video: 'Résumé vidéo',
   qcm: 'QCM / DP / QROC',
   entrainement: 'QCM Entraînement',

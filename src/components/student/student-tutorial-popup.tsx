@@ -53,13 +53,13 @@ function buildSteps(flags: ContentFlags): Step[] {
     steps.push({
       Icon: BookMarked,
       tag: next(),
-      title: 'Fiches de cours & Fiche Express',
+      title: 'Fiches de cours & Fiche éclair',
       color: '#6D28D9', bg: '#F3EEFF', border: '#D6C8F7',
       body: (
         <>
           Chaque cours dispose d&rsquo;une <strong>fiche complète</strong> et d&rsquo;une{' '}
-          <strong>Fiche Express</strong> (résumé condensé). Consultez-les dans les onglets{' '}
-          <strong>Fiche</strong> et <strong>Fiche Express</strong> pour structurer vos révisions.
+          <strong>Fiche éclair</strong> (résumé condensé). Consultez-les dans les onglets{' '}
+          <strong>Fiche</strong> et <strong>Fiche éclair</strong> pour structurer vos révisions.
         </>
       ),
     });

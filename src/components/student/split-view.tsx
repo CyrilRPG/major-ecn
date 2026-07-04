@@ -45,7 +45,7 @@ export const useSplitView = () => useContext(SplitContext);
 
 const SPLIT_OPTIONS: { type: SplitContentType; label: string; Icon: LucideIcon }[] = [
   { type: 'fiche', label: 'Fiche de cours', Icon: FileText },
-  { type: 'fiche-express', label: 'Fiche Express', Icon: BookMarked },
+  { type: 'fiche-express', label: 'Fiche éclair', Icon: BookMarked },
   { type: 'video', label: 'Vidéo', Icon: MonitorPlay },
   { type: 'seance-approfondie', label: 'Séance approf.', Icon: Video },
   { type: 'qcm', label: 'DP · QI', Icon: ClipboardCheck },
@@ -160,7 +160,7 @@ function SplitPanelContent({ coursId, type, notesHtml }: { coursId: string; type
     case 'fiche':
       return <iframe src={`/api/fiches/${coursId}/pdf`} title="Fiche de cours" className="h-full w-full border-0" />;
     case 'fiche-express':
-      return <iframe src={`/api/fiches/${coursId}/express`} title="Fiche Express" className="h-full w-full border-0" />;
+      return <iframe src={`/api/fiches/${coursId}/express`} title="Fiche éclair" className="h-full w-full border-0" />;
     case 'video':
       return <VideoPanel coursId={coursId} />;
     case 'seance-approfondie':

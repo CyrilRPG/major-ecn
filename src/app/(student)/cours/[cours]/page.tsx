@@ -153,7 +153,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
         },
         {
-          href: `/cours/${coursId}/fiche-express`, label: 'Fiche Express',
+          href: `/cours/${coursId}/fiche-express`, label: 'Fiche éclair',
           desc: "L'essentiel du cours en un coup d'œil — la page de synthèse.",
           Icon: BookMarked, accent: '#0891B2', bg: '#ECFEFF',
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
@@ -214,7 +214,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         if (!access || access.ficheExpress) {
           standardActions.push(
             {
-              href: `/cours/${coursId}/fiche-express`, label: 'Fiche Express',
+              href: `/cours/${coursId}/fiche-express`, label: 'Fiche éclair',
               desc: "L'essentiel du cours en un coup d'œil — la page de synthèse.",
               Icon: BookMarked, accent: '#0891B2', bg: '#ECFEFF',
               available: (c.fiches ?? []).some((f) => !!f.storage_path),

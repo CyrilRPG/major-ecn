@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 /**
  * GET /api/fiches/[coursId]/express
  *
- * Renvoie la « Fiche Express » : dernière page de la fiche du cours
+ * Renvoie la « Fiche éclair » : dernière page de la fiche du cours
  * (ou avant-dernière si la dernière est quasiment vierge).
  * Le PDF est watermarké comme la fiche complète.
  */

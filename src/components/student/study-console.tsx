@@ -99,7 +99,7 @@ export function StudyConsole({
           ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
           : []),
         { key: 'fiche', label: 'Fiche', seg: 'fiche', Icon: FileText, available: availability.fiche },
-        { key: 'fiche-express', label: 'Fiche Express', seg: 'fiche-express', Icon: BookMarked, available: availability.fiche },
+        { key: 'fiche-express', label: 'Fiche éclair', seg: 'fiche-express', Icon: BookMarked, available: availability.fiche },
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
         { key: 'qcm', label: 'DP · QI', seg: 'qcm', Icon: ClipboardCheck, available: availability.qcm },
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
