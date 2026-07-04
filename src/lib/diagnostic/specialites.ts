@@ -17,7 +17,7 @@ export const SPECIALITES: string[] = [
   'Rhumatologie',
   'Dermatologie et vénéréologie',
   'Oncologie',
-  'Médecine interne',
+  'Médecine interne polyvalente',
   'Réanimation médicale',
   'Gériatrie',
   'Médecine physique et de réadaptation',

@@ -42,43 +42,77 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
   const pageCount = srcPdf.getPageCount();
   if (pageCount === 0) return NextResponse.json({ error: 'PDF vide' }, { status: 404 });
 
+  // Par défaut : DERNIÈRE page. On ne bascule sur l'avant-dernière que si l'on
+  // est confiant que la dernière page est quasiment vierge (< 200 caractères).
   let targetIdx = pageCount - 1;
   if (pageCount >= 2) {
-    // Decode the last page's content stream and count text characters.
-    // If < 200 visible chars, the page is mostly empty → use previous page.
     try {
+      const ctx = srcPdf.context;
       const lastPageNode = srcPdf.getPage(pageCount - 1).node;
+
+      // Décode un flux (résout les PDFRef, applique les filtres Flate/etc.).
+      const decodeStream = (obj: unknown): Uint8Array => {
+        const stream = obj instanceof PDFRef ? ctx.lookup(obj) : obj;
+        return stream instanceof PDFRawStream
+          ? new Uint8Array(decodePDFRawStream(stream).decode())
+          : new Uint8Array(0);
+      };
+
+      // 1) Flux de contenu de la page (Contents peut être un flux ou un tableau).
+      const parts: Uint8Array[] = [];
       const contentsEntry = lastPageNode.get(PDFName.of('Contents'));
-      let decodedBytes = new Uint8Array(0);
-      if (contentsEntry) {
-        const ctx = srcPdf.context;
-        const resolved = contentsEntry instanceof PDFRef ? ctx.lookup(contentsEntry) : contentsEntry;
-        if (resolved instanceof PDFRawStream) {
-          decodedBytes = new Uint8Array(decodePDFRawStream(resolved).decode());
-        } else if (resolved instanceof PDFArray) {
-          const parts: Uint8Array[] = [];
-          for (let i = 0; i < resolved.size(); i++) {
-            const item = resolved.get(i);
-            const stream = item instanceof PDFRef ? ctx.lookup(item) : item;
-            if (stream instanceof PDFRawStream) {
-              parts.push(new Uint8Array(decodePDFRawStream(stream).decode()));
+      const contents = contentsEntry instanceof PDFRef ? ctx.lookup(contentsEntry) : contentsEntry;
+      if (contents instanceof PDFRawStream) {
+        parts.push(new Uint8Array(decodePDFRawStream(contents).decode()));
+      } else if (contents instanceof PDFArray) {
+        for (let i = 0; i < contents.size(); i++) parts.push(decodeStream(contents.get(i)));
+      }
+
+      // 2) Le corps de texte vit souvent dans des XObjects de type /Form
+      //    (InDesign, etc.) — on inclut leur contenu dans le décompte.
+      try {
+        const resEntry = lastPageNode.get(PDFName.of('Resources'));
+        const resDict = resEntry instanceof PDFRef ? ctx.lookup(resEntry) : resEntry;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const xobjEntry = (resDict as any)?.get?.(PDFName.of('XObject'));
+        const xobjDict = xobjEntry instanceof PDFRef ? ctx.lookup(xobjEntry) : xobjEntry;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const keys: any[] = typeof (xobjDict as any)?.keys === 'function' ? (xobjDict as any).keys() : [];
+        for (const key of keys) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const ref = (xobjDict as any).get(key);
+          const xstream = ref instanceof PDFRef ? ctx.lookup(ref) : ref;
+          if (xstream instanceof PDFRawStream) {
+            const subtype = xstream.dict.get(PDFName.of('Subtype'));
+            // On ignore les images (/Image) : seuls les /Form portent du texte.
+            if (subtype && subtype.toString() === '/Form') {
+              parts.push(new Uint8Array(decodePDFRawStream(xstream).decode()));
             }
           }
-          const total = parts.reduce((s, p) => s + p.length, 0);
-          decodedBytes = new Uint8Array(total);
-          let off = 0;
-          for (const p of parts) { decodedBytes.set(p, off); off += p.length; }
         }
-      }
+      } catch { /* XObjects illisibles : on ignore */ }
+
+      const total = parts.reduce((s, p) => s + p.length, 0);
+      const decodedBytes = new Uint8Array(total);
+      let off = 0;
+      for (const p of parts) { decodedBytes.set(p, off); off += p.length; }
+
       const ops = Buffer.from(decodedBytes).toString('latin1');
       let charCount = 0;
-      for (const m of ops.matchAll(/\(([^)]*)\)\s*Tj/g)) charCount += m[1].length;
+      const litLen = (s: string) => s.replace(/\\[0-7]{1,3}/g, ' ').replace(/\\./g, ' ').length;
+      const hexLen = (s: string) => Math.floor(s.replace(/[^0-9A-Fa-f]/g, '').length / 2);
+      // Chaînes littérales : (texte) Tj
+      for (const m of ops.matchAll(/\(((?:\\.|[^\\()])*)\)\s*Tj/g)) charCount += litLen(m[1]);
+      // Chaînes hexadécimales : <hex> Tj  (polices sous-ensemblées)
+      for (const m of ops.matchAll(/<([0-9A-Fa-f\s]+)>\s*Tj/g)) charCount += hexLen(m[1]);
+      // Tableaux [ (a) -10 <hex> ] TJ  (littéral ET hex)
       for (const m of ops.matchAll(/\[([^\]]*)\]\s*TJ/g)) {
-        for (const tp of m[1].matchAll(/\(([^)]*)\)/g)) charCount += tp[1].length;
+        for (const tp of m[1].matchAll(/\(((?:\\.|[^\\()])*)\)/g)) charCount += litLen(tp[1]);
+        for (const hp of m[1].matchAll(/<([0-9A-Fa-f\s]+)>/g)) charCount += hexLen(hp[1]);
       }
       if (charCount < 200) targetIdx = pageCount - 2;
     } catch {
-      // fallback: show last page
+      // fallback : on affiche la dernière page
     }
   }
 

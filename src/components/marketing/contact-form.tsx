@@ -55,7 +55,7 @@ const SPECIALITES = [
   'Hématologie',
   'Médecine du travail',
   'Médecine générale',
-  'Médecine interne',
+  'Médecine interne polyvalente',
   'Médecine nucléaire',
   'Médecine physique et de réadaptation',
   'Néphrologie',

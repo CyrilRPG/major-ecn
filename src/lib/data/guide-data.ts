@@ -132,7 +132,7 @@ export const SPECIALTIES = [
   'Hématologie',
   'Maladies infectieuses',
   'Médecine d\'urgence',
-  'Médecine interne (MIPIC)',
+  'Médecine interne polyvalente (MIPIC)',
   'Médecine physique',
   'Néphrologie',
   'Neurologie',

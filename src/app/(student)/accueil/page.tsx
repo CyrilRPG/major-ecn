@@ -74,19 +74,25 @@ export default async function AccueilPage() {
     { count: flashcardsTotal },
     { data: platformTimeRows },
   ] = await Promise.all([
+    // Filtre programme EDN poussé côté serveur (jointures !inner) : ne remonte
+    // que les lignes du programme au lieu de tout l'historique — allège nettement
+    // la page d'accueil. Le filtre JS `inEdn` plus bas reste en garde-fou.
     supabase
       .from('qcm_attempts')
       .select('is_correct, attempted_at, time_spent_seconds, qcm_questions!inner(qcm_series!inner(type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
-      .eq('user_id', user.id),
+      .eq('user_id', user.id)
+      .eq('qcm_questions.qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
     supabase
       .from('qcm_sessions')
       .select('finished_at, qcm_series!inner(cours!inner(id, titre, matieres!inner(id, semestres!inner(faculte_id))))')
       .eq('user_id', user.id)
-      .not('finished_at', 'is', null),
+      .not('finished_at', 'is', null)
+      .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
     supabase
       .from('flashcard_reviews')
       .select('flashcard_id, difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
       .eq('user_id', user.id)
+      .eq('flashcards.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID)
       .order('reviewed_at', { ascending: false }),
     supabase
       .from('facultes')

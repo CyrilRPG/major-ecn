@@ -16,7 +16,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const cookieStore = await cookies();
   const isImpersonating = cookieStore.has('impersonator_id');
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
-  const tree = await getNavigatorTree(profile);
+  const treePromise = getNavigatorTree(profile);
   // Détection mode Découverte : utilisé pour verrouiller Entraînement,
   // Révisions, Agenda et Annales EVC dans le menu sidebar + afficher
   // l'encadré Découverte au-dessus d'Accueil.
@@ -33,25 +33,31 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // ratio des cours touchés dans les 7 derniers jours sur le total des cours
   // visibles, arrondi à l'entier le plus proche (0 si pas d'activité).
   const supabase = await createClient();
-  const totalCours = tree.reduce((acc, c) => acc + c.cours.length, 0);
   const days7Ago = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
-  const [{ data: recentProgress }, { data: forms }, { data: responses }] = await Promise.all([
-    supabase
-      .from('course_progress')
-      .select('cours_id')
-      .eq('user_id', user.id)
-      .gte('last_seen_at', days7Ago),
-    supabase
-      .from('satisfaction_forms')
-      .select('id, title, intro_text, mandatory, target_promo, target_offer, target_college')
-      .eq('active', true)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('satisfaction_responses')
-      .select('form_id')
-      .eq('user_id', user.id),
+  // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
+  // n'attend plus la fin de l'arbre avant de lancer les requêtes de
+  // satisfaction/progrès (elles en sont indépendantes) → moins de latence.
+  const [tree, [{ data: recentProgress }, { data: forms }, { data: responses }]] = await Promise.all([
+    treePromise,
+    Promise.all([
+      supabase
+        .from('course_progress')
+        .select('cours_id')
+        .eq('user_id', user.id)
+        .gte('last_seen_at', days7Ago),
+      supabase
+        .from('satisfaction_forms')
+        .select('id, title, intro_text, mandatory, target_promo, target_offer, target_college')
+        .eq('active', true)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('satisfaction_responses')
+        .select('form_id')
+        .eq('user_id', user.id),
+    ]),
   ]);
+  const totalCours = tree.reduce((acc, c) => acc + c.cours.length, 0);
   const touchedThisWeek = new Set((recentProgress ?? []).map((r) => r.cours_id)).size;
   const weeklyProgressDelta = totalCours > 0
     ? Math.min(100, Math.round((touchedThisWeek / totalCours) * 100))

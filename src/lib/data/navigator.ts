@@ -10,6 +10,7 @@ export type NavCours = {
   id: string;
   titre: string;
   progress: number; // 0..100 weighted
+  importance: number; // 0..5 étoiles (réglé par l'admin)
   hasFiche: boolean;
   hasVideo: boolean;
   hasQcm: boolean;
@@ -40,6 +41,7 @@ type Row = {
                     id: string;
                     titre: string;
                     order_index: number | null;
+                    importance: number | null;
                     course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
                   }[]
                 | null;
@@ -62,7 +64,7 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     .from('facultes')
     .select(
       `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
-         cours(id, titre, order_index, course_progress(video_watched, fiche_read))))`,
+         cours(id, titre, order_index, importance, course_progress(video_watched, fiche_read))))`,
     )
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
@@ -132,6 +134,7 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
           id: c.id,
           titre: c.titre,
           progress,
+          importance: c.importance ?? 0,
           hasFiche: ficheSet.has(c.id),
           hasVideo,
           hasQcm: qcmSet.has(c.id),

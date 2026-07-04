@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ArrowRight, CalendarDays, ChevronRight, FileText, Home, Lock, MessagesSquare,
-  MousePointerClick, NotebookPen, RefreshCcw, Sparkles, Target, Trophy, X,
+  MousePointerClick, NotebookPen, RefreshCcw, Sparkles, Star, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
@@ -42,6 +42,26 @@ function ProgressDot({ value, active }: { value: number; active?: boolean }) {
         style={{ background: `conic-gradient(${fill} ${v * 3.6}deg, ${track} 0)` }}
         aria-hidden
       />
+    </span>
+  );
+}
+
+/** Étoiles d'importance (0–5) réglées par l'admin — affichées juste après le
+ *  nom du cours dans le menu. On n'affiche que les étoiles pleines (or) ; rien
+ *  si l'importance vaut 0 (« non prioritaire »). Le composant est `inline`
+ *  pour suivre le texte du nom même lorsqu'il passe à la ligne. */
+function ImportanceStars({ value }: { value: number }) {
+  const v = Math.min(5, Math.max(0, Math.round(value || 0)));
+  if (v === 0) return null;
+  return (
+    <span
+      className="ml-1 inline-flex shrink-0 items-center gap-px align-middle"
+      title={`Importance ${v}/5`}
+      aria-label={`Importance ${v} sur 5`}
+    >
+      {Array.from({ length: v }).map((_, i) => (
+        <Star key={i} className="h-3 w-3" style={{ fill: '#F5C84B', color: '#F5C84B' }} />
+      ))}
     </span>
   );
 }
@@ -281,8 +301,8 @@ export function Navigator({
                 )}
               />
               <Icon className="h-[18px] w-[18px] shrink-0 text-white" />
-              <span className="flex-1 truncate">{col.nom}</span>
-              <span className="rounded-full bg-white/10 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white/70">
+              <span className="min-w-0 flex-1 break-words leading-snug">{col.nom}</span>
+              <span className="shrink-0 rounded-full bg-white/10 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white/70">
                 {colTotal}
               </span>
             </button>
@@ -370,13 +390,16 @@ export function Navigator({
                     key={c.id}
                     href={`/cours/${c.id}`}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
+                      'flex items-start gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                       c.id === activeCoursId
                         ? `${ACTIVE_GRADIENT} font-medium`
                         : 'text-white/70 hover:bg-white/10 hover:text-white',
                     )}
                   >
-                    <span className="flex-1 truncate">{c.titre}</span>
+                    <span className="min-w-0 flex-1 break-words leading-snug">
+                      {c.titre}
+                      <ImportanceStars value={c.importance} />
+                    </span>
                     <ProgressDot value={c.progress} active={c.id === activeCoursId} />
                   </Link>
                 ))}
@@ -398,8 +421,8 @@ export function Navigator({
                           )}
                         />
                         <SubIcon className="h-4 w-4 shrink-0 text-white/80" />
-                        <span className="flex-1 truncate text-[14px] font-medium">{sub.nom}</span>
-                        <span className="rounded-full bg-white/10 px-1.5 py-px text-[10px] font-semibold tabular-nums text-white/60">
+                        <span className="min-w-0 flex-1 break-words text-[14px] font-medium leading-snug">{sub.nom}</span>
+                        <span className="shrink-0 rounded-full bg-white/10 px-1.5 py-px text-[10px] font-semibold tabular-nums text-white/60">
                           {sub.cours.length}
                         </span>
                       </button>
@@ -409,13 +432,16 @@ export function Navigator({
                             key={sc.id}
                             href={`/cours/${sc.id}`}
                             className={cn(
-                              'flex items-center gap-2 rounded-lg py-1.5 pl-[3.75rem] pr-2.5 transition-colors',
+                              'flex items-start gap-2 rounded-lg py-1.5 pl-[3.75rem] pr-2.5 transition-colors',
                               sc.id === activeCoursId
                                 ? `${ACTIVE_GRADIENT} font-medium`
                                 : 'text-white/65 hover:bg-white/10 hover:text-white',
                             )}
                           >
-                            <span className="flex-1 truncate text-[13px]">{sc.titre}</span>
+                            <span className="min-w-0 flex-1 break-words text-[13px] leading-snug">
+                              {sc.titre}
+                              <ImportanceStars value={sc.importance} />
+                            </span>
                             <ProgressDot value={sc.progress} active={sc.id === activeCoursId} />
                           </Link>
                         ))}

@@ -94,7 +94,7 @@ const SPECIALITIES: Speciality[] = [
     description: "Programme dermatologique sur les cancers cutanés, eczéma, psoriasis, infections sexuellement transmissibles et urgences dermatologiques avec iconographie clinique." },
   { slug: "oncologie", name: "Oncologie", family: "Médecine", Icon: Target, accent: ACCENTS.indigo,
     description: "Programme oncologique couvrant les cancers fréquents, les protocoles de chimiothérapie et d'immunothérapie, les soins de support et l'organisation des RCP." },
-  { slug: "medecine-interne", name: "Médecine interne", family: "Médecine", Icon: Compass, accent: ACCENTS.navy,
+  { slug: "medecine-interne", name: "Médecine interne polyvalente", family: "Médecine", Icon: Compass, accent: ACCENTS.navy,
     description: "Préparation transversale sur les maladies systémiques, les pathologies auto-immunes, la fièvre prolongée et l'altération de l'état général avec démarche diagnostique rigoureuse." },
   { slug: "reanimation-medicale", name: "Réanimation médicale", family: "Médecine", Icon: Activity, accent: ACCENTS.red,
     description: "Préparation à la médecine intensive : sepsis, SDRA, ventilation mécanique, états de choc et défaillances multi-organes selon les recommandations SRLF actualisées." },

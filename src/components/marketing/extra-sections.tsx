@@ -279,7 +279,7 @@ const CATEGORIES = [
 const MEDICAL_COLS = [
   ['Gériatrie', 'Médecine d’Urgence', 'Radiologie', 'Anesthésie-Réanimation', 'Pédiatrie'],
   ['Cardiologie', 'Neurologie', 'Pneumologie', 'Néphrologie', 'Endocrinologie'],
-  ['Gastro-entérologie', 'Hématologie', 'Oncologie', 'Médecine interne', 'Rhumatologie'],
+  ['Gastro-entérologie', 'Hématologie', 'Oncologie', 'Médecine interne polyvalente', 'Rhumatologie'],
   ['Psychiatrie', 'Médecine physique et réadaptation', 'Maladies infectieuses'],
 ];
 

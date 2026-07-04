@@ -265,7 +265,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
                   </div>
                   <p className="mt-3 text-[12.5px] leading-relaxed text-[#1A2233]">
                     Le Parcours de Consolidation des Compétences (PCC) doit être réalisé dans une{' '}
-                    <a href="#" className="font-bold underline" style={{ color: '#1E4D8B' }}>structure habilitée</a>{' '}
+                    <strong className="font-bold" style={{ color: '#1E4D8B' }}>structure habilitée</strong>{' '}
                     à accueillir des lauréats de la PAE.
                   </p>
                   <span aria-hidden className="my-3 block h-px" style={{ background: '#DCE6FF' }} />

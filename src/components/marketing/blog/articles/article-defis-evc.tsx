@@ -432,7 +432,7 @@ function DashboardMock() {
           <div className="rounded bg-white/5 px-1 py-0.5 text-[6px] text-white/60">Révisions transversales</div>
           <div className="rounded bg-white/5 px-1 py-0.5 text-[6px] text-white/60">Agenda</div>
           <p className="pt-1 text-[5.5px] font-bold uppercase tracking-wider text-white/40">Médecine</p>
-          {['Médecine générale', 'Annales EVC', 'Neurologie', 'Cardiologie', 'Médecine interne', 'Infectiologie', 'Pharmacologie', 'Hépato-gastro…'].map((s) => (
+          {['Médecine générale', 'Annales EVC', 'Neurologie', 'Cardiologie', 'Médecine interne polyvalente', 'Infectiologie', 'Pharmacologie', 'Hépato-gastro…'].map((s) => (
             <div key={s} className="rounded bg-white/5 px-1 py-0.5 text-[5.5px] text-white/60">{s}</div>
           ))}
         </div>

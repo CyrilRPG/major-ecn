@@ -49,6 +49,7 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Gynécologie':               { bg: '#FBD6DF', accent: '#841933', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
   'Obstétrique':               { bg: '#FBD6DF', accent: '#841933', Icon: PregnantWomanArt,  image: '/flashcards-decor/obstetrique.png' },
   'Médecine interne':          { bg: '#D8F2F3', accent: '#266E72', Icon: HumanBodyArt,      image: '/flashcards-decor/medecine-interne.png' },
+  'Médecine interne polyvalente': { bg: '#D8F2F3', accent: '#266E72', Icon: HumanBodyArt,   image: '/flashcards-decor/medecine-interne.png' },
   'Médecine générale':         { bg: '#DBEAFE', accent: '#1E40AF', Icon: StethoscopeArt,    image: '/flashcards-decor/medecine-generale.png' },
   'Infectiologie':             { bg: '#EFE4F7', accent: '#63437C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
   'Maladies infectieuses':     { bg: '#EFE4F7', accent: '#63437C', Icon: VirusArt,          image: '/flashcards-decor/infectio.png' },
