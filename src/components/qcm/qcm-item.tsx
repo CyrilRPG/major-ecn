@@ -11,6 +11,26 @@ import { sanitizeFlashcardHtml, flashcardPlainText } from '@/lib/flashcards/rich
 /** Caractères avant troncature « voir plus » sur une justification d'item. */
 const JUSTIF_MAX = 280;
 
+const GREEN = '#2E8B57';
+
+/**
+ * État visuel d'un item APRÈS validation — couleur la plus intuitive par cas
+ * (croisement coché × vrai) :
+ *  - 'ok-picked'    coché + vrai   → vert plein (bien répondu)
+ *  - 'bad-picked'   coché + faux   → rouge (erreur)
+ *  - 'missed'       non coché + vrai → encadré vert (bonne réponse manquée)
+ *  - 'ok-unpicked'  non coché + faux → vert léger (correct de ne pas cocher)
+ * Avant validation : 'idle' / 'sel'.
+ */
+type ItemState = 'idle' | 'sel' | 'ok-picked' | 'bad-picked' | 'missed' | 'ok-unpicked';
+
+const STATE_LABEL: Record<Exclude<ItemState, 'idle' | 'sel'>, string> = {
+  'ok-picked': 'Bonne réponse — bien cochée',
+  'bad-picked': 'Erreur — à ne pas cocher',
+  'missed': 'Bonne réponse — non cochée',
+  'ok-unpicked': 'Correct — à ne pas cocher',
+};
+
 export type QcmItemView = {
   id: string;
   lettre: string;
@@ -34,6 +54,19 @@ export function QcmItem({
   disabled: boolean;
   isCorrect: boolean | null;
 }) {
+  // `outcome` non nul = correction révélée. On dérive alors l'état des 4 cas
+  // depuis (coché × vrai) plutôt que du simple 'correct'/'wrong'.
+  const revealed = outcome !== null;
+  const state: ItemState = !revealed
+    ? (selected ? 'sel' : 'idle')
+    : selected && isCorrect
+    ? 'ok-picked'
+    : selected && !isCorrect
+    ? 'bad-picked'
+    : !selected && isCorrect
+    ? 'missed'
+    : 'ok-unpicked';
+
   return (
     <div>
       <button
@@ -42,20 +75,25 @@ export function QcmItem({
         disabled={disabled}
         className={cn(
           'group w-full text-left flex items-start gap-3 rounded-xl border px-3.5 py-2.5 focus-ring transition',
-          outcome === null && !selected && 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)/40 hover:bg-(--color-primary-soft)/40',
-          outcome === null && selected && 'border-(--color-primary) bg-(--color-primary-soft)',
-          outcome === 'correct' && 'border-[#2E8B57] bg-[color-mix(in_srgb,#2E8B57_12%,var(--color-surface))]',
-          outcome === 'wrong' && 'border-(--color-danger) bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))]',
+          state === 'idle' && 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)/40 hover:bg-(--color-primary-soft)/40',
+          state === 'sel' && 'border-(--color-primary) bg-(--color-primary-soft)',
+          state === 'ok-picked' && 'border-[#2E8B57] bg-[color-mix(in_srgb,#2E8B57_14%,var(--color-surface))]',
+          state === 'bad-picked' && 'border-(--color-danger) bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))]',
+          // Encadré vert : bordure épaisse + fond très léger pour signaler la bonne réponse manquée.
+          state === 'missed' && 'border-2 border-dashed border-[#2E8B57] bg-[color-mix(in_srgb,#2E8B57_6%,var(--color-surface))]',
+          state === 'ok-unpicked' && 'border-[#2E8B57]/30 bg-[color-mix(in_srgb,#2E8B57_5%,var(--color-surface))]',
           disabled && 'cursor-default',
         )}
       >
         <span
           className={cn(
             'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-semibold',
-            outcome === null && !selected && 'bg-(--color-surface-soft) text-(--color-ink-soft) group-hover:bg-(--color-primary)/15 group-hover:text-(--color-primary-deep)',
-            outcome === null && selected && 'bg-(--color-primary) text-(--color-primary-fg)',
-            outcome === 'correct' && 'bg-[#2E8B57] text-white',
-            outcome === 'wrong' && 'bg-(--color-danger) text-white',
+            state === 'idle' && 'bg-(--color-surface-soft) text-(--color-ink-soft) group-hover:bg-(--color-primary)/15 group-hover:text-(--color-primary-deep)',
+            state === 'sel' && 'bg-(--color-primary) text-(--color-primary-fg)',
+            state === 'ok-picked' && 'bg-[#2E8B57] text-white',
+            state === 'bad-picked' && 'bg-(--color-danger) text-white',
+            state === 'missed' && 'border-2 border-[#2E8B57] bg-transparent text-[#2E8B57]',
+            state === 'ok-unpicked' && 'bg-[color-mix(in_srgb,#2E8B57_14%,var(--color-surface))] text-[#2E8B57]',
           )}
         >
           {item.lettre}
@@ -72,18 +110,20 @@ export function QcmItem({
             </span>
           )}
         </span>
-        {outcome && (
+        {/* Icône : ✓ vert pour les bonnes réponses (cochées ou manquées),
+            ✗ rouge pour une coche erronée, rien pour un faux correctement laissé. */}
+        {revealed && (state === 'ok-picked' || state === 'missed' || state === 'bad-picked') && (
           <span className="shrink-0">
-            {outcome === 'correct' ? (
-              <Check className="h-4 w-4 text-[#2E8B57]" strokeWidth={3} />
-            ) : (
+            {state === 'bad-picked' ? (
               <X className="h-4 w-4 text-(--color-danger)" strokeWidth={3} />
+            ) : (
+              <Check className="h-4 w-4" strokeWidth={3} style={{ color: GREEN }} />
             )}
           </span>
         )}
       </button>
       <AnimatePresence initial={false}>
-        {outcome && item.justification && (
+        {revealed && item.justification && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -91,9 +131,15 @@ export function QcmItem({
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <div className="ml-10 mt-1 border-l-2 border-(--color-primary-soft) py-0.5 pl-4 pr-2">
-              <p className="text-[10px] uppercase tracking-wider text-(--color-primary-deep) font-medium">
-                {isCorrect ? 'Réponse correcte' : 'À retravailler'}
+            <div
+              className="ml-10 mt-1 border-l-2 py-0.5 pl-4 pr-2"
+              style={{ borderColor: state === 'bad-picked' ? 'var(--color-danger)' : GREEN }}
+            >
+              <p
+                className="text-[10px] uppercase tracking-wider font-medium"
+                style={{ color: state === 'bad-picked' ? 'var(--color-danger)' : GREEN }}
+              >
+                {state === 'idle' || state === 'sel' ? '' : STATE_LABEL[state]}
               </p>
               <JustificationText text={item.justification} />
             </div>

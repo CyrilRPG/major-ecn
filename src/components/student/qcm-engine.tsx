@@ -106,14 +106,22 @@ export function QcmEngine({
           {q.items.map((it) => {
             const picked = sel.has(it.lettre);
             const correct = it.is_correct;
+            // Couleur la plus intuitive par cas (coché × vrai), après validation :
+            //  ok-picked  coché+vrai  → vert plein ; bad-picked coché+faux → rouge ;
+            //  missed     non coché+vrai → encadré vert ; ok-unpicked non coché+faux → vert léger.
+            const st = !validated
+              ? (picked ? 'sel' : 'idle')
+              : picked && correct ? 'ok-picked'
+              : picked && !correct ? 'bad-picked'
+              : !picked && correct ? 'missed'
+              : 'ok-unpicked';
             let ring = 'border-(--color-border)';
             let bg = '';
-            if (validated) {
-              if (correct) { ring = 'border-[#16793C]'; bg = 'bg-[#ECFDF3]'; }
-              else if (picked && !correct) { ring = 'border-[#A91D2C]'; bg = 'bg-[#FEF2F2]'; }
-            } else if (picked) {
-              ring = 'border-[#6D28D9]'; bg = 'bg-[#F5F3FF]';
-            }
+            if (st === 'sel') { ring = 'border-[#6D28D9]'; bg = 'bg-[#F5F3FF]'; }
+            else if (st === 'ok-picked') { ring = 'border-[#16793C]'; bg = 'bg-[#ECFDF3]'; }
+            else if (st === 'bad-picked') { ring = 'border-[#A91D2C]'; bg = 'bg-[#FEF2F2]'; }
+            else if (st === 'missed') { ring = 'border-dashed border-[#16793C]'; bg = 'bg-[#F0FDF4]'; }
+            else if (st === 'ok-unpicked') { ring = 'border-[#16793C]/30'; bg = 'bg-[#F0FDF4]'; }
             return (
               <button
                 key={it.id}
@@ -127,15 +135,16 @@ export function QcmEngine({
                 <span
                   className={cn(
                     'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold',
-                    picked && !validated && 'border-[#6D28D9] bg-[#6D28D9] text-white',
-                    validated && correct && 'border-[#16793C] bg-[#16793C] text-white',
-                    validated && picked && !correct && 'border-[#A91D2C] bg-[#A91D2C] text-white',
-                    !picked && !validated && 'border-(--color-border) text-(--color-ink-soft)',
-                    !picked && validated && !correct && 'border-(--color-border) text-(--color-ink-soft)',
+                    st === 'sel' && 'border-[#6D28D9] bg-[#6D28D9] text-white',
+                    st === 'ok-picked' && 'border-[#16793C] bg-[#16793C] text-white',
+                    st === 'bad-picked' && 'border-[#A91D2C] bg-[#A91D2C] text-white',
+                    st === 'missed' && 'border-[#16793C] bg-transparent text-[#16793C]',
+                    st === 'ok-unpicked' && 'border-[#16793C]/40 bg-[#ECFDF3] text-[#16793C]',
+                    st === 'idle' && 'border-(--color-border) text-(--color-ink-soft)',
                   )}
                 >
-                  {validated && correct ? <Check className="h-3.5 w-3.5" /> :
-                   validated && picked && !correct ? <X className="h-3.5 w-3.5" /> :
+                  {st === 'ok-picked' || st === 'missed' ? <Check className="h-3.5 w-3.5" /> :
+                   st === 'bad-picked' ? <X className="h-3.5 w-3.5" /> :
                    it.lettre}
                 </span>
                 <span className="flex-1"><RichText html={it.enonce} /></span>
