@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Check, X } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RichText } from '@/components/qcm/rich-text';
 import { cn } from '@/lib/utils';
@@ -121,7 +121,8 @@ export function QcmEngine({
             else if (st === 'ok-picked') { ring = 'border-[#16793C]'; bg = 'bg-[#ECFDF3]'; }
             else if (st === 'bad-picked') { ring = 'border-[#A91D2C]'; bg = 'bg-[#FEF2F2]'; }
             else if (st === 'missed') { ring = 'border-dashed border-[#16793C]'; bg = 'bg-[#F0FDF4]'; }
-            else if (st === 'ok-unpicked') { ring = 'border-[#16793C]/30'; bg = 'bg-[#F0FDF4]'; }
+            // Énoncé faux non coché : encadré vert plein SANS fond vert.
+            else if (st === 'ok-unpicked') { ring = 'border-[#16793C]'; bg = ''; }
             return (
               <button
                 key={it.id}
@@ -139,15 +140,17 @@ export function QcmEngine({
                     st === 'ok-picked' && 'border-[#16793C] bg-[#16793C] text-white',
                     st === 'bad-picked' && 'border-[#A91D2C] bg-[#A91D2C] text-white',
                     st === 'missed' && 'border-[#16793C] bg-transparent text-[#16793C]',
-                    st === 'ok-unpicked' && 'border-[#16793C]/40 bg-[#ECFDF3] text-[#16793C]',
+                    st === 'ok-unpicked' && 'border-[#16793C] bg-transparent text-[#16793C]',
                     st === 'idle' && 'border-(--color-border) text-(--color-ink-soft)',
                   )}
                 >
-                  {st === 'ok-picked' || st === 'missed' ? <Check className="h-3.5 w-3.5" /> :
-                   st === 'bad-picked' ? <X className="h-3.5 w-3.5" /> :
-                   it.lettre}
+                  {st === 'ok-picked' || st === 'missed' ? <Check className="h-3.5 w-3.5" /> : it.lettre}
                 </span>
                 <span className="flex-1"><RichText html={it.enonce} /></span>
+                {/* Sigle ⚠ rouge : erreurs de l'élève (coche fausse, réponse manquée) + énoncé faux. */}
+                {(st === 'bad-picked' || st === 'missed' || st === 'ok-unpicked') && (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#A91D2C]" aria-label="Attention" />
+                )}
               </button>
             );
           })}

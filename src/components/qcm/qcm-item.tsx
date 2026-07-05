@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { AlertTriangle, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ItemOutcome } from '@/lib/qcm/grade';
 import { sanitizeFlashcardHtml, flashcardPlainText } from '@/lib/flashcards/rich-text';
@@ -16,11 +16,12 @@ const GREEN = '#2E8B57';
 /**
  * État visuel d'un item APRÈS validation — couleur la plus intuitive par cas
  * (croisement coché × vrai) :
- *  - 'ok-picked'    coché + vrai   → vert plein (bien répondu)
- *  - 'bad-picked'   coché + faux   → rouge (erreur)
- *  - 'missed'       non coché + vrai → encadré vert (bonne réponse manquée)
- *  - 'ok-unpicked'  non coché + faux → vert léger (correct de ne pas cocher)
- * Avant validation : 'idle' / 'sel'.
+ *  - 'ok-picked'    coché + vrai   → vert plein (bien répondu) + ✓
+ *  - 'bad-picked'   coché + faux   → rouge + ⚠ (erreur)
+ *  - 'missed'       non coché + vrai → encadré vert + ✓ + ⚠ (bonne réponse manquée)
+ *  - 'ok-unpicked'  non coché + faux → encadré vert SANS fond + ⚠ (énoncé faux)
+ * Le sigle ⚠ rouge marque toutes les erreurs de l'élève (coché+faux, manquée)
+ * ainsi que l'énoncé faux non coché. Avant validation : 'idle' / 'sel'.
  */
 type ItemState = 'idle' | 'sel' | 'ok-picked' | 'bad-picked' | 'missed' | 'ok-unpicked';
 
@@ -28,7 +29,7 @@ const STATE_LABEL: Record<Exclude<ItemState, 'idle' | 'sel'>, string> = {
   'ok-picked': 'Bonne réponse — bien cochée',
   'bad-picked': 'Erreur — à ne pas cocher',
   'missed': 'Bonne réponse — non cochée',
-  'ok-unpicked': 'Correct — à ne pas cocher',
+  'ok-unpicked': 'Énoncé faux — à ne pas cocher',
 };
 
 export type QcmItemView = {
@@ -67,6 +68,9 @@ export function QcmItem({
     ? 'missed'
     : 'ok-unpicked';
 
+  const showCheck = state === 'ok-picked' || state === 'missed';
+  const showWarn = state === 'bad-picked' || state === 'missed' || state === 'ok-unpicked';
+
   return (
     <div>
       <button
@@ -79,9 +83,10 @@ export function QcmItem({
           state === 'sel' && 'border-(--color-primary) bg-(--color-primary-soft)',
           state === 'ok-picked' && 'border-[#2E8B57] bg-[color-mix(in_srgb,#2E8B57_14%,var(--color-surface))]',
           state === 'bad-picked' && 'border-(--color-danger) bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))]',
-          // Encadré vert : bordure épaisse + fond très léger pour signaler la bonne réponse manquée.
+          // Bonne réponse manquée : encadré vert (bordure pointillée) + léger fond vert.
           state === 'missed' && 'border-2 border-dashed border-[#2E8B57] bg-[color-mix(in_srgb,#2E8B57_6%,var(--color-surface))]',
-          state === 'ok-unpicked' && 'border-[#2E8B57]/30 bg-[color-mix(in_srgb,#2E8B57_5%,var(--color-surface))]',
+          // Énoncé faux non coché : encadré vert plein SANS fond vert (fond neutre).
+          state === 'ok-unpicked' && 'border-2 border-[#2E8B57]/70 bg-(--color-surface)',
           disabled && 'cursor-default',
         )}
       >
@@ -93,7 +98,7 @@ export function QcmItem({
             state === 'ok-picked' && 'bg-[#2E8B57] text-white',
             state === 'bad-picked' && 'bg-(--color-danger) text-white',
             state === 'missed' && 'border-2 border-[#2E8B57] bg-transparent text-[#2E8B57]',
-            state === 'ok-unpicked' && 'bg-[color-mix(in_srgb,#2E8B57_14%,var(--color-surface))] text-[#2E8B57]',
+            state === 'ok-unpicked' && 'border-2 border-[#2E8B57]/70 bg-transparent text-[#2E8B57]',
           )}
         >
           {item.lettre}
@@ -110,14 +115,17 @@ export function QcmItem({
             </span>
           )}
         </span>
-        {/* Icône : ✓ vert pour les bonnes réponses (cochées ou manquées),
-            ✗ rouge pour une coche erronée, rien pour un faux correctement laissé. */}
-        {revealed && (state === 'ok-picked' || state === 'missed' || state === 'bad-picked') && (
-          <span className="shrink-0">
-            {state === 'bad-picked' ? (
-              <X className="h-4 w-4 text-(--color-danger)" strokeWidth={3} />
-            ) : (
-              <Check className="h-4 w-4" strokeWidth={3} style={{ color: GREEN }} />
+        {/* Repères à droite : ✓ vert = bonne réponse (cochée ou manquée) ;
+            ⚠ rouge = « attention » sur les erreurs de l'élève et les énoncés faux. */}
+        {revealed && (showCheck || showWarn) && (
+          <span className="flex shrink-0 items-center gap-1.5 pt-0.5">
+            {showCheck && <Check className="h-4 w-4" strokeWidth={3} style={{ color: GREEN }} />}
+            {showWarn && (
+              <AlertTriangle
+                className="h-4 w-4 text-(--color-danger)"
+                strokeWidth={2.5}
+                aria-label="Attention"
+              />
             )}
           </span>
         )}
