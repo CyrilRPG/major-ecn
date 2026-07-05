@@ -61,7 +61,8 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
       lastBySerie.set(s.serie_id, { score_correct: s.score_correct, score_total: s.score_total });
   }
 
-  const isDp = (label: string) => /^dp\s*\d/i.test(label);
+  // « DP 1 » (DP QCM) comme « DP QROC 1 · … » → même traitement visuel (rouge + icône DP).
+  const isDp = (label: string) => /^dp\b/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
   const isSeance = (s: { type?: string }) => s.type === 'seance';
 

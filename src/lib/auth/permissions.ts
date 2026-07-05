@@ -17,7 +17,12 @@ function parseOffer(raw: unknown): Offer {
 function parseVoie(raw: unknown): 'interne' | 'externe' | null {
   if (raw && typeof raw === 'object') {
     const v = (raw as { paid_voie?: unknown; voie?: unknown }).paid_voie ?? (raw as { voie?: unknown }).voie;
-    if (v === 'interne' || v === 'externe') return v;
+    // Accepte les valeurs normalisées ('externe'/'interne') ET les libellés bruts
+    // des formulaires ('Voie externe'/'Voie interne') — cf. current_voie() côté RLS.
+    if (typeof v === 'string') {
+      const n = v.trim().toLowerCase().replace(/^voie\s+/, '');
+      if (n === 'interne' || n === 'externe') return n;
+    }
   }
   return null;
 }

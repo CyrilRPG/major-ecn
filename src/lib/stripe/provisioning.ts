@@ -44,6 +44,13 @@ export type ProvisioningInput = {
   source?: 'webhook' | 'merci';
 };
 
+/** Normalise la voie ('Voie externe' → 'externe', etc.) vers la forme courte
+ *  attendue par la RLS (current_voie). Renvoie null si non reconnue. */
+function normalizeVoie(raw?: string): 'interne' | 'externe' | null {
+  const v = (raw ?? '').trim().toLowerCase().replace(/^voie\s+/, '');
+  return v === 'interne' || v === 'externe' ? v : null;
+}
+
 export type ProvisioningResult =
   | {
       ok: true;
@@ -177,7 +184,9 @@ export async function provisionStudentAccount(
     paid_offer: offerForFormule,
     paid_formule: input.formuleId,
     paid_specialty: input.specialty ?? 'Médecine générale',
-    paid_voie: input.voie ?? null,
+    // Normalise 'externe'/'interne' — les formulaires peuvent envoyer le libellé
+    // 'Voie externe'/'Voie interne'. La RLS (current_voie) attend la forme courte.
+    paid_voie: normalizeVoie(input.voie),
     paid_at: new Date().toISOString(),
   };
 
