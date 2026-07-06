@@ -45,15 +45,6 @@ export const CONTENT: Block[] = [
   "html": "Autrement dit, vous ne pouvez pas « tenter » deux spécialités pour voir laquelle réussit. Le choix doit donc être réfléchi, pas opportuniste."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Calendrier et inscription au concours PAE 2026",
-    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Critère 1 — Votre parcours et vos compétences réelles"
  },
@@ -84,15 +75,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Cette dérogation change tout pour les médecins généralistes PADHUE : elle leur ouvre l'accès à des spécialités jusque-là fermées, dont deux parmi les plus dotées de la session 2026."
- },
- {
-  "t": "related",
-  "items": [
-   {
-    "label": "Psychiatrie, MIPIC ou médecine générale — quelle spécialité pour un généraliste PADHUE ?",
-    "href": "/blog/evc-medecine-interne-polyvalente-mipic-2026"
-   }
-  ]
  },
  {
   "t": "h2",
@@ -173,15 +155,6 @@ export const CONTENT: Block[] = [
   "html": "Au total, la voie externe ouvre 1 003 postes de médecins dans 13 spécialités en 2026. La voie interne, elle, en ouvre 2 896 — soit l'essentiel du recrutement. Si vous êtes éligible à la voie interne, le nombre de postes y est généralement bien plus élevé."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Voie interne ou voie externe — comment savoir laquelle vous concerne",
-    "href": "/blog/voie-interne-evc-logique-qcm"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Critère 4 — Le niveau de concurrence (le vrai piège)"
  },
@@ -212,15 +185,6 @@ export const CONTENT: Block[] = [
   "html": "Le meilleur choix n'est pas forcément la spécialité qui offre le plus de postes. C'est celle dans laquelle vous pourrez exprimer votre meilleur niveau le jour du concours. Autrement dit, la meilleure spécialité EVC pour vous n'est pas la même que pour votre voisin : la spécialité la plus accessible aux EVC dépend de votre profil, de votre éligibilité et de votre voie."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "EVC 2026 — pourquoi le nombre de postes ne doit pas guider seul votre choix",
-    "href": "/blog/evc-ratio-candidats-postes-choix-specialite-2026"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Le cas particulier des médecins généralistes PADHUE"
  },
@@ -239,15 +203,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "La médecine générale, elle, reste une option naturelle, mais historiquement la plus concurrentielle. Le choix se joue donc entre le confort d'un terrain connu et l'opportunité d'une spécialité plus ouverte. Pour un PADHUE en voie externe, ces deux nouvelles spécialités peuvent constituer une réelle opportunité ; un PADHUE en voie interne, lui, dispose en général d'un choix de postes encore plus large, tous formats confondus."
- },
- {
-  "t": "related",
-  "items": [
-   {
-    "label": "EVC MIPIC 2026 — tout comprendre sur la médecine interne polyvalente",
-    "href": "/blog/evc-medecine-interne-polyvalente-mipic-2026"
-   }
-  ]
  },
  {
   "t": "h2",
@@ -378,5 +333,34 @@ export const CONTENT: Block[] = [
   "t": "callout",
   "tone": "source",
   "html": "Les données de postes et de spécialités ouvertes proviennent des arrêtés du 12 juin 2026 (CNG, Journal officiel du 13 juin 2026). Les chiffres évoluant d'une session à l'autre, vérifiez toujours la liste officielle sur www.cng.sante.fr avant de fixer votre choix."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "EVC 2026 : le nombre de postes ne doit pas guider seul votre choix",
+    "href": "/blog/evc-ratio-candidats-postes-choix-specialite-2026"
+   },
+   {
+    "label": "Psychiatrie, MIPIC ou médecine générale : quelle spécialité ?",
+    "href": "/blog/psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026"
+   },
+   {
+    "label": "EVC MIPIC 2026 : la médecine interne polyvalente",
+    "href": "/blog/evc-medecine-interne-polyvalente-mipic-2026"
+   },
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Calendrier et inscription au concours PAE 2026 (CNG)",
+    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
+   }
+  ]
  }
 ];

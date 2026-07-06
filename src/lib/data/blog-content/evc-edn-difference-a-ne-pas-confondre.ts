@@ -273,5 +273,34 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Chaque année, des médecins compétents échouent aux EVC. Non parce qu'ils ne savent pas la médecine, mais parce qu'ils ont préparé un autre concours. Ne laissez pas cette erreur décider de votre avenir professionnel."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "Comment rédiger une QROC aux EVC",
+    "href": "/blog/comment-rediger-qroc-evc"
+   },
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Pourquoi des médecins excellents échouent aux EVC",
+    "href": "/blog/pourquoi-des-medecins-echouent-aux-evc"
+   },
+   {
+    "label": "Réussir les EVC : les conseils des lauréats",
+    "href": "/blog/comment-reussir-les-evc-conseils-laureats"
+   },
+   {
+    "label": "Calendrier et inscription au concours PAE 2026 (CNG)",
+    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
+   }
+  ]
  }
 ];

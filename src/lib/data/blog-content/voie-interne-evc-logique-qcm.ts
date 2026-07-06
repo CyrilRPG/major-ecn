@@ -253,5 +253,34 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Vous avez le terrain et l'expérience. Il vous reste à maîtriser le format — et c'est exactement ce qui se travaille avant l'épreuve."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Comment rédiger une QROC aux EVC",
+    "href": "/blog/comment-rediger-qroc-evc"
+   },
+   {
+    "label": "EVC et EDN : la différence à ne pas confondre",
+    "href": "/blog/evc-edn-difference-a-ne-pas-confondre"
+   },
+   {
+    "label": "Pourquoi des médecins excellents échouent aux EVC",
+    "href": "/blog/pourquoi-des-medecins-echouent-aux-evc"
+   },
+   {
+    "label": "Comment choisir sa spécialité aux EVC",
+    "href": "/blog/comment-choisir-specialite-evc"
+   },
+   {
+    "label": "Calendrier et inscription au concours PAE 2026 (CNG)",
+    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
+   }
+  ]
  }
 ];

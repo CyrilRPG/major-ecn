@@ -268,5 +268,30 @@ export const CONTENT: Block[] = [
   "t": "callout",
   "tone": "source",
   "html": "Les informations de cet article proviennent du CNG (arrêté du 12 juin 2026, publié au Journal officiel le 13 juin 2026). Les dates et modalités pouvant évoluer, vérifiez toujours la page officielle de la session sur www.cng.sante.fr avant toute démarche."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "EVC PAE : la liste complète des documents à fournir",
+    "href": "/blog/evc-pae-liste-documents-fournir"
+   },
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Comment choisir sa spécialité aux EVC",
+    "href": "/blog/comment-choisir-specialite-evc"
+   },
+   {
+    "label": "Réussir les EVC : les conseils des lauréats",
+    "href": "/blog/comment-reussir-les-evc-conseils-laureats"
+   }
+  ]
  }
 ];

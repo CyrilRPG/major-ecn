@@ -89,7 +89,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 27,
     image: '/blog/blog2026/voie-interne-evc-logique-qcm-1.png',
     readers: 0,
-    publishedAt: '2026-07-06',
+    publishedAt: '2026-07-07',
     featured: true,
   },
   {
@@ -100,7 +100,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 10,
     image: '/blog/blog2026/evc-voie-externe-comprendre-1.png',
     readers: 0,
-    publishedAt: '2026-07-06',
+    publishedAt: '2026-07-07',
     featured: true,
   },
   {
@@ -111,7 +111,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 21,
     image: '/blog/blog2026/comment-rediger-qroc-evc-1.jpeg',
     readers: 0,
-    publishedAt: '2026-07-06',
+    publishedAt: '2026-07-07',
     featured: true,
   },
   {
@@ -122,7 +122,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     readingMinutes: 12,
     image: '/blog/blog2026/comment-choisir-specialite-evc-1.png',
     readers: 0,
-    publishedAt: '2026-07-06',
+    publishedAt: '2026-07-08',
     featured: true,
   },
   {

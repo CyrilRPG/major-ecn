@@ -534,5 +534,34 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Le jour des EVC, chaque mot compte. Chaque réponse compte. Chaque point compte. Commencez dès aujourd'hui à vous entraîner comme le jury vous évaluera demain."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "EVC et EDN : la différence à ne pas confondre",
+    "href": "/blog/evc-edn-difference-a-ne-pas-confondre"
+   },
+   {
+    "label": "Réussir les EVC : les conseils des lauréats",
+    "href": "/blog/comment-reussir-les-evc-conseils-laureats"
+   },
+   {
+    "label": "Calendrier et inscription au concours PAE 2026 (CNG)",
+    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
+   },
+   {
+    "label": "Comment Major ECN accompagne ses candidats aux EVC",
+    "href": "/blog/comment-major-ecn-accompagne-candidats-evc"
+   }
+  ]
  }
 ];

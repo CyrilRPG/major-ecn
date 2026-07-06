@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Camera, List, Quote } from 'lucide-react';
 import { ArticleHeader, ArticleFinalCta, PrepCtaCard, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
-import type { BlogArticleMeta } from '@/lib/data/blog-articles';
+import { getPublishedArticles, type BlogArticleMeta } from '@/lib/data/blog-articles';
 import { RICH_CONTENT } from '@/lib/data/blog-content';
 import type { Block } from '@/lib/data/blog-content/types';
 
@@ -80,7 +80,7 @@ const CALLOUT_STYLES = {
   },
 } as const;
 
-function BlockView({ b }: { b: Block }) {
+function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string> }) {
   switch (b.t) {
     case 'hero':
       return null; // rendered in header rightArea
@@ -177,12 +177,19 @@ function BlockView({ b }: { b: Block }) {
         </div>
       );
     }
-    case 'related':
+    case 'related': {
+      // On masque les liens vers des articles pas encore publiés (planning
+      // 3/3/1) : le maillage reste valide automatiquement, sans lien mort.
+      const items = b.items.filter((it) => {
+        const m = /^\/blog\/([a-z0-9-]+)$/.exec(it.href);
+        return !m || publishedSlugs.has(m[1]);
+      });
+      if (items.length === 0) return null;
       return (
         <aside className="my-6 rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-4">
           <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#52607A]">À lire aussi</p>
           <ul className="space-y-1.5">
-            {b.items.map((it, i) => (
+            {items.map((it, i) => (
               <li key={i}>
                 <Link href={it.href} className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#E4002B] hover:underline">
                   <ArrowUpRight className="h-3.5 w-3.5 shrink-0" /> {it.label}
@@ -192,6 +199,7 @@ function BlockView({ b }: { b: Block }) {
           </ul>
         </aside>
       );
+    }
     default:
       return null;
   }
@@ -199,6 +207,7 @@ function BlockView({ b }: { b: Block }) {
 
 export function ArticleRich({ article }: { article: BlogArticleMeta }) {
   const blocks = RICH_CONTENT[article.slug] ?? [];
+  const publishedSlugs = new Set(getPublishedArticles().map((a) => a.slug));
   const hero = blocks.find((b): b is Extract<Block, { t: 'hero' }> => b.t === 'hero');
   const toc = blocks
     .filter((b): b is Extract<Block, { t: 'h2' }> => b.t === 'h2')
@@ -257,7 +266,7 @@ export function ArticleRich({ article }: { article: BlogArticleMeta }) {
             )}
 
             {blocks.map((b, i) => (
-              <BlockView key={i} b={b} />
+              <BlockView key={i} b={b} publishedSlugs={publishedSlugs} />
             ))}
 
             <ArticleFinalCta />

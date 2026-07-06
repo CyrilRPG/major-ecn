@@ -56,19 +56,6 @@ export const CONTENT: Block[] = [
   "html": "<strong>Point crucial avant de vous inscrire : en 2026, seules 13 spécialités médicales sont ouvertes en voie externe. Ce n'est pas toutes les spécialités. Avant toute démarche, vérifiez que la vôtre figure bien dans l'Annexe I de l'arrêté du 12 juin 2026 publié au Journal officiel — le lien est disponible sur le site du CNG. Deux nouvelles spécialités ont été ajoutées en 2026 : la psychiatrie et la médecine interne polyvalente (MIPIC), désormais accessibles sans diplôme de spécialité dans le pays d'origine.</strong>"
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Comment choisir sa spécialité EVC",
-    "href": "/blog/comment-choisir-specialite-evc"
-   },
-   {
-    "label": "Voie interne EVC — tout comprendre",
-    "href": "/blog/voie-interne-evc-logique-qcm"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Deux épreuves, pas une — et c'est là que tout se joue"
  },
@@ -144,15 +131,6 @@ export const CONTENT: Block[] = [
   "html": "L'autre point qui fait la différence sur nos corrections : la hiérarchisation. Face à un patient complexe, le candidat qui ouvre par l'urgence vitale et organise sa réponse par priorités marque immédiatement plus de points que celui qui déverse tout ce qu'il sait dans le désordre — même à connaissances égales. Le correcteur doit voir votre raisonnement, pas le reconstituer."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Comment rédiger une QROC aux EVC",
-    "href": "/blog/comment-rediger-qroc-evc"
-   }
-  ]
- },
- {
   "t": "p",
   "html": "<strong>Vous souhaitez connaître votre niveau avant les EVC ? Réalisez gratuitement votre Profil EVC personnalisé et obtenez une première analyse de votre préparation. 👉 Faire mon Profil EVC gratuit →</strong>"
  },
@@ -189,15 +167,6 @@ export const CONTENT: Block[] = [
   "html": "Ce qui coûte des points : répondre trop longuement, utiliser les protocoles du pays d'origine à la place des recommandations HAS, oublier de hiérarchiser, manquer de temps sur les dernières questions parce qu'on a trop développé les premières."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Différence EVC et EDN — pourquoi les supports EDN ne suffisent pas",
-    "href": "/blog/evc-edn-difference-a-ne-pas-confondre"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Les erreurs que nous voyons sur les copies"
  },
@@ -220,15 +189,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "<strong>L'entraînement sur des supports inadaptés. Des cas cliniques EDN, des QCM d'internat, des fiches pour étudiants. Ça occupe, ça rassure — mais ça ne prépare pas aux EVC. Quand le jury attend un score ou une classification de référence nommément, une fiche d'externe ne suffit pas. Le niveau attendu, le format de réponse, les références utilisées : tout est différent. Travailler les bons supports dès le départ, c'est ne pas perdre des semaines à désapprendre.</strong>"
- },
- {
-  "t": "related",
-  "items": [
-   {
-    "label": "Pourquoi les candidats échouent aux EVC",
-    "href": "/blog/pourquoi-des-medecins-echouent-aux-evc"
-   }
-  ]
  },
  {
   "t": "h2",
@@ -321,15 +281,6 @@ export const CONTENT: Block[] = [
   "html": "La médecine interne polyvalente (MIPIC), avec 213 postes, est la spécialité la plus dotée de la voie externe. Elle suit la même logique : accessible sans diplôme de spécialité dans le pays d'origine, pour les PADHUE qui exercent en milieu hospitalier polyvalent."
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Comment choisir sa spécialité EVC",
-    "href": "/blog/comment-choisir-specialite-evc"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Calendrier EVC 2026"
  },
@@ -350,15 +301,6 @@ export const CONTENT: Block[] = [
   "html": "<strong>Résultats et affectation : premier trimestre 2027.</strong>"
  },
  {
-  "t": "related",
-  "items": [
-   {
-    "label": "Calendrier complet des EVC 2026",
-    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
-   }
-  ]
- },
- {
   "t": "h2",
   "text": "Checklist — les documents à préparer"
  },
@@ -377,15 +319,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "<strong>Avant de valider ☐ Tous les documents sont numérisés, lisibles, complets ☐ Vous n'avez pas ouvert de dossier sur une autre ARS ou en voie interne ☐ L'accusé de réception est téléchargé et conservé</strong>"
- },
- {
-  "t": "related",
-  "items": [
-   {
-    "label": "Les documents complets pour l'inscription aux EVC",
-    "href": "/blog/evc-pae-liste-documents-fournir"
-   }
-  ]
  },
  {
   "t": "h2",
@@ -450,5 +383,34 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Voir tous les témoignages →"
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "Comment rédiger une QROC aux EVC",
+    "href": "/blog/comment-rediger-qroc-evc"
+   },
+   {
+    "label": "Comment choisir sa spécialité aux EVC",
+    "href": "/blog/comment-choisir-specialite-evc"
+   },
+   {
+    "label": "EVC et EDN : la différence à ne pas confondre",
+    "href": "/blog/evc-edn-difference-a-ne-pas-confondre"
+   },
+   {
+    "label": "Pourquoi des médecins excellents échouent aux EVC",
+    "href": "/blog/pourquoi-des-medecins-echouent-aux-evc"
+   },
+   {
+    "label": "Calendrier et inscription au concours PAE 2026 (CNG)",
+    "href": "/blog/calendrier-inscription-concours-pae-2026-cng"
+   }
+  ]
  }
 ];

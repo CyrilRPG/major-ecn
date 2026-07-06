@@ -279,5 +279,34 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Vous préparez les EVC ? La meilleure façon de savoir si notre méthode vous correspond, c'est de l'essayer."
+ },
+ {
+  "t": "related",
+  "items": [
+   {
+    "label": "Voie interne des EVC : comprendre la logique des QCM",
+    "href": "/blog/voie-interne-evc-logique-qcm"
+   },
+   {
+    "label": "EVC voie externe : tout comprendre avant de vous lancer",
+    "href": "/blog/evc-voie-externe-comprendre"
+   },
+   {
+    "label": "Comment rédiger une QROC aux EVC",
+    "href": "/blog/comment-rediger-qroc-evc"
+   },
+   {
+    "label": "EVC et EDN : la différence à ne pas confondre",
+    "href": "/blog/evc-edn-difference-a-ne-pas-confondre"
+   },
+   {
+    "label": "Pourquoi des médecins excellents échouent aux EVC",
+    "href": "/blog/pourquoi-des-medecins-echouent-aux-evc"
+   },
+   {
+    "label": "Comment choisir sa spécialité aux EVC",
+    "href": "/blog/comment-choisir-specialite-evc"
+   }
+  ]
  }
 ];
