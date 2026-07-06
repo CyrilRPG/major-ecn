@@ -15,6 +15,8 @@ export default function SetupPasswordPage() {
   const [message, setMessage] = useState<string>('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   // La session est désormais posée côté SERVEUR par /auth/confirm (PKCE-safe).
   // On lit simplement la session ici ; on garde quand même un fallback pour
@@ -35,6 +37,11 @@ export default function SetupPasswordPage() {
     const check = async () => {
       const { data } = await supabase.auth.getSession();
       if (!mounted) return;
+      // Préremplit nom/prénom depuis les métadonnées d'invitation (vides pour une
+      // invitation en masse → l'élève les saisit lui-même).
+      const meta = data.session?.user?.user_metadata as { first_name?: string; last_name?: string } | undefined;
+      if (meta?.first_name) setFirstName(meta.first_name);
+      if (meta?.last_name) setLastName(meta.last_name);
       setStatus(data.session ? 'ready' : 'no-session');
     };
     const t = setTimeout(check, 150);
@@ -51,6 +58,11 @@ export default function SetupPasswordPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!firstName.trim() || !lastName.trim()) {
+      setMessage('Merci de renseigner votre prénom et votre nom.');
+      setStatus('error');
+      return;
+    }
     if (password.length < 8) {
       setMessage('Le mot de passe doit faire au moins 8 caractères.');
       setStatus('error');
@@ -64,12 +76,21 @@ export default function SetupPasswordPage() {
     setStatus('submitting');
     setMessage('');
     const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await supabase.auth.updateUser({
+      password,
+      data: { first_name: firstName.trim(), last_name: lastName.trim() },
+    });
     if (error) {
       setMessage(error.message);
       setStatus('error');
       return;
     }
+    // Persiste le nom/prénom sur le profil (metadata auth != table profiles).
+    await fetch('/api/auth/complete-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: firstName.trim(), last_name: lastName.trim() }),
+    }).catch(() => null);
     setStatus('done');
     setTimeout(() => router.push('/accueil'), 1100);
   };
@@ -132,6 +153,32 @@ export default function SetupPasswordPage() {
 
           {(status === 'ready' || status === 'submitting' || status === 'error') && (
             <form onSubmit={onSubmit} className="mt-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label htmlFor="firstName" className="text-xs font-semibold text-(--color-ink)">Prénom</label>
+                  <input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    autoComplete="given-name"
+                    placeholder="Votre prénom"
+                    className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor="lastName" className="text-xs font-semibold text-(--color-ink)">Nom</label>
+                  <input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    autoComplete="family-name"
+                    placeholder="Votre nom"
+                    className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+                  />
+                </div>
+              </div>
               <PasswordField
                 label="Nouveau mot de passe"
                 id="password"
