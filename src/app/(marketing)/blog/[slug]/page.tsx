@@ -17,6 +17,8 @@ import { Article7ErreursEvc } from '@/components/marketing/blog/articles/article
 import { ArticleMentalEvc } from '@/components/marketing/blog/articles/article-mental-evc';
 import { ArticleOrganiserRevisionsEvc } from '@/components/marketing/blog/articles/article-organiser-revisions-evc';
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
+import { ArticleRich } from '@/components/marketing/blog/articles/article-rich';
+import { RICH_CONTENT } from '@/lib/data/blog-content';
 
 export async function generateMetadata({
   params,
@@ -74,7 +76,9 @@ function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArt
     case 'organiser-revisions-evc':
       return <ArticleOrganiserRevisionsEvc article={article} />;
     default:
-      return <ArticleGeneric article={article} />;
+      return RICH_CONTENT[slug]
+        ? <ArticleRich article={article} />
+        : <ArticleGeneric article={article} />;
   }
 }
 
