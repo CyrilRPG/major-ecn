@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight, ClipboardCheck, Clock, FileText, Layers3, Play, RefreshCcw, Target,
@@ -629,7 +630,9 @@ export default async function AccueilPage() {
 
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
-        <AnnouncementsWidget />
+        <Suspense fallback={<SidebarSkeleton />}>
+          <AnnouncementsWidget />
+        </Suspense>
         {isDecouverte && <DiscoveryUpgradeCta />}
         {isDecouverte && <NouveauxContenusBanner />}
       </aside>
@@ -640,6 +643,39 @@ export default async function AccueilPage() {
 /* ============================================================
    Sub-components
    ============================================================ */
+
+function SidebarSkeleton() {
+  return (
+    <div className="space-y-3 animate-pulse">
+      <div className="rounded-3xl border border-(--color-border) bg-(--color-surface) p-5">
+        <div className="flex items-start gap-3.5">
+          <div className="h-11 w-11 shrink-0 rounded-2xl bg-(--color-sand-100)" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-(--color-sand-100)" />
+            <div className="h-4 w-1/2 rounded bg-(--color-sand-100)" />
+          </div>
+        </div>
+        <div className="mt-4 h-3 w-12 rounded-full bg-(--color-sand-100)" />
+        <div className="mt-4 space-y-2">
+          <div className="h-3 w-1/3 rounded bg-(--color-sand-100)" />
+          <div className="h-4 w-full rounded bg-(--color-sand-100)" />
+          <div className="h-4 w-4/5 rounded bg-(--color-sand-100)" />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3 border-t border-(--color-border) pt-4">
+          <div className="rounded-2xl border border-(--color-border) px-3 py-2.5">
+            <div className="h-3 w-2/3 rounded bg-(--color-sand-100)" />
+            <div className="mt-1 h-6 w-1/2 rounded bg-(--color-sand-100)" />
+          </div>
+          <div className="rounded-2xl border border-(--color-border) px-3 py-2.5">
+            <div className="h-3 w-2/3 rounded bg-(--color-sand-100)" />
+            <div className="mt-1 h-6 w-1/2 rounded bg-(--color-sand-100)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <div className={`flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) ${className}`}>
