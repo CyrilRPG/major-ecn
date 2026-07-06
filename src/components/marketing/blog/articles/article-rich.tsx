@@ -6,7 +6,6 @@ import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 import { RICH_CONTENT } from '@/lib/data/blog-content';
 import type { Block } from '@/lib/data/blog-content/types';
 
-/** Slugifie un titre H2 en ancre stable (sommaire + SEO). */
 function anchorId(text: string): string {
   return text
     .normalize('NFD')
@@ -46,8 +45,45 @@ function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
   );
 }
 
+const CALLOUT_STYLES = {
+  warning: {
+    wrapper: 'border-[#FDE68A] bg-[#FFFBEB]',
+    bar:     'bg-[#F59E0B]',
+    icon:    '⚠',
+    label:   'À retenir',
+    label_c: 'text-[#92400E]',
+    body_c:  'text-[#78350F]',
+  },
+  tip: {
+    wrapper: 'border-[#BAE6FD] bg-[#F0F9FF]',
+    bar:     'bg-[#0EA5E9]',
+    icon:    '💡',
+    label:   'Conseil Major ECN',
+    label_c: 'text-[#0C4A6E]',
+    body_c:  'text-[#0369A1]',
+  },
+  key: {
+    wrapper: 'border-[#A7F3D0] bg-[#F0FDF4]',
+    bar:     'bg-[#10B981]',
+    icon:    '✓',
+    label:   'En résumé',
+    label_c: 'text-[#064E3B]',
+    body_c:  'text-[#065F46]',
+  },
+  source: {
+    wrapper: 'border-[#ECEEF1] bg-[#F6F8FC]',
+    bar:     'bg-[#64748B]',
+    icon:    '📌',
+    label:   'Source officielle',
+    label_c: 'text-[#334155]',
+    body_c:  'text-[#475569]',
+  },
+} as const;
+
 function BlockView({ b }: { b: Block }) {
   switch (b.t) {
+    case 'hero':
+      return null; // rendered in header rightArea
     case 'h2':
       return (
         <h2
@@ -124,6 +160,23 @@ function BlockView({ b }: { b: Block }) {
           </figcaption>
         </figure>
       );
+    case 'callout': {
+      const s = CALLOUT_STYLES[b.tone] ?? CALLOUT_STYLES.warning;
+      return (
+        <div className={`my-5 flex gap-3 rounded-xl border p-4 ${s.wrapper}`}>
+          <div className={`mt-0.5 w-1 shrink-0 self-stretch rounded-full ${s.bar}`} />
+          <div className="min-w-0">
+            <p className={`mb-1 text-[11px] font-extrabold uppercase tracking-[0.14em] ${s.label_c}`}>
+              {s.icon} {s.label}
+            </p>
+            <p
+              className={`text-[14px] leading-[1.7] ${s.body_c} [&_a]:font-semibold [&_a]:underline [&_strong]:font-bold`}
+              dangerouslySetInnerHTML={{ __html: b.html }}
+            />
+          </div>
+        </div>
+      );
+    }
     case 'related':
       return (
         <aside className="my-6 rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-4">
@@ -146,14 +199,43 @@ function BlockView({ b }: { b: Block }) {
 
 export function ArticleRich({ article }: { article: BlogArticleMeta }) {
   const blocks = RICH_CONTENT[article.slug] ?? [];
+  const hero = blocks.find((b): b is Extract<Block, { t: 'hero' }> => b.t === 'hero');
   const toc = blocks
     .filter((b): b is Extract<Block, { t: 'h2' }> => b.t === 'h2')
     .map((b) => ({ id: anchorId(b.text), label: b.text }));
 
+  const heroArea = hero ? (
+    <div className="relative hidden overflow-hidden rounded-2xl lg:block" style={{ aspectRatio: '4/3' }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={hero.src}
+        alt={hero.alt}
+        className="h-full w-full object-cover"
+        loading="eager"
+        decoding="async"
+      />
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/10" />
+    </div>
+  ) : undefined;
+
   return (
     <main className="bg-[#FAFBFE] py-8 sm:py-10 lg:py-12" style={{ fontFamily: ARTICLE_FONT }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ArticleHeader article={article} subtitle={article.excerpt} />
+        <ArticleHeader article={article} subtitle={article.excerpt} rightArea={heroArea} />
+
+        {/* Hero visible on mobile (below header) */}
+        {hero && (
+          <div className="mb-6 overflow-hidden rounded-2xl lg:hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={hero.src}
+              alt={hero.alt}
+              className="h-auto w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        )}
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           <article className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-7">
