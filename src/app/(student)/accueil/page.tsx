@@ -12,7 +12,7 @@ import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-
 import { DiscoveryUpgradeCta } from '@/components/espace-decouverte/discovery-upgrade-cta';
 import { DiscoveryGateLink } from '@/components/espace-decouverte/discovery-gate-link';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
-import { DIFFICULTY_SCORE, FLASHCARD_MASTERY_THRESHOLD, type Difficulty } from '@/types/domain';
+import { getFaculteContentTotals } from '@/lib/data/faculte-totals';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
 
 export const metadata = { title: 'Accueil' };
@@ -20,27 +20,6 @@ export const metadata = { title: 'Accueil' };
 /* ============================================================
    Types
    ============================================================ */
-type AttemptRow = {
-  is_correct: boolean;
-  attempted_at: string;
-  time_spent_seconds: number | null;
-  qcm_questions: {
-    qcm_series: {
-      type: string;
-      cours: { id: string; titre: string; matieres: { id: string; nom: string; semestres: { faculte_id: string } } };
-    };
-  };
-};
-type SessionRow = {
-  finished_at: string | null;
-  qcm_series: { cours: { id: string; titre: string; matieres: { id: string; semestres: { faculte_id: string } } } };
-};
-type ReviewRow = {
-  flashcard_id: string;
-  difficulty: string;
-  reviewed_at: string;
-  flashcards: { cours: { id: string; titre: string; matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
-};
 type CollegeRow = {
   id: string;
   nom: string;
@@ -65,95 +44,129 @@ export default async function AccueilPage() {
   const scope = parseScope(profile.permission_scope);
   const isPaidFormula = scope.offer !== 'decouverte';
   const isDecouverte = !isPaidFormula && scope.type === 'college' && scope.colleges.includes('col-decouverte');
+  const firstName = profile.first_name || 'étudiant';
+
+  // Coque instantanée : l'en-tête + la structure s'affichent immédiatement,
+  // le tableau de bord (1 RPC agrégé + arbre EDN) est streamé via <Suspense>.
+  return (
+    <div className="mx-auto grid w-full max-w-[1640px] gap-4 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      {/* ============ COLONNE PRINCIPALE ============ */}
+      <div className="flex min-w-0 flex-col gap-4">
+        {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
+              Bonjour, {firstName} <span aria-hidden>👋</span>
+            </h1>
+            <p className="mt-1 text-sm text-(--color-ink-soft) sm:text-[15px]">
+              Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.
+            </p>
+          </div>
+          <DiscoveryGateLink
+            href="/revisions-transversales"
+            locked={isDecouverte}
+            className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
+            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+            ariaLabel="Reprendre l'entraînement — Découverte verrouillé"
+          >
+            <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
+          </DiscoveryGateLink>
+        </header>
+
+        <Suspense fallback={<DashboardSkeleton />}>
+          <Dashboard userId={user.id} scope={scope} isDecouverte={isDecouverte} />
+        </Suspense>
+      </div>
+
+      {/* ============ SIDEBAR DROITE ============ */}
+      <aside className="space-y-3">
+        <Suspense fallback={<SidebarSkeleton />}>
+          <AnnouncementsWidget />
+        </Suspense>
+        {isDecouverte && <DiscoveryUpgradeCta />}
+        {isDecouverte && <NouveauxContenusBanner />}
+      </aside>
+    </div>
+  );
+}
+
+/* ============================================================
+   DASHBOARD (streamé) — 1 RPC agrégé + arbre EDN, en parallèle
+   ============================================================ */
+type StatsResp = {
+  totals: {
+    attempts_total: number; attempts_correct: number; attempts_week: number;
+    sessions_total: number; sessions_week: number;
+    reviews_total: number; reviews_week: number;
+    fc_mastered: number; flashcards_total: number;
+    platform_seconds_week: number; cours_touched_week: number;
+  };
+  per_cours: { cours_id: string; attempts: number; correct: number; has_fc: boolean }[];
+  qcm_counts: { cours_id: string; n: number }[];
+  daily: { d: string; n: number }[];
+  recent: { kind: string; titre: string; at: string }[];
+};
+
+async function Dashboard({
+  userId, scope, isDecouverte,
+}: {
+  userId: string;
+  scope: ReturnType<typeof parseScope>;
+  isDecouverte: boolean;
+}) {
   const supabase = await createClient();
 
-  const [
-    { data: attemptsRaw },
-    { data: sessionsRaw },
-    { data: reviewsRaw },
-    { data: edn },
-    { count: flashcardsTotal },
-    { data: platformTimeRows },
-  ] = await Promise.all([
-    // Filtre programme EDN poussé côté serveur (jointures !inner) : ne remonte
-    // que les lignes du programme au lieu de tout l'historique — allège nettement
-    // la page d'accueil. Le filtre JS `inEdn` plus bas reste en garde-fou.
-    supabase
-      .from('qcm_attempts')
-      .select('is_correct, attempted_at, time_spent_seconds, qcm_questions!inner(qcm_series!inner(type, cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
-      .eq('user_id', user.id)
-      .eq('qcm_questions.qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
-    supabase
-      .from('qcm_sessions')
-      .select('finished_at, qcm_series!inner(cours!inner(id, titre, matieres!inner(id, semestres!inner(faculte_id))))')
-      .eq('user_id', user.id)
-      .not('finished_at', 'is', null)
-      .eq('qcm_series.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
-    supabase
-      .from('flashcard_reviews')
-      .select('flashcard_id, difficulty, reviewed_at, flashcards!inner(cours!inner(id, titre, matieres!inner(id, nom, semestres!inner(faculte_id))))')
-      .eq('user_id', user.id)
-      .eq('flashcards.cours.matieres.semestres.faculte_id', EDN_FACULTE_ID)
-      .order('reviewed_at', { ascending: false }),
+  // Deux appels en parallèle : les agrégats par-utilisateur (RPC, tout calculé
+  // en base) + l'arbre du programme (nécessaire au rendu des collèges + scope).
+  const [statsRes, ednRes, cachedTotals] = await Promise.all([
+    // RPC hors types générés (database.ts) : cast ciblé, cf. incident schema drift.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any).rpc('get_accueil_stats', { p_faculte_id: EDN_FACULTE_ID }) as Promise<{ data: StatsResp | null }>,
     supabase
       .from('facultes')
       .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index, course_progress(video_watched, fiche_read))))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
-    // Totaux scopés au programme EDN (les comptes globaux remontaient toute la
-    // base, y compris contenu héritage hors EDN — d'où les chiffres faux affichés).
-    supabase.from('flashcards')
-      .select('id, cours!inner(matieres!inner(semestres!inner(faculte_id)))', { count: 'exact', head: true })
-      .eq('cours.matieres.semestres.faculte_id', EDN_FACULTE_ID),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any)
-      .from('platform_time_tracking')
-      .select('total_seconds')
-      .eq('user_id', user.id)
-      .gte('session_date', new Date(Date.now() - 7 * 86_400_000).toISOString().slice(0, 10)),
+    // Totaux de contenu (identiques pour tous) mis en cache global — P4.
+    getFaculteContentTotals(EDN_FACULTE_ID),
   ]);
 
-  const inEdn = (f: string) => f === EDN_FACULTE_ID;
-  const attempts = ((attemptsRaw ?? []) as unknown as AttemptRow[]).filter((a) =>
-    inEdn(a.qcm_questions.qcm_series.cours.matieres.semestres.faculte_id),
-  );
-  const sessions = ((sessionsRaw ?? []) as unknown as SessionRow[]).filter((s) =>
-    inEdn(s.qcm_series.cours.matieres.semestres.faculte_id),
-  );
-  const reviews = ((reviewsRaw ?? []) as unknown as ReviewRow[]).filter((r) =>
-    inEdn(r.flashcards.cours.matieres.semestres.faculte_id),
-  );
-
+  const stats = (statsRes.data as StatsResp | null) ?? {
+    totals: {
+      attempts_total: 0, attempts_correct: 0, attempts_week: 0,
+      sessions_total: 0, sessions_week: 0, reviews_total: 0, reviews_week: 0,
+      fc_mastered: 0, flashcards_total: 0, platform_seconds_week: 0, cours_touched_week: 0,
+    },
+    per_cours: [], qcm_counts: [], daily: [], recent: [],
+  };
+  const t = stats.totals;
   const now = Date.now();
-  const weekAgo = now - 7 * 86_400_000;
-  const twoWeeksAgo = now - 14 * 86_400_000;
 
   /* ---- Périmètre EDN ---- */
   const colleges = (
-    ((edn as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
+    ((ednRes.data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
     .filter((m) => canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
-  /* ---- Total de questions QCM auxquelles l'étudiant a accès ----
-     (dénominateur du compteur « QCM réalisés » : réalisées / accessibles) */
   const accessibleCoursIds = colleges.flatMap((m) =>
     (m.cours ?? []).filter((c) => canAccessCours(scope, m.id, c.id)).map((c) => c.id),
   );
-  const { count: qcmAccessibleTotal } = accessibleCoursIds.length
-    ? await supabase
-        .from('qcm_questions')
-        .select('id, qcm_series!inner(cours_id)', { count: 'exact', head: true })
-        .in('qcm_series.cours_id', accessibleCoursIds)
-    : { count: 0 };
+
+  /* ---- Total QCM accessibles (dénominateur « QCM réalisés ») ----
+     Somme locale des comptes par cours → aucune requête séquentielle. Source
+     préférée : le cache global (P4) ; repli sur les champs du RPC par-élève. */
+  const qcmCounts = cachedTotals.qcm_counts.length > 0 ? cachedTotals.qcm_counts : stats.qcm_counts;
+  const qcmCountByCours = new Map(qcmCounts.map((q) => [q.cours_id, q.n]));
+  const itemsTotal = accessibleCoursIds.reduce((s, id) => s + (qcmCountByCours.get(id) ?? 0), 0);
+
+  /* ---- Agrégats par cours (attempts / correct / flashcards) ---- */
+  const aggByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p]));
+  const coursWithQcm = new Set(stats.per_cours.filter((p) => p.attempts > 0).map((p) => p.cours_id));
+  const coursWithFc = new Set(stats.per_cours.filter((p) => p.has_fc).map((p) => p.cours_id));
 
   /* ---- Progression couverture (vidéo + fiche + QCM + flashcards) ---- */
-  const coursWithQcm = new Set<string>();
-  const coursWithFc = new Set<string>();
-  for (const a of attempts) coursWithQcm.add(a.qcm_questions.qcm_series.cours.id);
-  for (const r of reviews) coursWithFc.add(r.flashcards.cours.id);
-
   let stepsDone = 0, stepsTotal = 0;
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
@@ -166,33 +179,14 @@ export default async function AccueilPage() {
   const globalProgress = stepsTotal > 0 ? Math.round((stepsDone / stepsTotal) * 100) : 0;
 
   /* ---- Statistiques attempts ---- */
-  const totalAttempts = attempts.length;
-  const correctTotal = attempts.filter((a) => a.is_correct).length;
-  const inWindow = (t: string | null, from: number, to: number) => {
-    if (!t) return false;
-    const v = new Date(t).getTime();
-    return v >= from && v < to;
-  };
-  const attemptsThisWeek = attempts.filter((a) => inWindow(a.attempted_at, weekAgo, now)).length;
-  const sessionsCount = sessions.length;
-  const sessionsThisWeek = sessions.filter((s) => inWindow(s.finished_at, weekAgo, now)).length;
+  const totalAttempts = t.attempts_total;
+  const sessionsCount = t.sessions_total;
 
   /* ---- Temps de révision (mesuré par le heartbeat plateforme) ---- */
-  const secondsThisWeek = ((platformTimeRows ?? []) as { total_seconds: number }[])
-    .reduce((sum, r) => sum + r.total_seconds, 0);
+  const secondsThisWeek = t.platform_seconds_week;
   const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
   const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
   const goalSeconds = 25 * 3600;
-
-  /* ---- Flashcards maîtrisées ---- */
-  // Réutilise `reviews` (déjà chargé + filtré EDN plus haut) : évite un second
-  // scan complet de flashcard_reviews par rendu.
-  const scoreByCard = new Map<string, number>();
-  for (const r of reviews) {
-    scoreByCard.set(r.flashcard_id, (scoreByCard.get(r.flashcard_id) ?? 0) + (DIFFICULTY_SCORE[r.difficulty as Difficulty] ?? 0));
-  }
-  let fcMastered = 0;
-  for (const v of scoreByCard.values()) if (v >= FLASHCARD_MASTERY_THRESHOLD) fcMastered++;
 
   /* ---- Score par cours (priorité de révision) ---- */
   type CoursStats = {
@@ -205,24 +199,14 @@ export default async function AccueilPage() {
   for (const m of colleges) {
     for (const c of m.cours ?? []) {
       const cp = c.course_progress?.[0];
+      const agg = aggByCours.get(c.id);
       perCours.set(c.id, {
         id: c.id, titre: c.titre, matiereNom: m.nom,
-        attempts: 0, correct: 0,
+        attempts: agg?.attempts ?? 0, correct: agg?.correct ?? 0,
         videoDone: !!cp?.video_watched, ficheDone: !!cp?.fiche_read,
-        hasFc: false,
+        hasFc: agg?.has_fc ?? false,
       });
     }
-  }
-  for (const a of attempts) {
-    const c = a.qcm_questions.qcm_series.cours;
-    const e = perCours.get(c.id);
-    if (!e) continue;
-    e.attempts++;
-    if (a.is_correct) e.correct++;
-  }
-  for (const r of reviews) {
-    const e = perCours.get(r.flashcards.cours.id);
-    if (e) e.hasFc = true;
   }
   const coursScored = [...perCours.values()].map((c) => {
     const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
@@ -257,10 +241,8 @@ export default async function AccueilPage() {
 
   /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
   const itemsMastered = coursScored.filter((c) => c.value >= 75).length;
-  const itemsTotal = qcmAccessibleTotal ?? 0;
-  // Total cours du programme (= dénominateur cohérent pour « items maîtrisés »)
   const coursTotalEdn = coursScored.length;
-  const flashcardsTotalEdn = flashcardsTotal ?? 0;
+  const flashcardsTotalEdn = cachedTotals.flashcards_total || t.flashcards_total;
 
   /* ---- Progression par cours groupée par collège ---- */
   type Group = { matiereNom: string; cours: typeof coursScored };
@@ -288,31 +270,25 @@ export default async function AccueilPage() {
       value: 0,
     });
   }
-  for (const a of attempts) {
-    const i = idxByKey.get(new Date(a.attempted_at).toISOString().slice(0, 10));
-    if (i !== undefined) days[i].value++;
+  for (const row of stats.daily) {
+    const i = idxByKey.get(row.d);
+    if (i !== undefined) days[i].value = row.n;
   }
-  // Pour la jauge de la courbe : valeur max sur les 30j (au moins 4)
   const maxDay = Math.max(4, ...days.map((d) => d.value));
 
   /* ---- Répartition révisions (QCM vs Flashcards) ---- */
-  const totalRevisions = totalAttempts + reviews.length;
+  const reviewsTotal = t.reviews_total;
+  const totalRevisions = totalAttempts + reviewsTotal;
   const qcmPct = totalRevisions > 0 ? Math.round((totalAttempts / totalRevisions) * 100) : 0;
-  const fcPct  = totalRevisions > 0 ? Math.round((reviews.length / totalRevisions) * 100) : 0;
+  const fcPct  = totalRevisions > 0 ? Math.round((reviewsTotal / totalRevisions) * 100) : 0;
 
   /* ---- Cette semaine (3 stats) ---- */
-  const reviewsThisWeek = reviews.filter((r) => inWindow(r.reviewed_at, weekAgo, now)).length;
-  const coursTouchedThisWeek = new Set<string>();
-  for (const a of attempts) if (inWindow(a.attempted_at, weekAgo, now)) coursTouchedThisWeek.add(a.qcm_questions.qcm_series.cours.id);
-  for (const r of reviews) if (inWindow(r.reviewed_at, weekAgo, now)) coursTouchedThisWeek.add(r.flashcards.cours.id);
-  const itemsConsolidatedThisWeek = coursTouchedThisWeek.size;
-  // Progression delta hebdo (≈ items revus cette semaine / total)
-  const totalCoursCount = coursScored.length;
-  const progDeltaPct = totalCoursCount > 0 ? Math.round((itemsConsolidatedThisWeek / totalCoursCount) * 100) : 0;
+  const reviewsThisWeek = t.reviews_week;
+  const itemsConsolidatedThisWeek = t.cours_touched_week;
+  const progDeltaPct = coursTotalEdn > 0 ? Math.round((itemsConsolidatedThisWeek / coursTotalEdn) * 100) : 0;
 
-  const firstName = profile.first_name || 'étudiant';
-  const ago = (t: number) => {
-    const h = Math.round((now - t) / 3_600_000);
+  const ago = (ts: number) => {
+    const h = Math.round((now - ts) / 3_600_000);
     if (h < 1) return "à l'instant";
     if (h < 24) return `il y a ${h} h`;
     const d = Math.round(h / 24);
@@ -320,19 +296,10 @@ export default async function AccueilPage() {
   };
 
   /* ---- Activité récente ---- */
-  type Recent = { kind: string; college: string; when: number };
-  const recent: Recent[] = [
-    ...sessions.slice(0, 6).map((s) => ({
-      kind: 'QCM',
-      college: s.qcm_series.cours.titre,
-      when: s.finished_at ? new Date(s.finished_at).getTime() : 0,
-    })),
-    ...reviews.slice(0, 4).map((r) => ({
-      kind: 'Flashcards',
-      college: r.flashcards.cours.titre,
-      when: new Date(r.reviewed_at).getTime(),
-    })),
-  ].sort((a, b) => b.when - a.when).slice(0, 5);
+  const recent = stats.recent
+    .map((r) => ({ kind: r.kind, college: r.titre, when: new Date(r.at).getTime() }))
+    .sort((a, b) => b.when - a.when)
+    .slice(0, 5);
 
   /* ---- Aujourd'hui — objectif du jour ---- */
   const todayQcmTarget = 15;
@@ -341,301 +308,291 @@ export default async function AccueilPage() {
   const todayEstMin = 35;
 
   return (
-    <div className="mx-auto grid w-full max-w-[1640px] gap-4 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-      {/* ============ COLONNE PRINCIPALE ============ */}
-      <div className="flex min-w-0 flex-col gap-4">
-
-        {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
-              Bonjour, {firstName} <span aria-hidden>👋</span>
-            </h1>
-            <p className="mt-1 text-sm text-(--color-ink-soft) sm:text-[15px]">
-              Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.
-            </p>
+    <>
+      {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">
+          <div className="flex items-center gap-3">
+            <ProgressRing pct={globalProgress} />
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-(--color-ink-muted)">Prochaine priorité</p>
+              <p className="truncate text-sm font-extrabold text-(--color-ink)">
+                {nextPriority?.titre ?? '—'}
+              </p>
+            </div>
           </div>
           <DiscoveryGateLink
             href="/revisions-transversales"
             locked={isDecouverte}
-            className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
-            ariaLabel="Reprendre l'entraînement — Découverte verrouillé"
+            className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline"
           >
-            <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
+            Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
           </DiscoveryGateLink>
-        </header>
+        </KpiCard>
 
-        {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
-        <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">
-            <div className="flex items-center gap-3">
-              <ProgressRing pct={globalProgress} />
-              <div className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-(--color-ink-muted)">Prochaine priorité</p>
-                <p className="truncate text-sm font-extrabold text-(--color-ink)">
-                  {nextPriority?.titre ?? '—'}
-                </p>
-              </div>
-            </div>
-            <DiscoveryGateLink
-              href="/revisions-transversales"
-              locked={isDecouverte}
-              className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-bold text-[#2563EB] hover:underline"
-            >
-              Voir mon plan de travail <ArrowRight className="h-3.5 w-3.5" />
-            </DiscoveryGateLink>
-          </KpiCard>
-
-          <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
-            <p className="text-4xl font-black tabular-nums text-(--color-ink)">
-              {hoursThisWeek}h <span className="text-2xl">{minsThisWeek.toString().padStart(2, '0')}</span>
+        <KpiCard accent="#16A34A" Icon={Clock} label="Temps de révision">
+          <p className="text-4xl font-black tabular-nums text-(--color-ink)">
+            {hoursThisWeek}h <span className="text-2xl">{minsThisWeek.toString().padStart(2, '0')}</span>
+          </p>
+          <p className="text-xs text-(--color-ink-soft)">cette semaine</p>
+          <div className="mt-auto">
+            <p className="rounded-md bg-[#DCFCE7] px-2 py-1 text-center text-[11px] font-bold text-[#16793C]">
+              Objectif min. conseillé : 25h / semaine
             </p>
-            <p className="text-xs text-(--color-ink-soft)">cette semaine</p>
-            <div className="mt-auto">
-              <p className="rounded-md bg-[#DCFCE7] px-2 py-1 text-center text-[11px] font-bold text-[#16793C]">
-                Objectif min. conseillé : 25h / semaine
-              </p>
-              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-(--color-sand-200)">
-                <div className="h-full rounded-full bg-[#16A34A]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />
-              </div>
+            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-(--color-sand-200)">
+              <div className="h-full rounded-full bg-[#16A34A]" style={{ width: `${Math.min(100, (secondsThisWeek / goalSeconds) * 100)}%` }} />
             </div>
-          </KpiCard>
-
-          <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
-            <p className="text-4xl font-black tabular-nums text-(--color-ink)">
-              {totalAttempts}<span className="text-lg font-bold text-(--color-ink-soft)">/{itemsTotal}</span>
-            </p>
-            <p className="text-xs text-(--color-ink-soft)">questions réalisées · {sessionsCount} séries</p>
-            <DiscoveryGateLink
-              href="/entrainement"
-              locked={isDecouverte}
-              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]"
-            >
-              Commencer un entraînement <ArrowRight className="h-3.5 w-3.5" />
-            </DiscoveryGateLink>
-          </KpiCard>
-
-          <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
-            <p className="text-3xl font-black tabular-nums text-(--color-ink)">
-              {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
-            </p>
-            <p className="text-xs text-(--color-ink-soft)">
-              {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
-            </p>
-            <DiscoveryGateLink
-              href="/entrainement"
-              locked={isDecouverte}
-              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
-            >
-              Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
-            </DiscoveryGateLink>
-          </KpiCard>
-        </section>
-
-        {/* ---- 3 cartes : Aujourd'hui + Évolution + Répartition ---- */}
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
-          {/* Aujourd'hui */}
-          <Card>
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
-                <Target className="h-4 w-4" />
-              </span>
-              <p className="text-sm font-bold text-(--color-ink)">Aujourd&rsquo;hui</p>
-            </div>
-            <p className="mt-1 text-[11px] text-(--color-ink-soft)">
-              Objectif du jour pour avancer sereinement
-            </p>
-            <ul className="mt-3 space-y-2">
-              <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
-              <TodayRow Icon={FileText}       bg="#DBEAFE" fg="#2563EB" title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
-              <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
-              <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
-            </ul>
-            <DiscoveryGateLink
-              href="/revisions-transversales"
-              locked={isDecouverte}
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
-              style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
-            >
-              <Play className="h-4 w-4" /> Commencer maintenant
-            </DiscoveryGateLink>
-          </Card>
-
-          {/* Évolution */}
-          <Card>
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
-              <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
-            </div>
-            <Sparkline days={days} max={maxDay} />
-            <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
-              <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
-              <p className="text-[12px] leading-relaxed text-(--color-ink)">
-                <strong>Vos résultats s&rsquo;améliorent avec la régularité.</strong>{' '}
-                Continuez vos entraînements&nbsp;!
-              </p>
-            </div>
-          </Card>
-
-          {/* Répartition révisions */}
-          <Card>
-            <p className="text-sm font-bold text-(--color-ink)">Répartition des révisions</p>
-            <div className="mt-3 flex items-center gap-4">
-              <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
-              <div className="flex-1 space-y-2 text-[12px]">
-                <LegendRow color="#C0112E" label="QCM" count={totalAttempts} pct={qcmPct} />
-                <LegendRow color="#7C3AED" label="Flashcards" count={reviews.length} pct={fcPct} />
-              </div>
-            </div>
-            <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
-              Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions}</span> / {itemsTotal + flashcardsTotalEdn}
-            </p>
-          </Card>
-        </section>
-
-        {/* ---- À travailler en priorité ---- */}
-        <Card>
-          <div className="flex items-baseline justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
-              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats récents</p>
-            </div>
-            <DiscoveryGateLink
-              href="/entrainement"
-              locked={isDecouverte}
-              className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex"
-            >
-              Voir mes lacunes <ArrowRight className="ml-0.5 h-3.5 w-3.5" />
-            </DiscoveryGateLink>
           </div>
-          {priorities.length === 0 ? (
-            <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
-              Lancez vos premiers QCM pour voir vos priorités apparaître ici.
+        </KpiCard>
+
+        <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
+          <p className="text-4xl font-black tabular-nums text-(--color-ink)">
+            {totalAttempts}<span className="text-lg font-bold text-(--color-ink-soft)">/{itemsTotal}</span>
+          </p>
+          <p className="text-xs text-(--color-ink-soft)">questions réalisées · {sessionsCount} séries</p>
+          <DiscoveryGateLink
+            href="/entrainement"
+            locked={isDecouverte}
+            className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#FCEAEC] px-2 py-1.5 text-[12px] font-bold text-[#C0112E] hover:bg-[#FAD1D6]"
+          >
+            Commencer un entraînement <ArrowRight className="h-3.5 w-3.5" />
+          </DiscoveryGateLink>
+        </KpiCard>
+
+        <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
+          <p className="text-3xl font-black tabular-nums text-(--color-ink)">
+            {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
+          </p>
+          <p className="text-xs text-(--color-ink-soft)">
+            {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
+          </p>
+          <DiscoveryGateLink
+            href="/entrainement"
+            locked={isDecouverte}
+            className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
+          >
+            Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
+          </DiscoveryGateLink>
+        </KpiCard>
+      </section>
+
+      {/* ---- 3 cartes : Aujourd'hui + Évolution + Répartition ---- */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
+        {/* Aujourd'hui */}
+        <Card>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
+              <Target className="h-4 w-4" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Aujourd&rsquo;hui</p>
+          </div>
+          <p className="mt-1 text-[11px] text-(--color-ink-soft)">
+            Objectif du jour pour avancer sereinement
+          </p>
+          <ul className="mt-3 space-y-2">
+            <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
+            <TodayRow Icon={FileText}       bg="#DBEAFE" fg="#2563EB" title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
+            <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
+            <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
+          </ul>
+          <DiscoveryGateLink
+            href="/revisions-transversales"
+            locked={isDecouverte}
+            className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
+            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+          >
+            <Play className="h-4 w-4" /> Commencer maintenant
+          </DiscoveryGateLink>
+        </Card>
+
+        {/* Évolution */}
+        <Card>
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
+            <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
+          </div>
+          <Sparkline days={days} max={maxDay} />
+          <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
+            <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
+            <p className="text-[12px] leading-relaxed text-(--color-ink)">
+              <strong>Vos résultats s&rsquo;améliorent avec la régularité.</strong>{' '}
+              Continuez vos entraînements&nbsp;!
+            </p>
+          </div>
+        </Card>
+
+        {/* Répartition révisions */}
+        <Card>
+          <p className="text-sm font-bold text-(--color-ink)">Répartition des révisions</p>
+          <div className="mt-3 flex items-center gap-4">
+            <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
+            <div className="flex-1 space-y-2 text-[12px]">
+              <LegendRow color="#C0112E" label="QCM" count={totalAttempts} pct={qcmPct} />
+              <LegendRow color="#7C3AED" label="Flashcards" count={reviewsTotal} pct={fcPct} />
+            </div>
+          </div>
+          <p className="mt-3 border-t border-(--color-border) pt-2 text-[11px] text-(--color-ink-soft)">
+            Total étudié : <span className="font-bold text-(--color-ink)">{totalRevisions}</span> / {itemsTotal + flashcardsTotalEdn}
+          </p>
+        </Card>
+      </section>
+
+      {/* ---- À travailler en priorité ---- */}
+      <Card>
+        <div className="flex items-baseline justify-between gap-3">
+          <div>
+            <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
+            <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">Basé sur vos résultats récents</p>
+          </div>
+          <DiscoveryGateLink
+            href="/entrainement"
+            locked={isDecouverte}
+            className="hidden text-[12px] font-bold text-[#C0112E] hover:underline sm:inline-flex"
+          >
+            Voir mes lacunes <ArrowRight className="ml-0.5 h-3.5 w-3.5" />
+          </DiscoveryGateLink>
+        </div>
+        {priorities.length === 0 ? (
+          <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
+            Lancez vos premiers QCM pour voir vos priorités apparaître ici.
+          </p>
+        ) : (
+          <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {priorities.map((p, i) => {
+              const pill = p.value < 50
+                ? { label: 'Priorité haute',   bg: '#FCEAEC', fg: '#C0112E' }
+                : { label: 'Priorité moyenne', bg: '#FEF3C7', fg: '#A16207' };
+              return (
+                <li key={p.id}>
+                  <Link
+                    href={`/cours/${p.id}`}
+                    className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-[#C0112E]/40 hover:bg-[#FCEAEC]/40"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-sand-100) text-[12px] font-black text-(--color-ink-soft)">
+                      {i + 1}
+                    </span>
+                    <span className="flex-1 truncate text-sm font-bold text-(--color-ink)">{p.titre}</span>
+                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
+                      {pill.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </Card>
+
+      {/* ---- Progression par cours ---- */}
+      <Card>
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <div>
+            <p className="text-sm font-bold text-(--color-ink)">Progression par cours</p>
+            <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">
+              {coursScored.length} cours · groupés par collège
+            </p>
+          </div>
+        </div>
+        <div className="max-h-[320px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+          {coursByMatiere.map((g) => (
+            <section key={g.matiereNom}>
+              <p className="sticky top-0 bg-(--color-surface) py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
+                {g.matiereNom}
+              </p>
+              <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                {g.cours.map((c) => {
+                  const pill = c.value < 50
+                    ? { label: 'Urgent',     bg: '#FCEAEC', fg: '#C0112E' }
+                    : c.value < 75
+                    ? { label: 'À revoir',   bg: '#FEF3C7', fg: '#A16207' }
+                    : { label: 'En progrès', bg: '#DCFCE7', fg: '#16A34A' };
+                  return (
+                    <li key={c.id}>
+                      <Link href={`/cours/${c.id}`} className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 transition-colors hover:border-[#C0112E]/30">
+                        <span className="min-w-0 flex-1 truncate text-[12.5px] text-(--color-ink)">{c.titre}</span>
+                        <span className="hidden h-1 w-16 shrink-0 overflow-hidden rounded-full sm:block" style={{ background: '#ECEEF1' }}>
+                          <span className="block h-full rounded-full" style={{ width: `${c.value}%`, background: pill.fg }} />
+                        </span>
+                        <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums text-(--color-ink)">{c.value}%</span>
+                        <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
+                          {pill.label}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </Card>
+
+      {/* ---- Activité récente + Cette semaine ---- */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
+              <RefreshCcw className="h-3.5 w-3.5" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Activité récente</p>
+          </div>
+          {recent.length === 0 ? (
+            <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
+              Aucune activité récente. Lancez votre premier entraînement&nbsp;!
             </p>
           ) : (
-            <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {priorities.map((p, i) => {
-                const pill = p.value < 50
-                  ? { label: 'Priorité haute',   bg: '#FCEAEC', fg: '#C0112E' }
-                  : { label: 'Priorité moyenne', bg: '#FEF3C7', fg: '#A16207' };
-                return (
-                  <li key={p.id}>
-                    <Link
-                      href={`/cours/${p.id}`}
-                      className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-[#C0112E]/40 hover:bg-[#FCEAEC]/40"
-                    >
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-sand-100) text-[12px] font-black text-(--color-ink-soft)">
-                        {i + 1}
-                      </span>
-                      <span className="flex-1 truncate text-sm font-bold text-(--color-ink)">{p.titre}</span>
-                      <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
-                        {pill.label}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
+            <ul className="mt-3 space-y-2">
+              {recent.map((r, i) => (
+                <li key={i} className="flex items-center gap-2 text-[12px]">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
+                    {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
+                  </span>
+                  <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
+                  <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
+                </li>
+              ))}
             </ul>
           )}
         </Card>
 
-        {/* ---- Progression par cours ---- */}
         <Card>
-          <div className="mb-3 flex items-baseline justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold text-(--color-ink)">Progression par cours</p>
-              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">
-                {coursScored.length} cours · groupés par collège
-              </p>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DCFCE7] text-[#16A34A]">
+              <Zap className="h-3.5 w-3.5" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
           </div>
-          <div className="max-h-[320px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
-            {coursByMatiere.map((g) => (
-              <section key={g.matiereNom}>
-                <p className="sticky top-0 bg-(--color-surface) py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
-                  {g.matiereNom}
-                </p>
-                <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                  {g.cours.map((c) => {
-                    const pill = c.value < 50
-                      ? { label: 'Urgent',     bg: '#FCEAEC', fg: '#C0112E' }
-                      : c.value < 75
-                      ? { label: 'À revoir',   bg: '#FEF3C7', fg: '#A16207' }
-                      : { label: 'En progrès', bg: '#DCFCE7', fg: '#16A34A' };
-                    return (
-                      <li key={c.id}>
-                        <Link href={`/cours/${c.id}`} className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 transition-colors hover:border-[#C0112E]/30">
-                          <span className="min-w-0 flex-1 truncate text-[12.5px] text-(--color-ink)">{c.titre}</span>
-                          <span className="hidden h-1 w-16 shrink-0 overflow-hidden rounded-full sm:block" style={{ background: '#ECEEF1' }}>
-                            <span className="block h-full rounded-full" style={{ width: `${c.value}%`, background: pill.fg }} />
-                          </span>
-                          <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums text-(--color-ink)">{c.value}%</span>
-                          <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
-                            {pill.label}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`}           label="Progression"          color="#16A34A" />
+            <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`}          label="Flashcards révisées" color="#7C3AED" />
+            <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`}label="Items consolidés"     color="#2563EB" />
           </div>
         </Card>
+      </section>
+    </>
+  );
+}
 
-        {/* ---- Activité récente + Cette semaine ---- */}
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Card>
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-(--color-sand-100) text-(--color-ink-soft)">
-                <RefreshCcw className="h-3.5 w-3.5" />
-              </span>
-              <p className="text-sm font-bold text-(--color-ink)">Activité récente</p>
-            </div>
-            {recent.length === 0 ? (
-              <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">
-                Aucune activité récente. Lancez votre premier entraînement&nbsp;!
-              </p>
-            ) : (
-              <ul className="mt-3 space-y-2">
-                {recent.map((r, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[12px]">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
-                      {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
-                    </span>
-                    <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
-                    <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-
-          <Card>
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DCFCE7] text-[#16A34A]">
-                <Zap className="h-3.5 w-3.5" />
-              </span>
-              <p className="text-sm font-bold text-(--color-ink)">Cette semaine</p>
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              <WeekStat Icon={TrendingUp} value={`+${progDeltaPct}%`}           label="Progression"          color="#16A34A" />
-              <WeekStat Icon={Layers3}    value={`+${reviewsThisWeek}`}          label="Flashcards révisées" color="#7C3AED" />
-              <WeekStat Icon={Target}     value={`+${itemsConsolidatedThisWeek}`}label="Items consolidés"     color="#2563EB" />
-            </div>
-          </Card>
-        </section>
-      </div>
-
-      {/* ============ SIDEBAR DROITE ============ */}
-      <aside className="space-y-3">
-        <Suspense fallback={<SidebarSkeleton />}>
-          <AnnouncementsWidget />
-        </Suspense>
-        {isDecouverte && <DiscoveryUpgradeCta />}
-        {isDecouverte && <NouveauxContenusBanner />}
-      </aside>
+/* Skeleton du tableau de bord pendant le streaming du RPC. */
+function DashboardSkeleton() {
+  return (
+    <div className="flex animate-pulse flex-col gap-4">
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-32 rounded-2xl border border-(--color-border) bg-(--color-surface) p-3.5">
+            <div className="h-4 w-2/3 rounded bg-(--color-sand-100)" />
+            <div className="mt-4 h-8 w-1/2 rounded bg-(--color-sand-100)" />
+            <div className="mt-4 h-3 w-full rounded bg-(--color-sand-100)" />
+          </div>
+        ))}
+      </section>
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="h-52 rounded-2xl border border-(--color-border) bg-(--color-surface)" />
+        ))}
+      </section>
+      <div className="h-40 rounded-2xl border border-(--color-border) bg-(--color-surface)" />
+      <div className="h-64 rounded-2xl border border-(--color-border) bg-(--color-surface)" />
     </div>
   );
 }
