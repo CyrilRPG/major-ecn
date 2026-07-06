@@ -17,6 +17,10 @@ export default function SetupPasswordPage() {
   const [confirm, setConfirm] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  // Invitation en masse : le profil n'a ni prénom ni nom préremplis → le
+  // téléphone devient obligatoire à l'inscription.
+  const [bulkInvite, setBulkInvite] = useState(false);
 
   // La session est désormais posée côté SERVEUR par /auth/confirm (PKCE-safe).
   // On lit simplement la session ici ; on garde quand même un fallback pour
@@ -42,6 +46,8 @@ export default function SetupPasswordPage() {
       const meta = data.session?.user?.user_metadata as { first_name?: string; last_name?: string } | undefined;
       if (meta?.first_name) setFirstName(meta.first_name);
       if (meta?.last_name) setLastName(meta.last_name);
+      // Aucun prénom prérempli => invité en masse => téléphone obligatoire.
+      setBulkInvite(!meta?.first_name);
       setStatus(data.session ? 'ready' : 'no-session');
     };
     const t = setTimeout(check, 150);
@@ -60,6 +66,11 @@ export default function SetupPasswordPage() {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim()) {
       setMessage('Merci de renseigner votre prénom et votre nom.');
+      setStatus('error');
+      return;
+    }
+    if (bulkInvite && !phone.trim()) {
+      setMessage('Merci de renseigner votre numéro de téléphone.');
       setStatus('error');
       return;
     }
@@ -85,11 +96,11 @@ export default function SetupPasswordPage() {
       setStatus('error');
       return;
     }
-    // Persiste le nom/prénom sur le profil (metadata auth != table profiles).
+    // Persiste le nom/prénom (+ téléphone) sur le profil (metadata auth != table profiles).
     await fetch('/api/auth/complete-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ first_name: firstName.trim(), last_name: lastName.trim() }),
+      body: JSON.stringify({ first_name: firstName.trim(), last_name: lastName.trim(), phone: phone.trim() }),
     }).catch(() => null);
     setStatus('done');
     setTimeout(() => router.push('/accueil'), 1100);
@@ -178,6 +189,21 @@ export default function SetupPasswordPage() {
                     className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
                   />
                 </div>
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="phone" className="text-xs font-semibold text-(--color-ink)">
+                  Téléphone{bulkInvite && <span className="text-(--color-primary)"> *</span>}
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required={bulkInvite}
+                  autoComplete="tel"
+                  placeholder="06 12 34 56 78"
+                  className="w-full rounded-xl border border-(--color-border) bg-white px-4 py-3 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
+                />
               </div>
               <PasswordField
                 label="Nouveau mot de passe"

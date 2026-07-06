@@ -22,13 +22,8 @@ const STEPS: Step[] = [
   {
     selector: '[data-tour="cours-item"]',
     title: '2. Ouvrez un item',
-    body: 'Cliquez sur un item pour accéder à son parcours pédagogique complet.',
+    body: 'Cliquez sur un item pour accéder à son parcours pédagogique. Un dernier conseil vous y attend.',
     expandFirst: true,
-  },
-  {
-    selector: '[data-tour="student-menu"]',
-    title: '3. Suivez le parcours',
-    body: 'Pour chaque item, avancez dans l’ordre : Fiche → Fiche éclair → DP / QI → Séance approfondie / vidéo → Flashcards.',
   },
 ];
 

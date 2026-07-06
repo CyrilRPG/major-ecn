@@ -16,6 +16,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const first = typeof body.first_name === 'string' ? body.first_name.trim().slice(0, 80) : '';
   const last = typeof body.last_name === 'string' ? body.last_name.trim().slice(0, 80) : '';
+  const phone = typeof body.phone === 'string' ? body.phone.trim().slice(0, 40) : '';
   if (!first || !last) return NextResponse.json({ error: 'Nom et prénom requis' }, { status: 400 });
 
   let admin;
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
 
   const { error } = await admin
     .from('profiles')
-    .update({ first_name: first, last_name: last })
+    .update({ first_name: first, last_name: last, ...(phone ? { phone } : {}) })
     .eq('id', user.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

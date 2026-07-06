@@ -10,6 +10,7 @@ import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
 import { LockedSeanceApprofondieCard } from '@/components/student/locked-seance-approfondie-card';
+import { ApercuCoachmark } from '@/components/student/apercu-coachmark';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
@@ -352,7 +353,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         </div>
       )}
 
-      <div className={`grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
+      <ApercuCoachmark />
+      <div data-tour="apercu-content" className={`grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
         {actions.map((a) => {
           // Séance approfondie verrouillée → popup invitation DP/QI.
           if (a.href === '#locked-seance-approfondie') {

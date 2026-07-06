@@ -34,6 +34,10 @@ const CAT: Record<CatKey, { label: string; short: string; color: string; soft: s
   ia: { label: 'Réponses IA', short: 'IA', color: '#8B5CF6', soft: 'rgba(139,92,246,0.14)', Icon: MessageSquare },
 };
 
+// Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
+const MANUAL_QCM_LINES = [{ label: 'QROC Voies externes', montant: 300 }];
+const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
+
 const PALIERS = [
   { seuil: 1500, pct: 10 },
   { seuil: 3000, pct: 16 },
@@ -63,13 +67,14 @@ export function FacturationDashboard({
   const data = useMemo(() => {
     const counts = {
       fiche: lines.filter((l) => l.fichePrice > 0).length,
-      qcm: lines.filter((l) => l.qcmPrice > 0).length,
+      qcm: lines.filter((l) => l.qcmPrice > 0).length + MANUAL_QCM_LINES.length,
       flash: lines.filter((l) => l.flashPrice > 0).length,
       ia: aiResponses,
     };
     const totals = {
       fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
-      qcm: lines.reduce((s, l) => s + l.qcmPrice, 0),
+      // Brut DP/QI = QCM/DP calculés + lignes manuelles (ex. QROC Voies externes).
+      qcm: lines.reduce((s, l) => s + l.qcmPrice, 0) + MANUAL_QCM_TOTAL,
       flash: lines.reduce((s, l) => s + l.flashPrice, 0),
       ia: aiResponses * tarifs.ia,
     };
@@ -81,6 +86,7 @@ export function FacturationDashboard({
       const c = l.fichePrice + l.qcmPrice + l.flashPrice;
       byCollege.set(l.matiere, (byCollege.get(l.matiere) ?? 0) + c);
     }
+    for (const ml of MANUAL_QCM_LINES) byCollege.set(ml.label, (byCollege.get(ml.label) ?? 0) + ml.montant);
     if (totals.ia > 0) byCollege.set('Réponses IA', (byCollege.get('Réponses IA') ?? 0) + totals.ia);
 
     return { counts, totals, grand, byCollege };
