@@ -159,18 +159,18 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           available: (c.fiches ?? []).some((f) => !!f.storage_path),
         },
         {
+          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+          desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+        },
+        {
           // Cours vidéo verrouillé — clic = popup LockedContentModal.
           href: '#locked-video', label: 'Cours vidéo',
           desc: 'Le cours filmé, aligné sur les recommandations HAS.',
           Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
           available: false,
           locked: true,
-        },
-        {
-          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
-          desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
-          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
         },
         {
           href: `/cours/${coursId}/flashcards`, label: 'Flashcards',
@@ -186,21 +186,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         },
       ]
     : (() => {
+        // Ordre pédagogique fixe : Fiche -> Fiche éclair -> DP/QI -> Séance
+        // approfondie -> Cours vidéo -> Flashcards -> Interrogation -> Notes.
         const standardActions: Action[] = [];
-        if (hasSeanceApprofondie && isApprofondi) {
-          standardActions.push({
-            href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
-            label: 'Séance approfondie',
-            desc: allSeancesCompleted
-              ? 'Cours vidéo approfondis par le professeur pour aller plus loin.'
-              : 'Complétez d\'abord toutes les séances du professeur (DP & QI) pour débloquer les vidéos.',
-            Icon: allSeancesCompleted ? Video : Lock,
-            accent: '#7C3AED',
-            bg: '#F3EAFF',
-            available: allSeancesCompleted,
-            locked: !allSeancesCompleted,
-          });
-        }
         if (!access || access.fiche) {
           standardActions.push(
             {
@@ -221,6 +209,28 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             },
           );
         }
+        standardActions.push(
+          {
+            href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+            desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
+            Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+            available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+          },
+        );
+        if (hasSeanceApprofondie && isApprofondi) {
+          standardActions.push({
+            href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
+            label: 'Séance approfondie',
+            desc: allSeancesCompleted
+              ? 'Cours vidéo approfondis par le professeur pour aller plus loin.'
+              : 'Complétez d\'abord toutes les séances du professeur (DP & QI) pour débloquer les vidéos.',
+            Icon: allSeancesCompleted ? Video : Lock,
+            accent: '#7C3AED',
+            bg: '#F3EAFF',
+            available: allSeancesCompleted,
+            locked: !allSeancesCompleted,
+          });
+        }
         if (!access || access.video) {
           standardActions.push(
             {
@@ -231,14 +241,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             },
           );
         }
-        standardActions.push(
-          {
-            href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
-            desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
-            Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-            available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
-          },
-        );
         if (!access || access.flashcards) {
           standardActions.push(
             {
@@ -296,15 +298,19 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       : href.endsWith('/flashcards') ? 'flashcards'
       : href.endsWith('/seance-approfondie') || href === '#locked-seance-approfondie' ? 'seance-approfondie'
       : null;
+    // Ordre canonique de repli (types non gérés par les slots admin). Fiche
+    // éclair colle à la Fiche, Séance approfondie colle aux DP/QI.
+    const CANON: Record<string, number> = { fiche: 0, 'fiche-express': 1, qcm: 2, 'seance-approfondie': 3, video: 4, flashcards: 5 };
+    const rankOf = (t: string | null, i: number): number => {
+      if (t === 'fiche-express') return (slotOrder.has('fiche') ? (slotOrder.get('fiche') as number) : CANON.fiche) + 0.5;
+      if (t === 'seance-approfondie') return (slotOrder.has('qcm') ? (slotOrder.get('qcm') as number) : CANON.qcm) + 0.5;
+      if (t && slotOrder.has(t)) return slotOrder.get(t) as number;
+      if (t && t in CANON) return CANON[t];
+      return 100 + i; // Notes / Interrogation : toujours en fin
+    };
     actions = actions
       .map((a, i) => ({ a, i }))
-      .sort((x, y) => {
-        const tx = typeOf(x.a.href);
-        const ty = typeOf(y.a.href);
-        const rx = tx === 'seance-approfondie' ? -1 : tx && slotOrder.has(tx) ? (slotOrder.get(tx) as number) : 100 + x.i;
-        const ry = ty === 'seance-approfondie' ? -1 : ty && slotOrder.has(ty) ? (slotOrder.get(ty) as number) : 100 + y.i;
-        return rx - ry || x.i - y.i;
-      })
+      .sort((x, y) => (rankOf(typeOf(x.a.href), x.i) - rankOf(typeOf(y.a.href), y.i)) || x.i - y.i)
       .map((r) => r.a);
   }
 

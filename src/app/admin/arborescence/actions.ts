@@ -182,10 +182,13 @@ export async function deleteCollege(id: string): Promise<{ ok: boolean; error?: 
 /* ============================================================
    ITEMS (cours)
    ============================================================ */
+// Ordre pédagogique par défaut : Fiche -> DP/QI -> Cours vidéo -> Flashcards
+// (Fiche éclair et Séance approfondie ne sont pas des slots ; elles se placent
+// respectivement après la Fiche et après les DP/QI côté affichage).
 const DEFAULT_SLOTS: { label: string; content_type: 'video' | 'fiche' | 'qcm' | 'flashcards' }[] = [
-  { label: 'Cours vidéo',                content_type: 'video' },
   { label: 'Fiche de cours exhaustive',  content_type: 'fiche' },
   { label: 'Dossiers progressifs & QI',  content_type: 'qcm' },
+  { label: 'Cours vidéo',                content_type: 'video' },
   { label: 'Flashcards',                 content_type: 'flashcards' },
 ];
 
