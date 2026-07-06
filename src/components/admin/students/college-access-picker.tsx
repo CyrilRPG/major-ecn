@@ -52,12 +52,11 @@ export function CollegeAccessPicker({
       if (checked) {
         s.add(MG_COLLEGE_ID);
         allSpecialtyIds.forEach((x) => s.add(x)); // par défaut, toutes les spécialités
-        setColleges(Array.from(s), { voie: value.voie ?? 'interne' });
       } else {
         s.delete(MG_COLLEGE_ID);
         allSpecialtyIds.forEach((x) => s.delete(x));
-        setColleges(Array.from(s), { voie: null });
       }
+      setColleges(Array.from(s));
       return;
     }
     if (checked) s.add(id); else s.delete(id);
@@ -93,6 +92,39 @@ export function CollegeAccessPicker({
           <span className="text-sm">Collèges spécifiques</span>
         </label>
       </RadioGroup>
+
+      {/* Voie de concours — TOUJOURS affichée et obligatoire, quelle que soit
+          l'offre/le collège. Détermine le type d'entraînement accessible. */}
+      <div className="space-y-1.5 rounded-xl border-2 border-(--color-primary)/30 bg-(--color-primary-soft)/40 p-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
+          <Stethoscope className="h-4 w-4 text-(--color-primary)" />
+          Voie de concours
+        </div>
+        <p className="text-xs text-(--color-ink-soft)">
+          <strong>Interne</strong> = QCM / DP · <strong>Externe</strong> = QROC / DP-QROC.
+          Jamais les deux, quelle que soit la spécialité.
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { value: 'interne', label: 'Voie interne (QCM / DP)' },
+            { value: 'externe', label: 'Voie externe (QROC / DP-QROC)' },
+          ] as const).map((opt) => (
+            <label
+              key={opt.value}
+              className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm ${value.voie === opt.value ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}
+            >
+              <input
+                type="radio"
+                name="voie"
+                checked={value.voie === opt.value}
+                onChange={() => onChange({ ...value, voie: opt.value })}
+                className="h-4 w-4 accent-(--color-primary)"
+              />
+              {opt.label}
+            </label>
+          ))}
+        </div>
+      </div>
 
       {value.permissionType === 'college' && (
         <>

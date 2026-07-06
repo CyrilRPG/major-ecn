@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, Trophy, Sparkles } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Trophy, Sparkles } from 'lucide-react';
 import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -61,7 +61,11 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
       lastBySerie.set(s.serie_id, { score_correct: s.score_correct, score_total: s.score_total });
   }
 
-  // « DP 1 » (DP QCM) comme « DP QROC 1 · … » → même traitement visuel (rouge + icône DP).
+  // Voie externe : QROC (« QROC — Série N ») et DP-QROC (« DP QROC N · … »)
+  // partagent une identité visuelle « teal » distincte des QCM/DP (voie interne).
+  const isDpQroc = (label: string) => /^dp\s*qroc/i.test(label);
+  const isQroc = (label: string) => /^qroc/i.test(label);
+  // « DP 1 » (DP QCM) → traitement rouge + icône DP.
   const isDp = (label: string) => /^dp\b/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
   const isSeance = (s: { type?: string }) => s.type === 'seance';
@@ -126,11 +130,18 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
               );
             }
             const seance = isSeance(s);
-            // Violet pour Séance, vert pour Entraînement, rouge pour DP, bleu pour QCM standard.
+            const dpQroc = isDpQroc(s.label);
+            const qroc = isQroc(s.label);
+            // Violet=Séance, vert=Entraînement, teal=QROC/DP-QROC (voie externe),
+            // rouge=DP, bleu=QCM standard (voie interne).
             const theme = seance
               ? { bar: '#7C3AED', bg: '#F3EAFF', fg: '#5B21B6', Icon: Sparkles,      kindLabel: 'Séance du prof' }
               : entr
               ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }
+              : dpQroc
+              ? { bar: '#0D9488', bg: '#CCFBF1', fg: '#0F766E', Icon: ClipboardList,  kindLabel: 'DP QROC' }
+              : qroc
+              ? { bar: '#0D9488', bg: '#CCFBF1', fg: '#0F766E', Icon: PenLine,        kindLabel: 'QROC' }
               : dp
               ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList,  kindLabel: 'DP' }
               : { bar: '#2563EB', bg: '#E5F1FF', fg: '#1E4D8B', Icon: GraduationCap,  kindLabel: 'QCM' };

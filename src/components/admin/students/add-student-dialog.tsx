@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CollegeAccessPicker, OfferPicker, MG_COLLEGE_ID, type College, type AccessValue } from './college-access-picker';
+import { CollegeAccessPicker, OfferPicker, type College, type AccessValue } from './college-access-picker';
 
 type OfferOption = { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] };
 
@@ -39,7 +39,8 @@ export function AddStudentDialog({
   const [pending, start] = useTransition();
 
   const [offer, setOffer] = useState<OfferOption['id']>('essentiel');
-  const [access, setAccess] = useState<AccessValue>({ permissionType: 'all', colleges: [], voie: null });
+  // La voie est désormais obligatoire pour toute spécialité → défaut 'interne'.
+  const [access, setAccess] = useState<AccessValue>({ permissionType: 'all', colleges: [], voie: 'interne' });
 
   const {
     register,
@@ -51,19 +52,19 @@ export function AddStudentDialog({
   const resetAll = () => {
     reset();
     setOffer('essentiel');
-    setAccess({ permissionType: 'all', colleges: [], voie: null });
+    setAccess({ permissionType: 'all', colleges: [], voie: 'interne' });
     setSubmitError(null);
   };
 
   const onSubmit = (identity: IdentityInput) => {
     setSubmitError(null);
-    const mgSelected = access.permissionType === 'college' && access.colleges.includes(MG_COLLEGE_ID);
     const payload = {
       ...identity,
       offer,
       permission_type: access.permissionType,
       colleges: access.permissionType === 'college' ? access.colleges : [],
-      voie: mgSelected ? access.voie : null,
+      // Voie désormais obligatoire pour TOUTE spécialité (plus seulement MG).
+      voie: access.voie ?? 'interne',
     };
     start(async () => {
       const res = await fetch('/api/admin/create-student', {

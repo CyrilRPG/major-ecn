@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { parseScope } from '@/lib/auth/permissions';
-import { CollegeAccessPicker, OfferPicker, MG_COLLEGE_ID, type College, type AccessValue } from './college-access-picker';
+import { CollegeAccessPicker, OfferPicker, type College, type AccessValue } from './college-access-picker';
 
 type OfferOption = { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] };
 
@@ -52,7 +52,8 @@ export function EditStudentDialog({
   const initialAccess: AccessValue = {
     permissionType: initialScope.type,
     colleges: initialScope.type === 'college' ? initialScope.colleges : [],
-    voie: initialScope.voie ?? null,
+    // Voie obligatoire pour toutes les spécialités → défaut 'interne' si absente.
+    voie: initialScope.voie ?? 'interne',
   };
 
   const [firstName, setFirstName] = useState(student.first_name ?? '');
@@ -80,7 +81,7 @@ export function EditStudentDialog({
     setAccess({
       permissionType: sc.type,
       colleges: sc.type === 'college' ? sc.colleges : [],
-      voie: sc.voie ?? null,
+      voie: sc.voie ?? 'interne',
     });
     setSubmitError(null);
   };
@@ -89,7 +90,6 @@ export function EditStudentDialog({
     e.preventDefault();
     setSubmitError(null);
     if (!firstName.trim() || !lastName.trim()) { setSubmitError('Prénom et nom requis.'); return; }
-    const mgSelected = access.permissionType === 'college' && access.colleges.includes(MG_COLLEGE_ID);
     start(async () => {
       // 1) Identité
       const pRes = await fetch('/api/admin/update-profile', {
@@ -114,7 +114,8 @@ export function EditStudentDialog({
           offer,
           permission_type: access.permissionType,
           colleges: access.permissionType === 'college' ? access.colleges : [],
-          voie: mgSelected ? access.voie : null,
+          // Voie obligatoire pour toutes les spécialités (plus seulement MG).
+          voie: access.voie ?? 'interne',
           can_download: canDownload,
         }),
       });
