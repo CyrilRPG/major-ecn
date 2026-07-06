@@ -7,6 +7,7 @@ import { AppShell } from '@/components/shell/app-shell';
 import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
 import { StudentTutorialPopup } from '@/components/student/student-tutorial-popup';
+import { OnboardingTour } from '@/components/student/onboarding-tour';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { parseScope } from '@/lib/auth/permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
@@ -262,6 +263,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
         </AppShell>
       </div>
       {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} />}
+      {profile.role === 'student' && <OnboardingTour />}
       {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
         <StudentTutorialPopup offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'} />
       )}

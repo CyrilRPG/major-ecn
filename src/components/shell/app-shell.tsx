@@ -138,7 +138,7 @@ export function AppShell({
     <div className="flex h-full w-full overflow-hidden">
       {/* Desktop sidebar */}
       {!collapsed && (
-        <aside className="hidden w-[260px] shrink-0 lg:block">{sidebar}</aside>
+        <aside data-tour="student-menu" className="hidden w-[260px] shrink-0 lg:block">{sidebar}</aside>
       )}
 
       {/* Mobile drawer */}

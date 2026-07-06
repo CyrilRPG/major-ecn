@@ -288,6 +288,7 @@ export function Navigator({
           <div key={col.id} className={isDecouverteCol ? 'relative' : undefined}>
             <button
               type="button"
+              data-tour="matiere"
               onClick={() => {
                 toggle(col.id);
                 if (isDecouverteCol) dismissCoachmark();
@@ -389,6 +390,7 @@ export function Navigator({
                   <Link
                     key={c.id}
                     href={`/cours/${c.id}`}
+                    data-tour="cours-item"
                     className={cn(
                       'flex items-start gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
                       c.id === activeCoursId
