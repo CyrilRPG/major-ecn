@@ -54,7 +54,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: "Calendrier EVC PAE 2026 : dates d'inscription sur le CNG, ouverture et clôture, épreuves écrites, choix de poste et postes ouverts (voies interne et externe). Le guide complet.",
     category: 'candidature-dossier',
     readingMinutes: 11,
-    image: '/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-1.png',
+    image: '/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-1.jpeg',
     readers: 0,
     publishedAt: '2026-07-06',
     featured: true,
