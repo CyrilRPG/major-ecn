@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
   {
     t: 'hero',
-    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-2.jpeg',
-    alt: 'Médecin PADHUE préparant les EVC avec la méthode Major ECN',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w1.jpeg',
+    alt: 'Bannière Major ECN « Comment Major ECN accompagne ses candidats aux EVC » : médecin en blouse blanche avec casque audio travaillant sur un ordinateur portable, préparation EVC PAE PADHUE depuis 2011.',
   },
   {
     t: 'h2',
@@ -24,8 +24,8 @@ export const CONTENT: Block[] = [
   },
   {
     t: 'img',
-    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-4.png',
-    alt: 'Connaissances + Méthode + Entraînement + Corrections = Progression : l’équation de la réussite aux EVC',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w2.png',
+    alt: 'Infographie : Connaissances + Méthode + Entraînement + Corrections = Progression, l’équation de la réussite aux EVC.',
     caption: 'Les connaissances seules ne suffisent pas : c’est la combinaison des quatre qui fait la réussite.',
   },
   {
@@ -85,6 +85,11 @@ export const CONTENT: Block[] = [
     text: 'La plateforme Major ECN : des outils concrets',
   },
   {
+    t: 'img',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w3.png',
+    alt: 'Grille des 8 outils de la plateforme Major ECN : QCM, flashcards, dossiers cliniques, annales, révisions transversales, suivi de progression, zooms live et replays, support des enseignants.',
+  },
+  {
     t: 'p',
     html: 'Notre plateforme premium a été conçue autour d’un objectif simple : vous aider à réviser avec méthode, gagner du temps et progresser efficacement jusqu’aux EVC. Elle réunit, organisé par spécialité et par thématique :',
   },
@@ -96,11 +101,6 @@ export const CONTENT: Block[] = [
       '<strong>plus de 10 000 flashcards</strong> pour la mémorisation active ;',
       'les <strong>annales</strong> des sessions précédentes.',
     ],
-  },
-  {
-    t: 'img',
-    src: '/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-1.png',
-    alt: 'Les outils de la plateforme Major ECN : QCM, flashcards, dossiers cliniques, annales, révisions transversales, suivi de progression, zooms live et support des enseignants',
   },
   {
     t: 'p',
@@ -124,9 +124,9 @@ export const CONTENT: Block[] = [
   },
   {
     t: 'img',
-    src: '/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-8.png',
-    alt: 'Tableau de bord personnalisé Major ECN : progression globale, temps de révision, QCM réalisés, courbe de performance et calendrier EVC 2026',
-    caption: 'Le tableau de bord suit votre progression et concentre vos efforts sur les thèmes à plus fort impact le jour J.',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w4.png',
+    alt: 'Capture d’un cours de la plateforme Major ECN (item BPCO en pneumologie) : onglets Aperçu, Fiche, Fiche éclair, DP-QI, Flashcards et Prise de notes, avec fiche de cours exhaustive, fiche éclair, dossiers progressifs & QI et flashcards.',
+    caption: 'Chaque item propose fiche de cours, dossiers au format EVC, flashcards et prise de notes, organisés par spécialité.',
   },
   {
     t: 'p',
@@ -213,9 +213,20 @@ export const CONTENT: Block[] = [
     ],
   },
   {
+    t: 'img',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w5.jpeg',
+    alt: 'Médecin en blouse blanche souriant, assis à un bureau devant son ordinateur portable, en pleine session de préparation à distance.',
+  },
+  {
     t: 'callout',
     tone: 'tip',
     html: "C'est précisément pour éviter cela que Major ECN existe : sécuriser votre tentative et gagner du temps sur votre parcours.",
+  },
+  {
+    t: 'img',
+    src: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-w6.png',
+    alt: 'Tableau de bord personnalisé Major ECN : progression globale 68 %, temps de révision, QCM réalisés, items maîtrisés, courbe d’évolution de la performance, répartition des révisions, priorités à travailler et calendrier EVC 2026.',
+    caption: 'Le tableau de bord suit votre progression et concentre vos efforts sur les thèmes à plus fort impact le jour J.',
   },
   {
     t: 'h2',

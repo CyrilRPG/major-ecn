@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/evc-voie-externe-comprendre-1.png",
-  "alt": "Médecin PADHUE préparant la voie externe des EVC avant son arrivée en France"
+  "src": "/blog/blog2026/evc-voie-externe-comprendre-w1.png",
+  "alt": "Candidats en train de composer sur table dans une salle d'examen, avec le logo Major ECN et le titre « EVC voie externe : tout comprendre avant de vous lancer »"
  },
  {
   "t": "h2",
@@ -32,8 +32,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/evc-voie-externe-comprendre-2.png",
-  "alt": "Infographie de synthèse de la voie externe des EVC 2026 : deux épreuves EVCF et EVCP le même jour, 1 003 postes, 13 spécialités et inscriptions jusqu'au 16 juillet 2026",
+  "src": "/blog/blog2026/evc-voie-externe-comprendre-w2.png",
+  "alt": "Infographie de synthèse « Voie externe EVC 2026 en un coup d'œil » : les deux épreuves EVCF (QROC, théorie) et EVCP (dossiers cliniques, raisonnement), 2 heures chacune, puis 1 003 postes, 13 spécialités, 4 h d'épreuves au total et inscription jusqu'au 16 juillet 2026",
   "caption": "La voie externe des EVC 2026 en un coup d'œil."
  },
  {
@@ -67,8 +67,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/evc-voie-externe-comprendre-3.png",
-  "alt": "Comparaison des deux épreuves de la voie externe : l'EVCF (connaissances fondamentales, QROC) et l'EVCP (connaissances pratiques, dossiers cliniques progressifs), deux heures chacune et seuil éliminatoire à 6/20",
+  "src": "/blog/blog2026/evc-voie-externe-comprendre-w3.png",
+  "alt": "Comparatif des deux épreuves de la voie externe : l'EVCF (connaissances fondamentales, QROC, théorie et balayage du programme) face à l'EVCP (connaissances pratiques, dossiers cliniques progressifs, raisonnement), avec en points communs 2 heures chacune, même coefficient, même jour à Rungis et seuil éliminatoire à 6/20",
   "caption": "EVCF et EVCP : deux épreuves distinctes, le même jour, à Rungis."
  },
  {
@@ -206,8 +206,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/evc-voie-externe-comprendre-4.png",
-  "alt": "Diagramme en barres de la répartition des 1 003 postes de la voie externe 2026 par spécialité, de la MIPIC (213 postes) à la pneumologie (17 postes)",
+  "src": "/blog/blog2026/evc-voie-externe-comprendre-w4.png",
+  "alt": "Diagramme en barres horizontales classant les 1 003 postes de la voie externe 2026 par spécialité, de la MIPIC (213 postes) et la psychiatrie (198) en tête jusqu'à la médecine cardiovasculaire (20) et la pneumologie (17) en bas",
   "caption": "Répartition des 1 003 postes de voie externe 2026, spécialité par spécialité."
  },
  {

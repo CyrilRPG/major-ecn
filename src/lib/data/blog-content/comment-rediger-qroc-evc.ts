@@ -3,7 +3,7 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/comment-rediger-qroc-evc-1.jpeg",
+  "src": "/blog/blog2026/comment-rediger-qroc-evc-w1.jpeg",
   "alt": "Main tenant un stylo au-dessus d'une copie d'examen, avec le titre « Comment rédiger une QROC aux EVC »"
  },
  {

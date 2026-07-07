@@ -27,11 +27,16 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     scope === null ? { read: true, write: true } : { read: canRead(scope, t), write: canWrite(scope, t) };
   const can = {
     qcm: allow('qcm'),
+    dp: allow('dp'),
+    qroc: allow('qroc'),
     fiche: allow('fiche'),
     video: allow('video'),
     annale: allow('annale'),
     flashcards: allow('flashcards'),
   };
+  // L'onglet « QCM & Annales » regroupe QCM, DP et QROC : visible dès qu'un des trois (ou les annales) est accessible.
+  const canQcmFamilyRead = can.qcm.read || can.dp.read || can.qroc.read;
+  const canQcmFamilyWrite = can.qcm.write || can.dp.write || can.qroc.write;
   const supabase = await createClient();
 
   const { data: c } = await supabase
@@ -103,11 +108,11 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
         {c.description && <p className="mt-2 text-(--color-ink-soft) max-w-2xl">{c.description}</p>}
       </header>
 
-      <Tabs defaultValue={can.video.read ? 'video' : can.fiche.read ? 'fiche' : can.qcm.read || can.annale.read ? 'qcm' : 'flashcards'}>
+      <Tabs defaultValue={can.video.read ? 'video' : can.fiche.read ? 'fiche' : canQcmFamilyRead || can.annale.read ? 'qcm' : 'flashcards'}>
         <TabsList>
           {can.video.read && <TabsTrigger value="video"><PlayCircle className="h-4 w-4 mr-1.5" /> Vidéo</TabsTrigger>}
           {can.fiche.read && <TabsTrigger value="fiche"><FileText className="h-4 w-4 mr-1.5" /> Fiche</TabsTrigger>}
-          {(can.qcm.read || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
+          {(canQcmFamilyRead || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
           {can.flashcards.read && <TabsTrigger value="flashcards"><Layers3 className="h-4 w-4 mr-1.5" /> Flashcards</TabsTrigger>}
           {can.video.read && <TabsTrigger value="seance-approfondie"><Video className="h-4 w-4 mr-1.5" /> Seance approfondie</TabsTrigger>}
         </TabsList>
@@ -194,7 +199,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           </TabsContent>
         )}
 
-        {(can.qcm.read || can.annale.read) && (
+        {(canQcmFamilyRead || can.annale.read) && (
         <TabsContent value="qcm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
@@ -242,13 +247,13 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
             </Card>
           </div>
           {/* Génération IA — réservée à l'admin (les profs n'ont aucune trace d'IA). */}
-          {can.qcm.write && scope === null && (
+          {canQcmFamilyWrite && scope === null && (
             <div className="mt-4">
               <GenerateButton coursId={coursId} kind="qcm" />
             </div>
           )}
 
-          {can.qcm.write && (
+          {canQcmFamilyWrite && (
             <div className="mt-4">
               <QcmSeriesManager
                 coursId={coursId}

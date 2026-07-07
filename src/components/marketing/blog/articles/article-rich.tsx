@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, Camera, List, Quote } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Camera, Gift, List, Quote, Sparkles } from 'lucide-react';
 import { ArticleHeader, ArticleFinalCta, PrepCtaCard, ARTICLE_FONT } from '../article-shell';
 import { NewsletterForm } from '../newsletter-form';
 import { getPublishedArticles, type BlogArticleMeta } from '@/lib/data/blog-articles';
@@ -237,6 +237,36 @@ function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string
   }
 }
 
+/** Petite pub « Espace découverte gratuit » — affichée dans la colonne de droite. */
+function DiscoveryAdCard() {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-[#FACBD0] bg-[linear-gradient(160deg,#FFF7F8_0%,#FFE9EC_100%)] p-5 shadow-sm">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E4002B] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-white">
+        <Gift className="h-3 w-3" /> Gratuit
+      </span>
+      <h3 className="mt-3 text-[15px] font-extrabold leading-snug text-[#1A2233]">
+        Testez la préparation Major ECN
+      </h3>
+      <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#52607A]">
+        Accédez gratuitement à l&rsquo;<strong className="font-bold text-[#1A2233]">espace découverte</strong> :
+        QCM, dossiers cliniques et flashcards calibrés au niveau réel des EVC, sans engagement.
+      </p>
+      <Link
+        href="/espace-decouverte"
+        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-extrabold text-white shadow-sm transition-transform hover:scale-[1.01]"
+      >
+        <Sparkles className="h-4 w-4" /> Accéder à l&rsquo;espace découverte
+      </Link>
+      <Link
+        href="/profil-evc"
+        className="mt-2 block text-center text-[12px] font-semibold text-[#E4002B] hover:underline"
+      >
+        Situer mon niveau avec le Profil EVC →
+      </Link>
+    </section>
+  );
+}
+
 export function ArticleRich({
   article,
   blocks: blocksProp,
@@ -318,6 +348,7 @@ export function ArticleRich({
           </article>
 
           <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <DiscoveryAdCard />
             <PrepCtaCard />
             <section className="rounded-2xl border border-[#FACBD0] bg-[#FFF1F3] p-5">
               <h3 className="text-[15px] font-bold text-[#1A2233]">Recevez nos meilleurs conseils EVC</h3>

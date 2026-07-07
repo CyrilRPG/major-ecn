@@ -1,15 +1,21 @@
 import { z } from 'zod';
 
-export const CONTENT_TYPES = ['qcm', 'fiche', 'video', 'annale', 'flashcards'] as const;
+export const CONTENT_TYPES = ['qcm', 'dp', 'qroc', 'fiche', 'video', 'annale', 'flashcards'] as const;
 export type ContentType = typeof CONTENT_TYPES[number];
 
 export const CONTENT_TYPE_LABEL: Record<ContentType, string> = {
   qcm: 'QCM',
+  dp: 'Dossiers progressifs (DP)',
+  qroc: 'QROC',
   fiche: 'Fiches',
   video: 'Vidéos',
   annale: 'Annales',
   flashcards: 'Flashcards',
 };
+
+/** Sous-types de séries QCM gérés séparément dans les permissions. */
+export const QCM_KINDS = ['qcm', 'dp', 'qroc'] as const;
+export type QcmKind = typeof QCM_KINDS[number];
 
 /** Niveau d'accès par type de contenu. */
 export const PERMISSION_LEVELS = ['none', 'read', 'write', 'rw'] as const;
@@ -65,14 +71,40 @@ export type ProfessorScope = {
   content_permissions: Partial<Record<ContentType, PermissionLevel>>;
 };
 
+/**
+ * Niveau effectif d'un type de contenu. Rétrocompat : DP et QROC (nouveaux types)
+ * héritent du niveau « qcm » quand ils ne sont pas définis explicitement — ainsi
+ * les professeurs créés avant la séparation, qui n'ont que « qcm », gardent l'accès
+ * à l'ensemble QCM + DP + QROC.
+ */
+export function effectiveLevel(
+  scope: ProfessorScope | null | undefined,
+  type: ContentType,
+): PermissionLevel {
+  const cp = scope?.content_permissions;
+  if (!cp) return 'none';
+  const direct = cp[type];
+  if (direct !== undefined) return direct;
+  if (type === 'dp' || type === 'qroc') return cp.qcm ?? 'none';
+  return 'none';
+}
+
 /** Helpers d'enforcement. */
 export function canRead(scope: ProfessorScope | null | undefined, type: ContentType): boolean {
-  const p = scope?.content_permissions?.[type] ?? 'none';
+  const p = effectiveLevel(scope, type);
   return p === 'read' || p === 'rw';
 }
 export function canWrite(scope: ProfessorScope | null | undefined, type: ContentType): boolean {
-  const p = scope?.content_permissions?.[type] ?? 'none';
+  const p = effectiveLevel(scope, type);
   return p === 'write' || p === 'rw';
+}
+/** Accès en lecture à au moins un des sous-types QCM/DP/QROC. */
+export function canReadAnyQcm(scope: ProfessorScope | null | undefined): boolean {
+  return canRead(scope, 'qcm') || canRead(scope, 'dp') || canRead(scope, 'qroc');
+}
+/** Accès en écriture à au moins un des sous-types QCM/DP/QROC. */
+export function canWriteAnyQcm(scope: ProfessorScope | null | undefined): boolean {
+  return canWrite(scope, 'qcm') || canWrite(scope, 'dp') || canWrite(scope, 'qroc');
 }
 export function hasAnyContentAccess(scope: ProfessorScope | null | undefined): boolean {
   if (!scope?.content_permissions) return false;

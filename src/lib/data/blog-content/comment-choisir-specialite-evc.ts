@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/comment-choisir-specialite-evc-1.png",
-  "alt": "Les quatre critères pour choisir sa spécialité aux EVC : compétences, éligibilité, nombre de postes et concurrence"
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-w1.jpeg",
+  "alt": "Carte-titre de l'article « Comment choisir sa spécialité aux EVC » : un médecin en blouse blanche travaille sur un ordinateur portable, avec les quatre critères de choix (compétences, éligibilité, nombre de postes, niveau de concurrence)"
  },
  {
   "t": "h2",
@@ -21,6 +21,12 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Certaines spécialités ouvrent des centaines de postes ; d'autres, une poignée. Certaines sont accessibles à tous les médecins généralistes ; d'autres exigent un diplôme de spécialité. Bien choisir, c'est mettre les probabilités de votre côté avant même d'ouvrir un livre."
+ },
+ {
+  "t": "img",
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-w2.png",
+  "alt": "Infographie des quatre critères pour choisir sa spécialité aux EVC présentés en cartes : critère 1 compétences, critère 2 éligibilité, critère 3 nombre de postes, critère 4 concurrence",
+  "caption": "Les quatre critères à croiser pour faire le bon choix de spécialité aux EVC."
  },
  {
   "t": "callout",
@@ -142,7 +148,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/comment-choisir-specialite-evc-2.png",
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-w3.png",
   "alt": "Diagramme en barres du nombre de postes de médecins ouverts par spécialité en voie externe aux EVC 2026, de la MIPIC (213) à la pneumologie (17)",
   "caption": "Répartition officielle des postes de la voie externe pour la session 2026 : la MIPIC et la psychiatrie dominent largement."
  },
@@ -191,12 +197,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Or deux d'entre elles — la MIPIC (213 postes en voie externe) et la psychiatrie (198 postes) — sont parmi les plus dotées de la session, tout en étant nouvelles, donc moins concurrentielles pour l'instant. Pour un généraliste, elles méritent un examen sérieux, à condition bien sûr de pouvoir s'y préparer sérieusement."
- },
- {
-  "t": "img",
-  "src": "/blog/blog2026/comment-choisir-specialite-evc-4.png",
-  "alt": "Tableau de bord de la plateforme Major ECN de préparation aux EVC (PAE) : progression, QCM réalisés, cours en direct et suivi personnalisé par spécialité",
-  "caption": "La plateforme Major ECN : QCM et cas cliniques calibrés par spécialité pour vous entraîner en conditions réelles."
  },
  {
   "t": "callout",
@@ -259,7 +259,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/comment-choisir-specialite-evc-3.png",
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-w4.png",
   "alt": "Arbre de décision en quatre étapes pour choisir sa spécialité EVC : diplôme, ouverture de la voie, niveau attendu puis rapport postes / candidats, aboutissant à « ma spécialité »",
   "caption": "Le bon choix coche les quatre cases : compétent, ouvert, éligible, ratio favorable."
  },
@@ -301,6 +301,12 @@ export const CONTENT: Block[] = [
   "t": "callout",
   "tone": "source",
   "html": "Les données de postes et de spécialités ouvertes proviennent des arrêtés du 12 juin 2026 (CNG, Journal officiel du 13 juin 2026). Les chiffres évoluant d'une session à l'autre, vérifiez toujours la liste officielle sur www.cng.sante.fr avant de fixer votre choix."
+ },
+ {
+  "t": "img",
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-w5.png",
+  "alt": "Tableau de bord de la plateforme Major ECN de préparation aux EVC (PAE) : progression globale, temps de révision, QCM réalisés, items maîtrisés, cours en direct et suivi personnalisé par spécialité",
+  "caption": "La plateforme Major ECN : QCM, cas cliniques et suivi calibrés par spécialité pour vous entraîner en conditions réelles."
  },
  {
   "t": "related",

@@ -6,10 +6,11 @@ import Link from 'next/link';
 import {
   ArrowUp, ArrowDown, Copy, Trash2, Plus, Save, Rocket, Loader2, ExternalLink,
   Type, Heading2, Heading3, List, ListOrdered, Image as ImageIcon, Images,
-  Table2, StickyNote, Quote, Megaphone, Link2,
+  Table2, StickyNote, Quote, Megaphone, Link2, Eye, X,
 } from 'lucide-react';
 import type { Block, ImageLayout } from '@/lib/data/blog-content/types';
-import { BLOG_CATEGORIES, type BlogCategory } from '@/lib/data/blog-articles';
+import { BLOG_CATEGORIES, type BlogCategory, type BlogArticleMeta } from '@/lib/data/blog-articles';
+import { ArticleRich } from '@/components/marketing/blog/articles/article-rich';
 import { savePost, type BlogPostInput } from './actions';
 import { RichText } from './rich-text';
 import { ImageUploader } from './image-uploader';
@@ -106,7 +107,24 @@ export function BlogEditor({
     (initial?.blocks ?? []).filter((b) => b.t !== 'hero').map((b) => ({ id: uid(), block: b })),
   );
 
+  const [preview, setPreview] = useState(false);
+
   const effectiveSlug = slugTouched ? slug : localSlugify(title);
+
+  // Données de prévisualisation : rendu identique à la page publiée (ArticleRich).
+  const previewMeta: BlogArticleMeta = {
+    slug: effectiveSlug || 'apercu',
+    title: title || 'Titre de l’article',
+    excerpt,
+    category,
+    readingMinutes,
+    image: heroImage ?? undefined,
+    readers: 0,
+    publishedAt: publishedAt || undefined,
+  };
+  const previewBlocks: Block[] = heroImage
+    ? [{ t: 'hero', src: heroImage, alt: title }, ...items.map((it) => it.block)]
+    : items.map((it) => it.block);
 
   function setBlock(id: string, block: Block) {
     setItems((prev) => prev.map((it) => (it.id === id ? { ...it, block } : it)));
@@ -169,7 +187,11 @@ export function BlogEditor({
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+    <>
+      {preview && (
+        <PreviewOverlay meta={previewMeta} blocks={previewBlocks} onClose={() => setPreview(false)} />
+      )}
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Colonne principale : contenu */}
       <div className="min-w-0 space-y-4">
         <section className="rounded-xl border border-(--color-border) bg-white p-4 sm:p-5">
@@ -249,6 +271,13 @@ export function BlogEditor({
             </div>
           )}
           <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => setPreview(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#E4002B] bg-white px-3 py-2 text-sm font-bold text-[#E4002B] hover:bg-[#FFF1F3]"
+            >
+              <Eye className="h-4 w-4" /> Aperçu
+            </button>
             <button
               type="button"
               disabled={pending}
@@ -332,6 +361,41 @@ export function BlogEditor({
           </label>
         </section>
       </aside>
+      </div>
+    </>
+  );
+}
+
+/* ───────────────────────── Aperçu plein écran ───────────────────────── */
+function PreviewOverlay({
+  meta,
+  blocks,
+  onClose,
+}: {
+  meta: BlogArticleMeta;
+  blocks: Block[];
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-white">
+      <div className="flex items-center justify-between border-b border-(--color-border) bg-white px-4 py-2.5">
+        <span className="inline-flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
+          <Eye className="h-4 w-4 text-[#E4002B]" /> Aperçu de l’article
+          <span className="rounded-full bg-[#FEF3C7] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#92400E]">
+            Non enregistré
+          </span>
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-1.5 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft)"
+        >
+          <X className="h-4 w-4" /> Fermer l’aperçu
+        </button>
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <ArticleRich article={meta} blocks={blocks} />
+      </div>
     </div>
   );
 }

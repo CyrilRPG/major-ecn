@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-3.jpeg",
-  "alt": "Médecin à diplôme étranger travaillant sur son ordinateur portable pour préparer les EVC"
+  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-w1.jpeg",
+  "alt": "Visuel Major ECN « EVC et EDN : pourquoi confondre les deux peut vous coûter votre concours », avec des candidats qui composent par écrit en salle d'examen"
  },
  {
   "t": "h2",
@@ -72,6 +72,12 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Ce ne sont pas des épreuves pour des étudiants. Ce sont des épreuves pour des praticiens — souvent avec des années, parfois des décennies, d'expérience clinique derrière eux."
+ },
+ {
+  "t": "img",
+  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-w2.png",
+  "alt": "Schéma comparant les deux parcours : l'étudiant français passe les EDN pour choisir sa spécialité, le médecin PADHUE passe les EVC dans le cadre de la PAE pour obtenir l'autorisation d'exercice en France",
+  "caption": "Deux publics, deux objectifs : les EDN classent les étudiants français, les EVC ouvrent l'autorisation d'exercice aux médecins PADHUE."
  },
  {
   "t": "h2",
@@ -161,8 +167,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-3.png",
-  "alt": "Les 5 erreurs fréquentes des candidats PADHUE aux EVC : confondre EDN et EVC, ne faire que des QCM, oublier les recommandations HAS, ne jamais rédiger, ne jamais faire corriger ses copies",
+  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-w3.png",
+  "alt": "Cartes récapitulant les cinq erreurs fréquentes des candidats PADHUE aux EVC : confondre EDN et EVC, ne faire que des QCM, oublier les recommandations HAS, ne jamais rédiger, ne jamais faire corriger ses copies",
   "caption": "Les cinq erreurs de préparation qui coûtent le plus de points aux candidats PADHUE."
  },
  {

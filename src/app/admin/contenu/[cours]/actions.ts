@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { assertCanWrite, requireContentEditor } from '@/lib/auth/require-role';
+import { assertCanWrite, assertCanWriteAnyQcm, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { embed, toPgVector } from '@/lib/ai/embeddings';
@@ -344,7 +344,7 @@ type QcmGenShape = {
 
 export async function generateQcmAction(coursId: string): Promise<GenResult> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
   if (!ctx.hasFiche) {

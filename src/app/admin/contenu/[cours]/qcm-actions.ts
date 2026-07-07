@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { assertCanWrite, requireContentEditor } from '@/lib/auth/require-role';
+import { assertCanWrite, assertCanWriteAnyQcm, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
 import { sanitizeFlashcardHtml, flashcardPlainText, flashcardHasContent } from '@/lib/flashcards/rich-text';
@@ -47,7 +47,7 @@ export async function createQcmSerieAction(input: {
   vignette?: string;
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   if (!input.label.trim()) return { error: 'Intitulé requis.' };
 
   const admin = createAdminClient();
@@ -96,7 +96,7 @@ export async function updateSerieVignetteAction(input: {
   vignette: string;
 }): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   const admin = createAdminClient();
   const { data: serie } = await admin.from('qcm_series').select('label').eq('id', input.serieId).maybeSingle();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,7 +123,7 @@ export async function updateSerieVignetteAction(input: {
 
 export async function deleteQcmSerieAction(serieId: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   const admin = createAdminClient();
   const { data: serie } = await admin.from('qcm_series').select('label').eq('id', serieId).maybeSingle();
   const { error } = await admin.from('qcm_series').delete().eq('id', serieId);
@@ -156,7 +156,7 @@ export async function upsertQcmQuestionAction(input: {
   insertAfterQuestionId?: string | null;
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
 
   const parsed = QuestionSchema.safeParse(input.question);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
@@ -273,7 +273,7 @@ export async function upsertQcmQuestionAction(input: {
 
 export async function deleteQcmQuestionAction(questionId: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   const admin = createAdminClient();
   // Snapshot complet (question + items) AVANT delete → permet la restauration depuis les logs.
   const { data: snapshot } = await admin
@@ -479,7 +479,7 @@ export async function restoreFromLogAction(logId: string): Promise<{ ok: true; e
 
 export async function uploadQcmImageAction(formData: FormData): Promise<{ ok: true; url: string } | { error: string }> {
   const { scope } = await requireContentEditor();
-  try { assertCanWrite(scope, 'qcm'); } catch (e) { return { error: (e as Error).message }; }
+  try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
   const file = formData.get('file');
   if (!(file instanceof File)) return { error: 'Fichier manquant.' };
   if (file.size > 5 * 1024 * 1024) return { error: 'Image trop volumineuse (max 5 Mo).' };

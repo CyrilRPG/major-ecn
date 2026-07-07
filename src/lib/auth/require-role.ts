@@ -2,7 +2,7 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { getCurrentUserAndProfile } from './get-profile';
 import {
-  canRead, canWrite, hasAnyContentAccess,
+  canRead, canWrite, canWriteAnyQcm, hasAnyContentAccess,
   type ContentType, type ProfessorScope,
 } from '@/lib/schemas/professor';
 
@@ -75,6 +75,17 @@ export function assertCanWrite(scope: ProfessorScope | null, type: ContentType) 
   if (scope === null) return; // admin
   if (!canWrite(scope, type)) {
     throw new Error(`Permission insuffisante pour modifier le contenu de type "${type}".`);
+  }
+}
+
+/**
+ * Écriture sur les séries QCM/DP/QROC : l'éditeur de contenu regroupe ces trois
+ * sous-types. On autorise dès que le prof a l'écriture sur l'un d'eux.
+ */
+export function assertCanWriteAnyQcm(scope: ProfessorScope | null) {
+  if (scope === null) return; // admin
+  if (!canWriteAnyQcm(scope)) {
+    throw new Error('Permission insuffisante pour modifier les QCM / DP / QROC.');
   }
 }
 

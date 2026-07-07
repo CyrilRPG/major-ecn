@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-4.jpeg",
-  "alt": "Carte de couverture Major ECN : « EVC voie interne, tout comprendre avant de vous lancer », avec une médecin en blouse blanche travaillant sur un ordinateur portable"
+  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-w1.jpeg",
+  "alt": "Carte de couverture Major ECN « EVC voie interne : tout comprendre avant de vous lancer », avec une médecin en blouse blanche et stéthoscope travaillant sur un ordinateur portable, et quatre repères en bas : Éligibilité, QCM, Calendrier 2026 et Préparation"
  },
  {
   "t": "h2",
@@ -83,8 +83,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-5.png",
-  "alt": "Schéma du parcours de la voie interne des EVC : voie interne, éligibilité PADHUE en poste, format QCM par spécialité, épreuve unique de 2 heures, 2 896 postes, aboutissant à la procédure d'autorisation d'exercice (PAE)",
+  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-w2.png",
+  "alt": "Schéma vertical du parcours de la voie interne des EVC : voie interne (concours EVC-PAE), éligibilité PADHUE déjà en poste en France (2 ans ETP), format QCM (QRU + QRM par spécialité, différent de l'EDN), épreuve unique de 2 heures à Rungis en novembre 2026, 2 896 postes de médecins pour la session 2026, aboutissant à la procédure d'autorisation d'exercice (PAE)",
   "caption": "Le parcours de la voie interne, de l'éligibilité à la procédure d'autorisation d'exercice."
  },
  {
@@ -114,12 +114,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Dans cette logique, une discordance correspond à un écart entre votre réponse et la correction : une bonne case non cochée, ou une mauvaise case cochée. Plus vous accumulez de discordances, plus votre note baisse — et une seule réponse jugée inacceptable, ou l'oubli d'une réponse indispensable, peut ramener la question entière à zéro."
- },
- {
-  "t": "img",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-7.png",
-  "alt": "Écran de correction d'un QRM illustrant la logique de discordances : une bonne réponse non cochée, une erreur à ne pas cocher et des bonnes réponses bien cochées, chacune signalée en vert ou en rouge",
-  "caption": "Exemple de correction d'un QRM : chaque écart avec le corrigé constitue une discordance."
  },
  {
   "t": "p",
@@ -214,6 +208,18 @@ export const CONTENT: Block[] = [
   "html": "Une préparation efficace à la voie interne repose sur quelques principes simples."
  },
  {
+  "t": "img",
+  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-w3.png",
+  "alt": "Écran d'entraînement Major ECN affichant l'énoncé d'un QRM (« Concernant le traitement de fond de l'asthme, quelle(s) proposition(s) est (sont) exacte(s) ? ») avec cinq propositions à cocher de A à E, un chronomètre en haut et un bouton Valider",
+  "caption": "Un QRM type de la plateforme Major ECN, calibré au niveau réel des EVC."
+ },
+ {
+  "t": "img",
+  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-w4.png",
+  "alt": "Écran de correction du même QRM illustrant la notation par discordances : une bonne réponse non cochée (A) signalée en vert, une erreur à ne pas cocher (C) signalée en rouge, et des bonnes réponses bien cochées (B, D) en vert, chacune assortie d'une explication",
+  "caption": "La correction du QRM : chaque écart avec le corrigé constitue une discordance."
+ },
+ {
   "t": "ul",
   "items": [
    "<strong>S'entraîner sur des QCM au bon niveau</strong> — QRU et QRM calibrés sur les attentes réelles des EVC, pas sur des QCM d'externat.",
@@ -222,12 +228,6 @@ export const CONTENT: Block[] = [
    "<strong>Mettre à jour ses recommandations HAS en continu</strong>, dans sa spécialité.",
    "<strong>Faire analyser ses erreurs</strong>, pour ne pas reproduire les mêmes semaines après semaine."
   ]
- },
- {
-  "t": "img",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-6.png",
-  "alt": "Interface d'entraînement Major ECN affichant un QRM sur le traitement de fond de l'asthme, avec cinq propositions à cocher (A à E) et un bouton Valider",
-  "caption": "Un QRM type de la plateforme Major ECN, calibré au niveau réel des EVC."
  },
  {
   "t": "h2",

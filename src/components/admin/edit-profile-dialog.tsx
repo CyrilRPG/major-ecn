@@ -60,11 +60,19 @@ function initialScope(raw: unknown): {
   if (!s.content_permissions && Array.isArray(s.content_types)) {
     for (const t of s.content_types) fromOld[t] = 'rw';
   }
+  const perms: Partial<Record<ContentType, PermissionLevel>> = { ...(s.content_permissions ?? fromOld) };
+  // Rétrocompat : les profs créés avant la séparation n'ont que « qcm ». On fait
+  // hériter DP et QROC de qcm à l'ouverture, pour afficher le bon état et ne pas
+  // révoquer leur accès lors de l'enregistrement.
+  if (perms.qcm !== undefined) {
+    if (perms.dp === undefined) perms.dp = perms.qcm;
+    if (perms.qroc === undefined) perms.qroc = perms.qcm;
+  }
   return {
     permission_type: s.type === 'college' ? 'college' : 'all',
     colleges: Array.isArray(s.colleges) ? s.colleges : [],
     cours: Array.isArray(s.cours) ? s.cours : [],
-    perms: s.content_permissions ?? fromOld,
+    perms,
   };
 }
 

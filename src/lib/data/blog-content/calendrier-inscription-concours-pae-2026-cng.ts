@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-1.jpeg",
-  "alt": "Carte-titre Major ECN : calendrier et inscription au concours PAE 2026 sur le site du CNG, avec un médecin en tenue de bloc consultant une tablette"
+  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-w1.jpeg",
+  "alt": "Carte-titre Major ECN « Calendrier et inscription au concours PAE 2026 sur le site », avec un soignant en tunique bleue et stéthoscope tenant une tablette, et les repères Dates clés, Inscription, Épreuves et Postes ouverts"
  },
  {
   "t": "h2",
@@ -94,8 +94,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-2.png",
-  "alt": "Frise chronologique de la session EVC 2026 : inscriptions du 17 juin au 16 juillet 2026 sur cng.sante.fr, épreuves écrites à partir de novembre 2026 à Rungis, puis choix de poste au 1er trimestre 2027",
+  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-w2.png",
+  "alt": "Frise chronologique en trois étapes de la session EVC 2026 : Inscriptions du 17 juin au 16 juillet 2026 sur cng.sante.fr, Épreuves écrites à partir de novembre 2026 à Rungis en présentiel, puis Choix de poste au 1er trimestre 2027 avec auditions en établissements",
   "caption": "Les trois grands jalons de la session EVC (PAE) 2026, de l'inscription au choix de poste."
  },
  {
@@ -120,8 +120,8 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "img",
-  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-3.png",
-  "alt": "Tableau comparatif des deux voies du concours : voie interne (médecins PADHUE en poste depuis 2 ans, une épreuve de 2 h en QCM, 2 896 postes) et voie externe (PADHUE sans condition d'exercice, deux épreuves de 2 h en QROC et dossiers cliniques, 1 003 postes dans 13 spécialités)",
+  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-w3.png",
+  "alt": "Deux cartes comparant les voies du concours : voie interne (médecins PADHUE déjà en poste en France depuis 2 ans minimum, 1 épreuve unique de 2 h, format QCM en QRU et QRM, 2 896 postes de médecins en 2026) et voie externe (PADHUE à l'étranger ou en France depuis moins de 2 ans, 2 épreuves de 2 h EVCF et EVCP, format QROC et dossiers cliniques, 1 003 postes de médecins dans 13 spécialités en 2026)",
   "caption": "Voie interne et voie externe : éligibilité, format des épreuves et postes ouverts en 2026."
  },
  {
@@ -256,6 +256,11 @@ export const CONTENT: Block[] = [
   "t": "callout",
   "tone": "source",
   "html": "Les informations de cet article proviennent du CNG (arrêté du 12 juin 2026, publié au Journal officiel le 13 juin 2026). Les dates et modalités pouvant évoluer, vérifiez toujours la page officielle de la session sur www.cng.sante.fr avant toute démarche."
+ },
+ {
+  "t": "img",
+  "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-w4.png",
+  "alt": "Capture du tableau de bord de la plateforme Major ECN pour préparer les EVC (PAE) : progression globale, temps de révision, QCM réalisés et items maîtrisés, agenda des cours en direct, courbe d'évolution des performances, répartition des révisions et compteur EVC 2026, avec un panneau latéral listant entraînement ciblé, cours en direct, replays et suivi personnalisé"
  },
  {
   "t": "related",
