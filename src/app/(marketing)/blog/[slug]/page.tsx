@@ -40,7 +40,9 @@ export async function generateMetadata({
   };
 }
 
-export const revalidate = 3600;
+// Revalidation courte : un article programmé (published_at futur) passe en ligne
+// automatiquement dans les ~5 min suivant sa date, sans redéploiement.
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return getPublishedArticles().map((a) => ({ slug: a.slug }));

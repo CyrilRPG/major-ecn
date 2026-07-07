@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { BlogIndex } from '@/components/marketing/blog/blog-index';
 
-export const revalidate = 3600;
+// Revalidation courte pour que les articles programmés apparaissent/disparaissent
+// de la liste dans les ~5 min suivant leur date de publication.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   alternates: { canonical: '/blog' },
