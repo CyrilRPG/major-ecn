@@ -61,6 +61,11 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Rhumatologie':              { bg: '#DDEAFB', accent: '#2F5484', Icon: JointArt,          image: '/flashcards-decor/rhumato.png' },
   'Réanimation':               { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
   'Reanimation':               { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
+  // Collège top-level « Médecine Intensive-Réanimation » (col-mir) : même ambiance
+  // flashcard que la Réanimation de médecine générale (icône + couleur associées).
+  'Médecine Intensive-Réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
+  'Médecine Intensive Réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
+  'Médecine intensive-réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
   'Urgences':                  { bg: '#FBDECC', accent: '#843200', Icon: HeartbeatArt,      image: '/flashcards-decor/urgences.png' },
   'Pharmacologie':             { bg: '#FBE4EA', accent: '#844354', Icon: PillArt,           image: '/flashcards-decor/pharmaco.png' },
   'Dermatologie':              { bg: '#E5DAF0', accent: '#4D2D6C', Icon: HumanBodyArt,      image: '/flashcards-decor/dermato.png' },
