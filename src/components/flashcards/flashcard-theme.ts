@@ -48,6 +48,11 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Gériatrie':                 { bg: '#DAF0E7', accent: '#2D6B51', Icon: ElderlyArt,        image: '/flashcards-decor/geriatrie.png' },
   'Gynécologie':               { bg: '#FBD6DF', accent: '#841933', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
   'Obstétrique':               { bg: '#FBD6DF', accent: '#841933', Icon: PregnantWomanArt,  image: '/flashcards-decor/obstetrique.png' },
+  // Collège top-level « Gynécologie-obstétrique » (col-gynecologie) : icône +
+  // décor de la gynécologie, couleur associée (rose/bordeaux gynéco).
+  'Gynécologie-obstétrique':   { bg: '#FBD6DF', accent: '#841933', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
+  'Gynécologie obstétrique':   { bg: '#FBD6DF', accent: '#841933', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
+  'Gynécologie-Obstétrique':   { bg: '#FBD6DF', accent: '#841933', Icon: UterusArt,         image: '/flashcards-decor/gyneco.png' },
   'Médecine interne':          { bg: '#D8F2F3', accent: '#266E72', Icon: HumanBodyArt,      image: '/flashcards-decor/medecine-interne.png' },
   'Médecine interne polyvalente': { bg: '#D8F2F3', accent: '#266E72', Icon: HumanBodyArt,   image: '/flashcards-decor/medecine-interne.png' },
   'Médecine générale':         { bg: '#DBEAFE', accent: '#1E40AF', Icon: StethoscopeArt,    image: '/flashcards-decor/medecine-generale.png' },
