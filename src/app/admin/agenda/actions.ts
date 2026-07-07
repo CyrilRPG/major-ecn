@@ -23,7 +23,8 @@ const eventSchema = z.object({
   notes: z.string().max(2000).optional().or(z.literal('')),
   required_offers: z.array(z.enum(['essentiel', 'intensif', 'approfondi'])).min(1),
   scope_type: z.enum(['all', 'college']),
-  scope_colleges: z.array(z.string().uuid()).default([]),
+  scope_colleges: z.array(z.string().min(1)).default([]),
+  voies: z.array(z.enum(['interne', 'externe'])).min(1),
 });
 
 export type AdminEventInput = z.infer<typeof eventSchema>;
@@ -42,6 +43,7 @@ function parseForm(form: FormData): unknown {
     required_offers: form.getAll('required_offers').map((v) => v.toString()),
     scope_type: form.get('scope_type')?.toString() ?? 'all',
     scope_colleges: form.getAll('scope_colleges').map((v) => v.toString()),
+    voies: form.getAll('voies').map((v) => v.toString()),
   };
 }
 
@@ -63,6 +65,7 @@ export async function upsertPlatformEvent(form: FormData) {
     required_offers: d.required_offers,
     scope_type: d.scope_type,
     scope_colleges: d.scope_type === 'college' ? d.scope_colleges : [],
+    voies: d.voies,
     created_by: user.id,
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -20,7 +20,11 @@ export type PlatformEventRow = {
   required_offers: string[] | null;
   scope_type: 'all' | 'college';
   scope_colleges: string[] | null;
+  voies: string[] | null;
 };
+
+type College = { id: string; nom: string; parentId?: string | null };
+const MG_COLLEGE_ID = 'col-medecine-generale';
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
@@ -55,7 +59,7 @@ export function AdminAgenda({
   events, colleges,
 }: {
   events: PlatformEventRow[];
-  colleges: { id: string; nom: string }[];
+  colleges: College[];
 }) {
   const [weekOffset, setWeekOffset] = useState(0);
   const dates = weekDates(weekOffset);
@@ -158,6 +162,11 @@ export function AdminAgenda({
                             {(e.scope_colleges ?? []).length} collège{(e.scope_colleges ?? []).length > 1 ? 's' : ''}
                           </span>
                         )}
+                        {(e.voies ?? []).length === 1 && (
+                          <span className="rounded bg-white/70 px-1.5 py-0.5 font-semibold uppercase tracking-wide text-[10px]" style={{ color: pal.fg }}>
+                            {e.voies![0] === 'interne' ? 'Interne' : 'Externe'}
+                          </span>
+                        )}
                       </span>
                     </button>
                   );
@@ -193,7 +202,7 @@ function EventFormDialog({
   open: boolean;
   date: Date | null;
   initial: PlatformEventRow | null;
-  colleges: { id: string; nom: string }[];
+  colleges: College[];
   onClose: () => void;
 }) {
   const [pending, startTransition] = useTransition();
@@ -201,6 +210,10 @@ function EventFormDialog({
   const [scopeType, setScopeType] = useState<'all' | 'college'>(initial?.scope_type ?? 'all');
   const [scopeColleges, setScopeColleges] = useState<string[]>(initial?.scope_colleges ?? []);
   const [offers, setOffers] = useState<string[]>(initial?.required_offers ?? ['essentiel', 'intensif', 'approfondi']);
+  const [voies, setVoies] = useState<string[]>(initial?.voies ?? ['interne', 'externe']);
+
+  const topColleges = useMemo(() => colleges.filter((c) => !c.parentId), [colleges]);
+  const mgSpecialties = useMemo(() => colleges.filter((c) => c.parentId === MG_COLLEGE_ID), [colleges]);
 
   // Réinitialise les états locaux à chaque ouverture
   useEffect(() => {
@@ -208,6 +221,7 @@ function EventFormDialog({
     setScopeType(initial?.scope_type ?? 'all');
     setScopeColleges(initial?.scope_colleges ?? []);
     setOffers(initial?.required_offers ?? ['essentiel', 'intensif', 'approfondi']);
+    setVoies(initial?.voies ?? ['interne', 'externe']);
     setErr(null);
   }, [open, initial]);
 
@@ -220,6 +234,8 @@ function EventFormDialog({
     if (scopeType === 'college') {
       scopeColleges.forEach((c) => formData.append('scope_colleges', c));
     }
+    formData.delete('voies');
+    voies.forEach((v) => formData.append('voies', v));
     setErr(null);
     startTransition(async () => {
       const res = await upsertPlatformEvent(formData);
@@ -242,6 +258,10 @@ function EventFormDialog({
   };
   const toggleCollege = (id: string) => {
     setScopeColleges((cur) => cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]);
+  };
+  const toggleVoie = (v: string) => {
+    // Au moins une voie doit rester sélectionnée.
+    setVoies((cur) => cur.includes(v) ? (cur.length > 1 ? cur.filter((x) => x !== v) : cur) : [...cur, v]);
   };
 
   return (
@@ -325,6 +345,28 @@ function EventFormDialog({
               ))}
             </div>
 
+            <p className="mb-1 text-xs font-semibold text-(--color-ink)">Voie de concours</p>
+            <p className="mb-2 text-[11px] text-(--color-ink-soft)">
+              <strong>Interne</strong> = QCM/DP · <strong>Externe</strong> = QROC/DP-QROC.
+              Sélectionnez une voie ou les deux ; seuls les étudiants de la voie
+              cochée verront l’évènement.
+            </p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {([
+                { value: 'interne', label: 'Voie interne' },
+                { value: 'externe', label: 'Voie externe' },
+              ] as const).map((v) => (
+                <label key={v.value} className={`cursor-pointer rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  voies.includes(v.value)
+                    ? 'border-(--color-primary) bg-(--color-primary-soft) text-(--color-primary-deep)'
+                    : 'border-(--color-border) text-(--color-ink-soft) hover:bg-(--color-surface)'
+                }`}>
+                  <input type="checkbox" className="sr-only" checked={voies.includes(v.value)} onChange={() => toggleVoie(v.value)} />
+                  {v.label}
+                </label>
+              ))}
+            </div>
+
             <p className="mb-2 text-xs font-semibold text-(--color-ink)">Spécialités concernées</p>
             <div className="mb-3 flex gap-2">
               {(['all', 'college'] as const).map((t) => (
@@ -344,10 +386,10 @@ function EventFormDialog({
             </div>
 
             {scopeType === 'college' && (
-              <div>
-                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Spécialités ciblées</p>
-                <div className="grid max-h-44 grid-cols-2 gap-1.5 overflow-y-auto rounded-lg border border-(--color-border) bg-(--color-surface) p-2">
-                  {colleges.map((c) => (
+              <div className="max-h-56 space-y-2 overflow-y-auto rounded-lg border border-(--color-border) bg-(--color-surface) p-2">
+                <p className="px-1 text-[11px] font-bold uppercase tracking-wide text-(--color-ink-muted)">Collèges</p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {topColleges.map((c) => (
                     <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-(--color-surface-soft)">
                       <input
                         type="checkbox"
@@ -359,6 +401,24 @@ function EventFormDialog({
                     </label>
                   ))}
                 </div>
+                {mgSpecialties.length > 0 && (
+                  <>
+                    <p className="px-1 pt-1 text-[11px] font-bold uppercase tracking-wide text-(--color-ink-muted)">Médecine générale — spécialités</p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {mgSpecialties.map((c) => (
+                        <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-(--color-surface-soft)">
+                          <input
+                            type="checkbox"
+                            checked={scopeColleges.includes(c.id)}
+                            onChange={() => toggleCollege(c.id)}
+                            className="h-3.5 w-3.5 rounded border-(--color-border)"
+                          />
+                          <span className="text-(--color-ink)">{c.nom}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </fieldset>

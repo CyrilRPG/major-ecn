@@ -17,22 +17,26 @@ export default async function AdminAgendaPage() {
   const [{ data: events }, { data: fac }] = await Promise.all([
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).from('platform_events')
-      .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges')
+      .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges, voies')
       .gte('date', start.toISOString().slice(0, 10))
       .lte('date', end.toISOString().slice(0, 10))
       .order('date').order('start_time'),
     supabase.from('facultes')
-      .select('semestres(matieres(id, nom, order_index))')
+      .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
       .eq('id', EDN_FACULTE_ID).maybeSingle(),
   ]);
 
+  // Liste des spécialités proposées sur la plateforme : collèges de premier
+  // niveau (parent NULL) + spécialités de Médecine générale (col-mg-*), en
+  // excluant l'espace Découverte. Même modèle que le sélecteur d'accès élève.
   const colleges = (
-    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null }[] }[] } | null)
+    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null; parent_matiere_id: string | null }[] }[] } | null)
       ?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
+    .filter((m) => m.id !== 'col-decouverte')
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-    .map((m) => ({ id: m.id, nom: m.nom }));
+    .map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">

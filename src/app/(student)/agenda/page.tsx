@@ -25,7 +25,7 @@ export default async function AgendaPage() {
       .gte('date', startStr).lte('date', endStr)
       .order('date').order('start_time'),
     db.from('platform_events')
-      .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges')
+      .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges, voies')
       .gte('date', startStr).lte('date', endStr)
       .order('date').order('start_time'),
   ]);
@@ -36,9 +36,15 @@ export default async function AgendaPage() {
     id: string; title: string; date: string; start_time: string | null; end_time: string | null;
     college: string | null; intervenant: string | null; zoom_url: string | null; notes: string | null;
     required_offers: string[] | null; scope_type: 'all' | 'college'; scope_colleges: string[] | null;
+    voies: string[] | null;
   }>).filter((e) => {
     const offers = e.required_offers ?? ['essentiel', 'intensif', 'approfondi'];
     if (!offers.includes(scope.offer)) return false;
+    // Voie de concours : si l'évènement cible une/des voie(s) et que l'étudiant a
+    // une voie définie hors de cette liste, il ne le voit pas. Voie inconnue
+    // (null) ou liste vide → pas de restriction.
+    const evVoies = e.voies ?? [];
+    if (evVoies.length > 0 && scope.voie && !evVoies.includes(scope.voie)) return false;
     if (e.scope_type === 'college') {
       const ids = e.scope_colleges ?? [];
       if (ids.length === 0) return true; // aucune spécialité cochée → toutes
