@@ -148,6 +148,12 @@ export type Database = {
         Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null };
         Relationships: [{ foreignKeyName: 'videos_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
+      blog_posts: {
+        Row: { id: string; slug: string; title: string; excerpt: string; category: string; reading_minutes: number; hero_image: string | null; content: Json; status: string; featured: boolean; published_at: string | null; author_id: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; slug: string; title: string; excerpt?: string; category?: string; reading_minutes?: number; hero_image?: string | null; content?: Json; status?: string; featured?: boolean; published_at?: string | null; author_id?: string | null; created_at?: string; updated_at?: string };
+        Update: { id?: string; slug?: string; title?: string; excerpt?: string; category?: string; reading_minutes?: number; hero_image?: string | null; content?: Json; status?: string; featured?: boolean; published_at?: string | null; author_id?: string | null; created_at?: string; updated_at?: string };
+        Relationships: [{ foreignKeyName: 'blog_posts_author_id_fkey'; columns: ['author_id']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
+      };
     };
     Views: Record<string, never>;
     Functions: {

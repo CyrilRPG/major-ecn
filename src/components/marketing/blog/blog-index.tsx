@@ -9,6 +9,7 @@ import {
   getPublishedArticles, BLOG_CATEGORIES, BLOG_TOP_THEMES, BLOG_CATEGORY_IMAGE,
   type BlogArticleMeta, type BlogCategory,
 } from '@/lib/data/blog-articles';
+import { getDbPublishedArticles } from '@/lib/data/blog-db';
 import { NewsletterForm } from './newsletter-form';
 
 const FONT = "'Plus Jakarta Sans', sans-serif";
@@ -40,7 +41,14 @@ export async function BlogIndex({
   const sp = (await searchParamsPromise) ?? {};
   const activeCat = (sp.cat as BlogCategory | undefined) ?? null;
 
-  const articles = getPublishedArticles();
+  // Articles statiques (ordre curé préservé) + articles créés depuis /admin/blog,
+  // ces derniers (les plus récents) placés en tête de liste.
+  const staticArticles = getPublishedArticles();
+  const seen = new Set(staticArticles.map((a) => a.slug));
+  const dbArticles = (await getDbPublishedArticles())
+    .filter((a) => !seen.has(a.slug))
+    .sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
+  const articles = [...dbArticles, ...staticArticles];
   const featured = articles.find((a) => a.featured) ?? articles[0];
   const visibleArticles = activeCat
     ? articles.filter((a) => a.category === activeCat)

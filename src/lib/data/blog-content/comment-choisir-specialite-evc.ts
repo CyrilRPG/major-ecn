@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/comment-rediger-qroc-evc-2.jpeg",
-  "alt": "Médecin PADHUE choisissant sa spécialité médicale pour les EVC PAE 2026"
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-1.png",
+  "alt": "Les quatre critères pour choisir sa spécialité aux EVC : compétences, éligibilité, nombre de postes et concurrence"
  },
  {
   "t": "h2",
@@ -21,11 +21,6 @@ export const CONTENT: Block[] = [
  {
   "t": "p",
   "html": "Certaines spécialités ouvrent des centaines de postes ; d'autres, une poignée. Certaines sont accessibles à tous les médecins généralistes ; d'autres exigent un diplôme de spécialité. Bien choisir, c'est mettre les probabilités de votre côté avant même d'ouvrir un livre."
- },
- {
-  "t": "img",
-  "src": "/blog/blog2026/comment-choisir-specialite-evc-1.png",
-  "alt": "Illustration"
  },
  {
   "t": "callout",
@@ -148,7 +143,8 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/comment-choisir-specialite-evc-2.png",
-  "alt": "Illustration"
+  "alt": "Diagramme en barres du nombre de postes de médecins ouverts par spécialité en voie externe aux EVC 2026, de la MIPIC (213) à la pneumologie (17)",
+  "caption": "Répartition officielle des postes de la voie externe pour la session 2026 : la MIPIC et la psychiatrie dominent largement."
  },
  {
   "t": "p",
@@ -173,12 +169,12 @@ export const CONTENT: Block[] = [
  {
   "t": "callout",
   "tone": "tip",
-  "html": "Notre conseil Ne regardez jamais le nombre de postes seul. Regardez le rapport entre les postes et les candidats. Une spécialité avec 200 postes et 2 000 candidats est plus difficile qu'une spécialité avec 50 postes et 150 candidats. Le ratio compte plus que le chiffre brut."
+  "html": "<strong>Ne regardez jamais le nombre de postes seul.</strong> Regardez le rapport entre les postes et les candidats. Une spécialité avec 200 postes et 2 000 candidats est plus difficile qu'une spécialité avec 50 postes et 150 candidats. Le ratio compte plus que le chiffre brut."
  },
  {
   "t": "callout",
   "tone": "warning",
-  "html": "Erreur fréquente Beaucoup de candidats choisissent une spécialité uniquement parce qu'elle ouvre davantage de postes. Pourtant, un candidat très bien préparé dans sa discipline aura souvent plus de chances qu'un candidat moyen dans une spécialité simplement jugée « plus facile »."
+  "html": "<strong>Erreur fréquente :</strong> beaucoup de candidats choisissent une spécialité uniquement parce qu'elle ouvre davantage de postes. Pourtant, un candidat très bien préparé dans sa discipline aura souvent plus de chances qu'un candidat moyen dans une spécialité simplement jugée « plus facile »."
  },
  {
   "t": "p",
@@ -197,8 +193,15 @@ export const CONTENT: Block[] = [
   "html": "Or deux d'entre elles — la MIPIC (213 postes en voie externe) et la psychiatrie (198 postes) — sont parmi les plus dotées de la session, tout en étant nouvelles, donc moins concurrentielles pour l'instant. Pour un généraliste, elles méritent un examen sérieux, à condition bien sûr de pouvoir s'y préparer sérieusement."
  },
  {
-  "t": "note",
-  "text": "Espace d'entraînement Major ECN : QCM et dossiers cliniques calibrés, par spécialité."
+  "t": "img",
+  "src": "/blog/blog2026/comment-choisir-specialite-evc-4.png",
+  "alt": "Tableau de bord de la plateforme Major ECN de préparation aux EVC (PAE) : progression, QCM réalisés, cours en direct et suivi personnalisé par spécialité",
+  "caption": "La plateforme Major ECN : QCM et cas cliniques calibrés par spécialité pour vous entraîner en conditions réelles."
+ },
+ {
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Entraînez-vous par spécialité :</strong> une fois votre choix arrêté, accédez à des QCM et des cas cliniques calibrés pour chaque discipline sur la <a href=\"/plateforme\">plateforme Major ECN</a>."
  },
  {
   "t": "p",
@@ -225,20 +228,13 @@ export const CONTENT: Block[] = [
   "html": "Voici une méthode simple pour trancher, en quatre questions successives :"
  },
  {
-  "t": "p",
-  "html": "D'abord, dans quelles spécialités suis-je réellement compétent ? Listez celles où votre niveau est solide."
- },
- {
-  "t": "p",
-  "html": "Ensuite, parmi elles, lesquelles sont ouvertes dans ma voie cette année ? Éliminez les spécialités fermées."
- },
- {
-  "t": "p",
-  "html": "Puis, ai-je besoin d'un diplôme de spécialité, et l'ai-je ? Vérifiez votre éligibilité, en tenant compte des cinq spécialités dérogatoires."
- },
- {
-  "t": "p",
-  "html": "Enfin, parmi les spécialités restantes, quel est le meilleur rapport postes / concurrence ? C'est là que se fait l'arbitrage final."
+  "t": "ol",
+  "items": [
+   "<strong>Dans quelles spécialités suis-je réellement compétent ?</strong> Listez celles où votre niveau est solide.",
+   "<strong>Parmi elles, lesquelles sont ouvertes dans ma voie cette année ?</strong> Éliminez les spécialités fermées.",
+   "<strong>Ai-je besoin d'un diplôme de spécialité, et l'ai-je ?</strong> Vérifiez votre éligibilité, en tenant compte des cinq spécialités dérogatoires.",
+   "<strong>Parmi les spécialités restantes, quel est le meilleur rapport postes / concurrence ?</strong> C'est là que se fait l'arbitrage final."
+  ]
  },
  {
   "t": "p",
@@ -253,53 +249,19 @@ export const CONTENT: Block[] = [
   "html": "Pour trancher rapidement, déroulez ces questions dans l'ordre :"
  },
  {
-  "t": "p",
-  "html": "1. Ai-je un diplôme de spécialité ?"
- },
- {
-  "t": "p",
-  "html": "Oui → je regarde uniquement les spécialités correspondant à mon diplôme."
- },
- {
-  "t": "p",
-  "html": "Non → puis-je accéder à l'une des cinq spécialités dérogatoires (médecine générale, gériatrie, médecine d'urgence, psychiatrie, MIPIC) ?"
- },
- {
-  "t": "p",
-  "html": "2. La spécialité est-elle ouverte dans ma voie cette année ?"
- },
- {
-  "t": "p",
-  "html": "Non → je l'écarte, même si elle m'intéresse."
- },
- {
-  "t": "p",
-  "html": "Oui → je continue."
- },
- {
-  "t": "p",
-  "html": "3. Ai-je réellement le niveau attendu dans cette spécialité ?"
- },
- {
-  "t": "p",
-  "html": "Non → le risque d'échec est élevé, même avec peu de concurrents."
- },
- {
-  "t": "p",
-  "html": "Oui → je continue."
- },
- {
-  "t": "p",
-  "html": "4. Quel est le rapport postes / candidats ?"
+  "t": "ol",
+  "items": [
+   "<strong>Ai-je un diplôme de spécialité ?</strong> Oui → je regarde uniquement les spécialités correspondant à mon diplôme. Non → puis-je accéder à l'une des cinq spécialités dérogatoires (médecine générale, gériatrie, médecine d'urgence, psychiatrie, MIPIC) ?",
+   "<strong>La spécialité est-elle ouverte dans ma voie cette année ?</strong> Non → je l'écarte, même si elle m'intéresse. Oui → je continue.",
+   "<strong>Ai-je réellement le niveau attendu dans cette spécialité ?</strong> Non → le risque d'échec est élevé, même avec peu de concurrents. Oui → je continue.",
+   "<strong>Quel est le rapport postes / candidats ?</strong> C'est l'arbitrage final entre les spécialités qui restent."
+  ]
  },
  {
   "t": "img",
   "src": "/blog/blog2026/comment-choisir-specialite-evc-3.png",
-  "alt": "Illustration"
- },
- {
-  "t": "p",
-  "html": "C'est l'arbitrage final entre les spécialités qui restent."
+  "alt": "Arbre de décision en quatre étapes pour choisir sa spécialité EVC : diplôme, ouverture de la voie, niveau attendu puis rapport postes / candidats, aboutissant à « ma spécialité »",
+  "caption": "Le bon choix coche les quatre cases : compétent, ouvert, éligible, ratio favorable."
  },
  {
   "t": "h2",
@@ -310,8 +272,14 @@ export const CONTENT: Block[] = [
   "html": "Si vous ne deviez retenir que cinq idées de cet article :"
  },
  {
-  "t": "p",
-  "html": "✅ Une seule spécialité par session : le choix est définitif ✅ Partez de vos compétences réelles, pas seulement du nombre de postes ✅ Cinq spécialités sont accessibles sans diplôme de spécialité (dont psychiatrie et MIPIC en 2026) ✅ Le ratio postes / candidats compte plus que le nombre de postes brut ✅ Vérifiez que votre spécialité est bien ouverte dans votre voie cette année"
+  "t": "ul",
+  "items": [
+   "Une seule spécialité par session : le choix est définitif.",
+   "Partez de vos compétences réelles, pas seulement du nombre de postes.",
+   "Cinq spécialités sont accessibles sans diplôme de spécialité (dont psychiatrie et MIPIC en 2026).",
+   "Le ratio postes / candidats compte plus que le nombre de postes brut.",
+   "Vérifiez que votre spécialité est bien ouverte dans votre voie cette année."
+  ]
  },
  {
   "t": "h2",

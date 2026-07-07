@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, CalendarDays, ClipboardList, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Receipt, ScrollText, ShieldCheck, UserCog, Users } from 'lucide-react';
+import { AlertTriangle, BarChart3, CalendarDays, ClipboardList, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Newspaper, Receipt, ScrollText, ShieldCheck, UserCog, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -19,6 +19,7 @@ const ALL_ITEMS: Item[] = [
   { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
   { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
   { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },
+  { href: '/admin/blog', label: 'Blog', Icon: Newspaper, adminOnly: true },
   { href: '/admin/popups', label: 'Popups', Icon: MonitorPlay, adminOnly: true },
   { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
   { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },

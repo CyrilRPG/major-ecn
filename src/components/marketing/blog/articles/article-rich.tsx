@@ -126,9 +126,16 @@ function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string
           ))}
         </ol>
       );
-    case 'img':
+    case 'img': {
+      const layout = b.layout ?? 'full';
+      const figClass =
+        layout === 'left'
+          ? 'my-6 sm:float-left sm:mr-6 sm:mb-4 sm:w-[46%] sm:max-w-[46%]'
+          : layout === 'right'
+            ? 'my-6 sm:float-right sm:ml-6 sm:mb-4 sm:w-[46%] sm:max-w-[46%]'
+            : 'my-6 clear-both';
       return (
-        <figure className="my-6">
+        <figure className={figClass}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={b.src}
@@ -140,6 +147,31 @@ function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string
           {b.caption && <figcaption className="mt-2 text-center text-[12px] text-[#9AA1AE]">{b.caption}</figcaption>}
         </figure>
       );
+    }
+    case 'gallery': {
+      const imgs = b.images ?? [];
+      if (imgs.length === 0) return null;
+      const cols = imgs.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2';
+      return (
+        <div className={`my-6 clear-both grid grid-cols-1 gap-3 ${cols}`}>
+          {imgs.map((im, i) => (
+            <figure key={i} className="m-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={im.src}
+                alt={im.alt}
+                className="block h-full w-full rounded-xl border border-[#ECEEF1] object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+              {im.caption && (
+                <figcaption className="mt-1.5 text-center text-[11.5px] text-[#9AA1AE]">{im.caption}</figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      );
+    }
     case 'table':
       return <Table headers={b.headers} rows={b.rows} />;
     case 'note':
@@ -205,9 +237,22 @@ function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string
   }
 }
 
-export function ArticleRich({ article }: { article: BlogArticleMeta }) {
-  const blocks = RICH_CONTENT[article.slug] ?? [];
-  const publishedSlugs = new Set(getPublishedArticles().map((a) => a.slug));
+export function ArticleRich({
+  article,
+  blocks: blocksProp,
+  extraPublishedSlugs,
+}: {
+  article: BlogArticleMeta;
+  /** Blocs fournis explicitement (articles créés en base). Sinon on lit le contenu statique. */
+  blocks?: Block[];
+  /** Slugs supplémentaires (articles DB) considérés comme publiés pour le maillage « À lire aussi ». */
+  extraPublishedSlugs?: string[];
+}) {
+  const blocks = blocksProp ?? RICH_CONTENT[article.slug] ?? [];
+  const publishedSlugs = new Set([
+    ...getPublishedArticles().map((a) => a.slug),
+    ...(extraPublishedSlugs ?? []),
+  ]);
   const hero = blocks.find((b): b is Extract<Block, { t: 'hero' }> => b.t === 'hero');
   const toc = blocks
     .filter((b): b is Extract<Block, { t: 'h2' }> => b.t === 'h2')

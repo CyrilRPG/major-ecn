@@ -4,7 +4,7 @@ export const CONTENT: Block[] = [
  {
   "t": "hero",
   "src": "/blog/blog2026/voie-interne-evc-logique-qcm-4.jpeg",
-  "alt": "Médecin PADHUE en poste en France révisant les QCM pour la voie interne EVC"
+  "alt": "Carte de couverture Major ECN : « EVC voie interne, tout comprendre avant de vous lancer », avec une médecin en blouse blanche travaillant sur un ordinateur portable"
  },
  {
   "t": "h2",
@@ -68,8 +68,14 @@ export const CONTENT: Block[] = [
   "html": "Chaque année, des praticiens expérimentés échouent à cette épreuve. Non par manque de connaissances, mais parce qu'ils n'ont pas compris comment un QCM d'EVC est construit et corrigé."
  },
  {
-  "t": "p",
-  "html": "✔ À retenir ✓ Une seule épreuve ✓ Uniquement des QCM ✓ Réservée aux médecins déjà en exercice en France ✓ Les connaissances seules ne suffisent pas ✓ Les recommandations HAS sont essentielles"
+  "t": "ul",
+  "items": [
+   "Une seule épreuve.",
+   "Uniquement des QCM.",
+   "Réservée aux médecins déjà en exercice en France.",
+   "Les connaissances seules ne suffisent pas.",
+   "Les recommandations HAS sont essentielles."
+  ]
  },
  {
   "t": "h2",
@@ -78,7 +84,8 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/voie-interne-evc-logique-qcm-5.png",
-  "alt": "Illustration"
+  "alt": "Schéma du parcours de la voie interne des EVC : voie interne, éligibilité PADHUE en poste, format QCM par spécialité, épreuve unique de 2 heures, 2 896 postes, aboutissant à la procédure d'autorisation d'exercice (PAE)",
+  "caption": "Le parcours de la voie interne, de l'éligibilité à la procédure d'autorisation d'exercice."
  },
  {
   "t": "h2",
@@ -109,12 +116,19 @@ export const CONTENT: Block[] = [
   "html": "Dans cette logique, une discordance correspond à un écart entre votre réponse et la correction : une bonne case non cochée, ou une mauvaise case cochée. Plus vous accumulez de discordances, plus votre note baisse — et une seule réponse jugée inacceptable, ou l'oubli d'une réponse indispensable, peut ramener la question entière à zéro."
  },
  {
+  "t": "img",
+  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-7.png",
+  "alt": "Écran de correction d'un QRM illustrant la logique de discordances : une bonne réponse non cochée, une erreur à ne pas cocher et des bonnes réponses bien cochées, chacune signalée en vert ou en rouge",
+  "caption": "Exemple de correction d'un QRM : chaque écart avec le corrigé constitue une discordance."
+ },
+ {
   "t": "p",
   "html": "C'est pourquoi, sur un QCM médical, cocher au hasard est risqué : chaque case incertaine augmente la probabilité de tomber sur une réponse gravement fausse."
  },
  {
-  "t": "p",
-  "html": "✔ Le réflexe qui compte vraiment Cocher une réponse clairement dangereuse pour le patient, ou oublier une mesure clairement indispensable, pèse bien plus lourd qu'une simple imprécision. C'est cette hiérarchie clinique qui doit guider votre sélection : en cas de doute sérieux sur un item, mieux vaut s'abstenir que cocher au hasard."
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Le réflexe qui compte vraiment :</strong> cocher une réponse clairement dangereuse pour le patient, ou oublier une mesure clairement indispensable, pèse bien plus lourd qu'une simple imprécision. C'est cette hiérarchie clinique qui doit guider votre sélection : en cas de doute sérieux sur un item, mieux vaut s'abstenir que cocher au hasard."
  },
  {
   "t": "h2",
@@ -125,12 +139,17 @@ export const CONTENT: Block[] = [
   "html": "Face à chaque item d'un QRM, un réflexe simple permet de décider, item par item, s'il faut cocher."
  },
  {
-  "t": "p",
-  "html": "L'item est-il clairement inacceptable pour le patient ? Ne le cochez pas — c'est le risque éliminatoire. Est-il clairement indispensable à la prise en charge ? Cochez-le obligatoirement. Êtes-vous en doute réel sur cet item ? Abstenez-vous plutôt que de risquer une discordance grave. L'item est-il sûrement correct ? Cochez sans hésiter."
+  "t": "ul",
+  "items": [
+   "<strong>Item clairement inacceptable pour le patient</strong> → ne le cochez pas : c'est le risque éliminatoire.",
+   "<strong>Item clairement indispensable à la prise en charge</strong> → cochez-le obligatoirement.",
+   "<strong>Doute réel sur l'item</strong> → abstenez-vous plutôt que de risquer une discordance grave.",
+   "<strong>Item sûrement correct</strong> → cochez sans hésiter."
+  ]
  },
  {
   "t": "p",
-  "html": "Résumé en une phrase : inacceptable, ne jamais cocher ; indispensable, toujours cocher ; en doute, s'abstenir ; sûrement correct, cocher sans hésiter."
+  "html": "<strong>Résumé en une phrase :</strong> inacceptable, ne jamais cocher ; indispensable, toujours cocher ; en doute, s'abstenir ; sûrement correct, cocher sans hésiter."
  },
  {
   "t": "h2",
@@ -141,28 +160,26 @@ export const CONTENT: Block[] = [
   "html": "En QCM comme ailleurs, une grande partie des points perdus ne vient pas d'un manque de connaissances, mais d'une mauvaise lecture de l'énoncé, sous la pression du temps."
  },
  {
-  "t": "p",
-  "html": "La double négation — « Quels gestes ne sont pas contre-indiqués ? » revient à demander quels gestes sont autorisés. Reformulez mentalement la question avant de répondre."
+  "t": "ul",
+  "items": [
+   "<strong>La double négation</strong> — « Quels gestes ne sont pas contre-indiqués ? » revient à demander quels gestes sont autorisés. Reformulez mentalement la question avant de répondre.",
+   "<strong>Le « sauf » ou le « à l'exception de »</strong> — un seul mot qui change complètement le sens d'une consigne par ailleurs simple.",
+   "<strong>Le singulier contre le pluriel</strong> — « quelle est LA réponse exacte » (QRU) n'est pas « quelle(s) est(sont) la(les) réponse(s) exacte(s) » (QRM). Lisez toujours l'intitulé du format avant de répondre.",
+   "<strong>Les qualificatifs absolus</strong> — « toujours », « jamais », « systématiquement » rendent souvent une proposition fausse en médecine, où il existe presque toujours une exception.",
+   "<strong>Le terrain implicite</strong> — un énoncé qui précise « grossesse », « insuffisance rénale » ou « sujet âgé » modifie la réponse attendue, même si la question semble générale."
+  ]
  },
  {
-  "t": "p",
-  "html": "Le « sauf » ou le « à l'exception de » — un seul mot qui change complètement le sens d'une consigne par ailleurs simple."
+  "t": "h3",
+  "text": "Méthode de lecture en 3 passages"
  },
  {
-  "t": "p",
-  "html": "Le singulier contre le pluriel — « quelle est LA réponse exacte » (QRU) n'est pas « quelle(s) est(sont) la(les) réponse(s) exacte(s) » (QRM). Lisez toujours l'intitulé du format avant de répondre."
- },
- {
-  "t": "p",
-  "html": "Les qualificatifs absolus — « toujours », « jamais », « systématiquement » rendent souvent une proposition fausse en médecine, où il existe presque toujours une exception."
- },
- {
-  "t": "p",
-  "html": "Le terrain implicite — un énoncé qui précise « grossesse », « insuffisance rénale » ou « sujet âgé » modifie la réponse attendue, même si la question semble générale."
- },
- {
-  "t": "p",
-  "html": "✔ Méthode de lecture en 3 passages 1er passage : lisez l'énoncé en entier sans regarder les propositions, pour vous faire votre propre idée. 2e passage : éliminez les propositions certainement fausses. 3e passage : pesez les propositions restantes une à une, en vous demandant « est-ce indispensable ? » et « est-ce inacceptable ? » avant de cocher."
+  "t": "ol",
+  "items": [
+   "Lisez l'énoncé en entier sans regarder les propositions, pour vous faire votre propre idée.",
+   "Éliminez les propositions certainement fausses.",
+   "Pesez les propositions restantes une à une, en vous demandant « est-ce indispensable ? » et « est-ce inacceptable ? » avant de cocher."
+  ]
  },
  {
   "t": "h2",
@@ -186,7 +203,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Pourquoi des médecins excellents échouent aux EVC →"
+  "html": "<a href=\"/blog/pourquoi-des-medecins-echouent-aux-evc\">Pourquoi des médecins excellents échouent aux EVC →</a>"
  },
  {
   "t": "h2",
@@ -197,34 +214,20 @@ export const CONTENT: Block[] = [
   "html": "Une préparation efficace à la voie interne repose sur quelques principes simples."
  },
  {
+  "t": "ul",
+  "items": [
+   "<strong>S'entraîner sur des QCM au bon niveau</strong> — QRU et QRM calibrés sur les attentes réelles des EVC, pas sur des QCM d'externat.",
+   "<strong>Travailler la logique de sélection</strong> — savoir quand cocher et quand s'abstenir, jusqu'à en faire un réflexe.",
+   "<strong>S'entraîner en conditions réelles, chronométrées</strong> — la gestion du temps est une compétence distincte des connaissances médicales.",
+   "<strong>Mettre à jour ses recommandations HAS en continu</strong>, dans sa spécialité.",
+   "<strong>Faire analyser ses erreurs</strong>, pour ne pas reproduire les mêmes semaines après semaine."
+  ]
+ },
+ {
   "t": "img",
   "src": "/blog/blog2026/voie-interne-evc-logique-qcm-6.png",
-  "alt": "Illustration"
- },
- {
-  "t": "p",
-  "html": "S'entraîner sur des QCM au bon niveau — QRU et QRM calibrés sur les attentes réelles des EVC, pas sur des QCM d'externat."
- },
- {
-  "t": "img",
-  "src": "/blog/blog2026/voie-interne-evc-logique-qcm-7.png",
-  "alt": "Illustration"
- },
- {
-  "t": "p",
-  "html": "Travailler la logique de sélection — savoir quand cocher et quand s'abstenir, jusqu'à en faire un réflexe."
- },
- {
-  "t": "p",
-  "html": "S'entraîner en conditions réelles, chronométrées — la gestion du temps est une compétence distincte des connaissances médicales."
- },
- {
-  "t": "p",
-  "html": "Mettre à jour ses recommandations HAS en continu, dans sa spécialité."
- },
- {
-  "t": "p",
-  "html": "Et faire analyser ses erreurs, pour ne pas reproduire les mêmes semaines après semaine."
+  "alt": "Interface d'entraînement Major ECN affichant un QRM sur le traitement de fond de l'asthme, avec cinq propositions à cocher (A à E) et un bouton Valider",
+  "caption": "Un QRM type de la plateforme Major ECN, calibré au niveau réel des EVC."
  },
  {
   "t": "h2",
@@ -235,8 +238,14 @@ export const CONTENT: Block[] = [
   "html": "Si vous ne deviez retenir que cinq idées de cet article :"
  },
  {
-  "t": "p",
-  "html": "✅ La voie interne, c'est une seule épreuve de QCM en 2 heures ✅ Deux formats : QRU (une réponse) et QRM (jusqu'à 5 réponses) ✅ En cas de doute sérieux, mieux vaut s'abstenir que cocher au hasard ✅ Une réponse dangereuse ou un oubli indispensable peut ramener la question à zéro ✅ Les connaissances ne suffisent pas : la méthode et la lecture font la différence"
+  "t": "ul",
+  "items": [
+   "La voie interne, c'est une seule épreuve de QCM en 2 heures.",
+   "Deux formats : QRU (une réponse) et QRM (jusqu'à 5 réponses).",
+   "En cas de doute sérieux, mieux vaut s'abstenir que cocher au hasard.",
+   "Une réponse dangereuse ou un oubli indispensable peut ramener la question à zéro.",
+   "Les connaissances ne suffisent pas : la méthode et la lecture font la différence."
+  ]
  },
  {
   "t": "h2",

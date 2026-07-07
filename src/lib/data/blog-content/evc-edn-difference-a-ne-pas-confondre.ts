@@ -3,8 +3,8 @@ import type { Block } from './types';
 export const CONTENT: Block[] = [
  {
   "t": "hero",
-  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-1.png",
-  "alt": "Médecin comparant les concours EVC et EDN pour éviter la confusion"
+  "src": "/blog/blog2026/evc-edn-difference-a-ne-pas-confondre-3.jpeg",
+  "alt": "Médecin à diplôme étranger travaillant sur son ordinateur portable pour préparer les EVC"
  },
  {
   "t": "h2",
@@ -33,31 +33,21 @@ export const CONTENT: Block[] = [
  {
   "t": "callout",
   "tone": "warning",
-  "html": "L'erreur que nous voyons le plus souvent Préparer les EVC exclusivement avec des supports EDN. Les connaissances médicales sont utiles, mais la méthode, le format des épreuves et les attentes du jury sont différents. C'est cette confusion qui fait perdre des points à de nombreux candidats."
+  "html": "<strong>L'erreur que nous voyons le plus souvent :</strong> préparer les EVC exclusivement avec des supports EDN. Les connaissances médicales sont utiles, mais la méthode, le format des épreuves et les attentes du jury sont différents. C'est cette confusion qui fait perdre des points à de nombreux candidats."
  },
  {
   "t": "p",
-  "html": "Pourquoi cette confusion peut-elle vous faire échouer ? Parce qu'elle conduit très souvent à :"
+  "html": "Pourquoi cette confusion peut-elle vous faire échouer ? Parce qu'elle conduit très souvent à :"
  },
  {
-  "t": "p",
-  "html": "réviser dans le mauvais format d'épreuve ;"
- },
- {
-  "t": "p",
-  "html": "négliger les recommandations françaises réellement attendues ;"
- },
- {
-  "t": "p",
-  "html": "ne jamais s'entraîner à rédiger des QROC et des dossiers cliniques ;"
- },
- {
-  "t": "p",
-  "html": "sous-estimer les attentes du jury ;"
- },
- {
-  "t": "p",
-  "html": "perdre des points sur la méthode plutôt que sur les connaissances."
+  "t": "ul",
+  "items": [
+   "réviser dans le mauvais format d'épreuve ;",
+   "négliger les recommandations françaises réellement attendues ;",
+   "ne jamais s'entraîner à rédiger des QROC et des dossiers cliniques ;",
+   "sous-estimer les attentes du jury ;",
+   "perdre des points sur la méthode plutôt que sur les connaissances."
+  ]
  },
  {
   "t": "p",
@@ -109,7 +99,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Comment réussir les EVC : les conseils des lauréats →"
+  "html": "<a href=\"/blog/comment-reussir-les-evc-conseils-laureats\">Comment réussir les EVC : les conseils des lauréats →</a>"
  },
  {
   "t": "h2",
@@ -133,7 +123,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Comment organiser ses révisions jusqu'au concours EVC →"
+  "html": "<a href=\"/blog/organiser-revisions-evc\">Comment organiser ses révisions jusqu'au concours EVC →</a>"
  },
  {
   "t": "h2",
@@ -148,8 +138,10 @@ export const CONTENT: Block[] = [
   "html": "Ce que nous observons depuis quinze ans, c'est que les candidats qui échouent ne manquent généralement pas de connaissances. Ils manquent de méthode. Ils ne savent pas dans quel ordre présenter les éléments. Ils ne savent pas ce que le jury attend en priorité. Ils répondent à côté — pas parce qu'ils ne savent pas, mais parce qu'ils ne savent pas comment répondre."
  },
  {
-  "t": "p",
-  "html": "Le Dr Ahmed Sifaoui, lauréat EVC 2025 en gériatrie, le dit mieux que nous : « Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit. »"
+  "t": "quote",
+  "author": "Dr Ahmed Sifaoui",
+  "role": "Lauréat EVC 2025 en gériatrie",
+  "text": "Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit."
  },
  {
   "t": "p",
@@ -157,7 +149,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Pourquoi des médecins excellents échouent aux EVC →"
+  "html": "<a href=\"/blog/pourquoi-des-medecins-echouent-aux-evc\">Pourquoi des médecins excellents échouent aux EVC →</a>"
  },
  {
   "t": "h2",
@@ -170,7 +162,8 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/voie-interne-evc-logique-qcm-3.png",
-  "alt": "Illustration"
+  "alt": "Les 5 erreurs fréquentes des candidats PADHUE aux EVC : confondre EDN et EVC, ne faire que des QCM, oublier les recommandations HAS, ne jamais rédiger, ne jamais faire corriger ses copies",
+  "caption": "Les cinq erreurs de préparation qui coûtent le plus de points aux candidats PADHUE."
  },
  {
   "t": "p",
@@ -187,7 +180,8 @@ export const CONTENT: Block[] = [
  {
   "t": "table",
   "headers": [
-   "| EVC",
+   "Critère",
+   "EVC",
    "EDN"
   ],
   "rows": [
@@ -247,8 +241,14 @@ export const CONTENT: Block[] = [
   "html": "Si vous ne deviez retenir que cinq idées de cet article :"
  },
  {
-  "t": "p",
-  "html": "✅ EVC et EDN sont deux concours distincts, pour deux publics différents ✅ Les EVC évaluent un praticien expérimenté, pas un étudiant en fin d'études ✅ La voie externe se rédige à la main (QROC, dossiers), pas en QCM sur écran ✅ Le jury attend les recommandations HAS françaises en vigueur ✅ Les supports EDN peuvent compléter votre révision, mais pas la constituer"
+  "t": "ul",
+  "items": [
+   "EVC et EDN sont deux concours distincts, pour deux publics différents.",
+   "Les EVC évaluent un praticien expérimenté, pas un étudiant en fin d'études.",
+   "La voie externe se rédige à la main (QROC, dossiers), pas en QCM sur écran.",
+   "Le jury attend les recommandations HAS françaises en vigueur.",
+   "Les supports EDN peuvent compléter votre révision, mais pas la constituer."
+  ]
  },
  {
   "t": "h2",

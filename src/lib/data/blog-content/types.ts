@@ -1,3 +1,5 @@
+export type ImageLayout = 'full' | 'left' | 'right';
+
 export type Block =
   | { t: 'hero'; src: string; alt: string }
   | { t: 'h2'; text: string }
@@ -5,7 +7,8 @@ export type Block =
   | { t: 'p'; html: string }
   | { t: 'ul'; items: string[] }
   | { t: 'ol'; items: string[] }
-  | { t: 'img'; src: string; alt: string; caption?: string }
+  | { t: 'img'; src: string; alt: string; caption?: string; layout?: ImageLayout }
+  | { t: 'gallery'; images: { src: string; alt: string; caption?: string }[] }
   | { t: 'table'; headers: string[]; rows: string[][] }
   | { t: 'note'; text: string }
   | { t: 'quote'; author: string; role?: string; text: string }

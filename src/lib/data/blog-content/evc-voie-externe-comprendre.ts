@@ -33,11 +33,8 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/evc-voie-externe-comprendre-2.png",
-  "alt": "Illustration"
- },
- {
-  "t": "h2",
-  "text": "1 003 postes en voie externe"
+  "alt": "Infographie de synthèse de la voie externe des EVC 2026 : deux épreuves EVCF et EVCP le même jour, 1 003 postes, 13 spécialités et inscriptions jusqu'au 16 juillet 2026",
+  "caption": "La voie externe des EVC 2026 en un coup d'œil."
  },
  {
   "t": "h2",
@@ -52,8 +49,9 @@ export const CONTENT: Block[] = [
   "html": "Si vous résidez à l'étranger, si vous êtes arrivé en France depuis moins de deux ans, ou si vous n'avez pas encore de poste hospitalier sous autorisation temporaire — c'est la voie externe."
  },
  {
-  "t": "p",
-  "html": "<strong>Point crucial avant de vous inscrire : en 2026, seules 13 spécialités médicales sont ouvertes en voie externe. Ce n'est pas toutes les spécialités. Avant toute démarche, vérifiez que la vôtre figure bien dans l'Annexe I de l'arrêté du 12 juin 2026 publié au Journal officiel — le lien est disponible sur le site du CNG. Deux nouvelles spécialités ont été ajoutées en 2026 : la psychiatrie et la médecine interne polyvalente (MIPIC), désormais accessibles sans diplôme de spécialité dans le pays d'origine.</strong>"
+  "t": "callout",
+  "tone": "warning",
+  "html": "En 2026, seules 13 spécialités médicales sont ouvertes en voie externe. Ce n'est pas toutes les spécialités. Avant toute démarche, vérifiez que la vôtre figure bien dans l'Annexe I de l'arrêté du 12 juin 2026 publié au Journal officiel — le lien est disponible sur le site du CNG. Deux nouvelles spécialités ont été ajoutées en 2026 : la psychiatrie et la médecine interne polyvalente (MIPIC), désormais accessibles sans diplôme de spécialité dans le pays d'origine."
  },
  {
   "t": "h2",
@@ -70,7 +68,8 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/evc-voie-externe-comprendre-3.png",
-  "alt": "Illustration"
+  "alt": "Comparaison des deux épreuves de la voie externe : l'EVCF (connaissances fondamentales, QROC) et l'EVCP (connaissances pratiques, dossiers cliniques progressifs), deux heures chacune et seuil éliminatoire à 6/20",
+  "caption": "EVCF et EVCP : deux épreuves distinctes, le même jour, à Rungis."
  },
  {
   "t": "h2",
@@ -82,7 +81,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "<strong>Ne vous attendez pas à « quelques questions ». Sur la session 2025, le sujet de gériatrie comptait 35 questions en deux heures, couvrant l'ensemble du champ de la spécialité : syndromes gériatriques, fragilité, iatrogénie, troubles cognitifs, douleur, os et ostéoporose, nutrition, urologie, ORL, et jusqu'aux aspects juridiques (sauvegarde de justice, APA). C'est un balayage exhaustif du programme, sans zone où se cacher. Une seule question par thème, mais tous les thèmes y passent.</strong>"
+  "html": "<strong>Ne vous attendez pas à « quelques questions ».</strong> Sur la session 2025, le sujet de gériatrie comptait 35 questions en deux heures, couvrant l'ensemble du champ de la spécialité : syndromes gériatriques, fragilité, iatrogénie, troubles cognitifs, douleur, os et ostéoporose, nutrition, urologie, ORL, et jusqu'aux aspects juridiques (sauvegarde de justice, APA). C'est un balayage exhaustif du programme, sans zone où se cacher. Une seule question par thème, mais tous les thèmes y passent."
  },
  {
   "t": "p",
@@ -90,7 +89,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "<strong>Et les questions attendent souvent des références nommées, pas une réponse approximative : le jury s'attend à ce que vous citiez le score, l'échelle ou la classification de référence en vigueur dans votre spécialité, tels qu'ils figurent dans les recommandations françaises actuelles. Il ne cherche pas une culture générale : il attend le référentiel précis, à jour à la date de l'épreuve.</strong>"
+  "html": "Et les questions attendent souvent des références nommées, pas une réponse approximative : le jury s'attend à ce que vous citiez le score, l'échelle ou la classification de référence en vigueur dans votre spécialité, tels qu'ils figurent dans les recommandations françaises actuelles. Il ne cherche pas une culture générale : il attend le référentiel précis, à jour à la date de l'épreuve."
  },
  {
   "t": "callout",
@@ -107,19 +106,18 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "<strong>Là encore, un chiffre concret aide à mesurer l'exigence. Le sujet de gériatrie 2025 proposait quatre dossiers, chacun avec cinq à neuf questions. Vous ne traitez pas un patient, mais plusieurs cas complexes le même jour, avec des polypathologies lourdes et des enchaînements diagnostiques serrés.</strong>"
+  "html": "<strong>Là encore, un chiffre concret aide à mesurer l'exigence.</strong> Le sujet de gériatrie 2025 proposait quatre dossiers, chacun avec cinq à neuf questions. Vous ne traitez pas un patient, mais plusieurs cas complexes le même jour, avec des polypathologies lourdes et des enchaînements diagnostiques serrés."
  },
  {
   "t": "p",
   "html": "Deux formats méritent une préparation spécifique, parce qu'ils sont discriminants et faciles à travailler à l'avance :"
  },
  {
-  "t": "p",
-  "html": "<strong>L'imagerie à interpréter : les dossiers 2025 comportaient une radiographie du genou et une radiographie thoracique à lire soi-même, intégrées au raisonnement.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>La prescription complète et datée : on demandait de rédiger une prescription d'apixaban sur les dix premiers jours, ou une antibiothérapie avec sa durée. Pas de « on anticoagule » : la posologie, le rythme, la durée, écrits comme sur une vraie ordonnance.</strong>"
+  "t": "ul",
+  "items": [
+   "<strong>L'imagerie à interpréter :</strong> les dossiers 2025 comportaient une radiographie du genou et une radiographie thoracique à lire soi-même, intégrées au raisonnement.",
+   "<strong>La prescription complète et datée :</strong> on demandait de rédiger une prescription d'apixaban sur les dix premiers jours, ou une antibiothérapie avec sa durée. Pas de « on anticoagule » : la posologie, le rythme, la durée, écrits comme sur une vraie ordonnance."
+  ]
  },
  {
   "t": "p",
@@ -131,8 +129,9 @@ export const CONTENT: Block[] = [
   "html": "L'autre point qui fait la différence sur nos corrections : la hiérarchisation. Face à un patient complexe, le candidat qui ouvre par l'urgence vitale et organise sa réponse par priorités marque immédiatement plus de points que celui qui déverse tout ce qu'il sait dans le désordre — même à connaissances égales. Le correcteur doit voir votre raisonnement, pas le reconstituer."
  },
  {
-  "t": "p",
-  "html": "<strong>Vous souhaitez connaître votre niveau avant les EVC ? Réalisez gratuitement votre Profil EVC personnalisé et obtenez une première analyse de votre préparation. 👉 Faire mon Profil EVC gratuit →</strong>"
+  "t": "callout",
+  "tone": "key",
+  "html": "Vous souhaitez connaître votre niveau avant les EVC ? Réalisez gratuitement votre Profil EVC personnalisé et obtenez une première analyse de votre préparation. <a href=\"/profil-evc\">Faire mon Profil EVC gratuit →</a>"
  },
  {
   "t": "h2",
@@ -155,8 +154,13 @@ export const CONTENT: Block[] = [
   "html": "Ce qui fait une bonne copie en voie externe :"
  },
  {
-  "t": "p",
-  "html": "Les termes précis issus des recommandations, placés clairement — pas enfouis dans une phrase. La hiérarchisation : urgence d'abord, indispensable ensuite, utile en dernier. Les diagnostics différentiels, cités et éliminés brièvement. Et la concision : une réponse qui va droit au but impressionne davantage qu'une réponse qui tourne autour."
+  "t": "ul",
+  "items": [
+   "Les termes précis issus des recommandations, placés clairement — pas enfouis dans une phrase.",
+   "La hiérarchisation : urgence d'abord, indispensable ensuite, utile en dernier.",
+   "Les diagnostics différentiels, cités et éliminés brièvement.",
+   "La concision : une réponse qui va droit au but impressionne davantage qu'une réponse qui tourne autour."
+  ]
  },
  {
   "t": "p",
@@ -164,7 +168,16 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Ce qui coûte des points : répondre trop longuement, utiliser les protocoles du pays d'origine à la place des recommandations HAS, oublier de hiérarchiser, manquer de temps sur les dernières questions parce qu'on a trop développé les premières."
+  "html": "Ce qui coûte des points :"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "répondre trop longuement ;",
+   "utiliser les protocoles du pays d'origine à la place des recommandations HAS ;",
+   "oublier de hiérarchiser ;",
+   "manquer de temps sur les dernières questions parce qu'on a trop développé les premières."
+  ]
  },
  {
   "t": "h2",
@@ -175,20 +188,13 @@ export const CONTENT: Block[] = [
   "html": "Pas cinq erreurs dans une liste. Quatre choses, concrètes, qui reviennent vraiment."
  },
  {
-  "t": "p",
-  "html": "<strong>Donner plus de réponses que demandé. C'est l'erreur formelle la plus sournoise, et le sujet EVCF s'ouvre justement sur cet avertissement : proposer plus de réponses que demandé peut entraîner un zéro à la question. Quand on demande « citez 3 échelles » et que vous en mettez cinq « pour sécuriser », vous ne sécurisez rien — vous risquez la note nulle. Le réflexe naturel du candidat bien préparé est exactement le mauvais. Lisez le nombre demandé, donnez ce nombre, arrêtez-vous.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>La copie qui noie l'essentiel. Un candidat qui sait, mais qui rédige des paragraphes entiers là où le jury attend trois lignes structurées. Le correcteur passe à la suivante. Les points partent.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>Les recommandations du mauvais pays. Pas par négligence — par habitude. Dix ans à pratiquer selon un référentiel, ça s'ancre. Aux EVC, la bonne réponse, c'est la recommandation HAS française en vigueur à la date de l'épreuve. Même si dans votre pays la pratique est différente — et médicalement défendable.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>L'entraînement sur des supports inadaptés. Des cas cliniques EDN, des QCM d'internat, des fiches pour étudiants. Ça occupe, ça rassure — mais ça ne prépare pas aux EVC. Quand le jury attend un score ou une classification de référence nommément, une fiche d'externe ne suffit pas. Le niveau attendu, le format de réponse, les références utilisées : tout est différent. Travailler les bons supports dès le départ, c'est ne pas perdre des semaines à désapprendre.</strong>"
+  "t": "ul",
+  "items": [
+   "<strong>Donner plus de réponses que demandé.</strong> C'est l'erreur formelle la plus sournoise, et le sujet EVCF s'ouvre justement sur cet avertissement : proposer plus de réponses que demandé peut entraîner un zéro à la question. Quand on demande « citez 3 échelles » et que vous en mettez cinq « pour sécuriser », vous ne sécurisez rien — vous risquez la note nulle. Le réflexe naturel du candidat bien préparé est exactement le mauvais. Lisez le nombre demandé, donnez ce nombre, arrêtez-vous.",
+   "<strong>La copie qui noie l'essentiel.</strong> Un candidat qui sait, mais qui rédige des paragraphes entiers là où le jury attend trois lignes structurées. Le correcteur passe à la suivante. Les points partent.",
+   "<strong>Les recommandations du mauvais pays.</strong> Pas par négligence — par habitude. Dix ans à pratiquer selon un référentiel, ça s'ancre. Aux EVC, la bonne réponse, c'est la recommandation HAS française en vigueur à la date de l'épreuve. Même si dans votre pays la pratique est différente — et médicalement défendable.",
+   "<strong>L'entraînement sur des supports inadaptés.</strong> Des cas cliniques EDN, des QCM d'internat, des fiches pour étudiants. Ça occupe, ça rassure — mais ça ne prépare pas aux EVC. Quand le jury attend un score ou une classification de référence nommément, une fiche d'externe ne suffit pas. Le niveau attendu, le format de réponse, les références utilisées : tout est différent. Travailler les bons supports dès le départ, c'est ne pas perdre des semaines à désapprendre."
+  ]
  },
  {
   "t": "h2",
@@ -201,15 +207,12 @@ export const CONTENT: Block[] = [
  {
   "t": "img",
   "src": "/blog/blog2026/evc-voie-externe-comprendre-4.png",
-  "alt": "Illustration"
+  "alt": "Diagramme en barres de la répartition des 1 003 postes de la voie externe 2026 par spécialité, de la MIPIC (213 postes) à la pneumologie (17 postes)",
+  "caption": "Répartition des 1 003 postes de voie externe 2026, spécialité par spécialité."
  },
  {
   "t": "p",
   "html": "Voici la répartition officielle des 1 003 postes de voie externe, spécialité par spécialité."
- },
- {
-  "t": "p",
-  "html": "Le tableau complet, avec les chiffres exacts :"
  },
  {
   "t": "table",
@@ -285,20 +288,13 @@ export const CONTENT: Block[] = [
   "text": "Calendrier EVC 2026"
  },
  {
-  "t": "p",
-  "html": "<strong>Inscriptions : du 17 juin 2026 à 14h00 au 16 juillet 2026 à 17h00, heure de Paris. Exclusivement en ligne sur www.cng.sante.fr. Une seule candidature possible — toute tentative de double inscription entraîne le rejet définitif et immédiat des deux dossiers.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>Épreuves : à partir de novembre 2026, à l'Espace Jean Monnet à Rungis (Val-de-Marne). Les deux épreuves EVCF et EVCP se passent le même jour, en présentiel uniquement.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>Si vous venez de l'étranger : anticipez le visa et l'hébergement à Paris. Rungis est en région parisienne — prévoir au minimum une nuit sur place.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>Résultats et affectation : premier trimestre 2027.</strong>"
+  "t": "ul",
+  "items": [
+   "<strong>Inscriptions :</strong> du 17 juin 2026 à 14h00 au 16 juillet 2026 à 17h00, heure de Paris. Exclusivement en ligne sur www.cng.sante.fr. Une seule candidature possible — toute tentative de double inscription entraîne le rejet définitif et immédiat des deux dossiers.",
+   "<strong>Épreuves :</strong> à partir de novembre 2026, à l'Espace Jean Monnet à Rungis (Val-de-Marne). Les deux épreuves EVCF et EVCP se passent le même jour, en présentiel uniquement.",
+   "<strong>Si vous venez de l'étranger :</strong> anticipez le visa et l'hébergement à Paris. Rungis est en région parisienne — prévoir au minimum une nuit sur place.",
+   "<strong>Résultats et affectation :</strong> premier trimestre 2027."
+  ]
  },
  {
   "t": "h2",
@@ -309,16 +305,40 @@ export const CONTENT: Block[] = [
   "html": "Avant d'ouvrir la plateforme du CNG, réunissez tout. Une fois la session d'inscription lancée, impossible de la sauvegarder et d'y revenir — vous devez soumettre en une seule fois. Et le CNG ne délivre aucun duplicata de l'accusé de réception : conservez-le précieusement."
  },
  {
-  "t": "p",
-  "html": "<strong>Documents obligatoires ☐ Pièce d'identité en cours de validité ☐ Diplôme de docteur en médecine hors UE ☐ Diplôme de spécialité dans la discipline choisie — sauf pour les 5 spécialités avec dérogation (médecine générale, gériatrie, médecine d'urgence, psychiatrie, MIPIC) si vous avez un droit d'exercice plénier dans votre pays ☐ Justificatif de niveau B2 minimum en français (TCF, DELF, DALF) — non requis pour les ressortissants de pays francophones et les titulaires d'un baccalauréat français</strong>"
+  "t": "h3",
+  "text": "Documents obligatoires"
  },
  {
-  "t": "p",
-  "html": "<strong>Traductions ☐ Tout document non rédigé en français doit être traduit par un traducteur assermenté ☐ Commencer les traductions maintenant — plusieurs semaines de délai sont fréquentes</strong>"
+  "t": "ul",
+  "items": [
+   "Pièce d'identité en cours de validité.",
+   "Diplôme de docteur en médecine hors UE.",
+   "Diplôme de spécialité dans la discipline choisie — sauf pour les 5 spécialités avec dérogation (médecine générale, gériatrie, médecine d'urgence, psychiatrie, MIPIC) si vous avez un droit d'exercice plénier dans votre pays.",
+   "Justificatif de niveau B2 minimum en français (TCF, DELF, DALF) — non requis pour les ressortissants de pays francophones et les titulaires d'un baccalauréat français."
+  ]
  },
  {
-  "t": "p",
-  "html": "<strong>Avant de valider ☐ Tous les documents sont numérisés, lisibles, complets ☐ Vous n'avez pas ouvert de dossier sur une autre ARS ou en voie interne ☐ L'accusé de réception est téléchargé et conservé</strong>"
+  "t": "h3",
+  "text": "Traductions"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "Tout document non rédigé en français doit être traduit par un traducteur assermenté.",
+   "Commencer les traductions maintenant — plusieurs semaines de délai sont fréquentes."
+  ]
+ },
+ {
+  "t": "h3",
+  "text": "Avant de valider"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "Tous les documents sont numérisés, lisibles, complets.",
+   "Vous n'avez pas ouvert de dossier sur une autre ARS ou en voie interne.",
+   "L'accusé de réception est téléchargé et conservé."
+  ]
  },
  {
   "t": "h2",
@@ -329,60 +349,47 @@ export const CONTENT: Block[] = [
   "html": "La voie externe demande un travail différent de la voie interne. Il ne s'agit pas d'acquérir des automatismes de QCM — il s'agit d'apprendre à écrire selon un format précis, que le correcteur reconnaît en quelques secondes."
  },
  {
-  "t": "note",
-  "text": "dossier clinique sur la plateforme Major ECN avec question et zone de rédaction"
- },
- {
   "t": "p",
   "html": "Concrètement, quatre chantiers :"
  },
  {
-  "t": "p",
-  "html": "Travailler des QROC et des dossiers cliniques calibrés au niveau réel des EVC — pas des cas cliniques EDN. Avec le bon volume : une épreuve de connaissances fondamentales, c'est plusieurs dizaines de questions balayant tout le programme, et une épreuve pratique, c'est plusieurs dossiers d'affilée."
- },
- {
-  "t": "p",
-  "html": "S'entraîner à la forme attendue : donner le nombre exact de réponses demandé (ni plus, ni moins), interpréter une imagerie intégrée au dossier, rédiger une prescription complète et datée. Ce sont des gestes qui se travaillent et qui rapportent des points sûrs."
- },
- {
-  "t": "p",
-  "html": "Apprendre à rédiger pour un correcteur : structure d'abord, développement ensuite. Et s'entraîner en conditions chronométrées, pour que la gestion du temps soit automatique le jour J."
- },
- {
-  "t": "p",
-  "html": "Mettre à jour ses recommandations HAS dans sa spécialité — en continu, pas la semaine avant. Le jury attend les référentiels à jour, cités précisément."
- },
- {
-  "t": "note",
-  "text": "correction annotée d'une réponse avec les mots-clés attendus et la structure idéale"
+  "t": "ol",
+  "items": [
+   "Travailler des QROC et des dossiers cliniques calibrés au niveau réel des EVC — pas des cas cliniques EDN. Avec le bon volume : une épreuve de connaissances fondamentales, c'est plusieurs dizaines de questions balayant tout le programme, et une épreuve pratique, c'est plusieurs dossiers d'affilée.",
+   "S'entraîner à la forme attendue : donner le nombre exact de réponses demandé (ni plus, ni moins), interpréter une imagerie intégrée au dossier, rédiger une prescription complète et datée. Ce sont des gestes qui se travaillent et qui rapportent des points sûrs.",
+   "Apprendre à rédiger pour un correcteur : structure d'abord, développement ensuite. Et s'entraîner en conditions chronométrées, pour que la gestion du temps soit automatique le jour J.",
+   "Mettre à jour ses recommandations HAS dans sa spécialité — en continu, pas la semaine avant. Le jury attend les référentiels à jour, cités précisément."
+  ]
  },
  {
   "t": "p",
   "html": "Et si possible, avoir quelqu'un qui lit vos copies et vous dit précisément ce qui manque. Pas \"c'est bien\" ou \"c'est insuffisant\" — mais pourquoi, et comment corriger. C'est souvent ce qui fait la différence entre deux candidats de niveau équivalent."
  },
  {
-  "t": "note",
-  "text": "tableau de bord de progression par thème et par type de question"
- },
- {
   "t": "h2",
   "text": "Ce que disent ceux qui ont réussi"
  },
  {
-  "t": "p",
-  "html": "<strong>[PHOTO LAURÉAT] Dr Ahmed Sifaoui — Gériatrie · Lauréat EVC 2025, voie externe  « Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit. »</strong>"
+  "t": "quote",
+  "author": "Dr Ahmed Sifaoui",
+  "role": "Gériatrie · Lauréat EVC 2025, voie externe",
+  "text": "Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit."
+ },
+ {
+  "t": "quote",
+  "author": "Dr Bill Baron Wankpo",
+  "role": "Médecine générale · Lauréat EVC",
+  "text": "Connaître son cours ne suffit pas : ce qui fait la différence, c'est de savoir comment répondre selon ce que le jury attend — pas selon ce qu'on aurait dit à un collègue."
+ },
+ {
+  "t": "quote",
+  "author": "Dr Leila Bettaieb",
+  "role": "Médecine générale · Lauréate EVC",
+  "text": "Une méthode claire, de bons supports et un véritable accompagnement. Ce qui compte le plus : comprendre précisément, dossier après dossier, ce qui est attendu dans chaque réponse."
  },
  {
   "t": "p",
-  "html": "<strong>[PHOTO LAURÉAT] Dr Bill Baron Wankpo — Médecine générale · Lauréat EVC  Ce qu'il retient : connaître son cours ne suffit pas. Ce qui fait la différence, c'est de savoir comment répondre selon ce que le jury attend — pas selon ce qu'on aurait dit à un collègue.</strong>"
- },
- {
-  "t": "p",
-  "html": "<strong>[PHOTO LAURÉAT] Dr Leila Bettaieb — Médecine générale · Lauréate « Une méthode claire, de bons supports et un véritable accompagnement. » Ce qu'elle retient surtout : comprendre précisément, dossier après dossier, ce qui était attendu dans chaque réponse.</strong>"
- },
- {
-  "t": "p",
-  "html": "Voir tous les témoignages →"
+  "html": "<a href=\"/temoignages\">Voir tous les témoignages →</a>"
  },
  {
   "t": "related",

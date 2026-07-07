@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getArticleBySlug, getPublishedArticles, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
+import { getDbArticleBySlug, getDbPublishedArticles } from '@/lib/data/blog-db';
 import { JsonLd, articleSchema, breadcrumbSchema } from '@/components/seo/json-ld';
 import { ArticleRemuneration } from '@/components/marketing/blog/articles/article-remuneration';
 import { ArticleStructuresPcc } from '@/components/marketing/blog/articles/article-structures-pcc';
@@ -24,7 +25,7 @@ export async function generateMetadata({
   params,
 }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const a = getArticleBySlug(slug);
+  const a = getArticleBySlug(slug) ?? (await getDbArticleBySlug(slug))?.meta ?? null;
   if (!a) return { title: 'Article introuvable — Major ECN' };
   return {
     title: `${a.title} — Blog Major ECN`,
@@ -84,28 +85,51 @@ function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArt
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
-  if (!article) notFound();
   const today = new Date().toISOString().slice(0, 10);
-  if (article.publishedAt && article.publishedAt > today) notFound();
+
+  const article = getArticleBySlug(slug);
+
+  // Article statique (composant dédié ou contenu riche embarqué).
+  if (article) {
+    if (article.publishedAt && article.publishedAt > today) notFound();
+    return (
+      <>
+        <JsonLd data={jsonLdFor(article, slug)} />
+        {articleBody(slug, article)}
+      </>
+    );
+  }
+
+  // Article créé depuis /admin/blog (base de données), rendu par le même gabarit premium.
+  const dbArticle = await getDbArticleBySlug(slug);
+  if (!dbArticle) notFound();
+  const extraPublishedSlugs = (await getDbPublishedArticles()).map((a) => a.slug);
 
   return (
     <>
-      <JsonLd data={[
-        articleSchema({
-          title: article.title,
-          description: article.excerpt,
-          slug,
-          image: article.image ?? BLOG_CATEGORY_IMAGE[article.category],
-          datePublished: article.publishedAt,
-        }),
-        breadcrumbSchema([
-          { name: 'Accueil', path: '/' },
-          { name: 'Blog', path: '/blog' },
-          { name: article.title, path: `/blog/${slug}` },
-        ]),
-      ]} />
-      {articleBody(slug, article)}
+      <JsonLd data={jsonLdFor(dbArticle.meta, slug)} />
+      <ArticleRich
+        article={dbArticle.meta}
+        blocks={dbArticle.blocks}
+        extraPublishedSlugs={extraPublishedSlugs}
+      />
     </>
   );
+}
+
+function jsonLdFor(article: NonNullable<ReturnType<typeof getArticleBySlug>>, slug: string) {
+  return [
+    articleSchema({
+      title: article.title,
+      description: article.excerpt,
+      slug,
+      image: article.image ?? BLOG_CATEGORY_IMAGE[article.category],
+      datePublished: article.publishedAt,
+    }),
+    breadcrumbSchema([
+      { name: 'Accueil', path: '/' },
+      { name: 'Blog', path: '/blog' },
+      { name: article.title, path: `/blog/${slug}` },
+    ]),
+  ];
 }

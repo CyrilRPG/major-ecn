@@ -4,7 +4,7 @@ export const CONTENT: Block[] = [
  {
   "t": "hero",
   "src": "/blog/blog2026/comment-rediger-qroc-evc-1.jpeg",
-  "alt": "Médecin rédigeant une QROC lors d'une épreuve de vérification des connaissances EVC"
+  "alt": "Main tenant un stylo au-dessus d'une copie d'examen, avec le titre « Comment rédiger une QROC aux EVC »"
  },
  {
   "t": "h2",
@@ -47,8 +47,9 @@ export const CONTENT: Block[] = [
   "html": "C'est toute la particularité des QROC — ces questions à réponse ouverte courte qui composent l'essentiel de l'épreuve de connaissances fondamentales (EVCF) en voie externe."
  },
  {
-  "t": "p",
-  "html": "✔ À retenir Une QROC n'évalue pas uniquement vos connaissances médicales. Elle évalue également votre capacité à restituer ces connaissances de façon précise, structurée et directement exploitable par le correcteur."
+  "t": "callout",
+  "tone": "warning",
+  "html": "Une QROC n'évalue pas uniquement vos connaissances médicales. Elle évalue également votre capacité à restituer ces connaissances de façon précise, structurée et directement exploitable par le correcteur."
  },
  {
   "t": "h2",
@@ -96,31 +97,17 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Exemple — Question : « Citez quatre facteurs de risque… »"
+  "html": "<strong>Exemple — Question :</strong> « Citez quatre facteurs de risque… »"
  },
  {
-  "t": "p",
-  "html": "❌ Réponse peu efficace : « Les principaux facteurs sont notamment l'âge, certains traitements, différents antécédents, plusieurs pathologies chroniques ainsi que d'autres situations qu'il convient également de rechercher… »"
+  "t": "callout",
+  "tone": "warning",
+  "html": "<strong>Réponse peu efficace :</strong> « Les principaux facteurs sont notamment l'âge, certains traitements, différents antécédents, plusieurs pathologies chroniques ainsi que d'autres situations qu'il convient également de rechercher… »"
  },
  {
-  "t": "p",
-  "html": "✔ Réponse efficace :"
- },
- {
-  "t": "p",
-  "html": "Âge"
- },
- {
-  "t": "p",
-  "html": "Traitement…"
- },
- {
-  "t": "p",
-  "html": "Antécédent…"
- },
- {
-  "t": "p",
-  "html": "Facteur…"
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Réponse efficace :</strong><ul><li>Âge</li><li>Traitement…</li><li>Antécédent…</li><li>Facteur…</li></ul>"
  },
  {
   "t": "p",
@@ -200,8 +187,9 @@ export const CONTENT: Block[] = [
   "html": "Aux EVC, ce raisonnement est dangereux. La consigne figurant en tête de certaines épreuves est explicite. Le sujet de gériatrie 2025 la place tout en haut de la première page, avant même la première question :"
  },
  {
-  "t": "p",
-  "html": "« Les candidats sont informés qu'ils doivent donner le nombre exact de réponses demandées. Proposer plus de réponses que demandées peut entraîner un zéro à la question. » — Consigne officielle, sujet EVCF de gériatrie, session 2025"
+  "t": "callout",
+  "tone": "source",
+  "html": "« Les candidats sont informés qu'ils doivent donner le nombre exact de réponses demandées. Proposer plus de réponses que demandées peut entraîner un zéro à la question. » — Consigne officielle, sujet EVCF de gériatrie, session 2025."
  },
  {
   "t": "p",
@@ -216,8 +204,9 @@ export const CONTENT: Block[] = [
   "html": "L'objectif n'est pas de montrer tout ce que vous savez. L'objectif est de montrer que vous savez identifier précisément les éléments attendus."
  },
  {
-  "t": "p",
-  "html": "✔ Bon réflexe Avant même de réfléchir à votre réponse, repérez le nombre exact d'éléments demandés. Ce simple réflexe évite des erreurs qui peuvent coûter plusieurs points sur une épreuve."
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Bon réflexe.</strong> Avant même de réfléchir à votre réponse, repérez le nombre exact d'éléments demandés. Ce simple réflexe évite des erreurs qui peuvent coûter plusieurs points sur une épreuve."
  },
  {
   "t": "h2",
@@ -233,15 +222,21 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Utilisez des listes. Lorsqu'une question demande plusieurs éléments, privilégiez les tirets ou une numérotation. Cette présentation est beaucoup plus lisible qu'un paragraphe."
+  "html": "<strong>Utilisez des listes.</strong> Lorsqu'une question demande plusieurs éléments, privilégiez les tirets ou une numérotation. Cette présentation est beaucoup plus lisible qu'un paragraphe."
  },
  {
   "t": "p",
-  "html": "Placez le mot-clé dès le début. Évitez les longues introductions. Le correcteur cherche un diagnostic, un traitement, un critère ou un examen. Faites-le apparaître immédiatement."
+  "html": "<strong>Placez le mot-clé dès le début.</strong> Évitez les longues introductions. Le correcteur cherche un diagnostic, un traitement, un critère ou un examen. Faites-le apparaître immédiatement."
  },
  {
-  "t": "p",
-  "html": "❌ Moins efficace : « Chez ce patient, il paraît raisonnable d'envisager… » ✔ Plus efficace : « Antibiothérapie probabiliste : … »"
+  "t": "callout",
+  "tone": "warning",
+  "html": "<strong>Moins efficace :</strong> « Chez ce patient, il paraît raisonnable d'envisager… »"
+ },
+ {
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Plus efficace :</strong> « Antibiothérapie probabiliste : … »"
  },
  {
   "t": "p",
@@ -249,15 +244,15 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Répondez à toutes les parties de la question. Certaines QROC comportent plusieurs demandes dans une seule phrase — par exemple : « Décrivez la méthode de recherche puis donnez les critères diagnostiques. » Deux questions sont posées. Une copie qui ne répond qu'à la première partie ne pourra pas obtenir tous les points. Avant de passer à la question suivante, relisez rapidement l'énoncé pour vérifier que chaque demande a bien reçu une réponse."
+  "html": "<strong>Répondez à toutes les parties de la question.</strong> Certaines QROC comportent plusieurs demandes dans une seule phrase — par exemple : « Décrivez la méthode de recherche puis donnez les critères diagnostiques. » Deux questions sont posées. Une copie qui ne répond qu'à la première partie ne pourra pas obtenir tous les points. Avant de passer à la question suivante, relisez rapidement l'énoncé pour vérifier que chaque demande a bien reçu une réponse."
  },
  {
   "t": "p",
-  "html": "Ne laissez jamais une question vide. Même si vous hésitez, une réponse partielle rapporte souvent davantage qu'une absence de réponse. Si vous connaissez deux éléments sur quatre, écrivez-les. Si vous connaissez la moitié du raisonnement, indiquez-la. Quelques points peuvent parfois faire la différence au classement final."
+  "html": "<strong>Ne laissez jamais une question vide.</strong> Même si vous hésitez, une réponse partielle rapporte souvent davantage qu'une absence de réponse. Si vous connaissez deux éléments sur quatre, écrivez-les. Si vous connaissez la moitié du raisonnement, indiquez-la. Quelques points peuvent parfois faire la différence au classement final."
  },
  {
   "t": "p",
-  "html": "Gérez votre temps. Les QROC s'enchaînent rapidement. Passer dix minutes sur une seule question peut vous empêcher de répondre correctement à plusieurs autres. Lorsqu'une question vous bloque : notez ce dont vous êtes certain, passez à la suivante, revenez-y si le temps le permet. Cette stratégie est souvent plus rentable que de rester bloqué."
+  "html": "<strong>Gérez votre temps.</strong> Les QROC s'enchaînent rapidement. Passer dix minutes sur une seule question peut vous empêcher de répondre correctement à plusieurs autres. Lorsqu'une question vous bloque : notez ce dont vous êtes certain, passez à la suivante, revenez-y si le temps le permet. Cette stratégie est souvent plus rentable que de rester bloqué."
  },
  {
   "t": "h2",
@@ -304,8 +299,9 @@ export const CONTENT: Block[] = [
   "html": "La meilleure présentation est simple : une cause par ligne, aucune explication inutile, exactement six réponses. Si vous en oubliez une, vous perdez des points. Si vous en ajoutez plusieurs « par sécurité », vous prenez le risque de ne pas respecter la consigne."
  },
  {
-  "t": "p",
-  "html": "✔ Réflexe à adopter Lorsque la question commence par « Citez », demandez-vous immédiatement : combien d'éléments sont attendus ?"
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Réflexe à adopter.</strong> Lorsque la question commence par « Citez », demandez-vous immédiatement : combien d'éléments sont attendus ?"
  },
  {
   "t": "h3",
@@ -324,16 +320,12 @@ export const CONTENT: Block[] = [
   "html": "La bonne stratégie consiste à organiser sa réponse de façon très visuelle :"
  },
  {
-  "t": "p",
-  "html": "Échelle n°1 → type de douleur évaluée"
- },
- {
-  "t": "p",
-  "html": "Échelle n°2 → type de douleur évaluée"
- },
- {
-  "t": "p",
-  "html": "Échelle n°3 → type de douleur évaluée"
+  "t": "ul",
+  "items": [
+   "Échelle n°1 → type de douleur évaluée",
+   "Échelle n°2 → type de douleur évaluée",
+   "Échelle n°3 → type de douleur évaluée"
+  ]
  },
  {
   "t": "p",
@@ -392,24 +384,14 @@ export const CONTENT: Block[] = [
   "html": "Ces cinq QROC sont très différentes sur le plan médical. En revanche, elles reposent toutes sur les mêmes principes méthodologiques. Avant de rédiger votre réponse, prenez quelques secondes pour vous poser les bonnes questions :"
  },
  {
-  "t": "p",
-  "html": "Combien d'éléments sont demandés ?"
- },
- {
-  "t": "p",
-  "html": "Y a-t-il plusieurs sous-questions ?"
- },
- {
-  "t": "p",
-  "html": "Une justification est-elle attendue ?"
- },
- {
-  "t": "p",
-  "html": "Dois-je donner une définition, une liste, une conduite à tenir ou un raisonnement ?"
- },
- {
-  "t": "p",
-  "html": "Comment rendre ma réponse immédiatement lisible ?"
+  "t": "ul",
+  "items": [
+   "Combien d'éléments sont demandés ?",
+   "Y a-t-il plusieurs sous-questions ?",
+   "Une justification est-elle attendue ?",
+   "Dois-je donner une définition, une liste, une conduite à tenir ou un raisonnement ?",
+   "Comment rendre ma réponse immédiatement lisible ?"
+  ]
  },
  {
   "t": "p",
@@ -444,8 +426,9 @@ export const CONTENT: Block[] = [
   "html": "Autrement dit, ce ne sont pas seulement vos connaissances qui sont évaluées. C'est votre capacité à les mobiliser dans une situation concrète."
  },
  {
-  "t": "p",
-  "html": "✔ Le bon réflexe Chaque fois que vous lisez les mots « pourquoi », « justifiez », « expliquez » ou qu'une réponse par oui/non est attendue, demandez-vous immédiatement : quel est le raisonnement que le correcteur souhaite retrouver ?"
+  "t": "callout",
+  "tone": "tip",
+  "html": "<strong>Le bon réflexe.</strong> Chaque fois que vous lisez les mots « pourquoi », « justifiez », « expliquez » ou qu'une réponse par oui/non est attendue, demandez-vous immédiatement : quel est le raisonnement que le correcteur souhaite retrouver ?"
  },
  {
   "t": "h2",
@@ -492,8 +475,16 @@ export const CONTENT: Block[] = [
   "html": "Avant de tourner la dernière page de votre copie, prenez une minute pour vérifier ces quelques points."
  },
  {
-  "t": "p",
-  "html": "☐ J'ai respecté le nombre exact de réponses demandé ☐ Chaque réponse est claire, courte et facile à lire ☐ Les mots-clés apparaissent immédiatement ☐ J'ai répondu à toutes les sous-questions ☐ Toutes les réponses nécessitant une justification sont réellement justifiées ☐ Aucune question n'est restée vide ☐ J'ai relu rapidement ma copie pour repérer un oubli évident"
+  "t": "ul",
+  "items": [
+   "J'ai respecté le nombre exact de réponses demandé",
+   "Chaque réponse est claire, courte et facile à lire",
+   "Les mots-clés apparaissent immédiatement",
+   "J'ai répondu à toutes les sous-questions",
+   "Toutes les réponses nécessitant une justification sont réellement justifiées",
+   "Aucune question n'est restée vide",
+   "J'ai relu rapidement ma copie pour repérer un oubli évident"
+  ]
  },
  {
   "t": "p",
@@ -508,8 +499,9 @@ export const CONTENT: Block[] = [
   "html": "Si vous ne deviez retenir que cinq idées de cet article :"
  },
  {
-  "t": "p",
-  "html": "✅ Respectez le nombre exact de réponses demandé ✅ Répondez précisément à la question posée, sans réciter votre cours ✅ Placez les mots-clés dès le début de chaque réponse ✅ Justifiez votre réponse lorsque la consigne le demande ✅ Gardez quelques minutes pour relire votre copie"
+  "t": "callout",
+  "tone": "key",
+  "html": "<ul><li>Respectez le nombre exact de réponses demandé.</li><li>Répondez précisément à la question posée, sans réciter votre cours.</li><li>Placez les mots-clés dès le début de chaque réponse.</li><li>Justifiez votre réponse lorsque la consigne le demande.</li><li>Gardez quelques minutes pour relire votre copie.</li></ul>"
  },
  {
   "t": "h2",

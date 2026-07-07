@@ -65,7 +65,7 @@ export const BLOG_ARTICLES: BlogArticleMeta[] = [
     excerpt: 'Découvrez comment Major ECN prépare les médecins PADHUE aux EVC depuis 2011 : plateforme, QCM et QROC corrigés, révisions transversales, cas cliniques et suivi pédagogique.',
     category: 'conseils-methodologie',
     readingMinutes: 11,
-    image: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-1.png',
+    image: '/blog/blog2026/comment-major-ecn-accompagne-candidats-evc-2.jpeg',
     readers: 0,
     publishedAt: '2026-07-06',
     featured: true,

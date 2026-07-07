@@ -4,7 +4,7 @@ export const CONTENT: Block[] = [
  {
   "t": "hero",
   "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-1.jpeg",
-  "alt": "Médecin consultant le calendrier des inscriptions EVC PAE 2026 sur le site du CNG"
+  "alt": "Carte-titre Major ECN : calendrier et inscription au concours PAE 2026 sur le site du CNG, avec un médecin en tenue de bloc consultant une tablette"
  },
  {
   "t": "h2",
@@ -54,7 +54,7 @@ export const CONTENT: Block[] = [
  {
   "t": "callout",
   "tone": "warning",
-  "html": "tout L'inscription se fait en ligne, en une seule fois, de façon définitive. Aucun dossier papier n'est accepté, aucune candidature n'est possible après la clôture, et le CNG ne délivre aucun duplicata de l'accusé de réception. Préparez tout avant d'ouvrir votre session."
+  "html": "L'inscription se fait en ligne, en une seule fois, de façon définitive. Aucun dossier papier n'est accepté, aucune candidature n'est possible après la clôture, et le CNG ne délivre aucun duplicata de l'accusé de réception. Préparez tout avant d'ouvrir votre session."
  },
  {
   "t": "h2",
@@ -70,7 +70,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Pourquoi les médecins diplômés hors UE sont essentiels à l'accès aux soins en France →"
+  "html": "<a href=\"/blog/impact-evc-acces-soins\">Pourquoi les médecins diplômés hors UE sont essentiels à l'accès aux soins en France →</a>"
  },
  {
   "t": "h2",
@@ -82,20 +82,21 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Inscriptions. La plateforme du CNG est ouverte du mercredi 17 juin 2026 à 14h00 au jeudi 16 juillet 2026 inclus à 17h00, heure de Paris. Après cette heure, la plateforme ferme automatiquement — aucune candidature ne peut plus être déposée, sans exception."
+  "html": "<strong>Inscriptions.</strong> La plateforme du CNG est ouverte du mercredi 17 juin 2026 à 14h00 au jeudi 16 juillet 2026 inclus à 17h00, heure de Paris. Après cette heure, la plateforme ferme automatiquement — aucune candidature ne peut plus être déposée, sans exception."
  },
  {
   "t": "p",
-  "html": "Épreuves. Les épreuves écrites se déroulent à partir du mois de novembre 2026, à l'Espace Jean Monnet, 47 rue des Solets, 94150 Rungis (Val-de-Marne), en présentiel uniquement. Les deux voies composent le même jour. Selon les horaires publiés par le CNG, l'épreuve de connaissances fondamentales (QCM en voie interne, rédactionnelle en voie externe) a lieu de 10h00 à 12h00, et l'épreuve de connaissances pratiques de la voie externe de 15h00 à 17h00. Le calendrier détaillé par profession et spécialité est communiqué par le CNG."
+  "html": "<strong>Épreuves.</strong> Les épreuves écrites se déroulent à partir du mois de novembre 2026, à l'Espace Jean Monnet, 47 rue des Solets, 94150 Rungis (Val-de-Marne), en présentiel uniquement. Les deux voies composent le même jour. Selon les horaires publiés par le CNG, l'épreuve de connaissances fondamentales (QCM en voie interne, rédactionnelle en voie externe) a lieu de 10h00 à 12h00, et l'épreuve de connaissances pratiques de la voie externe de 15h00 à 17h00. Le calendrier détaillé par profession et spécialité est communiqué par le CNG."
  },
  {
   "t": "p",
-  "html": "Résultats et affectation. La procédure nationale de choix de poste se déroule au cours du premier trimestre 2027. Les lauréats candidatent auprès des établissements, qui procèdent aux auditions ; la période d'audition ne peut excéder six mois à compter de la publication des résultats, sous peine de perdre le bénéfice du concours."
+  "html": "<strong>Résultats et affectation.</strong> La procédure nationale de choix de poste se déroule au cours du premier trimestre 2027. Les lauréats candidatent auprès des établissements, qui procèdent aux auditions ; la période d'audition ne peut excéder six mois à compter de la publication des résultats, sous peine de perdre le bénéfice du concours."
  },
  {
   "t": "img",
   "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-2.png",
-  "alt": "Illustration"
+  "alt": "Frise chronologique de la session EVC 2026 : inscriptions du 17 juin au 16 juillet 2026 sur cng.sante.fr, épreuves écrites à partir de novembre 2026 à Rungis, puis choix de poste au 1er trimestre 2027",
+  "caption": "Les trois grands jalons de la session EVC (PAE) 2026, de l'inscription au choix de poste."
  },
  {
   "t": "p",
@@ -111,16 +112,17 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "La voie externe est accessible à tous les PADHUE titulaires d'un diplôme définitif, sans condition d'exercice préalable en France. Elle comporte deux épreuves écrites de 2 heures chacune, de même coefficient : l'EVCF (connaissances fondamentales, sous forme de QROC) et l'EVCP (connaissances pratiques, sous forme de dossiers cliniques progressifs). En 2026, elle ouvre 1 003 postes de médecins dans 13 spécialités."
+  "html": "La <strong>voie externe</strong> est accessible à tous les PADHUE titulaires d'un diplôme définitif, sans condition d'exercice préalable en France. Elle comporte deux épreuves écrites de 2 heures chacune, de même coefficient : l'EVCF (connaissances fondamentales, sous forme de QROC) et l'EVCP (connaissances pratiques, sous forme de dossiers cliniques progressifs). En 2026, elle ouvre 1 003 postes de médecins dans 13 spécialités."
  },
  {
   "t": "p",
-  "html": "La voie interne est réservée aux PADHUE déjà en poste en France depuis au moins 2 ans sous autorisation temporaire. Elle comporte une épreuve unique de 2 heures, sous forme de QCM. En 2026, elle ouvre 2 896 postes de médecins — soit l'essentiel du recrutement."
+  "html": "La <strong>voie interne</strong> est réservée aux PADHUE déjà en poste en France depuis au moins 2 ans sous autorisation temporaire. Elle comporte une épreuve unique de 2 heures, sous forme de QCM. En 2026, elle ouvre 2 896 postes de médecins — soit l'essentiel du recrutement."
  },
  {
   "t": "img",
   "src": "/blog/blog2026/calendrier-inscription-concours-pae-2026-cng-3.png",
-  "alt": "Illustration"
+  "alt": "Tableau comparatif des deux voies du concours : voie interne (médecins PADHUE en poste depuis 2 ans, une épreuve de 2 h en QCM, 2 896 postes) et voie externe (PADHUE sans condition d'exercice, deux épreuves de 2 h en QROC et dossiers cliniques, 1 003 postes dans 13 spécialités)",
+  "caption": "Voie interne et voie externe : éligibilité, format des épreuves et postes ouverts en 2026."
  },
  {
   "t": "p",
@@ -128,7 +130,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Comment réussir les EVC : les conseils des lauréats →"
+  "html": "<a href=\"/blog/comment-reussir-les-evc-conseils-laureats\">Comment réussir les EVC : les conseils des lauréats →</a>"
  },
  {
   "t": "h2",
@@ -144,7 +146,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "Psychiatrie, MIPIC ou médecine générale : quelle spécialité choisir quand on est généraliste PADHUE ? →"
+  "html": "<a href=\"/blog/psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026\">Psychiatrie, MIPIC ou médecine générale : quelle spécialité choisir quand on est généraliste PADHUE ? →</a>"
  },
  {
   "t": "h2",
@@ -159,24 +161,14 @@ export const CONTENT: Block[] = [
   "html": "L'inscription est entièrement en ligne, sur la plateforme du CNG. Voici le déroulé."
  },
  {
-  "t": "p",
-  "html": "1. Réunir tous les documents à l'avance. Une fois la session d'inscription commencée, vous devez la finaliser et la soumettre en une seule fois : il n'est pas possible de sauvegarder un brouillon et de revenir plus tard. Numérisez donc toutes vos pièces avant d'ouvrir votre session."
- },
- {
-  "t": "p",
-  "html": "2. Choisir son ARS. Optez pour l'agence régionale de santé (ARS) de votre lieu de résidence si vous habitez en France, ou pour l'ARS de votre choix si vous résidez à l'étranger."
- },
- {
-  "t": "p",
-  "html": "3. Remplir le formulaire et déposer les pièces. Renseignez le formulaire d'inscription et téléversez l'ensemble de vos documents numérisés."
- },
- {
-  "t": "p",
-  "html": "4. Valider et récupérer son numéro d'enregistrement. À l'issue de la validation, une page s'ouvre automatiquement avec un numéro d'enregistrement à 8 chiffres. L'absence de ce numéro signifie que votre inscription n'a pas abouti : dans ce cas, recommencez le processus."
- },
- {
-  "t": "p",
-  "html": "5. Conserver l'accusé de réception. Téléchargez-le et sauvegardez-le immédiatement. Le CNG ne délivre aucun duplicata : c'est votre seule preuve d'inscription. Pensez à vérifier vos courriers indésirables (spams), où l'accusé peut parfois arriver."
+  "t": "ol",
+  "items": [
+   "<strong>Réunir tous les documents à l'avance.</strong> Une fois la session d'inscription commencée, vous devez la finaliser et la soumettre en une seule fois : il n'est pas possible de sauvegarder un brouillon et de revenir plus tard. Numérisez donc toutes vos pièces avant d'ouvrir votre session.",
+   "<strong>Choisir son ARS.</strong> Optez pour l'agence régionale de santé (ARS) de votre lieu de résidence si vous habitez en France, ou pour l'ARS de votre choix si vous résidez à l'étranger.",
+   "<strong>Remplir le formulaire et déposer les pièces.</strong> Renseignez le formulaire d'inscription et téléversez l'ensemble de vos documents numérisés.",
+   "<strong>Valider et récupérer son numéro d'enregistrement.</strong> À l'issue de la validation, une page s'ouvre automatiquement avec un numéro d'enregistrement à 8 chiffres. L'absence de ce numéro signifie que votre inscription n'a pas abouti : dans ce cas, recommencez le processus.",
+   "<strong>Conserver l'accusé de réception.</strong> Téléchargez-le et sauvegardez-le immédiatement. Le CNG ne délivre aucun duplicata : c'est votre seule preuve d'inscription. Pensez à vérifier vos courriers indésirables (spams), où l'accusé peut parfois arriver."
+  ]
  },
  {
   "t": "p",
@@ -185,20 +177,17 @@ export const CONTENT: Block[] = [
  {
   "t": "callout",
   "tone": "tip",
-  "html": "Notre conseil N'attendez pas la dernière semaine pour déposer votre dossier. Les traductions assermentées, certaines attestations administratives et les éventuels problèmes techniques peuvent prendre plusieurs jours à être résolus. Un dossier prêt tôt, c'est une source de stress en moins."
+  "html": "N'attendez pas la dernière semaine pour déposer votre dossier. Les traductions assermentées, certaines attestations administratives et les éventuels problèmes techniques peuvent prendre plusieurs jours à être résolus. Un dossier prêt tôt, c'est une source de stress en moins."
  },
  {
   "t": "callout",
   "tone": "warning",
-  "html": "Ne contactez pas les gestionnaires individuellement Le CNG précise que les candidats ne doivent pas contacter les gestionnaires par téléphone ou courriel individuel. Toutes les communications passent par la boîte fonctionnelle dédiée : CNG-EVC@sante.gouv.fr."
+  "html": "<strong>Ne contactez pas les gestionnaires individuellement.</strong> Le CNG précise que les candidats ne doivent pas contacter les gestionnaires par téléphone ou courriel individuel. Toutes les communications passent par la boîte fonctionnelle dédiée : CNG-EVC@sante.gouv.fr."
  },
  {
-  "t": "p",
-  "html": "<strong>[CAPTURE D'ÉCRAN — Espace découverte Major ECN. Légende : pendant que votre dossier est en cours de préparation, vous pouvez déjà commencer vos révisions gratuitement.]</strong>"
- },
- {
-  "t": "p",
-  "html": "EVC PAE : le guide complet pour s'inscrire aux épreuves de vérification des connaissances →"
+  "t": "callout",
+  "tone": "tip",
+  "html": "Pendant que votre dossier est en cours de préparation, vous pouvez déjà commencer vos révisions gratuitement sur la <a href=\"/plateforme\">plateforme Major ECN</a>."
  },
  {
   "t": "h2",
@@ -209,20 +198,13 @@ export const CONTENT: Block[] = [
   "html": "Les pièces exactes dépendent de votre voie et de votre situation, mais le socle commun comprend :"
  },
  {
-  "t": "p",
-  "html": "une pièce d'identité en cours de validité ;"
- },
- {
-  "t": "p",
-  "html": "le diplôme de docteur (hors UE) dans votre profession ;"
- },
- {
-  "t": "p",
-  "html": "le diplôme de spécialité (hors UE) dans lequel vous vous inscrivez — sauf pour les spécialités dérogatoires ;"
- },
- {
-  "t": "p",
-  "html": "un document attestant la maîtrise du français, sauf pour les ressortissants de pays francophones."
+  "t": "ul",
+  "items": [
+   "une pièce d'identité en cours de validité ;",
+   "le diplôme de docteur (hors UE) dans votre profession ;",
+   "le diplôme de spécialité (hors UE) dans lequel vous vous inscrivez — sauf pour les spécialités dérogatoires ;",
+   "un document attestant la maîtrise du français, sauf pour les ressortissants de pays francophones."
+  ]
  },
  {
   "t": "p",
@@ -234,7 +216,7 @@ export const CONTENT: Block[] = [
  },
  {
   "t": "p",
-  "html": "EVC PAE : la liste complète des documents à fournir →"
+  "html": "<a href=\"/blog/evc-pae-liste-documents-fournir\">EVC PAE : la liste complète des documents à fournir →</a>"
  },
  {
   "t": "h2",
@@ -245,8 +227,14 @@ export const CONTENT: Block[] = [
   "html": "Si vous ne deviez retenir que cinq points sur l'inscription au concours PAE 2026 :"
  },
  {
-  "t": "p",
-  "html": "✅ Inscriptions du 17 juin au 16 juillet 2026, uniquement sur cng.sante.fr ✅ Une seule candidature : une spécialité, une ARS, une voie ✅ Dossier à soumettre en une seule fois, sans brouillon possible ✅ Conservez votre accusé de réception : aucun duplicata n'est délivré ✅ Épreuves à Rungis dès novembre 2026, choix de poste au 1er trimestre 2027"
+  "t": "ul",
+  "items": [
+   "Inscriptions du 17 juin au 16 juillet 2026, uniquement sur cng.sante.fr ;",
+   "une seule candidature : une spécialité, une ARS, une voie ;",
+   "dossier à soumettre en une seule fois, sans brouillon possible ;",
+   "conservez votre accusé de réception : aucun duplicata n'est délivré ;",
+   "épreuves à Rungis dès novembre 2026, choix de poste au 1er trimestre 2027."
+  ]
  },
  {
   "t": "h2",
