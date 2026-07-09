@@ -8,6 +8,7 @@ import {
   Menu, Microscope, Pill, Stethoscope, X,
 } from 'lucide-react';
 import { PRIVE_MATIERES } from '@/lib/data/prive-courses';
+import { filterMatieresForAccess, type PriveAccess } from '@/components/prive/code-gate';
 
 const ICON_MAP: Record<string, typeof Activity> = {
   activity: Activity,
@@ -20,16 +21,17 @@ const ICON_MAP: Record<string, typeof Activity> = {
   'clipboard-list': ClipboardList,
 };
 
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+function SidebarContent({ onClose, access }: { onClose?: () => void; access: PriveAccess }) {
   const path = usePathname();
+  const matieres = filterMatieresForAccess(PRIVE_MATIERES, access);
   const [open, setOpen] = useState<Set<string>>(() => {
     const s = new Set<string>();
-    for (const m of PRIVE_MATIERES) {
+    for (const m of matieres) {
       for (const c of m.cours) {
         if (path.includes(c.slug)) { s.add(m.id); break; }
       }
     }
-    if (s.size === 0 && PRIVE_MATIERES.length > 0) s.add(PRIVE_MATIERES[0].id);
+    if (s.size === 0 && matieres.length > 0) s.add(matieres[0].id);
     return s;
   });
 
@@ -79,7 +81,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 pb-4">
-        {PRIVE_MATIERES.map((m) => {
+        {matieres.map((m) => {
           const Icon = ICON_MAP[m.icon] ?? Activity;
           const isOpen = open.has(m.id);
           return (
@@ -136,14 +138,14 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   );
 }
 
-export function PriveShell({ children }: { children: React.ReactNode }) {
+export function PriveShell({ children, access = 'full' }: { children: React.ReactNode; access?: PriveAccess }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 border-r border-gray-200 lg:block">
-        <SidebarContent />
+        <SidebarContent access={access} />
       </aside>
 
       {/* Mobile drawer */}
@@ -151,7 +153,7 @@ export function PriveShell({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="absolute inset-0 bg-black/30" onClick={() => setDrawerOpen(false)} />
           <div className="relative z-10 w-72 shadow-xl">
-            <SidebarContent onClose={() => setDrawerOpen(false)} />
+            <SidebarContent onClose={() => setDrawerOpen(false)} access={access} />
           </div>
         </div>
       )}

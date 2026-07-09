@@ -3,12 +3,50 @@
 import { useState, type FormEvent } from 'react';
 import { Lock, ArrowRight, ShieldCheck } from 'lucide-react';
 
-const CODE = 'rattrapagesrelou';
 const STORAGE_KEY = 'prive-auth';
 
+// Niveaux d'accès selon le code saisi :
+// - 'full'   → accès à tous les cours
+// - 'alexis' → accès au seul cours « Alexis » (banque d'annales)
+export type PriveAccess = 'full' | 'alexis';
+
+const CODES: Record<string, PriveAccess> = {
+  rattrapagesrelou: 'full',
+  vinciane123: 'alexis',
+};
+
+// Slugs autorisés pour un accès restreint.
+const ALEXIS_SLUGS = ['alexis'];
+
+/** Renvoie le niveau d'accès courant, ou null si non authentifié. */
+export function getPriveAccess(): PriveAccess | null {
+  if (typeof window === 'undefined') return null;
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored && CODES[stored] ? CODES[stored] : null;
+}
+
 export function usePriveAuth() {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(STORAGE_KEY) === CODE;
+  return getPriveAccess() !== null;
+}
+
+/** Un cours est-il accessible pour ce niveau d'accès ? */
+export function canAccessCours(access: PriveAccess | null, slug: string): boolean {
+  if (access === 'full') return true;
+  if (access === 'alexis') return ALEXIS_SLUGS.includes(slug);
+  return false;
+}
+
+/** Filtre la liste des matières/cours selon le niveau d'accès. */
+export function filterMatieresForAccess<
+  M extends { cours: { slug: string }[] }
+>(matieres: M[], access: PriveAccess | null): M[] {
+  if (access === 'full') return matieres;
+  if (access === 'alexis') {
+    return matieres
+      .map((m) => ({ ...m, cours: m.cours.filter((c) => ALEXIS_SLUGS.includes(c.slug)) }))
+      .filter((m) => m.cours.length > 0);
+  }
+  return [];
 }
 
 export function CodeGate({ onSuccess }: { onSuccess: () => void }) {
@@ -18,8 +56,9 @@ export function CodeGate({ onSuccess }: { onSuccess: () => void }) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (code.trim().toLowerCase() === CODE) {
-      localStorage.setItem(STORAGE_KEY, CODE);
+    const entered = code.trim().toLowerCase();
+    if (CODES[entered]) {
+      localStorage.setItem(STORAGE_KEY, entered);
       onSuccess();
     } else {
       setError(true);

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, BookOpen, FileText, HelpCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
-import { CodeGate } from '@/components/prive/code-gate';
+import { CodeGate, getPriveAccess, canAccessCours, type PriveAccess } from '@/components/prive/code-gate';
 import { PriveShell } from '@/components/prive/prive-shell';
 import { PriveFicheViewer } from '@/components/prive/prive-fiche';
 import { PriveFlashcardSession } from '@/components/prive/prive-flashcards';
@@ -25,31 +25,34 @@ export default function PriveCoursPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const [authed, setAuthed] = useState(false);
+  const [access, setAccess] = useState<PriveAccess | null>(null);
   const [checking, setChecking] = useState(true);
   const [tab, setTab] = useState<Tab>('fiche');
 
   const cours = getCoursBySlug(slug);
   const matiere = cours ? getMatiereForCours(slug) : undefined;
-  const content = authed ? getPriveContent(slug) : null;
+  const allowed = canAccessCours(access, slug);
+  const content = access && allowed ? getPriveContent(slug) : null;
 
   useEffect(() => {
-    setAuthed(localStorage.getItem('prive-auth') === 'rattrapagesrelou');
+    setAccess(getPriveAccess());
     setChecking(false);
   }, []);
 
   if (checking) return null;
 
-  if (!authed) {
-    return <CodeGate onSuccess={() => setAuthed(true)} />;
+  if (!access) {
+    return <CodeGate onSuccess={() => setAccess(getPriveAccess())} />;
   }
 
-  if (!cours) {
+  if (!cours || !allowed) {
     return (
-      <PriveShell>
+      <PriveShell access={access}>
         <div className="flex h-full items-center justify-center">
           <div className="text-center">
-            <p className="text-[18px] font-bold text-gray-700">Cours introuvable</p>
+            <p className="text-[18px] font-bold text-gray-700">
+              {cours ? 'Cours non accessible' : 'Cours introuvable'}
+            </p>
             <Link href="/cyrilwisa" className="mt-3 inline-block text-[14px] text-[#C0112E] hover:underline">
               ← Retour à l'accueil
             </Link>
@@ -60,7 +63,7 @@ export default function PriveCoursPage() {
   }
 
   return (
-    <PriveShell>
+    <PriveShell access={access}>
       {/* Header */}
       <div className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6 lg:px-10">

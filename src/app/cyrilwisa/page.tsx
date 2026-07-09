@@ -6,7 +6,7 @@ import {
   Activity, Atom, BookOpen, Bone, ChevronRight,
   HeartPulse, Microscope, Pill, Stethoscope,
 } from 'lucide-react';
-import { CodeGate } from '@/components/prive/code-gate';
+import { CodeGate, getPriveAccess, filterMatieresForAccess, type PriveAccess } from '@/components/prive/code-gate';
 import { PriveShell } from '@/components/prive/prive-shell';
 import { PRIVE_MATIERES } from '@/lib/data/prive-courses';
 
@@ -21,22 +21,24 @@ const ICON_MAP: Record<string, typeof Activity> = {
 };
 
 export default function CyrilwisaPage() {
-  const [authed, setAuthed] = useState(false);
+  const [access, setAccess] = useState<PriveAccess | null>(null);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    setAuthed(localStorage.getItem('prive-auth') === 'rattrapagesrelou');
+    setAccess(getPriveAccess());
     setChecking(false);
   }, []);
 
   if (checking) return null;
 
-  if (!authed) {
-    return <CodeGate onSuccess={() => setAuthed(true)} />;
+  if (!access) {
+    return <CodeGate onSuccess={() => setAccess(getPriveAccess())} />;
   }
 
+  const matieres = filterMatieresForAccess(PRIVE_MATIERES, access);
+
   return (
-    <PriveShell>
+    <PriveShell access={access}>
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-10">
         {/* Page header */}
         <div className="mb-8">
@@ -50,7 +52,7 @@ export default function CyrilwisaPage() {
 
         {/* Course grid */}
         <div className="grid gap-6 sm:grid-cols-2">
-          {PRIVE_MATIERES.map((m) => {
+          {matieres.map((m) => {
             const Icon = ICON_MAP[m.icon] ?? Activity;
             return (
               <div
