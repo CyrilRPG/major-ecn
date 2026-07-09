@@ -73,6 +73,7 @@ export const PRIVE_MATIERES: PriveMatiere[] = [
     cours: [
       { slug: 'alexis', titre: 'Alexis — Annales physio, sémio & andro', matiereId: 'annales', hasAnnales: true },
       { slug: 'autres-annales', titre: 'Autres annales — histo, anat, pharmaco, méd. nucléaire', matiereId: 'annales', hasAnnales: true },
+      { slug: 'toutes-annales', titre: 'Toutes les annales — toutes matières mélangées', matiereId: 'annales', hasAnnales: true },
     ],
   },
   {
