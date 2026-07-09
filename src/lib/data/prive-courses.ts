@@ -66,6 +66,15 @@ export type PriveCourseContent = {
 
 export const PRIVE_MATIERES: PriveMatiere[] = [
   {
+    id: 'annales',
+    nom: 'Annales corrigées',
+    icon: 'clipboard-list',
+    color: '#C0112E',
+    cours: [
+      { slug: 'alexis', titre: 'Alexis — Annales physio & sémio', matiereId: 'annales', hasAnnales: true },
+    ],
+  },
+  {
     id: 'physiologie',
     nom: 'Physiologie Rénale',
     icon: 'activity',

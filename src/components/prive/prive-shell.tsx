@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Activity, Atom, Bone, ChevronDown, HeartPulse, LogOut,
+  Activity, Atom, Bone, ChevronDown, ClipboardList, HeartPulse, LogOut,
   Menu, Microscope, Pill, Stethoscope, X,
 } from 'lucide-react';
 import { PRIVE_MATIERES } from '@/lib/data/prive-courses';
@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, typeof Activity> = {
   pill: Pill,
   microscope: Microscope,
   atom: Atom,
+  'clipboard-list': ClipboardList,
 };
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
