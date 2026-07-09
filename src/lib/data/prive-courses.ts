@@ -78,6 +78,7 @@ export const PRIVE_MATIERES: PriveMatiere[] = [
       { slug: 'desordres-hydroelectrolytiques', titre: 'Désordres hydroélectrolytiques', matiereId: 'physiologie', hasAnnales: true },
       { slug: 'miction', titre: 'Miction', matiereId: 'physiologie', hasAnnales: true },
       { slug: 'role-rein-equilibre-acido-basique', titre: 'Rôle du rein dans l\'équilibre acido-basique', matiereId: 'physiologie', hasAnnales: true },
+      { slug: 'role-rein-bilan-eau', titre: 'Rôle du rein dans le bilan de l\'eau', matiereId: 'physiologie', hasAnnales: false },
     ],
   },
   {

@@ -18,6 +18,7 @@ import retroperitoine from './prive-content/retroperitoine';
 import pharmacologieUe5 from './prive-content/pharmacologie-ue5';
 import medecineNucleaireUe5 from './prive-content/medecine-nucleaire-ue5';
 import histologieAppareilGenital from './prive-content/histologie-appareil-genital';
+import roleReinBilanEau from './prive-content/role-rein-bilan-eau';
 
 const CONTENT: Record<string, PriveCourseContent> = {
   'filtration-glomerulaire': filtrationGlomerulaire,
@@ -38,6 +39,7 @@ const CONTENT: Record<string, PriveCourseContent> = {
   'pharmacologie-ue5': pharmacologieUe5,
   'medecine-nucleaire-ue5': medecineNucleaireUe5,
   'histologie-appareil-genital': histologieAppareilGenital,
+  'role-rein-bilan-eau': roleReinBilanEau,
 };
 
 export function getPriveContent(slug: string): PriveCourseContent | null {
