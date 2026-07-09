@@ -9,14 +9,14 @@ const content: PriveCourseContent = {
     "parties": [
       {
         "numero": "I",
-        "titre": "Banque d’annales corrigées — Physiologie & Sémiologie",
+        "titre": "Banque d’annales corrigées — Physiologie, Sémiologie & Andrologie",
         "sous_parties": [
           {
             "titre": "Comment utiliser ce cours",
             "rows": [
               {
                 "concept": "◆ Onglet QCM",
-                "detail_md": "Toutes les annales sont dans l’onglet **QCM** ci-dessus.\n· 87 QCM d’annales de **Physiologie** et de **Sémiologie** (UE5), avec le **corrigé officiel** et un **rappel de cours** expliqué simplement, item par item.\n· Chaque question rappelle sa matière, son cours et son année.",
+                "detail_md": "Toutes les annales sont dans l’onglet **QCM** ci-dessus.\n· 104 QCM d’annales de **Physiologie**, de **Sémiologie** et d’**Andrologie** (UE5), avec le **corrigé** et un **rappel de cours** expliqué simplement, item par item.\n· Chaque question rappelle sa matière, son cours et son année.",
                 "kind": "a_retenir"
               },
               {
@@ -35,10 +35,11 @@ const content: PriveCourseContent = {
       }
     ],
     "points_cles": [
-      "Physiologie : clairance rénale, filtration glomérulaire, bilan du sodium, du potassium, de l’eau, équilibre acido-basique, miction.",
+      "Physiologie : clairance rénale, filtration glomérulaire, bilan du sodium, du potassium, de l’eau, équilibre acido-basique, désordres hydro-électrolytiques, miction.",
       "Sémiologie : PA / protéinurie / hématurie, insuffisance rénale chronique.",
-      "Chaque QCM : corrigé officiel + rappel de cours expliqué comme à un débutant.",
-      "Total : 87 QCM d’annales corrigées."
+      "Andrologie : troubles de l’érection et de l’éjaculation.",
+      "Chaque QCM : corrigé + rappel de cours expliqué comme à un débutant.",
+      "Total : 104 QCM d’annales corrigées (les désordres hydro-électrolytiques sont corrigés par Major ECN, faute de corrigé officiel)."
     ]
   },
   "flashcards": [],
@@ -2742,6 +2743,310 @@ const content: PriveCourseContent = {
       ]
     },
     {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2022-2023 (Question 8)",
+      "annee": "2022-2023",
+      "rappel_cours": "Rappel simple : le corps a deux grands réservoirs d'eau séparés par la membrane des cellules — le secteur **extracellulaire (EC)** (dont le sang) et le secteur **intracellulaire (IC)**. L'eau se déplace toujours vers le compartiment le plus **concentré** (le plus salé) pour égaliser les concentrations = **osmose**.\n\nIci on perfuse une solution **hypertonique** (600 mOsm/L, soit environ le double du plasma normal ≈ 300). On ajoute donc beaucoup de sel dans le secteur EC.\n\n**A. FAUX** — Le secteur EC devient plus concentré → l'eau **sort** des cellules pour le rejoindre → le volume IC **diminue** (il varie donc).\n**B. VRAI** — Une concentration plasmatique élevée (hyperosmolalité) est le stimulus n°1 de la **soif**.\n**C. FAUX** — On a apporté un excès de sel : le rein réagit en **augmentant** l'élimination du sodium (natriurèse ↑), pas en la diminuant.\n**D. VRAI** — C'est exactement l'osmose décrite : l'eau passe de l'IC vers l'EC.\n**E. VRAI** — Ajouter une solution plus salée que le plasma **augmente la natrémie**.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2022-2023 — Question 8]**\n\nUn sujet bien portant sans antécédent médical reçoit une perfusion intraveineuse d'un litre d'une solution saline ayant une osmolalité de 600 mOsm/L. Quelle ou quelles conséquence(s) aura cette perfusion ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le volume du compartiment intracellulaire ne variera pas",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le sujet peut ressentir une sensation de soif",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "La natriurèse de ce sujet va diminuer",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il y aura un transfert d'eau du compartiment intracellulaire vers le compartiment extracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "La natrémie va augmenter",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : BDE**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX** — Solution hypertonique → l'eau sort des cellules → le volume intracellulaire diminue.\nB. **VRAI** — L'hyperosmolalité plasmatique stimule la soif.\nC. **FAUX** — L'apport d'une charge sodée fait au contraire **augmenter** la natriurèse (le rein élimine l'excès de Na⁺).\nD. **VRAI** — L'eau se déplace du secteur intracellulaire vers le secteur extracellulaire devenu plus concentré (osmose).\nE. **VRAI** — On apporte une solution plus concentrée que le plasma → la natrémie augmente."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2022-2023 (Question 15)",
+      "annee": "2022-2023",
+      "rappel_cours": "Une **natrémie à 160 mmol/L** = **hypernatrémie** (normale ≈ 135–145). Elle traduit presque toujours un **manque d'eau** par rapport au sel (déshydratation à prédominance intracellulaire). Elle survient donc quand on perd de l'eau **sans pouvoir la remplacer en buvant**.\n\nPoint clé : une personne **consciente qui a soif et peut boire** corrige spontanément → elle ne fait pas d'hypernatrémie franche. Les personnes à risque sont celles qui **ne peuvent pas accéder à l'eau** ou n'ont pas de soif efficace (nourrissons, déments, comateux).\n\n**A. VRAI** — Sujet dément + canicule : perd de l'eau et ne pense pas à boire → hypernatrémie.\n**B. VRAI** — Nouveau-né fébrile : pertes d'eau importantes, dépend d'autrui pour boire.\n**C. FAUX** — Le potomane **boit trop d'eau** → il fait l'inverse, une **hypo**natrémie.\n**D. VRAI** — Coma fébrile : ne peut pas boire + pertes → hypernatrémie.\n**E. FAUX** — Un adulte **vigile** (conscient) avec diabète insipide compense en buvant énormément : sa natrémie reste le plus souvent normale.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2022-2023 — Question 15]**\n\nDans laquelle ou lesquelles de ces circonstances peut être observée une natrémie à 160 mmol/L ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Sujet dément en période de canicule",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Nouveau-né fébrile",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Sujet potomane",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Sujet présentant un coma fébrile en service de réanimation",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Adulte vigile présentant un diabète insipide néphrogénique",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : ABD**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **VRAI** — Impossibilité de boire + pertes d'eau (canicule) → hypernatrémie.\nB. **VRAI** — Pertes hydriques du nourrisson fébrile qui dépend d'autrui pour être hydraté.\nC. **FAUX** — La potomanie (excès de boissons) donne une **hyponatrémie**, pas une hypernatrémie.\nD. **VRAI** — Patient comateux fébrile : pertes d'eau sans possibilité de boire.\nE. **FAUX** — Un adulte **conscient** compense son diabète insipide en buvant : la natrémie reste habituellement normale."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2021-2022 (QCM 6)",
+      "annee": "2021-2022",
+      "rappel_cours": "On perfuse une solution **hypotonique** (osmolalité efficace 150 mOsm/L, deux fois **moins** concentrée que le plasma ≈ 300). C'est de l'eau « diluante » : elle abaisse la concentration du secteur EC, donc l'eau **entre** dans les cellules.\n\n**A. FAUX** — L'eau entre dans les cellules → le secteur intracellulaire se **dilue** (hypo-osmolalité IC), il ne devient pas hyperosmolaire.\n**B. VRAI** — Le volume EC augmente (on a ajouté du liquide) → hyperhydratation extracellulaire.\n**C. VRAI** — Les deux secteurs gagnent de l'eau → hyperhydratation **globale**.\n**D. VRAI** — Diluer le plasma abaisse la natrémie → **hyponatrémie**.\n**E. FAUX** — L'hypo-osmolalité **freine** la sécrétion d'ADH (l'ADH monte quand c'est trop concentré, pas trop dilué).",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2021-2022 — QCM 6]**\n\nChez un sujet bien portant, la perfusion d'1,5 L d'une solution dont l'osmolalité efficace est de 150 mOsm/L d'H₂O induit (indiquez la ou les réponse(s) exacte(s)) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une hyperosmolalité du secteur intracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une hyperhydratation extracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une hyperhydratation globale",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une hyponatrémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une augmentation de la sécrétion d'hormone anti-diurétique",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : BCD**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX** — Solution hypotonique → l'eau entre dans les cellules qui se **diluent** (hypo-osmolalité intracellulaire).\nB. **VRAI** — Le volume extracellulaire augmente.\nC. **VRAI** — Les deux compartiments gagnent de l'eau : hyperhydratation globale.\nD. **VRAI** — La dilution du plasma abaisse la natrémie.\nE. **FAUX** — L'hypo-osmolalité **inhibe** la sécrétion d'ADH."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2021-2022 (QCM 8)",
+      "annee": "2021-2022",
+      "rappel_cours": "On perfuse du **bicarbonate de sodium (NaHCO₃) iso-osmotique** (même concentration que le plasma) : le volume et l'osmolalité EC ne changent quasiment pas, mais on apporte une charge de **bicarbonates** (base).\n\n**A. FAUX** — La solution est **iso**-osmotique : pas d'hyperosmolalité.\n**B. VRAI** — Ajouter des bicarbonates (une base) → **alcalose métabolique**.\n**C. VRAI** — Le rein élimine l'excès de HCO₃⁻ dans les urines → **bicarbonaturie**.\n**D. FAUX** — Éliminer des bicarbonates rend l'urine **plus alcaline** → le pH urinaire **augmente** (il ne diminue pas).\n**E. FAUX** — En situation d'alcalose, le rein **réduit** l'excrétion acide : l'acidité titrable **diminue**.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2021-2022 — QCM 8]**\n\nChez un sujet bien portant, la perfusion d'1 L d'une solution de bicarbonate de sodium iso-osmotique au plasma induit (indiquez la ou les réponse(s) exacte(s)) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une hyperosmolalité du secteur extracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une alcalose d'origine métabolique",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "L'apparition d'une bicarbonaturie",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une diminution du pH urinaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une augmentation de l'acidité titrable",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : BC**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX** — La solution est iso-osmotique : l'osmolalité extracellulaire ne change pas.\nB. **VRAI** — L'apport de bicarbonates (base) provoque une alcalose métabolique.\nC. **VRAI** — Le rein excrète l'excès de bicarbonates → bicarbonaturie.\nD. **FAUX** — La bicarbonaturie **alcalinise** l'urine : le pH urinaire augmente.\nE. **FAUX** — En alcalose, le rein diminue l'excrétion d'acide → l'acidité titrable diminue."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2021-2022 (QCM 9)",
+      "annee": "2021-2022",
+      "rappel_cours": "On perfuse une solution **hypertonique** (osmolalité efficace 400 mOsm/L > plasma ≈ 300). On concentre le secteur EC → l'eau **sort** des cellules.\n\n**A. VRAI** — À l'équilibre, l'eau ayant quitté les cellules, le contenu intracellulaire est plus concentré → hyperosmolalité intracellulaire.\n**B. VRAI** — Le secteur EC gagne du volume (perfusion + eau tirée des cellules) → hyperhydratation extracellulaire.\n**C. FAUX** — Ce n'est pas une hyperhydratation **globale** : les cellules, elles, **perdent** de l'eau (elles sont déshydratées).\n**D. VRAI** — L'eau quitte les cellules → **déshydratation intracellulaire**.\n**E. VRAI** — L'hyperosmolalité déclenche la **soif**.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2021-2022 — QCM 9]**\n\nChez un sujet bien portant, la perfusion d'1,5 L d'une solution dont l'osmolalité efficace est de 400 mOsm/L d'H₂O induit (indiquez la ou les réponse(s) exacte(s)) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une hyperosmolalité du secteur intracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une hyperhydratation extracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une hyperhydratation globale",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une déshydratation du secteur intracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une sensation de soif",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : ABDE**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **VRAI** — L'eau sort des cellules → le secteur intracellulaire se concentre (hyperosmolalité).\nB. **VRAI** — Le secteur extracellulaire est expansé (perfusion + eau venue des cellules).\nC. **FAUX** — Pas d'hyperhydratation globale : le compartiment intracellulaire est au contraire **déshydraté**.\nD. **VRAI** — L'eau quitte les cellules → déshydratation intracellulaire.\nE. **VRAI** — L'hyperosmolalité plasmatique stimule la soif."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2021-2022 (QCM 26)",
+      "annee": "2021-2022",
+      "rappel_cours": "Une **déshydratation intracellulaire isolée** = les cellules perdent de l'eau, essentiellement par **manque d'eau pure** (→ hypernatrémie/hyperosmolalité), **sans perte importante de sel** (le secteur EC est relativement préservé). Elle survient quand on perd de l'eau sans pouvoir la remplacer.\n\n**A. FAUX** — Une diarrhée aiguë fait perdre eau **et** sel (sodium) : c'est surtout une déshydratation **extracellulaire**, pas isolée.\n**B. FAUX** — Boire trop d'eau donne une **hyper**hydratation, l'inverse.\n**C. VRAI** — Un comateux ne boit pas → pertes d'eau non compensées → hypernatrémie → cellules déshydratées.\n**D. VRAI** — Le sujet dément n'accède pas à l'eau → même mécanisme.\n**E. VRAI** — Le nourrisson fébrile perd beaucoup d'eau (fièvre) et dépend d'autrui → déshydratation intracellulaire.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2021-2022 — QCM 26]**\n\nDans quelles circonstances peut être observée une déshydratation intracellulaire isolée ? Veuillez choisir au moins une réponse.",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Diarrhée aiguë",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Consommation excessive d'eau",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "État comateux",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Sujet dément",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Nourrisson fébrile",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : CDE**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX** — La diarrhée fait perdre eau ET sodium → déshydratation à prédominance **extracellulaire**.\nB. **FAUX** — Boire trop d'eau → hyperhydratation (contraire).\nC. **VRAI** — Impossibilité de boire → perte d'eau pure → hypernatrémie → déshydratation intracellulaire.\nD. **VRAI** — Le dément n'accède pas à l'eau → même mécanisme.\nE. **VRAI** — Nourrisson fébrile : pertes d'eau importantes non compensées."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2019 session 2 (QCM 7)",
+      "annee": "2019 session 2",
+      "rappel_cours": "Énoncé du type « tout est vrai **SAUF UN** » : il faut cocher la **seule proposition FAUSSE**.\n\nOn perfuse du NaCl **hypertonique** (600 mOsm/kg, plus concentré que le plasma).\n\n**A. FAUX (c'est la réponse à cocher)** — Une solution hypertonique donne une **HYPER**-osmolalité plasmatique, pas une hypo-osmolalité.\n**B. VRAI** — L'ajout de volume fait prendre du poids.\n**C. VRAI** — Le secteur extracellulaire augmente de volume.\n**D. VRAI** — L'hyperosmolalité déclenche la soif.\n**E. VRAI** — L'eau quitte les cellules → déshydratation intracellulaire.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2019 session 2 — QCM 7]**\n\nChez un sujet sain, la perfusion d'un litre de solution de NaCl hypertonique (osmolalité : 600 mOsm/kg H₂O) peut induire tous les éléments suivants, **SAUF UN**. Lequel ? _(cochez la proposition fausse)_",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une hypo-osmolalité plasmatique",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une prise de poids",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une augmentation du volume extracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une sensation de soif",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une déshydratation du volume intracellulaire",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A** (la proposition fausse)\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX → à cocher** — Une solution hypertonique provoque une **hyper**-osmolalité plasmatique, pas une hypo-osmolalité.\nB. **VRAI** — L'apport de volume fait prendre du poids.\nC. **VRAI** — Le volume extracellulaire augmente.\nD. **VRAI** — L'hyperosmolalité stimule la soif.\nE. **VRAI** — L'eau sort des cellules → déshydratation intracellulaire."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — 2018 session 2 (QCM 18)",
+      "annee": "2018 session 2",
+      "rappel_cours": "Deux idées à ne pas confondre : la **natrémie** (concentration de Na⁺) reflète le **bilan de l'eau** (état d'hydratation intracellulaire), tandis que le **volume extracellulaire** dépend du **stock de sodium**. Ce sont deux choses différentes.\n\n**A. FAUX** — Une natrémie à 150 (hypernatrémie) signe une **déshydratation intracellulaire** (manque d'eau), pas forcément une déshydratation extracellulaire.\n**B. VRAI** — En déshydratation extracellulaire (hypovolémie), le rein **doit** retenir le sodium → Na⁺ urinaire bas → rapport Na⁺/K⁺ urinaire **< 1**. Si ce rapport est **> 1**, le rein ne retient pas le sel : réponse **inadaptée**.\n**C. FAUX** — La sécrétion inappropriée d'ADH (SIADH, ex. cancer du poumon) fait **retenir de l'eau** → **hypo**natrémie, pas hypernatrémie.\n**D. VRAI** — La déshydratation intracellulaire (hyperosmolalité) déclenche la **soif**.\n**E. FAUX** — Les œdèmes traduisent un excès de volume extracellulaire ; la natrémie peut être normale ou basse, mais « **toujours** hyponatrémie » est faux.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · 2018 session 2 — QCM 18]**\n\nÀ propos des désordres hydro-électrolytiques, indiquez LA ou LES proposition(s) EXACTE(S) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une natrémie à 150 mmol/L affirme l'existence d'une déshydratation extracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "En cas de déshydratation extracellulaire sévère, un rapport [Na⁺]urinaire/[K⁺]urinaire > 1 indique une réponse rénale inadaptée au trouble",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "La sécrétion inappropriée d'hormone anti-diurétique par un cancer du poumon induit en général une hypernatrémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La déshydratation du secteur intracellulaire entraîne la sensation de soif",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Les œdèmes des membres inférieurs sont toujours associés à une hyponatrémie",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : BD**\n_(Corrigé rédigé par Major ECN — le sujet officiel ne fournissait pas de correction.)_\n\nA. **FAUX** — Une hypernatrémie (150) traduit une déshydratation **intracellulaire** (déficit en eau), pas extracellulaire.\nB. **VRAI** — En hypovolémie, le rein doit retenir le Na⁺ (rapport Na⁺/K⁺ urinaire < 1) ; un rapport > 1 = réponse rénale **inadaptée**.\nC. **FAUX** — Le SIADH (cancer du poumon) fait retenir l'eau → **hyponatrémie**.\nD. **VRAI** — La déshydratation intracellulaire (hyperosmolalité) déclenche la soif.\nE. **FAUX** — Les œdèmes signent un excès de volume extracellulaire ; la natrémie n'est pas **toujours** basse."
+        }
+      ]
+    },
+    {
       "titre": "Physiologie — Miction — 2021-2022 (QCM 39)",
       "annee": "2021-2022",
       "rappel_cours": "Le **détrusor** est le muscle de la paroi de la vessie : c'est un **muscle lisse** (involontaire), donc commandé par le **système nerveux autonome**, pas par la volonté.\n\nCe muscle se contracte grâce au **système parasympathique**, qui libère un neurotransmetteur appelé **acétylcholine**. Cette acétylcholine agit sur des récepteurs **muscariniques** (et non nicotiniques). Retiens : détrusor = muscle lisse = récepteurs **muscariniques**.\n\n**A. FAUX** : l'acétylcholine contracte bien le détrusor, mais via des récepteurs **muscariniques**, pas nicotiniques.\n**B. FAUX** : la **noradrénaline** n'agit pas sur des récepteurs muscariniques (ceux-ci répondent à l'acétylcholine) ; elle agit sur des récepteurs **adrénergiques**.\n**C. VRAI** : le détrusor est bien un **muscle lisse**.\n**D. FAUX** : le **nerf pudendal** commande des muscles **striés** (comme le sphincter externe), pas le détrusor.\n**E. FAUX** : puisque C est vrai, cette réponse est fausse.",
@@ -3326,6 +3631,348 @@ const content: PriveCourseContent = {
             }
           ],
           "correction": "**Réponse : BCDE**\n\nNB : Clairance en créatinine = (140 − âge) × poids × coeff / [créatinine]p.\nA) FAUX : concentration plasmatique et non urinaire de créatinine.\nB) VRAI\nC) VRAI\nD) VRAI : pour savoir quel coefficient utiliser.\nE) VRAI"
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2019 Session 1 (QCM 37)",
+      "annee": "2019 Session 1",
+      "rappel_cours": "Le **priapisme** est une **érection prolongée** (souvent plus de 4 à 6 heures), douloureuse et **non liée à un désir sexuel**. C'est **anormal (pathologique)** et c'est une **urgence** : sans traitement, le pénis manque d'oxygène et les tissus peuvent être détruits de façon **irréversible**, ce qui rend impuissant.\n\n**A. FAUX** — Ce n'est pas normal (physiologique), c'est une **maladie** (pathologique).\n**B. VRAI** — C'est une vraie **urgence** : il faut agir vite (on pique une aiguille dans le pénis pour aspirer le sang bloqué).\n**C. VRAI** — L'érection dure **plusieurs heures** (environ 6 h), au lieu de disparaître normalement.\n**D. FAUX** — La partie qui devient rigide et qui souffre est le **corps caverneux**, pas le **corps spongieux** (qui, lui, ne durcit pas et n'est pas responsable de la rigidité).\n**E. VRAI** — La **drépanocytose** (maladie des globules rouges/hémoglobine) favorise le priapisme.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2019 Session 1 — QCM 37]**\n\nParmi les propositions suivantes concernant le priapisme, laquelle (lesquelles) est (sont) exacte(s) ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "C'est un phénomène physiologique",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il s'agit d'une véritable urgence",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il s'agit d'une érection qui dure depuis plusieurs heures",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il y a risque d'altération irréversible essentiellement du corps spongieux",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "C'est une situation fréquente chez les drépanocytaires.",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : BCE**\n\nA) FAUX, c'est un phénomène pathologique.\nB) VRAI, il s'agit d'une urgence médico-chirurgicale (on plante une aiguille dans le pénis et on aspire le sang noir).\nC) VRAI, les érections durent 6 h.\nD) FAUX, le corps spongieux n'a pas de rigidité, il n'intervient pas dans l'érection, donc ne peut pas altérer l'érection quand on parle de priapisme.\nE) VRAI, le priapisme est une pathologie de l'hémoglobine, ce qui est le cas dans la drépanocytose."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2019 Session 1 (QCM 38)",
+      "annee": "2019 Session 1",
+      "rappel_cours": "L'**érection** = les **corps caverneux** (deux cylindres dans le pénis) se remplissent de sang et deviennent rigides. Pour rester rigides, les **veines** qui drainent le sang sont **comprimées (étranglées)** : le sang entre mais ne sort presque plus. Le messager chimique clé de l'érection est le **NO (monoxyde d'azote)**.\n\n**A. VRAI** — Une **lésion des corps caverneux** (tissu de l'érection) peut empêcher une bonne érection → **dysfonction érectile**.\n**B. FAUX** — L'**étranglement des veines émissaires** n'est **pas facultatif** : il est **indispensable** pour garder le sang et donc la rigidité.\n**C. FAUX** — Il n'existe pas de « prostaglandine E15 » : la vraie molécule est la **PGE1**, qui **favorise** l'érection (elle sert même de médicament), elle ne l'inhibe pas.\n**D. FAUX** — L'érection **réflexe** passe par une boucle **sacrée** (bas de la moelle). La boucle **supra-spinale** (cerveau) concerne l'érection **psychogène** (déclenchée par les pensées).\n**E. VRAI** — Une **dysfonction érectile** peut **annoncer** une maladie **cardiovasculaire** (les mêmes petits vaisseaux sont touchés).",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2019 Session 1 — QCM 38]**\n\nParmi les propositions suivantes concernant l'érection, laquelle (lesquelles) est (sont) exacte(s) ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une lésion au niveau des corps caverneux peut provoquer une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "L'étranglement des veines émissaires est facultatif pendant l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La prostaglandine E15 est un inhibiteur de l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "L'érection réflexe s'effectue grâce à une boucle supra spinale",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "La dysfonction érectile peut être un symptôme prédicteur de pathologies cardiovasculaires.",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : AE**\n\nA) VRAI, il peut y avoir risque de nécrose qui affecte le corps caverneux et donner une dysfonction érectile.\nB) FAUX, il y a bien un étranglement des veines émissaires : c'est ce blocage veineux qui maintient le sang dans les corps caverneux et donc la rigidité (il n'est donc pas facultatif).\nC) FAUX.\nD) FAUX, grâce à une boucle sacrée ; la boucle supra spinale c'est lors d'une érection psychogène.\nE) VRAI, le trouble de l'érection est un marqueur de pathologie cardiovasculaire +++ ; a contrario une bonne érection est témoin d'une bonne santé cardiovasculaire."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2019 Session 1 (QCM 39)",
+      "annee": "2019 Session 1",
+      "rappel_cours": "Le **sperme** contient deux choses : les **spermatozoïdes** (peu de volume) et le **plasma (liquide) séminal** (l'essentiel du volume). Ce liquide est fabriqué par les **glandes annexes** : surtout les **vésicules séminales**, la **prostate** et l'**épididyme** — **pas directement le testicule**. Il est riche en **fructose** (le sucre qui nourrit les spermatozoïdes) et il est **alcalin** (pH basique) pour protéger les spermatozoïdes de l'acidité du vagin.\n\n**A. FAUX** — Les **spermatozoïdes** ne représentent qu'un **petit volume** ; le plasma séminal est surtout du liquide.\n**B. VRAI** — Il contient du **fructose** (sucre qui sert de carburant aux spermatozoïdes).\n**C. VRAI** — Son **pH est alcalin** (basique).\n**D. VRAI** — Il est produit/émis lors de la **stimulation sexuelle** (au moment de l'éjaculation).\n**E. FAUX** — Il n'est **pas d'origine testiculaire** : il vient de l'**épididyme, des vésicules séminales et de la prostate**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2019 Session 1 — QCM 39]**\n\nParmi les propositions suivantes concernant le plasma séminal, laquelle (lesquelles) est (sont) exacte(s) ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il est formé essentiellement de spermatozoïdes",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il est caractérisé par la présence de fructose",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Son pH est généralement alcalin",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il est synthétisé suite à la stimulation sexuelle",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Est une production essentiellement testiculaire.",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : BCD**\n\nA) FAUX, les spermatozoïdes occupent un petit volume du sperme.\nB) VRAI, présence de fructose.\nC) VRAI.\nD) VRAI.\nE) FAUX, le liquide séminal est fabriqué par l'épididyme, les vésicules séminales et la prostate."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2015 Session 1 (QCM 30)",
+      "annee": "2015 Session 1",
+      "rappel_cours": "L'**érection** repose sur les **corps caverneux** qui se gorgent de sang, avec **étranglement des veines** pour garder le sang. La couche de cellules qui tapisse les vaisseaux, l'**endothélium**, fabrique le **NO**, indispensable à l'érection : si l'endothélium fonctionne mal (**dysfonction endothéliale**), l'érection devient difficile. À l'inverse, la **noradrénaline** fait **contracter** les fibres musculaires lisses et fait **retomber** l'érection.\n\n**A. VRAI** — Un **priapisme** (érection bloquée trop longtemps) abîme les corps caverneux et peut ensuite causer une **dysfonction érectile**.\n**B. FAUX** — L'**étranglement des veines** est **obligatoire** (pas facultatif) pour maintenir l'érection.\n**C. VRAI** — La **dysfonction endothéliale** (mauvais NO) entraîne une **dysfonction érectile**.\n**D. FAUX** — Ce n'est pas la **sérotonine** mais la **noradrénaline** qui fait contracter les fibres lisses caverneuses.\n**E. VRAI** — La **dysfonction érectile** peut **annoncer** une maladie **cardiovasculaire**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2015 Session 1 — QCM 30]**\n\nConcernant l'érection, indiquez la(es) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "un priapisme peut provoquer une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "l'étranglement des veines émissaires est facultatif pendant l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "la dysfonction endothéliale induit une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "la sérotonine intervient dans la contraction des fibres lisses caverneuses",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "la dysfonction érectile peut être un symptôme annonciateur de pathologies cardiovasculaires",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : ACE**\n\nA) VRAI.\nB) FAUX, il y a bien un étranglement des veines émissaires : ce blocage veineux est nécessaire pour maintenir l'érection (il n'est donc pas facultatif).\nC) VRAI, elle est à la base de pathologies cardiovasculaires.\nD) FAUX, la noradrénaline intervient dans la contraction des fibres lisses.\nE) VRAI."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2015 Session 1 (QCM 31)",
+      "annee": "2015 Session 1",
+      "rappel_cours": "Le **plasma (liquide) séminal** est surtout produit par les **vésicules séminales** (environ 65 %), la **prostate** (environ 30 %) et un peu par l'**épididyme** (environ 5 %). Il est **alcalin** (pH basique, entre 7,2 et 8) et **riche en protéines**. La **capacitation** (étape qui rend le spermatozoïde capable de féconder) se fait surtout **dans les voies génitales féminines**, pas grâce au plasma séminal. Enfin, ce liquide peut parfois provoquer une **allergie**.\n\n**A. FAUX** — Il n'est **pas** surtout d'origine épididymaire : les **vésicules séminales** dominent (~65 %).\n**B. FAUX** — La **capacitation** a lieu plus tard, dans le tractus féminin ; le plasma séminal n'y joue pas ce rôle.\n**C. FAUX** — Il contient **beaucoup de protéines** (pas très peu).\n**D. VRAI** — Son **pH est alcalin**, entre **7,2 et 8**.\n**E. VRAI** — Il peut être **source d'allergie**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2015 Session 1 — QCM 31]**\n\nConcernant le plasma (liquide) séminal, indiquez la(es) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il est constitué essentiellement de liquide épididymaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il joue un rôle important dans la capacitation des spermatozoïdes",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il contient très peu de protéines",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Son pH varie entre 7.2-8",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il peut être source d'allergie",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : DE**\n\nA) FAUX, il est composé à 65 % de sécrétions des vésicules séminales, 30 % de sécrétions prostatiques et enfin 5 % de sécrétions épididymaires.\nB) FAUX.\nC) FAUX.\nD) VRAI, pH alcalin.\nE) VRAI (mais pas mentionné dans le cours)."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2018 Session 2 (QCM 26)",
+      "annee": "2018 Session 2",
+      "rappel_cours": "Rappel : l'**érection** vient du remplissage des **corps caverneux** en sang, avec **blocage des veines** pour garder le sang. L'**endothélium** (paroi interne des vaisseaux) libère le **NO**, molécule qui déclenche l'érection ; s'il fonctionne mal, l'érection est altérée. La **contraction** des fibres lisses (qui fait retomber l'érection) est surtout due à l'**adrénaline/noradrénaline** (récepteurs α1), pas à la sérotonine.\n\n**A. VRAI** — Un **priapisme** peut abîmer les corps caverneux et provoquer une **dysfonction érectile**.\n**B. FAUX** — L'**étranglement des veines** est **nécessaire** (pas facultatif).\n**C. VRAI** — La cellule **endothéliale** sécrète le **NO**, médiateur de l'érection : sa dysfonction cause une dysfonction érectile.\n**D. FAUX** — La contraction des fibres lisses est surtout médiée par l'**adrénaline (α1)** et des médiateurs locaux, **pas la sérotonine**.\n**E. VRAI** — La **dysfonction érectile** peut **annoncer** une maladie **cardiovasculaire**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2018 Session 2 — QCM 26]**\n\nConcernant l'érection, indiquez la(es) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "un priapisme peut provoquer une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "l'étranglement des veines émissaires est facultatif pendant l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "la dysfonction endothéliale induit une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "la sérotonine intervient dans la contraction des fibres lisses caverneuses",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "la dysfonction érectile peut être un symptôme annonciateur de pathologies cardiovasculaires",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : ACE**\n\nA) VRAI.\nB) FAUX, il y a bien un étranglement des veines émissaires : ce blocage veineux maintient l'érection (il n'est donc pas facultatif).\nC) VRAI, car la cellule endothéliale sécrète le NO qui est le médiateur de l'érection.\nD) FAUX, la contraction des fibres lisses est principalement médiée par l'adrénaline (α1) et par des médiateurs locaux, pas directement par la sérotonine.\nE) VRAI."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2018 Session 2 (QCM 27)",
+      "annee": "2018 Session 2",
+      "rappel_cours": "Le **plasma séminal** provient surtout des **vésicules séminales** (~65 %), de la **prostate** (~30 %) et un peu de l'**épididyme** (~5 %). Il est **alcalin** (pH 7,2 à 8) et **riche en protéines**. La **capacitation** (maturation finale du spermatozoïde) se fait dans les voies génitales féminines, pas grâce à ce liquide. Il peut parfois déclencher une **allergie**.\n\n**A. FAUX** — Pas surtout **épididymaire** : les **vésicules séminales** dominent (~65 %).\n**B. FAUX** — Il ne joue **pas** le rôle principal dans la **capacitation**.\n**C. FAUX** — Il contient **beaucoup de protéines** (pas très peu).\n**D. VRAI** — Son **pH est alcalin**, entre **7,2 et 8**.\n**E. VRAI** — Il peut être **source d'allergie**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2018 Session 2 — QCM 27]**\n\nConcernant le plasma séminal, indiquez la(es) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il est constitué essentiellement de liquide épididymaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il joue un rôle important dans la capacitation des spermatozoïdes",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il est composé de très peu de protéines",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Son pH varie entre 7.2 et 8",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il peut être source d'allergie",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : DE**\n\nA) FAUX, il est composé à 65 % de sécrétions des vésicules séminales, 30 % de sécrétions prostatiques et enfin 5 % de sécrétions épididymaires.\nB) FAUX.\nC) FAUX.\nD) VRAI, c'est un pH alcalin.\nE) VRAI (mais pas mentionné dans le cours)."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2016 Session 2 (QCM 19)",
+      "annee": "2016 Session 2",
+      "rappel_cours": "Rappel : l'**érection** = les **corps caverneux** se remplissent de sang et deviennent rigides, avec **étranglement des veines** pour garder le sang. L'**endothélium** produit le **NO**, indispensable ; sa dysfonction cause une **dysfonction érectile**. La sérotonine n'intervient pas dans le mécanisme enseigné.\n\n**A. VRAI** — L'érection dépend du **corps caverneux** ; une **lésion** de ce tissu provoque une **dysfonction érectile**.\n**B. FAUX** — L'**étranglement des veines** est **obligatoire** (pas facultatif).\n**C. VRAI** — La **dysfonction endothéliale** peut **induire** une dysfonction érectile.\n**D. FAUX** — La **sérotonine** n'est pas impliquée dans la contraction des fibres lisses caverneuses (non traitée dans le cours).\n**E. VRAI** — La **dysfonction érectile** peut **annoncer** une maladie **cardiovasculaire**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2016 Session 2 — QCM 19]**\n\nA propos de l'érection, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une lésion au niveau des corps caverneux peut provoquer une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "l'étranglement des veines émissaires est facultatif pendant l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "la dysfonction endothéliale peut induire une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "la sérotonine intervient dans la contraction des fibres lisses caverneuses",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "la dysfonction érectile peut être un symptôme prédicateur de pathologies cardiovasculaires",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : ACE**\n\nA) VRAI, l'érection c'est le corps caverneux, donc une lésion du corps caverneux peut provoquer une dysfonction érectile.\nB) FAUX, il y a bien un étranglement des veines émissaires : ce blocage veineux maintient l'érection (il n'est donc pas facultatif).\nC) VRAI.\nD) FAUX, on ne parle pas de sérotonine dans le cours.\nE) VRAI."
+        }
+      ]
+    },
+    {
+      "titre": "Andrologie — Troubles de l'érection et de l'éjaculation — 2015 Session 2 (QCM 19)",
+      "annee": "2015 Session 2",
+      "rappel_cours": "Rappel : l'**érection** repose sur le remplissage sanguin des **corps caverneux** et l'**étranglement des veines** qui garde le sang. L'**endothélium** (paroi des vaisseaux) libère le **NO**, indispensable à l'érection. La **sérotonine** n'est pas le médiateur de la contraction des fibres lisses caverneuses.\n\n**A. VRAI** — Un **priapisme** (érection bloquée trop longtemps) abîme les corps caverneux et peut causer une **dysfonction érectile**.\n**B. FAUX** — L'**étranglement des veines** est **nécessaire** (pas facultatif).\n**C. VRAI** — La **dysfonction endothéliale** (mauvais NO) provoque une **dysfonction érectile**.\n**D. FAUX** — Ce n'est **pas la sérotonine** qui fait contracter les fibres lisses caverneuses.\n**E. VRAI** — La **dysfonction érectile** peut **annoncer** une maladie **cardiovasculaire**.",
+      "questions": [
+        {
+          "enonce": "**[Andrologie · Troubles de l'érection et de l'éjaculation · 2015 Session 2 — QCM 19]**\n\nConcernant l'érection, indiquez la(es) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "un priapisme peut provoquer une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "l'étranglement des veines émissaires est facultatif pendant l'érection",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "la dysfonction endothéliale induit une dysfonction érectile",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "la sérotonine intervient dans la contraction des fibres lisses caverneuses",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "la dysfonction érectile peut être un symptôme annonciateur de pathologies cardiovasculaires",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : ACE**\n\nA) VRAI.\nB) FAUX, il y a bien un étranglement des veines émissaires : ce blocage veineux maintient l'érection (il n'est donc pas facultatif).\nC) VRAI.\nD) FAUX.\nE) VRAI."
         }
       ]
     }

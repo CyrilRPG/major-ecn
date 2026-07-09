@@ -71,7 +71,7 @@ export const PRIVE_MATIERES: PriveMatiere[] = [
     icon: 'clipboard-list',
     color: '#C0112E',
     cours: [
-      { slug: 'alexis', titre: 'Alexis — Annales physio & sémio', matiereId: 'annales', hasAnnales: true },
+      { slug: 'alexis', titre: 'Alexis — Annales physio, sémio & andro', matiereId: 'annales', hasAnnales: true },
     ],
   },
   {
