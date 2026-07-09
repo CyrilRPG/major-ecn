@@ -20,6 +20,7 @@ import medecineNucleaireUe5 from './prive-content/medecine-nucleaire-ue5';
 import histologieAppareilGenital from './prive-content/histologie-appareil-genital';
 import roleReinBilanEau from './prive-content/role-rein-bilan-eau';
 import alexis from './prive-content/alexis';
+import autresAnnales from './prive-content/autres-annales';
 
 const CONTENT: Record<string, PriveCourseContent> = {
   'filtration-glomerulaire': filtrationGlomerulaire,
@@ -42,6 +43,7 @@ const CONTENT: Record<string, PriveCourseContent> = {
   'histologie-appareil-genital': histologieAppareilGenital,
   'role-rein-bilan-eau': roleReinBilanEau,
   'alexis': alexis,
+  'autres-annales': autresAnnales,
 };
 
 export function getPriveContent(slug: string): PriveCourseContent | null {
