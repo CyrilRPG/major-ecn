@@ -16,7 +16,7 @@ const content: PriveCourseContent = {
             "rows": [
               {
                 "concept": "◆ Onglet QCM",
-                "detail_md": "Toutes les annales sont dans l’onglet **QCM** ci-dessus.\n· 104 QCM d’annales de **Physiologie**, de **Sémiologie** et d’**Andrologie** (UE5), avec le **corrigé** et un **rappel de cours** expliqué simplement, item par item.\n· Chaque question rappelle sa matière, son cours et son année.",
+                "detail_md": "Toutes les annales sont dans l’onglet **QCM** ci-dessus.\n· 152 QCM d’annales de **Physiologie**, de **Sémiologie** et d’**Andrologie** (UE5), avec le **corrigé** et un **rappel de cours** expliqué simplement, item par item.\n· Inclut les **examens complets DFG2-UE5** (rattrapage juillet 2024 et mars 2025) avec l’**intégralité des dossiers progressifs** (physio/sémio uniquement).\n· Chaque question rappelle sa matière, son cours et son année.",
                 "kind": "a_retenir"
               },
               {
@@ -38,8 +38,9 @@ const content: PriveCourseContent = {
       "Physiologie : clairance rénale, filtration glomérulaire, bilan du sodium, du potassium, de l’eau, équilibre acido-basique, désordres hydro-électrolytiques, miction.",
       "Sémiologie : PA / protéinurie / hématurie, insuffisance rénale chronique.",
       "Andrologie : troubles de l’érection et de l’éjaculation.",
+      "Examens complets DFG2-UE5 : rattrapage juillet 2024 et mars 2025, avec l’intégralité des dossiers progressifs (DP).",
       "Chaque QCM : corrigé + rappel de cours expliqué comme à un débutant.",
-      "Total : 104 QCM d’annales corrigées (les désordres hydro-électrolytiques sont corrigés par Major ECN, faute de corrigé officiel)."
+      "Total : 152 QCM d’annales corrigées (les désordres hydro-électrolytiques sont corrigés par Major ECN, faute de corrigé officiel)."
     ]
   },
   "flashcards": [],
@@ -3973,6 +3974,1850 @@ const content: PriveCourseContent = {
             }
           ],
           "correction": "**Réponse : ACE**\n\nA) VRAI.\nB) FAUX, il y a bien un étranglement des veines émissaires : ce blocage veineux maintient l'érection (il n'est donc pas facultatif).\nC) VRAI.\nD) FAUX.\nE) VRAI."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Miction — Rattrapage juillet 2024 (Q6)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**La miction** = l'action de vider la vessie.\n\n**Le centre de la miction** est situé dans la **moelle sacrée** (segments S2-S3-S4), et non dans la moelle dorso-lombaire (qui contient, elle, le centre sympathique du stockage des urines).\n\n**Deux systèmes s'opposent** :\n- Le **parasympathique** (sacré) **déclenche** la miction : il contracte le muscle vésical (détrusor) et relâche le sphincter → la vessie se vide.\n- Le **sympathique** (dorso-lombaire) **empêche** la miction : il relâche la vessie et ferme le sphincter → la vessie se remplit et se retient.\n\n**Le cortex frontal** (et non occipital ni pariétal) contrôle volontairement ce réflexe : c'est lui qui décide du bon moment. Le cortex occipital, lui, sert à la vision.\n\nComme aucune des 4 premières propositions n'est juste, c'est la réponse E « Aucune des réponses précédentes » qui est correcte.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Miction · Rattrapage juillet 2024]**\n\nConcernant le centre de la miction, quelle est la réponse exacte ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il se situe au niveau du cortex pariétal",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il favorise la miction en activant le système sympathique",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il est inhibé par le cortex occipital",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il se situe au niveau de la moelle dorso-lombaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Aucune des réponses précédentes n'est exacte",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : E**\n\nA. **Faux** — Le centre de la miction est médullaire (moelle sacrée), pas cortical pariétal.\nB. **Faux** — La miction est déclenchée par le parasympathique ; le sympathique favorise au contraire le stockage (continence).\nC. **Faux** — Le contrôle volontaire vient du cortex frontal, pas du cortex occipital (vision).\nD. **Faux** — Le centre de la miction est dans la moelle sacrée (S2-S4), pas dorso-lombaire (siège du centre sympathique).\nE. **Valide** — Aucune des propositions ci-dessus n'étant exacte, c'est la bonne réponse."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Clairance rénale — Rattrapage juillet 2024 (Q7)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**La clairance** d'une substance = le volume de plasma que le rein « nettoie » complètement de cette substance par minute. Elle renseigne sur la façon dont le rein traite la molécule.\n\n**Cas particuliers utiles :**\n- **Glucose** : chez un sujet sain, il est entièrement filtré puis entièrement réabsorbé → il n'en reste pas dans l'urine → **clairance = 0** (pas infinie).\n- **Inuline** : librement filtrée, ni réabsorbée ni sécrétée → sa clairance mesure exactement le **débit de filtration glomérulaire (DFG)**, pas le débit plasmatique rénal (ça, c'est le PAH).\n- **Albumine** : grosse protéine qui ne passe pas le filtre glomérulaire chez le sujet sain → **clairance = 0** (nulle).\n- **Seuil du glucose** : le rein réabsorbe tout le glucose jusqu'à ~10 mmol/L de glycémie. À **9 mmol/L**, on est sous le seuil → tout le glucose est réabsorbé → clairance du glucose **nulle**, même chez un diabétique à reins normaux.\n\nUne clairance comprise entre le DFG et le débit plasmatique rénal signifie qu'il y a **sécrétion tubulaire** ; ce n'est pas le cas du Na+ (qui est massivement réabsorbé, donc clairance basse).",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Clairance rénale · Rattrapage juillet 2024]**\n\nA propos des clairances rénales, indiquez la(les) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La clairance rénale du glucose chez un sujet sain est infinie",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "La clairance rénale de l'inuline est mesurée pour estimer le débit plasmatique rénal",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La clairance rénale du Na+ est comprise entre le débit de filtration glomérulaire et le débit plasmatique rénal",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La clairance rénale de l'albumine chez un sujet sain est nulle",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Chez un sujet diabétique à fonction rénale normale ayant une glycémie à 9 mmol/L, la clairance rénale du glucose est nulle",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : D, E**\n\nA. **Faux** — Chez un sujet sain, le glucose filtré est entièrement réabsorbé : sa clairance est nulle, pas infinie.\nB. **Faux** — La clairance de l'inuline estime le DFG (filtration glomérulaire), pas le débit plasmatique rénal (mesuré par le PAH).\nC. **Faux** — Le Na+ est massivement réabsorbé : sa clairance est faible, bien inférieure au DFG.\nD. **Valide** — L'albumine ne franchit pas le filtre glomérulaire chez le sujet sain : clairance nulle.\nE. **Valide** — À 9 mmol/L on reste sous le seuil de réabsorption (~10 mmol/L) : tout le glucose est réabsorbé, clairance nulle."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Bilan du sodium (hyperaldostéronisme primaire) — Rattrapage juillet 2024 (Q8)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**L'aldostérone** est une hormone fabriquée par la **corticosurrénale** (glande au-dessus du rein). Elle fait **retenir le sodium (Na+) et l'eau** et **éliminer le potassium (K+)** dans l'urine.\n\n**Hyperaldostéronisme PRIMAIRE** = la glande produit trop d'aldostérone **d'elle-même** (le problème vient de la glande), le plus souvent à cause d'une **tumeur bénigne** de la surrénale (adénome de Conn).\n\n**Conséquences :**\n- Rétention de Na+ et d'eau → **hypertension artérielle (HTA)**.\n- Fuite de K+ → **hypokaliémie** (K+ bas), et non hyperkaliémie.\n- Comme il y a déjà trop d'aldostérone et de volume, le rein **freine la rénine** → la **rénine est BASSE** (c'est la clé du diagnostic « primaire »).\n\n**À distinguer du secondaire** : là, c'est une **mauvaise perfusion rénale** qui stimule la rénine → rénine HAUTE. La mauvaise perfusion rénale ne cause donc pas un hyperaldostéronisme primaire.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Bilan du sodium · Rattrapage juillet 2024]**\n\nA propos de l'hyperaldostéronisme primaire, indiquez la(les) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il s'accompagne d'une activité rénine plasmatique anormalement élevée",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il peut être dû à une tumeur bénigne de la glande corticosurrénale",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il peut entraîner une hypertension artérielle",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il peut entraîner une hyperkaliémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il peut être dû à une mauvaise perfusion rénale",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C**\n\nA. **Faux** — Dans l'hyperaldostéronisme primaire, la rénine est au contraire BASSE (freinée) ; c'est le secondaire qui a une rénine élevée.\nB. **Valide** — L'adénome de Conn (tumeur bénigne de la corticosurrénale) est la cause classique.\nC. **Valide** — La rétention de Na+ et d'eau provoque une HTA.\nD. **Faux** — L'aldostérone fait fuir le K+ : on observe une hypokaliémie, pas une hyperkaliémie.\nE. **Faux** — Une mauvaise perfusion rénale entraîne un hyperaldostéronisme secondaire (rénine haute), pas primaire."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Bilan du sodium (facteur atrial natriurétique) — Rattrapage juillet 2024 (Q10)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**Le facteur atrial natriurétique (ANF, aussi appelé ANP)** est une hormone fabriquée par les **oreillettes du cœur** (parties atriales). « Natriurétique » = qui fait **éliminer le sodium (Na+) dans les urines**.\n\n**Quand est-il libéré ?** Quand le **volume sanguin AUGMENTE** et étire les parois de l'oreillette (trop de volume/pression). Il n'est donc PAS libéré quand le volume diminue.\n\n**Ses effets** visent à faire **baisser le volume et la pression** :\n- Il **augmente l'excrétion rénale de Na+** (et donc d'eau qui suit) → on urine plus salé.\n- Il **augmente le débit de filtration glomérulaire (DFG)** en dilatant l'artériole afférente.\n- Il **freine (inhibe) le système rénine-angiotensine-aldostérone (SRAA)** : c'est l'opposé de l'aldostérone.\n\nComme il diminue l'aldostérone, il ne fait pas fuir le K+ → il n'induit **pas d'hypokaliémie**.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Bilan du sodium · Rattrapage juillet 2024]**\n\nA propos du facteur atrial natriurétique (ANF), indiquez la(les) proposition(s) exacte(s) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il est libéré dans la circulation sanguine en cas de diminution du volume sanguin circulant",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il augmente l'excrétion rénale de Na+",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il peut induire une hypokaliémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il a un effet inhibiteur sur le système rénine-angiotensine-aldostérone",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il augmente le débit de filtration glomérulaire",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, D, E**\n\nA. **Faux** — Il est libéré quand le volume sanguin AUGMENTE (étirement des oreillettes), pas quand il diminue.\nB. **Valide** — C'est une hormone natriurétique : elle augmente l'élimination urinaire de Na+.\nC. **Faux** — En freinant l'aldostérone, il ne fait pas fuir le K+ : pas d'hypokaliémie.\nD. **Valide** — Il inhibe le SRAA (effet opposé à l'aldostérone).\nE. **Valide** — Il dilate l'artériole afférente et augmente le DFG."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Désordres hydro-électrolytiques — Rattrapage juillet 2024 (Q17)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**Déshydratation extracellulaire** = on a perdu de l'eau ET du sel (Na+) → le volume du secteur extracellulaire (dont le sang) baisse → **hypovolémie** → le rein est mal perfusé (**hypoperfusion rénale**).\n\n**Le corps réagit pour retenir sel et eau et remonter la pression :**\n- **↑ Rénine** : le rein mal perfusé sécrète de la rénine, qui active le système rénine-angiotensine-aldostérone (SRAA).\n- **↑ Aldostérone** → dans le **canal collecteur**, elle fait **réabsorber le Na+** (récupéré) et **sécréter le K+** (éliminé). Donc réabsorption de Na+ ET sécrétion de K+ augmentent ensemble.\n- **↑ ADH + soif** : l'hypovolémie active les centres de la soif et la sécrétion d'ADH pour retenir l'eau.\n- Le **gradient cortico-papillaire** (qui permet de concentrer les urines) est **maintenu**, voire renforcé, pour économiser l'eau — il n'est pas aboli.\n\nTous ces mécanismes servent à corriger la baisse de volume.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Désordres hydro-électrolytiques · Rattrapage juillet 2024]**\n\nEn cas d'hypoperfusion rénale sévère secondaire à une déshydratation extracellulaire, quelle(s) réponse(s) physiologique(s) peut-on observer ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Augmentation de la sécrétion de rénine",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Augmentation de la réabsorption de Na+ dans le canal collecteur",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Augmentation de la sécrétion de K+ dans le canal collecteur",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Activation des centres de la soif",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Abolition du gradient cortico-papillaire osmotique",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, B, C, D**\n\nA. **Valide** — Le rein hypoperfusé sécrète davantage de rénine (activation du SRAA).\nB. **Valide** — L'aldostérone augmente la réabsorption de Na+ dans le canal collecteur.\nC. **Valide** — L'aldostérone augmente parallèlement la sécrétion de K+ dans le canal collecteur.\nD. **Valide** — L'hypovolémie active les centres de la soif (et la sécrétion d'ADH).\nE. **Faux** — Le gradient cortico-papillaire est maintenu/renforcé pour concentrer les urines et économiser l'eau, pas aboli."
+        }
+      ]
+    },
+    {
+      "titre": "Sémiologie — Déshydratation extracellulaire (signes cliniques) — Rattrapage juillet 2024 (Q18)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**Déshydratation extracellulaire** = perte d'eau et de sel → le volume du compartiment extracellulaire (plasma + liquide entre les cellules) diminue. Le sang est « moins rempli ».\n\n**Signes cliniques à connaître :**\n- **Veines jugulaires plates** : moins de volume dans les veines du cou → elles se collabent (à l'inverse, une turgescence = trop de volume).\n- **Pli cutané persistant** : on pince la peau, elle reste plissée car le liquide qui la tend a disparu (signe classique de déshydratation extracellulaire).\n- **Hypotension**, surtout **orthostatique** (chute de tension au lever), et **tachycardie** réflexe (cœur qui s'accélère pour compenser) → PAS de bradycardie.\n- **Perte de poids**, oligurie (urine peu).\n\n**Ce qui n'est PAS de la déshydratation extracellulaire :** les **œdèmes** (au contraire, signe de rétention/excès d'eau et sel), et les nausées ne sont pas un signe spécifique.",
+      "questions": [
+        {
+          "enonce": "**[Sémiologie · Déshydratation extracellulaire · Rattrapage juillet 2024]**\n\nQuel(s) signe(s) clinique(s) / fonctionnel(s) peut(peuvent) être secondaire(s) à une déshydratation extracellulaire ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Veines jugulaires plates",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Plis cutanés",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Œdèmes blancs des membres inférieurs",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Bradycardie",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Nausées",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, B**\n\nA. **Valide** — La baisse du volume extracellulaire collabe les veines jugulaires (jugulaires plates).\nB. **Valide** — Le pli cutané persistant est un signe classique de déshydratation extracellulaire.\nC. **Faux** — Les œdèmes traduisent au contraire une rétention/excès de volume extracellulaire.\nD. **Faux** — L'hypovolémie entraîne une tachycardie réflexe, pas une bradycardie.\nE. **Faux** — Les nausées ne sont pas un signe spécifique de déshydratation extracellulaire."
+        }
+      ]
+    },
+    {
+      "titre": "Sémiologie — Sémiologie urologique (indications du scanner) — Rattrapage juillet 2024 (Q19)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**Infection urinaire** = infection des voies urinaires (vessie, reins…). Souvent une simple échographie ou un traitement antibiotique suffisent. Le **scanner (uro-scanner)** n'est demandé que dans des **situations à risque de complication**, pour chercher un abcès, un obstacle, etc.\n\n**Indications d'un scanner :**\n- **Échec du traitement** : infection qui résiste à un antibiotique pourtant bien conduit → on cherche une complication.\n- **Suspicion d'abcès** vue à l'échographie → le scanner précise la lésion.\n- **Obstruction des voies urinaires** (calcul, dilatation) vue à l'échographie → il faut lever/évaluer l'obstacle.\n- **Immunodépression** : terrain fragile, on cherche plus facilement une complication.\n\n**À éviter :** chez la **femme enceinte**, on ne fait pas de scanner (rayons X) ; on privilégie l'échographie (voire l'IRM). Ce n'est donc pas une indication.\n\n_Remarque : cette question a été neutralisée à l'examen._",
+      "questions": [
+        {
+          "enonce": "**[Sémiologie · Sémiologie urologique · Rattrapage juillet 2024]**\n\nDans les infections urinaires de l'adulte, quelle(s) est(sont) l'(les) indication(s) du scanner ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Infection résistant à un traitement antibiotique bien conduit",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Femme enceinte au 3ème trimestre",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Suspicion d'abcès à l'échographie",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Obstruction des voies urinaires à l'échographie",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "En cas d'immunodépression",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, C, D, E**\n\nA. **Valide** — Un échec d'antibiothérapie bien conduite fait rechercher une complication au scanner.\nB. **Faux** — Chez la femme enceinte on évite le scanner (rayons X) et on privilégie l'échographie.\nC. **Valide** — Une suspicion d'abcès à l'échographie justifie un scanner de précision.\nD. **Valide** — Une obstruction des voies urinaires impose une imagerie complémentaire (scanner).\nE. **Valide** — L'immunodépression est un terrain à risque justifiant le scanner.\n\n_(Question neutralisée)_"
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q1)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "La **déshydratation extracellulaire (DEC)** = perte d'eau ET de sel du secteur extracellulaire (le sang en fait partie). Le volume qui circule diminue.\n\nConséquences typiques :\n- **Pression artérielle basse** (hypotension) car il y a moins de volume dans les vaisseaux.\n- **Tachycardie** (cœur qui bat vite) : réflexe pour compenser la baisse de pression.\n- **Oligurie** (peu d'urine) : le rein retient l'eau pour économiser le volume.\n\nÀ l'inverse, des **veines jugulaires turgescentes** (gonflées) et des **œdèmes prenant le godet** signent un EXCÈS de volume extracellulaire : c'est le contraire d'une DEC.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nParmi les signes cliniques suivants, quels sont ceux compatibles avec une déshydratation extracellulaire ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Turgescence des veines jugulaires",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Pression artérielle 90/60 mmHg",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Fréquence cardiaque 130 /min en décubitus",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Oligurie",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Des œdèmes périphériques prenant le godet",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C, D**\n\nA. **Faux** — Des jugulaires turgescentes traduisent un excès de volume, pas une déshydratation.\nB. **Valide** — L'hypotension témoigne de la baisse du volume circulant.\nC. **Valide** — La tachycardie est un réflexe compensateur de la baisse de pression.\nD. **Valide** — Le rein économise l'eau : la diurèse diminue (oligurie).\nE. **Faux** — Les œdèmes prenant le godet signent une hyperhydratation extracellulaire."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q2)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "On évalue les secteurs d'eau avec deux repères simples :\n- La **natrémie** (concentration de sodium dans le sang) reflète l'état du secteur **intracellulaire (IC)**. Une natrémie basse (**hyponatrémie**, ici 125 mmol/L) = le plasma est trop dilué → l'eau entre dans les cellules → le **volume intracellulaire augmente** (hyperhydratation IC).\n- Les signes cliniques (hypotension, tachycardie) reflètent le secteur **extracellulaire / plasmatique** : ici il est **diminué**.\n\nEn résumé : hyponatrémie → volume IC augmenté ; signes de DEC → volume plasmatique diminué.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nQue pouvez-vous déduire des résultats biologiques du patient ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le volume intracellulaire est normal",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le volume intracellulaire est augmenté",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Le volume intracellulaire est diminué",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le volume intracellulaire n'est pas évaluable",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le volume plasmatique est diminué",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, E**\n\nA. **Faux** — Le volume IC n'est pas normal : l'hyponatrémie le fait augmenter.\nB. **Valide** — Hyponatrémie (125 mmol/L) → hypo-osmolalité → l'eau entre dans les cellules → volume IC augmenté.\nC. **Faux** — C'est l'inverse qui se produit.\nD. **Faux** — La natrémie permet justement de l'évaluer.\nE. **Valide** — Les signes cliniques de DEC indiquent un volume plasmatique diminué."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q3)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "**Hyponatrémie** = sodium plasmatique trop bas. Chez un patient déshydraté (volume circulant bas), le corps déclenche des réflexes pour retenir l'EAU, ce qui dilue le sodium :\n- Le **système rénine-angiotensine** s'active : l'**angiotensine 2** augmente (elle retient sel et eau et stimule la soif).\n- L'**ADH** (hormone antidiurétique) augmente : le rein réabsorbe de l'eau libre → dilution du sodium.\n\nAttention : l'**aldostérone** fait retenir du sodium (elle ne crée pas d'hyponatrémie), et une **perte rénale de Na⁺** n'explique pas ici l'hyponatrémie de dilution.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nQuelle(s) adaptation(s) physiologique(s) a (ont) pu contribuer à l'hyponatrémie ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Inhibition des chémorécepteurs carotidiens",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Augmentation de la concentration plasmatique d'aldostérone",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Augmentation de la concentration plasmatique d'angiotensine 2",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Perte de Na⁺ par les reins",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Augmentation de la concentration plasmatique d'hormone anti-diurétique (ADH)",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : C, E**\n\nA. **Faux** — Ce ne sont pas les chémorécepteurs (O2/CO2) mais les barorécepteurs qui détectent la baisse de volume.\nB. **Faux** — L'aldostérone retient du sodium ; elle ne dilue pas la natrémie.\nC. **Valide** — L'angiotensine 2 augmente (activation du SRAA) et favorise rétention d'eau et soif.\nD. **Faux** — L'hyponatrémie est ici de dilution, pas due à une fuite rénale de Na⁺.\nE. **Valide** — L'ADH augmentée fait réabsorber de l'eau libre → dilution du sodium."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q4)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "L'**appareil juxtaglomérulaire** est une zone du rein située au pôle du glomérule, là où le tube (tube contourné distal) revient toucher les artérioles du glomérule.\nÉléments clés à reconnaître :\n- La **macula densa** : cellules spécialisées du tube distal qui « lisent » la concentration de sel dans l'urine.\n- L'**artériole afférente** (qui entre) et l'**artériole efférente** (qui sort) du glomérule.\n- Les **podocytes** : cellules de la barrière de filtration, autour des capillaires.\n- L'**espace glomérulaire (de Bowman)** : la chambre qui recueille l'urine primitive.\n\nIl faut associer chaque flèche du schéma à la bonne structure.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nÀ propos du schéma ci-dessous de l'appareil juxtaglomérulaire, indiquez la ou les proposition(s) exacte(s) :\n<img src=\"/prive-images/alexis/juillet2024-dp1-juxtaglomerulaire.png\" alt=\"Schéma de l'appareil juxtaglomérulaire\" style=\"display:block;max-width:100%;height:auto;margin:10px auto;border:1px solid #e5e7eb;border-radius:8px;background:#fff;\" />",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La flèche n°1 indique l'urothélium",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "La flèche n°2 indique la macula densa",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "La flèche n°3 indique l'artériole efférente",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La flèche n°4 indique l'espace glomérulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "La flèche n°5 indique un podocyte",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B**\n\nA. **Faux** — L'urothélium tapisse les voies urinaires (bassinet, uretère, vessie), pas l'appareil juxtaglomérulaire.\nB. **Valide** — La flèche n°2 désigne bien la macula densa (cellules du tube distal accolées au glomérule).\nC. **Faux** — La flèche n°3 ne correspond pas à l'artériole efférente.\nD. **Faux** — La flèche n°4 ne désigne pas l'espace glomérulaire.\nE. **Faux** — La flèche n°5 ne désigne pas un podocyte."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q5)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Pour lire un **état acido-basique**, on regarde le pH puis les bicarbonates (HCO3⁻) et la PCO2.\n- **pH > 7,45** = **alcalose** (le sang est trop basique). Ici pH 7,56 → alcalose.\n- **HCO3⁻ très élevés** (42 mmol/L, normal ~24) → l'origine est **métabolique** : c'est une **alcalose métabolique**.\n- Pour compenser, le poumon retient du CO2 (hypoventilation) : la **PCO2 monte** (ici 46, légèrement haute). Comme le pH reste anormal, la **compensation est partielle** (pas totale).\n\nIl n'y a donc pas d'acidose respiratoire, ni de trouble mixte.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nComment interprétez-vous l'état acidobasique du patient ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il existe une acidose respiratoire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il existe une alcalose métabolique",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il existe une compensation partielle",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le trouble acidobasique est d'origine mixte",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "L'acidose explique l'hypokaliémie",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C**\n\nA. **Faux** — Le pH est élevé (7,56) : c'est une alcalose, pas une acidose.\nB. **Valide** — pH élevé + HCO3⁻ très augmentés (42) = alcalose métabolique.\nC. **Valide** — La PCO2 monte (46) pour compenser, mais le pH reste anormal : compensation partielle.\nD. **Faux** — Le trouble est purement métabolique, pas mixte.\nE. **Faux** — Il n'y a pas d'acidose ici ; c'est plutôt l'alcalose/l'hyperaldostéronisme qui accompagne l'hypokaliémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q6)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Une **alcalose métabolique** (excès de bicarbonates) peut être entretenue par tout ce qui fait perdre des ions H⁺ ou du chlore, ou retenir des bicarbonates :\n- La **sécrétion d'aldostérone** fait éliminer des H⁺ et du K⁺ par le rein → alcalose + hypokaliémie.\n- L'**ADH** et la contraction du volume participent à la réabsorption des bicarbonates.\n- Les **vomissements** (perte d'acide gastrique) donnent classiquement une alcalose, mais ce patient n'en présente pas ici.\n\nL'hypokaliémie est plutôt une **conséquence** qu'une cause de l'alcalose.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nLe patient présente une alcalose métabolique. Quel(s) élément(s) peut(peuvent) être à l'origine de cet état acido-basique ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "L'insuffisance rénale fonctionnelle",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "L'hypokaliémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La sécrétion d'ADH",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Les vomissements",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "La sécrétion d'aldostérone",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : C, E** _(Question neutralisée)_\n\nA. **Faux** — L'insuffisance rénale fonctionnelle n'explique pas à elle seule l'alcalose.\nB. **Faux** — L'hypokaliémie est plutôt une conséquence associée qu'une cause.\nC. **Valide** — L'ADH participe à la réabsorption d'eau et de bicarbonates.\nD. **Faux** — Le patient ne présente pas de vomissements dans ce cas.\nE. **Valide** — L'hyperaldostéronisme fait perdre H⁺ et K⁺ → alcalose métabolique + hypokaliémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q7)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Chez un patient déshydraté, le rein **concentre au maximum les urines** pour économiser l'eau :\n- L'**osmolalité urinaire est élevée** (urines concentrées, ex : 800 mosmol/L).\n- L'**urée urinaire est très élevée** (réabsorption d'eau qui la concentre).\n- Le **sodium urinaire est bas** (le rein retient le Na⁺) : une [Na⁺]u à 60 mmol/L serait trop élevée.\n- La **créatinine urinaire est élevée** (urines concentrées) : 2 mmol/L serait trop bas.\n\nOn s'attend donc à des urines concentrées et pauvres en sodium.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nParmi les résultats biologiques urinaires ci-dessous, indiquez celui ou ceux que vous vous attendez à observer chez ce patient ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "[urée]ᵤ : 300 mmol/L",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "[créatinine]ᵤ : 2 mmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "[Na⁺]ᵤ : 60 mmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Osmolalité urinaire : 800 mosmol/l",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Rapport [Na⁺]ᵤ / [K⁺]ᵤ : 1,5",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, D** _(Question neutralisée)_\n\nA. **Valide** — Urines concentrées : l'urée urinaire est très élevée.\nB. **Faux** — La créatinine urinaire serait élevée (urines concentrées), pas à 2 mmol/L.\nC. **Faux** — Le rein retient le sodium : la natriurèse est basse, pas 60 mmol/L.\nD. **Valide** — Osmolalité urinaire élevée = urines concentrées, cohérent avec la déshydratation.\nE. **Faux** — Sous aldostérone, le rapport Na⁺/K⁺ urinaire est bas (<1), pas 1,5."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q8)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "L'**osmolalité urinaire** = la quantité totale de particules dissoutes dans l'urine. On l'estime en additionnant les principaux osmoles urinaires :\n**Osm urinaire ≈ 2 × ([Na⁺] + [K⁺]) + [urée] + [glucose]**\n\nIl faut donc connaître : le **sodium**, le **potassium**, l'**urée** et le **glucose** urinaires.\nLa **créatinine** n'entre PAS dans ce calcul (elle sert au calcul des clairances, pas de l'osmolalité).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nDe quelles valeurs a-t-on besoin pour calculer l'osmolalité urinaire ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "[urée] urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "[K⁺] urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "[Na⁺] urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "[créatinine] urinaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "[glucose] urinaire",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, B, C, E**\n\nA. **Valide** — L'urée est un osmole majeur de l'urine.\nB. **Valide** — Le potassium entre dans le calcul (2 × (Na⁺ + K⁺)).\nC. **Valide** — Le sodium aussi.\nD. **Faux** — La créatinine n'intervient pas dans l'osmolalité (elle sert aux clairances).\nE. **Valide** — Le glucose urinaire est un osmole à prendre en compte."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP1 — Rattrapage juillet 2024 (Q9)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Le rein concentre les urines grâce au **gradient cortico-papillaire** créé dans l'anse de Henlé (mécanisme à contre-courant). Les segments impliqués :\n- La **branche descendante de l'anse de Henlé** : perméable à l'eau, elle laisse sortir l'eau → l'urine se concentre.\n- La **branche ascendante large** : réabsorbe le sel (Na⁺) sans eau → crée le gradient dans la médullaire.\n- Le **canal collecteur médullaire** : sous l'action de l'ADH, il réabsorbe l'eau grâce à ce gradient → urine concentrée.\n\nLe **tube contourné proximal** réabsorbe en masse mais de façon iso-osmotique (ne concentre pas), et le **tube distal** dilue plutôt l'urine.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Rattrapage juillet 2024]**\n\nPatient. Biologie sanguine : [créatinine] 250 μmol/L, [urée] 20 mmol/L, [Na⁺] 125 mmol/L, [K⁺] 2,8 mmol/L, [bicarbonate] 42 mmol/L, [chlore] 75 mmol/L, [protides] 98 g/L, [glucose] 5 mmol/L. Gaz du sang : pH 7,56, PCO2 46 mmHg, PO2 90 mmHg, [HCO3⁻] 42 mmol/L, [Hb] 18 g/100 mL, saturation en O2 96 %.\n\nQuels segments du tube rénal participent à l'augmentation au phénomène de concentration des urines ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Tube contourné proximal",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Segment descendant de l'anse de Henlé",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Segment ascendant large de l'anse de Henlé",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Tube contourné distal",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Canal collecteur médullaire",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, C, E**\n\nA. **Faux** — Le tube proximal réabsorbe de façon iso-osmotique : il ne concentre pas les urines.\nB. **Valide** — La branche descendante laisse sortir l'eau → concentre l'urine.\nC. **Valide** — La branche ascendante large réabsorbe le sel et crée le gradient médullaire.\nD. **Faux** — Le tube distal tend à diluer l'urine.\nE. **Valide** — Le canal collecteur médullaire réabsorbe l'eau (ADH) grâce au gradient."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q1)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "On évalue séparément les deux secteurs d'eau :\n- Le secteur **extracellulaire (EC)** se juge sur la clinique (PA, œdèmes, jugulaires). Ici PA normale, pas d'œdème, pas d'infiltration : le **volume EC est normal**.\n- Le secteur **intracellulaire (IC)** se juge sur la natrémie. Ici **sodium à 110 mmol/L** = hyponatrémie franche → le plasma est trop dilué → l'eau entre dans les cellules → **hyperhydratation intracellulaire**.\n\nDonc : volume EC normal + hyperhydratation IC = une **hyperhydratation intracellulaire isolée** (pas d'hyperhydratation globale ni extracellulaire).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nDécrire l'état d'hydratation de la patiente :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Volume extracellulaire normal",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Hyperhydratation globale",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Hyperhydratation intracellulaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Hyperhydratation extracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Volume intracellulaire normal",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, C**\n\nA. **Valide** — Clinique normale (PA, pas d'œdème) : le volume extracellulaire est normal.\nB. **Faux** — Il n'y a pas d'hyperhydratation globale (l'EC est normal).\nC. **Valide** — L'hyponatrémie (110) fait gonfler les cellules : hyperhydratation intracellulaire.\nD. **Faux** — Pas d'œdème ni de surcharge : le secteur extracellulaire n'est pas augmenté.\nE. **Faux** — Le volume intracellulaire est augmenté, pas normal."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q2)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Une **hyperhydratation intracellulaire** = les cellules sont gonflées d'eau (hyponatrémie). Conséquences :\n- **Prise de poids** : l'excès d'eau retenu fait grossir (ici +4 kg).\n- **Signes neurologiques** : les neurones gonflent → **syndrome confusionnel**, céphalées, voire convulsions.\n\nÀ l'inverse, une **hypotension orthostatique**, des **veines jugulaires plates** ou une **hypotonie des globes oculaires** témoignent d'une atteinte du secteur EXTRAcellulaire (déshydratation EC), qui n'existe pas ici.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nLa patiente présente une hyperhydratation cellulaire isolée. Quel(s) symptôme(s) clinique(s) peut(peuvent) être expliqué(s) par ce trouble de l'hydratation ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Prise de poids",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Syndrome confusionnel",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Hypotension orthostatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Veines jugulaires plates",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Hypotonie des globes oculaires",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, B**\n\nA. **Valide** — La rétention d'eau explique la prise de poids.\nB. **Valide** — Le gonflement des neurones (œdème cérébral) provoque une confusion.\nC. **Faux** — L'hypotension orthostatique traduit une atteinte extracellulaire (non présente ici).\nD. **Faux** — Des jugulaires plates signent une déshydratation extracellulaire.\nE. **Faux** — L'hypotonie des globes oculaires est un signe de déshydratation, pas d'hyperhydratation."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q3)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "L'**osmolalité plasmatique calculée** estime la concentration de particules dans le sang. Formule usuelle :\n**Osm = 2 × [Na⁺] + [glycémie] + [urée]** (en mmol/L).\n\nIci : 2 × 110 + 4,5 + 2 = 220 + 4,5 + 2 = **226,5 mosm/L** ; selon la variante de formule et l'arrondi retenus, la valeur attendue tourne autour de 224,5–226,5. La valeur normale est ~285–295 : la patiente est donc en **hypo-osmolalité** (cohérent avec l'hyponatrémie).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nQuelle est la valeur de l'osmolalité plasmatique calculée ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "224,5 mosm/L",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "226,5 mosm/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "230 mosm/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "240,5 mosm/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "285 mosm/L",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A** _(Question neutralisée)_\n\nA. **Valide** — Retenue comme réponse officielle (osmolalité basse, autour de 224–226 mosm/L).\nB. **Faux** — Valeur proche mais non retenue.\nC. **Faux** — Trop élevée.\nD. **Faux** — Trop élevée.\nE. **Faux** — 285 correspond à une osmolalité normale, incompatible avec l'hyponatrémie à 110."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q4)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Le **« syndrome des buveurs de thé »** (apports d'osmoles insuffisants) explique l'hyponatrémie de cette patiente :\n- Elle boit **beaucoup d'eau** (apports hydriques excessifs) mais mange très peu → **apports d'osmoles faibles** (peu de sel et de protéines).\n- Le rein a besoin d'un minimum d'osmoles pour éliminer l'eau ; quand ils manquent, il ne peut plus éliminer tout le surplus d'eau → l'eau s'accumule → **hyponatrémie de dilution**.\n\nCe n'est donc PAS un manque d'eau, ni un excès de sodium, ni une diurèse osmotique.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nDans ce contexte clinique, quel(s) élément(s) peut(peuvent) expliquer l'hyponatrémie ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Apports hydriques insuffisants",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Apports hydriques excessifs",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Apports osmotiques faibles",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Diurèse osmotique",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Excès d'apport de sodium",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C**\n\nA. **Faux** — C'est un excès d'eau, pas un manque.\nB. **Valide** — Les apports hydriques excessifs diluent le sodium.\nC. **Valide** — Le manque d'osmoles (sel, protéines) limite la capacité du rein à éliminer l'eau.\nD. **Faux** — Une diurèse osmotique ferait plutôt perdre de l'eau.\nE. **Faux** — Il n'y a pas d'excès de sodium (au contraire, apports faibles)."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q5)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Pour confirmer un **syndrome des buveurs de thé**, l'examen clé est le **dosage de l'osmolalité urinaire**.\n- Dans ce syndrome, le rein essaie d'éliminer l'excès d'eau : les urines sont **très diluées** (osmolalité urinaire **très basse**, souvent < 100 mosmol/L).\n- Cela prouve que l'ADH est bien freinée et que le problème vient du manque d'osmoles, pas d'un excès d'ADH (SIADH).\n\nDoser la rénine, l'aldostérone ou l'ADH n'est pas l'examen de première intention le plus utile ici.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nVous suspectez en première intention un excès d'apport d'eau associé à un défaut d'apports d'osmoles (« syndrome des buveurs de thé »). Quel examen complémentaire proposez-vous en première intention pour confirmer cette hypothèse ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Dosage de l'activité rénine plasmatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Dosage de l'aldostérone plasmatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Dosage de l'hormone antidiurétique (ADH)",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Dosage de l'osmolalité urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Mesure du volume plasmatique",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : D**\n\nA. **Faux** — La rénine n'est pas l'examen de première intention pour ce diagnostic.\nB. **Faux** — L'aldostérone n'apporte pas la confirmation recherchée.\nC. **Faux** — Le dosage d'ADH n'est pas l'examen de première intention (coûteux, peu accessible).\nD. **Valide** — L'osmolalité urinaire basse (urines diluées) confirme le syndrome des buveurs de thé.\nE. **Faux** — La mesure du volume plasmatique n'est pas l'examen adapté."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q6)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "On a décidé de mesurer l'**osmolalité urinaire**. Dans le **syndrome des buveurs de thé**, le rein élimine correctement l'eau : les urines sont **très diluées**.\n- Une osmolalité urinaire **très basse (~80 mosmol/L)** confirme le diagnostic : le rein dilue au maximum, l'ADH est bien freinée.\n- Des urines **concentrées** (250, 300 ou 800 mosmol/L) orienteraient au contraire vers un **SIADH** (ADH inappropriée), diagnostic différent.\n\nRepère : dans le SIADH, l'osmolalité urinaire est élevée ; dans la potomanie/buveurs de thé, elle est effondrée.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nVous avez décidé de mesurer l'osmolalité urinaire. Quelle valeur confirme le diagnostic de « syndrome de buveur de thé » ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "80 mosmol/L",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "150 mosmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "250 mosmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "300 mosmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "800 mosmol/L",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A**\n\nA. **Valide** — Urines très diluées (~80 mosmol/L) : le rein élimine l'eau, ADH freinée → confirme le diagnostic.\nB. **Faux** — Valeur trop élevée pour confirmer une dilution maximale.\nC. **Faux** — Urines encore trop concentrées.\nD. **Faux** — Urines iso-osmotiques : oriente vers un SIADH.\nE. **Faux** — Urines très concentrées : incompatible avec le syndrome des buveurs de thé."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q7)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Si le laboratoire ne peut pas mesurer directement l'osmolalité urinaire, on la **calcule** à partir de ses principaux osmoles :\n**Osm urinaire ≈ 2 × ([Na⁺] + [K⁺]) + [urée] + [glucose]** (concentrations urinaires).\n\nIl faut donc doser dans les urines : le **sodium**, le **potassium**, l'**urée** et le **glucose**.\nLa **créatinine** et les **protides** urinaires n'entrent PAS dans ce calcul.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nLe laboratoire ne dispose pas de l'appareil adéquat pour mesurer l'osmolarité urinaire ; il vous propose de mesurer d'autres constantes biologiques qui permettraient de la calculer. De quelles concentrations devez-vous disposer pour calculer l'osmolalité urinaire ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Concentration de glucose urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Concentration de créatinine urinaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Concentration d'urée urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Concentration de sodium urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Concentration urinaire de protides",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, C, D**\n\nA. **Valide** — Le glucose urinaire est un osmole à inclure.\nB. **Faux** — La créatinine n'entre pas dans le calcul de l'osmolalité.\nC. **Valide** — L'urée urinaire est un osmole majeur.\nD. **Valide** — Le sodium (avec le potassium) est indispensable au calcul.\nE. **Faux** — Les protides n'interviennent pas dans l'osmolalité urinaire."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q8)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Dans le **syndrome des buveurs de thé** (hyponatrémie de dilution, volume EC normal), les dosages fins montreraient :\n- Une **ADH très basse voire nulle** : l'hypo-osmolalité freine normalement l'ADH (réponse physiologique adaptée).\n- Un **rapport Na⁺/K⁺ urinaire > 1** : le rein n'est pas en rétention hydrosodée majeure.\n\nComme le volume extracellulaire est normal, la **rénine** et l'**aldostérone** ne sont pas élevées, et le **facteur natriurétique auriculaire (ANF)** n'est pas augmenté.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nSi l'on faisait des dosages plasmatiques et urinaires plus sophistiqués chez cette patiente, on constaterait que :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La concentration plasmatique d'ADH est très faible voire nulle",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le rapport [Na⁺] urinaire / [K⁺] urinaire est supérieur à 1",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "L'activité rénine plasmatique est élevée",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La concentration d'aldostérone est élevée",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "La concentration de facteur auriculaire natriurétique est élevée",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, B** _(Question neutralisée)_\n\nA. **Valide** — L'hypo-osmolalité freine l'ADH : elle est très basse (réponse adaptée).\nB. **Valide** — Le rapport Na⁺/K⁺ urinaire est > 1 (pas de rétention sodée majeure).\nC. **Faux** — Volume EC normal : la rénine n'est pas élevée.\nD. **Faux** — L'aldostérone n'est pas augmentée.\nE. **Faux** — L'ANF n'est pas élevé (pas de surcharge volémique extracellulaire)."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q9)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "L'**hormone antidiurétique (ADH ou vasopressine)** contrôle la réabsorption d'eau par le rein. À retenir :\n- C'est une **hormone peptidique** (petite protéine) → elle agit sur un **récepteur membranaire** (pas nucléaire) et son action est **rapide** (minutes).\n- Elle est **synthétisée par l'hypothalamus** puis stockée/libérée par l'**hypophyse postérieure** (posthypophyse).\n- Elle est libérée quand l'osmolalité plasmatique **augmente** (> 280–285 mOsm/kg), pas quand elle baisse.\n\nPiège classique : « synthétisée au niveau de l'hypophyse » est faux (elle y est seulement stockée/libérée).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nL'hormone anti-diurétique :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Est une hormone dont la mise en jeu demande plusieurs jours pour être pleinement efficace",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Est synthétisée au niveau de l'hypophyse postérieure",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Est libérée dans le sang lorsque l'osmolalité plasmatique est inférieure à 280 mOsm/Kg d'eau",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Est une hormone de nature peptidique",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Se fixe à son récepteur nucléaire pour pouvoir activer la transcription de ses gènes cibles",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : D**\n\nA. **Faux** — L'ADH agit rapidement (minutes), pas en plusieurs jours.\nB. **Faux** — Elle est synthétisée par l'hypothalamus ; l'hypophyse postérieure ne fait que la stocker et la libérer.\nC. **Faux** — Elle est libérée quand l'osmolalité augmente (> 280), pas quand elle baisse.\nD. **Valide** — L'ADH est bien une hormone peptidique.\nE. **Faux** — Étant peptidique, elle agit sur un récepteur membranaire, pas nucléaire."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — DP2 — Rattrapage juillet 2024 (Q10)",
+      "annee": "Rattrapage juillet 2024",
+      "rappel_cours": "Traitement d'une **hyponatrémie de dilution par excès d'eau** (syndrome des buveurs de thé) : puisque le problème est un **trop-plein d'eau**, la solution logique est de **restreindre les apports d'eau** (souvent ≤ 1 L/jour), en rétablissant aussi des apports en sel et protéines.\n\nÀ éviter :\n- Les **diurétiques de l'anse** ou le **régime sans sel** aggraveraient la perte d'osmoles.\n- Une **perfusion de glucosé** apporterait encore de l'eau libre → aggrave l'hyponatrémie.\n- Une perfusion **hypertonique** n'est justifiée qu'en cas d'hyponatrémie grave et symptomatique (urgence), pas ici en première intention.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Rattrapage juillet 2024]**\n\nPatiente. PA couchée 120/90 mmHg, PA debout 115/85 mmHg, fréquence cardiaque 70/min, poids 56 kg (+4 kg depuis 2 mois), température 36,5 °C. Les membres inférieurs ne sont pas augmentés de volume ; pas d'infiltration cutanée lombaire ; auscultation pulmonaire normale. Biologie sanguine : [créatinine] 36 μmol/L, [urée] 2 mmol/L, [sodium] 110 mmol/L, [potassium] 4 mmol/L, [chlore] 90 mmol/L, [glycémie] 4,5 mmol/L, [protides] 70 g/L.\n\nVous souhaitez proposer un traitement à cette patiente. Parmi les options thérapeutiques suivantes, laquelle vous paraît la plus indiquée ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Traitement par un diurétique de l'anse",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Régime sans sel strict",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Perfusion d'un litre de soluté de chlorure de sodium hypertonique (osmolalité : 600 mOsm/L)",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Perfusion d'un litre de soluté glucosé isotonique (osmolalité : 300 mOsm/L)",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Restriction des apports hydriques (eau de boisson ≤ 1 L/j)",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : E**\n\nA. **Faux** — Un diurétique de l'anse ferait perdre encore des osmoles.\nB. **Faux** — Le régime sans sel aggraverait le manque d'osmoles.\nC. **Faux** — Le sérum hypertonique est réservé aux hyponatrémies graves symptomatiques (urgence), pas ici.\nD. **Faux** — Le glucosé apporte de l'eau libre → aggrave l'hyponatrémie.\nE. **Valide** — La restriction hydrique corrige la cause (excès d'eau) : c'est le traitement le plus indiqué."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Miction — Mars 2025 (Q1)",
+      "annee": "Mars 2025",
+      "rappel_cours": "La **miction** est l'action d'uriner. La vessie fonctionne selon 3 phases : le **remplissage**, la **continence** (on se retient) et la **miction** (on vide).\n\n- Le **détrusor** est le muscle de la paroi de la vessie : c'est un **muscle lisse** (involontaire), qui se contracte pour vider la vessie.\n- Le **sphincter interne** est aussi un muscle lisse involontaire ; le **sphincter externe** est un muscle **strié**, sous contrôle volontaire (nerf somatique).\n- Le **parasympathique** (acétylcholine) contracte le détrusor → favorise la miction. Le **sympathique** favorise le remplissage/la continence.\n- Le **centre de la miction** est dans le **tronc cérébral** (protubérance). Le **cortex préfrontal** inhibe ce centre quand on se retient.\n- L'innervation **sensitive** de la vessie déclenche des **réflexes médullaires**.\n- Les centres médullaires **sympathiques** sont **dorso-lombaires** (pas sacrés).",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Miction · Mars 2025]**\n\nConcernant la physiologie de la miction, sélectionnez les réponses exactes (5 réponses exactes attendues) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La miction normale permet l'évacuation des urines sans résidu.",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le fonctionnement vésical comprend l'alternance de 3 phases : le remplissage, la continence et la miction.",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Les centres médullaires sympathiques se situent au niveau de la moelle sacrée.",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le détrusor est un muscle lisse.",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le sphincter externe est un muscle lisse.",
+              "is_correct": false
+            },
+            {
+              "lettre": "F",
+              "enonce": "Le sphincter interne est innervé par le système nerveux somatique.",
+              "is_correct": false
+            },
+            {
+              "lettre": "G",
+              "enonce": "L'acétylcholine peut se fixer sur des récepteurs de type alpha ou beta.",
+              "is_correct": false
+            },
+            {
+              "lettre": "H",
+              "enonce": "L'innervation sensitive de la vessie est à l'origine de réflexes médullaires.",
+              "is_correct": true
+            },
+            {
+              "lettre": "I",
+              "enonce": "Le centre de la miction se situe au niveau du tronc cérébral.",
+              "is_correct": true
+            },
+            {
+              "lettre": "J",
+              "enonce": "En phase de continence, le cortex préfrontal inhibe le centre de la miction.",
+              "is_correct": true
+            },
+            {
+              "lettre": "K",
+              "enonce": "L'activation sympathique favorise la contraction du détrusor.",
+              "is_correct": false
+            },
+            {
+              "lettre": "L",
+              "enonce": "L'activation parasympathique favorise la contraction du sphincter interne.",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, D, H, I, J**\n\nA. **Valide** — Une miction normale vide la vessie sans résidu post-mictionnel.\nB. **Faux** — Le fonctionnement vésical comprend 2 phases : le remplissage/continence et la miction (pas 3 distinctes comme énoncé).\nC. **Faux** — Les centres sympathiques sont dorso-lombaires ; c'est le parasympathique qui est sacré.\nD. **Valide** — Le détrusor est bien un muscle lisse involontaire.\nE. **Faux** — Le sphincter externe est un muscle strié (volontaire).\nF. **Faux** — Le sphincter interne est lisse, innervé par le système autonome (sympathique), pas somatique.\nG. **Faux** — L'acétylcholine agit sur les récepteurs cholinergiques (muscariniques/nicotiniques), pas alpha/beta (ceux-ci sont adrénergiques).\nH. **Valide** — Les afférences sensitives vésicales déclenchent des réflexes médullaires.\nI. **Valide** — Le centre mictionnel (pontin) est dans le tronc cérébral.\nJ. **Valide** — En continence, le cortex préfrontal inhibe le centre pontin de la miction.\nK. **Faux** — Le sympathique relâche le détrusor (favorise le remplissage), il ne le contracte pas.\nL. **Faux** — Le parasympathique contracte le détrusor et relâche le sphincter (favorise la miction)."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Clairance rénale — Mars 2025 (Q10)",
+      "annee": "Mars 2025",
+      "rappel_cours": "La **clairance rénale** d'une substance = volume de plasma (mL) totalement « nettoyé » de cette substance par les reins chaque minute.\n\n- Le **débit de filtration glomérulaire (DFG)** ≈ 120 mL/min : volume filtré par les glomérules.\n- Substance **filtrée, ni réabsorbée ni sécrétée** → clairance = **DFG** (ex. inuline).\n- Clairance **< DFG** (ex. 50 mL/min) → la substance est en partie **réabsorbée**.\n- Clairance **> DFG** (ex. 200 mL/min) → la substance est **sécrétée** par le tubule.\n- Clairance **nulle** → toute la substance filtrée est réabsorbée ; cela ne dit rien sur sa concentration dans la veine rénale (elle y reste présente).\n- Le **glucose** est normalement entièrement réabsorbé (clairance ≈ 0) ; si la **glycémie** dépasse le seuil de réabsorption, du glucose passe dans l'urine → sa clairance varie.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Clairance rénale · Mars 2025]**\n\nConcernant les clairances rénales, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Si une substance librement filtrée a une clairance rénale nulle, cela signifie que la concentration de cette substance dans la veine rénale est nulle.",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Si une substance librement filtrée a une clairance rénale de 200 mL/min, cela signifie que cette substance est sécrétée par le tubule rénal.",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Si une substance est librement filtrée, non réabsorbée et non sécrétée, sa clairance rénale est égale au débit de filtration glomérulaire.",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Si une substance librement filtrée a une clairance rénale de 50 mL/min, cela signifie que cette substance est en partie réabsorbée par le tubule rénal.",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "La clairance rénale du glucose peut varier en fonction de la glycémie.",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, C, D, E**\n\nA. **Faux** — Une clairance nulle signifie que la substance filtrée est entièrement réabsorbée, mais elle reste présente dans le sang (et donc dans la veine rénale).\nB. **Valide** — Une clairance (200) supérieure au DFG (~120) implique une sécrétion tubulaire.\nC. **Valide** — Filtrée sans réabsorption ni sécrétion → clairance = DFG (principe de l'inuline).\nD. **Valide** — Une clairance (50) inférieure au DFG traduit une réabsorption partielle.\nE. **Valide** — Au-delà du seuil rénal du glucose (glycémie élevée), le glucose n'est plus totalement réabsorbé et sa clairance augmente."
+        }
+      ]
+    },
+    {
+      "titre": "Sémiologie — Pression artérielle (MAPA 24h) — Mars 2025 (Q17)",
+      "annee": "Mars 2025",
+      "rappel_cours": "La **MAPA** (Mesure Ambulatoire de la Pression Artérielle sur 24 h) enregistre la PA au domicile, jour et nuit. Plus fiable que la mesure au cabinet.\n\nSeuils de **normalité** en MAPA (plus bas qu'au cabinet, 140/90) :\n- **Moyenne 24 h** : < **130/80** mmHg.\n- **Diurne (éveil)** : < **135/85** mmHg.\n- **Nocturne (sommeil)** : < **120/70** mmHg.\n\nNormalement la PA **baisse la nuit** (« dipping » ~10 %). Une PAS diurne à 125 et une moyenne à 120 sont normales ; une PAD nocturne à 75 ou une PAD moyenne à 85 sont trop élevées.",
+      "questions": [
+        {
+          "enonce": "**[Sémiologie · PA, protéinurie, hématurie · Mars 2025]**\n\nQuelles sont les valeurs normales de pression artérielle (PA) lors d'un enregistrement ambulatoire de la pression artérielle (PA) sur 24 h ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Pression artérielle systolique diurne = 138 mmHg",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Pression artérielle systolique diurne = 125 mmHg",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Pression artérielle diastolique nocturne = 75 mmHg",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Pression artérielle diastolique moyenne sur 24h = 85 mmHg",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Pression artérielle systolique moyenne = 120 mmHg",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, E**\n\nA. **Faux** — 138 mmHg dépasse le seuil diurne (< 135 mmHg) : c'est anormal.\nB. **Valide** — 125 mmHg de PAS diurne est inférieur au seuil (< 135) : normal.\nC. **Faux** — La PAD nocturne doit être < 70 mmHg ; 75 est trop élevé.\nD. **Faux** — La PAD moyenne sur 24 h doit être < 80 mmHg ; 85 est trop élevé.\nE. **Valide** — PAS moyenne 24 h < 130 mmHg ; 120 est normal."
+        }
+      ]
+    },
+    {
+      "titre": "Sémiologie — Bandelette urinaire : fausse hématurie — Mars 2025 (Q18)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**hématurie** = présence de **globules rouges (hématies)** dans les urines, dépistée par **bandelette urinaire (BU)**.\n\nLa BU ne détecte pas les hématies elles-mêmes, mais l'activité de l'**hème** (pigment ferrique). Elle réagit donc aussi à d'autres pigments proches → **fausse hématurie** : BU positive (++) mais **absence de globules rouges** au microscope (ECBU / cytologie).\n\nDeux causes classiques :\n- La **rhabdomyolyse** : destruction musculaire → **myoglobine** libérée → myoglobinurie (BU +).\n- L'**hémolyse** : destruction de globules rouges → **hémoglobine** libre → hémoglobinurie (BU +).\n\nDans les deux cas : BU positive mais pas d'hématies au microscope.",
+      "questions": [
+        {
+          "enonce": "**[Sémiologie · PA, protéinurie, hématurie · Mars 2025]**\n\nParmi les situations suivantes, quelles sont celles pouvant être responsables d'une « fausse hématurie » à la bandelette urinaire (BU hématurie ++ / absence d'hématurie à l'examen cytologique des urines) ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Insuffisance hépatique aiguë",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Rhabdomyolyse",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Infection pulmonaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Hémolyse",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Insuffisance cardiaque",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, D**\n\nA. **Faux** — L'insuffisance hépatique ne libère pas de pigment hémique dans les urines.\nB. **Valide** — La rhabdomyolyse libère de la myoglobine → BU positive sans hématies (fausse hématurie).\nC. **Faux** — Une infection pulmonaire n'entraîne pas de pigmenturie.\nD. **Valide** — L'hémolyse libère de l'hémoglobine → BU positive sans hématies (fausse hématurie).\nE. **Faux** — L'insuffisance cardiaque ne provoque pas de fausse hématurie à la bandelette."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Concentration des urines — Mars 2025 (Q19)",
+      "annee": "Mars 2025",
+      "rappel_cours": "**Concentrer les urines** = fabriquer peu d'urine très concentrée pour économiser l'eau. Cela repose sur le **gradient osmotique** de la médullaire rénale (médullaire très « salée »).\n\n- La **branche large ascendante de l'anse de Henlé** réabsorbe activement le **sodium (Na+)** sans laisser passer l'eau → elle « sale » la médullaire. Étape indispensable.\n- Il faut une **anse de Henlé structurellement intacte** pour créer/maintenir ce gradient (système à contre-courant).\n- L'**ADH (hormone antidiurétique)** rend le **canal collecteur** perméable à l'eau : l'eau sort des urines vers la médullaire concentrée → urine concentrée. Sans ADH, pas de concentration.\n- Le Na+ réabsorbé au **tube contourné proximal** récupère surtout de l'eau mais ne participe pas au mécanisme de concentration médullaire.\n- L'**angiotensine 2** régule pression et sodium, mais n'est pas un paramètre de la concentration des urines.",
+      "questions": [
+        {
+          "enonce": "**[Physiologie · Rôle du rein dans le bilan de l'eau · Mars 2025]**\n\nQuels sont les paramètres indispensables à la concentration des urines dans le canal collecteur médullaire ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Réabsorption de sodium dans le tube contourné proximal",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Réabsorption de sodium dans la branche large ascendante de Henlé",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Intégrité structurale de l'anse de Henlé",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Synthèse d'angiotensine 2",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Synthèse d'hormone antidiurétique",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : B, C, E**\n\nA. **Faux** — La réabsorption de Na+ au tube proximal ne crée pas le gradient médullaire de concentration.\nB. **Valide** — La branche large ascendante réabsorbe le Na+ sans l'eau : elle construit le gradient osmotique médullaire.\nC. **Valide** — Un système à contre-courant fonctionnel exige une anse de Henlé structurellement intacte.\nD. **Faux** — L'angiotensine 2 régule la volémie/pression, pas la concentration des urines.\nE. **Valide** — L'ADH rend le canal collecteur perméable à l'eau, permettant la concentration finale de l'urine."
+        }
+      ]
+    },
+    {
+      "titre": "Sémiologie — Insuffisance rénale chronique : complications — Mars 2025 (Q20)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**insuffisance rénale chronique (IRC)** = perte progressive et durable de la fonction rénale. Le rein ne faisant plus son travail, des complications apparaissent :\n\n- **Acidose métabolique** (pas alcalose) : le rein n'élimine plus les acides ni ne régénère les bicarbonates.\n- **Hyperkaliémie** : le rein n'excrète plus le potassium → K+ s'accumule (dangereux pour le cœur).\n- **Hypocalcémie** : le rein malade ne transforme plus la vitamine D en forme active → moins de calcium absorbé.\n- **Anémie** : le rein produit l'**érythropoïétine (EPO)** qui stimule la fabrication des globules rouges ; en IRC l'EPO chute → anémie.\n- La **thrombopénie** (baisse des plaquettes) n'est pas typique de l'IRC (il existe surtout un trouble fonctionnel des plaquettes, pas une baisse de leur nombre).",
+      "questions": [
+        {
+          "enonce": "**[Sémiologie · Insuffisance rénale chronique · Mars 2025]**\n\nQuelles sont les complications pouvant être secondaires à une insuffisance rénale chronique ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Alcalose métabolique",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Hypocalcémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Hyperkaliémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Anémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Thrombopénie",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C, D**\n\nA. **Faux** — L'IRC provoque une acidose métabolique, pas une alcalose (défaut d'élimination des acides).\nB. **Valide** — Défaut d'activation de la vitamine D → moins de calcium absorbé → hypocalcémie.\nC. **Valide** — Défaut d'excrétion du potassium → hyperkaliémie.\nD. **Valide** — Chute de la production rénale d'érythropoïétine (EPO) → anémie.\nE. **Faux** — La thrombopénie n'est pas une complication typique de l'IRC (trouble fonctionnel plaquettaire plutôt que baisse du nombre)."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q1)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Pour lire une **gazométrie**, on regarde le **pH** (normal 7,38–7,42), le **CO2** (poumons, normal ≈ 40 mmHg) et les **bicarbonates HCO3-** (rein, normal ≈ 24 mmol/L).\nIci pH = 7,60 → très **au-dessus** de la normale : c'est une **alcalose** (le sang est trop basique).\nLe **PaCO2 est bas** (31 mmHg au lieu de 40) : moins de CO2 = moins d'acide → cela pousse le pH vers le haut. C'est une cause **respiratoire** (l'hyperventilation liée à la douleur/hypoxie).\nLe **HCO3- est haut** (28 au lieu de 24) : trop de base → cela pousse aussi le pH vers le haut. C'est une cause **métabolique** (les vomissements font perdre de l'acide gastrique).\nQuand les deux mécanismes (respiratoire ET métabolique) vont dans le même sens et aggravent l'alcalose, on parle d'alcalose **mixte**.\n**D. VRAI** : alcalose d'origine **mixte** (respiratoire + métabolique).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nParmi les propositions suivantes caractérisant l'état acido-basique de cette femme, laquelle est exacte ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il s'agit d'une acidose d'origine métabolique en voie de compensation",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il s'agit d'une alcalose d'origine métabolique non compensée",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il s'agit d'une alcalose d'origine respiratoire non compensée",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il s'agit d'une alcalose d'origine mixte",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il s'agit d'une alcalose d'origine respiratoire en voie de compensation",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : D**\n\nA. Faux — le pH est à 7,60 (élevé) : c'est une alcalose, pas une acidose.\nB. Faux — il n'y a pas que la composante métabolique : le PaCO2 est aussi abaissé.\nC. Faux — il n'y a pas que la composante respiratoire : le HCO3- est aussi élevé.\nD. Valide — PaCO2 bas (respiratoire) ET HCO3- haut (métabolique) vont dans le même sens : alcalose mixte.\nE. Faux — les deux composantes aggravent l'alcalose, ce n'est pas une compensation."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q2)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**hyperventilation** = respirer plus vite/plus fort. Elle est commandée par des capteurs appelés **chémorécepteurs**.\nLes **chémorécepteurs périphériques** (dans les carotides et l'aorte) réagissent surtout au **manque d'oxygène (hypoxémie)** : quand la PaO2 baisse (ici 55 mmHg, normal > 80), ils déclenchent l'hyperventilation.\nLes **chémorécepteurs centraux** (dans le cerveau) réagissent surtout à l'excès de CO2/acidité, pas à l'hypoxie.\n**A. Faux** : un pH élevé (alcalose) tend plutôt à **freiner** la ventilation, pas à l'augmenter.\n**B. Valide** : ici l'hyperventilation est due à l'**hypoxémie** (PaO2 basse à cause de la pneumopathie).\n**C. Faux** : ce sont les chémorécepteurs **périphériques** (hypoxie), pas centraux.\n**D. Faux** : ici l'hyperventilation ne compense pas, elle **aggrave** l'alcalose (elle baisse encore le CO2).\n**E. Faux** : l'hyperventilation n'est pas déclenchée par le taux de bicarbonates.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nA propos de l'hyperventilation que présente cette femme, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "L'hyperventilation est secondaire à l'augmentation du pH artériel",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "L'hyperventilation est due à l'hypoxémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "L'hyperventilation est due à la stimulation des chémorécepteurs centraux",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "L'hyperventilation est un mécanisme compensateur permettant de limiter la variation du pH",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "L'hyperventilation est induite par la modification de la concentration plasmatique d'HCO3-",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B**\n\nA. Faux — un pH élevé freine plutôt la ventilation.\nB. Valide — l'hypoxémie (PaO2 55 mmHg) stimule les chémorécepteurs périphériques et provoque l'hyperventilation.\nC. Faux — ce sont les chémorécepteurs périphériques (sensibles à l'hypoxie), pas les centraux.\nD. Faux — ici l'hyperventilation abaisse encore le CO2 et aggrave l'alcalose, elle ne la compense pas.\nE. Faux — le stimulus est l'hypoxémie, pas la bicarbonatémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q3)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Le corps garde son pH stable grâce à deux systèmes : les **poumons** (rapides) et les **reins** (lents).\nLes **poumons** règlent le **CO2** : en respirant plus ou moins, ils ajustent la PaCO2 en **quelques minutes**. Ils ne gèrent PAS directement les bicarbonates.\nLes **reins** règlent les **bicarbonates (HCO3-)** : ils en fabriquent/réabsorbent plus ou moins, mais c'est **lent** (heures à jours).\n**A. Valide** : la ventilation régule bien la **PaCO2**.\n**B. Faux** : quand le CO2 reste chroniquement élevé, le rein **augmente** (et non diminue) sa capacité à réabsorber les bicarbonates pour compenser.\n**C. Faux** : la compensation **rénale** est **lente** (heures/jours), pas en quelques minutes.\n**D. Valide** : la compensation **ventilatoire** d'un trouble métabolique est **rapide** (minutes).\n**E. Faux** : la ventilation régule le CO2, ce sont les **reins** qui règlent le bicarbonate.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nParmi les propositions suivantes concernant le rôle de la ventilation et le rôle du rein dans le maintien de l'équilibre acido-basique, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La ventilation joue le rôle de système régulateur pour la PaCO2",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une augmentation chronique de PaCO2 induit une diminution du transport maximal d'HCO3- par le tubule rénal",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La compensation rénale d'un désordre acido-basique d'origine respiratoire est rapide (quelques minutes)",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La compensation ventilatoire d'un désordre acido-basique d'origine métabolique est rapide (quelques minutes)",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "La ventilation joue le rôle de système régulateur pour la concentration plasmatique d'HCO3-",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, D**\n\nA. Valide — la ventilation ajuste rapidement la PaCO2.\nB. Faux — une hypercapnie chronique augmente le transport maximal de réabsorption des HCO3- (compensation).\nC. Faux — la compensation rénale est lente (heures à jours).\nD. Valide — la compensation ventilatoire d'un trouble métabolique est rapide (quelques minutes).\nE. Faux — c'est le rein, pas la ventilation, qui règle la bicarbonatémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q4)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Les **bicarbonates (HCO3-)** filtrés par le rein sont presque tous **récupérés** (réabsorbés) pour ne pas être gaspillés dans l'urine.\nCette réabsorption se fait surtout dans le **tube contourné proximal** (début du néphron), pas dans le néphron distal.\n**A. Valide** : normalement il ne reste quasiment pas de bicarbonate dans l'urine → la **bicarbonaturie est nulle ou très faible**.\n**B. Faux** : la réabsorption a lieu surtout dans le **néphron proximal**, pas distal.\n**D. Faux** : réabsorber un bicarbonate passe par la sécrétion d'un H+ dans la lumière, mais ce H+ est **recyclé** ; il n'y a pas forcément d'excrétion nette d'acide.\n**E. Valide** : en cas d'**hypovolémie** (ici déshydratation par vomissements), le rein retient plus de sodium et, avec lui, plus de bicarbonate → le transport maximal d'HCO3- **augmente** (cela entretient l'alcalose).\n(Une proposition redondante a été neutralisée et retirée.)",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nA propos de la réabsorption rénale d'HCO3-, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "En condition normale, la bicarbonaturie est nulle ou très faible",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "La réabsorption d'HCO3- a lieu principalement dans le néphron distal",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "La réabsorption d'HCO3- s'accompagne obligatoirement d'une excrétion d'ion H+",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le transport maximal d'HCO3- par le tubule rénal augmente en cas d'hypovolémie",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, E**\n\nA. Valide — quasiment tout le bicarbonate filtré est réabsorbé, l'urine n'en contient normalement pas.\nB. Faux — la réabsorption est majoritairement proximale, pas distale.\nD. Faux — le H+ sécrété sert à réabsorber le HCO3- puis est recyclé ; il n'y a pas obligatoirement d'excrétion nette d'acide.\nE. Valide — l'hypovolémie augmente la réabsorption de Na+ et donc de HCO3- (transport maximal augmenté).\n_(Une option « Neutraliser » a été retirée.)_"
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q5)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Le corps a deux « réservoirs » d'eau : le **compartiment extracellulaire** (sang, liquide entre les cellules) et le **compartiment intracellulaire** (dans les cellules).\nUne **déshydratation extracellulaire** = on a perdu de l'eau ET du sel (sodium) ensemble, donc le volume de sang baisse. Les signes sont ceux d'un « manque de volume » : **hypotension orthostatique** (la tension chute quand on se lève), **pli cutané** (la peau reste plissée), tachycardie, perte de poids.\n**A. Faux** : la fièvre n'est pas un signe de déshydratation extracellulaire (c'est un signe d'infection ici).\n**B. Faux** : un **œdème** est le signe inverse (trop d'eau dans le secteur extracellulaire).\n**C. Faux** : les nausées sont non spécifiques, pas un signe d'hypovolémie.\n**D. Valide** : l'**hypotension orthostatique** traduit bien la baisse de volume extracellulaire.\nL'ionogramme montre un [Na+] plasmatique normal et un [Na+] urinaire bas (10 mmol/L) : le rein retient le sel pour se remplir → cohérent avec une déshydratation extracellulaire.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nOn prélève chez cette femme un ionogramme plasmatique et un ionogramme urinaire : [Na⁺] plasmatique 142 mmol/L ; [K⁺] plasmatique 3 mmol/L ; [Na⁺] urinaire 10 mmol/L ; [K⁺] urinaire 30 mmol/L. Parmi les signes cliniques suivants, lequel ou lesquels est (sont) en faveur d'une déshydratation du compartiment extracellulaire :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Fièvre",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Œdème des chevilles",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Nausées",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Hypotension orthostatique",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : D**\n\nA. Faux — la fièvre traduit l'infection, pas la déshydratation extracellulaire.\nB. Faux — l'œdème est le signe inverse (excès de volume extracellulaire).\nC. Faux — signe non spécifique, sans rapport avec le volume extracellulaire.\nD. Valide — l'hypotension orthostatique est un signe classique de baisse du volume extracellulaire.\n_(Une option « Neutraliser » a été retirée.)_"
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q6)",
+      "annee": "Mars 2025",
+      "rappel_cours": "On classe la déshydratation selon le compartiment touché : **extracellulaire** (perte d'eau + sel → hypovolémie), **intracellulaire** (perte d'eau pure → cellules qui se vident, avec soif et natrémie élevée), ou **globale** (les deux).\nIci la patiente a une **natrémie normale** (142 mmol/L) : les cellules ne sont donc pas déshydratées → pas de déshydratation intracellulaire. Elle a perdu de l'eau et du sel par les vomissements → **déshydratation extracellulaire isolée**.\n**A. Faux / C. Faux** : pas de composante intracellulaire (natrémie normale), donc ni déshydratation intracellulaire ni globale.\n**B. Faux** : justement, le volume intracellulaire est normal — mais cette formulation « normal » est comptée fausse car elle n'exprime pas l'atteinte extracellulaire attendue.\n**D. Valide** : c'est une **déshydratation extracellulaire isolée**.\n**E. Valide** : face à l'hypovolémie, le rein sécrète plus d'**aldostérone** (hormone qui retient le sel et l'eau) → sa concentration est **élevée**.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nEn tenant compte des données cliniques et biologiques, indiquez la ou les propositions exactes concernant l'état d'hydratation de cette femme :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle présente une déshydratation intracellulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le volume de son compartiment intracellulaire est normal",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle présente une déshydratation globale",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle présente une déshydratation extracellulaire isolée",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Sa concentration plasmatique d'aldostérone est élevée",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : D, E**\n\nA. Faux — la natrémie est normale : pas de déshydratation intracellulaire.\nB. Faux — proposition comptée fausse dans la correction officielle.\nC. Faux — pas d'atteinte intracellulaire, donc pas de déshydratation globale.\nD. Valide — perte d'eau et de sel avec natrémie normale = déshydratation extracellulaire isolée.\nE. Valide — l'hypovolémie stimule le système rénine-angiotensine-aldostérone : aldostérone élevée."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q7)",
+      "annee": "Mars 2025",
+      "rappel_cours": "La **kaliémie** = taux de potassium (K+) dans le sang (normal 3,5–5 mmol/L). Ici elle est basse à 3 mmol/L = **hypokaliémie**.\n**A. Faux** : une **hémolyse** lors du prélèvement (globules rouges éclatés) libère du K+ et donne une **fausse hyperkaliémie**, pas une hypokaliémie.\n**B. Valide** : l'**hyperaldostéronisme** (aldostérone élevée) fait éliminer du K+ dans l'urine → hypokaliémie.\n**C. Valide** : l'**alcalose** fait entrer le K+ dans les cellules (échange avec les H+ qui sortent) → le K+ sanguin baisse.\n**D. Valide** : une hypokaliémie **favorise les troubles du rythme**, dont la **torsade de pointe**.\n**E. Faux** : c'est l'**hyperkaliémie** (K+ élevé) qui élargit le QRS ; l'hypokaliémie donne plutôt un aplatissement de l'onde T et des ondes U.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L. Chez cette femme, la kaliémie est mesurée à 3 mmol/L.\n\nA propos de la kaliémie de cette femme, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle peut être expliquée par une hémolyse lors du prélèvement",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle peut être expliquée par l'hyperaldostéronisme",
+              "is_correct": true
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle peut être expliquée par l'alcalose plasmatique",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle peut favoriser la survenue d'une torsade de pointe",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle peut induire un élargissement du QRS sur l'électrocardiogramme",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : B, C, D**\n\nA. Faux — une hémolyse donne une fausse HYPERkaliémie, pas une hypokaliémie.\nB. Valide — l'hyperaldostéronisme augmente l'élimination urinaire de K+.\nC. Valide — l'alcalose fait entrer le K+ dans les cellules, ce qui baisse la kaliémie.\nD. Valide — l'hypokaliémie favorise les torsades de pointe.\nE. Faux — l'élargissement du QRS est un signe d'hyperkaliémie, pas d'hypokaliémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q8)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**aldostérone** est une hormone fabriquée par la glande surrénale. Elle agit sur la fin du néphron (**canal collecteur**) pour **retenir le sodium (Na+)** et **éliminer le potassium (K+)** et les **ions H+**.\n**A. Valide** : elle stimule les **canaux sodiques ENaC** et la **pompe Na,K-ATPase** dans les cellules principales du canal collecteur → réabsorption de Na+.\n**B. Faux** : sa production est stimulée par l'**hyperkaliémie** (K+ élevé) et par l'angiotensine II, pas par l'hypokaliémie.\n**C. Valide** : elle stimule la **sécrétion d'acide (H+)** dans le néphron distal (cellules intercalaires) — c'est pour cela qu'elle entretient une alcalose.\n**D. Faux** : elle **diminue** l'excrétion de Na+ (elle le retient), elle ne l'augmente pas.\n**E. Valide** : elle **augmente l'excrétion de K+** dans l'urine.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nA propos de l'aldostérone, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle stimule l'activité des canaux sodiques ENaC et de la Na,K-ATPase dans les cellules principales du canal collecteur",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Sa production est stimulée par l'hypokaliémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle stimule la sécrétion acide dans le néphron distal",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle augmente l'excrétion rénale de Na+",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle augmente l'excrétion rénale de K+",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, C, E**\n\nA. Valide — elle active ENaC et la Na,K-ATPase des cellules principales → réabsorption de Na+.\nB. Faux — sa sécrétion est stimulée par l'HYPERkaliémie (et l'angiotensine II).\nC. Valide — elle stimule la sécrétion de H+ dans le néphron distal.\nD. Faux — elle retient le Na+, donc diminue son excrétion.\nE. Valide — elle augmente l'excrétion urinaire de K+."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q9)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Le rein sait maintenir un **débit de filtration glomérulaire (DFG)** à peu près stable même si la tension varie : c'est l'**autorégulation**. Elle fonctionne tant que la pression artérielle moyenne reste dans une fourchette d'environ 80 à 180 mmHg.\nIci la pression moyenne passe de 110 à 90 mmHg : elle **reste dans la zone d'autorégulation**, donc le rein ajuste ses artérioles pour garder le DFG et le débit sanguin quasi constants.\n**A. Faux** : grâce à l'autorégulation, le débit plasmatique rénal n'a **pas nettement** diminué.\n**B. Faux** : le réflexe myogénique répond à des **hausses** de pression (paroi étirée) ; ici la pression baisse, ce n'est pas lui qui est déclenché.\n**C. Faux** : l'**ANF** (facteur natriurétique) augmente quand le cœur est **trop rempli** ; ici la patiente est hypovolémique → l'ANF est plutôt bas.\n**D. Valide** : grâce à l'autorégulation, le **DFG reste stable**.\n**E. Faux** : pour maintenir le DFG quand la pression baisse, l'artériole afférente se **dilate** (pas de vasoconstriction).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L. La pression artérielle moyenne habituelle de cette femme est de 110 mmHg ; à son arrivée aux urgences, elle est de 90 mmHg.\n\nEn supposant que l'organisme de cette femme répond normalement à ce changement de pression artérielle moyenne, vous pouvez en déduire qu'à son arrivée aux urgences (une ou plusieurs réponses exactes) :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le débit plasmatique rénal a nettement diminué par rapport à habituellement",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le réflexe myogénique a été mis en jeu",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La concentration plasmatique de facteur auriculaire natriurétique (ANF) est augmentée",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le débit de filtration glomérulaire (DFG) est resté stable par rapport à d'habitude",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il existe une vasoconstriction de l'artériole afférente du glomérule",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : D**\n\nA. Faux — l'autorégulation maintient le débit plasmatique rénal quasi constant dans cette gamme de pression.\nB. Faux — le réflexe myogénique répond à une hausse de pression, pas à une baisse.\nC. Faux — l'ANF augmente en cas de surcharge volémique ; ici la patiente est hypovolémique.\nD. Valide — grâce à l'autorégulation, le DFG reste stable (90 mmHg est dans la zone d'autorégulation).\nE. Faux — l'artériole afférente se dilate pour maintenir le DFG quand la pression baisse."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie — Dossiers progressifs DP1 — Mars 2025 (Q10)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Le **rétrocontrôle tubulo-glomérulaire** est un système où une petite zone du tubule, la **macula densa**, « surveille » la quantité de sel (Na+/Cl-) qui passe, et ajuste le débit du glomérule en conséquence.\n**A. Valide** : ce mécanisme participe à l'**autorégulation du débit sanguin rénal**.\n**B. Faux** : il agit surtout sur l'artériole **afférente** (entrée), pas sur l'efférente (sortie).\n**C. Valide** : si la **pression baisse** dans l'artériole afférente, il arrive moins de sel à la macula densa → elle **réabsorbe moins de Na+ et Cl-**.\n**D. Valide** : si la **pression monte**, plus de sel arrive → la macula densa produit plus d'**adénosine** (molécule qui va contracter l'artériole afférente pour freiner la filtration).\n**E. Faux** : l'adénosine **freine** la sécrétion de rénine (elle ne la stimule pas) ; c'est la baisse de pression qui stimule la rénine.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP1 · Mars 2025]**\n\nUne femme de 81 ans en bonne santé (poids habituel 68 kg), vivant seule, présente depuis 72 h des vomissements répétés l'empêchant de s'alimenter. Lors d'un vomissement, elle inhale du liquide digestif et développe une pneumopathie d'inhalation de la base pulmonaire droite. Aux urgences : température 38,5 °C, poids 65 kg, fréquence respiratoire 25/min, fréquence cardiaque 115/min, hypotension orthostatique, pli cutané. Gazométrie artérielle : pH 7,60 ; PaO2 55 mmHg ; PaCO2 31 mmHg ; [HCO3⁻] 28 mmol/L.\n\nA propos du rétrocontrôle tubuloglomérulaire, indiquez la ou les propositions exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il participe à l'autorégulation du débit sanguin rénal",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il permet de moduler les résistances de l'artériole efférente du glomérule",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "La diminution de pression artérielle dans l'artériole afférente du glomérule induit une diminution de la réabsorption de Na+ et Cl- par les cellules de la macula densa",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "L'augmentation de pression artérielle dans l'artériole afférente du glomérule induit une augmentation de la production d'adénosine au niveau de la macula densa",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "L'adénosine stimule la production de rénine par les cellules de l'artériole afférente du glomérule",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, C, D**\n\nA. Valide — il contribue à l'autorégulation du débit sanguin rénal.\nB. Faux — il agit sur l'artériole afférente, pas sur l'efférente.\nC. Valide — moins de pression → moins de sel à la macula densa → réabsorption de Na+/Cl- diminuée.\nD. Valide — plus de pression → plus de sel → production d'adénosine augmentée.\nE. Faux — l'adénosine inhibe la sécrétion de rénine, elle ne la stimule pas."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q1)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Une **diarrhée** fait perdre beaucoup d'eau et de sel : c'est une cause classique de **déshydratation extracellulaire** (le volume de sang diminue).\nLes signes de ce « manque de volume » sont : **perte de poids** (on a perdu du liquide), **pli cutané** (la peau reste plissée car les tissus manquent d'eau), **soif**, tachycardie, hypotension.\n**A. Valide** : la **perte de poids** est un bon marqueur de la perte de liquide.\n**B. Faux** : la **turgescence jugulaire** (veines du cou gonflées) est un signe de **trop** de volume (insuffisance cardiaque), c'est l'inverse.\n**C. Valide** : le **pli cutané** traduit la déshydratation extracellulaire.\n**D. Valide** : la **soif** apparaît quand le corps manque d'eau.\n**E. Faux** : face à l'hypovolémie, le cœur **accélère** (tachycardie), il n'y a pas de bradycardie.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nParmi les signes cliniques quels sont ceux pouvant être présents chez cette patiente ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Perte de poids",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Turgescence jugulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Pli cutané",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Soif",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Bradycardie",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, C, D**\n\nA. Valide — la perte de liquide entraîne une perte de poids.\nB. Faux — la turgescence jugulaire signe une surcharge de volume, pas une déshydratation.\nC. Valide — le pli cutané est un signe de déshydratation extracellulaire.\nD. Valide — la soif accompagne le manque d'eau.\nE. Faux — l'hypovolémie entraîne une tachycardie, pas une bradycardie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q2)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**hémoconcentration** = le sang devient plus « concentré » car il a perdu de l'eau (déshydratation). Les éléments non éliminables restent, mais dans moins d'eau → leur concentration monte.\nDeux marqueurs fiables montent en cas d'hémoconcentration : la **protidémie** (taux de protéines du sang) et l'**hématocrite** (part du sang occupée par les globules rouges).\n**A. Faux** : l'**urée** peut monter pour plein de raisons (insuffisance rénale, apports…), ce n'est pas spécifique de l'hémoconcentration.\n**B. Faux** : la **natrémie** peut être normale, basse ou haute selon le type de déshydratation ; elle ne prouve pas une hémoconcentration.\n**C. Valide** : l'**augmentation de la protidémie** traduit la concentration du plasma.\n**D. Faux** : la **bicarbonatémie** dépend de l'équilibre acido-basique, pas de l'hémoconcentration.\n**E. Valide** : l'**augmentation de l'hématocrite** traduit le manque d'eau (globules plus concentrés).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nQuels examens complémentaires permettraient d'affirmer la présence d'une hémoconcentration ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Augmentation de la concentration d'urée plasmatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Augmentation de la natrémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Augmentation de la protidémie",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Augmentation de la bicarbonatémie",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Augmentation de l'hématocrite",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : C, E**\n\nA. Faux — l'urée monte pour de multiples raisons, ce n'est pas spécifique.\nB. Faux — la natrémie n'affirme pas une hémoconcentration.\nC. Valide — la protidémie augmente quand le plasma se concentre.\nD. Faux — la bicarbonatémie reflète l'équilibre acido-basique.\nE. Valide — l'hématocrite augmente en cas d'hémoconcentration."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q3)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**hyponatrémie** = sodium sanguin bas (< 135 mmol/L). Elle traduit surtout un **excès d'eau** par rapport au sel (l'eau « dilue » le sodium), et non forcément un manque de sel.\nIci le sérum est « clair », la glycémie normale et la protidémie élevée : ce n'est pas une fausse hyponatrémie → c'est une vraie hyponatrémie de dilution.\nQuand la volémie baisse (diarrhée), le corps réagit en **retenant de l'eau** grâce à l'**ADH** (hormone antidiurétique) : cela sauve le volume mais dilue le sodium.\n**A. Valide** : une **augmentation des apports/rétention d'eau** dilue le sodium → hyponatrémie.\n**B. Faux** : une simple baisse des apports en sel ne suffit pas à expliquer cette hyponatrémie de dilution.\n**C. Valide** : la baisse de volume **inhibe les barorécepteurs** (capteurs de pression) → cela lève le frein sur l'ADH, donc plus d'ADH → rétention d'eau.\n**D. Faux** : l'aldostérone retient le sodium, elle tendrait à corriger la natrémie, pas à la baisser.\n**E. Valide** : l'**ADH augmentée** fait retenir l'eau → hyponatrémie.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nLa prise de sang objective une hyponatrémie à 124 mmol/L, une glycémie à 5,5 mmol/L, un sérum « clair » et une protidémie à 88 g/L. Comment, dans ce contexte, expliquez-vous l'hyponatrémie ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Augmentation des apports hydriques",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Baisse des apports sodés",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Inhibition des baro-récepteurs aortiques",
+              "is_correct": true
+            },
+            {
+              "lettre": "D",
+              "enonce": "Augmentation de l'aldostérone plasmatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Augmentation de la concentration plasmatique d'hormone anti-diurétique (ADH)",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, C, E**\n\nA. Valide — un excès d'eau (apports/rétention) dilue le sodium.\nB. Faux — une baisse des apports sodés n'explique pas cette hyponatrémie de dilution.\nC. Valide — la baisse de volémie inhibe les barorécepteurs, ce qui augmente la sécrétion d'ADH.\nD. Faux — l'aldostérone retient le sodium, elle ne baisse pas la natrémie.\nE. Valide — l'ADH augmentée fait retenir l'eau et dilue le sodium."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q4)",
+      "annee": "Mars 2025",
+      "rappel_cours": "L'**ADH** (hormone antidiurétique, aussi appelée vasopressine) sert à **retenir l'eau** au niveau du rein : elle rend l'urine plus concentrée.\n**A. Valide** : c'est une hormone de nature **peptidique** (une petite protéine).\n**B. Faux** : elle est fabriquée dans l'**hypothalamus** et libérée par l'**hypophyse postérieure**, pas par l'hypophyse antérieure.\n**C. Faux** : elle **diminue** la clairance de l'eau libre (elle retient l'eau au lieu de l'éliminer).\n**D. Valide** : en concentrant les urines, elle **augmente leur osmolalité** (urines plus concentrées).\n**E. Valide** : sa sécrétion **augmente quand la volémie baisse** fortement (comme ici avec la diarrhée), pour sauver le volume.",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nIl existe chez cette femme une augmentation de la concentration plasmatique d'ADH. Parmi les propositions suivantes concernant l'ADH, indiquez celle ou celles qui est (sont) exactes :",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "C'est une hormone de nature peptidique",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle est synthétisée dans l'hypophyse antérieure",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle augmente la clairance de l'eau libre",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle permet d'augmenter l'osmolalité urinaire",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Sa concentration plasmatique augmente en cas de diminution importante de la volémie",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : A, D, E**\n\nA. Valide — l'ADH est une hormone peptidique.\nB. Faux — elle est synthétisée dans l'hypothalamus et libérée par l'hypophyse postérieure.\nC. Faux — elle diminue la clairance de l'eau libre (elle retient l'eau).\nD. Valide — elle concentre les urines, donc augmente leur osmolalité.\nE. Valide — sa sécrétion augmente en cas de baisse importante de la volémie."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q5)",
+      "annee": "Mars 2025",
+      "rappel_cours": "La **créatinine** est un déchet éliminé par le rein : si elle monte dans le sang (ici 250 μmol/L contre 70 deux mois plus tôt), c'est que le rein filtre mal → **insuffisance rénale aiguë**.\nDans ce contexte de déshydratation, il s'agit d'une insuffisance rénale **fonctionnelle** (le rein est sain mais mal perfusé). Le rein « se défend » en retenant au maximum le sel et l'eau.\n**A. Valide** : le rein retient le sodium → la **natriurèse est basse** (peu de Na+ dans l'urine).\n**B. Faux** : comme le Na+ urinaire est bas et le K+ urinaire conservé, le rapport **[Na]u/[K]u est < 1** (et non > 1).\n**C. Faux** : le rein concentre les urines → l'osmolalité urinaire est **élevée** (bien plus que 150 mosmol/L, qui correspond à des urines diluées).\n**D. Valide** : le rein réabsorbe l'eau et concentre l'urée → **[urée] urinaire très élevée**.\n**E. Faux** : une insuffisance rénale **fonctionnelle** n'abîme pas le filtre → pas d'albuminurie à 1 g/jour (ce serait une atteinte du glomérule).",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nLes examens biologiques objectivent une créatinine plasmatique à 250 μmol/L (70 μmol/L lors d'une prise de sang 2 mois plus tôt). Dans ce contexte clinique, quels sont les résultats d'examens biologiques urinaires les plus probables ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Natriurèse « basse »",
+              "is_correct": true
+            },
+            {
+              "lettre": "B",
+              "enonce": "Rapport [Na] urinaire / [K] urinaire > 1",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Osmolalité urinaire = 150 mosmol/L",
+              "is_correct": false
+            },
+            {
+              "lettre": "D",
+              "enonce": "[urée] urinaire très élevée",
+              "is_correct": true
+            },
+            {
+              "lettre": "E",
+              "enonce": "Présence d'une albuminurie à 1 g/jour",
+              "is_correct": false
+            }
+          ],
+          "correction": "**Réponse : A, D**\n\nA. Valide — insuffisance rénale fonctionnelle : le rein retient le Na+, natriurèse basse.\nB. Faux — le rapport [Na]u/[K]u est < 1 (Na+ urinaire bas).\nC. Faux — les urines sont concentrées : osmolalité urinaire élevée, pas 150 mosmol/L.\nD. Valide — le rein concentre l'urée dans les urines : [urée] urinaire très élevée.\nE. Faux — une cause fonctionnelle ne donne pas d'albuminurie significative."
+        }
+      ]
+    },
+    {
+      "titre": "Physiologie/Sémiologie — Dossiers progressifs DP2 — Mars 2025 (Q6)",
+      "annee": "Mars 2025",
+      "rappel_cours": "Dans le glomérule (filtre du rein), la filtration dépend de la pression à l'intérieur. Cette pression est maintenue en partie par l'**angiotensine II**, qui **resserre l'artériole efférente** (la sortie), un peu comme pincer le tuyau de sortie pour garder la pression en amont.\nLes **IEC** (inhibiteurs de l'enzyme de conversion) **bloquent la fabrication d'angiotensine II**. Résultat : l'artériole efférente ne se resserre plus, elle se **dilate** → la **pression dans le glomérule chute** → la filtration baisse.\nChez une patiente déjà déshydratée (diarrhée), le rein dépend justement de l'angiotensine II pour tenir sa filtration : les IEC peuvent donc **aggraver l'insuffisance rénale**.\n**A, B, C. Faux** : ce ne sont pas les mécanismes en cause ici.\n**E. Valide** : les IEC **baissent la pression hydrostatique glomérulaire** (via la dilatation de l'artériole efférente) → chute de la filtration.\n(Une proposition sur l'artériole efférente a été neutralisée et retirée.)",
+      "questions": [
+        {
+          "enonce": "**[Dossiers progressifs · DP2 · Mars 2025]**\n\nUne femme de 43 ans consulte pour des sensations de vertiges dans un contexte de diarrhée évoluant depuis 2 jours. Antécédents : hypertension artérielle traitée par inhibiteur de l'enzyme de conversion (IEC), deux grossesses non compliquées.\n\nComment les inhibiteurs de l'enzyme de conversion peuvent-ils, dans ce contexte, aggraver l'insuffisance rénale ?",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Diminution de la synthèse du facteur auriculaire natriurétique",
+              "is_correct": false
+            },
+            {
+              "lettre": "B",
+              "enonce": "Augmentation de l'aldostérone plasmatique",
+              "is_correct": false
+            },
+            {
+              "lettre": "C",
+              "enonce": "Vasoconstriction de l'artériole afférente glomérulaire",
+              "is_correct": false
+            },
+            {
+              "lettre": "E",
+              "enonce": "Baisse de la pression hydrostatique glomérulaire",
+              "is_correct": true
+            }
+          ],
+          "correction": "**Réponse : E**\n\nA. Faux — les IEC n'agissent pas via le facteur natriurétique.\nB. Faux — les IEC diminuent l'aldostérone, ils ne l'augmentent pas.\nC. Faux — ce n'est pas une vasoconstriction de l'artériole afférente.\nE. Valide — en bloquant l'angiotensine II, les IEC dilatent l'artériole efférente et baissent la pression hydrostatique glomérulaire, donc la filtration.\n_(Une option « Neutraliser » a été retirée.)_"
         }
       ]
     }
