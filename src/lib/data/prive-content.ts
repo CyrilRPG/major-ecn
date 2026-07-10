@@ -21,6 +21,7 @@ import histologieAppareilGenital from './prive-content/histologie-appareil-genit
 import roleReinBilanEau from './prive-content/role-rein-bilan-eau';
 import alexis from './prive-content/alexis';
 import autresAnnales from './prive-content/autres-annales';
+import nouvellesAnnales from './prive-content/nouvelles-annales';
 import toutesAnnales from './prive-content/toutes-annales';
 
 const CONTENT: Record<string, PriveCourseContent> = {
@@ -45,6 +46,7 @@ const CONTENT: Record<string, PriveCourseContent> = {
   'role-rein-bilan-eau': roleReinBilanEau,
   'alexis': alexis,
   'autres-annales': autresAnnales,
+  'nouvelles-annales': nouvellesAnnales,
   'toutes-annales': toutesAnnales,
 };
 
