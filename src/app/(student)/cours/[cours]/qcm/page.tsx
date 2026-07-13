@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Trophy, Sparkles } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Star, Trophy, Sparkles } from 'lucide-react';
 import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -64,6 +64,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   // Voie externe : QROC (« QROC — Série N ») et DP-QROC (« DP QROC N · … »)
   // partagent une identité visuelle « teal » distincte des QCM/DP (voie interne).
   const isDpQroc = (label: string) => /^dp\s*qroc/i.test(label);
+  // Les 2 nouveaux DP QROC premium (générés item par item) portent une étoile :
+  // ce sont « DP QROC 1 » / « DP QROC 2 » (les anciens sont décalés en ≥ 3).
+  const isStarredDpQroc = (label: string) => /^dp\s*qroc\s*[12]\b/i.test(label);
   const isQroc = (label: string) => /^qroc/i.test(label);
   // « DP 1 » (DP QCM) → traitement rouge + icône DP.
   const isDp = (label: string) => /^dp\b/i.test(label);
@@ -171,7 +174,11 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
                     {String(idx + 1).padStart(2, '0')}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[15px] font-semibold text-(--color-ink)">{s.label}</p>
+                    <p className="flex items-center gap-1.5 truncate text-[15px] font-semibold text-(--color-ink)">
+                      {/* Étoile distinctive sur les nouveaux DP QROC (voie externe). */}
+                      {isStarredDpQroc(s.label) && <Star className="h-4 w-4 shrink-0 fill-[#F5B301] text-[#F5B301]" aria-label="Nouveau dossier QROC" />}
+                      <span className="truncate">{s.label}</span>
+                    </p>
                     <p className="text-xs text-(--color-ink-muted)">
                       {qCount} questions · environ {Math.max(1, qCount)} min
                     </p>
