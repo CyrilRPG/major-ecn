@@ -13,19 +13,23 @@ type CollegeRow = {
   color_hex: string | null;
   order_index: number | null;
   parent_matiere_id: string | null;
-  cours?: { course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
+  cours?: { id: string; course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
 };
 
 export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('facultes')
-    .select(
-      `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
-         cours(id, course_progress(video_watched, fiche_read))))`,
-    )
-    .eq('id', EDN_FACULTE_ID)
-    .maybeSingle();
+  const [{ data }, { data: userData }] = await Promise.all([
+    supabase
+      .from('facultes')
+      .select(
+        `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
+           cours(id, course_progress(video_watched, fiche_read))))`,
+      )
+      .eq('id', EDN_FACULTE_ID)
+      .maybeSingle(),
+    supabase.auth.getUser(),
+  ]);
+  const userId = userData?.user?.id ?? null;
 
   const colleges = (
     ((data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
@@ -34,17 +38,51 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
     .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
+  // Progression fiable = QCM distincts faits / QCM totaux (85 %) + couverture (15 %).
+  const allCoursIds = colleges.flatMap((m) => (m.cours ?? []).map((c) => c.id));
+  const [{ data: qTotals }, { data: qDone }] = allCoursIds.length
+    ? await Promise.all([
+        supabase.from('qcm_questions').select('id, qcm_series!inner(cours_id, type)')
+          .eq('qcm_series.type', 'qcm').in('qcm_series.cours_id', allCoursIds),
+        userId
+          ? supabase.from('qcm_attempts').select('question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, type))')
+              .eq('user_id', userId).in('qcm_questions.qcm_series.cours_id', allCoursIds)
+          : Promise.resolve({ data: [] }),
+      ])
+    : [{ data: [] }, { data: [] }];
+  const qcmTotalByCours = new Map<string, number>();
+  for (const r of (qTotals ?? []) as unknown as { qcm_series: { cours_id: string } }[]) {
+    const cid = r.qcm_series?.cours_id; if (!cid) continue;
+    qcmTotalByCours.set(cid, (qcmTotalByCours.get(cid) ?? 0) + 1);
+  }
+  const qcmDoneByCours = new Map<string, Set<string>>();
+  for (const a of (qDone ?? []) as unknown as { question_id: string; qcm_questions: { qcm_series: { cours_id: string; type: string } } }[]) {
+    const cid = a.qcm_questions?.qcm_series?.cours_id;
+    if (!cid || a.qcm_questions?.qcm_series?.type !== 'qcm') continue;
+    if (!qcmDoneByCours.has(cid)) qcmDoneByCours.set(cid, new Set());
+    qcmDoneByCours.get(cid)!.add(a.question_id);
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {colleges.map((m) => {
         const Icon = iconFromKey(m.icon_key);
         const cours = m.cours ?? [];
-        const totalSteps = cours.length * 2;
-        const done = cours.reduce((acc, c) => {
+        const coverageSteps = cours.length * 2;
+        const coverageDone = cours.reduce((acc, c) => {
           const cp = c.course_progress?.[0];
           return acc + (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0);
         }, 0);
-        const progress = totalSteps === 0 ? 0 : Math.round((done / totalSteps) * 100);
+        const coverageRatio = coverageSteps === 0 ? 0 : coverageDone / coverageSteps;
+        let qcmTotal = 0, qcmDoneCount = 0;
+        for (const c of cours) {
+          const t = qcmTotalByCours.get(c.id) ?? 0;
+          qcmTotal += t;
+          qcmDoneCount += Math.min(qcmDoneByCours.get(c.id)?.size ?? 0, t);
+        }
+        const progress = qcmTotal > 0
+          ? Math.round(Math.min(1, qcmDoneCount / qcmTotal) * 85 + coverageRatio * 15)
+          : Math.round(coverageRatio * 100);
         return (
           <Link
             key={m.id}
