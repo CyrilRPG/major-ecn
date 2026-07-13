@@ -42,6 +42,8 @@ type State = {
   sessionSizes: { daily: number; recommended: number | null; intensive: number | null };
   /** Historique : les 4-5 dernières sessions. */
   recentSessions: { kind: string; completed_at: Date; score_pct: number }[];
+  /** Unité de question accessible selon la voie (« QCM » ou « QROC »). */
+  unit: 'QCM' | 'QROC';
 };
 
 async function buildState(userId: string, firstName: string): Promise<State> {
@@ -77,6 +79,8 @@ async function buildState(userId: string, firstName: string): Promise<State> {
     .eq('id', userId)
     .maybeSingle();
   const scope = parseScope(profileScope?.permission_scope);
+  // Voie externe : l'unité de question accessible est le QROC.
+  const unit = scope.voie === 'externe' ? 'QROC' : 'QCM';
 
   // course_progress → cours abordés
   const { data: progressRaw } = await supabase
@@ -218,6 +222,7 @@ async function buildState(userId: string, firstName: string): Promise<State> {
     specs,
     sessionSizes,
     recentSessions,
+    unit,
   };
 }
 
@@ -329,6 +334,7 @@ export default async function RevisionsTransversalesPage() {
               estMin={isBilanGlobal ? 60 : isAbsenceProlongee ? 40 : 20}
               cta={isBilanGlobal ? 'Lancer le bilan global' : isAbsenceProlongee ? 'Lancer la réévaluation approfondie' : 'Lancer la réévaluation'}
               ctaTone="red"
+              unit={s.unit}
               hint={isBilanGlobal
                 ? 'Pour faire le point sur votre niveau actuel'
                 : isAbsenceProlongee
@@ -349,6 +355,7 @@ export default async function RevisionsTransversalesPage() {
                 estMin={s.sessionSizes.daily}
                 cta="Commencer ma révision du jour"
                 ctaTone="purple"
+                unit={s.unit}
               />
               {s.sessionSizes.recommended && (
                 <RevisionCard
@@ -359,6 +366,7 @@ export default async function RevisionsTransversalesPage() {
                   estMin={35}
                   cta="Faire la révision recommandée"
                   ctaTone="orange"
+                  unit={s.unit}
                   hint="Recommandée à ce stade de votre progression"
                   tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
                 />
@@ -374,6 +382,7 @@ export default async function RevisionsTransversalesPage() {
                 estMin={Math.round(s.sessionSizes.intensive * 0.6)}
                 cta="Lancer la révision intensive"
                 ctaTone="red"
+                unit={s.unit}
                 hint="Pour les périodes de révision approfondie ou les week-ends"
               />
             )}
@@ -675,7 +684,7 @@ function BannerBilanGlobal({ days }: { days: number }) {
 }
 
 function RevisionCard({
-  kind, tint, tintFg, title, count, estMin, cta, ctaTone, hint, tags,
+  kind, tint, tintFg, title, count, estMin, cta, ctaTone, hint, tags, unit = 'QCM',
 }: {
   kind: string;
   tint: string; tintFg: string;
@@ -683,6 +692,7 @@ function RevisionCard({
   cta: string; ctaTone: 'purple' | 'orange' | 'red';
   hint?: string;
   tags?: string[];
+  unit?: string;
 }) {
   const tones = {
     purple: { bg: '#6D28D9', shadow: 'shadow-[0_10px_24px_-12px_rgba(109,40,217,0.55)]' },
@@ -704,7 +714,7 @@ function RevisionCard({
         <div className="min-w-0">
           <p className="text-sm font-semibold text-(--color-ink)">{title}</p>
           <p className="mt-1 text-3xl font-black tabular-nums text-(--color-ink)">
-            {count} QCM
+            {count} {unit}
           </p>
           {hint && <p className="mt-1 text-xs text-(--color-ink-soft)">{hint}</p>}
         </div>

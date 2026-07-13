@@ -18,6 +18,11 @@ export type TransversalQuestion = {
   college: string;
   cours_id: string;
   items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
+  /** QROC (voie externe) : pas d'items → saisie libre + révéler la réponse +
+   *  auto-évaluation Bon/Faux (comme les séances QROC). */
+  format?: 'qcm' | 'qroc';
+  reponse_attendue?: string | null;
+  correction_generale?: string | null;
 };
 
 const BACK_HREF = '/revisions-transversales';
@@ -30,14 +35,21 @@ export function TransversalSession({
   questions,
   kind,
   targetCount,
+  unitLabel = 'QCM',
 }: {
   questions: TransversalQuestion[];
   kind: TransversalKind;
   targetCount?: number;
+  /** Libellé de l'unité de question (« QCM » ou « QROC » pour la voie externe). */
+  unitLabel?: 'QCM' | 'QROC';
 }) {
   const [index, setIndex] = useState(0);
   const [sel, setSel] = useState<Set<string>>(new Set());
   const [outcomes, setOutcomes] = useState<ItemOutcome[] | null>(null);
+  // État QROC (voie externe) : réponse saisie, révélation, auto-évaluation.
+  const [qrocText, setQrocText] = useState('');
+  const [revealed, setRevealed] = useState(false);
+  const [selfGrade, setSelfGrade] = useState<'bon' | 'faux' | null>(null);
   const [score, setScore] = useState(0);
   const [perCours, setPerCours] = useState<Record<string, { c: number; t: number }>>({});
   const [done, setDone] = useState(false);
@@ -50,6 +62,7 @@ export function TransversalSession({
   const total = questions.length;
   const q = questions[index];
   const isFinished = done || !q;
+  const isQroc = !!q && q.format === 'qroc';
 
   useEffect(() => {
     if (!isFinished || recorded || total === 0) return;
@@ -83,6 +96,7 @@ export function TransversalSession({
         recordError={recordError}
         onRestart={() => {
           setIndex(0); setSel(new Set()); setOutcomes(null);
+          setQrocText(''); setRevealed(false); setSelfGrade(null);
           setScore(0); setPerCours({}); setDone(false); setRecorded(false);
           setRecordError(false);
         }}
@@ -91,7 +105,7 @@ export function TransversalSession({
     );
   }
 
-  const isValidated = outcomes != null;
+  const isValidated = isQroc ? selfGrade != null : outcomes != null;
 
   const toggle = (lettre: string) => {
     if (isValidated) return;
@@ -100,6 +114,36 @@ export function TransversalSession({
       if (n.has(lettre)) n.delete(lettre); else n.add(lettre);
       return n;
     });
+  };
+
+  // QROC : auto-évaluation Bon/Faux après révélation de la réponse. Enregistre
+  // l'attempt (is_correct = self-grade) et met à jour le score / par-cours.
+  const selfEvalQroc = async (grade: 'bon' | 'faux') => {
+    if (isValidated || submitting) return;
+    setSubmitting(true);
+    const isCorrect = grade === 'bon';
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('qcm_attempts').insert({
+          user_id: user.id,
+          question_id: q.id,
+          selected_items: [],
+          is_correct: isCorrect,
+          time_spent_seconds: null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          text_answer: qrocText.trim(),
+        } as any);
+      }
+    } catch { /* persistence non bloquante */ }
+    if (isCorrect) setScore((s) => s + 1);
+    setPerCours((prev) => {
+      const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
+      return { ...prev, [q.cours_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
+    });
+    setSelfGrade(grade);
+    setSubmitting(false);
   };
 
   const validate = async () => {
@@ -136,6 +180,7 @@ export function TransversalSession({
       setIndex((i) => i + 1);
       setSel(new Set());
       setOutcomes(null);
+      setQrocText(''); setRevealed(false); setSelfGrade(null);
     } else {
       setDone(true);
     }
@@ -160,33 +205,106 @@ export function TransversalSession({
       {targetCount && total < targetCount && index === 0 && (
         <div className="mb-3 flex items-center gap-2 rounded-lg border border-[#E8742C]/30 bg-[#FFF7E6] px-3 py-2 text-xs text-[#B45B00]">
           <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-          Session adaptée : {total} QCM disponibles sur les {targetCount} prévus. Révisez davantage de spécialités pour débloquer plus de questions.
+          Session adaptée : {total} {unitLabel} disponibles sur les {targetCount} prévus. Révisez davantage de spécialités pour débloquer plus de questions.
         </div>
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+          {isQroc ? 'QROC' : 'Énoncé'}
+        </p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichText html={q.enonce} />
         </h2>
       </div>
 
-      <div className="space-y-2">
-        {q.items.map((it, i) => (
-          <QcmItem
-            key={it.id}
-            item={it}
-            selected={sel.has(it.lettre)}
-            outcome={outcomes?.[i] ?? null}
-            disabled={isValidated}
-            isCorrect={it.is_correct}
-            onToggle={() => toggle(it.lettre)}
-          />
-        ))}
-      </div>
+      {isQroc ? (
+        /* ─── QROC : saisie libre + révéler + auto-évaluation ─── */
+        <div className="space-y-3">
+          <div className={cn(
+            'rounded-xl border px-3.5 py-3 transition',
+            revealed ? 'border-[#00695C]/30 bg-[#E0F2F1]/40' : 'border-(--color-border) bg-(--color-surface)',
+          )}>
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-ink-muted)">
+              Votre réponse
+            </label>
+            <textarea
+              value={qrocText}
+              onChange={(e) => setQrocText(e.target.value)}
+              disabled={revealed}
+              placeholder="Rédigez votre réponse avant de révéler la correction…"
+              rows={3}
+              className="w-full resize-none bg-transparent text-sm leading-snug text-(--color-ink) placeholder:text-(--color-ink-muted)/50 focus:outline-none disabled:cursor-default"
+            />
+          </div>
+
+          {revealed && (q.reponse_attendue || q.correction_generale) && (
+            <div className="rounded-xl border-2 border-[#00695C]/40 bg-[#E0F2F1]/60 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#00695C]">Réponse et correction</p>
+              {q.reponse_attendue && (
+                <p className="mt-2 text-sm leading-relaxed text-(--color-ink)">
+                  <span className="font-semibold">Réponse attendue : </span>
+                  {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                </p>
+              )}
+              {q.correction_generale && (
+                <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+                  <RichText html={q.correction_generale} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {selfGrade && (
+            <div className={cn(
+              'flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm font-medium',
+              selfGrade === 'bon'
+                ? 'border-[#2E8B57]/40 bg-[color-mix(in_srgb,#2E8B57_12%,var(--color-surface))] text-[#1F6B43]'
+                : 'border-(--color-danger)/40 bg-[color-mix(in_srgb,var(--color-danger)_12%,var(--color-surface))] text-(--color-danger)',
+            )}>
+              {selfGrade === 'bon' ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+              {selfGrade === 'bon' ? 'Marqué comme bon' : 'Marqué comme faux'}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {q.items.map((it, i) => (
+            <QcmItem
+              key={it.id}
+              item={it}
+              selected={sel.has(it.lettre)}
+              outcome={outcomes?.[i] ?? null}
+              disabled={isValidated}
+              isCorrect={it.is_correct}
+              onToggle={() => toggle(it.lettre)}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="mt-4 flex items-center justify-end gap-3 pb-6">
-        {!isValidated ? (
+        {isQroc ? (
+          !revealed ? (
+            <Button onClick={() => setRevealed(true)} className="bg-[#00695C] hover:bg-[#004D40]">
+              <Eye className="h-4 w-4" /> Révéler la réponse
+            </Button>
+          ) : !selfGrade ? (
+            <>
+              <Button onClick={() => selfEvalQroc('faux')} variant="outline" className="border-red-300 text-red-600 hover:bg-red-50" disabled={submitting}>
+                <XCircle className="h-4 w-4" /> Faux
+              </Button>
+              <Button onClick={() => selfEvalQroc('bon')} className="bg-[#2E8B57] hover:bg-[#256B45]" disabled={submitting}>
+                <CheckCircle2 className="h-4 w-4" /> Bon
+              </Button>
+            </>
+          ) : (
+            <Button onClick={next}>
+              {index < total - 1 ? 'Question suivante' : 'Terminer'}
+              <ArrowRight />
+            </Button>
+          )
+        ) : !isValidated ? (
           <Button onClick={validate} disabled={sel.size === 0 || submitting}>Valider</Button>
         ) : (
           <Button onClick={next}>
@@ -541,6 +659,19 @@ function CorrectionsView({
               <span className="text-xs font-bold text-(--color-ink)">Q{qi + 1}</span>
             </div>
             <p className="text-sm font-semibold text-(--color-ink)"><RichText html={q.enonce} /></p>
+            {q.format === 'qroc' ? (
+              <div className="mt-3 rounded-lg border border-[#00695C]/30 bg-[#E0F2F1]/50 px-3 py-2 text-sm">
+                {q.reponse_attendue && (
+                  <p className="text-(--color-ink)">
+                    <span className="font-semibold text-[#00695C]">Réponse attendue : </span>
+                    {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                  </p>
+                )}
+                {q.correction_generale && (
+                  <div className="mt-1.5 text-(--color-ink-soft)"><RichText html={q.correction_generale} /></div>
+                )}
+              </div>
+            ) : (
             <div className="mt-3 space-y-1.5">
               {q.items.map((it) => (
                 <div
@@ -571,6 +702,7 @@ function CorrectionsView({
                 </div>
               ))}
             </div>
+            )}
           </div>
         ))}
       </div>

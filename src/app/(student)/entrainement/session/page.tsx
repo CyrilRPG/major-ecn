@@ -16,6 +16,9 @@ type QRow = {
   id: string;
   enonce: string;
   order_index: number;
+  format: 'qcm' | 'qroc' | null;
+  reponse_attendue: string | null;
+  correction_generale: string | null;
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
   qcm_series: { cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
@@ -49,13 +52,15 @@ export default async function TargetedSessionPage({
   // 2. Fetch full questions (prioritized + fill with EDN questions if needed)
   const { data: allQRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
     .order('order_index');
 
   const allQ = ((allQRaw ?? []) as unknown as QRow[]).filter(
     (q) => q.qcm_series.cours.matieres.semestres.faculte_id === EDN_FACULTE_ID
       && canAccessCollege(scope, q.qcm_series.cours.matieres.id)
-      && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id)),
+      && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id))
+      // On garde les QCM (avec items) ET les QROC (saisie libre).
+      && (q.format === 'qroc' || (!!q.qcm_items && q.qcm_items.length > 0)),
   );
 
   const byId = new Map(allQ.map((q) => [q.id, q]));
@@ -78,6 +83,9 @@ export default async function TargetedSessionPage({
     id: q.id,
     enonce: q.enonce,
     college: q.qcm_series.cours.matieres.nom,
+    format: q.format ?? 'qcm',
+    reponse_attendue: q.reponse_attendue,
+    correction_generale: q.correction_generale,
     items: [...(q.qcm_items ?? [])]
       .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),

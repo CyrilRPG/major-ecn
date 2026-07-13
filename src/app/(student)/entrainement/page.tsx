@@ -66,9 +66,11 @@ export default async function EntrainementPage() {
     { value: totalToReview, label: 'questions ratées à revoir', Icon: CheckCircle, accent: '#2563EB', bg: '#E5F1FF' },
     { value: weak.length, label: 'collèges à renforcer',      Icon: Building2,  accent: '#16A34A', bg: '#E7F6EC' },
   ];
+  // Voie externe : les questions accessibles sont des QROC.
+  const unit = scope.voie === 'externe' ? 'QROC' : 'QCM';
   const steps = [
-    { Icon: TrendingDown, t: 'On repère tes erreurs', d: 'Analyse de tes QCM passés, collège par collège.' },
-    { Icon: ListChecks, t: 'On regroupe les bonnes questions', d: 'Les QCM des collèges où tu te trompes le plus.' },
+    { Icon: TrendingDown, t: 'On repère tes erreurs', d: `Analyse de tes ${unit} passés, collège par collège.` },
+    { Icon: ListChecks, t: 'On regroupe les bonnes questions', d: `Les ${unit} des collèges où tu te trompes le plus.` },
     { Icon: Target, t: 'On priorise', d: 'D’abord les questions échouées le plus souvent.' },
   ];
 
@@ -92,7 +94,7 @@ export default async function EntrainementPage() {
             Travaille en priorité ce que tu rates le plus.
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--color-ink-soft)">
-            Une session sur-mesure : les QCM des collèges où tu fais le plus d’erreurs, en
+            Une session sur-mesure : les {unit} des collèges où tu fais le plus d’erreurs, en
             commençant par les questions échouées le plus souvent. Correction et justification
             à chaque item.
           </p>

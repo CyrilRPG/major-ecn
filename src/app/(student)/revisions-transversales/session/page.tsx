@@ -41,6 +41,9 @@ type QRow = {
   id: string;
   enonce: string;
   order_index: number;
+  format: 'qcm' | 'qroc' | null;
+  reponse_attendue: string | null;
+  correction_generale: string | null;
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
   qcm_series: {
     cours_id: string;
@@ -105,7 +108,7 @@ export default async function TransversalSessionPage({
 
   const { data: allQRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
     .in('serie_id', serieIds)
     .order('order_index');
 
@@ -113,7 +116,9 @@ export default async function TransversalSessionPage({
     const m = q.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
     if (!canAccessCollege(scope, m.id)) return false;
-    if (!q.qcm_items || q.qcm_items.length === 0) return false;
+    // On garde les QCM (avec items) ET les QROC (saisie libre, sans items).
+    const isQroc = q.format === 'qroc';
+    if (!isQroc && (!q.qcm_items || q.qcm_items.length === 0)) return false;
     return true;
   });
 
@@ -156,10 +161,14 @@ export default async function TransversalSessionPage({
     enonce: q.enonce,
     college: q.qcm_series.cours.matieres.nom,
     cours_id: q.qcm_series.cours_id,
+    format: q.format ?? 'qcm',
+    reponse_attendue: q.reponse_attendue,
+    correction_generale: q.correction_generale,
     items: [...(q.qcm_items ?? [])]
       .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
 
-  return <TransversalSession questions={questions} kind={kind} targetCount={targetN} />;
+  const unitLabel = scope.voie === 'externe' ? 'QROC' : 'QCM';
+  return <TransversalSession questions={questions} kind={kind} targetCount={targetN} unitLabel={unitLabel} />;
 }
