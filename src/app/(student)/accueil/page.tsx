@@ -143,6 +143,11 @@ async function Dashboard({
   const t = stats.totals;
   const now = Date.now();
 
+  // Voie externe : le contenu QCM accessible est en réalité des QROC. On relabel
+  // « QCM » → « QROC » dans les libellés visibles (le KPI, la répartition, etc.).
+  const isExterne = scope.voie === 'externe';
+  const qLabel = isExterne ? 'QROC' : 'QCM';
+
   /* ---- Périmètre EDN ---- */
   const colleges = (
     ((ednRes.data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
@@ -350,7 +355,7 @@ async function Dashboard({
           </div>
         </KpiCard>
 
-        <KpiCard accent="#C0112E" Icon={ClipboardCheck} label="QCM réalisés">
+        <KpiCard accent="#C0112E" Icon={ClipboardCheck} label={`${qLabel} réalisés`}>
           <p className="text-4xl font-black tabular-nums text-(--color-ink)">
             {totalAttempts}<span className="text-lg font-bold text-(--color-ink-soft)">/{itemsTotal}</span>
           </p>
@@ -395,7 +400,7 @@ async function Dashboard({
             Objectif du jour pour avancer sereinement
           </p>
           <ul className="mt-3 space-y-2">
-            <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} QCM ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
+            <TodayRow Icon={ClipboardCheck} bg="#FCEAEC" fg="#C0112E" title={`${todayQcmTarget} ${qLabel} ciblés`} sub={nextPriority?.matiereNom ?? 'Cardiologie'} />
             <TodayRow Icon={FileText}       bg="#DBEAFE" fg="#2563EB" title={`${todayCasTarget} cas clinique`} sub="Analyse et raisonnement" />
             <TodayRow Icon={Layers3}        bg="#EDE9FE" fg="#7C3AED" title={`${todayFcTarget} flashcards`} sub="Révision active" />
             <TodayRow Icon={Clock}          bg="#FEF3C7" fg="#D97706" title="Temps estimé" sub={`${todayEstMin} min`} />
@@ -432,7 +437,7 @@ async function Dashboard({
           <div className="mt-3 flex items-center gap-4">
             <DonutChart qcmPct={qcmPct} fcPct={fcPct} />
             <div className="flex-1 space-y-2 text-[12px]">
-              <LegendRow color="#C0112E" label="QCM" count={totalAttempts} pct={qcmPct} />
+              <LegendRow color="#C0112E" label={qLabel} count={totalAttempts} pct={qcmPct} />
               <LegendRow color="#7C3AED" label="Flashcards" count={reviewsTotal} pct={fcPct} />
             </div>
           </div>
@@ -459,7 +464,7 @@ async function Dashboard({
         </div>
         {priorities.length === 0 ? (
           <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
-            Lancez vos premiers QCM pour voir vos priorités apparaître ici.
+            Lancez vos premiers {qLabel} pour voir vos priorités apparaître ici.
           </p>
         ) : (
           <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -552,7 +557,7 @@ async function Dashboard({
                   <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--color-sand-100) text-(--color-ink-soft)">
                     {r.kind === 'QCM' ? <ClipboardCheck className="h-3 w-3" /> : <Layers3 className="h-3 w-3" />}
                   </span>
-                  <span className="flex-1 truncate text-(--color-ink)">{r.kind} · {r.college}</span>
+                  <span className="flex-1 truncate text-(--color-ink)">{isExterne && r.kind === 'QCM' ? 'QROC' : r.kind} · {r.college}</span>
                   <span className="shrink-0 text-(--color-ink-muted)">{ago(r.when)}</span>
                 </li>
               ))}
