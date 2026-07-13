@@ -65,6 +65,16 @@ export function AnnouncementForm(props: Mode) {
   const [targetColleges, setTargetColleges] = useState<Set<string>>(
     new Set(props.initial?.target_colleges ?? []),
   );
+  // Ciblage par voie de concours (interne / externe). Défaut = les deux.
+  const [voies, setVoies] = useState<Set<'interne' | 'externe'>>(
+    new Set((props.initial?.voies as ('interne' | 'externe')[] | undefined) ?? ['interne', 'externe']),
+  );
+  const toggleVoie = (v: 'interne' | 'externe') =>
+    setVoies((prev) => {
+      const n = new Set(prev);
+      if (n.has(v)) n.delete(v); else n.add(v);
+      return n;
+    });
 
   const onKindChange = (k: AnnouncementInput['kind']) => {
     setKind(k);
@@ -85,6 +95,8 @@ export function AnnouncementForm(props: Mode) {
       min_offer: minOffer ? (minOffer as 'essentiel' | 'intensif' | 'approfondi') : null,
       target_scope: targetScope,
       target_colleges: targetScope === 'college' ? Array.from(targetColleges) : [],
+      // Une sélection vide équivaut à « toutes les voies » côté rendu.
+      voies: voies.size > 0 ? Array.from(voies) : ['interne', 'externe'],
     };
     start(async () => {
       const res = props.mode === 'create'
@@ -176,6 +188,33 @@ export function AnnouncementForm(props: Mode) {
                 <option value="college">Élèves ayant un collège donné</option>
               </select>
             </Field>
+          </div>
+
+          {/* Ciblage par voie de concours */}
+          <div className="mt-3">
+            <p className="mb-2 text-xs font-bold text-(--color-ink)">Voie de concours ciblée</p>
+            <div className="flex flex-wrap gap-2">
+              {([
+                { value: 'interne', label: 'Voie interne' },
+                { value: 'externe', label: 'Voie externe' },
+              ] as const).map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex cursor-pointer items-center gap-2 rounded-md border border-(--color-border) bg-white px-3 py-1.5 text-xs has-[:checked]:border-(--color-primary) has-[:checked]:bg-(--color-primary-soft)/40"
+                >
+                  <input
+                    type="checkbox"
+                    checked={voies.has(opt.value)}
+                    onChange={() => toggleVoie(opt.value)}
+                    className="h-3.5 w-3.5"
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              ))}
+            </div>
+            <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+              Les deux cochées (ou aucune) = visible par toutes les voies.
+            </p>
           </div>
           {targetScope === 'college' && (
             <div className="mt-3">

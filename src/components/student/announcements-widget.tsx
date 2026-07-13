@@ -22,6 +22,7 @@ export type Announcement = {
   min_offer: 'essentiel' | 'intensif' | 'approfondi' | null;
   target_scope: 'all' | 'full' | 'college' | null;
   target_colleges: string[] | null;
+  voies: ('interne' | 'externe')[] | null;
 };
 
 // Rang des offres pour comparer avec min_offer (une annonce « intensif+ » n'est
@@ -33,6 +34,11 @@ function announcementVisibleFor(a: Announcement, scope: Scope): boolean {
   if (a.min_offer) {
     if ((OFFER_RANK[scope.offer] ?? 0) < (OFFER_RANK[a.min_offer] ?? 0)) return false;
   }
+  // Ciblage par voie de concours : si l'annonce cible une/des voie(s) et que
+  // l'élève a une voie connue non incluse, on masque. Une liste vide ou les deux
+  // voies = visible par tout le monde.
+  const vs = a.voies ?? [];
+  if (vs.length > 0 && vs.length < 2 && scope.voie && !vs.includes(scope.voie)) return false;
   const ts = a.target_scope ?? 'all';
   if (ts === 'full') {
     // Réservé aux élèves ayant l'accès intégral (toutes les spécialités).
@@ -96,7 +102,7 @@ export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
   const supabase = await createClient();
   const { data } = await supabase
     .from('homepage_announcements')
-    .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible, min_offer, target_scope, target_colleges')
+    .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible, min_offer, target_scope, target_colleges, voies')
     .eq('visible', true)
     .order('order_index', { ascending: true });
 

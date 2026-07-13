@@ -9,6 +9,7 @@ const KIND = z.enum(['countdown', 'event_list', 'info', 'stat', 'text']);
 const TONE = z.enum(['red', 'green', 'blue', 'orange', 'purple', 'gray']);
 const OFFER = z.enum(['essentiel', 'intensif', 'approfondi']);
 const SCOPE = z.enum(['all', 'full', 'college']);
+const VOIE = z.enum(['interne', 'externe']);
 
 const Base = z.object({
   kind: KIND,
@@ -24,6 +25,8 @@ const Base = z.object({
   min_offer: OFFER.nullable().optional(),
   target_scope: SCOPE.default('all'),
   target_colleges: z.array(z.string()).default([]),
+  /** Voies ciblées. Vide ou les deux = toutes les voies. */
+  voies: z.array(VOIE).default(['interne', 'externe']),
 });
 
 const CreateInput = Base;

@@ -108,6 +108,7 @@ export default async function AdminAnnoncesPage() {
                     min_offer: (r as { min_offer?: 'essentiel'|'intensif'|'approfondi'|null }).min_offer ?? null,
                     target_scope: ((r as { target_scope?: 'all'|'full'|'college' }).target_scope) ?? 'all',
                     target_colleges: ((r as { target_colleges?: string[] }).target_colleges) ?? [],
+                    voies: ((r as { voies?: ('interne'|'externe')[] }).voies) ?? ['interne', 'externe'],
                   }}
                   colleges={colleges}
                 />
