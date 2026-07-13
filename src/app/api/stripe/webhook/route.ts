@@ -129,6 +129,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const firstName = metadata.first_name ?? '';
   const lastName = metadata.last_name ?? '';
   const specialty = metadata.specialty ?? 'Médecine générale';
+  const collegeId = metadata.college_id || undefined;
   const voie = metadata.voie ?? '';
   const phone = metadata.phone ?? session.customer_details?.phone ?? '';
   const installments = Number(metadata.installments ?? '1') || 1;
@@ -164,6 +165,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     installments,
     amountTotalCents,
     specialty,
+    collegeId,
     voie,
     phone,
     sessionId: session.id,

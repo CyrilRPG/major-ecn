@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/client';
+import { ENROLLABLE_SPECIALTY_NAMES } from '@/lib/data/enrollable-colleges';
 import { InfoImportantePopup, FORMULE_COLORS } from './info-importante-popup';
 import { TurnstileWidget } from './turnstile-widget';
 
@@ -44,7 +45,10 @@ type Props = {
   color?: Color;
 };
 
-const SPECIALTIES = ['Médecine générale'] as const;
+// Spécialités inscriptibles = collèges présents sur la plateforme pédagogique.
+// Le prix ne change pas selon la spécialité ; le choix débloque le collège
+// correspondant (permissions).
+const SPECIALTIES = ENROLLABLE_SPECIALTY_NAMES;
 const VOIES = [
   { value: 'interne', label: 'Voie interne (QCM)' },
   { value: 'externe', label: 'Voie externe (Questions ouvertes)' },

@@ -34,8 +34,11 @@ export type ProvisioningInput = {
   amountTotalCents?: number;
   /** Téléphone collecté au checkout (récap interne). */
   phone?: string;
-  /** Spécialité préparée (pour l'instant toujours Médecine générale). */
+  /** Spécialité préparée (libellé affiché). */
   specialty?: string;
+  /** Collège débloqué (col-…) résolu depuis la spécialité au checkout.
+   *  Défaut Médecine générale si absent. */
+  collegeId?: string;
   /** Voie de concours pour la Formule Intensive ('interne' / 'externe' / ''). */
   voie?: string;
   /** ID de session Stripe — clé de déduplication d'envoi d'email. */
@@ -155,24 +158,23 @@ export async function provisionStudentAccount(
   const lastName = input.lastName || existingProfile?.last_name || '';
   const phone = input.phone || existingProfile?.phone || null;
 
-  // Accès accordé après achat : STRICTEMENT « Médecine générale - Voie interne »
-  // (col-medecine-generale) + ses sous-collèges (Cardiologie, Dermatologie…).
-  // NI la voie externe, NI l'Espace Découverte, NI aucune autre spécialité — quel
-  // que soit la voie transmise au checkout. Le contenu est ensuite borné par la
-  // formule (offer) achetée.
-  const mgId = MG_INTERNE_ID;
+  // Accès accordé après achat : le COLLÈGE de la spécialité choisie au checkout
+  // (col-medecine-generale par défaut) + ses éventuels sous-collèges. Le contenu
+  // est ensuite borné par la formule (offer) et la voie (interne/externe) achetées.
+  const targetId = input.collegeId || MG_INTERNE_ID;
 
-  // Sous-collèges rattachés à Médecine générale (interrogés dynamiquement pour
-  // rester à jour quand de nouveaux sous-collèges sont ajoutés).
+  // Sous-collèges rattachés à la spécialité (interrogés dynamiquement pour rester
+  // à jour quand de nouveaux sous-collèges sont ajoutés). Les collèges de 1er
+  // niveau sans enfant (Pédiatrie, Psychiatrie…) → colleges = [targetId].
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: allMatieres } = await (admin as any)
     .from('matieres')
     .select('id, parent_matiere_id');
   const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
-  const childIds = mats.filter((m) => m.parent_matiere_id === mgId).map((m) => m.id);
+  const childIds = mats.filter((m) => m.parent_matiere_id === targetId).map((m) => m.id);
 
-  const colleges: string[] = [mgId, ...childIds];
-  log('colleges-resolved', { mgId, count: colleges.length, colleges });
+  const colleges: string[] = [targetId, ...childIds];
+  log('colleges-resolved', { targetId, count: colleges.length, colleges });
 
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
   // `specialty_wish`…) puis on superpose les marqueurs d'achat.

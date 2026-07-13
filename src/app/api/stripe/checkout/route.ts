@@ -30,6 +30,7 @@ import {
 } from '@/lib/stripe';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
+import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
 
 type Consents = {
   cgu?: boolean;
@@ -127,6 +128,10 @@ export async function POST(req: Request) {
     );
   }
 
+  // Spécialité → collège débloqué (mêmes prix, l'accès dépend de la spécialité).
+  // Défaut Médecine générale si non reconnue (back-compat).
+  const collegeId = collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale';
+
   try {
     const commonMetadata = {
       formule: formule.id,
@@ -134,6 +139,7 @@ export async function POST(req: Request) {
       last_name: body.lastName ?? '',
       phone: body.phone ?? '',
       specialty: body.specialty ?? '',
+      college_id: collegeId,
       voie: body.voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',

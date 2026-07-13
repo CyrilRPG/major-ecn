@@ -9,6 +9,7 @@ import Image from 'next/image';
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
 import {
   Activity, Apple, ArrowRight, Award, Baby, Bandage, Beaker, Bone, BookOpen, Brain, BriefcaseMedical,
   Check, CheckCircle2, ChevronRight, Compass, Dna, Droplet, Ear, Eye,
@@ -428,7 +429,10 @@ function SpecialitesGrid() {
 
 function SpecCard({ s }: { s: Speciality }) {
   const isMG = s.slug === 'medecine-generale';
-  const href = isMG ? '/specialites/medecine-generale' : '/contact';
+  // Spécialité inscriptible en ligne (collège présent sur la plateforme) → on
+  // envoie vers la page tarifs/checkout au lieu de « Nous contacter ».
+  const enrollable = isMG || collegeIdForSpecialty(s.name) != null;
+  const href = isMG ? '/specialites/medecine-generale' : enrollable ? '/tarifs' : '/contact';
   return (
     <Link href={href}
       className="group relative flex h-full flex-col gap-2.5 rounded-2xl border bg-white p-4 shadow-[0_8px_28px_-18px_rgba(15,31,77,0.20)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-20px_rgba(15,31,77,0.35)]"
@@ -476,8 +480,8 @@ function SpecCard({ s }: { s: Speciality }) {
 
       {/* 4. CTA bas de carte */}
       <span className="mt-auto inline-flex items-center gap-1 text-[11.5px] font-bold transition-colors group-hover:underline"
-        style={{ color: isMG ? s.accent : '#7A8499' }}>
-        {isMG ? 'Découvrir la préparation' : 'Nous contacter pour s’inscrire'} <ChevronRight className="h-3.5 w-3.5" />
+        style={{ color: isMG ? s.accent : enrollable ? s.accent : '#7A8499' }}>
+        {isMG ? 'Découvrir la préparation' : enrollable ? 'S’inscrire en ligne' : 'Nous contacter pour s’inscrire'} <ChevronRight className="h-3.5 w-3.5" />
       </span>
     </Link>
   );
