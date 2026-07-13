@@ -103,7 +103,8 @@ type StatsResp = {
     attempts_distinct?: number;
   };
   per_cours: { cours_id: string; attempts: number; correct: number; has_fc: boolean; distinct_done?: number }[];
-  qcm_counts: { cours_id: string; n: number }[];
+  qcm_counts: { cours_id: string; n: number; n_qroc?: number }[];
+  fc_counts?: { cours_id: string; n: number }[];
   daily: { d: string; n: number }[];
   recent: { kind: string; titre: string; at: string }[];
 };
@@ -160,12 +161,23 @@ async function Dashboard({
     (m.cours ?? []).filter((c) => canAccessCours(scope, m.id, c.id)).map((c) => c.id),
   );
 
-  /* ---- Total QCM accessibles (dénominateur « QCM réalisés ») ----
+  /* ---- Total QCM/QROC accessibles (dénominateur « QCM/QROC réalisés ») ----
      Somme locale des comptes par cours → aucune requête séquentielle. Source
-     préférée : le cache global (P4) ; repli sur les champs du RPC par-élève. */
+     préférée : le cache global (P4) ; repli sur les champs du RPC par-élève.
+     VOIE-AWARE : la voie externe ne compte que les questions QROC (kind='qroc'),
+     la voie interne les QCM/DP (non-qroc), sinon tout. */
   const qcmCounts = cachedTotals.qcm_counts.length > 0 ? cachedTotals.qcm_counts : stats.qcm_counts;
   const qcmCountByCours = new Map(qcmCounts.map((q) => [q.cours_id, q.n]));
-  const itemsTotal = accessibleCoursIds.reduce((s, id) => s + (qcmCountByCours.get(id) ?? 0), 0);
+  const qrocCountByCours = new Map(qcmCounts.map((q) => [q.cours_id, q.n_qroc ?? 0]));
+  // Nombre de questions ACCESSIBLES pour un cours selon la voie.
+  const accessibleCount = (id: string) => {
+    const total = qcmCountByCours.get(id) ?? 0;
+    const qroc = qrocCountByCours.get(id) ?? 0;
+    if (scope.voie === 'externe') return qroc;
+    if (scope.voie === 'interne') return Math.max(0, total - qroc);
+    return total;
+  };
+  const itemsTotal = accessibleCoursIds.reduce((s, id) => s + accessibleCount(id), 0);
 
   /* ---- Agrégats par cours (attempts / correct / flashcards) ---- */
   const aggByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p]));
@@ -179,7 +191,7 @@ async function Dashboard({
      1er QCM). La lecture fiches/vidéos/flashcards n'y contribue plus que
      marginalement pour ne pas figer un cours 100 % QCM. */
   const globalQcmDone = accessibleCoursIds.reduce(
-    (s, id) => s + Math.min(qcmDoneByCours.get(id) ?? 0, qcmCountByCours.get(id) ?? 0), 0,
+    (s, id) => s + Math.min(qcmDoneByCours.get(id) ?? 0, accessibleCount(id)), 0,
   );
   const globalProgress = itemsTotal > 0 ? Math.round((globalQcmDone / itemsTotal) * 100) : 0;
 
@@ -218,7 +230,7 @@ async function Dashboard({
   const coursScored = [...perCours.values()].map((c) => {
     // Avancement fiable = QCM distincts faits / QCM totaux (85 %) + couverture
     // fiche/vidéo/flashcards (15 %). Pour un cours sans QCM, couverture seule.
-    const qcmTotal = qcmCountByCours.get(c.id) ?? 0;
+    const qcmTotal = accessibleCount(c.id);
     const qcmDone = Math.min(qcmDoneByCours.get(c.id) ?? 0, qcmTotal);
     const coverageRatio = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0) + (c.hasFc ? 1 : 0)) / 3;
     const value = qcmTotal > 0
@@ -252,7 +264,13 @@ async function Dashboard({
   /* ---- Items maîtrisés (cours ≥ 75 %) ---- */
   const itemsMastered = coursScored.filter((c) => c.value >= 75).length;
   const coursTotalEdn = coursScored.length;
-  const flashcardsTotalEdn = cachedTotals.flashcards_total || t.flashcards_total;
+  // Flashcards ACCESSIBLES : somme par cours accessible (au lieu du total faculté).
+  const fcCounts = (cachedTotals.fc_counts.length > 0 ? cachedTotals.fc_counts : stats.fc_counts) ?? [];
+  const fcCountByCours = new Map(fcCounts.map((f) => [f.cours_id, f.n]));
+  const accessibleFcSet = new Set(accessibleCoursIds);
+  const flashcardsTotalEdn = fcCounts.length > 0
+    ? [...accessibleFcSet].reduce((s, id) => s + (fcCountByCours.get(id) ?? 0), 0)
+    : (cachedTotals.flashcards_total || t.flashcards_total);
 
   /* ---- Progression par cours groupée par collège ---- */
   type Group = { matiereNom: string; cours: typeof coursScored };
