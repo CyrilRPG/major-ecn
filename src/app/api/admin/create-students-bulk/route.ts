@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
 import { buildStudentScope, sendStudentInvite } from '@/lib/admin/student-invite';
 import { siteUrl } from '@/lib/email/send';
+import { isDecouverteOnly } from '@/lib/auth/trial';
 
 function origin(req: Request): string {
   const fromEnv = siteUrl();
@@ -54,24 +55,49 @@ export async function POST(req: Request) {
   const skipped: { email: string; reason: string }[] = [];
   const failed: { email: string; reason: string }[] = [];
 
+  // Index des comptes existants (pour l'écrasement des comptes Découverte).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existingList } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const byEmail = new Map<string, any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const u of (existingList?.users ?? []) as any[]) {
+    if (u.email) byEmail.set(u.email.toLowerCase(), u);
+  }
+
   for (const email of uniq) {
     try {
-      const { data: c, error } = await admin.auth.admin.createUser({
-        email,
-        email_confirm: false,
-        user_metadata: { role: 'student' },
-      });
-      if (error || !c?.user) {
-        const msg = error?.message ?? 'échec';
-        if (/already|exist|duplicate/i.test(msg)) { skipped.push({ email, reason: 'compte déjà existant' }); continue; }
-        failed.push({ email, reason: msg }); continue;
+      let userId: string;
+      let wasNew = false;
+      const existingUser = byEmail.get(email);
+
+      if (existingUser) {
+        // Écrasement uniquement si le compte est « Découverte » (gratuit).
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: existingProfile } = await (admin as any)
+          .from('profiles').select('permission_scope').eq('id', existingUser.id).maybeSingle();
+        if (!isDecouverteOnly(existingProfile)) { skipped.push({ email, reason: 'compte payant déjà existant' }); continue; }
+        userId = existingUser.id;
+      } else {
+        const { data: c, error } = await admin.auth.admin.createUser({
+          email,
+          email_confirm: false,
+          user_metadata: { role: 'student' },
+        });
+        if (error || !c?.user) {
+          const msg = error?.message ?? 'échec';
+          if (/already|exist|duplicate/i.test(msg)) { skipped.push({ email, reason: 'compte déjà existant' }); continue; }
+          failed.push({ email, reason: msg }); continue;
+        }
+        userId = c.user.id;
+        wasNew = true;
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error: upErr } = await (admin as any).from('profiles').upsert({
-        id: c.user.id, email, role: 'student', permission_scope,
+        id: userId, email, role: 'student', permission_scope,
       }, { onConflict: 'id' });
       if (upErr) {
-        await admin.auth.admin.deleteUser(c.user.id).catch(() => null);
+        if (wasNew) await admin.auth.admin.deleteUser(userId).catch(() => null);
         failed.push({ email, reason: upErr.message }); continue;
       }
       const { via } = await sendStudentInvite(admin, base, email, '', '');

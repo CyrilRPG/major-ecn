@@ -15,7 +15,7 @@ import type { Profile } from './get-profile';
 
 type IsSubscriberArg = Pick<Profile, 'trial_until' | 'permission_scope'> | Pick<Profile, 'trial_until'> | null | undefined;
 
-function isDecouverteOnly(p: { permission_scope?: unknown } | null | undefined): boolean {
+export function isDecouverteOnly(p: { permission_scope?: unknown } | null | undefined): boolean {
   if (!p?.permission_scope || typeof p.permission_scope !== 'object') return false;
   const s = p.permission_scope as { espace_decouverte?: unknown; paid_formule?: unknown; offer?: unknown };
   // Une offre payante (essentiel/intensif/approfondi) prime sur le flag
