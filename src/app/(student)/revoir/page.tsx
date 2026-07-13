@@ -18,7 +18,7 @@ export default async function RevoirPage() {
       'question_id, serie_id, cours_id, created_at, ' +
         'qcm_questions:question_id(enonce, format), ' +
         'qcm_series:serie_id(label), ' +
-        'cours:cours_id(titre, matieres(nom))',
+        'cours:cours_id(titre, matieres(nom, parent_matiere_id, parent:parent_matiere_id(nom)))',
     )
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
@@ -30,24 +30,37 @@ export default async function RevoirPage() {
     created_at: string;
     qcm_questions: { enonce: string; format: string | null } | null;
     qcm_series: { label: string } | null;
-    cours: { titre: string; matieres: { nom: string } | null } | null;
+    cours: {
+      titre: string;
+      matieres: { nom: string; parent_matiere_id: string | null; parent: { nom: string } | null } | null;
+    } | null;
   };
 
   const stripHtml = (s: string) => s.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
   const questions: SavedQuestion[] = ((rows ?? []) as Row[])
     .filter((r) => r.cours_id && r.serie_id && r.qcm_questions)
-    .map((r) => ({
-      questionId: r.question_id,
-      coursId: r.cours_id as string,
-      serieId: r.serie_id as string,
-      college: r.cours?.matieres?.nom ?? '',
-      coursTitre: r.cours?.titre ?? 'Item inconnu',
-      serieLabel: r.qcm_series?.label ?? '',
-      format: (r.qcm_questions?.format as 'qcm' | 'qroc' | null) ?? 'qcm',
-      preview: stripHtml(r.qcm_questions?.enonce ?? '').slice(0, 220),
-      createdAt: r.created_at,
-    }));
+    .map((r) => {
+      const m = r.cours?.matieres;
+      // Collège de 1er niveau = le collège parent s'il existe (cas Médecine
+      // générale et ses sous-collèges), sinon la matière elle-même. Le
+      // sous-collège n'est renseigné que pour les matières ayant un parent.
+      const parentNom = m?.parent?.nom ?? null;
+      const college = parentNom ?? m?.nom ?? '';
+      const sousCollege = parentNom ? (m?.nom ?? null) : null;
+      return {
+        questionId: r.question_id,
+        coursId: r.cours_id as string,
+        serieId: r.serie_id as string,
+        college,
+        sousCollege,
+        coursTitre: r.cours?.titre ?? 'Item inconnu',
+        serieLabel: r.qcm_series?.label ?? '',
+        format: (r.qcm_questions?.format as 'qcm' | 'qroc' | null) ?? 'qcm',
+        preview: stripHtml(r.qcm_questions?.enonce ?? '').slice(0, 220),
+        createdAt: r.created_at,
+      };
+    });
 
   return (
     <div>
