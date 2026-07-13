@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { UpdateStudentSchema } from '@/lib/schemas/student';
+import { highestOffer, type Offer } from '@/types/domain';
 
 export async function PATCH(req: Request) {
   const supabase = await createClient();
@@ -16,7 +17,12 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, offer, permission_type, colleges, cours, can_download, voie } = parsed.data;
+  const { id, first_name, last_name, phone, permission_type, colleges, cours, can_download, voie } = parsed.data;
+  // Union des formules : `offers` prime ; `offer` (plus haut rang) sert d'offre
+  // d'affichage/de rang (paid_offer, paid_formule…).
+  const offerList = Array.from(new Set((parsed.data.offers && parsed.data.offers.length > 0 ? parsed.data.offers : [parsed.data.offer]))) as Offer[];
+  const offer = highestOffer(offerList);
+  const offersField = offerList.length > 1 ? { offers: offerList } : {};
 
   // Préserve les métadonnées d'inscription (signup, specialty_wish, espace_decouverte)
   // déjà stockées dans permission_scope : l'édition admin reconstruit le scope
@@ -48,11 +54,12 @@ export async function PATCH(req: Request) {
 
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer, ...meta, ...specialtyFields, ...voieFields }
+      ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields }
       : {
           type: 'college' as const,
           colleges: colleges ?? [],
           offer,
+          ...offersField,
           ...(cours && cours.length > 0 ? { cours } : {}),
           ...meta,
           ...specialtyFields,

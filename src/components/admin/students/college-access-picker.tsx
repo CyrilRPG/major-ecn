@@ -206,29 +206,41 @@ export function CollegeAccessPicker({
   );
 }
 
-/** Formule (offre) : options rendues depuis la Config Permissions. */
+export type OfferId = 'essentiel' | 'intensif' | 'approfondi';
+
+/** Formule(s) souscrite(s) : SÉLECTION MULTIPLE. Un élève peut cumuler plusieurs
+ *  formules → l'UNION de leurs droits (ex. « approfondi + essentiel » = accès aux
+ *  cours approfondis ET aux vidéos/QCM essentiels). Options rendues depuis la
+ *  Config Permissions. */
 export function OfferPicker({
   offers,
   value,
   onChange,
 }: {
-  offers: { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] }[];
-  value: string;
-  onChange: (v: 'essentiel' | 'intensif' | 'approfondi') => void;
+  offers: { id: OfferId; label: string; unlocks: string[] }[];
+  value: OfferId[];
+  onChange: (v: OfferId[]) => void;
 }) {
+  const selected = new Set(value);
+  const toggle = (id: OfferId, checked: boolean) => {
+    const s = new Set(selected);
+    if (checked) s.add(id); else s.delete(id);
+    onChange(offers.map((o) => o.id).filter((id) => s.has(id)));
+  };
   return (
     <div className="space-y-2">
-      <Label>Formule souscrite</Label>
+      <Label>Formule(s) souscrite(s)</Label>
       <p className="text-xs text-(--color-ink-soft)">
+        Sélection multiple possible : les droits se <strong>cumulent</strong> (union).
         Contenus débloqués selon la <strong>Config Permissions</strong>.
       </p>
-      <RadioGroup value={value} onValueChange={(v) => onChange(v as 'essentiel' | 'intensif' | 'approfondi')}>
+      <div className="space-y-2">
         {offers.map((o) => (
           <label
             key={o.id}
             className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-surface-soft) has-[:checked]:border-(--color-primary) has-[:checked]:bg-(--color-primary-soft)/40"
           >
-            <RadioGroupItem value={o.id} className="mt-0.5" />
+            <Checkbox checked={selected.has(o.id)} onCheckedChange={(v) => toggle(o.id, !!v)} className="mt-0.5" />
             <span className="text-sm">
               <span className="font-semibold text-(--color-ink)">{o.label}</span>
               {o.unlocks.length > 0 && (
@@ -237,7 +249,7 @@ export function OfferPicker({
             </span>
           </label>
         ))}
-      </RadioGroup>
+      </div>
     </div>
   );
 }

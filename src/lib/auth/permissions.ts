@@ -1,4 +1,5 @@
 import type { Offer, PermissionScope } from '@/types/domain';
+import { OFFERS, highestOffer } from '@/types/domain';
 
 function parseOffer(raw: unknown): Offer {
   if (raw && typeof raw === 'object') {
@@ -12,6 +13,20 @@ function parseOffer(raw: unknown): Offer {
     if (r.type === 'all') return 'approfondi';
   }
   return 'decouverte';
+}
+
+/** Lit `permission_scope.offers` (union multi-formules). Renvoie undefined si
+ *  absent/vide → scope mono-formule. Filtre les valeurs invalides. */
+function parseOffers(raw: unknown): Offer[] | undefined {
+  if (raw && typeof raw === 'object') {
+    const arr = (raw as { offers?: unknown }).offers;
+    if (Array.isArray(arr)) {
+      const list = arr.filter((x): x is Offer => typeof x === 'string' && (OFFERS as string[]).includes(x));
+      const uniq = Array.from(new Set(list));
+      if (uniq.length > 0) return uniq;
+    }
+  }
+  return undefined;
 }
 
 function parseVoie(raw: unknown): 'interne' | 'externe' | null {
@@ -28,22 +43,32 @@ function parseVoie(raw: unknown): 'interne' | 'externe' | null {
 }
 
 export function parseScope(raw: unknown): PermissionScope {
-  const offer = parseOffer(raw);
+  const offers = parseOffers(raw);
+  // `offer` = offre d'affichage/de rang. Si une union `offers` est présente, on
+  // prend l'offre de plus haut rang ; sinon on lit l'offre unique historique.
+  const offer = offers ? highestOffer(offers) : parseOffer(raw);
   const voie = parseVoie(raw);
+  const offersField = offers ? { offers } : {};
   if (raw && typeof raw === 'object' && 'type' in raw) {
     const t = (raw as { type: unknown }).type;
-    if (t === 'all') return { type: 'all', offer, voie };
+    if (t === 'all') return { type: 'all', offer, ...offersField, voie };
     if (t === 'college') {
       const cs = (raw as { colleges?: unknown }).colleges;
       const list = Array.isArray(cs) ? cs.filter((x): x is string => typeof x === 'string') : [];
       const co = (raw as { cours?: unknown }).cours;
       const cours = Array.isArray(co) ? co.filter((x): x is string => typeof x === 'string') : undefined;
-      return { type: 'college', colleges: list, offer, voie, ...(cours && cours.length > 0 ? { cours } : {}) };
+      return { type: 'college', colleges: list, offer, ...offersField, voie, ...(cours && cours.length > 0 ? { cours } : {}) };
     }
     // Legacy faculty-scoped accounts → full access (single EVC faculté now).
-    if (t === 'faculty') return { type: 'all', offer, voie };
+    if (t === 'faculty') return { type: 'all', offer, ...offersField, voie };
   }
-  return { type: 'all', offer, voie };
+  return { type: 'all', offer, ...offersField, voie };
+}
+
+/** Union des formules détenues par le scope (au moins une). Base de l'accès
+ *  multi-formules : les droits sont l'UNION (OR) des droits de chaque offre. */
+export function scopeOffers(scope: PermissionScope): Offer[] {
+  return scope.offers && scope.offers.length > 0 ? scope.offers : [scope.offer];
 }
 
 /**
@@ -123,6 +148,32 @@ export function getContentAccess(offer: Offer): ContentAccess {
     default:
       return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
   }
+}
+
+/** OR booléen de deux matrices d'accès (union des droits multi-formules). */
+export function mergeAccess(a: ContentAccess, b: ContentAccess): ContentAccess {
+  return {
+    fiche: a.fiche || b.fiche,
+    ficheExpress: a.ficheExpress || b.ficheExpress,
+    video: a.video || b.video,
+    qcm: a.qcm || b.qcm,
+    entrainement: a.entrainement || b.entrainement,
+    seanceProf: a.seanceProf || b.seanceProf,
+    flashcards: a.flashcards || b.flashcards,
+    interrogation: a.interrogation || b.interrogation,
+    seanceApprofondie: a.seanceApprofondie || b.seanceApprofondie,
+    notes: a.notes || b.notes,
+  };
+}
+
+const NO_ACCESS: ContentAccess = {
+  fiche: false, ficheExpress: false, video: false, qcm: false, entrainement: false,
+  seanceProf: false, flashcards: false, interrogation: false, seanceApprofondie: false, notes: false,
+};
+
+/** Accès combiné (union) de plusieurs offres, version hardcodée. */
+export function getContentAccessMulti(offers: Offer[]): ContentAccess {
+  return offers.map(getContentAccess).reduce(mergeAccess, NO_ACCESS);
 }
 
 export function offerLabel(offer: Offer): string {

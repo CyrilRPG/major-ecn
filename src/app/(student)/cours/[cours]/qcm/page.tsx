@@ -5,7 +5,7 @@ import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/re
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { fetchContentAccess } from '@/lib/auth/formula-permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 import { canWrite } from '@/lib/schemas/professor';
@@ -29,7 +29,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const isAdmin = profile.role === 'admin';
   const canEditQcm = isAdmin
     || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'qcm'));
-  const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
 

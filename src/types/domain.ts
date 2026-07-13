@@ -12,10 +12,29 @@ export const OFFER_LABEL: Record<Offer, string> = {
   approfondi: 'Programme Approfondi',
 };
 
+/** Rang d'une offre (pour l'affichage/le gating par offre minimale). Plus le
+ *  rang est élevé, plus la formule est complète. */
+export const OFFER_RANK: Record<Offer, number> = {
+  decouverte: 0,
+  essentiel: 1,
+  intensif: 2,
+  approfondi: 3,
+};
+
+/** Offre de plus haut rang d'une liste (offre « d'affichage » d'un multi-scope). */
+export function highestOffer(offers: Offer[]): Offer {
+  return offers.reduce<Offer>((best, o) => (OFFER_RANK[o] > OFFER_RANK[best] ? o : best), offers[0] ?? 'decouverte');
+}
+
 export type Voie = 'interne' | 'externe';
 
 export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: string[]; /** Optionnel : liste d'IDs de cours auxquels l'accès est restreint au sein des collèges sélectionnés. Vide ou absent = tous les cours du/des collège(s). */ cours?: string[] }) & {
   offer: Offer;
+  /** Union des formules détenues (multi-formules). `offer` reste l'offre de plus
+   *  haut rang (affichage / offre minimale) ; `offers` porte l'UNION des droits :
+   *  un élève « approfondi + essentiel » cumule les contenus des deux. Absent ⇒
+   *  scope mono-formule (équivaut à `[offer]`). */
+  offers?: Offer[];
   /** Voie de concours (Médecine générale) : détermine l'accès aux séries.
    *  'interne' → pas de QROC ; 'externe' → pas de QCM/DP (sauf item Révisions).
    *  null/absent → aucune restriction de voie. Appliqué côté DB (RLS). */

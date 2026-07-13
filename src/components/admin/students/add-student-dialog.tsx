@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CollegeAccessPicker, OfferPicker, type College, type AccessValue } from './college-access-picker';
+import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
 
-type OfferOption = { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] };
+type OfferOption = { id: OfferId; label: string; unlocks: string[] };
 type Mode = 'single' | 'bulk';
 
 const IdentitySchema = z.object({
@@ -42,7 +42,7 @@ export function AddStudentDialog({
   const router = useRouter();
   const [pending, start] = useTransition();
 
-  const [offer, setOffer] = useState<OfferOption['id']>('essentiel');
+  const [offersSel, setOffersSel] = useState<OfferId[]>(['essentiel']);
   // Voie obligatoire pour toute spécialité → défaut 'interne'.
   const [access, setAccess] = useState<AccessValue>({ permissionType: 'all', colleges: [], voie: 'interne' });
   const [emails, setEmails] = useState<string[]>(['']);
@@ -53,7 +53,7 @@ export function AddStudentDialog({
 
   const resetAll = () => {
     reset();
-    setOffer('essentiel');
+    setOffersSel(['essentiel']);
     setAccess({ permissionType: 'all', colleges: [], voie: 'interne' });
     setEmails(['']);
     setSubmitError(null);
@@ -62,7 +62,10 @@ export function AddStudentDialog({
   };
 
   const accessPayload = () => ({
-    offer,
+    // `offers` = union des formules ; `offer` (offre de plus haut rang) conservé
+    // pour compat des schémas serveur.
+    offers: offersSel.length > 0 ? offersSel : ['essentiel'],
+    offer: offersSel[0] ?? 'essentiel',
     permission_type: access.permissionType,
     colleges: access.permissionType === 'college' ? access.colleges : [],
     voie: access.voie ?? 'interne',
@@ -71,6 +74,7 @@ export function AddStudentDialog({
   // ---- Mode « un élève » ----
   const onSubmitSingle = (identity: IdentityInput) => {
     setSubmitError(null);
+    if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
       const res = await fetch('/api/admin/create-student', {
         method: 'POST',
@@ -91,6 +95,7 @@ export function AddStudentDialog({
     setBulkResult(null);
     const valid = Array.from(new Set(emails.map((e) => e.trim().toLowerCase()).filter((e) => EMAIL_RE.test(e))));
     if (valid.length === 0) { setSubmitError('Ajoutez au moins un email valide.'); return; }
+    if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
       const res = await fetch('/api/admin/create-students-bulk', {
         method: 'POST',
@@ -181,7 +186,7 @@ export function AddStudentDialog({
               <Input id="phone" {...register('phone')} placeholder="06 12 34 56 78" />
             </div>
 
-            <OfferPicker offers={offers} value={offer} onChange={setOffer} />
+            <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
             <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
 
             {submitError && (
@@ -204,7 +209,7 @@ export function AddStudentDialog({
               passe — avec exactement les accès définis ici.
             </p>
 
-            <OfferPicker offers={offers} value={offer} onChange={setOffer} />
+            <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
             <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
 
             <div className="space-y-2">

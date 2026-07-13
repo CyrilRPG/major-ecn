@@ -4,8 +4,8 @@ import { notFound, redirect } from 'next/navigation';
 import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, Video, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
-import { fetchContentAccess } from '@/lib/auth/formula-permissions';
+import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -79,8 +79,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .eq('user_id', user.id).eq('flashcards.cours_id', coursId),
   ]);
   const isAdmin = profile.role === 'admin';
-  const access = isAdmin ? undefined : await fetchContentAccess(scope.offer);
-  const isApprofondi = scope.offer === 'approfondi' || isAdmin;
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
+  const isApprofondi = scopeOffers(scope).includes('approfondi') || isAdmin;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [{ data: seanceApprofondieVideos }, { data: seanceSeries }] = isApprofondi
     ? await Promise.all([

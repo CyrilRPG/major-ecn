@@ -11,6 +11,8 @@ export const AddStudentSchema = z.object({
   email: z.string().email('Email invalide'),
   phone: z.string().optional(),
   offer: AdminOffer,
+  /** Multi-formules : union des droits. Si absent, on retombe sur `offer`. */
+  offers: z.array(AdminOffer).min(1).optional(),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
   /** Liste optionnelle de cours (matières au sein d'un collège) — utilisée
@@ -28,6 +30,8 @@ export const UpdateStudentSchema = z.object({
   last_name: z.string().min(1, 'Nom requis'),
   phone: z.string().optional().nullable(),
   offer: AdminOffer,
+  /** Multi-formules (édition) : union des droits. Si absent, on retombe sur `offer`. */
+  offers: z.array(AdminOffer).min(1).optional(),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional(),
   cours: z.array(z.string()).optional(),

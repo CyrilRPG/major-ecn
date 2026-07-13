@@ -11,15 +11,23 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { parseScope } from '@/lib/auth/permissions';
-import { CollegeAccessPicker, OfferPicker, type College, type AccessValue } from './college-access-picker';
+import { parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
+import type { PermissionScope } from '@/types/domain';
 
-type OfferOption = { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] };
+type OfferOption = { id: OfferId; label: string; unlocks: string[] };
 
 // 'decouverte' n'est pas administrable : on l'aligne par défaut sur essentiel.
-function adminOfferFrom(rawOffer: string): OfferOption['id'] {
+function adminOfferFrom(rawOffer: string): OfferId {
   if (rawOffer === 'intensif' || rawOffer === 'approfondi' || rawOffer === 'essentiel') return rawOffer;
   return 'essentiel';
+}
+
+// Union des formules administrables de l'élève (au moins une). 'decouverte' est
+// remplacée par 'essentiel' ; doublons retirés.
+function adminOffersFrom(scope: PermissionScope): OfferId[] {
+  const list = Array.from(new Set(scopeOffers(scope).map(adminOfferFrom)));
+  return list.length > 0 ? list : ['essentiel'];
 }
 
 export type EditStudentTarget = {
@@ -63,7 +71,7 @@ export function EditStudentDialog({
   const [address, setAddress] = useState(student.address ?? '');
   const [pseudo, setPseudo] = useState(student.pseudo ?? '');
   const [canDownload, setCanDownload] = useState(student.can_download ?? false);
-  const [offer, setOffer] = useState<OfferOption['id']>(adminOfferFrom(initialScope.offer));
+  const [offersSel, setOffersSel] = useState<OfferId[]>(adminOffersFrom(initialScope));
   const [access, setAccess] = useState<AccessValue>(initialAccess);
 
   // Resynchronise tous les champs depuis le scope actuel de l'élève (appelé à
@@ -77,7 +85,7 @@ export function EditStudentDialog({
     setAddress(student.address ?? '');
     setPseudo(student.pseudo ?? '');
     setCanDownload(student.can_download ?? false);
-    setOffer(adminOfferFrom(sc.offer));
+    setOffersSel(adminOffersFrom(sc));
     setAccess({
       permissionType: sc.type,
       colleges: sc.type === 'college' ? sc.colleges : [],
@@ -90,6 +98,7 @@ export function EditStudentDialog({
     e.preventDefault();
     setSubmitError(null);
     if (!firstName.trim() || !lastName.trim()) { setSubmitError('Prénom et nom requis.'); return; }
+    if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
       // 1) Identité
       const pRes = await fetch('/api/admin/update-profile', {
@@ -111,7 +120,8 @@ export function EditStudentDialog({
           first_name: firstName,
           last_name: lastName,
           phone,
-          offer,
+          offers: offersSel,
+          offer: offersSel[0] ?? 'essentiel',
           permission_type: access.permissionType,
           colleges: access.permissionType === 'college' ? access.colleges : [],
           // Voie obligatoire pour toutes les spécialités (plus seulement MG).
@@ -181,7 +191,7 @@ export function EditStudentDialog({
             <Input id="edit-address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="N° rue, code postal, ville" />
           </div>
 
-          <OfferPicker offers={offers} value={offer} onChange={setOffer} />
+          <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
 
           <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
 

@@ -28,8 +28,8 @@ export async function POST(req: Request) {
   const parsed = AddStudentSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
 
-  const { first_name, last_name, email, phone, offer, permission_type, colleges, cours, voie } = parsed.data;
-  const permission_scope = buildStudentScope({ offer, permission_type, colleges, cours, voie });
+  const { first_name, last_name, email, phone, offer, offers, permission_type, colleges, cours, voie } = parsed.data;
+  const permission_scope = buildStudentScope({ offer, offers, permission_type, colleges, cours, voie });
 
   let admin;
   try {

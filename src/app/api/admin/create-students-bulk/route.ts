@@ -17,6 +17,7 @@ function origin(req: Request): string {
 const BulkSchema = z.object({
   emails: z.array(z.string().email()).min(1, 'Au moins un email').max(200, 'Maximum 200 emails à la fois'),
   offer: z.enum(['essentiel', 'intensif', 'approfondi']),
+  offers: z.array(z.enum(['essentiel', 'intensif', 'approfondi'])).min(1).optional(),
   permission_type: z.enum(['all', 'college']),
   colleges: z.array(z.string()).optional().nullable(),
   cours: z.array(z.string()).optional().nullable(),
@@ -36,8 +37,8 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
-  const { emails, offer, permission_type, colleges, cours, voie } = parsed.data;
-  const permission_scope = buildStudentScope({ offer, permission_type, colleges, cours, voie });
+  const { emails, offer, offers, permission_type, colleges, cours, voie } = parsed.data;
+  const permission_scope = buildStudentScope({ offer, offers, permission_type, colleges, cours, voie });
 
   let admin;
   try {

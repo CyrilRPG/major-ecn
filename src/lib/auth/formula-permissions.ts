@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
-import { getContentAccess, type ContentAccess } from './permissions';
-import type { Offer } from '@/types/domain';
+import { getContentAccess, mergeAccess, scopeOffers, type ContentAccess } from './permissions';
+import type { Offer, PermissionScope } from '@/types/domain';
 
 type Row = {
   fiche: boolean;
@@ -51,6 +51,25 @@ export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAcc
   }
   return getContentAccess(offer);
 });
+
+/**
+ * Accès combiné (UNION) de plusieurs formules détenues. Un élève « approfondi +
+ * essentiel » cumule les contenus des deux. Chaque offre est résolue via
+ * `fetchContentAccess` (config DB `formula_permissions`) puis OR-mergée.
+ */
+export const fetchContentAccessMulti = cache(async (offersKey: string): Promise<ContentAccess> => {
+  const offers = offersKey.split(',').filter(Boolean) as Offer[];
+  if (offers.length === 0) return getContentAccess('decouverte');
+  const list = await Promise.all(offers.map((o) => fetchContentAccess(o)));
+  return list.reduce(mergeAccess);
+});
+
+/** Accès (union) pour un scope, tenant compte du multi-formules (`offers`). */
+export function fetchContentAccessForScope(scope: PermissionScope): Promise<ContentAccess> {
+  // Clé de cache stable : liste triée et dédoublonnée.
+  const key = Array.from(new Set(scopeOffers(scope))).sort().join(',');
+  return fetchContentAccessMulti(key);
+}
 
 /** Libellés des formules (offres) — alignés sur la page Config Permissions. */
 export const OFFER_LABELS: Record<Offer, string> = {

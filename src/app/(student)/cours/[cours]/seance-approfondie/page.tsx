@@ -4,7 +4,7 @@ import { Pencil, Video } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { fetchContentAccess } from '@/lib/auth/formula-permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { EmptyState } from '@/components/empty-state';
@@ -16,7 +16,7 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
   const isAdmin = profile.role === 'admin';
 
   const scope = parseScope(profile.permission_scope);
-  if (!isAdmin && !(await fetchContentAccess(scope.offer)).seanceApprofondie) redirect(`/cours/${coursId}`);
+  if (!isAdmin && !(await fetchContentAccessForScope(scope)).seanceApprofondie) redirect(`/cours/${coursId}`);
 
   const { data: c } = await supabase
     .from('cours')

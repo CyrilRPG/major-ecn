@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { fetchContentAccess } from '@/lib/auth/formula-permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canWrite } from '@/lib/schemas/professor';
 import { DIFFICULTY_SCORE, type Difficulty } from '@/types/domain';
 
@@ -22,7 +22,7 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !(await fetchContentAccess(scope.offer)).flashcards) redirect(`/cours/${coursId}`);
+  if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).flashcards) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'flashcards', `/cours/${coursId}`);
 
   const { data: cards } = await supabase

@@ -1,27 +1,38 @@
 import 'server-only';
 import { sendEmail } from '@/lib/email/send';
 import { welcomeEmail } from '@/lib/email/templates';
+import { highestOffer, type Offer } from '@/types/domain';
 
-/** Construit le permission_scope d'un élève (offre, collèges, cours, voie). */
+/** Construit le permission_scope d'un élève (offre(s), collèges, cours, voie). */
 export function buildStudentScope(input: {
   offer: string;
+  /** Multi-formules : union des droits. Si absent, on retombe sur `offer`. */
+  offers?: string[] | null;
   permission_type: 'all' | 'college';
   colleges?: string[] | null;
   cours?: string[] | null;
   voie?: 'interne' | 'externe' | null;
 }) {
-  const { offer, permission_type, colleges, cours, voie } = input;
+  const { permission_type, colleges, cours, voie } = input;
+  // Union des formules : `offers` (multi) prime ; à défaut la formule unique.
+  const offerList = (input.offers && input.offers.length > 0 ? input.offers : [input.offer]) as Offer[];
+  const uniqOffers = Array.from(new Set(offerList));
+  // `offer` = offre de plus haut rang (affichage/rang) ; `offers` = union stockée
+  // uniquement si plusieurs formules (scope propre en mono-formule).
+  const offer = highestOffer(uniqOffers);
+  const offersField = uniqOffers.length > 1 ? { offers: uniqOffers } : {};
   // Voie : stockée en `paid_voie` — lue par la RLS (current_voie()) ET parseScope,
   // exactement comme après un paiement Stripe. Filtre QCM/DP vs QROC/DP-QROC.
   const voieFields = voie ? { paid_voie: voie } : {};
   const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');
   const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
   return permission_type === 'all'
-    ? { type: 'all' as const, offer, ...specialtyFields, ...voieFields }
+    ? { type: 'all' as const, offer, ...offersField, ...specialtyFields, ...voieFields }
     : {
         type: 'college' as const,
         colleges: colleges ?? [],
         offer,
+        ...offersField,
         ...(cours && cours.length > 0 ? { cours } : {}),
         ...specialtyFields,
         ...voieFields,
