@@ -1,9 +1,12 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
+import type { parseScope } from '@/lib/auth/permissions';
 import {
   ArrowRight, BarChart3, Bell, Calendar, CalendarCheck, CalendarDays, ExternalLink,
   Info, Medal, Megaphone, Trophy, UserCheck, type LucideIcon,
 } from 'lucide-react';
+
+type Scope = ReturnType<typeof parseScope>;
 
 /** Représente un bloc personnalisable affiché à droite de l'accueil. */
 export type Announcement = {
@@ -16,7 +19,33 @@ export type Announcement = {
   data: Record<string, unknown>;
   order_index: number;
   visible: boolean;
+  min_offer: 'essentiel' | 'intensif' | 'approfondi' | null;
+  target_scope: 'all' | 'full' | 'college' | null;
+  target_colleges: string[] | null;
 };
+
+// Rang des offres pour comparer avec min_offer (une annonce « intensif+ » n'est
+// pas visible par un élève essentiel/découverte).
+const OFFER_RANK: Record<string, number> = { decouverte: 0, essentiel: 1, intensif: 2, approfondi: 3 };
+
+/** Une annonce est-elle visible pour le périmètre (offre / collèges) de l'élève ? */
+function announcementVisibleFor(a: Announcement, scope: Scope): boolean {
+  if (a.min_offer) {
+    if ((OFFER_RANK[scope.offer] ?? 0) < (OFFER_RANK[a.min_offer] ?? 0)) return false;
+  }
+  const ts = a.target_scope ?? 'all';
+  if (ts === 'full') {
+    // Réservé aux élèves ayant l'accès intégral (toutes les spécialités).
+    return scope.type === 'all';
+  }
+  if (ts === 'college') {
+    const ids = a.target_colleges ?? [];
+    if (ids.length === 0) return true; // aucun collège coché → tout le monde
+    if (scope.type === 'all') return true; // accès intégral → voit tout
+    return ids.some((cid) => scope.colleges.includes(cid));
+  }
+  return true; // 'all'
+}
 
 const ICON_MAP: Record<string, LucideIcon> = {
   calendar: Calendar,
@@ -63,11 +92,11 @@ function fmtDate(iso: string): string {
 }
 
 /* ------------ Server entry ------------ */
-export async function AnnouncementsWidget() {
+export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
   const supabase = await createClient();
   const { data } = await supabase
     .from('homepage_announcements')
-    .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible')
+    .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible, min_offer, target_scope, target_colleges')
     .eq('visible', true)
     .order('order_index', { ascending: true });
 
@@ -75,7 +104,11 @@ export async function AnnouncementsWidget() {
   // Anti-doublon : la carte statique `MgEvc2026Card` affiche déjà le « Nombre
   // de postes » (Voie externe / interne). On masque donc toute annonce DB qui
   // ferait doublon avec cette rubrique (ex. « Nombre de postes EVC 2026 »).
-  const items = allItems.filter((it) => !/nombre\s+de\s+postes/i.test(it.title));
+  // + Filtrage par permissions (offre minimale / collèges ciblés) : le ciblage
+  //   défini côté admin est désormais réellement appliqué au rendu.
+  const items = allItems
+    .filter((it) => !/nombre\s+de\s+postes/i.test(it.title))
+    .filter((it) => announcementVisibleFor(it, scope));
 
   return (
     <aside className="space-y-3" aria-label="Annonces et informations EVC">
@@ -224,21 +257,35 @@ function AnnouncementCard({ a }: { a: Announcement }) {
 }
 
 /* ------------ Bodies ------------ */
-/* NB. tant que le calendrier officiel des EVC (PAE) n'est pas connu,
- * on n'affiche ni le nombre de jours restants ni les vraies dates :
- * on les remplace par un placeholder « Bientôt communiqué ». */
-type CountdownData = { suffix_top?: string; suffix_bottom?: string };
+/* Le compteur affiche le nombre de jours restants dès qu'une `target_date` est
+ * renseignée par l'admin. Sans date, on garde le placeholder « Bientôt communiqué ». */
+type CountdownData = { suffix_top?: string; suffix_bottom?: string; target_date?: string };
 function CountdownBody({ data }: { data: Record<string, unknown> }) {
   const d = data as CountdownData;
+  const hasDate = typeof d.target_date === 'string' && !Number.isNaN(new Date(d.target_date).getTime());
+  const days = hasDate ? daysUntil(d.target_date as string) : null;
   return (
     <div className="relative overflow-hidden rounded-xl bg-(--color-primary-soft)/40 px-4 py-3">
       {d.suffix_top && <p className="text-xs text-(--color-ink-soft)">{d.suffix_top}</p>}
-      <p className="mt-1 text-base font-extrabold leading-snug text-(--color-primary)">
-        Bientôt communiqué
-      </p>
-      <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">
-        {d.suffix_bottom ?? 'La date officielle sera annoncée dès sa publication.'}
-      </p>
+      {hasDate ? (
+        <>
+          <p className="mt-1 text-2xl font-black leading-none text-(--color-primary)">
+            {days === 0 ? "Aujourd'hui" : <>J−{days}</>}
+          </p>
+          <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">
+            {d.suffix_bottom ?? `Épreuve le ${fmtDate(d.target_date as string)}`}
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="mt-1 text-base font-extrabold leading-snug text-(--color-primary)">
+            Bientôt communiqué
+          </p>
+          <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">
+            {d.suffix_bottom ?? 'La date officielle sera annoncée dès sa publication.'}
+          </p>
+        </>
+      )}
       <Calendar
         aria-hidden
         className="pointer-events-none absolute -right-3 -bottom-2 h-20 w-20 text-(--color-primary)/10"
@@ -257,12 +304,13 @@ function EventListBody({ data }: { data: Record<string, unknown> }) {
     <ul className="space-y-2.5">
       {events.map((e, i) => {
         const EvIcon = pickIcon(e.icon ?? 'calendar_check');
+        const hasDate = typeof e.date === 'string' && !Number.isNaN(new Date(e.date).getTime());
         return (
           <li key={i} className="flex items-center gap-2.5 text-sm">
             <EvIcon className="h-4 w-4 shrink-0 text-(--color-primary)" />
             <span className="flex-1 truncate text-(--color-ink-soft)">{e.label}</span>
             <span className="shrink-0 rounded-full bg-(--color-sand-100) px-2 py-0.5 text-[11px] font-bold text-(--color-ink-soft)">
-              Bientôt communiqué
+              {hasDate ? fmtDate(e.date as string) : 'Bientôt communiqué'}
             </span>
           </li>
         );

@@ -81,7 +81,7 @@ export default async function AccueilPage() {
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
         <Suspense fallback={<SidebarSkeleton />}>
-          <AnnouncementsWidget />
+          <AnnouncementsWidget scope={scope} />
         </Suspense>
         {isDecouverte && <DiscoveryUpgradeCta />}
         {isDecouverte && <NouveauxContenusBanner />}
