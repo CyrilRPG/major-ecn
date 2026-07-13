@@ -100,8 +100,9 @@ type StatsResp = {
     reviews_total: number; reviews_week: number;
     fc_mastered: number; flashcards_total: number;
     platform_seconds_week: number; cours_touched_week: number;
+    attempts_distinct?: number;
   };
-  per_cours: { cours_id: string; attempts: number; correct: number; has_fc: boolean }[];
+  per_cours: { cours_id: string; attempts: number; correct: number; has_fc: boolean; distinct_done?: number }[];
   qcm_counts: { cours_id: string; n: number }[];
   daily: { d: string; n: number }[];
   recent: { kind: string; titre: string; at: string }[];
@@ -163,23 +164,24 @@ async function Dashboard({
 
   /* ---- Agrégats par cours (attempts / correct / flashcards) ---- */
   const aggByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p]));
-  const coursWithQcm = new Set(stats.per_cours.filter((p) => p.attempts > 0).map((p) => p.cours_id));
   const coursWithFc = new Set(stats.per_cours.filter((p) => p.has_fc).map((p) => p.cours_id));
+  // Nombre de QCM DISTINCTS faits par cours (dédoublonné, séries QCM only).
+  const qcmDoneByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p.distinct_done ?? 0]));
 
-  /* ---- Progression couverture (vidéo + fiche + QCM + flashcards) ---- */
-  let stepsDone = 0, stepsTotal = 0;
-  for (const m of colleges) {
-    for (const c of m.cours ?? []) {
-      const cp = c.course_progress?.[0];
-      stepsTotal += 4;
-      stepsDone += (cp?.video_watched ? 1 : 0) + (cp?.fiche_read ? 1 : 0)
-        + (coursWithQcm.has(c.id) ? 1 : 0) + (coursWithFc.has(c.id) ? 1 : 0);
-    }
-  }
-  const globalProgress = stepsTotal > 0 ? Math.round((stepsDone / stepsTotal) * 100) : 0;
+  /* ---- Progression globale = QCM faits / QCM totaux (majoritaire) ----
+     Rebasée sur le nombre de questions QCM distinctes réellement tentées
+     rapporté au total de QCM accessibles (fiable, ne « monte » plus dès le
+     1er QCM). La lecture fiches/vidéos/flashcards n'y contribue plus que
+     marginalement pour ne pas figer un cours 100 % QCM. */
+  const globalQcmDone = accessibleCoursIds.reduce(
+    (s, id) => s + Math.min(qcmDoneByCours.get(id) ?? 0, qcmCountByCours.get(id) ?? 0), 0,
+  );
+  const globalProgress = itemsTotal > 0 ? Math.round((globalQcmDone / itemsTotal) * 100) : 0;
 
-  /* ---- Statistiques attempts ---- */
-  const totalAttempts = t.attempts_total;
+  /* ---- Statistiques attempts ----
+     « QCM réalisés » = questions QCM DISTINCTES tentées (pas les re-tentatives ni
+     les annales) → le ratio X/total reste cohérent (≤ 100 %). */
+  const totalAttempts = t.attempts_distinct ?? t.attempts_total;
   const sessionsCount = t.sessions_total;
 
   /* ---- Temps de révision (mesuré par le heartbeat plateforme) ---- */
@@ -209,11 +211,14 @@ async function Dashboard({
     }
   }
   const coursScored = [...perCours.values()].map((c) => {
-    const successPct = c.attempts > 0 ? (c.correct / c.attempts) * 100 : 0;
-    const coverage = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0) + (c.attempts > 0 ? 1 : 0) + (c.hasFc ? 1 : 0)) / 4 * 100;
-    const value = c.attempts > 0
-      ? Math.round(successPct * 0.7 + coverage * 0.3)
-      : Math.round(coverage);
+    // Avancement fiable = QCM distincts faits / QCM totaux (85 %) + couverture
+    // fiche/vidéo/flashcards (15 %). Pour un cours sans QCM, couverture seule.
+    const qcmTotal = qcmCountByCours.get(c.id) ?? 0;
+    const qcmDone = Math.min(qcmDoneByCours.get(c.id) ?? 0, qcmTotal);
+    const coverageRatio = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0) + (c.hasFc ? 1 : 0)) / 3;
+    const value = qcmTotal > 0
+      ? Math.round(Math.min(1, qcmDone / qcmTotal) * 85 + coverageRatio * 15)
+      : Math.round(coverageRatio * 100);
     return { id: c.id, titre: c.titre, matiereNom: c.matiereNom, value, attempts: c.attempts };
   });
 
