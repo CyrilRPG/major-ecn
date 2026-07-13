@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Eye, Pencil, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Eye, Pencil, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -40,12 +40,18 @@ export function QcmSession({
   mode = 'live',
   durationMinutes = null,
   editable = false,
+  savedQuestionIds = [],
+  initialIndex = 0,
 }: {
   sessionId: string;
   coursId: string;
   serieId?: string;
   serieLabel: string;
   serieKind: 'qcm' | 'annale' | 'seance';
+  /** IDs des questions déjà enregistrées dans « Questions à revoir » par l'élève. */
+  savedQuestionIds?: string[];
+  /** Index de la question à afficher en premier (deep-link « Questions à revoir »). */
+  initialIndex?: number;
   /** Vignette clinique commune à toutes les questions (DP / annale).
    *  Affichée dans un encadré séparé au-dessus de chaque question. */
   vignette?: string | null;
@@ -63,7 +69,9 @@ export function QcmSession({
   const isSeance = serieKind === 'seance';
   const totalSeconds = durationMinutes ? durationMinutes * 60 : null;
   const router = useRouter();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() =>
+    Number.isFinite(initialIndex) ? Math.min(Math.max(0, initialIndex), Math.max(0, questions.length - 1)) : 0,
+  );
   // QCM state
   const [selected, setSelected] = useState<Record<string, Set<string>>>({});
   const [validated, setValidated] = useState<Record<string, ItemOutcome[] | null>>({});
@@ -78,6 +86,9 @@ export function QcmSession({
   const [elapsed, setElapsed] = useState(0);
   const [perQuestionStart, setPerQuestionStart] = useState(Date.now());
   const [submitting, setSubmitting] = useState(false);
+  // « Questions à revoir » : ensemble des question_id enregistrés par l'élève.
+  const [saved, setSaved] = useState<Set<string>>(() => new Set(savedQuestionIds));
+  const [savingStar, setSavingStar] = useState(false);
   // Ref to scroll bottom buttons into view after QROC reveal on mobile
   const bottomActionsRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +142,51 @@ export function QcmSession({
     : isQroc
     ? (qrocAnswers[q.id] ?? '').trim().length > 0
     : sel.size > 0;
+
+  // Ajoute / retire la question courante des « Questions à revoir » (toggle).
+  const toggleSaved = async () => {
+    if (savingStar) return;
+    const questionId = q.id;
+    const wasSaved = saved.has(questionId);
+    // Optimiste
+    setSaved((prev) => {
+      const next = new Set(prev);
+      if (wasSaved) next.delete(questionId); else next.add(questionId);
+      return next;
+    });
+    setSavingStar(true);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const supabase = createClient() as any;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      if (wasSaved) {
+        await supabase
+          .from('student_saved_questions')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('question_id', questionId);
+      } else {
+        await supabase
+          .from('student_saved_questions')
+          .upsert({
+            user_id: user.id,
+            question_id: questionId,
+            serie_id: serieId ?? null,
+            cours_id: coursId,
+          }, { onConflict: 'user_id,question_id' });
+      }
+    } catch {
+      // rollback en cas d'échec réseau
+      setSaved((prev) => {
+        const next = new Set(prev);
+        if (wasSaved) next.add(questionId); else next.delete(questionId);
+        return next;
+      });
+    } finally {
+      setSavingStar(false);
+    }
+  };
 
   const validate = async () => {
     if (isValidated || !canValidate || submitting) return;
@@ -346,6 +402,22 @@ export function QcmSession({
                 ? `Question ${index + 1}`
                 : 'Énoncé'}
           </p>
+          <div className="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            onClick={toggleSaved}
+            disabled={savingStar}
+            aria-pressed={saved.has(q.id)}
+            title={saved.has(q.id) ? 'Retirer des questions à revoir' : 'Ajouter aux questions à revoir'}
+            className={cn(
+              'inline-flex items-center justify-center rounded-md border p-1.5 transition-colors',
+              saved.has(q.id)
+                ? 'border-[#E0A400] bg-[#FFF7E0] text-[#B47E00]'
+                : 'border-(--color-border) bg-white text-(--color-ink-soft) hover:border-[#E0A400] hover:text-[#B47E00]'
+            )}
+          >
+            <Star className={cn('h-4 w-4', saved.has(q.id) && 'fill-current')} />
+          </button>
           {editable && (
             <button
               type="button"
@@ -368,6 +440,7 @@ export function QcmSession({
               <Pencil className="h-3 w-3" /> Éditer
             </button>
           )}
+          </div>
         </div>
         <h2
           className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"

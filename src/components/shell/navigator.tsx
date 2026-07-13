@@ -198,6 +198,7 @@ export function Navigator({
   const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
   const notesActive = pathname.startsWith('/notes');
+  const revoirActive = pathname.startsWith('/revoir');
 
   const topLevelClass = (active: boolean) =>
     cn(
@@ -244,6 +245,7 @@ export function Navigator({
               {renderLockedTop(RefreshCcw, 'Révisions transversales')}
               {renderLockedTop(CalendarDays, 'Agenda')}
               {renderLockedTop(NotebookPen, 'Prises de notes')}
+              {renderLockedTop(Star, 'Questions à revoir')}
             </>
           ) : (
             <>
@@ -265,6 +267,11 @@ export function Navigator({
               <Link href="/notes" className={topLevelClass(notesActive)}>
                 <NotebookPen className="h-[18px] w-[18px] shrink-0" />
                 Prises de notes
+              </Link>
+
+              <Link href="/revoir" className={topLevelClass(revoirActive)}>
+                <Star className="h-[18px] w-[18px] shrink-0" />
+                Questions à revoir
               </Link>
             </>
           )}

@@ -5,8 +5,15 @@ import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { canWrite } from '@/lib/schemas/professor';
 
-export default async function QcmRunPage({ params }: { params: Promise<{ cours: string; serie: string }> }) {
+export default async function QcmRunPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ cours: string; serie: string }>;
+  searchParams: Promise<{ q?: string }>;
+}) {
   const { cours: coursId, serie: serieId } = await params;
+  const { q: focusQuestionId } = await searchParams;
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
@@ -62,6 +69,15 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
   const editable = profile.role === 'admin' || (profScope ? canWrite(profScope, 'qcm') : false);
 
+  // Questions déjà enregistrées dans « Questions à revoir » par cet élève.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: savedRows } = await (supabase as any)
+    .from('student_saved_questions')
+    .select('question_id')
+    .eq('user_id', user.id)
+    .in('question_id', enrichedQuestions.map((q) => q.id));
+  const savedQuestionIds = ((savedRows ?? []) as { question_id: string }[]).map((r) => r.question_id);
+
   const { data: session } = await supabase
     .from('qcm_sessions')
     .insert({ user_id: user.id, serie_id: serieId, score_correct: 0, score_total: enrichedQuestions.length })
@@ -84,6 +100,8 @@ export default async function QcmRunPage({ params }: { params: Promise<{ cours: 
       questions={enrichedQuestions}
       backHref={backHref}
       editable={editable}
+      savedQuestionIds={savedQuestionIds}
+      initialIndex={focusQuestionId ? Math.max(0, enrichedQuestions.findIndex((q) => q.id === focusQuestionId)) : 0}
     />
   );
 }

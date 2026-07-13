@@ -96,6 +96,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
       '/notes',
       '/revisions-transversales',
       '/entrainement',
+      '/revoir',
     ];
     if (blockedPrefixes.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
       redirect('/accueil');
@@ -113,7 +114,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   if (profile.role === 'student') {
     const alwaysAllowed = [
       '/revisions-transversales', '/formulaires/', '/api/', '/logout',
-      '/accueil', '/agenda', '/notes', '/contact', '/entrainement',
+      '/accueil', '/agenda', '/notes', '/contact', '/entrainement', '/revoir',
     ];
     const isOnAllowed = alwaysAllowed.some((p) => pathname === p || pathname.startsWith(p + '/') || pathname.startsWith(p));
     const isOnMatieresSubpage = pathname.match(/^\/matieres\/[^/]+\/(evaluation|consolidation|renforcement)/);
