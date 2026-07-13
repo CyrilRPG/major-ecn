@@ -132,17 +132,24 @@ export async function POST(req: Request) {
     );
   }
 
+  // Voie choisie à l'inscription (MG uniquement) : promue en champ de 1er niveau
+  // `voie` pour qu'elle se répercute IMMÉDIATEMENT sur la plateforme pédagogique
+  // — parseScope() (admin/app) et current_voie() (RLS) la lisent, donc l'élève
+  // découverte voit d'emblée le contenu QROC (externe) ou QCM/DP (interne).
+  const chosenVoie = specialty === MG_NAME ? (voie || null) : null;
+
   const permission_scope = {
     type: 'college' as const,
     colleges: [DECOUVERTE_COLLEGE_ID],
     offer: 'decouverte' as const, // était 'essentiel' → bug : un user découverte est désormais bien typé.
     espace_decouverte: true,
     specialty_wish: specialty || null,
+    ...(chosenVoie ? { voie: chosenVoie } : {}),
     // Informations d'inscription saisies dans le formulaire découverte —
     // affichées côté admin (liste élèves).
     signup: {
       specialty,
-      voie: specialty === MG_NAME ? (voie || null) : null,
+      voie: chosenVoie,
       session,
       country,
       passed_evc: passedEvc,
