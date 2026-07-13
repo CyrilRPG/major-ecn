@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
+      // Supabase Storage (héros/images d'articles de blog uploadés via l'éditeur
+      // admin). Sans ce host, next/image bloque le rendu → vignettes cassées.
+      { protocol: "https", hostname: "mrrgfnirpwsknuyiwcqy.supabase.co" },
     ],
   },
   // Tree-shaking ciblé des grosses librairies (icônes / animation / charts) :
