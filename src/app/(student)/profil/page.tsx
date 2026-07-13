@@ -73,7 +73,9 @@ export default async function ProfilPage() {
           statusDescription = 'Accès complet à l’administration de la plateforme.';
           badgeText = 'Admin';
           badgeTone = 'primary';
-        } else if (raw.espace_decouverte === true && !raw.paid_formule) {
+        } else if (scope.offer === 'decouverte' && raw.espace_decouverte === true && !raw.paid_formule) {
+          // Une offre payante (approfondi/intensif/essentiel) prime sur le flag
+          // « espace_decouverte » hérité de l'inscription initiale.
           statusLabel = 'Espace Découverte';
           statusDescription = 'Aperçu gratuit de la plateforme — passez à une formule pour débloquer l’ensemble des contenus.';
           badgeText = 'Découverte';

@@ -26,9 +26,20 @@ export async function PATCH(req: Request) {
   const { data: existing } = await supabase
     .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
   const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
+  const isPaidOffer = offer === 'essentiel' || offer === 'intensif' || offer === 'approfondi';
   const meta: Record<string, unknown> = {};
+  // Métadonnées à conserver. Lorsqu'on accorde une offre PAYANTE, on ne reporte
+  // pas `espace_decouverte` (flag hérité de l'inscription gratuite) : sinon le
+  // profil continue d'afficher « Découverte » et le bandeau « Découverte terminé ».
   for (const k of ['signup', 'specialty_wish', 'espace_decouverte', 'paid_offer', 'paid_formule', 'paid_at'] as const) {
+    if (k === 'espace_decouverte' && isPaidOffer) continue;
     if (prev[k] !== undefined) meta[k] = prev[k];
+  }
+  // Marque l'offre payante comme réglée (débloque l'accès complet côté affichage).
+  if (isPaidOffer) {
+    meta.paid_offer = offer;
+    if (!meta.paid_formule) meta.paid_formule = offer;
+    if (!meta.paid_at) meta.paid_at = new Date().toISOString();
   }
 
   const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');

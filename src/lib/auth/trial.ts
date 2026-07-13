@@ -18,6 +18,10 @@ type IsSubscriberArg = Pick<Profile, 'trial_until' | 'permission_scope'> | Pick<
 function isDecouverteOnly(p: { permission_scope?: unknown } | null | undefined): boolean {
   if (!p?.permission_scope || typeof p.permission_scope !== 'object') return false;
   const s = p.permission_scope as { espace_decouverte?: unknown; paid_formule?: unknown; offer?: unknown };
+  // Une offre payante (essentiel/intensif/approfondi) prime sur le flag
+  // « espace_decouverte » hérité de l'inscription initiale : un élève passé au
+  // cursus approfondi ne doit plus voir le bandeau « Découverte terminé ».
+  if (s.offer === 'essentiel' || s.offer === 'intensif' || s.offer === 'approfondi') return false;
   if (s.espace_decouverte === true && !s.paid_formule) return true;
   if (s.offer === 'decouverte' && !s.paid_formule) return true;
   return false;
