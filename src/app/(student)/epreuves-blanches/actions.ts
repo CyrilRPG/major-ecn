@@ -135,8 +135,11 @@ export async function submitExam(input: unknown): Promise<{ ok: true; submission
   if (answerRows.length > 0) await a.from('mock_exam_answers').insert(answerRows);
 
   const summary = summarizeExam(gradable, gradedForSummary);
-  const hasPendingSelf = isQrocSelf && questions.some((q) => q.format === 'qroc');
-  const status = hasPendingSelf ? 'submitted' : 'graded';
+  // Reste « submitted » tant que les QROC ne sont pas notées (auto-évaluation
+  // ou correction IA) → n'entre au classement qu'une fois réellement corrigée.
+  const hasQroc = questions.some((q) => q.format === 'qroc');
+  const hasPending = hasQroc && (isQrocSelf || exam.qroc_mode === 'ai');
+  const status = hasPending ? 'submitted' : 'graded';
   await a.from('mock_exam_submissions').update({
     submitted_at: new Date().toISOString(), status,
     score: summary.score, max_score: summary.maxScore, percentage: summary.percentage,

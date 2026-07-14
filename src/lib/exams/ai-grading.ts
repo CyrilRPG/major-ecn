@@ -47,8 +47,11 @@ export function computeQrocPoints(q: QrocToGrade, det: QrocDetection, maxPoints:
   if ((det.zero_missing?.length ?? 0) > 0) return 0;
   if ((det.major_errors_found?.length ?? 0) > 0) return 0;
   if (q.keywords.length === 0) {
-    const h = Math.max(0, Math.min(maxPoints, Number(det.holistic ?? 0)));
-    return Math.round(h * 100) / 100;
+    // Notation globale INDULGENTE à 3 niveaux : 0, la moitié (partiel), le max (juste).
+    const raw = Math.max(0, Math.min(maxPoints, Number(det.holistic ?? 0)));
+    const levels = [0, maxPoints / 2, maxPoints];
+    const snapped = levels.reduce((best, lvl) => (Math.abs(lvl - raw) < Math.abs(best - raw) ? lvl : best), 0);
+    return Math.round(snapped * 100) / 100;
   }
   const found = new Set((det.keywords_found ?? []).map((s) => s.trim().toLowerCase()));
   const pts = q.keywords.reduce((s, k) => s + (found.has(k.label.trim().toLowerCase()) ? (k.points || 0) : 0), 0);
@@ -75,7 +78,7 @@ export function buildAiGradingPrompt(examTitle: string, questions: QrocToGrade[]
     "- zero_missing : la liste des éléments « pas mis = 0 » ABSENTS de la réponse ;",
     "- major_errors_found : la liste des erreurs majeures présentes dans la réponse ;",
     "- feedback (2-3 phrases), positives (points forts), gaps (éléments oubliés) ;",
-    "- holistic : UNIQUEMENT si la question n'a AUCUN mot-clé défini — une note sur le maximum indiqué, sinon omets ce champ.",
+    "- holistic : UNIQUEMENT si la question n'a AUCUN mot-clé défini. Note globale à 3 NIVEAUX seulement : 0 (faux ou absent), la MOITIÉ du maximum indiqué (partiellement juste), ou le MAXIMUM (juste). Sois INDULGENT : si l'idée principale / la bonne réponse est présente, mets le MAXIMUM même s'il manque des détails secondaires ; ne mets la moitié que si la question exigeait clairement ces détails ou si la réponse est incomplète ; 0 seulement si c'est faux ou hors-sujet. En cas de doute entre deux niveaux, choisis le plus favorable au candidat.",
     "Réponds UNIQUEMENT par un JSON valide, sans texte autour.",
   ].join('\n');
 
