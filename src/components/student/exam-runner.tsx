@@ -8,21 +8,28 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn, formatDuration } from '@/lib/utils';
 import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
-import { submitExam } from '@/app/(student)/epreuves-blanches/actions';
+import { startExam, submitExam } from '@/app/(student)/epreuves-blanches/actions';
+import { effectiveDeadline } from '@/lib/exams/window';
 
 type Q = {
   id: string; format: 'qcm' | 'qroc'; enonce: string; vignette: string | null;
   images: string[]; points: number; items: { lettre: string; enonce: string }[];
 };
-type ExamMeta = { id: string; title: string; instructions: string; duration_minutes: number | null; question_order: 'fixed' | 'random' };
+type ExamMeta = {
+  id: string; title: string; instructions: string; duration_minutes: number | null; question_order: 'fixed' | 'random';
+  scheduled?: boolean; closesAt?: string | null; startedAt?: string | null;
+};
 
 export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[] }) {
   const router = useRouter();
-  const [phase, setPhase] = useState<'intro' | 'running'>('intro');
+  // Reprise : si une copie est déjà en cours (started_at connu), on démarre direct.
+  const [phase, setPhase] = useState<'intro' | 'running'>(exam.startedAt ? 'running' : 'intro');
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<Record<string, Set<string>>>({});
   const [qroc, setQroc] = useState<Record<string, string>>({});
-  const [elapsed, setElapsed] = useState(0);
+  const [startedAtMs, setStartedAtMs] = useState<number | null>(exam.startedAt ? new Date(exam.startedAt).getTime() : null);
+  const [now, setNow] = useState(() => Date.now());
+  const [starting, setStarting] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // Ordre (mélangé une fois si demandé)
@@ -34,7 +41,10 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
   }, [questions, exam.question_order]);
 
   const total = ordered.length;
-  const totalSeconds = exam.duration_minutes ? exam.duration_minutes * 60 : null;
+  const closesAt = exam.closesAt ? new Date(exam.closesAt) : null;
+  const deadline = startedAtMs !== null ? effectiveDeadline(startedAtMs, exam.duration_minutes, closesAt) : null;
+  const remaining = deadline ? Math.max(0, Math.floor((deadline.getTime() - now) / 1000)) : null;
+  const elapsed = startedAtMs !== null ? Math.max(0, Math.floor((now - startedAtMs) / 1000)) : 0;
 
   const doSubmit = useCallback(async () => {
     if (submitting) return;
@@ -49,16 +59,25 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
     else { setSubmitting(false); alert(res.error); }
   }, [submitting, ordered, selected, qroc, exam.id, elapsed, router]);
 
-  // Chronomètre + auto-remise
+  // Horloge (tick 1s) + auto-remise à échéance
   useEffect(() => {
     if (phase !== 'running') return;
-    const t = setInterval(() => setElapsed((s) => s + 1), 1000);
+    const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, [phase]);
   useEffect(() => {
-    if (phase !== 'running' || !totalSeconds) return;
-    if (elapsed >= totalSeconds) doSubmit();
-  }, [elapsed, totalSeconds, phase, doSubmit]);
+    if (phase !== 'running' || remaining === null) return;
+    if (remaining <= 0) doSubmit();
+  }, [remaining, phase, doSubmit]);
+
+  const begin = () => {
+    setStarting(true);
+    startExam({ examId: exam.id }).then((res) => {
+      setStarting(false);
+      if (res.ok) { setStartedAtMs(new Date(res.startedAt).getTime()); setNow(Date.now()); setPhase('running'); }
+      else alert(res.error);
+    });
+  };
 
   if (phase === 'intro') {
     return (
@@ -75,12 +94,12 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
             <p className="whitespace-pre-line">{exam.instructions}</p>
           </div>
         )}
-        {exam.duration_minutes && (
+        {(exam.duration_minutes || exam.scheduled) && (
           <p className="mt-4 flex items-start gap-2 rounded-xl border border-[#E8742C]/30 bg-[#FFF7E6] px-3 py-2 text-xs text-[#B45B00]">
-            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" /> Une fois commencée, l’épreuve est chronométrée et sera remise automatiquement à la fin du temps imparti.
+            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" /> Une fois commencée, l’épreuve est chronométrée : le chronomètre ne peut plus être remis à zéro et la copie sera remise automatiquement à la fin du temps imparti{exam.scheduled ? ' (ou à la clôture de la session)' : ''}.
           </p>
         )}
-        <Button className="mt-5" onClick={() => setPhase('running')} disabled={total === 0}>Commencer l’épreuve <ArrowRight /></Button>
+        <Button className="mt-5" onClick={begin} disabled={total === 0 || starting}>{starting ? <Loader2 className="animate-spin" /> : null} Commencer l’épreuve <ArrowRight /></Button>
       </div>
     );
   }
@@ -92,8 +111,6 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
     if (cur.has(lettre)) cur.delete(lettre); else cur.add(lettre);
     return { ...prev, [q.id]: cur };
   });
-
-  const remaining = totalSeconds ? Math.max(0, totalSeconds - elapsed) : null;
 
   return (
     <div className="flex flex-col">

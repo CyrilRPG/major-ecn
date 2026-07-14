@@ -32,6 +32,15 @@ export const ExamSettingsSchema = z.object({
   target_colleges: z.array(z.string()).default([]),
   voies: z.array(z.enum(['interne', 'externe'])).default([]),
   target_promos: z.array(z.string()).default([]),
+  // Programmation (Phase 3)
+  exam_mode: z.enum(['free', 'scheduled']).default('free'),
+  open_at: z.string().nullable().optional(),
+  close_at: z.string().nullable().optional(),
+  results_publish_mode: z.enum(['immediate', 'after_close', 'at_datetime']).default('immediate'),
+  results_publish_at: z.string().nullable().optional(),
+  absence_mode: z.enum(['zero', 'rattrapage']).default('zero'),
+  rattrapage_open_at: z.string().nullable().optional(),
+  rattrapage_close_at: z.string().nullable().optional(),
 });
 
 const KeywordSchema = z.object({

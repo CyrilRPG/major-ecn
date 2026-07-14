@@ -14,13 +14,14 @@ import { selfGradeAnswer, gradeExamWithAI } from '@/app/(student)/epreuves-blanc
 type AnyRow = Record<string, any>;
 
 export function ExamResults({
-  exam, submission, questions, answers, collegeNames = {},
+  exam, submission, questions, answers, collegeNames = {}, leaderboard = null,
 }: {
   exam: { id: string; title: string; qroc_mode: 'self' | 'ai' };
   submission: AnyRow;
   questions: AnyRow[];
   answers: AnyRow[];
   collegeNames?: Record<string, string>;
+  leaderboard?: AnyRow | null;
 }) {
   const router = useRouter();
   const [grading, setGrading] = useState<string | null>(null);
@@ -102,6 +103,39 @@ export function ExamResults({
                 {aiReport.plan_de_travail.map((p: string, i: number) => <li key={i}>{p}</li>)}
               </ul>
             </div>
+          )}
+        </div>
+      )}
+
+      {/* Classement & statistiques comparatives */}
+      {leaderboard && Number(leaderboard.count) > 0 && (
+        <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5">
+          <p className="mb-3 text-sm font-bold text-(--color-ink)">Classement</p>
+          {leaderboard.me && (
+            <div className="mb-3 rounded-xl bg-(--color-primary-soft)/40 px-4 py-3 text-center">
+              <p className="text-sm text-(--color-ink)">
+                <strong className="text-(--color-primary)">{String(leaderboard.me.rank)}ᵉ</strong> sur {String(leaderboard.me.n)} candidat{Number(leaderboard.me.n) > 1 ? 's' : ''}
+              </p>
+              {Number(leaderboard.me.better_than_pct) > 0 && (
+                <p className="mt-0.5 text-xs text-(--color-ink-soft)">Vous obtenez un score supérieur à {String(leaderboard.me.better_than_pct)}% des candidats{Number(leaderboard.me.better_than_pct) >= 90 ? ' — top 10 % !' : ''}.</p>
+              )}
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-2 text-center text-sm sm:grid-cols-4">
+            <Stat label="Moyenne" value={`${leaderboard.average ?? '—'}%`} />
+            <Stat label="Médiane" value={`${leaderboard.median ?? '—'}%`} />
+            <Stat label="Meilleure" value={`${leaderboard.best ?? '—'}%`} />
+            <Stat label="Candidats" value={String(leaderboard.count)} />
+          </div>
+          {Array.isArray(leaderboard.top) && leaderboard.top.length > 0 && (
+            <ol className="mt-3 space-y-1 text-sm">
+              {leaderboard.top.map((t: AnyRow, i: number) => (
+                <li key={i} className="flex items-center justify-between rounded-lg bg-(--color-surface-soft) px-3 py-1.5">
+                  <span className="text-(--color-ink-soft)">{String(t.rank)}ᵉ</span>
+                  <span className="font-bold tabular-nums text-(--color-ink)">{String(t.percentage)}%</span>
+                </li>
+              ))}
+            </ol>
           )}
         </div>
       )}
@@ -210,6 +244,15 @@ export function ExamResults({
       <Button asChild variant="outline" className="w-full">
         <Link href="/epreuves-blanches"><ArrowLeft className="h-4 w-4" /> Retour aux épreuves</Link>
       </Button>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-(--color-border) px-2 py-2">
+      <p className="text-lg font-black tabular-nums text-(--color-ink)">{value}</p>
+      <p className="text-[11px] text-(--color-ink-muted)">{label}</p>
     </div>
   );
 }

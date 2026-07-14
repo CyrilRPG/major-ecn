@@ -8,6 +8,7 @@ import { updateExam, deleteExamQuestion } from '@/app/admin/epreuves-blanches/ac
 import { DEFAULT_DISCORDANCE_TABLE } from '@/lib/exams/scoring';
 import { ExamQuestionDialog } from './exam-question-dialog';
 import { ContentPickerDialog } from './content-picker-dialog';
+import { ExamAccessManager } from './exam-access-manager';
 
 export type CollegeOption = { id: string; nom: string; parentId: string | null };
 export type ExamKeyword = { label: string; points: number; mandatory?: boolean };
@@ -23,7 +24,20 @@ export type ExamData = {
   qcm_bareme_mode: 'classic' | 'custom' | 'discordance'; discordance_table: { d: number; p: number }[];
   qroc_mode: 'self' | 'ai'; question_order: 'fixed' | 'random';
   min_offer: string | null; target_colleges: string[]; voies: string[]; target_promos: string[];
+  exam_mode: 'free' | 'scheduled'; open_at: string | null; close_at: string | null;
+  results_publish_mode: 'immediate' | 'after_close' | 'at_datetime'; results_publish_at: string | null;
+  absence_mode: 'zero' | 'rattrapage'; rattrapage_open_at: string | null; rattrapage_close_at: string | null;
 };
+
+/** ISO → valeur d'un <input type="datetime-local"> (heure locale). */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+const fromLocalInput = (v: string): string | null => (v ? new Date(v).toISOString() : null);
 
 const inputCls = 'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)';
 
@@ -46,6 +60,15 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
   const [voies, setVoies] = useState<Set<string>>(new Set(exam.voies ?? []));
   const [targetColleges, setTargetColleges] = useState<Set<string>>(new Set(exam.target_colleges ?? []));
   const [targetPromos, setTargetPromos] = useState<Set<string>>(new Set(exam.target_promos ?? []));
+  // Programmation
+  const [examMode, setExamMode] = useState(exam.exam_mode ?? 'free');
+  const [openAt, setOpenAt] = useState(toLocalInput(exam.open_at));
+  const [closeAt, setCloseAt] = useState(toLocalInput(exam.close_at));
+  const [publishMode, setPublishMode] = useState(exam.results_publish_mode ?? 'immediate');
+  const [publishAt, setPublishAt] = useState(toLocalInput(exam.results_publish_at));
+  const [absenceMode, setAbsenceMode] = useState(exam.absence_mode ?? 'zero');
+  const [ratOpen, setRatOpen] = useState(toLocalInput(exam.rattrapage_open_at));
+  const [ratClose, setRatClose] = useState(toLocalInput(exam.rattrapage_close_at));
 
   // Dialogs
   const [editing, setEditing] = useState<ExamQuestionData | null>(null);
@@ -75,6 +98,14 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
         target_colleges: Array.from(targetColleges),
         voies: Array.from(voies),
         target_promos: Array.from(targetPromos),
+        exam_mode: examMode,
+        open_at: examMode === 'scheduled' ? fromLocalInput(openAt) : null,
+        close_at: examMode === 'scheduled' ? fromLocalInput(closeAt) : null,
+        results_publish_mode: publishMode,
+        results_publish_at: publishMode === 'at_datetime' ? fromLocalInput(publishAt) : null,
+        absence_mode: absenceMode,
+        rattrapage_open_at: examMode === 'scheduled' && absenceMode === 'rattrapage' ? fromLocalInput(ratOpen) : null,
+        rattrapage_close_at: examMode === 'scheduled' && absenceMode === 'rattrapage' ? fromLocalInput(ratClose) : null,
       });
       setMsg(res.ok ? 'Enregistré ✓' : (res.error ?? 'Erreur'));
       if (res.ok) router.refresh();
@@ -202,6 +233,51 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Programmation */}
+        <div className="mt-4 rounded-xl border border-dashed border-(--color-border) bg-(--color-sand-100)/40 p-4">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Programmation</p>
+          <div className="flex flex-wrap gap-2">
+            {([{ v: 'free', l: 'Libre (à tout moment)' }, { v: 'scheduled', l: 'Programmée (fenêtre)' }] as const).map((o) => (
+              <label key={o.v} className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-1.5 text-sm ${examMode === o.v ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
+                <input type="radio" name="mode" checked={examMode === o.v} onChange={() => setExamMode(o.v)} className="accent-(--color-primary)" /> {o.l}
+              </label>
+            ))}
+          </div>
+          {examMode === 'scheduled' && (
+            <div className="mt-3 space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="Ouverture"><input type="datetime-local" value={openAt} onChange={(e) => setOpenAt(e.target.value)} className={inputCls} /></Field>
+                <Field label="Fermeture"><input type="datetime-local" value={closeAt} onChange={(e) => setCloseAt(e.target.value)} className={inputCls} /></Field>
+              </div>
+              <Field label="En cas d’absence">
+                <select value={absenceMode} onChange={(e) => setAbsenceMode(e.target.value as 'zero' | 'rattrapage')} className={inputCls}>
+                  <option value="zero">Absent = 0</option>
+                  <option value="rattrapage">Session de rattrapage</option>
+                </select>
+              </Field>
+              {absenceMode === 'rattrapage' && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Rattrapage — ouverture"><input type="datetime-local" value={ratOpen} onChange={(e) => setRatOpen(e.target.value)} className={inputCls} /></Field>
+                  <Field label="Rattrapage — fermeture"><input type="datetime-local" value={ratClose} onChange={(e) => setRatClose(e.target.value)} className={inputCls} /></Field>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <Field label="Publication des résultats">
+              <select value={publishMode} onChange={(e) => setPublishMode(e.target.value as 'immediate' | 'after_close' | 'at_datetime')} className={inputCls}>
+                <option value="immediate">Immédiate (après remise)</option>
+                <option value="after_close">À la clôture de la session</option>
+                <option value="at_datetime">À une date précise</option>
+              </select>
+            </Field>
+            {publishMode === 'at_datetime' && (
+              <Field label="Date de publication"><input type="datetime-local" value={publishAt} onChange={(e) => setPublishAt(e.target.value)} className={inputCls} /></Field>
+            )}
+          </div>
+          {examMode === 'scheduled' && <div className="mt-3"><ExamAccessManager examId={exam.id} /></div>}
         </div>
 
         <div className="mt-4 flex items-center gap-3">

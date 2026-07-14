@@ -160,6 +160,64 @@ export async function reorderExamQuestions(examId: string, orderedIds: string[])
   return { ok: true };
 }
 
+/* ─── Déblocage individuel (mock_exam_access) ─── */
+export type ExamAccessRow = { id: string; user_id: string; email: string; name: string; open_at: string | null; close_at: string | null; duration_minutes: number | null; reason: string | null };
+
+export async function listExamAccess(examId: string): Promise<{ ok: true; rows: ExamAccessRow[] } | Err> {
+  const { admin } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data, error } = await a.from('mock_exam_access').select('id, user_id, open_at, close_at, duration_minutes, reason').eq('exam_id', examId);
+  if (error) return { ok: false, error: error.message };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rows = (data ?? []) as any[];
+  const ids = rows.map((r) => r.user_id);
+  const { data: profs } = ids.length ? await a.from('profiles').select('id, first_name, last_name, email').in('id', ids) : { data: [] };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pById = new Map<string, any>(((profs ?? []) as any[]).map((p) => [p.id, p]));
+  return {
+    ok: true,
+    rows: rows.map((r) => {
+      const p = pById.get(r.user_id);
+      return { id: r.id, user_id: r.user_id, email: p?.email ?? '', name: [p?.first_name, p?.last_name].filter(Boolean).join(' '), open_at: r.open_at, close_at: r.close_at, duration_minutes: r.duration_minutes, reason: r.reason };
+    }),
+  };
+}
+
+const GrantSchema = z.object({
+  examId: z.string().uuid(),
+  email: z.string().email(),
+  open_at: z.string().nullable().optional(),
+  close_at: z.string().nullable().optional(),
+  duration_minutes: z.number().int().positive().nullable().optional(),
+  reason: z.string().optional(),
+});
+export async function grantExamAccess(input: unknown): Promise<Ok | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const parsed = GrantSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Données invalides' };
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data: prof } = await a.from('profiles').select('id').eq('email', parsed.data.email.trim().toLowerCase()).maybeSingle();
+  if (!prof) return { ok: false, error: 'Aucun élève avec cet email' };
+  const { error } = await a.from('mock_exam_access').upsert({
+    exam_id: parsed.data.examId, user_id: prof.id,
+    open_at: parsed.data.open_at ?? null, close_at: parsed.data.close_at ?? null,
+    duration_minutes: parsed.data.duration_minutes ?? null, reason: parsed.data.reason ?? null,
+    created_by: profile.id,
+  }, { onConflict: 'exam_id,user_id' });
+  if (error) return { ok: false, error: error.message };
+  revalidateExams(parsed.data.examId);
+  return { ok: true };
+}
+
+export async function revokeExamAccess(examId: string, accessId: string): Promise<Ok | Err> {
+  const { admin } = await ensureAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any).from('mock_exam_access').delete().eq('id', accessId);
+  if (error) return { ok: false, error: error.message };
+  revalidateExams(examId);
+  return { ok: true };
+}
+
 /* ─── Lecture du contenu existant pour le sélecteur « Piocher » ─── */
 export type PickerQuestion = { id: string; enonce: string; format: 'qcm' | 'qroc'; cours_titre: string; serie_label: string };
 
