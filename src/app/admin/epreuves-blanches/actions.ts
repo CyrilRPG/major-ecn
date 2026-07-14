@@ -121,6 +121,11 @@ export async function upsertExamQuestion(examId: string, input: unknown): Promis
     college_id: q.college_id ?? null,
     items: q.format === 'qcm' ? q.items : [],
     reponse_attendue: q.format === 'qroc' ? (q.reponse_attendue ?? null) : null,
+    // Critères de correction IA (QROC)
+    keywords: q.format === 'qroc' ? q.keywords : [],
+    zero_if_missing: q.format === 'qroc' ? q.zero_if_missing : [],
+    major_errors: q.format === 'qroc' ? q.major_errors : [],
+    corrige_complet: q.format === 'qroc' ? (q.corrige_complet ?? null) : null,
   };
   if (q.id) {
     const { error } = await a.from('mock_exam_questions').update(payload).eq('id', q.id);

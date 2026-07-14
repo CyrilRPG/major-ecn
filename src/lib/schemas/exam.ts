@@ -34,6 +34,12 @@ export const ExamSettingsSchema = z.object({
   target_promos: z.array(z.string()).default([]),
 });
 
+const KeywordSchema = z.object({
+  label: z.string().min(1),
+  points: z.number().min(0).max(100).default(1),
+  mandatory: z.boolean().optional().default(false),
+});
+
 export const ExamQuestionSchema = z.object({
   id: z.string().uuid().optional(),
   format: z.enum(['qcm', 'qroc']),
@@ -44,6 +50,11 @@ export const ExamQuestionSchema = z.object({
   college_id: z.string().nullable().optional(),
   items: z.array(ExamItemSchema).default([]),
   reponse_attendue: z.string().nullable().optional(),
+  // QROC — correction IA (Phase 2)
+  keywords: z.array(KeywordSchema).default([]),
+  zero_if_missing: z.array(z.string()).default([]),
+  major_errors: z.array(z.string()).default([]),
+  corrige_complet: z.string().nullable().optional(),
 });
 
 export type ExamSettingsInput = z.infer<typeof ExamSettingsSchema>;

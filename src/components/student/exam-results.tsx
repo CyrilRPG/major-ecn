@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Loader2, Sparkles, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
 import { examLevel, weakColleges, type PerCollege } from '@/lib/exams/scoring';
-import { selfGradeAnswer } from '@/app/(student)/epreuves-blanches/actions';
+import { selfGradeAnswer, gradeExamWithAI } from '@/app/(student)/epreuves-blanches/actions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRow = Record<string, any>;
@@ -24,13 +24,27 @@ export function ExamResults({
 }) {
   const router = useRouter();
   const [grading, setGrading] = useState<string | null>(null);
+  const [aiGrading, setAiGrading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [pct, setPct] = useState<number>(submission.percentage ?? 0);
 
   const ansByQ = new Map(answers.map((x) => [x.question_id, x]));
   const perCollege = (submission.per_college ?? {}) as PerCollege;
   const level = examLevel(pct);
   const weak = weakColleges(perCollege);
+  const aiReport = submission.ai_report as AnyRow | null;
+  const hasQroc = questions.some((q) => q.format === 'qroc');
   const pendingSelf = exam.qroc_mode === 'self' && questions.some((q) => q.format === 'qroc' && !ansByQ.get(q.id)?.self_grade);
+  const canAiGrade = exam.qroc_mode === 'ai' && hasQroc && !aiReport;
+
+  const runAiGrading = () => {
+    setAiGrading(true); setAiError(null);
+    gradeExamWithAI({ submissionId: submission.id }).then((res) => {
+      setAiGrading(false);
+      if (res.ok) router.refresh();
+      else setAiError(res.error);
+    });
+  };
 
   const grade = (questionId: string, g: 'correct' | 'partial' | 'incorrect') => {
     setGrading(questionId);
@@ -62,7 +76,35 @@ export function ExamResults({
         {pendingSelf && (
           <p className="mt-3 text-xs font-medium text-[#B45B00]">Auto-évaluez vos QROC ci-dessous pour finaliser votre note.</p>
         )}
+        {canAiGrade && (
+          <div className="mt-4">
+            <Button onClick={runAiGrading} disabled={aiGrading} className="bg-[linear-gradient(90deg,#7C3AED,#8B5CF6)]">
+              {aiGrading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />} Corriger ma copie
+            </Button>
+            {aiGrading && <p className="mt-2 text-xs text-(--color-ink-soft)">Correction en cours…</p>}
+            {aiError && <p className="mt-2 text-xs text-(--color-danger)">{aiError}</p>}
+          </div>
+        )}
       </div>
+
+      {/* Rapport de correction IA */}
+      {aiReport && (
+        <div className="rounded-2xl border-2 border-[#8B5CF6]/30 bg-[#8B5CF6]/5 p-5">
+          <div className="flex items-center gap-2 text-[#6D28D9]">
+            <Sparkles className="h-4 w-4" />
+            <p className="text-sm font-bold">Rapport de correction — Niveau : {String(aiReport.niveau ?? '')}</p>
+          </div>
+          {aiReport.avis_general ? <p className="mt-2 text-[13px] leading-relaxed text-(--color-ink)">{String(aiReport.avis_general)}</p> : null}
+          {Array.isArray(aiReport.plan_de_travail) && aiReport.plan_de_travail.length > 0 && (
+            <div className="mt-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-[#6D28D9]">Plan de travail</p>
+              <ul className="mt-1 list-inside list-disc space-y-0.5 text-[13px] text-(--color-ink)">
+                {aiReport.plan_de_travail.map((p: string, i: number) => <li key={i}>{p}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Analyse par spécialité */}
       {Object.keys(perCollege).length > 1 && (
@@ -127,7 +169,7 @@ export function ExamResults({
                       <p className="mt-0.5 text-(--color-ink)">{String(q.reponse_attendue).split('|').map((s: string) => s.trim()).join(' ou ')}</p>
                     </div>
                   )}
-                  {/* Auto-évaluation */}
+                  {/* Auto-évaluation (mode self) */}
                   {exam.qroc_mode === 'self' && (
                     ans?.self_grade ? (
                       <p className="text-xs font-semibold text-(--color-ink-soft)">Auto-évaluation : {ans.self_grade === 'correct' ? 'Correct' : ans.self_grade === 'partial' ? 'Partiellement correct' : 'Incorrect'}</p>
@@ -138,6 +180,18 @@ export function ExamResults({
                         <Button size="sm" className="bg-[#2E8B57]" disabled={grading === q.id} onClick={() => grade(q.id, 'correct')}>{grading === q.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />} Correct</Button>
                       </div>
                     )
+                  )}
+                  {/* Retour IA (mode ai) */}
+                  {exam.qroc_mode === 'ai' && ans?.ai_grade && (
+                    <div className="rounded-lg border border-[#8B5CF6]/30 bg-[#8B5CF6]/5 px-3 py-2 text-[13px]">
+                      {ans.ai_grade.feedback && <p className="text-(--color-ink)">{ans.ai_grade.feedback}</p>}
+                      {Array.isArray(ans.ai_grade.gaps) && ans.ai_grade.gaps.length > 0 && (
+                        <p className="mt-1 text-(--color-ink-soft)"><span className="font-semibold">Éléments oubliés :</span> {ans.ai_grade.gaps.join(', ')}</p>
+                      )}
+                      {Array.isArray(ans.ai_grade.major_errors_found) && ans.ai_grade.major_errors_found.length > 0 && (
+                        <p className="mt-1 text-(--color-danger)"><span className="font-semibold">Erreur majeure :</span> {ans.ai_grade.major_errors_found.join(', ')}</p>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

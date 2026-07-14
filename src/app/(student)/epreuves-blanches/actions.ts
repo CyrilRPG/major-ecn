@@ -6,7 +6,10 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope } from '@/lib/auth/permissions';
 import { isExamTargeted } from '@/lib/exams/targeting';
-import { gradeExamAnswer, summarizeExam, type GradableQuestion, type BaremeConfig } from '@/lib/exams/scoring';
+import { gradeExamAnswer, summarizeExam, examLevel, type GradableQuestion, type BaremeConfig, type PerCollege } from '@/lib/exams/scoring';
+import { callClaude, extractJson, DEFAULT_MODEL } from '@/lib/ai/anthropic';
+import { usageToUsd } from '@/lib/ai/cost';
+import { buildAiGradingPrompt, computeQrocPoints, qrocAiMaxPoints, aiLevel, type QrocToGrade, type AiGradingOutput } from '@/lib/exams/ai-grading';
 
 type Err = { ok: false; error: string };
 
@@ -94,6 +97,110 @@ export async function submitExam(input: unknown): Promise<{ ok: true; submission
   revalidatePath(`/epreuves-blanches/${examId}`);
   revalidatePath('/epreuves-blanches');
   return { ok: true, submissionId: sub.id };
+}
+
+/**
+ * Correction QROC par IA (« Corriger ma copie »). L'IA DÉTECTE (mots-clés,
+ * pas-mis=0, erreurs majeures) ; les points sont calculés côté serveur selon le
+ * barème admin. Recalcule la note globale et produit un rapport pédagogique.
+ */
+export async function gradeExamWithAI(input: unknown): Promise<{ ok: true } | Err> {
+  const parsed = z.object({ submissionId: z.string().uuid() }).safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'Données invalides' };
+  const { user } = await requireUser();
+  const admin = createAdminClient();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const { data: sub } = await a.from('mock_exam_submissions').select('*').eq('id', parsed.data.submissionId).maybeSingle();
+  if (!sub || sub.user_id !== user.id) return { ok: false, error: 'Copie introuvable' };
+  const { data: exam } = await a.from('mock_exams').select('id, title, qroc_mode').eq('id', sub.exam_id).single();
+  if (!exam || exam.qroc_mode !== 'ai') return { ok: false, error: 'Correction IA non applicable' };
+  if (sub.ai_report) return { ok: true }; // déjà corrigée
+
+  const { data: qs } = await a.from('mock_exam_questions').select('*').eq('exam_id', sub.exam_id).order('order_index');
+  const { data: answers } = await a.from('mock_exam_answers').select('*').eq('submission_id', sub.id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const questions = (qs ?? []) as any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ansByQ = new Map<string, any>((answers ?? []).map((x: any) => [x.question_id, x])); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const qrocs = questions.filter((q) => q.format === 'qroc');
+  if (qrocs.length === 0) return { ok: false, error: 'Aucune QROC à corriger' };
+
+  const toGrade: QrocToGrade[] = qrocs.map((q) => ({
+    id: q.id, enonce: q.enonce, reponse_attendue: q.reponse_attendue, corrige_complet: q.corrige_complet,
+    keywords: q.keywords ?? [], zero_if_missing: q.zero_if_missing ?? [], major_errors: q.major_errors ?? [],
+    answer: ansByQ.get(q.id)?.text_answer ?? '',
+  }));
+
+  // Appel IA (Sonnet) — tolérant : en cas d'échec on n'altère pas la copie.
+  let output: AiGradingOutput;
+  let usage;
+  try {
+    const { system, user: userPrompt } = buildAiGradingPrompt(exam.title, toGrade);
+    const res = await callClaude({ system, user: userPrompt, model: DEFAULT_MODEL, maxTokens: 6000, temperature: 0.2 });
+    usage = res.usage;
+    output = extractJson<AiGradingOutput>(res.text);
+  } catch (e) {
+    return { ok: false, error: `Correction IA indisponible : ${(e as Error).message}` };
+  }
+
+  const detById = new Map((output.questions ?? []).map((d) => [d.id, d]));
+  // Met à jour chaque QROC : points (calculés serveur) + détail IA
+  for (const q of toGrade) {
+    const det = detById.get(q.id) ?? { id: q.id, keywords_found: [], zero_missing: [], major_errors_found: [] };
+    const maxPts = qrocAiMaxPoints(q, ansByQ.get(q.id)?.max_points ?? 1);
+    const pts = computeQrocPoints(q, det, maxPts);
+    await a.from('mock_exam_answers').update({
+      points_awarded: pts, max_points: maxPts, is_correct: pts >= maxPts && maxPts > 0,
+      ai_grade: { ...det, points_awarded: pts, max_points: maxPts },
+    }).eq('submission_id', sub.id).eq('question_id', q.id);
+  }
+
+  // Recalcule le total complet (QCM déjà notés + QROC IA) + per_college
+  const { data: freshAns } = await a.from('mock_exam_answers').select('question_id, points_awarded, max_points, is_correct').eq('submission_id', sub.id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fresh = (freshAns ?? []) as any[];
+  const score = fresh.reduce((s, r) => s + Number(r.points_awarded), 0);
+  const maxScore = fresh.reduce((s, r) => s + Number(r.max_points), 0);
+  const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+  const freshById = new Map(fresh.map((r) => [r.question_id, r]));
+  const perCollege: PerCollege = {};
+  for (const q of questions) {
+    const r = freshById.get(q.id);
+    const key = q.college_id || 'Autres';
+    const c = perCollege[key] ?? { correct: 0, total: 0, points: 0, maxPoints: 0, pct: 0 };
+    c.total += 1; if (r?.is_correct) c.correct += 1;
+    c.points += Number(r?.points_awarded ?? 0); c.maxPoints += Number(r?.max_points ?? 0);
+    perCollege[key] = c;
+  }
+  for (const k of Object.keys(perCollege)) { const c = perCollege[k]; c.pct = c.maxPoints > 0 ? Math.round((c.points / c.maxPoints) * 100) : 0; }
+
+  const level = examLevel(pct);
+  const aiReport = {
+    note: Math.round(score * 100) / 100, max: Math.round(maxScore * 100) / 100, percentage: pct,
+    niveau: aiLevel(pct), niveau_court: level.title,
+    avis_general: output.avis_general ?? '', plan_de_travail: output.plan_de_travail ?? [],
+    per_college: perCollege,
+  };
+  await a.from('mock_exam_submissions').update({
+    score: Math.round(score * 100) / 100, max_score: Math.round(maxScore * 100) / 100, percentage: pct,
+    per_college: perCollege, ai_report: aiReport, status: 'graded', graded_at: new Date().toISOString(),
+  }).eq('id', sub.id);
+
+  // Log coût IA (best-effort)
+  try {
+    if (usage) {
+      await a.from('ai_generations').insert({
+        admin_id: null, cours_id: null, cours_titre: exam.title, kind: 'exam_grading', feature: 'exam_qroc_grading',
+        items_count: qrocs.length, input_tokens: usage.input_tokens, output_tokens: usage.output_tokens,
+        cost_usd: usageToUsd(usage, DEFAULT_MODEL), price_eur: 0, status: 'success', model: DEFAULT_MODEL,
+      });
+    }
+  } catch { /* log non bloquant */ }
+
+  revalidatePath(`/epreuves-blanches/${sub.exam_id}`);
+  return { ok: true };
 }
 
 /** Auto-évaluation d'une QROC (mode self) → recalcule le score de la copie. */

@@ -15,7 +15,8 @@ export default async function AdminFacturationPage() {
 
   const [coursRes, aiRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
-    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
+    // « Réponses IA » = assistant élève + corrections QROC d'épreuves blanches (IA).
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).in('feature', ['assistant_chat', 'exam_qroc_grading']).eq('status', 'success'),
   ]);
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(

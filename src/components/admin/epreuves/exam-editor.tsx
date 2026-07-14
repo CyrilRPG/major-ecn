@@ -10,11 +10,13 @@ import { ExamQuestionDialog } from './exam-question-dialog';
 import { ContentPickerDialog } from './content-picker-dialog';
 
 export type CollegeOption = { id: string; nom: string; parentId: string | null };
+export type ExamKeyword = { label: string; points: number; mandatory?: boolean };
 export type ExamQuestionData = {
   id: string; order_index: number; format: 'qcm' | 'qroc'; enonce: string;
   vignette: string | null; correction_generale: string | null; points: number;
   college_id: string | null; items: { lettre: string; enonce: string; is_correct: boolean; justification?: string }[];
   reponse_attendue: string | null;
+  keywords?: ExamKeyword[]; zero_if_missing?: string[]; major_errors?: string[]; corrige_complet?: string | null;
 };
 export type ExamData = {
   id: string; title: string; college_id: string | null; duration_minutes: number | null; instructions: string;
@@ -247,6 +249,7 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
           colleges={colleges}
           initial={editing}
           format={editing?.format ?? creatingFormat ?? 'qcm'}
+          qrocMode={qrocMode}
           onClose={() => { setEditing(null); setCreatingFormat(null); router.refresh(); }}
         />
       )}
