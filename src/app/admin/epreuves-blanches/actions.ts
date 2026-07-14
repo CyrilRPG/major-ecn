@@ -219,26 +219,67 @@ export async function revokeExamAccess(examId: string, accessId: string): Promis
 }
 
 /* ─── Lecture du contenu existant pour le sélecteur « Piocher » ─── */
-export type PickerQuestion = { id: string; enonce: string; format: 'qcm' | 'qroc'; cours_titre: string; serie_label: string };
+export type ContentType = 'qcm' | 'qroc' | 'dp_qcm' | 'dp_qroc';
+export type PickerQuestion = { id: string; enonce: string; type: ContentType; cours_titre: string; serie_label: string };
+export type ContentTree = { cours: { id: string; titre: string; series: { id: string; label: string; is_dp: boolean }[] }[] };
 
-export async function listContentQuestions(matiereId: string): Promise<{ ok: true; questions: PickerQuestion[] } | Err> {
+/** Arbre cours → séries d'un collège (pour les listes déroulantes du sélecteur). */
+export async function listContentTree(matiereId: string): Promise<{ ok: true; tree: ContentTree } | Err> {
   const { admin } = await ensureAdmin();
   if (!matiereId) return { ok: false, error: 'Spécialité requise' };
   const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
   const { data, error } = await a
-    .from('qcm_questions')
-    .select('id, enonce, format, qcm_series!inner(label, cours!inner(titre, matiere_id))')
-    .eq('qcm_series.cours.matiere_id', matiereId)
-    .limit(1000);
+    .from('cours')
+    .select('id, titre, order_index, qcm_series(id, label, vignette, order_index)')
+    .eq('matiere_id', matiereId)
+    .order('order_index');
   if (error) return { ok: false, error: error.message };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const questions: PickerQuestion[] = ((data ?? []) as any[]).map((q) => ({
-    id: q.id,
-    enonce: (q.enonce ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160),
-    format: q.format === 'qroc' ? 'qroc' : 'qcm',
-    cours_titre: q.qcm_series?.cours?.titre ?? '',
-    serie_label: q.qcm_series?.label ?? '',
+  const cours = ((data ?? []) as any[]).map((c) => ({
+    id: c.id, titre: c.titre,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    series: [...(c.qcm_series ?? [])].sort((x: any, y: any) => (x.order_index ?? 0) - (y.order_index ?? 0)) // eslint-disable-line @typescript-eslint/no-explicit-any
+      .map((s: any) => ({ id: s.id, label: s.label, is_dp: s.vignette != null })), // eslint-disable-line @typescript-eslint/no-explicit-any
   }));
+  return { ok: true, tree: { cours } };
+}
+
+const PickerSchema = z.object({
+  matiereId: z.string(),
+  coursId: z.string().optional().nullable(),
+  serieId: z.string().optional().nullable(),
+  types: z.array(z.enum(['qcm', 'qroc', 'dp_qcm', 'dp_qroc'])).optional(),
+});
+export async function listContentQuestions(input: unknown): Promise<{ ok: true; questions: PickerQuestion[] } | Err> {
+  const { admin } = await ensureAdmin();
+  const parsed = PickerSchema.safeParse(input);
+  if (!parsed.success || !parsed.data.matiereId) return { ok: false, error: 'Spécialité requise' };
+  const { matiereId, coursId, serieId, types } = parsed.data;
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  let query = a
+    .from('qcm_questions')
+    .select('id, enonce, format, qcm_series!inner(id, label, vignette, cours!inner(id, titre, matiere_id))')
+    .eq('qcm_series.cours.matiere_id', matiereId);
+  if (coursId) query = query.eq('qcm_series.cours.id', coursId);
+  if (serieId) query = query.eq('qcm_series.id', serieId);
+  const { data, error } = await query.limit(2000);
+  if (error) return { ok: false, error: error.message };
+  const typeSet = types && types.length > 0 ? new Set(types) : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const questions: PickerQuestion[] = ((data ?? []) as any[])
+    .map((q) => {
+      const isDp = q.qcm_series?.vignette != null;
+      const fmt = q.format === 'qroc' ? 'qroc' : 'qcm';
+      const type: ContentType = isDp ? (fmt === 'qroc' ? 'dp_qroc' : 'dp_qcm') : (fmt as 'qcm' | 'qroc');
+      return {
+        id: q.id,
+        enonce: (q.enonce ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160),
+        type,
+        cours_titre: q.qcm_series?.cours?.titre ?? '',
+        serie_label: q.qcm_series?.label ?? '',
+      };
+    })
+    .filter((q) => !typeSet || typeSet.has(q.type));
   return { ok: true, questions };
 }
 
