@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ArrowRight, CalendarDays, ChevronRight, FileText, Home, Lock, MessagesSquare,
-  MousePointerClick, NotebookPen, RefreshCcw, Sparkles, Star, Target, Trophy, X,
+  MousePointerClick, NotebookPen, PencilRuler, RefreshCcw, Sparkles, Star, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
@@ -199,6 +199,7 @@ export function Navigator({
   const agendaActive = pathname.startsWith('/agenda');
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
+  const epreuvesActive = pathname.startsWith('/epreuves-blanches');
 
   const topLevelClass = (active: boolean) =>
     cn(
@@ -246,6 +247,7 @@ export function Navigator({
               {renderLockedTop(CalendarDays, 'Agenda')}
               {renderLockedTop(NotebookPen, 'Prises de notes')}
               {renderLockedTop(Star, 'Questions à revoir')}
+              {renderLockedTop(PencilRuler, 'Épreuves blanches')}
             </>
           ) : (
             <>
@@ -272,6 +274,11 @@ export function Navigator({
               <Link href="/revoir" className={topLevelClass(revoirActive)}>
                 <Star className="h-[18px] w-[18px] shrink-0" />
                 Questions à revoir
+              </Link>
+
+              <Link href="/epreuves-blanches" className={topLevelClass(epreuvesActive)}>
+                <PencilRuler className="h-[18px] w-[18px] shrink-0" />
+                Épreuves blanches
               </Link>
             </>
           )}
