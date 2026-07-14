@@ -104,3 +104,34 @@ export function buildAiGradingPrompt(examTitle: string, questions: QrocToGrade[]
   const user = 'Corrige les QROC suivantes et renvoie le JSON demandé.\n\n' + JSON.stringify(payload, null, 2);
   return { system, user };
 }
+
+/** Résumé d'une copie corrigée, pour l'analyse pédagogique globale. */
+export type ExamAnalysisInput = {
+  title: string;
+  percentage: number;
+  perCollege: { nom: string; pct: number }[];
+  questions: { enonce: string; resultat: 'juste' | 'partiel' | 'faux'; specialite?: string | null }[];
+};
+
+/**
+ * Prompt d'ANALYSE pédagogique (pour TOUTE épreuve, pas seulement QROC-IA). L'IA
+ * ne recalcule aucune note : elle rédige un avis global + un plan de travail à
+ * partir des résultats déjà corrigés.
+ */
+export function buildAnalysisPrompt(input: ExamAnalysisInput): { system: string; user: string } {
+  const system = [
+    "Tu es un tuteur pédagogique aux Épreuves de Vérification des Connaissances (EVC/ECN), bienveillant et précis.",
+    "À partir des résultats DÉJÀ CORRIGÉS d'une épreuve blanche (score global, réussite par spécialité, résultat de chaque question), tu rédiges :",
+    "- avis_general : 3 à 4 phrases synthétiques sur le niveau et les points saillants ;",
+    "- plan_de_travail : 3 à 6 recommandations CONCRÈTES de révision, en priorisant les spécialités et notions les plus faibles.",
+    "Tu ne recalcules AUCUNE note et n'inventes aucun résultat. Réponds UNIQUEMENT par un JSON valide { avis_general, plan_de_travail }.",
+  ].join('\n');
+  const payload = {
+    epreuve: input.title,
+    score_global_pct: input.percentage,
+    reussite_par_specialite: input.perCollege,
+    questions: input.questions,
+  };
+  const user = 'Analyse cette copie et renvoie { avis_general, plan_de_travail }.\n\n' + JSON.stringify(payload, null, 2);
+  return { system, user };
+}

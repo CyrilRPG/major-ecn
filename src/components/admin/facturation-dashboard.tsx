@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   BadgePercent, ClipboardList, FileText, Layers3, type LucideIcon,
-  MessageSquare, Receipt, Sparkles, TrendingDown, Wallet,
+  MessageSquare, PencilRuler, Receipt, Sparkles, TrendingDown, Wallet,
 } from 'lucide-react';
 
 export type CourseLine = {
@@ -25,14 +25,21 @@ export type CourseLine = {
 };
 
 type Tarifs = { fiche: number; qcm: number; flash: number; ia: number };
-type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia';
+type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves';
+
+// Tarifs Épreuves blanches : 1 centime fixe / épreuve + 0,5 centime / QROC.
+const EPREUVE_FIXED_EUR = 0.01;
+const QROC_RATE_EUR = 0.005;
 
 const CAT: Record<CatKey, { label: string; short: string; color: string; soft: string; Icon: LucideIcon }> = {
   fiche: { label: 'Fiches', short: 'Fiche', color: '#2563EB', soft: 'rgba(37,99,235,0.12)', Icon: FileText },
   qcm: { label: 'QCM + DP', short: 'QCM', color: '#F59E0B', soft: 'rgba(245,158,11,0.14)', Icon: ClipboardList },
   flash: { label: 'Flashcards', short: 'Flashcards', color: '#E4002B', soft: 'rgba(228,0,43,0.12)', Icon: Layers3 },
   ia: { label: 'Réponses IA', short: 'IA', color: '#8B5CF6', soft: 'rgba(139,92,246,0.14)', Icon: MessageSquare },
+  epreuves: { label: 'Épreuves blanches', short: 'Épreuves', color: '#0D9488', soft: 'rgba(13,148,136,0.14)', Icon: PencilRuler },
 };
+
+const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves'];
 
 // Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
 const MANUAL_QCM_LINES = [
@@ -64,16 +71,18 @@ function remisePct(montant: number): number {
 }
 
 export function FacturationDashboard({
-  lines, aiResponses, tarifs,
-}: { lines: CourseLine[]; aiResponses: number; tarifs: Tarifs }) {
+  lines, aiResponses, tarifs, epreuves = { exams: 0, qroc: 0 },
+}: { lines: CourseLine[]; aiResponses: number; tarifs: Tarifs; epreuves?: { exams: number; qroc: number } }) {
   const [sel, setSel] = useState<CatKey | null>(null);
 
   const data = useMemo(() => {
+    const epreuvesTotal = epreuves.exams * EPREUVE_FIXED_EUR + epreuves.qroc * QROC_RATE_EUR;
     const counts = {
       fiche: lines.filter((l) => l.fichePrice > 0).length,
       qcm: lines.filter((l) => l.qcmPrice > 0).length + MANUAL_QCM_LINES.length,
       flash: lines.filter((l) => l.flashPrice > 0).length,
       ia: aiResponses,
+      epreuves: epreuves.exams,
     };
     const totals = {
       fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
@@ -81,8 +90,9 @@ export function FacturationDashboard({
       qcm: lines.reduce((s, l) => s + l.qcmPrice, 0) + MANUAL_QCM_TOTAL,
       flash: lines.reduce((s, l) => s + l.flashPrice, 0),
       ia: aiResponses * tarifs.ia,
+      epreuves: epreuvesTotal,
     };
-    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia;
+    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves;
 
     // Coût par collège (pour analyse).
     const byCollege = new Map<string, number>();
@@ -92,16 +102,17 @@ export function FacturationDashboard({
     }
     for (const ml of MANUAL_QCM_LINES) byCollege.set(ml.label, (byCollege.get(ml.label) ?? 0) + ml.montant);
     if (totals.ia > 0) byCollege.set('Réponses IA', (byCollege.get('Réponses IA') ?? 0) + totals.ia);
+    if (totals.epreuves > 0) byCollege.set('Épreuves blanches', (byCollege.get('Épreuves blanches') ?? 0) + totals.epreuves);
 
     return { counts, totals, grand, byCollege };
-  }, [lines, aiResponses, tarifs]);
+  }, [lines, aiResponses, tarifs, epreuves]);
 
   const pct = remisePct(data.grand);
   const remiseEur = (data.grand * pct) / 100;
   const net = data.grand - remiseEur;
-  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia };
+  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR };
 
-  const pieData = (['fiche', 'qcm', 'flash', 'ia'] as CatKey[])
+  const pieData = CAT_KEYS
     .map((k) => ({ key: k, name: CAT[k].label, value: data.totals[k], color: CAT[k].color }))
     .filter((d) => d.value > 0);
 
@@ -112,7 +123,7 @@ export function FacturationDashboard({
 
   // Courses du tableau selon la catégorie sélectionnée.
   const rows = useMemo(() => {
-    if (sel === 'ia') return [];
+    if (sel === 'ia' || sel === 'epreuves') return [];
     const keep = (l: CourseLine) =>
       sel === null ? l.fichePrice > 0 || l.qcmPrice > 0 || l.flashPrice > 0
         : sel === 'fiche' ? l.fichePrice > 0 : sel === 'qcm' ? l.qcmPrice > 0 : l.flashPrice > 0;
@@ -199,10 +210,13 @@ export function FacturationDashboard({
           </button>
         )}
       </div>
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {(['fiche', 'qcm', 'flash', 'ia'] as CatKey[]).map((k) => {
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+        {CAT_KEYS.map((k) => {
           const c = CAT[k];
           const active = sel === k;
+          const meta = k === 'ia' ? `${data.counts[k]} rép. · ${tarifOf[k].toFixed(2)} €`
+            : k === 'epreuves' ? `${data.counts[k]} épreuve${data.counts[k] > 1 ? 's' : ''} · 1c + 0,5c/QROC`
+            : `${data.counts[k]} cours · ${tarifOf[k] % 1 === 0 ? tarifOf[k] : tarifOf[k].toFixed(2)} €`;
           return (
             <button
               key={k}
@@ -218,9 +232,7 @@ export function FacturationDashboard({
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: c.soft, color: c.color }}>
                   <c.Icon className="h-4 w-4" />
                 </span>
-                <span className="text-[11px] font-semibold tabular-nums text-(--color-ink-muted)">
-                  {data.counts[k]} {k === 'ia' ? 'rép.' : 'cours'} · {tarifOf[k] % 1 === 0 ? tarifOf[k] : tarifOf[k].toFixed(2)} €
-                </span>
+                <span className="text-[11px] font-semibold tabular-nums text-(--color-ink-muted)">{meta}</span>
               </div>
               <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">{c.label}</p>
               <p className="mt-0.5 font-display text-2xl font-bold tracking-tight tabular-nums text-(--color-ink)">{eur(data.totals[k])}</p>
@@ -255,7 +267,7 @@ export function FacturationDashboard({
             </div>
           </div>
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
-            {(['fiche', 'qcm', 'flash', 'ia'] as CatKey[]).map((k) => (
+            {CAT_KEYS.map((k) => (
               <span key={k} className="inline-flex items-center gap-1.5 text-xs text-(--color-ink-soft)">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: CAT[k].color }} />
                 {CAT[k].label}
@@ -327,6 +339,7 @@ export function FacturationDashboard({
             <Row label="QCM + DP" value={eur(data.totals.qcm)} />
             <Row label="Flashcards" value={eur(data.totals.flash)} />
             <Row label="Réponses IA" value={eur(data.totals.ia)} />
+            <Row label="Épreuves blanches" value={eur(data.totals.epreuves)} />
             <div className="my-2 border-t border-dashed border-(--color-border)" />
             <Row label="Total avant remise" value={eur(data.grand)} strong />
             <Row label={`Geste commercial (−${pct.toFixed(1)} %)`} value={`− ${eur(remiseEur)}`} accent />
@@ -342,10 +355,10 @@ export function FacturationDashboard({
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
         <div className="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
           <h3 className="text-sm font-semibold text-(--color-ink)">
-            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : `Cours facturés — ${CAT[sel].label}`}
+            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : `Cours facturés — ${CAT[sel].label}`}
           </h3>
           <span className="text-xs text-(--color-ink-soft)">
-            {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}` : `${rows.length} cours`}
+            {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}` : sel === 'epreuves' ? `${epreuves.exams} épreuve${epreuves.exams > 1 ? 's' : ''}` : `${rows.length} cours`}
           </span>
         </div>
 
@@ -354,6 +367,12 @@ export function FacturationDashboard({
             <MessageSquare className="mx-auto mb-2 h-6 w-6 text-(--color-ink-muted)" />
             {aiResponses} réponse{aiResponses > 1 ? 's' : ''} de l’assistant IA facturée{aiResponses > 1 ? 's' : ''} à 0,10 € —
             soit <span className="font-semibold text-(--color-ink)">{eur(data.totals.ia)}</span>.
+          </div>
+        ) : sel === 'epreuves' ? (
+          <div className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">
+            <PencilRuler className="mx-auto mb-2 h-6 w-6 text-(--color-ink-muted)" />
+            {epreuves.exams} épreuve{epreuves.exams > 1 ? 's' : ''} · {epreuves.qroc} QROC — facturées 1&nbsp;c / épreuve + 0,5&nbsp;c / QROC,
+            soit <span className="font-semibold text-(--color-ink)">{eur(data.totals.epreuves)}</span>.
           </div>
         ) : rows.length === 0 ? (
           <div className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">Aucun cours dans cette catégorie.</div>

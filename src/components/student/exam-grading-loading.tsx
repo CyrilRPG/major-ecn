@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { gradeExamWithAI } from '@/app/(student)/epreuves-blanches/actions';
+import { finalizeExamCorrection } from '@/app/(student)/epreuves-blanches/actions';
 
 /**
  * Écran « votre copie est en cours de correction » : déclenche automatiquement
@@ -17,7 +17,7 @@ export function ExamGradingLoading({ submissionId }: { submissionId: string }) {
 
   const run = () => {
     setError(null);
-    gradeExamWithAI({ submissionId }).then((res) => {
+    finalizeExamCorrection({ submissionId }).then((res) => {
       if (res.ok) router.refresh();
       else setError(res.error);
     });

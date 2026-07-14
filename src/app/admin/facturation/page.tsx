@@ -13,11 +13,15 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
-    // « Réponses IA » = assistant élève + corrections QROC d'épreuves blanches (IA).
-    a.from('ai_generations').select('id', { count: 'exact', head: true }).in('feature', ['assistant_chat', 'exam_qroc_grading']).eq('status', 'success'),
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
+    // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
+    a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived'),
+    a.from('mock_exam_questions').select('id', { count: 'exact', head: true }).eq('format', 'qroc'),
   ]);
+  const examsCount = examCountRes.count ?? 0;
+  const qrocCount = qrocCountRes.count ?? 0;
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,6 +56,7 @@ export default async function AdminFacturationPage() {
     <FacturationDashboard
       lines={lines}
       aiResponses={aiResponses}
+      epreuves={{ exams: examsCount, qroc: qrocCount }}
       tarifs={{
         fiche: BILLING_EUR.fiche,
         qcm: BILLING_EUR.qcm_per_course,

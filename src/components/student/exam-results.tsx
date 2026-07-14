@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
 import { examLevel, weakColleges, type PerCollege } from '@/lib/exams/scoring';
-import { selfGradeAnswer, gradeExamWithAI } from '@/app/(student)/epreuves-blanches/actions';
+import { selfGradeAnswer, finalizeExamCorrection } from '@/app/(student)/epreuves-blanches/actions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRow = Record<string, any>;
@@ -40,7 +40,7 @@ export function ExamResults({
 
   const runAiGrading = () => {
     setAiGrading(true); setAiError(null);
-    gradeExamWithAI({ submissionId: submission.id }).then((res) => {
+    finalizeExamCorrection({ submissionId: submission.id }).then((res) => {
       setAiGrading(false);
       if (res.ok) router.refresh();
       else setAiError(res.error);

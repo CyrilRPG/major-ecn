@@ -40,14 +40,20 @@ export default async function StudentExamPage({ params }: { params: Promise<{ id
     .in('status', ['submitted', 'graded'])
     .order('submitted_at', { ascending: false }).limit(1).maybeSingle();
 
-  // ── Correction IA en attente → écran de chargement (déclenche la correction) ──
-  if (submission && exam.qroc_mode === 'ai' && !submission.ai_report) {
-    return shell(<ExamGradingLoading submissionId={submission.id} />);
-  }
-
   // ── Copie déjà soumise ──
   if (submission) {
-    if (!resultsVisible(exam, now)) {
+    const { data: answers } = await a.from('mock_exam_answers').select('*').eq('submission_id', submission.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const answerRows = (answers ?? []) as any[];
+    // Auto-évaluation QROC (mode self) encore en attente ?
+    const pendingSelf = exam.qroc_mode === 'self' && answerRows.some((x) => x.format === 'qroc' && !x.self_grade);
+
+    // Correction / analyse IA à faire (dans tous les cas) → écran de chargement.
+    if (!submission.ai_report && !pendingSelf) {
+      return shell(<ExamGradingLoading submissionId={submission.id} />);
+    }
+
+    if (submission.ai_report && !resultsVisible(exam, now)) {
       const when = exam.results_publish_mode === 'after_close' ? exam.close_at : exam.results_publish_at;
       return shell(
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-8 text-center shadow-(--shadow-soft)">
@@ -58,7 +64,6 @@ export default async function StudentExamPage({ params }: { params: Promise<{ id
       );
     }
     const { data: qs } = await a.from('mock_exam_questions').select('*').eq('exam_id', id).order('order_index');
-    const { data: answers } = await a.from('mock_exam_answers').select('*').eq('submission_id', submission.id);
     const { data: colsRaw } = await a.from('matieres').select('id, nom');
     const collegeNames: Record<string, string> = Object.fromEntries(((colsRaw ?? []) as { id: string; nom: string }[]).map((c) => [c.id, c.nom]));
     // Classement (RPC SECURITY DEFINER, appelée avec le client utilisateur → auth.uid()).
@@ -70,7 +75,7 @@ export default async function StudentExamPage({ params }: { params: Promise<{ id
         exam={{ id: exam.id, title: exam.title, qroc_mode: exam.qroc_mode }}
         submission={submission}
         questions={(qs ?? []) as Record<string, unknown>[]}
-        answers={(answers ?? []) as Record<string, unknown>[]}
+        answers={answerRows as Record<string, unknown>[]}
         collegeNames={collegeNames}
         leaderboard={(leaderboard ?? null) as Record<string, unknown> | null}
       />,
