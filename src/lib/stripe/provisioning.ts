@@ -24,6 +24,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
+import { highestOffer, type Offer } from '@/types/domain';
 
 export type ProvisioningInput = {
   email: string;
@@ -176,21 +177,59 @@ export async function provisionStudentAccount(
   const colleges: string[] = [targetId, ...childIds];
   log('colleges-resolved', { targetId, count: colleges.length, colleges });
 
+  // ─── MULTI-FORMULES : cumul des droits pour un compte déjà PAYANT ───
+  // Si l'email correspond à un compte qui possède déjà une formule payante
+  // (ex. Approfondi) et qu'il achète en ligne une autre formule (Intensif /
+  // Essentiel), on N'ÉCRASE PAS : on garde ses accès existants et on AJOUTE la
+  // nouvelle formule. Le contenu débloqué devient l'UNION des deux (cf. système
+  // multi-formules, permission_scope.offers[]). Un compte gratuit (Découverte)
+  // ou nouveau reçoit simplement la formule achetée.
+  const PAID_OFFERS = new Set<Offer>(['essentiel', 'intensif', 'approfondi']);
+  const priorOffersRaw: unknown[] = Array.isArray(prevScope.offers)
+    ? prevScope.offers
+    : (prevScope.offer ? [prevScope.offer] : []);
+  const priorPaid = priorOffersRaw.filter((o): o is Offer => typeof o === 'string' && PAID_OFFERS.has(o as Offer));
+  // Le marqueur `paid_offer` atteste aussi d'un achat antérieur.
+  if (priorPaid.length === 0 && typeof prevScope.paid_offer === 'string' && PAID_OFFERS.has(prevScope.paid_offer as Offer)) {
+    priorPaid.push(prevScope.paid_offer as Offer);
+  }
+  const unionOffers = Array.from(new Set<Offer>([...priorPaid, offerForFormule]));
+  const mergedOffer = highestOffer(unionOffers);
+  // `offers` porte l'union quand plusieurs formules sont détenues ; sinon on
+  // retire toute liste héritée (scope mono-formule propre).
+  const offersField = unionOffers.length > 1 ? unionOffers : undefined;
+
+  // Collèges : on cumule les accès. Un compte « toute l'offre » (type 'all')
+  // reste 'all' ; sinon on fusionne les collèges déjà accordés avec le nouveau.
+  const prevIsAll = prevScope.type === 'all';
+  const prevColleges: string[] = Array.isArray(prevScope.colleges)
+    ? prevScope.colleges.filter((x: unknown): x is string => typeof x === 'string')
+    : [];
+  const mergedColleges = Array.from(new Set<string>([...prevColleges, ...colleges]));
+
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
-  // `specialty_wish`…) puis on superpose les marqueurs d'achat.
+  // `specialty_wish`…) puis on superpose les marqueurs d'achat + l'union.
   const permission_scope = {
     ...prevScope,
-    type: 'college' as const,
-    colleges,
-    offer: offerForFormule,
-    paid_offer: offerForFormule,
+    ...(prevIsAll
+      ? { type: 'all' as const }
+      : { type: 'college' as const, colleges: mergedColleges }),
+    offer: mergedOffer,
+    // Écrase explicitement toute liste `offers` héritée (undefined => clé retirée).
+    offers: offersField,
+    paid_offer: mergedOffer,
     paid_formule: input.formuleId,
     paid_specialty: input.specialty ?? 'Médecine générale',
     // Normalise 'externe'/'interne' — les formulaires peuvent envoyer le libellé
     // 'Voie externe'/'Voie interne'. La RLS (current_voie) attend la forme courte.
-    paid_voie: normalizeVoie(input.voie),
+    // On conserve la voie existante si le nouvel achat n'en précise pas.
+    paid_voie: normalizeVoie(input.voie) ?? (typeof prevScope.paid_voie === 'string' ? prevScope.paid_voie : null),
     paid_at: new Date().toISOString(),
   };
+  log('scope-merged', {
+    priorPaid, purchased: offerForFormule, unionOffers, mergedOffer,
+    type: prevIsAll ? 'all' : 'college', collegesCount: prevIsAll ? 'all' : mergedColleges.length,
+  });
 
   // 4) Upsert du profile
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
