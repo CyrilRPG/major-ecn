@@ -35,7 +35,11 @@ const CAT: Record<CatKey, { label: string; short: string; color: string; soft: s
 };
 
 // Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
-const MANUAL_QCM_LINES = [{ label: 'QROC Voies externes', montant: 300 }];
+const MANUAL_QCM_LINES = [
+  { label: 'QROC Voies externes', montant: 300 },
+  // DP QROC voie externe — 2 nouveaux dossiers de 7 questions par item (874 séries).
+  { label: 'QROC Voies externes — DP QROC', montant: 67 },
+];
 const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 
 const PALIERS = [
