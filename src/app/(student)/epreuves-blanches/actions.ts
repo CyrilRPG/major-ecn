@@ -8,8 +8,9 @@ import { parseScope } from '@/lib/auth/permissions';
 import { isExamTargeted } from '@/lib/exams/targeting';
 import { examWindow, type AccessOverride } from '@/lib/exams/window';
 import { gradeExamAnswer, summarizeExam, examLevel, type GradableQuestion, type BaremeConfig, type PerCollege } from '@/lib/exams/scoring';
-import { callClaude, extractJson, DEFAULT_MODEL } from '@/lib/ai/anthropic';
+import { callClaude, extractJson, FAST_MODEL } from '@/lib/ai/anthropic';
 import { usageToUsd } from '@/lib/ai/cost';
+import { gradeQroc } from '@/lib/qcm/grade';
 import { buildAiGradingPrompt, computeQrocPoints, qrocAiMaxPoints, aiLevel, type QrocToGrade, type AiGradingOutput } from '@/lib/exams/ai-grading';
 
 type Err = { ok: false; error: string };
@@ -186,12 +187,12 @@ export async function gradeExamWithAI(input: unknown): Promise<{ ok: true } | Er
     answer: ansByQ.get(q.id)?.text_answer ?? '',
   }));
 
-  // Appel IA (Sonnet) — tolérant : en cas d'échec on n'altère pas la copie.
+  // Appel IA (modèle économique Haiku) — tolérant : en cas d'échec on n'altère pas la copie.
   let output: AiGradingOutput;
   let usage;
   try {
     const { system, user: userPrompt } = buildAiGradingPrompt(exam.title, toGrade);
-    const res = await callClaude({ system, user: userPrompt, model: DEFAULT_MODEL, maxTokens: 6000, temperature: 0.2 });
+    const res = await callClaude({ system, user: userPrompt, model: FAST_MODEL, maxTokens: 4000, temperature: 0.1 });
     usage = res.usage;
     output = extractJson<AiGradingOutput>(res.text);
   } catch (e) {
@@ -203,10 +204,14 @@ export async function gradeExamWithAI(input: unknown): Promise<{ ok: true } | Er
   for (const q of toGrade) {
     const det = detById.get(q.id) ?? { id: q.id, keywords_found: [], zero_missing: [], major_errors_found: [] };
     const maxPts = qrocAiMaxPoints(q, ansByQ.get(q.id)?.max_points ?? 1);
-    const pts = computeQrocPoints(q, det, maxPts);
+    // Filet de sécurité : si la réponse correspond à une variante attendue
+    // (comparaison insensible aux accents/casse/orthographe), on met le maximum
+    // sans dépendre du jugement de l'IA.
+    const exactMatch = q.reponse_attendue ? gradeQroc(q.answer, q.reponse_attendue) : false;
+    const pts = exactMatch ? maxPts : computeQrocPoints(q, det, maxPts);
     await a.from('mock_exam_answers').update({
       points_awarded: pts, max_points: maxPts, is_correct: pts >= maxPts && maxPts > 0,
-      ai_grade: { ...det, points_awarded: pts, max_points: maxPts },
+      ai_grade: { ...det, points_awarded: pts, max_points: maxPts, ...(exactMatch ? { feedback: det.feedback || 'Réponse conforme à la réponse attendue.' } : {}) },
     }).eq('submission_id', sub.id).eq('question_id', q.id);
   }
 
@@ -247,7 +252,7 @@ export async function gradeExamWithAI(input: unknown): Promise<{ ok: true } | Er
       await a.from('ai_generations').insert({
         admin_id: null, cours_id: null, cours_titre: exam.title, kind: 'exam_grading', feature: 'exam_qroc_grading',
         items_count: qrocs.length, input_tokens: usage.input_tokens, output_tokens: usage.output_tokens,
-        cost_usd: usageToUsd(usage, DEFAULT_MODEL), price_eur: 0, status: 'success', model: DEFAULT_MODEL,
+        cost_usd: usageToUsd(usage, FAST_MODEL), price_eur: 0, status: 'success', model: FAST_MODEL,
       });
     }
   } catch { /* log non bloquant */ }

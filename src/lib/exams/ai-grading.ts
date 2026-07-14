@@ -73,7 +73,7 @@ export function buildAiGradingPrompt(examTitle: string, questions: QrocToGrade[]
   const system = [
     "Tu es correcteur aux Épreuves de Vérification des Connaissances (EVC/ECN), rigoureux et bienveillant.",
     "Tu corriges des questions ouvertes (QROC) EXCLUSIVEMENT selon le barème fourni par l'enseignant : mots-clés attendus, éléments obligatoires (« pas mis = 0 »), erreurs majeures (rédhibitoires).",
-    "Tu N'INVENTES AUCUN critère et tu ne fixes AUCUN point. Ton rôle : reconnaître les FORMULATIONS ÉQUIVALENTES (synonymes, abréviations, orthographe) et DÉTECTER, pour chaque question :",
+    "Tu N'INVENTES AUCUN critère et tu ne fixes AUCUN point. Tu IGNORES totalement les fautes d'orthographe, d'accents, de casse et de ponctuation, et tu acceptes les synonymes et abréviations usuelles (une réponse correcte mal orthographiée reste correcte). Ton rôle : reconnaître les FORMULATIONS ÉQUIVALENTES et DÉTECTER, pour chaque question :",
     "- keywords_found : la liste EXACTE des `label` de mots-clés attendus réellement présents dans la réponse du candidat (formulations équivalentes acceptées) ;",
     "- zero_missing : la liste des éléments « pas mis = 0 » ABSENTS de la réponse ;",
     "- major_errors_found : la liste des erreurs majeures présentes dans la réponse ;",

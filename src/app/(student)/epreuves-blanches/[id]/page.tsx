@@ -10,6 +10,7 @@ import { examWindow, resultsVisible, type AccessOverride } from '@/lib/exams/win
 import { ExamRunner } from '@/components/student/exam-runner';
 import { ExamResults } from '@/components/student/exam-results';
 import { ExamGate } from '@/components/student/exam-gate';
+import { ExamGradingLoading } from '@/components/student/exam-grading-loading';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,6 +39,11 @@ export default async function StudentExamPage({ params }: { params: Promise<{ id
     .eq('exam_id', id).eq('user_id', user.id)
     .in('status', ['submitted', 'graded'])
     .order('submitted_at', { ascending: false }).limit(1).maybeSingle();
+
+  // ── Correction IA en attente → écran de chargement (déclenche la correction) ──
+  if (submission && exam.qroc_mode === 'ai' && !submission.ai_report) {
+    return shell(<ExamGradingLoading submissionId={submission.id} />);
+  }
 
   // ── Copie déjà soumise ──
   if (submission) {
