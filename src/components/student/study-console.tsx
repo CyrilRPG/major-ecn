@@ -10,6 +10,7 @@ import {
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 import { SplitViewToggle, SplitLayout } from './split-view';
+import { AssistantCoachmark } from './assistant-coachmark';
 import { cn } from '@/lib/utils';
 
 export type Availability = {
@@ -114,6 +115,8 @@ export function StudyConsole({
 
   return (
     <div className="relative">
+      {/* 4ᵉ flèche d'onboarding : pointe le bouton « Assistant » (une seule fois). */}
+      <AssistantCoachmark />
       {/* Console header — sticky, page scrolls underneath (so QCM/long content scrolls).
           Mobile : padding réduit, gauge compacte, titre 1 ligne tronqué. */}
       <div className="sticky top-0 z-20 border-b border-(--color-border) bg-(--color-surface)/95 px-3 py-2 backdrop-blur sm:px-4 sm:py-3 lg:px-8">
@@ -126,6 +129,7 @@ export function StudyConsole({
           <SplitViewToggle />
           <button
             type="button"
+            data-tour="assistant"
             onClick={() => setAssistantOpen((v) => !v)}
             aria-label="Assistant du cours"
             className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg bg-white px-2.5 text-sm font-bold text-[#E4002B] transition-transform hover:scale-[1.02] focus-ring sm:px-3"
