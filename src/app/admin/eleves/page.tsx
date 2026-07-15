@@ -1,5 +1,6 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
@@ -40,6 +41,25 @@ export default async function ElevesPage() {
 
   const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
+  // Date de dernière connexion (auth.users) → drapeau « jamais connecté » par élève.
+  const lastSignIn = new Map<string, string | null>();
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const aAuth = createAdminClient() as any;
+    for (let page = 1; page <= 40; page++) {
+      const { data, error } = await aAuth.auth.admin.listUsers({ page, perPage: 200 });
+      if (error) break;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const users = (data?.users ?? []) as any[];
+      for (const u of users) lastSignIn.set(u.id, u.last_sign_in_at ?? null);
+      if (users.length < 200) break;
+    }
+  } catch { /* service-role indispo → drapeau non calculé */ }
+  const studentsWithLogin = ((students ?? []) as unknown as { id: string }[]).map((s) => ({
+    ...s,
+    never_connected: !lastSignIn.get(s.id),
+  }));
+
   // Formules + contenus débloqués, d'après la Config Permissions.
   const offers = await Promise.all(
     ADMIN_OFFERS.map(async (offer) => ({
@@ -62,7 +82,7 @@ export default async function ElevesPage() {
         <AddStudentDialog colleges={colleges} offers={offers} />
       </header>
 
-      <StudentsTable students={(students ?? []) as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} />
+      <StudentsTable students={studentsWithLogin as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} />
     </main>
   );
 }

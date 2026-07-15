@@ -746,5 +746,56 @@ export function purchaseNotificationEmail({
 }
 
 /* ============================================================
+   Relance — élève jamais connecté (cadence 7 jours)
+   Message chaud et humain, sans parenthèses, avec le logo Major ECN.
+   ============================================================ */
+type RelanceArgs = {
+  firstName?: string | null;
+  setupUrl: string;
+};
+export function relanceInactiveEmail({ firstName, setupUrl }: RelanceArgs) {
+  const hello = firstName && firstName.trim() ? firstName.trim() : 'et bienvenue';
+  const subject = 'Votre accès Major ECN vous attend';
+  const bodyHtml = `
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#3D3D3D;">
+      Bonjour <strong style="color:#2D2D2D;">${escapeHtml(hello)}</strong>,
+    </p>
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#4A5568;">
+      On ne vous a pas encore vu sur la plateforme et on tenait à vous le dire simplement&nbsp;:
+      votre espace Major ECN est prêt et il n'attend plus que vous.
+    </p>
+    <p style="margin:0 0 22px;font-size:15px;line-height:1.7;color:#4A5568;">
+      Quelques minutes suffisent pour choisir votre mot de passe et commencer votre préparation aux EVC
+      avec les fiches, les QCM et les dossiers progressifs. Chaque jour compte, et le meilleur moment
+      pour s'y mettre, c'est maintenant.
+    </p>
+    ${buttonHtml(setupUrl, 'Activer mon espace')}
+    <p style="margin:8px 0 0;font-size:13px;line-height:1.7;color:#5A5A5A;">
+      Une question ou un souci pour vous connecter&nbsp;? Répondez simplement à cet email ou écrivez-nous à
+      <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
+      Nous sommes là pour vous accompagner.
+    </p>
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#2D2D2D;">
+      À très vite,<br />
+      <strong>L'équipe Major ECN</strong>
+    </p>`;
+  const html = layout({ subject, eyebrow: 'On pense à vous', title: 'Votre place vous attend', bodyHtml });
+  const text = [
+    `Bonjour ${hello},`,
+    '',
+    `On ne vous a pas encore vu sur la plateforme et votre espace Major ECN est prêt.`,
+    `Quelques minutes suffisent pour choisir votre mot de passe et commencer votre préparation aux EVC.`,
+    '',
+    `Activer mon espace : ${setupUrl}`,
+    '',
+    `Une question pour vous connecter ? Écrivez-nous à contact@major-ecn.fr.`,
+    '',
+    `À très vite,`,
+    `L'équipe Major ECN`,
+  ].join('\n');
+  return { subject, html, text };
+}
+
+/* ============================================================
    Welcome (existant) — voir welcomeEmail() au-dessus
    ============================================================ */

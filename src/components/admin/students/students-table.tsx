@@ -30,6 +30,8 @@ export type Student = {
   permission_scope: unknown;
   is_active?: boolean | null;
   created_at?: string;
+  /** Vrai si l'élève ne s'est jamais connecté (auth.users.last_sign_in_at nul). */
+  never_connected?: boolean | null;
 };
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
@@ -106,6 +108,7 @@ export function StudentsTable({
   const [payment, setPayment] = useState('all'); // all | paid | free
   const [period, setPeriod] = useState('all'); // all | 7 | 30 | 90 | 365
   const [access, setAccess] = useState('all'); // all | active | expired
+  const [connexion, setConnexion] = useState('all'); // all | never
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [emailOpen, setEmailOpen] = useState(false);
 
@@ -134,10 +137,11 @@ export function StudentsTable({
       if (payment === 'free' && isPaid(s)) return false;
       if (access === 'active' && !isActive(s)) return false;
       if (access === 'expired' && isActive(s)) return false;
+      if (connexion === 'never' && !s.never_connected) return false;
       if (!withinPeriod(s.created_at, period)) return false;
       return true;
     });
-  }, [students, q, promo, specialty, offer, payment, access, period]);
+  }, [students, q, promo, specialty, offer, payment, access, connexion, period]);
 
   const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
   const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
@@ -243,6 +247,13 @@ export function StudentsTable({
             <SelectItem value="expired">Expiré / Inactif</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={connexion} onValueChange={setConnexion}>
+          <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Connexion" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toute connexion</SelectItem>
+            <SelectItem value="never">Jamais connecté</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Inscription" /></SelectTrigger>
           <SelectContent>
@@ -331,7 +342,12 @@ export function StudentsTable({
                         <AvatarFallback>{initials(s.first_name, s.last_name)}</AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-medium">{s.first_name} {s.last_name}</p>
+                        <p className="flex items-center gap-1.5 truncate font-medium">
+                          <span className="truncate">{s.first_name} {s.last_name}</span>
+                          {s.never_connected && (
+                            <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Jamais connecté</span>
+                          )}
+                        </p>
                         <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">{s.email}</p>
                         <p className="truncate text-[11px] text-(--color-ink-soft) lg:hidden">
                           {sp ? `${sp}${voie ? ` (${voie})` : ''}` : '—'}
