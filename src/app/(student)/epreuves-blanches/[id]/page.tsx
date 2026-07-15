@@ -24,7 +24,7 @@ export default async function StudentExamPage({ params }: { params: Promise<{ id
 
   const { data: exam } = await a.from('mock_exams').select('*').eq('id', id).eq('status', 'published').maybeSingle();
   if (!exam) notFound();
-  if (!isExamTargeted(exam, scope, (profile as { promotion?: string }).promotion)) redirect('/epreuves-blanches');
+  if (!isExamTargeted(exam, scope, (profile as { promotion?: string }).promotion, user.id)) redirect('/epreuves-blanches');
 
   const now = Date.now();
   const back = (

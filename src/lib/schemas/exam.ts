@@ -32,6 +32,9 @@ export const ExamSettingsSchema = z.object({
   target_colleges: z.array(z.string()).default([]),
   voies: z.array(z.enum(['interne', 'externe'])).default([]),
   target_promos: z.array(z.string()).default([]),
+  // Ciblage nominatif : si non vide, l'épreuve est réservée à ces élèves précis
+  // (les critères offre/voie/collège/promo ci-dessus sont alors ignorés).
+  target_user_ids: z.array(z.string().uuid()).default([]),
   // Programmation (Phase 3)
   exam_mode: z.enum(['free', 'scheduled']).default('free'),
   open_at: z.string().nullable().optional(),

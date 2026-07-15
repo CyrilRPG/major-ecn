@@ -24,10 +24,12 @@ export type ExamData = {
   qcm_bareme_mode: 'classic' | 'custom' | 'discordance'; discordance_table: { d: number; p: number }[];
   qroc_mode: 'self' | 'ai'; question_order: 'fixed' | 'random';
   min_offer: string | null; target_colleges: string[]; voies: string[]; target_promos: string[];
+  target_user_ids: string[];
   exam_mode: 'free' | 'scheduled'; open_at: string | null; close_at: string | null;
   results_publish_mode: 'immediate' | 'after_close' | 'at_datetime'; results_publish_at: string | null;
   absence_mode: 'zero' | 'rattrapage'; rattrapage_open_at: string | null; rattrapage_close_at: string | null;
 };
+export type StudentOption = { id: string; name: string; email: string };
 
 /** ISO → valeur d'un <input type="datetime-local"> (heure locale). */
 function toLocalInput(iso: string | null): string {
@@ -41,7 +43,7 @@ const fromLocalInput = (v: string): string | null => (v ? new Date(v).toISOStrin
 
 const inputCls = 'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)';
 
-export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamData; questions: ExamQuestionData[]; colleges: CollegeOption[]; promos: string[] }) {
+export function ExamEditor({ exam, questions, colleges, promos, students }: { exam: ExamData; questions: ExamQuestionData[]; colleges: CollegeOption[]; promos: string[]; students: StudentOption[] }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [msg, setMsg] = useState<string | null>(null);
@@ -60,6 +62,10 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
   const [voies, setVoies] = useState<Set<string>>(new Set(exam.voies ?? []));
   const [targetColleges, setTargetColleges] = useState<Set<string>>(new Set(exam.target_colleges ?? []));
   const [targetPromos, setTargetPromos] = useState<Set<string>>(new Set(exam.target_promos ?? []));
+  // Ciblage nominatif : élèves spécifiques (masque les autres critères).
+  const [specificMode, setSpecificMode] = useState((exam.target_user_ids ?? []).length > 0);
+  const [targetUsers, setTargetUsers] = useState<Set<string>>(new Set(exam.target_user_ids ?? []));
+  const [studentQuery, setStudentQuery] = useState('');
   // Programmation
   const [examMode, setExamMode] = useState(exam.exam_mode ?? 'free');
   const [openAt, setOpenAt] = useState(toLocalInput(exam.open_at));
@@ -84,6 +90,13 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
   const toggle = (set: React.Dispatch<React.SetStateAction<Set<string>>>, v: string) =>
     set((prev) => { const n = new Set(prev); if (n.has(v)) n.delete(v); else n.add(v); return n; });
 
+  // Sans recherche : on affiche les élèves déjà sélectionnés. Avec recherche :
+  // les correspondances (nom / prénom / email), limitées à 60 pour la lisibilité.
+  const sq = studentQuery.trim().toLowerCase();
+  const filteredStudents = sq
+    ? students.filter((s) => s.name.toLowerCase().includes(sq) || s.email.toLowerCase().includes(sq)).slice(0, 60)
+    : students.filter((s) => targetUsers.has(s.id));
+
   const save = () => {
     setMsg(null);
     start(async () => {
@@ -96,10 +109,12 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
         discordance_table: bareme === 'discordance' ? discTable : [],
         qroc_mode: qrocMode,
         question_order: order,
-        min_offer: minOffer || null,
-        target_colleges: Array.from(targetColleges),
-        voies: Array.from(voies),
-        target_promos: Array.from(targetPromos),
+        // En mode « élèves spécifiques », le ciblage large est ignoré/vidé.
+        min_offer: specificMode ? null : (minOffer || null),
+        target_colleges: specificMode ? [] : Array.from(targetColleges),
+        voies: specificMode ? [] : Array.from(voies),
+        target_promos: specificMode ? [] : Array.from(targetPromos),
+        target_user_ids: specificMode ? Array.from(targetUsers) : [],
         exam_mode: examMode,
         open_at: examMode === 'scheduled' ? fromLocalInput(openAt) : null,
         close_at: examMode === 'scheduled' ? fromLocalInput(closeAt) : null,
@@ -195,46 +210,84 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
         {/* Ciblage */}
         <div className="mt-4 rounded-xl border border-dashed border-(--color-border) bg-(--color-primary-soft)/10 p-4">
           <p className="mb-3 text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Qui peut composer ?</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Offre minimale">
-              <select value={minOffer} onChange={(e) => setMinOffer(e.target.value)} className={inputCls}>
-                <option value="">Toutes les offres</option>
-                <option value="essentiel">Essentielle ou +</option>
-                <option value="intensif">Intensive ou +</option>
-                <option value="approfondi">Approfondi uniquement</option>
-              </select>
-            </Field>
-            <Field label="Voie de concours (vide = toutes)">
-              <div className="flex gap-2">
-                {['interne', 'externe'].map((v) => (
-                  <label key={v} className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm ${voies.has(v) ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
-                    <input type="checkbox" checked={voies.has(v)} onChange={() => toggle(setVoies, v)} /> {v}
+          <label className="mb-3 flex cursor-pointer items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm font-semibold text-(--color-ink)">
+            <input type="checkbox" checked={specificMode} onChange={(e) => setSpecificMode(e.target.checked)} />
+            Réserver à des élèves spécifiques
+          </label>
+
+          {specificMode ? (
+            <div className="space-y-2">
+              <input
+                value={studentQuery}
+                onChange={(e) => setStudentQuery(e.target.value)}
+                placeholder="Rechercher un élève par nom, prénom ou email…"
+                className={inputCls}
+              />
+              <p className="text-xs text-(--color-ink-muted)">
+                {targetUsers.size} élève{targetUsers.size > 1 ? 's' : ''} sélectionné{targetUsers.size > 1 ? 's' : ''}
+                {!sq && targetUsers.size === 0 ? ' — tapez un nom ou un email pour rechercher.' : ''}
+              </p>
+              <div className="max-h-64 space-y-0.5 overflow-y-auto rounded-lg border border-(--color-border) p-2">
+                {filteredStudents.map((s) => (
+                  <label key={s.id} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-[13px] hover:bg-(--color-sand-100)">
+                    <input type="checkbox" checked={targetUsers.has(s.id)} onChange={() => toggle(setTargetUsers, s.id)} />
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className="font-medium text-(--color-ink)">{s.name || '(profil incomplet)'}</span>
+                      <span className="text-(--color-ink-muted)"> · {s.email}</span>
+                    </span>
                   </label>
                 ))}
+                {filteredStudents.length === 0 && (
+                  <p className="px-2 py-1 text-xs text-(--color-ink-muted)">
+                    {sq ? 'Aucun élève trouvé.' : 'Aucun élève sélectionné pour l’instant.'}
+                  </p>
+                )}
               </div>
-            </Field>
-          </div>
-          <div className="mt-3">
-            <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Promotions ciblées (vide = toutes)</p>
-            <div className="flex flex-wrap gap-1.5">
-              {promos.map((p) => (
-                <label key={p} className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs ${targetPromos.has(p) ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
-                  <input type="checkbox" checked={targetPromos.has(p)} onChange={() => toggle(setTargetPromos, p)} /> {p}
-                </label>
-              ))}
             </div>
-          </div>
-          <div className="mt-3">
-            <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Collèges ciblés (vide = tous les accessibles)</p>
-            <div className="grid max-h-40 grid-cols-1 gap-1 overflow-y-auto rounded-lg border border-(--color-border) p-2 sm:grid-cols-2">
-              {topColleges.map((c) => (
-                <label key={c.id} className="flex items-center gap-2 text-[13px]">
-                  <input type="checkbox" checked={targetColleges.has(c.id)} onChange={() => toggle(setTargetColleges, c.id)} />
-                  <span className="truncate">{c.nom}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          ) : (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="Offre minimale">
+                  <select value={minOffer} onChange={(e) => setMinOffer(e.target.value)} className={inputCls}>
+                    <option value="">Toutes les offres</option>
+                    <option value="essentiel">Essentielle ou +</option>
+                    <option value="intensif">Intensive ou +</option>
+                    <option value="approfondi">Approfondi uniquement</option>
+                  </select>
+                </Field>
+                <Field label="Voie de concours (vide = toutes)">
+                  <div className="flex gap-2">
+                    {['interne', 'externe'].map((v) => (
+                      <label key={v} className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 text-sm ${voies.has(v) ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
+                        <input type="checkbox" checked={voies.has(v)} onChange={() => toggle(setVoies, v)} /> {v}
+                      </label>
+                    ))}
+                  </div>
+                </Field>
+              </div>
+              <div className="mt-3">
+                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Promotions ciblées (vide = toutes)</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {promos.map((p) => (
+                    <label key={p} className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs ${targetPromos.has(p) ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
+                      <input type="checkbox" checked={targetPromos.has(p)} onChange={() => toggle(setTargetPromos, p)} /> {p}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3">
+                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Collèges ciblés (vide = tous les accessibles)</p>
+                <div className="grid max-h-40 grid-cols-1 gap-1 overflow-y-auto rounded-lg border border-(--color-border) p-2 sm:grid-cols-2">
+                  {topColleges.map((c) => (
+                    <label key={c.id} className="flex items-center gap-2 text-[13px]">
+                      <input type="checkbox" checked={targetColleges.has(c.id)} onChange={() => toggle(setTargetColleges, c.id)} />
+                      <span className="truncate">{c.nom}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Programmation */}

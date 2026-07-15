@@ -22,9 +22,14 @@ export default async function EditExamPage({ params }: { params: Promise<{ id: s
 
   const { data: qs } = await a.from('mock_exam_questions').select('*').eq('exam_id', id).order('order_index');
   const { data: colsRaw } = await a.from('matieres').select('id, nom, parent_matiere_id').order('nom');
+  const { data: studsRaw } = await a
+    .from('profiles').select('id, first_name, last_name, email')
+    .eq('role', 'student').order('last_name');
 
   const colleges: CollegeOption[] = ((colsRaw ?? []) as { id: string; nom: string; parent_matiere_id: string | null }[])
     .map((c) => ({ id: c.id, nom: c.nom, parentId: c.parent_matiere_id }));
+  const students = ((studsRaw ?? []) as { id: string; first_name: string | null; last_name: string | null; email: string | null }[])
+    .map((s) => ({ id: s.id, name: [s.first_name, s.last_name].filter(Boolean).join(' '), email: s.email ?? '' }));
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -44,6 +49,7 @@ export default async function EditExamPage({ params }: { params: Promise<{ id: s
         questions={(qs ?? []) as ExamQuestionData[]}
         colleges={colleges}
         promos={PROMOS}
+        students={students}
       />
     </main>
   );

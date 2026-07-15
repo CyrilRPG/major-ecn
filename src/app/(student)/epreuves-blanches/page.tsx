@@ -21,13 +21,13 @@ export default async function StudentExamsPage() {
   const { data: examsRaw } = await supabase
     .from('mock_exams')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .select('id, title, college_id, duration_minutes, instructions, min_offer, target_colleges, voies, target_promos, publish_at, exam_mode, qroc_mode, open_at, close_at, absence_mode, rattrapage_open_at, rattrapage_close_at, results_publish_mode, results_publish_at') as any;
+    .select('id, title, college_id, duration_minutes, instructions, min_offer, target_colleges, voies, target_promos, target_user_ids, publish_at, exam_mode, qroc_mode, open_at, close_at, absence_mode, rattrapage_open_at, rattrapage_close_at, results_publish_mode, results_publish_at') as any;
 
   const now = Date.now();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const accessible = ((examsRaw ?? []) as any[])
     .filter((e) => !e.publish_at || new Date(e.publish_at).getTime() <= now)
-    .filter((e) => isExamTargeted(e, scope, promotion));
+    .filter((e) => isExamTargeted(e, scope, promotion, user.id));
 
   // Copies de l'élève (statut par épreuve)
   const admin = createAdminClient();
