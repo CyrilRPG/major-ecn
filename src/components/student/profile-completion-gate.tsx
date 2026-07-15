@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Loader2, UserRound } from 'lucide-react';
+import { ArrowLeft, Check, Loader2, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -20,17 +20,30 @@ export function ProfileCompletionGate({
   initialFirstName,
   initialLastName,
   initialPhone,
+  impersonating = false,
 }: {
   initialFirstName: string | null;
   initialLastName: string | null;
   initialPhone: string | null;
+  /** Mode « se connecter en tant que » : le popup s'affiche quand même mais
+   *  l'admin garde un bouton pour revenir au panel d'administration. */
+  impersonating?: boolean;
 }) {
   const router = useRouter();
   const [firstName, setFirstName] = useState(initialFirstName ?? '');
   const [lastName, setLastName] = useState(initialLastName ?? '');
   const [phone, setPhone] = useState(initialPhone ?? '');
   const [pending, start] = useTransition();
+  const [returning, startReturn] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const returnToAdmin = () => {
+    startReturn(async () => {
+      await fetch('/api/admin/stop-impersonation', { method: 'POST' });
+      router.push('/admin/eleves');
+      router.refresh();
+    });
+  };
 
   const incomplete =
     !(initialFirstName ?? '').trim() ||
@@ -116,9 +129,18 @@ export function ProfileCompletionGate({
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
           Enregistrer et continuer
         </Button>
+
+        {impersonating && (
+          <Button type="button" variant="outline" className="mt-2 w-full" onClick={returnToAdmin} disabled={returning}>
+            {returning ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
+            Revenir au panel admin
+          </Button>
+        )}
+
         <p className="mt-3 text-center text-[11px] text-(--color-ink-muted)">
-          Une erreur dans ces informations ? Écrivez à{' '}
-          <a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">contact@major-ecn.fr</a>.
+          {impersonating
+            ? 'Mode « connexion en tant que » : vous voyez ce que voit l’élève.'
+            : (<>Une erreur dans ces informations ? Écrivez à{' '}<a className="font-semibold text-(--color-primary)" href="mailto:contact@major-ecn.fr">contact@major-ecn.fr</a>.</>)}
         </p>
       </div>
     </div>

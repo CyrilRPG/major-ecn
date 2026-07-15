@@ -264,13 +264,14 @@ export default async function StudentLayout({ children }: { children: React.Reac
           {children}
         </AppShell>
       </div>
-      {/* Popup obligatoire de complétion de profil — JAMAIS en mode
-          « se connecter en tant que » (l'admin doit pouvoir revenir au panel). */}
-      {profile.role === 'student' && !isImpersonating && (
+      {/* Popup obligatoire de complétion de profil. En mode « se connecter en
+          tant que », il s'affiche aussi mais expose un bouton retour au panel. */}
+      {profile.role === 'student' && (
         <ProfileCompletionGate
           initialFirstName={(profile as { first_name?: string | null }).first_name ?? null}
           initialLastName={(profile as { last_name?: string | null }).last_name ?? null}
           initialPhone={(profile as { phone?: string | null }).phone ?? null}
+          impersonating={isImpersonating}
         />
       )}
       {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} />}
