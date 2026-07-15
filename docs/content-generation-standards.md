@@ -178,8 +178,11 @@ texte brut, ses balises apparaîtraient EN CLAIR à l'écran (bug classique).
 ### Balises autorisées (les seules qui s'affichent)
 
 `<b> <strong> <i> <em> <u> <sub> <sup> <br> <span style="color:…"> <img>`
-plus, dans les **vignettes uniquement**, `<ul> <li> <p>` sont tolérés car
-`sanitizeVignetteHtml` les convertit en `<br>`/puces.
+plus, dans les **vignettes ET les flashcards** (recto/verso), `<ul> <li> <p>`
+sont tolérés car le rendu passe par `sanitizeBlockHtml` qui les convertit en
+`<br>` / puces. Partout ailleurs (énoncés/corrections QCM via
+`sanitizeFlashcardHtml`), ces balises de bloc sont retirées et le texte se
+colle : y utiliser `<br>` pour les sauts de ligne.
 
 **Interdits partout ailleurs** : `<p>`, `<div>`, `<ul>`, `<li>`, `<table>`,
 `<h1-6>`… → utiliser `<br>` pour les sauts de ligne et `<strong>` pour le gras.

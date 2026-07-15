@@ -11,7 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
 import { QrocItem, type QrocOutcome } from './qroc-item';
 import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
-import { sanitizeFlashcardHtml, sanitizeVignetteHtml } from '@/lib/flashcards/rich-text';
+import { sanitizeFlashcardHtml, sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
@@ -379,7 +379,7 @@ export function QcmSession({
           {vignette && (
             <div
               className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)"
-              dangerouslySetInnerHTML={{ __html: sanitizeVignetteHtml(vignette) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(vignette) }}
             />
           )}
         </details>

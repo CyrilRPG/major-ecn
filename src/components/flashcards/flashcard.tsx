@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Info, RefreshCw, type LucideProps } from 'lucide-react';
 import { Layers3 } from 'lucide-react';
 import type { ComponentType } from 'react';
-import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
+import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 
 type ThemeShape = { bg: string; accent: string; Icon: ComponentType<LucideProps>; image?: string };
 const NEUTRAL_THEME: ThemeShape = { bg: '#FCEAEC', accent: '#C0112E', Icon: Layers3 };
@@ -113,7 +113,7 @@ function Face({
       <div className="relative z-20 flex flex-1 items-center justify-center px-4 py-4 sm:px-8 sm:py-6">
         <div
           className="max-w-full text-center text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-balance sm:max-w-[80%] sm:text-xl md:text-2xl lg:text-3xl [&_img]:mx-auto [&_img]:my-2 [&_img]:max-h-[38vh] [&_img]:w-auto [&_img]:max-w-full [&_img]:rounded-lg [&_img]:object-contain"
-          dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(text) }}
+          dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(text) }}
         />
       </div>
       {/* Footer carte : empile en colonne sur mobile (texte au-dessus du

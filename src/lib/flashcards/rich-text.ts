@@ -113,13 +113,15 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
 }
 
 /**
- * Rendu HTML sûr d'une vignette de dossier (contexte clinique). Le contenu peut
- * avoir été rédigé avec des blocs (`<p>`, `<ul><li>`) ou de simples retours à la
- * ligne : on les convertit tous en `<br>` PUIS on applique la liste blanche
- * stricte (sinon les balises non autorisées s'afficheraient en clair). À utiliser
- * partout où une vignette est affichée — jamais `{vignette}` en texte brut.
+ * Rendu HTML sûr d'un contenu potentiellement « en blocs » (vignette de dossier,
+ * recto/verso de flashcard…). Le texte peut avoir été rédigé avec des blocs
+ * (`<p>`, `<ul><li>`) ou de simples retours à la ligne : on les convertit tous
+ * en `<br>` (les `<li>` reçoivent une puce) PUIS on applique la liste blanche
+ * stricte — sinon les balises non autorisées seraient retirées et les éléments
+ * se colleraient les uns aux autres. À utiliser partout où le contenu peut
+ * contenir des listes ou des retours à la ligne ; jamais `{valeur}` en brut.
  */
-export function sanitizeVignetteHtml(input: string): string {
+export function sanitizeBlockHtml(input: string): string {
   if (!input) return '';
   const withBreaks = input
     .replace(/\r?\n/g, '<br>')
