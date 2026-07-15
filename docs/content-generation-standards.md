@@ -90,11 +90,26 @@ Champ `recto` : question courte, claire, **mémorisable**.
 Champ `verso` : réponse concise (1-3 lignes max), **structurée** quand
 plusieurs éléments (puces ou triade type :).
 
+**Contraintes d'affichage NON négociables** (le verso est rendu en GROSSE
+police centrée dans une carte à hauteur fixe avec `overflow-hidden` — un verso
+trop long ou en bloc est COUPÉ / illisible) :
+
+- **Longueur du verso : viser ≤ 110 caractères de texte visible, maximum
+  absolu 150.** (Moyenne des autres decks ≈ 90 caractères — c'est la cible.)
+- **TOUJOURS des retours à la ligne** : dès qu'il y a plusieurs éléments,
+  utiliser `<ul><li>…</li></ul>` (2-3 items courts) OU des `<br>` entre lignes.
+  **JAMAIS un pavé de texte compact**, jamais deux phrases collées (« …bulbe.La
+  voie… » interdit — mettre un `<br>` ou au moins un espace après le point).
+- Idéalement 3-6 lignes courtes, une idée par ligne.
+- Balises autorisées uniquement : `<strong>`, `<em>`, `<br>`, `<ul>`, `<li>`
+  (voir « Affichage & rendu HTML » plus bas).
+
 Exemples :
 - ✅ `recto`: « Triade de l'insuffisance cardiaque droite ? »
-       `verso`: « Œdèmes des membres inférieurs · turgescence jugulaire ·
-                  hépatalgie d'effort »
-- ❌ Carte trop longue, ouverte ou nécessitant un raisonnement.
+       `verso`: « Œdèmes des membres inférieurs<br>turgescence jugulaire<br>hépatalgie d'effort »
+- ✅ `verso`: « <strong>Vermis</strong> = statique/équilibre.<br><strong>Hémisphères</strong> = coordination des membres. »
+- ❌ Carte trop longue, ouverte, en bloc sans retour à la ligne, ou nécessitant
+  un raisonnement.
 
 ### Couverture
 
@@ -150,6 +165,53 @@ L'admin peut aussi déclencher la génération automatique :
 
 Les deux actions appellent Claude Sonnet 4.6 avec le contexte fiche + annales
 et respectent les standards ci-dessus.
+
+---
+
+## Affichage & rendu HTML — pour que le contenu s'affiche TOUJOURS correctement
+
+Le contenu riche (énoncés, corrections, **vignettes**, flashcards) est nettoyé
+par une **liste blanche stricte** (`src/lib/flashcards/rich-text.ts`) avant
+rendu. Toute balise hors liste est retirée et, si un champ était affiché en
+texte brut, ses balises apparaîtraient EN CLAIR à l'écran (bug classique).
+
+### Balises autorisées (les seules qui s'affichent)
+
+`<b> <strong> <i> <em> <u> <sub> <sup> <br> <span style="color:…"> <img>`
+plus, dans les **vignettes uniquement**, `<ul> <li> <p>` sont tolérés car
+`sanitizeVignetteHtml` les convertit en `<br>`/puces.
+
+**Interdits partout ailleurs** : `<p>`, `<div>`, `<ul>`, `<li>`, `<table>`,
+`<h1-6>`… → utiliser `<br>` pour les sauts de ligne et `<strong>` pour le gras.
+
+### Vignettes de dossier (`qcm_series.vignette`)
+
+- Rédiger la vignette en **texte + `<strong>` + `<br>`** (ou `<p>`/`<ul>` qui
+  seront convertis en `<br>`). Ne jamais compter sur `<p>`/`<ul>` pour la mise
+  en forme finale.
+- Elle est affichée via **`sanitizeVignetteHtml`** dans `QcmSession` et
+  `ExamRunner` (encadré « Contexte clinique »). **Ne jamais** afficher une
+  vignette (ni aucun champ HTML) en texte brut `{vignette}` — toujours
+  `dangerouslySetInnerHTML={{ __html: sanitizeVignetteHtml(...) }}`.
+
+### Fiche PDF (charte `major-ecn-fiche`) — cohérence du plan
+
+Voir aussi `major-ecn-fiche/CLAUDE.md`. Règle critique de mise en page :
+
+- `thead { display: table-header-group }` ⇒ **le `<thead>` d'une `.fiche-table`
+  se répète en haut de CHAQUE page**. Donc **une seule sous-partie (A, B, C…)
+  par `<table class="fiche-table">`** : son `ft-head-row` (« A. … ») va dans SON
+  propre thead. Mettre plusieurs sous-parties dans une même table (head-rows en
+  `tbody`) fait répéter « A. » au-dessus du contenu de B/C sur les pages
+  suivantes → **plan incohérent** (bug vu en prod).
+- La bannière sombre `ft-banner-row` n'est mise QUE dans le thead de la 1re
+  table de chaque grande partie.
+- Chaque grande partie = `<section class="partie-page partie-page--first">`
+  (nouvelle page). Sous-parties = tables successives dans cette section.
+- **Vérification obligatoire avant publication** : extraire le texte page par
+  page (`pdfjs-dist/legacy/build/pdf.mjs`, dispo dans le repo) et contrôler que
+  l'en-tête en haut de chaque page coiffe bien SON contenu, et qu'aucune
+  sous-partie n'a été perdue.
 
 ---
 
