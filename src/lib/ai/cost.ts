@@ -24,32 +24,32 @@ export function usageToUsd(usage: AnthropicUsage, model: string): number {
 
 /** Prix facturé à l'étudiant / centre, en €. */
 export const PRICE_EUR = {
-  flashcards: 5,
-  qcm: 3,
+  flashcards: 3,
+  qcm: 5,
 } as const;
 
 /**
  * Tarification de la facturation IA, calculée en direct sur le contenu
  * réellement disponible (et non par génération) :
- *  - tous les QCM + DP d'un cours        → 3 €
+ *  - tous les QCM + DP d'un cours        → 5 €
  *  - une fiche                            → 10 €
- *  - toutes les flashcards d'un cours     → 5 €
+ *  - toutes les flashcards d'un cours     → 3 €
  *  - une réponse de l'assistant IA        → 0,10 €
  * Règle Découverte : pour les cours du collège Découverte, on ne facture que
  * la fiche (QCM / flashcards non comptés).
  */
 export const BILLING_EUR = {
-  qcm_per_course: 3,
+  qcm_per_course: 5,
   fiche: 10,
-  flashcards_per_course: 5,
+  flashcards_per_course: 3,
   ai_response: 0.1,
 } as const;
 
 /**
  * Seuils « cours complet » servant à la tarification PROPORTIONNELLE des
  * spécialités de Médecine générale (contenu produit de façon incrémentale) :
- *  - une spécialité complète = 200 flashcards → 5 € (proportionnel en deçà) ;
- *  - une spécialité complète = 10 séries QCM/DP → 3 € (proportionnel en deçà) ;
+ *  - une spécialité complète = 200 flashcards → 3 € (proportionnel en deçà) ;
+ *  - une spécialité complète = 10 séries QCM/DP → 5 € (proportionnel en deçà) ;
  *  - 1 fiche pour toute la spécialité → 10 €.
  * Les autres collèges restent facturés au forfait par cours.
  */
