@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
+import { DeactivateStudentsDialog } from '@/components/admin/students/deactivate-students-dialog';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { fetchContentAccess, OFFER_LABELS, unlockedLabels } from '@/lib/auth/formula-permissions';
 
@@ -79,7 +80,10 @@ export default async function ElevesPage() {
             {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
           </p>
         </div>
-        <AddStudentDialog colleges={colleges} offers={offers} />
+        <div className="flex flex-wrap items-center gap-2">
+          <DeactivateStudentsDialog />
+          <AddStudentDialog colleges={colleges} offers={offers} />
+        </div>
       </header>
 
       <StudentsTable students={studentsWithLogin as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} />
