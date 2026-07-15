@@ -8,6 +8,7 @@ import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
 import { StudentTutorialPopup } from '@/components/student/student-tutorial-popup';
 import { OnboardingTour } from '@/components/student/onboarding-tour';
+import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { parseScope } from '@/lib/auth/permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
@@ -263,6 +264,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
           {children}
         </AppShell>
       </div>
+      {profile.role === 'student' && (
+        <ProfileCompletionGate
+          initialFirstName={(profile as { first_name?: string | null }).first_name ?? null}
+          initialLastName={(profile as { last_name?: string | null }).last_name ?? null}
+          initialPhone={(profile as { phone?: string | null }).phone ?? null}
+        />
+      )}
       {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} />}
       {profile.role === 'student' && <OnboardingTour />}
       {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
