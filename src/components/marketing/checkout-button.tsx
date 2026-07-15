@@ -19,7 +19,6 @@ import {
 import type { FormuleId } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/client';
 import { ENROLLABLE_SPECIALTY_NAMES } from '@/lib/data/enrollable-colleges';
-import { InfoImportantePopup, FORMULE_COLORS } from './info-importante-popup';
 import { TurnstileWidget } from './turnstile-widget';
 
 type ProfileRow = {
@@ -81,7 +80,6 @@ export function CheckoutButton({
   const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
   // ── Mise à niveau Découverte → payant via connexion ──────────────
   // Si l'étudiant est connecté (ou se connecte), on pré-remplit et verrouille
@@ -186,7 +184,7 @@ export function CheckoutButton({
     setVoie('');
   }
 
-  /** Étape 1 : validation locale du formulaire. Ouvre la popup info. */
+  /** Validation locale du formulaire puis redirection directe vers le paiement. */
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!firstName || !lastName || !email) {
@@ -210,12 +208,11 @@ export function CheckoutButton({
       return;
     }
     setError(null);
-    setShowInfoPopup(true);
+    void handleCheckout();
   }
 
-  /** Étape 2 : déclenché après confirmation de la popup info. */
+  /** Crée la session Stripe et redirige vers le paiement. */
   async function handleCheckout() {
-    setShowInfoPopup(false);
     setLoading(true);
     setError(null);
     try {
@@ -468,16 +465,6 @@ export function CheckoutButton({
         <Sparkles className="h-3 w-3" style={{ color: color.main }} />
         Paiement traité par <strong style={{ color: '#635BFF' }}>Stripe</strong> · Aucune carte stockée chez nous
       </p>
-
-      {/* Popup "Information importante avant votre inscription" — affichée
-          systématiquement avant la redirection Stripe, dans la couleur
-          correspondant à la formule choisie. */}
-      <InfoImportantePopup
-        open={showInfoPopup}
-        onClose={() => setShowInfoPopup(false)}
-        onContinue={handleCheckout}
-        color={FORMULE_COLORS[formuleId]}
-      />
     </form>
   );
 }
