@@ -75,8 +75,10 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
   const [creatingFormat, setCreatingFormat] = useState<'qcm' | 'qroc' | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
 
+  // Ciblage : uniquement les collèges de 1er niveau. « Médecine générale »
+  // (col-medecine-generale) regroupe toutes ses spécialités — inutile de lister
+  // les sous-collèges car tout élève MG a col-medecine-generale dans sa portée.
   const topColleges = colleges.filter((c) => !c.parentId);
-  const mgSubs = colleges.filter((c) => c.parentId === 'col-medecine-generale');
   const collegeName = new Map(colleges.map((c) => [c.id, c.nom]));
 
   const toggle = (set: React.Dispatch<React.SetStateAction<Set<string>>>, v: string) =>
@@ -225,10 +227,10 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
           <div className="mt-3">
             <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Collèges ciblés (vide = tous les accessibles)</p>
             <div className="grid max-h-40 grid-cols-1 gap-1 overflow-y-auto rounded-lg border border-(--color-border) p-2 sm:grid-cols-2">
-              {[...topColleges, ...mgSubs].map((c) => (
+              {topColleges.map((c) => (
                 <label key={c.id} className="flex items-center gap-2 text-[13px]">
                   <input type="checkbox" checked={targetColleges.has(c.id)} onChange={() => toggle(setTargetColleges, c.id)} />
-                  <span className="truncate">{c.nom}{c.parentId ? ' (MG)' : ''}</span>
+                  <span className="truncate">{c.nom}</span>
                 </label>
               ))}
             </div>
