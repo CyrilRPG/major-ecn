@@ -7,7 +7,7 @@ import { AlertTriangle, ArrowLeft, ArrowRight, Clock, Loader2, PencilRuler } fro
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn, formatDuration } from '@/lib/utils';
-import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
+import { sanitizeFlashcardHtml, sanitizeVignetteHtml } from '@/lib/flashcards/rich-text';
 import { startExam, submitExam } from '@/app/(student)/epreuves-blanches/actions';
 import { effectiveDeadline } from '@/lib/exams/window';
 
@@ -131,7 +131,7 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
       {q.vignette && (
         <details open className="mb-3 rounded-xl border border-l-4 border-(--color-primary)/30 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5">
           <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">Contexte clinique</summary>
-          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">{q.vignette}</p>
+          <div className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)" dangerouslySetInnerHTML={{ __html: sanitizeVignetteHtml(q.vignette) }} />
         </details>
       )}
 

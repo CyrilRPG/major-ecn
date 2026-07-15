@@ -112,6 +112,26 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
   return out.join('').slice(0, maxLen);
 }
 
+/**
+ * Rendu HTML sûr d'une vignette de dossier (contexte clinique). Le contenu peut
+ * avoir été rédigé avec des blocs (`<p>`, `<ul><li>`) ou de simples retours à la
+ * ligne : on les convertit tous en `<br>` PUIS on applique la liste blanche
+ * stricte (sinon les balises non autorisées s'afficheraient en clair). À utiliser
+ * partout où une vignette est affichée — jamais `{vignette}` en texte brut.
+ */
+export function sanitizeVignetteHtml(input: string): string {
+  if (!input) return '';
+  const withBreaks = input
+    .replace(/\r?\n/g, '<br>')
+    .replace(/<li[^>]*>/gi, '• ')
+    .replace(/<\/(?:p|div|li)>/gi, '<br>')
+    .replace(/<(?:\/?(?:p|div|ul|ol))[^>]*>/gi, '');
+  return sanitizeFlashcardHtml(withBreaks)
+    .replace(/(?:<br>\s*){3,}/g, '<br><br>')
+    .replace(/^(?:<br>\s*)+/g, '')
+    .replace(/(?:<br>\s*)+$/g, '');
+}
+
 /** Texte brut (sans balises) — pour les aperçus compacts et la validation. */
 export function flashcardPlainText(html: string): string {
   if (!html) return '';
