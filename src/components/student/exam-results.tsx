@@ -14,7 +14,7 @@ import { selfGradeAnswer, finalizeExamCorrection } from '@/app/(student)/epreuve
 type AnyRow = Record<string, any>;
 
 export function ExamResults({
-  exam, submission, questions, answers, collegeNames = {}, leaderboard = null,
+  exam, submission, questions, answers, collegeNames = {}, leaderboard = null, readOnly = false,
 }: {
   exam: { id: string; title: string; qroc_mode: 'self' | 'ai' };
   submission: AnyRow;
@@ -22,6 +22,8 @@ export function ExamResults({
   answers: AnyRow[];
   collegeNames?: Record<string, string>;
   leaderboard?: AnyRow | null;
+  /** Vue admin en lecture seule : masque les boutons de correction/auto-évaluation. */
+  readOnly?: boolean;
 }) {
   const router = useRouter();
   const [grading, setGrading] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function ExamResults({
   const aiReport = submission.ai_report as AnyRow | null;
   const hasQroc = questions.some((q) => q.format === 'qroc');
   const pendingSelf = exam.qroc_mode === 'self' && questions.some((q) => q.format === 'qroc' && !ansByQ.get(q.id)?.self_grade);
-  const canAiGrade = exam.qroc_mode === 'ai' && hasQroc && !aiReport;
+  const canAiGrade = !readOnly && exam.qroc_mode === 'ai' && hasQroc && !aiReport;
 
   const runAiGrading = () => {
     setAiGrading(true); setAiError(null);
@@ -207,6 +209,8 @@ export function ExamResults({
                   {exam.qroc_mode === 'self' && (
                     ans?.self_grade ? (
                       <p className="text-xs font-semibold text-(--color-ink-soft)">Auto-évaluation : {ans.self_grade === 'correct' ? 'Correct' : ans.self_grade === 'partial' ? 'Partiellement correct' : 'Incorrect'}</p>
+                    ) : readOnly ? (
+                      <p className="text-xs font-semibold text-(--color-ink-muted)">QROC non auto-évaluée par l’élève.</p>
                     ) : (
                       <div className="flex flex-wrap gap-2">
                         <Button size="sm" variant="outline" className="border-red-300 text-red-600" disabled={grading === q.id} onClick={() => grade(q.id, 'incorrect')}><XCircle className="h-3.5 w-3.5" /> Incorrect</Button>

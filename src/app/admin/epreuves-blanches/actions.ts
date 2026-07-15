@@ -218,6 +218,41 @@ export async function revokeExamAccess(examId: string, accessId: string): Promis
   return { ok: true };
 }
 
+/* ─── Résultats des élèves (consultation admin) ─── */
+
+/** Copie complète d'un élève (submission + réponses) pour la vue « Détails ». */
+export async function getExamCopy(submissionId: string): Promise<{ ok: true; submission: Record<string, unknown>; answers: Record<string, unknown>[] } | Err> {
+  const { admin } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data: submission, error } = await a.from('mock_exam_submissions').select('*').eq('id', submissionId).maybeSingle();
+  if (error || !submission) return { ok: false, error: error?.message ?? 'Copie introuvable' };
+  const { data: answers, error: e2 } = await a.from('mock_exam_answers').select('*').eq('submission_id', submissionId);
+  if (e2) return { ok: false, error: e2.message };
+  return { ok: true, submission, answers: (answers ?? []) as Record<string, unknown>[] };
+}
+
+/**
+ * Supprime TOUS les résultats d'un élève pour une épreuve (copies + réponses),
+ * ce qui lui permet de refaire l'épreuve. N'affecte que cet élève.
+ */
+export async function deleteExamResultsForUser(examId: string, userId: string): Promise<Ok | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data: subs, error } = await a.from('mock_exam_submissions').select('id').eq('exam_id', examId).eq('user_id', userId);
+  if (error) return { ok: false, error: error.message };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ids = ((subs ?? []) as any[]).map((s) => s.id);
+  if (ids.length === 0) return { ok: false, error: 'Aucun résultat à supprimer' };
+  const { error: eAns } = await a.from('mock_exam_answers').delete().in('submission_id', ids);
+  if (eAns) return { ok: false, error: eAns.message };
+  const { error: eSub } = await a.from('mock_exam_submissions').delete().in('id', ids);
+  if (eSub) return { ok: false, error: eSub.message };
+  await logAudit({ actor: profile, action: 'delete', entity: 'mock_exam_submission', entityId: examId, description: `Résultats d'un élève supprimés (refaire l'épreuve autorisé)` });
+  revalidatePath(`/admin/epreuves-blanches/${examId}/resultats`);
+  revalidateExams(examId);
+  return { ok: true };
+}
+
 /* ─── Lecture du contenu existant pour le sélecteur « Piocher » ─── */
 export type ContentType = 'qcm' | 'qroc' | 'dp_qcm' | 'dp_qroc';
 export type PickerQuestion = { id: string; enonce: string; type: ContentType; cours_titre: string; serie_label: string };

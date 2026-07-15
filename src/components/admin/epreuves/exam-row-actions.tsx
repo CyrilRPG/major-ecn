@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Archive, Copy, Eye, EyeOff, Loader2, Pencil, Trash2 } from 'lucide-react';
+import { Archive, Copy, Eye, EyeOff, Loader2, Pencil, Trash2, Users } from 'lucide-react';
 import { setExamStatus, duplicateExam, deleteExam } from '@/app/admin/epreuves-blanches/actions';
 
 export function ExamRowActions({ id, status }: { id: string; status: 'draft' | 'published' | 'archived' }) {
@@ -21,6 +21,9 @@ export function ExamRowActions({ id, status }: { id: string; status: 'draft' | '
   return (
     <div className="flex shrink-0 items-center gap-0.5">
       {pending && <Loader2 className="mr-1 h-4 w-4 animate-spin text-(--color-ink-muted)" />}
+      <a href={`/admin/epreuves-blanches/${id}/resultats`} className={btn} title="Résultats des élèves" aria-label="Résultats des élèves">
+        <Users className="h-4 w-4" />
+      </a>
       <a href={`/admin/epreuves-blanches/${id}`} className={btn} title="Éditer" aria-label="Éditer">
         <Pencil className="h-4 w-4" />
       </a>
