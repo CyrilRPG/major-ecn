@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Plus, Trash2, UserPlus, Users } from 'lucide-react';
+import { Loader2, Plus, UserPlus, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader,
   DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
 
@@ -27,6 +28,14 @@ const IdentitySchema = z.object({
 type IdentityInput = z.infer<typeof IdentitySchema>;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Extrait les emails valides et dédoublonnés d'un texte libre séparé par des
+ *  virgules (les points-virgules, espaces et retours à la ligne sont tolérés). */
+function parseEmails(text: string): string[] {
+  return Array.from(
+    new Set(text.split(/[\s,;]+/).map((e) => e.trim().toLowerCase()).filter((e) => EMAIL_RE.test(e))),
+  );
+}
 
 export function AddStudentDialog({
   colleges,
@@ -45,7 +54,7 @@ export function AddStudentDialog({
   const [offersSel, setOffersSel] = useState<OfferId[]>(['essentiel']);
   // Voie obligatoire pour toute spécialité → défaut 'interne'.
   const [access, setAccess] = useState<AccessValue>({ permissionType: 'all', colleges: [], voie: 'interne' });
-  const [emails, setEmails] = useState<string[]>(['']);
+  const [emailsText, setEmailsText] = useState('');
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<IdentityInput>({
     resolver: zodResolver(IdentitySchema),
@@ -55,7 +64,7 @@ export function AddStudentDialog({
     reset();
     setOffersSel(['essentiel']);
     setAccess({ permissionType: 'all', colleges: [], voie: 'interne' });
-    setEmails(['']);
+    setEmailsText('');
     setSubmitError(null);
     setBulkResult(null);
     setMode('single');
@@ -93,8 +102,8 @@ export function AddStudentDialog({
   const onSubmitBulk = () => {
     setSubmitError(null);
     setBulkResult(null);
-    const valid = Array.from(new Set(emails.map((e) => e.trim().toLowerCase()).filter((e) => EMAIL_RE.test(e))));
-    if (valid.length === 0) { setSubmitError('Ajoutez au moins un email valide.'); return; }
+    const valid = parseEmails(emailsText);
+    if (valid.length === 0) { setSubmitError('Ajoutez au moins un email valide (séparés par des virgules).'); return; }
     if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
       const res = await fetch('/api/admin/create-students-bulk', {
@@ -119,9 +128,7 @@ export function AddStudentDialog({
     });
   };
 
-  const updateEmail = (i: number, v: string) => setEmails((e) => e.map((x, k) => (k === i ? v : x)));
-  const addEmail = () => setEmails((e) => [...e, '']);
-  const removeEmail = (i: number) => setEmails((e) => (e.length <= 1 ? [''] : e.filter((_, k) => k !== i)));
+  const detectedCount = parseEmails(emailsText).length;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetAll(); }}>
@@ -205,40 +212,31 @@ export function AddStudentDialog({
           <div className="space-y-4">
             <p className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2.5 text-xs text-(--color-ink-soft)">
               Choisissez le collège / les items, la formule et la voie <strong>communs à tout le groupe</strong>, puis
-              ajoutez les emails. Chaque élève reçoit une invitation où il renseigne lui-même son nom, prénom et mot de
-              passe — avec exactement les accès définis ici.
+              collez tous les emails. Chaque élève reçoit une invitation où il renseigne lui-même son nom, prénom et mot
+              de passe — avec exactement les accès définis ici. Un email correspondant à un
+              <strong> compte Découverte existant</strong> est automatiquement basculé sur la formule choisie ci-dessus.
             </p>
 
             <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
             <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
 
             <div className="space-y-2">
-              <Label>Emails des élèves à inviter</Label>
-              <div className="space-y-2">
-                {emails.map((em, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <Input
-                      type="email"
-                      value={em}
-                      onChange={(e) => updateEmail(i, e.target.value)}
-                      placeholder={`eleve${i + 1}@exemple.fr`}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeEmail(i)}
-                      aria-label="Retirer cet email"
-                      disabled={emails.length <= 1 && !emails[0]}
-                    >
-                      <Trash2 className="h-4 w-4 text-(--color-ink-soft)" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <Button type="button" variant="ghost" size="sm" onClick={addEmail} className="gap-1.5">
-                <Plus className="h-4 w-4" /> Ajouter un email
-              </Button>
+              <Label htmlFor="bulk-emails">Emails des élèves à inviter</Label>
+              <Textarea
+                id="bulk-emails"
+                value={emailsText}
+                onChange={(e) => setEmailsText(e.target.value)}
+                rows={7}
+                placeholder="eleve1@exemple.fr, eleve2@exemple.fr, eleve3@exemple.fr, …"
+                className="min-h-[150px] font-mono text-sm"
+              />
+              <p className="text-xs text-(--color-ink-muted)">
+                Séparez les emails par une virgule (les points-virgules, espaces et retours à la ligne sont aussi
+                acceptés).
+                {detectedCount > 0 && (
+                  <span className="font-semibold text-(--color-ink-soft)"> {detectedCount} email{detectedCount > 1 ? 's' : ''} valide{detectedCount > 1 ? 's' : ''} détecté{detectedCount > 1 ? 's' : ''}.</span>
+                )}
+              </p>
             </div>
 
             {submitError && (
