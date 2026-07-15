@@ -145,7 +145,7 @@ export function ExamEditor({ exam, questions, colleges, promos }: { exam: ExamDa
           <Field label="Correction QROC">
             <select value={qrocMode} onChange={(e) => setQrocMode(e.target.value as 'self' | 'ai')} className={inputCls}>
               <option value="self">Auto-évaluation par le candidat</option>
-              <option value="ai">Correction par IA (Phase 2)</option>
+              <option value="ai">Correction par IA</option>
             </select>
           </Field>
         </div>
