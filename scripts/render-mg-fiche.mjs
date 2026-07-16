@@ -72,11 +72,28 @@ writeFileSync(tmpHtml, fullHtml, 'utf-8');
 console.log(`→ Rendu de « ${nomCours} »…`);
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ['--no-sandbox', '--font-render-hinting=none', '--allow-file-access-from-files'] });
 const page = await browser.newPage();
+// Mesurer dans un viewport aux dimensions de la zone imprimable : au format
+// écran par défaut (800px), la carte éclair est mesurée plus large donc plus
+// courte qu'à l'impression, et le zoom calculé plus bas la fait déborder.
+const mmToPx = (x) => Math.round((x * 96) / 25.4);
+await page.setViewport({ width: mmToPx(210 - M.left - M.right), height: mmToPx(297 - M.top - M.bottom) });
 await page.goto(pathToFileURL(tmpHtml).href, { waitUntil: 'networkidle0' });
 try { await page.evaluate(() => document.fonts.ready); } catch {}
 await page.evaluate((mm) => {
   const [t, b] = mm; const toPx = (x) => (x * 96) / 25.4; const avail = toPx(297 - t - b) - 4;
-  document.querySelectorAll('.eclair-card').forEach((el) => { el.style.zoom = '1'; const h = el.getBoundingClientRect().height; if (h > avail) el.style.zoom = String(Math.max(0.5, avail / h)); });
+  // `zoom` reflowe le contenu : la hauteur obtenue n'est pas proportionnelle au
+  // facteur appliqué. Un calcul en une passe vise donc `avail` au pixel près et
+  // fait déborder la carte sur une page vide. On itère jusqu'à tenir, avec marge.
+  document.querySelectorAll('.eclair-card').forEach((el) => {
+    el.style.zoom = '1';
+    let zoom = 1;
+    for (let i = 0; i < 15; i++) {
+      const h = el.getBoundingClientRect().height;
+      if (h <= avail - 8) break;
+      zoom = Math.max(0.5, zoom * ((avail - 8) / h) * 0.998);
+      el.style.zoom = String(zoom);
+    }
+  });
 }, [M.top, M.bottom]);
 const pdf = await page.pdf({
   format: 'A4', printBackground: true,
