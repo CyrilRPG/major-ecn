@@ -17,7 +17,7 @@ export default async function AdminFacturationPage() {
     a.rpc('admin_facturation_lines'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
-    a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived'),
+    a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived').is('cours_id', null),
     a.from('mock_exam_questions').select('id', { count: 'exact', head: true }).eq('format', 'qroc'),
     // Générations IA facturées au forfait (uniquement les réussites).
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),

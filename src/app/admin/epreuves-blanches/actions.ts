@@ -221,6 +221,77 @@ export async function revokeExamAccess(examId: string, accessId: string): Promis
   return { ok: true };
 }
 
+/* ─── Interrogation de fin de parcours (épreuve rattachée à un item) ─── */
+
+export type InterrogationInfo = { id: string; nQuestions: number; qroc_mode: 'self' | 'ai'; status: string };
+
+/**
+ * Récupère l'interrogation d'un item, en la CRÉANT si elle n'existe pas encore.
+ * Une interrogation est une `mock_exams` avec `cours_id` renseigné : elle réutilise
+ * tout le moteur d'épreuve (QCM/QROC, DP, correction auto ou IA) mais n'apparaît
+ * jamais dans la liste des épreuves blanches.
+ */
+export async function ensureInterrogation(coursId: string): Promise<{ ok: true; info: InterrogationInfo } | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const { data: cours } = await a.from('cours').select('id, titre, matiere_id').eq('id', coursId).maybeSingle();
+  if (!cours) return { ok: false, error: 'Item introuvable' };
+
+  const { data: found } = await a
+    .from('mock_exams')
+    .select('id, qroc_mode, status, mock_exam_questions(count)')
+    .eq('cours_id', coursId)
+    .maybeSingle();
+  if (found) {
+    return {
+      ok: true,
+      info: {
+        id: found.id, qroc_mode: found.qroc_mode, status: found.status,
+        nQuestions: found.mock_exam_questions?.[0]?.count ?? 0,
+      },
+    };
+  }
+
+  const { data: created, error } = await a
+    .from('mock_exams')
+    .insert({
+      title: `Interrogation — ${cours.titre}`,
+      cours_id: coursId,
+      college_id: cours.matiere_id,
+      status: 'published',
+      exam_mode: 'free',
+      qroc_mode: 'self',
+      question_order: 'fixed',
+      created_by: profile.id,
+    })
+    .select('id, qroc_mode, status')
+    .single();
+  if (error || !created) return { ok: false, error: error?.message ?? 'Création impossible' };
+  revalidatePath(`/admin/contenu/${coursId}`);
+  return { ok: true, info: { id: created.id, qroc_mode: created.qroc_mode, status: created.status, nQuestions: 0 } };
+}
+
+/** Réglage du mode de correction QROC d'une interrogation. */
+export async function setInterrogationQrocMode(examId: string, mode: 'self' | 'ai'): Promise<Ok | Err> {
+  const { admin } = await ensureAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any).from('mock_exams')
+    .update({ qroc_mode: mode, updated_at: new Date().toISOString() }).eq('id', examId);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+/** Questions d'une interrogation (pour l'onglet admin). */
+export async function listInterrogationQuestions(examId: string): Promise<{ ok: true; questions: Record<string, unknown>[] } | Err> {
+  const { admin } = await ensureAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin as any).from('mock_exam_questions')
+    .select('*').eq('exam_id', examId).order('order_index');
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, questions: (data ?? []) as Record<string, unknown>[] };
+}
+
 /* ─── Génération d'une épreuve par IA ─── */
 
 const AiGenSchema = z.object({

@@ -19,11 +19,17 @@ export function ExamAiGenerateDialog({
   colleges,
   qrocMode,
   onClose,
+  scope = 'epreuve',
+  lockedCoursId,
 }: {
   examId: string;
   colleges: CollegeOption[];
   qrocMode: 'self' | 'ai';
   onClose: () => void;
+  /** Facturation IA : 1,30 € pour une épreuve blanche, 0,30 € pour une interrogation. */
+  scope?: 'epreuve' | 'interrogation';
+  /** Interrogation : l'item est imposé, on masque le choix collège/items. */
+  lockedCoursId?: string;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -47,6 +53,7 @@ export function ExamAiGenerateDialog({
 
   // Charge les items des collèges sélectionnés (sous-collèges MG inclus).
   useEffect(() => {
+    if (lockedCoursId) return; // interrogation : l'item est imposé
     const ids = Array.from(collegeIds).filter((id) => id !== 'col-medecine-generale');
     if (ids.length === 0) { setItems([]); setCoursIds(new Set()); return; }
     let cancelled = false;
@@ -65,12 +72,14 @@ export function ExamAiGenerateDialog({
     return () => { cancelled = true; };
   }, [collegeIds]);
 
+  const targetCoursIds = lockedCoursId ? [lockedCoursId] : Array.from(coursIds);
+
   const submit = () => {
     setError(null); setResult(null);
-    if (coursIds.size === 0) { setError('Sélectionnez au moins un item.'); return; }
+    if (targetCoursIds.length === 0) { setError('Sélectionnez au moins un item.'); return; }
     start(async () => {
       const res = await generateExamQuestionsWithAI({
-        examId, coursIds: Array.from(coursIds), voie, nbKnowledge, nbDpQuestions,
+        examId, coursIds: targetCoursIds, voie, nbKnowledge, nbDpQuestions, scope,
       });
       if (!res.ok) { setError(res.error); return; }
       setResult(`${res.inserted} question(s) générée(s) · ${res.dps} dossier(s) progressif(s) · coût ≈ ${(res.costUsd).toFixed(3)} $`);
@@ -95,6 +104,12 @@ export function ExamAiGenerateDialog({
           </button>
         </div>
 
+        {lockedCoursId ? (
+          <p className="rounded-lg border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">
+            Les questions seront générées à partir de la <strong>fiche de ce cours</strong> et de ses annales.
+          </p>
+        ) : (
+        <>
         {/* 1. Collèges */}
         <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">1 · Collèges</p>
         <div className="grid max-h-32 grid-cols-1 gap-1 overflow-y-auto rounded-lg border border-(--color-border) p-2 sm:grid-cols-2">
@@ -146,6 +161,8 @@ export function ExamAiGenerateDialog({
             <p className="mt-1 text-[11px] text-(--color-ink-muted)">{coursIds.size} item(s) sélectionné(s) · 15 maximum</p>
           </>
         )}
+        </>
+        )}
 
         {/* 3. Voie + volumes */}
         <p className="mb-1.5 mt-4 text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">3 · Format</p>
@@ -182,7 +199,7 @@ export function ExamAiGenerateDialog({
 
         <div className="mt-5 flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>Fermer</Button>
-          <Button type="button" onClick={submit} disabled={pending || coursIds.size === 0} className="bg-[linear-gradient(90deg,#7C3AED,#8B5CF6)]">
+          <Button type="button" onClick={submit} disabled={pending || targetCoursIds.length === 0} className="bg-[linear-gradient(90deg,#7C3AED,#8B5CF6)]">
             {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
             {pending ? 'Génération en cours…' : 'Générer'}
           </Button>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, ClipboardList, FileText, History, Layers3, PlayCircle, Video } from 'lucide-react';
+import { ArrowLeft, ClipboardList, FileText, GraduationCap, History, Layers3, PlayCircle, Video } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
@@ -17,6 +17,7 @@ import { GenerateButton } from '@/components/admin/generate-buttons';
 import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
 import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
+import { InterrogationPanel } from '@/components/admin/content/interrogation-panel';
 import { BunnyLinkPaste } from '@/components/admin/content/bunny-link-paste';
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -54,6 +55,11 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
 
   if (!c) notFound();
   if (!profCanAccessCours(scope, c.matiere_id, c.id)) redirect('/admin/contenu');
+
+  // Collèges pour l'onglet Interrogations (champ « spécialité » d'une question).
+  const { data: interroColsRaw } = await supabase.from('matieres').select('id, nom, parent_matiere_id').order('nom');
+  const interroColleges = ((interroColsRaw ?? []) as unknown as { id: string; nom: string; parent_matiere_id: string | null }[])
+    .map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
   const video = c.videos?.[0];
   const fiche = c.fiches?.[0];
@@ -115,7 +121,14 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           {(canQcmFamilyRead || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
           {can.flashcards.read && <TabsTrigger value="flashcards"><Layers3 className="h-4 w-4 mr-1.5" /> Flashcards</TabsTrigger>}
           {can.video.read && <TabsTrigger value="seance-approfondie"><Video className="h-4 w-4 mr-1.5" /> Seance approfondie</TabsTrigger>}
+          {canQcmFamilyRead && <TabsTrigger value="interrogations"><GraduationCap className="h-4 w-4 mr-1.5" /> Interrogations</TabsTrigger>}
         </TabsList>
+
+        {canQcmFamilyRead && (
+          <TabsContent value="interrogations">
+            <InterrogationPanel coursId={coursId} colleges={interroColleges} />
+          </TabsContent>
+        )}
 
         {can.video.read && (
           <TabsContent value="video">
