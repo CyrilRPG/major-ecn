@@ -246,7 +246,8 @@ export function InterrogationSession({
 }
 
 /* ============ Signature pad ============ */
-function SignaturePadScreen({
+/** Exporté pour être réutilisé par l'interrogation basée sur le moteur d'épreuve. */
+export function SignaturePadScreen({
   firstName, lastName, coursTitre, onCancel, onConfirm, pending,
 }: {
   firstName: string;

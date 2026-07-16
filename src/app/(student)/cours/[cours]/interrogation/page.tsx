@@ -3,7 +3,9 @@ import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { InterrogationSession, type IQuestion } from './interrogation-session';
+import { InterrogationExamFlow } from './interrogation-exam-flow';
 
 const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
 const N_QUESTIONS = 15;
@@ -72,6 +74,64 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
     .select('qcm_test_score, qcm_test_total, certificate_signed_at')
     .eq('user_id', user.id).eq('cours_id', coursId).maybeSingle();
 
+  // ── Interrogation configurée par l'admin (moteur d'épreuve) ──
+  // Si l'item a une interrogation avec des questions, elle prime sur le tirage
+  // automatique de 15 QCM. Elle est rendue ICI (même URL) : aucune redirection,
+  // donc aucun conflit avec le verrou de fin de parcours du layout.
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ad = admin as any;
+  const { data: interro } = await ad
+    .from('mock_exams')
+    .select('id, title, qroc_mode, instructions, duration_minutes, question_order')
+    .eq('cours_id', coursId).eq('status', 'published').maybeSingle();
+
+  if (interro) {
+    const { data: iqs } = await ad
+      .from('mock_exam_questions')
+      .select('id, order_index, format, enonce, vignette, images, points, items, reponse_attendue, correction_generale, college_id')
+      .eq('exam_id', interro.id).order('order_index');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const iQuestions = (iqs ?? []) as any[];
+    if (iQuestions.length > 0) {
+      const { data: sub } = await ad
+        .from('mock_exam_submissions').select('*')
+        .eq('exam_id', interro.id).eq('user_id', user.id)
+        .in('status', ['submitted', 'graded'])
+        .order('submitted_at', { ascending: false }).limit(1).maybeSingle();
+      const { data: ans } = sub
+        ? await ad.from('mock_exam_answers').select('*').eq('submission_id', sub.id)
+        : { data: [] };
+      const { data: colsRaw } = await ad.from('matieres').select('id, nom');
+      const collegeNames: Record<string, string> = Object.fromEntries(
+        ((colsRaw ?? []) as { id: string; nom: string }[]).map((x) => [x.id, x.nom]),
+      );
+      // En passation, on n'expose jamais les corrigés (is_correct/justification).
+      const forRunner = iQuestions.map((q) => ({
+        id: q.id, format: q.format as 'qcm' | 'qroc', enonce: q.enonce,
+        vignette: q.vignette ?? null, images: (q.images ?? []) as string[], points: q.points,
+        items: q.format === 'qcm'
+          ? (q.items ?? []).map((it: { lettre: string; enonce: string }) => ({ lettre: it.lettre, enonce: it.enonce }))
+          : [],
+      }));
+      return (
+        <InterrogationExamFlow
+          coursId={coursId}
+          coursTitre={c.titre}
+          firstName={profile.first_name ?? ''}
+          lastName={profile.last_name ?? ''}
+          exam={interro}
+          questions={sub ? iQuestions : forRunner}
+          submission={sub ?? null}
+          answers={(ans ?? []) as Record<string, unknown>[]}
+          collegeNames={collegeNames}
+          alreadySigned={!!completion?.certificate_signed_at}
+        />
+      );
+    }
+  }
+
+  // ── Repli : interrogation automatique (15 QCM tirés au hasard) ──
   return (
     <InterrogationSession
       coursId={coursId}
