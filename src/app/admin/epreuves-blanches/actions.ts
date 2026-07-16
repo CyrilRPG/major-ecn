@@ -5,6 +5,9 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
 import { ExamSettingsSchema, ExamQuestionSchema, EXAM_STATUSES } from '@/lib/schemas/exam';
+import { callClaude, extractJson } from '@/lib/ai/anthropic';
+import { examGenerationPrompt } from '@/lib/ai/prompts';
+import { usageToUsd } from '@/lib/ai/cost';
 import { z } from 'zod';
 
 type Ok<T = object> = { ok: true } & T;
@@ -216,6 +219,203 @@ export async function revokeExamAccess(examId: string, accessId: string): Promis
   if (error) return { ok: false, error: error.message };
   revalidateExams(examId);
   return { ok: true };
+}
+
+/* ─── Génération d'une épreuve par IA ─── */
+
+const AiGenSchema = z.object({
+  examId: z.string().uuid(),
+  coursIds: z.array(z.string().uuid()).min(1, 'Sélectionnez au moins un item').max(15, 'Maximum 15 items à la fois'),
+  voie: z.enum(['interne', 'externe']),
+  nbKnowledge: z.number().int().min(0).max(60),
+  nbDpQuestions: z.number().int().min(0).max(60),
+});
+
+/** Nombre de questions visé par dossier progressif. */
+const DP_SIZE = 7;
+/** Texte de fiche retenu par item (borne le coût du prompt). */
+const FICHE_CHARS_PER_COURS = 9000;
+
+const stripHtml = (s: string) =>
+  s.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/\s+/g, ' ').trim();
+
+/** Contexte de génération : contenu réel des items + annales pour le style. */
+async function loadExamContext(coursIds: string[]): Promise<{ text: string; titres: string[] }> {
+  const admin = createAdminClient();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data: cours } = await a
+    .from('cours')
+    .select('id, titre, matiere_id, matieres(nom), fiches(content_html, extracted_text)')
+    .in('id', coursIds);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rows = (cours ?? []) as any[];
+
+  const { data: annales } = await a
+    .from('qcm_series')
+    .select('cours_id, label, qcm_questions(enonce, qcm_items(lettre, enonce, is_correct, justification))')
+    .in('cours_id', coursIds)
+    .eq('type', 'annale')
+    .limit(30);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const annalesByCours = new Map<string, any[]>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const s of (annales ?? []) as any[]) {
+    const list = annalesByCours.get(s.cours_id) ?? [];
+    list.push(s);
+    annalesByCours.set(s.cours_id, list);
+  }
+
+  const parts: string[] = [];
+  const titres: string[] = [];
+  for (const c of rows) {
+    titres.push(c.titre);
+    const fiche = (c.fiches ?? [])[0] ?? {};
+    const raw: string = fiche.content_html ? stripHtml(fiche.content_html) : (fiche.extracted_text ?? '');
+    parts.push(`\n\n===== ITEM : ${c.titre} =====`);
+    parts.push(`college_id : ${c.matiere_id}`);
+    parts.push(`Collège : ${c.matieres?.nom ?? ''}`);
+    parts.push(raw ? `--- CONTENU DE LA FICHE ---\n${raw.slice(0, FICHE_CHARS_PER_COURS)}` : '--- Aucune fiche disponible pour cet item ---');
+    const ann = annalesByCours.get(c.id) ?? [];
+    if (ann.length > 0) {
+      parts.push('--- ANNALES DE CET ITEM (référence de style) ---');
+      for (const s of ann.slice(0, 2)) {
+        for (const q of (s.qcm_questions ?? []).slice(0, 3)) {
+          parts.push(`Q : ${stripHtml(q.enonce ?? '').slice(0, 400)}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          for (const it of (q.qcm_items ?? []) as any[]) {
+            parts.push(`  ${it.lettre}. ${stripHtml(it.enonce ?? '').slice(0, 200)} [${it.is_correct ? 'VRAI' : 'FAUX'}]`);
+          }
+        }
+      }
+    }
+  }
+  return { text: parts.join('\n'), titres };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AiQuestion = Record<string, any>;
+type AiGenShape = { knowledge?: AiQuestion[]; dps?: { vignette?: string; questions?: AiQuestion[] }[] };
+
+export async function generateExamQuestionsWithAI(
+  input: unknown,
+): Promise<Ok<{ inserted: number; dps: number; costUsd: number }> | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const parsed = AiGenSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Paramètres invalides' };
+  const { examId, coursIds, voie, nbKnowledge, nbDpQuestions } = parsed.data;
+  if (nbKnowledge + nbDpQuestions === 0) return { ok: false, error: 'Demandez au moins une question.' };
+
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data: exam } = await a.from('mock_exams').select('id, qroc_mode').eq('id', examId).maybeSingle();
+  if (!exam) return { ok: false, error: 'Épreuve introuvable' };
+
+  const isQcm = voie === 'interne';
+  const qrocAi = !isQcm && exam.qroc_mode === 'ai';
+  const nbDp = Math.max(0, Math.round(nbDpQuestions / DP_SIZE));
+  const dpSize = nbDp > 0 ? Math.max(3, Math.round(nbDpQuestions / nbDp)) : DP_SIZE;
+
+  const { text: context, titres } = await loadExamContext(coursIds);
+  if (!context.trim()) return { ok: false, error: 'Aucun contenu de cours exploitable pour les items choisis.' };
+
+  const { system, user } = examGenerationPrompt({
+    courseContext: context, voie, nbKnowledge, nbDp, dpSize, qrocAi,
+  });
+
+  let result;
+  try {
+    result = await callClaude({ system, user, maxTokens: 32000, temperature: 0.4 });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : 'Échec de l’IA';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin as any).from('ai_generations').insert({
+      admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
+      kind: 'exam_generation', items_count: 0, input_tokens: 0, output_tokens: 0,
+      cost_usd: 0, price_eur: 0, status: 'failed', error_message: msg, model: 'unknown',
+    });
+    return { ok: false, error: msg };
+  }
+
+  const costUsd = usageToUsd(result.usage, result.model);
+  let parsedOut: AiGenShape;
+  try {
+    parsedOut = extractJson<AiGenShape>(result.text);
+  } catch {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin as any).from('ai_generations').insert({
+      admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
+      kind: 'exam_generation', items_count: 0,
+      input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
+      cost_usd: costUsd, price_eur: 0, status: 'failed', error_message: 'Réponse IA mal formée', model: result.model,
+    });
+    return { ok: false, error: 'Réponse IA mal formée.' };
+  }
+
+  // order_index de départ : on ajoute à la suite des questions existantes.
+  const { data: last } = await a.from('mock_exam_questions')
+    .select('order_index').eq('exam_id', examId)
+    .order('order_index', { ascending: false }).limit(1).maybeSingle();
+  let idx = (last?.order_index ?? -1) + 1;
+
+  const format = isQcm ? 'qcm' : 'qroc';
+  const toRow = (q: AiQuestion, vignette: string | null) => ({
+    exam_id: examId,
+    order_index: idx++,
+    format,
+    enonce: String(q.enonce ?? '').trim(),
+    vignette,
+    correction_generale: q.correction_generale ?? null,
+    points: 1,
+    college_id: q.college_id ?? null,
+    images: [],
+    items: isQcm
+      ? (Array.isArray(q.items) ? q.items.slice(0, 5).map((it: AiQuestion) => ({
+          lettre: String(it.lettre ?? '').slice(0, 1).toUpperCase(),
+          enonce: String(it.enonce ?? ''),
+          is_correct: !!it.is_correct,
+          justification: String(it.justification ?? ''),
+        })) : [])
+      : [],
+    reponse_attendue: isQcm ? null : (q.reponse_attendue ?? null),
+    keywords: qrocAi && Array.isArray(q.keywords) ? q.keywords : [],
+    zero_if_missing: qrocAi && Array.isArray(q.zero_if_missing) ? q.zero_if_missing : [],
+    major_errors: qrocAi && Array.isArray(q.major_errors) ? q.major_errors : [],
+    corrige_complet: qrocAi ? (q.corrige_complet ?? null) : null,
+  });
+
+  const rows: ReturnType<typeof toRow>[] = [];
+  // 1) Questions de connaissances (sans vignette).
+  for (const q of (parsedOut.knowledge ?? []).slice(0, nbKnowledge)) {
+    if (q?.enonce) rows.push(toRow(q, null));
+  }
+  // 2) Dossiers progressifs : questions CONSÉCUTIVES partageant la vignette du DP.
+  let dpCount = 0;
+  for (const dp of (parsedOut.dps ?? []).slice(0, nbDp)) {
+    const vignette = (dp.vignette ?? '').trim();
+    const qs = (dp.questions ?? []).filter((q) => q?.enonce);
+    if (!vignette || qs.length === 0) continue;
+    dpCount += 1;
+    for (const q of qs) rows.push(toRow(q, vignette));
+  }
+
+  if (rows.length === 0) return { ok: false, error: 'L’IA n’a produit aucune question exploitable.' };
+
+  const { error: insErr } = await a.from('mock_exam_questions').insert(rows);
+  if (insErr) return { ok: false, error: insErr.message };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (admin as any).from('ai_generations').insert({
+    admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
+    kind: 'exam_generation', items_count: rows.length,
+    input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
+    cost_usd: costUsd, price_eur: 0, status: 'success', model: result.model,
+  });
+  await logAudit({
+    actor: profile, action: 'create', entity: 'mock_exam_question', entityId: examId,
+    description: `${rows.length} question(s) générée(s) par IA (${dpCount} DP) pour l'épreuve ${examId}`,
+  });
+  revalidateExams(examId);
+  return { ok: true, inserted: rows.length, dps: dpCount, costUsd };
 }
 
 /* ─── Résultats des élèves (consultation admin) ─── */

@@ -32,12 +32,25 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
   const [starting, setStarting] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Ordre (mélangé une fois si demandé)
+  // Ordre (mélangé une fois si demandé).
+  // Le mélange se fait par BLOCS et jamais question par question : les questions
+  // consécutives partageant la même vignette forment un dossier progressif
+  // indivisible, qui doit rester groupé et dans l'ordre. Une question isolée
+  // constitue un bloc à elle seule.
   const ordered = useMemo(() => {
     if (exam.question_order !== 'random') return questions;
-    const arr = [...questions];
-    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
-    return arr;
+    const blocks: (typeof questions)[] = [];
+    for (const q of questions) {
+      const prev = blocks[blocks.length - 1];
+      const sameDp = prev && q.vignette && prev[0].vignette === q.vignette;
+      if (sameDp) prev.push(q);
+      else blocks.push([q]);
+    }
+    for (let i = blocks.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+    }
+    return blocks.flat();
   }, [questions, exam.question_order]);
 
   const total = ordered.length;

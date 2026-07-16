@@ -2,12 +2,13 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ClipboardList, Download, Loader2, PenLine, Plus, Save, Trash2 } from 'lucide-react';
+import { Check, ClipboardList, Download, Loader2, PenLine, Plus, Save, Sparkles, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { updateExam, deleteExamQuestion } from '@/app/admin/epreuves-blanches/actions';
 import { DEFAULT_DISCORDANCE_TABLE } from '@/lib/exams/scoring';
 import { ExamQuestionDialog } from './exam-question-dialog';
 import { ContentPickerDialog } from './content-picker-dialog';
+import { ExamAiGenerateDialog } from './exam-ai-generate-dialog';
 import { ExamAccessManager } from './exam-access-manager';
 
 export type CollegeOption = { id: string; nom: string; parentId: string | null };
@@ -80,6 +81,7 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
   const [editing, setEditing] = useState<ExamQuestionData | null>(null);
   const [creatingFormat, setCreatingFormat] = useState<'qcm' | 'qroc' | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
 
   // Ciblage : uniquement les collèges de 1er niveau. « Médecine générale »
   // (col-medecine-generale) regroupe toutes ses spécialités — inutile de lister
@@ -349,6 +351,14 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
             <Button variant="outline" size="sm" onClick={() => setCreatingFormat('qcm')}><Plus className="h-4 w-4" /> QCM</Button>
             <Button variant="outline" size="sm" onClick={() => setCreatingFormat('qroc')}><Plus className="h-4 w-4" /> QROC</Button>
             <Button variant="outline" size="sm" onClick={() => setPickerOpen(true)}><Download className="h-4 w-4" /> Piocher dans le contenu</Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAiOpen(true)}
+              className="border-[#8B5CF6]/40 text-[#6D28D9] hover:bg-[#F3EAFF]"
+            >
+              <Sparkles className="h-4 w-4" /> Générer par IA
+            </Button>
           </div>
         </div>
         {questions.length === 0 ? (
@@ -382,6 +392,14 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
           format={editing?.format ?? creatingFormat ?? 'qcm'}
           qrocMode={qrocMode}
           onClose={() => { setEditing(null); setCreatingFormat(null); router.refresh(); }}
+        />
+      )}
+      {aiOpen && (
+        <ExamAiGenerateDialog
+          examId={exam.id}
+          colleges={colleges}
+          qrocMode={qrocMode}
+          onClose={() => { setAiOpen(false); router.refresh(); }}
         />
       )}
       {pickerOpen && (

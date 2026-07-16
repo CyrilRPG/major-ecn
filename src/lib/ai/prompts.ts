@@ -15,6 +15,85 @@ Vérification des Connaissances) pour médecins à diplôme étranger, calqué s
 Réponses précises, conformes aux recommandations françaises HAS / sociétés savantes
 en vigueur. Pas de réponse vague. Pas d'opinion. Pas de raccourci pédagogique.`;
 
+/**
+ * Génération d'une ÉPREUVE (épreuve blanche ou interrogation de fin de parcours)
+ * à partir des cours réellement disponibles sur la plateforme.
+ *
+ *  - `voie = interne`  → QCM à 5 propositions A-E ;
+ *  - `voie = externe`  → QROC (questions à réponse ouverte courte) ;
+ *  - `nbKnowledge`     → questions de connaissances isolées ;
+ *  - `nbDp` dossiers progressifs de `dpSize` questions (~7), chaque question
+ *    ajoutant un élément clinique nouveau ;
+ *  - `qrocAi = true`   → on demande en plus le barème de correction IA.
+ */
+export function examGenerationPrompt(args: {
+  courseContext: string;
+  voie: 'interne' | 'externe';
+  nbKnowledge: number;
+  nbDp: number;
+  dpSize: number;
+  qrocAi: boolean;
+}): { system: string; user: string } {
+  const { courseContext, voie, nbKnowledge, nbDp, dpSize, qrocAi } = args;
+  const isQcm = voie === 'interne';
+  const fmt = isQcm ? 'QCM' : 'QROC';
+
+  const questionShape = isQcm
+    ? `{ "enonce": "…", "college_id": "<id du collège du cours source>", "items": [{ "lettre": "A", "enonce": "…", "is_correct": true, "justification": "…" }, … 5 items A-E], "correction_generale": "2-4 phrases de synthèse" }`
+    : `{ "enonce": "…", "college_id": "<id du collège du cours source>", "reponse_attendue": "réponse courte|variante acceptée|autre variante", "correction_generale": "corrigé pédagogique"${
+        qrocAi
+          ? `, "keywords": [{ "label": "mot-clé attendu", "points": 1, "mandatory": false }], "zero_if_missing": ["élément dont l'absence annule la note"], "major_errors": ["erreur rédhibitoire"], "corrige_complet": "corrigé de référence complet"`
+          : ''
+      } }`;
+
+  const system = `Tu es un médecin enseignant qui rédige des épreuves blanches pour les EVC
+(Épreuves de Vérification des Connaissances, calquées sur l'EDN), destinées à des
+médecins à diplôme étranger préparant un CONCOURS. ${SCIENTIFIC_QUALITY}
+
+${EXCLUDE_RULES}
+
+RÈGLES ABSOLUES :
+1. Tu ne t'appuies QUE sur le CONTENU DES COURS fourni ci-dessous. Aucune
+   connaissance extérieure, aucune extrapolation : si une notion n'est pas dans
+   les cours fournis, tu ne poses pas de question dessus.
+2. Tu t'INSPIRES DU STYLE DES ANNALES fournies : longueur, tournure, niveau de
+   pertinence des distracteurs, pièges classiques réellement tombés.
+3. Niveau CONCOURS : pas d'exercice scolaire, pas de question triviale. Les
+   distracteurs doivent être plausibles.
+4. Format imposé : ${fmt} uniquement (voie ${voie}).
+5. Les dossiers progressifs sont VRAIMENT progressifs : une vignette clinique de
+   départ, puis ${dpSize} questions qui s'enchaînent logiquement (diagnostic →
+   examens → diagnostic différentiel → prise en charge → évolution/complication).
+   CHAQUE question ajoute un ÉLÉMENT CLINIQUE NOUVEAU (résultat d'examen,
+   évolution, nouveau signe) introduit au début de son énoncé.
+6. Réponds UNIQUEMENT par un JSON valide, sans texte autour.`;
+
+  const user = `Génère une épreuve à partir des cours ci-dessous.
+
+À produire :
+- "knowledge" : ${nbKnowledge} question(s) de CONNAISSANCES isolées au format ${fmt}.
+- "dps" : ${nbDp} dossier(s) progressif(s), chacun avec une "vignette" clinique de
+  6 à 12 lignes et exactement ${dpSize} questions au format ${fmt}.
+
+Format de sortie JSON attendu :
+{
+  "knowledge": [ ${questionShape} ],
+  "dps": [ { "vignette": "cas clinique de départ", "questions": [ ${questionShape} ] } ]
+}
+
+Contraintes de contenu :
+- Répartis les questions sur les différents cours fournis.
+- "college_id" doit reprendre exactement l'identifiant de collège indiqué pour le
+  cours dont la question est issue.
+${isQcm ? '- Chaque QCM a 5 propositions A à E, avec 1 à 4 bonnes réponses (varie), et une justification par proposition.' : '- Chaque QROC attend une réponse COURTE ; liste les formulations acceptables séparées par « | ».'}
+${qrocAi ? '- Renseigne le barème de correction IA (keywords/points, zero_if_missing, major_errors, corrige_complet) pour chaque QROC.' : ''}
+
+=== CONTENU DES COURS DISPONIBLES SUR LA PLATEFORME ===
+${courseContext}`;
+
+  return { system, user };
+}
+
 export function flashcardsPrompt(courseContext: string): { system: string; user: string } {
   const system = `Tu es un médecin enseignant qui rédige des flashcards d'apprentissage actif
 pour les EVC (équivalent EDN). ${SCIENTIFIC_QUALITY}
