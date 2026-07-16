@@ -5,7 +5,7 @@ import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/re
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { PdfViewer } from '@/components/student/pdf-viewer';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canDownloadFiche, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
@@ -39,9 +39,12 @@ export default async function CoursFichePage({ params }: { params: Promise<{ cou
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
   const canEdit = profile.role === 'admin'
     || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'fiche'));
-  // Téléchargement : admin toujours ; prof/élève seulement si l'admin l'a autorisé.
-  const canDownload = profile.role === 'admin'
-    || (profile as { can_download?: boolean }).can_download === true;
+  // Téléchargement : admin toujours ; sinon droit global (can_download) ou
+  // droit accordé sur la spécialité de ce cours (download_colleges).
+  const canDownload = canDownloadFiche(
+    profile as { role?: string | null; can_download?: boolean | null; download_colleges?: string[] | null },
+    c.matiere_id,
+  );
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">

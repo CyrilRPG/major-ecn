@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, permission_type, colleges, cours, can_download, voie } = parsed.data;
+  const { id, first_name, last_name, phone, permission_type, colleges, cours, can_download, download_colleges, voie } = parsed.data;
   // Union des formules : `offers` prime ; `offer` (plus haut rang) sert d'offre
   // d'affichage/de rang (paid_offer, paid_formule…).
   const offerList = Array.from(new Set((parsed.data.offers && parsed.data.offers.length > 0 ? parsed.data.offers : [parsed.data.offer]))) as Offer[];
@@ -74,6 +74,8 @@ export async function PATCH(req: Request) {
       phone: phone ?? null,
       permission_scope,
       ...(can_download === undefined ? {} : { can_download }),
+      // Droit d'impression par spécialité (vidé si le droit global est accordé).
+      ...(download_colleges === undefined ? {} : { download_colleges: can_download ? [] : download_colleges }),
     } as never)
     .eq('id', id);
 

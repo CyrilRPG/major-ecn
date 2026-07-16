@@ -40,6 +40,8 @@ export type EditStudentTarget = {
   pseudo?: string | null;
   permission_scope: unknown;
   can_download?: boolean | null;
+  /** Spécialités où l'impression des fiches est autorisée (si pas de droit global). */
+  download_colleges?: string[] | null;
 };
 
 export function EditStudentDialog({
@@ -71,6 +73,7 @@ export function EditStudentDialog({
   const [address, setAddress] = useState(student.address ?? '');
   const [pseudo, setPseudo] = useState(student.pseudo ?? '');
   const [canDownload, setCanDownload] = useState(student.can_download ?? false);
+  const [downloadColleges, setDownloadColleges] = useState<Set<string>>(new Set(student.download_colleges ?? []));
   const [offersSel, setOffersSel] = useState<OfferId[]>(adminOffersFrom(initialScope));
   const [access, setAccess] = useState<AccessValue>(initialAccess);
 
@@ -85,6 +88,7 @@ export function EditStudentDialog({
     setAddress(student.address ?? '');
     setPseudo(student.pseudo ?? '');
     setCanDownload(student.can_download ?? false);
+    setDownloadColleges(new Set(student.download_colleges ?? []));
     setOffersSel(adminOffersFrom(sc));
     setAccess({
       permissionType: sc.type,
@@ -127,6 +131,8 @@ export function EditStudentDialog({
           // Voie obligatoire pour toutes les spécialités (plus seulement MG).
           voie: access.voie ?? 'interne',
           can_download: canDownload,
+          // Droit global → la liste par spécialité devient inutile, on la vide.
+          download_colleges: canDownload ? [] : Array.from(downloadColleges),
         }),
       });
       if (!res.ok) {
@@ -198,12 +204,45 @@ export function EditStudentDialog({
           <label className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
             <Checkbox checked={canDownload} onCheckedChange={(v) => setCanDownload(!!v)} />
             <span>
-              <span className="block text-sm font-semibold text-(--color-ink)">Autoriser le téléchargement des fichiers</span>
+              <span className="block text-sm font-semibold text-(--color-ink)">Autoriser l’impression des fiches — toutes les spécialités</span>
               <span className="block text-[12px] text-(--color-ink-soft)">
-                Par défaut désactivé. Si activé, cet élève peut télécharger les PDF (filigranés à son identité).
+                Si activé, cet élève peut télécharger les PDF de toutes ses spécialités (filigranés à son identité).
+                Laissez décoché pour n’autoriser que certaines spécialités ci-dessous.
               </span>
             </span>
           </label>
+
+          {!canDownload && (
+            <div className="rounded-xl border border-(--color-border) px-3 py-2.5">
+              <p className="text-sm font-semibold text-(--color-ink)">Impression autorisée par spécialité</p>
+              <p className="mb-2 text-[12px] text-(--color-ink-soft)">
+                Cochez les spécialités dont cet élève peut imprimer les fiches. Vide = aucune impression.
+                {downloadColleges.size > 0 && (
+                  <span className="font-semibold text-(--color-ink-soft)"> {downloadColleges.size} sélectionnée{downloadColleges.size > 1 ? 's' : ''}.</span>
+                )}
+              </p>
+              <div className="grid max-h-44 grid-cols-1 gap-1 overflow-y-auto rounded-lg border border-(--color-border) p-2 sm:grid-cols-2">
+                {colleges.map((col) => (
+                  <label key={col.id} className="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-[13px] hover:bg-(--color-sand-100)">
+                    <Checkbox
+                      checked={downloadColleges.has(col.id)}
+                      onCheckedChange={() =>
+                        setDownloadColleges((prev) => {
+                          const n = new Set(prev);
+                          if (n.has(col.id)) n.delete(col.id); else n.add(col.id);
+                          return n;
+                        })
+                      }
+                    />
+                    <span className="truncate">
+                      {col.nom}
+                      {col.parentId ? <span className="text-(--color-ink-muted)"> · MG</span> : null}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           {submitError && (
             <p className="text-sm text-(--color-danger) bg-red-500/10 border border-(--color-danger)/30 rounded-lg px-3 py-2">

@@ -32,6 +32,10 @@ export type Student = {
   created_at?: string;
   /** Vrai si l'élève ne s'est jamais connecté (auth.users.last_sign_in_at nul). */
   never_connected?: boolean | null;
+  /** Droit d'impression global (toutes spécialités). */
+  can_download?: boolean | null;
+  /** Spécialités où l'impression est autorisée (si pas de droit global). */
+  download_colleges?: string[] | null;
 };
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];

@@ -116,6 +116,27 @@ export function canAccessCours(
   return true;
 }
 
+/**
+ * Droit d'IMPRESSION / TÉLÉCHARGEMENT des fiches, par spécialité (collège).
+ *
+ *  - admin                → toujours autorisé ;
+ *  - `can_download = true`→ droit GLOBAL, toutes spécialités confondues ;
+ *  - sinon                → uniquement les collèges listés dans
+ *    `download_colleges` (ex. `col-mg-neurologie` pour n'autoriser que la
+ *    Neurologie de Médecine générale).
+ *
+ * `collegeId` est le `matiere_id` du cours dont on veut la fiche.
+ */
+export function canDownloadFiche(
+  profile: { role?: string | null; can_download?: boolean | null; download_colleges?: string[] | null },
+  collegeId: string | null | undefined,
+): boolean {
+  if (profile.role === 'admin') return true;
+  if (profile.can_download === true) return true;
+  if (!collegeId) return false;
+  return (profile.download_colleges ?? []).includes(collegeId);
+}
+
 /** Legacy faculté gate kept for unreferenced faculté routes; no-op under the EVC model. */
 export function canAccessFaculte(scope: PermissionScope, _faculteId: string): boolean {
   return scope.type === 'all' || scope.type === 'college';

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { watermarkPdf } from '@/lib/fiches/watermark';
+import { canDownloadFiche } from '@/lib/auth/permissions';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -23,21 +24,14 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
   const { data: profile } = await supabase
     .from('profiles')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .select('role, first_name, last_name, email, can_download' as any)
+    .select('role, first_name, last_name, email, can_download, download_colleges' as any)
     .eq('id', user.id)
     .maybeSingle();
-  // Par défaut, seul l'admin télécharge. Un prof ou un élève (client) ne peut
-  // télécharger que si l'admin lui a explicitement accordé la permission
-  // (profiles.can_download = true).
-  const p = profile as ({ role?: string; first_name?: string; last_name?: string; email?: string; can_download?: boolean } | null);
+  const p = profile as ({
+    role?: string; first_name?: string; last_name?: string; email?: string;
+    can_download?: boolean; download_colleges?: string[] | null;
+  } | null);
   const isAdmin = p?.role === 'admin';
-  const allowed = isAdmin || p?.can_download === true;
-  if (!p || !allowed) {
-    return NextResponse.json(
-      { error: 'Téléchargement non autorisé. Demandez l’accès à un administrateur.' },
-      { status: 403 },
-    );
-  }
 
   const [{ data: fiche }, { data: c }] = await Promise.all([
     supabase
@@ -48,8 +42,18 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
-    supabase.from('cours').select('titre, matieres(nom)').eq('id', coursId).maybeSingle(),
+    supabase.from('cours').select('titre, matiere_id, matieres(nom)').eq('id', coursId).maybeSingle(),
   ]);
+
+  // Droit d'impression PAR SPÉCIALITÉ : admin toujours ; can_download = droit
+  // global ; sinon le collège du cours doit figurer dans download_colleges.
+  const collegeId = (c as { matiere_id?: string } | null)?.matiere_id ?? null;
+  if (!p || !canDownloadFiche(p, collegeId)) {
+    return NextResponse.json(
+      { error: 'Téléchargement non autorisé pour cette spécialité. Demandez l’accès à un administrateur.' },
+      { status: 403 },
+    );
+  }
 
   if (!fiche?.storage_path) {
     return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });

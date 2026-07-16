@@ -36,6 +36,9 @@ export const UpdateStudentSchema = z.object({
   colleges: z.array(z.string()).optional(),
   cours: z.array(z.string()).optional(),
   can_download: z.boolean().optional(),
+  /** Spécialités (collèges) où l'impression des fiches est autorisée. Ignoré si
+   *  `can_download` est vrai — celui-ci accorde le droit sur toutes. */
+  download_colleges: z.array(z.string()).optional(),
   voie: z.enum(['interne', 'externe']).optional().nullable(),
 });
 
