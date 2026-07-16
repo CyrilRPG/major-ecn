@@ -7,7 +7,7 @@ import { logAudit } from '@/lib/audit/log';
 import { ExamSettingsSchema, ExamQuestionSchema, EXAM_STATUSES } from '@/lib/schemas/exam';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { examGenerationPrompt } from '@/lib/ai/prompts';
-import { usageToUsd } from '@/lib/ai/cost';
+import { usageToUsd, BILLING_EUR, GEN_FEATURE } from '@/lib/ai/cost';
 import { z } from 'zod';
 
 type Ok<T = object> = { ok: true } & T;
@@ -229,6 +229,8 @@ const AiGenSchema = z.object({
   voie: z.enum(['interne', 'externe']),
   nbKnowledge: z.number().int().min(0).max(60),
   nbDpQuestions: z.number().int().min(0).max(60),
+  /** Facturation IA : interrogation de fin de parcours (0,30 €) vs épreuve blanche (1,30 €). */
+  scope: z.enum(['epreuve', 'interrogation']).default('epreuve'),
 });
 
 /** Nombre de questions visé par dossier progressif. */
@@ -303,8 +305,11 @@ export async function generateExamQuestionsWithAI(
   const { admin, profile } = await ensureAdmin();
   const parsed = AiGenSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Paramètres invalides' };
-  const { examId, coursIds, voie, nbKnowledge, nbDpQuestions } = parsed.data;
+  const { examId, coursIds, voie, nbKnowledge, nbDpQuestions, scope } = parsed.data;
   if (nbKnowledge + nbDpQuestions === 0) return { ok: false, error: 'Demandez au moins une question.' };
+  // Facturation IA : forfait par génération réussie.
+  const feature = scope === 'interrogation' ? GEN_FEATURE.interrogation : GEN_FEATURE.epreuve;
+  const priceEur = scope === 'interrogation' ? BILLING_EUR.interrogation_generation : BILLING_EUR.exam_generation;
 
   const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
   const { data: exam } = await a.from('mock_exams').select('id, qroc_mode').eq('id', examId).maybeSingle();
@@ -330,7 +335,7 @@ export async function generateExamQuestionsWithAI(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (admin as any).from('ai_generations').insert({
       admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
-      kind: 'exam_generation', items_count: 0, input_tokens: 0, output_tokens: 0,
+      kind: 'exam_generation', feature, items_count: 0, input_tokens: 0, output_tokens: 0,
       cost_usd: 0, price_eur: 0, status: 'failed', error_message: msg, model: 'unknown',
     });
     return { ok: false, error: msg };
@@ -344,7 +349,7 @@ export async function generateExamQuestionsWithAI(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (admin as any).from('ai_generations').insert({
       admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
-      kind: 'exam_generation', items_count: 0,
+      kind: 'exam_generation', feature, items_count: 0,
       input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
       cost_usd: costUsd, price_eur: 0, status: 'failed', error_message: 'Réponse IA mal formée', model: result.model,
     });
@@ -406,9 +411,9 @@ export async function generateExamQuestionsWithAI(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (admin as any).from('ai_generations').insert({
     admin_id: profile.id, cours_id: null, cours_titre: titres.join(' · ').slice(0, 200),
-    kind: 'exam_generation', items_count: rows.length,
+    kind: 'exam_generation', feature, items_count: rows.length,
     input_tokens: result.usage.input_tokens, output_tokens: result.usage.output_tokens,
-    cost_usd: costUsd, price_eur: 0, status: 'success', model: result.model,
+    cost_usd: costUsd, price_eur: priceEur, status: 'success', model: result.model,
   });
   await logAudit({
     actor: profile, action: 'create', entity: 'mock_exam_question', entityId: examId,

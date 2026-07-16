@@ -1,6 +1,6 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { BILLING_EUR, billingLinePrices } from '@/lib/ai/cost';
+import { BILLING_EUR, GEN_FEATURE, billingLinePrices } from '@/lib/ai/cost';
 import { FacturationDashboard, type CourseLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
@@ -13,15 +13,19 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
     a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived'),
     a.from('mock_exam_questions').select('id', { count: 'exact', head: true }).eq('format', 'qroc'),
+    // Générations IA facturées au forfait (uniquement les réussites).
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
+  const generations = { epreuves: genExamRes.count ?? 0, interrogations: genInterroRes.count ?? 0 };
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,6 +61,7 @@ export default async function AdminFacturationPage() {
       lines={lines}
       aiResponses={aiResponses}
       epreuves={{ exams: examsCount, qroc: qrocCount }}
+      generations={generations}
       tarifs={{
         fiche: BILLING_EUR.fiche,
         qcm: BILLING_EUR.qcm_per_course,

@@ -43,6 +43,16 @@ export const BILLING_EUR = {
   fiche: 10,
   flashcards_per_course: 3,
   ai_response: 0.1,
+  /** Génération IA d'une interrogation de fin de parcours (1 item). */
+  interrogation_generation: 0.3,
+  /** Génération IA d'une épreuve blanche (multi-items). */
+  exam_generation: 1.3,
+} as const;
+
+/** Discriminant `ai_generations.feature` des générations d'épreuves facturées. */
+export const GEN_FEATURE = {
+  interrogation: 'interrogation_generation',
+  epreuve: 'exam_generation',
 } as const;
 
 /**

@@ -25,11 +25,15 @@ export type CourseLine = {
 };
 
 type Tarifs = { fiche: number; qcm: number; flash: number; ia: number };
-type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves';
+type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves' | 'generations';
 
 // Tarifs Épreuves blanches : 1 centime fixe / épreuve + 0,5 centime / QROC.
 const EPREUVE_FIXED_EUR = 0.01;
 const QROC_RATE_EUR = 0.005;
+
+// Générations IA facturées au forfait, par génération réussie.
+const GEN_INTERRO_EUR = 0.3;
+const GEN_EPREUVE_EUR = 1.3;
 
 const CAT: Record<CatKey, { label: string; short: string; color: string; soft: string; Icon: LucideIcon }> = {
   fiche: { label: 'Fiches', short: 'Fiche', color: '#2563EB', soft: 'rgba(37,99,235,0.12)', Icon: FileText },
@@ -37,9 +41,10 @@ const CAT: Record<CatKey, { label: string; short: string; color: string; soft: s
   flash: { label: 'Flashcards', short: 'Flashcards', color: '#E4002B', soft: 'rgba(228,0,43,0.12)', Icon: Layers3 },
   ia: { label: 'Réponses IA', short: 'IA', color: '#8B5CF6', soft: 'rgba(139,92,246,0.14)', Icon: MessageSquare },
   epreuves: { label: 'Épreuves blanches', short: 'Épreuves', color: '#0D9488', soft: 'rgba(13,148,136,0.14)', Icon: PencilRuler },
+  generations: { label: 'Générations IA', short: 'Générations', color: '#7C3AED', soft: 'rgba(124,58,237,0.14)', Icon: Sparkles },
 };
 
-const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves'];
+const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves', 'generations'];
 
 // Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
 const MANUAL_QCM_LINES = [
@@ -72,17 +77,26 @@ function remisePct(montant: number): number {
 
 export function FacturationDashboard({
   lines, aiResponses, tarifs, epreuves = { exams: 0, qroc: 0 },
-}: { lines: CourseLine[]; aiResponses: number; tarifs: Tarifs; epreuves?: { exams: number; qroc: number } }) {
+  generations = { interrogations: 0, epreuves: 0 },
+}: {
+  lines: CourseLine[]; aiResponses: number; tarifs: Tarifs;
+  epreuves?: { exams: number; qroc: number };
+  /** Générations IA réussies, facturées au forfait. */
+  generations?: { interrogations: number; epreuves: number };
+}) {
   const [sel, setSel] = useState<CatKey | null>(null);
 
   const data = useMemo(() => {
     const epreuvesTotal = epreuves.exams * EPREUVE_FIXED_EUR + epreuves.qroc * QROC_RATE_EUR;
+    const generationsTotal =
+      generations.interrogations * GEN_INTERRO_EUR + generations.epreuves * GEN_EPREUVE_EUR;
     const counts = {
       fiche: lines.filter((l) => l.fichePrice > 0).length,
       qcm: lines.filter((l) => l.qcmPrice > 0).length + MANUAL_QCM_LINES.length,
       flash: lines.filter((l) => l.flashPrice > 0).length,
       ia: aiResponses,
       epreuves: epreuves.exams,
+      generations: generations.interrogations + generations.epreuves,
     };
     const totals = {
       fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
@@ -91,8 +105,9 @@ export function FacturationDashboard({
       flash: lines.reduce((s, l) => s + l.flashPrice, 0),
       ia: aiResponses * tarifs.ia,
       epreuves: epreuvesTotal,
+      generations: generationsTotal,
     };
-    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves;
+    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves + totals.generations;
 
     // Coût par collège (pour analyse).
     const byCollege = new Map<string, number>();
@@ -103,14 +118,15 @@ export function FacturationDashboard({
     for (const ml of MANUAL_QCM_LINES) byCollege.set(ml.label, (byCollege.get(ml.label) ?? 0) + ml.montant);
     if (totals.ia > 0) byCollege.set('Réponses IA', (byCollege.get('Réponses IA') ?? 0) + totals.ia);
     if (totals.epreuves > 0) byCollege.set('Épreuves blanches', (byCollege.get('Épreuves blanches') ?? 0) + totals.epreuves);
+    if (totals.generations > 0) byCollege.set('Générations IA', (byCollege.get('Générations IA') ?? 0) + totals.generations);
 
     return { counts, totals, grand, byCollege };
-  }, [lines, aiResponses, tarifs, epreuves]);
+  }, [lines, aiResponses, tarifs, epreuves, generations]);
 
   const pct = remisePct(data.grand);
   const remiseEur = (data.grand * pct) / 100;
   const net = data.grand - remiseEur;
-  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR };
+  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR };
 
   const pieData = CAT_KEYS
     .map((k) => ({ key: k, name: CAT[k].label, value: data.totals[k], color: CAT[k].color }))
@@ -123,7 +139,7 @@ export function FacturationDashboard({
 
   // Courses du tableau selon la catégorie sélectionnée.
   const rows = useMemo(() => {
-    if (sel === 'ia' || sel === 'epreuves') return [];
+    if (sel === 'ia' || sel === 'epreuves' || sel === 'generations') return [];
     const keep = (l: CourseLine) =>
       sel === null ? l.fichePrice > 0 || l.qcmPrice > 0 || l.flashPrice > 0
         : sel === 'fiche' ? l.fichePrice > 0 : sel === 'qcm' ? l.qcmPrice > 0 : l.flashPrice > 0;
@@ -216,6 +232,7 @@ export function FacturationDashboard({
           const active = sel === k;
           const meta = k === 'ia' ? `${data.counts[k]} rép. · ${tarifOf[k].toFixed(2)} €`
             : k === 'epreuves' ? `${data.counts[k]} épreuve${data.counts[k] > 1 ? 's' : ''} · 1c + 0,5c/QROC`
+            : k === 'generations' ? `${data.counts[k]} génération${data.counts[k] > 1 ? 's' : ''} · 0,30 € / 1,30 €`
             : `${data.counts[k]} cours · ${tarifOf[k] % 1 === 0 ? tarifOf[k] : tarifOf[k].toFixed(2)} €`;
           return (
             <button
@@ -340,6 +357,7 @@ export function FacturationDashboard({
             <Row label="Flashcards" value={eur(data.totals.flash)} />
             <Row label="Réponses IA" value={eur(data.totals.ia)} />
             <Row label="Épreuves blanches" value={eur(data.totals.epreuves)} />
+            <Row label="Générations IA" value={eur(data.totals.generations)} />
             <div className="my-2 border-t border-dashed border-(--color-border)" />
             <Row label="Total avant remise" value={eur(data.grand)} strong />
             <Row label={`Geste commercial (−${pct.toFixed(1)} %)`} value={`− ${eur(remiseEur)}`} accent />
@@ -355,10 +373,13 @@ export function FacturationDashboard({
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
         <div className="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
           <h3 className="text-sm font-semibold text-(--color-ink)">
-            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : `Cours facturés — ${CAT[sel].label}`}
+            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : sel === 'generations' ? 'Générations IA' : `Cours facturés — ${CAT[sel].label}`}
           </h3>
           <span className="text-xs text-(--color-ink-soft)">
-            {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}` : sel === 'epreuves' ? `${epreuves.exams} épreuve${epreuves.exams > 1 ? 's' : ''}` : `${rows.length} cours`}
+            {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}`
+              : sel === 'epreuves' ? `${epreuves.exams} épreuve${epreuves.exams > 1 ? 's' : ''}`
+              : sel === 'generations' ? `${data.counts.generations} génération${data.counts.generations > 1 ? 's' : ''}`
+              : `${rows.length} cours`}
           </span>
         </div>
 
@@ -373,6 +394,26 @@ export function FacturationDashboard({
             <PencilRuler className="mx-auto mb-2 h-6 w-6 text-(--color-ink-muted)" />
             {epreuves.exams} épreuve{epreuves.exams > 1 ? 's' : ''} · {epreuves.qroc} QROC — facturées 1&nbsp;c / épreuve + 0,5&nbsp;c / QROC,
             soit <span className="font-semibold text-(--color-ink)">{eur(data.totals.epreuves)}</span>.
+          </div>
+        ) : sel === 'generations' ? (
+          <div className="px-5 py-8 text-sm text-(--color-ink-soft)">
+            <Sparkles className="mx-auto mb-3 h-6 w-6 text-(--color-ink-muted)" />
+            <div className="mx-auto max-w-sm space-y-1.5">
+              <Row
+                label={`Interrogations générées — ${generations.interrogations} × 0,30 €`}
+                value={eur(generations.interrogations * GEN_INTERRO_EUR)}
+              />
+              <Row
+                label={`Épreuves blanches générées — ${generations.epreuves} × 1,30 €`}
+                value={eur(generations.epreuves * GEN_EPREUVE_EUR)}
+              />
+              <div className="border-t border-(--color-border) pt-1.5">
+                <Row label="Total" value={eur(data.totals.generations)} strong />
+              </div>
+            </div>
+            <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
+              Forfait par génération réussie. Une génération en échec n’est pas facturée.
+            </p>
           </div>
         ) : rows.length === 0 ? (
           <div className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">Aucun cours dans cette catégorie.</div>
