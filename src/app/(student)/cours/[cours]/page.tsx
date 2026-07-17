@@ -86,19 +86,25 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     ? await Promise.all([
         (supabase as any)
           .from('videos')
-          .select('id, bunny_video_id, titre')
+          .select('id, bunny_video_id, titre, serie_id')
           .eq('cours_id', coursId)
-          .eq('type', 'seance_approfondie'),
+          .eq('type', 'seance_approfondie')
+          .order('created_at', { ascending: true }),
         supabase
           .from('qcm_series')
-          .select('id')
+          .select('id, label, order_index')
           .eq('cours_id', coursId)
-          .eq('type', 'seance'),
+          .eq('type', 'seance')
+          .order('order_index'),
       ])
     : [{ data: [] }, { data: [] }];
   const hasSeanceApprofondie = (seanceApprofondieVideos ?? []).length > 0;
 
   let allSeancesCompleted = false;
+  let completedSerieIds = new Set<string>();
+  const seanceLabelById = new Map<string, string>(
+    ((seanceSeries ?? []) as { id: string; label: string }[]).map((s) => [s.id, s.label]),
+  );
   if (hasSeanceApprofondie && isApprofondi) {
     const seanceIds = (seanceSeries ?? []).map((s: { id: string }) => s.id);
     if (seanceIds.length > 0) {
@@ -108,12 +114,23 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         .eq('user_id', user.id)
         .in('serie_id', seanceIds)
         .not('finished_at', 'is', null);
-      const completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
+      completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
       allSeancesCompleted = seanceIds.every((id: string) => completedSerieIds.has(id));
     } else {
       allSeancesCompleted = true;
     }
   }
+
+  /**
+   * Déblocage PROGRESSIF : une vidéo rattachée à une séance (`videos.serie_id`)
+   * s'ouvre dès que CETTE séance est terminée. Sans rattachement, on garde
+   * l'ancienne règle (toutes les séances du cours) pour ne pas ouvrir
+   * rétroactivement les vidéos déjà en ligne.
+   */
+  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null };
+  const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
+  const isVideoUnlocked = (v: SAVid) =>
+    isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesCompleted);
 
   // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
   // (la vidéo est remplacée par une carte cadenas → popup tarifs).
@@ -219,17 +236,31 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           },
         );
         if (hasSeanceApprofondie && isApprofondi) {
-          standardActions.push({
-            href: allSeancesCompleted ? `/cours/${coursId}/seance-approfondie` : '#locked-seance-approfondie',
-            label: 'Séance approfondie',
-            desc: allSeancesCompleted
-              ? 'Cours vidéo approfondis par le professeur pour aller plus loin.'
-              : 'Complétez d\'abord toutes les séances du professeur (DP & QI) pour débloquer les vidéos.',
-            Icon: allSeancesCompleted ? Video : Lock,
-            accent: '#7C3AED',
-            bg: '#F3EAFF',
-            available: allSeancesCompleted,
-            locked: !allSeancesCompleted,
+          // Une carte PAR séance approfondie : l'élève voit d'un coup d'œil
+          // laquelle est ouverte, et par quelle séance du professeur.
+          const plusieurs = saVids.length > 1;
+          saVids.forEach((v, i) => {
+            const unlocked = isVideoUnlocked(v);
+            const gate = v.serie_id ? seanceLabelById.get(v.serie_id) : null;
+            standardActions.push({
+              href: unlocked
+                ? `/cours/${coursId}/seance-approfondie?v=${v.id}`
+                : '#locked-seance-approfondie',
+              // Le titre de la vidéo prime ; à défaut on numérote dans l'ordre.
+              label: v.titre?.trim()
+                ? v.titre.trim()
+                : plusieurs ? `Séance approfondie ${i + 1}` : 'Séance approfondie',
+              desc: unlocked
+                ? 'Cours vidéo approfondi par le professeur pour aller plus loin.'
+                : gate
+                  ? `Terminez « ${gate} » pour débloquer cette vidéo.`
+                  : 'Complétez d\'abord les séances du professeur (DP & QI) pour débloquer cette vidéo.',
+              Icon: unlocked ? Video : Lock,
+              accent: '#7C3AED',
+              bg: '#F3EAFF',
+              available: unlocked,
+              locked: !unlocked,
+            });
           });
         }
         if (!access || access.video) {

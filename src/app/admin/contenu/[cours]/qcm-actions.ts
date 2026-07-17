@@ -184,12 +184,24 @@ export async function upsertQcmQuestionAction(input: {
 
   const admin = createAdminClient();
 
+  // Lettres correctes, dans l'ordre alphabétique → "ACE" si A, C et E sont
+  // justes. Calculé AVANT la bifurcation insert/update : la branche UPDATE
+  // l'omettait, si bien que corriger les bonnes réponses d'une question
+  // laissait `reponse_attendue` périmé (la notation lit `is_correct` et restait
+  // juste, mais l'affichage du corrigé mentait).
+  const reponse = q.items
+    .filter((it) => it.is_correct)
+    .map((it) => it.lettre)
+    .sort()
+    .join('');
+
   let questionId = input.questionId ?? null;
   if (questionId) {
     // UPDATE question
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (admin as any).from('qcm_questions').update({
       enonce: q.enonce,
+      reponse_attendue: reponse,
       correction_generale: q.correction_generale ?? null,
       images: q.images ?? [],
     }).eq('id', questionId);
@@ -220,8 +232,6 @@ export async function upsertQcmQuestionAction(input: {
         .order('order_index', { ascending: false }).limit(1);
       nextIdx = (last?.[0]?.order_index ?? -1) + 1;
     }
-    // Lettres dans l'ordre attendu → "ACE" si A, C, E sont corrects
-    const reponse = letters.filter((l) => q.items.find((it) => it.lettre === l)?.is_correct).join('');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (admin as any).from('qcm_questions').insert({
       serie_id: input.serieId,
