@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Pencil, Video } from 'lucide-react';
+import { Lock, Pencil, Video } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
@@ -26,38 +26,45 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
   if (!c) notFound();
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
 
-  // Admins bypass séance completion check.
-  if (!isAdmin) {
-    const { data: seanceSeries } = await supabase
-      .from('qcm_series')
-      .select('id')
-      .eq('cours_id', coursId)
-      .eq('type', 'seance');
-    const seanceIds = (seanceSeries ?? []).map((s) => s.id);
-    if (seanceIds.length > 0) {
-      const { data: completedSessions } = await supabase
-        .from('qcm_sessions')
-        .select('serie_id')
-        .eq('user_id', user.id)
-        .in('serie_id', seanceIds)
-        .not('finished_at', 'is', null);
-      const completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
-      if (!seanceIds.every((id) => completedSerieIds.has(id))) {
-        redirect(`/cours/${coursId}`);
-      }
-    }
+  // Déblocage PROGRESSIF : chaque vidéo est verrouillée par SA séance du
+  // professeur (videos.serie_id). Faire la séance 1 ouvre la vidéo 1, sans
+  // exiger d'avoir fait les séances 2 à 12. Les vidéos sans serie_id gardent
+  // l'ancienne règle (toutes les séances du cours), d'où le calcul des deux.
+  const { data: seanceSeries } = await supabase
+    .from('qcm_series')
+    .select('id, label')
+    .eq('cours_id', coursId)
+    .eq('type', 'seance');
+  const seances = seanceSeries ?? [];
+  const seanceIds = seances.map((s) => s.id);
+  const labelById = new Map(seances.map((s) => [s.id, s.label]));
+
+  let completedSerieIds = new Set<string>();
+  if (seanceIds.length > 0) {
+    const { data: completedSessions } = await supabase
+      .from('qcm_sessions')
+      .select('serie_id')
+      .eq('user_id', user.id)
+      .in('serie_id', seanceIds)
+      .not('finished_at', 'is', null);
+    completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
   }
+  const allSeancesDone = seanceIds.every((id) => completedSerieIds.has(id));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videos } = await (supabase as any)
     .from('videos')
-    .select('id, titre, bunny_video_id')
+    .select('id, titre, bunny_video_id, serie_id')
     .eq('cours_id', coursId)
     .eq('type', 'seance_approfondie')
     .order('created_at', { ascending: true });
 
-  type SAVideo = { id: string; titre: string; bunny_video_id: string | null };
+  type SAVideo = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null };
   const saVideos = (videos ?? []) as SAVideo[];
+
+  /** Une vidéo ciblant une séance s'ouvre avec CETTE séance ; sinon, ancienne règle. */
+  const isUnlocked = (v: SAVideo) =>
+    isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesDone);
   const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID ?? '691475';
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
@@ -104,15 +111,33 @@ export default async function SeanceApprofondiePage({ params }: { params: Promis
         {saVideos.map((v) => {
           const bunnyId = v.bunny_video_id;
           const embed = bunnyId && BUNNY_LIBRARY ? bunnyEmbedUrl(bunnyId, { libraryId: BUNNY_LIBRARY }) : null;
+          const unlocked = isUnlocked(v);
+          const gateLabel = v.serie_id ? labelById.get(v.serie_id) : null;
           return (
             <section key={v.id}>
               <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-(--color-ink)">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F3EAFF] text-[#7C3AED]">
-                  <Video className="h-4 w-4" />
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                    unlocked ? 'bg-[#F3EAFF] text-[#7C3AED]' : 'bg-(--color-sand-100) text-(--color-ink-soft)'
+                  }`}
+                >
+                  {unlocked ? <Video className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
                 </span>
                 {v.titre}
               </h2>
-              {embed ? (
+              {!unlocked ? (
+                <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
+                  <EmptyState
+                    icon={Lock}
+                    title="Séance à terminer d'abord"
+                    description={
+                      gateLabel
+                        ? `Terminez « ${gateLabel} » pour débloquer cette vidéo.`
+                        : 'Terminez les séances du professeur de ce cours pour débloquer cette vidéo.'
+                    }
+                  />
+                </div>
+              ) : embed ? (
                 <BunnyVideoPlayer embedUrl={embed} coursId={coursId} watermarkText={watermarkText} />
               ) : (
                 <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
