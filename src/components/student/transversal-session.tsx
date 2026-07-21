@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
+import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -15,6 +16,10 @@ import { recordTransversalSession, type TransversalKind } from '@/app/(student)/
 export type TransversalQuestion = {
   id: string;
   enonce: string;
+  /** Contexte clinique du dossier progressif (l'« énoncé » du dossier, partagé
+   *  par ses questions). Nul pour une question isolée. Comme les questions sont
+   *  piochées individuellement, chaque question porte sa propre vignette. */
+  vignette?: string | null;
   college: string;
   cours_id: string;
   items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
@@ -207,6 +212,24 @@ export function TransversalSession({
           <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
           Session adaptée : {total} {unitLabel} disponibles sur les {targetCount} prévus. Révisez davantage de spécialités pour débloquer plus de questions.
         </div>
+      )}
+
+      {q.vignette && (
+        <details open className="group mb-3 block rounded-xl border border-l-4 border-(--color-accent)/30 border-l-(--color-accent) bg-(--color-accent-soft)/40 p-3.5 shadow-sm">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+              Contexte clinique du dossier
+            </span>
+            <span className="text-[11px] font-medium text-(--color-accent-deep)">
+              <span className="group-open:hidden">Afficher</span>
+              <span className="hidden group-open:inline">Réduire</span>
+            </span>
+          </summary>
+          <div
+            className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)"
+            dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
+          />
+        </details>
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
@@ -658,6 +681,23 @@ function CorrectionsView({
               <span className="text-xs font-medium text-(--color-ink-muted)">{q.college}</span>
               <span className="text-xs font-bold text-(--color-ink)">Q{qi + 1}</span>
             </div>
+            {q.vignette && (
+              <details className="group mb-2 block rounded-lg border border-l-4 border-(--color-accent)/30 border-l-(--color-accent) bg-(--color-accent-soft)/30 px-3 py-2">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+                    Contexte clinique du dossier
+                  </span>
+                  <span className="text-[11px] font-medium text-(--color-accent-deep)">
+                    <span className="group-open:hidden">Afficher</span>
+                    <span className="hidden group-open:inline">Réduire</span>
+                  </span>
+                </summary>
+                <div
+                  className="mt-1.5 break-words text-sm leading-relaxed text-(--color-ink-soft) [&_strong]:font-semibold [&_strong]:text-(--color-ink)"
+                  dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
+                />
+              </details>
+            )}
             <p className="text-sm font-semibold text-(--color-ink)"><RichText html={q.enonce} /></p>
             {q.format === 'qroc' ? (
               <div className="mt-3 rounded-lg border border-[#00695C]/30 bg-[#E0F2F1]/50 px-3 py-2 text-sm">

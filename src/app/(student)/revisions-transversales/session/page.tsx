@@ -47,6 +47,8 @@ type QRow = {
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
   qcm_series: {
     cours_id: string;
+    /** Contexte clinique partagé du dossier progressif (l'« énoncé » du dossier). */
+    vignette: string | null;
     cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } };
   };
 };
@@ -108,7 +110,7 @@ export default async function TransversalSessionPage({
 
   const { data: allQRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
     .in('serie_id', serieIds)
     .order('order_index');
 
@@ -159,6 +161,7 @@ export default async function TransversalSessionPage({
   const questions: TransversalQuestion[] = ordered.slice(0, N).map((q) => ({
     id: q.id,
     enonce: q.enonce,
+    vignette: q.qcm_series.vignette,
     college: q.qcm_series.cours.matieres.nom,
     cours_id: q.qcm_series.cours_id,
     format: q.format ?? 'qcm',
