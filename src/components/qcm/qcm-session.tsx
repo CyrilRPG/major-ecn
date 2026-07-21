@@ -424,7 +424,9 @@ export function QcmSession({
               type="button"
               onClick={() => setEditingQ({
                 id: q.id,
+                format: q.format ?? 'qcm',
                 enonce: q.enonce,
+                reponse_attendue: q.reponse_attendue ?? '',
                 correction_generale: q.correction_generale ?? '',
                 images: q.images ?? [],
                 items: q.items.map((it) => ({

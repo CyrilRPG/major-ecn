@@ -22,7 +22,11 @@ export type QcmItemDraft = {
 };
 export type QcmQuestionDraft = {
   id?: string;
+  /** 'qcm' = items A-E à cocher ; 'qroc' = question rédactionnelle courte (réponse attendue). */
+  format: 'qcm' | 'qroc';
   enonce: string;
+  /** QROC uniquement : réponse-modèle. Variantes acceptées séparées par « | ». */
+  reponse_attendue: string;
   correction_generale: string;
   images: string[];
   items: QcmItemDraft[];
@@ -34,7 +38,9 @@ const EMPTY_ITEM = (l: QcmItemDraft['lettre']): QcmItemDraft => ({
 
 function defaultDraft(): QcmQuestionDraft {
   return {
+    format: 'qcm',
     enonce: '',
+    reponse_attendue: '',
     correction_generale: '',
     images: [],
     items: ['A', 'B', 'C', 'D', 'E'].map((l) => EMPTY_ITEM(l as QcmItemDraft['lettre'])),
@@ -64,10 +70,18 @@ export function QcmQuestionEditor({
 
   const isCreate = !draft.id;
   const showPositionChoice = isCreate && !!insertAnchor;
+  const isQroc = draft.format === 'qroc';
 
   useEffect(() => {
     if (open) {
-      setDraft(initial ? { ...initial, items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })) } : defaultDraft());
+      setDraft(initial
+        ? {
+            ...initial,
+            format: initial.format ?? 'qcm',
+            reponse_attendue: initial.reponse_attendue ?? '',
+            items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })),
+          }
+        : defaultDraft());
       setVignetteEnabled(!!initialVignette);
       setVignette(initialVignette ?? '');
       setAtEnd(false);
@@ -91,6 +105,8 @@ export function QcmQuestionEditor({
 
   const onSubmit = () => {
     setErr(null);
+    if (!flashcardHasContent(draft.enonce)) { setErr('L’énoncé est requis.'); return; }
+
     const items = draft.items
       .filter((it) => flashcardHasContent(it.enonce))
       .map((it) => ({
@@ -100,9 +116,13 @@ export function QcmQuestionEditor({
         justification: it.justification,
         images: it.images,
       }));
-    if (!flashcardHasContent(draft.enonce)) { setErr('L’énoncé est requis.'); return; }
-    if (items.length < 2) { setErr('Au moins 2 items avec un énoncé.'); return; }
-    if (items.filter((i) => i.is_correct).length < 1) { setErr('Au moins un item doit être marqué comme correct.'); return; }
+
+    if (isQroc) {
+      if (!draft.reponse_attendue.trim()) { setErr('La réponse attendue est requise pour une QROC.'); return; }
+    } else {
+      if (items.length < 2) { setErr('Au moins 2 items avec un énoncé.'); return; }
+      if (items.filter((i) => i.is_correct).length < 1) { setErr('Au moins un item doit être marqué comme correct.'); return; }
+    }
 
     start(async () => {
       const res = await upsertQcmQuestionAction({
@@ -110,10 +130,12 @@ export function QcmQuestionEditor({
         serieId,
         coursId,
         question: {
+          format: draft.format,
           enonce: draft.enonce,
+          reponse_attendue: isQroc ? draft.reponse_attendue.trim() : null,
           correction_generale: draft.correction_generale || null,
           images: draft.images,
-          items,
+          items: isQroc ? [] : items,
         },
         insertAfterQuestionId: showPositionChoice && !atEnd ? insertAnchor!.questionId : undefined,
       });
@@ -138,11 +160,34 @@ export function QcmQuestionEditor({
         <DialogHeader>
           <DialogTitle>{draft.id ? 'Modifier la question' : 'Nouvelle question'}</DialogTitle>
           <DialogDescription>
-            Énoncé, items A-E, justifications, corrigé général et images. Mise en forme possible (gras, italique, souligné, couleur, image).
+            {isQroc
+              ? 'Question rédactionnelle courte (QROC) : énoncé, réponse attendue, corrigé et schémas. Mise en forme possible (gras, italique, souligné, couleur, image).'
+              : 'Énoncé, items A-E, justifications, corrigé général et images. Mise en forme possible (gras, italique, souligné, couleur, image).'}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5">
+          {/* Type de question : QCM (items à cocher) ou QROC (réponse rédigée) */}
+          <div className="space-y-1.5">
+            <Label>Type de question</Label>
+            <div className="flex gap-2">
+              {(['qcm', 'qroc'] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setDraft((d) => ({ ...d, format: f }))}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                    draft.format === f
+                      ? 'border-(--color-primary) bg-(--color-primary-soft) text-(--color-primary-deep)'
+                      : 'border-(--color-border) text-(--color-ink-soft) hover:bg-(--color-surface-soft)'
+                  }`}
+                >
+                  {f === 'qcm' ? 'QCM (items A-E)' : 'QROC (réponse courte)'}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Vignette clinique (optionnelle, niveau série / DP) */}
           <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
             <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-(--color-ink)">
@@ -183,7 +228,24 @@ export function QcmQuestionEditor({
             label="Images de la question (arbres décisionnels, ECG, scanners, schémas…)"
           />
 
-          {/* Items A-E */}
+          {/* QROC : réponse attendue */}
+          {isQroc && (
+            <div className="space-y-1.5">
+              <Label>Réponse attendue</Label>
+              <Textarea
+                rows={3}
+                value={draft.reponse_attendue}
+                onChange={(e) => setDraft((d) => ({ ...d, reponse_attendue: e.target.value }))}
+                placeholder="Ex : Embolie pulmonaire | EP"
+              />
+              <p className="text-[11px] text-(--color-ink-muted)">
+                Réponse-modèle affichée à l&apos;étudiant. Séparez les variantes acceptées par «&nbsp;|&nbsp;» (ex.&nbsp;: «&nbsp;Embolie pulmonaire | EP&nbsp;»).
+              </p>
+            </div>
+          )}
+
+          {/* Items A-E (QCM uniquement) */}
+          {!isQroc && (
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <Label>Items (réponses A-E)</Label>
@@ -244,6 +306,7 @@ export function QcmQuestionEditor({
               </div>
             ))}
           </div>
+          )}
 
           {/* Corrigé général */}
           <div className="space-y-1.5">
@@ -252,11 +315,13 @@ export function QcmQuestionEditor({
               coursId={coursId}
               value={draft.correction_generale}
               onChange={(html) => setDraft((d) => ({ ...d, correction_generale: html }))}
-              placeholder="Explication globale de la question, points clés, rappels physiopathologiques…"
+              placeholder="Explication globale, points clés, rappels physiopathologiques… Insérez un schéma avec le bouton image."
               minHeight={110}
             />
             <p className="text-[11px] text-(--color-ink-muted)">
-              Apparaît sous l&apos;ensemble des items au moment du corrigé, en plus des justifications par item.
+              {isQroc
+                ? 'Affiché après la réponse au moment du corrigé. Utilisez le bouton image de la barre d’outils pour insérer un schéma (arbre décisionnel, ECG, illustration…).'
+                : 'Apparaît sous l’ensemble des items au moment du corrigé, en plus des justifications par item. Le bouton image permet d’insérer un schéma.'}
             </p>
           </div>
 

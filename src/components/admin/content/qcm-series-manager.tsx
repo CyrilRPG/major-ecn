@@ -130,7 +130,9 @@ export function QcmSeriesManager({
                           <p className="flex-1 text-(--color-ink) leading-snug">
                             {flashcardPlainText(q.enonce)}
                             <span className="ml-2 inline-flex items-center gap-1 text-[10px] text-(--color-ink-muted)">
-                              {q.items.length} items · {q.items.filter((it) => it.is_correct).length} vrais
+                              {q.format === 'qroc'
+                                ? `QROC${q.reponse_attendue ? ` · ${flashcardPlainText(q.reponse_attendue).slice(0, 40)}` : ''}`
+                                : `${q.items.length} items · ${q.items.filter((it) => it.is_correct).length} vrais`}
                               {(q.images?.length ?? 0) > 0 && ` · ${q.images.length} image${q.images.length > 1 ? 's' : ''}`}
                               {q.correction_generale && ' · corrigé'}
                             </span>

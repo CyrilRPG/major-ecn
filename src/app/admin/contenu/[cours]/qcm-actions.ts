@@ -20,10 +20,22 @@ const ItemSchema = z.object({
 });
 
 const QuestionSchema = z.object({
+  // 'qcm' = items A-E à cocher ; 'qroc' = question rédactionnelle courte (réponse attendue).
+  format: z.enum(['qcm', 'qroc']).optional().default('qcm'),
   enonce: z.string().min(3, 'Énoncé requis (3+ caractères)'),
+  // QROC uniquement : réponse-modèle (variantes acceptées séparées par « | »).
+  reponse_attendue: z.string().optional().nullable(),
   correction_generale: z.string().optional().nullable(),
   images: z.array(z.string()).optional().default([]),
-  items: z.array(ItemSchema).min(2, 'Au moins 2 items').max(5, 'Maximum 5 items'),
+  items: z.array(ItemSchema).max(5, 'Maximum 5 items').optional().default([]),
+}).superRefine((val, ctx) => {
+  if (val.format === 'qroc') {
+    if (!val.reponse_attendue || !val.reponse_attendue.trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Réponse attendue requise pour une QROC.', path: ['reponse_attendue'] });
+    }
+  } else if (val.items.length < 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Au moins 2 items.', path: ['items'] });
+  }
 });
 
 export type QcmQuestionInput = z.infer<typeof QuestionSchema>;
@@ -161,6 +173,7 @@ export async function upsertQcmQuestionAction(input: {
   const parsed = QuestionSchema.safeParse(input.question);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
   const raw = parsed.data;
+  const isQroc = raw.format === 'qroc';
   // Le contenu peut être du HTML riche (gras/italique/souligné/couleur/image) :
   // on l'assainit selon la même liste blanche que les flashcards.
   const q = {
@@ -173,40 +186,41 @@ export async function upsertQcmQuestionAction(input: {
       justification: it.justification ? sanitizeFlashcardHtml(it.justification) : it.justification,
     })),
   };
-  if (q.items.filter((i) => i.is_correct).length < 1) {
-    return { error: 'Au moins un item doit être marqué comme correct.' };
-  }
-  // unicité des lettres
-  const letters = q.items.map((i) => i.lettre);
-  if (new Set(letters).size !== letters.length) {
-    return { error: 'Les lettres d\'items doivent être uniques (A, B, C, D, E).' };
+
+  // Réponse attendue :
+  //  - QCM  → lettres correctes triées ("ACE" si A, C et E sont justes), calculées
+  //           depuis is_correct. Recalculée à chaque upsert pour ne jamais laisser
+  //           `reponse_attendue` périmé après correction des bonnes réponses.
+  //  - QROC → texte-modèle saisi par le correcteur (variantes séparées par « | »).
+  let reponse: string;
+  if (isQroc) {
+    reponse = (raw.reponse_attendue ?? '').trim();
+  } else {
+    if (q.items.filter((i) => i.is_correct).length < 1) {
+      return { error: 'Au moins un item doit être marqué comme correct.' };
+    }
+    const letters = q.items.map((i) => i.lettre);
+    if (new Set(letters).size !== letters.length) {
+      return { error: 'Les lettres d\'items doivent être uniques (A, B, C, D, E).' };
+    }
+    reponse = q.items.filter((it) => it.is_correct).map((it) => it.lettre).sort().join('');
   }
 
   const admin = createAdminClient();
-
-  // Lettres correctes, dans l'ordre alphabétique → "ACE" si A, C et E sont
-  // justes. Calculé AVANT la bifurcation insert/update : la branche UPDATE
-  // l'omettait, si bien que corriger les bonnes réponses d'une question
-  // laissait `reponse_attendue` périmé (la notation lit `is_correct` et restait
-  // juste, mais l'affichage du corrigé mentait).
-  const reponse = q.items
-    .filter((it) => it.is_correct)
-    .map((it) => it.lettre)
-    .sort()
-    .join('');
 
   let questionId = input.questionId ?? null;
   if (questionId) {
     // UPDATE question
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (admin as any).from('qcm_questions').update({
+      format: raw.format,
       enonce: q.enonce,
       reponse_attendue: reponse,
       correction_generale: q.correction_generale ?? null,
       images: q.images ?? [],
     }).eq('id', questionId);
     if (error) return { error: error.message };
-    // purge items existants → reinsert
+    // purge items existants → reinsert (ou suppression définitive si on passe en QROC)
     await admin.from('qcm_items').delete().eq('question_id', questionId);
   } else {
     // INSERT question
@@ -235,6 +249,7 @@ export async function upsertQcmQuestionAction(input: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (admin as any).from('qcm_questions').insert({
       serie_id: input.serieId,
+      format: raw.format,
       enonce: q.enonce,
       order_index: nextIdx,
       reponse_attendue: reponse,
@@ -245,18 +260,20 @@ export async function upsertQcmQuestionAction(input: {
     questionId = data.id;
   }
 
-  // Insert items
-  const itemsToInsert = q.items.map((it) => ({
-    question_id: questionId!,
-    lettre: it.lettre,
-    enonce: it.enonce,
-    is_correct: it.is_correct,
-    justification: it.justification ?? '',
-    images: it.images ?? [],
-  }));
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: itemsErr } = await (admin as any).from('qcm_items').insert(itemsToInsert);
-  if (itemsErr) return { error: itemsErr.message };
+  // Insert items — QCM uniquement (une QROC n'a pas d'items).
+  if (!isQroc && q.items.length > 0) {
+    const itemsToInsert = q.items.map((it) => ({
+      question_id: questionId!,
+      lettre: it.lettre,
+      enonce: it.enonce,
+      is_correct: it.is_correct,
+      justification: it.justification ?? '',
+      images: it.images ?? [],
+    }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: itemsErr } = await (admin as any).from('qcm_items').insert(itemsToInsert);
+    if (itemsErr) return { error: itemsErr.message };
+  }
 
   const ctx = await loadCoursCtx(input.coursId);
   await logAudit({
