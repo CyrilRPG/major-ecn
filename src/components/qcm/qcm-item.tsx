@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AlertTriangle, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ItemOutcome } from '@/lib/qcm/grade';
 import { sanitizeFlashcardHtml, flashcardPlainText } from '@/lib/flashcards/rich-text';
+import { RichTextZoom, ZoomableImage } from './image-zoom';
 
 /** Caractères avant troncature « voir plus » sur une justification d'item. */
 const JUSTIF_MAX = 280;
@@ -104,13 +104,13 @@ export function QcmItem({
           {item.lettre}
         </span>
         <span className="flex-1 text-sm leading-snug text-(--color-ink)">
-          <span className="[&_img]:my-1 [&_img]:max-h-40 [&_img]:rounded" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(item.enonce) }} />
+          <RichTextZoom>
+            <span className="[&_img]:my-1 [&_img]:max-h-56 [&_img]:rounded" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(item.enonce) }} />
+          </RichTextZoom>
           {(item.images?.length ?? 0) > 0 && (
             <span className="mt-2 flex flex-wrap gap-2">
               {item.images!.map((src) => (
-                <span key={src} className="relative block h-20 w-20 overflow-hidden rounded-md border border-(--color-border) bg-white sm:h-24 sm:w-24">
-                  <Image src={src} alt="" fill sizes="96px" className="object-contain p-1" unoptimized />
-                </span>
+                <ZoomableImage key={src} src={src} className="h-32 w-32 sm:h-40 sm:w-40" sizes="160px" />
               ))}
             </span>
           )}
@@ -166,10 +166,12 @@ function JustificationText({ text }: { text: string }) {
   return (
     <>
       {(!isLong || expanded) ? (
-        <div
-          className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug [&_img]:my-1 [&_img]:max-h-40 [&_img]:rounded"
-          dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(text) }}
-        />
+        <RichTextZoom>
+          <div
+            className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug [&_img]:my-1 [&_img]:max-h-56 [&_img]:rounded"
+            dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(text) }}
+          />
+        </RichTextZoom>
       ) : (
         <p className="mt-0.5 whitespace-pre-line text-xs text-(--color-ink-soft) leading-snug">
           {plain.slice(0, JUSTIF_MAX).trimEnd() + '…'}

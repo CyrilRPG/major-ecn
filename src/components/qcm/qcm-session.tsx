@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
 import { QrocItem, type QrocOutcome } from './qroc-item';
+import { RichTextZoom, ZoomableImage } from './image-zoom';
 import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
 import { sanitizeFlashcardHtml, sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
@@ -377,10 +378,12 @@ export function QcmSession({
             </span>
           </summary>
           {vignette && (
-            <div
-              className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)"
-              dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(vignette) }}
-            />
+            <RichTextZoom>
+              <div
+                className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg"
+                dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(vignette) }}
+              />
+            </RichTextZoom>
           )}
         </details>
       )}
@@ -445,16 +448,16 @@ export function QcmSession({
           )}
           </div>
         </div>
-        <h2
-          className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
-          dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }}
-        />
+        <RichTextZoom>
+          <h2
+            className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg"
+            dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }}
+          />
+        </RichTextZoom>
         {(q.images?.length ?? 0) > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {q.images!.map((src) => (
-              <div key={src} className="relative h-32 w-32 overflow-hidden rounded-lg border border-(--color-border) bg-white sm:h-40 sm:w-40">
-                <Image src={src} alt="" fill sizes="160px" className="object-contain p-1.5" unoptimized />
-              </div>
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
             ))}
           </div>
         )}

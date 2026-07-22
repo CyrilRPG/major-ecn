@@ -14,7 +14,7 @@ import { upsertQcmQuestionAction, uploadQcmImageAction, updateSerieVignetteActio
 import { flashcardHasContent } from '@/lib/flashcards/rich-text';
 
 export type QcmItemDraft = {
-  lettre: 'A' | 'B' | 'C' | 'D' | 'E';
+  lettre: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
   enonce: string;
   is_correct: boolean;
   justification: string;
@@ -96,9 +96,10 @@ export function QcmQuestionEditor({
     setDraft((d) => ({ ...d, items: d.items.filter((_, i) => i !== idx) }));
   };
   const addItem = () => {
-    if (draft.items.length >= 5) return;
+    // A-K : la base accepte jusqu'à 11 propositions (banques hémato / EVC 2025).
+    if (draft.items.length >= 11) return;
     const used = new Set(draft.items.map((i) => i.lettre));
-    const next = (['A', 'B', 'C', 'D', 'E'] as const).find((l) => !used.has(l));
+    const next = (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'] as const).find((l) => !used.has(l));
     if (!next) return;
     setDraft((d) => ({ ...d, items: [...d.items, EMPTY_ITEM(next)] }));
   };
@@ -249,7 +250,7 @@ export function QcmQuestionEditor({
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <Label>Items (réponses A-E)</Label>
-              {draft.items.length < 5 && (
+              {draft.items.length < 11 && (
                 <Button type="button" variant="ghost" size="sm" onClick={addItem}>
                   <Plus className="h-3.5 w-3.5" /> Ajouter un item
                 </Button>

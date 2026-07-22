@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
+import { RichTextZoom } from '@/components/qcm/image-zoom';
 import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
@@ -225,10 +226,12 @@ export function TransversalSession({
               <span className="hidden group-open:inline">Réduire</span>
             </span>
           </summary>
-          <div
-            className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)"
-            dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
-          />
+          <RichTextZoom>
+            <div
+              className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg"
+              dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
+            />
+          </RichTextZoom>
         </details>
       )}
 
@@ -237,7 +240,7 @@ export function TransversalSession({
           {isQroc ? 'QROC' : 'Énoncé'}
         </p>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
-          <RichText html={q.enonce} />
+          <RichTextZoom><RichText html={q.enonce} /></RichTextZoom>
         </h2>
       </div>
 

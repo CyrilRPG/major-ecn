@@ -8,7 +8,7 @@ import { upsertExamQuestion } from '@/app/admin/epreuves-blanches/actions';
 import type { CollegeOption, ExamQuestionData } from './exam-editor';
 
 const inputCls = 'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)';
-const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 type Item = { lettre: string; enonce: string; is_correct: boolean; justification: string };
 
 type Keyword = { label: string; points: number; mandatory: boolean };
@@ -53,7 +53,7 @@ export function ExamQuestionDialog({
   );
 
   const updateItem = (i: number, patch: Partial<Item>) => setItems((p) => p.map((x, j) => (j === i ? { ...x, ...patch } : x)));
-  const addItem = () => setItems((p) => (p.length >= 5 ? p : [...p, { lettre: LETTERS[p.length], enonce: '', is_correct: false, justification: '' }]));
+  const addItem = () => setItems((p) => (p.length >= LETTERS.length ? p : [...p, { lettre: LETTERS[p.length], enonce: '', is_correct: false, justification: '' }]));
 
   const submit = () => {
     setError(null);
@@ -122,7 +122,7 @@ export function ExamQuestionDialog({
                   </div>
                 ))}
               </div>
-              {items.length < 5 && (
+              {items.length < LETTERS.length && (
                 <button type="button" onClick={addItem} className="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-(--color-primary)"><Plus className="h-3.5 w-3.5" /> Ajouter une proposition</button>
               )}
             </div>

@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { AlertTriangle, ArrowLeft, ArrowRight, Clock, Loader2, PencilRuler } from 'lucide-react';
+import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn, formatDuration } from '@/lib/utils';
@@ -144,16 +144,20 @@ export function ExamRunner({ exam, questions }: { exam: ExamMeta; questions: Q[]
       {q.vignette && (
         <details open className="mb-3 rounded-xl border border-l-4 border-(--color-primary)/30 border-l-(--color-primary) bg-(--color-primary-soft)/40 p-3.5">
           <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-primary-deep)">Contexte clinique</summary>
-          <div className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink)" dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }} />
+          <RichTextZoom>
+            <div className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg" dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }} />
+          </RichTextZoom>
         </details>
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-        <h2 className="text-base font-semibold leading-snug text-(--color-ink)" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }} />
+        <RichTextZoom>
+          <h2 className="text-base font-semibold leading-snug text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }} />
+        </RichTextZoom>
         {q.images.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {q.images.map((src) => (
-              <div key={src} className="relative h-32 w-32 overflow-hidden rounded-lg border border-(--color-border) bg-white"><Image src={src} alt="" fill sizes="128px" className="object-contain p-1.5" unoptimized /></div>
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
             ))}
           </div>
         )}

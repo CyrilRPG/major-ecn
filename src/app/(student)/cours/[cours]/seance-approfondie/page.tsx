@@ -65,12 +65,12 @@ export default async function SeanceApprofondiePage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videos } = await (supabase as any)
     .from('videos')
-    .select('id, titre, bunny_video_id, serie_id')
+    .select('id, titre, bunny_video_id, serie_id, unlock_direct')
     .eq('cours_id', coursId)
     .eq('type', 'seance_approfondie')
     .order('created_at', { ascending: true });
 
-  type SAVideo = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null };
+  type SAVideo = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; unlock_direct?: boolean | null };
   const allSaVideos = (videos ?? []) as SAVideo[];
   // `?v=<id>` : la page du cours propose une carte par séance approfondie et
   // pointe ici avec l'identifiant. On n'affiche alors QUE cette vidéo. Sans le
@@ -80,9 +80,11 @@ export default async function SeanceApprofondiePage({
     : allSaVideos;
   if (onlyVideoId && saVideos.length === 0) notFound();
 
-  /** Une vidéo ciblant une séance s'ouvre avec CETTE séance ; sinon, ancienne règle. */
+  /** Une vidéo ciblant une séance s'ouvre avec CETTE séance ; `unlock_direct`
+   *  (séance sans exercices du professeur associés) est accessible d'emblée ;
+   *  sinon, ancienne règle : toutes les séances du cours. */
   const isUnlocked = (v: SAVideo) =>
-    isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesDone);
+    isAdmin || !!v.unlock_direct || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesDone);
   const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID ?? '691475';
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 

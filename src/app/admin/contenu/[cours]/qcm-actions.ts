@@ -12,7 +12,8 @@ import { sanitizeFlashcardHtml, flashcardPlainText, flashcardHasContent } from '
    ============================================================ */
 
 const ItemSchema = z.object({
-  lettre: z.enum(['A', 'B', 'C', 'D', 'E']),
+  // A-K : certaines banques (hémato MG, EVC 2025) ont jusqu'à 11 propositions.
+  lettre: z.enum(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']),
   enonce: z.string().min(1, 'Énoncé requis'),
   is_correct: z.boolean(),
   justification: z.string().optional().default(''),
@@ -201,7 +202,7 @@ export async function upsertQcmQuestionAction(input: {
     }
     const letters = q.items.map((i) => i.lettre);
     if (new Set(letters).size !== letters.length) {
-      return { error: 'Les lettres d\'items doivent être uniques (A, B, C, D, E).' };
+      return { error: 'Les lettres d\'items doivent être uniques (A à K).' };
     }
     reponse = q.items.filter((it) => it.is_correct).map((it) => it.lettre).sort().join('');
   }
