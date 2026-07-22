@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { assertAccessActive } from '@/lib/auth/access';
+import { getRequestUser } from '@/lib/auth/bearer';
+import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { callClaude, FAST_MODEL } from '@/lib/ai/anthropic';
 
 /**
@@ -120,9 +122,17 @@ function trim(text: string, max: number): string {
 }
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  const { supabase, user } = auth;
+  if (auth.via === 'bearer') {
+    const check = await assertDeviceSlot(user.id, req.headers.get(DEVICE_HEADER));
+    if (!check.ok) return check.response;
+  }
+
+  const expiredRes = await assertAccessActive(supabase, user.id);
+  if (expiredRes) return expiredRes;
 
   const { coursId, message } = (await req.json().catch(() => ({}))) as {
     coursId?: string; message?: string;

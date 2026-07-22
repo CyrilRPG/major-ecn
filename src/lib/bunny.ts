@@ -72,6 +72,75 @@ export function tusUploadAuth(videoId: string) {
   };
 }
 
+export type BunnyVideoInfo = {
+  guid: string;
+  /** 0..6 — 3 = terminé, 4 = résolutions en cours, 5 = échec (cf. docs Bunny). */
+  status: number;
+  lengthSeconds: number;
+  hasMP4Fallback: boolean;
+  availableResolutions: string[];
+};
+
+/** Métadonnées d'une vidéo (dont la disponibilité du MP4 Fallback). */
+export async function getBunnyVideoInfo(videoId: string): Promise<BunnyVideoInfo | null> {
+  const cfg = getBunnyConfig();
+  if (!cfg) return null;
+  const res = await fetch(`https://video.bunnycdn.com/library/${cfg.libraryId}/videos/${videoId}`, {
+    headers: { AccessKey: cfg.apiKey, accept: 'application/json' },
+  });
+  if (!res.ok) return null;
+  const d = (await res.json()) as {
+    guid?: string; status?: number; length?: number;
+    hasMP4Fallback?: boolean; availableResolutions?: string | null;
+  };
+  return {
+    guid: d.guid ?? videoId,
+    status: d.status ?? 0,
+    lengthSeconds: d.length ?? 0,
+    hasMP4Fallback: !!d.hasMP4Fallback,
+    availableResolutions: (d.availableResolutions ?? '').split(',').map((r) => r.trim()).filter(Boolean),
+  };
+}
+
+/** Relance l'encodage d'une vidéo (nécessaire pour générer les MP4 des vidéos
+ *  uploadées AVANT l'activation du MP4 Fallback sur la librairie). */
+export async function reencodeBunnyVideo(videoId: string): Promise<boolean> {
+  const cfg = getBunnyConfig();
+  if (!cfg) return false;
+  const res = await fetch(`https://video.bunnycdn.com/library/${cfg.libraryId}/videos/${videoId}/reencode`, {
+    method: 'POST',
+    headers: { AccessKey: cfg.apiKey, accept: 'application/json' },
+  });
+  return res.ok;
+}
+
+/** Hostname CDN de la librairie (ex. vz-xxxxx-xxx.b-cdn.net) — env dédiée. */
+export function bunnyCdnHost(): string | null {
+  return process.env.BUNNY_STREAM_CDN_HOST?.trim() || null;
+}
+
+/**
+ * URL MP4 directe signée pour le téléchargement hors ligne (app mobile).
+ * Nécessite le MP4 Fallback actif sur la librairie + BUNNY_STREAM_CDN_HOST.
+ * Token = SHA256(tokenKey + videoId + expires) — même schéma que l'embed
+ * (auth token « Embed view » de Bunny Stream, qui couvre aussi les fichiers
+ * directs de la zone vidéo). Sans tokenKey, URL non signée.
+ */
+export function bunnySignedMp4Url(
+  videoId: string,
+  resolution: string,
+  expiresInSec = 6 * 60 * 60,
+): string | null {
+  const host = bunnyCdnHost();
+  if (!host) return null;
+  const base = `https://${host}/${videoId}/play_${resolution}.mp4`;
+  const cfg = getBunnyConfig();
+  if (!cfg?.tokenKey) return base;
+  const expires = Math.floor(Date.now() / 1000) + expiresInSec;
+  const token = sha256(`${cfg.tokenKey}${videoId}${expires}`);
+  return `${base}?token=${token}&expires=${expires}`;
+}
+
 /**
  * URL d'embed (iframe) pour la lecture. Si la librairie a l'authentification
  * par token activée (BUNNY_STREAM_TOKEN_KEY), on signe l'URL (validité limitée).

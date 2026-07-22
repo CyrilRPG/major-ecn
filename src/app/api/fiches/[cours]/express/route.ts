@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument, StandardFonts, degrees, rgb, PDFName, PDFRef, PDFRawStream, PDFArray, decodePDFRawStream } from 'pdf-lib';
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { assertAccessActive } from '@/lib/auth/access';
+import { getRequestUser } from '@/lib/auth/bearer';
+import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,11 +14,19 @@ export const dynamic = 'force-dynamic';
  * (ou avant-dernière si la dernière est quasiment vierge).
  * Le PDF est watermarké comme la fiche complète.
  */
-export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
+export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  const { supabase, user } = auth;
+  if (auth.via === 'bearer') {
+    const check = await assertDeviceSlot(user.id, req.headers.get(DEVICE_HEADER));
+    if (!check.ok) return check.response;
+  }
+
+  const expiredRes = await assertAccessActive(supabase, user.id);
+  if (expiredRes) return expiredRes;
 
   const [{ data: profile }, { data: fiches }] = await Promise.all([
     supabase.from('profiles').select('first_name, last_name, email').eq('id', user.id).maybeSingle(),

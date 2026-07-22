@@ -28,6 +28,13 @@ export async function GET(req: Request) {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
+
+  // Ménage quotidien : purge des op_id de synchro mobile > 90 jours (la fenêtre
+  // de rejeu d'une app hors ligne est bien plus courte). Best-effort.
+  try {
+    const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+    await a.from('sync_ops').delete().lt('applied_at', cutoff);
+  } catch { /* best-effort */ }
   const base = (siteUrl() || 'https://www.major-ecn.fr').replace(/\/$/, '');
 
   // 1) Date de dernière connexion par utilisateur (pagination défensive).

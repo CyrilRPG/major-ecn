@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, CalendarDays, ClipboardList, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, UserCog, Users } from 'lucide-react';
+import { AlertTriangle, BarChart3, CalendarClock, CalendarDays, ClipboardList, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, UserCog, Users } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -13,6 +13,7 @@ type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; 
 
 const ALL_ITEMS: Item[] = [
   { href: '/admin/eleves', label: 'Élèves', Icon: Users },
+  { href: '/admin/sessions', label: 'Sessions EVC', Icon: CalendarClock, adminOnly: true },
   { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
   { href: '/admin/arborescence', label: 'Arborescence', Icon: ListTree },
   { href: '/admin/agenda', label: 'Agenda', Icon: CalendarDays },

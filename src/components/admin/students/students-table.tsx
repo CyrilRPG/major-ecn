@@ -1,8 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Award, Download, Mail, Search } from 'lucide-react';
+import { useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { Award, CalendarClock, Download, Loader2, Mail, Search } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -36,7 +41,14 @@ export type Student = {
   can_download?: boolean | null;
   /** Spécialités où l'impression est autorisée (si pas de droit global). */
   download_colleges?: string[] | null;
+  /** Session EVC de rattachement (fin d'accès par défaut). */
+  evc_session_id?: string | null;
+  access_start?: string | null;
+  /** Fin d'accès individuelle — prime sur la date de la session. */
+  access_end?: string | null;
 };
+
+export type EvcSessionOption = { id: string; label: string; default_access_end: string; is_default?: boolean };
 
 const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
@@ -86,6 +98,16 @@ function fmtDate(iso?: string): string {
   if (Number.isNaN(d.getTime())) return '—';
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
 }
+/** Fin d'accès effective : date individuelle sinon date par défaut de la session. */
+function effectiveAccessEnd(s: Student, sessionsById: Map<string, EvcSessionOption>): string | null {
+  if (s.access_end) return s.access_end;
+  if (s.evc_session_id) return sessionsById.get(s.evc_session_id)?.default_access_end ?? null;
+  return null;
+}
+function isAccessExpired(s: Student, sessionsById: Map<string, EvcSessionOption>): boolean {
+  const end = effectiveAccessEnd(s, sessionsById);
+  return !!end && new Date(end).getTime() < Date.now();
+}
 function withinPeriod(iso: string | undefined, period: string): boolean {
   if (period === 'all') return true;
   if (!iso) return false;
@@ -100,10 +122,12 @@ export function StudentsTable({
   students,
   colleges,
   offers,
+  sessions = [],
 }: {
   students: Student[];
   colleges: { id: string; nom: string; parentId?: string | null }[];
   offers: { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] }[];
+  sessions?: EvcSessionOption[];
 }) {
   const [q, setQ] = useState('');
   const [promo, setPromo] = useState('all');
@@ -115,6 +139,9 @@ export function StudentsTable({
   const [connexion, setConnexion] = useState('all'); // all | never
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [emailOpen, setEmailOpen] = useState(false);
+  const [assignOpen, setAssignOpen] = useState(false);
+
+  const sessionsById = useMemo(() => new Map(sessions.map((s) => [s.id, s])), [sessions]);
 
   /** Liste triée des spécialités présentes. */
   const specialties = useMemo(() => {
@@ -139,13 +166,13 @@ export function StudentsTable({
       if (offer !== 'all' && offerOf(s) !== offer) return false;
       if (payment === 'paid' && !isPaid(s)) return false;
       if (payment === 'free' && isPaid(s)) return false;
-      if (access === 'active' && !isActive(s)) return false;
-      if (access === 'expired' && isActive(s)) return false;
+      if (access === 'active' && (!isActive(s) || isAccessExpired(s, sessionsById))) return false;
+      if (access === 'expired' && isActive(s) && !isAccessExpired(s, sessionsById)) return false;
       if (connexion === 'never' && !s.never_connected) return false;
       if (!withinPeriod(s.created_at, period)) return false;
       return true;
     });
-  }, [students, q, promo, specialty, offer, payment, access, connexion, period]);
+  }, [students, q, promo, specialty, offer, payment, access, connexion, period, sessionsById]);
 
   const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
   const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
@@ -183,7 +210,9 @@ export function StudentsTable({
       'Voie': voieOf(s),
       'Abonnement': offerLabel(offerOf(s)),
       'Paiement': isPaid(s) ? 'Payé' : 'Gratuit (Découverte)',
-      'Accès': isActive(s) ? 'Actif' : 'Expiré / Inactif',
+      'Accès': !isActive(s) ? 'Inactif' : isAccessExpired(s, sessionsById) ? 'Expiré' : 'Actif',
+      'Session EVC': (s.evc_session_id && sessionsById.get(s.evc_session_id)?.label) || '—',
+      'Accès jusqu\'au': fmtDate(effectiveAccessEnd(s, sessionsById) ?? undefined),
       'Promotion': s.promotion ?? '',
       'Adresse': s.address ?? '',
       'Téléphone': s.phone ?? '',
@@ -193,7 +222,7 @@ export function StudentsTable({
     const ws = XLSX.utils.json_to_sheet(rows);
     ws['!cols'] = [
       { wch: 16 }, { wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 20 }, { wch: 18 },
-      { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
+      { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
@@ -285,6 +314,15 @@ export function StudentsTable({
         </span>
         <div className="ml-auto flex items-center gap-2">
           <button
+            onClick={() => setAssignOpen(true)}
+            disabled={emailTargets.length === 0 || sessions.length === 0}
+            title={sessions.length === 0 ? 'Créez d’abord une session dans Sessions EVC' : undefined}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100) disabled:opacity-50"
+          >
+            <CalendarClock className="h-3.5 w-3.5" />
+            {selectedInFilter.length > 0 ? `Affecter à une session (${selectedInFilter.length})` : 'Affecter la liste à une session'}
+          </button>
+          <button
             onClick={() => setEmailOpen(true)}
             disabled={emailTargets.length === 0}
             className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) px-3 py-2 text-xs font-bold text-white hover:opacity-90 disabled:opacity-50"
@@ -329,6 +367,8 @@ export function StudentsTable({
               const scope = parseScope(s.permission_scope);
               const sp = specialtyOf(s);
               const voie = voieOf(s);
+              const accessEnd = effectiveAccessEnd(s, sessionsById);
+              const accessExpired = isAccessExpired(s, sessionsById);
               return (
                 <TableRow key={s.id} data-state={selected.has(s.id) ? 'selected' : undefined}>
                   <TableCell>
@@ -358,6 +398,9 @@ export function StudentsTable({
                         </p>
                         <div className="mt-1 flex flex-wrap items-center gap-1 md:hidden">
                           {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
+                          {accessExpired && (
+                            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">Expiré</span>
+                          )}
                           <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
                         </div>
                       </div>
@@ -373,7 +416,15 @@ export function StudentsTable({
                       <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
                       {isPaid(s) ? <Badge variant="muted">Payé</Badge> : <Badge variant="muted">Gratuit</Badge>}
                       {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
+                      {accessExpired && (
+                        <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">Expiré</span>
+                      )}
                     </div>
+                    {accessEnd && (
+                      <p className={`mt-0.5 text-[11px] ${accessExpired ? 'text-red-700' : 'text-(--color-ink-soft)'}`}>
+                        Accès jusqu&apos;au {fmtDate(accessEnd)}
+                      </p>
+                    )}
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
                     <span className="text-xs text-(--color-ink-soft)">{fmtDate(s.created_at)}</span>
@@ -390,7 +441,7 @@ export function StudentsTable({
                         <Award className="h-3.5 w-3.5" />
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
-                      <EditStudentDialog student={s} colleges={colleges} offers={offers} />
+                      <EditStudentDialog student={s} colleges={colleges} offers={offers} sessions={sessions} />
                       <ImpersonateAction
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
@@ -423,7 +474,93 @@ export function StudentsTable({
         studentIds={emailTargets}
         contextLabel={emailContext}
       />
+
+      <AssignSessionDialog
+        open={assignOpen}
+        onClose={() => setAssignOpen(false)}
+        studentIds={emailTargets}
+        contextLabel={emailContext}
+        sessions={sessions}
+      />
     </>
+  );
+}
+
+/** Affectation en masse d'une session EVC (fin d'accès par défaut). */
+function AssignSessionDialog({
+  open,
+  onClose,
+  studentIds,
+  contextLabel,
+  sessions,
+}: {
+  open: boolean;
+  onClose: () => void;
+  studentIds: string[];
+  contextLabel: string;
+  sessions: EvcSessionOption[];
+}) {
+  const router = useRouter();
+  const [sessionId, setSessionId] = useState<string>('none');
+  const [error, setError] = useState<string | null>(null);
+  const [pending, start] = useTransition();
+
+  const submit = () => {
+    setError(null);
+    start(async () => {
+      const res = await fetch('/api/admin/assign-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ student_ids: studentIds, evc_session_id: sessionId === 'none' ? null : sessionId }),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(j.error ?? 'Une erreur est survenue.');
+        return;
+      }
+      onClose();
+      router.refresh();
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <CalendarClock className="h-5 w-5 text-(--color-accent)" />
+            Affecter à une session EVC
+          </DialogTitle>
+          <DialogDescription>
+            {contextLabel} — la date de fin d&apos;accès par défaut de la session s&apos;appliquera
+            (sauf date individuelle définie sur l&apos;élève).
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <Select value={sessionId} onValueChange={setSessionId}>
+            <SelectTrigger className="w-full"><SelectValue placeholder="Session" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Aucune session (pas d&apos;expiration)</SelectItem>
+              {sessions.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.label} — fin {fmtDate(s.default_access_end)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {error && (
+            <p className="text-sm text-(--color-danger) bg-red-500/10 border border-(--color-danger)/30 rounded-lg px-3 py-2">{error}</p>
+          )}
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>Annuler</Button>
+          <Button type="button" onClick={submit} disabled={pending || studentIds.length === 0}>
+            {pending ? <Loader2 className="animate-spin" /> : <CalendarClock />}
+            Affecter ({studentIds.length})
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

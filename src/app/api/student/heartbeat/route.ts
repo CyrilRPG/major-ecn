@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { fetchAccessInfoFor } from '@/lib/auth/access';
+import { getRequestUser } from '@/lib/auth/bearer';
+import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { isStudyRoute } from '@/lib/student/study-route';
 
 export const runtime = 'nodejs';
@@ -7,15 +9,25 @@ export const runtime = 'nodejs';
 const HEARTBEAT_INTERVAL_S = 30;
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
+  // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
+  const { supabase, user } = auth;
+  if (auth.via === 'bearer') {
+    const check = await assertDeviceSlot(user.id, req.headers.get(DEVICE_HEADER));
+    if (!check.ok) return check.response;
+  }
 
   // Garde-fou serveur : ne comptabiliser le temps que sur les pages d'étude
   // réelle. Le client n'émet déjà de heartbeat que sur ces pages ; cette
   // vérification empêche toute comptabilisation parasite (navigation, onglets…).
   const body = (await req.json().catch(() => ({}))) as { path?: string };
   if (!isStudyRoute(body.path)) {
+    return NextResponse.json({ ok: true, ignored: true });
+  }
+
+  // Accès expiré (session EVC) → no-op silencieux, pas de temps comptabilisé.
+  if ((await fetchAccessInfoFor(supabase, user.id)).expired) {
     return NextResponse.json({ ok: true, ignored: true });
   }
 

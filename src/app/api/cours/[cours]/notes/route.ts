@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { assertAccessActive } from '@/lib/auth/access';
+import { getRequestUser } from '@/lib/auth/bearer';
+import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -10,9 +12,17 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(req: Request, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  const { supabase, user } = auth;
+  if (auth.via === 'bearer') {
+    const check = await assertDeviceSlot(user.id, req.headers.get(DEVICE_HEADER));
+    if (!check.ok) return check.response;
+  }
+
+  const expiredRes = await assertAccessActive(supabase, user.id);
+  if (expiredRes) return expiredRes;
 
   const body = (await req.json().catch(() => ({}))) as { content?: string };
   const content = typeof body.content === 'string' ? body.content.slice(0, 200_000) : '';

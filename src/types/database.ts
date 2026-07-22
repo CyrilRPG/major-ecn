@@ -11,10 +11,22 @@ export type Database = {
   public: {
     Tables: {
       cours: {
-        Row: { access_type: string; created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string };
-        Insert: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string };
-        Update: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string };
+        Row: { access_type: string; created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string; updated_at: string };
+        Insert: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string; updated_at?: string };
+        Update: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string; updated_at?: string };
         Relationships: [{ foreignKeyName: 'cours_matiere_id_fkey'; columns: ['matiere_id']; isOneToOne: false; referencedRelation: 'matieres'; referencedColumns: ['id'] }];
+      };
+      course_notes: {
+        Row: { id: string; user_id: string; cours_id: string; content: string; updated_at: string };
+        Insert: { id?: string; user_id: string; cours_id: string; content?: string; updated_at?: string };
+        Update: { id?: string; user_id?: string; cours_id?: string; content?: string; updated_at?: string };
+        Relationships: [{ foreignKeyName: 'course_notes_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
+      };
+      student_saved_questions: {
+        Row: { user_id: string; question_id: string; serie_id: string | null; cours_id: string | null; created_at: string };
+        Insert: { user_id: string; question_id: string; serie_id?: string | null; cours_id?: string | null; created_at?: string };
+        Update: { user_id?: string; question_id?: string; serie_id?: string | null; cours_id?: string | null; created_at?: string };
+        Relationships: [{ foreignKeyName: 'student_saved_questions_question_id_fkey'; columns: ['question_id']; isOneToOne: false; referencedRelation: 'qcm_questions'; referencedColumns: ['id'] }];
       };
       course_progress: {
         Row: { cours_id: string; fiche_read: boolean; last_seen_at: string; user_id: string; video_watched: boolean };
@@ -35,9 +47,9 @@ export type Database = {
         Relationships: [];
       };
       fiches: {
-        Row: { cours_id: string; created_at: string; id: string; pages: number | null; storage_path: string | null; titre: string };
-        Insert: { cours_id: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre: string };
-        Update: { cours_id?: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre?: string };
+        Row: { cours_id: string; created_at: string; id: string; pages: number | null; storage_path: string | null; titre: string; updated_at: string };
+        Insert: { cours_id: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre: string; updated_at?: string };
+        Update: { cours_id?: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre?: string; updated_at?: string };
         Relationships: [{ foreignKeyName: 'fiches_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       guide_leads: {
@@ -59,15 +71,33 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'flashcards_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       matieres: {
-        Row: { access_type: string; color_hex: string; created_at: string; icon_key: string; id: string; min_offer: string | null; nom: string; order_index: number; semestre_id: string };
-        Insert: { access_type?: string; color_hex: string; created_at?: string; icon_key: string; id: string; min_offer?: string | null; nom: string; order_index?: number; semestre_id: string };
-        Update: { access_type?: string; color_hex?: string; created_at?: string; icon_key?: string; id?: string; min_offer?: string | null; nom?: string; order_index?: number; semestre_id?: string };
+        Row: { access_type: string; color_hex: string; created_at: string; icon_key: string; id: string; min_offer: string | null; nom: string; order_index: number; semestre_id: string; parent_matiere_id: string | null; updated_at: string };
+        Insert: { access_type?: string; color_hex: string; created_at?: string; icon_key: string; id: string; min_offer?: string | null; nom: string; order_index?: number; semestre_id: string; parent_matiere_id?: string | null; updated_at?: string };
+        Update: { access_type?: string; color_hex?: string; created_at?: string; icon_key?: string; id?: string; min_offer?: string | null; nom?: string; order_index?: number; semestre_id?: string; parent_matiere_id?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'matieres_semestre_id_fkey'; columns: ['semestre_id']; isOneToOne: false; referencedRelation: 'semestres'; referencedColumns: ['id'] }];
       };
       profiles: {
-        Row: { created_at: string; email: string | null; first_name: string | null; id: string; last_name: string | null; permission_scope: Json; phone: string | null; promotion: string | null; role: string; is_active: boolean | null; active_session_id: string | null; can_download: boolean | null };
-        Insert: { created_at?: string; email?: string | null; first_name?: string | null; id: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null };
-        Update: { created_at?: string; email?: string | null; first_name?: string | null; id?: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null };
+        Row: { created_at: string; email: string | null; first_name: string | null; id: string; last_name: string | null; permission_scope: Json; phone: string | null; promotion: string | null; role: string; is_active: boolean | null; active_session_id: string | null; can_download: boolean | null; evc_session_id: string | null; access_start: string | null; access_end: string | null };
+        Insert: { created_at?: string; email?: string | null; first_name?: string | null; id: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null; evc_session_id?: string | null; access_start?: string | null; access_end?: string | null };
+        Update: { created_at?: string; email?: string | null; first_name?: string | null; id?: string; last_name?: string | null; permission_scope?: Json; phone?: string | null; promotion?: string | null; role?: string; is_active?: boolean | null; active_session_id?: string | null; can_download?: boolean | null; evc_session_id?: string | null; access_start?: string | null; access_end?: string | null };
+        Relationships: [{ foreignKeyName: 'profiles_evc_session_id_fkey'; columns: ['evc_session_id']; isOneToOne: false; referencedRelation: 'evc_sessions'; referencedColumns: ['id'] }];
+      };
+      evc_sessions: {
+        Row: { id: string; label: string; default_access_end: string; is_default: boolean; created_at: string };
+        Insert: { id: string; label: string; default_access_end: string; is_default?: boolean; created_at?: string };
+        Update: { id?: string; label?: string; default_access_end?: string; is_default?: boolean; created_at?: string };
+        Relationships: [];
+      };
+      devices: {
+        Row: { id: string; user_id: string; platform: string; model: string | null; name: string | null; app_version: string | null; registered_at: string; last_seen_at: string; revoked_at: string | null };
+        Insert: { id: string; user_id: string; platform: string; model?: string | null; name?: string | null; app_version?: string | null; registered_at?: string; last_seen_at?: string; revoked_at?: string | null };
+        Update: { id?: string; user_id?: string; platform?: string; model?: string | null; name?: string | null; app_version?: string | null; registered_at?: string; last_seen_at?: string; revoked_at?: string | null };
+        Relationships: [];
+      };
+      sync_ops: {
+        Row: { op_id: string; user_id: string; applied_at: string };
+        Insert: { op_id: string; user_id: string; applied_at?: string };
+        Update: { op_id?: string; user_id?: string; applied_at?: string };
         Relationships: [];
       };
       qcm_attempts: {
@@ -83,15 +113,15 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'qcm_items_question_id_fkey'; columns: ['question_id']; isOneToOne: false; referencedRelation: 'qcm_questions'; referencedColumns: ['id'] }];
       };
       qcm_questions: {
-        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string; images: Json; correction_generale: string | null };
-        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string; images?: Json; correction_generale?: string | null };
-        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string; images?: Json; correction_generale?: string | null };
+        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string; images: Json; correction_generale: string | null; format: string | null; reponse_attendue: string | null; updated_at: string };
+        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string; images?: Json; correction_generale?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
+        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string; images?: Json; correction_generale?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'qcm_questions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
       qcm_series: {
-        Row: { annee: number | null; cours_id: string; created_at: string; duration_minutes: number | null; vignette: string | null; id: string; label: string; order_index: number; type: string };
-        Insert: { annee?: number | null; cours_id: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label: string; order_index?: number; type: string };
-        Update: { annee?: number | null; cours_id?: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label?: string; order_index?: number; type?: string };
+        Row: { annee: number | null; cours_id: string; created_at: string; duration_minutes: number | null; vignette: string | null; id: string; label: string; order_index: number; type: string; kind: string | null; updated_at: string };
+        Insert: { annee?: number | null; cours_id: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label: string; order_index?: number; type: string; kind?: string | null; updated_at?: string };
+        Update: { annee?: number | null; cours_id?: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label?: string; order_index?: number; type?: string; kind?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'qcm_series_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       qcm_sessions: {
@@ -143,9 +173,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'semestres_faculte_id_fkey'; columns: ['faculte_id']; isOneToOne: false; referencedRelation: 'facultes'; referencedColumns: ['id'] }];
       };
       videos: {
-        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null };
-        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null };
-        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null };
+        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null; updated_at: string };
+        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null; updated_at?: string };
+        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'videos_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       blog_posts: {
@@ -159,6 +189,8 @@ export type Database = {
     Functions: {
       can_access_faculte: { Args: { p_faculte_id: string }; Returns: boolean };
       current_role: { Args: Record<string, never>; Returns: string };
+      effective_access_end: { Args: { p_user: string }; Returns: string | null };
+      access_expired: { Args: Record<string, never>; Returns: boolean };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

@@ -149,7 +149,7 @@ export async function provisionStudentAccount(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: existingProfile } = await (admin as any)
     .from('profiles')
-    .select('first_name, last_name, phone, permission_scope')
+    .select('first_name, last_name, phone, permission_scope, evc_session_id, access_start, access_end')
     .eq('id', userId)
     .maybeSingle();
 
@@ -231,6 +231,42 @@ export async function provisionStudentAccount(
     type: prevIsAll ? 'all' : 'college', collegesCount: prevIsAll ? 'all' : mergedColleges.length,
   });
 
+  // ─── PÉRIODE D'ACCÈS (sessions EVC) ───
+  // Règles :
+  //  - access_start : posé au premier achat, jamais décalé ensuite.
+  //  - compte sans aucune période (ni session ni date individuelle) → session
+  //    par défaut du moment.
+  //  - accès effectif déjà EXPIRÉ (renouvellement) → nouvelle session par
+  //    défaut + suppression de la date individuelle périmée.
+  //  - sinon (upsell en cours de session) → dates inchangées.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: allSessions } = await (admin as any)
+    .from('evc_sessions')
+    .select('id, default_access_end, is_default');
+  const sessionRows = (allSessions ?? []) as { id: string; default_access_end: string; is_default: boolean }[];
+  const defaultSession = sessionRows.find((s) => s.is_default) ?? null;
+
+  const prevSessionId: string | null = existingProfile?.evc_session_id ?? null;
+  const prevAccessEnd: string | null = existingProfile?.access_end ?? null;
+  const prevAccessStart: string | null = existingProfile?.access_start ?? null;
+  const prevEffectiveEnd = prevAccessEnd
+    ?? (prevSessionId ? sessionRows.find((s) => s.id === prevSessionId)?.default_access_end ?? null : null);
+  const isRenewal = !!prevEffectiveEnd && new Date(prevEffectiveEnd).getTime() < Date.now();
+  const hasAnyPeriod = !!prevSessionId || !!prevAccessEnd;
+
+  const accessFields: { access_start: string; evc_session_id?: string | null; access_end?: null } =
+    (!hasAnyPeriod || isRenewal)
+      ? {
+          access_start: prevAccessStart ?? new Date().toISOString(),
+          evc_session_id: defaultSession?.id ?? prevSessionId,
+          access_end: null,
+        }
+      : { access_start: prevAccessStart ?? new Date().toISOString() };
+  log('access-period', {
+    prevSessionId, prevAccessEnd, isRenewal, hasAnyPeriod,
+    assigned: accessFields.evc_session_id ?? '(inchangé)', defaultSession: defaultSession?.id ?? null,
+  });
+
   // 4) Upsert du profile
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: pErr } = await (admin as any)
@@ -244,6 +280,7 @@ export async function provisionStudentAccount(
         phone,
         role: 'student',
         permission_scope,
+        ...accessFields,
       },
       { onConflict: 'id' },
     );

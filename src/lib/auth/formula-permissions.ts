@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { getContentAccess, mergeAccess, scopeOffers, type ContentAccess } from './permissions';
 import type { Offer, PermissionScope } from '@/types/domain';
@@ -32,15 +33,13 @@ function rowToAccess(row: Row): ContentAccess {
 }
 
 /**
- * Mémoïsé par requête (React `cache`), keyé par `offer` : appelé depuis ~18
- * endroits (layout + page + sous-pages d'un cours) qui interrogeaient tous
- * `formula_permissions`. Le cache réduit à un seul accès DB par offre/requête.
+ * Variante à client injecté — utilisable hors contexte React (routes /api/mobile,
+ * émission de licence avec le client service-role, etc.). Pas de mémoïsation.
  */
-export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAccess> => {
+export async function fetchContentAccessWith(client: SupabaseClient, offer: Offer): Promise<ContentAccess> {
   if (offer === 'decouverte') return getContentAccess(offer);
   try {
-    const supabase = await createClient();
-    const { data } = await supabase
+    const { data } = await client
       .from('formula_permissions')
       .select('fiche, fiche_express, video, qcm, entrainement, seance_prof, flashcards, interrogation, seance_approfondie, notes')
       .eq('offer', offer)
@@ -50,6 +49,27 @@ export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAcc
     // fallback to hardcoded
   }
   return getContentAccess(offer);
+}
+
+/** Union multi-formules avec client injeté (miroir de fetchContentAccessForScope). */
+export async function fetchContentAccessForScopeWith(
+  client: SupabaseClient,
+  scope: PermissionScope,
+): Promise<ContentAccess> {
+  const offers = Array.from(new Set(scopeOffers(scope)));
+  if (offers.length === 0) return getContentAccess('decouverte');
+  const list = await Promise.all(offers.map((o) => fetchContentAccessWith(client, o)));
+  return list.reduce(mergeAccess);
+}
+
+/**
+ * Mémoïsé par requête (React `cache`), keyé par `offer` : appelé depuis ~18
+ * endroits (layout + page + sous-pages d'un cours) qui interrogeaient tous
+ * `formula_permissions`. Le cache réduit à un seul accès DB par offre/requête.
+ */
+export const fetchContentAccess = cache(async (offer: Offer): Promise<ContentAccess> => {
+  const supabase = await createClient();
+  return fetchContentAccessWith(supabase, offer);
 });
 
 /**

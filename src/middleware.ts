@@ -1,7 +1,44 @@
-import { type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
+/**
+ * CORS pour l'application mobile (Capacitor). L'app tourne sous une origine
+ * native (capacitor://localhost, https://localhost) et appelle ces routes en
+ * Bearer + X-Device-Id — le préflight OPTIONS doit répondre et les réponses
+ * porter Access-Control-Allow-Origin.
+ *
+ * `*` SANS Access-Control-Allow-Credentials : les cookies ne sont jamais
+ * exposés cross-origin (le navigateur ne les joint pas hors mode credentials),
+ * la posture CSRF des routes web à cookies est donc inchangée.
+ */
+const CORS_PREFIXES = [
+  '/api/mobile/',
+  '/api/fiches/',
+  '/api/cours/',
+  '/api/student/heartbeat',
+  '/api/chat',
+];
+
+const CORS_HEADERS: Record<string, string> = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-Device-Id',
+  'Access-Control-Max-Age': '86400',
+};
+
+function isCorsPath(pathname: string): boolean {
+  return CORS_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 export async function middleware(request: NextRequest) {
+  if (isCorsPath(request.nextUrl.pathname)) {
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+    }
+    const res = await updateSession(request);
+    for (const [k, v] of Object.entries(CORS_HEADERS)) res.headers.set(k, v);
+    return res;
+  }
   return updateSession(request);
 }
 

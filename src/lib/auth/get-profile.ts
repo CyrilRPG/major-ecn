@@ -13,6 +13,8 @@ export type Profile = Tables<'profiles'> & {
   certificat_scolarite_url: string | null;
   carte_pro_url: string | null;
   avatar_seed: string | null;
+  /** Session EVC embarquée (fin d'accès par défaut) — cf. lib/auth/access.ts. */
+  evc_session: { id: string; label: string; default_access_end: string } | null;
 };
 
 /**
@@ -28,10 +30,10 @@ export const getCurrentUserAndProfile = cache(async () => {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('*, evc_session:evc_sessions(id, label, default_access_end)')
     .eq('id', user.id)
     .maybeSingle();
 
   // Cast: `pseudo` and `trial_until` are added by recent migrations and not in generated types yet.
-  return { user, profile: profile as Profile | null };
+  return { user, profile: profile as unknown as Profile | null };
 });

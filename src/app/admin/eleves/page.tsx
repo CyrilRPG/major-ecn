@@ -17,10 +17,10 @@ export default async function ElevesPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  const [{ data: students }, { data: fac }] = await Promise.all([
+  const [{ data: students }, { data: fac }, { data: evcSessions }] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges')
+      .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
       .eq('role', 'student')
       // Tri décroissant par date d'inscription (les plus récents en premier).
       .order('created_at', { ascending: false, nullsFirst: false }),
@@ -29,6 +29,10 @@ export default async function ElevesPage() {
       .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
+    supabase
+      .from('evc_sessions')
+      .select('id, label, default_access_end, is_default')
+      .order('default_access_end', { ascending: false }),
   ]);
 
   type MatRaw = {
@@ -86,7 +90,7 @@ export default async function ElevesPage() {
         </div>
       </header>
 
-      <StudentsTable students={studentsWithLogin as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} />
+      <StudentsTable students={studentsWithLogin as unknown as Parameters<typeof StudentsTable>[0]['students']} colleges={colleges} offers={offers} sessions={evcSessions ?? []} />
     </main>
   );
 }

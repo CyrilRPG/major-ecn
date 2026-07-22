@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
 import type { PermissionScope } from '@/types/domain';
@@ -42,16 +43,33 @@ export type EditStudentTarget = {
   can_download?: boolean | null;
   /** Spécialités où l'impression des fiches est autorisée (si pas de droit global). */
   download_colleges?: string[] | null;
+  /** Session EVC de rattachement (fin d'accès par défaut). */
+  evc_session_id?: string | null;
+  /** Fin d'accès individuelle — prime sur la date de la session. */
+  access_end?: string | null;
 };
+
+export type EvcSessionOption = { id: string; label: string; default_access_end: string; is_default?: boolean };
+
+/** ISO → 'YYYY-MM-DD' pour un input date (heure locale). */
+function isoToDateInput(iso: string | null | undefined): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
 
 export function EditStudentDialog({
   student,
   colleges,
   offers,
+  sessions = [],
 }: {
   student: EditStudentTarget;
   colleges: College[];
   offers: OfferOption[];
+  sessions?: EvcSessionOption[];
 }) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -76,6 +94,8 @@ export function EditStudentDialog({
   const [downloadColleges, setDownloadColleges] = useState<Set<string>>(new Set(student.download_colleges ?? []));
   const [offersSel, setOffersSel] = useState<OfferId[]>(adminOffersFrom(initialScope));
   const [access, setAccess] = useState<AccessValue>(initialAccess);
+  const [evcSessionId, setEvcSessionId] = useState<string>(student.evc_session_id ?? 'none');
+  const [accessEndDate, setAccessEndDate] = useState<string>(isoToDateInput(student.access_end));
 
   // Resynchronise tous les champs depuis le scope actuel de l'élève (appelé à
   // l'ouverture du dialog — les hooks d'état persistent entre ouvertures).
@@ -95,6 +115,8 @@ export function EditStudentDialog({
       colleges: sc.type === 'college' ? sc.colleges : [],
       voie: sc.voie ?? 'interne',
     });
+    setEvcSessionId(student.evc_session_id ?? 'none');
+    setAccessEndDate(isoToDateInput(student.access_end));
     setSubmitError(null);
   };
 
@@ -133,6 +155,9 @@ export function EditStudentDialog({
           can_download: canDownload,
           // Droit global → la liste par spécialité devient inutile, on la vide.
           download_colleges: canDownload ? [] : Array.from(downloadColleges),
+          // Période d'accès : session de rattachement + éventuelle date individuelle.
+          evc_session_id: evcSessionId === 'none' ? null : evcSessionId,
+          access_end: accessEndDate ? new Date(`${accessEndDate}T23:59:59`).toISOString() : null,
         }),
       });
       if (!res.ok) {
@@ -200,6 +225,37 @@ export function EditStudentDialog({
           <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
 
           <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
+
+          <div className="rounded-xl border border-(--color-border) px-3 py-2.5 space-y-2.5">
+            <p className="text-sm font-semibold text-(--color-ink)">Période d&apos;accès</p>
+            <div className="space-y-1.5">
+              <Label>Session EVC</Label>
+              <Select value={evcSessionId} onValueChange={setEvcSessionId}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Session" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Aucune session (pas d&apos;expiration)</SelectItem>
+                  {sessions.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.label} — fin {new Date(s.default_access_end).toLocaleDateString('fr-FR')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-access-end">Fin d&apos;accès individuelle (facultative)</Label>
+              <Input
+                id="edit-access-end"
+                type="date"
+                value={accessEndDate}
+                onChange={(e) => setAccessEndDate(e.target.value)}
+              />
+              <p className="text-[12px] text-(--color-ink-soft)">
+                Prime sur la date de la session. Vide = la date de la session s&apos;applique
+                (ou aucune expiration si l&apos;élève n&apos;a pas de session).
+              </p>
+            </div>
+          </div>
 
           <label className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
             <Checkbox checked={canDownload} onCheckedChange={(v) => setCanDownload(!!v)} />

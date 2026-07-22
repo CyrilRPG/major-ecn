@@ -1,6 +1,7 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
 import { getCurrentUserAndProfile } from './get-profile';
+import { getAccessInfo } from './access';
 import {
   canRead, canWrite, canWriteAnyQcm, hasAnyContentAccess,
   type ContentType, type ProfessorScope,
@@ -10,6 +11,8 @@ export async function requireUser() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user || !profile) redirect('/login');
   if (profile.is_active === false) redirect('/login?disabled=1');
+  // Fin d'accès (session EVC) : un étudiant expiré est bloqué sur /acces-expire.
+  if (profile.role === 'student' && getAccessInfo(profile).expired) redirect('/acces-expire');
   return { user, profile };
 }
 

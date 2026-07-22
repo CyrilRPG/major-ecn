@@ -40,6 +40,10 @@ export const UpdateStudentSchema = z.object({
    *  `can_download` est vrai — celui-ci accorde le droit sur toutes. */
   download_colleges: z.array(z.string()).optional(),
   voie: z.enum(['interne', 'externe']).optional().nullable(),
+  /** Session EVC de rattachement (fin d'accès par défaut). null = aucune session. */
+  evc_session_id: z.string().optional().nullable(),
+  /** Fin d'accès individuelle (ISO) — prime sur la date de la session. null = hérite. */
+  access_end: z.string().datetime({ offset: true }).optional().nullable(),
 });
 
 export type AddStudentInput = z.infer<typeof AddStudentSchema>;
