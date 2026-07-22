@@ -1907,7 +1907,7 @@ const TV_CARDS = [
     flag: "",
     year: "Lauréat EVC 2025",
     duration: '',
-    quote: 'Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne grâce à un accompagnement structuré.',
+    quote: 'Reprendre confiance après un échec — et réussir les EVC avec de brillants résultats grâce à un accompagnement structuré.',
     bgGrad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
     initials: 'ES',
     videoSrc: '/temoignages/T3 FINAL V2.mp4',

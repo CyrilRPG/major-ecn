@@ -447,7 +447,7 @@ const SOCIAL_PROOFS: Record<Variant, { quote: string; name: string; role: string
     role: "Lauréate des EVC d’odontologie 2025",
   },
   intensive: {
-    quote: "« Reprendre confiance après un échec — et réussir les EVC avec plus de 17/20 de moyenne. La méthodologie de Major ECN a fait toute la différence. »",
+    quote: "« Reprendre confiance après un échec — et réussir les EVC avec de brillants résultats. La méthodologie de Major ECN a fait toute la différence. »",
     name: "Dr SY Ely Cheikh Ibrahima",
     role: "Lauréat des EVC Endocrinologie-Diabétologie 2025",
   },

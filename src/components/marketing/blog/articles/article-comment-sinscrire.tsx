@@ -22,7 +22,7 @@ const TESTIMONIALS = [
     name: 'Dr. SY Ely Cheikh Ibrahima',
     spec: 'Lauréat EVC Endocrinologie-Diabétologie 2025',
     photo: '/temoignages/dr-sy-ely-cheikh-ibrahima.jpg',
-    text: "J'ai particulièrement apprécié la qualité de l'accompagnement, la disponibilité de l'équipe et le suivi tout au long de la préparation. J'ai obtenu plus de 17/20 de moyenne et réussi les EVC.",
+    text: "J'ai particulièrement apprécié la qualité de l'accompagnement, la disponibilité de l'équipe et le suivi tout au long de la préparation. J'ai obtenu de brillants résultats et réussi les EVC.",
   },
   {
     initials: 'LO',
