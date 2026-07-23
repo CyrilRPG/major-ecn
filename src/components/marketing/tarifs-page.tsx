@@ -180,6 +180,7 @@ export function TarifsPageContent() {
                 </div>
                 <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>S{"'"}entraîner efficacement aux EVC</p>
                 <p className="mt-3 text-[40px] font-black leading-none" style={{ color: GREEN }}>495 &#8364;</p>
+                <p className="mt-1.5 text-[12.5px] font-semibold" style={{ color: GREEN }}>ou 165 &#8364;/mois en 3&#215; &#183; 124 &#8364;/mois en 4&#215; sans frais</p>
                 <ul className="mt-5 space-y-2.5">
                   {['Plateforme EVC accès illimité', "QCM d'entraînement", 'Dossiers et exercices corrigés', 'Fiches de synthèse', 'Suivi de progression'].map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
@@ -219,6 +220,7 @@ export function TarifsPageContent() {
                   <Link href="/formules/intensive" className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-[11.5px] font-bold transition-colors hover:bg-[#FDE8EC]" style={{ borderColor: RED, color: RED }}>VOIE EXTERNE <ArrowRight className="h-3 w-3" /></Link>
                 </div>
                 <p className="mt-3 text-[40px] font-black leading-none" style={{ color: RED }}>995 &#8364;</p>
+                <p className="mt-1.5 text-[12.5px] font-semibold" style={{ color: RED }}>ou 332 &#8364;/mois en 3&#215; &#183; 249 &#8364;/mois en 4&#215; sans frais</p>
                 <ul className="mt-5 space-y-2.5">
                   {['Tout le contenu de la formule Essentielle', 'Environ 20 heures de révision ciblée', 'QCM supplémentaires expliqués', 'Méthodologie avancée EVC', '2 épreuves blanches inspirées des EVC', 'Corrections détaillées'].map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
@@ -266,6 +268,7 @@ export function TarifsPageContent() {
                 <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
                 <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>À partir de</p>
                 <p className="mt-0.5 text-[40px] font-black leading-none" style={{ color: PURPLE }}>2 395 &#8364;</p>
+                <p className="mt-1.5 text-[12.5px] font-semibold" style={{ color: PURPLE }}>Paiement en 3&#215; ou 4&#215; sans frais</p>
                 <ul className="mt-5 space-y-2.5">
                   {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches inspirées des EVC'].map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px]" style={{ color: INK }}>
@@ -335,6 +338,11 @@ export function TarifsPageContent() {
               <div key={p.v} className="rounded-2xl border bg-white p-5 transition-all hover:-translate-y-1 hover:shadow-lg" style={{ borderColor: BORDER }}>
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
                 <p className="text-2xl font-black" style={{ color: p.color }}>{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
+                <p className="mt-0.5 text-[11.5px] font-semibold" style={{ color: p.color }}>
+                  {p.v === 'approfondi'
+                    ? 'ou en 3× / 4× sans frais'
+                    : `ou ${Math.round(parseInt(p.price.replace(/\s/g, ''), 10) / 4)} €/mois en 4× sans frais`}
+                </p>
                 <p className="mt-2 text-sm font-bold" style={{ color: NAVY }}>{p.desc}</p>
                 <p className="mt-1 text-xs" style={{ color: INK_SOFT }}>{p.sub}</p>
                 <Link href={p.href}

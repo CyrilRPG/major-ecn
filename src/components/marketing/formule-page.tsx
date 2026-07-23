@@ -367,6 +367,11 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
                 <p className="text-2xl font-black" style={{ color: p.color }}>{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
+                <p className="mt-0.5 text-[11.5px] font-semibold" style={{ color: p.color }}>
+                  {p.v === 'approfondi'
+                    ? 'ou en 3× / 4× sans frais'
+                    : `ou ${Math.round(parseInt(p.price.replace(/\s/g, ''), 10) / 4)} €/mois en 4× sans frais`}
+                </p>
                 <p className="mt-2 text-sm font-bold" style={{ color: NAVY }}>{p.desc}</p>
                 <p className="mt-1 text-xs" style={{ color: INK_SOFT }}>{p.sub}</p>
                 <Link href={p.v === variant ? '#' : `/formules/${p.v === 'approfondi' ? 'programme-approfondi' : p.v}`}
@@ -425,7 +430,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
       <section className="bg-white py-6 border-t" style={{ borderColor: BORDER }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-6 text-center text-xs" style={{ color: INK_SOFT }}>
-            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x ou 3x', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
+            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x, 3x ou 4x', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
               <span key={b} className="flex items-center gap-1.5">
                 <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {b}
               </span>
