@@ -4,7 +4,7 @@ import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lo
 import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { LockedTrainingsList } from '@/components/espace-decouverte/locked-trainings-list';
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
@@ -40,9 +40,27 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .in('type', seriesTypes)
     .order('order_index');
   const hideEntrainement = access && !access.entrainement;
+  // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
+  //   séances du professeur → entraînements → DP (DP QCM interne / DP QROC externe)
+  //   → QCM (voie interne) ou QROC (voie externe).
+  // La voie est déjà filtrée en amont par la RLS (interne = QCM/DP, externe =
+  // QROC/DP-QROC), donc un seul barème de catégories couvre les deux voies.
+  const isApprofondi = scopeOffers(scope).includes('approfondi');
+  const categoryRank = (s: { label: string; type?: string }) => {
+    if (s.type === 'seance') return 0;                 // Séance du professeur
+    if (/entra[iî]nement/i.test(s.label)) return 1;    // Entraînement
+    if (/^dp\b/i.test(s.label)) return 2;              // DP (couvre « DP … » et « DP QROC … »)
+    return 3;                                          // QCM / QROC de base
+  };
   const series = (rawSeries ?? [])
     .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
     .sort((a, b) => {
+      if (isApprofondi) {
+        const ra = categoryRank(a);
+        const rb = categoryRank(b);
+        return ra !== rb ? ra - rb : a.order_index - b.order_index;
+      }
+      // Autres formules : séances d'abord, puis ordre d'affichage défini en admin.
       const ta = a.type === 'seance' ? 0 : 1;
       const tb = b.type === 'seance' ? 0 : 1;
       return ta !== tb ? ta - tb : a.order_index - b.order_index;

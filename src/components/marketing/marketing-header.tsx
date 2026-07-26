@@ -22,7 +22,7 @@ const NAV: NavItem[] = [
   { href: '/plateforme',  label: 'Plateforme' },
   { href: '/specialites', label: 'Spécialités' },
   { href: '/temoignages', label: 'Témoignages' },
-  { href: '/tarifs',      label: 'Tarifs' },
+  { href: '/tarifs',      label: 'Tarifs et inscriptions' },
   { href: '/faq',         label: 'FAQ' },
   { href: '/blog',        label: 'Blog' },
   { href: '/recrutement', label: 'Recrutement' },
