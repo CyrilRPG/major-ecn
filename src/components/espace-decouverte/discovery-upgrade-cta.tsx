@@ -5,6 +5,7 @@
  */
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Trophy } from 'lucide-react';
+import { APPROFONDI_FROM_LABEL } from '@/lib/stripe/approfondi';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -13,7 +14,7 @@ const NAVY = '#0F1F4D';
 const FORMULES: { name: string; price: string }[] = [
   { name: 'Essentielle', price: '495 €' },
   { name: 'Intensive',   price: '995 €' },
-  { name: 'Approfondi',  price: 'dès 2 395 €' },
+  { name: 'Approfondi',  price: APPROFONDI_FROM_LABEL },
 ];
 
 export function DiscoveryUpgradeCta() {

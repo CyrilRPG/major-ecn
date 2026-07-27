@@ -15,22 +15,34 @@
  */
 
 /** Sous-matières de Médecine Générale incluses dans l'offre « Approfondi » (13 spé).
- *  L'offre « Approfondi + » couvre la totalité des sous-matières MG. */
-export const MG_APPROFONDI_COLLEGES: string[] = [
-  'col-mg-cardiologie',
-  'col-mg-endocrinologie',
-  'col-mg-hepato-gastro',
-  'col-mg-nephrologie',
-  'col-mg-pneumologie',
-  'col-mg-urologie',
-  'col-mg-hematologie',
-  'col-mg-geriatrie',
-  'col-mg-infectiologie',
-  'col-mg-neurologie',
-  'col-mg-rhumatologie',
-  'col-dermatologie', // sous-matière MG « Dermatologie » (id historique sans préfixe col-mg-)
-  'col-mg-reanimation',
+ *  L'offre « Approfondi + » couvre la totalité des sous-matières MG.
+ *
+ *  Source UNIQUE : l'`id` sert au provisioning (périmètre d'accès réellement
+ *  débloqué) et le `label` est affiché à l'étudiant AVANT l'achat. Les deux ne
+ *  peuvent donc pas diverger — ce que l'étudiant lit est ce qu'il obtient.
+ *  Les libellés reprennent ceux de la table `matieres`. */
+const MG_APPROFONDI: { id: string; label: string }[] = [
+  { id: 'col-mg-cardiologie', label: 'Cardiologie' },
+  { id: 'col-mg-endocrinologie', label: 'Endocrinologie' },
+  { id: 'col-mg-hepato-gastro', label: 'Hépato-gastro-entérologie' },
+  { id: 'col-mg-nephrologie', label: 'Néphrologie' },
+  { id: 'col-mg-pneumologie', label: 'Pneumologie' },
+  { id: 'col-mg-urologie', label: 'Urologie' },
+  { id: 'col-mg-hematologie', label: 'Hématologie' },
+  { id: 'col-mg-geriatrie', label: 'Gériatrie' },
+  { id: 'col-mg-infectiologie', label: 'Maladies infectieuses' },
+  { id: 'col-mg-neurologie', label: 'Neurologie' },
+  { id: 'col-mg-rhumatologie', label: 'Rhumatologie' },
+  // sous-matière MG « Dermatologie » (id historique sans préfixe col-mg-)
+  { id: 'col-dermatologie', label: 'Dermatologie' },
+  { id: 'col-mg-reanimation', label: 'Réanimation' },
 ];
+
+/** Identifiants des collèges débloqués par l'offre MG « Approfondi ». */
+export const MG_APPROFONDI_COLLEGES: string[] = MG_APPROFONDI.map((c) => c.id);
+
+/** Libellés affichés à l'étudiant pour l'offre MG « Approfondi ». */
+export const MG_APPROFONDI_LABELS: string[] = MG_APPROFONDI.map((c) => c.label);
 
 export type ApprofondiTier = {
   /** Identifiant unique de l'offre (transmis au checkout + metadata Stripe). */
@@ -43,6 +55,9 @@ export type ApprofondiTier = {
   hoursLabel?: string;
   /** Couverture (MG : nombre de spécialités). */
   coverageLabel?: string;
+  /** Détail des spécialités couvertes, affiché avant l'achat quand l'offre ne
+   *  donne PAS accès à toute la spécialité (ex. MG « Approfondi » = 13 sur 20). */
+  coverageDetails?: string[];
   /** Variable d'env contenant le price_id Stripe de cette offre. */
   envPriceId: string;
   /** Collège cible débloqué au provisioning. */
@@ -69,6 +84,7 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
         id: 'mg', tier: 'base', tierLabel: 'Approfondi',
         amountCents: 239500,
         coverageLabel: '13 spécialités',
+        coverageDetails: MG_APPROFONDI_LABELS,
         envPriceId: 'STRIPE_PRICE_APPRO_MG',
         targetCollege: 'col-medecine-generale',
         collegesOverride: MG_APPROFONDI_COLLEGES,
@@ -132,6 +148,27 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     ],
   },
 ];
+
+/** Prix d'entrée du Programme Approfondi = offre la MOINS chère du catalogue,
+ *  toutes spécialités confondues. Dérivé (jamais saisi en dur) pour que les
+ *  vitrines ne puissent pas afficher un tarif que Stripe ne pratique plus. */
+export const APPROFONDI_MIN_CENTS: number = Math.min(
+  ...APPROFONDI_SPECIALTIES.flatMap((s) => s.tiers.map((t) => t.amountCents)),
+);
+
+/** Montant d'entrée formaté à la française, sans le symbole (ex. « 2 095 »).
+ *  Formatage volontairement manuel plutôt que `toLocaleString('fr-FR')` : la
+ *  constante est évaluée au chargement du module, donc à la fois au rendu
+ *  serveur et côté client. Selon la version d'ICU, `toLocaleString` renvoie une
+ *  espace fine insécable ou une espace ordinaire — un écart suffisant pour
+ *  déclencher une erreur d'hydratation React sur les vitrines. */
+export const APPROFONDI_MIN_EUROS_FR: string = String(Math.round(APPROFONDI_MIN_CENTS / 100))
+  .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+/** Libellé de prix unique du Programme Approfondi (ex. « dès 2 095 € »).
+ *  Le tarif dépendant de la spécialité, aucune vitrine ne doit annoncer un
+ *  prix ferme : on annonce toujours le point d'entrée. */
+export const APPROFONDI_FROM_LABEL = `dès ${APPROFONDI_MIN_EUROS_FR} €`;
 
 const TIER_BY_ID: Record<string, ApprofondiTier & { specialtyName: string }> = (() => {
   const m: Record<string, ApprofondiTier & { specialtyName: string }> = {};

@@ -14,6 +14,7 @@ import {
   AnimatedCounter, ComparisonTable, GlassCard, MarqueeScroll,
   MeshGradient, NoiseTexture, SpotlightCard,
 } from './premium-ui';
+import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 
 const NAVY = '#0F1F4D';
 const RED = '#C0112E';
@@ -266,8 +267,9 @@ export function TarifsPageContent() {
                   </div>
                 </div>
                 <p className="mt-3 text-[13.5px]" style={{ color: INK_SOFT }}>Remise à niveau approfondie et préparation complète</p>
-                <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>À partir de</p>
-                <p className="mt-0.5 text-[40px] font-black leading-none" style={{ color: PURPLE }}>2 095 &#8364;</p>
+                <p className="mt-3 text-[40px] font-black leading-none" style={{ color: PURPLE }}>
+                  <span className="text-[26px]">dès </span>{APPROFONDI_MIN_EUROS_FR} &#8364;
+                </p>
                 <p className="mt-1.5 text-[12.5px] font-semibold" style={{ color: PURPLE }}>Paiement en 3&#215; ou 4&#215; sans frais</p>
                 <ul className="mt-5 space-y-2.5">
                   {['Plateforme EVC accès illimité', 'Remise à niveau et préparation complète', 'Reprise approfondie des spécialités majeures', 'Cours de remise à niveau associés à des dossiers cliniques', 'Résolution progressive de dossiers inspirés des EVC', 'Interrogations régulières pour évaluer la progression', 'Épreuves blanches inspirées des EVC'].map(f => (
@@ -333,11 +335,11 @@ export function TarifsPageContent() {
             {[
               { v: 'essentielle',  name: 'FORMULE ESSENTIELLE',   price: '495',   color: '#2E7D32', desc: 'Travail en autonomie',                                  sub: 'Organisez votre préparation à votre rythme avec les ressources essentielles.',           href: '/formules/essentielle',         cta: "Découvrir l'Essentielle" },
               { v: 'intensive',    name: 'FORMULE INTENSIVE',     price: '995',   color: '#C0112E', desc: 'Consolidation avant les EVC',                           sub: 'Révisions guidées et corrections commentées pour consolider vos connaissances.',         href: '/formules/intensive',           cta: "Découvrir l'Intensive" },
-              { v: 'approfondi',   name: 'PROGRAMME APPROFONDI',  price: '2 095', color: '#1E40AF', desc: 'Reprise structurée des spécialités majeures',           sub: 'Accompagnement renforcé pour une remise à niveau complète et performante.',              href: '/formules/programme-approfondi', cta: 'Découvrir le programme' },
+              { v: 'approfondi',   name: 'PROGRAMME APPROFONDI',  price: APPROFONDI_MIN_EUROS_FR, color: '#1E40AF', desc: 'Reprise structurée des spécialités majeures',           sub: 'Accompagnement renforcé pour une remise à niveau complète et performante.',              href: '/formules/programme-approfondi', cta: 'Découvrir le programme' },
             ].map(p => (
               <div key={p.v} className="rounded-2xl border bg-white p-5 transition-all hover:-translate-y-1 hover:shadow-lg" style={{ borderColor: BORDER }}>
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
-                <p className="text-2xl font-black" style={{ color: p.color }}>{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
+                <p className="text-2xl font-black" style={{ color: p.color }}>{p.v === 'approfondi' ? 'dès ' : ''}{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
                 <p className="mt-0.5 text-[11.5px] font-semibold" style={{ color: p.color }}>
                   {p.v === 'approfondi'
                     ? 'ou en 3× / 4× sans frais'

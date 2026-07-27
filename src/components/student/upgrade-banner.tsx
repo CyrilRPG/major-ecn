@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Sparkles, Trophy } from 'lucide-react';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
 import type { Profile } from '@/lib/auth/get-profile';
+import { APPROFONDI_FROM_LABEL } from '@/lib/stripe/approfondi';
 
 type Variant = 'banner' | 'card' | 'inline';
 
@@ -27,7 +28,7 @@ const COPY: Record<string, { eyebrow: string; titre: string; sous: string }> = {
 const FORMULES: { name: string; price: string; href: string; tone: string }[] = [
   { name: 'Essentielle', price: '495 €',         href: '/tarifs', tone: '#16793C' },
   { name: 'Intensive',   price: '995 €',         href: '/tarifs', tone: '#C0112E' },
-  { name: 'Approfondi',  price: 'à partir de 2 395 €', href: '/tarifs', tone: '#1E40AF' },
+  { name: 'Approfondi',  price: APPROFONDI_FROM_LABEL, href: '/tarifs', tone: '#1E40AF' },
 ];
 
 /**

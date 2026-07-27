@@ -15,6 +15,7 @@ import {
   AnimatedCounter, MeshGradient, NoiseTexture, SpotlightCard,
 } from './premium-ui';
 import type { FormuleId } from '@/lib/stripe';
+import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
   essentielle: 'essentielle',
@@ -80,7 +81,7 @@ const CONFIGS: Record<Variant, {
   approfondi: {
     color: '#1E40AF', colorSoft: '#DBEAFE',
     label: 'PROGRAMME APPROFONDI', tagline: "Approfondissez votre préparation\navec un accompagnement structuré\njusqu'aux EVC",
-    price: '2 095', pricePrefix: 'A partir de', hero: '/formules/hero-programme-approfondi.jpg',
+    price: APPROFONDI_MIN_EUROS_FR, pricePrefix: 'dès', hero: '/formules/hero-programme-approfondi.jpg',
     desc: "Le Programme Approfondi est conçu pour vous offrir une reprise structurée des spécialités essentielles, des séances interactives, des échanges réguliers avec les enseignants et un suivi pédagogique renforcé.",
     cta: 'Échanger avec un conseiller', ctaSecondary: 'Planifier un échange',
     features: ['Approfondissement des spécialités majeures', 'Échanges avec les enseignants', 'Épreuves blanches et suivi personnalisé', 'Idéal pour une reprise complète et progressive'],
@@ -175,8 +176,10 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
               {/* Price — restauré original */}
               <Reveal delay={0.35}>
                 <div className="mt-6">
-                  {c.pricePrefix && <p className="text-sm" style={{ color: INK_SOFT }}>{c.pricePrefix}</p>}
-                  <p className="text-4xl font-black" style={{ color: c.color }}>{c.price} &euro;{variant === 'approfondi' ? '*' : ''}</p>
+                  <p className="text-4xl font-black" style={{ color: c.color }}>
+                    {c.pricePrefix && <span className="text-2xl">{c.pricePrefix} </span>}
+                    {c.price} &euro;{variant === 'approfondi' ? '*' : ''}
+                  </p>
                 </div>
               </Reveal>
 
@@ -356,7 +359,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             {[
               { v: 'essentielle' as Variant, name: 'FORMULE ESSENTIELLE', price: '495', color: '#2E7D32', bg: '#E8F5E9', desc: 'Travail en autonomie', sub: 'Organisez votre préparation a votre rythme avec les ressources essentielles.' },
               { v: 'intensive' as Variant, name: 'FORMULE INTENSIVE', price: '995', color: '#C0112E', bg: '#FDE8EC', desc: 'Consolidation avant les EVC', sub: 'Révisions guidées et corrections commentées pour consolider vos connaissances.' },
-              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: '2 095', color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structurée des spécialités majeures', sub: 'Accompagnement renforcé pour une remise a niveau complète et performante.' },
+              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: APPROFONDI_MIN_EUROS_FR, color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structurée des spécialités majeures', sub: 'Accompagnement renforcé pour une remise a niveau complète et performante.' },
             ].map(p => (
               <div key={p.v} className={`rounded-2xl border p-5 ${p.v === variant ? 'ring-2 shadow-lg' : ''}`}
                 style={{ borderColor: p.v === variant ? p.color : BORDER, ...(p.v === variant ? { ringColor: p.color } : {}) }}>
@@ -366,7 +369,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                   </span>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: p.color }}>{p.name}</p>
-                <p className="text-2xl font-black" style={{ color: p.color }}>{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
+                <p className="text-2xl font-black" style={{ color: p.color }}>{p.v === 'approfondi' ? 'dès ' : ''}{p.price} &euro;{p.v === 'approfondi' ? '*' : ''}</p>
                 <p className="mt-0.5 text-[11.5px] font-semibold" style={{ color: p.color }}>
                   {p.v === 'approfondi'
                     ? 'ou en 3× / 4× sans frais'
@@ -563,6 +566,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
               </p>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="text-5xl font-black text-white sm:text-6xl">
+                  {isApprofondi && <span className="text-3xl sm:text-4xl">dès </span>}
                   {c.price} €{isApprofondi ? '*' : ''}
                 </span>
                 {!isApprofondi && (

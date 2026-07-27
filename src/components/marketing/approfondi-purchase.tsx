@@ -96,25 +96,49 @@ export function ApprofondiPurchase() {
                   key={t.id}
                   type="button"
                   onClick={() => setTierId(t.id)}
-                  className="flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors"
+                  className="w-full rounded-xl border px-4 py-3 text-left transition-colors"
                   style={{
                     borderColor: active ? CTA.main : BORDER,
                     background: active ? '#EEF2FF' : 'white',
                   }}
                 >
-                  <div className="min-w-0">
-                    <p className="flex items-center gap-1.5 text-[14px] font-extrabold" style={{ color: NAVY }}>
-                      {active && <Check className="h-4 w-4 shrink-0" style={{ color: CTA.main }} strokeWidth={3} />}
-                      {t.tierLabel}
-                    </p>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: INK_SOFT }}>
-                      {t.hoursLabel && <><Clock className="h-3.5 w-3.5" /> {t.hoursLabel}</>}
-                      {t.coverageLabel && <><Layers3 className="h-3.5 w-3.5" /> {t.coverageLabel}</>}
-                    </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-1.5 text-[14px] font-extrabold" style={{ color: NAVY }}>
+                        {active && <Check className="h-4 w-4 shrink-0" style={{ color: CTA.main }} strokeWidth={3} />}
+                        {t.tierLabel}
+                      </p>
+                      <p className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: INK_SOFT }}>
+                        {t.hoursLabel && <><Clock className="h-3.5 w-3.5" /> {t.hoursLabel}</>}
+                        {t.coverageLabel && <><Layers3 className="h-3.5 w-3.5" /> {t.coverageLabel}</>}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-[18px] font-black" style={{ color: CTA.main }}>
+                      {euros(t.amountCents)} €
+                    </span>
                   </div>
-                  <span className="shrink-0 text-[18px] font-black" style={{ color: CTA.main }}>
-                    {euros(t.amountCents)} €
-                  </span>
+
+                  {/* Détail du périmètre quand l'offre ne couvre pas toute la
+                      spécialité : l'étudiant doit savoir AVANT de payer quelles
+                      spécialités il débloque exactement. */}
+                  {t.coverageDetails && t.coverageDetails.length > 0 && (
+                    <div className="mt-2.5 border-t pt-2.5" style={{ borderColor: BORDER }}>
+                      <p className="text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: INK_SOFT }}>
+                        Spécialités incluses
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {t.coverageDetails.map((label) => (
+                          <span
+                            key={label}
+                            className="rounded-md px-1.5 py-0.5 text-[11.5px] font-medium"
+                            style={{ background: '#F1F4F9', color: NAVY }}
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </button>
               );
             })}
