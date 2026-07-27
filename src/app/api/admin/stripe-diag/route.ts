@@ -5,6 +5,8 @@
  *
  * Étapes inspectées (avec résultat de chacune) :
  *  1. Variables d'env critiques présentes ?
+ *  1 bis. Prix du Programme Approfondi (7 offres) : variable renseignée, prix
+ *      existant DANS LE MÊME MODE que la clé, montant identique au catalogue.
  *  2. Session Stripe retrouvée ?
  *  3. Paiement bien confirmé ?
  *  4. Métadonnées complètes (formule, email) ?
@@ -17,9 +19,11 @@
  * "Renvoyer l'email d'activation" dans /admin/eleves.
  */
 import { NextResponse } from 'next/server';
+import type Stripe from 'stripe';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getStripe, FORMULES, type FormuleId } from '@/lib/stripe';
+import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 
 type Step = { name: string; ok: boolean; details: Record<string, unknown> };
@@ -61,6 +65,95 @@ export async function GET(req: Request) {
     name: 'env-vars',
     ok: envCheck.RESEND_API_KEY && envCheck.STRIPE_SECRET_KEY_set && envCheck.SUPABASE_SERVICE_ROLE_KEY,
     details: envCheck,
+  });
+
+  // Step 1 bis — prix du Programme Approfondi (7 offres = spécialité × tier).
+  // On ne se contente PAS de vérifier que la variable d'env est renseignée : on
+  // interroge Stripe pour chaque price_id afin de garantir, AVANT toute mise en
+  // vente, les trois invariants qui protègent l'étudiant :
+  //   - le prix existe dans le MÊME MODE que STRIPE_SECRET_KEY (un price_id de
+  //     test sous une clé live — ou l'inverse — échoue en « No such price »
+  //     seulement au moment du paiement : on veut le voir ici, à froid) ;
+  //   - le montant Stripe correspond EXACTEMENT au montant affiché dans le
+  //     catalogue (src/lib/stripe/approfondi.ts) ;
+  //   - c'est bien un paiement unique en euros : le 3×/4× est dérivé du produit
+  //     par le checkout, jamais d'un prix récurrent.
+  const keyMode = envCheck.STRIPE_SECRET_KEY_mode;
+  let priceProbe: Stripe | null = null;
+  try { priceProbe = getStripe(); } catch { priceProbe = null; }
+
+  const approfondiRows: Record<string, unknown>[] = [];
+  for (const spec of APPROFONDI_SPECIALTIES) {
+    for (const tier of spec.tiers) {
+      const priceId = process.env[tier.envPriceId];
+      const row: Record<string, unknown> = {
+        offre: `${spec.name} — ${tier.tierLabel}`,
+        variant: tier.id,
+        env: tier.envPriceId,
+        configured: !!priceId,
+        expectedAmountCents: tier.amountCents,
+      };
+
+      if (!priceId) {
+        row.ok = false;
+        row.hint = `Variable ${tier.envPriceId} absente — le checkout refusera l'achat de cette offre (fail-safe : aucune facturation).`;
+        approfondiRows.push(row);
+        continue;
+      }
+      row.priceId = priceId;
+
+      if (!priceProbe) {
+        row.ok = false;
+        row.error = 'Client Stripe indisponible (STRIPE_SECRET_KEY manquante) — impossible de vérifier le prix.';
+        approfondiRows.push(row);
+        continue;
+      }
+
+      try {
+        const price = await priceProbe.prices.retrieve(priceId);
+        const problems: string[] = [];
+        if (price.unit_amount !== tier.amountCents) {
+          problems.push(
+            `montant Stripe ${price.unit_amount} ≠ catalogue ${tier.amountCents} (le prix affiché à l'étudiant ne correspond pas au prélèvement)`,
+          );
+        }
+        if (price.livemode !== (keyMode === 'live')) {
+          problems.push(
+            `mode incohérent : prix ${price.livemode ? 'live' : 'test'} vs clé ${keyMode}`,
+          );
+        }
+        if (price.currency !== 'eur') problems.push(`devise ${price.currency} ≠ eur`);
+        if (price.type !== 'one_time' || price.recurring) {
+          problems.push('prix récurrent — un paiement unique est attendu (le 3×/4× est dérivé du produit)');
+        }
+        if (!price.active) problems.push('prix archivé (active=false)');
+
+        row.stripeAmountCents = price.unit_amount;
+        row.stripeCurrency = price.currency;
+        row.stripeMode = price.livemode ? 'live' : 'test';
+        row.stripeType = price.type;
+        row.ok = problems.length === 0;
+        if (problems.length) row.problems = problems;
+      } catch (e) {
+        // « No such price » = price_id inconnu du compte OU appartenant à l'autre
+        // mode. Dans les deux cas l'achat échouerait au paiement.
+        row.ok = false;
+        row.error = e instanceof Error ? e.message : String(e);
+        row.hint = `Prix introuvable avec la clé ${keyMode} — vérifie que le price_id a bien été créé dans ce mode.`;
+      }
+      approfondiRows.push(row);
+    }
+  }
+
+  const approfondiConfigured = approfondiRows.filter((r) => r.configured === true).length;
+  steps.push({
+    name: 'approfondi-prices',
+    ok: approfondiRows.every((r) => r.ok === true),
+    details: {
+      keyMode,
+      configured: `${approfondiConfigured}/${approfondiRows.length}`,
+      offres: approfondiRows,
+    },
   });
 
   // Step 2 — Stripe session (si session_id fourni)
