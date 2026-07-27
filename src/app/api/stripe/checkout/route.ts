@@ -28,6 +28,7 @@ import {
   isValidInstallmentPlan,
   isTestMode,
 } from '@/lib/stripe';
+import { getApprofondiTier } from '@/lib/stripe/approfondi';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
@@ -50,6 +51,9 @@ type Body = {
   /** Voie de concours pour la Formule Intensive : 'interne' | 'externe' | ''. */
   voie?: string;
   installments?: number;
+  /** Offre Approfondi choisie (ex. 'mg', 'mg-plus', 'psy', 'psy-plus', 'urg',
+   *  'urg-plus', 'mipic') — obligatoire quand formule = 'programme-approfondi'. */
+  approfondiVariant?: string;
   consents?: Consents;
   turnstileToken?: string;
 };
@@ -89,9 +93,37 @@ export async function POST(req: Request) {
       ? body.installments
       : 1;
 
+  // Programme Approfondi : prix variable selon spécialité × tier. On exige une
+  // offre valide et on lit son price_id dans la variable d'env correspondante.
+  // Les autres formules gardent leur prix unique (STRIPE_PRICE_*).
+  const isApprofondi = formule.id === 'programme-approfondi';
+  const approfondiTier = isApprofondi ? getApprofondiTier(body.approfondiVariant) : null;
+  if (isApprofondi && !approfondiTier) {
+    return NextResponse.json(
+      { error: 'Offre Approfondi invalide ou manquante. Choisissez une spécialité et une formule (Approfondi / Approfondi +).' },
+      { status: 400 },
+    );
+  }
+
+  // Montant total de référence (pour le calcul des mensualités) et libellé produit.
+  const amountCents = approfondiTier ? approfondiTier.amountCents : formule.amountCents;
+  const productName = approfondiTier
+    ? `Programme ${approfondiTier.tierLabel} — ${approfondiTier.specialtyName}`
+    : formule.name;
+
   let priceId: string;
   try {
-    priceId = getPriceId(formule);
+    if (approfondiTier) {
+      const id = process.env[approfondiTier.envPriceId];
+      if (!id) {
+        throw new Error(
+          `Le prix Stripe pour « ${productName} » n'est pas configuré (variable ${approfondiTier.envPriceId}).`,
+        );
+      }
+      priceId = id;
+    } else {
+      priceId = getPriceId(formule);
+    }
   } catch (e) {
     return NextResponse.json(
       {
@@ -128,17 +160,22 @@ export async function POST(req: Request) {
     );
   }
 
-  // Spécialité → collège débloqué (mêmes prix, l'accès dépend de la spécialité).
-  // Défaut Médecine générale si non reconnue (back-compat).
-  const collegeId = collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale';
+  // Spécialité → collège débloqué. Pour l'Approfondi, la spécialité et le collège
+  // cible viennent de l'offre choisie (catalogue Approfondi) ; sinon on résout
+  // depuis le libellé de spécialité (défaut Médecine générale).
+  const collegeId = approfondiTier
+    ? approfondiTier.targetCollege
+    : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
+  const specialtyName = approfondiTier ? approfondiTier.specialtyName : (body.specialty ?? '');
 
   try {
     const commonMetadata = {
       formule: formule.id,
+      approfondi_variant: approfondiTier?.id ?? '',
       first_name: body.firstName ?? '',
       last_name: body.lastName ?? '',
       phone: body.phone ?? '',
-      specialty: body.specialty ?? '',
+      specialty: specialtyName,
       college_id: collegeId,
       voie: body.voie ?? '',
       installments: String(installments),
@@ -158,7 +195,7 @@ export async function POST(req: Request) {
       // subscription mode + cancel_at après N cycles mensuels.
       // Le 1er paiement = à la souscription, puis 1/mois pendant N mois.
       // ============================================================
-      const monthlyCents = Math.round(formule.amountCents / installments);
+      const monthlyCents = Math.round(amountCents / installments);
 
       // cancel_at = maintenant + (N-1) mois + 2 jours de buffer
       // → garantit exactement N facturations (J0, J30, J60, J90…)
@@ -167,7 +204,7 @@ export async function POST(req: Request) {
       const endDateFr = new Date(cancelAt * 1000).toLocaleDateString('fr-FR', {
         day: 'numeric', month: 'long', year: 'numeric',
       });
-      const totalFr = (formule.amountCents / 100).toFixed(2).replace('.', ',');
+      const totalFr = (amountCents / 100).toFixed(2).replace('.', ',');
       const monthlyFr = (monthlyCents / 100).toFixed(2).replace('.', ',');
 
       // On récupère le product_id du price one-shot pour réutiliser la
@@ -179,7 +216,7 @@ export async function POST(req: Request) {
       // l'utilisateur doit voir "fin de prélèvement le DD MMM YYYY" et le
       // total cumulé pour comprendre que ce n'est PAS un abonnement infini.
       const planDescription =
-        `${formule.name} — Paiement en ${installments} fois sans frais. ` +
+        `${productName} — Paiement en ${installments} fois sans frais. ` +
         `${installments} prélèvements de ${monthlyFr} € (total ${totalFr} €). ` +
         `Plan se termine automatiquement le ${endDateFr}. Aucun renouvellement.`;
 
@@ -245,7 +282,7 @@ export async function POST(req: Request) {
       metadata: commonMetadata,
       payment_intent_data: {
         metadata: commonMetadata,
-        description: `Major ECN — ${formule.name} (paiement comptant)`,
+        description: `Major ECN — ${productName} (paiement comptant)`,
       },
     });
 

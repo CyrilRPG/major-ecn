@@ -10,7 +10,7 @@ import {
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
 import { CheckoutButton } from './checkout-button';
-import { CallbackRequestForm } from './callback-request-form';
+import { ApprofondiPurchase } from './approfondi-purchase';
 import {
   AnimatedCounter, MeshGradient, NoiseTexture, SpotlightCard,
 } from './premium-ui';
@@ -80,7 +80,7 @@ const CONFIGS: Record<Variant, {
   approfondi: {
     color: '#1E40AF', colorSoft: '#DBEAFE',
     label: 'PROGRAMME APPROFONDI', tagline: "Approfondissez votre préparation\navec un accompagnement structuré\njusqu'aux EVC",
-    price: '2 395', pricePrefix: 'A partir de', hero: '/formules/hero-programme-approfondi.jpg',
+    price: '2 095', pricePrefix: 'A partir de', hero: '/formules/hero-programme-approfondi.jpg',
     desc: "Le Programme Approfondi est conçu pour vous offrir une reprise structurée des spécialités essentielles, des séances interactives, des échanges réguliers avec les enseignants et un suivi pédagogique renforcé.",
     cta: 'Échanger avec un conseiller', ctaSecondary: 'Planifier un échange',
     features: ['Approfondissement des spécialités majeures', 'Échanges avec les enseignants', 'Épreuves blanches et suivi personnalisé', 'Idéal pour une reprise complète et progressive'],
@@ -356,7 +356,7 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
             {[
               { v: 'essentielle' as Variant, name: 'FORMULE ESSENTIELLE', price: '495', color: '#2E7D32', bg: '#E8F5E9', desc: 'Travail en autonomie', sub: 'Organisez votre préparation a votre rythme avec les ressources essentielles.' },
               { v: 'intensive' as Variant, name: 'FORMULE INTENSIVE', price: '995', color: '#C0112E', bg: '#FDE8EC', desc: 'Consolidation avant les EVC', sub: 'Révisions guidées et corrections commentées pour consolider vos connaissances.' },
-              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: '2 395', color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structurée des spécialités majeures', sub: 'Accompagnement renforcé pour une remise a niveau complète et performante.' },
+              { v: 'approfondi' as Variant, name: 'PROGRAMME APPROFONDI', price: '2 095', color: '#1E40AF', bg: '#DBEAFE', desc: 'Reprise structurée des spécialités majeures', sub: 'Accompagnement renforcé pour une remise a niveau complète et performante.' },
             ].map(p => (
               <div key={p.v} className={`rounded-2xl border p-5 ${p.v === variant ? 'ring-2 shadow-lg' : ''}`}
                 style={{ borderColor: p.v === variant ? p.color : BORDER, ...(p.v === variant ? { ringColor: p.color } : {}) }}>
@@ -533,16 +533,16 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
         {/* Header section */}
         <div className="text-center text-white">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] backdrop-blur">
-            {isApprofondi ? '📞 Programme sur-mesure' : '🔒 Paiement 100 % sécurisé'}
+            {isApprofondi ? '🎓 Programme Approfondi' : '🔒 Paiement 100 % sécurisé'}
           </span>
           <h2 className="mt-4 text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl">
             {isApprofondi
-              ? 'Échanger avec un conseiller'
+              ? 'Composez votre Programme Approfondi'
               : (<>Rejoignez les médecins<br className="hidden sm:block" /> qui réussissent les EVC</>)}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base sm:text-[17px] text-white/85">
             {isApprofondi
-              ? "Programme entièrement personnalisé. Un conseiller pédagogique vous rappelle sous 24 h ouvrées pour cadrer votre préparation."
+              ? "Choisissez votre spécialité et votre formule (Approfondi ou Approfondi +) : le tarif s'affiche selon votre choix. Paiement en ligne sécurisé, en 1, 3 ou 4 fois."
               : (
                 <>
                   Activation immédiate après paiement · Email de bienvenue avec votre lien d&rsquo;accès ·{' '}
@@ -591,7 +591,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
                       'Échanges réguliers avec les enseignants',
                       'Épreuves blanches et suivi personnalisé',
                       'Accompagnement individuel haut niveau',
-                      'Rappel sous 24 h ouvrées',
+                      'Paiement en ligne 1, 3 ou 4 fois sans frais',
                     ]
                   : [
                       'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
@@ -637,18 +637,18 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
               </span>
               <div>
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.14em]" style={{ color: INK_SOFT }}>
-                  {isApprofondi ? 'Demande de rappel' : `Étape ${variant === 'essentielle' ? '1/1' : '1/1'} — Paiement`}
+                  {isApprofondi ? 'Spécialité & formule' : `Étape ${variant === 'essentielle' ? '1/1' : '1/1'} — Paiement`}
                 </p>
                 <p className="text-[15px] font-black" style={{ color: NAVY }}>
                   {isApprofondi
-                    ? 'Soyez rappelé sous 24 h ouvrées'
+                    ? 'Choisissez, puis payez en ligne'
                     : 'Créez votre compte étudiant'}
                 </p>
               </div>
             </div>
             <p className="mt-3 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
               {isApprofondi
-                ? 'Un conseiller pédagogique vous appelle au numéro indiqué pour établir un programme sur-mesure et répondre à toutes vos questions.'
+                ? 'Sélectionnez votre spécialité et votre formule : le tarif s’affiche automatiquement. Paiement sécurisé Stripe (1, 3 ou 4 fois) et activation immédiate. Spécialité non listée ? Un conseiller vous rappelle.'
                 : (
                   <>
                     Remplissez ce formulaire en 30 secondes, puis effectuez votre paiement
@@ -660,7 +660,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
 
             <div className="mt-6">
               {isApprofondi ? (
-                <CallbackRequestForm color={ctaColor} />
+                <ApprofondiPurchase />
               ) : (
                 <CheckoutButton
                   formuleId={VARIANT_TO_FORMULE_ID[variant]}

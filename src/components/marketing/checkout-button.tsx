@@ -42,6 +42,9 @@ type Props = {
   label?: string;
   /** Couleur principale du bouton (gradient deep → main). */
   color?: Color;
+  /** Offre Approfondi choisie (ex. 'mg-plus'). Quand fournie, la spécialité et le
+   *  prix viennent de l'offre → on masque le sélecteur de spécialité interne. */
+  approfondiVariant?: string;
 };
 
 // Spécialités inscriptibles = collèges présents sur la plateforme pédagogique.
@@ -57,7 +60,11 @@ export function CheckoutButton({
   formuleId,
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
+  approfondiVariant,
 }: Props) {
+  // Parcours Approfondi : la spécialité est portée par l'offre choisie en amont
+  // (catalogue Approfondi) → on masque le sélecteur de spécialité interne.
+  const isApprofondiFlow = !!approfondiVariant;
   // Voie de concours (interne / externe) demandée pour toutes les formules
   // payantes : elle détermine l'accès aux séries de Médecine générale
   // (interne → pas de QROC ; externe → pas de QCM/DP hors « Révisions »).
@@ -221,6 +228,7 @@ export function CheckoutButton({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           formule: formuleId,
+          approfondiVariant,
           email,
           firstName,
           lastName,
@@ -341,12 +349,15 @@ export function CheckoutButton({
 
       {/* Section PRÉPARATION */}
       <SectionLabel n={2} title="Votre préparation" />
-      <Select
-        icon={Stethoscope}
-        value={specialty}
-        onChange={setSpecialty}
-        options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
-      />
+      {/* Spécialité : masquée en parcours Approfondi (portée par l'offre choisie). */}
+      {!isApprofondiFlow && (
+        <Select
+          icon={Stethoscope}
+          value={specialty}
+          onChange={setSpecialty}
+          options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
+        />
+      )}
       {/* Voie interne / externe — Formules Intensive et Essentielle.
           Le parcours pédagogique diffère selon le format de concours
           du candidat. */}

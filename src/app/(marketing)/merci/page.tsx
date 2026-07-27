@@ -105,6 +105,7 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
     specialty: meta.specialty ?? 'Médecine générale',
     collegeId: meta.college_id || undefined,
     voie: meta.voie ?? '',
+    approfondiVariant: meta.approfondi_variant ?? '',
     phone: meta.phone ?? session.customer_details?.phone ?? '',
     sessionId,
     source: 'merci',

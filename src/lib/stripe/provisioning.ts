@@ -24,6 +24,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
+import { getApprofondiTier } from '@/lib/stripe/approfondi';
 import { highestOffer, type Offer } from '@/types/domain';
 
 export type ProvisioningInput = {
@@ -42,6 +43,9 @@ export type ProvisioningInput = {
   collegeId?: string;
   /** Voie de concours pour la Formule Intensive ('interne' / 'externe' / ''). */
   voie?: string;
+  /** Offre Approfondi achetée (ex. 'mg', 'mg-plus'…) — détermine le périmètre de
+   *  collèges débloqués (ex. MG « Approfondi » = 13 spécialités seulement). */
+  approfondiVariant?: string;
   /** ID de session Stripe — clé de déduplication d'envoi d'email. */
   sessionId?: string;
   /** Source de l'appel : webhook OU /merci. Utile pour le log d'audit. */
@@ -174,8 +178,16 @@ export async function provisionStudentAccount(
   const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
   const childIds = mats.filter((m) => m.parent_matiere_id === targetId).map((m) => m.id);
 
-  const colleges: string[] = [targetId, ...childIds];
-  log('colleges-resolved', { targetId, count: colleges.length, colleges });
+  // Programme Approfondi : le périmètre de sous-collèges peut être RESTREINT selon
+  // l'offre (ex. MG « Approfondi » = 13 spécialités ; « Approfondi + » = toutes).
+  // Si l'offre définit une liste explicite, on l'utilise à la place des enfants.
+  const approfondiTier = getApprofondiTier(input.approfondiVariant);
+  const subColleges = approfondiTier?.collegesOverride ?? childIds;
+  const colleges: string[] = [targetId, ...subColleges];
+  log('colleges-resolved', {
+    targetId, variant: approfondiTier?.id ?? null,
+    count: colleges.length, colleges,
+  });
 
   // ─── MULTI-FORMULES : cumul des droits pour un compte déjà PAYANT ───
   // Si l'email correspond à un compte qui possède déjà une formule payante
