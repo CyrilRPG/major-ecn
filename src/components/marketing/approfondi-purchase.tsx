@@ -12,8 +12,8 @@
  * sur le formulaire de rappel conseiller.
  */
 import { useState } from 'react';
-import { ArrowRight, Check, Clock, GraduationCap, Layers3, Phone } from 'lucide-react';
-import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
+import { AlertTriangle, ArrowRight, Check, Clock, GraduationCap, Layers3, Phone } from 'lucide-react';
+import { APPROFONDI_SPECIALTIES, CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { CheckoutButton } from './checkout-button';
 import { CallbackRequestForm } from './callback-request-form';
 
@@ -108,9 +108,17 @@ export function ApprofondiPurchase() {
                         {active && <Check className="h-4 w-4 shrink-0" style={{ color: CTA.main }} strokeWidth={3} />}
                         {t.tierLabel}
                       </p>
-                      <p className="mt-0.5 flex items-center gap-1.5 text-[12px]" style={{ color: INK_SOFT }}>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px]" style={{ color: INK_SOFT }}>
                         {t.hoursLabel && <><Clock className="h-3.5 w-3.5" /> {t.hoursLabel}</>}
                         {t.coverageLabel && <><Layers3 className="h-3.5 w-3.5" /> {t.coverageLabel}</>}
+                        {t.contentPending && (
+                          <span
+                            className="rounded px-1.5 py-0.5 text-[11px] font-bold"
+                            style={{ background: '#FFF1D6', color: '#8A5200' }}
+                          >
+                            Contenus à venir
+                          </span>
+                        )}
                       </p>
                     </div>
                     <span className="shrink-0 text-[18px] font-black" style={{ color: CTA.main }}>
@@ -152,7 +160,25 @@ export function ApprofondiPurchase() {
           <CallbackRequestForm color={CTA} />
         </div>
       ) : tier ? (
-        <div className="pt-1">
+        <div className="space-y-3 pt-1">
+          {/* Contenus pas encore en ligne : l'étudiant doit le savoir AVANT de
+              payer. Le même texte est repris sur la page de paiement Stripe. */}
+          {tier.contentPending && (
+            <div
+              className="flex items-start gap-2.5 rounded-xl border px-3.5 py-3"
+              style={{ borderColor: '#F5C86B', background: '#FFF8EA' }}
+            >
+              <AlertTriangle className="mt-px h-4 w-4 shrink-0" style={{ color: '#B26A00' }} />
+              <div>
+                <p className="text-[13px] font-extrabold" style={{ color: '#8A5200' }}>
+                  Contenus en cours de mise en ligne
+                </p>
+                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT }}>
+                  {CONTENT_PENDING_NOTICE}
+                </p>
+              </div>
+            </div>
+          )}
           <CheckoutButton
             formuleId="programme-approfondi"
             approfondiVariant={tier.id}

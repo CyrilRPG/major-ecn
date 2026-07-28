@@ -60,8 +60,14 @@ export type ApprofondiTier = {
   coverageDetails?: string[];
   /** Variable d'env contenant le price_id Stripe de cette offre. */
   envPriceId: string;
-  /** Collège cible débloqué au provisioning. */
-  targetCollege: string;
+  /** Collège cible débloqué au provisioning. `null` quand le contenu n'existe
+   *  pas encore sur la plateforme (cf. `contentPending`). */
+  targetCollege: string | null;
+  /** Contenu pas encore en ligne : le compte est créé SANS aucun accès, et
+   *  l'étudiant en est averti AVANT de payer (encart dans le tunnel d'achat +
+   *  message sur la page Stripe). L'équipe pédagogique prend le relais par
+   *  email jusqu'à la mise en ligne. */
+  contentPending?: boolean;
   /** Sous-collèges explicites à accorder. Si absent → tous les enfants du collège
    *  cible (résolus dynamiquement au provisioning). */
   collegesOverride?: string[];
@@ -147,7 +153,52 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
       },
     ],
   },
+  {
+    key: 'geriatrie',
+    name: 'Gériatrie',
+    tiers: [
+      {
+        id: 'ger', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_GER',
+        targetCollege: 'col-geriatrie',
+      },
+      {
+        id: 'ger-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_GER_PLUS',
+        targetCollege: 'col-geriatrie',
+      },
+    ],
+  },
+  {
+    // Contenus pas encore en ligne : l'offre est achetable, mais le compte est
+    // créé sans accès et l'étudiant est prévenu avant de payer.
+    key: 'anesthesie-reanimation',
+    name: 'Anesthésie-réanimation',
+    tiers: [
+      {
+        id: 'anesth', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ANESTH',
+        targetCollege: null, contentPending: true,
+      },
+      {
+        id: 'anesth-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ANESTH_PLUS',
+        targetCollege: null, contentPending: true,
+      },
+    ],
+  },
 ];
+
+/** Message affiché à l'étudiant — dans le tunnel d'achat ET sur la page de
+ *  paiement Stripe — quand l'offre choisie porte `contentPending`. */
+export const CONTENT_PENDING_NOTICE =
+  "Les contenus de cette spécialité ne sont pas encore disponibles sur la plateforme : "
+  + "ils y seront ajoutés dans les jours à venir. En attendant la mise en ligne, "
+  + "l'équipe pédagogique vous contactera par email pour vous transmettre les contenus.";
 
 /** Prix d'entrée du Programme Approfondi = offre la MOINS chère du catalogue,
  *  toutes spécialités confondues. Dérivé (jamais saisi en dur) pour que les

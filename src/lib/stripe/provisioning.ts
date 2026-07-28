@@ -163,31 +163,44 @@ export async function provisionStudentAccount(
   const lastName = input.lastName || existingProfile?.last_name || '';
   const phone = input.phone || existingProfile?.phone || null;
 
-  // Accès accordé après achat : le COLLÈGE de la spécialité choisie au checkout
-  // (col-medecine-generale par défaut) + ses éventuels sous-collèges. Le contenu
-  // est ensuite borné par la formule (offer) et la voie (interne/externe) achetées.
-  const targetId = input.collegeId || MG_INTERNE_ID;
-
-  // Sous-collèges rattachés à la spécialité (interrogés dynamiquement pour rester
-  // à jour quand de nouveaux sous-collèges sont ajoutés). Les collèges de 1er
-  // niveau sans enfant (Pédiatrie, Psychiatrie…) → colleges = [targetId].
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: allMatieres } = await (admin as any)
-    .from('matieres')
-    .select('id, parent_matiere_id');
-  const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
-  const childIds = mats.filter((m) => m.parent_matiere_id === targetId).map((m) => m.id);
-
-  // Programme Approfondi : le périmètre de sous-collèges peut être RESTREINT selon
-  // l'offre (ex. MG « Approfondi » = 13 spécialités ; « Approfondi + » = toutes).
-  // Si l'offre définit une liste explicite, on l'utilise à la place des enfants.
   const approfondiTier = getApprofondiTier(input.approfondiVariant);
-  const subColleges = approfondiTier?.collegesOverride ?? childIds;
-  const colleges: string[] = [targetId, ...subColleges];
-  log('colleges-resolved', {
-    targetId, variant: approfondiTier?.id ?? null,
-    count: colleges.length, colleges,
-  });
+
+  // Certaines offres Approfondi sont vendues AVANT la mise en ligne des contenus
+  // (ex. Anesthésie-réanimation) : l'étudiant est prévenu au moment de payer, le
+  // compte est créé mais n'ouvre AUCUN collège. On sort donc avant toute
+  // résolution de collège — surtout pas de repli sur la Médecine générale, qui
+  // accorderait par erreur un périmètre qui n'a pas été acheté.
+  const contentPending = approfondiTier?.contentPending === true;
+
+  let colleges: string[] = [];
+  if (contentPending) {
+    log('colleges-pending', { variant: approfondiTier?.id ?? null });
+  } else {
+    // Accès accordé après achat : le COLLÈGE de la spécialité choisie au checkout
+    // (col-medecine-generale par défaut) + ses éventuels sous-collèges. Le contenu
+    // est ensuite borné par la formule (offer) et la voie (interne/externe) achetées.
+    const targetId = input.collegeId || MG_INTERNE_ID;
+
+    // Sous-collèges rattachés à la spécialité (interrogés dynamiquement pour rester
+    // à jour quand de nouveaux sous-collèges sont ajoutés). Les collèges de 1er
+    // niveau sans enfant (Pédiatrie, Psychiatrie…) → colleges = [targetId].
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: allMatieres } = await (admin as any)
+      .from('matieres')
+      .select('id, parent_matiere_id');
+    const mats = (allMatieres ?? []) as { id: string; parent_matiere_id: string | null }[];
+    const childIds = mats.filter((m) => m.parent_matiere_id === targetId).map((m) => m.id);
+
+    // Programme Approfondi : le périmètre de sous-collèges peut être RESTREINT selon
+    // l'offre (ex. MG « Approfondi » = 13 spécialités ; « Approfondi + » = toutes).
+    // Si l'offre définit une liste explicite, on l'utilise à la place des enfants.
+    const subColleges = approfondiTier?.collegesOverride ?? childIds;
+    colleges = [targetId, ...subColleges];
+    log('colleges-resolved', {
+      targetId, variant: approfondiTier?.id ?? null,
+      count: colleges.length, colleges,
+    });
+  }
 
   // ─── MULTI-FORMULES : cumul des droits pour un compte déjà PAYANT ───
   // Si l'email correspond à un compte qui possède déjà une formule payante
@@ -232,6 +245,10 @@ export async function provisionStudentAccount(
     paid_offer: mergedOffer,
     paid_formule: input.formuleId,
     paid_specialty: input.specialty ?? 'Médecine générale',
+    // Marque les comptes achetés AVANT la mise en ligne des contenus, pour
+    // pouvoir les retrouver et leur ouvrir l'accès le jour du lancement.
+    // `undefined` retire la clé — un achat ultérieur non concerné la nettoie.
+    content_pending: contentPending ? true : undefined,
     // Normalise 'externe'/'interne' — les formulaires peuvent envoyer le libellé
     // 'Voie externe'/'Voie interne'. La RLS (current_voie) attend la forme courte.
     // On conserve la voie existante si le nouvel achat n'en précise pas.

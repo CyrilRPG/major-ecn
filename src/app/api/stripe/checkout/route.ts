@@ -28,7 +28,7 @@ import {
   isValidInstallmentPlan,
   isTestMode,
 } from '@/lib/stripe';
-import { getApprofondiTier } from '@/lib/stripe/approfondi';
+import { getApprofondiTier, CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
@@ -164,6 +164,8 @@ export async function POST(req: Request) {
   // Spécialité → collège débloqué. Pour l'Approfondi, la spécialité et le collège
   // cible viennent de l'offre choisie (catalogue Approfondi) ; sinon on résout
   // depuis le libellé de spécialité (défaut Médecine générale).
+  // `null` pour une offre dont les contenus ne sont pas encore en ligne : aucun
+  // collège n'est débloqué au provisioning (cf. `contentPending`).
   const collegeId = approfondiTier
     ? approfondiTier.targetCollege
     : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
@@ -177,7 +179,8 @@ export async function POST(req: Request) {
       last_name: body.lastName ?? '',
       phone: body.phone ?? '',
       specialty: specialtyName,
-      college_id: collegeId,
+      college_id: collegeId ?? '',
+      content_pending: approfondiTier?.contentPending ? '1' : '',
       voie: body.voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
@@ -256,7 +259,9 @@ export async function POST(req: Request) {
         // total, dans la sidebar de la page de paiement).
         custom_text: {
           submit: {
-            message: `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`,
+            message:
+              `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`
+              + (approfondiTier?.contentPending ? ` ${CONTENT_PENDING_NOTICE}` : ''),
           },
         },
       });
@@ -288,6 +293,11 @@ export async function POST(req: Request) {
         metadata: commonMetadata,
         description: `Major ECN — ${productName} (paiement comptant)`,
       },
+      // Contenus pas encore en ligne : l'avertissement doit aussi figurer sur
+      // la page de paiement Stripe, pas seulement dans le tunnel du site.
+      ...(approfondiTier?.contentPending
+        ? { custom_text: { submit: { message: CONTENT_PENDING_NOTICE } } }
+        : {}),
     });
 
     return NextResponse.json({
