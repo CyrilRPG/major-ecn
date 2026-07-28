@@ -29,6 +29,7 @@ import {
   isTestMode,
 } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
+import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
@@ -197,11 +198,14 @@ export async function POST(req: Request) {
       // ============================================================
       const monthlyCents = Math.round(amountCents / installments);
 
-      // cancel_at = maintenant + (N-1) mois + 2 jours de buffer
-      // → garantit exactement N facturations (J0, J30, J60, J90…)
+      // Échéancier : le 1er prélèvement a lieu à la souscription, puis 1 par
+      // mois calendaire. On distingue deux dates :
+      //  - `lastCharge` = date du DERNIER prélèvement, annoncée à l'étudiant ;
+      //  - `cancelAt`   = arrêt automatique, quelques jours APRÈS, pour être
+      //    certain que la Nième facture est bien émise avant l'annulation.
       const now = Math.floor(Date.now() / 1000);
-      const cancelAt = now + (installments - 1) * 30 * 86400 + 2 * 86400;
-      const endDateFr = new Date(cancelAt * 1000).toLocaleDateString('fr-FR', {
+      const cancelAt = installmentCancelAt(now, installments);
+      const endDateFr = lastChargeDate(now, installments).toLocaleDateString('fr-FR', {
         day: 'numeric', month: 'long', year: 'numeric',
       });
       const totalFr = (amountCents / 100).toFixed(2).replace('.', ',');

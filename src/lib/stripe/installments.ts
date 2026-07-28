@@ -23,6 +23,33 @@
  */
 import { getStripe } from '@/lib/stripe';
 
+/** Marge (en jours) entre le dernier prélèvement et l'arrêt automatique du plan.
+ *  Assez large pour que la Nième facture soit toujours émise, assez courte pour
+ *  qu'aucune (N+1)ième ne le soit (les échéances sont espacées de 28 à 31 j). */
+const CANCEL_BUFFER_DAYS = 5;
+
+/** Date du DERNIER prélèvement d'un plan en N fois : N-1 mois **calendaires**
+ *  après le premier.
+ *
+ *  Stripe facture par mois calendaire (19 juil → 19 août → 19 sept → 19 oct),
+ *  et non par tranches de 30 jours. L'ancienne approximation « (N-1) × 30 jours
+ *  + 2 j » tombait jusqu'à 92 jours pour un 4× dont les échéances réelles
+ *  s'étalent aussi sur 92 jours : le cancel_at pouvait alors tomber quelques
+ *  minutes AVANT le dernier prélèvement et n'en déclencher que N-1 (cas observé
+ *  en production : un plan 4× qui n'aurait prélevé que 3 fois). */
+export function lastChargeDate(startSeconds: number, installments: number): Date {
+  const d = new Date(startSeconds * 1000);
+  d.setUTCMonth(d.getUTCMonth() + (installments - 1));
+  return d;
+}
+
+/** Timestamp (secondes) d'arrêt automatique d'un plan en N fois, calculé à
+ *  partir de la date de souscription. Garantit exactement N prélèvements. */
+export function installmentCancelAt(startSeconds: number, installments: number): number {
+  return Math.floor(lastChargeDate(startSeconds, installments).getTime() / 1000)
+    + CANCEL_BUFFER_DAYS * 86400;
+}
+
 export type EnsureInstallmentResult = {
   applied: boolean;
   via: 'schedule' | 'cancel_at' | 'noop';
@@ -101,8 +128,7 @@ export async function ensureInstallmentPlanEnds(params: {
   } catch (scheduleErr) {
     // 2) Filet de sécurité : cancel_at classique.
     const cancelAt =
-      fallbackCancelAt ??
-      Math.floor(Date.now() / 1000) + (installments - 1) * 30 * 86400 + 2 * 86400;
+      fallbackCancelAt ?? installmentCancelAt(Math.floor(Date.now() / 1000), installments);
 
     try {
       // Si un schedule partiel a été créé avant l'échec, on le release pour
