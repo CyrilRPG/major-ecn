@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
+import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { EmptyState } from '@/components/empty-state';
 
@@ -36,6 +37,16 @@ export default async function SeanceApprofondiePage({
     .maybeSingle();
   if (!c) notFound();
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+
+  // Émargement du cours : même obligation que sur la page vidéo, l'état vient
+  // de la base pour résister au rechargement.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: attendance } = await (supabase as any)
+    .from('course_attendances')
+    .select('signed_at')
+    .eq('user_id', user.id)
+    .eq('cours_id', coursId)
+    .maybeSingle();
 
   // Déblocage PROGRESSIF : chaque vidéo est verrouillée par SA séance du
   // professeur (videos.serie_id). Faire la séance 1 ouvre la vidéo 1, sans
@@ -165,6 +176,15 @@ export default async function SeanceApprofondiePage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
+      {profile.role === 'student' && (
+        <EmargementGate
+          coursId={coursId}
+          coursTitre={c.titre}
+          studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
+          initialPending={!!attendance && !attendance.signed_at}
+          initialSigned={!!attendance?.signed_at}
+        />
+      )}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7C3AED]">

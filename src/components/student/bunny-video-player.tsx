@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } from '@/lib/emargement';
 
 /**
  * Lecteur vidéo Bunny Stream (iframe embed). Suit la progression via le
@@ -62,14 +63,31 @@ export function BunnyVideoPlayer({
         markWatched();
       } else if (d.event === 'timeupdate' && d.value?.duration) {
         const { seconds = 0, duration = 0 } = d.value;
+        if (duration > 0) {
+          // Alimente la barrière d'émargement (seuil à 20 %).
+          window.dispatchEvent(
+            new CustomEvent<VideoProgressDetail>(VIDEO_PROGRESS_EVENT, {
+              detail: { coursId, ratio: seconds / duration, seconds },
+            }),
+          );
+        }
         if (duration > 0 && seconds / duration > 0.8) markWatched();
       }
     }
 
+    // La barrière d'émargement demande la mise en pause tant que la signature
+    // n'est pas enregistrée.
+    function onPause() { send('pause'); }
+    window.addEventListener(VIDEO_PAUSE_EVENT, onPause);
+
     window.addEventListener('message', onMessage);
     // Au cas où le player serait déjà prêt avant l'attache du listener.
     const t = setTimeout(() => { send('addEventListener', 'ended'); send('addEventListener', 'timeupdate'); }, 1500);
-    return () => { window.removeEventListener('message', onMessage); clearTimeout(t); };
+    return () => {
+      window.removeEventListener('message', onMessage);
+      window.removeEventListener(VIDEO_PAUSE_EVENT, onPause);
+      clearTimeout(t);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

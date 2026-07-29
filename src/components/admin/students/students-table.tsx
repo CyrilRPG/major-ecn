@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ImpersonateAction } from './impersonate-action';
 import { EditStudentDialog } from './edit-student-dialog';
+import { EmargementsDialog } from './emargements-dialog';
 import { BulkEmailDialog } from './bulk-email-dialog';
 import { initials } from '@/lib/utils';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
@@ -441,6 +442,10 @@ export function StudentsTable({
                         <Award className="h-3.5 w-3.5" />
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
+                      <EmargementsDialog
+                        studentId={s.id}
+                        studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                      />
                       <EditStudentDialog student={s} colleges={colleges} offers={offers} sessions={sessions} />
                       <ImpersonateAction
                         studentId={s.id}

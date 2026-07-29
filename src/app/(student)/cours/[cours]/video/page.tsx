@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
+import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
@@ -36,6 +37,18 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
   const bunnyId = video?.bunny_video_id ?? null;
   const embedUrl = bunnyId && getBunnyConfig() ? bunnyEmbedUrl(bunnyId) : null;
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
+
+  // Émargement : l'état fait autorité côté serveur, pour qu'un rechargement ne
+  // permette pas de contourner la signature. Les admins et professeurs
+  // consultent les cours sans être soumis à l'obligation.
+  const isStudent = profile.role === 'student';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: attendance } = await (supabase as any)
+    .from('course_attendances')
+    .select('signed_at')
+    .eq('user_id', user.id)
+    .eq('cours_id', coursId)
+    .maybeSingle();
   let signedUrl: string | null = null;
   if (!bunnyId && video?.storage_path) {
     const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
@@ -44,6 +57,15 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
+      {isStudent && (
+        <EmargementGate
+          coursId={coursId}
+          coursTitre={c.titre}
+          studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
+          initialPending={!!attendance && !attendance.signed_at}
+          initialSigned={!!attendance?.signed_at}
+        />
+      )}
       {embedUrl ? (
         <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
       ) : signedUrl ? (

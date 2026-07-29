@@ -5,6 +5,7 @@ import { Maximize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { formatDuration } from '@/lib/utils';
+import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } from '@/lib/emargement';
 
 const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
 
@@ -22,6 +23,14 @@ export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) 
     if (!v) return;
     const onTime = async () => {
       setTime(v.currentTime);
+      if (v.duration > 0) {
+        // Alimente la barrière d'émargement (seuil à 20 %).
+        window.dispatchEvent(
+          new CustomEvent<VideoProgressDetail>(VIDEO_PROGRESS_EVENT, {
+            detail: { coursId, ratio: v.currentTime / v.duration, seconds: v.currentTime },
+          }),
+        );
+      }
       if (!markedDone && v.duration > 0 && v.currentTime / v.duration > 0.8) {
         setMarkedDone(true);
         const supabase = createClient();
@@ -31,11 +40,16 @@ export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) 
       }
     };
     const onMeta = () => setDur(v.duration);
+    // La barrière d'émargement demande la mise en pause tant que la signature
+    // n'est pas enregistrée.
+    const onGatePause = () => { v.pause(); setPlaying(false); };
     v.addEventListener('timeupdate', onTime);
     v.addEventListener('loadedmetadata', onMeta);
+    window.addEventListener(VIDEO_PAUSE_EVENT, onGatePause);
     return () => {
       v.removeEventListener('timeupdate', onTime);
       v.removeEventListener('loadedmetadata', onMeta);
+      window.removeEventListener(VIDEO_PAUSE_EVENT, onGatePause);
     };
   }, [coursId, markedDone]);
 
