@@ -12,13 +12,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, Calendar, Check, CheckCircle2,
+  AlertTriangle, ArrowRight, Calendar, Check, CheckCircle2,
   GitFork, Loader2, Lock, LogIn, Mail, Phone, ShieldCheck, Sparkles,
   Stethoscope, User, UserCheck,
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/client';
-import { ENROLLABLE_SPECIALTY_NAMES } from '@/lib/data/enrollable-colleges';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
+import { CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { TurnstileWidget } from './turnstile-widget';
 
 type ProfileRow = {
@@ -351,12 +352,33 @@ export function CheckoutButton({
       <SectionLabel n={2} title="Votre préparation" />
       {/* Spécialité : masquée en parcours Approfondi (portée par l'offre choisie). */}
       {!isApprofondiFlow && (
-        <Select
-          icon={Stethoscope}
-          value={specialty}
-          onChange={setSpecialty}
-          options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
-        />
+        <>
+          <Select
+            icon={Stethoscope}
+            value={specialty}
+            onChange={setSpecialty}
+            options={SPECIALTIES.map((s) => ({ value: s, label: s }))}
+          />
+          {/* Spécialité dont les contenus ne sont pas encore publiés :
+              l'étudiant doit le savoir AVANT de payer. Même texte que dans le
+              tunnel Approfondi, et repris sur la page de paiement Stripe. */}
+          {isContentPendingSpecialty(specialty) && (
+            <div
+              className="flex items-start gap-2.5 rounded-xl border px-3.5 py-3"
+              style={{ borderColor: '#F5C86B', background: '#FFF8EA' }}
+            >
+              <AlertTriangle className="mt-px h-4 w-4 shrink-0" style={{ color: '#B26A00' }} />
+              <div>
+                <p className="text-[13px] font-extrabold" style={{ color: '#8A5200' }}>
+                  Contenus en cours de mise en ligne
+                </p>
+                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: '#5B6478' }}>
+                  {CONTENT_PENDING_NOTICE}
+                </p>
+              </div>
+            </div>
+          )}
+        </>
       )}
       {/* Voie interne / externe — Formules Intensive et Essentielle.
           Le parcours pédagogique diffère selon le format de concours

@@ -168,6 +168,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     collegeId,
     voie,
     approfondiVariant: metadata.approfondi_variant ?? '',
+    contentPending: metadata.content_pending === '1',
     phone,
     sessionId: session.id,
     source: 'webhook',

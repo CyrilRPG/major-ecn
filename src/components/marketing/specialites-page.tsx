@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
+import { specialtyByName } from '@/lib/data/enrollable-colleges';
 import {
   Activity, Apple, ArrowRight, Award, Baby, Bandage, Beaker, Bone, BookOpen, Brain, BriefcaseMedical,
   Check, CheckCircle2, ChevronRight, Compass, Dna, Droplet, Ear, Eye,
@@ -429,9 +429,11 @@ function SpecialitesGrid() {
 
 function SpecCard({ s }: { s: Speciality }) {
   const isMG = s.slug === 'medecine-generale';
-  // Spécialité inscriptible en ligne (collège présent sur la plateforme) → on
-  // envoie vers la page tarifs/checkout au lieu de « Nous contacter ».
-  const enrollable = isMG || collegeIdForSpecialty(s.name) != null;
+  // Spécialité inscriptible en ligne → page tarifs/checkout au lieu de « Nous
+  // contacter ». On teste la présence au catalogue et non celle d'un collège :
+  // une spécialité dont les contenus arrivent (Anesthésie-réanimation) est déjà
+  // achetable, l'étudiant étant averti au moment de payer.
+  const enrollable = isMG || specialtyByName(s.name) != null;
   const href = isMG ? '/specialites/medecine-generale' : enrollable ? '/tarifs' : '/contact';
   return (
     <Link href={href}

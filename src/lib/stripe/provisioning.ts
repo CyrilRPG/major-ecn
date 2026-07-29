@@ -46,6 +46,11 @@ export type ProvisioningInput = {
   /** Offre Approfondi achetée (ex. 'mg', 'mg-plus'…) — détermine le périmètre de
    *  collèges débloqués (ex. MG « Approfondi » = 13 spécialités seulement). */
   approfondiVariant?: string;
+  /** Contenus pas encore publiés pour la spécialité achetée : le compte est créé
+   *  SANS accès. Renseigné depuis la metadata Stripe `content_pending`, ce qui
+   *  couvre aussi bien une offre Approfondi qu'une Essentielle / Intensive dont
+   *  la spécialité choisie n'est pas encore en ligne. */
+  contentPending?: boolean;
   /** ID de session Stripe — clé de déduplication d'envoi d'email. */
   sessionId?: string;
   /** Source de l'appel : webhook OU /merci. Utile pour le log d'audit. */
@@ -170,7 +175,7 @@ export async function provisionStudentAccount(
   // compte est créé mais n'ouvre AUCUN collège. On sort donc avant toute
   // résolution de collège — surtout pas de repli sur la Médecine générale, qui
   // accorderait par erreur un périmètre qui n'a pas été acheté.
-  const contentPending = approfondiTier?.contentPending === true;
+  const contentPending = input.contentPending === true || approfondiTier?.contentPending === true;
 
   let colleges: string[] = [];
   if (contentPending) {

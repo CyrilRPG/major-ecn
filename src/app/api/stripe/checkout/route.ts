@@ -32,7 +32,7 @@ import { getApprofondiTier, CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfon
 import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
-import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
+import { collegeIdForSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
 
 type Consents = {
   cgu?: boolean;
@@ -164,11 +164,21 @@ export async function POST(req: Request) {
   // Spécialité → collège débloqué. Pour l'Approfondi, la spécialité et le collège
   // cible viennent de l'offre choisie (catalogue Approfondi) ; sinon on résout
   // depuis le libellé de spécialité (défaut Médecine générale).
-  // `null` pour une offre dont les contenus ne sont pas encore en ligne : aucun
-  // collège n'est débloqué au provisioning (cf. `contentPending`).
+  // Contenus pas encore publiés : soit l'offre Approfondi le déclare, soit la
+  // spécialité choisie pour une Essentielle / Intensive (Anesthésie-réanimation).
+  const specialtyEntry = approfondiTier ? null : specialtyByName(body.specialty);
+  const contentPending = approfondiTier
+    ? approfondiTier.contentPending === true
+    : specialtyEntry?.contentPending === true;
+
+  // `null` quand les contenus ne sont pas encore en ligne : aucun collège n'est
+  // débloqué au provisioning. Surtout PAS de repli sur la Médecine générale, qui
+  // accorderait un périmètre qui n'a pas été acheté.
   const collegeId = approfondiTier
     ? approfondiTier.targetCollege
-    : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
+    : contentPending
+      ? null
+      : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
   const specialtyName = approfondiTier ? approfondiTier.specialtyName : (body.specialty ?? '');
 
   try {
@@ -180,7 +190,7 @@ export async function POST(req: Request) {
       phone: body.phone ?? '',
       specialty: specialtyName,
       college_id: collegeId ?? '',
-      content_pending: approfondiTier?.contentPending ? '1' : '',
+      content_pending: contentPending ? '1' : '',
       voie: body.voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
@@ -261,7 +271,7 @@ export async function POST(req: Request) {
           submit: {
             message:
               `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`
-              + (approfondiTier?.contentPending ? ` ${CONTENT_PENDING_NOTICE}` : ''),
+              + (contentPending ? ` ${CONTENT_PENDING_NOTICE}` : ''),
           },
         },
       });
@@ -295,7 +305,7 @@ export async function POST(req: Request) {
       },
       // Contenus pas encore en ligne : l'avertissement doit aussi figurer sur
       // la page de paiement Stripe, pas seulement dans le tunnel du site.
-      ...(approfondiTier?.contentPending
+      ...(contentPending
         ? { custom_text: { submit: { message: CONTENT_PENDING_NOTICE } } }
         : {}),
     });

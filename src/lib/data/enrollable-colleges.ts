@@ -8,7 +8,15 @@
  * Module « pur » (aucune dépendance serveur) → importable côté client (formulaire
  * de checkout) ET serveur (API checkout / provisioning).
  */
-export type EnrollableSpecialty = { collegeId: string; name: string };
+export type EnrollableSpecialty = {
+  /** Collège débloqué à l'achat. `null` quand les contenus ne sont pas encore
+   *  en ligne (cf. `contentPending`). */
+  collegeId: string | null;
+  name: string;
+  /** Contenus pas encore publiés : la formule est achetable au même prix, mais
+   *  le compte est créé SANS accès et l'étudiant en est averti avant de payer. */
+  contentPending?: boolean;
+};
 
 export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-medecine-generale', name: 'Médecine générale' },
@@ -21,18 +29,35 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-medecine-interne', name: 'Médecine interne polyvalente' },
   { collegeId: 'col-psychiatrie', name: 'Psychiatrie' },
   { collegeId: 'col-gynecologie', name: 'Gynécologie-obstétrique' },
+  // Aucun collège en base pour cette spécialité : les contenus arrivent. Le
+  // prix est celui de la formule (Essentielle / Intensive sont à prix unique,
+  // indépendant de la spécialité), l'accès est ouvert à la mise en ligne.
+  { collegeId: null, name: 'Anesthésie-réanimation', contentPending: true },
 ];
 
 export const ENROLLABLE_SPECIALTY_NAMES = ENROLLABLE_SPECIALTIES.map((s) => s.name);
 
-/** Résout l'id de collège pour un nom de spécialité (insensible à la casse/accents). */
-export function collegeIdForSpecialty(name: string | null | undefined): string | null {
+// Normalisation robuste : minuscules, sans accents, sans espaces/traits d'union
+// ni ponctuation (« Gynécologie-obstétrique » == « Gynecologie obstetrique »).
+const norm = (s: string) =>
+  s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+
+/** Retrouve une spécialité inscriptible par son libellé. */
+export function specialtyByName(name: string | null | undefined): EnrollableSpecialty | null {
   if (!name) return null;
-  // Normalisation robuste : minuscules, sans accents, sans espaces/traits d'union
-  // ni ponctuation (« Gynécologie-obstétrique » == « Gynecologie obstetrique »).
-  const norm = (s: string) =>
-    s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
   const target = norm(name);
-  const found = ENROLLABLE_SPECIALTIES.find((s) => norm(s.name) === target);
-  return found?.collegeId ?? null;
+  return ENROLLABLE_SPECIALTIES.find((s) => norm(s.name) === target) ?? null;
+}
+
+/** Résout l'id de collège pour un nom de spécialité (insensible à la casse/accents).
+ *  Renvoie `null` aussi bien pour une spécialité inconnue que pour une
+ *  spécialité dont les contenus ne sont pas encore en ligne — les appelants qui
+ *  doivent distinguer les deux cas utilisent `specialtyByName`. */
+export function collegeIdForSpecialty(name: string | null | undefined): string | null {
+  return specialtyByName(name)?.collegeId ?? null;
+}
+
+/** true si la spécialité est vendue avant la mise en ligne de ses contenus. */
+export function isContentPendingSpecialty(name: string | null | undefined): boolean {
+  return specialtyByName(name)?.contentPending === true;
 }
