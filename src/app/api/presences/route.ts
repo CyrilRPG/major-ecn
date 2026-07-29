@@ -4,22 +4,59 @@ import { createClient } from '@/lib/supabase/server';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+/** Garde-fou : une signature PNG raisonnable pèse quelques dizaines de Ko. */
+const MAX_SIGNATURE_CHARS = 400_000;
+
 /**
  * POST /api/presences — émarge la présence de l'utilisateur connecté à une
- * session Zoom (évènement plateforme), avant ouverture du lien.
- * Body : { eventId: string }
+ * session Zoom (évènement plateforme), AVANT ouverture du lien.
+ *
+ * Body : { eventId: string, signaturePng: string }
+ *
+ * La signature manuscrite est obligatoire : c'est elle qui donne à
+ * l'émargement Zoom la même valeur probatoire qu'un émargement de vidéo
+ * plateforme. Le client n'ouvre le lien Zoom qu'une fois cette route en succès.
+ *
+ * Ré-émarger une session déjà signée ne remplace pas la signature d'origine :
+ * la réponse est un succès, l'enregistrement initial est conservé.
  */
 export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
-  const body = (await req.json().catch(() => ({}))) as { eventId?: string };
+  const body = (await req.json().catch(() => ({}))) as {
+    eventId?: string;
+    signaturePng?: string;
+  };
   const eventId = (body.eventId ?? '').trim();
   if (!eventId) return NextResponse.json({ error: 'Évènement manquant' }, { status: 400 });
 
+  const signature = body.signaturePng ?? '';
+  if (!signature.startsWith('data:image/png;base64,')) {
+    return NextResponse.json(
+      { error: 'Signature manuscrite requise pour émarger cette session.' },
+      { status: 400 },
+    );
+  }
+  if (signature.length > MAX_SIGNATURE_CHARS) {
+    return NextResponse.json({ error: 'Signature trop volumineuse' }, { status: 413 });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;
+
+  // Déjà émargé : on ne réécrit pas la signature d'origine.
+  const { data: existing } = await db
+    .from('session_presences')
+    .select('id, signature_png')
+    .eq('user_id', user.id)
+    .eq('event_id', eventId)
+    .maybeSingle();
+  if (existing?.signature_png) {
+    return NextResponse.json({ ok: true, alreadySigned: true });
+  }
+
   // Instantané de l'évènement (résiste à une suppression ultérieure).
   const { data: ev } = await db
     .from('platform_events')
@@ -40,6 +77,7 @@ export async function POST(req: Request) {
         end_time: ev.end_time,
         college: ev.college,
         intervenant: ev.intervenant,
+        signature_png: signature,
         marked_at: new Date().toISOString(),
       },
       { onConflict: 'user_id,event_id' },

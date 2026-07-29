@@ -4,9 +4,8 @@
  * Feuilles d'émargement d'un élève, toutes origines confondues :
  *   - `course_attendances` → vidéos visionnées sur la plateforme (vidéo du
  *     cours ou séance approfondie), avec signature manuscrite ;
- *   - `session_presences`  → sessions Zoom en direct, émargées avant ouverture
- *     du lien (pas de signature manuscrite : l'émargement est l'acte d'entrer
- *     en session).
+ *   - `session_presences`  → sessions Zoom en direct, émargées par signature
+ *     manuscrite avant ouverture du lien.
  *
  * `?format=csv` renvoie l'export (sans les images de signature).
  * `?source=plateforme|zoom` filtre l'export sur une seule origine.
@@ -76,7 +75,7 @@ export async function GET(
         .select('id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, signature_png, watched_ratio')
         .eq('user_id', userId).order('required_at', { ascending: false }),
       db.from('session_presences')
-        .select('id, event_title, event_date, start_time, college, intervenant, marked_at')
+        .select('id, event_title, event_date, start_time, college, intervenant, marked_at, signature_png')
         .eq('user_id', userId).order('marked_at', { ascending: false }),
       // `course_attendances.matiere_id` stocke un identifiant (col-…) : on le
       // résout en nom lisible. Côté Zoom, `college` est déjà un libellé libre.
@@ -97,6 +96,7 @@ export async function GET(
   type PRow = {
     id: string; event_title: string | null; event_date: string | null; start_time: string | null;
     college: string | null; intervenant: string | null; marked_at: string;
+    signature_png: string | null;
   };
 
   const fromPlateforme: Emargement[] = ((attendances ?? []) as ARow[]).map((r) => ({
@@ -121,10 +121,10 @@ export async function GET(
     titre: r.event_title ?? 'Session',
     date: r.marked_at,
     requiredAt: null,
-    // Émarger une session Zoom, c'est déclarer sa présence avant d'ouvrir le
-    // lien : l'acte vaut signature, il n'y a pas de tracé manuscrit.
-    signed: true,
-    signaturePng: null,
+    // Depuis l'ajout de la signature manuscrite, une session Zoom n'est
+    // considérée émargée que si le tracé a bien été enregistré.
+    signed: !!r.signature_png,
+    signaturePng: r.signature_png,
     watchedRatio: null,
     intervenant: r.intervenant,
   }));

@@ -57,6 +57,16 @@ export default async function AgendaPage() {
 
   const events = (userData ?? []) as UserEvent[];
 
+  // Sessions déjà émargées : on ne redemande pas la signature à l'étudiant.
+  const { data: signedRows } = await db
+    .from('session_presences')
+    .select('event_id')
+    .eq('user_id', user.id)
+    .not('signature_png', 'is', null);
+  const signedEventIds = ((signedRows ?? []) as { event_id: string | null }[])
+    .map((r) => r.event_id)
+    .filter((id): id is string => !!id);
+
   return (
     <div className="flex flex-col gap-4 px-4 py-5 lg:h-full lg:overflow-hidden lg:px-8">
       <header>
@@ -66,7 +76,7 @@ export default async function AgendaPage() {
           « + Ajouter » sous chaque journée pour planifier une session.
         </p>
       </header>
-      <AgendaWeek userEvents={events} platformEvents={platformEvents} />
+      <AgendaWeek userEvents={events} platformEvents={platformEvents} signedEventIds={signedEventIds} />
     </div>
   );
 }

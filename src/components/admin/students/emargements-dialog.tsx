@@ -211,7 +211,15 @@ export function EmargementsDialog({
                           </>
                         ) : (
                           <p className="mt-0.5 text-[12px] text-(--color-ink-soft)">
-                            Émargé le <strong>{fmt(r.date)}</strong>
+                            {r.signed
+                              ? <>Émargé le <strong>{fmt(r.date)}</strong></>
+                              : (
+                                // Émargement Zoom antérieur à la signature
+                                // manuscrite : présence enregistrée, sans tracé.
+                                <span className="inline-flex items-center gap-1 font-bold" style={{ color: '#B26A00' }}>
+                                  <TriangleAlert className="h-3.5 w-3.5" /> Présence enregistrée sans signature
+                                </span>
+                              )}
                             {r.intervenant && ` · ${r.intervenant}`}
                           </p>
                         )}

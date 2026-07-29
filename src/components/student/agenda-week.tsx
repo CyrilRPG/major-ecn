@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { CalendarDays, ChevronLeft, ChevronRight, Clock, ExternalLink, Plus, Star, Trash2, User, Video } from 'lucide-react';
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock, ExternalLink, PenLine, Plus, Star, Trash2, User, Video } from 'lucide-react';
+import { SignaturePad } from '@/components/student/signature-pad';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -86,8 +87,13 @@ const dateKey = (d: Date) => d.toISOString().slice(0, 10);
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AgendaWeek({
-  userEvents, platformEvents = [],
-}: { userEvents: UserEvent[]; platformEvents?: PlatformEvent[] }) {
+  userEvents, platformEvents = [], signedEventIds = [],
+}: {
+  userEvents: UserEvent[];
+  platformEvents?: PlatformEvent[];
+  /** Sessions déjà émargées par l'étudiant : on ne redemande pas sa signature. */
+  signedEventIds?: string[];
+}) {
   // Décalage en semaines par rapport à la semaine courante (0 = cette
   // semaine, -1 = semaine précédente, +1 = semaine prochaine…).
   const [weekOffset, setWeekOffset] = useState(0);
@@ -302,7 +308,11 @@ export function AgendaWeek({
                   </p>
                 )}
                 {selectedPlatform.zoom_url && (
-                  <ZoomJoinBlock key={selectedPlatform.id} event={selectedPlatform} />
+                  <ZoomJoinBlock
+                    key={selectedPlatform.id}
+                    event={selectedPlatform}
+                    alreadySigned={signedEventIds.includes(selectedPlatform.id)}
+                  />
                 )}
               </div>
             </>
@@ -328,57 +338,90 @@ export function AgendaWeek({
   );
 }
 
-/* ───────────── Émargement obligatoire avant d'ouvrir le lien Zoom ───────── */
-function ZoomJoinBlock({ event }: { event: PlatformEvent }) {
-  const [checked, setChecked] = useState(false);
+/* ───────────── Émargement obligatoire avant d'ouvrir le lien Zoom ─────────
+ *
+ * L'émargement porte une SIGNATURE MANUSCRITE, comme les vidéos de la
+ * plateforme : les deux origines ont ainsi la même valeur probatoire.
+ *
+ * Déroulé en deux temps, volontairement : on signe, PUIS le lien Zoom
+ * s'active sous forme de vraie ancre. Ouvrir la fenêtre en JavaScript après
+ * l'attente réseau se ferait bloquer par les bloqueurs de pop-up, qui
+ * n'autorisent `window.open` que dans le geste utilisateur lui-même.
+ */
+function ZoomJoinBlock({ event, alreadySigned }: { event: PlatformEvent; alreadySigned: boolean }) {
+  const [signature, setSignature] = useState<string | null>(null);
+  const [signed, setSigned] = useState(alreadySigned);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   if (!event.zoom_url) return null;
   const url = event.zoom_url;
 
-  async function join() {
-    if (!checked || busy) return;
+  async function emarger() {
+    if (!signature || busy) return;
     setBusy(true);
+    setError(null);
     try {
-      await fetch('/api/presences', {
+      const res = await fetch('/api/presences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId: event.id }),
+        body: JSON.stringify({ eventId: event.id, signaturePng: signature }),
       });
-    } catch {
-      /* on ouvre le lien quoi qu'il arrive — l'émargement est best-effort */
+      const json = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(json.error ?? 'Émargement impossible');
+      setSigned(true);
+    } catch (e) {
+      // Contrairement à l'ancien comportement « best-effort », on n'ouvre PAS
+      // le lien si l'émargement a échoué : une session suivie sans émargement
+      // laisse un trou dans le dossier de formation.
+      setError(e instanceof Error ? e.message : 'Émargement impossible');
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
-    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   return (
     <div className="mt-2 space-y-2.5">
-      <label
-        className="flex cursor-pointer items-start gap-2.5 rounded-xl border p-3"
-        style={{ borderColor: checked ? 'var(--color-primary)' : 'var(--color-border)' }}
-      >
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => setChecked(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0"
-          style={{ accentColor: 'var(--color-primary)' }}
-        />
-        <span className="text-[13px] leading-snug text-(--color-ink)">
-          J’émarge ma présence à cette session{' '}
-          <span className="font-semibold text-(--color-danger)">(obligatoire)</span>.
-        </span>
-      </label>
-      <button
-        type="button"
-        onClick={join}
-        disabled={!checked || busy}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <Video className="h-4 w-4" />
-        {busy ? 'Émargement…' : 'Rejoindre le cours sur Zoom'}
-        <ExternalLink className="h-3.5 w-3.5" />
-      </button>
+      {!signed ? (
+        <>
+          <div className="rounded-xl border p-3" style={{ borderColor: 'var(--color-border)' }}>
+            <p className="text-[13px] leading-snug text-(--color-ink)">
+              Signez votre émargement pour accéder à la session{' '}
+              <span className="font-semibold text-(--color-danger)">(obligatoire)</span>.
+            </p>
+            <div className="mt-2.5">
+              <SignaturePad onChange={setSignature} disabled={busy} />
+            </div>
+          </div>
+          {error && (
+            <p className="text-[12.5px] font-semibold text-(--color-danger)">{error}</p>
+          )}
+          <button
+            type="button"
+            onClick={emarger}
+            disabled={!signature || busy}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <PenLine className="h-4 w-4" />
+            {busy ? 'Émargement…' : 'Valider mon émargement'}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="flex items-center gap-1.5 text-[12.5px] font-semibold text-(--color-primary)">
+            <Check className="h-3.5 w-3.5" /> Émargement enregistré.
+          </p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
+          >
+            <Video className="h-4 w-4" />
+            Rejoindre le cours sur Zoom
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </>
+      )}
     </div>
   );
 }
