@@ -30,12 +30,15 @@ export function EmargementGate({
   coursId,
   coursTitre,
   studentName,
+  kind = 'video',
   initialPending,
   initialSigned,
 }: {
   coursId: string;
   coursTitre: string;
   studentName: string;
+  /** Séance de formation émargée : vidéo du cours ou séance approfondie. */
+  kind?: 'video' | 'seance';
   /** Émargement déjà dû et non signé au chargement (source : base). */
   initialPending: boolean;
   /** Déjà signé : la barrière ne se déclenchera plus. */
@@ -72,6 +75,7 @@ export function EmargementGate({
           body: JSON.stringify({
             action: 'require',
             coursId,
+            kind,
             watchedRatio: detail.ratio,
             watchedSeconds: detail.seconds,
           }),
@@ -83,7 +87,7 @@ export function EmargementGate({
 
     window.addEventListener(VIDEO_PROGRESS_EVENT, onProgress);
     return () => window.removeEventListener(VIDEO_PROGRESS_EVENT, onProgress);
-  }, [coursId, signed, pauseVideo]);
+  }, [coursId, kind, signed, pauseVideo]);
 
   // Tant que la barrière est levée, la vidéo reste en pause et la page ne
   // défile pas derrière la modale.
@@ -105,13 +109,13 @@ export function EmargementGate({
       await fetch('/api/emargement', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'require', coursId }),
+        body: JSON.stringify({ action: 'require', coursId, kind }),
       }).catch(() => null);
 
       const res = await fetch('/api/emargement', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'sign', coursId, signaturePng: signature }),
+        body: JSON.stringify({ action: 'sign', coursId, kind, signaturePng: signature }),
       });
       const json = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(json.error ?? 'Enregistrement impossible');

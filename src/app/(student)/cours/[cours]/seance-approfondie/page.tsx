@@ -46,6 +46,7 @@ export default async function SeanceApprofondiePage({
     .select('signed_at')
     .eq('user_id', user.id)
     .eq('cours_id', coursId)
+    .eq('kind', 'seance')
     .maybeSingle();
 
   // Déblocage PROGRESSIF : chaque vidéo est verrouillée par SA séance du
@@ -180,6 +181,7 @@ export default async function SeanceApprofondiePage({
         <EmargementGate
           coursId={coursId}
           coursTitre={c.titre}
+          kind="seance"
           studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
           initialPending={!!attendance && !attendance.signed_at}
           initialSigned={!!attendance?.signed_at}

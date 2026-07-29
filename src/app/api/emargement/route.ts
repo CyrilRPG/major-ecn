@@ -26,10 +26,18 @@ const MAX_SIGNATURE_CHARS = 400_000;
 type Body = {
   action?: 'require' | 'sign';
   coursId?: string;
+  /** 'video' = vidéo du cours ; 'seance' = séance approfondie. */
+  kind?: string;
   watchedRatio?: number;
   watchedSeconds?: number;
   signaturePng?: string;
 };
+
+/** La vidéo du cours et la séance approfondie sont deux séances de formation
+ *  distinctes : chacune s'émarge séparément. */
+function parseKind(raw: string | undefined): 'video' | 'seance' {
+  return raw === 'seance' ? 'seance' : 'video';
+}
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -39,6 +47,7 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as Body;
   const coursId = (body.coursId ?? '').trim();
   if (!coursId) return NextResponse.json({ error: 'Cours manquant' }, { status: 400 });
+  const kind = parseKind(body.kind);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;
@@ -59,6 +68,7 @@ export async function POST(req: Request) {
       .update({ signed_at: new Date().toISOString(), signature_png: signature })
       .eq('user_id', user.id)
       .eq('cours_id', coursId)
+      .eq('kind', kind)
       .is('signed_at', null)
       .select('id')
       .maybeSingle();
@@ -75,6 +85,7 @@ export async function POST(req: Request) {
     .select('id, signed_at')
     .eq('user_id', user.id)
     .eq('cours_id', coursId)
+    .eq('kind', kind)
     .maybeSingle();
 
   if (existing) {
@@ -99,6 +110,7 @@ export async function POST(req: Request) {
   const { error } = await db.from('course_attendances').insert({
     user_id: user.id,
     cours_id: coursId,
+    kind,
     watched_ratio: ratio,
     watched_seconds: seconds,
     cours_titre: c.titre,

@@ -48,6 +48,7 @@ export default async function CoursVideoPage({ params }: { params: Promise<{ cou
     .select('signed_at')
     .eq('user_id', user.id)
     .eq('cours_id', coursId)
+    .eq('kind', 'video')
     .maybeSingle();
   let signedUrl: string | null = null;
   if (!bunnyId && video?.storage_path) {
