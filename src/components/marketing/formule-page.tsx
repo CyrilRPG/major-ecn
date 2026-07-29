@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
   FileText, GraduationCap, Heart, Layers3, LineChart, Lock, MessageCircle,
-  Phone, Play, Quote, Shield, ShieldCheck, Star, Stethoscope, Target,
+  Play, Quote, Shield, ShieldCheck, Star, Stethoscope, Target,
   TrendingUp, Trophy, Users, Video,
 } from 'lucide-react';
 import { Reveal } from './reveal';
@@ -83,7 +83,7 @@ const CONFIGS: Record<Variant, {
     label: 'PROGRAMME APPROFONDI', tagline: "Approfondissez votre préparation\navec un accompagnement structuré\njusqu'aux EVC",
     price: APPROFONDI_MIN_EUROS_FR, pricePrefix: 'dès', hero: '/formules/hero-programme-approfondi.jpg',
     desc: "Le Programme Approfondi est conçu pour vous offrir une reprise structurée des spécialités essentielles, des séances interactives, des échanges réguliers avec les enseignants et un suivi pédagogique renforcé.",
-    cta: 'Échanger avec un conseiller', ctaSecondary: 'Planifier un échange',
+    cta: 'Souscrire en ligne', ctaSecondary: 'Planifier un échange',
     features: ['Approfondissement des spécialités majeures', 'Échanges avec les enseignants', 'Épreuves blanches et suivi personnalisé', 'Idéal pour une reprise complète et progressive'],
     contentItems: [
       { Icon: Users, t: 'Séances interactives', d: 'Reprise des notions clés a partir de dossiers cliniques guidés' },
@@ -637,7 +637,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
             <div className="flex items-center gap-2.5">
               <span className="flex h-10 w-10 items-center justify-center rounded-2xl"
                 style={{ background: '#FCEAEC', color: ctaColor.main }}>
-                {isApprofondi ? <Phone className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
+                <Lock className="h-5 w-5" />
               </span>
               <div>
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.14em]" style={{ color: INK_SOFT }}>
@@ -676,7 +676,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
 
             {/* Mentions légales bas */}
             <p className="mt-5 text-center text-[10.5px]" style={{ color: '#7A8499' }}>
-              En procédant au {isApprofondi ? 'rappel' : 'paiement'}, vous acceptez les{' '}
+              En procédant au paiement, vous acceptez les{' '}
               <Link href="/cgu" className="font-semibold underline" style={{ color: ctaColor.main }}>CGU</Link>
               {' '}de Major ECN.
             </p>
