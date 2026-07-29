@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/types/database';
+import { DB_TIMEOUT_MS, getUserSafely, supabaseCookieNames, withTimeout } from '@/lib/auth/safe-auth';
 
 export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -36,7 +37,33 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // Appel BORNÉ : sans cela, un rafraîchissement de token saturé (409) faisait
+  // pendre le middleware jusqu'à son plafond de 25 s, et la plateforme coupait
+  // la connexion — « Load failed » côté navigateur.
+  const auth = await getUserSafely(supabase);
+  const { user } = auth;
+
+  // Session morte (refresh token absent ou déjà consommé) : on PURGE les
+  // cookies Supabase avant de renvoyer vers /login. Sans cette purge, le
+  // navigateur represente le même token périmé à chaque requête et relance
+  // indéfiniment la tempête de rafraîchissements.
+  if (auth.sessionInvalid) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    url.search = '';
+    if (isProtectedRoute) url.searchParams.set('next', path);
+    url.searchParams.set('reason', 'session-expiree');
+    const res = NextResponse.redirect(url);
+    for (const name of supabaseCookieNames(request.cookies.getAll().map((c) => c.name))) {
+      res.cookies.set(name, '', { path: '/', maxAge: 0 });
+    }
+    return res;
+  }
+
+  // Échec TRANSITOIRE (délai dépassé, 409, réseau) : on ne déconnecte pas et on
+  // ne bloque pas. On laisse passer — la page refera sa propre vérification,
+  // elle aussi bornée. L'essentiel est de rendre la main tout de suite.
+  if (auth.timedOut) return response;
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
@@ -57,12 +84,20 @@ export async function updateSession(request: NextRequest) {
       if (cachedOk && cachedOk === device) {
         // Cache hit — skip DB query
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: prof } = await (supabase as any)
-          .from('profiles')
-          .select('active_session_id')
-          .eq('id', user.id)
-          .maybeSingle();
+        // Bornée elle aussi : un `catch` n'attrape pas un blocage, seule une
+        // course contre un délai garantit que le middleware rend la main.
+        const probe = await withTimeout(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (supabase as any)
+            .from('profiles')
+            .select('active_session_id')
+            .eq('id', user.id)
+            .maybeSingle(),
+          DB_TIMEOUT_MS,
+        );
+        // Délai dépassé → on n'invalide pas la session sur une simple lenteur.
+        if (probe.timedOut) return response;
+        const { data: prof } = probe.value as { data: { active_session_id?: string | null } | null };
         const active = (prof as { active_session_id?: string | null } | null)?.active_session_id ?? null;
         if (active && device !== active) {
           const url = request.nextUrl.clone();

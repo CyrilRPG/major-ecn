@@ -1,3 +1,10 @@
+/** Plafond d'exécution de TOUTES les pages étudiant. Le défaut de la
+ *  plateforme est de 300 s : une page bloquée gardait donc la connexion ouverte
+ *  cinq minutes avant d'être tuée, ce que le navigateur affiche en
+ *  ERR_CONNECTION_ABORTED. Une page qui n'a pas rendu en 60 s est de toute
+ *  façon perdue — autant échouer vite et laisser l'élève réessayer. */
+export const maxDuration = 60;
+
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
