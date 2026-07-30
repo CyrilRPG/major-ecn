@@ -25,7 +25,18 @@ export type Profile = Tables<'profiles'> & {
  */
 export const getCurrentUserAndProfile = cache(async () => {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+
+  // Même protection que dans le middleware : `getUser()` LÈVE une exception
+  // quand le refresh token est périmé, ce qui faisait planter le rendu de la
+  // page (500) au lieu de renvoyer proprement vers /login.
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Session indéterminée : l'appelant (`requireUser`) redirige vers /login,
+    // et la reconnexion réécrit les cookies.
+  }
   if (!user) return { user: null, profile: null };
 
   const { data: profile } = await supabase

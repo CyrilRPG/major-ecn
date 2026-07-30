@@ -36,7 +36,28 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // `getUser()` LÈVE une exception quand le refresh token est périmé ou déjà
+  // consommé (AuthApiError refresh_token_not_found). Sans ce try/catch, le
+  // middleware plantait et la requête renvoyait 500 — y compris sur /login,
+  // puisque le middleware s'y exécute aussi. La page de connexion devenait donc
+  // inatteignable pour quiconque avait un cookie périmé : plus personne ne
+  // pouvait se reconnecter.
+  //
+  // En cas d'échec on considère simplement qu'il n'y a pas d'utilisateur
+  // identifié : sur une route protégée cela redirige vers /login (comportement
+  // normal), et sur /login la page s'affiche — la connexion réécrit alors les
+  // cookies, ce qui résout le problème de lui-même.
+  //
+  // On ne purge AUCUN cookie ici : une tentative précédente le faisait et
+  // détruisait des sessions saines, `refresh_token_not_found` survenant aussi
+  // quand une requête concurrente vient légitimement de renouveler le jeton.
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Session indéterminée — on continue sans utilisateur.
+  }
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
