@@ -1,7 +1,6 @@
 import 'server-only';
 import { createClient as createSupabaseClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import { createClient as createCookieClient } from '@/lib/supabase/server';
-import { AUTH_TIMEOUT_MS, getUserSafely, withTimeout } from '@/lib/auth/safe-auth';
 import type { Database } from '@/types/database';
 
 /**
@@ -32,9 +31,7 @@ export async function getBearerUser(req: Request): Promise<RequestAuth | null> {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
-  const res = await withTimeout(supabase.auth.getUser(token), AUTH_TIMEOUT_MS);
-  if (res.timedOut) return null;
-  const { data: { user }, error } = res.value;
+  const { data: { user }, error } = await supabase.auth.getUser(token);
   if (error || !user) return null;
   return { user, supabase, accessToken: token, via: 'bearer' };
 }
@@ -47,14 +44,10 @@ export async function getBearerUser(req: Request): Promise<RequestAuth | null> {
 export async function getRequestUser(req: Request): Promise<RequestAuth | null> {
   try {
     const cookieClient = await createCookieClient();
-    // Appel BORNÉ : le heartbeat part toutes les 30 s en parallèle du rendu des
-    // pages et rafraîchissait le même token en concurrence, d'où les 409
-    // Supabase et des fonctions qui partaient jusqu'à leur plafond.
-    const { user } = await getUserSafely(cookieClient);
+    const { data: { user } } = await cookieClient.auth.getUser();
     if (user) {
-      const s = await withTimeout(cookieClient.auth.getSession(), AUTH_TIMEOUT_MS);
-      const accessToken = s.timedOut ? null : (s.value.data.session?.access_token ?? null);
-      return { user, supabase: cookieClient, accessToken, via: 'cookie' };
+      const { data: { session } } = await cookieClient.auth.getSession();
+      return { user, supabase: cookieClient, accessToken: session?.access_token ?? null, via: 'cookie' };
     }
   } catch {
     // Pas de contexte cookie (ou erreur) → on tente le Bearer.
