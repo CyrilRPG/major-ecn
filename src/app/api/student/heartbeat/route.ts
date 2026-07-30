@@ -5,10 +5,6 @@ import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { isStudyRoute } from '@/lib/student/study-route';
 
 export const runtime = 'nodejs';
-/** Plafond bas et volontaire : le heartbeat est purement statistique. Mieux
- *  vaut perdre 30 s de comptage qu'occuper une fonction pendant 300 s — c'est
- *  cette accumulation qui saturait les connexions et bloquait la plateforme. */
-export const maxDuration = 20;
 
 const HEARTBEAT_INTERVAL_S = 30;
 
