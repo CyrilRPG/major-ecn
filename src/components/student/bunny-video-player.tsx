@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } from '@/lib/emargement';
 
 /**
@@ -32,7 +33,7 @@ export function BunnyVideoPlayer({
     setDone(true);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (!user) return;
       await supabase.from('course_progress').upsert({
         cours_id: coursId,

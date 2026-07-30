@@ -16,6 +16,7 @@ import {
   type Difficulty,
 } from '@/types/domain';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { FlashcardEditDialog } from '@/components/admin/content/flashcard-edit-dialog';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { useRouter } from 'next/navigation';
@@ -74,7 +75,7 @@ export function FlashcardSession({
       setSubmitting(true);
       try {
         const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getVerifiedUser(supabase);
         if (user) {
           await supabase.from('flashcard_reviews').insert({
             user_id: user.id,

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -22,7 +23,7 @@ const MAX_SIGNATURE_CHARS = 400_000;
  */
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
   const body = (await req.json().catch(() => ({}))) as {

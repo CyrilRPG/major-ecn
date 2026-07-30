@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export async function saveInterrogationResult(input: {
   cours_id: string;
@@ -8,7 +9,7 @@ export async function saveInterrogationResult(input: {
   total: number;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const supa = await createClient();
-  const { data: { user } } = await supa.auth.getUser();
+  const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const { data: profile } = await supa
@@ -41,7 +42,7 @@ export async function saveSignature(input: {
   signature_data_url: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const supa = await createClient();
-  const { data: { user } } = await supa.auth.getUser();
+  const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const { error } = await (supa as unknown as {

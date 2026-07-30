@@ -6,7 +6,10 @@ import { isStudyRoute } from '@/lib/student/study-route';
 
 export const runtime = 'nodejs';
 
-const HEARTBEAT_INTERVAL_S = 30;
+/** Doit rester aligné sur HEARTBEAT_MS de components/student/platform-timer.tsx. */
+const HEARTBEAT_INTERVAL_S = 60;
+/** Au-delà, l'élève a fermé l'onglet ou s'est absenté : on ne compte rien. */
+const IDLE_AFTER_S = HEARTBEAT_INTERVAL_S * 3;
 
 export async function POST(req: Request) {
   // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
@@ -46,8 +49,8 @@ export async function POST(req: Request) {
     const lastBeat = new Date(existing.last_heartbeat).getTime();
     const now = Date.now();
     const elapsed = Math.floor((now - lastBeat) / 1000);
-    // Only count if last heartbeat was recent (< 2 min) to avoid counting idle time.
-    const increment = elapsed <= 120 ? Math.min(elapsed, HEARTBEAT_INTERVAL_S + 5) : 0;
+    // Only count if last heartbeat was recent to avoid counting idle time.
+    const increment = elapsed <= IDLE_AFTER_S ? Math.min(elapsed, HEARTBEAT_INTERVAL_S + 5) : 0;
     await sb
       .from('platform_time_tracking')
       .update({

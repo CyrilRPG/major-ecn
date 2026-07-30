@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUserId } from '@/lib/auth/verified-user';
 import { iconFromKey } from '@/lib/icons';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { canAccessCollege } from '@/lib/auth/permissions';
@@ -18,7 +19,7 @@ type CollegeRow = {
 
 export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
   const supabase = await createClient();
-  const [{ data }, { data: userData }] = await Promise.all([
+  const [{ data }, userId] = await Promise.all([
     supabase
       .from('facultes')
       .select(
@@ -27,9 +28,8 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
       )
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
-    supabase.auth.getUser(),
+    getVerifiedUserId(supabase),
   ]);
-  const userId = userData?.user?.id ?? null;
 
   const colleges = (
     ((data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])

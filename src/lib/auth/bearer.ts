@@ -1,6 +1,7 @@
 import 'server-only';
-import { createClient as createSupabaseClient, type SupabaseClient, type User } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
 import { createClient as createCookieClient } from '@/lib/supabase/server';
+import { getVerifiedUser, type VerifiedUser } from './verified-user';
 import type { Database } from '@/types/database';
 
 /**
@@ -10,7 +11,7 @@ import type { Database } from '@/types/database';
  */
 
 export type RequestAuth = {
-  user: User;
+  user: VerifiedUser;
   supabase: SupabaseClient<Database>;
   /** Access token JWT — sert notamment à révoquer les AUTRES sessions. */
   accessToken: string | null;
@@ -31,8 +32,11 @@ export async function getBearerUser(req: Request): Promise<RequestAuth | null> {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return null;
+  // Vérification locale de la signature du jeton (cf. verified-user.ts) plutôt
+  // qu'un appel réseau à l'API Auth : l'app mobile appelle ces routes en
+  // rafale (sync, fiches, heartbeat).
+  const user = await getVerifiedUser(supabase, token);
+  if (!user) return null;
   return { user, supabase, accessToken: token, via: 'bearer' };
 }
 
@@ -44,10 +48,15 @@ export async function getBearerUser(req: Request): Promise<RequestAuth | null> {
 export async function getRequestUser(req: Request): Promise<RequestAuth | null> {
   try {
     const cookieClient = await createCookieClient();
-    const { data: { user } } = await cookieClient.auth.getUser();
-    if (user) {
-      const { data: { session } } = await cookieClient.auth.getSession();
-      return { user, supabase: cookieClient, accessToken: session?.access_token ?? null, via: 'cookie' };
+    // `getSession()` lit les cookies (et ne renouvelle le jeton que s'il est
+    // expiré) ; `getVerifiedUser()` en vérifie ensuite la signature en local.
+    // Aucune requête vers l'API Auth dans le cas courant.
+    const { data: { session } } = await cookieClient.auth.getSession();
+    if (session?.access_token) {
+      const user = await getVerifiedUser(cookieClient, session.access_token);
+      if (user) {
+        return { user, supabase: cookieClient, accessToken: session.access_token, via: 'cookie' };
+      }
     }
   } catch {
     // Pas de contexte cookie (ou erreur) → on tente le Bearer.

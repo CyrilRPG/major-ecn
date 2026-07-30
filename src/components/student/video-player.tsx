@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Maximize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { formatDuration } from '@/lib/utils';
 import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } from '@/lib/emargement';
 
@@ -34,9 +35,12 @@ export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) 
       if (!markedDone && v.duration > 0 && v.currentTime / v.duration > 0.8) {
         setMarkedDone(true);
         const supabase = createClient();
-        await supabase
-          .from('course_progress')
-          .upsert({ cours_id: coursId, video_watched: true, last_seen_at: new Date().toISOString(), user_id: (await supabase.auth.getUser()).data.user!.id });
+        const user = await getVerifiedUser(supabase);
+        if (user) {
+          await supabase
+            .from('course_progress')
+            .upsert({ cours_id: coursId, video_watched: true, last_seen_at: new Date().toISOString(), user_id: user.id });
+        }
       }
     };
     const onMeta = () => setDur(v.duration);

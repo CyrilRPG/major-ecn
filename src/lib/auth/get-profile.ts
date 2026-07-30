@@ -1,6 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUser } from './verified-user';
 import type { Tables } from '@/types/database';
 
 /** Augmented with columns added by recent migrations not yet in generated types. */
@@ -26,17 +27,15 @@ export type Profile = Tables<'profiles'> & {
 export const getCurrentUserAndProfile = cache(async () => {
   const supabase = await createClient();
 
-  // Même protection que dans le middleware : `getUser()` LÈVE une exception
-  // quand le refresh token est périmé, ce qui faisait planter le rendu de la
-  // page (500) au lieu de renvoyer proprement vers /login.
-  let user = null;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    // Session indéterminée : l'appelant (`requireUser`) redirige vers /login,
-    // et la reconnexion réécrit les cookies.
-  }
+  // Vérification LOCALE du JWT (cf. verified-user.ts) : chaque rendu de page
+  // faisait sinon un aller-retour réseau vers l'API Auth, en plus de celui du
+  // middleware. `getVerifiedUser()` ne lève jamais d'exception — `getUser()`,
+  // lui, plantait le rendu (500) quand le refresh token était périmé, au lieu
+  // de renvoyer proprement vers /login.
+  //
+  // Session indéterminée ⇒ `null` : l'appelant (`requireUser`) redirige vers
+  // /login, et la reconnexion réécrit les cookies.
+  const user = await getVerifiedUser(supabase);
   if (!user) return { user: null, profile: null };
 
   const { data: profile } = await supabase

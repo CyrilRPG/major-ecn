@@ -3,6 +3,7 @@ import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -28,7 +29,7 @@ function ansi(s: string): string {
 export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
   const url = new URL(req.url);

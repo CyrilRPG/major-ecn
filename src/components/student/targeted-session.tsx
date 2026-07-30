@@ -9,6 +9,7 @@ import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
 
 export type TQuestion = {
@@ -77,7 +78,7 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
     const isCorrect = grade === 'bon';
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await supabase.from('qcm_attempts').insert({
           user_id: user.id,
@@ -104,7 +105,7 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
     const oc = q.items.map((it) => perItem[it.lettre]);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await supabase.from('qcm_attempts').insert({
           user_id: user.id,

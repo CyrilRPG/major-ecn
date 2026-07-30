@@ -4,7 +4,14 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { isStudyRoute } from '@/lib/student/study-route';
 
-const HEARTBEAT_MS = 30_000;
+/**
+ * 60 s (et non 30) : chaque battement est une requête authentifiée + 3 requêtes
+ * SQL. Avec plusieurs dizaines d'élèves en cours d'étude simultanée, la cadence
+ * précédente représentait à elle seule plusieurs requêtes par seconde en
+ * permanence. La précision du « Temps de révision » est inchangée : le serveur
+ * comptabilise l'écart réel entre deux battements.
+ */
+const HEARTBEAT_MS = 60_000;
 
 /**
  * Compte le « Temps de révision » — mais UNIQUEMENT sur les pages d'étude

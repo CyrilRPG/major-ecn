@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Check, Download, Loader2, Lock, Maximize2, Minimize2, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 // Rendu en <canvas> (react-pdf), chargé uniquement côté client : pas de
 // visionneuse PDF native → aucun bouton de téléchargement / impression,
@@ -43,10 +44,10 @@ export function PdfViewer({
   const markRead = () => {
     start(async () => {
       const supabase = createClient();
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) return;
+      const user = await getVerifiedUser(supabase);
+      if (!user) return;
       await supabase.from('course_progress').upsert(
-        { user_id: data.user.id, cours_id: coursId, fiche_read: true, last_seen_at: new Date().toISOString() },
+        { user_id: user.id, cours_id: coursId, fiche_read: true, last_seen_at: new Date().toISOString() },
         { onConflict: 'user_id,cours_id' },
       );
       setRead(true);

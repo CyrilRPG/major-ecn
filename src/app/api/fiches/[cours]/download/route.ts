@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { watermarkPdf } from '@/lib/fiches/watermark';
 import { canDownloadFiche } from '@/lib/auth/permissions';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,7 +19,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(_req: Request, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
   const { data: profile } = await supabase

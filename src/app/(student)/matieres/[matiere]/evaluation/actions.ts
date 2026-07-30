@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export type EvalType = 'fin_specialite' | 'consolidation_mini_eval' | 'renforcement_eval' | 'reevaluation';
 
@@ -12,7 +13,7 @@ export async function saveSpecialtyEvaluation(input: {
   score_total: number;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const supa = await createClient();
-  const { data: { user } } = await supa.auth.getUser();
+  const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const pct = input.score_total > 0 ? (input.score_correct / input.score_total) * 100 : 0;
@@ -39,7 +40,7 @@ export async function saveConsolidationSession(input: {
   score_correct: number;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const supa = await createClient();
-  const { data: { user } } = await supa.auth.getUser();
+  const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const now = new Date().toISOString();
@@ -65,7 +66,7 @@ export async function saveRenforcementStep(input: {
   total?: number;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const supa = await createClient();
-  const { data: { user } } = await supa.auth.getUser();
+  const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const { data: existing } = await (supa as unknown as {

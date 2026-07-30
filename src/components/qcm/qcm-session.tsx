@@ -14,6 +14,7 @@ import { RichTextZoom, ZoomableImage } from './image-zoom';
 import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
 import { sanitizeFlashcardHtml, sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
 import { VignetteEditorDialog } from '@/components/admin/content/vignette-editor-dialog';
@@ -159,7 +160,7 @@ export function QcmSession({
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const supabase = createClient() as any;
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (!user) return;
       if (wasSaved) {
         await supabase
@@ -194,7 +195,7 @@ export function QcmSession({
     setSubmitting(true);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getVerifiedUser(supabase);
     const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
 
     if (isQroc) {
@@ -262,7 +263,7 @@ export function QcmSession({
     setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getVerifiedUser(supabase);
     const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
     if (user) {
       await supabase.from('qcm_attempts').insert({

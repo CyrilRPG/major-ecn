@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { RichText } from './rich-text';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 type TextQuestion = {
   id: string;
@@ -42,7 +43,7 @@ export function TextAnnaleViewer({
       // Persiste les brouillons dans qcm_attempts.text_answer (sans is_correct,
       // qui sera défini ultérieurement quand la correction sera ajoutée).
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await Promise.all(
           questions.map((q) =>

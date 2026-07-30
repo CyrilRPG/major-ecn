@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import type { Database } from '@/types/database';
 
 export async function updateSession(request: NextRequest) {
@@ -36,28 +37,24 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // `getUser()` LÈVE une exception quand le refresh token est périmé ou déjà
-  // consommé (AuthApiError refresh_token_not_found). Sans ce try/catch, le
-  // middleware plantait et la requête renvoyait 500 — y compris sur /login,
-  // puisque le middleware s'y exécute aussi. La page de connexion devenait donc
-  // inatteignable pour quiconque avait un cookie périmé : plus personne ne
-  // pouvait se reconnecter.
+  // Vérification LOCALE du JWT (cf. lib/auth/verified-user.ts) au lieu d'un
+  // `getUser()` réseau. Le middleware s'exécute sur chaque page, chaque payload
+  // RSC et chaque préchargement de lien : c'était à lui seul la première source
+  // d'appels à l'API Auth, et donc de la lenteur générale.
   //
-  // En cas d'échec on considère simplement qu'il n'y a pas d'utilisateur
-  // identifié : sur une route protégée cela redirige vers /login (comportement
-  // normal), et sur /login la page s'affiche — la connexion réécrit alors les
-  // cookies, ce qui résout le problème de lui-même.
+  // `getVerifiedUser()` n'échoue jamais par exception (`getUser()`, lui, LEVAIT
+  // une AuthApiError sur refresh token périmé : le middleware plantait et la
+  // requête renvoyait 500 — y compris sur /login, où il s'exécute aussi, ce qui
+  // rendait la reconnexion impossible).
+  //
+  // Échec ⇒ pas d'utilisateur identifié : sur une route protégée on redirige
+  // vers /login (comportement normal), et sur /login la page s'affiche — la
+  // connexion réécrit alors les cookies et le problème se résout de lui-même.
   //
   // On ne purge AUCUN cookie ici : une tentative précédente le faisait et
   // détruisait des sessions saines, `refresh_token_not_found` survenant aussi
   // quand une requête concurrente vient légitimement de renouveler le jeton.
-  let user = null;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    // Session indéterminée — on continue sans utilisateur.
-  }
+  const user = await getVerifiedUser(supabase);
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();

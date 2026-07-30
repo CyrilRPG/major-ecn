@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ const COL: Record<string, 'cv_url' | 'certificat_scolarite_url' | 'carte_pro_url
 
 async function resolveTarget(req: NextRequest, explicitUserId?: string | null) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return { error: NextResponse.json({ error: 'Non authentifié' }, { status: 401 }) };
   const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
   const isAdmin = me?.role === 'admin';

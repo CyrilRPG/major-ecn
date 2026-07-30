@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Star, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
 
 export type SavedQuestion = {
@@ -62,7 +63,7 @@ export function SavedQuestionsList({ questions }: { questions: SavedQuestion[] }
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const supabase = createClient() as any;
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await supabase
           .from('student_saved_questions')

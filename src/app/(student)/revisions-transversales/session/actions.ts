@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export type TransversalKind =
   | 'daily'
@@ -24,7 +25,7 @@ export async function recordTransversalSession(
   input: RecordTransversalSessionInput,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
   const now = new Date().toISOString();

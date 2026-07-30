@@ -11,6 +11,7 @@ import { RichTextZoom } from '@/components/qcm/image-zoom';
 import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
 import { recordTransversalSession, type TransversalKind } from '@/app/(student)/revisions-transversales/session/actions';
 
@@ -130,7 +131,7 @@ export function TransversalSession({
     const isCorrect = grade === 'bon';
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await supabase.from('qcm_attempts').insert({
           user_id: user.id,
@@ -161,7 +162,7 @@ export function TransversalSession({
     const oc = q.items.map((it) => perItem[it.lettre]);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await getVerifiedUser(supabase);
       if (user) {
         await supabase.from('qcm_attempts').insert({
           user_id: user.id,
@@ -488,7 +489,7 @@ function CompletionScreen({
     setScheduling(true);
     try {
       const supabase = createClient();
-      const { data: { user: u } } = await supabase.auth.getUser();
+      const u = await getVerifiedUser(supabase);
       if (u) {
         await (supabase as unknown as {
           from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: unknown }> };

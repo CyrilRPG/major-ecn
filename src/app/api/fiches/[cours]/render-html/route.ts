@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { launchBrowser } from '@/lib/fiches/chromium';
 import { charteCss } from '@/lib/fiches/charte';
+import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   const { cours: coursId } = await ctx.params;
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
   const { data: profile } = await supabase
     .from('profiles').select('role').eq('id', user.id).maybeSingle();
