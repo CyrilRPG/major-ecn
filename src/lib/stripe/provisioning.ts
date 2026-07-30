@@ -199,7 +199,18 @@ export async function provisionStudentAccount(
     // Programme Approfondi : le périmètre de sous-collèges peut être RESTREINT selon
     // l'offre (ex. MG « Approfondi » = 13 spécialités ; « Approfondi + » = toutes).
     // Si l'offre définit une liste explicite, on l'utilise à la place des enfants.
-    const subColleges = approfondiTier?.collegesOverride ?? childIds;
+    //
+    // Achat Approfondi dont la metadata Stripe n'identifie AUCUNE offre connue : on
+    // n'ouvre que le collège cible. Se rabattre sur tous les enfants reviendrait à
+    // accorder le périmètre de l'offre la plus chère à quelqu'un qui a payé la
+    // moins chère — c'est fail-open sur un droit facturé.
+    const isApprofondi = offerForFormule === 'approfondi';
+    if (isApprofondi && !approfondiTier) {
+      log('approfondi-variant-unresolved', { variant: input.approfondiVariant ?? null, targetId });
+    }
+    const subColleges = approfondiTier
+      ? (approfondiTier.collegesOverride ?? childIds)
+      : (isApprofondi ? [] : childIds);
     colleges = [targetId, ...subColleges];
     log('colleges-resolved', {
       targetId, variant: approfondiTier?.id ?? null,
@@ -229,12 +240,26 @@ export async function provisionStudentAccount(
   // retire toute liste héritée (scope mono-formule propre).
   const offersField = unionOffers.length > 1 ? unionOffers : undefined;
 
+  // Le cumul ne vaut QUE pour un compte qui détenait DÉJÀ une formule payante :
+  // lui retirer un périmètre acheté serait une régression. Un compte gratuit
+  // (Découverte), invité ou nouveau reçoit exactement le périmètre payé. Sans
+  // cette borne, un accès large accordé AVANT l'achat (scope 'all' par défaut,
+  // collèges cochés à la main côté admin) survivait au paiement et ouvrait des
+  // collèges jamais achetés — y compris toute la plateforme.
+  const cumulate = priorPaid.length > 0;
+
   // Collèges : on cumule les accès. Un compte « toute l'offre » (type 'all')
-  // reste 'all' ; sinon on fusionne les collèges déjà accordés avec le nouveau.
-  const prevIsAll = prevScope.type === 'all';
-  const prevColleges: string[] = Array.isArray(prevScope.colleges)
+  // déjà payant reste 'all' ; sinon on fusionne les collèges déjà accordés avec
+  // le nouveau.
+  const prevIsAll = cumulate && prevScope.type === 'all';
+  const prevCollegesRaw: string[] = Array.isArray(prevScope.colleges)
     ? prevScope.colleges.filter((x: unknown): x is string => typeof x === 'string')
     : [];
+  // Le collège Découverte est gratuit : une mise à niveau Découverte → payant
+  // ne doit pas le faire disparaître, même quand le cumul ne s'applique pas.
+  const prevColleges = cumulate
+    ? prevCollegesRaw
+    : prevCollegesRaw.filter((c) => c === 'col-decouverte');
   const mergedColleges = Array.from(new Set<string>([...prevColleges, ...colleges]));
 
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
