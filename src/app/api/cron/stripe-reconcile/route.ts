@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { provisionStudentAccount } from '@/lib/stripe/provisioning';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { auditWebhooks, auditAndFixUnboundedPlans } from '@/lib/stripe/health';
 import type { FormuleId } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
@@ -63,7 +64,30 @@ type Recovered = {
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
   const secret = process.env.CRON_SECRET ?? process.env.CAMPAIGN_SECRET;
+
   if (!secret || authHeader !== `Bearer ${secret}`) {
+    // Un cron refusé en silence est le pire des cas : le filet de sécurité
+    // paraît en place alors qu'il ne tourne pas. Quand l'appel vient bien de
+    // Vercel Cron mais que le secret est absent ou faux, on le fait SAVOIR.
+    const fromVercelCron = /vercel-cron/i.test(req.headers.get('user-agent') ?? '');
+    if (fromVercelCron) {
+      const cause = !secret
+        ? 'la variable CRON_SECRET (ou CAMPAIGN_SECRET) n\'est pas définie'
+        : 'le secret envoyé ne correspond pas à CRON_SECRET';
+      console.error('[stripe-reconcile] cron refusé —', cause);
+      // N'interrompt jamais la réponse : l'alerte est un effet de bord.
+      await sendEmail({
+        to: INTERNAL_NOTIFY_EMAILS,
+        subject: '🚨 Le rattrapage des paiements Stripe est DÉSACTIVÉ',
+        html: `<p>Le contrôle horaire des paiements Stripe vient d'être refusé : ${cause}.</p>
+               <p><strong>Conséquence :</strong> aucun achat oublié ne sera rattrapé, et les
+               abonnements en plusieurs fois non bornés ne seront pas détectés. C'est
+               exactement la situation qui a laissé passer deux achats sans compte ni
+               notification.</p>
+               <p>Corrigez la variable d'environnement, puis redéployez.</p>`,
+        text: `Rattrapage Stripe désactivé : ${cause}.`,
+      }).catch(() => null);
+    }
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -76,6 +100,14 @@ export async function GET(req: Request) {
       { status: 500 },
     );
   }
+
+  // ── Contrôles d'infrastructure, indépendants des achats ─────────────────
+  // Ils tournent AVANT le rattrapage : si le webhook est cassé ou qu'un plan
+  // n'est pas borné, il faut le savoir même s'il n'y a eu aucun achat récent.
+  const [webhook, unbounded] = await Promise.all([
+    auditWebhooks(stripe),
+    auditAndFixUnboundedPlans(stripe),
+  ]);
 
   const since = Math.floor(Date.now() / 1000) - LOOKBACK_DAYS * 86_400;
 
@@ -186,9 +218,17 @@ export async function GET(req: Request) {
     recovered.push(entry);
   }
 
-  // Alerte interne : on ne notifie QUE s'il y a eu quelque chose à rattraper,
-  // pour que la réception d'un mail soit toujours un signal utile.
-  if (recovered.length > 0) {
+  // Alerte interne : on notifie s'il y a eu un rattrapage, OU si un contrôle
+  // d'infrastructure a échoué. Recevoir ce mail est toujours un signal utile.
+  const infraProblems = [
+    ...webhook.problems,
+    ...unbounded.map(
+      (u) => `Plan ${u.installments}× non borné pour ${u.customerName} (${u.subscriptionId}) — `
+        + (u.fixed ? `corrigé automatiquement (${u.fixed}).` : `ÉCHEC du bornage : ${u.error}. INTERVENIR MAINTENANT.`),
+    ),
+  ];
+
+  if (recovered.length > 0 || infraProblems.length > 0) {
     const rows = recovered
       .map((r) => {
         const montant = r.amountTotal != null ? `${(r.amountTotal / 100).toFixed(2)} €` : '—';
@@ -206,14 +246,26 @@ export async function GET(req: Request) {
       .join('');
 
     const failed = recovered.filter((r) => r.error).length;
+    const subject = infraProblems.length > 0
+      ? `🚨 Chaîne de paiement : ${infraProblems.length} anomalie(s) détectée(s)`
+      : `⚠️ ${recovered.length} paiement(s) Stripe rattrapé(s)${failed ? ` — ${failed} en échec` : ''}`;
+
+    const infraHtml = infraProblems.length > 0
+      ? `<h3 style="color:#C0112E;font-family:sans-serif">Anomalies de configuration</h3>
+         <ul style="font-family:sans-serif;font-size:13px">
+           ${infraProblems.map((p) => `<li>${p}</li>`).join('')}
+         </ul>`
+      : '';
+
     await sendEmail({
       to: INTERNAL_NOTIFY_EMAILS,
-      subject: `⚠️ ${recovered.length} paiement(s) Stripe rattrapé(s)${failed ? ` — ${failed} en échec` : ''}`,
+      subject,
       html: `
-        <p>Ces paiements étaient <strong>payés côté Stripe mais jamais provisionnés</strong> :
+        ${infraHtml}
+        ${recovered.length === 0 ? '' : `<p>Ces paiements étaient <strong>payés côté Stripe mais jamais provisionnés</strong> :
         ni le webhook ni la page /merci ne les avaient traités. Le rattrapage automatique
-        vient de créer les comptes et d'envoyer les emails d'activation.</p>
-        <table style="border-collapse:collapse;font-family:sans-serif;font-size:13px">
+        vient de créer les comptes et d'envoyer les emails d'activation.</p>`}
+        ${recovered.length === 0 ? '' : `<table style="border-collapse:collapse;font-family:sans-serif;font-size:13px">
           <tr>
             <th style="text-align:left;padding:6px 10px">Email</th>
             <th style="text-align:left;padding:6px 10px">Formule</th>
@@ -222,16 +274,19 @@ export async function GET(req: Request) {
             <th style="text-align:left;padding:6px 10px">Statut</th>
           </tr>
           ${rows}
-        </table>
+        </table>`}
         <p style="margin-top:16px">Si ce message revient régulièrement, c'est que le webhook
         Stripe ne fonctionne pas : vérifiez son URL et ses événements.</p>`,
-      text: recovered
-        .map((r) => `${r.email} — ${r.formule} — ${r.error ? `ÉCHEC: ${r.error}` : 'rattrapé'}`)
-        .join('\n'),
+      text: [
+        ...infraProblems,
+        ...recovered.map((r) => `${r.email} — ${r.formule} — ${r.error ? `ÉCHEC: ${r.error}` : 'rattrapé'}`),
+      ].join('\n'),
     });
   }
 
   return NextResponse.json({
+    webhook,
+    unboundedPlans: unbounded,
     checked: paid.length,
     alreadyDone: paid.length - missing.length,
     recovered: recovered.length,

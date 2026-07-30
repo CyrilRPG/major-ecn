@@ -24,6 +24,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getStripe, FORMULES, type FormuleId } from '@/lib/stripe';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
+import { auditWebhooks, auditAndFixUnboundedPlans } from '@/lib/stripe/health';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 
 type Step = { name: string; ok: boolean; details: Record<string, unknown> };
@@ -155,6 +156,29 @@ export async function GET(req: Request) {
       offres: approfondiRows,
     },
   });
+
+  // Step 1 ter — santé de la chaîne de paiement.
+  // Mêmes contrôles que le cron horaire, disponibles à la demande : on ne veut
+  // pas dépendre d'un cron (qui peut lui-même être mal configuré) pour savoir
+  // si le webhook fonctionne et si tous les plans en plusieurs fois sont bornés.
+  if (priceProbe) {
+    const [wh, unbounded] = await Promise.all([
+      auditWebhooks(priceProbe),
+      auditAndFixUnboundedPlans(priceProbe),
+    ]);
+    steps.push({
+      name: 'webhook-sante',
+      ok: wh.ok,
+      details: { problems: wh.problems, endpoints: wh.endpoints },
+    });
+    steps.push({
+      name: 'plans-en-plusieurs-fois-bornes',
+      ok: unbounded.length === 0,
+      details: unbounded.length === 0
+        ? { message: 'Tous les plans 3×/4× actifs sont bornés — aucun prélèvement sans fin.' }
+        : { corriges: unbounded },
+    });
+  }
 
   // Step 2 — Stripe session (si session_id fourni)
   if (sessionId) {
