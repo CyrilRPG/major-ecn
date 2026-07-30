@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/types/database';
-import { DB_TIMEOUT_MS, getUserSafely, supabaseCookieNames, withTimeout } from '@/lib/auth/safe-auth';
+import { DB_TIMEOUT_MS, getUserSafely, withTimeout } from '@/lib/auth/safe-auth';
 
 export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -43,26 +43,15 @@ export async function updateSession(request: NextRequest) {
   const auth = await getUserSafely(supabase);
   const { user } = auth;
 
-  // Session morte (refresh token absent ou déjà consommé) : on PURGE les
-  // cookies Supabase avant de renvoyer vers /login. Sans cette purge, le
-  // navigateur represente le même token périmé à chaque requête et relance
-  // indéfiniment la tempête de rafraîchissements.
-  if (auth.sessionInvalid) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.search = '';
-    if (isProtectedRoute) url.searchParams.set('next', path);
-    url.searchParams.set('reason', 'session-expiree');
-    const res = NextResponse.redirect(url);
-    for (const name of supabaseCookieNames(request.cookies.getAll().map((c) => c.name))) {
-      res.cookies.set(name, '', { path: '/', maxAge: 0 });
-    }
-    return res;
-  }
-
-  // Échec TRANSITOIRE (délai dépassé, 409, réseau) : on ne déconnecte pas et on
-  // ne bloque pas. On laisse passer — la page refera sa propre vérification,
-  // elle aussi bornée. L'essentiel est de rendre la main tout de suite.
+  // Session INDÉTERMINÉE (délai dépassé, 409, refresh concurrent, réseau) : on
+  // laisse passer sans rien conclure. La page refera sa propre vérification,
+  // elle aussi bornée, et c'est elle qui décide.
+  //
+  // On ne purge JAMAIS les cookies et on ne redirige pas ici. Une version
+  // précédente le faisait, et cela coupait l'accès à la plateforme : le code
+  // `refresh_token_not_found` apparaît aussi quand une requête perd une course
+  // au rafraîchissement alors que la session est saine, et la redirection vers
+  // /login s'appliquait même depuis /login — donc en boucle.
   if (auth.timedOut) return response;
 
   if (!user && isProtectedRoute) {

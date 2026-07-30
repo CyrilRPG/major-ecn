@@ -14,47 +14,56 @@
  * jusqu'à son plafond (25 s pour le middleware, 300 s pour une page) avant
  * d'être tuée — côté navigateur, ERR_CONNECTION_ABORTED ou « Load failed ».
  *
- * Règle : plus aucun appel d'authentification ne peut pendre. On distingue
- *   - session INVALIDE (refresh token absent/déjà utilisé) → il faut nettoyer
- *     les cookies et renvoyer vers /login, sinon chaque requête suivante
- *     relance la même tempête ;
- *   - échec TRANSITOIRE (409, réseau, lenteur) → on ne déconnecte personne,
- *     on rend la main immédiatement.
+ * DEUX RÈGLES, la seconde ayant été apprise à nos frais.
+ *
+ *  1. Plus aucun appel d'authentification ne peut pendre : tout passe par une
+ *     course contre un délai.
+ *
+ *  2. Un échec n'est JAMAIS interprété comme une absence de session. Il signifie
+ *     seulement « indéterminé ». On ne purge pas de cookies, on ne déconnecte
+ *     personne : la requête suivante retentera avec les cookies à jour.
  */
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 /** Au-delà, on considère l'authentification injoignable. Très en deçà des
  *  plafonds d'exécution (25 s middleware / 300 s page) pour que la réponse
  *  parte toujours avant que la plateforme ne coupe la connexion. */
-export const AUTH_TIMEOUT_MS = 6_000;
+export const AUTH_TIMEOUT_MS = 10_000;
 
 /** Idem pour les lectures de profil, qui suivent immédiatement l'auth. */
 export const DB_TIMEOUT_MS = 8_000;
 
 export type SafeAuth = {
   user: User | null;
-  /** Délai dépassé : Supabase Auth injoignable ou saturé. */
+  /** Délai dépassé, OU erreur d'authentification quelconque : dans les deux cas
+   *  on n'a PAS pu déterminer l'utilisateur — ce qui ne veut pas dire qu'il n'y
+   *  en a pas. Les appelants ne doivent jamais en déduire une déconnexion. */
   timedOut: boolean;
-  /** Session irrécupérable : seul ce cas justifie de déconnecter. */
-  sessionInvalid: boolean;
 };
 
-/** Codes Supabase signant une session morte — réessayer ne sert à rien. */
-const DEAD_SESSION_CODES = new Set([
-  'refresh_token_not_found',
-  'refresh_token_already_used',
-  'session_not_found',
-  'session_expired',
-]);
-
-function isDeadSession(err: unknown): boolean {
-  if (!err || typeof err !== 'object') return false;
-  const e = err as { code?: string; status?: number; message?: string };
-  if (e.code && DEAD_SESSION_CODES.has(e.code)) return true;
-  // 409 = rafraîchissements concurrents : transitoire, surtout PAS une
-  // déconnexion (c'est précisément le symptôme de la tempête à éteindre).
-  if (e.status === 409) return false;
-  return /refresh token (not found|already used)|session (not found|expired)/i.test(e.message ?? '');
+/**
+ * AUCUNE erreur d'authentification ne provoque de déconnexion automatique.
+ *
+ * Une version précédente considérait `refresh_token_not_found` et
+ * `refresh_token_already_used` comme des sessions mortes, et purgeait les
+ * cookies. C'était faux et ça a coupé l'accès à la plateforme : ces deux codes
+ * apparaissent aussi lorsqu'une requête PERD une course au rafraîchissement —
+ * le jeton a été légitimement remplacé par une requête concurrente, et la
+ * session est parfaitement valide. Purger les cookies détruisait donc des
+ * sessions saines, et la redirection vers /login s'appliquait même depuis
+ * /login, créant une boucle qui rendait la connexion impossible.
+ *
+ * La règle est désormais : on ne peut pas conclure qu'une session est morte
+ * depuis une seule requête. On ne déconnecte jamais ; on laisse simplement la
+ * requête suivante retenter avec les cookies à jour.
+ */
+function isTransient(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return true;
+  const e = err as { code?: string; status?: number };
+  // Conservé pour la journalisation : ces codes sont fréquents et bénins.
+  return e.status === 409
+    || e.code === 'refresh_token_not_found'
+    || e.code === 'refresh_token_already_used';
 }
 
 /**
@@ -88,25 +97,23 @@ export async function getUserSafely(
     const res = await withTimeout(supabase.auth.getUser(), timeoutMs);
     if (res.timedOut) {
       console.warn('[auth] getUser: délai dépassé', { timeoutMs });
-      return { user: null, timedOut: true, sessionInvalid: false };
+      return { user: null, timedOut: true };
     }
     const { data, error } = res.value;
     if (error) {
-      const dead = isDeadSession(error);
-      console.warn('[auth] getUser: erreur', { code: error.code, status: error.status, dead });
-      return { user: null, timedOut: false, sessionInvalid: dead };
+      // `timedOut: true` signifie ici « indéterminé », pas « pas d'utilisateur » :
+      // c'est ce qui empêche l'appelant de conclure à une déconnexion.
+      console.warn('[auth] getUser: erreur', {
+        code: error.code, status: error.status, transient: isTransient(error),
+      });
+      return { user: null, timedOut: true };
     }
-    return { user: data.user ?? null, timedOut: false, sessionInvalid: false };
+    return { user: data.user ?? null, timedOut: false };
   } catch (e) {
-    const dead = isDeadSession(e);
     console.warn('[auth] getUser: exception', {
-      message: e instanceof Error ? e.message : String(e), dead,
+      message: e instanceof Error ? e.message : String(e), transient: isTransient(e),
     });
-    return { user: null, timedOut: false, sessionInvalid: dead };
+    return { user: null, timedOut: true };
   }
 }
 
-/** Noms des cookies de session Supabase présents sur la requête. */
-export function supabaseCookieNames(names: string[]): string[] {
-  return names.filter((n) => n.startsWith('sb-'));
-}
