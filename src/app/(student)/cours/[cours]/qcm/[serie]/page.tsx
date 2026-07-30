@@ -38,7 +38,7 @@ export default async function QcmRunPage({
 
   const { data: questions } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
     .eq('serie_id', serieId)
     .order('order_index');
 
@@ -47,6 +47,7 @@ export default async function QcmRunPage({
   type QRow = {
     id: string; enonce: string; order_index: number; format: string;
     reponse_attendue: string | null; correction_generale: string | null;
+    commentaire_enseignant: string | null;
     images: string[] | null;
     qcm_items: Array<{ id: string; lettre: string; enonce: string; is_correct: boolean; justification: string | null; images: string[] | null }>;
   };
@@ -57,6 +58,7 @@ export default async function QcmRunPage({
     format: q.format as 'qcm' | 'qroc',
     reponse_attendue: q.reponse_attendue,
     correction_generale: q.correction_generale,
+    commentaire_enseignant: q.commentaire_enseignant,
     images: q.images ?? [],
     items: (q.qcm_items ?? [])
       .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))

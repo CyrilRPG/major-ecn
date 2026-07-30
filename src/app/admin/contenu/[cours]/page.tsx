@@ -83,7 +83,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const { data: qcmDetail } = qcmSerieIds.length > 0
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? await (supabase as any).from('qcm_questions')
-        .select('id, serie_id, format, enonce, reponse_attendue, order_index, correction_generale, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
+        .select('id, serie_id, format, enonce, reponse_attendue, order_index, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
         .in('serie_id', qcmSerieIds)
         .order('order_index', { ascending: true })
     : { data: [] };
@@ -277,7 +277,8 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                   questions: ((qcmDetail ?? []) as Array<{
                     id: string; serie_id: string; format: 'qcm' | 'qroc' | null; enonce: string;
                     reponse_attendue: string | null; order_index: number;
-                    correction_generale: string | null; images: string[] | null;
+                    correction_generale: string | null; commentaire_enseignant: string | null;
+                    images: string[] | null;
                     qcm_items: Array<{ id: string; lettre: string; enonce: string; is_correct: boolean; justification: string | null; images: string[] | null }>;
                   }>)
                     .filter((q) => q.serie_id === s.id)
@@ -287,6 +288,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                       enonce: q.enonce,
                       reponse_attendue: q.reponse_attendue ?? '',
                       correction_generale: q.correction_generale ?? '',
+                      commentaire_enseignant: q.commentaire_enseignant ?? '',
                       images: q.images ?? [],
                       items: (q.qcm_items ?? []).map((it) => ({
                         lettre: it.lettre as 'A'|'B'|'C'|'D'|'E',

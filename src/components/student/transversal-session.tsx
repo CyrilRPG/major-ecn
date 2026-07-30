@@ -30,6 +30,7 @@ export type TransversalQuestion = {
   format?: 'qcm' | 'qroc';
   reponse_attendue?: string | null;
   correction_generale?: string | null;
+  commentaire_enseignant?: string | null;
 };
 
 const BACK_HREF = '/revisions-transversales';
@@ -265,7 +266,7 @@ export function TransversalSession({
             />
           </div>
 
-          {revealed && (q.reponse_attendue || q.correction_generale) && (
+          {revealed && (q.reponse_attendue || q.correction_generale || q.commentaire_enseignant) && (
             <div className="rounded-xl border-2 border-[#00695C]/40 bg-[#E0F2F1]/60 p-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#00695C]">Réponse et correction</p>
               {q.reponse_attendue && (
@@ -277,6 +278,14 @@ export function TransversalSession({
               {q.correction_generale && (
                 <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
                   <RichText html={q.correction_generale} />
+                </div>
+              )}
+              {q.commentaire_enseignant && (
+                <div className="mt-3 border-t border-[#00695C]/25 pt-3">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#00695C]">Commentaire de l’enseignant</p>
+                  <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
+                    <RichText html={q.commentaire_enseignant} />
+                  </div>
                 </div>
               )}
             </div>
@@ -713,6 +722,12 @@ function CorrectionsView({
                 )}
                 {q.correction_generale && (
                   <div className="mt-1.5 text-(--color-ink-soft)"><RichText html={q.correction_generale} /></div>
+                )}
+                {q.commentaire_enseignant && (
+                  <div className="mt-2 border-t border-[#00695C]/25 pt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#00695C]">Commentaire de l’enseignant</span>
+                    <div className="mt-1 text-(--color-ink-soft)"><RichText html={q.commentaire_enseignant} /></div>
+                  </div>
                 )}
               </div>
             ) : (

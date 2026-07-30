@@ -113,9 +113,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'qcm_items_question_id_fkey'; columns: ['question_id']; isOneToOne: false; referencedRelation: 'qcm_questions'; referencedColumns: ['id'] }];
       };
       qcm_questions: {
-        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string; images: Json; correction_generale: string | null; format: string | null; reponse_attendue: string | null; updated_at: string };
-        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string; images?: Json; correction_generale?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
-        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string; images?: Json; correction_generale?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
+        Row: { created_at: string; enonce: string; id: string; order_index: number; serie_id: string; images: Json; correction_generale: string | null; commentaire_enseignant: string | null; format: string | null; reponse_attendue: string | null; updated_at: string };
+        Insert: { created_at?: string; enonce: string; id?: string; order_index?: number; serie_id: string; images?: Json; correction_generale?: string | null; commentaire_enseignant?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
+        Update: { created_at?: string; enonce?: string; id?: string; order_index?: number; serie_id?: string; images?: Json; correction_generale?: string | null; commentaire_enseignant?: string | null; format?: string | null; reponse_attendue?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'qcm_questions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
       qcm_series: {

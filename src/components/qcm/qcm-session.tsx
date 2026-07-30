@@ -26,6 +26,7 @@ type Question = {
   format?: 'qcm' | 'qroc';
   reponse_attendue?: string | null;
   correction_generale?: string | null;
+  commentaire_enseignant?: string | null;
   images?: string[] | null;
   items: (QcmItemView & { is_correct: boolean })[];
 };
@@ -432,6 +433,7 @@ export function QcmSession({
                 enonce: q.enonce,
                 reponse_attendue: q.reponse_attendue ?? '',
                 correction_generale: q.correction_generale ?? '',
+                commentaire_enseignant: q.commentaire_enseignant ?? '',
                 images: q.images ?? [],
                 items: q.items.map((it) => ({
                   lettre: it.lettre as 'A'|'B'|'C'|'D'|'E',
@@ -501,7 +503,7 @@ export function QcmSession({
             />
           </div>
 
-          {isRevealed && (q.correction_generale || q.reponse_attendue) && (
+          {isRevealed && (q.correction_generale || q.reponse_attendue || q.commentaire_enseignant) && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -522,6 +524,17 @@ export function QcmSession({
                   className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
                   dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale || q.reponse_attendue || '') }}
                 />
+              )}
+              {q.commentaire_enseignant && (
+                <div className="mt-3 border-t border-[#7C3AED]/25 pt-3">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#5B21B6]">
+                    Commentaire de l’enseignant
+                  </p>
+                  <div
+                    className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
+                    dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.commentaire_enseignant) }}
+                  />
+                </div>
               )}
             </motion.div>
           )}
@@ -582,6 +595,19 @@ export function QcmSession({
           <div
             className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
             dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale) }}
+          />
+        </div>
+      )}
+
+      {/* Commentaire de l'enseignant — rubrique distincte du corrigé. */}
+      {isValidated && !isTraining && !isSeanceQroc && q.commentaire_enseignant && (
+        <div className="mt-3 rounded-xl border border-[#7C3AED]/30 bg-[#F3EAFF]/60 p-3.5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#5B21B6]">
+            Commentaire de l’enseignant
+          </p>
+          <div
+            className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
+            dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.commentaire_enseignant) }}
           />
         </div>
       )}

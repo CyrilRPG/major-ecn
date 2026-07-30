@@ -28,6 +28,8 @@ export type QcmQuestionDraft = {
   /** QROC uniquement : réponse-modèle. Variantes acceptées séparées par « | ». */
   reponse_attendue: string;
   correction_generale: string;
+  /** Rubrique libre de l'enseignant, affichée en plus du corrigé. */
+  commentaire_enseignant: string;
   images: string[];
   items: QcmItemDraft[];
 };
@@ -42,6 +44,7 @@ function defaultDraft(): QcmQuestionDraft {
     enonce: '',
     reponse_attendue: '',
     correction_generale: '',
+    commentaire_enseignant: '',
     images: [],
     items: ['A', 'B', 'C', 'D', 'E'].map((l) => EMPTY_ITEM(l as QcmItemDraft['lettre'])),
   };
@@ -79,6 +82,7 @@ export function QcmQuestionEditor({
             ...initial,
             format: initial.format ?? 'qcm',
             reponse_attendue: initial.reponse_attendue ?? '',
+            commentaire_enseignant: initial.commentaire_enseignant ?? '',
             items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })),
           }
         : defaultDraft());
@@ -135,6 +139,7 @@ export function QcmQuestionEditor({
           enonce: draft.enonce,
           reponse_attendue: isQroc ? draft.reponse_attendue.trim() : null,
           correction_generale: draft.correction_generale || null,
+          commentaire_enseignant: draft.commentaire_enseignant || null,
           images: draft.images,
           items: isQroc ? [] : items,
         },
@@ -323,6 +328,21 @@ export function QcmQuestionEditor({
               {isQroc
                 ? 'Affiché après la réponse au moment du corrigé. Utilisez le bouton image de la barre d’outils pour insérer un schéma (arbre décisionnel, ECG, illustration…).'
                 : 'Apparaît sous l’ensemble des items au moment du corrigé, en plus des justifications par item. Le bouton image permet d’insérer un schéma.'}
+            </p>
+          </div>
+
+          {/* Commentaire de l'enseignant */}
+          <div className="space-y-1.5">
+            <Label>Commentaire de l’enseignant (optionnel)</Label>
+            <FlashcardRichField
+              coursId={coursId}
+              value={draft.commentaire_enseignant}
+              onChange={(html) => setDraft((d) => ({ ...d, commentaire_enseignant: html }))}
+              placeholder="Rappel, remise en contexte, notion à réexpliquer, schéma… Mise en forme et images disponibles."
+              minHeight={110}
+            />
+            <p className="text-[11px] text-(--color-ink-muted)">
+              Rubrique distincte du corrigé, affichée à l’étudiant sous la correction. À utiliser pour un rappel de cours, une notion réexpliquée ou un schéma complémentaire.
             </p>
           </div>
 

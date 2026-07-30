@@ -27,6 +27,8 @@ const QuestionSchema = z.object({
   // QROC uniquement : réponse-modèle (variantes acceptées séparées par « | »).
   reponse_attendue: z.string().optional().nullable(),
   correction_generale: z.string().optional().nullable(),
+  /** Rubrique libre de l'enseignant, en plus du corrigé (rappel, schéma…). */
+  commentaire_enseignant: z.string().optional().nullable(),
   images: z.array(z.string()).optional().default([]),
   items: z.array(ItemSchema).max(5, 'Maximum 5 items').optional().default([]),
 }).superRefine((val, ctx) => {
@@ -181,6 +183,7 @@ export async function upsertQcmQuestionAction(input: {
     ...raw,
     enonce: sanitizeFlashcardHtml(raw.enonce),
     correction_generale: raw.correction_generale ? sanitizeFlashcardHtml(raw.correction_generale) : raw.correction_generale,
+    commentaire_enseignant: raw.commentaire_enseignant ? sanitizeFlashcardHtml(raw.commentaire_enseignant) : raw.commentaire_enseignant,
     items: raw.items.map((it) => ({
       ...it,
       enonce: sanitizeFlashcardHtml(it.enonce),
@@ -218,6 +221,7 @@ export async function upsertQcmQuestionAction(input: {
       enonce: q.enonce,
       reponse_attendue: reponse,
       correction_generale: q.correction_generale ?? null,
+      commentaire_enseignant: q.commentaire_enseignant || null,
       images: q.images ?? [],
     }).eq('id', questionId);
     if (error) return { error: error.message };
@@ -255,6 +259,7 @@ export async function upsertQcmQuestionAction(input: {
       order_index: nextIdx,
       reponse_attendue: reponse,
       correction_generale: q.correction_generale ?? null,
+      commentaire_enseignant: q.commentaire_enseignant || null,
       images: q.images ?? [],
     }).select('id').single();
     if (error || !data) return { error: error?.message ?? 'Échec de la création.' };
@@ -306,7 +311,7 @@ export async function deleteQcmQuestionAction(questionId: string, coursId: strin
   // Snapshot complet (question + items) AVANT delete → permet la restauration depuis les logs.
   const { data: snapshot } = await admin
     .from('qcm_questions')
-    .select('id, serie_id, enonce, order_index, reponse_attendue, correction_generale, images, qcm_items(lettre, enonce, is_correct, justification, images)')
+    .select('id, serie_id, enonce, format, order_index, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(lettre, enonce, is_correct, justification, images)')
     .eq('id', questionId)
     .maybeSingle();
   const { error } = await admin.from('qcm_questions').delete().eq('id', questionId);
@@ -461,7 +466,9 @@ export async function restoreFromLogAction(logId: string): Promise<{ ok: true; e
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error: qErr } = await (admin as any).from('qcm_questions').insert({
         id: snap.id, serie_id: snap.serie_id, enonce: snap.enonce, order_index: snap.order_index,
+        format: snap.format ?? 'qcm',
         reponse_attendue: snap.reponse_attendue, correction_generale: snap.correction_generale,
+        commentaire_enseignant: snap.commentaire_enseignant ?? null,
         images: snap.images ?? [],
       });
       if (qErr) return { error: qErr.message };
