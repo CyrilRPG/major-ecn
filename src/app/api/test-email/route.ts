@@ -3,7 +3,8 @@
  *
  * Route de diagnostic : envoie un email de test via Resend.
  * Protégée par un secret via header `x-test-token` ou query `?token=...`
- * (configurer EMAIL_TEST_TOKEN sur Vercel pour activer).
+ * — EMAIL_TEST_TOKEN doit être configuré sur Vercel, sinon la route refuse
+ * toute requête (fail-closed).
  */
 import { NextResponse } from 'next/server';
 import { sendEmail, siteUrl } from '@/lib/email/send';
@@ -17,9 +18,10 @@ export async function GET(req: Request) {
 
   const expectedToken = process.env.EMAIL_TEST_TOKEN;
 
-  // Si EMAIL_TEST_TOKEN n'est pas configuré, on autorise depuis localhost
-  // uniquement. Sinon on valide le token.
-  if (expectedToken && token !== expectedToken) {
+  // Fail-closed : sans EMAIL_TEST_TOKEN configuré, cette route restait
+  // accessible sans authentification (relais d'envoi + fuite du préfixe de
+  // clé Resend à quiconque). On refuse désormais dans les deux cas.
+  if (!expectedToken || token !== expectedToken) {
     return NextResponse.json({ error: 'Token invalide ou manquant' }, { status: 401 });
   }
 
