@@ -3,9 +3,10 @@
 import { useCallback, useState } from 'react';
 import { Loader2, Video } from 'lucide-react';
 import {
-  listItemsAction, listVideosAction,
+  addVideoToRevisionsAction, listItemsAction, listVideosAction,
   type VideoLibraryItem, type VideoLibraryVideo, type VideoType,
 } from '@/app/admin/videos/actions';
+import { estItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
 import { VideoManager } from './video-manager';
 
@@ -15,6 +16,9 @@ export type LibraryCollege = {
   /** Sous-collèges (Médecine générale). Vide pour les spécialités simples. */
   enfants: { id: string; nom: string }[];
 };
+
+/** Valeur sentinelle du sélecteur d'item pour « Révisions - <Collège> ». */
+const REVISIONS_VALUE = '__revisions__';
 
 const CATEGORIES: { type: VideoType; label: string; aide: string }[] = [
   { type: 'cours', label: 'Cours vidéo', aide: 'Visible par la Formule Intensive.' },
@@ -81,6 +85,27 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
 
   const item = items?.find((i) => i.id === coursId) ?? null;
 
+  // « Révisions - <Collège> » : proposé pour les collèges hors Médecine
+  // générale (ceux qui portent directement leurs items) tant que l'item
+  // n'existe pas. Il sera créé au moment d'ajouter la première vidéo.
+  const nomCollege = college && !aDesEnfants ? college.nom : '';
+  const titreRevisions = nomCollege ? revisionsTitre(nomCollege) : '';
+  const revisionsExiste = (items ?? []).some((i) => estItemRevisions(i.titre, nomCollege));
+  const proposerRevisions = !!titreRevisions && !!items && !revisionsExiste;
+  const modeRevisions = coursId === REVISIONS_VALUE;
+
+  /** Après la création de l'item de révisions : on le retrouve dans la liste
+   *  rechargée et on bascule dessus, comme s'il avait toujours existé. */
+  const apresCreationRevisions = () => {
+    if (!matiereId) return;
+    listItemsAction(matiereId).then((res) => {
+      if ('error' in res) { setError(res.error); return; }
+      setItems(res.items);
+      const cree = res.items.find((i) => estItemRevisions(i.titre, nomCollege));
+      if (cree) { setCoursId(cree.id); chargerVideos(cree.id, type); }
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -127,13 +152,18 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
               value={coursId}
               onChange={(e) => {
                 const id = e.target.value;
-                setCoursId(id); setVideos(null);
+                setCoursId(id);
+                if (id === REVISIONS_VALUE) { setVideos([]); return; }
+                setVideos(null);
                 chargerVideos(id, type);
               }}
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm"
               disabled={!items}
             >
               <option value="">{items ? 'Choisir un item…' : 'Chargement…'}</option>
+              {proposerRevisions && (
+                <option value={REVISIONS_VALUE}>{titreRevisions} — à créer</option>
+              )}
               {(items ?? []).map((i) => (
                 <option key={i.id} value={i.id}>
                   {i.titre}
@@ -160,7 +190,12 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
                 <button
                   key={c.type}
                   type="button"
-                  onClick={() => { setType(c.type); setVideos(null); chargerVideos(coursId, c.type); }}
+                  onClick={() => {
+                    setType(c.type);
+                    if (modeRevisions) { setVideos([]); return; }
+                    setVideos(null);
+                    chargerVideos(coursId, c.type);
+                  }}
                   className={
                     'rounded-xl border px-3.5 py-2 text-sm font-semibold transition-colors ' +
                     (actif
@@ -199,17 +234,25 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
       ) : (
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4">
           <p className="mb-3 text-sm font-bold text-(--color-ink)">
-            {item?.titre} — {CATEGORIES.find((c) => c.type === type)?.label}
+            {modeRevisions ? titreRevisions : item?.titre} — {CATEGORIES.find((c) => c.type === type)?.label}
           </p>
           <VideoManager
             key={`${coursId}-${type}`}
-            coursId={coursId}
+            coursId={modeRevisions ? '' : coursId}
             type={type}
             videos={videos}
-            onChanged={rechargerTout}
+            onChanged={modeRevisions ? apresCreationRevisions : rechargerTout}
+            notice={modeRevisions
+              ? `L’item « ${titreRevisions} » n’existe pas encore : il sera créé automatiquement, en tête du collège, dès que vous ajouterez cette vidéo.`
+              : undefined}
+            onAdd={modeRevisions
+              ? (input) => addVideoToRevisionsAction({ matiereId, ...input })
+              : undefined}
           />
 
-          {/* Repli : envoyer le fichier depuis ici, sans passer par bunny.net. */}
+          {/* Repli : envoyer le fichier depuis ici, sans passer par bunny.net.
+              Indisponible tant que l'item de révisions n'existe pas. */}
+          {!modeRevisions && (
           <details className="mt-4 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
             <summary className="cursor-pointer text-[12.5px] font-semibold text-(--color-ink-soft)">
               Autre méthode : téléverser le fichier directement (sans passer par bunny.net)
@@ -223,6 +266,7 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
               />
             </div>
           </details>
+          )}
         </div>
       )}
     </div>

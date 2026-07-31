@@ -8,6 +8,7 @@ import {
 } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
+import { revisionsTitre } from '@/lib/videos/revisions';
 import { logAudit } from '@/lib/audit/log';
 
 /**
@@ -213,10 +214,20 @@ export async function addVideoAction(input: {
   titre: string;
   lien: string;
   position?: number | null;
-}): Promise<{ ok: true; videoId: string } | { error: string }> {
+}): Promise<AddResult> {
   const ctx = await guard(input.coursId);
   if ('error' in ctx) return ctx;
+  return insertVideo(ctx, input);
+}
 
+export type AddResult = { ok: true; videoId: string; coursId: string } | { error: string };
+
+/** Insertion effective, partagée par l'ajout normal et l'ajout « Révisions ». */
+async function insertVideo(
+  ctx: Ctx,
+  input: { type: VideoType; titre: string; lien: string; position?: number | null },
+): Promise<AddResult> {
+  const coursId = ctx.cours.id;
   const titre = input.titre.trim().slice(0, 200);
   if (!titre) return { error: 'Donnez un titre à la vidéo.' };
   const bunnyId = extractBunnyVideoId(input.lien);
@@ -229,7 +240,7 @@ export async function addVideoAction(input: {
   const { data: existing } = await ctx.a
     .from('videos')
     .select('id, order_index')
-    .eq('cours_id', input.coursId)
+    .eq('cours_id', coursId)
     .eq('type', input.type)
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
@@ -241,7 +252,7 @@ export async function addVideoAction(input: {
   const { data: created, error } = await ctx.a
     .from('videos')
     .insert({
-      cours_id: input.coursId,
+      cours_id: coursId,
       titre,
       bunny_video_id: bunnyId,
       type: input.type,
@@ -272,8 +283,111 @@ export async function addVideoAction(input: {
     diff: { bunny_video_id: bunnyId, type: input.type, order_index: insertAt },
   });
 
-  refresh(input.coursId);
-  return { ok: true, videoId: created.id as string };
+  refresh(coursId);
+  return { ok: true, videoId: created.id as string, coursId };
+}
+
+/**
+ * Ajoute une vidéo à l'item « Révisions - <Collège> », en le CRÉANT s'il
+ * n'existe pas encore (en tête du collège, comme les autres items de révisions).
+ *
+ * L'item n'est créé qu'au moment où on lui donne une première vidéo : on ne
+ * laisse jamais traîner un item vide visible par les élèves.
+ */
+export async function addVideoToRevisionsAction(input: {
+  matiereId: string;
+  type: VideoType;
+  titre: string;
+  lien: string;
+  position?: number | null;
+}): Promise<AddResult> {
+  const { profile, scope } = await requireContentEditor();
+  try {
+    assertCanWrite(scope, 'video');
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
+  }
+  // Créer un item est une opération d'administrateur (un professeur n'agit que
+  // sur les items déjà inscrits dans son périmètre).
+  if (scope !== null) return { error: 'Seul un administrateur peut créer l’item de révisions.' };
+
+  // Le lien est vérifié AVANT toute création : un lien invalide ne doit pas
+  // laisser derrière lui un item vide.
+  if (!extractBunnyVideoId(input.lien)) {
+    return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
+  }
+  if (!input.titre.trim()) return { error: 'Donnez un titre à la vidéo.' };
+
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+
+  const { data: matiere } = await a
+    .from('matieres')
+    .select('id, nom, parent_matiere_id')
+    .eq('id', input.matiereId)
+    .maybeSingle();
+  if (!matiere) return { error: 'Collège introuvable.' };
+  const nomCollege = (matiere as { nom: string }).nom;
+  const titreItem = revisionsTitre(nomCollege);
+
+  // Item existant ? (comparaison insensible à la casse, pour ne jamais créer
+  // un doublon de « Révisions - Cardiologie »).
+  const { data: dejaLa } = await a
+    .from('cours')
+    .select('id, titre')
+    .eq('matiere_id', input.matiereId)
+    .ilike('titre', titreItem)
+    .limit(1)
+    .maybeSingle();
+
+  let coursId = (dejaLa as { id?: string } | null)?.id ?? null;
+
+  if (!coursId) {
+    // Décale les items existants : les révisions se placent en tête.
+    const { data: siblings } = await a
+      .from('cours')
+      .select('id, order_index')
+      .eq('matiere_id', input.matiereId)
+      .order('order_index', { ascending: true });
+    const list = (siblings ?? []) as { id: string; order_index: number }[];
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].order_index !== i + 1) {
+        await a.from('cours').update({ order_index: i + 1 }).eq('id', list[i].id);
+      }
+    }
+    const { data: cree, error } = await a
+      .from('cours')
+      .insert({ matiere_id: input.matiereId, titre: titreItem, order_index: 0 })
+      .select('id')
+      .single();
+    if (error) return { error: error.message };
+    coursId = cree.id as string;
+
+    await logAudit({
+      actor: profile,
+      action: 'create',
+      entity: 'cours',
+      entityId: coursId,
+      coursId,
+      coursTitre: titreItem,
+      matiereNom: nomCollege,
+      description: `Création automatique de l’item « ${titreItem} » (ajout d’une vidéo)`,
+      diff: { matiere_id: input.matiereId, order_index: 0 },
+    });
+    revalidatePath('/admin/contenu');
+    revalidatePath('/facultes');
+  }
+
+  return insertVideo(
+    {
+      admin,
+      a,
+      profile,
+      cours: { id: coursId, titre: titreItem, matiere_id: input.matiereId, matiereNom: nomCollege },
+    },
+    input,
+  );
 }
 
 /** Renomme une vidéo. Le titre sert aussi de nom d'onglet du support. */

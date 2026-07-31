@@ -11,7 +11,8 @@ import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
   addVideoAction, deleteVideoAction, moveVideoAction, removeVideoSupportAction,
-  renameVideoAction, replaceVideoLinkAction, setVideoSupportAction, type VideoType,
+  renameVideoAction, replaceVideoLinkAction, setVideoSupportAction,
+  type AddResult, type VideoType,
 } from '@/app/admin/videos/actions';
 
 export type ManagedVideo = {
@@ -52,6 +53,8 @@ export function VideoManager({
   type,
   videos,
   onChanged,
+  onAdd,
+  notice,
 }: {
   coursId: string;
   type: VideoType;
@@ -59,6 +62,11 @@ export function VideoManager({
   /** Appelé après chaque modification. Fourni par la bibliothèque vidéo, qui
    *  charge sa liste côté client : un simple router.refresh() ne suffirait pas. */
   onChanged?: () => void;
+  /** Ajout personnalisé — utilisé quand l'item n'existe pas encore (« Révisions
+   *  - <Collège> ») : l'action crée l'item puis y place la vidéo. */
+  onAdd?: (input: { type: VideoType; titre: string; lien: string; position: number | null }) => Promise<AddResult>;
+  /** Message affiché au-dessus de la liste (contexte particulier). */
+  notice?: string;
 }) {
   const router = useRouter();
   const copy = COPY[type];
@@ -77,10 +85,10 @@ export function VideoManager({
   const [supportFile, setSupportFile] = useState<File | null>(null);
 
   /** Dépose le PDF dans le bucket privé et l'attache à la vidéo. */
-  async function uploadSupport(videoId: string, file: File): Promise<string | null> {
+  async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
     const supabase = createClient();
     const safe = file.name.replace(/[^\w.\-]+/g, '_').slice(-80);
-    const path = `${coursId}/${videoId}-${Date.now()}-${safe}`;
+    const path = `${coursIdCible || coursId}/${videoId}-${Date.now()}-${safe}`;
     const { error: upErr } = await supabase.storage.from('supports').upload(path, file, {
       upsert: false,
       contentType: file.type || 'application/pdf',
@@ -108,13 +116,13 @@ export function VideoManager({
     if (withSupport && !supportFile) return setError('Choisissez le PDF du support, ou décochez la case.');
     start(async () => {
       const rang = position.trim() ? Number(position) : null;
-      const res = await addVideoAction({
-        coursId, type, titre, lien,
-        position: rang && Number.isFinite(rang) ? rang : null,
-      });
+      const pos = rang && Number.isFinite(rang) ? rang : null;
+      const res = onAdd
+        ? await onAdd({ type, titre, lien, position: pos })
+        : await addVideoAction({ coursId, type, titre, lien, position: pos });
       if ('error' in res) return setError(res.error);
       if (withSupport && supportFile) {
-        const err = await uploadSupport(res.videoId, supportFile);
+        const err = await uploadSupport(res.videoId, supportFile, res.coursId);
         if (err) setError(`Vidéo ajoutée, mais le support a échoué : ${err}`);
       }
       resetAdd();
@@ -136,6 +144,11 @@ export function VideoManager({
       <p className="text-[12.5px] text-(--color-ink-soft)">
         {copy.audience} L’ordre ci-dessous est celui que voient les élèves.
       </p>
+      {notice && (
+        <p className="rounded-xl border border-[#7C3AED]/30 bg-[#F3EAFF] px-3 py-2 text-[12.5px] text-[#5B21B6]">
+          {notice}
+        </p>
+      )}
 
       {videos.length === 0 ? (
         <p className="rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-3 py-4 text-sm text-(--color-ink-muted)">
