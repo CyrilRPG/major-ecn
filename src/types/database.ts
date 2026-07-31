@@ -173,9 +173,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'semestres_faculte_id_fkey'; columns: ['faculte_id']; isOneToOne: false; referencedRelation: 'facultes'; referencedColumns: ['id'] }];
       };
       videos: {
-        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null; updated_at: string };
-        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null; updated_at?: string };
-        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null; updated_at?: string };
+        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null; type: string; serie_id: string | null; unlock_direct: boolean; order_index: number; support_path: string | null; support_pages: number | null; support_updated_at: string | null; updated_at: string };
+        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null; type?: string; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
+        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null; type?: string; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'videos_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       blog_posts: {

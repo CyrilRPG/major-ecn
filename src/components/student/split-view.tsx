@@ -3,16 +3,20 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeftRight, BookMarked, ChevronDown, ClipboardCheck, Columns2, FileText,
-  Layers3, Lock, MonitorPlay, NotebookPen, Video, X, type LucideIcon,
+  Layers3, Lock, MonitorPlay, NotebookPen, Paperclip, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supportTabLabel, type CourseSupport } from '@/lib/student/supports';
 import { NotesEditor } from './notes-editor';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export type SplitContentType = 'fiche' | 'fiche-express' | 'video' | 'qcm' | 'flashcards' | 'seance-approfondie' | 'notes';
+/** `support:<videoId>` : support de séance, un par vidéo qui en possède un. */
+export type SplitContentType =
+  | 'fiche' | 'fiche-express' | 'video' | 'qcm' | 'flashcards' | 'seance-approfondie' | 'notes'
+  | `support:${string}`;
 
 type SplitCtx = {
   active: SplitContentType | null;
@@ -26,6 +30,7 @@ type SplitCtx = {
   hasQcm: boolean;
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
+  supports: CourseSupport[];
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 };
@@ -35,7 +40,7 @@ const SplitContext = createContext<SplitCtx>({
   splitPct: 50, setSplitPct: () => {},
   coursId: '', hasFiche: false, hasVideo: false,
   hasQcm: false, hasFlashcards: false, hasSeanceApprofondie: false,
-  locked: {}, notesHtml: '',
+  supports: [], locked: {}, notesHtml: '',
 });
 export const useSplitView = () => useContext(SplitContext);
 
@@ -43,7 +48,9 @@ export const useSplitView = () => useContext(SplitContext);
 /*  Content type config                                                */
 /* ------------------------------------------------------------------ */
 
-const SPLIT_OPTIONS: { type: SplitContentType; label: string; Icon: LucideIcon }[] = [
+type SplitOption = { type: SplitContentType; label: string; Icon: LucideIcon };
+
+const SPLIT_OPTIONS: SplitOption[] = [
   { type: 'fiche', label: 'Fiche de cours', Icon: FileText },
   { type: 'fiche-express', label: 'Fiche éclair', Icon: BookMarked },
   { type: 'video', label: 'Vidéo', Icon: MonitorPlay },
@@ -52,6 +59,27 @@ const SPLIT_OPTIONS: { type: SplitContentType; label: string; Icon: LucideIcon }
   { type: 'flashcards', label: 'Flashcards', Icon: Layers3 },
   { type: 'notes', label: 'Prise de notes', Icon: NotebookPen },
 ];
+
+/** Ajoute une entrée par support, juste après le contenu dont il dépend. */
+function splitOptionsWithSupports(supports: CourseSupport[]): SplitOption[] {
+  if (supports.length === 0) return SPLIT_OPTIONS;
+  const option = (s: CourseSupport): SplitOption => ({
+    type: `support:${s.videoId}`,
+    label: supportTabLabel(s),
+    Icon: Paperclip,
+  });
+  const out: SplitOption[] = [];
+  for (const o of SPLIT_OPTIONS) {
+    out.push(o);
+    if (o.type === 'seance-approfondie') {
+      out.push(...supports.filter((s) => s.type === 'seance_approfondie').map(option));
+    }
+    if (o.type === 'video') {
+      out.push(...supports.filter((s) => s.type === 'cours').map(option));
+    }
+  }
+  return out;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Draggable divider                                                  */
@@ -156,6 +184,12 @@ function EmbedPanel({ coursId, path, title }: { coursId: string; path: string; t
 }
 
 function SplitPanelContent({ coursId, type, notesHtml }: { coursId: string; type: SplitContentType; notesHtml: string }) {
+  // Support de séance : page interne (rendu <canvas>, filigrané, non
+  // téléchargeable) — surtout pas le PDF brut dans une iframe.
+  if (type.startsWith('support:')) {
+    const videoId = type.slice('support:'.length);
+    return <EmbedPanel coursId={coursId} path={`support/${videoId}`} title="Support de séance" />;
+  }
   switch (type) {
     case 'fiche':
       return <iframe src={`/api/fiches/${coursId}/pdf`} title="Fiche de cours" className="h-full w-full border-0" />;
@@ -192,6 +226,7 @@ function SplitPanel({
   hasQcm,
   hasFlashcards,
   hasSeanceApprofondie,
+  supports,
   locked,
   notesHtml,
 }: {
@@ -204,13 +239,15 @@ function SplitPanel({
   hasQcm: boolean;
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
+  supports: CourseSupport[];
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const available = SPLIT_OPTIONS.filter((o) => {
+  const options = splitOptionsWithSupports(supports);
+  const available = options.filter((o) => {
     if (o.type === 'fiche' || o.type === 'fiche-express') return hasFiche;
     if (o.type === 'video') return hasVideo;
     if (o.type === 'qcm') return hasQcm;
@@ -219,7 +256,7 @@ function SplitPanel({
     return true;
   });
 
-  const current = SPLIT_OPTIONS.find((o) => o.type === type);
+  const current = options.find((o) => o.type === type);
   const CurrentIcon = current?.Icon ?? FileText;
   const isTypeLocked = locked[type] === true;
 
@@ -337,7 +374,7 @@ export function SplitViewToggle() {
 /* ------------------------------------------------------------------ */
 
 export function SplitLayout({ children }: { children: React.ReactNode }) {
-  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, locked, notesHtml } = useSplitView();
+  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, locked, notesHtml } = useSplitView();
 
   if (!active) return <>{children}</>;
 
@@ -358,6 +395,7 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
           hasQcm={hasQcm}
           hasFlashcards={hasFlashcards}
           hasSeanceApprofondie={hasSeanceApprofondie}
+          supports={supports}
           locked={locked}
           notesHtml={notesHtml}
         />
@@ -377,6 +415,7 @@ export function SplitViewProvider({
   hasQcm = false,
   hasFlashcards = false,
   hasSeanceApprofondie = false,
+  supports = [],
   locked = {},
   notesHtml,
   children,
@@ -387,6 +426,7 @@ export function SplitViewProvider({
   hasQcm?: boolean;
   hasFlashcards?: boolean;
   hasSeanceApprofondie?: boolean;
+  supports?: CourseSupport[];
   locked?: Partial<Record<string, boolean>>;
   notesHtml: string;
   children: React.ReactNode;
@@ -407,7 +447,7 @@ export function SplitViewProvider({
   }, [active, close]);
 
   return (
-    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, locked, notesHtml }}>
+    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, locked, notesHtml }}>
       {children}
     </SplitContext.Provider>
   );

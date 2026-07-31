@@ -18,7 +18,18 @@ import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
 import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
 import { InterrogationPanel } from '@/components/admin/content/interrogation-panel';
-import { BunnyLinkPaste } from '@/components/admin/content/bunny-link-paste';
+import { VideoManager } from '@/components/admin/content/video-manager';
+
+/** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
+type ManagedVideoRow = {
+  id: string;
+  titre: string;
+  storage_path: string | null;
+  bunny_video_id: string | null;
+  type: string | null;
+  order_index: number | null;
+  support_path: string | null;
+};
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -45,7 +56,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     .select(`
       id, titre, description, matiere_id,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
-      videos(id, storage_path, bunny_video_id),
+      videos(id, titre, storage_path, bunny_video_id, type, order_index, support_path),
       fiches(id, storage_path, pages),
       qcm_series(id, type, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
@@ -61,21 +72,28 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const interroColleges = ((interroColsRaw ?? []) as unknown as { id: string; nom: string; parent_matiere_id: string | null }[])
     .map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
-  const video = c.videos?.[0];
+  // Deux listes indépendantes, chacune dans l'ordre choisi par l'administrateur.
+  // Le TYPE porte la permission élève : `cours` → Formule Intensive,
+  // `seance_approfondie` → Programme Approfondi (cf. formula_permissions).
+  const allVideos = ((c.videos ?? []) as unknown as ManagedVideoRow[])
+    .slice()
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    .map((v) => ({
+      id: v.id,
+      titre: v.titre,
+      bunny_video_id: v.bunny_video_id,
+      storage_path: v.storage_path,
+      order_index: v.order_index ?? 0,
+      support_path: v.support_path,
+      type: (v.type ?? 'cours') as 'cours' | 'seance_approfondie',
+    }));
+  const coursVideos = allVideos.filter((v) => v.type === 'cours');
+  const seanceApprofondieVideos = allVideos.filter((v) => v.type === 'seance_approfondie');
+  const video = coursVideos[0];
   const fiche = c.fiches?.[0];
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
-
-  // Vidéos séance approfondie (via colonne type)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: saVideoRows } = await (supabase as any)
-    .from('videos')
-    .select('id, titre, bunny_video_id')
-    .eq('cours_id', coursId)
-    .eq('type', 'seance_approfondie')
-    .order('created_at', { ascending: true });
-  const seanceApprofondieVideos = (saVideoRows ?? []) as { id: string; titre: string; bunny_video_id: string | null }[];
 
   // Charge le détail complet des séries QCM (questions + items + images + corrigé général)
   // pour l'éditeur intégré côté admin. Une seule requête supplémentaire.
@@ -134,31 +152,29 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           <TabsContent value="video">
             <Card>
               <CardHeader>
-                <CardTitle>Vidéo du cours</CardTitle>
+                <CardTitle>Cours vidéo</CardTitle>
                 <CardDescription>
                   {can.video.write
-                    ? 'Téléverse un MP4 (ou autre format compatible HTML5). Limite recommandée : 1 Go.'
-                    : 'Lecture seule — vous pouvez consulter mais pas modifier la vidéo.'}
+                    ? 'Déposez la vidéo sur bunny.net (Stream), puis collez son lien ici. Vous pouvez en ajouter plusieurs, les renommer et choisir leur ordre.'
+                    : 'Lecture seule — vous pouvez consulter mais pas modifier les vidéos.'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
                 {can.video.write ? (
                   <>
-                    {/* Hébergement recommandé : Bunny Stream (CDN, streaming adaptatif). */}
-                    <div>
-                      <p className="mb-2 text-[13px] font-semibold text-(--color-ink)">Bunny Stream (recommandé)</p>
-                      <BunnyVideoUpload
-                        coursId={coursId}
-                        defaultTitle={c.titre ?? 'Vidéo du cours'}
-                        existingBunnyId={(video as { bunny_video_id?: string | null } | undefined)?.bunny_video_id ?? null}
-                      />
-                    </div>
-                    {/* Repli : hébergement direct dans le bucket Supabase. */}
+                    <VideoManager coursId={coursId} type="cours" videos={coursVideos} />
+                    {/* Méthodes historiques conservées : téléversement direct vers
+                        Bunny (TUS) et hébergement dans le bucket Supabase. */}
                     <details className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
                       <summary className="cursor-pointer text-[12.5px] font-semibold text-(--color-ink-soft)">
-                        Alternative : héberger sur Supabase (fichier direct)
+                        Autres méthodes : téléverser le fichier depuis cette page
                       </summary>
-                      <div className="pt-3">
+                      <div className="space-y-4 pt-3">
+                        <BunnyVideoUpload
+                          coursId={coursId}
+                          defaultTitle={c.titre ?? 'Vidéo du cours'}
+                          existingBunnyId={video?.bunny_video_id ?? null}
+                        />
                         <FileDropzone
                           bucket="videos"
                           table="videos"
@@ -174,7 +190,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                   </>
                 ) : (
                   <p className="text-sm text-(--color-ink-soft)">
-                    {(video as { bunny_video_id?: string | null } | undefined)?.bunny_video_id || video?.storage_path ? 'Vidéo présente.' : 'Aucune vidéo téléversée.'}
+                    {coursVideos.length > 0 ? `${coursVideos.length} vidéo(s) de cours.` : 'Aucune vidéo téléversée.'}
                   </p>
                 )}
               </CardContent>
@@ -340,25 +356,25 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           <TabsContent value="seance-approfondie">
             <Card>
               <CardHeader>
-                <CardTitle>Videos Seance Approfondie</CardTitle>
+                <CardTitle>Séances approfondies</CardTitle>
                 <CardDescription>
                   {can.video.write
-                    ? 'Collez un lien Bunny.net Stream pour ajouter une video de seance approfondie. Ces videos ne sont visibles que par les abonnes Programme Approfondi.'
+                    ? 'Déposez la séance sur bunny.net (Stream), puis collez son lien ici. Ces vidéos ne sont visibles que par les abonnés du Programme Approfondi.'
                     : 'Lecture seule.'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {can.video.write ? (
-                  <BunnyLinkPaste
+                  <VideoManager
                     coursId={coursId}
-                    videoType="seance_approfondie"
-                    existingVideos={seanceApprofondieVideos}
+                    type="seance_approfondie"
+                    videos={seanceApprofondieVideos}
                   />
                 ) : (
                   <p className="text-sm text-(--color-ink-soft)">
                     {seanceApprofondieVideos.length > 0
-                      ? `${seanceApprofondieVideos.length} video(s) de seance approfondie.`
-                      : 'Aucune video de seance approfondie.'}
+                      ? `${seanceApprofondieVideos.length} séance(s) approfondie(s).`
+                      : 'Aucune séance approfondie.'}
                   </p>
                 )}
               </CardContent>

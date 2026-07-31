@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronRight, ClipboardList, FileText, Layers3, PlayCircle } from 'lucide-react';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ItemImportanceButton, ImportanceStars } from '@/components/admin/content/item-importance-button';
+import { NewItemButton } from '@/components/admin/content/new-item-button';
 
 export const metadata = { title: 'Contenu' };
 
@@ -31,7 +32,7 @@ type CountRow = {
 const EMPTY_COUNT = { has_video: false, has_fiche: false, qcm_count: 0, annale_count: 0, flashcard_count: 0, importance: 0 };
 
 export default async function AdminContenuPage() {
-  const { scope } = await requireContentEditor();
+  const { scope, isAdmin } = await requireContentEditor();
   const supabase = await createClient();
 
   // Requête « cœur » volontairement légère (id + titre uniquement). Les compteurs
@@ -58,8 +59,9 @@ export default async function AdminContenuPage() {
       ...m,
       cours: (m.cours ?? []).filter((c) => profCanAccessCours(scope, m.id, c.id)),
     }))
-    // Cache les collèges qui n'ont plus aucun cours accessible
-    .filter((m) => (m.cours ?? []).length > 0);
+    // Cache les collèges qui n'ont plus aucun cours accessible — sauf pour
+    // l'administrateur, qui doit pouvoir créer le premier item d'un collège vide.
+    .filter((m) => isAdmin || (m.cours ?? []).length > 0);
 
   // Compteurs agrégés (RPC SECURITY DEFINER réservée au staff) — tolérante :
   // si elle échoue, la grille s'affiche quand même avec des compteurs à 0.
@@ -100,6 +102,11 @@ export default async function AdminContenuPage() {
                   <h2 className="text-base font-semibold tracking-tight text-(--color-ink) break-words">{m.nom}</h2>
                   <p className="text-xs text-(--color-ink-muted)">Collège EVC · {(m.cours ?? []).length} items</p>
                 </div>
+                {isAdmin && (
+                  <div className="ml-auto shrink-0">
+                    <NewItemButton matiereId={m.id} matiereNom={m.nom} />
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {(m.cours ?? []).map((c) => {

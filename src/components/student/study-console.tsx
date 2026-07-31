@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BookMarked, ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
-  MonitorPlay, NotebookPen, Telescope, Video, X, type LucideIcon,
+  MonitorPlay, NotebookPen, Paperclip, Telescope, Video, X, type LucideIcon,
 } from 'lucide-react';
+import { supportTabKey, supportTabLabel, type CourseSupport } from '@/lib/student/supports';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 import { SplitViewToggle, SplitLayout } from './split-view';
@@ -54,6 +55,7 @@ export function StudyConsole({
   titre,
   context,
   availability,
+  supports = [],
   mastery,
   isDecouverte = false,
   visibility,
@@ -64,6 +66,9 @@ export function StudyConsole({
   titre: string;
   context: string;
   availability: Availability;
+  /** Supports de séance autorisés pour cet élève : un onglet chacun, placé
+   *  juste après l'onglet de la vidéo dont ils dépendent. */
+  supports?: CourseSupport[];
   mastery: number;
   /** Mode Découverte : verrouille l'onglet "Cours vidéo" (popup tarifs au clic
    *  au lieu de naviguer vers /video). */
@@ -83,18 +88,35 @@ export function StudyConsole({
   const [lockedOpen, setLockedOpen] = useState(false);
 
   const base = `/cours/${coursId}`;
-  const after = pathname.startsWith(base) ? pathname.slice(base.length) : '';
-  const activeSeg = after.split('/')[1] ?? '';
+  // Segment courant COMPLET (« support/<id> » compte deux niveaux), avec
+  // correspondance par préfixe pour les sous-pages (« qcm/<serie> »).
+  const activeFull = (pathname.startsWith(base) ? pathname.slice(base.length) : '').replace(/^\//, '');
+  const isActiveSeg = (seg: string) =>
+    seg === '' ? activeFull === '' : activeFull === seg || activeFull.startsWith(`${seg}/`);
 
   /** Si AUCUN contenu pédagogique n'est encore disponible pour ce cours
    *  (cas typique de « Méthodologie EVC » côté Découverte), on n'affiche
    *  QUE l'onglet Aperçu — les autres tabs (Fiche, Vidéo, QCM, Flashcards)
    *  sont masquées pour ne pas exposer des liens menant à des pages vides. */
   const hasAnyContent =
-    availability.fiche || availability.video || availability.qcm || availability.flashcards;
+    availability.fiche || availability.video || availability.qcm || availability.flashcards
+    // Un item peut n'avoir QUE des séances approfondies (cas des items
+    // « Révisions … ») : sans cette condition, la barre d'onglets se réduisait
+    // à l'Aperçu et la séance devenait inatteignable.
+    || !!availability.seanceApprofondie || supports.length > 0;
 
   // Ordre pédagogique fixe : Fiche -> Fiche éclair -> DP/QI -> Séance
   // approfondie / Cours vidéo -> Flashcards (Aperçu et Prise de notes encadrent).
+  const supportTab = (s: CourseSupport): Tab => ({
+    key: supportTabKey(s.videoId),
+    label: supportTabLabel(s),
+    seg: `support/${s.videoId}`,
+    Icon: Paperclip,
+    available: true,
+  });
+  const seanceSupports = supports.filter((s) => s.type === 'seance_approfondie').map(supportTab);
+  const coursSupports = supports.filter((s) => s.type === 'cours').map(supportTab);
+
   const tabs: Tab[] = hasAnyContent
     ? [
         { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
@@ -104,7 +126,10 @@ export function StudyConsole({
         ...(availability.seanceApprofondie
           ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
           : []),
+        // Support de séance : juste après l'onglet Séance approfondie.
+        ...seanceSupports,
         { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
+        ...coursSupports,
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
         { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ]
@@ -163,7 +188,7 @@ export function StudyConsole({
             if (t.key === 'video' && !t.available && !isDecouverte) return false;
             return true;
           }).map((t) => {
-            const active = activeSeg === t.seg;
+            const active = isActiveSeg(t.seg);
             const isLocked = isDecouverte && t.seg === 'video';
             const commonInnerClasses = cn(
               'group relative flex items-center gap-1.5 whitespace-nowrap px-2.5 py-2 text-[13px] font-medium transition-colors focus-ring sm:gap-2 sm:px-3 sm:py-2.5 sm:text-sm',

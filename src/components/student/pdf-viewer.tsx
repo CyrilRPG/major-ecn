@@ -28,12 +28,19 @@ export function PdfViewer({
   coursId,
   initiallyRead,
   canDownload = false,
+  canMarkRead = true,
+  notice,
 }: {
   src: string;
   coursId: string;
   initiallyRead: boolean;
   /** Affiche le bouton de téléchargement (admin / professeur uniquement). */
   canDownload?: boolean;
+  /** « Marquer comme lue » n'a de sens que pour la fiche du cours : les
+   *  supports de séance ne comptent pas dans la progression. */
+  canMarkRead?: boolean;
+  /** Petit texte affiché à gauche de la barre d'outils (ex. nom de la séance). */
+  notice?: string;
 }) {
   const [read, setRead] = useState(initiallyRead);
   const [pending, start] = useTransition();
@@ -94,7 +101,7 @@ export function PdfViewer({
       >
         <p className="hidden items-center gap-1.5 text-xs text-(--color-ink-soft) sm:flex">
           <Lock className="h-3.5 w-3.5" />
-          {canDownload ? 'Téléchargement réservé au staff.' : 'Fiche consultable en ligne uniquement.'}
+          {notice ?? (canDownload ? 'Téléchargement réservé au staff.' : 'Fiche consultable en ligne uniquement.')}
         </p>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <div className="flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-1">
@@ -124,11 +131,13 @@ export function PdfViewer({
             {isFullscreen ? <Minimize2 /> : <Maximize2 />}
             <span className="hidden sm:inline">{isFullscreen ? 'Quitter' : 'Plein écran'}</span>
           </Button>
-          <Button size="sm" variant={read ? 'secondary' : 'primary'} onClick={markRead} disabled={pending || read}>
-            {pending ? <Loader2 className="animate-spin" /> : <Check />}
-            <span className="hidden sm:inline">{read ? 'Marquée comme lue' : 'Marquer comme lue'}</span>
-            <span className="sm:hidden">{read ? 'Lue' : 'Lu'}</span>
-          </Button>
+          {canMarkRead && (
+            <Button size="sm" variant={read ? 'secondary' : 'primary'} onClick={markRead} disabled={pending || read}>
+              {pending ? <Loader2 className="animate-spin" /> : <Check />}
+              <span className="hidden sm:inline">{read ? 'Marquée comme lue' : 'Marquer comme lue'}</span>
+              <span className="sm:hidden">{read ? 'Lue' : 'Lu'}</span>
+            </Button>
+          )}
         </div>
       </div>
       <div className={isFullscreen ? 'min-h-0 flex-1' : 'h-[calc(100dvh-220px)] sm:h-[80vh]'}>

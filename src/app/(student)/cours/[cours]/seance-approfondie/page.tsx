@@ -80,6 +80,9 @@ export default async function SeanceApprofondiePage({
     .select('id, titre, bunny_video_id, serie_id, unlock_direct')
     .eq('cours_id', coursId)
     .eq('type', 'seance_approfondie')
+    // Ordre choisi par l'administrateur (Contenu › Séances approfondies) ;
+    // la date ne sert plus que de départage.
+    .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
 
   type SAVideo = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; unlock_direct?: boolean | null };

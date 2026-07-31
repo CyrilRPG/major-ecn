@@ -49,7 +49,17 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
-  const { data: existing } = await a.from('videos').select('id, bunny_video_id').eq('cours_id', coursId).limit(1).maybeSingle();
+  // Uniquement la vidéo de COURS : une séance approfondie ne doit jamais être
+  // écrasée par ce téléversement (elle a son propre gestionnaire, et surtout
+  // un autre public — Programme Approfondi et non Formule Intensive).
+  const { data: existing } = await a
+    .from('videos')
+    .select('id, bunny_video_id')
+    .eq('cours_id', coursId)
+    .eq('type', 'cours')
+    .order('order_index', { ascending: true })
+    .limit(1)
+    .maybeSingle();
   if (existing?.id) {
     await a.from('videos').update({ bunny_video_id: videoId, titre: videoTitle }).eq('id', existing.id);
   } else {

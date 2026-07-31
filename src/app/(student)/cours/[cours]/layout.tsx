@@ -6,6 +6,18 @@ import { SplitViewProvider } from '@/components/student/split-view';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canRead } from '@/lib/schemas/professor';
+import type { CourseSupport } from '@/lib/student/supports';
+
+/** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
+type CourseVideoRow = {
+  id: string;
+  titre: string;
+  type: string | null;
+  storage_path: string | null;
+  bunny_video_id: string | null;
+  support_path: string | null;
+  order_index: number | null;
+};
 
 export default async function CoursLayout({
   children,
@@ -23,7 +35,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type,
       matieres(nom, access_type, semestres(label)),
-      videos(storage_path),
+      videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
       fiches(storage_path),
       qcm_series(type),
       flashcards(id),
@@ -37,17 +49,32 @@ export default async function CoursLayout({
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
   if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: saVids } = await (supabase as any)
-    .from('videos').select('id').eq('cours_id', coursId).eq('type', 'seance_approfondie').limit(1);
+  // Les vidéos d'un item sont désormais multiples et ordonnées, avec un support
+  // PDF facultatif par vidéo. Le TYPE porte la permission : `cours` (Formule
+  // Intensive) vs `seance_approfondie` (Programme Approfondi).
+  const videos = ((c.videos ?? []) as unknown as CourseVideoRow[])
+    .slice()
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+  const hasSource = (v: CourseVideoRow) => !!v.bunny_video_id || !!v.storage_path;
+  const coursVideos = videos.filter((v) => (v.type ?? 'cours') === 'cours');
+  const seanceVideos = videos.filter((v) => v.type === 'seance_approfondie');
 
   const availability = {
-    video: (c.videos ?? []).some((v) => !!v.storage_path),
+    video: coursVideos.some(hasSource),
     fiche: (c.fiches ?? []).some((f) => !!f.storage_path),
     qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
-    seanceApprofondie: (saVids ?? []).length > 0,
+    seanceApprofondie: seanceVideos.length > 0,
   };
+
+  // Un onglet par support, rangé juste après l'onglet de sa vidéo.
+  const supportsAll: CourseSupport[] = [...seanceVideos, ...coursVideos]
+    .filter((v) => !!v.support_path)
+    .map((v) => ({
+      videoId: v.id,
+      titre: v.titre,
+      type: (v.type ?? 'cours') as CourseSupport['type'],
+    }));
 
   const isAdmin = profile.role === 'admin';
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
@@ -67,6 +94,12 @@ export default async function CoursLayout({
     flashcards: !access.flashcards,
     'seance-approfondie': !access.seanceApprofondie,
   } as Partial<Record<string, boolean>> : undefined;
+
+  // Le support hérite de la permission de SA vidéo : sans la formule, l'onglet
+  // n'apparaît pas du tout (et la route du PDF refuserait de toute façon).
+  const supports = supportsAll.filter((s) =>
+    !access || (s.type === 'seance_approfondie' ? access.seanceApprofondie : access.video),
+  );
 
   const cp = c.course_progress?.[0];
   const [{ count: qcmCount }, { count: flashCount }] = await Promise.all([
@@ -111,6 +144,7 @@ export default async function CoursLayout({
       hasQcm={availability.qcm}
       hasFlashcards={availability.flashcards}
       hasSeanceApprofondie={availability.seanceApprofondie}
+      supports={supports}
       locked={locked ?? {}}
       notesHtml={(noteRow?.content as string) ?? ''}
     >
@@ -119,6 +153,7 @@ export default async function CoursLayout({
         titre={c.titre}
         context={`${c.matieres.nom} · Programme EVC`}
         availability={availability}
+        supports={supports}
         mastery={mastery}
         isDecouverte={isDecouverte}
         visibility={visibility}

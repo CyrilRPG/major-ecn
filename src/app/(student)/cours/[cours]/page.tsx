@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Sparkles, Video, type LucideIcon } from 'lucide-react';
+import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Paperclip, Sparkles, Video, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
@@ -44,7 +44,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .select(`
       id, titre, description, matiere_id, access_type,
       matieres(nom, access_type),
-      videos(storage_path), fiches(storage_path), qcm_series(type), flashcards(id)
+      videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
+      fiches(storage_path), qcm_series(type), flashcards(id)
     `)
     .eq('id', coursId)
     .maybeSingle();
@@ -86,9 +87,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     ? await Promise.all([
         (supabase as any)
           .from('videos')
-          .select('id, bunny_video_id, titre, serie_id')
+          .select('id, bunny_video_id, titre, serie_id, support_path')
           .eq('cours_id', coursId)
           .eq('type', 'seance_approfondie')
+          // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
+          .order('order_index', { ascending: true })
           .order('created_at', { ascending: true }),
         supabase
           .from('qcm_series')
@@ -127,7 +130,18 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
    * l'ancienne règle (toutes les séances du cours) pour ne pas ouvrir
    * rétroactivement les vidéos déjà en ligne.
    */
-  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null };
+  /** Vidéos de COURS de l'item (plusieurs possibles, ordonnées côté admin). */
+  const coursVideos = ((c.videos ?? []) as unknown as {
+    id: string; titre: string; type: string | null;
+    storage_path: string | null; bunny_video_id: string | null;
+    support_path: string | null; order_index: number | null;
+  }[])
+    .filter((v) => (v.type ?? 'cours') === 'cours')
+    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+  // Une vidéo Bunny n'a pas de storage_path : les deux hébergements comptent.
+  const coursVideosDisponibles = coursVideos.some((v) => !!v.storage_path || !!v.bunny_video_id);
+
+  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; support_path?: string | null };
   const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
   const isVideoUnlocked = (v: SAVid) =>
     isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesCompleted);
@@ -261,6 +275,18 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               available: unlocked,
               locked: !unlocked,
             });
+            // Support de la séance, juste après elle.
+            if (v.support_path) {
+              standardActions.push({
+                href: `/cours/${coursId}/support/${v.id}`,
+                label: `Support — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
+                desc: 'Le support de la séance, consultable en ligne (non téléchargeable).',
+                Icon: Paperclip,
+                accent: '#7C3AED',
+                bg: '#F3EAFF',
+                available: true,
+              });
+            }
           });
         }
         if (!access || access.video) {
@@ -269,9 +295,18 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               href: `/cours/${coursId}/video`, label: 'Cours vidéo',
               desc: 'Le cours filmé, aligné sur les recommandations HAS.',
               Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
-              available: (c.videos ?? []).some((v) => !!v.storage_path),
+              available: coursVideosDisponibles,
             },
           );
+          for (const v of coursVideos.filter((x) => !!x.support_path)) {
+            standardActions.push({
+              href: `/cours/${coursId}/support/${v.id}`,
+              label: `Support — ${v.titre?.trim() || 'Cours vidéo'}`,
+              desc: 'Le support du cours, consultable en ligne (non téléchargeable).',
+              Icon: Paperclip, accent: '#E4002B', bg: '#FDE7E9',
+              available: true,
+            });
+          }
         }
         if (!access || access.flashcards) {
           standardActions.push(
