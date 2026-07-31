@@ -11,8 +11,15 @@ import { CheckCircle2, Loader2, UploadCloud, Video } from 'lucide-react';
  * serveur (la clé API reste serveur). Gros fichiers OK (pas de limite Vercel).
  */
 export function BunnyVideoUpload({
-  coursId, defaultTitle, existingBunnyId,
-}: { coursId: string; defaultTitle: string; existingBunnyId?: string | null }) {
+  coursId, defaultTitle, type = 'cours', onDone,
+}: {
+  coursId: string;
+  defaultTitle: string;
+  /** Catégorie de la vidéo créée — elle porte la permission côté élève. */
+  type?: 'cours' | 'seance_approfondie';
+  /** Appelé après l'envoi (la bibliothèque recharge sa liste elle-même). */
+  onDone?: () => void;
+}) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [phase, setPhase] = useState<'idle' | 'creating' | 'uploading' | 'done'>('idle');
@@ -29,7 +36,7 @@ export function BunnyVideoUpload({
       const res = await fetch('/api/admin/videos/bunny/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coursId, title: defaultTitle }),
+        body: JSON.stringify({ coursId, title: defaultTitle, type }),
       });
       const j = await res.json();
       if (!res.ok) throw new Error(j.error ?? 'Création de la vidéo échouée.');
@@ -55,7 +62,7 @@ export function BunnyVideoUpload({
       });
 
       setPhase('done');
-      router.refresh();
+      if (onDone) onDone(); else router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur lors du téléversement.');
       setPhase('idle');
@@ -77,11 +84,7 @@ export function BunnyVideoUpload({
         {phase === 'creating' && <><Loader2 className="h-4 w-4 animate-spin" /> Préparation…</>}
         {phase === 'uploading' && <><Loader2 className="h-4 w-4 animate-spin" /> Téléversement vers Bunny… {pct}%</>}
         {phase === 'done' && <><CheckCircle2 className="h-4 w-4 text-[#16A34A]" /> Vidéo envoyée — encodage Bunny en cours</>}
-        {phase === 'idle' && (
-          existingBunnyId
-            ? <><UploadCloud className="h-4 w-4" /> Remplacer la vidéo (Bunny Stream)</>
-            : <><UploadCloud className="h-4 w-4" /> Téléverser une vidéo (Bunny Stream)</>
-        )}
+        {phase === 'idle' && <><UploadCloud className="h-4 w-4" /> Téléverser une vidéo (Bunny Stream)</>}
       </button>
 
       {phase === 'uploading' && (
@@ -92,9 +95,8 @@ export function BunnyVideoUpload({
 
       <p className="flex items-center gap-1.5 text-[12px] text-(--color-ink-muted)">
         <Video className="h-3.5 w-3.5" />
-        {existingBunnyId
-          ? <>Vidéo Bunny associée (<span className="font-mono">{existingBunnyId.slice(0, 8)}…</span>). L’encodage adaptatif peut prendre quelques minutes après l’envoi.</>
-          : <>MP4 / MOV / WebM. Envoi direct vers le CDN Bunny (pas de limite de taille).</>}
+        MP4 / MOV / WebM. Envoi direct vers le CDN Bunny (pas de limite de taille) : la vidéo
+        s’ajoute à la fin de la liste, vous pouvez ensuite la renommer et la déplacer.
       </p>
 
       {error && <p className="rounded-lg bg-(--color-primary-soft) px-3 py-2 text-xs text-(--color-primary-deep)">{error}</p>}

@@ -9,9 +9,10 @@ export const runtime = 'nodejs';
  * POST /api/admin/videos/bunny/create
  * Body : { coursId, title }
  *
- * Crée un conteneur vidéo dans la librairie Bunny Stream, l'associe au cours
- * (table videos.bunny_video_id), et renvoie les éléments d'autorisation pour un
- * upload TUS direct navigateur → Bunny (la clé API ne quitte jamais le serveur).
+ * Crée un conteneur vidéo dans la librairie Bunny Stream, ajoute une NOUVELLE
+ * vidéo à l'item (dans la catégorie demandée, à la fin de la liste), et renvoie
+ * les éléments d'autorisation pour un upload TUS direct navigateur → Bunny
+ * (la clé API ne quitte jamais le serveur).
  */
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -30,8 +31,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const { coursId, title } = (await req.json().catch(() => ({}))) as { coursId?: string; title?: string };
+  const { coursId, title, type: rawType } = (await req.json().catch(() => ({}))) as {
+    coursId?: string; title?: string; type?: string;
+  };
   if (!coursId) return NextResponse.json({ error: 'coursId manquant' }, { status: 400 });
+  const type = rawType === 'seance_approfondie' ? 'seance_approfondie' : 'cours';
 
   // Vérifie que le cours existe (et récupère son titre par défaut).
   const { data: cours } = await supabase.from('cours').select('id, titre').eq('id', coursId).maybeSingle();
@@ -49,22 +53,25 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
-  // Uniquement la vidéo de COURS : une séance approfondie ne doit jamais être
-  // écrasée par ce téléversement (elle a son propre gestionnaire, et surtout
-  // un autre public — Programme Approfondi et non Formule Intensive).
-  const { data: existing } = await a
+  // Toujours une NOUVELLE vidéo, à la fin de sa catégorie : un item peut en
+  // porter plusieurs, et écraser la première ligne changerait silencieusement
+  // une vidéo déjà en ligne (voire son public si les types différaient).
+  const { data: last } = await a
     .from('videos')
-    .select('id, bunny_video_id')
+    .select('order_index')
     .eq('cours_id', coursId)
-    .eq('type', 'cours')
-    .order('order_index', { ascending: true })
+    .eq('type', type)
+    .order('order_index', { ascending: false })
     .limit(1)
     .maybeSingle();
-  if (existing?.id) {
-    await a.from('videos').update({ bunny_video_id: videoId, titre: videoTitle }).eq('id', existing.id);
-  } else {
-    await a.from('videos').insert({ cours_id: coursId, titre: videoTitle, bunny_video_id: videoId });
-  }
+  const orderIndex = ((last?.order_index as number | undefined) ?? -1) + 1;
+  await a.from('videos').insert({
+    cours_id: coursId,
+    titre: videoTitle,
+    bunny_video_id: videoId,
+    type,
+    order_index: orderIndex,
+  });
 
   return NextResponse.json({ ok: true, ...tusUploadAuth(videoId), title: videoTitle });
 }

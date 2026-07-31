@@ -12,7 +12,7 @@ import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
   addVideoAction, deleteVideoAction, moveVideoAction, removeVideoSupportAction,
   renameVideoAction, replaceVideoLinkAction, setVideoSupportAction, type VideoType,
-} from '@/app/admin/contenu/[cours]/video-actions';
+} from '@/app/admin/videos/actions';
 
 export type ManagedVideo = {
   id: string;
@@ -51,13 +51,18 @@ export function VideoManager({
   coursId,
   type,
   videos,
+  onChanged,
 }: {
   coursId: string;
   type: VideoType;
   videos: ManagedVideo[];
+  /** Appelé après chaque modification. Fourni par la bibliothèque vidéo, qui
+   *  charge sa liste côté client : un simple router.refresh() ne suffirait pas. */
+  onChanged?: () => void;
 }) {
   const router = useRouter();
   const copy = COPY[type];
+  const apresModification = onChanged ?? (() => router.refresh());
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
@@ -66,6 +71,7 @@ export function VideoManager({
   const [adding, setAdding] = useState(false);
   const [titre, setTitre] = useState('');
   const [lien, setLien] = useState('');
+  const [position, setPosition] = useState('');
   const [withSupport, setWithSupport] = useState(false);
   const supportInput = useRef<HTMLInputElement>(null);
   const [supportFile, setSupportFile] = useState<File | null>(null);
@@ -87,6 +93,7 @@ export function VideoManager({
   function resetAdd() {
     setTitre('');
     setLien('');
+    setPosition('');
     setWithSupport(false);
     setSupportFile(null);
     setAdding(false);
@@ -100,14 +107,18 @@ export function VideoManager({
     }
     if (withSupport && !supportFile) return setError('Choisissez le PDF du support, ou décochez la case.');
     start(async () => {
-      const res = await addVideoAction({ coursId, type, titre, lien });
+      const rang = position.trim() ? Number(position) : null;
+      const res = await addVideoAction({
+        coursId, type, titre, lien,
+        position: rang && Number.isFinite(rang) ? rang : null,
+      });
       if ('error' in res) return setError(res.error);
       if (withSupport && supportFile) {
         const err = await uploadSupport(res.videoId, supportFile);
         if (err) setError(`Vidéo ajoutée, mais le support a échoué : ${err}`);
       }
       resetAdd();
-      router.refresh();
+      apresModification();
     });
   }
 
@@ -116,7 +127,7 @@ export function VideoManager({
     start(async () => {
       const res = await fn();
       if ('error' in res) setError(res.error);
-      else router.refresh();
+      else apresModification();
     });
   }
 
@@ -238,6 +249,21 @@ export function VideoManager({
               onChange={(e) => setLien(e.target.value)}
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
             />
+            <label className="flex flex-wrap items-center gap-2 pt-1 text-sm text-(--color-ink)">
+              Position dans la liste
+              <input
+                type="number"
+                min={1}
+                max={videos.length + 1}
+                placeholder={`${videos.length + 1}`}
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                className="w-20 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5 text-sm"
+              />
+              <span className="text-xs text-(--color-ink-muted)">
+                (vide = à la fin ; 1 = en tête)
+              </span>
+            </label>
             <label className="flex items-center gap-2 pt-1 text-sm text-(--color-ink)">
               <input
                 type="checkbox"

@@ -11,8 +11,9 @@ import { extractBunnyVideoId } from '@/lib/bunny-link';
 import { logAudit } from '@/lib/audit/log';
 
 /**
- * Gestion autonome des vidéos d'un item par l'administrateur : ajout, ordre,
- * renommage, remplacement du lien Bunny, suppression, et support de séance.
+ * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
+ * collège → sous-collège → item → catégorie, puis ajout, ordre, renommage,
+ * remplacement du lien Bunny, suppression et support de séance.
  *
  * Toutes les écritures passent par le client service-role APRÈS contrôle
  * explicite des droits (éditeur de contenu + périmètre du cours + droit
@@ -67,6 +68,28 @@ async function guard(coursId: string): Promise<Ctx | { error: string }> {
   };
 }
 
+/** Contrôles de LECTURE seule (consultation de la bibliothèque). */
+async function guardRead(coursId: string): Promise<Ctx | { error: string }> {
+  const { profile, scope } = await requireContentEditor();
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data } = await a
+    .from('cours')
+    .select('id, titre, matiere_id, matieres(nom)')
+    .eq('id', coursId)
+    .maybeSingle();
+  if (!data) return { error: 'Item introuvable.' };
+  const c = data as { id: string; titre: string; matiere_id: string; matieres?: { nom?: string } | null };
+  if (!profCanAccessCours(scope, c.matiere_id, c.id)) return { error: 'Accès refusé à cet item.' };
+  return {
+    admin,
+    a,
+    profile,
+    cours: { id: c.id, titre: c.titre, matiere_id: c.matiere_id, matiereNom: c.matieres?.nom ?? null },
+  };
+}
+
 /** Charge une vidéo et applique les mêmes contrôles via son cours. */
 async function guardVideo(videoId: string) {
   const admin = createAdminClient();
@@ -87,16 +110,109 @@ async function guardVideo(videoId: string) {
 }
 
 function refresh(coursId: string) {
+  revalidatePath('/admin/videos');
   revalidatePath(`/admin/contenu/${coursId}`);
   revalidatePath(`/cours/${coursId}`, 'layout');
 }
 
-/** Ajoute une vidéo (lien Bunny collé) à la fin de la liste de son type. */
+/* ------------------------------------------------------------------ */
+/*  Lecture — cascade collège → item → catégorie                       */
+/* ------------------------------------------------------------------ */
+
+export type VideoLibraryItem = {
+  id: string;
+  titre: string;
+  orderIndex: number;
+  nbCours: number;
+  nbSeances: number;
+};
+
+export type VideoLibraryVideo = {
+  id: string;
+  titre: string;
+  bunny_video_id: string | null;
+  order_index: number;
+  support_path: string | null;
+};
+
+/** Items d'un collège, avec le nombre de vidéos de chaque catégorie. */
+export async function listItemsAction(
+  matiereId: string,
+): Promise<{ items: VideoLibraryItem[] } | { error: string }> {
+  const { scope } = await requireContentEditor();
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+
+  const { data: coursRows, error } = await a
+    .from('cours')
+    .select('id, titre, order_index')
+    .eq('matiere_id', matiereId)
+    .order('order_index', { ascending: true })
+    .order('titre', { ascending: true });
+  if (error) return { error: error.message };
+
+  const cours = ((coursRows ?? []) as { id: string; titre: string; order_index: number }[])
+    .filter((c) => profCanAccessCours(scope, matiereId, c.id));
+  if (cours.length === 0) return { items: [] };
+
+  const { data: vids } = await a
+    .from('videos')
+    .select('cours_id, type')
+    .in('cours_id', cours.map((c) => c.id));
+
+  const counts = new Map<string, { cours: number; seances: number }>();
+  for (const v of ((vids ?? []) as { cours_id: string; type: string | null }[])) {
+    const entry = counts.get(v.cours_id) ?? { cours: 0, seances: 0 };
+    if (v.type === 'seance_approfondie') entry.seances++;
+    else entry.cours++;
+    counts.set(v.cours_id, entry);
+  }
+
+  return {
+    items: cours.map((c) => ({
+      id: c.id,
+      titre: c.titre,
+      orderIndex: c.order_index,
+      nbCours: counts.get(c.id)?.cours ?? 0,
+      nbSeances: counts.get(c.id)?.seances ?? 0,
+    })),
+  };
+}
+
+/** Vidéos d'un item pour une catégorie, dans l'ordre d'affichage élève. */
+export async function listVideosAction(
+  coursId: string,
+  type: VideoType,
+): Promise<{ videos: VideoLibraryVideo[] } | { error: string }> {
+  const ctx = await guardRead(coursId);
+  if ('error' in ctx) return ctx;
+
+  const { data, error } = await ctx.a
+    .from('videos')
+    .select('id, titre, bunny_video_id, order_index, support_path')
+    .eq('cours_id', coursId)
+    .eq('type', type)
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) return { error: error.message };
+  return { videos: (data ?? []) as VideoLibraryVideo[] };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Écriture                                                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Ajoute une vidéo (lien Bunny collé). Sans `position`, elle se range à la fin
+ * de sa catégorie ; sinon elle s'insère à la place demandée (1 = en tête).
+ */
 export async function addVideoAction(input: {
   coursId: string;
   type: VideoType;
   titre: string;
   lien: string;
+  position?: number | null;
 }): Promise<{ ok: true; videoId: string } | { error: string }> {
   const ctx = await guard(input.coursId);
   if ('error' in ctx) return ctx;
@@ -108,15 +224,19 @@ export async function addVideoAction(input: {
     return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
   }
 
-  const { data: last } = await ctx.a
+  // Liste actuelle de la catégorie : sert à insérer à la position demandée et
+  // à renuméroter proprement (les données antérieures peuvent avoir des trous).
+  const { data: existing } = await ctx.a
     .from('videos')
-    .select('order_index')
+    .select('id, order_index')
     .eq('cours_id', input.coursId)
     .eq('type', input.type)
-    .order('order_index', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  const nextIndex = ((last?.order_index as number | undefined) ?? -1) + 1;
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true });
+  const list = (existing ?? []) as { id: string; order_index: number }[];
+
+  const wanted = input.position == null ? list.length : input.position - 1;
+  const insertAt = Math.max(0, Math.min(list.length, wanted));
 
   const { data: created, error } = await ctx.a
     .from('videos')
@@ -125,11 +245,20 @@ export async function addVideoAction(input: {
       titre,
       bunny_video_id: bunnyId,
       type: input.type,
-      order_index: nextIndex,
+      order_index: insertAt,
     })
     .select('id')
     .single();
   if (error) return { error: error.message };
+
+  // Décale ce qui suit (et recompacte au passage).
+  const reordered = [...list];
+  reordered.splice(insertAt, 0, { id: created.id as string, order_index: insertAt });
+  for (let i = 0; i < reordered.length; i++) {
+    if (reordered[i].order_index !== i) {
+      await ctx.a.from('videos').update({ order_index: i }).eq('id', reordered[i].id);
+    }
+  }
 
   await logAudit({
     actor: ctx.profile,
@@ -139,8 +268,8 @@ export async function addVideoAction(input: {
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `Ajout de « ${titre} » (${LABEL[input.type]})`,
-    diff: { bunny_video_id: bunnyId, type: input.type, order_index: nextIndex },
+    description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`,
+    diff: { bunny_video_id: bunnyId, type: input.type, order_index: insertAt },
   });
 
   refresh(input.coursId);

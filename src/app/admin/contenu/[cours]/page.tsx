@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, ClipboardList, FileText, GraduationCap, History, Layers3, PlayCircle, Video } from 'lucide-react';
+import { ArrowLeft, Clapperboard, ClipboardList, FileText, GraduationCap, History, Layers3, PlayCircle } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileDropzone } from '@/components/admin/content/file-dropzone';
-import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
 import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
@@ -18,7 +16,6 @@ import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
 import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
 import { InterrogationPanel } from '@/components/admin/content/interrogation-panel';
-import { VideoManager } from '@/components/admin/content/video-manager';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type ManagedVideoRow = {
@@ -89,7 +86,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     }));
   const coursVideos = allVideos.filter((v) => v.type === 'cours');
   const seanceApprofondieVideos = allVideos.filter((v) => v.type === 'seance_approfondie');
-  const video = coursVideos[0];
+  const nbSupports = allVideos.filter((v) => !!v.support_path).length;
   const fiche = c.fiches?.[0];
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
@@ -134,11 +131,10 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
 
       <Tabs defaultValue={can.video.read ? 'video' : can.fiche.read ? 'fiche' : canQcmFamilyRead || can.annale.read ? 'qcm' : 'flashcards'}>
         <TabsList>
-          {can.video.read && <TabsTrigger value="video"><PlayCircle className="h-4 w-4 mr-1.5" /> Vidéo</TabsTrigger>}
+          {can.video.read && <TabsTrigger value="video"><PlayCircle className="h-4 w-4 mr-1.5" /> Vidéos</TabsTrigger>}
           {can.fiche.read && <TabsTrigger value="fiche"><FileText className="h-4 w-4 mr-1.5" /> Fiche</TabsTrigger>}
           {(canQcmFamilyRead || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
           {can.flashcards.read && <TabsTrigger value="flashcards"><Layers3 className="h-4 w-4 mr-1.5" /> Flashcards</TabsTrigger>}
-          {can.video.read && <TabsTrigger value="seance-approfondie"><Video className="h-4 w-4 mr-1.5" /> Seance approfondie</TabsTrigger>}
           {canQcmFamilyRead && <TabsTrigger value="interrogations"><GraduationCap className="h-4 w-4 mr-1.5" /> Interrogations</TabsTrigger>}
         </TabsList>
 
@@ -152,46 +148,38 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           <TabsContent value="video">
             <Card>
               <CardHeader>
-                <CardTitle>Cours vidéo</CardTitle>
+                <CardTitle>Vidéos de cet item</CardTitle>
                 <CardDescription>
-                  {can.video.write
-                    ? 'Déposez la vidéo sur bunny.net (Stream), puis collez son lien ici. Vous pouvez en ajouter plusieurs, les renommer et choisir leur ordre.'
-                    : 'Lecture seule — vous pouvez consulter mais pas modifier les vidéos.'}
+                  Les vidéos se gèrent désormais dans l’onglet « Vidéos » de l’administration :
+                  collège, item, catégorie, puis ordre, nom et lien Bunny.net.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-5">
-                {can.video.write ? (
-                  <>
-                    <VideoManager coursId={coursId} type="cours" videos={coursVideos} />
-                    {/* Méthodes historiques conservées : téléversement direct vers
-                        Bunny (TUS) et hébergement dans le bucket Supabase. */}
-                    <details className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
-                      <summary className="cursor-pointer text-[12.5px] font-semibold text-(--color-ink-soft)">
-                        Autres méthodes : téléverser le fichier depuis cette page
-                      </summary>
-                      <div className="space-y-4 pt-3">
-                        <BunnyVideoUpload
-                          coursId={coursId}
-                          defaultTitle={c.titre ?? 'Vidéo du cours'}
-                          existingBunnyId={video?.bunny_video_id ?? null}
-                        />
-                        <FileDropzone
-                          bucket="videos"
-                          table="videos"
-                          coursId={coursId}
-                          rowId={video?.id}
-                          existingPath={video?.storage_path}
-                          accept="video/mp4,video/webm,video/ogg"
-                          label={video?.storage_path ? 'Vidéo téléversée, la remplacer' : 'Glisse une vidéo MP4 ici'}
-                          hint="Format conseillé : H.264 / AAC, 1080p."
-                        />
-                      </div>
-                    </details>
-                  </>
-                ) : (
-                  <p className="text-sm text-(--color-ink-soft)">
-                    {coursVideos.length > 0 ? `${coursVideos.length} vidéo(s) de cours.` : 'Aucune vidéo téléversée.'}
-                  </p>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center justify-between rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
+                    <span className="font-medium">Cours vidéo</span>
+                    <Badge variant={coursVideos.length > 0 ? 'primary' : 'muted'}>
+                      {coursVideos.length}
+                    </Badge>
+                  </li>
+                  <li className="flex items-center justify-between rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
+                    <span className="font-medium">Séances approfondies</span>
+                    <Badge variant={seanceApprofondieVideos.length > 0 ? 'primary' : 'muted'}>
+                      {seanceApprofondieVideos.length}
+                    </Badge>
+                  </li>
+                  <li className="flex items-center justify-between rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
+                    <span className="font-medium">Supports de séance</span>
+                    <Badge variant={nbSupports > 0 ? 'primary' : 'muted'}>{nbSupports}</Badge>
+                  </li>
+                </ul>
+                {can.video.write && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link href="/admin/videos">
+                      <Clapperboard />
+                      Ouvrir la bibliothèque vidéo
+                    </Link>
+                  </Button>
                 )}
               </CardContent>
             </Card>
@@ -347,35 +335,6 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                       </li>
                     ))}
                   </ul>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        )}
-        {can.video.read && (
-          <TabsContent value="seance-approfondie">
-            <Card>
-              <CardHeader>
-                <CardTitle>Séances approfondies</CardTitle>
-                <CardDescription>
-                  {can.video.write
-                    ? 'Déposez la séance sur bunny.net (Stream), puis collez son lien ici. Ces vidéos ne sont visibles que par les abonnés du Programme Approfondi.'
-                    : 'Lecture seule.'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {can.video.write ? (
-                  <VideoManager
-                    coursId={coursId}
-                    type="seance_approfondie"
-                    videos={seanceApprofondieVideos}
-                  />
-                ) : (
-                  <p className="text-sm text-(--color-ink-soft)">
-                    {seanceApprofondieVideos.length > 0
-                      ? `${seanceApprofondieVideos.length} séance(s) approfondie(s).`
-                      : 'Aucune séance approfondie.'}
-                  </p>
                 )}
               </CardContent>
             </Card>
