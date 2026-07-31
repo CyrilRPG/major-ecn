@@ -1,0 +1,12 @@
+-- stripe_provisioning_log a été créée (migration distante 20260614054032, jamais
+-- committée) sans RLS. Le linter Supabase la remonte en ERROR : la table est
+-- exposée publiquement via PostgREST et contient session_id + email sans
+-- aucune protection — n'importe qui avec la clé anon peut lire toutes les
+-- sessions de paiement, ou insérer une ligne pour bloquer le provisioning
+-- d'un vrai achat (la dédup est un ON CONFLICT DO NOTHING sur session_id).
+--
+-- Seul le client admin (service role) lit/écrit cette table
+-- (src/lib/stripe/provisioning.ts, src/app/api/cron/stripe-reconcile/route.ts),
+-- qui bypass RLS. Activer RLS sans policy bloque donc anon/authenticated sans
+-- affecter le fonctionnement existant.
+alter table public.stripe_provisioning_log enable row level security;
