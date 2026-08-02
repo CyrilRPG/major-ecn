@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
+import { estTitreRevisions } from '@/lib/videos/revisions';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -346,23 +347,43 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         return standardActions;
       })();
 
+  /** Bloc pédagogique auquel appartient une carte (null = hors blocs). */
+  const blocOf = (href: string): BlocKey | null =>
+    href.endsWith('/fiche-express') ? 'fiche-express'
+    : href.endsWith('/fiche') ? 'fiche'
+    : href.endsWith('/video') || href === '#locked-video' || href === '#video-coming-soon' ? 'video'
+    : href.endsWith('/qcm') ? 'qcm'
+    : href.endsWith('/flashcards') ? 'flashcards'
+    : href.endsWith('/interrogation') ? 'interrogation'
+    : href.endsWith('/notes') ? 'notes'
+    : href.includes('/seance-approfondie') || href === '#locked-seance-approfondie' ? 'seance-approfondie'
+    : null;
+
   // Blocs masqués pour cet item par l'administration : les cartes
   // correspondantes disparaissent de l'aperçu, comme les onglets.
   const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
   if (hiddenBlocks.length > 0) {
-    const blocOf = (href: string): BlocKey | null =>
-      href.endsWith('/fiche-express') ? 'fiche-express'
-      : href.endsWith('/fiche') ? 'fiche'
-      : href.endsWith('/video') || href === '#locked-video' || href === '#video-coming-soon' ? 'video'
-      : href.endsWith('/qcm') ? 'qcm'
-      : href.endsWith('/flashcards') ? 'flashcards'
-      : href.endsWith('/interrogation') ? 'interrogation'
-      : href.endsWith('/notes') ? 'notes'
-      : href.includes('/seance-approfondie') || href === '#locked-seance-approfondie' ? 'seance-approfondie'
-      : null;
     actions = actions.filter((a) => {
       const b = blocOf(a.href);
       return !b || !hiddenBlocks.includes(b);
+    });
+  }
+
+  // Item de révisions : on retire les blocs SANS CONTENU (et non seulement
+  // ceux verrouillés) — la carte « bientôt disponible » n'a pas de sens ici.
+  // L'interrogation est tirée des QCM de l'item : pas de QCM, pas d'interrogation.
+  if (estTitreRevisions(c.titre)) {
+    // L'interrogation est tirée des QCM de l'item : sans QCM, pas d'interrogation
+    // (son `available` ne reflète que le déverrouillage, pas le contenu).
+    const aQcm = (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance');
+    actions = actions.filter((a) => {
+      const b = blocOf(a.href);
+      if (!b || b === 'notes') return true;
+      if (b === 'interrogation') return aQcm;
+      // Les cartes de séance et de support ne sont créées que si elles existent
+      // (leur `available` traduit le déverrouillage progressif).
+      if (b === 'seance-approfondie') return true;
+      return a.available;
     });
   }
 

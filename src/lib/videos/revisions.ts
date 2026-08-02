@@ -12,3 +12,15 @@ export function revisionsTitre(collegeNom: string): string {
 export function estItemRevisions(titre: string, collegeNom: string): boolean {
   return titre.trim().toLowerCase() === revisionsTitre(collegeNom).toLowerCase();
 }
+
+/**
+ * Item de révisions, quel que soit le collège (« Révisions - … », « Révision …»).
+ *
+ * Ces items ne suivent pas le parcours d'un item du programme : ils ne portent
+ * souvent qu'un seul type de contenu. On y masque donc complètement les blocs
+ * vides, au lieu d'afficher une rubrique « bientôt disponible » qui n'arrivera
+ * jamais.
+ */
+export function estTitreRevisions(titre: string): boolean {
+  return /^r[eé]vision/i.test(titre.trim());
+}

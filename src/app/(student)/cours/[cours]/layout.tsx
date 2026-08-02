@@ -8,6 +8,7 @@ import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canRead } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
+import { estTitreRevisions } from '@/lib/videos/revisions';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type CourseVideoRow = {
@@ -64,7 +65,10 @@ export default async function CoursLayout({
   const availability = {
     video: coursVideos.some(hasSource),
     fiche: (c.fiches ?? []).some((f) => !!f.storage_path),
-    qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm'),
+    // La page « DP · QI » liste les séries QCM **et** les séances du professeur :
+    // l'onglet doit suivre le même critère, sinon un item qui n'a que des
+    // séances passerait pour vide alors que la page a du contenu.
+    qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
     seanceApprofondie: seanceVideos.length > 0,
   };
@@ -92,8 +96,21 @@ export default async function CoursLayout({
         flashcards: canRead(profScope, 'flashcards'),
       }
     : undefined;
-  const visibility = (profVisibility || hiddenBlocks.length > 0)
-    ? { ...(profVisibility ?? {}), ...hiddenBlocksVisibility(hiddenBlocks) }
+  // Item de révisions : un bloc sans contenu n'a pas de raison d'exister. On le
+  // retire complètement au lieu d'afficher une pastille « bientôt disponible »
+  // (ces items ne portent souvent qu'un seul type de contenu).
+  const estRevisions = estTitreRevisions(c.titre);
+  const blocsVides: Record<string, boolean> = estRevisions
+    ? {
+        ...(availability.fiche ? {} : { fiche: false, 'fiche-express': false }),
+        ...(availability.qcm ? {} : { qcm: false }),
+        ...(availability.flashcards ? {} : { flashcards: false }),
+        ...(availability.video ? {} : { video: false }),
+      }
+    : {};
+
+  const visibility = (profVisibility || hiddenBlocks.length > 0 || Object.keys(blocsVides).length > 0)
+    ? { ...(profVisibility ?? {}), ...blocsVides, ...hiddenBlocksVisibility(hiddenBlocks) }
     : undefined;
   const locked = (!isAdmin && !profScope && access) ? {
     fiche: !access.fiche,
