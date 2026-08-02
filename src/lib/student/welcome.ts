@@ -73,17 +73,18 @@ export function resolveWelcomeConfig(
   rows: WelcomePopupRow[],
   scopeColleges: string[],
   specialitesParId: Map<string, WelcomeSpecialite>,
+  couvreMedecineGenerale: boolean,
 ): WelcomeConfig {
   const parCollege = rows.find((r) => r.college_id && scopeColleges.includes(r.college_id));
   const defaut = rows.find((r) => r.college_id === null);
   const row = parCollege ?? defaut;
-  if (!row) return WELCOME_PAR_DEFAUT;
+  if (!row) return sansConseilsHorsMg(WELCOME_PAR_DEFAUT, couvreMedecineGenerale);
 
   const choisies = (row.demarrage_colleges ?? [])
     .map((id) => specialitesParId.get(id))
     .filter((s): s is WelcomeSpecialite => !!s);
 
-  return {
+  const config: WelcomeConfig = {
     active: row.active,
     titre: row.titre,
     accroche: row.accroche,
@@ -96,4 +97,20 @@ export function resolveWelcomeConfig(
       ? choisies
       : row.college_id === null ? SPECIALITES_PAR_DEFAUT : [],
   };
+  // Spécialités choisies explicitement par l'administration : on les respecte,
+  // elles ont été décidées pour ce public.
+  return choisies.length > 0 ? config : sansConseilsHorsMg(config, couvreMedecineGenerale);
+}
+
+/**
+ * « Par où commencer ? » d'origine = Cardiologie, Pneumologie, Gériatrie,
+ * Neurologie, Endocrinologie, Néphrologie : c'est le programme de MÉDECINE
+ * GÉNÉRALE. Ce conseil n'a pas de sens pour un élève de psychiatrie ou
+ * d'anesthésie : hors MG, la section est retirée tant que l'administration n'a
+ * pas défini ses propres spécialités conseillées. Le reste du popup (titre,
+ * accroche, introduction) est générique et demeure.
+ */
+function sansConseilsHorsMg(config: WelcomeConfig, couvreMedecineGenerale: boolean): WelcomeConfig {
+  if (couvreMedecineGenerale) return config;
+  return { ...config, demarrageActif: false, specialites: [] };
 }

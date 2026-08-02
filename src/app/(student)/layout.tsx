@@ -260,7 +260,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // Popup d'accueil : configuration de la spécialité de l'élève, à défaut la
   // configuration générale. Un élève de psychiatrie ne doit pas recevoir les
   // conseils de démarrage écrits pour la médecine générale.
-  let welcome = WELCOME_PAR_DEFAUT;
+  // Les conseils de démarrage d'origine sont ceux de la médecine générale : on
+  // ne les sert qu'aux élèves concernés (ou en accès intégral).
+  const couvreMg = scopeForNav.type === 'all'
+    || scopeForNav.colleges.some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-'));
+  let welcome = couvreMg
+    ? WELCOME_PAR_DEFAUT
+    : { ...WELCOME_PAR_DEFAUT, demarrageActif: false, specialites: [] };
   if (profile.role === 'student') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: welcomeRows } = await (supabase as any)
@@ -285,7 +291,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
         }
       }
       const scopeColleges = scopeForNav.type === 'college' ? scopeForNav.colleges : [];
-      welcome = resolveWelcomeConfig(rows, scopeColleges, specialites);
+      welcome = resolveWelcomeConfig(rows, scopeColleges, specialites, couvreMg);
     }
   }
 
