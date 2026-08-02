@@ -16,8 +16,10 @@ export const dynamic = 'force-dynamic';
  *  - PROFESSEUR → PDF watermarké à son identité (comme la consultation élève).
  * Les étudiants n'ont pas accès au téléchargement.
  */
-export async function GET(_req: Request, ctx: { params: Promise<{ cours: string }> }) {
+export async function GET(req: Request, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
+  // `?doc=<id>` : un item peut porter plusieurs fiches (cf. onglet élève).
+  const docId = new URL(req.url).searchParams.get('doc');
   const supabase = await createClient();
   const user = await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -34,17 +36,21 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
   } | null);
   const isAdmin = p?.role === 'admin';
 
-  const [{ data: fiche }, { data: c }] = await Promise.all([
+  const [{ data: fichesRows }, { data: c }] = await Promise.all([
     supabase
       .from('fiches')
-      .select('storage_path')
+      .select('id, titre, storage_path')
       .eq('cours_id', coursId)
       .not('storage_path', 'is', null)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true }),
     supabase.from('cours').select('titre, matiere_id, matieres(nom)').eq('id', coursId).maybeSingle(),
   ]);
+
+  // La requête est filtrée sur cours_id : un `doc` étranger à l'item ne peut
+  // pas être servi, on retombe alors sur la fiche principale.
+  const liste = (fichesRows ?? []) as { id: string; titre: string | null; storage_path: string | null }[];
+  const fiche = (docId ? liste.find((f) => f.id === docId) : undefined) ?? liste[0];
 
   // Droit d'impression PAR SPÉCIALITÉ : admin toujours ; can_download = droit
   // global ; sinon le collège du cours doit figurer dans download_colleges.
@@ -80,7 +86,10 @@ export async function GET(_req: Request, ctx: { params: Promise<{ cours: string 
 
   const matiere = (c as { matieres?: { nom?: string } | null } | null)?.matieres?.nom;
   const titre = (c as { titre?: string } | null)?.titre ?? 'cours';
-  const rawName = `Fiche - ${matiere ? `${matiere} - ` : ''}${titre}.pdf`;
+  // Plusieurs fiches sur l'item : on ajoute le nom du document pour que les
+  // fichiers téléchargés ne se recouvrent pas.
+  const suffixe = liste.length > 1 && fiche.titre?.trim() ? ` - ${fiche.titre.trim()}` : '';
+  const rawName = `Fiche - ${matiere ? `${matiere} - ` : ''}${titre}${suffixe}.pdf`;
   const safe = rawName.replace(/[\\/?%*:|"<>]/g, '-');
   const ascii = safe.replace(/[^\x20-\x7E]/g, '_');
 

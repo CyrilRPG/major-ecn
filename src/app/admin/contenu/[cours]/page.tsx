@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
-import { FichePdfUpload } from '@/components/admin/content/fiche-pdf-upload';
+import { FichesManager } from '@/components/admin/content/fiches-manager';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
@@ -19,6 +19,7 @@ import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager'
 import { InterrogationPanel } from '@/components/admin/content/interrogation-panel';
 import { BlocsEditor } from '@/components/admin/content/blocs-editor';
 import { parseHiddenBlocks } from '@/lib/student/blocs';
+import { trierFiches } from '@/lib/fiches/documents';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type ManagedVideoRow = {
@@ -29,6 +30,17 @@ type ManagedVideoRow = {
   type: string | null;
   order_index: number | null;
   video_supports?: { id: string }[] | null;
+};
+
+/** Ligne `fiches` telle que sélectionnée ci-dessous (types générés incomplets). */
+type ManagedFicheRow = {
+  id: string;
+  titre: string;
+  storage_path: string | null;
+  pages: number | null;
+  content_format: string | null;
+  order_index: number | null;
+  created_at: string | null;
 };
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -57,7 +69,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
       id, titre, description, matiere_id, hidden_blocks,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
       videos(id, titre, storage_path, bunny_video_id, type, order_index, video_supports(id)),
-      fiches(id, storage_path, pages, content_format),
+      fiches(id, titre, storage_path, pages, content_format, order_index, created_at),
       qcm_series(id, type, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
     `)
@@ -92,7 +104,10 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const nbSupports = allVideos.reduce((n, v) => n + v.nbSupports, 0);
   const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
   const isAdmin = scope === null;
-  const fiche = c.fiches?.[0];
+  // Plusieurs fiches possibles par item : la première (order_index le plus bas)
+  // est la fiche principale — celle qu'ouvre l'éditeur en ligne.
+  const fichesTriees = trierFiches((c.fiches ?? []) as unknown as ManagedFicheRow[]);
+  const fiche = fichesTriees[0];
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
@@ -214,32 +229,60 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           <TabsContent value="fiche">
             <Card>
               <CardHeader>
-                <CardTitle>Fiche de cours (HTML)</CardTitle>
+                <CardTitle>Fiches de cours</CardTitle>
                 <CardDescription>
                   {can.fiche.write
-                    ? 'Déposez la fiche en HTML : elle est convertie automatiquement en PDF (charte Major ECN) pour les étudiants. Vous pouvez ensuite l’éditer visuellement.'
-                    : 'Lecture seule — vous pouvez consulter mais pas modifier la fiche.'}
+                    ? 'Un item peut porter plusieurs fiches : elles s’affichent toutes dans le même onglet « Fiche de cours » chez l’élève. La fiche principale (la première) peut être déposée en HTML et éditée en ligne ; les autres se déposent en PDF.'
+                    : 'Lecture seule — vous pouvez consulter mais pas modifier les fiches.'}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-5">
                 {can.fiche.write ? (
                   <>
-                    <FicheHtmlUpload
-                      coursId={coursId}
-                      nomCours={c.titre ?? 'Fiche'}
-                      annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
-                      existing={!!fiche?.storage_path}
-                      pages={fiche?.pages}
-                    />
-                    <FichePdfUpload
-                      coursId={coursId}
-                      existePdf={!!fiche?.storage_path && (fiche as { content_format?: string }).content_format === 'pdf'}
-                    />
+                    <div>
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+                        Fiche principale (HTML → PDF, éditable en ligne)
+                      </p>
+                      <FicheHtmlUpload
+                        coursId={coursId}
+                        nomCours={c.titre ?? 'Fiche'}
+                        annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
+                        existing={!!fiche?.storage_path}
+                        pages={fiche?.pages}
+                      />
+                    </div>
+                    <div>
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+                        Toutes les fiches de cet item ({fichesTriees.length})
+                      </p>
+                      <FichesManager
+                        coursId={coursId}
+                        fiches={fichesTriees.map((f) => ({
+                          id: f.id,
+                          titre: f.titre,
+                          storage_path: f.storage_path,
+                          pages: f.pages,
+                          content_format: f.content_format,
+                        }))}
+                      />
+                    </div>
                   </>
+                ) : fichesTriees.length === 0 ? (
+                  <p className="text-sm text-(--color-ink-soft)">Aucune fiche téléversée.</p>
                 ) : (
-                  <p className="text-sm text-(--color-ink-soft)">
-                    {fiche?.storage_path ? `PDF présent${fiche.pages ? ` (${fiche.pages} pages)` : ''}.` : 'Aucune fiche téléversée.'}
-                  </p>
+                  <ul className="space-y-2 text-sm">
+                    {fichesTriees.map((f, i) => (
+                      <li
+                        key={f.id}
+                        className="flex items-center justify-between rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2"
+                      >
+                        <span className="font-medium">{f.titre?.trim() || `Fiche ${i + 1}`}</span>
+                        <Badge variant={f.storage_path ? 'primary' : 'muted'}>
+                          {f.storage_path ? (f.pages ? `${f.pages} pages` : 'PDF présent') : 'aucun fichier'}
+                        </Badge>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </CardContent>
             </Card>

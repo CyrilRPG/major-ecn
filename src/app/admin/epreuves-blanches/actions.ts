@@ -343,8 +343,13 @@ async function loadExamContext(coursIds: string[]): Promise<{ text: string; titr
   const titres: string[] = [];
   for (const c of rows) {
     titres.push(c.titre);
-    const fiche = (c.fiches ?? [])[0] ?? {};
-    const raw: string = fiche.content_html ? stripHtml(fiche.content_html) : (fiche.extracted_text ?? '');
+    // Un item peut porter plusieurs fiches : on concatène leur contenu pour ne
+    // rien perdre du programme de l'item.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw: string = ((c.fiches ?? []) as any[])
+      .map((f) => (f.content_html ? stripHtml(f.content_html) : (f.extracted_text ?? '')))
+      .filter((t: string) => t.trim().length > 0)
+      .join('\n\n');
     parts.push(`\n\n===== ITEM : ${c.titre} =====`);
     parts.push(`college_id : ${c.matiere_id}`);
     parts.push(`Collège : ${c.matieres?.nom ?? ''}`);

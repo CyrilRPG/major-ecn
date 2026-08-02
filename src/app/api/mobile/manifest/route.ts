@@ -82,7 +82,14 @@ export async function GET(req: Request) {
   if (includedIds.length > 0) {
     const [f, v, s, fc] = await Promise.all([
       content.fiche
-        ? auth.supabase.from('fiches').select('cours_id, pages, updated_at').in('cours_id', includedIds)
+        // Un item peut porter plusieurs fiches : l'ordre garantit que c'est la
+        // fiche principale qui est retenue ci-dessous.
+        ? auth.supabase
+            .from('fiches')
+            .select('cours_id, pages, updated_at')
+            .in('cours_id', includedIds)
+            .order('order_index', { ascending: true })
+            .order('created_at', { ascending: true })
         : Promise.resolve({ data: [] }),
       content.video
         ? auth.supabase.from('videos').select('cours_id, bunny_video_id, storage_path, duration_seconds, updated_at').in('cours_id', includedIds)
@@ -105,7 +112,9 @@ export async function GET(req: Request) {
     }, new Map<string, number>());
   }
 
-  const fichesByCours = new Map(fiches.map((r) => [r.cours_id, r]));
+  // Première ligne rencontrée = fiche principale (la requête est ordonnée).
+  const fichesByCours = new Map<string, ChildRow>();
+  for (const r of fiches) if (!fichesByCours.has(r.cours_id)) fichesByCours.set(r.cours_id, r);
   const videosByCours = new Map(videos.map((r) => [r.cours_id, r]));
   const seriesByCours = new Map<string, ChildRow[]>();
   for (const s of series) {

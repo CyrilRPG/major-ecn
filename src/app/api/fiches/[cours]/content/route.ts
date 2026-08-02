@@ -41,11 +41,14 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
+  // Fiche PRINCIPALE de l'item (order_index le plus bas) : c'est elle que
+  // l'éditeur en ligne modifie, jamais les fiches PDF ajoutées à sa suite.
   const { data: existing } = await a
     .from('fiches')
     .select('id')
     .eq('cours_id', coursId)
-    .order('created_at', { ascending: false })
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(1);
   const row = existing?.[0] as { id: string } | undefined;
 

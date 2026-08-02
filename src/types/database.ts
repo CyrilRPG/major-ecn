@@ -47,9 +47,9 @@ export type Database = {
         Relationships: [];
       };
       fiches: {
-        Row: { cours_id: string; created_at: string; id: string; pages: number | null; storage_path: string | null; titre: string; content_format: string; content_json: Json | null; content_html: string | null; extracted_text: string | null; updated_by: string | null; updated_at: string };
-        Insert: { cours_id: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre: string; content_format?: string; content_json?: Json | null; content_html?: string | null; extracted_text?: string | null; updated_by?: string | null; updated_at?: string };
-        Update: { cours_id?: string; created_at?: string; id?: string; pages?: number | null; storage_path?: string | null; titre?: string; content_format?: string; content_json?: Json | null; content_html?: string | null; extracted_text?: string | null; updated_by?: string | null; updated_at?: string };
+        Row: { cours_id: string; created_at: string; id: string; order_index: number; pages: number | null; storage_path: string | null; titre: string; content_format: string; content_json: Json | null; content_html: string | null; extracted_text: string | null; updated_by: string | null; updated_at: string };
+        Insert: { cours_id: string; created_at?: string; id?: string; order_index?: number; pages?: number | null; storage_path?: string | null; titre: string; content_format?: string; content_json?: Json | null; content_html?: string | null; extracted_text?: string | null; updated_by?: string | null; updated_at?: string };
+        Update: { cours_id?: string; created_at?: string; id?: string; order_index?: number; pages?: number | null; storage_path?: string | null; titre?: string; content_format?: string; content_json?: Json | null; content_html?: string | null; extracted_text?: string | null; updated_by?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'fiches_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       guide_leads: {

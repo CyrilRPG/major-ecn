@@ -173,11 +173,14 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
+  // Fiche PRINCIPALE de l'item (order_index le plus bas) : la conversion
+  // HTML → PDF ne doit jamais écraser une fiche PDF ajoutée à sa suite.
   const { data: existing } = await a
     .from('fiches')
     .select('id, storage_path')
     .eq('cours_id', coursId)
-    .order('created_at', { ascending: false })
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 

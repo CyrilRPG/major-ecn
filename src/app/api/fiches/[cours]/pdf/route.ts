@@ -28,19 +28,24 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const expiredRes = await assertAccessActive(supabase, user.id);
   if (expiredRes) return expiredRes;
 
+  // Un item peut porter plusieurs fiches : `?doc=<id>` désigne celle demandée,
+  // à défaut la première de la liste (order_index le plus bas).
+  const docId = new URL(req.url).searchParams.get('doc');
   const [{ data: profile }, { data: fiches }] = await Promise.all([
     supabase.from('profiles').select('first_name, last_name, email, role').eq('id', user.id).maybeSingle(),
-    // Tolère plusieurs lignes éventuelles : on prend celle qui a un storage_path.
     supabase
       .from('fiches')
-      .select('storage_path')
+      .select('id, storage_path')
       .eq('cours_id', coursId)
       .not('storage_path', 'is', null)
-      .order('created_at', { ascending: false })
-      .limit(1),
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true }),
   ]);
 
-  const fiche = fiches?.[0];
+  // Le `doc` demandé doit appartenir à CET item : la requête ci-dessus est déjà
+  // filtrée sur cours_id, donc un id étranger ne peut pas être servi.
+  const liste = (fiches ?? []) as { id: string; storage_path: string | null }[];
+  const fiche = (docId ? liste.find((f) => f.id === docId) : undefined) ?? liste[0];
   if (!fiche?.storage_path) return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
 
   // Téléchargement explicite : ?download=1 → attachment + PDF clair (sans

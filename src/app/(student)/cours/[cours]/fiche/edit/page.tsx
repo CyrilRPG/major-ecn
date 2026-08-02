@@ -39,7 +39,10 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .select('content_html' as any)
     .eq('cours_id', coursId)
-    .order('created_at', { ascending: false })
+    // Fiche PRINCIPALE de l'item (order_index le plus bas) : l'éditeur en ligne
+    // ne touche jamais aux fiches PDF ajoutées à sa suite.
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 

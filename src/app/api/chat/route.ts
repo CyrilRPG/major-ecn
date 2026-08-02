@@ -173,10 +173,15 @@ export async function POST(req: Request) {
     { data: flashcards },
     { data: qcmItems },
   ] = await Promise.all([
+    // Un item peut porter plusieurs fiches : on prend la principale
+    // (order_index le plus bas). `maybeSingle()` échouerait dès la deuxième.
     supabase
       .from('fiches')
       .select('extracted_text')
       .eq('cours_id', coursId)
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true })
+      .limit(1)
       .maybeSingle(),
     supabase
       .from('flashcards')

@@ -38,11 +38,13 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
+  // Fiche PRINCIPALE de l'item (order_index le plus bas).
   const { data } = await a
     .from('fiches')
     .select('content_html, titre')
     .eq('cours_id', coursId)
-    .order('created_at', { ascending: false })
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 
@@ -73,7 +75,8 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
     .from('fiches')
     .select('id')
     .eq('cours_id', coursId)
-    .order('created_at', { ascending: false })
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 

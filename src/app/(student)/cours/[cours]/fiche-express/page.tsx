@@ -27,8 +27,9 @@ export default async function FicheExpressPage({ params }: { params: Promise<{ c
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).ficheExpress) redirect(`/cours/${coursId}`);
 
-  const fiche = c.fiches?.[0];
-  const hasFiche = !!fiche?.storage_path;
+  // Un item peut porter plusieurs fiches : il suffit qu'UNE ait un PDF pour que
+  // la fiche éclair soit proposée (la route extrait la fiche principale).
+  const hasFiche = (c.fiches ?? []).some((f) => !!f.storage_path);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4 sm:py-6 lg:px-8">

@@ -32,11 +32,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     supabase.from('profiles').select('first_name, last_name, email').eq('id', user.id).maybeSingle(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
+      // Fiche PRINCIPALE de l'item (order_index le plus bas) : la fiche éclair
+      // est l'extrait de la fiche de référence, pas d'un document annexe.
       .from('fiches')
       .select('storage_path, pages')
       .eq('cours_id', coursId)
       .not('storage_path', 'is', null)
-      .order('created_at', { ascending: false })
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true })
       .limit(1),
   ]);
 
