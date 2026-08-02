@@ -39,15 +39,18 @@ export function ResendActivationButton({ userId, displayName }: { userId: string
       });
       const j = (await res.json().catch(() => ({}))) as Reponse;
 
+      // Le lien est TOUJOURS affiché, envoi réussi ou non : c'est le moyen le
+      // plus sûr de débloquer un élève (à transmettre par un autre canal si
+      // l'e-mail n'arrive pas). Il est valable 24 h et à usage unique.
+      setLien(j.setupUrl ?? null);
+
       if (j.ok) {
         setDone('ok');
-        setMsg(`Envoyé via ${j.via ?? '?'}`);
-        setTimeout(() => { setDone(null); setMsg(null); }, 4000);
+        setMsg(`Envoyé via ${j.via ?? '?'} — lien à transmettre au besoin :`);
         return;
       }
 
       setDone('error');
-      setLien(j.setupUrl ?? null);
       setMsg(
         j.setupUrl
           ? j.reason === 'quota'
