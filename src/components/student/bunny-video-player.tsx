@@ -109,14 +109,19 @@ export function BunnyVideoPlayer({
             aria-hidden="true"
             className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
           >
+            {/* Quatre bandes réparties sur la hauteur, en alternant sombre et
+                clair : quel que soit le fond de l'image, au moins l'une reste
+                lisible. Police volontairement large — le filigrane doit rester
+                identifiable sur une capture d'écran. */}
             {[
-              { top: '12%', left: '15%', dark: true },
-              { top: '50%', left: '55%', dark: false },
-              { top: '82%', left: '25%', dark: true },
+              { top: '10%', left: '10%', dark: true },
+              { top: '34%', left: '48%', dark: false },
+              { top: '58%', left: '14%', dark: false },
+              { top: '82%', left: '44%', dark: true },
             ].map((pos, i) => (
               <span
                 key={i}
-                className="absolute whitespace-nowrap text-[11px] sm:text-[13px] font-semibold"
+                className="absolute whitespace-nowrap text-[15px] sm:text-[19px] lg:text-[22px] font-semibold"
                 style={{
                   top: pos.top,
                   left: pos.left,
