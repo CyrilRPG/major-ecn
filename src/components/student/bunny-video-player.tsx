@@ -109,28 +109,29 @@ export function BunnyVideoPlayer({
             aria-hidden="true"
             className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
           >
-            {/* Quatre bandes réparties sur la hauteur, en alternant sombre et
-                clair : quel que soit le fond de l'image, au moins l'une reste
-                lisible. Police volontairement large — le filigrane doit rester
-                identifiable sur une capture d'écran. */}
+            {/* Quatre bandes horizontales, à 1/5, 2/5, 3/5 et 4/5 de la hauteur.
+                Chacune occupe toute la largeur et est centrée : le texte reste
+                entier, jamais coupé par le bord de l'image. On alterne sombre et
+                clair pour qu'au moins une bande reste lisible quel que soit le
+                fond, et le halo de contraste garantit la lisibilité même sur une
+                zone de la même teinte. */}
             {[
-              { top: '10%', left: '10%', dark: true },
-              { top: '34%', left: '48%', dark: false },
-              { top: '58%', left: '14%', dark: false },
-              { top: '82%', left: '44%', dark: true },
+              { top: '20%', dark: true },
+              { top: '40%', dark: false },
+              { top: '60%', dark: true },
+              { top: '80%', dark: false },
             ].map((pos, i) => (
               <span
                 key={i}
-                className="absolute whitespace-nowrap text-[15px] sm:text-[19px] lg:text-[22px] font-semibold"
+                className="absolute inset-x-0 whitespace-nowrap text-center text-[13px] font-semibold tracking-wide sm:text-[17px] lg:text-[20px]"
                 style={{
                   top: pos.top,
-                  left: pos.left,
-                  transform: 'rotate(-20deg)',
-                  opacity: 0.18,
-                  color: pos.dark ? '#1a1a1a' : '#ffffff',
+                  transform: 'translateY(-50%)',
+                  opacity: 0.3,
+                  color: pos.dark ? '#111111' : '#ffffff',
                   textShadow: pos.dark
-                    ? '0 0 4px rgba(255,255,255,0.9), 1px 1px 2px rgba(255,255,255,0.7)'
-                    : '0 0 4px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.7)',
+                    ? '0 0 6px rgba(255,255,255,0.95), 0 1px 2px rgba(255,255,255,0.85)'
+                    : '0 0 6px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.85)',
                 }}
               >
                 {watermarkText}
