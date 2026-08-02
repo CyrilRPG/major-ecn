@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
+import { FichePdfUpload } from '@/components/admin/content/fiche-pdf-upload';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
 import { GenerateButton } from '@/components/admin/generate-buttons';
@@ -56,7 +57,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
       id, titre, description, matiere_id, hidden_blocks,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
       videos(id, titre, storage_path, bunny_video_id, type, order_index, video_supports(id)),
-      fiches(id, storage_path, pages),
+      fiches(id, storage_path, pages, content_format),
       qcm_series(id, type, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
     `)
@@ -220,15 +221,21 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                     : 'Lecture seule — vous pouvez consulter mais pas modifier la fiche.'}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 {can.fiche.write ? (
-                  <FicheHtmlUpload
-                    coursId={coursId}
-                    nomCours={c.titre ?? 'Fiche'}
-                    annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
-                    existing={!!fiche?.storage_path}
-                    pages={fiche?.pages}
-                  />
+                  <>
+                    <FicheHtmlUpload
+                      coursId={coursId}
+                      nomCours={c.titre ?? 'Fiche'}
+                      annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
+                      existing={!!fiche?.storage_path}
+                      pages={fiche?.pages}
+                    />
+                    <FichePdfUpload
+                      coursId={coursId}
+                      existePdf={!!fiche?.storage_path && (fiche as { content_format?: string }).content_format === 'pdf'}
+                    />
+                  </>
                 ) : (
                   <p className="text-sm text-(--color-ink-soft)">
                     {fiche?.storage_path ? `PDF présent${fiche.pages ? ` (${fiche.pages} pages)` : ''}.` : 'Aucune fiche téléversée.'}

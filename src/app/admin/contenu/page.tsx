@@ -16,6 +16,7 @@ type College = {
   icon_key: string | null;
   color_hex: string | null;
   order_index: number | null;
+  parent_matiere_id: string | null;
   cours: { id: string; titre: string }[] | null;
 };
 
@@ -43,13 +44,13 @@ export default async function AdminContenuPage() {
   const { data } = await supabase
     .from('facultes')
     .select(`
-      semestres(matieres(id, nom, icon_key, color_hex, order_index,
+      semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
         cours(id, titre)))
     `)
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
 
-  const colleges = (
+  const toutes = (
     ((data as unknown as { semestres?: { matieres?: College[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
@@ -58,10 +59,22 @@ export default async function AdminContenuPage() {
     .map((m) => ({
       ...m,
       cours: (m.cours ?? []).filter((c) => profCanAccessCours(scope, m.id, c.id)),
-    }))
+    }));
+
+  // Les sous-collèges de médecine générale apparaissaient comme des collèges
+  // indépendants, et « Médecine générale » — qui ne porte aucun item en propre —
+  // s'affichait vide. On rétablit la hiérarchie : un collège parent regroupe
+  // ses sous-collèges, et ses items éventuels.
+  const enfantsDe = (id: string) => toutes.filter((m) => m.parent_matiere_id === id);
+  const colleges = toutes
+    .filter((m) => !m.parent_matiere_id)
+    .map((m) => ({ parent: m, enfants: enfantsDe(m.id) }))
     // Cache les collèges qui n'ont plus aucun cours accessible — sauf pour
     // l'administrateur, qui doit pouvoir créer le premier item d'un collège vide.
-    .filter((m) => isAdmin || (m.cours ?? []).length > 0);
+    .filter(({ parent, enfants }) =>
+      isAdmin
+      || (parent.cours ?? []).length > 0
+      || enfants.some((e) => (e.cours ?? []).length > 0));
 
   // Compteurs agrégés (RPC SECURITY DEFINER réservée au staff) — tolérante :
   // si elle échoue, la grille s'affiche quand même avec des compteurs à 0.
@@ -84,84 +97,133 @@ export default async function AdminContenuPage() {
       </header>
 
       <div className="space-y-10">
-        {colleges.map((m) => {
-          const Icon = iconFromKey(m.icon_key);
+        {colleges.map(({ parent, enfants }) => {
+          const Icon = iconFromKey(parent.icon_key);
+          const nbTotal = (parent.cours ?? []).length
+            + enfants.reduce((n, e) => n + (e.cours ?? []).length, 0);
           return (
-            <section key={m.id}>
+            <section key={parent.id}>
               <div className="mb-4 flex items-center gap-3">
                 <div
                   className="flex h-10 w-10 items-center justify-center rounded-xl"
                   style={{
-                    backgroundColor: `color-mix(in srgb, ${m.color_hex ?? 'var(--color-accent)'} 16%, transparent)`,
-                    color: m.color_hex ?? 'var(--color-accent)',
+                    backgroundColor: `color-mix(in srgb, ${parent.color_hex ?? 'var(--color-accent)'} 16%, transparent)`,
+                    color: parent.color_hex ?? 'var(--color-accent)',
                   }}
                 >
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-base font-semibold tracking-tight text-(--color-ink) break-words">{m.nom}</h2>
-                  <p className="text-xs text-(--color-ink-muted)">Collège EVC · {(m.cours ?? []).length} items</p>
+                  <h2 className="text-base font-semibold tracking-tight text-(--color-ink) break-words">{parent.nom}</h2>
+                  <p className="text-xs text-(--color-ink-muted)">
+                    Collège EVC · {nbTotal} items
+                    {enfants.length > 0 && ` · ${enfants.length} sous-collèges`}
+                  </p>
                 </div>
                 {isAdmin && (
                   <div className="ml-auto shrink-0">
-                    <NewItemButton matiereId={m.id} matiereNom={m.nom} />
+                    <NewItemButton matiereId={parent.id} matiereNom={parent.nom} />
                   </div>
                 )}
               </div>
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {(m.cours ?? []).map((c) => {
-                  const k = countsMap.get(c.id) ?? EMPTY_COUNT;
-                  const hasVideo = k.has_video;
-                  const hasFiche = k.has_fiche;
-                  const qcmCount = k.qcm_count;
-                  const annaleCount = k.annale_count;
-                  const fcCount = k.flashcard_count;
-                  const importance = k.importance ?? 0;
-                  return (
-                    <div
-                      key={c.id}
-                      className="group relative rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted)"
-                    >
-                      <Link
-                        href={`/admin/contenu/${c.id}`}
-                        aria-label={c.titre}
-                        className="absolute inset-0 z-0 rounded-2xl focus-ring"
-                      />
-                      <div className="relative z-10 flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h3 className="font-semibold leading-snug text-(--color-ink) break-words">{c.titre}</h3>
-                          <ImportanceStars value={importance} className="mt-1" />
-                        </div>
-                        <div className="flex shrink-0 items-center gap-1">
-                          <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importance} />
-                          <ChevronRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
-                        </div>
+
+              {/* Items portés directement par le collège. */}
+              {(parent.cours ?? []).length > 0 && (
+                <GrilleItems cours={parent.cours ?? []} countsMap={countsMap} />
+              )}
+              {(parent.cours ?? []).length === 0 && enfants.length === 0 && (
+                <p className="text-sm text-(--color-ink-muted)">Aucun item dans ce collège.</p>
+              )}
+
+              {/* Sous-collèges (Médecine générale) : rattachés à leur parent. */}
+              {enfants.length > 0 && (
+                <div className="mt-5 space-y-6 border-l-2 border-(--color-border) pl-4 sm:pl-5">
+                  {enfants.map((e) => (
+                    <div key={e.id}>
+                      <div className="mb-3 flex items-center gap-2">
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: e.color_hex ?? 'var(--color-accent)' }}
+                        />
+                        <h3 className="text-sm font-semibold tracking-tight text-(--color-ink) break-words">
+                          {e.nom}
+                        </h3>
+                        <span className="text-xs text-(--color-ink-muted)">
+                          {(e.cours ?? []).length} items
+                        </span>
+                        {isAdmin && (
+                          <div className="ml-auto shrink-0">
+                            <NewItemButton matiereId={e.id} matiereNom={`${parent.nom} · ${e.nom}`} />
+                          </div>
+                        )}
                       </div>
-                      <div className="relative z-10 mt-3 flex flex-wrap gap-1.5 text-xs">
-                        <Badge variant={hasVideo ? 'success' : 'muted'}>
-                          <PlayCircle className="h-3 w-3" /> {hasVideo ? 'Vidéo' : 'Pas de vidéo'}
-                        </Badge>
-                        <Badge variant={hasFiche ? 'success' : 'muted'}>
-                          <FileText className="h-3 w-3" /> {hasFiche ? 'Fiche' : 'Pas de fiche'}
-                        </Badge>
-                        <Badge variant={qcmCount + annaleCount > 0 ? 'primary' : 'muted'}>
-                          <ClipboardList className="h-3 w-3" /> {qcmCount + annaleCount} séries
-                        </Badge>
-                        <Badge variant={fcCount > 0 ? 'primary' : 'muted'}>
-                          <Layers3 className="h-3 w-3" /> {fcCount} cartes
-                        </Badge>
-                      </div>
+                      {(e.cours ?? []).length > 0 ? (
+                        <GrilleItems cours={e.cours ?? []} countsMap={countsMap} />
+                      ) : (
+                        <p className="text-sm text-(--color-ink-muted)">Aucun item dans ce sous-collège.</p>
+                      )}
                     </div>
-                  );
-                })}
-                {(m.cours ?? []).length === 0 && (
-                  <p className="text-sm text-(--color-ink-muted)">Aucun item dans ce collège.</p>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </section>
           );
         })}
       </div>
     </main>
+  );
+}
+
+/** Grille des items d'un collège (ou d'un sous-collège). */
+function GrilleItems({
+  cours,
+  countsMap,
+}: {
+  cours: { id: string; titre: string }[];
+  countsMap: Map<string, Omit<CountRow, 'cours_id'>>;
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {cours.map((c) => {
+        const k = countsMap.get(c.id) ?? EMPTY_COUNT;
+        const importance = k.importance ?? 0;
+        return (
+          <div
+            key={c.id}
+            className="group relative rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted)"
+          >
+            <Link
+              href={`/admin/contenu/${c.id}`}
+              aria-label={c.titre}
+              className="absolute inset-0 z-0 rounded-2xl focus-ring"
+            />
+            <div className="relative z-10 flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <h3 className="font-semibold leading-snug text-(--color-ink) break-words">{c.titre}</h3>
+                <ImportanceStars value={importance} className="mt-1" />
+              </div>
+              <div className="flex shrink-0 items-center gap-1">
+                <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importance} />
+                <ChevronRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </div>
+            <div className="relative z-10 mt-3 flex flex-wrap gap-1.5 text-xs">
+              <Badge variant={k.has_video ? 'success' : 'muted'}>
+                <PlayCircle className="h-3 w-3" /> {k.has_video ? 'Vidéo' : 'Pas de vidéo'}
+              </Badge>
+              <Badge variant={k.has_fiche ? 'success' : 'muted'}>
+                <FileText className="h-3 w-3" /> {k.has_fiche ? 'Fiche' : 'Pas de fiche'}
+              </Badge>
+              <Badge variant={k.qcm_count + k.annale_count > 0 ? 'primary' : 'muted'}>
+                <ClipboardList className="h-3 w-3" /> {k.qcm_count + k.annale_count} séries
+              </Badge>
+              <Badge variant={k.flashcard_count > 0 ? 'primary' : 'muted'}>
+                <Layers3 className="h-3 w-3" /> {k.flashcard_count} cartes
+              </Badge>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
