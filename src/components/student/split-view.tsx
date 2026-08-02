@@ -31,6 +31,9 @@ type SplitCtx = {
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
   supports: CourseSupport[];
+  /** Blocs masqués pour cet item par l'administration : ils ne sont pas non
+   *  plus proposés en vue partagée. */
+  hiddenBlocks: string[];
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 };
@@ -40,7 +43,7 @@ const SplitContext = createContext<SplitCtx>({
   splitPct: 50, setSplitPct: () => {},
   coursId: '', hasFiche: false, hasVideo: false,
   hasQcm: false, hasFlashcards: false, hasSeanceApprofondie: false,
-  supports: [], locked: {}, notesHtml: '',
+  supports: [], hiddenBlocks: [], locked: {}, notesHtml: '',
 });
 export const useSplitView = () => useContext(SplitContext);
 
@@ -227,6 +230,7 @@ function SplitPanel({
   hasFlashcards,
   hasSeanceApprofondie,
   supports,
+  hiddenBlocks,
   locked,
   notesHtml,
 }: {
@@ -240,6 +244,7 @@ function SplitPanel({
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
   supports: CourseSupport[];
+  hiddenBlocks: string[];
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
 }) {
@@ -248,6 +253,7 @@ function SplitPanel({
 
   const options = splitOptionsWithSupports(supports);
   const available = options.filter((o) => {
+    if (hiddenBlocks.includes(o.type)) return false;
     if (o.type === 'fiche' || o.type === 'fiche-express') return hasFiche;
     if (o.type === 'video') return hasVideo;
     if (o.type === 'qcm') return hasQcm;
@@ -374,7 +380,7 @@ export function SplitViewToggle() {
 /* ------------------------------------------------------------------ */
 
 export function SplitLayout({ children }: { children: React.ReactNode }) {
-  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, locked, notesHtml } = useSplitView();
+  const { active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, hiddenBlocks, locked, notesHtml } = useSplitView();
 
   if (!active) return <>{children}</>;
 
@@ -396,6 +402,7 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
           hasFlashcards={hasFlashcards}
           hasSeanceApprofondie={hasSeanceApprofondie}
           supports={supports}
+          hiddenBlocks={hiddenBlocks}
           locked={locked}
           notesHtml={notesHtml}
         />
@@ -416,6 +423,7 @@ export function SplitViewProvider({
   hasFlashcards = false,
   hasSeanceApprofondie = false,
   supports = [],
+  hiddenBlocks = [],
   locked = {},
   notesHtml,
   children,
@@ -427,6 +435,7 @@ export function SplitViewProvider({
   hasFlashcards?: boolean;
   hasSeanceApprofondie?: boolean;
   supports?: CourseSupport[];
+  hiddenBlocks?: string[];
   locked?: Partial<Record<string, boolean>>;
   notesHtml: string;
   children: React.ReactNode;
@@ -447,7 +456,7 @@ export function SplitViewProvider({
   }, [active, close]);
 
   return (
-    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, locked, notesHtml }}>
+    <SplitContext.Provider value={{ active, open, close, splitPct, setSplitPct, coursId, hasFiche, hasVideo, hasQcm, hasFlashcards, hasSeanceApprofondie, supports, hiddenBlocks, locked, notesHtml }}>
       {children}
     </SplitContext.Provider>
   );

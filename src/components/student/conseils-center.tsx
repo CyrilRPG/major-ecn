@@ -9,6 +9,7 @@ import {
   TrendingUp, X,
 } from 'lucide-react';
 import { DiscoveryWelcomePopup } from '@/components/espace-decouverte/discovery-welcome-popup';
+import { WELCOME_PAR_DEFAUT, type WelcomeConfig } from '@/lib/student/welcome';
 
 const STORAGE_KEY = 'major-ecn:conseils-dismissed';
 // Charte cohérente avec le menu (rouge-orange officiel Major ECN)
@@ -25,17 +26,14 @@ const SECTIONS: { id: Section; label: string; Icon: typeof Lightbulb }[] = [
   { id: 'faq',      label: 'Questions fréquentes',    Icon: HelpCircle },
 ];
 
-/** Spécialités du popup : chacune avec son image adaptée (uploadée par le client). */
-const STARTER_SPECIALTIES = [
-  { image: '/flashcards-decor/cardio.png',    label: 'Cardiologie',    color: '#840000', bg: '#FBCCCC' },
-  { image: '/flashcards-decor/pneumo.png',    label: 'Pneumologie',    color: '#214980', bg: '#D8E6F9' },
-  { image: '/flashcards-decor/geriatrie.png', label: 'Gériatrie',      color: '#2D6B51', bg: '#DAF0E7' },
-  { image: '/flashcards-decor/neuro.png',     label: 'Neurologie',     color: '#583474', bg: '#EADEF4' },
-  { image: '/flashcards-decor/endocrino.png', label: 'Endocrinologie', color: '#845D40', bg: '#FBEDE3' },
-  { image: '/flashcards-decor/nephro.png',    label: 'Néphrologie',    color: '#00572F', bg: '#C2E7D6' },
-];
-
-export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolean }) {
+export function ConseilsCenter({
+  isDecouverte = false,
+  welcome = WELCOME_PAR_DEFAUT,
+}: {
+  isDecouverte?: boolean;
+  /** Contenu du popup d'accueil, résolu côté serveur selon la spécialité. */
+  welcome?: WelcomeConfig;
+}) {
   // 'popup' = grand popup d'accueil ; 'panel' = panneau latéral compact ;
   // 'closed' = bouton seul dans le header.
   const [mode, setMode] = useState<'popup' | 'panel' | 'closed'>('closed');
@@ -57,9 +55,11 @@ export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolea
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (isDecouverte) return;
+    // Popup désactivé pour cette spécialité (configuration d'administration).
+    if (!welcome.active) return;
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (!dismissed) setMode('popup');
-  }, [isDecouverte]);
+  }, [isDecouverte, welcome.active]);
 
   const closePopup = () => {
     if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
@@ -73,8 +73,9 @@ export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolea
           localStorage : `major-ecn:welcome-decouverte-dismissed`). */}
       {isDecouverte && <DiscoveryWelcomePopup />}
 
-      {mode === 'popup' && !isDecouverte && (
+      {mode === 'popup' && !isDecouverte && welcome.active && (
         <PopupOverlay
+          welcome={welcome}
           onClose={closePopup}
           neverShow={neverShow}
           onNeverShowChange={setNeverShow}
@@ -83,6 +84,7 @@ export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolea
 
       {mode === 'panel' && (
         <PanelOverlay
+          welcome={welcome}
           section={section}
           onSectionChange={setSection}
           onClose={() => setMode('closed')}
@@ -96,8 +98,9 @@ export function ConseilsCenter({ isDecouverte = false }: { isDecouverte?: boolea
    GRAND POPUP — affiché à la première ouverture
    ============================================================ */
 function PopupOverlay({
-  onClose, neverShow, onNeverShowChange,
+  welcome, onClose, neverShow, onNeverShowChange,
 }: {
+  welcome: WelcomeConfig;
   onClose: () => void;
   neverShow: boolean;
   onNeverShowChange: (v: boolean) => void;
@@ -120,50 +123,42 @@ function PopupOverlay({
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
-              Bienvenue sur Major ECN <span aria-hidden>👋</span>
+              {welcome.titre} <span aria-hidden>👋</span>
             </h2>
-            <p className="mt-1 text-base font-bold text-(--color-ink)">
-              Comment bien démarrer votre préparation ?
-            </p>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-(--color-ink-soft)">
-              Major ECN est la plateforme de référence pour vous préparer efficacement
-              aux Épreuves de Vérification des Connaissances (EVC).
-            </p>
+            <p className="mt-1 text-base font-bold text-(--color-ink)">{welcome.accroche}</p>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-(--color-ink-soft)">{welcome.intro}</p>
           </div>
         </div>
 
-        {/* Par où commencer ? */}
-        <section className="mt-6 rounded-2xl border border-(--color-border) bg-[#FAFBFE] p-5">
-          <h3 className="flex items-center gap-2 text-base font-extrabold text-(--color-ink)">
-            <Compass className="h-4 w-4" style={{ color: RED }} />
-            Par où commencer ?
-          </h3>
-          <p className="mt-1.5 text-[12.5px] text-(--color-ink-soft)">
-            Si vous ne savez pas par où commencer, nous vous recommandons de débuter par
-            les <strong className="text-(--color-ink)">spécialités les plus transversales</strong> :
-          </p>
-          <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
-            {STARTER_SPECIALTIES.map((s, i) => (
-              <div key={s.label} className="flex flex-col items-center text-center">
-                <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl p-1.5"
-                  style={{ background: s.bg }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={s.image}
-                    alt=""
-                    className="h-full w-full object-contain"
-                  />
-                </span>
-                <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
-                <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-[12px] leading-relaxed text-(--color-ink-soft)">
-            Ces spécialités vous permettront d&rsquo;acquérir des bases solides et utiles dans
-            de nombreuses situations cliniques.
-          </p>
-        </section>
+        {/* Par où commencer ? — section facultative, configurable par spécialité */}
+        {welcome.demarrageActif && welcome.specialites.length > 0 && (
+          <section className="mt-6 rounded-2xl border border-(--color-border) bg-[#FAFBFE] p-5">
+            <h3 className="flex items-center gap-2 text-base font-extrabold text-(--color-ink)">
+              <Compass className="h-4 w-4" style={{ color: RED }} />
+              Par où commencer ?
+            </h3>
+            <p className="mt-1.5 text-[12.5px] text-(--color-ink-soft)">{welcome.demarrageIntro}</p>
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+              {welcome.specialites.map((s, i) => (
+                <div key={s.label} className="flex flex-col items-center text-center">
+                  <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl p-1.5"
+                    style={{ background: s.bg }}>
+                    {s.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={s.image} alt="" className="h-full w-full object-contain" />
+                    ) : (
+                      <span className="text-lg font-black" style={{ color: s.color }}>
+                        {s.label.slice(0, 1).toUpperCase()}
+                      </span>
+                    )}
+                  </span>
+                  <p className="mt-1.5 text-[10px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
+                  <p className="text-[11px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Comment utiliser */}
         <section className="mt-5 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5">
@@ -238,8 +233,9 @@ function PopupOverlay({
    PANNEAU SECTIONNÉ — accessible via le bouton, navigation latérale
    ============================================================ */
 function PanelOverlay({
-  section, onSectionChange, onClose,
+  welcome, section, onSectionChange, onClose,
 }: {
+  welcome: WelcomeConfig;
   section: Section;
   onSectionChange: (s: Section) => void;
   onClose: () => void;
@@ -291,7 +287,7 @@ function PanelOverlay({
 
         {/* Contenu de la section */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-6">
-          {section === 'demarrer' && <SectionDemarrer />}
+          {section === 'demarrer' && <SectionDemarrer welcome={welcome} />}
           {section === 'parcours' && <SectionParcours />}
           {section === 'methode'  && <SectionMethode />}
           {section === 'faq'      && <SectionFAQ />}
@@ -301,35 +297,34 @@ function PanelOverlay({
   );
 }
 
-function SectionDemarrer() {
+function SectionDemarrer({ welcome }: { welcome: WelcomeConfig }) {
   return (
     <div>
-      <h3 className="text-lg font-black tracking-tight text-(--color-ink)">Comment bien démarrer ?</h3>
-      <p className="mt-2 text-[13px] leading-relaxed text-(--color-ink-soft)">
-        Si vous ne savez pas par où commencer, nous vous recommandons de débuter par les
-        <strong className="text-(--color-ink)"> spécialités les plus transversales </strong> :
-      </p>
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
-        {STARTER_SPECIALTIES.map((s, i) => (
-          <div key={s.label} className="flex flex-col items-center text-center">
-            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1"
-              style={{ background: s.bg }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={s.image}
-                alt=""
-                className="h-full w-full object-contain"
-              />
-            </span>
-            <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
-            <p className="text-[10px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
+      <h3 className="text-lg font-black tracking-tight text-(--color-ink)">{welcome.accroche}</h3>
+      {welcome.demarrageActif && welcome.specialites.length > 0 && (
+        <>
+          <p className="mt-2 text-[13px] leading-relaxed text-(--color-ink-soft)">{welcome.demarrageIntro}</p>
+          <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+            {welcome.specialites.map((s, i) => (
+              <div key={s.label} className="flex flex-col items-center text-center">
+                <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1"
+                  style={{ background: s.bg }}>
+                  {s.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={s.image} alt="" className="h-full w-full object-contain" />
+                  ) : (
+                    <span className="text-base font-black" style={{ color: s.color }}>
+                      {s.label.slice(0, 1).toUpperCase()}
+                    </span>
+                  )}
+                </span>
+                <p className="mt-1 text-[9px] font-bold tabular-nums" style={{ color: s.color }}>{i + 1}</p>
+                <p className="text-[10px] font-bold leading-tight" style={{ color: s.color }}>{s.label}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <p className="mt-4 text-[12.5px] leading-relaxed text-(--color-ink-soft)">
-        Ces spécialités vous permettront d&rsquo;acquérir des bases solides et utiles dans de
-        nombreuses situations cliniques.
-      </p>
+        </>
+      )}
       <Link href="/methode" className="mt-5 inline-flex items-center gap-1 text-[12.5px] font-bold" style={{ color: PURPLE }}>
         Voir tous nos conseils <ArrowRight className="h-3.5 w-3.5" />
       </Link>

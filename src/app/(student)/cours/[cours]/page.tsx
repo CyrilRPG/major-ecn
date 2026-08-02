@@ -6,6 +6,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -42,7 +43,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre, description, matiere_id, access_type,
+      id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
       videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
       fiches(storage_path), qcm_series(type), flashcards(id)
@@ -344,6 +345,26 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         );
         return standardActions;
       })();
+
+  // Blocs masqués pour cet item par l'administration : les cartes
+  // correspondantes disparaissent de l'aperçu, comme les onglets.
+  const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
+  if (hiddenBlocks.length > 0) {
+    const blocOf = (href: string): BlocKey | null =>
+      href.endsWith('/fiche-express') ? 'fiche-express'
+      : href.endsWith('/fiche') ? 'fiche'
+      : href.endsWith('/video') || href === '#locked-video' || href === '#video-coming-soon' ? 'video'
+      : href.endsWith('/qcm') ? 'qcm'
+      : href.endsWith('/flashcards') ? 'flashcards'
+      : href.endsWith('/interrogation') ? 'interrogation'
+      : href.endsWith('/notes') ? 'notes'
+      : href.includes('/seance-approfondie') || href === '#locked-seance-approfondie' ? 'seance-approfondie'
+      : null;
+    actions = actions.filter((a) => {
+      const b = blocOf(a.href);
+      return !b || !hiddenBlocks.includes(b);
+    });
+  }
 
   // Ordre d'affichage personnalisé par l'admin (arborescence → cours_content_slots).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

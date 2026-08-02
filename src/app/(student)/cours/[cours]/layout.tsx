@@ -7,6 +7,7 @@ import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canRead } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
+import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type CourseVideoRow = {
@@ -33,7 +34,7 @@ export default async function CoursLayout({
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre, matiere_id, access_type,
+      id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
       videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
       fiches(storage_path),
@@ -79,13 +80,19 @@ export default async function CoursLayout({
   const isAdmin = profile.role === 'admin';
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
-  const visibility = profScope
+  // Blocs masqués pour cet item par l'administration (choix d'affichage, pas
+  // une permission) : ils disparaissent des onglets ET de l'aperçu.
+  const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
+  const profVisibility = profScope
     ? {
         fiche: canRead(profScope, 'fiche'),
         video: canRead(profScope, 'video'),
         qcm: canRead(profScope, 'qcm'),
         flashcards: canRead(profScope, 'flashcards'),
       }
+    : undefined;
+  const visibility = (profVisibility || hiddenBlocks.length > 0)
+    ? { ...(profVisibility ?? {}), ...hiddenBlocksVisibility(hiddenBlocks) }
     : undefined;
   const locked = (!isAdmin && !profScope && access) ? {
     fiche: !access.fiche,
@@ -145,6 +152,7 @@ export default async function CoursLayout({
       hasFlashcards={availability.flashcards}
       hasSeanceApprofondie={availability.seanceApprofondie}
       supports={supports}
+      hiddenBlocks={hiddenBlocks}
       locked={locked ?? {}}
       notesHtml={(noteRow?.content as string) ?? ''}
     >

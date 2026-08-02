@@ -1,6 +1,9 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PopupsManager, type PopupRow, type CoursOption } from '@/components/admin/popups/popups-manager';
+import {
+  WelcomePopupManager, type WelcomeConfigRow, type CollegeOption,
+} from '@/components/admin/popups/welcome-popup-manager';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,16 +40,66 @@ export default async function AdminPopupsPage() {
     videoUrl: supabase.storage.from('item-popups').getPublicUrl(p.video_path).data.publicUrl,
   }));
 
+  // Popup d'accueil « Bienvenue sur Major ECN » : configurations par spécialité.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: welcomeRaw } = await (supabase as any)
+    .from('welcome_popups')
+    .select('id, college_id, active, titre, accroche, intro, demarrage_actif, demarrage_intro, demarrage_colleges');
+  const welcomeConfigs: WelcomeConfigRow[] = ((welcomeRaw ?? []) as Array<{
+    id: string; college_id: string | null; active: boolean; titre: string; accroche: string;
+    intro: string; demarrage_actif: boolean; demarrage_intro: string; demarrage_colleges: string[] | null;
+  }>)
+    .map((w) => ({
+      id: w.id,
+      collegeId: w.college_id,
+      active: w.active,
+      titre: w.titre,
+      accroche: w.accroche,
+      intro: w.intro,
+      demarrageActif: w.demarrage_actif,
+      demarrageIntro: w.demarrage_intro,
+      demarrageColleges: w.demarrage_colleges ?? [],
+    }))
+    // Configuration par défaut en tête, puis les spécialités par nom.
+    .sort((a, b) => (a.collegeId === null ? -1 : b.collegeId === null ? 1 : a.collegeId.localeCompare(b.collegeId)));
+
+  const { data: collegesRaw } = await supabase
+    .from('matieres')
+    .select('id, nom, parent_matiere_id')
+    .order('order_index', { ascending: true });
+  const colleges: CollegeOption[] = ((collegesRaw ?? []) as Array<{
+    id: string; nom: string; parent_matiere_id: string | null;
+  }>).map((m) => ({
+    id: m.id,
+    nom: m.parent_matiere_id ? `Médecine générale · ${m.nom}` : m.nom,
+  }));
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
       <header className="mb-6 border-b border-(--color-border) pb-5">
-        <h1 className="text-xl font-black tracking-tight text-(--color-ink)">Popups vidéo</h1>
+        <h1 className="text-xl font-black tracking-tight text-(--color-ink)">Popups</h1>
         <p className="mt-1 text-sm text-(--color-ink-soft)">
+          Le popup d’accueil de la plateforme, et les popups vidéo attachées à un item.
+        </p>
+      </header>
+
+      <section className="mb-10">
+        <h2 className="text-base font-black tracking-tight text-(--color-ink)">Popup d’accueil</h2>
+        <p className="mb-4 mt-1 text-sm text-(--color-ink-soft)">
+          Le message « Bienvenue sur Major ECN » affiché à la première connexion. Personnalisez-le
+          par spécialité — ou décochez « Afficher le popup » pour le retirer.
+        </p>
+        <WelcomePopupManager configs={welcomeConfigs} colleges={colleges} />
+      </section>
+
+      <section>
+        <h2 className="text-base font-black tracking-tight text-(--color-ink)">Popups vidéo</h2>
+        <p className="mb-4 mt-1 text-sm text-(--color-ink-soft)">
           Créez des popups vidéo (mp4) associées à un item. Elles s’affichent à l’accueil de l’item ;
           l’élève peut les fermer, et une fois vues elles ne réapparaissent plus.
         </p>
-      </header>
-      <PopupsManager cours={cours} popups={popups} />
+        <PopupsManager cours={cours} popups={popups} />
+      </section>
     </div>
   );
 }

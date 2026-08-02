@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, Clapperboard, ClipboardList, FileText, GraduationCap, History, Layers3, PlayCircle } from 'lucide-react';
+import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, PlayCircle } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
@@ -16,6 +16,8 @@ import { AddAnnaleDialog } from '@/components/admin/content/add-annale-dialog';
 import { ReindexButton } from '@/components/admin/reindex-button';
 import { QcmSeriesManager } from '@/components/admin/content/qcm-series-manager';
 import { InterrogationPanel } from '@/components/admin/content/interrogation-panel';
+import { BlocsEditor } from '@/components/admin/content/blocs-editor';
+import { parseHiddenBlocks } from '@/lib/student/blocs';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type ManagedVideoRow = {
@@ -51,7 +53,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const { data: c } = await supabase
     .from('cours')
     .select(`
-      id, titre, description, matiere_id,
+      id, titre, description, matiere_id, hidden_blocks,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
       videos(id, titre, storage_path, bunny_video_id, type, order_index, support_path),
       fiches(id, storage_path, pages),
@@ -87,6 +89,8 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const coursVideos = allVideos.filter((v) => v.type === 'cours');
   const seanceApprofondieVideos = allVideos.filter((v) => v.type === 'seance_approfondie');
   const nbSupports = allVideos.filter((v) => !!v.support_path).length;
+  const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
+  const isAdmin = scope === null;
   const fiche = c.fiches?.[0];
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
@@ -136,7 +140,26 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
           {(canQcmFamilyRead || can.annale.read) && <TabsTrigger value="qcm"><ClipboardList className="h-4 w-4 mr-1.5" /> QCM &amp; Annales</TabsTrigger>}
           {can.flashcards.read && <TabsTrigger value="flashcards"><Layers3 className="h-4 w-4 mr-1.5" /> Flashcards</TabsTrigger>}
           {canQcmFamilyRead && <TabsTrigger value="interrogations"><GraduationCap className="h-4 w-4 mr-1.5" /> Interrogations</TabsTrigger>}
+          {isAdmin && <TabsTrigger value="affichage"><Eye className="h-4 w-4 mr-1.5" /> Affichage</TabsTrigger>}
         </TabsList>
+
+        {isAdmin && (
+          <TabsContent value="affichage">
+            <Card>
+              <CardHeader>
+                <CardTitle>Blocs affichés aux élèves</CardTitle>
+                <CardDescription>
+                  Décochez ce que cet item ne propose pas : le bloc disparaît de l’onglet, de
+                  l’aperçu et de la vue partagée. Les droits par formule continuent de
+                  s’appliquer par-dessus.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <BlocsEditor coursId={coursId} hidden={hiddenBlocks} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         {canQcmFamilyRead && (
           <TabsContent value="interrogations">

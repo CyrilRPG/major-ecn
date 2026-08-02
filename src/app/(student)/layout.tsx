@@ -12,6 +12,10 @@ import { ProfileCompletionGate } from '@/components/student/profile-completion-g
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { parseScope } from '@/lib/auth/permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
+import {
+  resolveWelcomeConfig, WELCOME_PAR_DEFAUT,
+  type WelcomePopupRow, type WelcomeSpecialite,
+} from '@/lib/student/welcome';
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const { user, profile } = await requireUser();
@@ -253,6 +257,38 @@ export default async function StudentLayout({ children }: { children: React.Reac
     }
   }
 
+  // Popup d'accueil : configuration de la spécialité de l'élève, à défaut la
+  // configuration générale. Un élève de psychiatrie ne doit pas recevoir les
+  // conseils de démarrage écrits pour la médecine générale.
+  let welcome = WELCOME_PAR_DEFAUT;
+  if (profile.role === 'student') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: welcomeRows } = await (supabase as any)
+      .from('welcome_popups')
+      .select('id, college_id, active, titre, accroche, intro, demarrage_actif, demarrage_intro, demarrage_colleges');
+    const rows = (welcomeRows ?? []) as WelcomePopupRow[];
+    if (rows.length > 0) {
+      const ids = rows.flatMap((r) => r.demarrage_colleges ?? []);
+      const specialites = new Map<string, WelcomeSpecialite>();
+      if (ids.length > 0) {
+        const { data: mats } = await supabase
+          .from('matieres')
+          .select('id, nom, color_hex')
+          .in('id', Array.from(new Set(ids)));
+        for (const m of ((mats ?? []) as { id: string; nom: string; color_hex: string | null }[])) {
+          const couleur = m.color_hex ?? '#E4002B';
+          specialites.set(m.id, {
+            label: m.nom,
+            color: couleur,
+            bg: `color-mix(in srgb, ${couleur} 16%, white)`,
+          });
+        }
+      }
+      const scopeColleges = scopeForNav.type === 'college' ? scopeForNav.colleges : [];
+      welcome = resolveWelcomeConfig(rows, scopeColleges, specialites);
+    }
+  }
+
   return (
     <div className="flex h-screen flex-col">
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
@@ -274,7 +310,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
           impersonating={isImpersonating}
         />
       )}
-      {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} />}
+      {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} welcome={welcome} />}
       {profile.role === 'student' && <OnboardingTour />}
       {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
         <StudentTutorialPopup offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'} />

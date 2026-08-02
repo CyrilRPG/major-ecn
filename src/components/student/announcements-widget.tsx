@@ -107,19 +107,25 @@ export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
     .order('order_index', { ascending: true });
 
   const allItems = ((data ?? []) as unknown as Announcement[]) ?? [];
-  // Anti-doublon : la carte statique `MgEvc2026Card` affiche déjà le « Nombre
-  // de postes » (Voie externe / interne). On masque donc toute annonce DB qui
-  // ferait doublon avec cette rubrique (ex. « Nombre de postes EVC 2026 »).
-  // + Filtrage par permissions (offre minimale / collèges ciblés) : le ciblage
-  //   défini côté admin est désormais réellement appliqué au rendu.
+
+  // La carte « Médecine Générale — EVC 2026 » est écrite en dur et ne concerne
+  // QUE la médecine générale (35 / 89 postes). Elle était affichée à tout le
+  // monde : un élève de psychiatrie voyait donc les postes de MG, et l'annonce
+  // « Nombre de postes » créée pour sa spécialité était en plus masquée par le
+  // filtre anti-doublon ci-dessous — d'où l'impression que le badge ne changeait
+  // jamais. On ne l'affiche plus qu'aux élèves concernés par la MG.
+  const showMgCard = scope.type === 'all'
+    || scope.colleges.some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-'));
+
+  // Anti-doublon : uniquement quand la carte statique est réellement affichée.
+  // Sinon l'annonce « Nombre de postes … » de la spécialité doit passer.
   const items = allItems
-    .filter((it) => !/nombre\s+de\s+postes/i.test(it.title))
+    .filter((it) => !showMgCard || !/nombre\s+de\s+postes/i.test(it.title))
     .filter((it) => announcementVisibleFor(it, scope));
 
   return (
     <aside className="space-y-3" aria-label="Annonces et informations EVC">
-      {/* Annonce officielle EVC Médecine Générale — Session 2026 (toujours affichée). */}
-      <MgEvc2026Card />
+      {showMgCard && <MgEvc2026Card />}
       {items.map((it) => (
         <AnnouncementCard key={it.id} a={it} />
       ))}

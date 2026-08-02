@@ -11,9 +11,9 @@ export type Database = {
   public: {
     Tables: {
       cours: {
-        Row: { access_type: string; created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string; updated_at: string };
-        Insert: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string; updated_at?: string };
-        Update: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string; updated_at?: string };
+        Row: { access_type: string; created_at: string; description: string | null; id: string; matiere_id: string; order_index: number; titre: string; hidden_blocks: string[]; importance: number; updated_at: string };
+        Insert: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id: string; order_index?: number; titre: string; hidden_blocks?: string[]; importance?: number; updated_at?: string };
+        Update: { access_type?: string; created_at?: string; description?: string | null; id?: string; matiere_id?: string; order_index?: number; titre?: string; hidden_blocks?: string[]; importance?: number; updated_at?: string };
         Relationships: [{ foreignKeyName: 'cours_matiere_id_fkey'; columns: ['matiere_id']; isOneToOne: false; referencedRelation: 'matieres'; referencedColumns: ['id'] }];
       };
       course_notes: {
