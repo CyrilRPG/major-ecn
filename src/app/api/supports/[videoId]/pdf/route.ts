@@ -17,6 +17,9 @@ export const dynamic = 'force-dynamic';
  * servi INLINE et jamais en pièce jointe. Le bucket `supports` est privé et
  * illisible par les élèves : ce chemin serveur est le seul accès.
  *
+ * Une séance peut porter plusieurs documents : `?doc=<id>` choisit lequel,
+ * le premier dans l'ordre d'affichage par défaut.
+ *
  * Deux verrous, dans cet ordre :
  *  1. le collège du cours doit être dans le périmètre de l'élève ;
  *  2. le support hérite de la permission de SA vidéo — une séance approfondie
@@ -46,18 +49,26 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, titre, type, support_path, cours:cours_id(id, matiere_id, matieres(access_type))')
+      .select(`
+        id, titre, type,
+        video_supports(id, titre, storage_path, order_index),
+        cours:cours_id(id, matiere_id, matieres(access_type))
+      `)
       .eq('id', videoId)
       .maybeSingle(),
   ]);
 
   const video = videoRow as {
-    id: string; titre: string; type: string; support_path: string | null;
+    id: string; titre: string; type: string;
+    video_supports?: { id: string; titre: string; storage_path: string; order_index: number }[] | null;
     cours?: { id: string; matiere_id: string; matieres?: { access_type?: string } | null } | null;
   } | null;
-  if (!video?.support_path || !video.cours) {
-    return NextResponse.json({ error: 'Support introuvable' }, { status: 404 });
-  }
+  if (!video?.cours) return NextResponse.json({ error: 'Support introuvable' }, { status: 404 });
+
+  const docs = (video.video_supports ?? []).slice().sort((a, b) => a.order_index - b.order_index);
+  const demande = new URL(req.url).searchParams.get('doc');
+  const doc = (demande && docs.find((d) => d.id === demande)) || docs[0];
+  if (!doc) return NextResponse.json({ error: 'Support introuvable' }, { status: 404 });
   if (!profile) return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 });
 
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
@@ -73,7 +84,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   }
 
   const admin = createAdminClient();
-  const { data: file, error: dlErr } = await admin.storage.from('supports').download(video.support_path);
+  const { data: file, error: dlErr } = await admin.storage.from('supports').download(doc.storage_path);
   if (dlErr || !file) {
     return NextResponse.json({ error: dlErr?.message ?? 'Support indisponible' }, { status: 500 });
   }

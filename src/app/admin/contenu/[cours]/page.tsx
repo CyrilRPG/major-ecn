@@ -27,7 +27,7 @@ type ManagedVideoRow = {
   bunny_video_id: string | null;
   type: string | null;
   order_index: number | null;
-  support_path: string | null;
+  video_supports?: { id: string }[] | null;
 };
 
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -55,7 +55,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     .select(`
       id, titre, description, matiere_id, hidden_blocks,
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
-      videos(id, titre, storage_path, bunny_video_id, type, order_index, support_path),
+      videos(id, titre, storage_path, bunny_video_id, type, order_index, video_supports(id)),
       fiches(id, storage_path, pages),
       qcm_series(id, type, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
@@ -83,12 +83,12 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
       bunny_video_id: v.bunny_video_id,
       storage_path: v.storage_path,
       order_index: v.order_index ?? 0,
-      support_path: v.support_path,
+      nbSupports: (v.video_supports ?? []).length,
       type: (v.type ?? 'cours') as 'cours' | 'seance_approfondie',
     }));
   const coursVideos = allVideos.filter((v) => v.type === 'cours');
   const seanceApprofondieVideos = allVideos.filter((v) => v.type === 'seance_approfondie');
-  const nbSupports = allVideos.filter((v) => !!v.support_path).length;
+  const nbSupports = allVideos.reduce((n, v) => n + v.nbSupports, 0);
   const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
   const isAdmin = scope === null;
   const fiche = c.fiches?.[0];

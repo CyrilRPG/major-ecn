@@ -18,6 +18,12 @@ import { FORMULES, type FormuleId } from '@/lib/stripe';
 
 type ScopeWithFormule = { paid_formule?: string; paid_offer?: string };
 
+/** Quota d'envoi journalier atteint côté Resend (ou limite de débit). */
+function quotaAtteint(err: string | null): boolean {
+  if (!err) return false;
+  return /quota|429|rate.?limit|too many/i.test(err);
+}
+
 export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -119,7 +125,17 @@ export async function POST(req: Request) {
   }
 
   if (!emailVia) {
-    return NextResponse.json({ ok: false, error: emailError ?? 'Aucun email envoyé' }, { status: 500 });
+    // Aucun canal disponible (quota Resend du jour atteint, SMTP Supabase
+    // temporisé…). On renvoie tout de même le LIEN D'ACTIVATION : l'équipe peut
+    // le transmettre à l'élève par un autre moyen au lieu de rester bloquée.
+    // Statut 200 volontaire — la requête a abouti, seul l'envoi a échoué.
+    return NextResponse.json({
+      ok: false,
+      error: emailError ?? 'Aucun email envoyé',
+      reason: quotaAtteint(emailError) ? 'quota' : 'autre',
+      to: prof.email,
+      setupUrl,
+    });
   }
 
   return NextResponse.json({ ok: true, via: emailVia, to: prof.email, setupUrl });

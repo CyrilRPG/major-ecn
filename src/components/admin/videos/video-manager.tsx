@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
-  addVideoAction, deleteVideoAction, moveVideoAction, removeVideoSupportAction,
-  renameVideoAction, replaceVideoLinkAction, setVideoSupportAction,
-  type AddResult, type VideoType,
+  addVideoAction, addVideoSupportAction, deleteVideoAction, moveVideoAction,
+  removeVideoSupportAction, renameVideoAction, renameVideoSupportAction,
+  replaceVideoLinkAction, type AddResult, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
 
 export type ManagedVideo = {
@@ -20,7 +20,8 @@ export type ManagedVideo = {
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
-  support_path: string | null;
+  /** Supports PDF de la vidéo (plusieurs possibles). */
+  supports: VideoSupportDoc[];
 };
 
 const COPY: Record<VideoType, { titre: string; unite: string; audience: string; exemple: string }> = {
@@ -82,9 +83,9 @@ export function VideoManager({
   const [position, setPosition] = useState('');
   const [withSupport, setWithSupport] = useState(false);
   const supportInput = useRef<HTMLInputElement>(null);
-  const [supportFile, setSupportFile] = useState<File | null>(null);
+  const [supportFiles, setSupportFiles] = useState<File[]>([]);
 
-  /** Dépose le PDF dans le bucket privé et l'attache à la vidéo. */
+  /** Dépose un PDF dans le bucket privé et l'ajoute aux supports de la vidéo. */
   async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
     const supabase = createClient();
     const safe = file.name.replace(/[^\w.\-]+/g, '_').slice(-80);
@@ -94,8 +95,17 @@ export function VideoManager({
       contentType: file.type || 'application/pdf',
     });
     if (upErr) return upErr.message;
-    const res = await setVideoSupportAction({ videoId, path, fileName: file.name });
+    const res = await addVideoSupportAction({ videoId, path, fileName: file.name });
     return 'error' in res ? res.error : null;
+  }
+
+  /** Dépose plusieurs PDF à la suite ; renvoie la première erreur rencontrée. */
+  async function uploadSupports(videoId: string, files: File[], coursIdCible?: string): Promise<string | null> {
+    for (const f of files) {
+      const err = await uploadSupport(videoId, f, coursIdCible);
+      if (err) return err;
+    }
+    return null;
   }
 
   function resetAdd() {
@@ -103,7 +113,7 @@ export function VideoManager({
     setLien('');
     setPosition('');
     setWithSupport(false);
-    setSupportFile(null);
+    setSupportFiles([]);
     setAdding(false);
   }
 
@@ -113,7 +123,7 @@ export function VideoManager({
     if (!extractBunnyVideoId(lien)) {
       return setError('Lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.');
     }
-    if (withSupport && !supportFile) return setError('Choisissez le PDF du support, ou décochez la case.');
+    if (withSupport && supportFiles.length === 0) return setError('Choisissez au moins un PDF, ou décochez la case.');
     start(async () => {
       const rang = position.trim() ? Number(position) : null;
       const pos = rang && Number.isFinite(rang) ? rang : null;
@@ -121,9 +131,9 @@ export function VideoManager({
         ? await onAdd({ type, titre, lien, position: pos })
         : await addVideoAction({ coursId, type, titre, lien, position: pos });
       if ('error' in res) return setError(res.error);
-      if (withSupport && supportFile) {
-        const err = await uploadSupport(res.videoId, supportFile, res.coursId);
-        if (err) setError(`Vidéo ajoutée, mais le support a échoué : ${err}`);
+      if (withSupport && supportFiles.length > 0) {
+        const err = await uploadSupports(res.videoId, supportFiles, res.coursId);
+        if (err) setError(`Vidéo ajoutée, mais un support a échoué : ${err}`);
       }
       resetAdd();
       apresModification();
@@ -189,9 +199,10 @@ export function VideoManager({
                     <span className="font-mono">
                       {v.bunny_video_id ? `${v.bunny_video_id.slice(0, 8)}…` : 'aucune vidéo'}
                     </span>
-                    {v.support_path ? (
+                    {v.supports.length > 0 ? (
                       <span className="inline-flex items-center gap-1 text-emerald-600">
-                        <Paperclip className="h-3 w-3" /> support
+                        <Paperclip className="h-3 w-3" />
+                        {v.supports.length} support{v.supports.length > 1 ? 's' : ''}
                       </span>
                     ) : (
                       <span className="text-(--color-ink-muted)">sans support</span>
@@ -210,7 +221,7 @@ export function VideoManager({
                   type="button"
                   disabled={pending}
                   onClick={() => {
-                    if (confirm(`Supprimer « ${v.titre} » ?${v.support_path ? ' Son support sera également supprimé.' : ''}`)) {
+                    if (confirm(`Supprimer « ${v.titre} » ?${v.supports.length > 0 ? ' Ses supports seront également supprimés.' : ''}`)) {
                       run(() => deleteVideoAction({ videoId: v.id }));
                     }
                   }}
@@ -227,13 +238,16 @@ export function VideoManager({
                   pending={pending}
                   onRename={(t) => run(() => renameVideoAction({ videoId: v.id, titre: t }))}
                   onReplaceLink={(l) => run(() => replaceVideoLinkAction({ videoId: v.id, lien: l }))}
-                  onSupport={(file) =>
+                  onAddSupports={(files) =>
                     run(async () => {
-                      const err = await uploadSupport(v.id, file);
+                      const err = await uploadSupports(v.id, files);
                       return err ? { error: err } : { ok: true };
                     })
                   }
-                  onRemoveSupport={() => run(() => removeVideoSupportAction({ videoId: v.id }))}
+                  onRenameSupport={(supportId, titre) =>
+                    run(() => renameVideoSupportAction({ supportId, titre }))
+                  }
+                  onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
                 />
               )}
             </li>
@@ -283,11 +297,11 @@ export function VideoManager({
                 checked={withSupport}
                 onChange={(e) => {
                   setWithSupport(e.target.checked);
-                  if (!e.target.checked) setSupportFile(null);
+                  if (!e.target.checked) setSupportFiles([]);
                 }}
                 className="h-4 w-4 accent-[#7C3AED]"
               />
-              Ajouter un support (PDF) — crée un onglet « Support de la séance » chez l’élève
+              Ajouter des supports (PDF) — crée un onglet « Support de la séance » chez l’élève
             </label>
             {withSupport && (
               <div className="flex items-center gap-2 pl-6">
@@ -295,15 +309,18 @@ export function VideoManager({
                   ref={supportInput}
                   type="file"
                   accept="application/pdf"
+                  multiple
                   className="hidden"
-                  onChange={(e) => setSupportFile(e.target.files?.[0] ?? null)}
+                  onChange={(e) => setSupportFiles(Array.from(e.target.files ?? []))}
                 />
                 <Button type="button" variant="outline" size="sm" onClick={() => supportInput.current?.click()}>
                   <FileText />
-                  {supportFile ? 'Changer de PDF' : 'Choisir le PDF'}
+                  {supportFiles.length > 0 ? 'Changer de sélection' : 'Choisir un ou plusieurs PDF'}
                 </Button>
-                {supportFile && (
-                  <span className="truncate text-xs text-(--color-ink-soft)">{supportFile.name}</span>
+                {supportFiles.length > 0 && (
+                  <span className="truncate text-xs text-(--color-ink-soft)">
+                    {supportFiles.map((f) => f.name).join(', ')}
+                  </span>
                 )}
               </div>
             )}
@@ -340,15 +357,17 @@ function VideoEditPanel({
   pending,
   onRename,
   onReplaceLink,
-  onSupport,
+  onAddSupports,
+  onRenameSupport,
   onRemoveSupport,
 }: {
   video: ManagedVideo;
   pending: boolean;
   onRename: (titre: string) => void;
   onReplaceLink: (lien: string) => void;
-  onSupport: (file: File) => void;
-  onRemoveSupport: () => void;
+  onAddSupports: (files: File[]) => void;
+  onRenameSupport: (supportId: string, titre: string) => void;
+  onRemoveSupport: (supportId: string) => void;
 }) {
   const [titre, setTitre] = useState(video.titre);
   const [lien, setLien] = useState('');
@@ -405,38 +424,81 @@ function VideoEditPanel({
 
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-          Support de séance (PDF)
+          Supports de séance (PDF)
         </label>
+
+        {video.supports.length > 0 && (
+          <ul className="mb-2 space-y-1.5">
+            {video.supports.map((doc) => (
+              <SupportLigne
+                key={doc.id}
+                doc={doc}
+                pending={pending}
+                onRename={(t) => onRenameSupport(doc.id, t)}
+                onRemove={() => onRemoveSupport(doc.id)}
+              />
+            ))}
+          </ul>
+        )}
+
         <input
           ref={fileRef}
           type="file"
           accept="application/pdf"
+          multiple
           className="hidden"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) onSupport(f); }}
+          onChange={(e) => {
+            const files = Array.from(e.target.files ?? []);
+            if (files.length > 0) onAddSupports(files);
+            e.target.value = '';
+          }}
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" size="sm" variant="outline" disabled={pending} onClick={() => fileRef.current?.click()}>
-            <FileText />
-            {video.support_path ? 'Remplacer le support' : 'Ajouter un support'}
-          </Button>
-          {video.support_path && (
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              disabled={pending}
-              onClick={() => { if (confirm('Retirer le support de cette séance ?')) onRemoveSupport(); }}
-              className="text-(--color-danger)"
-            >
-              <Trash2 />
-              Retirer
-            </Button>
-          )}
-        </div>
+        <Button type="button" size="sm" variant="outline" disabled={pending} onClick={() => fileRef.current?.click()}>
+          <FileText />
+          {video.supports.length > 0 ? 'Ajouter d’autres PDF' : 'Ajouter un ou plusieurs PDF'}
+        </Button>
         <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-          Le support apparaît comme un onglet chez l’élève, filigrané à son nom et non téléchargeable.
+          L’élève ouvre l’onglet « Support de la séance » et y retrouve tous les documents,
+          filigranés à son nom et non téléchargeables.
         </p>
       </div>
     </div>
+  );
+}
+
+/** Une ligne de support : nom modifiable + suppression. */
+function SupportLigne({
+  doc, pending, onRename, onRemove,
+}: {
+  doc: VideoSupportDoc;
+  pending: boolean;
+  onRename: (titre: string) => void;
+  onRemove: () => void;
+}) {
+  const [titre, setTitre] = useState(doc.titre);
+  return (
+    <li className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5">
+      <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+      <input
+        type="text"
+        value={titre}
+        onChange={(e) => setTitre(e.target.value)}
+        className="min-w-0 flex-1 bg-transparent text-sm text-(--color-ink) outline-none"
+      />
+      {titre.trim() !== doc.titre && titre.trim() !== '' && (
+        <Button type="button" size="sm" variant="secondary" disabled={pending} onClick={() => onRename(titre)}>
+          Renommer
+        </Button>
+      )}
+      <button
+        type="button"
+        disabled={pending}
+        onClick={() => { if (confirm(`Retirer le support « ${doc.titre} » ?`)) onRemove(); }}
+        aria-label="Retirer ce support"
+        className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </button>
+    </li>
   );
 }

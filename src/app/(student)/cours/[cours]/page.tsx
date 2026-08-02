@@ -45,7 +45,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .select(`
       id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
-      videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, video_supports(id)),
       fiches(storage_path), qcm_series(type), flashcards(id)
     `)
     .eq('id', coursId)
@@ -88,7 +88,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     ? await Promise.all([
         (supabase as any)
           .from('videos')
-          .select('id, bunny_video_id, titre, serie_id, support_path')
+          .select('id, bunny_video_id, titre, serie_id, video_supports(id)')
           .eq('cours_id', coursId)
           .eq('type', 'seance_approfondie')
           // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -135,14 +135,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const coursVideos = ((c.videos ?? []) as unknown as {
     id: string; titre: string; type: string | null;
     storage_path: string | null; bunny_video_id: string | null;
-    support_path: string | null; order_index: number | null;
+    order_index: number | null; video_supports?: { id: string }[] | null;
   }[])
     .filter((v) => (v.type ?? 'cours') === 'cours')
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   // Une vidéo Bunny n'a pas de storage_path : les deux hébergements comptent.
   const coursVideosDisponibles = coursVideos.some((v) => !!v.storage_path || !!v.bunny_video_id);
 
-  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; support_path?: string | null };
+  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; video_supports?: { id: string }[] | null };
   const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
   const isVideoUnlocked = (v: SAVid) =>
     isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesCompleted);
@@ -277,11 +277,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               locked: !unlocked,
             });
             // Support de la séance, juste après elle.
-            if (v.support_path) {
+            if ((v.video_supports ?? []).length > 0) {
               standardActions.push({
                 href: `/cours/${coursId}/support/${v.id}`,
-                label: `Support — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
-                desc: 'Le support de la séance, consultable en ligne (non téléchargeable).',
+                label: `Supports — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
+                desc: 'Les documents de la séance, consultables en ligne (non téléchargeables).',
                 Icon: Paperclip,
                 accent: '#7C3AED',
                 bg: '#F3EAFF',
@@ -299,11 +299,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               available: coursVideosDisponibles,
             },
           );
-          for (const v of coursVideos.filter((x) => !!x.support_path)) {
+          for (const v of coursVideos.filter((x) => (x.video_supports ?? []).length > 0)) {
             standardActions.push({
               href: `/cours/${coursId}/support/${v.id}`,
-              label: `Support — ${v.titre?.trim() || 'Cours vidéo'}`,
-              desc: 'Le support du cours, consultable en ligne (non téléchargeable).',
+              label: `Supports — ${v.titre?.trim() || 'Cours vidéo'}`,
+              desc: 'Les documents du cours, consultables en ligne (non téléchargeables).',
               Icon: Paperclip, accent: '#E4002B', bg: '#FDE7E9',
               available: true,
             });

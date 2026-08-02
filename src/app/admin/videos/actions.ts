@@ -128,12 +128,15 @@ export type VideoLibraryItem = {
   nbSeances: number;
 };
 
+export type VideoSupportDoc = { id: string; titre: string; order_index: number };
+
 export type VideoLibraryVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
-  support_path: string | null;
+  /** Supports PDF de la vidéo, dans l'ordre d'affichage élève. */
+  supports: VideoSupportDoc[];
 };
 
 /** Items d'un collège, avec le nombre de vidéos de chaque catégorie. */
@@ -191,13 +194,23 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, support_path')
+    .select('id, titre, bunny_video_id, order_index, video_supports(id, titre, order_index)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
   if (error) return { error: error.message };
-  return { videos: (data ?? []) as VideoLibraryVideo[] };
+  const videos = ((data ?? []) as Array<VideoLibraryVideo & { video_supports?: VideoSupportDoc[] | null }>)
+    .map((v) => ({
+      id: v.id,
+      titre: v.titre,
+      bunny_video_id: v.bunny_video_id,
+      order_index: v.order_index,
+      supports: (v.video_supports ?? [])
+        .slice()
+        .sort((a, b) => a.order_index - b.order_index),
+    }));
+  return { videos };
 }
 
 /* ------------------------------------------------------------------ */
@@ -463,8 +476,15 @@ export async function deleteVideoAction(input: {
   const ctx = await guardVideo(input.videoId);
   if ('error' in ctx) return ctx;
 
-  if (ctx.video.support_path) {
-    await ctx.admin.storage.from('supports').remove([ctx.video.support_path]);
+  // Retire les fichiers de tous ses supports (les lignes partent en cascade).
+  const { data: docs } = await ctx.a
+    .from('video_supports')
+    .select('storage_path')
+    .eq('video_id', input.videoId);
+  const chemins = ((docs ?? []) as { storage_path: string }[]).map((d) => d.storage_path);
+  if (ctx.video.support_path) chemins.push(ctx.video.support_path);
+  if (chemins.length > 0) {
+    await ctx.admin.storage.from('supports').remove(chemins);
   }
   const { error } = await ctx.a.from('videos').delete().eq('id', input.videoId);
   if (error) return { error: error.message };
@@ -481,7 +501,7 @@ export async function deleteVideoAction(input: {
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
     description: `Suppression de « ${ctx.video.titre} » (${LABEL[ctx.video.type]})`,
-    diff: { support_supprime: !!ctx.video.support_path },
+    diff: { supports_supprimes: chemins.length },
   });
 
   refresh(ctx.cours.id);
@@ -537,16 +557,16 @@ export async function moveVideoAction(input: {
 }
 
 /**
- * Enregistre le support téléversé (le fichier est déposé directement depuis le
+ * Enregistre un support téléversé (le fichier est déposé directement depuis le
  * navigateur vers le bucket privé `supports`, comme les fiches : pas de limite
- * de taille de requête serveur).
+ * de taille de requête serveur). Une vidéo peut en porter plusieurs.
  */
-export async function setVideoSupportAction(input: {
+export async function addVideoSupportAction(input: {
   videoId: string;
   path: string;
-  pages?: number | null;
+  titre?: string;
   fileName?: string;
-}): Promise<{ ok: true } | { error: string }> {
+}): Promise<{ ok: true; supportId: string } | { error: string }> {
   const ctx = await guardVideo(input.videoId);
   if ('error' in ctx) return ctx;
 
@@ -555,62 +575,111 @@ export async function setVideoSupportAction(input: {
     return { error: 'Chemin de support invalide.' };
   }
 
-  const previous = ctx.video.support_path;
-  const { error } = await ctx.a
-    .from('videos')
-    .update({
-      support_path: input.path,
-      support_pages: input.pages ?? null,
-      support_updated_at: new Date().toISOString(),
-    })
-    .eq('id', input.videoId);
-  if (error) return { error: error.message };
+  const titre = (input.titre ?? input.fileName ?? 'Support')
+    .replace(/\.pdf$/i, '')
+    .trim()
+    .slice(0, 200) || 'Support';
 
-  if (previous && previous !== input.path) {
-    await ctx.admin.storage.from('supports').remove([previous]);
-  }
+  const { data: derniers } = await ctx.a
+    .from('video_supports')
+    .select('order_index')
+    .eq('video_id', input.videoId)
+    .order('order_index', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const rang = ((derniers?.order_index as number | undefined) ?? -1) + 1;
+
+  const { data: cree, error } = await ctx.a
+    .from('video_supports')
+    .insert({ video_id: input.videoId, titre, storage_path: input.path, order_index: rang })
+    .select('id')
+    .single();
+  if (error) return { error: error.message };
 
   await logAudit({
     actor: ctx.profile,
-    action: previous ? 'replace' : 'create',
+    action: 'create',
     entity: 'video',
     entityId: input.videoId,
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `${previous ? 'Remplacement' : 'Ajout'} du support de « ${ctx.video.titre} »${input.fileName ? ` (${input.fileName})` : ''}`,
-    diff: { support_path: input.path },
+    description: `Support « ${titre} » ajouté à « ${ctx.video.titre} »`,
+    diff: { storage_path: input.path },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true, supportId: cree.id as string };
+}
+
+/** Renomme un support (le nom est affiché à l'élève). */
+export async function renameVideoSupportAction(input: {
+  supportId: string;
+  titre: string;
+}): Promise<{ ok: true } | { error: string }> {
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data: doc } = await a
+    .from('video_supports')
+    .select('id, video_id, titre')
+    .eq('id', input.supportId)
+    .maybeSingle();
+  if (!doc) return { error: 'Support introuvable.' };
+  const ctx = await guardVideo((doc as { video_id: string }).video_id);
+  if ('error' in ctx) return ctx;
+
+  const titre = input.titre.trim().slice(0, 200);
+  if (!titre) return { error: 'Le nom ne peut pas être vide.' };
+
+  const { error } = await ctx.a.from('video_supports').update({ titre }).eq('id', input.supportId);
+  if (error) return { error: error.message };
+
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: ctx.video.id,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Support renommé : « ${(doc as { titre: string }).titre} » → « ${titre} »`,
   });
 
   refresh(ctx.cours.id);
   return { ok: true };
 }
 
-/** Retire le support d'une vidéo (l'onglet élève disparaît). */
+/** Retire un support (fichier compris). */
 export async function removeVideoSupportAction(input: {
-  videoId: string;
+  supportId: string;
 }): Promise<{ ok: true } | { error: string }> {
-  const ctx = await guardVideo(input.videoId);
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data: doc } = await a
+    .from('video_supports')
+    .select('id, video_id, titre, storage_path')
+    .eq('id', input.supportId)
+    .maybeSingle();
+  if (!doc) return { ok: true };
+  const support = doc as { id: string; video_id: string; titre: string; storage_path: string };
+  const ctx = await guardVideo(support.video_id);
   if ('error' in ctx) return ctx;
-  if (!ctx.video.support_path) return { ok: true };
 
-  await ctx.admin.storage.from('supports').remove([ctx.video.support_path]);
-  const { error } = await ctx.a
-    .from('videos')
-    .update({ support_path: null, support_pages: null, support_updated_at: null })
-    .eq('id', input.videoId);
+  await ctx.admin.storage.from('supports').remove([support.storage_path]);
+  const { error } = await ctx.a.from('video_supports').delete().eq('id', support.id);
   if (error) return { error: error.message };
 
   await logAudit({
     actor: ctx.profile,
     action: 'delete',
     entity: 'video',
-    entityId: input.videoId,
+    entityId: ctx.video.id,
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `Suppression du support de « ${ctx.video.titre} »`,
-    diff: { support_path: ctx.video.support_path },
+    description: `Support « ${support.titre} » retiré de « ${ctx.video.titre} »`,
   });
 
   refresh(ctx.cours.id);

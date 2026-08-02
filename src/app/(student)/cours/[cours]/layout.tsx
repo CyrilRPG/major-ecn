@@ -16,8 +16,9 @@ type CourseVideoRow = {
   type: string | null;
   storage_path: string | null;
   bunny_video_id: string | null;
-  support_path: string | null;
   order_index: number | null;
+  /** Supports PDF rattachés (plusieurs possibles). */
+  video_supports?: { id: string }[] | null;
 };
 
 export default async function CoursLayout({
@@ -36,7 +37,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
-      videos(id, titre, type, storage_path, bunny_video_id, support_path, order_index),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, video_supports(id)),
       fiches(storage_path),
       qcm_series(type),
       flashcards(id),
@@ -70,7 +71,7 @@ export default async function CoursLayout({
 
   // Un onglet par support, rangé juste après l'onglet de sa vidéo.
   const supportsAll: CourseSupport[] = [...seanceVideos, ...coursVideos]
-    .filter((v) => !!v.support_path)
+    .filter((v) => (v.video_supports ?? []).length > 0)
     .map((v) => ({
       videoId: v.id,
       titre: v.titre,

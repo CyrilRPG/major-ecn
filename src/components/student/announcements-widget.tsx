@@ -117,10 +117,18 @@ export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
   const showMgCard = scope.type === 'all'
     || scope.colleges.some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-'));
 
-  // Anti-doublon : uniquement quand la carte statique est réellement affichée.
-  // Sinon l'annonce « Nombre de postes … » de la spécialité doit passer.
+  // Anti-doublon : la carte statique ne fait doublon qu'avec l'annonce
+  // « Nombre de postes » DE LA MÉDECINE GÉNÉRALE. Une annonce de postes ciblée
+  // sur une autre spécialité doit toujours passer — y compris pour un compte à
+  // accès intégral, qui voit aussi la carte MG.
+  const faitDoublonAvecCarteMg = (it: Announcement) =>
+    /nombre\s+de\s+postes/i.test(it.title)
+    && (it.target_scope !== 'college'
+      || (it.target_colleges ?? []).length === 0
+      || (it.target_colleges ?? []).some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-')));
+
   const items = allItems
-    .filter((it) => !showMgCard || !/nombre\s+de\s+postes/i.test(it.title))
+    .filter((it) => !showMgCard || !faitDoublonAvecCarteMg(it))
     .filter((it) => announcementVisibleFor(it, scope));
 
   return (
