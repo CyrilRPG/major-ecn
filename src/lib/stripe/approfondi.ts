@@ -131,7 +131,7 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
         id: 'urg', tier: 'base', tierLabel: 'Approfondi',
         amountCents: 209500, hoursLabel: '36 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_URG',
-        targetCollege: 'col-mir', // Médecine Intensive-Réanimation
+        targetCollege: 'col-mir', // collège « Médecine d'urgence »
       },
       {
         id: 'urg-plus', tier: 'plus', tierLabel: 'Approfondi +',

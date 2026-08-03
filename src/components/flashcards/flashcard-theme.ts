@@ -66,8 +66,12 @@ const THEMES: Record<string, FlashcardTheme> = {
   'Rhumatologie':              { bg: '#DDEAFB', accent: '#2F5484', Icon: JointArt,          image: '/flashcards-decor/rhumato.png' },
   'Réanimation':               { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
   'Reanimation':               { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt,      image: '/flashcards-decor/reanimation.png' },
-  // Collège top-level « Médecine Intensive-Réanimation » (col-mir) : même ambiance
-  // flashcard que la Réanimation de médecine générale (icône + couleur associées).
+  // Collège top-level « Médecine d'urgence » (col-mir) : même ambiance flashcard
+  // que la Réanimation de médecine générale (icône + couleur associées). Les
+  // anciens libellés « Médecine Intensive-Réanimation » restent référencés :
+  // ils peuvent subsister dans des contenus ou des exports antérieurs.
+  'Médecine d’urgence':             { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
+  "Médecine d'urgence":             { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
   'Médecine Intensive-Réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
   'Médecine Intensive Réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },
   'Médecine intensive-réanimation': { bg: '#D1E3FA', accent: '#0D3F81', Icon: HeartbeatArt, image: '/flashcards-decor/reanimation.png' },

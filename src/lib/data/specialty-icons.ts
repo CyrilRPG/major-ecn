@@ -43,7 +43,10 @@ const MAP: { keys: string[]; theme: SpecialtyTheme }[] = [
   { keys: ['hematologie', 'hemato'],          theme: { Icon: Droplets,      accent: '#9F1239', bg: '#FFE4E6' } },
   { keys: ['gynecologie', 'gyneco'],          theme: { Icon: Heart,         accent: '#DB2777', bg: '#FCE7F3' } },
   { keys: ['psychiatrie', 'psy'],             theme: { Icon: Smile,         accent: '#8B5CF6', bg: '#EDE9FE' } },
-  { keys: ['reanimation', 'rea'],             theme: { Icon: HeartPulse,    accent: '#DC2626', bg: '#FEE2E2' } },
+  // « Médecine d'urgence » (ex-Médecine Intensive-Réanimation) : la clé
+  // `urgence` doit précéder le repli générique `medecine`, sinon la spécialité
+  // hériterait de l'identité visuelle de la médecine générale.
+  { keys: ['urgence', 'reanimation', 'rea'],  theme: { Icon: HeartPulse,    accent: '#DC2626', bg: '#FEE2E2' } },
   { keys: ['dermatologie', 'dermato'],        theme: { Icon: Hand,          accent: '#EA580C', bg: '#FFEDD5' } },
   { keys: ['medecine generale', 'medecine'],  theme: { Icon: Stethoscope,   accent: '#1E40AF', bg: '#DBEAFE' } },
 ];

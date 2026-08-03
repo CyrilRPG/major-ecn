@@ -13,6 +13,10 @@ export type EnrollableSpecialty = {
    *  en ligne (cf. `contentPending`). */
   collegeId: string | null;
   name: string;
+  /** Anciens libellés de la même spécialité. Ils continuent de résoudre vers ce
+   *  collège : les sessions Stripe déjà payées portent l'ancien nom dans leurs
+   *  métadonnées, et le cron de réconciliation peut les rejouer. */
+  legacyNames?: string[];
   /** Contenus pas encore publiés : la formule est achetable au même prix, mais
    *  le compte est créé SANS accès et l'étudiant en est averti avant de payer. */
   contentPending?: boolean;
@@ -22,7 +26,9 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-medecine-generale', name: 'Médecine générale' },
   { collegeId: 'col-cardiologie', name: 'Cardiologie' },
   { collegeId: 'col-pediatrie', name: 'Pédiatrie' },
-  { collegeId: 'col-mir', name: 'Médecine Intensive-Réanimation' },
+  // Le collège `col-mir` est commercialisé sous le nom « Médecine d'urgence »
+  // (cf. APPROFONDI_SPECIALTIES). L'ancien libellé reste reconnu.
+  { collegeId: 'col-mir', name: 'Médecine d’urgence', legacyNames: ['Médecine Intensive-Réanimation'] },
   { collegeId: 'col-pneumologie', name: 'Pneumologie' },
   { collegeId: 'col-geriatrie', name: 'Gériatrie' },
   { collegeId: 'col-neurologie', name: 'Neurologie' },
@@ -46,7 +52,9 @@ const norm = (s: string) =>
 export function specialtyByName(name: string | null | undefined): EnrollableSpecialty | null {
   if (!name) return null;
   const target = norm(name);
-  return ENROLLABLE_SPECIALTIES.find((s) => norm(s.name) === target) ?? null;
+  return ENROLLABLE_SPECIALTIES.find(
+    (s) => norm(s.name) === target || (s.legacyNames ?? []).some((l) => norm(l) === target),
+  ) ?? null;
 }
 
 /** Résout l'id de collège pour un nom de spécialité (insensible à la casse/accents).
