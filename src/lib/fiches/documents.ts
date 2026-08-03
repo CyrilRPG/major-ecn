@@ -30,12 +30,19 @@ export function ficheLabel(fiche: { titre?: string | null }, index: number): str
   return t && t.length > 0 ? t : `Fiche ${index + 1}`;
 }
 
-/** Titre par défaut d'une fiche déposée en PDF, dérivé du nom de fichier. */
+/**
+ * Titre par défaut d'une fiche déposée, dérivé du nom de fichier :
+ * « Angor.pdf » → « Angor ». L'extension est retirée quelle qu'elle soit — on
+ * dépose aussi des `.html` / `.htm`, dont l'extension restait auparavant
+ * collée au titre affiché à l'élève. Les séparateurs de nom de fichier
+ * deviennent des espaces : « Item-221-Angor.pdf » → « Item 221 Angor ».
+ */
 export function titreDepuisFichier(fileName: string): string {
   return (
     fileName
-      .replace(/\.pdf$/i, '')
+      .replace(/\.(pdf|html?|docx?|odt)$/i, '')
       .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
       .trim()
       .slice(0, 200) || 'Fiche'
   );

@@ -105,6 +105,94 @@ function AudiencePicker({
   );
 }
 
+/** Un glisser-déposer ramasse volontiers autre chose : on ne garde que les PDF. */
+function estPdf(file: File): boolean {
+  return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+}
+
+/**
+ * Zone de dépôt des supports de séance : on y glisse plusieurs PDF à la fois,
+ * ou on passe par l'explorateur. Les fichiers écartés (non-PDF) sont nommés,
+ * sans quoi un dépôt partiel passerait inaperçu.
+ */
+function SupportsDropzone({
+  libelle,
+  disabled,
+  onFiles,
+}: {
+  libelle: string;
+  disabled?: boolean;
+  onFiles: (files: File[]) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const [ignores, setIgnores] = useState<string[]>([]);
+
+  function retenir(files: File[]) {
+    if (files.length === 0) return;
+    setIgnores(files.filter((f) => !estPdf(f)).map((f) => f.name));
+    const pdfs = files.filter(estPdf);
+    if (pdfs.length > 0) onFiles(pdfs);
+  }
+
+  return (
+    <div>
+      <div
+        onDragEnter={(e) => { e.preventDefault(); if (!disabled) setDragging(true); }}
+        // `relatedTarget` est l'élément survolé APRÈS la sortie : sans ce test,
+        // passer au-dessus du bouton intérieur éteindrait le surlignage.
+        onDragLeave={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+        }}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          if (disabled) return;
+          retenir(Array.from(e.dataTransfer.files ?? []));
+        }}
+        className={`rounded-xl border-2 border-dashed px-3 py-4 text-center transition ${
+          dragging
+            ? 'border-[#7C3AED] bg-[#F3EAFF]'
+            : 'border-(--color-border) bg-(--color-surface-soft)'
+        }`}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept="application/pdf"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            retenir(Array.from(e.target.files ?? []));
+            e.target.value = '';
+          }}
+        />
+        <Paperclip className="mx-auto mb-1.5 h-5 w-5 text-(--color-ink-muted)" />
+        <p className="text-[12.5px] font-medium text-(--color-ink)">
+          Glissez ici un ou plusieurs PDF
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="mt-2"
+          disabled={disabled}
+          onClick={() => inputRef.current?.click()}
+        >
+          <FileText />
+          {libelle}
+        </Button>
+      </div>
+      {ignores.length > 0 && (
+        <p className="mt-1 text-[11px] font-medium text-amber-600">
+          Ignoré{ignores.length > 1 ? 's' : ''} (pas un PDF) : {ignores.join(', ')}
+        </p>
+      )}
+    </div>
+  );
+}
+
 const COPY: Record<VideoType, { titre: string; unite: string; audience: string; exemple: string }> = {
   cours: {
     titre: 'Cours vidéo',
@@ -166,7 +254,6 @@ export function VideoManager({
   const [lien, setLien] = useState('');
   const [position, setPosition] = useState('');
   const [withSupport, setWithSupport] = useState(false);
-  const supportInput = useRef<HTMLInputElement>(null);
   const [supportFiles, setSupportFiles] = useState<File[]>([]);
   // Audience du nouvel ajout : les deux voies cochées par défaut.
   const [voies, setVoies] = useState<string[]>(['interne', 'externe']);
@@ -410,24 +497,46 @@ export function VideoManager({
               Ajouter des supports (PDF) — crée un onglet « Support de la séance » chez l’élève
             </label>
             {withSupport && (
-              <div className="flex items-center gap-2 pl-6">
-                <input
-                  ref={supportInput}
-                  type="file"
-                  accept="application/pdf"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => setSupportFiles(Array.from(e.target.files ?? []))}
+              <div className="space-y-2 pl-6">
+                <SupportsDropzone
+                  libelle={supportFiles.length > 0 ? 'Ajouter d’autres PDF' : 'Choisir un ou plusieurs PDF'}
+                  disabled={pending}
+                  // On CUMULE : glisser un deuxième lot ne doit pas effacer le
+                  // premier. Les doublons de nom sont écartés — glisser deux
+                  // fois le même fichier créerait deux supports identiques.
+                  onFiles={(files) =>
+                    setSupportFiles((prev) => [
+                      ...prev,
+                      ...files.filter((f) => !prev.some((p) => p.name === f.name && p.size === f.size)),
+                    ])
+                  }
                 />
-                <Button type="button" variant="outline" size="sm" onClick={() => supportInput.current?.click()}>
-                  <FileText />
-                  {supportFiles.length > 0 ? 'Changer de sélection' : 'Choisir un ou plusieurs PDF'}
-                </Button>
                 {supportFiles.length > 0 && (
-                  <span className="truncate text-xs text-(--color-ink-soft)">
-                    {supportFiles.map((f) => f.name).join(', ')}
-                  </span>
+                  <ul className="space-y-1">
+                    {supportFiles.map((f, i) => (
+                      <li
+                        key={`${f.name}-${f.size}-${i}`}
+                        className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1"
+                      >
+                        <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+                        <span className="min-w-0 flex-1 truncate text-xs text-(--color-ink)">{f.name}</span>
+                        <button
+                          type="button"
+                          disabled={pending}
+                          aria-label={`Retirer ${f.name}`}
+                          onClick={() => setSupportFiles((prev) => prev.filter((_, j) => j !== i))}
+                          className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 )}
+                <p className="text-[11px] text-(--color-ink-muted)">
+                  Chaque support prend pour nom celui de son fichier, sans l’extension.
+                  Renommez-les depuis le crayon une fois la vidéo créée.
+                </p>
               </div>
             )}
             <div className="flex items-center gap-2 pt-1">
@@ -481,7 +590,6 @@ function VideoEditPanel({
   const [lien, setLien] = useState('');
   const [voies, setVoies] = useState<string[]>(video.voies);
   const [offers, setOffers] = useState<string[]>(video.offers);
-  const fileRef = useRef<HTMLInputElement>(null);
   const audienceModifiee =
     voies.slice().sort().join() !== video.voies.slice().sort().join()
     || offers.slice().sort().join() !== video.offers.slice().sort().join();
@@ -579,25 +687,15 @@ function VideoEditPanel({
           </ul>
         )}
 
-        <input
-          ref={fileRef}
-          type="file"
-          accept="application/pdf"
-          multiple
-          className="hidden"
-          onChange={(e) => {
-            const files = Array.from(e.target.files ?? []);
-            if (files.length > 0) onAddSupports(files);
-            e.target.value = '';
-          }}
+        <SupportsDropzone
+          libelle={video.supports.length > 0 ? 'Ajouter d’autres PDF' : 'Ajouter un ou plusieurs PDF'}
+          disabled={pending}
+          onFiles={onAddSupports}
         />
-        <Button type="button" size="sm" variant="outline" disabled={pending} onClick={() => fileRef.current?.click()}>
-          <FileText />
-          {video.supports.length > 0 ? 'Ajouter d’autres PDF' : 'Ajouter un ou plusieurs PDF'}
-        </Button>
         <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-          L’élève ouvre l’onglet « Support de la séance » et y retrouve tous les documents,
-          filigranés à son nom et non téléchargeables.
+          Chaque support prend pour nom celui de son fichier, sans l’extension ; il se renomme
+          dans la liste ci-dessus. L’élève ouvre l’onglet « Support de la séance » et y retrouve
+          tous les documents, filigranés à son nom et non téléchargeables.
         </p>
       </div>
     </div>
