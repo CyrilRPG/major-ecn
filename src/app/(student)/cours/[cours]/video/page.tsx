@@ -9,14 +9,17 @@ import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { videoVisible } from '@/lib/videos/audience';
 
 type CoursVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
   storage_path: string | null;
+  voies: string[] | null;
+  offers: string[] | null;
 };
 
 export default async function CoursVideoPage({
@@ -45,7 +48,8 @@ export default async function CoursVideoPage({
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).video) redirect(`/cours/${coursId}`);
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
 
   // Un item peut porter plusieurs cours vidéo, dans l'ordre choisi par
@@ -53,14 +57,23 @@ export default async function CoursVideoPage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videoRows } = await (supabase as any)
     .from('videos')
-    .select('id, titre, bunny_video_id, storage_path')
+    .select('id, titre, bunny_video_id, storage_path, voies, offers')
     .eq('cours_id', coursId)
     .eq('type', 'cours')
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
+  // L'audience est portée par la vidéo (voies + formules cochées à l'ajout) ;
+  // le droit global de la formule ne sert que de repli.
+  const offresEleve = scopeOffers(scope);
   const allVideos = ((videoRows ?? []) as CoursVideo[]).filter(
-    (v) => !!v.bunny_video_id || !!v.storage_path,
+    (v) => (!!v.bunny_video_id || !!v.storage_path)
+      && (isAdmin || videoVisible(v, {
+        offres: offresEleve, voie: scope.voie ?? null, droitFormule: !access || access.video,
+      })),
   );
+  // Ni droit de formule, ni vidéo ciblant cet élève : la page n'a rien à
+  // montrer et n'aurait pas dû être atteignable.
+  if (!isAdmin && access && !access.video && allVideos.length === 0) redirect(`/cours/${coursId}`);
 
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 

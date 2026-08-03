@@ -9,6 +9,9 @@ import {
 import { createAdminClient } from '@/lib/supabase/admin';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import { revisionsTitre } from '@/lib/videos/revisions';
+import {
+  normaliserOffres, normaliserVoies, resumeAudience, VIDEO_OFFERS,
+} from '@/lib/videos/audience';
 import { logAudit } from '@/lib/audit/log';
 
 /**
@@ -135,6 +138,10 @@ export type VideoLibraryVideo = {
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** Voies de concours concernées (les deux = aucune restriction). */
+  voies: string[];
+  /** Formules ayant accès à cette vidéo. */
+  offers: string[];
   /** Supports PDF de la vidéo, dans l'ordre d'affichage élève. */
   supports: VideoSupportDoc[];
 };
@@ -194,7 +201,7 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, video_supports(id, titre, order_index)')
+    .select('id, titre, bunny_video_id, order_index, voies, offers, video_supports(id, titre, order_index)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
@@ -206,6 +213,8 @@ export async function listVideosAction(
       titre: v.titre,
       bunny_video_id: v.bunny_video_id,
       order_index: v.order_index,
+      voies: normaliserVoies(v.voies),
+      offers: normaliserOffres(v.offers),
       supports: (v.video_supports ?? [])
         .slice()
         .sort((a, b) => a.order_index - b.order_index),
@@ -227,6 +236,8 @@ export async function addVideoAction(input: {
   titre: string;
   lien: string;
   position?: number | null;
+  voies?: string[];
+  offers?: string[];
 }): Promise<AddResult> {
   const ctx = await guard(input.coursId);
   if ('error' in ctx) return ctx;
@@ -235,10 +246,37 @@ export async function addVideoAction(input: {
 
 export type AddResult = { ok: true; videoId: string; coursId: string } | { error: string };
 
+/** Audience par défaut d'un nouveau contenu, à l'identique de ce qui existait
+ *  avant le ciblage par vidéo : cours vidéo → Formule Intensive, séance
+ *  approfondie → Programme Approfondi. L'administrateur peut tout changer. */
+const OFFRES_PAR_DEFAUT: Record<VideoType, string[]> = {
+  cours: ['intensif'],
+  seance_approfondie: ['approfondi'],
+};
+
+/** Valide voies + formules d'une vidéo. Au moins une case de chaque côté :
+ *  sinon la vidéo serait invisible pour tout le monde (et la base la refuse). */
+function validerAudience(
+  type: VideoType,
+  input: { voies?: string[]; offers?: string[] },
+): { voies: string[]; offers: string[] } | { error: string } {
+  const voies = normaliserVoies(input.voies);
+  const offers = input.offers === undefined
+    ? OFFRES_PAR_DEFAUT[type]
+    : normaliserOffres(input.offers);
+  if (offers.length === 0) {
+    return { error: `Cochez au moins une formule (${VIDEO_OFFERS.map((o) => o.label).join(', ')}).` };
+  }
+  return { voies, offers };
+}
+
 /** Insertion effective, partagée par l'ajout normal et l'ajout « Révisions ». */
 async function insertVideo(
   ctx: Ctx,
-  input: { type: VideoType; titre: string; lien: string; position?: number | null },
+  input: {
+    type: VideoType; titre: string; lien: string; position?: number | null;
+    voies?: string[]; offers?: string[];
+  },
 ): Promise<AddResult> {
   const coursId = ctx.cours.id;
   const titre = input.titre.trim().slice(0, 200);
@@ -247,6 +285,8 @@ async function insertVideo(
   if (!bunnyId) {
     return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
   }
+  const audience = validerAudience(input.type, input);
+  if ('error' in audience) return audience;
 
   // Liste actuelle de la catégorie : sert à insérer à la position demandée et
   // à renuméroter proprement (les données antérieures peuvent avoir des trous).
@@ -270,6 +310,8 @@ async function insertVideo(
       bunny_video_id: bunnyId,
       type: input.type,
       order_index: insertAt,
+      voies: audience.voies,
+      offers: audience.offers,
     })
     .select('id')
     .single();
@@ -292,8 +334,12 @@ async function insertVideo(
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`,
-    diff: { bunny_video_id: bunnyId, type: input.type, order_index: insertAt },
+    description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`
+      + ` — ${resumeAudience(audience)}`,
+    diff: {
+      bunny_video_id: bunnyId, type: input.type, order_index: insertAt,
+      voies: audience.voies, offers: audience.offers,
+    },
   });
 
   refresh(coursId);
@@ -313,6 +359,8 @@ export async function addVideoToRevisionsAction(input: {
   titre: string;
   lien: string;
   position?: number | null;
+  voies?: string[];
+  offers?: string[];
 }): Promise<AddResult> {
   const { profile, scope } = await requireContentEditor();
   try {
@@ -429,6 +477,45 @@ export async function renameVideoAction(input: {
     matiereNom: ctx.cours.matiereNom,
     description: `Renommage : « ${ctx.video.titre} » → « ${titre} »`,
     diff: { from: ctx.video.titre, to: titre },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/**
+ * Change l'audience d'une vidéo : voies de concours et formules.
+ *
+ * Les supports de la vidéo suivent automatiquement — ils héritent de la
+ * permission de leur vidéo, ici comme dans les pages élève et la route PDF.
+ */
+export async function updateVideoAudienceAction(input: {
+  videoId: string;
+  voies: string[];
+  offers: string[];
+}): Promise<{ ok: true } | { error: string }> {
+  const ctx = await guardVideo(input.videoId);
+  if ('error' in ctx) return ctx;
+
+  const audience = validerAudience(ctx.video.type, input);
+  if ('error' in audience) return audience;
+
+  const { error } = await ctx.a
+    .from('videos')
+    .update({ voies: audience.voies, offers: audience.offers, updated_at: new Date().toISOString() })
+    .eq('id', input.videoId);
+  if (error) return { error: error.message };
+
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.videoId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Audience de « ${ctx.video.titre} » : ${resumeAudience(audience)}`,
+    diff: { voies: audience.voies, offers: audience.offers },
   });
 
   refresh(ctx.cours.id);

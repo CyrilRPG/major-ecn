@@ -9,6 +9,8 @@ import { canRead } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
+import { videoVisible } from '@/lib/videos/audience';
+import { scopeOffers } from '@/lib/auth/permissions';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type CourseVideoRow = {
@@ -18,6 +20,8 @@ type CourseVideoRow = {
   storage_path: string | null;
   bunny_video_id: string | null;
   order_index: number | null;
+  voies: string[] | null;
+  offers: string[] | null;
   /** Supports PDF rattachés (plusieurs possibles). */
   video_supports?: { id: string }[] | null;
 };
@@ -38,7 +42,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, video_supports(id)),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, video_supports(id)),
       fiches(storage_path),
       qcm_series(type),
       flashcards(id),
@@ -52,15 +56,26 @@ export default async function CoursLayout({
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
   if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
 
-  // Les vidéos d'un item sont désormais multiples et ordonnées, avec un support
-  // PDF facultatif par vidéo. Le TYPE porte la permission : `cours` (Formule
-  // Intensive) vs `seance_approfondie` (Programme Approfondi).
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
+
+  // Les vidéos d'un item sont multiples et ordonnées, avec des supports PDF
+  // facultatifs. L'AUDIENCE est portée par la vidéo elle-même (voies de
+  // concours + formules cochées à l'ajout) ; le droit global de la formule ne
+  // sert que de repli pour une vidéo sans ciblage explicite.
   const videos = ((c.videos ?? []) as unknown as CourseVideoRow[])
     .slice()
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   const hasSource = (v: CourseVideoRow) => !!v.bunny_video_id || !!v.storage_path;
-  const coursVideos = videos.filter((v) => (v.type ?? 'cours') === 'cours');
-  const seanceVideos = videos.filter((v) => v.type === 'seance_approfondie');
+  const offresEleve = scopeOffers(scope);
+  const visible = (v: CourseVideoRow, droitFormule: boolean) =>
+    isAdmin || videoVisible(v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule });
+  const coursVideos = videos.filter(
+    (v) => (v.type ?? 'cours') === 'cours' && visible(v, !access || access.video),
+  );
+  const seanceVideos = videos.filter(
+    (v) => v.type === 'seance_approfondie' && visible(v, !access || access.seanceApprofondie),
+  );
 
   const availability = {
     video: coursVideos.some(hasSource),
@@ -82,8 +97,6 @@ export default async function CoursLayout({
       type: (v.type ?? 'cours') as CourseSupport['type'],
     }));
 
-  const isAdmin = profile.role === 'admin';
-  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
   // Blocs masqués pour cet item par l'administration (choix d'affichage, pas
   // une permission) : ils disparaissent des onglets ET de l'aperçu.
@@ -112,19 +125,20 @@ export default async function CoursLayout({
   const visibility = (profVisibility || hiddenBlocks.length > 0 || Object.keys(blocsVides).length > 0)
     ? { ...(profVisibility ?? {}), ...blocsVides, ...hiddenBlocksVisibility(hiddenBlocks) }
     : undefined;
+  // Cadenas : le droit de la formule ne suffit plus à trancher — une vidéo peut
+  // cibler explicitement la formule de l'élève. Dès qu'un contenu lui est
+  // destiné, le bloc s'ouvre.
   const locked = (!isAdmin && !profScope && access) ? {
     fiche: !access.fiche,
     'fiche-express': !access.ficheExpress,
-    video: !access.video,
+    video: !access.video && coursVideos.length === 0,
     flashcards: !access.flashcards,
-    'seance-approfondie': !access.seanceApprofondie,
+    'seance-approfondie': !access.seanceApprofondie && seanceVideos.length === 0,
   } as Partial<Record<string, boolean>> : undefined;
 
-  // Le support hérite de la permission de SA vidéo : sans la formule, l'onglet
-  // n'apparaît pas du tout (et la route du PDF refuserait de toute façon).
-  const supports = supportsAll.filter((s) =>
-    !access || (s.type === 'seance_approfondie' ? access.seanceApprofondie : access.video),
-  );
+  // Le support hérite de l'audience de SA vidéo : `supportsAll` est construit à
+  // partir des vidéos déjà filtrées, il n'y a donc rien à refiltrer ici.
+  const supports = supportsAll;
 
   const cp = c.course_progress?.[0];
   const [{ count: qcmCount }, { count: flashCount }] = await Promise.all([

@@ -3,8 +3,9 @@ import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { assertAccessActive } from '@/lib/auth/access';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
+import { videoVisible } from '@/lib/videos/audience';
 import { buildLicense } from '@/lib/license/sign';
 
 export const runtime = 'nodejs';
@@ -91,9 +92,15 @@ export async function GET(req: Request) {
             .order('order_index', { ascending: true })
             .order('created_at', { ascending: true })
         : Promise.resolve({ data: [] }),
-      content.video
-        ? auth.supabase.from('videos').select('cours_id, bunny_video_id, storage_path, duration_seconds, updated_at').in('cours_id', includedIds)
-        : Promise.resolve({ data: [] }),
+      // `content.video` reste le droit global de la formule ; il ne suffit plus
+      // à décider : une vidéo peut cibler explicitement d'autres formules. On
+      // charge donc toujours, et on filtre par audience ci-dessous.
+      auth.supabase
+        .from('videos')
+        .select('cours_id, bunny_video_id, storage_path, duration_seconds, voies, offers, updated_at')
+        .in('cours_id', includedIds)
+        .eq('type', 'cours')
+        .order('order_index', { ascending: true }),
       auth.supabase
         .from('qcm_series')
         .select('id, cours_id, label, type, annee, duration_minutes, vignette, order_index, updated_at')
@@ -115,7 +122,15 @@ export async function GET(req: Request) {
   // Première ligne rencontrée = fiche principale (la requête est ordonnée).
   const fichesByCours = new Map<string, ChildRow>();
   for (const r of fiches) if (!fichesByCours.has(r.cours_id)) fichesByCours.set(r.cours_id, r);
-  const videosByCours = new Map(videos.map((r) => [r.cours_id, r]));
+  // Audience portée par la vidéo (voies + formules). Le staff voit tout.
+  const videosByCours = new Map<string, ChildRow>();
+  for (const r of videos) {
+    const visible = isStaff || videoVisible(
+      r as { voies?: string[] | null; offers?: string[] | null },
+      { offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule: content.video },
+    );
+    if (visible && !videosByCours.has(r.cours_id)) videosByCours.set(r.cours_id, r);
+  }
   const seriesByCours = new Map<string, ChildRow[]>();
   for (const s of series) {
     const list = seriesByCours.get(s.cours_id) ?? [];

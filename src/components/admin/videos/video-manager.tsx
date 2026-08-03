@@ -12,17 +12,98 @@ import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, moveVideoAction,
   removeVideoSupportAction, renameVideoAction, renameVideoSupportAction,
-  replaceVideoLinkAction, type AddResult, type VideoSupportDoc, type VideoType,
+  replaceVideoLinkAction, updateVideoAudienceAction,
+  type AddResult, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
+import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
 
 export type ManagedVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** Voies de concours concernées (les deux = aucune restriction). */
+  voies: string[];
+  /** Formules ayant accès à cette vidéo (et à ses supports). */
+  offers: string[];
   /** Supports PDF de la vidéo (plusieurs possibles). */
   supports: VideoSupportDoc[];
 };
+
+/** Audience par défaut d'un nouvel ajout — celle qui avait cours avant le
+ *  ciblage par vidéo. Les deux voies sont cochées. */
+const OFFRES_PAR_DEFAUT: Record<VideoType, string[]> = {
+  cours: ['intensif'],
+  seance_approfondie: ['approfondi'],
+};
+
+/** Cases à cocher d'audience : voies (les deux par défaut) et formules. */
+function AudiencePicker({
+  voies, offers, disabled, onVoies, onOffers,
+}: {
+  voies: string[];
+  offers: string[];
+  disabled?: boolean;
+  onVoies: (v: string[]) => void;
+  onOffers: (o: string[]) => void;
+}) {
+  /** Décocher la dernière case rendrait la vidéo invisible : on l'interdit. */
+  const bascule = (liste: string[], valeur: string, apply: (l: string[]) => void) => {
+    const next = liste.includes(valeur) ? liste.filter((x) => x !== valeur) : [...liste, valeur];
+    if (next.length === 0) return;
+    apply(next);
+  };
+
+  return (
+    <div className="space-y-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
+      <div>
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          Voie de concours
+        </p>
+        <div className="flex flex-wrap gap-3">
+          {VOIES.map((v) => (
+            <label key={v.value} className="flex items-center gap-1.5 text-sm text-(--color-ink)">
+              <input
+                type="checkbox"
+                disabled={disabled}
+                checked={voies.includes(v.value)}
+                onChange={() => bascule(voies, v.value, onVoies)}
+                className="h-4 w-4 accent-[#7C3AED]"
+              />
+              {v.label}
+            </label>
+          ))}
+        </div>
+        <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+          Les deux cochées = aucune restriction de voie.
+        </p>
+      </div>
+
+      <div>
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          Formules ayant accès
+        </p>
+        <div className="flex flex-wrap gap-3">
+          {VIDEO_OFFERS.map((o) => (
+            <label key={o.value} className="flex items-center gap-1.5 text-sm text-(--color-ink)">
+              <input
+                type="checkbox"
+                disabled={disabled}
+                checked={offers.includes(o.value)}
+                onChange={() => bascule(offers, o.value, onOffers)}
+                className="h-4 w-4 accent-[#7C3AED]"
+              />
+              {o.label}
+            </label>
+          ))}
+        </div>
+        <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+          Ce choix prime sur le droit global de la formule. Le support éventuel suit la même règle.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 const COPY: Record<VideoType, { titre: string; unite: string; audience: string; exemple: string }> = {
   cours: {
@@ -65,7 +146,10 @@ export function VideoManager({
   onChanged?: () => void;
   /** Ajout personnalisé — utilisé quand l'item n'existe pas encore (« Révisions
    *  - <Collège> ») : l'action crée l'item puis y place la vidéo. */
-  onAdd?: (input: { type: VideoType; titre: string; lien: string; position: number | null }) => Promise<AddResult>;
+  onAdd?: (input: {
+    type: VideoType; titre: string; lien: string; position: number | null;
+    voies: string[]; offers: string[];
+  }) => Promise<AddResult>;
   /** Message affiché au-dessus de la liste (contexte particulier). */
   notice?: string;
 }) {
@@ -84,6 +168,9 @@ export function VideoManager({
   const [withSupport, setWithSupport] = useState(false);
   const supportInput = useRef<HTMLInputElement>(null);
   const [supportFiles, setSupportFiles] = useState<File[]>([]);
+  // Audience du nouvel ajout : les deux voies cochées par défaut.
+  const [voies, setVoies] = useState<string[]>(['interne', 'externe']);
+  const [offers, setOffers] = useState<string[]>(OFFRES_PAR_DEFAUT[type]);
 
   /** Dépose un PDF dans le bucket privé et l'ajoute aux supports de la vidéo. */
   async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
@@ -114,6 +201,8 @@ export function VideoManager({
     setPosition('');
     setWithSupport(false);
     setSupportFiles([]);
+    setVoies(['interne', 'externe']);
+    setOffers(OFFRES_PAR_DEFAUT[type]);
     setAdding(false);
   }
 
@@ -124,12 +213,14 @@ export function VideoManager({
       return setError('Lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.');
     }
     if (withSupport && supportFiles.length === 0) return setError('Choisissez au moins un PDF, ou décochez la case.');
+    if (offers.length === 0) return setError('Cochez au moins une formule.');
+    if (voies.length === 0) return setError('Cochez au moins une voie.');
     start(async () => {
       const rang = position.trim() ? Number(position) : null;
       const pos = rang && Number.isFinite(rang) ? rang : null;
       const res = onAdd
-        ? await onAdd({ type, titre, lien, position: pos })
-        : await addVideoAction({ coursId, type, titre, lien, position: pos });
+        ? await onAdd({ type, titre, lien, position: pos, voies, offers })
+        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers });
       if ('error' in res) return setError(res.error);
       if (withSupport && supportFiles.length > 0) {
         const err = await uploadSupports(res.videoId, supportFiles, res.coursId);
@@ -208,6 +299,9 @@ export function VideoManager({
                       <span className="text-(--color-ink-muted)">sans support</span>
                     )}
                   </p>
+                  <p className="mt-0.5 truncate text-[11px] font-medium text-(--color-primary-deep)">
+                    {resumeAudience(v)}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -248,6 +342,11 @@ export function VideoManager({
                     run(() => renameVideoSupportAction({ supportId, titre }))
                   }
                   onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
+                  onAudience={(nextVoies, nextOffers) =>
+                    run(() => updateVideoAudienceAction({
+                      videoId: v.id, voies: nextVoies, offers: nextOffers,
+                    }))
+                  }
                 />
               )}
             </li>
@@ -291,6 +390,13 @@ export function VideoManager({
                 (vide = à la fin ; 1 = en tête)
               </span>
             </label>
+            <AudiencePicker
+              voies={voies}
+              offers={offers}
+              disabled={pending}
+              onVoies={setVoies}
+              onOffers={setOffers}
+            />
             <label className="flex items-center gap-2 pt-1 text-sm text-(--color-ink)">
               <input
                 type="checkbox"
@@ -360,6 +466,7 @@ function VideoEditPanel({
   onAddSupports,
   onRenameSupport,
   onRemoveSupport,
+  onAudience,
 }: {
   video: ManagedVideo;
   pending: boolean;
@@ -368,10 +475,16 @@ function VideoEditPanel({
   onAddSupports: (files: File[]) => void;
   onRenameSupport: (supportId: string, titre: string) => void;
   onRemoveSupport: (supportId: string) => void;
+  onAudience: (voies: string[], offers: string[]) => void;
 }) {
   const [titre, setTitre] = useState(video.titre);
   const [lien, setLien] = useState('');
+  const [voies, setVoies] = useState<string[]>(video.voies);
+  const [offers, setOffers] = useState<string[]>(video.offers);
   const fileRef = useRef<HTMLInputElement>(null);
+  const audienceModifiee =
+    voies.slice().sort().join() !== video.voies.slice().sort().join()
+    || offers.slice().sort().join() !== video.offers.slice().sort().join();
 
   return (
     <div className="space-y-3 border-t border-(--color-border) bg-(--color-surface-soft) px-3 py-3">
@@ -420,6 +533,31 @@ function VideoEditPanel({
             Remplacer
           </Button>
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+          Qui y a accès
+        </label>
+        <AudiencePicker
+          voies={voies}
+          offers={offers}
+          disabled={pending}
+          onVoies={setVoies}
+          onOffers={setOffers}
+        />
+        {audienceModifiee && (
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            className="mt-2"
+            disabled={pending}
+            onClick={() => onAudience(voies, offers)}
+          >
+            Enregistrer l’accès
+          </Button>
+        )}
       </div>
 
       <div>

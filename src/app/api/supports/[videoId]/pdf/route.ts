@@ -3,8 +3,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
+import { videoVisible } from '@/lib/videos/audience';
 import { watermarkPdf } from '@/lib/fiches/watermark';
 
 export const runtime = 'nodejs';
@@ -22,9 +23,9 @@ export const dynamic = 'force-dynamic';
  *
  * Deux verrous, dans cet ordre :
  *  1. le collège du cours doit être dans le périmètre de l'élève ;
- *  2. le support hérite de la permission de SA vidéo — une séance approfondie
- *     n'est lisible qu'avec le Programme Approfondi, un cours vidéo qu'avec la
- *     Formule Intensive (table formula_permissions).
+ *  2. le support hérite de l'AUDIENCE de SA vidéo — voies de concours et
+ *     formules cochées à l'ajout. Le droit global de la formule
+ *     (formula_permissions) ne sert que de repli, pour une vidéo sans ciblage.
  */
 export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: string }> }) {
   const { videoId } = await ctx.params;
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
     (supabase as any)
       .from('videos')
       .select(`
-        id, titre, type,
+        id, titre, type, voies, offers,
         video_supports(id, titre, storage_path, order_index),
         cours:cours_id(id, matiere_id, matieres(access_type))
       `)
@@ -59,7 +60,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   ]);
 
   const video = videoRow as {
-    id: string; titre: string; type: string;
+    id: string; titre: string; type: string; voies: string[] | null; offers: string[] | null;
     video_supports?: { id: string; titre: string; storage_path: string; order_index: number }[] | null;
     cours?: { id: string; matiere_id: string; matieres?: { access_type?: string } | null } | null;
   } | null;
@@ -79,7 +80,10 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
       return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
     const access = await fetchContentAccessForScopeWith(supabase, scope);
-    const allowed = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
+    const droitFormule = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
+    const allowed = videoVisible(video, {
+      offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule,
+    });
     if (!allowed) return NextResponse.json({ error: 'Contenu réservé à une autre formule' }, { status: 403 });
   }
 

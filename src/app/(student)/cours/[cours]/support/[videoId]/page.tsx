@@ -3,8 +3,9 @@ import { notFound, redirect } from 'next/navigation';
 import { FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { videoVisible } from '@/lib/videos/audience';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
 import { supportPageTitle, type SupportVideoType } from '@/lib/student/supports';
@@ -36,7 +37,7 @@ export default async function SupportPage({
   const { data: row } = await (supabase as any)
     .from('videos')
     .select(`
-      id, titre, type, cours_id,
+      id, titre, type, cours_id, voies, offers,
       video_supports(id, titre, order_index),
       cours:cours_id(id, titre, matiere_id, matieres(nom, access_type))
     `)
@@ -45,6 +46,7 @@ export default async function SupportPage({
 
   const video = row as {
     id: string; titre: string; type: SupportVideoType; cours_id: string;
+    voies: string[] | null; offers: string[] | null;
     video_supports?: { id: string; titre: string; order_index: number }[] | null;
     cours?: { id: string; titre: string; matiere_id: string; matieres?: { nom?: string; access_type?: string } | null } | null;
   } | null;
@@ -57,7 +59,11 @@ export default async function SupportPage({
     const collegeAccess = (video.cours.matieres?.access_type as 'all' | 'specific' | undefined) ?? 'all';
     if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess)) redirect('/facultes');
     const access = await fetchContentAccessForScope(scope);
-    const allowed = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
+    // Le support suit l'audience de SA vidéo (voies + formules).
+    const droitFormule = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
+    const allowed = videoVisible(video, {
+      offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule,
+    });
     if (!allowed) redirect(`/cours/${coursId}`);
   }
 
