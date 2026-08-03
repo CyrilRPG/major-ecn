@@ -279,11 +279,16 @@ export async function POST(req: Request) {
   const redirectTo = `${base}/auth/setup-password`;
 
   // 3) Génération du lien d'activation
-  //    - Nouveau user → invite link
-  //    - User existant → magiclink (un nouveau lien valable 24 h)
+  //    - Nouveau user → invite
+  //    - User existant → recovery, et NON magiclink : GoTrue range le magiclink
+  //      dans la même colonne que le recovery, si bien qu'un magiclink écrase
+  //      un lien d'activation en attente et se fait écraser par lui. Le piège
+  //      est documenté dans lib/stripe/provisioning.ts, où il avait déjà été
+  //      corrigé — mais pas ici.
+  const typeLien = isNew ? 'invite' : 'recovery';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
-    type: isNew ? 'invite' : 'magiclink',
+    type: typeLien,
     email,
     options: { redirectTo },
   });
@@ -291,7 +296,7 @@ export async function POST(req: Request) {
 
   const hashedToken = link?.properties?.hashed_token as string | undefined;
   const setupUrl = hashedToken
-    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=${isNew ? 'invite' : 'magiclink'}&next=${encodeURIComponent('/auth/setup-password')}`
+    ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=${typeLien}&next=${encodeURIComponent('/auth/setup-password')}`
     : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
   log('setup-url-built', { viaHashedToken: !!hashedToken });
 

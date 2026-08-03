@@ -98,7 +98,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
                 </div>`}
 
                 <p style="margin:0;font-size:12px;line-height:1.6;color:#7A7A7A;">
-                  Lien valable 24 h. Une question ? Écrivez-nous à
+                  Lien valable 1 heure et à usage unique. Une question ? Écrivez-nous à
                   <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
                 </p>
               </td>
@@ -129,7 +129,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     '',
     `Choisissez votre mot de passe : ${setupUrl}`,
     '',
-    'Lien valable 24 h. Pour toute question : contact@major-ecn.fr',
+    'Lien valable 1 heure et à usage unique. Pour toute question : contact@major-ecn.fr',
     '— Major ECN',
   ].join('\n');
 

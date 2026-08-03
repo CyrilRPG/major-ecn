@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AddStudentSchema } from '@/lib/schemas/student';
 import { siteUrl } from '@/lib/email/send';
-import { buildStudentScope, sendStudentInvite } from '@/lib/admin/student-invite';
+import { buildStudentScope, etatCompte, sendStudentInvite } from '@/lib/admin/student-invite';
 import { isDecouverteOnly } from '@/lib/auth/trial';
 
 /** URL publique : siteUrl() (NEXT_PUBLIC_SITE_URL / Vercel) en priorité,
@@ -107,15 +107,23 @@ export async function POST(req: Request) {
 
   // 3) Email d'invitation robuste (Resend puis fallback Supabase).
   const base = origin(req);
-  const { via, error: emailError, setupUrl } = await sendStudentInvite(admin, base, email, first_name, last_name);
+  // Un compte « Découverte » réutilisé a déjà été activé et porte déjà un mot
+  // de passe : lui envoyer « choisissez votre mot de passe » produisait le
+  // « New password should be different from the old password » signalé.
+  const etat = existingUser ? etatCompte(existingUser) : 'jamais_active';
+  const { via, error: emailError, setupUrl } = await sendStudentInvite(
+    admin, base, email, first_name, last_name, etat,
+  );
 
   if (!via) {
     return NextResponse.json({
       ok: true,
       id: userId,
       warning:
-        `Élève créé, mais l'email d'invitation n'a pas pu être envoyé : ${emailError ?? 'erreur inconnue'}. ` +
-        `Communiquez ce lien à l'élève pour activer son compte : ${setupUrl}`,
+        `Élève créé, mais l'email d'invitation n'a pas pu être envoyé : ${emailError ?? 'erreur inconnue'}. `
+        + (setupUrl
+          ? `Communiquez ce lien à l'élève pour activer son compte : ${setupUrl}`
+          : 'Aucun lien n\'a pu être généré — utilisez « Renvoyer l\'email d\'activation » sur sa fiche.'),
     });
   }
 

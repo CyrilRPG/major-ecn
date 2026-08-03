@@ -13,7 +13,7 @@ import { createClient as createSupabasePublicClient } from '@supabase/supabase-j
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
-import { purchaseConfirmationEmail } from '@/lib/email/templates';
+import { purchaseConfirmationEmail, resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 
 type ScopeWithFormule = { paid_formule?: string; paid_offer?: string };
@@ -68,9 +68,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `generateLink: ${linkErr.message}` }, { status: 500 });
   }
   const hashedToken = link?.properties?.hashed_token as string | undefined;
+  // Pas de repli vers `/login` : envoyer « voici votre lien d'activation » vers
+  // l'écran de connexion d'un compte sans mot de passe est une impasse.
   const setupUrl = hashedToken
     ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=recovery&next=${encodeURIComponent('/auth/setup-password')}`
-    : (link?.properties?.action_link as string | undefined) ?? `${base}/login`;
+    : (link?.properties?.action_link as string | undefined) ?? null;
+  if (!setupUrl) {
+    return NextResponse.json({ error: 'Aucun lien exploitable n\'a pu être généré.' }, { status: 500 });
+  }
+
+  // L'objet du mail doit dire la vérité : un compte déjà activé ne « s'active »
+  // pas une seconde fois, il se réinitialise. Annoncer une activation à
+  // quelqu'un qui a déjà un mot de passe, c'est exactement ce qui l'amenait à
+  // retaper le sien et à buter sur « must be different from the old password ».
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: authUser } = await (admin as any).auth.admin.getUserById(body.userId);
+  const dejaActive = !!(authUser?.user?.email_confirmed_at || authUser?.user?.last_sign_in_at);
 
   // 3) Tentative 1 : Resend avec le template d'achat (si on a une formule)
   //    sinon un template "activation" générique.
@@ -78,9 +91,10 @@ export async function POST(req: Request) {
   let emailError: string | null = null;
 
   try {
+    const quoi = dejaActive ? 'Réinitialisation de votre mot de passe' : 'Votre lien d\'activation';
     const subject = formule
-      ? `Votre lien d'activation — ${formule.name} | Major ECN`
-      : `Votre lien d'activation — Major ECN`;
+      ? `${quoi} — ${formule.name} | Major ECN`
+      : `${quoi} — Major ECN`;
     if (formule) {
       const tmpl = purchaseConfirmationEmail({
         firstName: prof.first_name ?? '',
@@ -93,12 +107,10 @@ export async function POST(req: Request) {
       if (r.ok) { emailVia = 'resend'; }
       else { emailError = r.error; }
     } else {
-      const r = await sendEmail({
-        to: prof.email,
-        subject,
-        html: `<p>Bonjour,</p><p>Voici votre lien d'activation : <a href="${setupUrl}">${setupUrl}</a>.</p>`,
-        text: `Votre lien d'activation : ${setupUrl}`,
-      });
+      const tmpl = dejaActive
+        ? resetPasswordEmail({ firstName: prof.first_name ?? '', resetUrl: setupUrl })
+        : welcomeEmail({ firstName: prof.first_name ?? 'futur lauréat', setupUrl, role: 'student' });
+      const r = await sendEmail({ to: prof.email, subject, html: tmpl.html, text: tmpl.text });
       if (r.ok) { emailVia = 'resend'; }
       else { emailError = r.error; }
     }

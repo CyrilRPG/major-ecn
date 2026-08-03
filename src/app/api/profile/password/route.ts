@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { messageAuth } from '@/lib/auth/messages';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -17,7 +18,16 @@ export async function POST(req: Request) {
   }
 
   const { error } = await supabase.auth.updateUser({ password: pwd });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // Le message brut de Supabase était renvoyé tel quel — donc affiché en
+  // anglais à l'élève, « New password should be different from the old
+  // password » en tête. On traduit, et on distingue l'erreur de saisie (400)
+  // d'une vraie panne (500).
+  if (error) {
+    return NextResponse.json(
+      { error: messageAuth(error.code, error.message) },
+      { status: error.code === 'same_password' || error.code === 'weak_password' ? 400 : 500 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

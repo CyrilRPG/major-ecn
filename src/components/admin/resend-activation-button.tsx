@@ -41,7 +41,7 @@ export function ResendActivationButton({ userId, displayName }: { userId: string
 
       // Le lien est TOUJOURS affiché, envoi réussi ou non : c'est le moyen le
       // plus sûr de débloquer un élève (à transmettre par un autre canal si
-      // l'e-mail n'arrive pas). Il est valable 24 h et à usage unique.
+      // l'e-mail n'arrive pas). Il est valable 1 heure et à usage unique.
       setLien(j.setupUrl ?? null);
 
       if (j.ok) {

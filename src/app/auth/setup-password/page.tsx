@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { CheckCircle2, Eye, EyeOff, KeyRound, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { createClient } from '@/lib/supabase/client';
+import { messageAuth, messageLien } from '@/lib/auth/messages';
 
 type Status = 'checking' | 'ready' | 'no-session' | 'submitting' | 'done' | 'error';
 
@@ -13,6 +14,9 @@ export default function SetupPasswordPage() {
   const router = useRouter();
   const [status, setStatus] = useState<Status>('checking');
   const [message, setMessage] = useState<string>('');
+  /** Compte réellement visé par le formulaire — affiché pour lever toute
+   *  ambiguïté quand plusieurs comptes ont servi sur le même navigateur. */
+  const [emailCible, setEmailCible] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -29,18 +33,27 @@ export default function SetupPasswordPage() {
     const supabase = createClient();
     let mounted = true;
 
-    // Affiche l'erreur remontée par /auth/confirm (?error=…) le cas échéant
-    const url = new URL(window.location.href);
-    const err = url.searchParams.get('error');
-    if (err) {
-      setMessage(decodeURIComponent(err));
-      // on n'arrête pas tout de suite : peut-être que la session est quand
-      // même posée via le fallback implicit.
-    }
+    // Le lien a échoué → on s'arrête NET.
+    //
+    // Auparavant le message était mémorisé sans changer le statut, puis le
+    // formulaire s'affichait dès qu'une session existait dans le navigateur.
+    // Quand le jeton était mort mais qu'une ancienne session traînait (élève
+    // déjà activé, ou autre compte utilisé sur le même poste), la page
+    // paraissait donc fonctionner et `updateUser` s'appliquait à CETTE
+    // session-là. L'élève retapait son mot de passe habituel et récoltait
+    // « New password should be different from the old password ». C'est
+    // exactement le scénario relevé dans les journaux : douze tentatives
+    // depuis une même adresse IP en quarante minutes.
+    const echecLien = new URL(window.location.href).searchParams.get('error');
 
     const check = async () => {
       const { data } = await supabase.auth.getSession();
       if (!mounted) return;
+      if (echecLien) {
+        setMessage(messageLien(echecLien));
+        setStatus('no-session');
+        return;
+      }
       // Préremplit nom/prénom depuis les métadonnées d'invitation (vides pour une
       // invitation en masse → l'élève les saisit lui-même).
       const meta = data.session?.user?.user_metadata as { first_name?: string; last_name?: string } | undefined;
@@ -48,12 +61,19 @@ export default function SetupPasswordPage() {
       if (meta?.last_name) setLastName(meta.last_name);
       // Aucun prénom prérempli => invité en masse => téléphone obligatoire.
       setBulkInvite(!meta?.first_name);
+      setEmailCible(data.session?.user?.email ?? null);
       setStatus(data.session ? 'ready' : 'no-session');
     };
     const t = setTimeout(check, 150);
     const sub = supabase.auth.onAuthStateChange((_evt, sess) => {
       if (!mounted) return;
-      if (sess) setStatus('ready');
+      // Le lien a échoué : une session résiduelle ne doit surtout PAS rouvrir
+      // le formulaire — c'était le mécanisme du bug `same_password`.
+      if (echecLien) return;
+      if (sess) {
+        setEmailCible(sess.user?.email ?? null);
+        setStatus('ready');
+      }
     });
     return () => {
       mounted = false;
@@ -91,8 +111,12 @@ export default function SetupPasswordPage() {
       password,
       data: { first_name: firstName.trim(), last_name: lastName.trim() },
     });
-    if (error) {
-      setMessage(error.message);
+    // `same_password` n'est PAS un échec ici : le compte porte déjà exactement
+    // le mot de passe demandé, donc l'objectif de l'élève est atteint. Le
+    // traiter comme une erreur le renvoyait en boucle sur un formulaire qui
+    // n'avait plus rien à faire. On enchaîne sur la suite du parcours.
+    if (error && error.code !== 'same_password') {
+      setMessage(messageAuth(error.code, error.message));
       setStatus('error');
       return;
     }
@@ -130,13 +154,18 @@ export default function SetupPasswordPage() {
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">
             {status === 'no-session'
-              ? (message
-                  ? `Lien invalide : ${message}. Demandez un nouveau lien depuis la page d’inscription.`
-                  : 'Lien d’activation invalide ou expiré. Demandez un nouveau lien depuis la page d’inscription.')
+              ? (message || messageLien(null))
               : status === 'done'
               ? 'Votre mot de passe est créé. On vous redirige vers la plateforme…'
               : 'Définissez un mot de passe sécurisé pour accéder à votre espace Major ECN.'}
           </p>
+
+          {status === 'no-session' && (
+            <p className="mt-2 text-[13px] text-(--color-ink-muted)">
+              Si vous aviez déjà choisi un mot de passe, connectez-vous simplement : votre
+              compte reste actif.
+            </p>
+          )}
 
           {status === 'checking' && (
             <div className="mt-6 flex items-center gap-2 text-sm text-(--color-ink-soft)">
@@ -147,23 +176,32 @@ export default function SetupPasswordPage() {
 
           {status === 'no-session' && (
             <div className="mt-6 flex flex-col gap-3">
+              {/* Action principale : repartir avec un lien neuf, sans passer par
+                  l'administration. C'est le seul geste qui débloque vraiment. */}
               <Link
-                href="/"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-5 py-3 text-sm font-semibold text-(--color-ink) hover:border-(--color-primary)/40"
+                href="/forgot-password"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
               >
-                Retour au site
+                Recevoir un nouveau lien
               </Link>
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-5 py-3 text-sm font-bold text-white shadow-sm hover:scale-[1.02] transition-transform"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-5 py-3 text-sm font-semibold text-(--color-ink) hover:border-(--color-primary)/40"
               >
-                Se connecter
+                J’ai déjà un mot de passe — me connecter
               </Link>
             </div>
           )}
 
           {(status === 'ready' || status === 'submitting' || status === 'error') && (
             <form onSubmit={onSubmit} className="mt-6 space-y-4">
+              {/* Lever l'ambiguïté quand plusieurs comptes ont servi sur ce
+                  navigateur : l'élève voit noir sur blanc lequel il configure. */}
+              {emailCible && (
+                <p className="rounded-xl bg-(--color-surface-soft) px-3 py-2 text-[12.5px] text-(--color-ink-soft)">
+                  Compte concerné : <strong className="text-(--color-ink)">{emailCible}</strong>
+                </p>
+              )}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label htmlFor="firstName" className="text-xs font-semibold text-(--color-ink)">Prénom</label>

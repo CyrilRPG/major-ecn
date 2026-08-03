@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
-import { buildStudentScope, sendStudentInvite } from '@/lib/admin/student-invite';
+import { buildStudentScope, etatCompte, sendStudentInvite } from '@/lib/admin/student-invite';
 import { siteUrl } from '@/lib/email/send';
 import { isDecouverteOnly } from '@/lib/auth/trial';
 
@@ -101,7 +101,11 @@ export async function POST(req: Request) {
         if (wasNew) await admin.auth.admin.deleteUser(userId).catch(() => null);
         failed.push({ email, reason: upErr.message }); continue;
       }
-      const { via } = await sendStudentInvite(admin, base, email, '', '');
+      // Compte « Découverte » réutilisé : il a déjà un mot de passe, donc
+      // gabarit de réinitialisation et lien `recovery` — pas « choisissez
+      // votre mot de passe », qui déclenchait `same_password`.
+      const etat = existingUser ? etatCompte(existingUser) : 'jamais_active';
+      const { via } = await sendStudentInvite(admin, base, email, '', '', etat);
       if (via) created.push(email); else invitedNoEmail.push(email);
       await sleep(600); // throttle : respecte les limites d'envoi Resend/Supabase
     } catch (e) {

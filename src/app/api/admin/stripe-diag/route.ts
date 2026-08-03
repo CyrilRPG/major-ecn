@@ -239,24 +239,25 @@ export async function GET(req: Request) {
       details: existing ? { id: existing.id, email_confirmed_at: existing.email_confirmed_at } : { found: false, hint: 'Le user n\'a pas encore été provisionné — /merci ne s\'est peut-être jamais déclenché.' },
     });
 
-    // Step 5 — generateLink (dry-run, n'envoie pas)
+    // Step 5 — état d'activation du compte.
+    //
+    // Cette étape générait auparavant un lien de récupération, en se disant
+    // « dry-run parce qu'on n'envoie pas d'e-mail ». C'était faux du point de
+    // vue qui compte : GoTrue ne conserve qu'un jeton par utilisateur, donc
+    // chaque diagnostic INVALIDAIT le lien d'activation que l'élève avait
+    // dans sa boîte. Un outil de diagnostic ne doit rien casser de ce qu'il
+    // observe. On se contente de rapporter l'état, sans rien générer.
     if (existing) {
-      const base = siteUrl();
-      const redirectTo = `${base}/auth/setup-password`;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data: link, error: linkErr } = await (admin as any).auth.admin.generateLink({
-        type: 'recovery',
-        email,
-        options: { redirectTo },
-      });
-      const hashedToken = link?.properties?.hashed_token as string | undefined;
-      const setupUrl = hashedToken
-        ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=recovery&next=${encodeURIComponent('/auth/setup-password')}`
-        : null;
       steps.push({
-        name: 'generate-link-recovery',
-        ok: !!hashedToken,
-        details: linkErr ? { error: linkErr.message } : { setupUrl, hashedTokenPrefix: hashedToken?.slice(0, 12) + '…' },
+        name: 'etat-activation',
+        ok: !!existing.email_confirmed_at,
+        details: {
+          email_confirmed_at: existing.email_confirmed_at ?? null,
+          last_sign_in_at: existing.last_sign_in_at ?? null,
+          hint: existing.email_confirmed_at
+            ? 'Compte activé — en cas d\'oubli, l\'élève passe par « Mot de passe oublié ».'
+            : 'Compte jamais activé — utilise « Renvoyer l\'email d\'activation » sur la fiche élève, qui génère ET envoie un lien.',
+        },
       });
     }
   }

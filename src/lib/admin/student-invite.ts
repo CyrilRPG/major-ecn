@@ -1,7 +1,29 @@
 import 'server-only';
 import { sendEmail } from '@/lib/email/send';
-import { welcomeEmail } from '@/lib/email/templates';
+import { resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
 import { highestOffer, type Offer } from '@/types/domain';
+
+/**
+ * Un compte qui a DÉJÀ un mot de passe ne doit pas recevoir « choisissez votre
+ * mot de passe ».
+ *
+ * C'est la source directe du « New password should be different from the old
+ * password » signalé sur des e-mails d'invitation : un élève venu de l'Espace
+ * Découverte, puis basculé sur une offre payante par l'administration, garde
+ * son compte et son mot de passe — mais recevait quand même le gabarit de
+ * première activation. Il retapait son mot de passe habituel, et GoTrue le
+ * rejetait parce qu'identique à l'actuel.
+ *
+ * `invite` ne fonctionne d'ailleurs pas sur un compte déjà confirmé : le bon
+ * type est alors `recovery`.
+ */
+export type EtatCompte = 'jamais_active' | 'deja_active';
+
+/** Détermine l'état d'un compte auth (confirmé/déjà connecté = déjà activé). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function etatCompte(user: any): EtatCompte {
+  return user?.email_confirmed_at || user?.last_sign_in_at ? 'deja_active' : 'jamais_active';
+}
 
 /** Construit le permission_scope d'un élève (offre(s), collèges, cours, voie). */
 export function buildStudentScope(input: {
@@ -53,25 +75,51 @@ export async function sendStudentInvite(
   email: string,
   first_name: string,
   last_name: string,
-): Promise<{ via: 'resend' | 'supabase' | null; error: string | null; setupUrl: string }> {
+  etat: EtatCompte = 'jamais_active',
+): Promise<{ via: 'resend' | 'supabase' | null; error: string | null; setupUrl: string | null }> {
   const redirectTo = `${base}/auth/setup-password`;
-  let setupUrl = `${base}/login`;
+  const type = etat === 'deja_active' ? 'recovery' : 'invite';
+  // `null` et non `${base}/login` : un e-mail « activez votre compte » qui mène
+  // à l'écran de connexion d'un compte sans mot de passe est une impasse. Sans
+  // lien exploitable, l'appelant doit le SAVOIR plutôt qu'envoyer un mail cassé.
+  let setupUrl: string | null = null;
+  let erreurLien: string | null = null;
   try {
-    const { data: link } = await admin.auth.admin.generateLink({
-      type: 'invite', email, options: { redirectTo },
+    // `error` n'était pas destructuré : un échec de génération passait
+    // totalement inaperçu (le SDK ne lève pas), et l'élève recevait le lien
+    // vers /login sans que personne ne s'en aperçoive.
+    const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
+      type, email, options: { redirectTo },
     });
+    if (linkErr) throw linkErr;
     const hashedToken = link?.properties?.hashed_token as string | undefined;
     if (hashedToken) {
-      setupUrl = `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=invite&next=${encodeURIComponent('/auth/setup-password')}`;
+      setupUrl = `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=${type}&next=${encodeURIComponent('/auth/setup-password')}`;
     } else if (link?.properties?.action_link) {
       setupUrl = link.properties.action_link as string;
     }
-  } catch {
-    /* generateLink KO → on tentera quand même Resend, puis Supabase */
+  } catch (e) {
+    erreurLien = e instanceof Error ? e.message : 'generateLink a échoué';
+  }
+
+  if (!setupUrl) {
+    // On tente quand même la voie Supabase native, qui génère son propre lien.
+    try {
+      const { error: invErr } = await admin.auth.admin.inviteUserByEmail(email, {
+        data: { first_name, last_name, role: 'student' }, redirectTo,
+      });
+      return invErr
+        ? { via: null, error: `${erreurLien ?? 'lien indisponible'} | Supabase: ${invErr.message}`, setupUrl: null }
+        : { via: 'supabase', error: null, setupUrl: null };
+    } catch (e) {
+      return { via: null, error: `${erreurLien ?? 'lien indisponible'} | ${e instanceof Error ? e.message : ''}`, setupUrl: null };
+    }
   }
 
   try {
-    const { subject, html, text } = welcomeEmail({ firstName: first_name || 'futur lauréat', setupUrl, role: 'student' });
+    const { subject, html, text } = etat === 'deja_active'
+      ? resetPasswordEmail({ firstName: first_name || 'futur lauréat', resetUrl: setupUrl })
+      : welcomeEmail({ firstName: first_name || 'futur lauréat', setupUrl, role: 'student' });
     const sent = await sendEmail({ to: email, subject, html, text });
     if (sent.ok) return { via: 'resend', error: null, setupUrl };
     const { error: invErr } = await admin.auth.admin.inviteUserByEmail(email, {
