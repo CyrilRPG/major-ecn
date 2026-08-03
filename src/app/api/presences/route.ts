@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { getRequestUser } from '@/lib/auth/bearer';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -22,9 +21,12 @@ const MAX_SIGNATURE_CHARS = 400_000;
  * la réponse est un succès, l'enregistrement initial est conservé.
  */
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const user = await getVerifiedUser(supabase);
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  // Auth duale cookie OU Bearer, pour la même raison que /api/emargement : le
+  // middleware ne rafraîchit pas la session ici, et un onglet resté ouvert
+  // longtemps avant l'ouverture du lien Zoom présente un cookie périmé.
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  const user = auth.user;
 
   const body = (await req.json().catch(() => ({}))) as {
     eventId?: string;
@@ -45,7 +47,7 @@ export async function POST(req: Request) {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any;
+  const db = auth.supabase as any;
 
   // Déjà émargé : on ne réécrit pas la signature d'origine.
   const { data: existing } = await db

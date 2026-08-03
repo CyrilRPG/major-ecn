@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock, ExternalLink, PenLine, Plus, Star, Trash2, User, Video } from 'lucide-react';
 import { SignaturePad } from '@/components/student/signature-pad';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -361,13 +362,18 @@ function ZoomJoinBlock({ event, alreadySigned }: { event: PlatformEvent; already
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch('/api/presences', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId: event.id, signaturePng: signature }),
+      const res = await fetchAvecJetonFrais('/api/presences', {
+        eventId: event.id,
+        signaturePng: signature,
       });
       const json = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) throw new Error(json.error ?? 'Émargement impossible');
+      if (!res.ok) {
+        throw new Error(
+          res.status === 401
+            ? 'Votre session a expiré. Rechargez la page, puis réémargez.'
+            : json.error ?? 'Émargement impossible',
+        );
+      }
       setSigned(true);
     } catch (e) {
       // Contrairement à l'ancien comportement « best-effort », on n'ouvre PAS

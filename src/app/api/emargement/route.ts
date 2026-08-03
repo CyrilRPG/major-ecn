@@ -15,8 +15,7 @@
  * d'échapper à l'émargement.
  */
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { getRequestUser } from '@/lib/auth/bearer';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -41,9 +40,17 @@ function parseKind(raw: string | undefined): 'video' | 'seance' {
 }
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const user = await getVerifiedUser(supabase);
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  // Auth duale cookie OU Bearer. Le cookie seul ne suffisait pas : le
+  // middleware ne rafraîchit pas la session sur cette route (elle n'est pas
+  // dans `isProtectedRoute`), et une page laissée ouverte pendant une longue
+  // vidéo finissait avec un jeton périmé dans ses cookies. L'étudiant se
+  // voyait alors refuser sa signature — « Non authentifié » — sans aucun
+  // moyen de s'en sortir, la modale d'émargement n'étant pas fermable. Le
+  // navigateur, lui, sait toujours produire un jeton frais : il l'envoie en
+  // Bearer (cf. lib/auth/fresh-token.ts).
+  const auth = await getRequestUser(req);
+  if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+  const user = auth.user;
 
   const body = (await req.json().catch(() => ({}))) as Body;
   const coursId = (body.coursId ?? '').trim();
@@ -51,7 +58,7 @@ export async function POST(req: Request) {
   const kind = parseKind(body.kind);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any;
+  const db = auth.supabase as any;
 
   if (body.action === 'sign') {
     const signature = body.signaturePng ?? '';

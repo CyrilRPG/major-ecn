@@ -19,12 +19,41 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PenLine, ShieldCheck } from 'lucide-react';
 import { SignaturePad } from './signature-pad';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import {
   ATTENDANCE_THRESHOLD,
   VIDEO_PAUSE_EVENT,
   VIDEO_PROGRESS_EVENT,
   type VideoProgressDetail,
 } from '@/lib/emargement';
+
+/**
+ * Une signature non transmise est conservée localement. Sans cela, un échec
+ * réseau ou un jeton périmé obligeait l'étudiant à tout recommencer — et,
+ * la modale n'étant pas fermable, le laissait bloqué sur le cours.
+ */
+function cleSignature(coursId: string, kind: string) {
+  return `mecn:emargement:${coursId}:${kind}`;
+}
+
+function lireSignatureGardee(coursId: string, kind: string): string | null {
+  try {
+    const v = window.localStorage.getItem(cleSignature(coursId, kind));
+    return v && v.startsWith('data:image/png;base64,') ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function garderSignature(coursId: string, kind: string, png: string | null) {
+  try {
+    const cle = cleSignature(coursId, kind);
+    if (png) window.localStorage.setItem(cle, png);
+    else window.localStorage.removeItem(cle);
+  } catch {
+    // Stockage indisponible (navigation privée, quota) : sans conséquence.
+  }
+}
 
 export function EmargementGate({
   coursId,
@@ -69,16 +98,12 @@ export function EmargementGate({
       setBlocked(true);
       pauseVideo();
       try {
-        await fetch('/api/emargement', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'require',
-            coursId,
-            kind,
-            watchedRatio: detail.ratio,
-            watchedSeconds: detail.seconds,
-          }),
+        await fetchAvecJetonFrais('/api/emargement', {
+          action: 'require',
+          coursId,
+          kind,
+          watchedRatio: detail.ratio,
+          watchedSeconds: detail.seconds,
         });
       } catch {
         // L'enregistrement réessaiera à la signature ; la barrière reste posée.
@@ -99,34 +124,69 @@ export function EmargementGate({
     return () => { document.body.style.overflow = prev; };
   }, [blocked, pauseVideo]);
 
+  const envoyer = useCallback(async (png: string) => {
+    // La signature est gardée AVANT l'envoi : si l'onglet est fermé ou la
+    // requête perdue, elle sera rejouée au prochain chargement.
+    garderSignature(coursId, kind, png);
+
+    // Filet : si l'appel « require » a échoué (réseau), on le rejoue pour que
+    // la ligne existe avant de tenter la signature.
+    await fetchAvecJetonFrais('/api/emargement', {
+      action: 'require', coursId, kind,
+    }).catch(() => null);
+
+    const res = await fetchAvecJetonFrais('/api/emargement', {
+      action: 'sign', coursId, kind, signaturePng: png,
+    });
+    const json = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) {
+      throw new Error(
+        res.status === 401
+          ? 'Votre session a expiré pendant la lecture. Rechargez la page : votre signature est conservée et sera envoyée automatiquement.'
+          : json.error ?? 'Enregistrement impossible',
+      );
+    }
+    garderSignature(coursId, kind, null);
+    setSigned(true);
+    setBlocked(false);
+  }, [coursId, kind]);
+
   async function submit() {
     if (!signature || busy) return;
     setBusy(true);
     setError(null);
     try {
-      // Filet : si l'appel « require » a échoué (réseau), on le rejoue pour que
-      // la ligne existe avant de tenter la signature.
-      await fetch('/api/emargement', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'require', coursId, kind }),
-      }).catch(() => null);
-
-      const res = await fetch('/api/emargement', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'sign', coursId, kind, signaturePng: signature }),
-      });
-      const json = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) throw new Error(json.error ?? 'Enregistrement impossible');
-      setSigned(true);
-      setBlocked(false);
+      await envoyer(signature);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Enregistrement impossible');
     } finally {
       setBusy(false);
     }
   }
+
+  // Rattrapage : une signature déjà tracée mais jamais enregistrée est
+  // renvoyée au chargement suivant. C'est ce qui garantit qu'un incident
+  // technique ne laisse plus personne coincé derrière la modale — l'étudiant
+  // a signé, son geste n'est pas perdu.
+  const rattrapageRef = useRef(false);
+  useEffect(() => {
+    if (!blocked || signed || rattrapageRef.current) return;
+    const gardee = lireSignatureGardee(coursId, kind);
+    if (!gardee) return;
+    rattrapageRef.current = true;
+    // Pas de `busy` ici : les deux actions serveur sont idempotentes (une
+    // signature déjà posée n'est jamais écrasée), un clic simultané sur
+    // « Valider » est donc sans danger.
+    //
+    // set-state-in-effect désactivée sciemment : la règle vise les cascades de
+    // rendus, or `envoyer` n'appelle setState qu'APRÈS ses requêtes réseau, et
+    // `rattrapageRef` garantit un unique passage. C'est bien une
+    // synchronisation avec un système externe — le serveur d'émargement.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    envoyer(gardee).catch(() => {
+      setError('Votre signature précédente n’a pas pu être enregistrée. Signez à nouveau, ou réessayez.');
+    });
+  }, [blocked, signed, coursId, kind, envoyer]);
 
   if (!blocked) return null;
 
