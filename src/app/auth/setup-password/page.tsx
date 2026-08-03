@@ -150,7 +150,14 @@ export default function SetupPasswordPage() {
             <ShieldCheck className="h-3.5 w-3.5" /> Activation du compte
           </span>
           <h1 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-(--color-ink) sm:text-3xl">
-            {status === 'done' ? 'Bienvenue !' : 'Choisissez votre mot de passe'}
+            {status === 'done'
+              ? 'Bienvenue !'
+              // Le titre suivait l'écran de succès quoi qu'il arrive : « Choisissez
+              // votre mot de passe » s'affichait au-dessus du message d'échec du
+              // lien, ce qui laissait croire qu'il restait quelque chose à saisir.
+              : status === 'no-session'
+              ? 'Ce lien n’est plus utilisable'
+              : 'Choisissez votre mot de passe'}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-(--color-ink-soft)">
             {status === 'no-session'
