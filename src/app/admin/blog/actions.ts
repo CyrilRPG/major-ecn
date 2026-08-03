@@ -1,8 +1,9 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { BLOG_CACHE_TAG } from '@/lib/data/blog-db';
 import type { Block } from '@/lib/data/blog-content/types';
 import type { BlogCategory } from '@/lib/data/blog-articles';
 import type { Json } from '@/types/database';
@@ -130,6 +131,15 @@ export async function uploadBlogImage(
 }
 
 function revalidateBlog(slug?: string) {
+  // `revalidatePath` ne suffit plus : les articles sont désormais lus à travers
+  // `unstable_cache`, dont l'invalidation passe par l'étiquette. Sans cette
+  // ligne, une publication resterait invisible jusqu'à l'expiration des
+  // 5 minutes de cache.
+  //
+  // `updateTag` plutôt que `revalidateTag` : appelé depuis une action serveur,
+  // il garantit que l'administrateur voit immédiatement sa propre publication
+  // au lieu d'attendre le prochain passage de cache.
+  updateTag(BLOG_CACHE_TAG);
   revalidatePath('/blog');
   revalidatePath('/admin/blog');
   if (slug) revalidatePath(`/blog/${slug}`);
