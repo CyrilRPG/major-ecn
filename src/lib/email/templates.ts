@@ -4,6 +4,24 @@
  * couleurs en hex, pas d'images externes obligatoires.
  */
 
+/**
+ * Durée de validité annoncée dans les e-mails, en heures.
+ *
+ * SOURCE DE VÉRITÉ UNIQUE — elle doit refléter le réglage réel
+ * « Email OTP Expiration » du dashboard Supabase (Authentication → Emails).
+ * Les gabarits promettaient « 24 h » pendant que la valeur effective était
+ * l'heure par défaut de GoTrue : des élèves attendaient donc tranquillement
+ * avec un lien déjà mort. Un seul endroit à changer désormais.
+ *
+ * Réglable sans redéploiement via NEXT_PUBLIC_LINK_TTL_HOURS.
+ */
+const TTL_LIEN_HEURES = Number(process.env.NEXT_PUBLIC_LINK_TTL_HOURS) || 1;
+
+/** « 1 heure », « 24 heures »… tel qu'affiché à l'élève. */
+export function dureeLien(): string {
+  return TTL_LIEN_HEURES === 1 ? '1 heure' : `${TTL_LIEN_HEURES} heures`;
+}
+
 type WelcomeArgs = {
   firstName: string;
   setupUrl: string;
@@ -98,7 +116,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
                 </div>`}
 
                 <p style="margin:0;font-size:12px;line-height:1.6;color:#7A7A7A;">
-                  Lien valable 1 heure et à usage unique. Une question ? Écrivez-nous à
+                  Lien valable ${dureeLien()} et à usage unique. Une question ? Écrivez-nous à
                   <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
                 </p>
               </td>
@@ -129,7 +147,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     '',
     `Choisissez votre mot de passe : ${setupUrl}`,
     '',
-    'Lien valable 1 heure et à usage unique. Pour toute question : contact@major-ecn.fr',
+    `Lien valable ${dureeLien()} et à usage unique. Pour toute question : contact@major-ecn.fr`,
     '— Major ECN',
   ].join('\n');
 
@@ -561,7 +579,7 @@ export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
   const subject = '🔐 Réinitialisation de votre mot de passe — Major ECN';
   const intro =
     `Vous avez demandé à réinitialiser votre mot de passe Major ECN. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.<br /><br />` +
-    `Le lien est valable <strong>1 heure</strong>. Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email — votre mot de passe actuel reste inchangé.`;
+    `Le lien est valable <strong>${dureeLien()}</strong>. Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email — votre mot de passe actuel reste inchangé.`;
   const bodyHtml = `
     <p style="margin:0 0 8px;font-size:13px;color:#9AA1AE;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">
       Sécurité du compte
@@ -603,7 +621,7 @@ export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
     `Vous avez demandé à réinitialiser votre mot de passe Major ECN.`,
     `Choisissez votre nouveau mot de passe : ${resetUrl}`,
     ``,
-    `Le lien est valable 1 heure. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email — votre mot de passe actuel reste inchangé.`,
+    `Le lien est valable ${dureeLien()}. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email — votre mot de passe actuel reste inchangé.`,
     ``,
     `— L'équipe Major ECN`,
   ].join('\n');
