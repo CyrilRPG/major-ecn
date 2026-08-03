@@ -41,6 +41,24 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const supabase = await createClient();
   const days7Ago = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
+  // Popup d'accueil : lancée ICI, attendue tout en bas.
+  //
+  // Elle ne dépend d'aucun des blocs qui suivent (révisions transversales,
+  // interrogation obligatoire), mais elle était exécutée APRÈS eux, en fin de
+  // chaîne — soit deux allers-retours de plus ajoutés à la latence de CHAQUE
+  // page de la plateforme. On la met en vol tout de suite ; son résultat n'est
+  // consommé qu'au moment du rendu.
+  const popupAccueilPromise = profile.role === 'student'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? (supabase as any)
+        .from('welcome_popups')
+        .select('id, college_id, active, titre, accroche, intro, demarrage_actif, demarrage_intro, demarrage_colleges')
+        .then((r: { data: unknown }) => r.data)
+    : Promise.resolve(null);
+  // Une promesse rejetée et non consommée ferait tomber le processus : on la
+  // neutralise dès maintenant, la valeur `null` étant déjà le cas de repli.
+  popupAccueilPromise.catch?.(() => null);
+
   // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
   // n'attend plus la fin de l'arbre avant de lancer les requêtes de
   // satisfaction/progrès (elles en sont indépendantes) → moins de latence.
@@ -268,10 +286,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
     ? WELCOME_PAR_DEFAUT
     : { ...WELCOME_PAR_DEFAUT, demarrageActif: false, specialites: [] };
   if (profile.role === 'student') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: welcomeRows } = await (supabase as any)
-      .from('welcome_popups')
-      .select('id, college_id, active, titre, accroche, intro, demarrage_actif, demarrage_intro, demarrage_colleges');
+    // Requête lancée en début de rendu (cf. popupAccueilPromise) : à ce stade
+    // elle est déjà revenue, on ne fait qu'en récupérer le résultat.
+    const welcomeRows = await popupAccueilPromise.catch(() => null);
     const rows = (welcomeRows ?? []) as WelcomePopupRow[];
     if (rows.length > 0) {
       const ids = rows.flatMap((r) => r.demarrage_colleges ?? []);
