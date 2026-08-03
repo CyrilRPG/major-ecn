@@ -1942,28 +1942,57 @@ const TV_CARDS = [
 
 type TVCard = (typeof TV_CARDS)[number];
 
+/**
+ * Carte témoignage.
+ *
+ * La vidéo n'est chargée qu'au clic. Auparavant, `preload="metadata"` combiné
+ * à `onLoadedData → currentTime = 3` — un déplacement de lecture destiné à
+ * afficher une vignette plutôt qu'une image noire — obligeait le navigateur à
+ * télécharger un segment de CHACUNE des cinq vidéos dès l'arrivée sur la page.
+ * Ces fichiers pèsent 132,7 Mo au total, dont 63,3 Mo pour un seul. C'était le
+ * premier poste de bande passante du site, payé par tout visiteur, y compris
+ * ceux qui ne regardent aucun témoignage.
+ *
+ * Tant que l'on n'a pas cliqué, on affiche donc un visuel de marque au lieu
+ * d'un extrait vidéo, et `preload="none"` garantit qu'aucun octet ne part.
+ */
 function VideoTestimonialCard({ card }: { card: TVCard }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [demarree, setDemarree] = useState(false);
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white" style={{ borderColor: "#ECECEF" }}>
       <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: card.bgGrad }}>
+        {!demarree && (
+          <button
+            type="button"
+            onClick={() => setDemarree(true)}
+            aria-label={`Lire le témoignage de ${card.name}`}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-white transition-opacity hover:opacity-90"
+            style={{ background: card.bgGrad }}
+          >
+            <span className="text-3xl font-black tracking-tight opacity-90">{card.initials}</span>
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 shadow-lg">
+              <Play className="ml-0.5 h-6 w-6" style={{ color: TV_RED }} fill="currentColor" />
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-wider opacity-90">Voir le témoignage</span>
+          </button>
+        )}
+        {demarree && (
         <video
           src={card.videoSrc}
           controls
+          autoPlay
           playsInline
-          preload="metadata"
+          preload="none"
           aria-label={`Témoignage vidéo de ${card.name}`}
           className="absolute inset-0 h-full w-full bg-black object-contain"
-          onLoadedData={(e) => { e.currentTarget.currentTime = 3; }}
-          onPlay={(e) => {
-            if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0;
-            setIsPlaying(true);
-          }}
+          onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
         >
           Votre navigateur ne supporte pas la lecture vidéo.
         </video>
+        )}
         {!isPlaying && (
           <span
             className="pointer-events-none absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-lg"

@@ -80,28 +80,44 @@ const REAL_VIDEOS = [
 ];
 type RealVideo = (typeof REAL_VIDEOS)[number];
 
+/** Même principe que sur l'accueil : rien n'est téléchargé avant le clic.
+ *  Cf. VideoTestimonialCard dans extra-sections.tsx. */
 function VideoCard({ v }: { v: RealVideo }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [demarree, setDemarree] = useState(false);
   return (
     <article className="snap-start shrink-0 w-[170px] overflow-hidden rounded-2xl border bg-white sm:w-[200px]" style={{ borderColor: BORDER }}>
       <div className="relative aspect-[9/16] w-full overflow-hidden" style={{ background: v.bgGrad }}>
+        {!demarree && (
+          <button
+            type="button"
+            onClick={() => setDemarree(true)}
+            aria-label={`Lire le témoignage de ${v.name}`}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-white transition-opacity hover:opacity-90"
+            style={{ background: v.bgGrad }}
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 shadow-lg">
+              <Play className="ml-0.5 h-5 w-5" style={{ color: RED }} fill="currentColor" />
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-90">Voir le témoignage</span>
+          </button>
+        )}
+        {demarree && (
         <video
           src={v.videoSrc}
           controls
+          autoPlay
           playsInline
-          preload="metadata"
+          preload="none"
           aria-label={`Témoignage vidéo de ${v.name}`}
           className="absolute inset-0 h-full w-full bg-black object-contain"
-          onLoadedData={(e) => { e.currentTarget.currentTime = 3; }}
-          onPlay={(e) => {
-            if (e.currentTarget.currentTime >= 2.5) e.currentTarget.currentTime = 0;
-            setIsPlaying(true);
-          }}
+          onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
         >
           Votre navigateur ne supporte pas la lecture vidéo.
         </video>
+        )}
         {!isPlaying && (
           <span
             className="pointer-events-none absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-lg"
