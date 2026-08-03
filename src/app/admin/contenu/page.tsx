@@ -1,12 +1,9 @@
-import Link from 'next/link';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { iconFromKey } from '@/lib/icons';
-import { Badge } from '@/components/ui/badge';
-import { ChevronRight, ClipboardList, FileText, Layers3, PlayCircle } from 'lucide-react';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { ItemImportanceButton, ImportanceStars } from '@/components/admin/content/item-importance-button';
-import { NewItemButton } from '@/components/admin/content/new-item-button';
+import {
+  ContenuExplorer, type CollegeAffiche, type ItemAvecCompteurs,
+} from '@/components/admin/content/contenu-explorer';
 
 export const metadata = { title: 'Contenu' };
 
@@ -30,7 +27,9 @@ type CountRow = {
   importance: number | null;
 };
 
-const EMPTY_COUNT = { has_video: false, has_fiche: false, qcm_count: 0, annale_count: 0, flashcard_count: 0, importance: 0 };
+const SANS_COMPTEURS = {
+  has_video: false, has_fiche: false, qcm_count: 0, annale_count: 0, flashcard_count: 0, importance: 0,
+};
 
 export default async function AdminContenuPage() {
   const { scope, isAdmin } = await requireContentEditor();
@@ -41,14 +40,44 @@ export default async function AdminContenuPage() {
   // agrégée : l'ancien embed profond (matieres→cours→qcm_series+flashcards, ~40k
   // lignes évaluées par les policies RLS) dépassait le statement_timeout et
   // renvoyait une page vide.
-  const { data } = await supabase
-    .from('facultes')
-    .select(`
-      semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
-        cours(id, titre)))
-    `)
-    .eq('id', EDN_FACULTE_ID)
-    .maybeSingle();
+  //
+  // Les deux lectures sont INDÉPENDANTES : elles partent ensemble au lieu de
+  // s'enchaîner. La RPC coûtait 1 374 ms à elle seule avant d'être réécrite en
+  // agrégats ; l'attendre après l'arbre doublait le délai d'affichage.
+  const [{ data }, { data: counts }] = await Promise.all([
+    supabase
+      .from('facultes')
+      .select(`
+        semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
+          cours(id, titre)))
+      `)
+      .eq('id', EDN_FACULTE_ID)
+      .maybeSingle(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any).rpc('admin_content_counts'),
+  ]);
+
+  // Compteurs agrégés — tolérant : si la RPC échoue, la grille s'affiche quand
+  // même avec des compteurs à zéro.
+  const compteurs = new Map<string, Omit<CountRow, 'cours_id'>>();
+  for (const r of ((counts ?? []) as CountRow[])) {
+    const { cours_id, ...reste } = r;
+    compteurs.set(cours_id, reste);
+  }
+
+  const avecCompteurs = (c: { id: string; titre: string }): ItemAvecCompteurs => {
+    const k = compteurs.get(c.id) ?? SANS_COMPTEURS;
+    return {
+      id: c.id,
+      titre: c.titre,
+      has_video: k.has_video,
+      has_fiche: k.has_fiche,
+      qcm_count: k.qcm_count,
+      annale_count: k.annale_count,
+      flashcard_count: k.flashcard_count,
+      importance: k.importance ?? 0,
+    };
+  };
 
   const toutes = (
     ((data as unknown as { semestres?: { matieres?: College[] }[] } | null)?.semestres ?? [])
@@ -66,7 +95,7 @@ export default async function AdminContenuPage() {
   // s'affichait vide. On rétablit la hiérarchie : un collège parent regroupe
   // ses sous-collèges, et ses items éventuels.
   const enfantsDe = (id: string) => toutes.filter((m) => m.parent_matiere_id === id);
-  const colleges = toutes
+  const colleges: CollegeAffiche[] = toutes
     .filter((m) => !m.parent_matiere_id)
     .map((m) => ({ parent: m, enfants: enfantsDe(m.id) }))
     // Cache les collèges qui n'ont plus aucun cours accessible — sauf pour
@@ -74,156 +103,37 @@ export default async function AdminContenuPage() {
     .filter(({ parent, enfants }) =>
       isAdmin
       || (parent.cours ?? []).length > 0
-      || enfants.some((e) => (e.cours ?? []).length > 0));
+      || enfants.some((e) => (e.cours ?? []).length > 0))
+    .map(({ parent, enfants }) => ({
+      id: parent.id,
+      nom: parent.nom,
+      iconKey: parent.icon_key,
+      colorHex: parent.color_hex,
+      cours: (parent.cours ?? []).map(avecCompteurs),
+      enfants: enfants.map((e) => ({
+        id: e.id,
+        nom: e.nom,
+        colorHex: e.color_hex,
+        cours: (e.cours ?? []).map(avecCompteurs),
+      })),
+    }));
 
-  // Compteurs agrégés (RPC SECURITY DEFINER réservée au staff) — tolérante :
-  // si elle échoue, la grille s'affiche quand même avec des compteurs à 0.
-  const countsMap = new Map<string, Omit<CountRow, 'cours_id'>>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: counts } = await (supabase as any).rpc('admin_content_counts');
-  for (const r of (counts ?? []) as CountRow[]) {
-    const { cours_id, ...rest } = r;
-    countsMap.set(cours_id, rest);
-  }
+  const nbItems = colleges.reduce(
+    (n, c) => n + c.cours.length + c.enfants.reduce((m, e) => m + e.cours.length, 0),
+    0,
+  );
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-      <header className="mb-8 border-b border-(--color-border) pb-5">
+      <header className="mb-6 border-b border-(--color-border) pb-5">
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Contenu pédagogique</h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Médecine — sélectionnez un item pour gérer sa vidéo, sa fiche, ses QCM et ses flashcards.
+          {colleges.length} collèges · {nbItems} items. Ouvrez un collège, ou cherchez directement un item.
         </p>
       </header>
 
-      <div className="space-y-10">
-        {colleges.map(({ parent, enfants }) => {
-          const Icon = iconFromKey(parent.icon_key);
-          const nbTotal = (parent.cours ?? []).length
-            + enfants.reduce((n, e) => n + (e.cours ?? []).length, 0);
-          return (
-            <section key={parent.id}>
-              <div className="mb-4 flex items-center gap-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: `color-mix(in srgb, ${parent.color_hex ?? 'var(--color-accent)'} 16%, transparent)`,
-                    color: parent.color_hex ?? 'var(--color-accent)',
-                  }}
-                >
-                  <Icon className="h-5 w-5" />
-                </div>
-                <div className="min-w-0">
-                  <h2 className="text-base font-semibold tracking-tight text-(--color-ink) break-words">{parent.nom}</h2>
-                  <p className="text-xs text-(--color-ink-muted)">
-                    Collège EVC · {nbTotal} items
-                    {enfants.length > 0 && ` · ${enfants.length} sous-collèges`}
-                  </p>
-                </div>
-                {isAdmin && (
-                  <div className="ml-auto shrink-0">
-                    <NewItemButton matiereId={parent.id} matiereNom={parent.nom} />
-                  </div>
-                )}
-              </div>
-
-              {/* Items portés directement par le collège. */}
-              {(parent.cours ?? []).length > 0 && (
-                <GrilleItems cours={parent.cours ?? []} countsMap={countsMap} />
-              )}
-              {(parent.cours ?? []).length === 0 && enfants.length === 0 && (
-                <p className="text-sm text-(--color-ink-muted)">Aucun item dans ce collège.</p>
-              )}
-
-              {/* Sous-collèges (Médecine générale) : rattachés à leur parent. */}
-              {enfants.length > 0 && (
-                <div className="mt-5 space-y-6 border-l-2 border-(--color-border) pl-4 sm:pl-5">
-                  {enfants.map((e) => (
-                    <div key={e.id}>
-                      <div className="mb-3 flex items-center gap-2">
-                        <span
-                          className="h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: e.color_hex ?? 'var(--color-accent)' }}
-                        />
-                        <h3 className="text-sm font-semibold tracking-tight text-(--color-ink) break-words">
-                          {e.nom}
-                        </h3>
-                        <span className="text-xs text-(--color-ink-muted)">
-                          {(e.cours ?? []).length} items
-                        </span>
-                        {isAdmin && (
-                          <div className="ml-auto shrink-0">
-                            <NewItemButton matiereId={e.id} matiereNom={`${parent.nom} · ${e.nom}`} />
-                          </div>
-                        )}
-                      </div>
-                      {(e.cours ?? []).length > 0 ? (
-                        <GrilleItems cours={e.cours ?? []} countsMap={countsMap} />
-                      ) : (
-                        <p className="text-sm text-(--color-ink-muted)">Aucun item dans ce sous-collège.</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          );
-        })}
-      </div>
+      <ContenuExplorer colleges={colleges} isAdmin={isAdmin} />
     </main>
-  );
-}
-
-/** Grille des items d'un collège (ou d'un sous-collège). */
-function GrilleItems({
-  cours,
-  countsMap,
-}: {
-  cours: { id: string; titre: string }[];
-  countsMap: Map<string, Omit<CountRow, 'cours_id'>>;
-}) {
-  return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-      {cours.map((c) => {
-        const k = countsMap.get(c.id) ?? EMPTY_COUNT;
-        const importance = k.importance ?? 0;
-        return (
-          <div
-            key={c.id}
-            className="group relative rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:border-(--color-accent) hover:shadow-(--shadow-lifted)"
-          >
-            <Link
-              href={`/admin/contenu/${c.id}`}
-              aria-label={c.titre}
-              className="absolute inset-0 z-0 rounded-2xl focus-ring"
-            />
-            <div className="relative z-10 flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h3 className="font-semibold leading-snug text-(--color-ink) break-words">{c.titre}</h3>
-                <ImportanceStars value={importance} className="mt-1" />
-              </div>
-              <div className="flex shrink-0 items-center gap-1">
-                <ItemImportanceButton coursId={c.id} titre={c.titre} importance={importance} />
-                <ChevronRight className="h-4 w-4 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
-              </div>
-            </div>
-            <div className="relative z-10 mt-3 flex flex-wrap gap-1.5 text-xs">
-              <Badge variant={k.has_video ? 'success' : 'muted'}>
-                <PlayCircle className="h-3 w-3" /> {k.has_video ? 'Vidéo' : 'Pas de vidéo'}
-              </Badge>
-              <Badge variant={k.has_fiche ? 'success' : 'muted'}>
-                <FileText className="h-3 w-3" /> {k.has_fiche ? 'Fiche' : 'Pas de fiche'}
-              </Badge>
-              <Badge variant={k.qcm_count + k.annale_count > 0 ? 'primary' : 'muted'}>
-                <ClipboardList className="h-3 w-3" /> {k.qcm_count + k.annale_count} séries
-              </Badge>
-              <Badge variant={k.flashcard_count > 0 ? 'primary' : 'muted'}>
-                <Layers3 className="h-3 w-3" /> {k.flashcard_count} cartes
-              </Badge>
-            </div>
-          </div>
-        );
-      })}
-    </div>
   );
 }
