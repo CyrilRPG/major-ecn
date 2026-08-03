@@ -16,8 +16,15 @@ export const dynamic = 'force-dynamic';
  *      legacy (pour les fiches déjà éditées dans l'ancien flow).
  *   3. Sinon → nouvel éditeur HTML, page vierge.
  */
-export default async function FicheEditPage({ params }: { params: Promise<{ cours: string }> }) {
+export default async function FicheEditPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ cours: string }>;
+  searchParams: Promise<{ doc?: string }>;
+}) {
   const { cours: coursId } = await params;
+  const { doc: docId } = await searchParams;
   const { profile } = await requireUser();
   if (profile.role !== 'admin' && profile.role !== 'professor') {
     redirect(`/cours/${coursId}/fiche`);
@@ -33,20 +40,20 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
     .maybeSingle();
   if (!c) notFound();
 
+  // Un item peut porter plusieurs fiches : `?doc=<id>` désigne celle à éditer,
+  // à défaut la fiche principale (order_index le plus bas). L'id doit
+  // appartenir à cet item — sinon on retombe sur la principale.
   // content_html n'est pas dans les types générés → accès souple.
-  const { data: ficheRow } = await supabase
+  const { data: ficheRows } = await supabase
     .from('fiches')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .select('content_html' as any)
+    .select('id, titre, content_html' as any)
     .eq('cours_id', coursId)
-    // Fiche PRINCIPALE de l'item (order_index le plus bas) : l'éditeur en ligne
-    // ne touche jamais aux fiches PDF ajoutées à sa suite.
     .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+    .order('created_at', { ascending: true });
 
-  const row = ficheRow as { content_html?: string | null } | null;
+  const liste = (ficheRows ?? []) as unknown as { id: string; titre: string | null; content_html?: string | null }[];
+  const row = (docId ? liste.find((f) => f.id === docId) : undefined) ?? liste[0] ?? null;
   const annee = process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026';
   const nomCours = c.titre ?? 'Fiche';
 
@@ -65,6 +72,7 @@ export default async function FicheEditPage({ params }: { params: Promise<{ cour
       initialHtml={initialHtml}
       nomCours={nomCours}
       annee={annee}
+      ficheId={row?.id}
     />
   );
 }

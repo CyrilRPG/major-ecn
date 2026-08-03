@@ -133,12 +133,18 @@ export default async function CoursFichePage({
       )}
 
       {courant ? (
-        <PdfViewer
-          key={courant.id}
-          src={`/api/fiches/${coursId}/pdf?doc=${courant.id}`}
-          coursId={coursId}
-          initiallyRead={initiallyRead}
-        />
+        <>
+          {/* Titre choisi par l'équipe pédagogique, affiché AVANT le document. */}
+          <h1 className="mb-2 text-lg font-bold tracking-tight text-(--color-ink) sm:mb-3 sm:text-xl">
+            {ficheLabel(courant, fiches.indexOf(courant))}
+          </h1>
+          <PdfViewer
+            key={courant.id}
+            src={`/api/fiches/${coursId}/pdf?doc=${courant.id}`}
+            coursId={coursId}
+            initiallyRead={initiallyRead}
+          />
+        </>
       ) : (
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState

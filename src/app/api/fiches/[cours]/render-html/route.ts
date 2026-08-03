@@ -93,6 +93,12 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
     save?: boolean;
     nom_cours?: string;
     annee?: string;
+    /** Fiche visée. Absent → fiche principale de l'item. */
+    ficheId?: string;
+    /** Crée une NOUVELLE fiche à la suite au lieu d'écraser une existante. */
+    createNew?: boolean;
+    /** Nom affiché à l'élève (création ou renommage à la publication). */
+    titre?: string;
   } | null;
   if (!body?.content_html || typeof body.content_html !== 'string') {
     return NextResponse.json({ error: 'content_html manquant' }, { status: 400 });
@@ -173,19 +179,32 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  // Fiche PRINCIPALE de l'item (order_index le plus bas) : la conversion
-  // HTML → PDF ne doit jamais écraser une fiche PDF ajoutée à sa suite.
-  const { data: existing } = await a
+  const titre = (body.titre ?? '').trim().slice(0, 200);
+
+  // Fiche visée :
+  //   - `createNew` → aucune, on insère une nouvelle fiche à la fin ;
+  //   - `ficheId`   → celle-là, à condition qu'elle appartienne bien à l'item ;
+  //   - sinon       → la fiche PRINCIPALE (order_index le plus bas), pour ne
+  //     jamais écraser une fiche ajoutée à sa suite.
+  const { data: rows } = await a
     .from('fiches')
-    .select('id, storage_path')
+    .select('id, storage_path, order_index')
     .eq('cours_id', coursId)
     .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+    .order('created_at', { ascending: true });
+  const liste = (rows ?? []) as { id: string; storage_path: string | null; order_index: number }[];
 
-  const storagePath = (existing?.storage_path as string | undefined)
-    ?? `${coursId}/${crypto.randomUUID()}.pdf`;
+  let existing: { id: string; storage_path: string | null } | null = null;
+  if (!body.createNew) {
+    if (body.ficheId) {
+      existing = liste.find((f) => f.id === body.ficheId) ?? null;
+      if (!existing) return NextResponse.json({ error: 'Fiche introuvable sur cet item.' }, { status: 404 });
+    } else {
+      existing = liste[0] ?? null;
+    }
+  }
+
+  const storagePath = existing?.storage_path ?? `${coursId}/${crypto.randomUUID()}.pdf`;
 
   const { error: upErr } = await admin.storage
     .from('fiches')
@@ -205,15 +224,22 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
     updated_at: new Date().toISOString(),
   };
 
+  let ficheId: string;
   if (existing) {
-    await a.from('fiches').update(patch).eq('id', existing.id);
+    // Le titre n'est réécrit que s'il est fourni : republier une fiche depuis
+    // l'éditeur ne doit pas effacer le nom choisi par l'administrateur.
+    await a.from('fiches').update(titre ? { ...patch, titre } : patch).eq('id', existing.id);
+    ficheId = existing.id;
   } else {
-    await a.from('fiches').insert({
-      cours_id: coursId,
-      titre: nomCours,
-      ...patch,
-    });
+    const rang = liste.length > 0 ? Math.max(...liste.map((f) => f.order_index ?? 0)) + 1 : 0;
+    const { data: cree, error: insErr } = await a
+      .from('fiches')
+      .insert({ cours_id: coursId, titre: titre || nomCours, order_index: rang, ...patch })
+      .select('id')
+      .single();
+    if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 });
+    ficheId = cree.id as string;
   }
 
-  return NextResponse.json({ ok: true, pages, storagePath });
+  return NextResponse.json({ ok: true, pages, storagePath, ficheId });
 }

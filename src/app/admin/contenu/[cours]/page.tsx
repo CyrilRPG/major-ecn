@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FicheHtmlUpload } from '@/components/admin/content/fiche-html-upload';
 import { FichesManager } from '@/components/admin/content/fiches-manager';
 import { FlashcardEditor } from '@/components/admin/content/flashcard-editor';
 import { EmptyState } from '@/components/empty-state';
@@ -104,10 +103,9 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const nbSupports = allVideos.reduce((n, v) => n + v.nbSupports, 0);
   const hiddenBlocks = parseHiddenBlocks((c as unknown as { hidden_blocks?: unknown }).hidden_blocks);
   const isAdmin = scope === null;
-  // Plusieurs fiches possibles par item : la première (order_index le plus bas)
-  // est la fiche principale — celle qu'ouvre l'éditeur en ligne.
+  // Plusieurs fiches possibles par item, dans l'ordre d'affichage élève : la
+  // première (order_index le plus bas) est la fiche principale.
   const fichesTriees = trierFiches((c.fiches ?? []) as unknown as ManagedFicheRow[]);
-  const fiche = fichesTriees[0];
   const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
@@ -232,41 +230,24 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
                 <CardTitle>Fiches de cours</CardTitle>
                 <CardDescription>
                   {can.fiche.write
-                    ? 'Un item peut porter plusieurs fiches : elles s’affichent toutes dans le même onglet « Fiche de cours » chez l’élève. La fiche principale (la première) peut être déposée en HTML et éditée en ligne ; les autres se déposent en PDF.'
+                    ? 'Un item peut porter plusieurs fiches : elles s’affichent toutes dans le même onglet « Fiche de cours » chez l’élève. Déposez-les en PDF ou en HTML (converti en PDF, puis éditable en ligne) et donnez un titre à chacune — c’est ce titre qui s’affiche au-dessus du document.'
                     : 'Lecture seule — vous pouvez consulter mais pas modifier les fiches.'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
                 {can.fiche.write ? (
-                  <>
-                    <div>
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-                        Fiche principale (HTML → PDF, éditable en ligne)
-                      </p>
-                      <FicheHtmlUpload
-                        coursId={coursId}
-                        nomCours={c.titre ?? 'Fiche'}
-                        annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
-                        existing={!!fiche?.storage_path}
-                        pages={fiche?.pages}
-                      />
-                    </div>
-                    <div>
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-                        Toutes les fiches de cet item ({fichesTriees.length})
-                      </p>
-                      <FichesManager
-                        coursId={coursId}
-                        fiches={fichesTriees.map((f) => ({
-                          id: f.id,
-                          titre: f.titre,
-                          storage_path: f.storage_path,
-                          pages: f.pages,
-                          content_format: f.content_format,
-                        }))}
-                      />
-                    </div>
-                  </>
+                  <FichesManager
+                    coursId={coursId}
+                    nomCours={c.titre ?? 'Fiche'}
+                    annee={process.env.NEXT_PUBLIC_FICHE_YEAR ?? '2025-2026'}
+                    fiches={fichesTriees.map((f) => ({
+                      id: f.id,
+                      titre: f.titre,
+                      storage_path: f.storage_path,
+                      pages: f.pages,
+                      content_format: f.content_format,
+                    }))}
+                  />
                 ) : fichesTriees.length === 0 ? (
                   <p className="text-sm text-(--color-ink-soft)">Aucune fiche téléversée.</p>
                 ) : (

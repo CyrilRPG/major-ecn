@@ -8,38 +8,53 @@ première est ouverte par défaut.
 
 `Admin → Contenu → <item> → onglet Fiche`
 
-Deux blocs :
+Une seule zone de dépôt, qui accepte **PDF et HTML, plusieurs fichiers à la
+fois**. Après la sélection (ou le glisser-déposer), chaque fichier apparaît avec
+un champ **titre**, prérempli depuis le nom du fichier : c'est ce titre qui
+s'affiche **au-dessus du document** côté élève. On corrige ce qu'on veut, puis
+« Ajouter N fiches ».
 
-1. **Fiche principale (HTML → PDF, éditable en ligne)** — le flux historique :
-   on dépose un `.html`, il est converti en PDF (charte Major ECN) par Chromium
-   et reste modifiable dans l'éditeur WYSIWYG.
-2. **Toutes les fiches de cet item** — la liste ordonnée :
-   - flèches ↑ ↓ pour changer l'ordre (c'est celui que voient les élèves) ;
-   - crayon pour **renommer** (le nom est l'étiquette de la pastille) ou
-     **remplacer le fichier** PDF ;
-   - corbeille pour supprimer (la ligne **et** le fichier) ;
-   - « Ajouter une ou plusieurs fiches PDF » : sélection multiple, chaque
-     fichier devient une fiche placée à la suite.
+- Un **PDF** part directement du navigateur vers le bucket `fiches` — aucune
+  limite de taille de requête serveur.
+- Un **HTML** est converti en PDF (charte Major ECN) par Chromium via
+  `/api/fiches/<id>/render-html`, et la fiche reste modifiable dans l'éditeur
+  WYSIWYG.
+
+La liste au-dessus donne, pour chaque fiche :
+
+- flèches ↑ ↓ pour changer l'ordre (c'est celui que voient les élèves) ;
+- crayon pour **renommer**, **remplacer le fichier** (PDF ou HTML) et, pour une
+  fiche non-PDF, **« Éditer en ligne »** (`/cours/<id>/fiche/edit?doc=<ficheId>`) ;
+- corbeille pour supprimer (la ligne **et** le fichier).
 
 Une fiche déposée en PDF **n'est pas éditable en ligne** : pour la modifier, on
-remplace le fichier. C'est écrit dans l'interface.
+remplace le fichier — par un PDF, ou par un HTML qui la rend à nouveau éditable.
+C'est écrit dans l'interface.
 
 ## La « fiche principale »
 
-C'est celle dont l'`order_index` est le plus bas. Elle seule est visée par :
+C'est celle dont l'`order_index` est le plus bas. C'est la **cible par défaut**,
+quand aucune fiche n'est désignée explicitement :
 
-- l'éditeur en ligne (`/cours/<id>/fiche/edit`) ;
-- la conversion HTML → PDF (`/api/fiches/<id>/render-html`) ;
-- l'autosave `content_html` / `content_json` ;
-- la **fiche éclair** (`/api/fiches/<id>/express`) ;
-- l'assistant (contexte pédagogique) et le manifeste mobile.
+- l'éditeur en ligne (`/cours/<id>/fiche/edit`, ou `?doc=<ficheId>` pour une
+  autre fiche) ;
+- la conversion HTML → PDF (`/api/fiches/<id>/render-html`, qui accepte
+  `ficheId` pour viser une fiche, ou `createNew: true` + `titre` pour en créer
+  une à la suite) ;
+- l'autosave `content_html` (`/api/fiches/<id>/html`, `?doc=` en GET et
+  `ficheId` en POST) et `content_json` ;
+- la **fiche éclair** (`/api/fiches/<id>/express`) — toujours la principale ;
+- l'assistant (contexte pédagogique) et le manifeste mobile — toujours la
+  principale.
 
-Les fiches suivantes sont des documents supplémentaires. Le bouton « Éditer la
-fiche » n'apparaît donc que lorsque la fiche principale est affichée.
+Côté élève, le bouton « Éditer la fiche » n'apparaît que lorsque la fiche
+principale est affichée ; pour les autres, l'accès à l'éditeur passe par le
+crayon de l'onglet Contenu.
 
 ## Côté élève
 
-`/cours/<id>/fiche` — une pastille par fiche dès qu'il y en a plus d'une,
+`/cours/<id>/fiche` — le **titre de la fiche est affiché au-dessus du
+document**, et une pastille par fiche apparaît dès qu'il y en a plus d'une,
 `?doc=<ficheId>` pour choisir (le paramètre `embed` de la vue partagée est
 conservé). Chaque PDF est servi **filigrané au nom de l'élève** par
 `/api/fiches/<id>/pdf?doc=<ficheId>`, exactement comme avant.

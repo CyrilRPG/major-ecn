@@ -30,7 +30,23 @@ async function _assertEditor() {
   return { error: null, status: 200 as const, user };
 }
 
-export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
+/** Fiche visée : `?doc=`/`ficheId` si fourni, sinon la principale (order_index
+ *  le plus bas). Retourne `undefined` si l'id ne correspond à aucune fiche de
+ *  cet item — on ne se rabat jamais silencieusement sur une autre. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function cibler(a: any, coursId: string, ficheId?: string | null) {
+  const { data } = await a
+    .from('fiches')
+    .select('id, content_html, titre')
+    .eq('cours_id', coursId)
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true });
+  const liste = (data ?? []) as { id: string; content_html: string | null; titre: string | null }[];
+  if (ficheId) return liste.find((f) => f.id === ficheId);
+  return liste[0];
+}
+
+export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
   const auth = await _assertEditor();
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -38,19 +54,11 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ cours: str
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
-  // Fiche PRINCIPALE de l'item (order_index le plus bas).
-  const { data } = await a
-    .from('fiches')
-    .select('content_html, titre')
-    .eq('cours_id', coursId)
-    .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const cible = await cibler(a, coursId, new URL(req.url).searchParams.get('doc'));
 
   return NextResponse.json({
-    content_html: (data?.content_html as string | null) ?? null,
-    titre: (data?.titre as string | null) ?? null,
+    content_html: cible?.content_html ?? null,
+    titre: cible?.titre ?? null,
   });
 }
 
@@ -59,7 +67,11 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   const auth = await _assertEditor();
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const body = (await req.json().catch(() => null)) as { content_html?: string } | null;
+  const body = (await req.json().catch(() => null)) as {
+    content_html?: string;
+    /** Fiche visée. Absent → fiche principale de l'item. */
+    ficheId?: string;
+  } | null;
   const html = body?.content_html;
   if (typeof html !== 'string' || html.length > 5_000_000) {
     // Limite anti-DoS : 5 Mo max (le HTML standalone avec fonts inlinées
@@ -71,14 +83,10 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
-  const { data: existing } = await a
-    .from('fiches')
-    .select('id')
-    .eq('cours_id', coursId)
-    .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const existing = await cibler(a, coursId, body?.ficheId);
+  if (body?.ficheId && !existing) {
+    return NextResponse.json({ error: 'Fiche introuvable sur cet item.' }, { status: 404 });
+  }
 
   const patch = {
     content_html: html,

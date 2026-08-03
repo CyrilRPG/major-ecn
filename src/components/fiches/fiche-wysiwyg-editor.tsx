@@ -35,12 +35,15 @@ const COLORS = [
 ];
 
 export function FicheWysiwygEditor({
-  coursId, initialHtml, nomCours, annee,
+  coursId, initialHtml, nomCours, annee, ficheId,
 }: {
   coursId: string;
   initialHtml: string;
   nomCours: string;
   annee: string;
+  /** Fiche éditée. Absent → fiche principale de l'item (un item peut en
+   *  porter plusieurs, toutes affichées dans l'onglet « Fiche de cours »). */
+  ficheId?: string;
 }) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -89,12 +92,12 @@ export function FicheWysiwygEditor({
         const res = await fetch(`/api/fiches/${coursId}/html`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content_html: serialize() }),
+          body: JSON.stringify({ content_html: serialize(), ficheId }),
         });
         setSave(res.ok ? 'saved' : 'error');
       } catch { setSave('error'); }
     }, 1200);
-  }, [coursId, serialize]);
+  }, [coursId, ficheId, serialize]);
 
   // Branche les écouteurs une fois l'iframe chargée.
   const onFrameLoad = useCallback(() => {
@@ -180,7 +183,7 @@ export function FicheWysiwygEditor({
       const res = await fetch(`/api/fiches/${coursId}/render-html`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content_html: serialize(), save: savePdf, nom_cours: nomCours, annee }),
+        body: JSON.stringify({ content_html: serialize(), save: savePdf, nom_cours: nomCours, annee, ficheId }),
       });
       if (savePdf) {
         const j = (await res.json().catch(() => ({}))) as { ok?: boolean; pages?: number; error?: string };
