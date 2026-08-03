@@ -2,10 +2,22 @@ import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
-import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { TargetedSession, type TQuestion } from '@/components/student/targeted-session';
 
 const MAX_Q = 12;
+/**
+ * Vivier de remplissage. On complète la sélection prioritaire avec les
+ * premières questions des collèges autorisés ; 300 candidats suffisent
+ * largement à en retenir 12 une fois écartées celles sans items exploitables.
+ */
+const TAILLE_VIVIER = 300;
+
+/** Colonnes communes aux deux lectures de questions. */
+const CHAMPS_QUESTION =
+  'id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, '
+  + 'qcm_items(id, lettre, enonce, justification, is_correct), '
+  + 'qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))';
 
 type AttemptRow = {
   question_id: string;
@@ -50,21 +62,83 @@ export default async function TargetedSessionPage({
 
   const prioritized = [...failCount.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id).slice(0, MAX_Q);
 
-  // 2. Fetch full questions (prioritized + fill with EDN questions if needed)
-  const { data: allQRaw } = await supabase
-    .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
-    .order('order_index');
+  // 2. Périmètre interrogeable, calculé AVANT toute lecture de questions.
+  //
+  // Cette page rapatriait auparavant la table `qcm_questions` ENTIÈRE — sans
+  // filtre, sans limite, embed `qcm_items` compris — pour n'en retenir que 12 :
+  // 51 341 questions et 143 369 items traversaient le réseau à chaque
+  // démarrage de session. C'était la requête la plus coûteuse de la
+  // plateforme. Le filtre part désormais en base.
+  //
+  // L'arbre est déjà chargé par le layout étudiant et `getNavigatorTree` est
+  // enveloppé dans `cache()` : cet appel ne coûte donc rien de plus.
+  const arbre = await getNavigatorTree(profile);
+  const coursInterrogeables = arbre
+    .flatMap((c) => [c, ...(c.children ?? [])])
+    .filter((c) => canAccessCollege(scope, c.id))
+    .filter((c) => !collegeFilter || collegeFilter.has(c.id))
+    // `hasQcm` évite d'aller chercher des séries pour des items qui n'en ont pas.
+    .flatMap((c) => c.cours.filter((x) => x.hasQcm).map((x) => x.id));
 
-  const allQ = ((allQRaw ?? []) as unknown as QRow[]).filter(
-    (q) => q.qcm_series.cours.matieres.semestres.faculte_id === EDN_FACULTE_ID
-      && canAccessCollege(scope, q.qcm_series.cours.matieres.id)
-      && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id))
-      // On garde les QCM (avec items) ET les QROC (saisie libre).
-      && (q.format === 'qroc' || (!!q.qcm_items && q.qcm_items.length > 0)),
-  );
+  if (coursInterrogeables.length === 0) redirect('/entrainement');
 
-  const byId = new Map(allQ.map((q) => [q.id, q]));
+  const { data: seriesRaw } = await supabase
+    .from('qcm_series')
+    .select('id')
+    .eq('type', 'qcm')
+    .in('cours_id', coursInterrogeables);
+  const toutesLesSeries = (seriesRaw ?? []).map((s) => s.id as string);
+  if (toutesLesSeries.length === 0) redirect('/entrainement');
+
+  // Le vivier est tiré d'un échantillon de séries, pas de toutes.
+  //
+  // Trier `order_index` sur l'ensemble des séries obligeait la base à parcourir
+  // les ~23 000 questions du périmètre pour n'en garder que 300 — et donnait un
+  // résultat médiocre : toutes les questions retenues portaient le même
+  // `order_index`, c'est-à-dire toujours la PREMIÈRE question de chaque série.
+  // En échantillonnant les séries, la lecture devient minuscule et le contenu
+  // proposé plus varié d'une session à l'autre.
+  const SERIES_ECHANTILLONNEES = 40;
+  const melangees = [...toutesLesSeries];
+  for (let i = melangees.length - 1; i > 0; i--) {
+    // La règle de pureté React vise les composants qui se re-rendent : un
+    // résultat instable y produirait un affichage qui saute. Ici nous sommes
+    // dans un composant SERVEUR, exécuté une fois par requête, et le tirage
+    // aléatoire est précisément l'effet recherché — deux sessions d'affilée
+    // ne doivent pas proposer les mêmes questions.
+    // eslint-disable-next-line react-hooks/purity
+    const j = Math.floor(Math.random() * (i + 1));
+    [melangees[i], melangees[j]] = [melangees[j], melangees[i]];
+  }
+  const serieIds = melangees.slice(0, SERIES_ECHANTILLONNEES);
+
+  // 3. Deux lectures bornées, en parallèle : les questions prioritaires (au
+  //    plus 12, visées par identifiant) et un vivier de remplissage.
+  const [prioRes, vivierRes] = await Promise.all([
+    prioritized.length > 0
+      ? supabase.from('qcm_questions').select(CHAMPS_QUESTION).in('id', prioritized)
+      : Promise.resolve({ data: [] as unknown[] }),
+    supabase
+      .from('qcm_questions')
+      .select(CHAMPS_QUESTION)
+      .in('serie_id', serieIds)
+      .order('order_index')
+      .limit(TAILLE_VIVIER),
+  ]);
+
+  // Mêmes garde-fous qu'avant : périmètre EDN, droits, et question réellement
+  // jouable (un QCM sans items n'est pas exploitable).
+  const utilisable = (q: QRow) =>
+    q.qcm_series.cours.matieres.semestres.faculte_id === EDN_FACULTE_ID
+    && canAccessCollege(scope, q.qcm_series.cours.matieres.id)
+    && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id))
+    // On garde les QCM (avec items) ET les QROC (saisie libre).
+    && (q.format === 'qroc' || (!!q.qcm_items && q.qcm_items.length > 0));
+
+  const prioQ = ((prioRes.data ?? []) as unknown as QRow[]).filter(utilisable);
+  const vivier = ((vivierRes.data ?? []) as unknown as QRow[]).filter(utilisable);
+
+  const byId = new Map(prioQ.map((q) => [q.id, q]));
   const ordered: QRow[] = [];
   for (const id of prioritized) {
     const q = byId.get(id);
@@ -72,7 +146,7 @@ export default async function TargetedSessionPage({
   }
   if (ordered.length < 8) {
     const picked = new Set(ordered.map((q) => q.id));
-    for (const q of allQ) {
+    for (const q of vivier) {
       if (ordered.length >= MAX_Q) break;
       if (!picked.has(q.id)) ordered.push(q);
     }
