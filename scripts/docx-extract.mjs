@@ -91,6 +91,21 @@ function normaliserLigatures(s) {
 }
 
 /**
+ * Accents décomposés par la conversion d'origine : la cédille ressort en
+ * « c¸ » (« rec¸oivent »). 62 des 133 chapitres portent ce défaut.
+ *
+ * ATTENTION — réparation de SURFACE uniquement. Les chapitres qui portent ce
+ * marqueur viennent d'une conversion à deux colonnes qui a AUSSI entrelacé
+ * les colonnes et perdu des mots (« à à mm », « Elle est transitionnelle les
+ * fractures »). Recomposer les cédilles ne les rend pas fiables : le compteur
+ * « accentsRepares » du rapport sert à repérer les chapitres à ne pas
+ * exploiter sans relecture humaine.
+ */
+function recomposerAccents(s) {
+  return s.replace(/c¸/g, "ç").replace(/C¸/g, "Ç");
+}
+
+/**
  * Une légende Word suit ou précède immédiatement la figure et commence par
  * « Figure », « Fig. », « Tableau »… On ne retient QUE ces formes explicites :
  * prendre le paragraphe voisin au hasard fabriquerait des légendes fausses.
@@ -141,10 +156,13 @@ function main() {
   const blocs = [];
   const images = [];
   let compteur = 0;
+  let accentsRepares = 0;
 
   for (const p of paragraphes) {
-    const texte = normaliserLigatures(decoderEntites(p.replace(/<[^>]+>/g, '')))
+    const brut = normaliserLigatures(decoderEntites(p.replace(/<[^>]+>/g, '')))
       .replace(/\s+/g, ' ').trim();
+    accentsRepares += (brut.match(/[cC]¸/g) ?? []).length;
+    const texte = recomposerAccents(brut);
     const styles = [...p.matchAll(/w:val="([^"]*(?:Heading|Titre)[^"]*)"/g)].map((m) => m[1]);
     const embeds = [...p.matchAll(/r:embed="([^"]+)"/g)].map((m) => m[1]);
 
@@ -193,6 +211,9 @@ function main() {
     titres: blocs.filter((b) => b.type === 'titre').length,
     images: images.length,
     imagesLegendees: images.filter((i) => i.legende).length,
+    // > 0 signale une conversion défectueuse : ce chapitre a de fortes chances
+    // de porter AUSSI des colonnes entrelacées et des mots manquants.
+    accentsRepares,
   };
 
   fs.writeFileSync(
