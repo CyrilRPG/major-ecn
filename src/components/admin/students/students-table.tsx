@@ -140,6 +140,7 @@ export function StudentsTable({
   const [connexion, setConnexion] = useState('all'); // all | never
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [emailOpen, setEmailOpen] = useState(false);
+  const [exportEnCours, setExportEnCours] = useState(false);
   const [assignOpen, setAssignOpen] = useState(false);
 
   const sessionsById = useMemo(() => new Map(sessions.map((s) => [s.id, s])), [sessions]);
@@ -202,7 +203,25 @@ export function StudentsTable({
       ? `${selectedInFilter.length} élève(s) sélectionné(s)`
       : `${filteredIds.length} élève(s) (liste filtrée)`;
 
+  /**
+   * Export Excel.
+   *
+   * `import('xlsx')` télécharge ~400 Ko puis construit le classeur : une à
+   * trois secondes pendant lesquelles le bouton ne montrait STRICTEMENT rien.
+   * L'administrateur croyait son clic perdu et recliquait. On affiche l'état
+   * d'avancement et on verrouille le bouton le temps de la génération.
+   */
   async function exportXlsx() {
+    if (exportEnCours) return;
+    setExportEnCours(true);
+    try {
+      await genererXlsx();
+    } finally {
+      setExportEnCours(false);
+    }
+  }
+
+  async function genererXlsx() {
     const XLSX = await import('xlsx');
     const rows = filtered.map((s) => ({
       'Nom': s.last_name ?? '',
@@ -333,10 +352,12 @@ export function StudentsTable({
           </button>
           <button
             onClick={exportXlsx}
-            disabled={filtered.length === 0}
+            disabled={filtered.length === 0 || exportEnCours}
             className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100) disabled:opacity-50"
           >
-            <Download className="h-3.5 w-3.5" /> Exporter Excel
+            {exportEnCours
+              ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Génération…</>
+              : <><Download className="h-3.5 w-3.5" /> Exporter Excel</>}
           </button>
         </div>
       </div>

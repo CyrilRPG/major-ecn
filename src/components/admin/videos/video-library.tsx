@@ -51,35 +51,42 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
 
   // Les chargements sont déclenchés par les sélections (pas par des effets) :
   // c'est une réaction à une action de l'utilisateur, pas une synchronisation.
+  // `.catch()` indispensable : sans lui, une action serveur qui échoue (réseau
+  // coupé, session expirée) laissait `loading` à true pour toujours et la page
+  // restait bloquée sur « Chargement… », sans le moindre message.
   const chargerItems = useCallback((mid: string) => {
     if (!mid) { setItems(null); return; }
     setLoading(true);
     setError(null);
-    listItemsAction(mid).then((res) => {
-      setLoading(false);
-      if ('error' in res) { setError(res.error); setItems([]); return; }
-      setItems(res.items);
-    });
+    listItemsAction(mid)
+      .then((res) => {
+        if ('error' in res) { setError(res.error); setItems([]); return; }
+        setItems(res.items);
+      })
+      .catch(() => { setError('Chargement des items impossible. Rechargez la page.'); setItems([]); })
+      .finally(() => setLoading(false));
   }, []);
 
   const chargerVideos = useCallback((cid: string, t: VideoType) => {
     if (!cid) { setVideos(null); return; }
     setLoading(true);
     setError(null);
-    listVideosAction(cid, t).then((res) => {
-      setLoading(false);
-      if ('error' in res) { setError(res.error); setVideos([]); return; }
-      setVideos(res.videos);
-    });
+    listVideosAction(cid, t)
+      .then((res) => {
+        if ('error' in res) { setError(res.error); setVideos([]); return; }
+        setVideos(res.videos);
+      })
+      .catch(() => { setError('Chargement des vidéos impossible. Rechargez la page.'); setVideos([]); })
+      .finally(() => setLoading(false));
   }, []);
 
   /** Après une modification : la liste ET les compteurs d'items. */
   const rechargerTout = useCallback(() => {
     chargerVideos(coursId, type);
     if (matiereId) {
-      listItemsAction(matiereId).then((res) => {
-        if (!('error' in res)) setItems(res.items);
-      });
+      listItemsAction(matiereId)
+        .then((res) => { if (!('error' in res)) setItems(res.items); })
+        .catch(() => { /* compteurs non rafraîchis : sans conséquence sur la liste */ });
     }
   }, [chargerVideos, coursId, type, matiereId]);
 
@@ -98,12 +105,14 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
    *  rechargée et on bascule dessus, comme s'il avait toujours existé. */
   const apresCreationRevisions = () => {
     if (!matiereId) return;
-    listItemsAction(matiereId).then((res) => {
-      if ('error' in res) { setError(res.error); return; }
-      setItems(res.items);
-      const cree = res.items.find((i) => estItemRevisions(i.titre, nomCollege));
-      if (cree) { setCoursId(cree.id); chargerVideos(cree.id, type); }
-    });
+    listItemsAction(matiereId)
+      .then((res) => {
+        if ('error' in res) { setError(res.error); return; }
+        setItems(res.items);
+        const cree = res.items.find((i) => estItemRevisions(i.titre, nomCollege));
+        if (cree) { setCoursId(cree.id); chargerVideos(cree.id, type); }
+      })
+      .catch(() => setError('L’item a peut-être été créé, mais la liste n’a pas pu être rechargée. Rechargez la page.'));
   };
 
   return (

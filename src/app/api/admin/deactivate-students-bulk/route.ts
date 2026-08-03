@@ -3,6 +3,10 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
 
+// Boucle séquentielle (mise à jour + déconnexion par élève) : sans
+// `maxDuration`, une désactivation en masse expirait silencieusement.
+export const maxDuration = 300;
+
 /**
  * Désactivation EN MASSE d'élèves par email. Le compte n'est PAS supprimé : on
  * met `is_active = false` (l'élève perd tout accès et est déconnecté). Le mot de

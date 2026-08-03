@@ -4,6 +4,10 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
+// Sans `maxDuration`, cette route retombait sur le délai par défaut : au-delà
+// d'une poignée de certificats, l'onglet restait blanc puis affichait un 504,
+// sans que l'administrateur sache pourquoi.
+export const maxDuration = 60;
 
 /**
  * GET /api/admin/certificates/[userId]
@@ -39,13 +43,33 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ userId: str
   const merged = await PDFDocument.create();
   const origin = new URL(req.url).origin;
 
-  for (const s of signed) {
-    // Fetch each individual certificate PDF (forward admin cookies via the call to our own route)
-    const res = await fetch(`${origin}/api/certificate/${s.cours_id}?user_id=${userId}`, {
-      headers: { cookie: req.headers.get('cookie') ?? '' },
-    });
-    if (!res.ok) continue;
-    const bytes = new Uint8Array(await res.arrayBuffer());
+  // Les certificats étaient récupérés UN PAR UN, chaque appel attendant le
+  // précédent : pour un élève ayant terminé vingt parcours, vingt allers-
+  // retours HTTP enchaînés. On les récupère de front, par paquets bornés pour
+  // ne pas saturer la fonction. `Promise.all` conserve l'ordre, la
+  // chronologie des certificats dans le PDF final est donc inchangée.
+  const LOT = 5;
+  const cookie = req.headers.get('cookie') ?? '';
+  const pdfs: (Uint8Array | null)[] = [];
+  for (let i = 0; i < signed.length; i += LOT) {
+    const lot = await Promise.all(
+      signed.slice(i, i + LOT).map(async (s) => {
+        try {
+          const res = await fetch(`${origin}/api/certificate/${s.cours_id}?user_id=${userId}`, {
+            headers: { cookie },
+          });
+          if (!res.ok) return null;
+          return new Uint8Array(await res.arrayBuffer());
+        } catch {
+          return null;
+        }
+      }),
+    );
+    pdfs.push(...lot);
+  }
+
+  for (const bytes of pdfs) {
+    if (!bytes) continue;
     const sub = await PDFDocument.load(bytes);
     const copied = await merged.copyPages(sub, sub.getPageIndices());
     copied.forEach((p) => merged.addPage(p));

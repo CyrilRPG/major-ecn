@@ -1,6 +1,5 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
 import { DeactivateStudentsDialog } from '@/components/admin/students/deactivate-students-dialog';
@@ -17,7 +16,25 @@ export default async function ElevesPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  const [{ data: students }, { data: fac }, { data: evcSessions }] = await Promise.all([
+  // Le drapeau « jamais connecté » vient d'une RPC, plus d'une pagination de
+  // l'API Auth : `listUsers({ perPage: 200 })` était appelée en BOUCLE
+  // SÉQUENTIELLE, et chaque action de la page déclenchant `router.refresh()`,
+  // la boucle repartait à chaque clic — d'où l'impression que rien ne répond.
+  // Une requête SQL suffit : `auth.users` est dans la même base.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activiteAuth = (supabase as any).rpc('admin_activite_auth');
+
+  // Les formules ne dépendent d'aucune des autres lectures : elles rejoignent
+  // la même vague au lieu d'ajouter un troisième aller-retour derrière.
+  const formules = Promise.all(
+    ADMIN_OFFERS.map(async (offer) => ({
+      id: offer,
+      label: OFFER_LABELS[offer],
+      unlocks: unlockedLabels(await fetchContentAccess(offer)),
+    })),
+  );
+
+  const [{ data: students }, { data: fac }, { data: evcSessions }, { data: activite }, offers] = await Promise.all([
     supabase
       .from('profiles')
       .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
@@ -33,6 +50,8 @@ export default async function ElevesPage() {
       .from('evc_sessions')
       .select('id, label, default_access_end, is_default')
       .order('default_access_end', { ascending: false }),
+    activiteAuth,
+    formules,
   ]);
 
   type MatRaw = {
@@ -46,33 +65,18 @@ export default async function ElevesPage() {
 
   const colleges = matieres.map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
-  // Date de dernière connexion (auth.users) → drapeau « jamais connecté » par élève.
-  const lastSignIn = new Map<string, string | null>();
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const aAuth = createAdminClient() as any;
-    for (let page = 1; page <= 40; page++) {
-      const { data, error } = await aAuth.auth.admin.listUsers({ page, perPage: 200 });
-      if (error) break;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const users = (data?.users ?? []) as any[];
-      for (const u of users) lastSignIn.set(u.id, u.last_sign_in_at ?? null);
-      if (users.length < 200) break;
-    }
-  } catch { /* service-role indispo → drapeau non calculé */ }
+  // Élèves qui ne se sont jamais connectés. En cas d'échec de la RPC, l'ensemble
+  // reste vide et le drapeau n'est simplement pas affiché — comme avant, la page
+  // ne doit pas tomber pour un indicateur secondaire.
+  const jamaisConnectes = new Set(
+    ((activite ?? []) as { user_id: string; last_sign_in_at: string | null }[])
+      .filter((r) => !r.last_sign_in_at)
+      .map((r) => r.user_id),
+  );
   const studentsWithLogin = ((students ?? []) as unknown as { id: string }[]).map((s) => ({
     ...s,
-    never_connected: !lastSignIn.get(s.id),
+    never_connected: jamaisConnectes.has(s.id),
   }));
-
-  // Formules + contenus débloqués, d'après la Config Permissions.
-  const offers = await Promise.all(
-    ADMIN_OFFERS.map(async (offer) => ({
-      id: offer,
-      label: OFFER_LABELS[offer],
-      unlocks: unlockedLabels(await fetchContentAccess(offer)),
-    })),
-  );
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">

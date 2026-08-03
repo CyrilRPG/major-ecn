@@ -6,6 +6,12 @@ import { buildStudentScope, etatCompte, sendStudentInvite } from '@/lib/admin/st
 import { siteUrl } from '@/lib/email/send';
 import { isDecouverteOnly } from '@/lib/auth/trial';
 
+// Création séquentielle avec throttle d'envoi : ~1 s par élève. Sans
+// `maxDuration`, un import de trente élèves dépassait le délai par défaut et la
+// requête mourait en cours de route — l'administrateur voyait une erreur réseau
+// sans savoir combien de comptes avaient réellement été créés.
+export const maxDuration = 300;
+
 function origin(req: Request): string {
   const fromEnv = siteUrl();
   if (fromEnv && !fromEnv.startsWith('http://localhost')) return fromEnv;
