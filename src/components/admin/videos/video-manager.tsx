@@ -4,7 +4,7 @@ import { useCallback, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
-  Plus, Search, Trash2, UserMinus, Video, X,
+  Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
@@ -28,16 +28,27 @@ export type ManagedVideo = {
   offers: string[];
   /** Élèves explicitement privés d'accès à cette séance. */
   denied_user_ids: string[];
+  /** Élèves explicitement autorisés (accès nominatif contournant voie/formule/item). */
+  allowed_user_ids: string[];
   /** Supports PDF de la vidéo (plusieurs possibles). */
   supports: VideoSupportDoc[];
 };
 
 /**
- * Sélecteur d'élèves à EXCLURE d'une séance. Les élèves cochés perdent l'accès,
- * même si leur formule/voie les rendrait éligibles. La liste est chargée à la
- * demande (annuaire potentiellement volumineux) et partagée par tout le manager.
+ * Sélecteur nominatif d'élèves pour une séance. Deux modes :
+ *
+ *  - `deny`  : les élèves cochés PERDENT l'accès, même si leur formule/voie les
+ *              rendait éligibles (rouge, `UserMinus`).
+ *  - `allow` : les élèves cochés OBTIENNENT l'accès, même sans formule adéquate,
+ *              sans la voie ciblée, ni même l'accès à l'item parent (vert
+ *              `emerald`, `UserPlus`). L'exclusion prime toujours sur
+ *              l'autorisation.
+ *
+ * La liste est chargée à la demande (annuaire potentiellement volumineux) et
+ * partagée par tout le manager.
  */
-function StudentExclusionPicker({
+function StudentPicker({
+  mode = 'deny',
   students,
   loading,
   error,
@@ -46,6 +57,7 @@ function StudentExclusionPicker({
   disabled,
   onChange,
 }: {
+  mode?: 'deny' | 'allow';
   students: StudentLite[] | null;
   loading: boolean;
   error: string | null;
@@ -74,6 +86,32 @@ function StudentExclusionPicker({
   });
   const selNoms = (students ?? []).filter((s) => selected.includes(s.id));
 
+  const isAllow = mode === 'allow';
+  const Icon = isAllow ? UserPlus : UserMinus;
+  const titre = isAllow
+    ? 'Accorder l’accès à des élèves supplémentaires'
+    : 'Retirer l’accès à certains élèves';
+  const removeAria = (nom: string) =>
+    isAllow ? `Retirer l’autorisation de ${nom}` : `Réautoriser ${nom}`;
+  const helper = isAllow
+    ? 'Les élèves cochés verront cette séance même s’ils n’ont normalement pas accès à l’item ou n’ont pas la formule requise.'
+    : 'Les élèves cochés ne verront plus cette séance ni ses supports.';
+  // Palette : rouge pour l'exclusion, emerald pour l'autorisation. Les classes
+  // sont figées (Tailwind purge les chaînes dynamiques).
+  const c = isAllow
+    ? {
+        badge: 'bg-emerald-100 text-emerald-700',
+        chip: 'bg-emerald-50 text-emerald-700',
+        chipBtn: 'hover:bg-emerald-200',
+        check: 'accent-emerald-600',
+      }
+    : {
+        badge: 'bg-red-100 text-red-700',
+        chip: 'bg-red-50 text-red-700',
+        chipBtn: 'hover:bg-red-200',
+        check: 'accent-red-600',
+      };
+
   return (
     <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
       <button
@@ -82,10 +120,10 @@ function StudentExclusionPicker({
         className="flex w-full items-center justify-between gap-2 text-left"
       >
         <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-          <UserMinus className="h-3.5 w-3.5" />
-          Retirer l’accès à certains élèves
+          <Icon className="h-3.5 w-3.5" />
+          {titre}
           {selected.length > 0 && (
-            <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
+            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${c.badge}`}>
               {selected.length}
             </span>
           )}
@@ -93,18 +131,18 @@ function StudentExclusionPicker({
         {open ? <ChevronUp className="h-4 w-4 text-(--color-ink-muted)" /> : <ChevronDown className="h-4 w-4 text-(--color-ink-muted)" />}
       </button>
 
-      {/* Résumé des exclus, visible même replié. */}
+      {/* Résumé des sélectionnés, visible même replié. */}
       {selected.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {(students ? selNoms : selected.map((id) => ({ id, nom: 'Élève', email: null, promotion: null }))).map((s) => (
-            <span key={s.id} className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700">
+            <span key={s.id} className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${c.chip}`}>
               {s.nom}
               <button
                 type="button"
                 disabled={disabled}
-                aria-label={`Réautoriser ${s.nom}`}
+                aria-label={removeAria(s.nom)}
                 onClick={() => bascule(s.id)}
-                className="rounded-full hover:bg-red-200"
+                className={`rounded-full ${c.chipBtn}`}
               >
                 <X className="h-3 w-3" />
               </button>
@@ -144,7 +182,7 @@ function StudentExclusionPicker({
                         disabled={disabled}
                         checked={selected.includes(s.id)}
                         onChange={() => bascule(s.id)}
-                        className="h-4 w-4 accent-red-600"
+                        className={`h-4 w-4 ${c.check}`}
                       />
                       <span className="min-w-0 flex-1 truncate text-(--color-ink)">{s.nom}</span>
                       {s.promotion && (
@@ -159,7 +197,7 @@ function StudentExclusionPicker({
         </div>
       )}
       <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-        Les élèves cochés ne verront plus cette séance ni ses supports.
+        {helper}
       </p>
     </div>
   );
@@ -371,7 +409,7 @@ export function VideoManager({
    *  - <Collège> ») : l'action crée l'item puis y place la vidéo. */
   onAdd?: (input: {
     type: VideoType; titre: string; lien: string; position: number | null;
-    voies: string[]; offers: string[]; deniedUserIds: string[];
+    voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[];
   }) => Promise<AddResult>;
   /** Message affiché au-dessus de la liste (contexte particulier). */
   notice?: string;
@@ -415,6 +453,8 @@ export function VideoManager({
   const [offers, setOffers] = useState<string[]>(OFFRES_PAR_DEFAUT[type]);
   // Élèves exclus nominativement de la nouvelle séance.
   const [deniedUserIds, setDeniedUserIds] = useState<string[]>([]);
+  // Élèves autorisés nominativement (accès garanti, contourne voie/formule/item).
+  const [allowedUserIds, setAllowedUserIds] = useState<string[]>([]);
 
   /** Dépose un PDF dans le bucket privé et l'ajoute aux supports de la vidéo. */
   async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
@@ -448,6 +488,7 @@ export function VideoManager({
     setVoies(['interne', 'externe']);
     setOffers(OFFRES_PAR_DEFAUT[type]);
     setDeniedUserIds([]);
+    setAllowedUserIds([]);
     setAdding(false);
   }
 
@@ -464,8 +505,8 @@ export function VideoManager({
       const rang = position.trim() ? Number(position) : null;
       const pos = rang && Number.isFinite(rang) ? rang : null;
       const res = onAdd
-        ? await onAdd({ type, titre, lien, position: pos, voies, offers, deniedUserIds })
-        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers, deniedUserIds });
+        ? await onAdd({ type, titre, lien, position: pos, voies, offers, deniedUserIds, allowedUserIds })
+        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers, deniedUserIds, allowedUserIds });
       if ('error' in res) return setError(res.error);
       if (withSupport && supportFiles.length > 0) {
         const err = await uploadSupports(res.videoId, supportFiles, res.coursId);
@@ -592,9 +633,10 @@ export function VideoManager({
                       supportId, differentes, voies: sVoies, offers: sOffers,
                     }))
                   }
-                  onAudience={(nextVoies, nextOffers, nextDenied) =>
+                  onAudience={(nextVoies, nextOffers, nextDenied, nextAllowed) =>
                     run(() => updateVideoAudienceAction({
-                      videoId: v.id, voies: nextVoies, offers: nextOffers, deniedUserIds: nextDenied,
+                      videoId: v.id, voies: nextVoies, offers: nextOffers,
+                      deniedUserIds: nextDenied, allowedUserIds: nextAllowed,
                     }))
                   }
                   studentPickerProps={studentPickerProps}
@@ -648,11 +690,19 @@ export function VideoManager({
               onVoies={setVoies}
               onOffers={setOffers}
             />
-            <StudentExclusionPicker
+            <StudentPicker
+              mode="deny"
               {...studentPickerProps}
               selected={deniedUserIds}
               disabled={pending}
               onChange={setDeniedUserIds}
+            />
+            <StudentPicker
+              mode="allow"
+              {...studentPickerProps}
+              selected={allowedUserIds}
+              disabled={pending}
+              onChange={setAllowedUserIds}
             />
             <label className="flex items-center gap-2 pt-1 text-sm text-(--color-ink)">
               <input
@@ -757,7 +807,7 @@ function VideoEditPanel({
   onRenameSupport: (supportId: string, titre: string) => void;
   onRemoveSupport: (supportId: string) => void;
   onSupportAudience: (supportId: string, differentes: boolean, voies: string[], offers: string[]) => void;
-  onAudience: (voies: string[], offers: string[], deniedUserIds: string[]) => void;
+  onAudience: (voies: string[], offers: string[], deniedUserIds: string[], allowedUserIds: string[]) => void;
   studentPickerProps: {
     students: StudentLite[] | null; loading: boolean; error: string | null; onLoad: () => void;
   };
@@ -767,11 +817,13 @@ function VideoEditPanel({
   const [voies, setVoies] = useState<string[]>(video.voies);
   const [offers, setOffers] = useState<string[]>(video.offers);
   const [denied, setDenied] = useState<string[]>(video.denied_user_ids);
+  const [allowed, setAllowed] = useState<string[]>(video.allowed_user_ids);
   const memeListe = (a: string[], b: string[]) => a.slice().sort().join() === b.slice().sort().join();
   const audienceModifiee =
     !memeListe(voies, video.voies)
     || !memeListe(offers, video.offers)
-    || !memeListe(denied, video.denied_user_ids);
+    || !memeListe(denied, video.denied_user_ids)
+    || !memeListe(allowed, video.allowed_user_ids);
 
   return (
     <div className="space-y-3 border-t border-(--color-border) bg-(--color-surface-soft) px-3 py-3">
@@ -833,12 +885,20 @@ function VideoEditPanel({
           onVoies={setVoies}
           onOffers={setOffers}
         />
-        <div className="mt-2">
-          <StudentExclusionPicker
+        <div className="mt-2 space-y-2">
+          <StudentPicker
+            mode="deny"
             {...studentPickerProps}
             selected={denied}
             disabled={pending}
             onChange={setDenied}
+          />
+          <StudentPicker
+            mode="allow"
+            {...studentPickerProps}
+            selected={allowed}
+            disabled={pending}
+            onChange={setAllowed}
           />
         </div>
         {audienceModifiee && (
@@ -848,7 +908,7 @@ function VideoEditPanel({
             variant="secondary"
             className="mt-2"
             disabled={pending}
-            onClick={() => onAudience(voies, offers, denied)}
+            onClick={() => onAudience(voies, offers, denied, allowed)}
           >
             Enregistrer l’accès
           </Button>

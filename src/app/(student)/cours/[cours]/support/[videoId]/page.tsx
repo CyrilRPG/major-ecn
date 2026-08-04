@@ -5,7 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { supportVisible } from '@/lib/videos/audience';
+import { supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
 import { supportPageTitle, type SupportVideoType } from '@/lib/student/supports';
@@ -37,7 +37,7 @@ export default async function SupportPage({
   const { data: row } = await (supabase as any)
     .from('videos')
     .select(`
-      id, titre, type, cours_id, voies, offers, denied_user_ids,
+      id, titre, type, cours_id, voies, offers, denied_user_ids, allowed_user_ids,
       video_supports(id, titre, order_index, voies, offers),
       cours:cours_id(id, titre, matiere_id, matieres(nom, access_type))
     `)
@@ -47,7 +47,8 @@ export default async function SupportPage({
   type SupportDoc = { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null };
   const video = row as {
     id: string; titre: string; type: SupportVideoType; cours_id: string;
-    voies: string[] | null; offers: string[] | null; denied_user_ids: string[] | null;
+    voies: string[] | null; offers: string[] | null;
+    denied_user_ids: string[] | null; allowed_user_ids: string[] | null;
     video_supports?: SupportDoc[] | null;
     cours?: { id: string; titre: string; matiere_id: string; matieres?: { nom?: string; access_type?: string } | null } | null;
   } | null;
@@ -59,8 +60,12 @@ export default async function SupportPage({
 
   let docs = (video.video_supports ?? []).slice().sort((a, b) => a.order_index - b.order_index);
   if (!isStaff) {
+    // Autorisation nominative sur la séance : contourne le cadenas collège pour
+    // que l'élève puisse ouvrir les supports qui lui sont destinés (l'exclusion
+    // continue de primer).
+    const autorise = eleveAutorise(video, user.id) && !eleveExclu(video, user.id);
     const collegeAccess = (video.cours.matieres?.access_type as 'all' | 'specific' | undefined) ?? 'all';
-    if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess)) redirect('/facultes');
+    if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess) && !autorise) redirect('/facultes');
     const access = await fetchContentAccessForScope(scope);
     // Chaque support porte ses PROPRES permissions si l'admin les a définies,
     // sinon il hérite de celles de la vidéo (voies + formules + exclusions).

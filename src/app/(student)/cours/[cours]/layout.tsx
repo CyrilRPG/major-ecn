@@ -9,7 +9,7 @@ import { canRead } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
-import { videoVisible, supportVisible } from '@/lib/videos/audience';
+import { videoVisible, supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
@@ -23,6 +23,7 @@ type CourseVideoRow = {
   voies: string[] | null;
   offers: string[] | null;
   denied_user_ids: string[] | null;
+  allowed_user_ids: string[] | null;
   /** Supports PDF rattachés (plusieurs possibles), avec leurs permissions propres. */
   video_supports?: { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null }[] | null;
 };
@@ -43,7 +44,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path),
       qcm_series(type),
       flashcards(id),
@@ -55,7 +56,15 @@ export default async function CoursLayout({
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
-  if (!canAccessCollege(scope, c.matiere_id, collegeAccess)) redirect('/facultes');
+  // L'autorisation nominative d'une vidéo contourne l'accès normal au collège
+  // et à l'item : si au moins une vidéo de ce cours cite l'élève dans son
+  // `allowed_user_ids` (sans l'exclure), on le laisse ouvrir la page pour
+  // qu'il accède au contenu qui lui est destiné. L'exclusion prime toujours.
+  const videosRow = (c.videos ?? []) as unknown as CourseVideoRow[];
+  const autoriseParVideo = videosRow.some(
+    (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
+  );
+  if (!canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
 
   const isAdmin = profile.role === 'admin';
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
@@ -64,7 +73,7 @@ export default async function CoursLayout({
   // facultatifs. L'AUDIENCE est portée par la vidéo elle-même (voies de
   // concours + formules cochées à l'ajout) ; le droit global de la formule ne
   // sert que de repli pour une vidéo sans ciblage explicite.
-  const videos = ((c.videos ?? []) as unknown as CourseVideoRow[])
+  const videos = videosRow
     .slice()
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   const hasSource = (v: CourseVideoRow) => !!v.bunny_video_id || !!v.storage_path;

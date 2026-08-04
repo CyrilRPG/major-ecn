@@ -5,6 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { ParcoursExercices, type RunnerQuestion } from '@/components/student/parcours/parcours-runner';
 import { BAND_META } from '@/lib/parcours/parcours';
+import { PARCOURS_PROSE } from '@/lib/parcours/prose';
 import { fetchCompletions, fetchParcoursByNumero } from '@/lib/parcours/source';
 
 export const dynamic = 'force-dynamic';
@@ -79,7 +80,7 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
             <BookOpen className="h-4 w-4" /> Le rappel du coach
           </p>
           <div
-            className="prose prose-sm max-w-none text-(--color-ink) prose-headings:text-(--color-ink) prose-a:text-[#C0112E] prose-strong:text-(--color-ink) prose-img:rounded-xl prose-li:my-0.5 prose-p:leading-relaxed"
+            className={PARCOURS_PROSE}
             dangerouslySetInnerHTML={{ __html: parcours.intro_html }}
           />
         </section>
@@ -90,7 +91,7 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
         <section className="mb-6 rounded-2xl border border-[#F8B4B4]/60 bg-[#FFF7F7] p-6">
           <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#C0112E]">Cas clinique</p>
           <div
-            className="prose prose-sm max-w-none text-(--color-ink) prose-p:leading-relaxed prose-strong:text-(--color-ink)"
+            className={PARCOURS_PROSE}
             dangerouslySetInnerHTML={{ __html: parcours.vignette_html }}
           />
         </section>

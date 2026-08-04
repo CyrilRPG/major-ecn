@@ -1,0 +1,4 @@
+# Contenu extrait / généré à partir des PDFs — non versionné
+*.txt
+*.sql
+*.json

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { submitParcoursAction } from '@/app/(student)/parcours/actions';
 import { BAND_META, computeScore10, type ParcoursBand } from '@/lib/parcours/parcours';
+import { PARCOURS_PROSE } from '@/lib/parcours/prose';
 
 export type RunnerItem = { lettre: string; texte: string; correct: boolean };
 export type RunnerQuestion = {
@@ -29,7 +30,7 @@ type Answer = { selected: string[]; validated: boolean; text: string; revealed: 
 function Rich({ html, className }: { html: string; className?: string }) {
   return (
     <div
-      className={cn('prose prose-sm max-w-none text-(--color-ink) prose-p:my-1.5 prose-li:my-0.5 prose-img:rounded-xl prose-img:my-2', className)}
+      className={cn(PARCOURS_PROSE, className)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

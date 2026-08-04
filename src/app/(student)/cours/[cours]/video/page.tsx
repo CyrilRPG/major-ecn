@@ -11,7 +11,7 @@ import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible } from '@/lib/videos/audience';
+import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 
 type CoursVideo = {
   id: string;
@@ -21,6 +21,7 @@ type CoursVideo = {
   voies: string[] | null;
   offers: string[] | null;
   denied_user_ids: string[] | null;
+  allowed_user_ids: string[] | null;
 };
 
 export default async function CoursVideoPage({
@@ -38,35 +39,44 @@ export default async function CoursVideoPage({
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
-    .from('cours')
-    .select(`
-      id, titre, matiere_id,
-      matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom)))
-    `)
-    .eq('id', coursId)
-    .maybeSingle();
-  if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   const isAdmin = profile.role === 'admin';
+
+  // Cours + vidéos en parallèle : le contrôle d'accès au collège dépend
+  // maintenant AUSSI des autorisations nominatives portées par les vidéos,
+  // qu'il faut donc connaître avant de rediriger.
+  const [{ data: c }, { data: videoRows }] = await Promise.all([
+    supabase
+      .from('cours')
+      .select(`
+        id, titre, matiere_id,
+        matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom)))
+      `)
+      .eq('id', coursId)
+      .maybeSingle(),
+    // Un item peut porter plusieurs cours vidéo, dans l'ordre choisi par
+    // l'administrateur (Contenu › Cours vidéo).
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from('videos')
+      .select('id, titre, bunny_video_id, storage_path, voies, offers, denied_user_ids, allowed_user_ids')
+      .eq('cours_id', coursId)
+      .eq('type', 'cours')
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true }),
+  ]);
+  if (!c || !c.matieres?.semestres) notFound();
+  const allVideosRaw = (videoRows ?? []) as CoursVideo[];
+  const autoriseParVideo = allVideosRaw.some(
+    (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
+  );
+  if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !autoriseParVideo) redirect('/facultes');
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
-
-  // Un item peut porter plusieurs cours vidéo, dans l'ordre choisi par
-  // l'administrateur (Contenu › Cours vidéo).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: videoRows } = await (supabase as any)
-    .from('videos')
-    .select('id, titre, bunny_video_id, storage_path, voies, offers, denied_user_ids')
-    .eq('cours_id', coursId)
-    .eq('type', 'cours')
-    .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true });
   // L'audience est portée par la vidéo (voies + formules cochées à l'ajout, plus
-  // les exclusions nominatives) ; le droit global de la formule ne sert que de repli.
+  // les listes nominatives) ; le droit global de la formule ne sert que de repli.
   const offresEleve = scopeOffers(scope);
-  const allVideos = ((videoRows ?? []) as CoursVideo[]).filter(
+  const allVideos = allVideosRaw.filter(
     (v) => (!!v.bunny_video_id || !!v.storage_path)
       && (isAdmin || videoVisible(v, {
         offres: offresEleve, voie: scope.voie ?? null, droitFormule: !access || access.video, userId: user.id,

@@ -97,7 +97,7 @@ export async function GET(req: Request) {
       // charge donc toujours, et on filtre par audience ci-dessous.
       auth.supabase
         .from('videos')
-        .select('cours_id, bunny_video_id, storage_path, duration_seconds, voies, offers, denied_user_ids, updated_at')
+        .select('cours_id, bunny_video_id, storage_path, duration_seconds, voies, offers, denied_user_ids, allowed_user_ids, updated_at')
         .in('cours_id', includedIds)
         .eq('type', 'cours')
         .order('order_index', { ascending: true }),
@@ -126,7 +126,7 @@ export async function GET(req: Request) {
   const videosByCours = new Map<string, ChildRow>();
   for (const r of videos) {
     const visible = isStaff || videoVisible(
-      r as { voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null },
+      r as { voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null },
       { offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule: content.video, userId: auth.user.id },
     );
     if (visible && !videosByCours.has(r.cours_id)) videosByCours.set(r.cours_id, r);

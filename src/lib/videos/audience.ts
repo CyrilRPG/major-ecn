@@ -26,6 +26,8 @@ export type VideoAudience = {
   offers?: string[] | null;
   /** Élèves explicitement privés d'accès (exclusion nominative). */
   denied_user_ids?: string[] | null;
+  /** Élèves explicitement autorisés (accès nominatif, contourne voie/formule/item). */
+  allowed_user_ids?: string[] | null;
 };
 
 /** Normalise une liste de voies ; vide/absente ⇒ les deux (aucune restriction). */
@@ -85,6 +87,21 @@ export function eleveExclu(
 }
 
 /**
+ * Cet élève est-il explicitement autorisé à voir cette vidéo ?
+ *
+ * L'autorisation nominative (`allowed_user_ids`) contourne tout le reste :
+ * voie, formules, droit global de la formule, et même l'accès au collège ou à
+ * l'item parent — seule l'exclusion nominative continue de la bloquer.
+ */
+export function eleveAutorise(
+  video: { allowed_user_ids?: string[] | null },
+  userId?: string | null,
+): boolean {
+  if (!userId) return false;
+  return (video.allowed_user_ids ?? []).includes(userId);
+}
+
+/**
  * Une vidéo est-elle visible par cet élève ?
  *
  * `droitFormule` est le droit global de la formule pour ce type de contenu
@@ -97,6 +114,10 @@ export function videoVisible(
   options: { offres: readonly Offer[]; voie?: Voie | null; droitFormule: boolean; userId?: string | null },
 ): boolean {
   if (eleveExclu(video, options.userId)) return false;
+  // Autorisation nominative : contourne voie, formules et droit global.
+  // Un élève ajouté à `allowed_user_ids` voit la séance même si sa formule /
+  // sa voie / son droit global à ce type de contenu ne le lui permettrait pas.
+  if (eleveAutorise(video, options.userId)) return true;
   if (!visiblePourVoie(video.voies, options.voie)) return false;
   const parOffre = visiblePourOffres(video.offers, options.offres);
   return parOffre ?? options.droitFormule;
@@ -119,7 +140,11 @@ export function audienceSupport(doc: SupportOverride, video: VideoAudience): Vid
   return {
     voies: doc.voies && doc.voies.length > 0 ? doc.voies : video.voies,
     offers: doc.offers && doc.offers.length > 0 ? doc.offers : video.offers,
+    // Exclusions et autorisations nominatives sont portées par la vidéo :
+    // un élève retiré de la séance l'est aussi de tous ses supports, un élève
+    // autorisé sur la séance voit tous ses supports.
     denied_user_ids: video.denied_user_ids,
+    allowed_user_ids: video.allowed_user_ids,
   };
 }
 

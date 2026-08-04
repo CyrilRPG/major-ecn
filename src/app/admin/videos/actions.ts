@@ -151,6 +151,8 @@ export type VideoLibraryVideo = {
   offers: string[];
   /** Élèves explicitement privés d'accès à cette séance (exclusion nominative). */
   denied_user_ids: string[];
+  /** Élèves explicitement autorisés (accès nominatif contournant voie/formule/item). */
+  allowed_user_ids: string[];
   /** Supports PDF de la vidéo, dans l'ordre d'affichage élève. */
   supports: VideoSupportDoc[];
 };
@@ -218,7 +220,7 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)')
+    .select('id, titre, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
@@ -233,6 +235,7 @@ export async function listVideosAction(
       voies: normaliserVoies(v.voies),
       offers: normaliserOffres(v.offers),
       denied_user_ids: (v.denied_user_ids ?? []).filter((x): x is string => typeof x === 'string'),
+      allowed_user_ids: (v.allowed_user_ids ?? []).filter((x): x is string => typeof x === 'string'),
       supports: (v.video_supports ?? [])
         .slice()
         .sort((a, b) => a.order_index - b.order_index)
@@ -292,6 +295,7 @@ export async function addVideoAction(input: {
   voies?: string[];
   offers?: string[];
   deniedUserIds?: string[];
+  allowedUserIds?: string[];
 }): Promise<AddResult> {
   const ctx = await guard(input.coursId);
   if ('error' in ctx) return ctx;
@@ -300,7 +304,8 @@ export async function addVideoAction(input: {
 
 export type AddResult = { ok: true; videoId: string; coursId: string } | { error: string };
 
-/** Normalise une liste d'IDs d'élèves exclus (UUID, dédoublonnés). */
+/** Normalise une liste d'IDs d'élèves (UUID, dédoublonnés). Sert autant à
+ *  l'exclusion nominative (denied) qu'à l'autorisation nominative (allowed). */
 function normaliserExclus(ids?: string[] | null): string[] {
   const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return Array.from(new Set((ids ?? []).filter((x) => typeof x === 'string' && uuid.test(x))));
@@ -335,7 +340,7 @@ async function insertVideo(
   ctx: Ctx,
   input: {
     type: VideoType; titre: string; lien: string; position?: number | null;
-    voies?: string[]; offers?: string[]; deniedUserIds?: string[];
+    voies?: string[]; offers?: string[]; deniedUserIds?: string[]; allowedUserIds?: string[];
   },
 ): Promise<AddResult> {
   const coursId = ctx.cours.id;
@@ -348,6 +353,7 @@ async function insertVideo(
   const audience = validerAudience(input.type, input);
   if ('error' in audience) return audience;
   const deniedUserIds = normaliserExclus(input.deniedUserIds);
+  const allowedUserIds = normaliserExclus(input.allowedUserIds);
 
   // Liste actuelle de la catégorie : sert à insérer à la position demandée et
   // à renuméroter proprement (les données antérieures peuvent avoir des trous).
@@ -374,6 +380,7 @@ async function insertVideo(
       voies: audience.voies,
       offers: audience.offers,
       denied_user_ids: deniedUserIds,
+      allowed_user_ids: allowedUserIds,
     })
     .select('id')
     .single();
@@ -398,10 +405,12 @@ async function insertVideo(
     matiereNom: ctx.cours.matiereNom,
     description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`
       + ` — ${resumeAudience(audience)}`
-      + (deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : ''),
+      + (deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : '')
+      + (allowedUserIds.length > 0 ? ` — ${allowedUserIds.length} élève(s) autorisé(s)` : ''),
     diff: {
       bunny_video_id: bunnyId, type: input.type, order_index: insertAt,
-      voies: audience.voies, offers: audience.offers, denied_user_ids: deniedUserIds,
+      voies: audience.voies, offers: audience.offers,
+      denied_user_ids: deniedUserIds, allowed_user_ids: allowedUserIds,
     },
   });
 
@@ -425,6 +434,7 @@ export async function addVideoToRevisionsAction(input: {
   voies?: string[];
   offers?: string[];
   deniedUserIds?: string[];
+  allowedUserIds?: string[];
 }): Promise<AddResult> {
   const { profile, scope } = await requireContentEditor();
   try {
@@ -559,6 +569,8 @@ export async function updateVideoAudienceAction(input: {
   offers: string[];
   /** Élèves à exclure nominativement. Absent ⇒ la liste actuelle est conservée. */
   deniedUserIds?: string[];
+  /** Élèves à autoriser nominativement. Absent ⇒ la liste actuelle est conservée. */
+  allowedUserIds?: string[];
 }): Promise<{ ok: true } | { error: string }> {
   const ctx = await guardVideo(input.videoId);
   if ('error' in ctx) return ctx;
@@ -572,6 +584,8 @@ export async function updateVideoAudienceAction(input: {
   };
   const deniedUserIds = input.deniedUserIds !== undefined ? normaliserExclus(input.deniedUserIds) : undefined;
   if (deniedUserIds !== undefined) patch.denied_user_ids = deniedUserIds;
+  const allowedUserIds = input.allowedUserIds !== undefined ? normaliserExclus(input.allowedUserIds) : undefined;
+  if (allowedUserIds !== undefined) patch.allowed_user_ids = allowedUserIds;
 
   const { error } = await ctx.a.from('videos').update(patch).eq('id', input.videoId);
   if (error) return { error: error.message };
@@ -587,8 +601,15 @@ export async function updateVideoAudienceAction(input: {
     description: `Audience de « ${ctx.video.titre} » : ${resumeAudience(audience)}`
       + (deniedUserIds !== undefined
         ? deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : ' — aucune exclusion'
+        : '')
+      + (allowedUserIds !== undefined
+        ? allowedUserIds.length > 0 ? ` — ${allowedUserIds.length} élève(s) autorisé(s)` : ' — aucune autorisation nominative'
         : ''),
-    diff: { voies: audience.voies, offers: audience.offers, ...(deniedUserIds !== undefined ? { denied_user_ids: deniedUserIds } : {}) },
+    diff: {
+      voies: audience.voies, offers: audience.offers,
+      ...(deniedUserIds !== undefined ? { denied_user_ids: deniedUserIds } : {}),
+      ...(allowedUserIds !== undefined ? { allowed_user_ids: allowedUserIds } : {}),
+    },
   });
 
   refresh(ctx.cours.id);

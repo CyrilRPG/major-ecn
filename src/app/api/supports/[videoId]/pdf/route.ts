@@ -5,7 +5,7 @@ import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
-import { supportVisible } from '@/lib/videos/audience';
+import { supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { watermarkPdf } from '@/lib/fiches/watermark';
 
 export const runtime = 'nodejs';
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
     (supabase as any)
       .from('videos')
       .select(`
-        id, titre, type, voies, offers, denied_user_ids,
+        id, titre, type, voies, offers, denied_user_ids, allowed_user_ids,
         video_supports(id, titre, storage_path, order_index, voies, offers),
         cours:cours_id(id, matiere_id, matieres(access_type))
       `)
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
 
   const video = videoRow as {
     id: string; titre: string; type: string; voies: string[] | null; offers: string[] | null;
-    denied_user_ids: string[] | null;
+    denied_user_ids: string[] | null; allowed_user_ids: string[] | null;
     video_supports?: { id: string; titre: string; storage_path: string; order_index: number; voies: string[] | null; offers: string[] | null }[] | null;
     cours?: { id: string; matiere_id: string; matieres?: { access_type?: string } | null } | null;
   } | null;
@@ -76,14 +76,17 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
   if (!isStaff) {
     const scope = parseScope(profile.permission_scope);
+    // Autorisation nominative sur la séance : contourne aussi le cadenas
+    // collège, comme sur la page. L'exclusion continue de primer.
+    const autorise = eleveAutorise(video, user.id) && !eleveExclu(video, user.id);
     const collegeAccess = (video.cours.matieres?.access_type as 'all' | 'specific' | undefined) ?? 'all';
-    if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess)) {
+    if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess) && !autorise) {
       return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
     const access = await fetchContentAccessForScopeWith(supabase, scope);
     const droitFormule = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
     // Le support demandé porte ses PROPRES permissions le cas échéant (sinon il
-    // hérite de la vidéo), plus l'exclusion nominative de la séance.
+    // hérite de la vidéo), plus les listes nominatives de la séance.
     const allowed = supportVisible(doc, video, {
       offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule, userId: user.id,
     });

@@ -5,6 +5,7 @@ import { assertAccessActive } from '@/lib/auth/access';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { canAccessCours, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
+import { eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { bunnySignedMp4Url, getBunnyVideoInfo } from '@/lib/bunny';
 import { siteUrl } from '@/lib/email/send';
 
@@ -46,34 +47,39 @@ export async function GET(req: Request, ctx: { params: Promise<{ cours: string }
   const isStaff = profile?.role === 'admin' || profile?.role === 'professor';
 
   // La lecture passe par le client RLS (voie/faculté) ; le collège est vérifié
-  // applicativement, comme sur le web.
-  const { data: coursRow } = await auth.supabase
-    .from('cours')
-    .select('id, matiere_id, access_type')
-    .eq('id', coursId)
-    .maybeSingle();
+  // applicativement, comme sur le web. On charge la vidéo en parallèle pour
+  // savoir si l'élève a une autorisation nominative qui contournerait le
+  // cadenas cours/formule.
+  const [{ data: coursRow }, { data: videos }] = await Promise.all([
+    auth.supabase
+      .from('cours')
+      .select('id, matiere_id, access_type')
+      .eq('id', coursId)
+      .maybeSingle(),
+    auth.supabase
+      .from('videos')
+      .select('bunny_video_id, storage_path, duration_seconds, denied_user_ids, allowed_user_ids')
+      .eq('cours_id', coursId)
+      .limit(1),
+  ]);
   if (!coursRow) return NextResponse.json({ error: 'Cours introuvable' }, { status: 404 });
-  if (!isStaff && !canAccessCours(scope, coursRow.matiere_id, coursRow.id, coursRow.access_type as 'all' | 'specific')) {
+  const video = videos?.[0];
+  if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });
+  const videoRow = video as { bunny_video_id: string | null; storage_path: string | null; duration_seconds: number | null; denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null };
+  // Exclusion nominative : prime sur tout, y compris sur l'autorisation.
+  if (!isStaff && eleveExclu(videoRow, auth.user.id)) {
+    return NextResponse.json({ code: 'CONTENT_NOT_IN_FORMULA', error: 'Cette séance ne vous est pas accessible.' }, { status: 403 });
+  }
+  // Autorisation nominative : contourne cours et droit global de la formule.
+  const autorise = !isStaff && eleveAutorise(videoRow, auth.user.id);
+  if (!isStaff && !autorise && !canAccessCours(scope, coursRow.matiere_id, coursRow.id, coursRow.access_type as 'all' | 'specific')) {
     return NextResponse.json({ error: 'Accès refusé à ce cours' }, { status: 403 });
   }
-
-  if (!isStaff) {
+  if (!isStaff && !autorise) {
     const content = await fetchContentAccessForScopeWith(auth.supabase, scope);
     if (!content.video) {
       return NextResponse.json({ code: 'CONTENT_NOT_IN_FORMULA', error: 'Votre formule n’inclut pas les vidéos.' }, { status: 403 });
     }
-  }
-
-  const { data: videos } = await auth.supabase
-    .from('videos')
-    .select('bunny_video_id, storage_path, duration_seconds, denied_user_ids')
-    .eq('cours_id', coursId)
-    .limit(1);
-  const video = videos?.[0];
-  if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });
-  // Exclusion nominative : un élève retiré de la séance ne peut pas la télécharger.
-  if (!isStaff && ((video as { denied_user_ids?: string[] | null }).denied_user_ids ?? []).includes(auth.user.id)) {
-    return NextResponse.json({ code: 'CONTENT_NOT_IN_FORMULA', error: 'Cette séance ne vous est pas accessible.' }, { status: 403 });
   }
 
   if (video.bunny_video_id) {
