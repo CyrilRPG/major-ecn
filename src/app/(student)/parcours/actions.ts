@@ -17,60 +17,72 @@ export async function submitParcoursAction(input: {
   parcoursId: string;
   /** Par question : QCM → lettres sélectionnées ; QROC → auto-évaluation + texte. */
   answers: Record<string, { selected?: string[]; self?: 'correct' | 'wrong'; text?: string }>;
-}): Promise<{ ok: true; score: number; band: ParcoursBand } | { error: string }> {
+  /** Comptage calculé côté client — repli quand la base n'est pas encore créée. */
+  correct: number;
+  total: number;
+}): Promise<{ ok: true; score: number; band: ParcoursBand; persisted: boolean } | { error: string }> {
   const { user } = await requireUser();
+
+  // Repli statique (aperçu sans base) : on fait confiance au comptage client,
+  // sans persistance. `parcoursId` en `static-…` = aucune ligne en base.
+  const fallback = () => {
+    const total = Math.max(0, Math.floor(input.total));
+    const correct = Math.max(0, Math.min(total, Math.floor(input.correct)));
+    const score = computeScore10(correct, total);
+    return { ok: true as const, score, band: scoreBand(score), persisted: false };
+  };
+  if (input.parcoursId.startsWith('static-')) return fallback();
+
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sb = supabase as any;
 
-  const { data: qRows, error } = await sb
-    .from('major_parcours_questions')
-    .select('id, format, items, reponse_attendue')
-    .eq('parcours_id', input.parcoursId);
-  if (error) return { error: error.message };
+  try {
+    const { data: qRows, error } = await sb
+      .from('major_parcours_questions')
+      .select('id, format, items, reponse_attendue')
+      .eq('parcours_id', input.parcoursId);
+    if (error) return fallback();
 
-  type Q = {
-    id: string; format: 'qcm' | 'qroc';
-    items: { lettre: string; correct?: boolean }[] | null;
-    reponse_attendue: string | null;
-  };
-  const questions = (qRows ?? []) as Q[];
-  if (questions.length === 0) return { error: 'Ce parcours n’a pas encore de questions.' };
+    type Q = {
+      id: string; format: 'qcm' | 'qroc';
+      items: { lettre: string; correct?: boolean }[] | null;
+      reponse_attendue: string | null;
+    };
+    const questions = (qRows ?? []) as Q[];
+    if (questions.length === 0) return fallback();
 
-  let correct = 0;
-  for (const q of questions) {
-    const a = input.answers[q.id];
-    if (q.format === 'qcm') {
-      const bonnes = new Set((q.items ?? []).filter((it) => it.correct).map((it) => it.lettre));
-      const choisies = new Set(a?.selected ?? []);
-      // Correct = exactement les bonnes lettres cochées (tout ou rien).
-      const exact = bonnes.size === choisies.size && [...bonnes].every((l) => choisies.has(l));
-      if (exact) correct++;
-    } else {
-      // QROC : auto-évaluation honnête de l'élève.
-      if (a?.self === 'correct') correct++;
+    // La note est RECALCULÉE en base : QCM regradés, QROC = auto-évaluation.
+    let correct = 0;
+    for (const q of questions) {
+      const a = input.answers[q.id];
+      if (q.format === 'qcm') {
+        const bonnes = new Set((q.items ?? []).filter((it) => it.correct).map((it) => it.lettre));
+        const choisies = new Set(a?.selected ?? []);
+        const exact = bonnes.size === choisies.size && [...bonnes].every((l) => choisies.has(l));
+        if (exact) correct++;
+      } else if (a?.self === 'correct') {
+        correct++;
+      }
     }
+
+    const score = computeScore10(correct, questions.length);
+    const band = scoreBand(score);
+
+    const { error: upErr } = await sb
+      .from('major_parcours_completions')
+      .upsert(
+        {
+          user_id: user.id, parcours_id: input.parcoursId, score, band,
+          answers: input.answers, completed_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,parcours_id' },
+      );
+    if (upErr) return { ok: true, score, band, persisted: false };
+
+    revalidatePath('/parcours');
+    return { ok: true, score, band, persisted: true };
+  } catch {
+    return fallback();
   }
-
-  const score = computeScore10(correct, questions.length);
-  const band = scoreBand(score);
-
-  const { error: upErr } = await sb
-    .from('major_parcours_completions')
-    .upsert(
-      {
-        user_id: user.id,
-        parcours_id: input.parcoursId,
-        score,
-        band,
-        answers: input.answers,
-        completed_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,parcours_id' },
-    );
-  if (upErr) return { error: upErr.message };
-
-  revalidatePath('/parcours');
-  revalidatePath(`/parcours`);
-  return { ok: true, score, band };
 }

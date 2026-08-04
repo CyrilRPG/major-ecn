@@ -5,16 +5,12 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import {
   BAND_META, computeStates, formatOuverture, prochaineOuverture,
-  type CompletionLite, type ParcoursBand, type ParcoursLite, type ParcoursState,
+  type ParcoursLite, type ParcoursState,
 } from '@/lib/parcours/parcours';
+import { fetchCompletions, fetchParcoursList } from '@/lib/parcours/source';
 
 export const metadata = { title: 'Parcours du Major' };
 export const dynamic = 'force-dynamic';
-
-type Row = {
-  id: string; numero: number; titre: string; sous_titre: string | null;
-  available_at: string; active: boolean;
-};
 
 export default async function ParcoursPage() {
   const { user, profile } = await requireUser();
@@ -22,18 +18,14 @@ export default async function ParcoursPage() {
   if (profile.role !== 'admin') redirect('/accueil');
   const supabase = await createClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sb = supabase as any;
-  const [{ data: parcoursRows }, { data: compsRows }] = await Promise.all([
-    sb.from('major_parcours').select('id, numero, titre, sous_titre, available_at, active').order('numero', { ascending: true }),
-    sb.from('major_parcours_completions').select('parcours_id, score, band').eq('user_id', user.id),
+  // Catalogue depuis la base si elle existe, sinon repli statique (data.ts).
+  const [{ rows }, completions] = await Promise.all([
+    fetchParcoursList(supabase),
+    fetchCompletions(supabase, user.id),
   ]);
-
-  const parcours: ParcoursLite[] = ((parcoursRows ?? []) as Row[])
+  const parcours: ParcoursLite[] = rows
     .filter((p) => p.active)
     .map((p) => ({ id: p.id, numero: p.numero, titre: p.titre, sousTitre: p.sous_titre, availableAt: p.available_at }));
-  const completions: CompletionLite[] = ((compsRows ?? []) as { parcours_id: string; score: number; band: ParcoursBand }[])
-    .map((c) => ({ parcoursId: c.parcours_id, band: c.band, score: Number(c.score) }));
 
   const now = new Date();
   const isStaff = profile.role === 'admin' || profile.role === 'professor';

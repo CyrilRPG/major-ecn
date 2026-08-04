@@ -144,7 +144,7 @@ export function ParcoursRunner({
           : [qq.id, { self: ans.self ?? 'wrong', text: ans.text }];
       }),
     );
-    const res = await submitParcoursAction({ parcoursId, answers: payload });
+    const res = await submitParcoursAction({ parcoursId, answers: payload, correct: correctSoFar, total });
     setSaving(false);
     if ('error' in res) { setError(res.error); return; }
     setFinished({ score: res.score, band: res.band });

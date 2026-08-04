@@ -3,6 +3,8 @@ import { CalendarClock, ChevronRight, Trophy } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { formatOuverture } from '@/lib/parcours/parcours';
+import { fetchParcoursList } from '@/lib/parcours/source';
+import { STATIC_PARCOURS } from '@/lib/parcours/data';
 
 export const metadata = { title: 'Parcours du Major' };
 export const dynamic = 'force-dynamic';
@@ -12,17 +14,20 @@ export default async function AdminParcoursPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const admin = createAdminClient() as any;
 
-  const { data: rows } = await admin
-    .from('major_parcours')
-    .select('id, numero, titre, sous_titre, available_at, active, major_parcours_questions(count)')
-    .order('numero', { ascending: true });
+  const { rows: parcours, source } = await fetchParcoursList(admin);
 
-  type Row = {
-    id: string; numero: number; titre: string; sous_titre: string | null;
-    available_at: string; active: boolean;
-    major_parcours_questions?: { count: number }[];
-  };
-  const parcours = (rows ?? []) as Row[];
+  // Nombre de questions par parcours (base si dispo, sinon catalogue statique).
+  const counts = new Map<string, number>();
+  if (source === 'db') {
+    try {
+      const { data } = await admin.from('major_parcours_questions').select('parcours_id');
+      for (const r of ((data ?? []) as { parcours_id: string }[])) {
+        counts.set(r.parcours_id, (counts.get(r.parcours_id) ?? 0) + 1);
+      }
+    } catch { /* ignore */ }
+  } else {
+    for (const p of STATIC_PARCOURS) counts.set(`static-${p.numero}`, p.questions.length);
+  }
   const now = new Date().getTime();
 
   return (
@@ -41,7 +46,7 @@ export default async function AdminParcoursPage() {
 
       <ul className="space-y-2">
         {parcours.map((p) => {
-          const nbQ = p.major_parcours_questions?.[0]?.count ?? 0;
+          const nbQ = counts.get(p.id) ?? 0;
           const future = new Date(p.available_at).getTime() > now;
           return (
             <li key={p.id}>

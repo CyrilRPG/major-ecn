@@ -4,20 +4,10 @@ import { ArrowLeft, BookOpen, Crown } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { ParcoursExercices, type RunnerQuestion } from '@/components/student/parcours/parcours-runner';
-import { BAND_META, type ParcoursBand } from '@/lib/parcours/parcours';
+import { BAND_META } from '@/lib/parcours/parcours';
+import { fetchCompletions, fetchParcoursByNumero } from '@/lib/parcours/source';
 
 export const dynamic = 'force-dynamic';
-
-type ParcoursRow = {
-  id: string; numero: number; titre: string; sous_titre: string | null;
-  intro_html: string; vignette_html: string | null; available_at: string; active: boolean;
-};
-type QuestionRow = {
-  id: string; section: 'qcm' | 'cas_clinique'; format: 'qcm' | 'qroc';
-  ordre: number; enonce_html: string;
-  items: { lettre: string; texte: string; correct?: boolean }[] | null;
-  reponse_attendue: string | null; explication_html: string | null; image_path: string | null;
-};
 
 export async function generateMetadata({ params }: { params: Promise<{ numero: string }> }) {
   const { numero } = await params;
@@ -27,38 +17,21 @@ export async function generateMetadata({ params }: { params: Promise<{ numero: s
 export default async function ParcoursDetailPage({ params }: { params: Promise<{ numero: string }> }) {
   const { numero: numeroRaw } = await params;
   const numero = Number(numeroRaw);
-  const { profile } = await requireUser();
+  const { user, profile } = await requireUser();
   if (profile.role !== 'admin') redirect('/accueil');
   if (!Number.isInteger(numero)) notFound();
   const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sb = supabase as any;
 
-  const { data: p } = await sb
-    .from('major_parcours')
-    .select('id, numero, titre, sous_titre, intro_html, vignette_html, available_at, active')
-    .eq('numero', numero)
-    .maybeSingle();
-  const parcours = p as ParcoursRow | null;
-  if (!parcours) notFound();
+  const loaded = await fetchParcoursByNumero(supabase, numero);
+  if (!loaded) notFound();
+  const parcours = loaded.parcours;
 
-  const [{ data: qRows }, { data: comp }, { data: neighbours }] = await Promise.all([
-    sb.from('major_parcours_questions')
-      .select('id, section, format, ordre, enonce_html, items, reponse_attendue, explication_html, image_path')
-      .eq('parcours_id', parcours.id)
-      .order('section', { ascending: true })
-      .order('ordre', { ascending: true }),
-    sb.from('major_parcours_completions')
-      .select('score, band')
-      .eq('parcours_id', parcours.id)
-      .maybeSingle(),
-    sb.from('major_parcours').select('numero').gt('numero', numero).order('numero', { ascending: true }).limit(1),
-  ]);
+  const completions = await fetchCompletions(supabase, user.id);
+  const comp = completions.find((c) => c.parcoursId === parcours.id) ?? null;
 
   // Ordonner : le cas clinique (QROC) puis les QCM — le rappel est au-dessus.
-  const rows = ((qRows ?? []) as QuestionRow[]);
   const order = { cas_clinique: 0, qcm: 1 } as const;
-  const questions: RunnerQuestion[] = rows
+  const questions: RunnerQuestion[] = loaded.questions
     .slice()
     .sort((a, b) => (order[a.section] - order[b.section]) || (a.ordre - b.ordre))
     .map((r) => ({
@@ -72,8 +45,8 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
       explicationHtml: r.explication_html,
     }));
 
-  const nextNumero = ((neighbours ?? []) as { numero: number }[])[0]?.numero ?? null;
-  const dejaFait = comp ? { score: Number((comp as { score: number }).score), band: (comp as { band: ParcoursBand }).band } : null;
+  const nextNumero = numero < 42 ? numero + 1 : null;
+  const dejaFait = comp ? { score: comp.score, band: comp.band } : null;
   const meta = dejaFait ? BAND_META[dejaFait.band] : null;
 
   return (
