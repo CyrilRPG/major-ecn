@@ -131,7 +131,14 @@ export type VideoLibraryItem = {
   nbSeances: number;
 };
 
-export type VideoSupportDoc = { id: string; titre: string; order_index: number };
+export type VideoSupportDoc = {
+  id: string;
+  titre: string;
+  order_index: number;
+  /** Permissions propres au support (NULL/[] = hérite de la vidéo). */
+  voies: string[] | null;
+  offers: string[] | null;
+};
 
 export type VideoLibraryVideo = {
   id: string;
@@ -142,8 +149,18 @@ export type VideoLibraryVideo = {
   voies: string[];
   /** Formules ayant accès à cette vidéo. */
   offers: string[];
+  /** Élèves explicitement privés d'accès à cette séance (exclusion nominative). */
+  denied_user_ids: string[];
   /** Supports PDF de la vidéo, dans l'ordre d'affichage élève. */
   supports: VideoSupportDoc[];
+};
+
+/** Élève proposé dans le sélecteur d'exclusion d'une séance. */
+export type StudentLite = {
+  id: string;
+  nom: string;
+  email: string | null;
+  promotion: string | null;
 };
 
 /** Items d'un collège, avec le nombre de vidéos de chaque catégorie. */
@@ -201,7 +218,7 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, voies, offers, video_supports(id, titre, order_index)')
+    .select('id, titre, bunny_video_id, order_index, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
@@ -215,11 +232,47 @@ export async function listVideosAction(
       order_index: v.order_index,
       voies: normaliserVoies(v.voies),
       offers: normaliserOffres(v.offers),
+      denied_user_ids: (v.denied_user_ids ?? []).filter((x): x is string => typeof x === 'string'),
       supports: (v.video_supports ?? [])
         .slice()
-        .sort((a, b) => a.order_index - b.order_index),
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((s) => ({
+          id: s.id,
+          titre: s.titre,
+          order_index: s.order_index,
+          voies: s.voies && s.voies.length > 0 ? normaliserVoies(s.voies) : null,
+          offers: s.offers && s.offers.length > 0 ? normaliserOffres(s.offers) : null,
+        })),
     }));
   return { videos };
+}
+
+/**
+ * Liste des élèves, pour le sélecteur d'exclusion d'une séance. Réservé à
+ * l'administrateur : un professeur gère les vidéos de son périmètre mais n'a
+ * pas à voir l'annuaire complet des élèves.
+ */
+export async function listStudentsAction(): Promise<{ students: StudentLite[] } | { error: string }> {
+  const { scope } = await requireContentEditor();
+  // scope === null ⇒ administrateur (les professeurs ont un scope non nul).
+  if (scope !== null) return { error: 'Réservé à l’administrateur.' };
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin as any)
+    .from('profiles')
+    .select('id, first_name, last_name, email, promotion')
+    .eq('role', 'student')
+    .order('last_name', { ascending: true, nullsFirst: false })
+    .order('first_name', { ascending: true, nullsFirst: false });
+  if (error) return { error: error.message };
+  const students = ((data ?? []) as { id: string; first_name: string | null; last_name: string | null; email: string | null; promotion: string | null }[])
+    .map((s) => ({
+      id: s.id,
+      nom: `${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || (s.email ?? 'Élève sans nom'),
+      email: s.email,
+      promotion: s.promotion,
+    }));
+  return { students };
 }
 
 /* ------------------------------------------------------------------ */
@@ -238,6 +291,7 @@ export async function addVideoAction(input: {
   position?: number | null;
   voies?: string[];
   offers?: string[];
+  deniedUserIds?: string[];
 }): Promise<AddResult> {
   const ctx = await guard(input.coursId);
   if ('error' in ctx) return ctx;
@@ -245,6 +299,12 @@ export async function addVideoAction(input: {
 }
 
 export type AddResult = { ok: true; videoId: string; coursId: string } | { error: string };
+
+/** Normalise une liste d'IDs d'élèves exclus (UUID, dédoublonnés). */
+function normaliserExclus(ids?: string[] | null): string[] {
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return Array.from(new Set((ids ?? []).filter((x) => typeof x === 'string' && uuid.test(x))));
+}
 
 /** Audience par défaut d'un nouveau contenu, à l'identique de ce qui existait
  *  avant le ciblage par vidéo : cours vidéo → Formule Intensive, séance
@@ -275,7 +335,7 @@ async function insertVideo(
   ctx: Ctx,
   input: {
     type: VideoType; titre: string; lien: string; position?: number | null;
-    voies?: string[]; offers?: string[];
+    voies?: string[]; offers?: string[]; deniedUserIds?: string[];
   },
 ): Promise<AddResult> {
   const coursId = ctx.cours.id;
@@ -287,6 +347,7 @@ async function insertVideo(
   }
   const audience = validerAudience(input.type, input);
   if ('error' in audience) return audience;
+  const deniedUserIds = normaliserExclus(input.deniedUserIds);
 
   // Liste actuelle de la catégorie : sert à insérer à la position demandée et
   // à renuméroter proprement (les données antérieures peuvent avoir des trous).
@@ -312,6 +373,7 @@ async function insertVideo(
       order_index: insertAt,
       voies: audience.voies,
       offers: audience.offers,
+      denied_user_ids: deniedUserIds,
     })
     .select('id')
     .single();
@@ -335,10 +397,11 @@ async function insertVideo(
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
     description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`
-      + ` — ${resumeAudience(audience)}`,
+      + ` — ${resumeAudience(audience)}`
+      + (deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : ''),
     diff: {
       bunny_video_id: bunnyId, type: input.type, order_index: insertAt,
-      voies: audience.voies, offers: audience.offers,
+      voies: audience.voies, offers: audience.offers, denied_user_ids: deniedUserIds,
     },
   });
 
@@ -361,6 +424,7 @@ export async function addVideoToRevisionsAction(input: {
   position?: number | null;
   voies?: string[];
   offers?: string[];
+  deniedUserIds?: string[];
 }): Promise<AddResult> {
   const { profile, scope } = await requireContentEditor();
   try {
@@ -493,6 +557,8 @@ export async function updateVideoAudienceAction(input: {
   videoId: string;
   voies: string[];
   offers: string[];
+  /** Élèves à exclure nominativement. Absent ⇒ la liste actuelle est conservée. */
+  deniedUserIds?: string[];
 }): Promise<{ ok: true } | { error: string }> {
   const ctx = await guardVideo(input.videoId);
   if ('error' in ctx) return ctx;
@@ -500,10 +566,14 @@ export async function updateVideoAudienceAction(input: {
   const audience = validerAudience(ctx.video.type, input);
   if ('error' in audience) return audience;
 
-  const { error } = await ctx.a
-    .from('videos')
-    .update({ voies: audience.voies, offers: audience.offers, updated_at: new Date().toISOString() })
-    .eq('id', input.videoId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const patch: Record<string, any> = {
+    voies: audience.voies, offers: audience.offers, updated_at: new Date().toISOString(),
+  };
+  const deniedUserIds = input.deniedUserIds !== undefined ? normaliserExclus(input.deniedUserIds) : undefined;
+  if (deniedUserIds !== undefined) patch.denied_user_ids = deniedUserIds;
+
+  const { error } = await ctx.a.from('videos').update(patch).eq('id', input.videoId);
   if (error) return { error: error.message };
 
   await logAudit({
@@ -514,8 +584,69 @@ export async function updateVideoAudienceAction(input: {
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `Audience de « ${ctx.video.titre} » : ${resumeAudience(audience)}`,
-    diff: { voies: audience.voies, offers: audience.offers },
+    description: `Audience de « ${ctx.video.titre} » : ${resumeAudience(audience)}`
+      + (deniedUserIds !== undefined
+        ? deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : ' — aucune exclusion'
+        : ''),
+    diff: { voies: audience.voies, offers: audience.offers, ...(deniedUserIds !== undefined ? { denied_user_ids: deniedUserIds } : {}) },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/**
+ * Permissions PROPRES d'un support de séance.
+ *
+ * `differentes = false` ⇒ le support revient à l'héritage de sa vidéo (voies et
+ * formules remises à NULL). `differentes = true` ⇒ il porte ses propres voies +
+ * formules (au moins une case de chaque côté), qui priment pour CE support.
+ */
+export async function updateVideoSupportAudienceAction(input: {
+  supportId: string;
+  differentes: boolean;
+  voies?: string[];
+  offers?: string[];
+}): Promise<{ ok: true } | { error: string }> {
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data: doc } = await a
+    .from('video_supports')
+    .select('id, video_id, titre')
+    .eq('id', input.supportId)
+    .maybeSingle();
+  if (!doc) return { error: 'Support introuvable.' };
+  const ctx = await guardVideo((doc as { video_id: string }).video_id);
+  if ('error' in ctx) return ctx;
+
+  let voies: string[] | null = null;
+  let offers: string[] | null = null;
+  if (input.differentes) {
+    const audience = validerAudience(ctx.video.type, { voies: input.voies, offers: input.offers });
+    if ('error' in audience) return audience;
+    voies = audience.voies;
+    offers = audience.offers;
+  }
+
+  const { error } = await ctx.a
+    .from('video_supports')
+    .update({ voies, offers })
+    .eq('id', input.supportId);
+  if (error) return { error: error.message };
+
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: ctx.video.id,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: input.differentes
+      ? `Permissions propres du support « ${(doc as { titre: string }).titre} » : ${resumeAudience({ voies, offers })}`
+      : `Support « ${(doc as { titre: string }).titre} » : retour aux permissions de la vidéo`,
+    diff: { voies, offers },
   });
 
   refresh(ctx.cours.id);

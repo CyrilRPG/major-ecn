@@ -20,6 +20,7 @@ type CoursVideo = {
   storage_path: string | null;
   voies: string[] | null;
   offers: string[] | null;
+  denied_user_ids: string[] | null;
 };
 
 export default async function CoursVideoPage({
@@ -57,18 +58,18 @@ export default async function CoursVideoPage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videoRows } = await (supabase as any)
     .from('videos')
-    .select('id, titre, bunny_video_id, storage_path, voies, offers')
+    .select('id, titre, bunny_video_id, storage_path, voies, offers, denied_user_ids')
     .eq('cours_id', coursId)
     .eq('type', 'cours')
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
-  // L'audience est portée par la vidéo (voies + formules cochées à l'ajout) ;
-  // le droit global de la formule ne sert que de repli.
+  // L'audience est portée par la vidéo (voies + formules cochées à l'ajout, plus
+  // les exclusions nominatives) ; le droit global de la formule ne sert que de repli.
   const offresEleve = scopeOffers(scope);
   const allVideos = ((videoRows ?? []) as CoursVideo[]).filter(
     (v) => (!!v.bunny_video_id || !!v.storage_path)
       && (isAdmin || videoVisible(v, {
-        offres: offresEleve, voie: scope.voie ?? null, droitFormule: !access || access.video,
+        offres: offresEleve, voie: scope.voie ?? null, droitFormule: !access || access.video, userId: user.id,
       })),
   );
   // Ni droit de formule, ni vidéo ciblant cet élève : la page n'a rien à
