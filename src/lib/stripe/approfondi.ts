@@ -124,6 +124,24 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     ],
   },
   {
+    key: 'gynecologie-obstetrique',
+    name: 'Gynécologie obstétrique',
+    tiers: [
+      {
+        id: 'gyneco', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_GYNECO',
+        targetCollege: 'col-gynecologie',
+      },
+      {
+        id: 'gyneco-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_GYNECO_PLUS',
+        targetCollege: 'col-gynecologie',
+      },
+    ],
+  },
+  {
     key: 'medecine-urgence',
     name: "Médecine d'urgence",
     tiers: [

@@ -67,17 +67,44 @@ type RawScope = {
   specialty_wish?: string | null;
   paid_at?: string;
   paid_offer?: string;
+  type?: string;
+  colleges?: string[];
   signup?: { specialty?: string; voie?: string | null; session?: string; country?: string; passed_evc?: string };
 };
 function rawScope(s: Student): RawScope {
   return (s.permission_scope ?? {}) as RawScope;
 }
+
+const COLLEGE_TO_SPECIALTY: Record<string, string> = {
+  'col-medecine-generale': 'Médecine générale',
+  'col-cardiologie': 'Cardiologie',
+  'col-pediatrie': 'Pédiatrie',
+  'col-mir': "Médecine d'urgence",
+  'col-pneumologie': 'Pneumologie',
+  'col-geriatrie': 'Gériatrie',
+  'col-neurologie': 'Neurologie',
+  'col-medecine-interne': 'Médecine interne polyvalente',
+  'col-psychiatrie': 'Psychiatrie',
+  'col-gynecologie': 'Gynécologie-obstétrique',
+  'col-orthopedie': 'Orthopédie',
+};
+
+function specialtyFromColleges(colleges: string[]): string {
+  const names = colleges
+    .map((c) => COLLEGE_TO_SPECIALTY[c])
+    .filter(Boolean);
+  return names.join(', ');
+}
+
 function specialtyOf(s: Student): string {
   const r = rawScope(s);
-  // La spécialité fixée par l'admin / Stripe (paid_specialty) est prioritaire
-  // sur le souhait déclaré à l'inscription (signup) : ainsi accorder Médecine
-  // générale affiche bien « Médecine générale ».
-  return (r.paid_specialty || r.signup?.specialty || r.specialty_wish || '').toString().trim();
+  const explicit = (r.paid_specialty || r.signup?.specialty || r.specialty_wish || '').toString().trim();
+  if (explicit) return explicit;
+  if (r.type === 'college' && Array.isArray(r.colleges)) {
+    const real = r.colleges.filter((c) => c !== 'col-decouverte');
+    if (real.length > 0) return specialtyFromColleges(real);
+  }
+  return '';
 }
 function voieOf(s: Student): string {
   const r = rawScope(s);

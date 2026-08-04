@@ -45,6 +45,7 @@ export default async function AccueilPage() {
   const isPaidFormula = scope.offer !== 'decouverte';
   const isDecouverte = !isPaidFormula && scope.type === 'college' && scope.colleges.includes('col-decouverte');
   const firstName = profile.first_name || 'étudiant';
+  const voieLabel = scope.voie === 'interne' ? 'Voie interne' : scope.voie === 'externe' ? 'Voie externe' : null;
 
   // Coque instantanée : l'en-tête + la structure s'affichent immédiatement,
   // le tableau de bord (1 RPC agrégé + arbre EDN) est streamé via <Suspense>.
@@ -58,8 +59,13 @@ export default async function AccueilPage() {
             <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
               Bonjour, {firstName} <span aria-hidden>👋</span>
             </h1>
-            <p className="mt-1 text-sm text-(--color-ink-soft) sm:text-[15px]">
-              Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-(--color-ink-soft) sm:text-[15px]">
+              <span>Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.</span>
+              {voieLabel && (
+                <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${scope.voie === 'interne' ? 'bg-[#DBEAFE] text-[#1E40AF]' : 'bg-[#FEF3C7] text-[#92400E]'}`}>
+                  {voieLabel}
+                </span>
+              )}
             </p>
           </div>
           <DiscoveryGateLink

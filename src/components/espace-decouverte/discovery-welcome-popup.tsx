@@ -1,21 +1,11 @@
 'use client';
 
 /**
- * Popup d'accueil "Bienvenue dans l'espace découverte / Pneumologie".
+ * Popup d'accueil "Bienvenue dans l'espace découverte / Major ECN".
  *
  * Affiché à la PREMIÈRE ouverture de la plateforme pour les utilisateurs
  * en mode Découverte uniquement. Remplace le popup Conseils classique
  * pour cette population.
- *
- * Pixel-perfect maquette :
- *  - Image poumon en haut (réutilise /flashcards-decor/pneumo.png)
- *    avec accents flottants (sparkle + point d'interrogation violets)
- *  - Titre 2 lignes : "Bienvenue dans l'espace découverte" / "Pneumologie"
- *    (la 2e en violet avec un trait d'accent dessous)
- *  - 3 cartes colorées (bleu / rouge / vert) listant les ressources
- *  - Box violette d'information sur l'objectif pédagogique
- *  - Bouton CTA orange/rouge "Commencer la découverte"
- *  - Checkbox "Ne plus afficher ce message"
  */
 import { useEffect, useState } from 'react';
 import {
@@ -86,7 +76,7 @@ export function DiscoveryWelcomePopup() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/flashcards-decor/pneumo.png"
-                alt="Pneumologie"
+                alt="Major ECN"
                 className="h-24 w-24 object-contain"
               />
             </span>
@@ -126,7 +116,7 @@ export function DiscoveryWelcomePopup() {
             className="mt-1 text-[26px] font-black leading-tight tracking-tight sm:text-[30px]"
             style={{ color: BLUE }}
           >
-            Pneumologie
+            Major ECN
           </p>
           <span
             aria-hidden
@@ -138,8 +128,7 @@ export function DiscoveryWelcomePopup() {
         {/* Sous-titre */}
         <p className="mt-5 text-center text-[13.5px] leading-relaxed sm:text-[14px]" style={{ color: INK_SOFT }}>
           Afin de vous faire découvrir les différents outils de la plateforme,
-          nous avons sélectionné plusieurs ressources issues de thèmes variés
-          de la pneumologie.
+          nous avons sélectionné plusieurs ressources issues de thèmes variés.
         </p>
 
         {/* 3 cartes colorées */}
@@ -160,7 +149,7 @@ export function DiscoveryWelcomePopup() {
                 1 fiche pédagogique
               </p>
               <p className="mt-0.5 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-                Une fiche complète consacrée au pneumothorax pour évaluer la qualité
+                Une fiche complète pour évaluer la qualité
                 et la profondeur de nos contenus.
               </p>
             </div>
@@ -182,8 +171,8 @@ export function DiscoveryWelcomePopup() {
                 10 QCM variés
               </p>
               <p className="mt-0.5 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-                Une sélection de 10 QCM couvrant plusieurs thèmes de pneumologie
-                (BPCO, asthme, infections respiratoires…).
+                Une sélection de 10 QCM couvrant plusieurs thèmes
+                pour tester vos connaissances.
               </p>
             </div>
           </li>
@@ -224,7 +213,7 @@ export function DiscoveryWelcomePopup() {
           </span>
           <div>
             <p className="text-[12.5px] leading-relaxed" style={{ color: INK }}>
-              Ces ressources ne constituent pas un chapitre complet de pneumologie
+              Ces ressources ne constituent pas un chapitre complet
               mais un aperçu représentatif des contenus disponibles sur la plateforme.
             </p>
             <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: INK }}>
