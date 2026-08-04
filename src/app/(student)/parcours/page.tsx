@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArrowRight, CalendarClock, Check, Crown, Lock, Sparkles, Star, Trophy } from 'lucide-react';
+import { ArrowRight, CalendarClock, Check, Crown, Lock, Star, Trophy } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import {
@@ -37,7 +37,10 @@ export default async function ParcoursPage() {
 
   const now = new Date();
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
-  const states = computeStates(parcours, completions, now, isStaff);
+  // On calcule TOUJOURS les états « élève » (cadenas + dates d'ouverture) pour
+  // que l'admin visualise le cheminement réel ; l'admin reste libre d'ouvrir
+  // n'importe quel parcours (géré par `isStaff` dans chaque nœud).
+  const states = computeStates(parcours, completions, now, false);
 
   const total = parcours.length;
   const done = completions.length;
@@ -62,10 +65,7 @@ export default async function ParcoursPage() {
         <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 opacity-20">
           <Crown className="h-44 w-44" style={{ color: '#F5C84B' }} strokeWidth={1.2} />
         </span>
-        <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em]" style={{ color: '#F5C84B' }}>
-          <Sparkles className="h-3.5 w-3.5" /> Section premium
-        </p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight">Parcours du Major</h1>
+        <h1 className="text-3xl font-black tracking-tight">Parcours du Major</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
           Votre ascension vers le Major : {total} parcours qui se suivent, deux nouveaux chaque
           lundi. Terminez le précédent pour débloquer le suivant.
