@@ -3,9 +3,8 @@ import { notFound, redirect } from 'next/navigation';
 import { Lock, Pencil, Video } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible } from '@/lib/videos/audience';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
@@ -29,8 +28,7 @@ export default async function SeanceApprofondiePage({
   const isAdmin = profile.role === 'admin';
 
   const scope = parseScope(profile.permission_scope);
-  const access = isAdmin ? null : await fetchContentAccessForScope(scope);
-  if (!isAdmin && access && !access.seanceApprofondie) redirect(`/cours/${coursId}`);
+  if (!isAdmin && !(await fetchContentAccessForScope(scope)).seanceApprofondie) redirect(`/cours/${coursId}`);
 
   const { data: c } = await supabase
     .from('cours')
@@ -79,7 +77,7 @@ export default async function SeanceApprofondiePage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videos } = await (supabase as any)
     .from('videos')
-    .select('id, titre, bunny_video_id, serie_id, unlock_direct, voies, offers, denied_user_ids')
+    .select('id, titre, bunny_video_id, serie_id, unlock_direct')
     .eq('cours_id', coursId)
     .eq('type', 'seance_approfondie')
     // Ordre choisi par l'administrateur (Contenu › Séances approfondies) ;
@@ -87,22 +85,8 @@ export default async function SeanceApprofondiePage({
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
 
-  type SAVideo = {
-    id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
-    unlock_direct?: boolean | null;
-    voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null;
-  };
-  // L'audience portée par la vidéo fait foi (voies + formules + exclusions
-  // nominatives). Un élève retiré de la séance, ou dont la formule/voie n'est
-  // pas ciblée, ne la voit pas — même en navigation directe.
-  const allSaVideos = ((videos ?? []) as SAVideo[]).filter(
-    (v) => isAdmin || videoVisible(v, {
-      offres: scopeOffers(scope),
-      voie: scope.voie ?? null,
-      droitFormule: !access || access.seanceApprofondie,
-      userId: user.id,
-    }),
-  );
+  type SAVideo = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; unlock_direct?: boolean | null };
+  const allSaVideos = (videos ?? []) as SAVideo[];
   // `?v=<id>` : la page du cours propose une carte par séance approfondie et
   // pointe ici avec l'identifiant. On n'affiche alors QUE cette vidéo. Sans le
   // paramètre (ou s'il ne correspond à rien), on garde la liste complète.

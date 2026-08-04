@@ -9,7 +9,7 @@ import { canRead } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
-import { videoVisible, supportVisible } from '@/lib/videos/audience';
+import { videoVisible } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
@@ -22,9 +22,8 @@ type CourseVideoRow = {
   order_index: number | null;
   voies: string[] | null;
   offers: string[] | null;
-  denied_user_ids: string[] | null;
-  /** Supports PDF rattachés (plusieurs possibles), avec leurs permissions propres. */
-  video_supports?: { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null }[] | null;
+  /** Supports PDF rattachés (plusieurs possibles). */
+  video_supports?: { id: string }[] | null;
 };
 
 export default async function CoursLayout({
@@ -43,7 +42,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, video_supports(id)),
       fiches(storage_path),
       qcm_series(type),
       flashcards(id),
@@ -69,22 +68,14 @@ export default async function CoursLayout({
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   const hasSource = (v: CourseVideoRow) => !!v.bunny_video_id || !!v.storage_path;
   const offresEleve = scopeOffers(scope);
-  const droitFormulePour = (v: CourseVideoRow) =>
-    v.type === 'seance_approfondie' ? (!access || access.seanceApprofondie) : (!access || access.video);
   const visible = (v: CourseVideoRow, droitFormule: boolean) =>
-    isAdmin || videoVisible(v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule, userId: user.id });
+    isAdmin || videoVisible(v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule });
   const coursVideos = videos.filter(
     (v) => (v.type ?? 'cours') === 'cours' && visible(v, !access || access.video),
   );
   const seanceVideos = videos.filter(
     (v) => v.type === 'seance_approfondie' && visible(v, !access || access.seanceApprofondie),
   );
-  // Supports visibles PAR SUPPORT : chacun porte ses permissions propres le cas
-  // échéant (sinon celles de la vidéo), plus l'exclusion nominative de la séance.
-  const supportsVisibles = (v: CourseVideoRow) =>
-    (v.video_supports ?? []).filter((d) => isAdmin || supportVisible(d, v, {
-      offres: offresEleve, voie: scope.voie ?? null, droitFormule: droitFormulePour(v), userId: user.id,
-    }));
 
   const availability = {
     video: coursVideos.some(hasSource),
@@ -97,11 +88,9 @@ export default async function CoursLayout({
     seanceApprofondie: seanceVideos.length > 0,
   };
 
-  // Un onglet par vidéo VISIBLE ayant au moins un support visible pour l'élève.
-  // Les permissions propres d'un support « répercutent » ici : un support plus
-  // restreint que sa vidéo peut disparaître pour l'élève même si la vidéo reste.
+  // Un onglet par support, rangé juste après l'onglet de sa vidéo.
   const supportsAll: CourseSupport[] = [...seanceVideos, ...coursVideos]
-    .filter((v) => supportsVisibles(v).length > 0)
+    .filter((v) => (v.video_supports ?? []).length > 0)
     .map((v) => ({
       videoId: v.id,
       titre: v.titre,
@@ -147,7 +136,8 @@ export default async function CoursLayout({
     'seance-approfondie': !access.seanceApprofondie && seanceVideos.length === 0,
   } as Partial<Record<string, boolean>> : undefined;
 
-  // `supportsAll` est déjà filtré par la visibilité propre de chaque support.
+  // Le support hérite de l'audience de SA vidéo : `supportsAll` est construit à
+  // partir des vidéos déjà filtrées, il n'y a donc rien à refiltrer ici.
   const supports = supportsAll;
 
   const cp = c.course_progress?.[0];

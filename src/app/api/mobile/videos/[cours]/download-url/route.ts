@@ -66,15 +66,11 @@ export async function GET(req: Request, ctx: { params: Promise<{ cours: string }
 
   const { data: videos } = await auth.supabase
     .from('videos')
-    .select('bunny_video_id, storage_path, duration_seconds, denied_user_ids')
+    .select('bunny_video_id, storage_path, duration_seconds')
     .eq('cours_id', coursId)
     .limit(1);
   const video = videos?.[0];
   if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });
-  // Exclusion nominative : un élève retiré de la séance ne peut pas la télécharger.
-  if (!isStaff && ((video as { denied_user_ids?: string[] | null }).denied_user_ids ?? []).includes(auth.user.id)) {
-    return NextResponse.json({ code: 'CONTENT_NOT_IN_FORMULA', error: 'Cette séance ne vous est pas accessible.' }, { status: 403 });
-  }
 
   if (video.bunny_video_id) {
     const info = await getBunnyVideoInfo(video.bunny_video_id);

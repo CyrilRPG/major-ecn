@@ -8,7 +8,7 @@ import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
-import { videoVisible, supportVisible, type SupportOverride } from '@/lib/videos/audience';
+import { videoVisible } from '@/lib/videos/audience';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -47,7 +47,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .select(`
       id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, video_supports(id)),
       fiches(storage_path), qcm_series(type), flashcards(id)
     `)
     .eq('id', coursId)
@@ -88,24 +88,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // Une vidéo porte son audience (voies + formules) : c'est elle qui décide,
   // le droit global de la formule ne servant que de repli. Un contenu peut donc
   // viser explicitement une formule à laquelle il n'était pas ouvert.
-  const estVisible = (v: { voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null }, droitFormule: boolean) =>
-    isAdmin || videoVisible(v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule, userId: user.id });
-  // Supports visibles PAR SUPPORT : chacun porte ses permissions propres le cas
-  // échéant (sinon celles de la vidéo), plus l'exclusion nominative de la séance.
-  type VideoAvecSupports = {
-    voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null;
-    video_supports?: SupportOverride[] | null;
-  };
-  const supportsVisibles = (v: VideoAvecSupports, droitFormule: boolean): SupportOverride[] =>
-    (v.video_supports ?? []).filter(
-      (d) => isAdmin || supportVisible(d, v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule, userId: user.id }),
-    );
+  const estVisible = (v: { voies?: string[] | null; offers?: string[] | null }, droitFormule: boolean) =>
+    isAdmin || videoVisible(v, { offres: offresEleve, voie: scope.voie ?? null, droitFormule });
 
   const [{ data: seanceApprofondieRows }, { data: seanceSeries }] = await Promise.all([
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, bunny_video_id, titre, serie_id, voies, offers, denied_user_ids, video_supports(id, titre, order_index, voies, offers)')
+      .select('id, bunny_video_id, titre, serie_id, voies, offers, video_supports(id)')
       .eq('cours_id', coursId)
       .eq('type', 'seance_approfondie')
       // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -158,19 +148,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     id: string; titre: string; type: string | null;
     storage_path: string | null; bunny_video_id: string | null;
     order_index: number | null; voies: string[] | null; offers: string[] | null;
-    denied_user_ids: string[] | null;
-    video_supports?: SupportOverride[] | null;
+    video_supports?: { id: string }[] | null;
   }[])
     .filter((v) => (v.type ?? 'cours') === 'cours' && estVisible(v, !access || access.video))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   // Une vidéo Bunny n'a pas de storage_path : les deux hébergements comptent.
   const coursVideosDisponibles = coursVideos.some((v) => !!v.storage_path || !!v.bunny_video_id);
 
-  type SAVid = {
-    id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
-    voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null;
-    video_supports?: SupportOverride[] | null;
-  };
+  type SAVid = { id: string; titre: string; bunny_video_id: string | null; serie_id: string | null; video_supports?: { id: string }[] | null };
   const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
   const isVideoUnlocked = (v: SAVid) =>
     isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesCompleted);
@@ -304,9 +289,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               available: unlocked,
               locked: !unlocked,
             });
-            // Support de la séance, juste après elle — seulement si au moins un
-            // document est visible pour l'élève (permissions propres du support).
-            if (supportsVisibles(v, !access || access.seanceApprofondie).length > 0) {
+            // Support de la séance, juste après elle.
+            if ((v.video_supports ?? []).length > 0) {
               standardActions.push({
                 href: `/cours/${coursId}/support/${v.id}`,
                 label: `Supports — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
@@ -330,7 +314,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               available: coursVideosDisponibles,
             },
           );
-          for (const v of coursVideos.filter((x) => supportsVisibles(x, !access || access.video).length > 0)) {
+          for (const v of coursVideos.filter((x) => (x.video_supports ?? []).length > 0)) {
             standardActions.push({
               href: `/cours/${coursId}/support/${v.id}`,
               label: `Supports — ${v.titre?.trim() || 'Cours vidéo'}`,

@@ -173,15 +173,15 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'semestres_faculte_id_fkey'; columns: ['faculte_id']; isOneToOne: false; referencedRelation: 'facultes'; referencedColumns: ['id'] }];
       };
       video_supports: {
-        Row: { id: string; video_id: string; titre: string; storage_path: string; pages: number | null; order_index: number; voies: string[] | null; offers: string[] | null; created_at: string };
-        Insert: { id?: string; video_id: string; titre?: string; storage_path: string; pages?: number | null; order_index?: number; voies?: string[] | null; offers?: string[] | null; created_at?: string };
-        Update: { id?: string; video_id?: string; titre?: string; storage_path?: string; pages?: number | null; order_index?: number; voies?: string[] | null; offers?: string[] | null; created_at?: string };
+        Row: { id: string; video_id: string; titre: string; storage_path: string; pages: number | null; order_index: number; created_at: string };
+        Insert: { id?: string; video_id: string; titre?: string; storage_path: string; pages?: number | null; order_index?: number; created_at?: string };
+        Update: { id?: string; video_id?: string; titre?: string; storage_path?: string; pages?: number | null; order_index?: number; created_at?: string };
         Relationships: [{ foreignKeyName: 'video_supports_video_id_fkey'; columns: ['video_id']; isOneToOne: false; referencedRelation: 'videos'; referencedColumns: ['id'] }];
       };
       videos: {
-        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null; type: string; voies: string[]; offers: string[]; denied_user_ids: string[]; serie_id: string | null; unlock_direct: boolean; order_index: number; support_path: string | null; support_pages: number | null; support_updated_at: string | null; updated_at: string };
-        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null; type?: string; voies?: string[]; offers?: string[]; denied_user_ids?: string[]; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
-        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null; type?: string; voies?: string[]; offers?: string[]; denied_user_ids?: string[]; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
+        Row: { cours_id: string; created_at: string; duration_seconds: number | null; id: string; storage_path: string | null; titre: string; bunny_video_id: string | null; type: string; voies: string[]; offers: string[]; serie_id: string | null; unlock_direct: boolean; order_index: number; support_path: string | null; support_pages: number | null; support_updated_at: string | null; updated_at: string };
+        Insert: { cours_id: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre: string; bunny_video_id?: string | null; type?: string; voies?: string[]; offers?: string[]; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
+        Update: { cours_id?: string; created_at?: string; duration_seconds?: number | null; id?: string; storage_path?: string | null; titre?: string; bunny_video_id?: string | null; type?: string; voies?: string[]; offers?: string[]; serie_id?: string | null; unlock_direct?: boolean; order_index?: number; support_path?: string | null; support_pages?: number | null; support_updated_at?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'videos_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       blog_posts: {

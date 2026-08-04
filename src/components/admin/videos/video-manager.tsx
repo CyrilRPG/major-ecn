@@ -1,19 +1,19 @@
 'use client';
 
-import { useCallback, useRef, useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
-  Plus, Search, Trash2, UserMinus, Video, X,
+  Plus, Trash2, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
-  addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
-  moveVideoAction, removeVideoSupportAction, renameVideoAction, renameVideoSupportAction,
-  replaceVideoLinkAction, updateVideoAudienceAction, updateVideoSupportAudienceAction,
-  type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
+  addVideoAction, addVideoSupportAction, deleteVideoAction, moveVideoAction,
+  removeVideoSupportAction, renameVideoAction, renameVideoSupportAction,
+  replaceVideoLinkAction, updateVideoAudienceAction,
+  type AddResult, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
 
@@ -26,144 +26,9 @@ export type ManagedVideo = {
   voies: string[];
   /** Formules ayant accès à cette vidéo (et à ses supports). */
   offers: string[];
-  /** Élèves explicitement privés d'accès à cette séance. */
-  denied_user_ids: string[];
   /** Supports PDF de la vidéo (plusieurs possibles). */
   supports: VideoSupportDoc[];
 };
-
-/**
- * Sélecteur d'élèves à EXCLURE d'une séance. Les élèves cochés perdent l'accès,
- * même si leur formule/voie les rendrait éligibles. La liste est chargée à la
- * demande (annuaire potentiellement volumineux) et partagée par tout le manager.
- */
-function StudentExclusionPicker({
-  students,
-  loading,
-  error,
-  onLoad,
-  selected,
-  disabled,
-  onChange,
-}: {
-  students: StudentLite[] | null;
-  loading: boolean;
-  error: string | null;
-  onLoad: () => void;
-  selected: string[];
-  disabled?: boolean;
-  onChange: (ids: string[]) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [q, setQ] = useState('');
-
-  function toggleOpen() {
-    const next = !open;
-    setOpen(next);
-    if (next && students === null && !loading) onLoad();
-  }
-
-  const bascule = (id: string) => {
-    onChange(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
-  };
-
-  const filtered = (students ?? []).filter((s) => {
-    if (!q.trim()) return true;
-    const t = `${s.nom} ${s.email ?? ''} ${s.promotion ?? ''}`.toLowerCase();
-    return t.includes(q.trim().toLowerCase());
-  });
-  const selNoms = (students ?? []).filter((s) => selected.includes(s.id));
-
-  return (
-    <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
-      <button
-        type="button"
-        onClick={toggleOpen}
-        className="flex w-full items-center justify-between gap-2 text-left"
-      >
-        <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-          <UserMinus className="h-3.5 w-3.5" />
-          Retirer l’accès à certains élèves
-          {selected.length > 0 && (
-            <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
-              {selected.length}
-            </span>
-          )}
-        </span>
-        {open ? <ChevronUp className="h-4 w-4 text-(--color-ink-muted)" /> : <ChevronDown className="h-4 w-4 text-(--color-ink-muted)" />}
-      </button>
-
-      {/* Résumé des exclus, visible même replié. */}
-      {selected.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {(students ? selNoms : selected.map((id) => ({ id, nom: 'Élève', email: null, promotion: null }))).map((s) => (
-            <span key={s.id} className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700">
-              {s.nom}
-              <button
-                type="button"
-                disabled={disabled}
-                aria-label={`Réautoriser ${s.nom}`}
-                onClick={() => bascule(s.id)}
-                className="rounded-full hover:bg-red-200"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
-
-      {open && (
-        <div className="mt-2">
-          <div className="mb-2 flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2">
-            <Search className="h-3.5 w-3.5 text-(--color-ink-muted)" />
-            <input
-              type="text"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Rechercher un élève (nom, e-mail, promotion)…"
-              className="w-full bg-transparent py-1.5 text-sm outline-none"
-            />
-          </div>
-          {loading ? (
-            <p className="flex items-center gap-2 py-2 text-xs text-(--color-ink-soft)">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" /> Chargement des élèves…
-            </p>
-          ) : error ? (
-            <p className="py-2 text-xs font-medium text-red-600">{error}</p>
-          ) : (
-            <ul className="max-h-52 space-y-0.5 overflow-y-auto pr-1">
-              {filtered.length === 0 ? (
-                <li className="py-2 text-xs text-(--color-ink-muted)">Aucun élève.</li>
-              ) : (
-                filtered.map((s) => (
-                  <li key={s.id}>
-                    <label className="flex cursor-pointer items-center gap-2 rounded-lg px-1.5 py-1 text-sm hover:bg-(--color-sand-100)">
-                      <input
-                        type="checkbox"
-                        disabled={disabled}
-                        checked={selected.includes(s.id)}
-                        onChange={() => bascule(s.id)}
-                        className="h-4 w-4 accent-red-600"
-                      />
-                      <span className="min-w-0 flex-1 truncate text-(--color-ink)">{s.nom}</span>
-                      {s.promotion && (
-                        <span className="shrink-0 text-[11px] text-(--color-ink-muted)">{s.promotion}</span>
-                      )}
-                    </label>
-                  </li>
-                ))
-              )}
-            </ul>
-          )}
-        </div>
-      )}
-      <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-        Les élèves cochés ne verront plus cette séance ni ses supports.
-      </p>
-    </div>
-  );
-}
 
 /** Audience par défaut d'un nouvel ajout — celle qui avait cours avant le
  *  ciblage par vidéo. Les deux voies sont cochées. */
@@ -371,7 +236,7 @@ export function VideoManager({
    *  - <Collège> ») : l'action crée l'item puis y place la vidéo. */
   onAdd?: (input: {
     type: VideoType; titre: string; lien: string; position: number | null;
-    voies: string[]; offers: string[]; deniedUserIds: string[];
+    voies: string[]; offers: string[];
   }) => Promise<AddResult>;
   /** Message affiché au-dessus de la liste (contexte particulier). */
   notice?: string;
@@ -383,26 +248,6 @@ export function VideoManager({
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
 
-  // Annuaire des élèves, chargé une seule fois puis partagé par les sélecteurs
-  // d'exclusion (formulaire d'ajout + panneaux d'édition).
-  const [students, setStudents] = useState<StudentLite[] | null>(null);
-  const [studentsLoading, setStudentsLoading] = useState(false);
-  const [studentsError, setStudentsError] = useState<string | null>(null);
-  const loadStudents = useCallback(() => {
-    setStudentsLoading(true);
-    setStudentsError(null);
-    listStudentsAction()
-      .then((res) => {
-        if ('error' in res) { setStudentsError(res.error); return; }
-        setStudents(res.students);
-      })
-      .catch(() => setStudentsError('Chargement des élèves impossible.'))
-      .finally(() => setStudentsLoading(false));
-  }, []);
-  const studentPickerProps = {
-    students, loading: studentsLoading, error: studentsError, onLoad: loadStudents,
-  };
-
   // Formulaire d'ajout
   const [adding, setAdding] = useState(false);
   const [titre, setTitre] = useState('');
@@ -413,8 +258,6 @@ export function VideoManager({
   // Audience du nouvel ajout : les deux voies cochées par défaut.
   const [voies, setVoies] = useState<string[]>(['interne', 'externe']);
   const [offers, setOffers] = useState<string[]>(OFFRES_PAR_DEFAUT[type]);
-  // Élèves exclus nominativement de la nouvelle séance.
-  const [deniedUserIds, setDeniedUserIds] = useState<string[]>([]);
 
   /** Dépose un PDF dans le bucket privé et l'ajoute aux supports de la vidéo. */
   async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
@@ -447,7 +290,6 @@ export function VideoManager({
     setSupportFiles([]);
     setVoies(['interne', 'externe']);
     setOffers(OFFRES_PAR_DEFAUT[type]);
-    setDeniedUserIds([]);
     setAdding(false);
   }
 
@@ -464,8 +306,8 @@ export function VideoManager({
       const rang = position.trim() ? Number(position) : null;
       const pos = rang && Number.isFinite(rang) ? rang : null;
       const res = onAdd
-        ? await onAdd({ type, titre, lien, position: pos, voies, offers, deniedUserIds })
-        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers, deniedUserIds });
+        ? await onAdd({ type, titre, lien, position: pos, voies, offers })
+        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers });
       if ('error' in res) return setError(res.error);
       if (withSupport && supportFiles.length > 0) {
         const err = await uploadSupports(res.videoId, supportFiles, res.coursId);
@@ -587,17 +429,11 @@ export function VideoManager({
                     run(() => renameVideoSupportAction({ supportId, titre }))
                   }
                   onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
-                  onSupportAudience={(supportId, differentes, sVoies, sOffers) =>
-                    run(() => updateVideoSupportAudienceAction({
-                      supportId, differentes, voies: sVoies, offers: sOffers,
-                    }))
-                  }
-                  onAudience={(nextVoies, nextOffers, nextDenied) =>
+                  onAudience={(nextVoies, nextOffers) =>
                     run(() => updateVideoAudienceAction({
-                      videoId: v.id, voies: nextVoies, offers: nextOffers, deniedUserIds: nextDenied,
+                      videoId: v.id, voies: nextVoies, offers: nextOffers,
                     }))
                   }
-                  studentPickerProps={studentPickerProps}
                 />
               )}
             </li>
@@ -647,12 +483,6 @@ export function VideoManager({
               disabled={pending}
               onVoies={setVoies}
               onOffers={setOffers}
-            />
-            <StudentExclusionPicker
-              {...studentPickerProps}
-              selected={deniedUserIds}
-              disabled={pending}
-              onChange={setDeniedUserIds}
             />
             <label className="flex items-center gap-2 pt-1 text-sm text-(--color-ink)">
               <input
@@ -745,9 +575,7 @@ function VideoEditPanel({
   onAddSupports,
   onRenameSupport,
   onRemoveSupport,
-  onSupportAudience,
   onAudience,
-  studentPickerProps,
 }: {
   video: ManagedVideo;
   pending: boolean;
@@ -756,22 +584,15 @@ function VideoEditPanel({
   onAddSupports: (files: File[]) => void;
   onRenameSupport: (supportId: string, titre: string) => void;
   onRemoveSupport: (supportId: string) => void;
-  onSupportAudience: (supportId: string, differentes: boolean, voies: string[], offers: string[]) => void;
-  onAudience: (voies: string[], offers: string[], deniedUserIds: string[]) => void;
-  studentPickerProps: {
-    students: StudentLite[] | null; loading: boolean; error: string | null; onLoad: () => void;
-  };
+  onAudience: (voies: string[], offers: string[]) => void;
 }) {
   const [titre, setTitre] = useState(video.titre);
   const [lien, setLien] = useState('');
   const [voies, setVoies] = useState<string[]>(video.voies);
   const [offers, setOffers] = useState<string[]>(video.offers);
-  const [denied, setDenied] = useState<string[]>(video.denied_user_ids);
-  const memeListe = (a: string[], b: string[]) => a.slice().sort().join() === b.slice().sort().join();
   const audienceModifiee =
-    !memeListe(voies, video.voies)
-    || !memeListe(offers, video.offers)
-    || !memeListe(denied, video.denied_user_ids);
+    voies.slice().sort().join() !== video.voies.slice().sort().join()
+    || offers.slice().sort().join() !== video.offers.slice().sort().join();
 
   return (
     <div className="space-y-3 border-t border-(--color-border) bg-(--color-surface-soft) px-3 py-3">
@@ -833,14 +654,6 @@ function VideoEditPanel({
           onVoies={setVoies}
           onOffers={setOffers}
         />
-        <div className="mt-2">
-          <StudentExclusionPicker
-            {...studentPickerProps}
-            selected={denied}
-            disabled={pending}
-            onChange={setDenied}
-          />
-        </div>
         {audienceModifiee && (
           <Button
             type="button"
@@ -848,7 +661,7 @@ function VideoEditPanel({
             variant="secondary"
             className="mt-2"
             disabled={pending}
-            onClick={() => onAudience(voies, offers, denied)}
+            onClick={() => onAudience(voies, offers)}
           >
             Enregistrer l’accès
           </Button>
@@ -867,11 +680,8 @@ function VideoEditPanel({
                 key={doc.id}
                 doc={doc}
                 pending={pending}
-                videoVoies={video.voies}
-                videoOffers={video.offers}
                 onRename={(t) => onRenameSupport(doc.id, t)}
                 onRemove={() => onRemoveSupport(doc.id)}
-                onAudience={(differentes, sVoies, sOffers) => onSupportAudience(doc.id, differentes, sVoies, sOffers)}
               />
             ))}
           </ul>
@@ -892,104 +702,39 @@ function VideoEditPanel({
   );
 }
 
-/**
- * Une ligne de support : nom modifiable, suppression, et — repliée par défaut —
- * une case « Permissions différentes » qui donne au support ses PROPRES voies et
- * formules (sinon il hérite de celles de la vidéo).
- */
+/** Une ligne de support : nom modifiable + suppression. */
 function SupportLigne({
-  doc, pending, videoVoies, videoOffers, onRename, onRemove, onAudience,
+  doc, pending, onRename, onRemove,
 }: {
   doc: VideoSupportDoc;
   pending: boolean;
-  videoVoies: string[];
-  videoOffers: string[];
   onRename: (titre: string) => void;
   onRemove: () => void;
-  onAudience: (differentes: boolean, voies: string[], offers: string[]) => void;
 }) {
   const [titre, setTitre] = useState(doc.titre);
-  const aDesPermsPropres = (doc.voies?.length ?? 0) > 0 || (doc.offers?.length ?? 0) > 0;
-  const [differentes, setDifferentes] = useState(aDesPermsPropres);
-  // Point de départ des permissions propres : celles du support si elles
-  // existent, sinon celles de la vidéo (base logique la plus proche).
-  const [voies, setVoies] = useState<string[]>(doc.voies && doc.voies.length > 0 ? doc.voies : videoVoies);
-  const [offers, setOffers] = useState<string[]>(doc.offers && doc.offers.length > 0 ? doc.offers : videoOffers);
-
-  const memeListe = (a: string[], b: string[]) => a.slice().sort().join() === b.slice().sort().join();
-  const modifie = differentes && (!aDesPermsPropres
-    || !memeListe(voies, doc.voies ?? [])
-    || !memeListe(offers, doc.offers ?? []));
-
-  function basculeDifferentes(next: boolean) {
-    setDifferentes(next);
-    // Décocher revient immédiatement à l'héritage de la vidéo.
-    if (!next && aDesPermsPropres) onAudience(false, [], []);
-  }
-
   return (
-    <li className="rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5">
-      <div className="flex items-center gap-2">
-        <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
-        <input
-          type="text"
-          value={titre}
-          onChange={(e) => setTitre(e.target.value)}
-          className="min-w-0 flex-1 bg-transparent text-sm text-(--color-ink) outline-none"
-        />
-        {titre.trim() !== doc.titre && titre.trim() !== '' && (
-          <Button type="button" size="sm" variant="secondary" disabled={pending} onClick={() => onRename(titre)}>
-            Renommer
-          </Button>
-        )}
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => { if (confirm(`Retirer le support « ${doc.titre} » ?`)) onRemove(); }}
-          aria-label="Retirer ce support"
-          className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
-      </div>
-
-      <label className="mt-1.5 flex items-center gap-2 pl-5 text-[12.5px] text-(--color-ink)">
-        <input
-          type="checkbox"
-          checked={differentes}
-          disabled={pending}
-          onChange={(e) => basculeDifferentes(e.target.checked)}
-          className="h-3.5 w-3.5 accent-[#7C3AED]"
-        />
-        Permissions différentes
-        {!differentes && (
-          <span className="text-[11px] text-(--color-ink-muted)">(hérite de la vidéo)</span>
-        )}
-      </label>
-
-      {differentes && (
-        <div className="mt-2 pl-5">
-          <AudiencePicker
-            voies={voies}
-            offers={offers}
-            disabled={pending}
-            onVoies={setVoies}
-            onOffers={setOffers}
-          />
-          {modifie && (
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              className="mt-2"
-              disabled={pending}
-              onClick={() => onAudience(true, voies, offers)}
-            >
-              Enregistrer les permissions du support
-            </Button>
-          )}
-        </div>
+    <li className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5">
+      <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+      <input
+        type="text"
+        value={titre}
+        onChange={(e) => setTitre(e.target.value)}
+        className="min-w-0 flex-1 bg-transparent text-sm text-(--color-ink) outline-none"
+      />
+      {titre.trim() !== doc.titre && titre.trim() !== '' && (
+        <Button type="button" size="sm" variant="secondary" disabled={pending} onClick={() => onRename(titre)}>
+          Renommer
+        </Button>
       )}
+      <button
+        type="button"
+        disabled={pending}
+        onClick={() => { if (confirm(`Retirer le support « ${doc.titre} » ?`)) onRemove(); }}
+        aria-label="Retirer ce support"
+        className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </button>
     </li>
   );
 }
