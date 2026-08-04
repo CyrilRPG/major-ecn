@@ -17,10 +17,10 @@ donne la commande, le contrôle qui prouve qu'elle a réussi, et le piège qu'el
 | Séries DP | 8, de **7** questions | `qcm_series` (`kind='dp'`, avec `vignette`) |
 | Questions | 96 | `qcm_questions` (`format='qcm'`) |
 | Items A–E | 480 | `qcm_items` |
-| Flashcards | 40 à 60 | `flashcards` |
+| Flashcards | **100 à 200** | `flashcards` |
 | Fiche de cours + fiche éclair | 1 PDF | `fiches` |
 
-Pas de QROC. Sur 133 chapitres : ~12 800 questions, ~64 000 items, ~7 000 cartes.
+Pas de QROC. Sur 133 chapitres : ~12 800 questions, ~64 000 items, ~20 000 cartes.
 
 ---
 
@@ -174,7 +174,11 @@ sous-chaîne `entra`.
 
 ## 7. Flashcards
 
-`flashcards(cours_id, recto, verso, order_index)`, 40 à 60 par chapitre.
+`flashcards(cours_id, recto, verso, order_index)`, **100 à 200 par chapitre**.
+
+Le mot d'ordre est *exhaustif* : une carte par notion vérifiable de la source.
+Un chapitre dense en porte 200, un chapitre mince 100 — c'est la matière qui
+décide, pas un quota.
 
 Le verso s'affiche en grande police dans une carte à **hauteur fixe**
 (`overflow-hidden`) : un verso trop long est **coupé à l'écran**.
@@ -198,6 +202,15 @@ ligne `fiches`. Exige `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
 4 à 7 parties, 2 à 5 sous-parties, synthèse et **fiche éclair** en fin.
 Marqueurs `__LOGO__` et `__WATERMARK__` laissés tels quels : le script les
 remplace par les data-URI.
+
+### ⚠️ Aucune cible de pagination
+La longueur découle de la source, et d'elle seule. Si le chapitre justifie
+7 pages, la fiche en fait 7 ; s'il en justifie 40, elle en fait 40. **Ne jamais
+rallonger** pour atteindre un volume, **ne jamais couper** pour tenir un format.
+
+Corollaire : **zéro contenu hors programme**. Pas de rappel général, pas de mise
+en contexte ajoutée de mémoire, pas de complément « utile ». Ce qui n'est pas
+dans l'input n'entre pas dans la fiche.
 
 ### ⚠️ Le piège du `<thead>`
 `thead { display: table-header-group }` fait **répéter l'en-tête en haut de
