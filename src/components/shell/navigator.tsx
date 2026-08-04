@@ -200,6 +200,7 @@ export function Navigator({
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
   const epreuvesActive = pathname.startsWith('/epreuves-blanches');
+  const parcoursActive = pathname.startsWith('/parcours');
 
   const topLevelClass = (active: boolean) =>
     cn(
@@ -237,6 +238,34 @@ export function Navigator({
         <Home className="h-[18px] w-[18px] shrink-0" />
         Accueil
       </Link>
+
+      {/* Parcours du Major — section premium. Réservée aux admins pour
+          l'instant : l'onglet n'apparaît que pour eux. Style doré distinctif. */}
+      {role === 'admin' && (
+        <Link
+          href="/parcours"
+          className={cn(
+            'mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-semibold transition-all',
+            parcoursActive
+              ? 'bg-[linear-gradient(90deg,#B8860B_0%,#F5C84B_100%)] text-[#1F1400] shadow-[0_6px_20px_-8px_rgba(245,200,75,0.7)]'
+              : 'text-white/90 hover:bg-white/10',
+          )}
+          style={parcoursActive ? undefined : {
+            background: 'linear-gradient(135deg, rgba(245,200,75,0.14) 0%, rgba(184,134,11,0.14) 100%)',
+          }}
+        >
+          <Trophy className="h-[18px] w-[18px] shrink-0" style={{ color: parcoursActive ? '#1F1400' : '#F5C84B' }} />
+          <span className="flex-1 truncate">Parcours du Major</span>
+          <span
+            className="shrink-0 rounded-full px-1.5 py-px text-[9px] font-bold uppercase tracking-wider"
+            style={parcoursActive
+              ? { background: 'rgba(31,20,0,0.15)', color: '#1F1400' }
+              : { background: 'rgba(245,200,75,0.2)', color: '#F5C84B' }}
+          >
+            Admin
+          </span>
+        </Link>
+      )}
 
       {!isProf && (
         <>
