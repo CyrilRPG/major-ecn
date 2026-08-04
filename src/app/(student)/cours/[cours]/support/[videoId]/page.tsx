@@ -5,7 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible } from '@/lib/videos/audience';
+import { supportVisible } from '@/lib/videos/audience';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
 import { supportPageTitle, type SupportVideoType } from '@/lib/student/supports';
@@ -30,24 +30,25 @@ export default async function SupportPage({
   const { cours: coursId, videoId } = await params;
   const { doc: docId, embed } = await searchParams;
   const embedQs = embed ? `&embed=${encodeURIComponent(embed)}` : '';
-  const { profile } = await requireUser();
+  const { user, profile } = await requireUser();
   const supabase = await createClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: row } = await (supabase as any)
     .from('videos')
     .select(`
-      id, titre, type, cours_id, voies, offers,
-      video_supports(id, titre, order_index),
+      id, titre, type, cours_id, voies, offers, denied_user_ids,
+      video_supports(id, titre, order_index, voies, offers),
       cours:cours_id(id, titre, matiere_id, matieres(nom, access_type))
     `)
     .eq('id', videoId)
     .maybeSingle();
 
+  type SupportDoc = { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null };
   const video = row as {
     id: string; titre: string; type: SupportVideoType; cours_id: string;
-    voies: string[] | null; offers: string[] | null;
-    video_supports?: { id: string; titre: string; order_index: number }[] | null;
+    voies: string[] | null; offers: string[] | null; denied_user_ids: string[] | null;
+    video_supports?: SupportDoc[] | null;
     cours?: { id: string; titre: string; matiere_id: string; matieres?: { nom?: string; access_type?: string } | null } | null;
   } | null;
 
@@ -55,19 +56,21 @@ export default async function SupportPage({
 
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
   const scope = parseScope(profile.permission_scope);
+
+  let docs = (video.video_supports ?? []).slice().sort((a, b) => a.order_index - b.order_index);
   if (!isStaff) {
     const collegeAccess = (video.cours.matieres?.access_type as 'all' | 'specific' | undefined) ?? 'all';
     if (!canAccessCollege(scope, video.cours.matiere_id, collegeAccess)) redirect('/facultes');
     const access = await fetchContentAccessForScope(scope);
-    // Le support suit l'audience de SA vidéo (voies + formules).
+    // Chaque support porte ses PROPRES permissions si l'admin les a définies,
+    // sinon il hérite de celles de la vidéo (voies + formules + exclusions).
     const droitFormule = video.type === 'seance_approfondie' ? access.seanceApprofondie : access.video;
-    const allowed = videoVisible(video, {
-      offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule,
-    });
-    if (!allowed) redirect(`/cours/${coursId}`);
+    docs = docs.filter((d) => supportVisible(d, video, {
+      offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule, userId: user.id,
+    }));
+    if (docs.length === 0) redirect(`/cours/${coursId}`);
   }
 
-  const docs = (video.video_supports ?? []).slice().sort((a, b) => a.order_index - b.order_index);
   const courant = (docId && docs.find((d) => d.id === docId)) || docs[0] || null;
 
   const entete = (
