@@ -564,6 +564,27 @@ thead { display: table-header-group; }
 }
 .ft-figure--large img { max-height: 95mm; }
 
+/* Légende de figure.
+   La charte n'en portait aucune règle : les premières fiches illustrées
+   d'orthopédie ont dû styler chaque <figcaption> en ligne, ce qui aurait
+   dispersé la mise en forme dans le corps de chaque fiche et l'aurait rendue
+   impossible à faire évoluer d'un seul endroit.
+   Discrète par construction : la légende accompagne la figure, elle ne
+   concurrence pas le texte du cours. */
+.ft-figure figcaption {
+  margin-top: 1.2mm;
+  font-size: 7.6pt;
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--pearl);
+  text-align: center;
+  /* Une légende ne doit jamais être séparée de sa figure par un saut de page. */
+  break-before: avoid;
+  page-break-before: avoid;
+}
+/* Sous une petite figure flottante, la légende reste dans la largeur du flotté. */
+.ft-figure--small figcaption { font-size: 7.2pt; }
+
 /* ════════════════════════════════════════════════════════════════════════════
    4. SYNTHÈSE & CHIFFRES-CLÉS
    ════════════════════════════════════════════════════════════════════════════ */
