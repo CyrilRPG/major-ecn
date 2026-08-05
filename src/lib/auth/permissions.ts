@@ -158,7 +158,7 @@ export type ContentAccess = {
 export function getContentAccess(offer: Offer): ContentAccess {
   switch (offer) {
     case 'essentiel':
-      return { fiche: false, ficheExpress: false, video: false, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
+      return { fiche: false, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
     case 'intensif':
       return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
     case 'approfondi':
