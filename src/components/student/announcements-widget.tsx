@@ -143,8 +143,11 @@ export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
 
 /* ------------ Carte statique : EVC Médecine Générale — Session 2026 ------------
  * Annonce officielle ajoutée en dur (hors système d'annonces DB) pour garantir
- * son affichage : période d'inscription + nombre de postes par voie d'accès. */
+ * son affichage : période d'inscription + nombre de postes par voie d'accès +
+ * compte à rebours vers la date d'épreuve. */
+const MG_EXAM_DATE = '2027-01-15';
 function MgEvc2026Card() {
+  const days = daysUntil(MG_EXAM_DATE);
   return (
     <article className="rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
       <header className="flex items-start gap-3.5">
@@ -169,6 +172,21 @@ function MgEvc2026Card() {
         className="mt-3 block h-[3px] w-12 rounded-full"
         style={{ background: 'var(--color-primary)' }}
       />
+
+      {/* Compte à rebours */}
+      <div className="relative mt-4 overflow-hidden rounded-xl bg-(--color-primary-soft)/40 px-4 py-3">
+        <p className="text-xs text-(--color-ink-soft)">Il vous reste</p>
+        <p className="mt-1 text-2xl font-black leading-none text-(--color-primary)">
+          {days === 0 ? "Aujourd'hui" : <>J−{days}</>}
+        </p>
+        <p className="mt-1 text-xs leading-snug text-(--color-ink-soft)">
+          avant l&rsquo;épreuve écrite
+        </p>
+        <Calendar
+          aria-hidden
+          className="pointer-events-none absolute -right-3 -bottom-2 h-20 w-20 text-(--color-primary)/10"
+        />
+      </div>
 
       {/* Période d'inscription */}
       <div className="mt-4">
