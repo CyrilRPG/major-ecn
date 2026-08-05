@@ -50,3 +50,6 @@ __pycache__/
 
 # artefacts de build fiches (images data-URI volumineuses)
 scripts/mg-fiches-data/**/.build-*.html
+
+# Supabase CLI : cache local de liaison au projet (pas du contenu de repo)
+supabase/.temp/

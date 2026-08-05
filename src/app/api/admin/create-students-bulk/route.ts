@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { buildStudentScope, etatCompte, sendStudentInvite } from '@/lib/admin/student-invite';
 import { siteUrl } from '@/lib/email/send';
 import { isDecouverteOnly } from '@/lib/auth/trial';
+import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 
 // Création séquentielle avec throttle d'envoi : ~1 s par élève. Sans
 // `maxDuration`, un import de trente élèves dépassait le délai par défaut et la
@@ -44,7 +45,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
   const { emails, offer, offers, permission_type, colleges, cours, voie } = parsed.data;
-  const permission_scope = buildStudentScope({ offer, offers, permission_type, colleges, cours, voie });
 
   let admin;
   try {
@@ -52,6 +52,15 @@ export async function POST(req: Request) {
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Service role indisponible' }, { status: 500 });
   }
+
+  // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts).
+  const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
+    permission_type === 'college'
+      ? await applyGeriatrieMgBonus(admin, colleges ?? [], cours)
+      : { colleges: colleges ?? [], cours: cours ?? undefined };
+  const permission_scope = buildStudentScope({
+    offer, offers, permission_type, colleges: collegesAvecBonus, cours: coursAvecBonus, voie,
+  });
 
   const base = origin(req);
   // Dédoublonne + normalise (les élèves saisiront eux-mêmes nom/prénom au 1er accès).

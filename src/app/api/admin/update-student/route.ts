@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { UpdateStudentSchema } from '@/lib/schemas/student';
 import { highestOffer, type Offer } from '@/types/domain';
+import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 
 export async function PATCH(req: Request) {
   const supabase = await createClient();
@@ -51,7 +52,14 @@ export async function PATCH(req: Request) {
     if (!meta.paid_at) meta.paid_at = new Date().toISOString();
   }
 
-  const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');
+  // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts) :
+  // no-op si le collège Gériatrie n'est pas sélectionné.
+  const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
+    permission_type === 'college'
+      ? await applyGeriatrieMgBonus(admin, colleges ?? [], cours)
+      : { colleges: colleges ?? [], cours: cours ?? undefined };
+
+  const mgGranted = permission_type === 'all' || collegesAvecBonus.includes('col-medecine-generale');
   const voieFields = voie ? { paid_voie: voie } : {};
   const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
 
@@ -60,10 +68,10 @@ export async function PATCH(req: Request) {
       ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields }
       : {
           type: 'college' as const,
-          colleges: colleges ?? [],
+          colleges: collegesAvecBonus,
           offer,
           ...offersField,
-          ...(cours && cours.length > 0 ? { cours } : {}),
+          ...(coursAvecBonus && coursAvecBonus.length > 0 ? { cours: coursAvecBonus } : {}),
           ...meta,
           ...specialtyFields,
           ...voieFields,

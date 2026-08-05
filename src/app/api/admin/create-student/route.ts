@@ -5,6 +5,7 @@ import { AddStudentSchema } from '@/lib/schemas/student';
 import { siteUrl } from '@/lib/email/send';
 import { buildStudentScope, etatCompte, sendStudentInvite } from '@/lib/admin/student-invite';
 import { isDecouverteOnly } from '@/lib/auth/trial';
+import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 
 /** URL publique : siteUrl() (NEXT_PUBLIC_SITE_URL / Vercel) en priorité,
  *  sinon reconstruite depuis les en-têtes de la requête. */
@@ -29,7 +30,6 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
 
   const { first_name, last_name, email, phone, offer, offers, permission_type, colleges, cours, voie } = parsed.data;
-  const permission_scope = buildStudentScope({ offer, offers, permission_type, colleges, cours, voie });
 
   let admin;
   try {
@@ -40,6 +40,16 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
+
+  // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts) :
+  // no-op si le collège Gériatrie n'est pas sélectionné.
+  const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
+    permission_type === 'college'
+      ? await applyGeriatrieMgBonus(admin, colleges ?? [], cours)
+      : { colleges: colleges ?? [], cours: cours ?? undefined };
+  const permission_scope = buildStudentScope({
+    offer, offers, permission_type, colleges: collegesAvecBonus, cours: coursAvecBonus, voie,
+  });
 
   // 1) Un compte existe-t-il déjà avec cet email ?
   //    - Compte « Découverte » (gratuit, non payant) → on l'ÉCRASE : on réutilise
