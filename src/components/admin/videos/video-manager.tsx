@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
+  Check, ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
   Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,31 +22,41 @@ export type ManagedVideo = {
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
-  /** Voies de concours concernées (les deux = aucune restriction). */
   voies: string[];
-  /** Formules ayant accès à cette vidéo (et à ses supports). */
   offers: string[];
-  /** Élèves explicitement privés d'accès à cette séance. */
   denied_user_ids: string[];
-  /** Élèves explicitement autorisés (accès nominatif contournant voie/formule/item). */
   allowed_user_ids: string[];
-  /** Supports PDF de la vidéo (plusieurs possibles). */
   supports: VideoSupportDoc[];
 };
 
-/**
- * Sélecteur nominatif d'élèves pour une séance. Deux modes :
- *
- *  - `deny`  : les élèves cochés PERDENT l'accès, même si leur formule/voie les
- *              rendait éligibles (rouge, `UserMinus`).
- *  - `allow` : les élèves cochés OBTIENNENT l'accès, même sans formule adéquate,
- *              sans la voie ciblée, ni même l'accès à l'item parent (vert
- *              `emerald`, `UserPlus`). L'exclusion prime toujours sur
- *              l'autorisation.
- *
- * La liste est chargée à la demande (annuaire potentiellement volumineux) et
- * partagée par tout le manager.
- */
+/* ------------------------------------------------------------------ */
+/*  Batch types                                                        */
+/* ------------------------------------------------------------------ */
+
+type BatchSupport = {
+  tempId: string;
+  file: File;
+  titre: string;
+  differentes: boolean;
+  voies: string[];
+  offers: string[];
+};
+
+type BatchSeance = {
+  tempId: string;
+  titre: string;
+  lien: string;
+  voies: string[];
+  offers: string[];
+  deniedUserIds: string[];
+  allowedUserIds: string[];
+  supports: BatchSupport[];
+};
+
+/* ------------------------------------------------------------------ */
+/*  StudentPicker                                                      */
+/* ------------------------------------------------------------------ */
+
 function StudentPicker({
   mode = 'deny',
   students,
@@ -96,8 +106,6 @@ function StudentPicker({
   const helper = isAllow
     ? 'Les élèves cochés verront cette séance même s’ils n’ont normalement pas accès à l’item ou n’ont pas la formule requise.'
     : 'Les élèves cochés ne verront plus cette séance ni ses supports.';
-  // Palette : rouge pour l'exclusion, emerald pour l'autorisation. Les classes
-  // sont figées (Tailwind purge les chaînes dynamiques).
   const c = isAllow
     ? {
         badge: 'bg-emerald-100 text-emerald-700',
@@ -131,7 +139,6 @@ function StudentPicker({
         {open ? <ChevronUp className="h-4 w-4 text-(--color-ink-muted)" /> : <ChevronDown className="h-4 w-4 text-(--color-ink-muted)" />}
       </button>
 
-      {/* Résumé des sélectionnés, visible même replié. */}
       {selected.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {(students ? selNoms : selected.map((id) => ({ id, nom: 'Élève', email: null, promotion: null }))).map((s) => (
@@ -203,14 +210,15 @@ function StudentPicker({
   );
 }
 
-/** Audience par défaut d'un nouvel ajout — celle qui avait cours avant le
- *  ciblage par vidéo. Les deux voies sont cochées. */
 const OFFRES_PAR_DEFAUT: Record<VideoType, string[]> = {
   cours: ['intensif'],
   seance_approfondie: ['approfondi'],
 };
 
-/** Cases à cocher d'audience : voies (les deux par défaut) et formules. */
+/* ------------------------------------------------------------------ */
+/*  AudiencePicker                                                     */
+/* ------------------------------------------------------------------ */
+
 function AudiencePicker({
   voies, offers, disabled, onVoies, onOffers,
 }: {
@@ -220,7 +228,6 @@ function AudiencePicker({
   onVoies: (v: string[]) => void;
   onOffers: (o: string[]) => void;
 }) {
-  /** Décocher la dernière case rendrait la vidéo invisible : on l'interdit. */
   const bascule = (liste: string[], valeur: string, apply: (l: string[]) => void) => {
     const next = liste.includes(valeur) ? liste.filter((x) => x !== valeur) : [...liste, valeur];
     if (next.length === 0) return;
@@ -278,16 +285,14 @@ function AudiencePicker({
   );
 }
 
-/** Un glisser-déposer ramasse volontiers autre chose : on ne garde que les PDF. */
+/* ------------------------------------------------------------------ */
+/*  SupportsDropzone                                                   */
+/* ------------------------------------------------------------------ */
+
 function estPdf(file: File): boolean {
   return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
 }
 
-/**
- * Zone de dépôt des supports de séance : on y glisse plusieurs PDF à la fois,
- * ou on passe par l'explorateur. Les fichiers écartés (non-PDF) sont nommés,
- * sans quoi un dépôt partiel passerait inaperçu.
- */
 function SupportsDropzone({
   libelle,
   disabled,
@@ -312,8 +317,6 @@ function SupportsDropzone({
     <div>
       <div
         onDragEnter={(e) => { e.preventDefault(); if (!disabled) setDragging(true); }}
-        // `relatedTarget` est l'élément survolé APRÈS la sortie : sans ce test,
-        // passer au-dessus du bouton intérieur éteindrait le surlignage.
         onDragLeave={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
         }}
@@ -366,6 +369,10 @@ function SupportsDropzone({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  VideoManager — gestion complète des vidéos d'un item               */
+/* ------------------------------------------------------------------ */
+
 const COPY: Record<VideoType, { titre: string; unite: string; audience: string; exemple: string }> = {
   cours: {
     titre: 'Cours vidéo',
@@ -381,16 +388,6 @@ const COPY: Record<VideoType, { titre: string; unite: string; audience: string; 
   },
 };
 
-/**
- * Gestion complète des vidéos d'un item : ajouter (lien Bunny.net collé),
- * réordonner, renommer, remplacer la vidéo, supprimer — et attacher un support
- * PDF facultatif qui devient un onglet chez l'élève.
- *
- * Le fichier de support part DIRECTEMENT du navigateur vers le bucket privé
- * `supports` (comme les fiches) : aucune limite de taille de requête serveur.
- * La ligne en base n'est mise à jour qu'ensuite, par une action serveur qui
- * revérifie les droits et le chemin.
- */
 export function VideoManager({
   coursId,
   type,
@@ -402,16 +399,11 @@ export function VideoManager({
   coursId: string;
   type: VideoType;
   videos: ManagedVideo[];
-  /** Appelé après chaque modification. Fourni par la bibliothèque vidéo, qui
-   *  charge sa liste côté client : un simple router.refresh() ne suffirait pas. */
   onChanged?: () => void;
-  /** Ajout personnalisé — utilisé quand l'item n'existe pas encore (« Révisions
-   *  - <Collège> ») : l'action crée l'item puis y place la vidéo. */
   onAdd?: (input: {
     type: VideoType; titre: string; lien: string; position: number | null;
     voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[];
   }) => Promise<AddResult>;
-  /** Message affiché au-dessus de la liste (contexte particulier). */
   notice?: string;
 }) {
   const router = useRouter();
@@ -421,8 +413,7 @@ export function VideoManager({
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
 
-  // Annuaire des élèves, chargé une seule fois puis partagé par les sélecteurs
-  // d'exclusion (formulaire d'ajout + panneaux d'édition).
+  // Annuaire des élèves (partagé par tous les sélecteurs)
   const [students, setStudents] = useState<StudentLite[] | null>(null);
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [studentsError, setStudentsError] = useState<string | null>(null);
@@ -441,22 +432,122 @@ export function VideoManager({
     students, loading: studentsLoading, error: studentsError, onLoad: loadStudents,
   };
 
-  // Formulaire d'ajout
+  // === Batch add state ===
   const [adding, setAdding] = useState(false);
-  const [titre, setTitre] = useState('');
-  const [lien, setLien] = useState('');
-  const [position, setPosition] = useState('');
-  const [withSupport, setWithSupport] = useState(false);
-  const [supportFiles, setSupportFiles] = useState<File[]>([]);
-  // Audience du nouvel ajout : les deux voies cochées par défaut.
-  const [voies, setVoies] = useState<string[]>(['interne', 'externe']);
-  const [offers, setOffers] = useState<string[]>(OFFRES_PAR_DEFAUT[type]);
-  // Élèves exclus nominativement de la nouvelle séance.
-  const [deniedUserIds, setDeniedUserIds] = useState<string[]>([]);
-  // Élèves autorisés nominativement (accès garanti, contourne voie/formule/item).
-  const [allowedUserIds, setAllowedUserIds] = useState<string[]>([]);
+  const [seances, setSeances] = useState<BatchSeance[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [saveProgress, setSaveProgress] = useState({ current: 0, total: 0, label: '' });
 
-  /** Dépose un PDF dans le bucket privé et l'ajoute aux supports de la vidéo. */
+  function createEmptySeance(): BatchSeance {
+    return {
+      tempId: crypto.randomUUID(),
+      titre: '',
+      lien: '',
+      voies: ['interne', 'externe'],
+      offers: OFFRES_PAR_DEFAUT[type],
+      deniedUserIds: [],
+      allowedUserIds: [],
+      supports: [],
+    };
+  }
+
+  function startAdding() {
+    setAdding(true);
+    setSeances([createEmptySeance()]);
+    setError(null);
+  }
+
+  function cancelAdding() {
+    setAdding(false);
+    setSeances([]);
+    setError(null);
+    setSaving(false);
+    setSaveProgress({ current: 0, total: 0, label: '' });
+  }
+
+  function updateSeance(tempId: string, patch: Partial<BatchSeance>) {
+    setSeances((prev) => prev.map((s) => (s.tempId === tempId ? { ...s, ...patch } : s)));
+  }
+
+  async function handleSaveAll() {
+    for (let i = 0; i < seances.length; i++) {
+      const s = seances[i];
+      if (!s.titre.trim()) return setError(`Séance ${i + 1} : donnez un titre.`);
+      if (!extractBunnyVideoId(s.lien)) return setError(`Séance ${i + 1} : lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.`);
+      if (s.offers.length === 0) return setError(`Séance ${i + 1} : cochez au moins une formule.`);
+      if (s.voies.length === 0) return setError(`Séance ${i + 1} : cochez au moins une voie.`);
+    }
+
+    setError(null);
+    setSaving(true);
+    const total = seances.reduce((acc, s) => acc + 1 + s.supports.length, 0);
+    let current = 0;
+    const supabase = createClient();
+
+    for (let i = 0; i < seances.length; i++) {
+      const s = seances[i];
+      setSaveProgress({ current, total, label: `Création de « ${s.titre} »…` });
+
+      const res = onAdd
+        ? await onAdd({
+            type, titre: s.titre, lien: s.lien, position: null,
+            voies: s.voies, offers: s.offers,
+            deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
+          })
+        : await addVideoAction({
+            coursId, type, titre: s.titre, lien: s.lien, position: null,
+            voies: s.voies, offers: s.offers,
+            deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
+          });
+
+      if ('error' in res) {
+        setError(`Séance ${i + 1} « ${s.titre} » : ${res.error}`);
+        setSaving(false);
+        apresModification();
+        return;
+      }
+
+      current++;
+
+      for (const sup of s.supports) {
+        setSaveProgress({ current, total, label: `Support « ${sup.titre} » → « ${s.titre} »…` });
+        const safe = sup.file.name.replace(/[^\w.\-]+/g, '_').slice(-80);
+        const path = `${res.coursId}/${res.videoId}-${Date.now()}-${safe}`;
+        const { error: upErr } = await supabase.storage.from('supports').upload(path, sup.file, {
+          upsert: false,
+          contentType: sup.file.type || 'application/pdf',
+        });
+        if (upErr) {
+          setError(`Support « ${sup.titre} » : ${upErr.message}`);
+          setSaving(false);
+          apresModification();
+          return;
+        }
+        const supRes = await addVideoSupportAction({ videoId: res.videoId, path, fileName: sup.file.name });
+        if ('error' in supRes) {
+          setError(`Support « ${sup.titre} » : ${supRes.error}`);
+          setSaving(false);
+          apresModification();
+          return;
+        }
+        if (sup.differentes) {
+          await updateVideoSupportAudienceAction({
+            supportId: supRes.supportId,
+            differentes: true,
+            voies: sup.voies,
+            offers: sup.offers,
+          });
+        }
+        current++;
+      }
+    }
+
+    setSaving(false);
+    cancelAdding();
+    apresModification();
+  }
+
+  // Upload helpers pour le panneau d'édition des vidéos existantes
   async function uploadSupport(videoId: string, file: File, coursIdCible?: string): Promise<string | null> {
     const supabase = createClient();
     const safe = file.name.replace(/[^\w.\-]+/g, '_').slice(-80);
@@ -470,51 +561,12 @@ export function VideoManager({
     return 'error' in res ? res.error : null;
   }
 
-  /** Dépose plusieurs PDF à la suite ; renvoie la première erreur rencontrée. */
   async function uploadSupports(videoId: string, files: File[], coursIdCible?: string): Promise<string | null> {
     for (const f of files) {
       const err = await uploadSupport(videoId, f, coursIdCible);
       if (err) return err;
     }
     return null;
-  }
-
-  function resetAdd() {
-    setTitre('');
-    setLien('');
-    setPosition('');
-    setWithSupport(false);
-    setSupportFiles([]);
-    setVoies(['interne', 'externe']);
-    setOffers(OFFRES_PAR_DEFAUT[type]);
-    setDeniedUserIds([]);
-    setAllowedUserIds([]);
-    setAdding(false);
-  }
-
-  function handleAdd() {
-    setError(null);
-    if (!titre.trim()) return setError('Donnez un titre.');
-    if (!extractBunnyVideoId(lien)) {
-      return setError('Lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.');
-    }
-    if (withSupport && supportFiles.length === 0) return setError('Choisissez au moins un PDF, ou décochez la case.');
-    if (offers.length === 0) return setError('Cochez au moins une formule.');
-    if (voies.length === 0) return setError('Cochez au moins une voie.');
-    start(async () => {
-      const rang = position.trim() ? Number(position) : null;
-      const pos = rang && Number.isFinite(rang) ? rang : null;
-      const res = onAdd
-        ? await onAdd({ type, titre, lien, position: pos, voies, offers, deniedUserIds, allowedUserIds })
-        : await addVideoAction({ coursId, type, titre, lien, position: pos, voies, offers, deniedUserIds, allowedUserIds });
-      if ('error' in res) return setError(res.error);
-      if (withSupport && supportFiles.length > 0) {
-        const err = await uploadSupports(res.videoId, supportFiles, res.coursId);
-        if (err) setError(`Vidéo ajoutée, mais un support a échoué : ${err}`);
-      }
-      resetAdd();
-      apresModification();
-    });
   }
 
   function run(fn: () => Promise<{ ok: true } | { error: string }>) {
@@ -529,7 +581,7 @@ export function VideoManager({
   return (
     <div className="space-y-4">
       <p className="text-[12.5px] text-(--color-ink-soft)">
-        {copy.audience} L’ordre ci-dessous est celui que voient les élèves.
+        {copy.audience} L'ordre ci-dessous est celui que voient les élèves.
       </p>
       {notice && (
         <p className="rounded-xl border border-[#7C3AED]/30 bg-[#F3EAFF] px-3 py-2 text-[12.5px] text-[#5B21B6]">
@@ -537,9 +589,10 @@ export function VideoManager({
         </p>
       )}
 
+      {/* ── Liste des vidéos existantes ── */}
       {videos.length === 0 ? (
         <p className="rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-3 py-4 text-sm text-(--color-ink-muted)">
-          Aucune {copy.unite} pour l’instant.
+          Aucune {copy.unite} pour l'instant.
         </p>
       ) : (
         <ul className="space-y-2">
@@ -647,136 +700,86 @@ export function VideoManager({
         </ul>
       )}
 
+      {/* ── Ajout par lot ── */}
       {adding ? (
-        <div className="rounded-xl border border-dashed border-(--color-border) bg-(--color-surface) p-4">
-          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
-            <Link2 className="h-4 w-4 text-[#7C3AED]" />
-            Nouvelle {copy.unite}
-          </p>
-          <div className="space-y-2">
-            <input
-              type="text"
-              placeholder={`Nom affiché aux élèves — ex. « ${copy.exemple} »`}
-              value={titre}
-              onChange={(e) => setTitre(e.target.value)}
-              className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
-            />
-            <input
-              type="text"
-              placeholder="Collez ici le lien Bunny.net Stream de la vidéo"
-              value={lien}
-              onChange={(e) => setLien(e.target.value)}
-              className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
-            />
-            <label className="flex flex-wrap items-center gap-2 pt-1 text-sm text-(--color-ink)">
-              Position dans la liste
-              <input
-                type="number"
-                min={1}
-                max={videos.length + 1}
-                placeholder={`${videos.length + 1}`}
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-                className="w-20 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5 text-sm"
-              />
-              <span className="text-xs text-(--color-ink-muted)">
-                (vide = à la fin ; 1 = en tête)
-              </span>
-            </label>
-            <AudiencePicker
-              voies={voies}
-              offers={offers}
-              disabled={pending}
-              onVoies={setVoies}
-              onOffers={setOffers}
-            />
-            <StudentPicker
-              mode="deny"
-              {...studentPickerProps}
-              selected={deniedUserIds}
-              disabled={pending}
-              onChange={setDeniedUserIds}
-            />
-            <StudentPicker
-              mode="allow"
-              {...studentPickerProps}
-              selected={allowedUserIds}
-              disabled={pending}
-              onChange={setAllowedUserIds}
-            />
-            <label className="flex items-center gap-2 pt-1 text-sm text-(--color-ink)">
-              <input
-                type="checkbox"
-                checked={withSupport}
-                onChange={(e) => {
-                  setWithSupport(e.target.checked);
-                  if (!e.target.checked) setSupportFiles([]);
-                }}
-                className="h-4 w-4 accent-[#7C3AED]"
-              />
-              Ajouter des supports (PDF) — crée un onglet « Support de la séance » chez l’élève
-            </label>
-            {withSupport && (
-              <div className="space-y-2 pl-6">
-                <SupportsDropzone
-                  libelle={supportFiles.length > 0 ? 'Ajouter d’autres PDF' : 'Choisir un ou plusieurs PDF'}
-                  disabled={pending}
-                  // On CUMULE : glisser un deuxième lot ne doit pas effacer le
-                  // premier. Les doublons de nom sont écartés — glisser deux
-                  // fois le même fichier créerait deux supports identiques.
-                  onFiles={(files) =>
-                    setSupportFiles((prev) => [
-                      ...prev,
-                      ...files.filter((f) => !prev.some((p) => p.name === f.name && p.size === f.size)),
-                    ])
-                  }
-                />
-                {supportFiles.length > 0 && (
-                  <ul className="space-y-1">
-                    {supportFiles.map((f, i) => (
-                      <li
-                        key={`${f.name}-${f.size}-${i}`}
-                        className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1"
-                      >
-                        <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
-                        <span className="min-w-0 flex-1 truncate text-xs text-(--color-ink)">{f.name}</span>
-                        <button
-                          type="button"
-                          disabled={pending}
-                          aria-label={`Retirer ${f.name}`}
-                          onClick={() => setSupportFiles((prev) => prev.filter((_, j) => j !== i))}
-                          className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <p className="text-[11px] text-(--color-ink-muted)">
-                  Chaque support prend pour nom celui de son fichier, sans l’extension.
-                  Renommez-les depuis le crayon une fois la vidéo créée.
-                </p>
-              </div>
-            )}
-            <div className="flex items-center gap-2 pt-1">
-              <Button type="button" size="sm" onClick={handleAdd} disabled={pending}>
-                {pending ? <Loader2 className="animate-spin" /> : <Plus />}
-                Ajouter
-              </Button>
-              <Button type="button" size="sm" variant="ghost" onClick={resetAdd} disabled={pending}>
-                Annuler
-              </Button>
-            </div>
+        <div className="space-y-4 rounded-2xl border-2 border-dashed border-[#7C3AED]/40 bg-[#FDFAFF] p-5">
+          <div className="flex items-center justify-between">
+            <p className="flex items-center gap-2 text-sm font-bold text-[#5B21B6]">
+              <Plus className="h-4 w-4" />
+              {seances.length > 1
+                ? `Ajouter ${seances.length} ${copy.unite}s`
+                : `Nouvelle ${copy.unite}`}
+            </p>
+            <Button type="button" variant="ghost" size="sm" onClick={cancelAdding} disabled={saving}>
+              <X className="h-4 w-4" /> Fermer
+            </Button>
           </div>
-          <p className="mt-2 text-[11px] text-(--color-ink-muted)">
-            Déposez d’abord la vidéo sur bunny.net (Stream), puis collez son lien ici.
+
+          <p className="text-[12.5px] text-(--color-ink-soft)">
+            Remplissez les informations de chaque {copy.unite} et leurs supports, puis cliquez sur « Enregistrer tout » en bas de page.
+            Les permissions de chaque support se règlent ici directement.
           </p>
+
+          {seances.map((s, i) => (
+            <BatchSeanceCard
+              key={s.tempId}
+              index={i}
+              seance={s}
+              type={type}
+              copy={copy}
+              canRemove={seances.length > 1}
+              disabled={saving}
+              onUpdate={(patch) => updateSeance(s.tempId, patch)}
+              onRemove={() => setSeances((prev) => prev.filter((x) => x.tempId !== s.tempId))}
+              studentPickerProps={studentPickerProps}
+            />
+          ))}
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setSeances((prev) => [...prev, createEmptySeance()])}
+            disabled={saving}
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter une autre {copy.unite}
+          </Button>
+
+          {saving && (
+            <div className="rounded-xl border border-[#7C3AED]/20 bg-white p-3">
+              <div className="mb-2 h-2 overflow-hidden rounded-full bg-[#F3EAFF]">
+                <div
+                  className="h-full rounded-full bg-[#7C3AED] transition-all duration-300"
+                  style={{ width: `${saveProgress.total > 0 ? (saveProgress.current / saveProgress.total) * 100 : 0}%` }}
+                />
+              </div>
+              <p className="flex items-center gap-2 text-xs text-[#5B21B6]">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                {saveProgress.label}
+              </p>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 border-t border-[#7C3AED]/20 pt-4">
+            <Button type="button" onClick={handleSaveAll} disabled={saving || seances.length === 0}>
+              {saving ? <Loader2 className="animate-spin" /> : <Check />}
+              Enregistrer tout
+              <span className="ml-1 rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
+                {seances.length} {copy.unite}{seances.length > 1 ? 's' : ''}
+                {seances.reduce((a, s) => a + s.supports.length, 0) > 0 &&
+                  ` · ${seances.reduce((a, s) => a + s.supports.length, 0)} support${seances.reduce((a, s) => a + s.supports.length, 0) > 1 ? 's' : ''}`}
+              </span>
+            </Button>
+            <Button type="button" variant="ghost" onClick={cancelAdding} disabled={saving}>
+              Annuler
+            </Button>
+          </div>
         </div>
       ) : (
-        <Button type="button" variant="outline" size="sm" onClick={() => { setAdding(true); setError(null); }}>
+        <Button type="button" variant="outline" size="sm" onClick={startAdding}>
           <Plus />
-          Ajouter une {copy.unite}
+          Ajouter {videos.length > 0 ? 'des' : 'une'} {copy.unite}{videos.length > 0 ? 's' : ''}
         </Button>
       )}
 
@@ -785,6 +788,233 @@ export function VideoManager({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  BatchSeanceCard — une séance dans le formulaire d'ajout par lot     */
+/* ------------------------------------------------------------------ */
+
+function BatchSeanceCard({
+  index,
+  seance,
+  type,
+  copy,
+  canRemove,
+  disabled,
+  onUpdate,
+  onRemove,
+  studentPickerProps,
+}: {
+  index: number;
+  seance: BatchSeance;
+  type: VideoType;
+  copy: { unite: string; exemple: string };
+  canRemove: boolean;
+  disabled: boolean;
+  onUpdate: (patch: Partial<BatchSeance>) => void;
+  onRemove: () => void;
+  studentPickerProps: {
+    students: StudentLite[] | null; loading: boolean; error: string | null; onLoad: () => void;
+  };
+}) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  function addSupportFiles(files: File[]) {
+    const existing = seance.supports;
+    const news: BatchSupport[] = files
+      .filter((f) => !existing.some((s) => s.file.name === f.name && s.file.size === f.size))
+      .map((f) => ({
+        tempId: crypto.randomUUID(),
+        file: f,
+        titre: f.name.replace(/\.pdf$/i, '').trim() || 'Support',
+        differentes: false,
+        voies: seance.voies,
+        offers: seance.offers,
+      }));
+    onUpdate({ supports: [...existing, ...news] });
+  }
+
+  function updateSupport(tempId: string, patch: Partial<BatchSupport>) {
+    onUpdate({
+      supports: seance.supports.map((s) => (s.tempId === tempId ? { ...s, ...patch } : s)),
+    });
+  }
+
+  function removeSupport(tempId: string) {
+    onUpdate({ supports: seance.supports.filter((s) => s.tempId !== tempId) });
+  }
+
+  return (
+    <div className="rounded-xl border border-(--color-border) bg-(--color-surface) shadow-sm">
+      {/* En-tête */}
+      <div className="flex items-center gap-3 px-4 py-3">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#7C3AED] text-xs font-bold text-white">
+          {index + 1}
+        </span>
+        <p className="min-w-0 flex-1 truncate text-sm font-bold text-(--color-ink)">
+          {seance.titre.trim() || `${copy.unite.charAt(0).toUpperCase() + copy.unite.slice(1)} ${index + 1}`}
+        </p>
+        {seance.supports.length > 0 && (
+          <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600">
+            <Paperclip className="h-3 w-3" />
+            {seance.supports.length}
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => setCollapsed(!collapsed)}
+          className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-(--color-sand-100)"
+          aria-label={collapsed ? 'Déplier' : 'Replier'}
+        >
+          {collapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+        </button>
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            disabled={disabled}
+            className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
+            aria-label="Retirer cette séance"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {!collapsed && (
+        <div className="space-y-3 border-t border-(--color-border) px-4 py-4">
+          {/* Titre + lien Bunny */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+                Nom affiché aux élèves
+              </label>
+              <input
+                type="text"
+                placeholder={`ex. « ${copy.exemple} »`}
+                value={seance.titre}
+                disabled={disabled}
+                onChange={(e) => onUpdate({ titre: e.target.value })}
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+                Lien Bunny.net Stream
+              </label>
+              <input
+                type="text"
+                placeholder="Collez le lien de la vidéo"
+                value={seance.lien}
+                disabled={disabled}
+                onChange={(e) => onUpdate({ lien: e.target.value })}
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
+              />
+            </div>
+          </div>
+
+          {/* Audience */}
+          <AudiencePicker
+            voies={seance.voies}
+            offers={seance.offers}
+            disabled={disabled}
+            onVoies={(v) => onUpdate({ voies: v })}
+            onOffers={(o) => onUpdate({ offers: o })}
+          />
+
+          {/* Élèves */}
+          <StudentPicker
+            mode="deny"
+            {...studentPickerProps}
+            selected={seance.deniedUserIds}
+            disabled={disabled}
+            onChange={(ids) => onUpdate({ deniedUserIds: ids })}
+          />
+          <StudentPicker
+            mode="allow"
+            {...studentPickerProps}
+            selected={seance.allowedUserIds}
+            disabled={disabled}
+            onChange={(ids) => onUpdate({ allowedUserIds: ids })}
+          />
+
+          {/* Supports PDF */}
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+              Supports PDF de la {copy.unite}
+            </p>
+
+            {seance.supports.length > 0 && (
+              <ul className="mb-3 space-y-2">
+                {seance.supports.map((sup) => (
+                  <li
+                    key={sup.tempId}
+                    className="rounded-lg border border-(--color-border) bg-(--color-surface-soft) p-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+                      <input
+                        type="text"
+                        value={sup.titre}
+                        disabled={disabled}
+                        onChange={(e) => updateSupport(sup.tempId, { titre: e.target.value })}
+                        className="min-w-0 flex-1 bg-transparent text-sm text-(--color-ink) outline-none"
+                      />
+                      <button
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => removeSupport(sup.tempId)}
+                        aria-label={`Retirer ${sup.titre}`}
+                        className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <label className="mt-1.5 flex items-center gap-2 pl-5 text-[12.5px] text-(--color-ink)">
+                      <input
+                        type="checkbox"
+                        checked={sup.differentes}
+                        disabled={disabled}
+                        onChange={(e) => updateSupport(sup.tempId, { differentes: e.target.checked })}
+                        className="h-3.5 w-3.5 accent-[#7C3AED]"
+                      />
+                      Permissions différentes
+                      {!sup.differentes && (
+                        <span className="text-[11px] text-(--color-ink-muted)">(hérite de la {copy.unite})</span>
+                      )}
+                    </label>
+                    {sup.differentes && (
+                      <div className="mt-2 pl-5">
+                        <AudiencePicker
+                          voies={sup.voies}
+                          offers={sup.offers}
+                          disabled={disabled}
+                          onVoies={(v) => updateSupport(sup.tempId, { voies: v })}
+                          onOffers={(o) => updateSupport(sup.tempId, { offers: o })}
+                        />
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <SupportsDropzone
+              libelle={seance.supports.length > 0 ? 'Ajouter d’autres PDF' : 'Choisir un ou plusieurs PDF'}
+              disabled={disabled}
+              onFiles={addSupportFiles}
+            />
+            <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+              Chaque support prend pour nom celui de son fichier. Renommez-le ci-dessus si besoin.
+              L'élève retrouve les documents dans l'onglet « Support de la séance ».
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  VideoEditPanel — édition d'une vidéo existante                     */
 /* ------------------------------------------------------------------ */
 
 function VideoEditPanel({
@@ -910,7 +1140,7 @@ function VideoEditPanel({
             disabled={pending}
             onClick={() => onAudience(voies, offers, denied, allowed)}
           >
-            Enregistrer l’accès
+            Enregistrer l'accès
           </Button>
         )}
       </div>
@@ -943,8 +1173,8 @@ function VideoEditPanel({
           onFiles={onAddSupports}
         />
         <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-          Chaque support prend pour nom celui de son fichier, sans l’extension ; il se renomme
-          dans la liste ci-dessus. L’élève ouvre l’onglet « Support de la séance » et y retrouve
+          Chaque support prend pour nom celui de son fichier, sans l'extension ; il se renomme
+          dans la liste ci-dessus. L'élève ouvre l'onglet « Support de la séance » et y retrouve
           tous les documents, filigranés à son nom et non téléchargeables.
         </p>
       </div>
@@ -952,11 +1182,10 @@ function VideoEditPanel({
   );
 }
 
-/**
- * Une ligne de support : nom modifiable, suppression, et — repliée par défaut —
- * une case « Permissions différentes » qui donne au support ses PROPRES voies et
- * formules (sinon il hérite de celles de la vidéo).
- */
+/* ------------------------------------------------------------------ */
+/*  SupportLigne — un support existant, avec permissions inline        */
+/* ------------------------------------------------------------------ */
+
 function SupportLigne({
   doc, pending, videoVoies, videoOffers, onRename, onRemove, onAudience,
 }: {
@@ -971,8 +1200,6 @@ function SupportLigne({
   const [titre, setTitre] = useState(doc.titre);
   const aDesPermsPropres = (doc.voies?.length ?? 0) > 0 || (doc.offers?.length ?? 0) > 0;
   const [differentes, setDifferentes] = useState(aDesPermsPropres);
-  // Point de départ des permissions propres : celles du support si elles
-  // existent, sinon celles de la vidéo (base logique la plus proche).
   const [voies, setVoies] = useState<string[]>(doc.voies && doc.voies.length > 0 ? doc.voies : videoVoies);
   const [offers, setOffers] = useState<string[]>(doc.offers && doc.offers.length > 0 ? doc.offers : videoOffers);
 
@@ -983,7 +1210,6 @@ function SupportLigne({
 
   function basculeDifferentes(next: boolean) {
     setDifferentes(next);
-    // Décocher revient immédiatement à l'héritage de la vidéo.
     if (!next && aDesPermsPropres) onAudience(false, [], []);
   }
 
