@@ -42,22 +42,42 @@ export function LoginForm() {
   async function onSubmit(values: FormData) {
     setAuthError(null);
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithPassword(values);
-    if (error) {
-      setAuthError(error.message === 'Invalid login credentials' ? 'Email ou mot de passe incorrect.' : error.message);
+    let data: Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>['data'];
+    try {
+      const result = await supabase.auth.signInWithPassword(values);
+      if (result.error) {
+        const msg = result.error.message ?? '';
+        if (msg === 'Invalid login credentials') {
+          setAuthError('Email ou mot de passe incorrect.');
+        } else if (/failed to fetch|network|522|504|timeout/i.test(msg)) {
+          setAuthError('Le service de connexion est temporairement saturé. Réessayez dans quelques secondes.');
+        } else {
+          setAuthError(msg);
+        }
+        return;
+      }
+      data = result.data;
+    } catch {
+      setAuthError('Le service de connexion est temporairement saturé. Réessayez dans quelques secondes.');
       return;
     }
     // Vérifier que le compte n'a pas été désactivé par un admin.
+    // Best-effort : si profiles est injoignable on laisse entrer (RLS + middleware
+    // refuseront ensuite un compte vraiment désactivé).
     if (data.user) {
-      const { data: prof } = await supabase
-        .from('profiles')
-        .select('is_active')
-        .eq('id', data.user.id)
-        .maybeSingle<{ is_active: boolean | null }>();
-      if (prof?.is_active === false) {
-        await supabase.auth.signOut();
-        setAuthError('Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.');
-        return;
+      try {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('is_active')
+          .eq('id', data.user.id)
+          .maybeSingle<{ is_active: boolean | null }>();
+        if (prof?.is_active === false) {
+          await supabase.auth.signOut();
+          setAuthError('Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.');
+          return;
+        }
+      } catch {
+        /* profiles injoignable — on n'bloque pas la connexion */
       }
     }
     // Session unique : enregistre cet appareil comme seul autorisé (déconnecte

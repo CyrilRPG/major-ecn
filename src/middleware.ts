@@ -31,14 +31,25 @@ function isCorsPath(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  if (isCorsPath(request.nextUrl.pathname)) {
+  const { pathname } = request.nextUrl;
+
+  // Les routes API gèrent leur propre auth. Les faire passer par updateSession
+  // (même en no-op) était inutile et, pour le préflight CORS + heartbeat,
+  // ajoutait de la contention Edge sous charge. On pose juste les headers CORS.
+  if (isCorsPath(pathname)) {
     if (request.method === 'OPTIONS') {
       return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
     }
-    const res = await updateSession(request);
+    const res = NextResponse.next({ request });
     for (const [k, v] of Object.entries(CORS_HEADERS)) res.headers.set(k, v);
     return res;
   }
+
+  // Autres /api/* : pas de session middleware (auth dans la route).
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next({ request });
+  }
+
   return updateSession(request);
 }
 

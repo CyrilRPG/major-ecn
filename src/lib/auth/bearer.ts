@@ -1,6 +1,8 @@
 import 'server-only';
+import { cookies } from 'next/headers';
 import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
 import { createClient as createCookieClient } from '@/lib/supabase/server';
+import { extractAccessTokenFromCookies } from './access-token-cookie';
 import { getVerifiedUser, type VerifiedUser } from './verified-user';
 import type { Database } from '@/types/database';
 
@@ -44,18 +46,21 @@ export async function getBearerUser(req: Request): Promise<RequestAuth | null> {
  * Auth duale : cookie (web) d'abord, Bearer (mobile) sinon. Permet de rendre
  * les routes existantes (fiche PDF, heartbeat…) accessibles à l'app mobile
  * sans changer le comportement web.
+ *
+ * IMPORTANT : on lit le JWT dans les cookies et on le passe à `getClaims(jwt)`.
+ * On n'appelle JAMAIS `getSession()` ici — sous saturation Auth, le refresh
+ * automatique bloquait heartbeat/API pendant des dizaines de secondes et
+ * amplifiait la panne (522 → files d'attente → plus aucune connexion DB).
  */
 export async function getRequestUser(req: Request): Promise<RequestAuth | null> {
   try {
-    const cookieClient = await createCookieClient();
-    // `getSession()` lit les cookies (et ne renouvelle le jeton que s'il est
-    // expiré) ; `getVerifiedUser()` en vérifie ensuite la signature en local.
-    // Aucune requête vers l'API Auth dans le cas courant.
-    const { data: { session } } = await cookieClient.auth.getSession();
-    if (session?.access_token) {
-      const user = await getVerifiedUser(cookieClient, session.access_token);
+    const cookieStore = await cookies();
+    const token = extractAccessTokenFromCookies(cookieStore.getAll());
+    if (token) {
+      const cookieClient = await createCookieClient();
+      const user = await getVerifiedUser(cookieClient, token);
       if (user) {
-        return { user, supabase: cookieClient, accessToken: session.access_token, via: 'cookie' };
+        return { user, supabase: cookieClient, accessToken: token, via: 'cookie' };
       }
     }
   } catch {
