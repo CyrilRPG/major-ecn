@@ -76,6 +76,12 @@ async function logUsage(args: {
   costUsd: number;
   model: string;
   status: 'success' | 'failed' | 'abstention';
+  userId?: string;
+  userPseudo?: string;
+  userOffer?: string;
+  userQuestion?: string;
+  aiAnswer?: string;
+  coursTitre?: string;
 }) {
   const admin = createAdminClient();
   try {
@@ -92,6 +98,12 @@ async function logUsage(args: {
       price_eur: 0,
       status: args.status,
       model: args.model,
+      user_id: args.userId ?? null,
+      user_pseudo: args.userPseudo ?? null,
+      user_offer: args.userOffer ?? null,
+      user_question: args.userQuestion ?? null,
+      ai_answer: args.aiAnswer ?? null,
+      cours_titre: args.coursTitre ?? null,
     });
   } catch { /* logging best-effort */ }
 }
@@ -133,6 +145,22 @@ export async function POST(req: Request) {
 
   const expiredRes = await assertAccessActive(supabase, user.id);
   if (expiredRes) return expiredRes;
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('first_name, last_name, permission_scope')
+    .eq('id', user.id)
+    .maybeSingle();
+  const scope = (profile?.permission_scope ?? {}) as Record<string, unknown>;
+  const userOffer = (scope.offer as string) ?? 'decouverte';
+  const userPseudo = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Élève';
+
+  if (userOffer === 'decouverte') {
+    return NextResponse.json(
+      { error: "L'assistant IA est réservé aux abonnés." },
+      { status: 403 },
+    );
+  }
 
   const { coursId, message } = (await req.json().catch(() => ({}))) as {
     coursId?: string; message?: string;
@@ -231,6 +259,8 @@ export async function POST(req: Request) {
       coursId, feature: 'assistant_chat',
       inputTokens: 0, outputTokens: 0, costUsd: 0, model: FAST_MODEL,
       status: 'abstention',
+      userId: user.id, userPseudo, userOffer,
+      userQuestion: message.trim(), coursTitre: cours.titre,
     });
     return NextResponse.json({
       reply:
@@ -269,6 +299,8 @@ export async function POST(req: Request) {
       coursId, feature: 'assistant_chat',
       inputTokens: 0, outputTokens: 0, costUsd: 0, model: FAST_MODEL,
       status: 'failed',
+      userId: user.id, userPseudo, userOffer,
+      userQuestion: message.trim(), coursTitre: cours.titre,
     });
     return NextResponse.json(
       { error: 'IA indisponible : ' + (e as Error).message },
@@ -286,6 +318,8 @@ export async function POST(req: Request) {
     costUsd: cost,
     model: result.model,
     status: 'success',
+    userId: user.id, userPseudo, userOffer,
+    userQuestion: message.trim(), aiAnswer: answer, coursTitre: cours.titre,
   });
 
   return NextResponse.json({

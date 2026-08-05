@@ -155,11 +155,11 @@ export function StudyConsole({
           <button
             type="button"
             data-tour="assistant"
-            onClick={() => setAssistantOpen((v) => !v)}
+            onClick={() => isDecouverte ? setLockedOpen(true) : setAssistantOpen((v) => !v)}
             aria-label="Assistant du cours"
             className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg bg-white px-2.5 text-sm font-bold text-[#E4002B] transition-transform hover:scale-[1.02] focus-ring sm:px-3"
             style={{
-              backgroundImage: assistantOpen
+              backgroundImage: assistantOpen && !isDecouverte
                 ? 'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(90deg,#E4002B 0%,#F97316 100%)'
                 : 'linear-gradient(#FFFFFF,#FFFFFF), linear-gradient(0deg,var(--color-border),var(--color-border))',
               backgroundOrigin: 'border-box',
@@ -167,7 +167,11 @@ export function StudyConsole({
               border: '1.5px solid transparent',
             }}
           >
-            <MessageCircle className="h-4 w-4" />
+            {isDecouverte ? (
+              <Lock className="h-4 w-4" style={{ color: '#C0112E' }} />
+            ) : (
+              <MessageCircle className="h-4 w-4" />
+            )}
             <span className="hidden bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] bg-clip-text text-transparent sm:inline">
               Assistant
             </span>
