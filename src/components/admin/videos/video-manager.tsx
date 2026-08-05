@@ -11,8 +11,9 @@ import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
-  moveVideoAction, removeVideoSupportAction, renameVideoAction, renameVideoSupportAction,
-  replaceVideoLinkAction, updateVideoAudienceAction, updateVideoSupportAudienceAction,
+  moveVideoAction, moveVideoSupportAction, removeVideoSupportAction, renameVideoAction,
+  renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
+  updateVideoSupportAudienceAction,
   type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
@@ -681,6 +682,9 @@ export function VideoManager({
                     run(() => renameVideoSupportAction({ supportId, titre }))
                   }
                   onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
+                  onMoveSupport={(supportId, direction) =>
+                    run(() => moveVideoSupportAction({ supportId, direction }))
+                  }
                   onSupportAudience={(supportId, differentes, sVoies, sOffers) =>
                     run(() => updateVideoSupportAudienceAction({
                       supportId, differentes, voies: sVoies, offers: sOffers,
@@ -842,6 +846,17 @@ function BatchSeanceCard({
     onUpdate({ supports: seance.supports.filter((s) => s.tempId !== tempId) });
   }
 
+  function moveSupport(tempId: string, direction: 'up' | 'down') {
+    const list = [...seance.supports];
+    const idx = list.findIndex((s) => s.tempId === tempId);
+    if (idx === -1) return;
+    const target = direction === 'up' ? idx - 1 : idx + 1;
+    if (target < 0 || target >= list.length) return;
+    const [moved] = list.splice(idx, 1);
+    list.splice(target, 0, moved);
+    onUpdate({ supports: list });
+  }
+
   return (
     <div className="rounded-xl border border-(--color-border) bg-(--color-surface) shadow-sm">
       {/* En-tête */}
@@ -944,12 +959,34 @@ function BatchSeanceCard({
 
             {seance.supports.length > 0 && (
               <ul className="mb-3 space-y-2">
-                {seance.supports.map((sup) => (
+                {seance.supports.map((sup, supIdx) => (
                   <li
                     key={sup.tempId}
                     className="rounded-lg border border-(--color-border) bg-(--color-surface-soft) p-2"
                   >
                     <div className="flex items-center gap-2">
+                      {seance.supports.length > 1 && (
+                        <div className="flex flex-col">
+                          <button
+                            type="button"
+                            aria-label="Monter"
+                            disabled={disabled || supIdx === 0}
+                            onClick={() => moveSupport(sup.tempId, 'up')}
+                            className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
+                          >
+                            <ChevronUp className="h-3 w-3" />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="Descendre"
+                            disabled={disabled || supIdx === seance.supports.length - 1}
+                            onClick={() => moveSupport(sup.tempId, 'down')}
+                            className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
+                          >
+                            <ChevronDown className="h-3 w-3" />
+                          </button>
+                        </div>
+                      )}
                       <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
                       <input
                         type="text"
@@ -1025,6 +1062,7 @@ function VideoEditPanel({
   onAddSupports,
   onRenameSupport,
   onRemoveSupport,
+  onMoveSupport,
   onSupportAudience,
   onAudience,
   studentPickerProps,
@@ -1036,6 +1074,7 @@ function VideoEditPanel({
   onAddSupports: (files: File[]) => void;
   onRenameSupport: (supportId: string, titre: string) => void;
   onRemoveSupport: (supportId: string) => void;
+  onMoveSupport: (supportId: string, direction: 'up' | 'down') => void;
   onSupportAudience: (supportId: string, differentes: boolean, voies: string[], offers: string[]) => void;
   onAudience: (voies: string[], offers: string[], deniedUserIds: string[], allowedUserIds: string[]) => void;
   studentPickerProps: {
@@ -1152,15 +1191,18 @@ function VideoEditPanel({
 
         {video.supports.length > 0 && (
           <ul className="mb-2 space-y-1.5">
-            {video.supports.map((doc) => (
+            {video.supports.map((doc, idx) => (
               <SupportLigne
                 key={doc.id}
                 doc={doc}
+                index={idx}
+                total={video.supports.length}
                 pending={pending}
                 videoVoies={video.voies}
                 videoOffers={video.offers}
                 onRename={(t) => onRenameSupport(doc.id, t)}
                 onRemove={() => onRemoveSupport(doc.id)}
+                onMove={(dir) => onMoveSupport(doc.id, dir)}
                 onAudience={(differentes, sVoies, sOffers) => onSupportAudience(doc.id, differentes, sVoies, sOffers)}
               />
             ))}
@@ -1187,14 +1229,17 @@ function VideoEditPanel({
 /* ------------------------------------------------------------------ */
 
 function SupportLigne({
-  doc, pending, videoVoies, videoOffers, onRename, onRemove, onAudience,
+  doc, index, total, pending, videoVoies, videoOffers, onRename, onRemove, onMove, onAudience,
 }: {
   doc: VideoSupportDoc;
+  index: number;
+  total: number;
   pending: boolean;
   videoVoies: string[];
   videoOffers: string[];
   onRename: (titre: string) => void;
   onRemove: () => void;
+  onMove: (direction: 'up' | 'down') => void;
   onAudience: (differentes: boolean, voies: string[], offers: string[]) => void;
 }) {
   const [titre, setTitre] = useState(doc.titre);
@@ -1216,6 +1261,28 @@ function SupportLigne({
   return (
     <li className="rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5">
       <div className="flex items-center gap-2">
+        {total > 1 && (
+          <div className="flex flex-col">
+            <button
+              type="button"
+              aria-label="Monter"
+              disabled={pending || index === 0}
+              onClick={() => onMove('up')}
+              className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
+            >
+              <ChevronUp className="h-3 w-3" />
+            </button>
+            <button
+              type="button"
+              aria-label="Descendre"
+              disabled={pending || index === total - 1}
+              onClick={() => onMove('down')}
+              className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
+            >
+              <ChevronDown className="h-3 w-3" />
+            </button>
+          </div>
+        )}
         <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
         <input
           type="text"

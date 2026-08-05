@@ -925,6 +925,61 @@ export async function removeVideoSupportAction(input: {
   return { ok: true };
 }
 
+/** Déplace un support d'un cran vers le haut ou vers le bas. */
+export async function moveVideoSupportAction(input: {
+  supportId: string;
+  direction: 'up' | 'down';
+}): Promise<{ ok: true } | { error: string }> {
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data: doc } = await a
+    .from('video_supports')
+    .select('id, video_id, titre, order_index')
+    .eq('id', input.supportId)
+    .maybeSingle();
+  if (!doc) return { error: 'Support introuvable.' };
+  const support = doc as { id: string; video_id: string; titre: string; order_index: number };
+  const ctx = await guardVideo(support.video_id);
+  if ('error' in ctx) return ctx;
+
+  const { data: rows } = await ctx.a
+    .from('video_supports')
+    .select('id, order_index')
+    .eq('video_id', support.video_id)
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true });
+  const list = (rows ?? []) as { id: string; order_index: number }[];
+  const pos = list.findIndex((s) => s.id === input.supportId);
+  if (pos === -1) return { error: 'Support introuvable dans la liste.' };
+  const target = input.direction === 'up' ? pos - 1 : pos + 1;
+  if (target < 0 || target >= list.length) return { ok: true };
+
+  const reordered = [...list];
+  const [moved] = reordered.splice(pos, 1);
+  reordered.splice(target, 0, moved);
+  for (let i = 0; i < reordered.length; i++) {
+    if (reordered[i].order_index !== i) {
+      await ctx.a.from('video_supports').update({ order_index: i }).eq('id', reordered[i].id);
+    }
+  }
+
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: ctx.video.id,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Ordre du support « ${support.titre} » : position ${pos + 1} → ${target + 1}`,
+    diff: { de: pos + 1, vers: target + 1 },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
 /** Recompacte les index d'une liste (après suppression). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function renumber(a: any, coursId: string, type: VideoType) {
