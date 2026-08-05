@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 const VALID_OFFERS = ['essentiel', 'intensif', 'approfondi'] as const;
 const VALID_KEYS = [
@@ -36,11 +37,13 @@ export async function PUT(req: Request) {
     }
   }
 
+  const admin = createAdminClient();
+
   for (const row of rows) {
     const update: Record<string, boolean | string> = { updated_at: new Date().toISOString() };
     for (const key of VALID_KEYS) update[key] = row[key] as boolean;
 
-    const { error } = await supabase
+    const { error } = await admin
       .from('formula_permissions')
       .update(update as never)
       .eq('offer', row.offer);
