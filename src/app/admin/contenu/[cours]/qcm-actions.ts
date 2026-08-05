@@ -116,7 +116,7 @@ export async function updateSerieVignetteAction(input: {
   const { data: serie } = await admin.from('qcm_series').select('label').eq('id', input.serieId).maybeSingle();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (admin as any).from('qcm_series')
-    .update({ vignette: input.vignette.trim() || null })
+    .update({ vignette: sanitizeFlashcardHtml(input.vignette).trim() || null })
     .eq('id', input.serieId);
   if (error) return { error: error.message };
 

@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
+import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
+import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
@@ -16,7 +18,9 @@ export type TQuestion = {
   id: string;
   enonce: string;
   college: string;
-  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
+  images?: string[] | null;
+  vignette?: string | null;
+  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images?: string[] | null }[];
   /** QROC (voie externe) : saisie libre + révéler + auto-évaluation. */
   format?: 'qcm' | 'qroc';
   reponse_attendue?: string | null;
@@ -149,13 +153,36 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
       </div>
       <Progress value={(index / total) * 100} className="mb-3" />
 
+      {q.vignette && (
+        <details open className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface-soft) shadow-(--shadow-soft)">
+          <summary className="cursor-pointer px-3.5 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-(--color-ink-muted) select-none">
+            Contexte clinique du dossier
+          </summary>
+          <RichTextZoom>
+            <div
+              className="break-words px-3.5 pb-3 text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg"
+              dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
+            />
+          </RichTextZoom>
+        </details>
+      )}
+
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
           {isQroc ? 'QROC' : 'Énoncé'}
         </p>
-        <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
-          <RichText html={q.enonce} />
-        </h2>
+        <RichTextZoom>
+          <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg">
+            <RichText html={q.enonce} />
+          </h2>
+        </RichTextZoom>
+        {(q.images?.length ?? 0) > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {q.images!.map((src) => (
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
+            ))}
+          </div>
+        )}
       </div>
 
       {isQroc ? (

@@ -15,9 +15,9 @@ const TAILLE_VIVIER = 300;
 
 /** Colonnes communes aux deux lectures de questions. */
 const CHAMPS_QUESTION =
-  'id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, '
-  + 'qcm_items(id, lettre, enonce, justification, is_correct), '
-  + 'qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))';
+  'id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, '
+  + 'qcm_items(id, lettre, enonce, justification, is_correct, images), '
+  + 'qcm_series!inner(vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))';
 
 type AttemptRow = {
   question_id: string;
@@ -32,8 +32,9 @@ type QRow = {
   reponse_attendue: string | null;
   correction_generale: string | null;
   commentaire_enseignant: string | null;
-  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
-  qcm_series: { cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
+  images: string[] | null;
+  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
+  qcm_series: { vignette: string | null; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
 
 export default async function TargetedSessionPage({
@@ -162,8 +163,10 @@ export default async function TargetedSessionPage({
     reponse_attendue: q.reponse_attendue,
     correction_generale: q.correction_generale,
     commentaire_enseignant: q.commentaire_enseignant,
+    images: q.images,
+    vignette: q.qcm_series.vignette,
     items: [...(q.qcm_items ?? [])]
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
+      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
 

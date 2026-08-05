@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { UpdateStudentSchema } from '@/lib/schemas/student';
 import { highestOffer, type Offer } from '@/types/domain';
 
@@ -10,6 +11,8 @@ export async function PATCH(req: Request) {
 
   const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
   if (me?.role !== 'admin') return NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 });
+
+  const admin = createAdminClient();
 
   const body = await req.json().catch(() => ({}));
   const parsed = UpdateStudentSchema.safeParse(body);
@@ -29,7 +32,7 @@ export async function PATCH(req: Request) {
   // (type/collèges/offre) et ne doit pas effacer ces informations.
   // paid_voie / paid_specialty sont RECALCULÉS depuis le formulaire (l'admin peut
   // changer la voie / accorder ou retirer Médecine générale), pas préservés.
-  const { data: existing } = await supabase
+  const { data: existing } = await (admin as any)
     .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
   const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
   const isPaidOffer = offer === 'essentiel' || offer === 'intensif' || offer === 'approfondi';
@@ -66,7 +69,7 @@ export async function PATCH(req: Request) {
           ...voieFields,
         };
 
-  const { error } = await supabase
+  const { error } = await (admin as any)
     .from('profiles')
     .update({
       first_name,

@@ -206,13 +206,15 @@ export function QcmQuestionEditor({
               Vignette clinique (contexte partagé — dossier progressif)
             </label>
             {vignetteEnabled && (
-              <Textarea
-                rows={4}
-                value={vignette}
-                onChange={(e) => setVignette(e.target.value)}
-                placeholder="Patient de 62 ans, tabagique, se présente aux urgences pour…"
-                className="mt-2 bg-white"
-              />
+              <div className="mt-2">
+                <FlashcardRichField
+                  coursId={coursId}
+                  value={vignette}
+                  onChange={setVignette}
+                  placeholder="Patient de 62 ans, tabagique, se présente aux urgences pour…"
+                  minHeight={96}
+                />
+              </div>
             )}
           </div>
 

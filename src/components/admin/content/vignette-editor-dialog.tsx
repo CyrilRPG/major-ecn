@@ -4,10 +4,10 @@ import { useEffect, useState, useTransition } from 'react';
 import { Loader2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
+import { FlashcardRichField } from './flashcard-rich-field';
 import { updateSerieVignetteAction } from '@/app/admin/contenu/[cours]/qcm-actions';
 
 export function VignetteEditorDialog({
@@ -49,13 +49,13 @@ export function VignetteEditorDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="vignette-text">Contexte clinique</Label>
-          <Textarea
-            id="vignette-text"
-            rows={8}
+          <Label>Contexte clinique</Label>
+          <FlashcardRichField
+            coursId={coursId}
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={setText}
             placeholder="Mme R., 68 ans, BPCO post-tabagique, consulte aux urgences pour une dyspnée d'aggravation progressive…"
+            minHeight={160}
           />
           {err && <p className="rounded-lg bg-(--color-primary-soft) px-3 py-2 text-xs text-(--color-primary-deep)">{err}</p>}
         </div>
