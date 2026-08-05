@@ -16,9 +16,19 @@ import 'server-only';
  * tous les cours de `col-geriatrie` (récupérés en direct, pour rester valide
  * si de nouveaux items y sont ajoutés) ET la liste ci-dessous.
  *
- * Voir aussi la policy RLS `qcm_series_geriatrie_mg_qroc_only` (bloque les
- * QCM/DP de Médecine générale pour ces élèves — seuls les QROC restent
- * visibles, indépendamment de leur voie).
+ * Voir aussi la policy RLS `qcm_series_geriatrie_mg_block_dp_entrainement_seance`
+ * (bloque les DP, séries entraînement et séances du prof sur ces cours — la
+ * distinction QCM/QROC par voie reste celle appliquée partout ailleurs).
+ *
+ * ⚠️ Piège : `col-medecine-generale` est un collège PARENT sans cours propres —
+ * tous ses cours vivent dans des sous-collèges (`col-mg-cardiologie`,
+ * `col-dermatologie`, …). Le navigateur élève (`getNavigatorTree`) filtre
+ * CHAQUE sous-collège individuellement via `canAccessCollege` : ajouter
+ * uniquement `col-medecine-generale` aux `colleges` du scope ne fait apparaître
+ * AUCUN sous-collège. Il faut donc aussi lister explicitement les sous-collèges
+ * qui portent les cours bonus — dérivés ici dynamiquement (matiere_id des
+ * cours de `GERIATRIE_MG_BONUS_COURS_IDS`), pour rester valides si la liste
+ * de cours change.
  */
 
 export const GERIATRIE_MG_BONUS_COURS_IDS: string[] = [
@@ -127,18 +137,21 @@ export async function applyGeriatrieMgBonus(
     return { colleges, cours: cours && cours.length > 0 ? cours : undefined };
   }
 
-  const { data: geriatrieCours } = await admin
-    .from('cours')
-    .select('id')
-    .eq('matiere_id', GERIATRIE_COLLEGE_ID);
+  const [{ data: geriatrieCours }, { data: bonusCours }] = await Promise.all([
+    admin.from('cours').select('id').eq('matiere_id', GERIATRIE_COLLEGE_ID),
+    admin.from('cours').select('matiere_id').in('id', GERIATRIE_MG_BONUS_COURS_IDS),
+  ]);
   const geriatrieCoursIds = ((geriatrieCours ?? []) as { id: string }[]).map((c) => c.id);
+  const bonusSubCollegeIds = Array.from(new Set(
+    ((bonusCours ?? []) as { matiere_id: string }[]).map((c) => c.matiere_id),
+  ));
 
   const mergedCours = Array.from(new Set([
     ...(cours ?? []),
     ...geriatrieCoursIds,
     ...GERIATRIE_MG_BONUS_COURS_IDS,
   ]));
-  const mergedColleges = colleges.includes(MG_COLLEGE_ID) ? colleges : [...colleges, MG_COLLEGE_ID];
+  const mergedColleges = Array.from(new Set([...colleges, MG_COLLEGE_ID, ...bonusSubCollegeIds]));
 
   return { colleges: mergedColleges, cours: mergedCours };
 }
