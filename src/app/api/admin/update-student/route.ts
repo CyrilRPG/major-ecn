@@ -52,12 +52,27 @@ export async function PATCH(req: Request) {
     if (!meta.paid_at) meta.paid_at = new Date().toISOString();
   }
 
-  // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts) :
-  // no-op si le collège Gériatrie n'est pas sélectionné.
-  const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
+  // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts).
+  //
+  // ⚠️ On ne l'applique QUE lorsque Gériatrie vient d'être ajouté à cet élève
+  // (transition « pas de gériatrie » → « gériatrie »). En édition d'un élève
+  // qui avait déjà Gériatrie, on RESPECTE la liste envoyée par l'admin :
+  // sinon décocher col-medecine-generale (ou un sous-collège MG bonus) serait
+  // immédiatement annulé côté serveur, et le checkbox se re-cocherait à la
+  // ré-ouverture du dialog. L'admin doit pouvoir retirer une permission.
+  const GERIATRIE_ID = 'col-geriatrie';
+  const prevColleges = Array.isArray((prev as { colleges?: unknown }).colleges)
+    ? ((prev as { colleges: string[] }).colleges)
+    : [];
+  const nextColleges = colleges ?? [];
+  const isFreshGeriatrie =
     permission_type === 'college'
-      ? await applyGeriatrieMgBonus(admin, colleges ?? [], cours)
-      : { colleges: colleges ?? [], cours: cours ?? undefined };
+      && nextColleges.includes(GERIATRIE_ID)
+      && !prevColleges.includes(GERIATRIE_ID);
+  const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
+    isFreshGeriatrie
+      ? await applyGeriatrieMgBonus(admin, nextColleges, cours)
+      : { colleges: nextColleges, cours: cours && cours.length > 0 ? cours : undefined };
 
   const mgGranted = permission_type === 'all' || collegesAvecBonus.includes('col-medecine-generale');
   const voieFields = voie ? { paid_voie: voie } : {};
