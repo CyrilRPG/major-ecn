@@ -4,7 +4,13 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
+import {
+  ANNALES_EVC_COLLEGE_ID,
+  canAccessAnnalesEvc,
+  canAccessCollege,
+  canAccessCours,
+  parseScope,
+} from '@/lib/auth/permissions';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -150,16 +156,6 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   const latestEval = evalData?.[0] ?? null;
   const evalStatus = latestEval?.status as string | null;
 
-  // Sous-onglet « Annales » en tête de Médecine générale.
-  const annaleRow: IndexRow = {
-    id: '__annales__',
-    href: `/matieres/${matiere}/annales`,
-    title: 'Annales EVC',
-    subtitle: 'Tous les sujets officiels, accessibles par année.',
-    leading: <RowIcon Icon={History} color="#6B1A2A" />,
-    badge: 'Officiel',
-  };
-
   // Evaluation / Consolidation / Renforcement cards based on status
   const evalRow: IndexRow = {
     id: '__evaluation__',
@@ -208,7 +204,21 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     });
   }
 
-  const rows = [annaleRow, ...actionRows, ...coursRows];
+  // Annales EVC : uniquement sous Médecine générale (et pour les élèves qui y ont accès).
+  const rows: IndexRow[] = [
+    ...(matiere === ANNALES_EVC_COLLEGE_ID && canAccessAnnalesEvc(scope)
+      ? [{
+          id: '__annales__',
+          href: `/matieres/${matiere}/annales`,
+          title: 'Annales EVC',
+          subtitle: 'Tous les sujets officiels, accessibles par année.',
+          leading: <RowIcon Icon={History} color="#6B1A2A" />,
+          badge: 'Officiel',
+        } satisfies IndexRow]
+      : []),
+    ...actionRows,
+    ...coursRows,
+  ];
 
   // ── Date d'épreuve de cette spécialité ──────────────────────────────────
   // On réutilise les annonces « countdown » ciblées sur ce collège (target_scope

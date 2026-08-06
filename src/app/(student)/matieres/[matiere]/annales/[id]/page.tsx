@@ -4,7 +4,11 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { AnnaleAssistantPanel } from '@/components/student/annale-assistant-panel';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import {
+  ANNALES_EVC_COLLEGE_ID,
+  canAccessAnnalesEvc,
+  parseScope,
+} from '@/lib/auth/permissions';
 
 export const metadata = { title: 'Annale EVC' };
 
@@ -17,6 +21,12 @@ export default async function AnnaleDetailPage({
   const { profile } = await requireUser();
   const supabase = await createClient();
 
+  const scope = parseScope(profile.permission_scope);
+  if (!canAccessAnnalesEvc(scope)) redirect('/facultes');
+  if (matiere !== ANNALES_EVC_COLLEGE_ID) {
+    redirect(`/matieres/${ANNALES_EVC_COLLEGE_ID}/annales/${id}`);
+  }
+
   const [{ data: m }, { data: row }] = await Promise.all([
     supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle(),
     supabase
@@ -26,7 +36,6 @@ export default async function AnnaleDetailPage({
       .maybeSingle(),
   ]);
   if (!m) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), m.id)) redirect('/facultes');
   if (!row) notFound();
 
   const sujetUrl = `/api/medgen-annales/${row.id}/pdf?type=sujet`;

@@ -362,9 +362,9 @@ export function Navigator({
 
             {o && (
               <>
-                {/* Annales EVC : entrée transversale, en tête du sous-menu
-                    du collège. En Découverte → cadenas + popup. */}
-                {isDecouverte ? (
+                {/* Annales EVC : réservées à la Médecine générale (pour le moment).
+                    En Découverte sous MG → cadenas + popup. */}
+                {col.id === 'col-medecine-generale' && (isDecouverte ? (
                   <button
                     type="button"
                     onClick={() => setLockedOpen(true)}
@@ -407,7 +407,7 @@ export function Navigator({
                       Officiel
                     </span>
                   </Link>
-                )}
+                ))}
 
                 {col.cours.map((c) => (
                   <Link

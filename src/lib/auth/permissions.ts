@@ -209,3 +209,21 @@ export function describeScope(scope: PermissionScope): string {
   if (scope.colleges.length === 0) return 'Aucun collège';
   return `${scope.colleges.length} collège${scope.colleges.length > 1 ? 's' : ''}`;
 }
+
+/** Collège parent des Annales EVC (PDFs `medgen_annales`). */
+export const ANNALES_EVC_COLLEGE_ID = 'col-medecine-generale';
+
+/**
+ * Accès aux Annales EVC (sujets officiels MG).
+ *
+ * Temporairement réservé à la Médecine générale : parent
+ * `col-medecine-generale` ou un sous-collège `col-mg-*`, ou scope `all`
+ * (admin / accès plateforme complète). Les autres spécialités (cardio
+ * college, gériatrie hors bonus MG, etc.) sont bloquées.
+ */
+export function canAccessAnnalesEvc(scope: PermissionScope): boolean {
+  if (scope.type === 'all') return true;
+  return scope.colleges.some(
+    (c) => c === ANNALES_EVC_COLLEGE_ID || c.startsWith('col-mg-'),
+  );
+}

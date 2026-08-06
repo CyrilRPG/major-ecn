@@ -4,6 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { requireUser } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { canAccessAnnalesEvc, parseScope } from '@/lib/auth/permissions';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,19 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
   const url = new URL(req.url);
   const kind = (url.searchParams.get('type') ?? 'sujet') as 'sujet' | 'corrige';
 
-  const { user } = await requireUser();
+  const { user, profile: authProfile } = await requireUser();
+  // Réservé à la Médecine générale (même règle que les pages /annales).
+  // Sans ce check, un élève d'une autre spécialité pouvait ouvrir le PDF
+  // directement via l'URL de l'API.
+  if (
+    authProfile.role === 'student' &&
+    !canAccessAnnalesEvc(parseScope(authProfile.permission_scope))
+  ) {
+    return NextResponse.json(
+      { error: 'Annales EVC réservées à la Médecine générale.' },
+      { status: 403 },
+    );
+  }
   const admin = createAdminClient();
 
   const [{ data: row }, { data: profile }] = await Promise.all([

@@ -1,8 +1,12 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Award, BookOpen, Calendar, ClipboardCheck, FileText, Lock, Sparkles, Trophy } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import {
+  ANNALES_EVC_COLLEGE_ID,
+  canAccessAnnalesEvc,
+  parseScope,
+} from '@/lib/auth/permissions';
 import { AnnaleActionButton } from '@/components/espace-decouverte/annale-action-button';
 
 export const metadata = { title: 'Annales EVC' };
@@ -14,32 +18,36 @@ export default async function AnnalesIndexPage({ params }: { params: Promise<{ m
   const { profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle();
-  if (!m) notFound();
-  // Mode "Découverte" : on autorise la consultation de la liste des annales
-  // mais TOUS les boutons "Ouvrir" sont verrouillés (cadenas + popup tarifs).
+  // Annales EVC = contenu Médecine générale uniquement (pour le moment).
   const scope = parseScope(profile.permission_scope);
-  const hasFullAccess = canAccessCollege(scope, m.id);
-  const isDecouverte =
-    !hasFullAccess &&
-    scope.type === 'college' &&
-    scope.colleges.includes('col-decouverte');
-  if (!hasFullAccess && !isDecouverte) {
-    // Pas l'offre Découverte non plus → vrai blocage
+  if (!canAccessAnnalesEvc(scope)) {
     return (
       <div className="mx-auto w-full max-w-3xl px-5 py-12 text-center">
         <div className="rounded-3xl border bg-white p-10 shadow-sm" style={{ borderColor: '#E5E9F0' }}>
           <Lock className="mx-auto h-10 w-10" style={{ color: '#C0112E' }} />
           <h1 className="mt-4 text-2xl font-black" style={{ color: '#0F1F4D' }}>
-            Cette préparation est verrouillée
+            Annales EVC réservées à la Médecine générale
           </h1>
           <p className="mt-3 text-sm" style={{ color: '#52607A' }}>
-            Choisissez une formule pour accéder aux annales de cette spécialité.
+            Ces annales officielles ne sont disponibles pour le moment que pour
+            les élèves inscrits en Médecine générale.
           </p>
         </div>
       </div>
     );
   }
+  if (matiere !== ANNALES_EVC_COLLEGE_ID) {
+    redirect(`/matieres/${ANNALES_EVC_COLLEGE_ID}/annales`);
+  }
+
+  const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', matiere).maybeSingle();
+  if (!m) notFound();
+
+  // Mode "Découverte" : liste visible mais boutons "Ouvrir" verrouillés.
+  const isDecouverte =
+    scope.offer === 'decouverte' &&
+    scope.type === 'college' &&
+    scope.colleges.includes('col-decouverte');
   const locked = isDecouverte;
 
   const { data: rowsRaw } = await supabase
