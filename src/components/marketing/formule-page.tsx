@@ -377,9 +377,25 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
                 </p>
                 <p className="mt-2 text-sm font-bold" style={{ color: NAVY }}>{p.desc}</p>
                 <p className="mt-1 text-xs" style={{ color: INK_SOFT }}>{p.sub}</p>
-                <Link href={p.v === variant ? '#' : `/formules/${p.v === 'approfondi' ? 'programme-approfondi' : p.v}`}
+                <Link
+                  href={
+                    p.v === variant
+                      ? '#choisir-formule'
+                      : `/formules/${p.v === 'approfondi' ? 'programme-approfondi' : p.v}`
+                  }
                   className="mt-4 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white"
-                  style={{ background: p.color }}>
+                  style={{ background: p.color }}
+                  onClick={
+                    p.v === variant
+                      ? (e) => {
+                          e.preventDefault();
+                          document
+                            .getElementById('choisir-formule')
+                            ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      : undefined
+                  }
+                >
                   {p.v === variant ? c.cta : p.v === 'approfondi' ? 'Découvrir le programme' : `Découvrir l'${p.name.split(' ')[1]}`}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
