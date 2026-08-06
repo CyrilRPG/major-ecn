@@ -124,6 +124,24 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     ],
   },
   {
+    key: 'pediatrie',
+    name: 'Pédiatrie',
+    tiers: [
+      {
+        id: 'ped', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_PED',
+        targetCollege: 'col-pediatrie',
+      },
+      {
+        id: 'ped-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_PED_PLUS',
+        targetCollege: 'col-pediatrie',
+      },
+    ],
+  },
+  {
     key: 'gynecologie-obstetrique',
     name: 'Gynécologie obstétrique',
     tiers: [
