@@ -145,11 +145,17 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Session unique : compare le cookie device au cache (mecn_device_ok).
+  // IMPORTANT : sans cookie `mecn_device` on FAIL-OPEN (on ne kick PAS).
+  // Auparavant `device === null` vs `active_session_id` était traité comme
+  // « autre appareil » → redirect /login en boucle dès que le cookie n'était
+  // pas posé (fetch register-device raté, navigateur strict, WebView…).
+  // L'admin en impersonation passe aussi (cookie impersonator_id) — d'où le
+  // symptôme « ça marche en impersonation, pas chez l'élève ».
   if (user && isProtectedRoute && !request.cookies.get('impersonator_id')) {
     const device = request.cookies.get('mecn_device')?.value ?? null;
     const cachedOk = request.cookies.get('mecn_device_ok')?.value;
 
-    if (!(cachedOk && cachedOk === device) && device) {
+    if (device && !(cachedOk && cachedOk === device)) {
       type ProfRow = { active_session_id?: string | null } | null;
       const prof = await withBudget(
         (async () => {
@@ -171,6 +177,7 @@ export async function updateSession(request: NextRequest) {
 
       if (prof) {
         const active = prof.active_session_id ?? null;
+        // Kick seulement si les DEUX côtés sont connus et divergent.
         if (active && device !== active) {
           const url = request.nextUrl.clone();
           url.pathname = '/login';

@@ -81,8 +81,15 @@ export function LoginForm() {
       }
     }
     // Session unique : enregistre cet appareil comme seul autorisé (déconnecte
-    // les autres). Best-effort — ne bloque jamais la connexion.
-    try { await fetch('/api/auth/register-device', { method: 'POST' }); } catch { /* ignore */ }
+    // les autres). On attend la réponse pour que le cookie `mecn_device` soit
+    // posé AVANT la navigation — sinon le middleware peut voir une session
+    // sans cookie et (selon les versions) éjecter l'élève.
+    try {
+      await fetch('/api/auth/register-device', {
+        method: 'POST',
+        credentials: 'same-origin',
+      });
+    } catch { /* best-effort */ }
 
     router.push(next);
     router.refresh();
