@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { extractAccessTokenFromCookies } from '@/lib/auth/access-token-cookie';
+import { extractSessionFromCookies } from '@/lib/auth/access-token-cookie';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import type { Database } from '@/types/database';
 
@@ -12,6 +12,8 @@ import type { Database } from '@/types/database';
  * et on fail-open.
  */
 const MIDDLEWARE_BUDGET_MS = 2_000;
+/** Refresh session : un peu plus large, mais toujours loin du plafond 25s. */
+const REFRESH_BUDGET_MS = 3_000;
 
 function withBudget<T>(promise: Promise<T>, fallback: T, ms = MIDDLEWARE_BUDGET_MS): Promise<T> {
   return new Promise<T>((resolve) => {
@@ -52,17 +54,14 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/matieres');
 
   // Pages PUBLIQUES (vitrine, blog, guide, APIs…) : aucun appel Supabase.
-  // Auparavant `auth.getUser()` / refresh était exécuté à CHAQUE requête et
-  // saturait Auth+Postgres → 504 MIDDLEWARE_INVOCATION_TIMEOUT sur tout le site.
   if (!isProtectedRoute && !isAuthRoute) {
     return NextResponse.next({ request });
   }
 
-  // Lecture locale du JWT — JAMAIS de refresh réseau dans le middleware.
-  const accessToken = extractAccessTokenFromCookies(request.cookies.getAll());
+  const cookieSession = extractSessionFromCookies(request.cookies.getAll());
 
-  // Pas de jeton : chemin rapide, zéro I/O.
-  if (!accessToken) {
+  // Pas de jeton du tout : chemin rapide, zéro I/O.
+  if (!cookieSession) {
     if (isProtectedRoute) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
@@ -73,6 +72,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   let response = NextResponse.next({ request });
+  let accessToken = cookieSession.accessToken;
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -83,16 +83,14 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(toSet) {
-          // On accepte les écritures de cookies (claims locaux) mais on ne
-          // déclenche volontairement AUCUN refresh ici.
           toSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
           toSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
       auth: {
-        // Ceinture + bretelles : même si un code path touchait la session,
-        // le client du middleware ne doit jamais appeler /token en rafale.
+        // Pas d'auto-refresh implicite : on le déclenche nous-mêmes, budgété,
+        // uniquement quand le JWT est expiré (voir plus bas).
         autoRefreshToken: false,
         persistSession: false,
         detectSessionInUrl: false,
@@ -100,28 +98,53 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Vérification LOCALE du JWT (signature JWKS). En passant le jeton
-  // explicitement, `getClaims(jwt)` ne passe PAS par `getSession()` et donc
-  // ne tente pas de renouveler un refresh_token — c'était LA source des
-  // 504 middleware + « Failed to fetch » sur /login quand Auth renvoyait 522.
-  //
-  // Budget 2s : si le JWKS est injoignable, on fail-open plutôt que de tuer
-  // la requête à 25s et d'aggraver la saturation.
+  // JWT expiré mais refresh_token présent : UNE tentative de renouvellement
+  // budgétée. Sans ça, getClaims(jwt) échoue → redirect /login alors que la
+  // session est encore valide — symptôme élève : « This page couldn't load »
+  // sur toutes les fiches (WebView / navigation cassée après redirect).
+  if (cookieSession.accessExpired && cookieSession.refreshToken) {
+    const refreshed = await withBudget(
+      (async () => {
+        try {
+          const { data, error } = await supabase.auth.refreshSession({
+            refresh_token: cookieSession.refreshToken!,
+          });
+          if (error || !data.session?.access_token) return null;
+          return data.session.access_token;
+        } catch {
+          return null;
+        }
+      })(),
+      null,
+      REFRESH_BUDGET_MS,
+    );
+    if (refreshed) {
+      accessToken = refreshed;
+    } else if (isProtectedRoute) {
+      // Refresh raté / timeout : FAIL-OPEN — on laisse passer la requête.
+      // Le Server Component (createClient + getSession) retentera le refresh.
+      // Un redirect /login ici cassait l'accès aux fiches pour des sessions
+      // encore valides (cas Sabrina KACHETEL / MG Approfondi).
+      return response;
+    }
+  }
+
+  // Vérification LOCALE du JWT (signature JWKS), budgétée.
   const user = await withBudget(getVerifiedUser(supabase, accessToken), null);
 
   if (!user && isProtectedRoute) {
-    // Jeton illisible / expiré / timeout : on envoie vers /login SANS purger
-    // les cookies (une purge concurrente a déjà cassé des sessions saines).
+    // Jeton vraiment inutilisable (pas juste expiré avec refresh en cours).
+    // S'il reste un refresh_token, fail-open plutôt que d'éjecter l'élève.
+    if (cookieSession.refreshToken) {
+      return response;
+    }
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     url.searchParams.set('next', path);
     return NextResponse.redirect(url);
   }
 
-  // Session unique : compare le cookie device au cache signé (mecn_device_ok)
-  // pour éviter un SELECT profiles à chaque requête. La vérif DB ne se fait
-  // que quand le cache expire — et elle est elle-même budgétée pour ne jamais
-  // faire tomber le middleware si Postgres est saturé.
+  // Session unique : compare le cookie device au cache (mecn_device_ok).
   if (user && isProtectedRoute && !request.cookies.get('impersonator_id')) {
     const device = request.cookies.get('mecn_device')?.value ?? null;
     const cachedOk = request.cookies.get('mecn_device_ok')?.value;
@@ -162,8 +185,6 @@ export async function updateSession(request: NextRequest) {
           return res;
         }
       }
-      // Cache hit (ou fail-open DB) : 30 min — on évite de marteler profiles
-      // sous charge. Le register-device au login reste la source de vérité.
       response.cookies.set('mecn_device_ok', device, {
         path: '/',
         httpOnly: true,

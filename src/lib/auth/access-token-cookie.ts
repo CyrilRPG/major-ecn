@@ -1,5 +1,5 @@
 /**
- * Extraction locale de l'access_token depuis les cookies Supabase SSR.
+ * Extraction locale de la session Supabase SSR depuis les cookies.
  *
  * Ne déclenche AUCUN appel réseau — contrairement à `auth.getSession()`,
  * qui renouvelle le refresh_token dès que le JWT est proche de l'expiration
@@ -8,7 +8,26 @@
 
 type CookieLike = { name: string; value: string };
 
-function parseSessionJson(raw: string): string | null {
+export type CookieSession = {
+  accessToken: string;
+  refreshToken: string | null;
+  /** `true` si `exp` du JWT est dépassé (ou illisible). */
+  accessExpired: boolean;
+};
+
+function decodeJwtExp(token: string): number | null {
+  try {
+    const part = token.split('.')[1];
+    if (!part) return null;
+    const json = atob(part.replace(/-/g, '+').replace(/_/g, '/'));
+    const payload = JSON.parse(json) as { exp?: unknown };
+    return typeof payload.exp === 'number' ? payload.exp : null;
+  } catch {
+    return null;
+  }
+}
+
+function parseSessionObject(raw: string): CookieSession | null {
   const candidates = [raw];
   if (raw.startsWith('base64-')) candidates.push(raw.slice('base64-'.length));
 
@@ -22,15 +41,19 @@ function parseSessionJson(raw: string): string | null {
           /* pas du base64 */
         }
       }
-      const parsed = JSON.parse(text) as { access_token?: unknown } | unknown[];
-      const session = Array.isArray(parsed) ? parsed[0] : parsed;
-      const token =
-        session &&
-        typeof session === 'object' &&
-        typeof (session as { access_token?: unknown }).access_token === 'string'
-          ? (session as { access_token: string }).access_token
-          : null;
-      if (token && token.split('.').length === 3) return token;
+      const parsed = JSON.parse(text) as Record<string, unknown> | unknown[];
+      const session = (Array.isArray(parsed) ? parsed[0] : parsed) as Record<string, unknown> | null;
+      if (!session || typeof session !== 'object') continue;
+      const accessToken =
+        typeof session.access_token === 'string' ? session.access_token : null;
+      if (!accessToken || accessToken.split('.').length !== 3) continue;
+      const refreshToken =
+        typeof session.refresh_token === 'string' ? session.refresh_token : null;
+      const exp = decodeJwtExp(accessToken);
+      // Marge 30 s : on considère « bientôt expiré » comme expiré pour
+      // déclencher un refresh avant que getClaims ne le refuse.
+      const accessExpired = exp === null || exp < Math.floor(Date.now() / 1000) + 30;
+      return { accessToken, refreshToken, accessExpired };
     } catch {
       /* cookie illisible */
     }
@@ -38,8 +61,7 @@ function parseSessionJson(raw: string): string | null {
   return null;
 }
 
-/** Lit l'access_token dans une liste de cookies (middleware Edge ou `cookies()`). */
-export function extractAccessTokenFromCookies(cookies: CookieLike[]): string | null {
+function readAuthCookieRaw(cookies: CookieLike[]): string | null {
   const byName = new Map(cookies.map((c) => [c.name, c.value]));
 
   const bases = new Set<string>();
@@ -59,9 +81,19 @@ export function extractAccessTokenFromCookies(cookies: CookieLike[]): string | n
       }
       raw = parts.join('');
     }
-    if (!raw) continue;
-    const token = parseSessionJson(raw);
-    if (token) return token;
+    if (raw) return raw;
   }
   return null;
+}
+
+/** Lit access + refresh token dans une liste de cookies (Edge ou `cookies()`). */
+export function extractSessionFromCookies(cookies: CookieLike[]): CookieSession | null {
+  const raw = readAuthCookieRaw(cookies);
+  if (!raw) return null;
+  return parseSessionObject(raw);
+}
+
+/** Lit l'access_token seul (compat. API routes / bearer). */
+export function extractAccessTokenFromCookies(cookies: CookieLike[]): string | null {
+  return extractSessionFromCookies(cookies)?.accessToken ?? null;
 }
