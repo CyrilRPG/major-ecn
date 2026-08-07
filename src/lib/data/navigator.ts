@@ -151,7 +151,9 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     }
   }
 
-  return colleges
+  const isGeriatrie = scope.type === 'college' && scope.colleges.includes('col-geriatrie');
+
+  let tree = colleges
     .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
     .map((m) => {
@@ -181,4 +183,36 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
       };
     })
     .filter((m) => m.cours.length > 0 || (m.children && m.children.length > 0));
+
+  // Élèves gériatrie : masquer « Médecine Générale » et rattacher ses
+  // sous-collèges (bonus MG) sous le collège Gériatrie. Les cours directs
+  // de Gériatrie deviennent un sous-collège « Gériatrie » affiché en premier.
+  if (isGeriatrie) {
+    const gerIdx = tree.findIndex((c) => c.id === 'col-geriatrie');
+    const mgIdx = tree.findIndex((c) => c.id === 'col-medecine-generale');
+    if (gerIdx !== -1 && mgIdx !== -1) {
+      const ger = tree[gerIdx];
+      const mg = tree[mgIdx];
+
+      const gerSub: NavCollege = {
+        id: 'col-geriatrie-main',
+        nom: 'Gériatrie',
+        iconKey: ger.iconKey,
+        colorHex: ger.colorHex,
+        cours: ger.cours,
+      };
+
+      const mgChildren = (mg.children ?? []).map((ch) => ({ ...ch }));
+
+      ger.cours = [];
+      ger.children = [
+        ...(gerSub.cours.length > 0 ? [gerSub] : []),
+        ...mgChildren,
+      ];
+
+      tree = tree.filter((c) => c.id !== 'col-medecine-generale');
+    }
+  }
+
+  return tree;
 });

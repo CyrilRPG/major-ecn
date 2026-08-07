@@ -29,6 +29,16 @@ export type Announcement = {
 // pas visible par un élève essentiel/découverte).
 const OFFER_RANK: Record<string, number> = { decouverte: 0, essentiel: 1, intensif: 2, approfondi: 3 };
 
+/** Un élève gériatrie ne doit voir que les annonces ciblant col-geriatrie,
+ *  pas celles ciblant les collèges MG ajoutés par le bonus. */
+function effectiveColleges(scope: Scope): string[] {
+  if (scope.type !== 'college') return [];
+  if (!scope.colleges.includes('col-geriatrie')) return scope.colleges;
+  return scope.colleges.filter(
+    (c) => c !== 'col-medecine-generale' && !c.startsWith('col-mg-'),
+  );
+}
+
 /** Une annonce est-elle visible pour le périmètre (offre / collèges) de l'élève ? */
 function announcementVisibleFor(a: Announcement, scope: Scope): boolean {
   if (a.min_offer) {
@@ -48,7 +58,7 @@ function announcementVisibleFor(a: Announcement, scope: Scope): boolean {
     const ids = a.target_colleges ?? [];
     if (ids.length === 0) return true; // aucun collège coché → tout le monde
     if (scope.type === 'all') return true; // accès intégral → voit tout
-    return ids.some((cid) => scope.colleges.includes(cid));
+    return ids.some((cid) => effectiveColleges(scope).includes(cid));
   }
   return true; // 'all'
 }
@@ -97,25 +107,147 @@ function fmtDate(iso: string): string {
   }
 }
 
+/* ------------ Generic sections → Announcement objects ------------ */
+type GenericRow = { section_key: string; college_id: string; data: Record<string, unknown> };
+type CollegeInfo = { id: string; nom: string };
+
+function genericToAnnouncements(
+  rows: GenericRow[],
+  collegeMap: Map<string, string>,
+): Announcement[] {
+  const result: Announcement[] = [];
+  for (const r of rows) {
+    const collegeName = collegeMap.get(r.college_id) ?? r.college_id;
+    switch (r.section_key) {
+      case 'countdown': {
+        const d = r.data as { target_date?: string };
+        if (!d.target_date) break;
+        result.push({
+          id: `gen-countdown-${r.college_id}`,
+          kind: 'countdown',
+          title: collegeName,
+          badge_label: null,
+          badge_tone: 'red',
+          icon_key: 'calendar_check',
+          data: {
+            target_date: d.target_date,
+            suffix_top: 'Il vous reste',
+            suffix_bottom: "avant l'épreuve écrite",
+            subtitle: 'EVC — Session 2026',
+          },
+          order_index: -30,
+          visible: true,
+          min_offer: null,
+          target_scope: 'college',
+          target_colleges: [r.college_id],
+          voies: null,
+        });
+        break;
+      }
+      case 'inscription': {
+        const d = r.data as { body?: string };
+        if (!d.body) break;
+        result.push({
+          id: `gen-inscription-${r.college_id}`,
+          kind: 'info',
+          title: "Période d'inscription",
+          badge_label: null,
+          badge_tone: 'blue',
+          icon_key: 'calendar_days',
+          data: { body: d.body, subtitle: collegeName },
+          order_index: -20,
+          visible: true,
+          min_offer: null,
+          target_scope: 'college',
+          target_colleges: [r.college_id],
+          voies: null,
+        });
+        break;
+      }
+      case 'postes': {
+        const d = r.data as { externe?: number; interne?: number };
+        if (!d.externe && !d.interne) break;
+        const subs: { label: string; value: string }[] = [];
+        if (d.externe) subs.push({ label: 'Voie externe', value: String(d.externe) });
+        if (d.interne) subs.push({ label: 'Voie interne', value: String(d.interne) });
+        result.push({
+          id: `gen-postes-${r.college_id}`,
+          kind: 'stat',
+          title: 'Nombre de postes',
+          badge_label: null,
+          badge_tone: 'red',
+          icon_key: 'chart',
+          data: { sub_stats: subs, subtitle: collegeName },
+          order_index: -10,
+          visible: true,
+          min_offer: null,
+          target_scope: 'college',
+          target_colleges: [r.college_id],
+          voies: null,
+        });
+        break;
+      }
+      case 'dates_cles': {
+        const d = r.data as { body?: string };
+        if (!d.body) break;
+        result.push({
+          id: `gen-dates-${r.college_id}`,
+          kind: 'text',
+          title: 'Dates clés',
+          badge_label: null,
+          badge_tone: 'orange',
+          icon_key: 'calendar',
+          data: { body: d.body, subtitle: collegeName },
+          order_index: -5,
+          visible: true,
+          min_offer: null,
+          target_scope: 'college',
+          target_colleges: [r.college_id],
+          voies: null,
+        });
+        break;
+      }
+    }
+  }
+  return result;
+}
+
 /* ------------ Server entry ------------ */
 export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('homepage_announcements')
-    .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible, min_offer, target_scope, target_colleges, voies')
-    .eq('visible', true)
-    .order('order_index', { ascending: true });
+  const [{ data }, { data: genericRaw }, { data: collegesRaw }] = await Promise.all([
+    supabase
+      .from('homepage_announcements')
+      .select('id, kind, title, badge_label, badge_tone, icon_key, data, order_index, visible, min_offer, target_scope, target_colleges, voies')
+      .eq('visible', true)
+      .order('order_index', { ascending: true }),
+    (supabase as any)
+      .from('homepage_generic_data')
+      .select('section_key, college_id, data'),
+    supabase.from('matieres').select('id, nom'),
+  ]);
 
-  const allItems = ((data ?? []) as unknown as Announcement[]) ?? [];
+  const collegeMap = new Map(
+    ((collegesRaw ?? []) as CollegeInfo[]).map((c) => [c.id, c.nom]),
+  );
+  const genericAnnouncements = genericToAnnouncements(
+    (genericRaw ?? []) as GenericRow[],
+    collegeMap,
+  );
+
+  const allItems = [
+    ...genericAnnouncements,
+    ...((data ?? []) as unknown as Announcement[]),
+  ];
 
   // La carte « Médecine Générale — EVC 2026 » est écrite en dur et ne concerne
-  // QUE la médecine générale (35 / 89 postes). Elle était affichée à tout le
-  // monde : un élève de psychiatrie voyait donc les postes de MG, et l'annonce
-  // « Nombre de postes » créée pour sa spécialité était en plus masquée par le
-  // filtre anti-doublon ci-dessous — d'où l'impression que le badge ne changeait
-  // jamais. On ne l'affiche plus qu'aux élèves concernés par la MG.
-  const showMgCard = scope.type === 'all'
-    || scope.colleges.some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-'));
+  // QUE la médecine générale (35 / 89 postes). Les élèves gériatrie ont
+  // col-medecine-generale dans leur scope (bonus MG) mais ne doivent PAS voir
+  // cette carte — elle n'est pertinente que pour les vrais inscrits en MG.
+  const isGeriatrie = scope.type === 'college' && scope.colleges.includes('col-geriatrie');
+  const showMgCard = !isGeriatrie
+    && (scope.type === 'all'
+      || scope.colleges.some((c) => c === 'col-medecine-generale' || c.startsWith('col-mg-')));
 
   // Anti-doublon : la carte statique ne fait doublon qu'avec l'annonce
   // « Nombre de postes » DE LA MÉDECINE GÉNÉRALE. Une annonce de postes ciblée
@@ -129,7 +261,8 @@ export async function AnnouncementsWidget({ scope }: { scope: Scope }) {
 
   const items = allItems
     .filter((it) => !showMgCard || !faitDoublonAvecCarteMg(it))
-    .filter((it) => announcementVisibleFor(it, scope));
+    .filter((it) => announcementVisibleFor(it, scope))
+    .sort((a, b) => a.order_index - b.order_index);
 
   return (
     <aside className="space-y-3" aria-label="Annonces et informations EVC">

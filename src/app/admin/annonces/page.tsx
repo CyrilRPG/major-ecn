@@ -3,6 +3,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AnnouncementForm } from './announcement-form';
 import { ToggleVisibilityForm, MoveBlockForm } from './client-actions';
+import { GenericSections } from './generic-sections';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +48,11 @@ export default async function AdminAnnoncesPage() {
           ou supprime à volonté.
         </p>
       </header>
+
+      {/* Sections génériques : un input par collège */}
+      <GenericSections colleges={colleges} />
+
+      <div className="my-8 border-t border-(--color-border)" />
 
       {/* Liste des blocs existants */}
       <section className="space-y-3">
