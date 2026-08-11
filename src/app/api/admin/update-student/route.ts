@@ -54,23 +54,16 @@ export async function PATCH(req: Request) {
 
   // Bonus « Gériatrie → Médecine générale » (cf. lib/auth/geriatrie-mg-bonus.ts).
   //
-  // ⚠️ On ne l'applique QUE lorsque Gériatrie vient d'être ajouté à cet élève
-  // (transition « pas de gériatrie » → « gériatrie »). En édition d'un élève
-  // qui avait déjà Gériatrie, on RESPECTE la liste envoyée par l'admin :
-  // sinon décocher col-medecine-generale (ou un sous-collège MG bonus) serait
-  // immédiatement annulé côté serveur, et le checkbox se re-cocherait à la
-  // ré-ouverture du dialog. L'admin doit pouvoir retirer une permission.
-  const GERIATRIE_ID = 'col-geriatrie';
-  const prevColleges = Array.isArray((prev as { colleges?: unknown }).colleges)
-    ? ((prev as { colleges: string[] }).colleges)
-    : [];
+  // Le bonus est une propriété INTRINSÈQUE de l'inscription en Gériatrie, pas
+  // une permission à cocher : il est donc ré-appliqué à CHAQUE édition tant que
+  // l'élève reste en Gériatrie. Ne l'appliquer qu'à la transition
+  // « pas de gériatrie » → « gériatrie » faisait perdre l'accès MG à chaque
+  // ré-enregistrement du dialog admin (le formulaire ne renvoie pas les
+  // sous-collèges MG ni les 60 items bonus, qui étaient donc écrasés).
+  // Pour retirer l'accès MG, l'admin retire Gériatrie.
   const nextColleges = colleges ?? [];
-  const isFreshGeriatrie =
-    permission_type === 'college'
-      && nextColleges.includes(GERIATRIE_ID)
-      && !prevColleges.includes(GERIATRIE_ID);
   const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
-    isFreshGeriatrie
+    permission_type === 'college'
       ? await applyGeriatrieMgBonus(admin, nextColleges, cours)
       : { colleges: nextColleges, cours: cours && cours.length > 0 ? cours : undefined };
 
