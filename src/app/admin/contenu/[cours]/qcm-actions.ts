@@ -30,7 +30,9 @@ const QuestionSchema = z.object({
   /** Rubrique libre de l'enseignant, en plus du corrigé (rappel, schéma…). */
   commentaire_enseignant: z.string().optional().nullable(),
   images: z.array(z.string()).optional().default([]),
-  items: z.array(ItemSchema).max(5, 'Maximum 5 items').optional().default([]),
+  // La base et l'éditeur autorisent les banques A-K ; l'import IA doit pouvoir
+  // restituer fidèlement les QCM source qui dépassent les 5 items EDN usuels.
+  items: z.array(ItemSchema).max(11, 'Maximum 11 items').optional().default([]),
 }).superRefine((val, ctx) => {
   if (val.format === 'qroc') {
     if (!val.reponse_attendue || !val.reponse_attendue.trim()) {

@@ -16,7 +16,8 @@ export type AuditEntity =
   | 'platform_event'
   | 'mock_exam'
   | 'mock_exam_question'
-  | 'mock_exam_submission';
+  | 'mock_exam_submission'
+  | 'exercise_import';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

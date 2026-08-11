@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: { bodySizeLimit: '30mb' },
+    optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -12,9 +16,6 @@ const nextConfig: NextConfig = {
   },
   // Tree-shaking ciblé des grosses librairies (icônes / animation / charts) :
   // n'embarque que les symboles réellement importés → moins de JS livré.
-  experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],
-  },
   // Redirections 301 permanentes : anciennes URL (ancien site / liens externes
   // indexés) → URL actuelles. Préserve le SEO (le « jus » des liens est transféré)
   // et corrige les liens cassés. À compléter avec les URL listées dans Google

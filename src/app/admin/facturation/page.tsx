@@ -1,7 +1,7 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { BILLING_EUR, GEN_FEATURE, billingLinePrices } from '@/lib/ai/cost';
-import { FacturationDashboard, type CourseLine } from '@/components/admin/facturation-dashboard';
+import { FacturationDashboard, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
 export const dynamic = 'force-dynamic';
@@ -13,7 +13,7 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
@@ -22,6 +22,7 @@ export default async function AdminFacturationPage() {
     // Générations IA facturées au forfait (uniquement les réussites).
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
+    a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').in('status', ['ready', 'published', 'cancelled']).not('billed_price_cents', 'is', null),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
@@ -55,6 +56,8 @@ export default async function AdminFacturationPage() {
   );
 
   const aiResponses = aiRes.count ?? 0;
+  const exerciseImports: ExerciseImportBillingLine[] = ((importsRes.data ?? []) as Array<{ id: string; title: string; billed_price_cents: number; result: { questions?: unknown[] } | null; created_at: string }>)
+    .map((row) => ({ id: row.id, title: row.title, cents: row.billed_price_cents, questions: row.result?.questions?.length ?? 0, createdAt: row.created_at }));
 
   return (
     <FacturationDashboard
@@ -62,6 +65,7 @@ export default async function AdminFacturationPage() {
       aiResponses={aiResponses}
       epreuves={{ exams: examsCount, qroc: qrocCount }}
       generations={generations}
+      exerciseImports={exerciseImports}
       tarifs={{
         fiche: BILLING_EUR.fiche,
         qcm: BILLING_EUR.qcm_per_course,

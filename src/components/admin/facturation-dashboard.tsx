@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   BadgePercent, ClipboardList, FileText, Layers3, type LucideIcon,
-  MessageSquare, PencilRuler, Receipt, Sparkles, TrendingDown, Wallet,
+  MessageSquare, PencilRuler, Receipt, Sparkles, TrendingDown, UploadCloud, Wallet,
 } from 'lucide-react';
 
 export type CourseLine = {
@@ -25,7 +25,8 @@ export type CourseLine = {
 };
 
 type Tarifs = { fiche: number; qcm: number; flash: number; ia: number };
-type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves' | 'generations';
+type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves' | 'generations' | 'imports';
+export type ExerciseImportBillingLine = { id: string; title: string; cents: number; questions: number; createdAt: string };
 
 // Tarifs Épreuves blanches : 1 centime fixe / épreuve + 0,5 centime / QROC.
 const EPREUVE_FIXED_EUR = 0.01;
@@ -42,9 +43,10 @@ const CAT: Record<CatKey, { label: string; short: string; color: string; soft: s
   ia: { label: 'Réponses IA', short: 'IA', color: '#8B5CF6', soft: 'rgba(139,92,246,0.14)', Icon: MessageSquare },
   epreuves: { label: 'Épreuves blanches', short: 'Épreuves', color: '#0D9488', soft: 'rgba(13,148,136,0.14)', Icon: PencilRuler },
   generations: { label: 'Générations IA', short: 'Générations', color: '#7C3AED', soft: 'rgba(124,58,237,0.14)', Icon: Sparkles },
+  imports: { label: 'Import d’exercices', short: 'Imports', color: '#0284C7', soft: 'rgba(2,132,199,0.14)', Icon: UploadCloud },
 };
 
-const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves', 'generations'];
+const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves', 'generations', 'imports'];
 
 // Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
 const MANUAL_QCM_LINES = [
@@ -78,11 +80,13 @@ function remisePct(montant: number): number {
 export function FacturationDashboard({
   lines, aiResponses, tarifs, epreuves = { exams: 0, qroc: 0 },
   generations = { interrogations: 0, epreuves: 0 },
+  exerciseImports = [],
 }: {
   lines: CourseLine[]; aiResponses: number; tarifs: Tarifs;
   epreuves?: { exams: number; qroc: number };
   /** Générations IA réussies, facturées au forfait. */
   generations?: { interrogations: number; epreuves: number };
+  exerciseImports?: ExerciseImportBillingLine[];
 }) {
   const [sel, setSel] = useState<CatKey | null>(null);
 
@@ -97,6 +101,7 @@ export function FacturationDashboard({
       ia: aiResponses,
       epreuves: epreuves.exams,
       generations: generations.interrogations + generations.epreuves,
+      imports: exerciseImports.length,
     };
     const totals = {
       fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
@@ -106,8 +111,9 @@ export function FacturationDashboard({
       ia: aiResponses * tarifs.ia,
       epreuves: epreuvesTotal,
       generations: generationsTotal,
+      imports: exerciseImports.reduce((sum, row) => sum + row.cents / 100, 0),
     };
-    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves + totals.generations;
+    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves + totals.generations + totals.imports;
 
     // Coût par collège (pour analyse).
     const byCollege = new Map<string, number>();
@@ -119,14 +125,15 @@ export function FacturationDashboard({
     if (totals.ia > 0) byCollege.set('Réponses IA', (byCollege.get('Réponses IA') ?? 0) + totals.ia);
     if (totals.epreuves > 0) byCollege.set('Épreuves blanches', (byCollege.get('Épreuves blanches') ?? 0) + totals.epreuves);
     if (totals.generations > 0) byCollege.set('Générations IA', (byCollege.get('Générations IA') ?? 0) + totals.generations);
+    if (totals.imports > 0) byCollege.set('Import d’exercices', (byCollege.get('Import d’exercices') ?? 0) + totals.imports);
 
     return { counts, totals, grand, byCollege };
-  }, [lines, aiResponses, tarifs, epreuves, generations]);
+  }, [lines, aiResponses, tarifs, epreuves, generations, exerciseImports]);
 
   const pct = remisePct(data.grand);
   const remiseEur = (data.grand * pct) / 100;
   const net = data.grand - remiseEur;
-  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR };
+  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR, imports: 0 };
 
   const pieData = CAT_KEYS
     .map((k) => ({ key: k, name: CAT[k].label, value: data.totals[k], color: CAT[k].color }))
@@ -139,7 +146,7 @@ export function FacturationDashboard({
 
   // Courses du tableau selon la catégorie sélectionnée.
   const rows = useMemo(() => {
-    if (sel === 'ia' || sel === 'epreuves' || sel === 'generations') return [];
+    if (sel === 'ia' || sel === 'epreuves' || sel === 'generations' || sel === 'imports') return [];
     const keep = (l: CourseLine) =>
       sel === null ? l.fichePrice > 0 || l.qcmPrice > 0 || l.flashPrice > 0
         : sel === 'fiche' ? l.fichePrice > 0 : sel === 'qcm' ? l.qcmPrice > 0 : l.flashPrice > 0;
@@ -233,6 +240,7 @@ export function FacturationDashboard({
           const meta = k === 'ia' ? `${data.counts[k]} rép. · ${tarifOf[k].toFixed(2)} €`
             : k === 'epreuves' ? `${data.counts[k]} épreuve${data.counts[k] > 1 ? 's' : ''} · 1c + 0,5c/QROC`
             : k === 'generations' ? `${data.counts[k]} génération${data.counts[k] > 1 ? 's' : ''} · 0,30 € / 1,30 €`
+            : k === 'imports' ? `${data.counts[k]} import${data.counts[k] > 1 ? 's' : ''}`
             : `${data.counts[k]} cours · ${tarifOf[k] % 1 === 0 ? tarifOf[k] : tarifOf[k].toFixed(2)} €`;
           return (
             <button
@@ -358,6 +366,7 @@ export function FacturationDashboard({
             <Row label="Réponses IA" value={eur(data.totals.ia)} />
             <Row label="Épreuves blanches" value={eur(data.totals.epreuves)} />
             <Row label="Générations IA" value={eur(data.totals.generations)} />
+            <Row label="Import d’exercices" value={eur(data.totals.imports)} />
             <div className="my-2 border-t border-dashed border-(--color-border)" />
             <Row label="Total avant remise" value={eur(data.grand)} strong />
             <Row label={`Geste commercial (−${pct.toFixed(1)} %)`} value={`− ${eur(remiseEur)}`} accent />
@@ -373,12 +382,13 @@ export function FacturationDashboard({
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
         <div className="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
           <h3 className="text-sm font-semibold text-(--color-ink)">
-            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : sel === 'generations' ? 'Générations IA' : `Cours facturés — ${CAT[sel].label}`}
+            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : sel === 'generations' ? 'Générations IA' : sel === 'imports' ? 'Import d’exercices' : `Cours facturés — ${CAT[sel].label}`}
           </h3>
           <span className="text-xs text-(--color-ink-soft)">
             {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}`
               : sel === 'epreuves' ? `${epreuves.exams} épreuve${epreuves.exams > 1 ? 's' : ''}`
               : sel === 'generations' ? `${data.counts.generations} génération${data.counts.generations > 1 ? 's' : ''}`
+              : sel === 'imports' ? `${exerciseImports.length} import${exerciseImports.length > 1 ? 's' : ''}`
               : `${rows.length} cours`}
           </span>
         </div>
@@ -414,6 +424,15 @@ export function FacturationDashboard({
             <p className="mt-4 text-center text-xs text-(--color-ink-muted)">
               Forfait par génération réussie. Une génération en échec n’est pas facturée.
             </p>
+          </div>
+        ) : sel === 'imports' ? (
+          <div className="divide-y divide-(--color-border)">
+            {exerciseImports.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">Aucun import facturé.</p> : exerciseImports.map((item) => (
+              <div key={item.id} className="flex items-center justify-between gap-4 px-5 py-3 text-sm">
+                <div><p className="font-medium text-(--color-ink)">{item.title}</p><p className="text-xs text-(--color-ink-muted)">{item.questions} exercice{item.questions > 1 ? 's' : ''} · {new Date(item.createdAt).toLocaleDateString('fr-FR')}</p></div>
+                <span className="font-semibold tabular-nums text-(--color-ink)">{eur(item.cents / 100)}</span>
+              </div>
+            ))}
           </div>
         ) : rows.length === 0 ? (
           <div className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">Aucun cours dans cette catégorie.</div>
