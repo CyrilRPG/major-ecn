@@ -11,17 +11,25 @@ import { LockedTrainingsList } from '@/components/espace-decouverte/locked-train
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
+import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
+
+type SerieListRow = SerieAccessRow & {
+  order_index: number;
+  qcm_questions?: { id: string; format: string }[] | null;
+};
 
 export default async function CoursQcmListPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await supabase
     .from('cours')
     .select(`id, titre, matiere_id, matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom)))`)
     .eq('id', coursId)
     .maybeSingle();
+  // Une erreur SQL/RLS ne doit jamais être déguisée en 404 : elle doit remonter.
+  if (coursError) throw coursError;
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
   if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
@@ -34,40 +42,34 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'];
 
-  // Admin client bypasses RLS entirely — avoids 42P17 recursion introduced by
-  // the restrictive voie/offers policies. Access control for students is
-  // enforced below in application code instead.
-  const { data: rawSeries } = await createAdminClient()
+  // Client service-role : la RLS de `qcm_series` est récursive en production
+  // (42P17) et faisait échouer la lecture. Le contrôle d'accès élève est
+  // rejoué en application juste après (cf. lib/data/qcm-access), avec les
+  // MÊMES règles que la page de série — sinon une série listée renvoie un 404
+  // à l'ouverture.
+  const { data: rawSeries, error: seriesError } = await createAdminClient()
     .from('qcm_series')
-    .select('id, label, order_index, type, allowed_voies, allowed_offers, qcm_questions(id)')
+    .select(`${SERIE_ACCESS_COLUMNS}, order_index, qcm_questions(id, format)` as 'id, label, order_index, type')
     .eq('cours_id', coursId)
     .in('type', seriesTypes)
     .order('order_index');
+  if (seriesError) throw seriesError;
   const hideEntrainement = access && !access.entrainement;
-  // Voie/offers filtering replicated from RLS (admin client bypasses it above).
-  const userVoie = scope.voie ?? null;
   const userOffers = scopeOffers(scope);
-  // `allowed_offers` vient de la base en `string[]` brut : on compare via un Set
-  // élargi plutôt que contre le type `Offer[]` de `scopeOffers`.
-  const userOffersSet = new Set<string>(userOffers);
+  const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
   // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
   //   séances du professeur → entraînements → DP (DP QCM interne / DP QROC externe)
   //   → QCM (voie interne) ou QROC (voie externe).
   const isApprofondi = userOffers.includes('approfondi');
-  const categoryRank = (s: { label: string; type?: string }) => {
+  const categoryRank = (s: { label: string; type?: string | null }) => {
     if (s.type === 'seance') return 0;                 // Séance du professeur
     if (/entra[iî]nement/i.test(s.label)) return 1;    // Entraînement
     if (/^dp\b/i.test(s.label)) return 2;              // DP (couvre « DP … » et « DP QROC … »)
     return 3;                                          // QCM / QROC de base
   };
-  const series = (rawSeries ?? [])
+  const series = ((rawSeries ?? []) as unknown as SerieListRow[])
     .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
-    .filter((s) => {
-      if (isAdmin || profile.role === 'professor') return true;
-      const voieOk = !s.allowed_voies || (!!userVoie && s.allowed_voies.includes(userVoie));
-      const offersOk = !s.allowed_offers || s.allowed_offers.some((o) => userOffersSet.has(o));
-      return voieOk && offersOk;
-    })
+    .filter((s) => canStudentReadSerie(s, accessCtx, (s.qcm_questions ?? []).map((q) => q.format)))
     .sort((a, b) => {
       if (isApprofondi) {
         const ra = categoryRank(a);
@@ -103,7 +105,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   // « DP 1 » (DP QCM) → traitement rouge + icône DP.
   const isDp = (label: string) => /^dp\b/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
-  const isSeance = (s: { type?: string }) => s.type === 'seance';
+  const isSeance = (s: { type?: string | null }) => s.type === 'seance';
 
   // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
   const scoreTheme = (correct: number, total: number) => {

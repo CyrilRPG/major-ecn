@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmReviewer } from '@/components/qcm/qcm-reviewer';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 
@@ -18,19 +19,33 @@ export default async function ReviewPage({
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: session } = await supabase
+  // Session lue avec le client utilisateur (policy `qcm_sessions_owner`) ;
+  // série et questions via le client service-role : la RLS de `qcm_series` /
+  // `qcm_questions` est récursive en production (42P17) et renvoyait un 404.
+  const { data: session, error: sessionError } = await supabase
     .from('qcm_sessions')
-    .select('id, serie_id, qcm_series(id, label, type, cours_id)')
+    .select('id, serie_id')
     .eq('id', sessionId)
     .eq('user_id', user.id)
     .maybeSingle();
-  if (!session || session.qcm_series.cours_id !== coursId) notFound();
+  if (sessionError) throw sessionError;
+  if (!session) notFound();
 
-  const { data: c } = await supabase
+  const admin = createAdminClient();
+  const { data: serie, error: serieError } = await admin
+    .from('qcm_series')
+    .select('id, label, type, cours_id')
+    .eq('id', session.serie_id)
+    .maybeSingle();
+  if (serieError) throw serieError;
+  if (!serie || serie.cours_id !== coursId) notFound();
+
+  const { data: c, error: coursError } = await supabase
     .from('cours')
     .select('id, matiere_id')
     .eq('id', coursId)
     .maybeSingle();
+  if (coursError) throw coursError;
   if (!c) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
@@ -39,11 +54,12 @@ export default async function ReviewPage({
     .select('question_id, selected_items, is_correct')
     .eq('session_id', sessionId);
 
-  const { data: questions } = await supabase
+  const { data: questions, error: questionsError } = await admin
     .from('qcm_questions')
     .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
     .eq('serie_id', session.serie_id)
     .order('order_index');
+  if (questionsError) throw questionsError;
   if (!questions || questions.length === 0) notFound();
 
   const attemptsByQ: Record<string, string[]> = {};
@@ -74,7 +90,7 @@ export default async function ReviewPage({
       questions={enriched}
       attemptsByQ={attemptsByQ}
       filterLabel={filter === 'wrong' ? 'mes erreurs uniquement' : 'toutes les questions'}
-      serieLabel={session.qcm_series.label}
+      serieLabel={serie.label}
       backHref={`/cours/${coursId}/resultats/${sessionId}`}
     />
   );

@@ -1,9 +1,11 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, getProfessorScope, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { canWrite } from '@/lib/schemas/professor';
+import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 
 export default async function QcmRunPage({
   params,
@@ -17,32 +19,48 @@ export default async function QcmRunPage({
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await supabase
     .from('cours')
     .select(`id, titre, matiere_id, matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom)))`)
     .eq('id', coursId)
     .maybeSingle();
+  // Une erreur SQL/RLS ne doit jamais être déguisée en 404 : elle doit remonter.
+  if (coursError) throw coursError;
   if (!c || !c.matieres?.semestres) notFound();
   if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
-  const { data: serie } = await supabase
+  // Série et questions lues via le client service-role : la RLS de `qcm_series`
+  // / `qcm_questions` est récursive en production (42P17) et faisait échouer
+  // ces lectures — donc `notFound()` sur TOUS les DP et QCM. Les droits élève
+  // sont rejoués juste après, en application (cf. lib/data/qcm-access).
+  const admin = createAdminClient();
+  const { data: serie, error: serieError } = await admin
     .from('qcm_series')
     // cast pour exposer la colonne vignette (ajoutée par migration)
-    .select('id, label, type, cours_id, vignette' as 'id, label, type, cours_id')
+    .select(`${SERIE_ACCESS_COLUMNS}, cours_id, vignette` as 'id, label, type, cours_id')
     .eq('id', serieId)
     .eq('cours_id', coursId)
     .maybeSingle();
+  if (serieError) throw serieError;
   if (!serie) notFound();
-  const vignette = (serie as unknown as { vignette?: string | null }).vignette ?? null;
+  const serieRow = serie as unknown as SerieAccessRow & { vignette?: string | null };
+  const vignette = serieRow.vignette ?? null;
 
-  const { data: questions } = await supabase
+  const { data: questions, error: questionsError } = await admin
     .from('qcm_questions')
     .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
     .eq('serie_id', serieId)
     .order('order_index');
+  if (questionsError) throw questionsError;
 
   if (!questions || questions.length === 0) notFound();
+
+  // Contrôle d'accès élève (voie, formule, entraînements, bonus Gériatrie → MG) :
+  // exactement les règles que la RLS appliquait avant l'incident.
+  const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
+  const questionFormats = (questions as unknown as { format: string }[]).map((q) => q.format);
+  if (!canStudentReadSerie(serieRow, accessCtx, questionFormats)) notFound();
 
   type QRow = {
     id: string; enonce: string; order_index: number; format: string;
