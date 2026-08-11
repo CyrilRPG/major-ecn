@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { StudyConsole } from '@/components/student/study-console';
 import { SplitViewProvider } from '@/components/student/split-view';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
@@ -39,21 +40,29 @@ export default async function CoursLayout({
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await supabase
     .from('cours')
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label)),
       videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path),
-      qcm_series(type),
       flashcards(id),
       course_progress(video_watched, fiche_read)
     `)
     .eq('id', coursId)
     .maybeSingle();
 
+  // Une erreur de relation/RLS ne doit jamais être déguisée en 404. La série
+  // QCM est lue séparément afin qu'une policy défectueuse n'empêche pas
+  // l'ouverture de tous les items.
+  if (coursError) throw coursError;
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
+
+  const { data: qcmSeries } = await createAdminClient()
+    .from('qcm_series')
+    .select('type')
+    .eq('cours_id', coursId);
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
   // L'autorisation nominative d'une vidéo contourne l'accès normal au collège
@@ -101,7 +110,7 @@ export default async function CoursLayout({
     // La page « DP · QI » liste les séries QCM **et** les séances du professeur :
     // l'onglet doit suivre le même critère, sinon un item qui n'a que des
     // séances passerait pour vide alors que la page a du contenu.
-    qcm: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+    qcm: (qcmSeries ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
     seanceApprofondie: seanceVideos.length > 0,
   };

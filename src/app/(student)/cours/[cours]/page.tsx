@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Paperclip, Sparkles, Video, type LucideIcon } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
@@ -42,18 +43,27 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await supabase
     .from('cours')
     .select(`
       id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
       videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
-      fiches(storage_path), qcm_series(type), flashcards(id)
+      fiches(storage_path), flashcards(id)
     `)
     .eq('id', coursId)
     .maybeSingle();
 
+  if (coursError) throw coursError;
   if (!c || !c.matieres) notFound();
+
+  // L'aperçu reste ouvrable même si la policy RLS de qcm_series est cassée.
+  // Seule la disponibilité est lue via le client serveur ; les pages QCM
+  // conservent leurs contrôles d'accès utilisateur.
+  const { data: qcmSeriesForAvailability } = await createAdminClient()
+    .from('qcm_series')
+    .select('type')
+    .eq('cours_id', coursId);
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
   const coursAccess  = (c as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
@@ -236,7 +246,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
           desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
           Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+          available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
         },
         {
           // Cours vidéo verrouillé — clic = popup LockedContentModal.
@@ -288,7 +298,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
             desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
             Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-            available: (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+            available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
           },
         );
         if (hasSeanceApprofondie && isApprofondi) {
@@ -418,7 +428,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   if (estTitreRevisions(c.titre)) {
     // L'interrogation est tirée des QCM de l'item : sans QCM, pas d'interrogation
     // (son `available` ne reflète que le déverrouillage, pas le contenu).
-    const aQcm = (c.qcm_series ?? []).some((s) => s.type === 'qcm' || s.type === 'seance');
+    const aQcm = (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance');
     actions = actions.filter((a) => {
       const b = blocOf(a.href);
       if (!b || b === 'notes') return true;
@@ -682,7 +692,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               </span>
               <div>
                 <p className="text-[15px] font-extrabold leading-tight" style={{ color: '#0F1F4D' }}>
-                  Vous testez l'aperçu Découverte
+                  Vous testez l&apos;aperçu Découverte
                 </p>
                 <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#52607A' }}>
                   Déverrouillez la totalité de la plateforme et préparez sereinement vos EVC.
