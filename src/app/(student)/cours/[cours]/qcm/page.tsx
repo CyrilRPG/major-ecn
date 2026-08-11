@@ -47,6 +47,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   // Voie/offers filtering replicated from RLS (admin client bypasses it above).
   const userVoie = scope.voie ?? null;
   const userOffers = scopeOffers(scope);
+  // `allowed_offers` vient de la base en `string[]` brut : on compare via un Set
+  // élargi plutôt que contre le type `Offer[]` de `scopeOffers`.
+  const userOffersSet = new Set<string>(userOffers);
   // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
   //   séances du professeur → entraînements → DP (DP QCM interne / DP QROC externe)
   //   → QCM (voie interne) ou QROC (voie externe).
@@ -62,7 +65,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .filter((s) => {
       if (isAdmin || profile.role === 'professor') return true;
       const voieOk = !s.allowed_voies || (!!userVoie && s.allowed_voies.includes(userVoie));
-      const offersOk = !s.allowed_offers || s.allowed_offers.some((o) => userOffers.includes(o));
+      const offersOk = !s.allowed_offers || s.allowed_offers.some((o) => userOffersSet.has(o));
       return voieOk && offersOk;
     })
     .sort((a, b) => {
