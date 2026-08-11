@@ -3,6 +3,7 @@ import { fetchAccessInfoFor } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { isStudyRoute } from '@/lib/student/study-route';
+import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 
 export const runtime = 'nodejs';
 /** Ne jamais laisser un heartbeat (appelé toutes les 60s × N élèves) saturer
@@ -73,19 +74,16 @@ export async function POST(req: Request) {
 
     // Total hebdo : best-effort. Sous charge DB on renvoie ok sans le total
     // plutôt que de retenir la connexion encore plusieurs centaines de ms.
-    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString().slice(0, 10);
+    const weekStart = startOfUtcIsoWeek();
     const { data: weekRows, error: weekErr } = await sb
       .from('platform_time_tracking')
       .select('total_seconds')
       .eq('user_id', user.id)
-      .gte('session_date', weekAgo);
+      .gte('session_date', weekStart);
 
     if (weekErr) return NextResponse.json({ ok: true });
 
-    const weeklyTotal = (weekRows ?? []).reduce(
-      (sum: number, r: { total_seconds: number }) => sum + r.total_seconds,
-      0,
-    );
+    const weeklyTotal = sumTrackedSeconds(weekRows as StudyTimeRow[] | null);
 
     return NextResponse.json({ ok: true, weeklyTotalSeconds: weeklyTotal });
   } catch {

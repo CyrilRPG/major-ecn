@@ -14,6 +14,7 @@ import { DiscoveryGateLink } from '@/components/espace-decouverte/discovery-gate
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { getFaculteContentTotals } from '@/lib/data/faculte-totals';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
+import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 
 export const metadata = { title: 'Accueil' };
 
@@ -124,9 +125,9 @@ async function Dashboard({
 }) {
   const supabase = await createClient();
 
-  // Deux appels en parallèle : les agrégats par-utilisateur (RPC, tout calculé
-  // en base) + l'arbre du programme (nécessaire au rendu des collèges + scope).
-  const [statsRes, ednRes, cachedTotals] = await Promise.all([
+  // Appels parallèles : agrégats par-utilisateur, arbre du programme, totaux de
+  // contenu partagés et compteur hebdomadaire issu de sa source canonique.
+  const [statsRes, ednRes, cachedTotals, timeRes] = await Promise.all([
     // RPC hors types générés (database.ts) : cast ciblé, cf. incident schema drift.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).rpc('get_accueil_stats', { p_faculte_id: EDN_FACULTE_ID }) as Promise<{ data: StatsResp | null }>,
@@ -137,6 +138,16 @@ async function Dashboard({
       .maybeSingle(),
     // Totaux de contenu (identiques pour tous) mis en cache global — P4.
     getFaculteContentTotals(EDN_FACULTE_ID),
+    // Le RPC historique utilise une fenêtre glissante de huit dates
+    // (`current_date - 7` inclus). Pour un libellé « cette semaine », on lit
+    // explicitement du lundi à aujourd'hui afin que les heures de la veille ne
+    // disparaissent pas au fil des jours.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from('platform_time_tracking')
+      .select('total_seconds')
+      .eq('user_id', userId)
+      .gte('session_date', startOfUtcIsoWeek()) as Promise<{ data: StudyTimeRow[] | null }>,
   ]);
 
   const stats = (statsRes.data as StatsResp | null) ?? {
@@ -208,7 +219,7 @@ async function Dashboard({
   const sessionsCount = t.sessions_total;
 
   /* ---- Temps de révision (mesuré par le heartbeat plateforme) ---- */
-  const secondsThisWeek = t.platform_seconds_week;
+  const secondsThisWeek = sumTrackedSeconds(timeRes.data);
   const hoursThisWeek = Math.floor(secondsThisWeek / 3600);
   const minsThisWeek = Math.floor((secondsThisWeek % 3600) / 60);
   const goalSeconds = 25 * 3600;

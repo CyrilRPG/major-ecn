@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { initials } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 
 export const metadata = { title: 'Statistiques' };
 
@@ -19,6 +20,7 @@ export default async function AdminStatsPage() {
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400_000);
+  const weekStart = startOfUtcIsoWeek();
   // Seuil hebdomadaire d'engagement : 30 min / semaine (objectif minimal réaliste pour
   // un étudiant en préparation EVC). En dessous, on alerte l'admin.
   const WEEKLY_MIN_SECONDS = 30 * 60;
@@ -29,8 +31,7 @@ export default async function AdminStatsPage() {
     { data: attempts },
     { data: sessions30 },
     { data: profiles },
-    { data: attempts7d },
-    { data: reviews7d },
+    { data: trackedTimeThisWeek },
   ] = await Promise.all([
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
     supabase.from('qcm_sessions').select('id', { count: 'exact', head: true }).gte('started_at', sevenDaysAgo),
@@ -39,8 +40,16 @@ export default async function AdminStatsPage() {
       .select('id, user_id, is_correct, attempted_at, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, cours!inner(id, titre, matieres!inner(id, nom))))'),
     supabase.from('qcm_sessions').select('id, user_id, started_at').gte('started_at', thirtyDaysAgo.toISOString()),
     supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope, email').eq('role', 'student'),
-    supabase.from('qcm_attempts').select('user_id, time_spent_seconds').gte('attempted_at', sevenDaysAgo),
-    supabase.from('flashcard_reviews').select('user_id').gte('reviewed_at', sevenDaysAgo),
+    // Source canonique du compteur affiché aux élèves. L'ancien calcul ne
+    // regardait que le temps renseigné sur les QCM (+ un forfait flashcard),
+    // ce qui affichait 0 min malgré des heures de fiches et vidéos enregistrées.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from('platform_time_tracking')
+      .select('user_id, total_seconds')
+      .gte('session_date', weekStart) as Promise<{
+        data: Array<StudyTimeRow & { user_id: string }> | null;
+      }>,
   ]);
 
   const activeUsers7d = new Set<string>();
@@ -72,6 +81,10 @@ export default async function AdminStatsPage() {
 
   const successRate = attemptsTotal > 0 ? Math.round((attemptsCorrect / attemptsTotal) * 100) : 0;
 
+  for (const row of trackedTimeThisWeek ?? []) {
+    if ((row.total_seconds ?? 0) > 0) activeUsers7d.add(row.user_id);
+  }
+
   // Activity area (30j)
   const days: { label: string; value: number }[] = [];
   for (let i = 29; i >= 0; i--) {
@@ -99,14 +112,13 @@ export default async function AdminStatsPage() {
     .sort((a, b) => (b.correct / Math.max(1, b.total)) - (a.correct / Math.max(1, a.total)))
     .map((m) => ({ label: m.nom, value: m.total > 0 ? (m.correct / m.total) * 100 : 0 }));
 
-  // Temps d'activité hebdomadaire par élève (QCM time_spent + 10s/flashcard)
-  const FLASHCARD_SECONDS = 10;
+  // Temps réellement mesuré sur les pages d'étude, du lundi à aujourd'hui.
   const weeklySeconds = new Map<string, number>();
-  for (const a of (attempts7d ?? []) as { user_id: string; time_spent_seconds: number | null }[]) {
-    weeklySeconds.set(a.user_id, (weeklySeconds.get(a.user_id) ?? 0) + (a.time_spent_seconds ?? 0));
-  }
-  for (const r of (reviews7d ?? []) as { user_id: string }[]) {
-    weeklySeconds.set(r.user_id, (weeklySeconds.get(r.user_id) ?? 0) + FLASHCARD_SECONDS);
+  for (const row of trackedTimeThisWeek ?? []) {
+    weeklySeconds.set(
+      row.user_id,
+      (weeklySeconds.get(row.user_id) ?? 0) + sumTrackedSeconds([row]),
+    );
   }
   const lowActivity = (profiles ?? [])
     .map((p) => {
@@ -185,7 +197,7 @@ export default async function AdminStatsPage() {
                 Élèves peu actifs cette semaine
               </CardTitle>
               <CardDescription>
-                Moins de {Math.round(WEEKLY_MIN_SECONDS / 60)} min de travail (QCM + flashcards) sur les 7 derniers jours.
+                Moins de {Math.round(WEEKLY_MIN_SECONDS / 60)} min de travail mesuré depuis lundi.
               </CardDescription>
             </div>
             <span className="shrink-0 rounded-full bg-(--color-warning)/15 px-2.5 py-1 text-xs font-semibold text-(--color-warning)">
