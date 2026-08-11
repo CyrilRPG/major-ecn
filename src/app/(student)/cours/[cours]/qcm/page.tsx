@@ -61,10 +61,8 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
     .filter((s) => {
       if (isAdmin || profile.role === 'professor') return true;
-      const av = (s as unknown as { allowed_voies?: string[] | null }).allowed_voies;
-      const ao = (s as unknown as { allowed_offers?: string[] | null }).allowed_offers;
-      const voieOk = !av || (!!userVoie && av.includes(userVoie));
-      const offersOk = !ao || ao.some((o) => userOffers.includes(o));
+      const voieOk = !s.allowed_voies || (!!userVoie && s.allowed_voies.includes(userVoie));
+      const offersOk = !s.allowed_offers || s.allowed_offers.some((o) => userOffers.includes(o));
       return voieOk && offersOk;
     })
     .sort((a, b) => {

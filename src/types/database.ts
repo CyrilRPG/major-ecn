@@ -119,9 +119,9 @@ export type Database = {
         Relationships: [{ foreignKeyName: 'qcm_questions_serie_id_fkey'; columns: ['serie_id']; isOneToOne: false; referencedRelation: 'qcm_series'; referencedColumns: ['id'] }];
       };
       qcm_series: {
-        Row: { annee: number | null; cours_id: string; created_at: string; duration_minutes: number | null; vignette: string | null; id: string; label: string; order_index: number; type: string; kind: string | null; updated_at: string };
-        Insert: { annee?: number | null; cours_id: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label: string; order_index?: number; type: string; kind?: string | null; updated_at?: string };
-        Update: { annee?: number | null; cours_id?: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label?: string; order_index?: number; type?: string; kind?: string | null; updated_at?: string };
+        Row: { annee: number | null; allowed_voies: string[] | null; allowed_offers: string[] | null; cours_id: string; created_at: string; duration_minutes: number | null; vignette: string | null; id: string; label: string; order_index: number; type: string; kind: string | null; updated_at: string };
+        Insert: { annee?: number | null; allowed_voies?: string[] | null; allowed_offers?: string[] | null; cours_id: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label: string; order_index?: number; type: string; kind?: string | null; updated_at?: string };
+        Update: { annee?: number | null; allowed_voies?: string[] | null; allowed_offers?: string[] | null; cours_id?: string; created_at?: string; duration_minutes?: number | null; vignette?: string | null; id?: string; label?: string; order_index?: number; type?: string; kind?: string | null; updated_at?: string };
         Relationships: [{ foreignKeyName: 'qcm_series_cours_id_fkey'; columns: ['cours_id']; isOneToOne: false; referencedRelation: 'cours'; referencedColumns: ['id'] }];
       };
       qcm_sessions: {
