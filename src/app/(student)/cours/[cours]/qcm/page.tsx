@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Star, Trophy, Sparkles } from 'lucide-react';
 import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { EmptyState } from '@/components/empty-state';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
@@ -33,19 +34,23 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'];
 
-  const { data: rawSeries } = await supabase
+  // Admin client bypasses RLS entirely — avoids 42P17 recursion introduced by
+  // the restrictive voie/offers policies. Access control for students is
+  // enforced below in application code instead.
+  const { data: rawSeries } = await createAdminClient()
     .from('qcm_series')
-    .select('id, label, order_index, type, qcm_questions(id)')
+    .select('id, label, order_index, type, allowed_voies, allowed_offers, qcm_questions(id)')
     .eq('cours_id', coursId)
     .in('type', seriesTypes)
     .order('order_index');
   const hideEntrainement = access && !access.entrainement;
+  // Voie/offers filtering replicated from RLS (admin client bypasses it above).
+  const userVoie = scope.voie ?? null;
+  const userOffers = scopeOffers(scope);
   // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
   //   séances du professeur → entraînements → DP (DP QCM interne / DP QROC externe)
   //   → QCM (voie interne) ou QROC (voie externe).
-  // La voie est déjà filtrée en amont par la RLS (interne = QCM/DP, externe =
-  // QROC/DP-QROC), donc un seul barème de catégories couvre les deux voies.
-  const isApprofondi = scopeOffers(scope).includes('approfondi');
+  const isApprofondi = userOffers.includes('approfondi');
   const categoryRank = (s: { label: string; type?: string }) => {
     if (s.type === 'seance') return 0;                 // Séance du professeur
     if (/entra[iî]nement/i.test(s.label)) return 1;    // Entraînement
@@ -54,6 +59,14 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   };
   const series = (rawSeries ?? [])
     .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
+    .filter((s) => {
+      if (isAdmin || profile.role === 'professor') return true;
+      const av = (s as unknown as { allowed_voies?: string[] | null }).allowed_voies;
+      const ao = (s as unknown as { allowed_offers?: string[] | null }).allowed_offers;
+      const voieOk = !av || (!!userVoie && av.includes(userVoie));
+      const offersOk = !ao || ao.some((o) => userOffers.includes(o));
+      return voieOk && offersOk;
+    })
     .sort((a, b) => {
       if (isApprofondi) {
         const ra = categoryRank(a);
