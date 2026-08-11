@@ -31,7 +31,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'qcm'));
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const showSeances = !access || access.seanceProf;
-  const seriesTypes = showSeances ? ['qcm', 'seance'] : ['qcm'];
+  const seriesTypes = showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'];
 
   const { data: rawSeries } = await supabase
     .from('qcm_series')

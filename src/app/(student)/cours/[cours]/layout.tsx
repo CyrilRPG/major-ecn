@@ -110,7 +110,7 @@ export default async function CoursLayout({
     // La page « DP · QI » liste les séries QCM **et** les séances du professeur :
     // l'onglet doit suivre le même critère, sinon un item qui n'a que des
     // séances passerait pour vide alors que la page a du contenu.
-    qcm: (qcmSeries ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+    qcm: (qcmSeries ?? []).some((s) => s.type === 'qcm' || s.type === 'seance' || s.type === 'qroc'),
     flashcards: (c.flashcards?.length ?? 0) > 0,
     seanceApprofondie: seanceVideos.length > 0,
   };

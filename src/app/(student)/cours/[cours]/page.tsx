@@ -246,7 +246,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
           desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
           Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-          available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+          available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance' || s.type === 'qroc'),
         },
         {
           // Cours vidéo verrouillé — clic = popup LockedContentModal.
@@ -298,7 +298,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
             desc: 'Entraînement au format EVC, corrigé et justifié item par item.',
             Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
-            available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance'),
+            available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance' || s.type === 'qroc'),
           },
         );
         if (hasSeanceApprofondie && isApprofondi) {
@@ -428,7 +428,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   if (estTitreRevisions(c.titre)) {
     // L'interrogation est tirée des QCM de l'item : sans QCM, pas d'interrogation
     // (son `available` ne reflète que le déverrouillage, pas le contenu).
-    const aQcm = (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance');
+    const aQcm = (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance' || s.type === 'qroc');
     actions = actions.filter((a) => {
       const b = blocOf(a.href);
       if (!b || b === 'notes') return true;
