@@ -23,6 +23,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const cookieStore = await cookies();
   const isImpersonating = cookieStore.has('impersonator_id');
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
+  // Ne jamais afficher une vue élève « impersonnée » avec les droits de
+  // l'administrateur si la session cible n'a pas été installée ou a expiré.
+  // C'était trompeur (bandeau cible + « Bonjour, Cyril ») et surtout fail-open.
+  if (isImpersonating && profile.role === 'admin') redirect('/admin/eleves');
   const treePromise = getNavigatorTree(profile);
   // Détection mode Découverte : utilisé pour verrouiller Entraînement,
   // Révisions, Agenda et Annales EVC dans le menu sidebar + afficher
