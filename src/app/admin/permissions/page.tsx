@@ -16,6 +16,7 @@ const CONTENT_LABELS: Record<string, string> = {
   interrogation: 'Interrogation',
   seance_approfondie: 'Séance approfondie',
   notes: 'Prise de notes',
+  parcours_major: 'Parcours du Major',
 };
 
 const OFFER_LABELS: Record<string, string> = {
@@ -27,7 +28,7 @@ const OFFER_LABELS: Record<string, string> = {
 const OFFERS = ['essentiel', 'intensif', 'approfondi'] as const;
 const CONTENT_KEYS = [
   'fiche', 'fiche_express', 'video', 'qcm', 'entrainement',
-  'seance_prof', 'flashcards', 'interrogation', 'seance_approfondie', 'notes',
+  'seance_prof', 'flashcards', 'interrogation', 'seance_approfondie', 'notes', 'parcours_major',
 ] as const;
 
 export default async function PermissionsPage() {

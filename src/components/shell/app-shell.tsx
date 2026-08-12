@@ -74,6 +74,7 @@ export function AppShell({
   tree,
   weeklyProgressDelta,
   isDecouverte = false,
+  canAccessParcoursMajor = false,
   children,
 }: {
   profile: Profile;
@@ -83,6 +84,8 @@ export function AppShell({
    *  Annales EVC dans le menu + affiche l'encadré Découverte au-dessus
    *  d'Accueil. */
   isDecouverte?: boolean;
+  /** Permission dynamique définie dans Configuration Permissions. */
+  canAccessParcoursMajor?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -128,7 +131,12 @@ export function AppShell({
         </button>
       </div>
       <div className="flex-1 overflow-y-auto pt-3">
-        <Navigator tree={tree} role={profile.role as 'student' | 'admin' | 'professor'} isDecouverte={isDecouverte} />
+        <Navigator
+          tree={tree}
+          role={profile.role as 'student' | 'admin' | 'professor'}
+          isDecouverte={isDecouverte}
+          canAccessParcoursMajor={canAccessParcoursMajor}
+        />
       </div>
       <SidebarHelpCard isDecouverte={isDecouverte} />
     </div>

@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 const VALID_OFFERS = ['essentiel', 'intensif', 'approfondi'] as const;
 const VALID_KEYS = [
   'fiche', 'fiche_express', 'video', 'qcm', 'entrainement',
-  'seance_prof', 'flashcards', 'interrogation', 'seance_approfondie', 'notes',
+  'seance_prof', 'flashcards', 'interrogation', 'seance_approfondie', 'notes', 'parcours_major',
 ] as const;
 
 export async function PUT(req: Request) {

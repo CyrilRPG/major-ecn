@@ -11,6 +11,7 @@ import { OnboardingTour } from '@/components/student/onboarding-tour';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
 import {
   resolveWelcomeConfig, WELCOME_PAR_DEFAUT,
@@ -30,6 +31,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // n'a aucune formule payée (paid_formule absent). Les acheteurs ont la
   // formule sur leur profil → on ne leur affiche pas les locks « Découverte ».
   const scopeForNav = parseScope(profile.permission_scope);
+  const parcoursAccessPromise = profile.role === 'admin'
+    ? Promise.resolve(true)
+    : fetchContentAccessForScope(scopeForNav).then((access) => access.parcoursMajor);
   const isDecouverte =
     scopeForNav.offer === 'decouverte' &&
     scopeForNav.type === 'college' &&
@@ -62,8 +66,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
   // n'attend plus la fin de l'arbre avant de lancer les requêtes de
   // satisfaction/progrès (elles en sont indépendantes) → moins de latence.
-  const [tree, [{ data: recentProgress }, { data: forms }, { data: responses }]] = await Promise.all([
+  const [tree, canAccessParcoursMajor, [{ data: recentProgress }, { data: forms }, { data: responses }]] = await Promise.all([
     treePromise,
+    parcoursAccessPromise,
     Promise.all([
       supabase
         .from('course_progress')
@@ -316,7 +321,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
     <div className="flex h-screen flex-col">
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="min-h-0 flex-1">
-        <AppShell profile={profile} tree={tree} weeklyProgressDelta={weeklyProgressDelta} isDecouverte={isDecouverte}>
+        <AppShell
+          profile={profile}
+          tree={tree}
+          weeklyProgressDelta={weeklyProgressDelta}
+          isDecouverte={isDecouverte}
+          canAccessParcoursMajor={canAccessParcoursMajor}
+        >
           {optionalPending.length > 0 && !onFormPage && (
             <SatisfactionBanner form={optionalPending[0]} />
           )}

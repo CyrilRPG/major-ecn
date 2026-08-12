@@ -8,14 +8,19 @@ import {
   type ParcoursLite, type ParcoursState,
 } from '@/lib/parcours/parcours';
 import { fetchCompletions, fetchParcoursList } from '@/lib/parcours/source';
+import { parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 
 export const metadata = { title: 'Parcours du Major' };
 export const dynamic = 'force-dynamic';
 
 export default async function ParcoursPage() {
   const { user, profile } = await requireUser();
-  // Réservé aux admins pour l'instant.
-  if (profile.role !== 'admin') redirect('/accueil');
+  const isStaff = profile.role === 'admin';
+  if (!isStaff) {
+    const access = await fetchContentAccessForScope(parseScope(profile.permission_scope));
+    if (!access.parcoursMajor) redirect('/accueil');
+  }
   const supabase = await createClient();
 
   // Catalogue depuis la base si elle existe, sinon repli statique (data.ts).
@@ -24,11 +29,10 @@ export default async function ParcoursPage() {
     fetchCompletions(supabase, user.id),
   ]);
   const parcours: ParcoursLite[] = rows
-    .filter((p) => p.active)
+    .filter((p) => p.active && (isStaff || new Date(p.available_at).getTime() <= Date.now()))
     .map((p) => ({ id: p.id, numero: p.numero, titre: p.titre, sousTitre: p.sous_titre, availableAt: p.available_at }));
 
   const now = new Date();
-  const isStaff = profile.role === 'admin' || profile.role === 'professor';
   // On calcule TOUJOURS les états « élève » (cadenas + dates d'ouverture) pour
   // que l'admin visualise le cheminement réel ; l'admin reste libre d'ouvrir
   // n'importe quel parcours (géré par `isStaff` dans chaque nœud).

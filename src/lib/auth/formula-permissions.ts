@@ -15,6 +15,7 @@ type Row = {
   interrogation: boolean;
   seance_approfondie: boolean;
   notes: boolean;
+  parcours_major: boolean;
 };
 
 function rowToAccess(row: Row): ContentAccess {
@@ -29,6 +30,7 @@ function rowToAccess(row: Row): ContentAccess {
     interrogation: row.interrogation,
     seanceApprofondie: row.seance_approfondie,
     notes: row.notes,
+    parcoursMajor: row.parcours_major,
   };
 }
 
@@ -41,7 +43,7 @@ export async function fetchContentAccessWith(client: SupabaseClient, offer: Offe
   try {
     const { data } = await client
       .from('formula_permissions')
-      .select('fiche, fiche_express, video, qcm, entrainement, seance_prof, flashcards, interrogation, seance_approfondie, notes')
+      .select('fiche, fiche_express, video, qcm, entrainement, seance_prof, flashcards, interrogation, seance_approfondie, notes, parcours_major')
       .eq('offer', offer)
       .maybeSingle();
     if (data) return rowToAccess(data as unknown as Row);
@@ -111,6 +113,7 @@ export const CONTENT_ACCESS_LABELS: { key: keyof ContentAccess; label: string }[
   { key: 'interrogation', label: 'Interrogation' },
   { key: 'seanceApprofondie', label: 'Séance approfondie' },
   { key: 'notes', label: 'Prise de notes' },
+  { key: 'parcoursMajor', label: 'Parcours du Major' },
 ];
 
 /** Liste des contenus débloqués par une formule (d'après la config). */

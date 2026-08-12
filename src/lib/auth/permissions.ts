@@ -153,21 +153,22 @@ export type ContentAccess = {
   interrogation: boolean;
   seanceApprofondie: boolean;
   notes: boolean;
+  parcoursMajor: boolean;
 };
 
 export function getContentAccess(offer: Offer): ContentAccess {
   switch (offer) {
     case 'essentiel':
-      return { fiche: false, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
+      return { fiche: false, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true, parcoursMajor: false };
     case 'intensif':
-      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true };
+      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: false, flashcards: true, interrogation: true, seanceApprofondie: false, notes: true, parcoursMajor: true };
     case 'approfondi':
       // « Tout sauf cours vidéo » (+ restriction voie sur les séries MG,
       // appliquée par la RLS). Séances prof/approfondies incluses ; entraînement
       // ciblé conservé (QCM pour la voie interne, QROC pour la voie externe).
-      return { fiche: true, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
+      return { fiche: true, ficheExpress: true, video: false, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true, parcoursMajor: true };
     default:
-      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true };
+      return { fiche: true, ficheExpress: true, video: true, qcm: true, entrainement: true, seanceProf: true, flashcards: true, interrogation: true, seanceApprofondie: true, notes: true, parcoursMajor: false };
   }
 }
 
@@ -184,12 +185,13 @@ export function mergeAccess(a: ContentAccess, b: ContentAccess): ContentAccess {
     interrogation: a.interrogation || b.interrogation,
     seanceApprofondie: a.seanceApprofondie || b.seanceApprofondie,
     notes: a.notes || b.notes,
+    parcoursMajor: a.parcoursMajor || b.parcoursMajor,
   };
 }
 
 const NO_ACCESS: ContentAccess = {
   fiche: false, ficheExpress: false, video: false, qcm: false, entrainement: false,
-  seanceProf: false, flashcards: false, interrogation: false, seanceApprofondie: false, notes: false,
+  seanceProf: false, flashcards: false, interrogation: false, seanceApprofondie: false, notes: false, parcoursMajor: false,
 };
 
 /** Accès combiné (union) de plusieurs offres, version hardcodée. */

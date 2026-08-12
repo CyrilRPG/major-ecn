@@ -105,12 +105,14 @@ export function Navigator({
   tree,
   role = 'student',
   isDecouverte = false,
+  canAccessParcoursMajor = false,
 }: {
   tree: NavCollege[];
   role?: 'student' | 'admin' | 'professor';
   /** Mode Découverte : Entraînement / Révisions / Agenda / Annales EVC
    *  deviennent des boutons cadenas qui ouvrent LockedContentModal. */
   isDecouverte?: boolean;
+  canAccessParcoursMajor?: boolean;
 }) {
   // Pour les profs : seulement les collèges/cours, pas Accueil/Agenda/etc.
   const isProf = role === 'professor';
@@ -239,8 +241,7 @@ export function Navigator({
         Accueil
       </Link>
 
-      {/* Parcours du Major — réservé aux admins pour l'instant. */}
-      {role === 'admin' && (
+      {(role === 'admin' || canAccessParcoursMajor) && (
         <Link href="/parcours" className={topLevelClass(parcoursActive)}>
           <Trophy className="h-[18px] w-[18px] shrink-0" />
           Parcours du Major

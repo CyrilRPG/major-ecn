@@ -7,6 +7,10 @@ import { ParcoursExercices, type RunnerQuestion } from '@/components/student/par
 import { BAND_META } from '@/lib/parcours/parcours';
 import { PARCOURS_PROSE } from '@/lib/parcours/prose';
 import { fetchCompletions, fetchParcoursByNumero } from '@/lib/parcours/source';
+import { fetchParcoursList } from '@/lib/parcours/source';
+import { peutJouer } from '@/lib/parcours/parcours';
+import { parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +23,11 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
   const { numero: numeroRaw } = await params;
   const numero = Number(numeroRaw);
   const { user, profile } = await requireUser();
-  if (profile.role !== 'admin') redirect('/accueil');
+  const isStaff = profile.role === 'admin';
+  if (!isStaff) {
+    const access = await fetchContentAccessForScope(parseScope(profile.permission_scope));
+    if (!access.parcoursMajor) redirect('/accueil');
+  }
   if (!Number.isInteger(numero)) notFound();
   const supabase = await createClient();
 
@@ -28,6 +36,17 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
   const parcours = loaded.parcours;
 
   const completions = await fetchCompletions(supabase, user.id);
+  if (!isStaff) {
+    const { rows } = await fetchParcoursList(supabase);
+    const catalogue = rows.filter((p) => p.active).map((p) => ({
+      id: p.id,
+      numero: p.numero,
+      titre: p.titre,
+      sousTitre: p.sous_titre,
+      availableAt: p.available_at,
+    }));
+    if (!peutJouer(catalogue, completions, parcours.id, new Date(), false)) redirect('/parcours');
+  }
   const comp = completions.find((c) => c.parcoursId === parcours.id) ?? null;
 
   // Ordonner : le cas clinique (QROC) puis les QCM — le rappel est au-dessus.
