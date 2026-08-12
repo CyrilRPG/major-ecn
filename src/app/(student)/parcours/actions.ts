@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { computeScore10, scoreBand, type ParcoursBand } from '@/lib/parcours/parcours';
+import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 
 /**
  * Enregistre la complétion d'un parcours par l'élève.
@@ -21,7 +23,13 @@ export async function submitParcoursAction(input: {
   correct: number;
   total: number;
 }): Promise<{ ok: true; score: number; band: ParcoursBand; persisted: boolean } | { error: string }> {
-  const { user } = await requireUser();
+  const { user, profile } = await requireUser();
+  if (profile.role !== 'admin') {
+    const access = await fetchContentAccessForScope(parseScope(profile.permission_scope));
+    if (!access.parcoursMajor || !hasMedecineGeneraleAccess(profile.permission_scope)) {
+      return { error: 'Le Parcours du Major est réservé aux élèves de Médecine générale autorisés.' };
+    }
+  }
 
   // Repli statique (aperçu sans base) : on fait confiance au comptage client,
   // sans persistance. `parcoursId` en `static-…` = aucune ligne en base.

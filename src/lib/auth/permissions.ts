@@ -71,6 +71,44 @@ export function scopeOffers(scope: PermissionScope): Offer[] {
   return scope.offers && scope.offers.length > 0 ? scope.offers : [scope.offer];
 }
 
+function normalizeSpecialty(value: unknown): string {
+  return typeof value === 'string'
+    ? value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase()
+    : '';
+}
+
+/**
+ * Le Parcours du Major est un contenu propre à la Médecine générale.
+ *
+ * `paid_specialty` est la source prioritaire lorsqu'elle existe, puis
+ * `specialty_wish`. Pour les anciens comptes sans ces métadonnées, on se
+ * rabat sur les collèges attribués. Les comptes Gériatrie sont exclus de ce
+ * repli, car leur bonus pédagogique ajoute techniquement des collèges MG sans
+ * constituer une inscription à la spécialité Médecine générale.
+ */
+export function hasMedecineGeneraleAccess(raw: unknown): boolean {
+  if (!raw || typeof raw !== 'object') return false;
+  const scope = raw as {
+    paid_specialty?: unknown;
+    specialty_wish?: unknown;
+    colleges?: unknown;
+  };
+
+  const paidSpecialty = normalizeSpecialty(scope.paid_specialty);
+  if (paidSpecialty) return paidSpecialty === 'medecine generale';
+
+  const specialtyWish = normalizeSpecialty(scope.specialty_wish);
+  if (specialtyWish) return specialtyWish === 'medecine generale';
+
+  const colleges = Array.isArray(scope.colleges)
+    ? scope.colleges.filter((value): value is string => typeof value === 'string')
+    : [];
+  const hasMgCollege = colleges.some(
+    (college) => college === 'col-medecine-generale' || college.startsWith('col-mg-'),
+  );
+  return hasMgCollege && !colleges.includes('col-geriatrie');
+}
+
 /**
  * Vérifie l'accès à un collège.
  * `accessType` (depuis `matieres.access_type`) :

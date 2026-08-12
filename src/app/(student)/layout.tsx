@@ -10,7 +10,7 @@ import { StudentTutorialPopup } from '@/components/student/student-tutorial-popu
 import { OnboardingTour } from '@/components/student/onboarding-tour';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
-import { parseScope } from '@/lib/auth/permissions';
+import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
 import {
@@ -33,7 +33,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const scopeForNav = parseScope(profile.permission_scope);
   const parcoursAccessPromise = profile.role === 'admin'
     ? Promise.resolve(true)
-    : fetchContentAccessForScope(scopeForNav).then((access) => access.parcoursMajor);
+    : fetchContentAccessForScope(scopeForNav).then(
+        (access) => access.parcoursMajor && hasMedecineGeneraleAccess(profile.permission_scope),
+      );
   const isDecouverte =
     scopeForNav.offer === 'decouverte' &&
     scopeForNav.type === 'college' &&

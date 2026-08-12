@@ -8,7 +8,7 @@ import {
   type ParcoursLite, type ParcoursState,
 } from '@/lib/parcours/parcours';
 import { fetchCompletions, fetchParcoursList } from '@/lib/parcours/source';
-import { parseScope } from '@/lib/auth/permissions';
+import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 
 export const metadata = { title: 'Parcours du Major' };
@@ -19,7 +19,7 @@ export default async function ParcoursPage() {
   const isStaff = profile.role === 'admin';
   if (!isStaff) {
     const access = await fetchContentAccessForScope(parseScope(profile.permission_scope));
-    if (!access.parcoursMajor) redirect('/accueil');
+    if (!access.parcoursMajor || !hasMedecineGeneraleAccess(profile.permission_scope)) redirect('/accueil');
   }
   const supabase = await createClient();
 

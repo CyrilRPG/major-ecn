@@ -9,7 +9,7 @@ import { PARCOURS_PROSE } from '@/lib/parcours/prose';
 import { fetchCompletions, fetchParcoursByNumero } from '@/lib/parcours/source';
 import { fetchParcoursList } from '@/lib/parcours/source';
 import { peutJouer } from '@/lib/parcours/parcours';
-import { parseScope } from '@/lib/auth/permissions';
+import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 
 export const dynamic = 'force-dynamic';
@@ -26,7 +26,7 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
   const isStaff = profile.role === 'admin';
   if (!isStaff) {
     const access = await fetchContentAccessForScope(parseScope(profile.permission_scope));
-    if (!access.parcoursMajor) redirect('/accueil');
+    if (!access.parcoursMajor || !hasMedecineGeneraleAccess(profile.permission_scope)) redirect('/accueil');
   }
   if (!Number.isInteger(numero)) notFound();
   const supabase = await createClient();
