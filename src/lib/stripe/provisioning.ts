@@ -26,6 +26,7 @@ import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/emai
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
 import { highestOffer, type Offer } from '@/types/domain';
+import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 
 export type ProvisioningInput = {
   email: string;
@@ -262,13 +263,28 @@ export async function provisionStudentAccount(
     : prevCollegesRaw.filter((c) => c === 'col-decouverte');
   const mergedColleges = Array.from(new Set<string>([...prevColleges, ...colleges]));
 
+  // Un achat Gériatrie doit recevoir le même bonus MG que les comptes créés
+  // depuis l'admin. Sans cette étape, le provisioning Stripe reconstruisait le
+  // scope avec le seul collège Gériatrie et faisait disparaître les 60 items
+  // bonus lors d'un achat, renouvellement ou rapprochement Stripe.
+  const previousCours = Array.isArray(prevScope.cours)
+    ? prevScope.cours.filter((value: unknown): value is string => typeof value === 'string')
+    : undefined;
+  const bonusScope = prevIsAll
+    ? { colleges: mergedColleges, cours: previousCours }
+    : await applyGeriatrieMgBonus(admin, mergedColleges, previousCours);
+
   // On part du scope existant (préserve `signup`, `espace_decouverte`,
   // `specialty_wish`…) puis on superpose les marqueurs d'achat + l'union.
   const permission_scope = {
     ...prevScope,
     ...(prevIsAll
       ? { type: 'all' as const }
-      : { type: 'college' as const, colleges: mergedColleges }),
+      : {
+          type: 'college' as const,
+          colleges: bonusScope.colleges,
+          ...(bonusScope.cours && bonusScope.cours.length > 0 ? { cours: bonusScope.cours } : {}),
+        }),
     offer: mergedOffer,
     // Écrase explicitement toute liste `offers` héritée (undefined => clé retirée).
     offers: offersField,
@@ -287,7 +303,7 @@ export async function provisionStudentAccount(
   };
   log('scope-merged', {
     priorPaid, purchased: offerForFormule, unionOffers, mergedOffer,
-    type: prevIsAll ? 'all' : 'college', collegesCount: prevIsAll ? 'all' : mergedColleges.length,
+    type: prevIsAll ? 'all' : 'college', collegesCount: prevIsAll ? 'all' : bonusScope.colleges.length,
   });
 
   // ─── PÉRIODE D'ACCÈS (sessions EVC) ───

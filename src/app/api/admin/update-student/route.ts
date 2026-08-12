@@ -67,9 +67,18 @@ export async function PATCH(req: Request) {
       ? await applyGeriatrieMgBonus(admin, nextColleges, cours)
       : { colleges: nextColleges, cours: cours && cours.length > 0 ? cours : undefined };
 
-  const mgGranted = permission_type === 'all' || collegesAvecBonus.includes('col-medecine-generale');
+  // Déduire la spécialité du choix ADMIN, avant l'ajout automatique des bonus.
+  // Sinon Gériatrie serait étiquetée « Médecine générale » parce que son bonus
+  // ajoute justement `col-medecine-generale` au scope technique.
+  const directlyAssignedColleges = nextColleges;
   const voieFields = voie ? { paid_voie: voie } : {};
-  const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
+  const specialtyFields = directlyAssignedColleges.includes('col-geriatrie')
+    ? { paid_specialty: 'Gériatrie' }
+    : permission_type === 'all' || directlyAssignedColleges.some(
+        (college) => college === 'col-medecine-generale' || college.startsWith('col-mg-'),
+      )
+      ? { paid_specialty: 'Médecine générale' }
+      : {};
 
   const permission_scope =
     permission_type === 'all'

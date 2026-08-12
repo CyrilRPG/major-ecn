@@ -46,8 +46,17 @@ export function buildStudentScope(input: {
   // Voie : stockée en `paid_voie` — lue par la RLS (current_voie()) ET parseScope,
   // exactement comme après un paiement Stripe. Filtre QCM/DP vs QROC/DP-QROC.
   const voieFields = voie ? { paid_voie: voie } : {};
-  const mgGranted = permission_type === 'all' || (colleges ?? []).includes('col-medecine-generale');
-  const specialtyFields = mgGranted ? { paid_specialty: 'Médecine générale' } : {};
+  // Le bonus Gériatrie ajoute techniquement le parent MG et plusieurs
+  // sous-collèges. La spécialité réelle doit néanmoins rester « Gériatrie » :
+  // elle pilote notamment les restrictions propres au Parcours du Major.
+  const assignedColleges = colleges ?? [];
+  const specialtyFields = assignedColleges.includes('col-geriatrie')
+    ? { paid_specialty: 'Gériatrie' }
+    : permission_type === 'all' || assignedColleges.some(
+        (college) => college === 'col-medecine-generale' || college.startsWith('col-mg-'),
+      )
+      ? { paid_specialty: 'Médecine générale' }
+      : {};
   return permission_type === 'all'
     ? { type: 'all' as const, offer, ...offersField, ...specialtyFields, ...voieFields }
     : {
