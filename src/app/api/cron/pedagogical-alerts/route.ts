@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { raiseAdminAlert } from '@/lib/pedago/alerts';
+import { raiseAdminAlert, sendDailyAlertDigest } from '@/lib/pedago/alerts';
 import { isExamTargeted } from '@/lib/exams/targeting';
 import { parseScope } from '@/lib/auth/permissions';
 
@@ -39,6 +39,7 @@ export async function GET(req: Request) {
     lowRevisions30d: 0,
     examUnder40: 0,
     examNotTaken30d: 0,
+    digest: { sent: false, p1: 0, p2: 0 },
   };
 
   /* ── 0. Recalcul des compteurs de maintien ── */
@@ -185,6 +186,16 @@ export async function GET(req: Request) {
         if (ok) summary.examNotTaken30d++;
       }
     }
+  }
+
+  /* ── 4. Email récapitulatif quotidien ──
+     UN seul email listant toutes les alertes pas encore emailées — y compris
+     les alertes événementielles créées au fil de l'eau depuis la veille par
+     les server actions (évaluations, réévaluations, bilans). */
+  try {
+    summary.digest = await sendDailyAlertDigest();
+  } catch (err) {
+    console.error('[PedagogicalAlerts] digest en échec', err);
   }
 
   return NextResponse.json({ ok: true, summary });

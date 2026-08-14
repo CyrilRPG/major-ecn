@@ -3,9 +3,11 @@ import 'server-only';
 /**
  * Chaîne d'alertes administrateur (section 13 du cahier des charges).
  *
- * Priorité 1 → email automatique + apparition dans « Candidats à contacter »
- * (CRM / page Alertes = alertes P1 non résolues).
- * Priorité 2 → email + notification admin (ligne admin_alerts).
+ * Les alertes sont créées EN TEMPS RÉEL dans admin_alerts (page Alertes, CRM,
+ * « Candidats à contacter » = P1 non résolues). L'email n'est PAS envoyé
+ * alerte par alerte : le cron quotidien envoie UN récapitulatif des alertes
+ * pas encore emailées (`sendDailyAlertDigest`, colonne `emailed_at`) — choix
+ * produit du 14/08/2026 pour éviter les rafales d'emails.
  *
  * Déclencheurs événementiels (appelés par les server actions) :
  *  - évaluation officielle enregistrée → 3 rouges (P1), 2 oranges (P2),
@@ -76,33 +78,120 @@ export async function raiseAdminAlert(input: AlertInput): Promise<boolean> {
     return false;
   }
 
+  // Les lignes de détail (« Cardiologie : 42 % ») sont stockées avec l'alerte :
+  // c'est le récapitulatif quotidien qui les mettra dans l'email.
   const { error } = await client.from('admin_alerts').insert({
     user_id: input.userId,
     priority: input.priority,
     motif: input.motif,
-    details: { ...(input.details ?? {}), key: input.key },
+    details: { ...(input.details ?? {}), key: input.key, email_lines: input.emailLines ?? [] },
   });
   if (error) {
     console.error('[AdminAlert] insertion impossible', error.message);
     return false;
   }
-
-  // Email — Priorité 1 ET Priorité 2 (section 13).
-  const { data: prof } = await client
-    .from('profiles')
-    .select('first_name, last_name, email')
-    .eq('id', input.userId)
-    .maybeSingle();
-  const p = (prof ?? {}) as { first_name?: string | null; last_name?: string | null; email?: string | null };
-  const name = [p.first_name, p.last_name].filter(Boolean).join(' ') || 'Candidat';
-  await sendAlertEmail({
-    priority: input.priority,
-    studentName: name,
-    studentEmail: p.email ?? '',
-    motif: input.motif,
-    lines: input.emailLines ?? [],
-  });
   return true;
+}
+
+/**
+ * Récapitulatif quotidien : UN email listant toutes les alertes pas encore
+ * emailées (P1 d'abord), puis marquage `emailed_at`. Aucun email si rien de
+ * nouveau. Appelé par le cron /api/cron/pedagogical-alerts.
+ */
+export async function sendDailyAlertDigest(): Promise<{ sent: boolean; p1: number; p2: number }> {
+  const client = resolveClient(null);
+  if (!client) return { sent: false, p1: 0, p2: 0 };
+
+  const { data: alertsRaw } = await client
+    .from('admin_alerts')
+    .select('id, user_id, priority, motif, details, created_at')
+    .is('emailed_at', null)
+    .order('priority', { ascending: true })
+    .order('created_at', { ascending: false });
+  type AlertRow = {
+    id: string; user_id: string; priority: number; motif: string;
+    details: { email_lines?: string[] } | null; created_at: string;
+  };
+  const alerts = (alertsRaw ?? []) as AlertRow[];
+  if (alerts.length === 0) return { sent: false, p1: 0, p2: 0 };
+
+  const userIds = [...new Set(alerts.map((a) => a.user_id))];
+  const { data: profsRaw } = await client
+    .from('profiles')
+    .select('id, first_name, last_name, email')
+    .in('id', userIds);
+  const profs = new Map(
+    ((profsRaw ?? []) as { id: string; first_name: string | null; last_name: string | null; email: string | null }[])
+      .map((p) => [p.id, p]),
+  );
+  const nameOf = (uid: string) => {
+    const p = profs.get(uid);
+    const n = [p?.first_name, p?.last_name].filter(Boolean).join(' ');
+    return { name: n || 'Candidat', email: p?.email ?? '' };
+  };
+
+  const p1 = alerts.filter((a) => a.priority === 1);
+  const p2 = alerts.filter((a) => a.priority === 2);
+  const dateLabel = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  const subject = `Récap alertes Major EVC — ${dateLabel} — ${p1.length} P1 · ${p2.length} P2`;
+
+  const sectionHtml = (list: AlertRow[], label: string, color: string) => {
+    if (list.length === 0) return '';
+    const rows = list.map((a) => {
+      const s = nameOf(a.user_id);
+      const lines = (a.details?.email_lines ?? [])
+        .map((l) => `<p style="font-size:13px;color:#374151;margin:1px 0 0 0">${escapeHtml(l)}</p>`)
+        .join('');
+      return `<div style="border:1px solid #E5E7EB;border-left:4px solid ${color};border-radius:8px;padding:12px 16px;margin:0 0 10px">
+  <p style="font-size:14px;color:#111;margin:0"><strong>${escapeHtml(s.name)}</strong> <span style="color:#6B7280">${escapeHtml(s.email)}</span></p>
+  <p style="font-size:13px;color:#111;margin:4px 0 0"><strong>Motif :</strong> ${escapeHtml(a.motif)}</p>
+  ${lines}
+</div>`;
+    }).join('');
+    return `<p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:${color};text-transform:uppercase;margin:20px 0 10px">${label} (${list.length})</p>${rows}`;
+  };
+
+  const html = `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"/></head>
+<body style="font-family:sans-serif;margin:0;padding:24px;background:#F9FAFB">
+<div style="max-width:640px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid #E5E7EB;padding:32px">
+  <h1 style="font-size:18px;color:#111;margin:0">Récapitulatif quotidien des alertes pédagogiques</h1>
+  <p style="font-size:13px;color:#6B7280;margin:6px 0 0">${escapeHtml(dateLabel)} — ${alerts.length} nouvelle${alerts.length > 1 ? 's' : ''} alerte${alerts.length > 1 ? 's' : ''}</p>
+  ${sectionHtml(p1, 'Priorité 1 — prise de contact pédagogique recommandée', '#A91D2C')}
+  ${sectionHtml(p2, 'Priorité 2 — à surveiller', '#E8742C')}
+  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
+  <p style="font-size:12px;color:#6B7280;margin:0">
+    Détail et résolution : Admin → Alertes pédagogiques. Les Priorité 1 non résolues
+    apparaissent dans « Candidats à contacter » (CRM).
+  </p>
+</div>
+</body></html>`;
+
+  const sectionText = (list: AlertRow[], label: string) =>
+    list.length === 0 ? [] : [
+      '', `${label} (${list.length})`,
+      ...list.flatMap((a) => {
+        const s = nameOf(a.user_id);
+        return [`- ${s.name} (${s.email}) — ${a.motif}`, ...(a.details?.email_lines ?? []).map((l) => `    ${l}`)];
+      }),
+    ];
+  const text = [
+    `Récapitulatif quotidien des alertes pédagogiques — ${dateLabel}`,
+    ...sectionText(p1, 'PRIORITÉ 1 — prise de contact pédagogique recommandée'),
+    ...sectionText(p2, 'PRIORITÉ 2 — à surveiller'),
+  ].join('\n');
+
+  const res = await sendEmail({ to: INTERNAL_NOTIFY_EMAILS, subject, html, text })
+    .catch((err) => {
+      console.error('[AlertDigest] échec envoi', err);
+      return { ok: false as const, error: String(err) };
+    });
+  if (!res.ok) return { sent: false, p1: p1.length, p2: p2.length };
+
+  // Marquage — uniquement après un envoi réussi.
+  const now = new Date().toISOString();
+  await client.from('admin_alerts').update({ emailed_at: now }).in('id', alerts.map((a) => a.id));
+  return { sent: true, p1: p1.length, p2: p2.length };
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -302,53 +391,6 @@ export async function checkAlertsAfterTransversalSession(
       });
     }
   }
-}
-
-/* ────────────────────────────────────────────────────────────────────────────
-   Email — format de la section 13.
-   ──────────────────────────────────────────────────────────────────────────── */
-
-async function sendAlertEmail(input: {
-  priority: number;
-  studentName: string;
-  studentEmail: string;
-  motif: string;
-  lines: string[];
-}): Promise<void> {
-  const subject = `ALERTE MAJOR EVC — Priorité ${input.priority} — ${input.studentName}`;
-  const linesHtml = input.lines.length > 0
-    ? `<div style="margin:16px 0 0">${input.lines.map((l) => `<p style="font-size:14px;color:#111;margin:2px 0">${escapeHtml(l)}</p>`).join('')}</div>`
-    : '';
-  const html = `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"/></head>
-<body style="font-family:sans-serif;margin:0;padding:24px;background:#F9FAFB">
-<div style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid #E5E7EB;padding:32px">
-  <p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:${input.priority === 1 ? '#A91D2C' : '#E8742C'};text-transform:uppercase;margin:0">
-    ALERTE MAJOR EVC — Priorité ${input.priority}
-  </p>
-  <h1 style="font-size:20px;color:#111;margin:12px 0 4px">Candidat : ${escapeHtml(input.studentName)}</h1>
-  <p style="font-size:14px;color:#6B7280;margin:0">${escapeHtml(input.studentEmail)}</p>
-  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
-  <p style="font-size:14px;color:#111;margin:0"><strong>Motif :</strong> ${escapeHtml(input.motif)}</p>
-  ${linesHtml}
-  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
-  <p style="font-size:13px;color:#6B7280;margin:0">
-    <strong>Action recommandée :</strong> prise de contact pédagogique.
-  </p>
-</div>
-</body></html>`;
-  const text = [
-    `ALERTE MAJOR EVC — Priorité ${input.priority}`,
-    '',
-    `Candidat : ${input.studentName} (${input.studentEmail})`,
-    `Motif : ${input.motif}`,
-    ...(input.lines.length > 0 ? ['', ...input.lines] : []),
-    '',
-    'Action recommandée : prise de contact pédagogique.',
-  ].join('\n');
-
-  await sendEmail({ to: INTERNAL_NOTIFY_EMAILS, subject, html, text })
-    .catch((err) => console.error('[AlertEmail] échec envoi', err));
 }
 
 function escapeHtml(s: string): string {
