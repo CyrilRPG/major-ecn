@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Download, FileText, Pencil } from 'lucide-react';
-import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser, profPageReadGuard, canEditCoursContent } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { canAccessCollege, canDownloadFiche, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { ficheLabel, trierFiches } from '@/lib/fiches/documents';
 
@@ -69,8 +68,9 @@ export default async function CoursFichePage({
   const estPrincipale = !!courant && courant.id === toutes[0]?.id;
 
   const initiallyRead = !!c.course_progress?.[0]?.fiche_read;
-  const canEdit = profile.role === 'admin'
-    || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'fiche'));
+  // Écriture sur le type « fiche » ET item attribué : sans la seconde condition,
+  // le bouton mène à un éditeur inaccessible (404). Cf. prof-content-access.ts.
+  const canEdit = canEditCoursContent(profile, 'fiche', c.matiere_id, c.id);
   // Téléchargement : admin toujours ; sinon droit global (can_download) ou
   // droit accordé sur la spécialité de ce cours (download_colleges).
   const canDownload = canDownloadFiche(

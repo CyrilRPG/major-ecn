@@ -1,10 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser, getProfessorScope, profPageReadGuard } from '@/lib/auth/require-role';
+import { requireUser, canEditCoursContent, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { canWrite } from '@/lib/schemas/professor';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 
 export default async function QcmRunPage({
@@ -83,11 +82,10 @@ export default async function QcmRunPage({
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
 
-  // Mode édition prof : visible UNIQUEMENT pour profs ayant le scope écriture
-  // sur le contenu QCM. Permet d'ouvrir l'éditeur de question depuis la vue
-  // élève via un bouton crayon.
-  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
-  const editable = profile.role === 'admin' || (profScope ? canWrite(profScope, 'qcm') : false);
+  // Mode édition prof : visible UNIQUEMENT pour un prof ayant le droit
+  // d'écriture QCM **et** cet item dans sa portée. Permet d'ouvrir l'éditeur de
+  // question depuis la vue élève via un bouton crayon.
+  const editable = canEditCoursContent(profile, 'qcm', c.matiere_id, c.id);
 
   // Questions déjà enregistrées dans « Questions à revoir » par cet élève.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

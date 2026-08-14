@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { assertCanWrite, assertCanWriteAnyQcm, requireContentEditor } from '@/lib/auth/require-role';
+import { assertCanWrite, assertCanWriteAnyQcm, checkCoursScope, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { embed, toPgVector } from '@/lib/ai/embeddings';
@@ -17,6 +17,8 @@ export async function addAnnaleAction(input: {
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'annale'); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, input.coursId);
+  if (refus) return { error: refus };
   if (!input.label?.trim()) return { error: 'Intitulé requis.' };
   const admin = createAdminClient();
 
@@ -76,6 +78,8 @@ export async function reindexCoursAction(coursId: string): Promise<
   } catch (e) {
     return { error: (e as Error).message };
   }
+  const refus = await checkCoursScope(scope, coursId);
+  if (refus) return { error: refus };
   if (!process.env.VOYAGE_API_KEY) {
     return { error: 'VOYAGE_API_KEY non configurée — impossible de calculer les embeddings.' };
   }
@@ -233,6 +237,8 @@ async function logGeneration(args: {
 export async function generateFlashcardsAction(coursId: string): Promise<GenResult> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, coursId);
+  if (refus) return { error: refus };
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
   if (!ctx.hasFiche) {
@@ -345,6 +351,8 @@ type QcmGenShape = {
 export async function generateQcmAction(coursId: string): Promise<GenResult> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, coursId);
+  if (refus) return { error: refus };
   const ctx = await loadCourseContext(coursId);
   if (!ctx) return { error: 'Cours introuvable.' };
   if (!ctx.hasFiche) {

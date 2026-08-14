@@ -2,7 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { assertCanWrite, assertCanWriteAnyQcm, requireContentEditor } from '@/lib/auth/require-role';
+import {
+  assertCanWrite, assertCanWriteAnyQcm, requireContentEditor,
+  checkCoursScope, coursIdOfSerie, coursIdOfQuestion, coursIdOfFlashcard,
+} from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
 import { sanitizeFlashcardHtml, flashcardPlainText, flashcardHasContent } from '@/lib/flashcards/rich-text';
@@ -65,6 +68,8 @@ export async function createQcmSerieAction(input: {
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, input.coursId);
+  if (refus) return { error: refus };
   if (!input.label.trim()) return { error: 'Intitulé requis.' };
 
   const admin = createAdminClient();
@@ -114,6 +119,9 @@ export async function updateSerieVignetteAction(input: {
 }): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  // Portée vérifiée sur l'item RÉEL de la série, pas sur le `coursId` du client.
+  const refus = await checkCoursScope(scope, await coursIdOfSerie(input.serieId));
+  if (refus) return { error: refus };
   const admin = createAdminClient();
   const { data: serie } = await admin.from('qcm_series').select('label').eq('id', input.serieId).maybeSingle();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -141,6 +149,8 @@ export async function updateSerieVignetteAction(input: {
 export async function deleteQcmSerieAction(serieId: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, await coursIdOfSerie(serieId));
+  if (refus) return { error: refus };
   const admin = createAdminClient();
   const { data: serie } = await admin.from('qcm_series').select('label').eq('id', serieId).maybeSingle();
   const { error } = await admin.from('qcm_series').delete().eq('id', serieId);
@@ -174,6 +184,12 @@ export async function upsertQcmQuestionAction(input: {
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  // Édition → item de la question ; création → item de la série visée.
+  const cible = input.questionId
+    ? await coursIdOfQuestion(input.questionId)
+    : await coursIdOfSerie(input.serieId);
+  const refus = await checkCoursScope(scope, cible);
+  if (refus) return { error: refus };
 
   const parsed = QuestionSchema.safeParse(input.question);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
@@ -309,6 +325,8 @@ export async function upsertQcmQuestionAction(input: {
 export async function deleteQcmQuestionAction(questionId: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWriteAnyQcm(scope); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, await coursIdOfQuestion(questionId));
+  if (refus) return { error: refus };
   const admin = createAdminClient();
   // Snapshot complet (question + items) AVANT delete → permet la restauration depuis les logs.
   const { data: snapshot } = await admin
@@ -349,6 +367,11 @@ export async function upsertFlashcardAction(input: {
 }): Promise<{ ok: true; id: string } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(
+    scope,
+    input.id ? await coursIdOfFlashcard(input.id) : input.coursId,
+  );
+  if (refus) return { error: refus };
 
   // Nettoyage du HTML riche (gras / couleur / image) selon la liste blanche.
   const recto = sanitizeFlashcardHtml(input.recto);
@@ -414,6 +437,8 @@ export async function upsertFlashcardAction(input: {
 export async function deleteFlashcardAction(id: string, coursId: string): Promise<{ ok: true } | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try { assertCanWrite(scope, 'flashcards'); } catch (e) { return { error: (e as Error).message }; }
+  const refus = await checkCoursScope(scope, await coursIdOfFlashcard(id));
+  if (refus) return { error: refus };
   const admin = createAdminClient();
   const { data: snapshot } = await admin.from('flashcards')
     .select('id, cours_id, recto, verso, order_index')

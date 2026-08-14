@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Star, Trophy, Sparkles } from 'lucide-react';
-import { requireUser, profPageReadGuard, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser, profPageReadGuard, canEditCoursContent, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { EmptyState } from '@/components/empty-state';
@@ -36,8 +36,15 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const isAdmin = profile.role === 'admin';
-  const canEditQcm = isAdmin
-    || (profile.role === 'professor' && canWrite(getProfessorScope(profile.permission_scope), 'qcm'));
+  // Le bouton doit refléter l'accès RÉEL à CET item : un professeur dont le
+  // scope couvre le collège mais pas l'item n'a pas accès à /admin/contenu/<id>
+  // (RLS `accessible_cours_ids`) — lui proposer le lien renvoyait un 404.
+  const canEditQcm = canEditCoursContent(profile, 'qcm', c.matiere_id, c.id);
+  // Prof habilité sur les QCM, mais cet item ne lui est pas attribué : on le dit
+  // au lieu de faire disparaître le bouton sans explication.
+  const qcmHorsPerimetre = !canEditQcm
+    && profile.role === 'professor'
+    && canWrite(getProfessorScope(profile.permission_scope), 'qcm');
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'];
@@ -127,6 +134,18 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
               <Pencil className="h-3.5 w-3.5" /> Gérer les QCM
             </Link>
           </EditHintTooltip>
+        </div>
+      )}
+      {qcmHorsPerimetre && (
+        <div className="mb-3 flex items-start gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          <p>
+            Cet item ne vous est pas attribué : vous le consultez en lecture seule.{' '}
+            <Link href="/admin/contenu" className="font-semibold text-(--color-primary-deep) underline">
+              Retrouvez les items que vous pouvez modifier
+            </Link>{' '}
+            dans « Administration › Contenu ».
+          </p>
         </div>
       )}
       {/* Bandeau d'info : ampoule + tagline EVC. */}

@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { requireUser, profPageWriteGuard } from '@/lib/auth/require-role';
+import { requireUser, profPageWriteGuard, canEditCoursContent } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { FicheWysiwygEditor } from '@/components/fiches/fiche-wysiwyg-editor';
 
@@ -33,12 +33,19 @@ export default async function FicheEditPage({
   profPageWriteGuard(profile, 'fiche', `/cours/${coursId}/fiche`);
 
   const supabase = await createClient();
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await supabase
     .from('cours')
-    .select('id, titre, matieres(nom)')
+    .select('id, titre, matiere_id, matieres(nom)')
     .eq('id', coursId)
     .maybeSingle();
+  // Une erreur SQL/RLS ne doit jamais être déguisée en 404 : elle doit remonter.
+  if (coursError) throw coursError;
   if (!c) notFound();
+  // Item hors du périmètre du professeur : retour à la fiche en lecture, plutôt
+  // qu'un éditeur dont chaque enregistrement serait refusé.
+  if (!canEditCoursContent(profile, 'fiche', c.matiere_id, c.id)) {
+    redirect(`/cours/${coursId}/fiche`);
+  }
 
   // Un item peut porter plusieurs fiches : `?doc=<id>` désigne celle à éditer,
   // à défaut la fiche principale (order_index le plus bas). L'id doit

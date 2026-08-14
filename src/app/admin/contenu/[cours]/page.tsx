@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, PlayCircle } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, Lock, PlayCircle } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -42,6 +43,45 @@ type ManagedFicheRow = {
   created_at: string | null;
 };
 
+/**
+ * Écran « item hors périmètre » — remplace le 404 muet.
+ *
+ * Incident du 2026-08-14 : un professeur dont la portée couvre un collège
+ * entier mais seulement une partie de ses items arrivait ici depuis le bouton
+ * « Gérer les QCM » de la vue élève. La RLS (`accessible_cours_ids`) ne lui
+ * renvoyait aucune ligne, `!c` déclenchait `notFound()` et il voyait « 404 non
+ * found » sans comprendre pourquoi. Un refus d'accès doit se DIRE.
+ */
+function HorsPerimetre({ titre }: { titre: string | null }) {
+  return (
+    <main className="mx-auto w-full max-w-2xl px-4 py-16">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lock className="h-4 w-4" /> Cet item ne vous est pas attribué
+          </CardTitle>
+          <CardDescription>
+            {titre ? `« ${titre} » ` : 'Cet item '}
+            ne fait pas partie du périmètre associé à votre compte : vous pouvez le
+            consulter côté élève, mais pas le modifier. Vos items — ceux sur lesquels
+            vous pouvez créer et corriger des questions — sont listés dans
+            « Contenu ». Si un item manque à votre périmètre, demandez son ajout à
+            l’équipe Major ECN.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild size="sm">
+            <Link href="/admin/contenu">
+              <ArrowLeft />
+              Voir mes items
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </main>
+  );
+}
+
 export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
   const { scope } = await requireContentEditor();
@@ -61,8 +101,22 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   const canQcmFamilyRead = can.qcm.read || can.dp.read || can.qroc.read;
   const canQcmFamilyWrite = can.qcm.write || can.dp.write || can.qroc.write;
   const supabase = await createClient();
+  // ─────────────────────────────────────────────────────────────────────────
+  // Lecture en service-role, contrôle d'accès en application.
+  //
+  // Incident du 2026-08-14 (Dr Borgne) : cette page lisait `cours` avec
+  // l'embed `qcm_series(… qcm_questions(id))` via le client RLS. Les policies
+  // de `qcm_series`/`qcm_questions` sont de nouveau récursives en production
+  // (42P17), l'erreur n'était pas testée, `data` valait null → `notFound()` →
+  // « 404 non found » pour TOUS les items, y compris ceux du professeur ; et
+  // l'éditeur de questions s'ouvrait vide. Même parade que les pages élèves
+  // depuis le 2026-08-11 : on lit avec le service-role et on rejoue les droits
+  // ici (portée d'item ci-dessous + `can.*` par type de contenu plus bas), de
+  // sorte qu'une régression de policy ne puisse plus fermer l'espace prof.
+  // ─────────────────────────────────────────────────────────────────────────
+  const admin = createAdminClient();
 
-  const { data: c } = await supabase
+  const { data: c, error: coursError } = await admin
     .from('cours')
     .select(`
       id, titre, description, matiere_id, hidden_blocks,
@@ -75,8 +129,12 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     .eq('id', coursId)
     .maybeSingle();
 
-  if (!c) notFound();
-  if (!profCanAccessCours(scope, c.matiere_id, c.id)) redirect('/admin/contenu');
+  // Une erreur SQL ne doit jamais être déguisée en 404 : elle doit remonter.
+  if (coursError) throw coursError;
+  if (!c) notFound();                                    // item réellement inexistant
+  if (!profCanAccessCours(scope, c.matiere_id, c.id)) {   // item hors périmètre
+    return <HorsPerimetre titre={c.titre} />;
+  }
 
   // Collèges pour l'onglet Interrogations (champ « spécialité » d'une question).
   const { data: interroColsRaw } = await supabase.from('matieres').select('id, nom, parent_matiere_id').order('nom');
@@ -112,21 +170,26 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
 
   // Charge le détail complet des séries QCM (questions + items + images + corrigé général)
   // pour l'éditeur intégré côté admin. Une seule requête supplémentaire.
+  // Service-role ici aussi : lues via la RLS, ces deux requêtes échouaient en
+  // 42P17 et l'éditeur s'ouvrait sans aucune question (« impossible d'ajouter
+  // mes propres questions »). Les droits sont déjà tranchés plus haut.
   const qcmSerieIds = qcmSeries.map((s) => s.id);
-  const { data: qcmDetail } = qcmSerieIds.length > 0
+  const { data: qcmDetail, error: qcmDetailError } = qcmSerieIds.length > 0
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? await (supabase as any).from('qcm_questions')
+    ? await (admin as any).from('qcm_questions')
         .select('id, serie_id, format, enonce, reponse_attendue, order_index, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
         .in('serie_id', qcmSerieIds)
         .order('order_index', { ascending: true })
-    : { data: [] };
+    : { data: [], error: null };
+  if (qcmDetailError) throw qcmDetailError;
   // Vignettes par série (DP)
-  const { data: vignetteRows } = qcmSerieIds.length > 0
+  const { data: vignetteRows, error: vignetteError } = qcmSerieIds.length > 0
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? await (supabase as any).from('qcm_series')
+    ? await (admin as any).from('qcm_series')
         .select('id, vignette')
         .in('id', qcmSerieIds)
-    : { data: [] };
+    : { data: [], error: null };
+  if (vignetteError) throw vignetteError;
   const vignetteMap = new Map<string, string | null>(
     ((vignetteRows ?? []) as Array<{ id: string; vignette: string | null }>).map((r) => [r.id, r.vignette])
   );

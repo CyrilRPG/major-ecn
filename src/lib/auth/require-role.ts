@@ -6,6 +6,15 @@ import {
   canRead, canWrite, canWriteAnyQcm, hasAnyContentAccess,
   type ContentType, type ProfessorScope,
 } from '@/lib/schemas/professor';
+import { getProfessorScope, profCanAccessCours } from './prof-content-access';
+import { createAdminClient } from '@/lib/supabase/admin';
+
+// Règles pures (portée collège/item d'un professeur) : définies dans
+// `prof-content-access.ts` pour rester testables hors serveur, ré-exportées ici
+// car c'est le point d'entrée historique de tous les appelants.
+export {
+  getProfessorScope, profCanAccessCours, canEditCoursContent, canViewCoursContent,
+} from './prof-content-access';
 
 export async function requireUser() {
   const { user, profile } = await getCurrentUserAndProfile();
@@ -34,26 +43,6 @@ export async function requireStaff() {
   if (profile?.is_active === false) redirect('/login?disabled=1');
   if (!profile || (profile.role !== 'admin' && profile.role !== 'professor')) redirect('/app');
   return { user, profile, isAdmin: profile.role === 'admin' };
-}
-
-/** Lit la portée professeur depuis profile.permission_scope (null si non-prof / mal formé). */
-export function getProfessorScope(scope: unknown): ProfessorScope | null {
-  if (!scope || typeof scope !== 'object') return null;
-  const s = scope as Partial<ProfessorScope> & { content_types?: ContentType[] };
-  if (s.role !== 'professor') return null;
-  // Rétrocompat ancien format : content_types[] → rw pour chacun
-  let content_permissions = s.content_permissions ?? {};
-  if (!s.content_permissions && Array.isArray(s.content_types)) {
-    content_permissions = Object.fromEntries(s.content_types.map((t) => [t, 'rw' as const]));
-  }
-  const cours = Array.isArray(s.cours) ? s.cours.filter((x): x is string => typeof x === 'string') : undefined;
-  return {
-    role: 'professor',
-    type: s.type ?? 'all',
-    colleges: Array.isArray(s.colleges) ? s.colleges : [],
-    ...(cours && cours.length > 0 ? { cours } : {}),
-    content_permissions,
-  };
 }
 
 /**
@@ -124,11 +113,52 @@ export function profPageWriteGuard(
   if (!canWrite(getProfessorScope(profile.permission_scope), type)) redirect(redirectTo);
 }
 
-/** Vérifie qu'un prof a accès au cours (et à son collège). Renvoie true/false. */
-export function profCanAccessCours(scope: ProfessorScope | null, collegeId: string, coursId: string): boolean {
-  if (scope === null) return true; // admin
-  if (scope.type === 'all') return true;
-  if (!scope.colleges.includes(collegeId)) return false;
-  if (scope.cours && scope.cours.length > 0) return scope.cours.includes(coursId);
-  return true;
+/**
+ * Garde SERVEUR pour toute écriture ciblant un item : résout le collège du cours
+ * puis rejoue `profCanAccessCours`. À appeler dans CHAQUE server action qui
+ * modifie du contenu — les actions passent par le client service-role, donc la
+ * RLS ne les protège pas : sans cette garde, un professeur peut écrire sur un
+ * item hors de sa portée en changeant l'identifiant envoyé.
+ *
+ * Renvoie `null` si l'accès est accordé, sinon le message d'erreur à afficher.
+ */
+export const HORS_PERIMETRE =
+  'Cet item ne fait pas partie de votre périmètre. Ouvrez « Administration › Contenu » pour retrouver les items qui vous sont attribués.';
+
+export async function checkCoursScope(
+  scope: ProfessorScope | null,
+  coursId: string | null | undefined,
+): Promise<string | null> {
+  if (scope === null) return null; // admin
+  if (!coursId) return 'Item introuvable.';
+  const { data: c } = await createAdminClient()
+    .from('cours')
+    .select('id, matiere_id')
+    .eq('id', coursId)
+    .maybeSingle();
+  if (!c) return 'Item introuvable.';
+  return profCanAccessCours(scope, c.matiere_id, c.id) ? null : HORS_PERIMETRE;
+}
+
+/**
+ * Item porteur d'une série / d'une question / d'une flashcard, lu côté serveur.
+ * Les server actions reçoivent `coursId` du navigateur : on ne s'y fie jamais
+ * pour un contrôle d'accès, on remonte à l'item depuis l'entité visée.
+ */
+export async function coursIdOfSerie(serieId: string): Promise<string | null> {
+  const { data } = await createAdminClient()
+    .from('qcm_series').select('cours_id').eq('id', serieId).maybeSingle();
+  return (data as { cours_id: string } | null)?.cours_id ?? null;
+}
+
+export async function coursIdOfQuestion(questionId: string): Promise<string | null> {
+  const { data } = await createAdminClient()
+    .from('qcm_questions').select('qcm_series(cours_id)').eq('id', questionId).maybeSingle();
+  return (data as { qcm_series?: { cours_id: string } | null } | null)?.qcm_series?.cours_id ?? null;
+}
+
+export async function coursIdOfFlashcard(flashcardId: string): Promise<string | null> {
+  const { data } = await createAdminClient()
+    .from('flashcards').select('cours_id').eq('id', flashcardId).maybeSingle();
+  return (data as { cours_id: string } | null)?.cours_id ?? null;
 }

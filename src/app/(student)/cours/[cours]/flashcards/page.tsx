@@ -1,12 +1,11 @@
 import { notFound, redirect } from 'next/navigation';
 import { Layers3 } from 'lucide-react';
-import { requireUser, getProfessorScope, profPageReadGuard } from '@/lib/auth/require-role';
+import { requireUser, canEditCoursContent, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
 import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { canWrite } from '@/lib/schemas/professor';
 import { DIFFICULTY_SCORE, type Difficulty } from '@/types/domain';
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ cours: string }> }) {
@@ -70,8 +69,8 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     score: scoreMap.get(c.id) ?? 0,
   }));
 
-  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
-  const editable = profile.role === 'admin' || (profScope ? canWrite(profScope, 'flashcards') : false);
+  // Écriture « flashcards » ET item attribué au professeur (cf. prof-content-access).
+  const editable = canEditCoursContent(profile, 'flashcards', c.matiere_id, c.id);
 
   return (
     <FlashcardSession

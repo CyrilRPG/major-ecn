@@ -57,6 +57,11 @@ export default async function CoursLayout({
   // QCM est lue séparément afin qu'une policy défectueuse n'empêche pas
   // l'ouverture de tous les items.
   if (coursError) throw coursError;
+  // Un professeur dont la portée ne couvre pas cet item n'obtient aucune ligne
+  // (RLS `accessible_cours_ids`, migration 20260813090000). On le renvoie vers
+  // SES items au lieu de lui afficher « 404 non found », qu'il ne peut pas
+  // interpréter — cf. le signalement du 2026-08-14.
+  if (!c && profile.role === 'professor') redirect('/admin/contenu');
   if (!c || !c.matieres || !c.matieres.semestres) notFound();
 
   const { data: qcmSeries } = await createAdminClient()
