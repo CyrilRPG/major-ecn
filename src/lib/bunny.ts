@@ -142,19 +142,33 @@ export function bunnySignedMp4Url(
 }
 
 /**
+ * Librairie utilisée pour la LECTURE (iframe embed). Un ID de librairie n'est
+ * pas un secret — il figure dans chaque URL d'embed — d'où le repli codé en
+ * dur : la lecture ne doit JAMAIS dépendre de la configuration serveur.
+ */
+export function bunnyEmbedLibraryId(): string {
+  return process.env.BUNNY_STREAM_LIBRARY_ID?.trim() || '691475';
+}
+
+/**
  * URL d'embed (iframe) pour la lecture. Si la librairie a l'authentification
  * par token activée (BUNNY_STREAM_TOKEN_KEY), on signe l'URL (validité limitée).
  * Token = SHA256(tokenKey + videoId + expires).
+ *
+ * IMPORTANT : ne dépend PAS de getBunnyConfig() — celle-ci exige la clé API,
+ * qui ne sert qu'aux uploads et à l'administration. Quand la clé manquait en
+ * production, l'embed renvoyait null et TOUTES les vidéos de cours affichaient
+ * « Vidéo bientôt disponible » (zéro émargement vidéo, zéro « vidéo vue » au
+ * CRM), alors que les séances approfondies, elles, jouaient grâce à leur repli.
  */
 export function bunnyEmbedUrl(videoId: string, opts?: { libraryId?: string }): string {
-  const cfg = getBunnyConfig();
-  const libraryId = opts?.libraryId ?? cfg?.libraryId;
-  if (!libraryId) throw new Error('Bunny Stream non configuré.');
+  const libraryId = opts?.libraryId ?? bunnyEmbedLibraryId();
   const base = `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}`;
   const params = new URLSearchParams({ autoplay: 'false', preload: 'true', responsive: 'true' });
-  if (cfg?.tokenKey) {
+  const tokenKey = process.env.BUNNY_STREAM_TOKEN_KEY?.trim();
+  if (tokenKey) {
     const expires = Math.floor(Date.now() / 1000) + 6 * 60 * 60; // 6 h
-    const token = sha256(`${cfg.tokenKey}${videoId}${expires}`);
+    const token = sha256(`${tokenKey}${videoId}${expires}`);
     params.set('token', token);
     params.set('expires', String(expires));
   }

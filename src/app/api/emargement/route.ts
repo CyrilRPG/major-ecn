@@ -82,6 +82,23 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+    // Règle produit : la vidéo du cours est considérée comme VUE dès
+    // l'émargement signé (l'obligation naît à 20 % de lecture). On aligne
+    // course_progress — la source de vérité des « vidéos vues » partout
+    // (CRM, parcours, interrogation) — sans attendre les 80 % du lecteur.
+    if (data && kind === 'video') {
+      await db.from('course_progress').upsert(
+        {
+          user_id: user.id,
+          cours_id: coursId,
+          video_watched: true,
+          last_seen_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,cours_id' },
+      ).then(() => null, () => null); // best-effort : la signature est déjà enregistrée.
+    }
+
     // Aucune ligne mise à jour = déjà signée (ou jamais déclenchée) : dans les
     // deux cas l'étudiant n'est plus bloqué, on répond OK.
     return NextResponse.json({ ok: true, alreadySigned: !data });

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
-import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
+import { bunnyEmbedUrl } from '@/lib/bunny';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +29,9 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const video = videos?.[0] as { bunny_video_id?: string | null; storage_path?: string | null } | undefined;
   if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });
 
+  // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts).
   const bunnyId = video.bunny_video_id;
-  if (bunnyId && getBunnyConfig()) {
+  if (bunnyId) {
     return NextResponse.json({ embedUrl: bunnyEmbedUrl(bunnyId) });
   }
 

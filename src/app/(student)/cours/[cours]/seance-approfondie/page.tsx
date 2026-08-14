@@ -127,7 +127,6 @@ export default async function SeanceApprofondiePage({
    *  sinon, ancienne règle : toutes les séances du cours. */
   const isUnlocked = (v: SAVideo) =>
     isAdmin || !!v.unlock_direct || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesDone);
-  const BUNNY_LIBRARY = process.env.BUNNY_STREAM_LIBRARY_ID ?? '691475';
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
   if (saVideos.length === 0) {
@@ -243,7 +242,7 @@ export default async function SeanceApprofondiePage({
       <div className="space-y-8">
         {saVideos.map((v) => {
           const bunnyId = v.bunny_video_id;
-          const embed = bunnyId && BUNNY_LIBRARY ? bunnyEmbedUrl(bunnyId, { libraryId: BUNNY_LIBRARY }) : null;
+          const embed = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
           const unlocked = isUnlocked(v);
           const gateLabel = v.serie_id ? labelById.get(v.serie_id) : null;
           return (

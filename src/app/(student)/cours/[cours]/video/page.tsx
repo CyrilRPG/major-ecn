@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/empty-state';
 import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
-import { bunnyEmbedUrl, getBunnyConfig } from '@/lib/bunny';
+import { bunnyEmbedUrl } from '@/lib/bunny';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
@@ -172,8 +172,11 @@ export default async function CoursVideoPage({
   const video = onlyVideoId ? allVideos.find((v) => v.id === onlyVideoId) : allVideos[0];
   if (!video) notFound();
 
+  // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts) : quand la
+  // clé API manquait en production, cette page affichait « Vidéo bientôt
+  // disponible » pour TOUS les cours alors que les vidéos existaient.
   const bunnyId = video.bunny_video_id;
-  const embedUrl = bunnyId && getBunnyConfig() ? bunnyEmbedUrl(bunnyId) : null;
+  const embedUrl = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
   let signedUrl: string | null = null;
   if (!embedUrl && video.storage_path) {
     const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
