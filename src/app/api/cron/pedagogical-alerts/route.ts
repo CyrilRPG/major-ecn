@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { raiseAdminAlert, sendDailyAlertDigest } from '@/lib/pedago/alerts';
 import { isExamTargeted } from '@/lib/exams/targeting';
 import { parseScope } from '@/lib/auth/permissions';
@@ -42,12 +43,15 @@ export async function GET(req: Request) {
     digest: { sent: false, p1: 0, p2: 0 },
   };
 
-  /* ── 0. Recalcul des compteurs de maintien ── */
-  const { data: sessionUsers } = await a
-    .from('transversal_sessions')
-    .select('user_id')
-    .not('completed_at', 'is', null);
-  const usersWithSessions = [...new Set(((sessionUsers ?? []) as { user_id: string }[]).map((r) => r.user_id))];
+  /* ── 0. Recalcul des compteurs de maintien ──
+     Dernière activité et liste des élèves à recalculer : agrégées en SQL par
+     admin_activity_snapshot(). Charger les tables d'activité en entier via
+     PostgREST (plafonné à 1 000 lignes) tronquait les données en silence et
+     déclenchait de fausses alertes « X jours sans activité ». */
+  type SnapshotRow = { user_id: string; last_activity: string | null; has_completed_transversal: boolean };
+  const snapshot = await fetchAllRows<SnapshotRow>((from, to) =>
+    a.rpc('admin_activity_snapshot').order('user_id').range(from, to));
+  const usersWithSessions = snapshot.filter((r) => r.has_completed_transversal).map((r) => r.user_id);
   for (const uid of usersWithSessions) {
     try {
       await a.rpc('recompute_user_revision_stats', { p_user_id: uid });
@@ -56,16 +60,18 @@ export async function GET(req: Request) {
   }
 
   /* ── Élèves actifs (accès en cours) ── */
-  const { data: studsRaw } = await a
-    .from('profiles')
-    .select('id, first_name, last_name, email, created_at, permission_scope, access_end')
-    .eq('role', 'student')
-    .eq('is_active', true);
   type Stud = {
     id: string; first_name: string | null; last_name: string | null; email: string | null;
     created_at: string; permission_scope: unknown; access_end: string | null;
   };
-  const students = ((studsRaw ?? []) as Stud[])
+  const studsRaw = await fetchAllRows<Stud>((from, to) =>
+    a.from('profiles')
+      .select('id, first_name, last_name, email, created_at, permission_scope, access_end')
+      .eq('role', 'student')
+      .eq('is_active', true)
+      .order('id')
+      .range(from, to));
+  const students = studsRaw
     .filter((s) => !s.access_end || new Date(s.access_end).getTime() > now);
   const studentIds = new Set(students.map((s) => s.id));
 
@@ -80,22 +86,11 @@ export async function GET(req: Request) {
   const alertable = new Set(students.filter((s) => isPaying(s.permission_scope)).map((s) => s.id));
 
   /* ── 1. Inactivité globale > 21 jours (P1) ── */
-  const [{ data: cpRaw }, { data: attRaw }, { data: fcRaw }, { data: tsRaw }] = await Promise.all([
-    a.from('course_progress').select('user_id, last_seen_at').not('last_seen_at', 'is', null),
-    a.from('qcm_attempts').select('user_id, attempted_at'),
-    a.from('flashcard_reviews').select('user_id, reviewed_at'),
-    a.from('transversal_sessions').select('user_id, completed_at').not('completed_at', 'is', null),
-  ]);
   const lastActivity = new Map<string, number>();
-  const bump = (uid: string, iso: string | null) => {
-    if (!iso || !studentIds.has(uid)) return;
-    const t = new Date(iso).getTime();
-    if (t > (lastActivity.get(uid) ?? 0)) lastActivity.set(uid, t);
-  };
-  for (const r of (cpRaw ?? []) as { user_id: string; last_seen_at: string }[]) bump(r.user_id, r.last_seen_at);
-  for (const r of (attRaw ?? []) as { user_id: string; attempted_at: string }[]) bump(r.user_id, r.attempted_at);
-  for (const r of (fcRaw ?? []) as { user_id: string; reviewed_at: string }[]) bump(r.user_id, r.reviewed_at);
-  for (const r of (tsRaw ?? []) as { user_id: string; completed_at: string }[]) bump(r.user_id, r.completed_at);
+  for (const r of snapshot) {
+    if (!r.last_activity || !studentIds.has(r.user_id)) continue;
+    lastActivity.set(r.user_id, new Date(r.last_activity).getTime());
+  }
 
   for (const [uid, last] of lastActivity) {
     if (!alertable.has(uid)) continue;
@@ -113,10 +108,13 @@ export async function GET(req: Request) {
   }
 
   /* ── 2. Moins de 15 révisions transversales / 30 jours (P2) ── */
-  const { data: statsRaw } = await a
-    .from('user_revision_stats')
-    .select('user_id, transversal_revisions_last_30_days, total_transversal_revisions');
-  for (const row of ((statsRaw ?? []) as { user_id: string; transversal_revisions_last_30_days: number; total_transversal_revisions: number }[])) {
+  const statsRaw = await fetchAllRows<{ user_id: string; transversal_revisions_last_30_days: number; total_transversal_revisions: number }>(
+    (from, to) =>
+      a.from('user_revision_stats')
+        .select('user_id, transversal_revisions_last_30_days, total_transversal_revisions')
+        .order('user_id')
+        .range(from, to));
+  for (const row of statsRaw) {
     if (!alertable.has(row.user_id)) continue;
     const stud = students.find((s) => s.id === row.user_id);
     const accountAge = stud ? now - new Date(stud.created_at).getTime() : 0;
@@ -135,20 +133,22 @@ export async function GET(req: Request) {
   }
 
   /* ── 3. Épreuves blanches ── */
-  const [{ data: examsRaw }, { data: subsRaw }] = await Promise.all([
+  type Sub = { exam_id: string; user_id: string; status: string; percentage: number | null; submitted_at: string | null };
+  const [{ data: examsRaw }, subs] = await Promise.all([
     a.from('mock_exams')
       .select('id, title, status, created_at, publish_at, min_offer, target_colleges, voies, target_promos, target_user_ids, college_id')
       .eq('status', 'published')
       .is('cours_id', null)
       .is('specialite_id', null),
-    a.from('mock_exam_submissions')
-      .select('exam_id, user_id, status, percentage, submitted_at')
-      .in('status', ['submitted', 'graded']),
+    fetchAllRows<Sub>((from, to) =>
+      a.from('mock_exam_submissions')
+        .select('exam_id, user_id, status, percentage, submitted_at')
+        .in('status', ['submitted', 'graded'])
+        .order('id')
+        .range(from, to)),
   ]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exams = (examsRaw ?? []) as any[];
-  type Sub = { exam_id: string; user_id: string; status: string; percentage: number | null; submitted_at: string | null };
-  const subs = (subsRaw ?? []) as Sub[];
   const examTitle = new Map<string, string>(exams.map((e) => [e.id, e.title]));
 
   // 3a. Épreuve blanche < 40 % (P1) — copies des 30 derniers jours.
