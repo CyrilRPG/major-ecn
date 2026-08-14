@@ -69,6 +69,16 @@ export async function GET(req: Request) {
     .filter((s) => !s.access_end || new Date(s.access_end).getTime() > now);
   const studentIds = new Set(students.map((s) => s.id));
 
+  // Périmètre des ALERTES : formules payantes uniquement — la page Alertes
+  // pédagogiques et le CRM masquent les comptes Découverte, on ne crée donc
+  // pas d'alertes qui y seraient invisibles. (Le recalcul des compteurs de
+  // maintien, lui, concerne tout le monde.)
+  const isPaying = (scope: unknown) => {
+    const o = (scope as Record<string, unknown> | null)?.offer;
+    return o === 'essentiel' || o === 'basic' || o === 'intensif' || o === 'premium' || o === 'approfondi';
+  };
+  const alertable = new Set(students.filter((s) => isPaying(s.permission_scope)).map((s) => s.id));
+
   /* ── 1. Inactivité globale > 21 jours (P1) ── */
   const [{ data: cpRaw }, { data: attRaw }, { data: fcRaw }, { data: tsRaw }] = await Promise.all([
     a.from('course_progress').select('user_id, last_seen_at').not('last_seen_at', 'is', null),
@@ -88,6 +98,7 @@ export async function GET(req: Request) {
   for (const r of (tsRaw ?? []) as { user_id: string; completed_at: string }[]) bump(r.user_id, r.completed_at);
 
   for (const [uid, last] of lastActivity) {
+    if (!alertable.has(uid)) continue;
     const days = Math.floor((now - last) / 86_400_000);
     if (days > 21) {
       const ok = await raiseAdminAlert({
@@ -106,7 +117,7 @@ export async function GET(req: Request) {
     .from('user_revision_stats')
     .select('user_id, transversal_revisions_last_30_days, total_transversal_revisions');
   for (const row of ((statsRaw ?? []) as { user_id: string; transversal_revisions_last_30_days: number; total_transversal_revisions: number }[])) {
-    if (!studentIds.has(row.user_id)) continue;
+    if (!alertable.has(row.user_id)) continue;
     const stud = students.find((s) => s.id === row.user_id);
     const accountAge = stud ? now - new Date(stud.created_at).getTime() : 0;
     // Seuil appliqué aux élèves qui utilisent déjà les révisions (≥ 1 session)
@@ -142,7 +153,7 @@ export async function GET(req: Request) {
 
   // 3a. Épreuve blanche < 40 % (P1) — copies des 30 derniers jours.
   for (const s of subs) {
-    if (!studentIds.has(s.user_id)) continue;
+    if (!alertable.has(s.user_id)) continue;
     if (s.percentage === null || s.percentage >= 40) continue;
     if (!s.submitted_at || now - new Date(s.submitted_at).getTime() > 30 * 86_400_000) continue;
     const title = examTitle.get(s.exam_id) ?? 'Épreuve blanche';
@@ -170,8 +181,8 @@ export async function GET(req: Request) {
   });
   if (oldExams.length > 0) {
     for (const stud of students) {
+      if (!alertable.has(stud.id)) continue;
       const scope = parseScope(stud.permission_scope);
-      if (scope.offer === 'decouverte') continue;
       const targeted = oldExams.some((e) => isExamTargeted(e, scope, undefined, stud.id));
       if (!targeted) continue;
       const lastSub = lastSubByUser.get(stud.id) ?? 0;
