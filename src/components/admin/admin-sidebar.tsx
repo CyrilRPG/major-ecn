@@ -34,6 +34,7 @@ const GROUPS: Group[] = [
       { href: '/admin/import-exercices', label: 'Import d’exercices', Icon: Upload, adminOnly: true },
       { href: '/admin/videos', label: 'Vidéos', Icon: Clapperboard, profContent: true },
       { href: '/admin/epreuves-blanches', label: 'Épreuves blanches', Icon: PencilRuler, adminOnly: true },
+      { href: '/admin/interrogations', label: 'Interrogations de spécialité', Icon: ClipboardList, adminOnly: true },
       { href: '/admin/parcours', label: 'Parcours du Major', Icon: Trophy, adminOnly: true },
       { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
     ],

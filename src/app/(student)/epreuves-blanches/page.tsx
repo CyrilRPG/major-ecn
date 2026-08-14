@@ -22,9 +22,11 @@ export default async function StudentExamsPage() {
     .from('mock_exams')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .select('id, title, college_id, duration_minutes, instructions, min_offer, target_colleges, voies, target_promos, target_user_ids, publish_at, exam_mode, qroc_mode, open_at, close_at, absence_mode, rattrapage_open_at, rattrapage_close_at, results_publish_mode, results_publish_at')
-    // Exclut les interrogations de fin de parcours (rattachées à un item) :
-    // elles se passent depuis le cours, pas depuis la liste des épreuves.
-    .is('cours_id', null) as any;
+    // Exclut les interrogations de fin de parcours (rattachées à un item) et
+    // les interrogations officielles de spécialité (specialite_id) : elles se
+    // passent depuis le cours / la page de la spécialité, pas depuis la liste.
+    .is('cours_id', null)
+    .is('specialite_id', null) as any;
 
   const now = Date.now();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

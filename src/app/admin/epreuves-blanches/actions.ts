@@ -292,6 +292,152 @@ export async function listInterrogationQuestions(examId: string): Promise<{ ok: 
   return { ok: true, questions: (data ?? []) as Record<string, unknown>[] };
 }
 
+/* ─── Interrogation officielle de fin de SPÉCIALITÉ (cahier des charges §9) ───
+   Une mock_exams avec `specialite_id` = collège. Créée et composée par
+   l'équipe pédagogique (15 QCM + 2 questions ouvertes + mini-cas clinique
+   éventuel) — jamais générée automatiquement pour l'élève. Elle n'apparaît
+   ni dans les épreuves blanches ni dans les interrogations d'item. */
+
+export type SpecialtyInterrogationInfo = {
+  id: string; nQuestions: number; qroc_mode: 'self' | 'ai'; status: string; matiereId: string;
+};
+
+export async function ensureSpecialtyInterrogation(
+  matiereId: string,
+): Promise<{ ok: true; info: SpecialtyInterrogationInfo } | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const { data: mat } = await a.from('matieres').select('id, nom').eq('id', matiereId).maybeSingle();
+  if (!mat) return { ok: false, error: 'Spécialité introuvable' };
+
+  const { data: found } = await a
+    .from('mock_exams')
+    .select('id, qroc_mode, status, mock_exam_questions(count)')
+    .eq('specialite_id', matiereId)
+    .maybeSingle();
+  if (found) {
+    return {
+      ok: true,
+      info: {
+        id: found.id, qroc_mode: found.qroc_mode, status: found.status, matiereId,
+        nQuestions: found.mock_exam_questions?.[0]?.count ?? 0,
+      },
+    };
+  }
+
+  const { data: created, error } = await a
+    .from('mock_exams')
+    .insert({
+      title: `Interrogation officielle Major EVC — ${mat.nom}`,
+      specialite_id: matiereId,
+      college_id: matiereId,
+      status: 'draft',
+      exam_mode: 'free',
+      qroc_mode: 'self',
+      question_order: 'fixed',
+      created_by: profile.id,
+    })
+    .select('id, qroc_mode, status')
+    .single();
+  if (error || !created) return { ok: false, error: error?.message ?? 'Création impossible' };
+  revalidatePath('/admin/interrogations');
+  return { ok: true, info: { id: created.id, qroc_mode: created.qroc_mode, status: created.status, matiereId, nQuestions: 0 } };
+}
+
+/**
+ * Pré-remplissage : propose un brouillon de 15 QCM + 2 questions ouvertes tirés
+ * de la banque du collège, que l'équipe RELIT, ajuste puis publie. La sélection
+ * automatique n'est jamais servie telle quelle à l'élève : seule une
+ * interrogation PUBLIÉE par l'équipe est proposée.
+ */
+export async function seedSpecialtyInterrogation(
+  examId: string,
+  matiereId: string,
+): Promise<Ok<{ added: number }> | Err> {
+  const { admin, profile } = await ensureAdmin();
+  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const { count: existing } = await a
+    .from('mock_exam_questions')
+    .select('id', { count: 'exact', head: true })
+    .eq('exam_id', examId);
+  if ((existing ?? 0) > 0) return { ok: false, error: 'L\'interrogation contient déjà des questions.' };
+
+  const { data: coursRows } = await a.from('cours').select('id').eq('matiere_id', matiereId);
+  const coursIds = ((coursRows ?? []) as { id: string }[]).map((c) => c.id);
+  if (coursIds.length === 0) return { ok: false, error: 'Aucun cours dans cette spécialité.' };
+
+  const { data: qRaw } = await a
+    .from('qcm_questions')
+    .select('id, enonce, format, reponse_attendue, correction_generale, qcm_items(lettre, enonce, is_correct, justification), qcm_series!inner(cours_id, type, vignette)')
+    .in('qcm_series.cours_id', coursIds);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const all = (qRaw ?? []) as any[];
+
+  const qcmPool = all.filter((q) => q.format !== 'qroc' && (q.qcm_items ?? []).length >= 3 && q.qcm_series?.type === 'qcm');
+  const qrocPool = all.filter((q) => q.format === 'qroc' && q.reponse_attendue);
+  const shuffle = <T,>(arr: T[]) => {
+    const s = [...arr];
+    for (let i = s.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [s[i], s[j]] = [s[j], s[i]];
+    }
+    return s;
+  };
+  const qcms = shuffle(qcmPool).slice(0, 15);
+  const qrocs = shuffle(qrocPool).slice(0, 2);
+  if (qcms.length === 0) return { ok: false, error: 'Aucun QCM disponible dans la banque de cette spécialité.' };
+
+  const rows = [
+    ...qcms.map((q, i) => ({
+      exam_id: examId,
+      order_index: i,
+      format: 'qcm',
+      enonce: q.enonce,
+      vignette: q.qcm_series?.vignette ?? null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      items: (q.qcm_items ?? []).map((it: any) => ({
+        lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct, justification: it.justification ?? '',
+      })),
+      college_id: matiereId,
+      source_question_id: q.id,
+      points: 1,
+    })),
+    ...qrocs.map((q, i) => ({
+      exam_id: examId,
+      order_index: 100 + i,
+      format: 'qroc',
+      enonce: q.enonce,
+      reponse_attendue: q.reponse_attendue,
+      correction_generale: q.correction_generale ?? null,
+      college_id: matiereId,
+      source_question_id: q.id,
+      points: 1,
+    })),
+  ];
+  const { error } = await a.from('mock_exam_questions').insert(rows);
+  if (error) return { ok: false, error: error.message };
+  await logAudit({ actor: profile, action: 'create', entity: 'mock_exam', entityId: examId, description: `Interrogation de spécialité pré-remplie (${rows.length} questions)` });
+  revalidatePath('/admin/interrogations');
+  return { ok: true, added: rows.length };
+}
+
+export async function setSpecialtyInterrogationStatus(
+  examId: string,
+  published: boolean,
+): Promise<Ok | Err> {
+  const { admin, profile } = await ensureAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any).from('mock_exams')
+    .update({ status: published ? 'published' : 'draft', updated_at: new Date().toISOString() })
+    .eq('id', examId);
+  if (error) return { ok: false, error: error.message };
+  await logAudit({ actor: profile, action: 'update', entity: 'mock_exam', entityId: examId, description: `Interrogation de spécialité → ${published ? 'publiée' : 'brouillon'}` });
+  revalidatePath('/admin/interrogations');
+  return { ok: true };
+}
+
 /* ─── Génération d'une épreuve par IA ─── */
 
 const AiGenSchema = z.object({

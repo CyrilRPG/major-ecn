@@ -17,6 +17,10 @@
     {
       "path": "/api/cron/stripe-reconcile",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/pedagogical-alerts",
+      "schedule": "0 7 * * *"
     }
   ]
 }

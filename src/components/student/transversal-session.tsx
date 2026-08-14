@@ -23,6 +23,9 @@ export type TransversalQuestion = {
    *  piochées individuellement, chaque question porte sa propre vignette. */
   vignette?: string | null;
   college: string;
+  /** Identifiant de la spécialité (matière) — sert aux scores par spécialité
+   *  et aux boutons Consolider / Renforcement de l'écran de fin. */
+  matiere_id: string;
   cours_id: string;
   items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
   /** QROC (voie externe) : pas d'items → saisie libre + révéler la réponse +
@@ -44,12 +47,17 @@ export function TransversalSession({
   kind,
   targetCount,
   unitLabel = 'QCM',
+  officialStatuses = {},
 }: {
   questions: TransversalQuestion[];
   kind: TransversalKind;
   targetCount?: number;
   /** Libellé de l'unité de question (« QCM » ou « QROC » pour la voie externe). */
   unitLabel?: 'QCM' | 'QROC';
+  /** Statut OFFICIEL par matiere_id — conditionne les boutons Consolider /
+   *  Renforcement (spec section 4 : ils ne s'affichent que si la spécialité
+   *  est DÉJÀ orange/rouge officiellement, pas sur le seul score du jour). */
+  officialStatuses?: Record<string, 'validee' | 'fragile' | 'insuffisante'>;
 }) {
   const [index, setIndex] = useState(0);
   const [sel, setSel] = useState<Set<string>>(new Set());
@@ -60,6 +68,7 @@ export function TransversalSession({
   const [selfGrade, setSelfGrade] = useState<'bon' | 'faux' | null>(null);
   const [score, setScore] = useState(0);
   const [perCours, setPerCours] = useState<Record<string, { c: number; t: number }>>({});
+  const [perMatiere, setPerMatiere] = useState<Record<string, { c: number; t: number }>>({});
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [recorded, setRecorded] = useState(false);
@@ -79,16 +88,26 @@ export function TransversalSession({
     for (const [cid, v] of Object.entries(perCours)) {
       specialty_scores[cid] = v.t > 0 ? v.c / v.t : 0;
     }
+    const matiere_scores: Record<string, number> = {};
+    for (const [mid, v] of Object.entries(perMatiere)) {
+      matiere_scores[mid] = v.t > 0 ? v.c / v.t : 0;
+    }
+    const matiere_names: Record<string, string> = {};
+    for (const q of questions) {
+      if (!matiere_names[q.matiere_id]) matiere_names[q.matiere_id] = q.college;
+    }
     recordTransversalSession({
       kind,
       qcm_count: total,
       score_correct: score,
       specialty_scores,
+      matiere_scores,
+      matiere_names,
       started_at: startedAt,
     }).then((res) => {
       if (!res.ok) setRecordError(true);
     }).catch(() => setRecordError(true));
-  }, [isFinished, recorded, total, perCours, score, kind, startedAt]);
+  }, [isFinished, recorded, total, perCours, perMatiere, questions, score, kind, startedAt]);
 
   if (isFinished) {
     if (showCorrections) {
@@ -99,13 +118,14 @@ export function TransversalSession({
         score={score}
         total={total}
         kind={kind}
-        perCours={perCours}
+        perMatiere={perMatiere}
         questions={questions}
+        officialStatuses={officialStatuses}
         recordError={recordError}
         onRestart={() => {
           setIndex(0); setSel(new Set()); setOutcomes(null);
           setQrocText(''); setRevealed(false); setSelfGrade(null);
-          setScore(0); setPerCours({}); setDone(false); setRecorded(false);
+          setScore(0); setPerCours({}); setPerMatiere({}); setDone(false); setRecorded(false);
           setRecordError(false);
         }}
         onShowCorrections={() => setShowCorrections(true)}
@@ -150,6 +170,10 @@ export function TransversalSession({
       const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
       return { ...prev, [q.cours_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
     });
+    setPerMatiere((prev) => {
+      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
+      return { ...prev, [q.matiere_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
+    });
     setSelfGrade(grade);
     setSubmitting(false);
   };
@@ -178,6 +202,10 @@ export function TransversalSession({
     setPerCours((prev) => {
       const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
       return { ...prev, [q.cours_id]: { c: cur.c + (isQuestionCorrect ? 1 : 0), t: cur.t + 1 } };
+    });
+    setPerMatiere((prev) => {
+      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
+      return { ...prev, [q.matiere_id]: { c: cur.c + (isQuestionCorrect ? 1 : 0), t: cur.t + 1 } };
     });
     setOutcomes(oc);
     setSubmitting(false);
@@ -445,20 +473,20 @@ function getReevaluationMessages(tier: ScoreTier, kind: TransversalKind) {
 }
 
 function getWeakSpecialties(
-  perCours: Record<string, { c: number; t: number }>,
+  perMatiere: Record<string, { c: number; t: number }>,
   questions: TransversalQuestion[],
-): { name: string; pct: number; coursId: string }[] {
-  const courseNames = new Map<string, string>();
+): { name: string; pct: number; matiereId: string }[] {
+  const matiereNames = new Map<string, string>();
   for (const q of questions) {
-    if (!courseNames.has(q.cours_id)) courseNames.set(q.cours_id, q.college);
+    if (!matiereNames.has(q.matiere_id)) matiereNames.set(q.matiere_id, q.college);
   }
 
-  const weak: { name: string; pct: number; coursId: string }[] = [];
-  for (const [cid, v] of Object.entries(perCours)) {
+  const weak: { name: string; pct: number; matiereId: string }[] = [];
+  for (const [mid, v] of Object.entries(perMatiere)) {
     if (v.t === 0) continue;
     const pct = Math.round((v.c / v.t) * 100);
     if (pct < 75) {
-      weak.push({ name: courseNames.get(cid) ?? cid, pct, coursId: cid });
+      weak.push({ name: matiereNames.get(mid) ?? mid, pct, matiereId: mid });
     }
   }
   return weak.sort((a, b) => a.pct - b.pct);
@@ -468,8 +496,9 @@ function CompletionScreen({
   score,
   total,
   kind,
-  perCours,
+  perMatiere,
   questions,
+  officialStatuses,
   recordError,
   onRestart,
   onShowCorrections,
@@ -477,8 +506,9 @@ function CompletionScreen({
   score: number;
   total: number;
   kind: TransversalKind;
-  perCours: Record<string, { c: number; t: number }>;
+  perMatiere: Record<string, { c: number; t: number }>;
   questions: TransversalQuestion[];
+  officialStatuses: Record<string, 'validee' | 'fragile' | 'insuffisante'>;
   recordError: boolean;
   onRestart: () => void;
   onShowCorrections: () => void;
@@ -517,7 +547,18 @@ function CompletionScreen({
     } catch { /* non bloquant */ }
     setScheduling(false);
   };
-  const weakSpecs = getWeakSpecialties(perCours, questions);
+  const weakSpecs = getWeakSpecialties(perMatiere, questions);
+
+  // Boutons Consolider / Renforcement (sections 4 et 6-8) :
+  //  - révision simple : uniquement si la spécialité faible est DÉJÀ orange
+  //    (consolidation) ou rouge (renforcement) OFFICIELLEMENT ;
+  //  - réévaluations : proposés directement sur la spécialité la plus faible.
+  const consolidTarget = isReeval
+    ? weakSpecs.find((w) => officialStatuses[w.matiereId] !== 'insuffisante') ?? weakSpecs[0] ?? null
+    : weakSpecs.find((w) => officialStatuses[w.matiereId] === 'fragile') ?? null;
+  const renforceTarget = isReeval
+    ? weakSpecs.find((w) => officialStatuses[w.matiereId] === 'insuffisante') ?? weakSpecs[0] ?? null
+    : weakSpecs.find((w) => officialStatuses[w.matiereId] === 'insuffisante') ?? null;
 
   return (
     <div className="mx-auto max-w-lg px-4 py-12 sm:px-6">
@@ -595,18 +636,28 @@ function CompletionScreen({
           </Button>
         )}
 
-        {/* Orange/Red: consolidation/renforcement buttons → link to weakest specialty */}
-        {tier === 'orange' && weakSpecs.length > 0 && (
+        {/* Orange : consolidation — uniquement si une spécialité affichée est
+            déjà orange OFFICIELLEMENT (révision simple) ; toujours proposée
+            après une réévaluation orange (sections 6-8). */}
+        {tier === 'orange' && consolidTarget && (
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#E8742C] border-[#E8742C] hover:bg-[#FFF7E6]">
-            <Link href={`/cours/${weakSpecs[0].coursId}`}>
+            <Link href={`/matieres/${consolidTarget.matiereId}/consolidation`}>
               <Shield className="h-4 w-4" /> Consolider la spécialité
             </Link>
           </Button>
         )}
-        {tier === 'red' && weakSpecs.length > 0 && (
+        {/* Rouge : renforcement approfondi — même logique. */}
+        {tier === 'red' && renforceTarget && (
           <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#A91D2C] border-[#A91D2C] hover:bg-[#FCEAEC]">
-            <Link href={`/cours/${weakSpecs[0].coursId}`}>
+            <Link href={`/matieres/${renforceTarget.matiereId}/renforcement`}>
               <Zap className="h-4 w-4" /> Renforcement approfondi
+            </Link>
+          </Button>
+        )}
+        {tier === 'red' && !renforceTarget && consolidTarget && (
+          <Button asChild variant="outline" className="w-full rounded-xl py-3 text-sm font-bold text-[#E8742C] border-[#E8742C] hover:bg-[#FFF7E6]">
+            <Link href={`/matieres/${consolidTarget.matiereId}/consolidation`}>
+              <Shield className="h-4 w-4" /> Consolider la spécialité
             </Link>
           </Button>
         )}

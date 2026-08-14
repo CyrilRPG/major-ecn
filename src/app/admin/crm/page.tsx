@@ -1,6 +1,8 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { CrmTabs } from './crm-tabs';
+import type { ContactCandidate } from './crm-contacter';
 
 export const metadata = { title: 'CRM pédagogique' };
 
@@ -144,7 +146,7 @@ export default async function CrmPage() {
         : Promise.resolve({ data: [] }),
       studentIds.length
         ? sb.from('admin_alerts')
-            .select('user_id, priority, resolved_at')
+            .select('user_id, priority, motif, created_at, resolved_at')
             .in('user_id', studentIds)
         : Promise.resolve({ data: [] }),
       studentIds.length
@@ -157,7 +159,7 @@ export default async function CrmPage() {
 
   type Session = { user_id: string; completed_at: string };
   type Note = { id: string; user_id: string; contact_type: string; motif: string; observations: string | null; difficultes: string | null; actions_recommandees: string | null; relance_date: string | null; created_at: string };
-  type AlertRow = { user_id: string; priority: number; resolved_at: string | null };
+  type AlertRow = { user_id: string; priority: number; motif: string; created_at: string; resolved_at: string | null };
   type EvalRow = { user_id: string; matiere_id: string; status: string };
 
   const sessions = (sessionsRaw ?? []) as Session[];
@@ -166,6 +168,34 @@ export default async function CrmPage() {
   const evals = (evalsRaw ?? []) as EvalRow[];
 
   const days30Ago = new Date(Date.now() - 30 * 86_400_000).toISOString();
+
+  // ── Épreuves blanches réalisées + dernière connexion (service-role) ──
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const adm = admin as any;
+  const epreuvesByUser = new Map<string, number>();
+  try {
+    const { data: subsRaw } = await adm
+      .from('mock_exam_submissions')
+      .select('user_id, status, mock_exams!inner(cours_id, specialite_id)')
+      .in('status', ['submitted', 'graded'])
+      .is('mock_exams.cours_id', null)
+      .is('mock_exams.specialite_id', null);
+    for (const s of ((subsRaw ?? []) as { user_id: string }[])) {
+      epreuvesByUser.set(s.user_id, (epreuvesByUser.get(s.user_id) ?? 0) + 1);
+    }
+  } catch { /* best-effort */ }
+  const lastSignInByUser = new Map<string, string | null>();
+  try {
+    for (let page = 1; page <= 40; page++) {
+      const { data, error } = await adm.auth.admin.listUsers({ page, perPage: 200 });
+      if (error) break;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const users = (data?.users ?? []) as any[];
+      for (const u of users) lastSignInByUser.set(u.id, u.last_sign_in_at ?? null);
+      if (users.length < 200) break;
+    }
+  } catch { /* best-effort */ }
 
   const enriched = paidStudents.map((s) => {
     const userSessions = sessions.filter((ss) => ss.user_id === s.id);
@@ -194,9 +224,30 @@ export default async function CrmPage() {
       alertsPending: userAlerts.filter((a) => !a.resolved_at).length,
       redSpecs,
       orangeSpecs,
+      epreuvesBlanches: epreuvesByUser.get(s.id) ?? 0,
+      lastSignIn: lastSignInByUser.get(s.id) ? new Date(lastSignInByUser.get(s.id)!) : null,
       notes: userNotes,
     };
   });
+
+  // ── « Candidats à contacter » : alertes Priorité 1 non résolues ──
+  const profileById = new Map(allRows.map((s) => [s.id, s]));
+  const contactCandidates: ContactCandidate[] = alerts
+    .filter((a) => a.priority === 1 && !a.resolved_at)
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .map((a) => {
+      const p = profileById.get(a.user_id);
+      return {
+        id: a.user_id,
+        first_name: p?.first_name ?? null,
+        last_name: p?.last_name ?? null,
+        email: p?.email ?? null,
+        phone: p?.phone ?? null,
+        motif: a.motif,
+        priority: a.priority,
+        created_at: a.created_at,
+      };
+    });
 
   const transStats = {
     total: enriched.length,
@@ -217,6 +268,7 @@ export default async function CrmPage() {
       colleges={colleges}
       transversalStudents={enriched}
       transversalStats={transStats}
+      contactCandidates={contactCandidates}
     />
   );
 }

@@ -36,8 +36,10 @@ export default async function AdminEpreuvesPage() {
     .from('mock_exams')
     .select('id, title, college_id, status, exam_mode, qroc_mode, voies, duration_minutes, mock_exam_questions(count)')
     // Les interrogations (rattachées à un item via cours_id) se gèrent depuis
-    // l'onglet « Interrogations » du contenu, pas dans cette liste.
+    // l'onglet « Interrogations » du contenu, et les interrogations officielles
+    // de spécialité depuis /admin/interrogations — pas dans cette liste.
     .is('cours_id', null)
+    .is('specialite_id', null)
     .order('created_at', { ascending: false });
   const { data: colsRaw } = await a.from('matieres').select('id, nom');
   const collegeName = new Map<string, string>(((colsRaw ?? []) as { id: string; nom: string }[]).map((c) => [c.id, c.nom]));

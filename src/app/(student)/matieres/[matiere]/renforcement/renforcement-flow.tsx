@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import {
-  ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2,
+  ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ExternalLink,
   FileText, Layers3, MessageCircle, Shield, Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -34,22 +34,34 @@ const RESULT = {
 export function RenforcementFlow({
   matiereId,
   matiereName,
-  firstCoursId,
+  coursFiches,
+  coursFlashcards,
   qcmQuestions,
   evalQuestions,
+  initialCompleted = [],
 }: {
   matiereId: string;
   matiereName: string;
-  firstCoursId: string;
+  /** Cours de la spécialité disposant d'une fiche (étape 1). */
+  coursFiches: { id: string; titre: string }[];
+  /** Cours de la spécialité disposant de flashcards (étape 2). */
+  coursFlashcards: { id: string; titre: string }[];
   qcmQuestions: EngineQuestion[];
   evalQuestions: EngineQuestion[];
+  /** Étapes déjà terminées (reprise d'un parcours en cours — renforcement_progress). */
+  initialCompleted?: number[];
 }) {
   const [phase, setPhase] = useState<Phase>('intro');
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set(initialCompleted));
+  const [startedSteps, setStartedSteps] = useState<Set<number>>(new Set());
   const [evalResult, setEvalResult] = useState<EngineResult | null>(null);
   const [, startTransition] = useTransition();
 
   const markStep = (step: number) => setCompletedSteps((prev) => new Set([...prev, step]));
+
+  // Statut d'étape (spec section 12) : Non commencé / En cours / Terminé.
+  const stepStatus = (n: number): 'done' | 'ongoing' | 'todo' =>
+    completedSteps.has(n) ? 'done' : startedSteps.has(n) ? 'ongoing' : 'todo';
 
   const handleQcmComplete = (r: EngineResult) => {
     markStep(3);
@@ -65,6 +77,7 @@ export function RenforcementFlow({
     setPhase('result');
     startTransition(async () => {
       await saveRenforcementStep({ matiere_id: matiereId, step: 'eval', score: r.score, total: r.total });
+      // Évaluation OFFICIELLE : change le statut + déroule la chaîne d'alertes.
       await saveSpecialtyEvaluation({
         matiere_id: matiereId,
         eval_type: 'renforcement_eval',
@@ -91,32 +104,40 @@ export function RenforcementFlow({
         </div>
 
         <div className="mt-8 space-y-3">
-          {STEPS.map((s) => (
-            <div
-              key={s.n}
-              className={cn(
-                'flex items-center gap-4 rounded-xl border px-4 py-3',
-                completedSteps.has(s.n) ? 'border-[#16793C] bg-[#ECFDF3]' : 'border-(--color-border)',
-              )}
-            >
-              <div className={cn(
-                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                completedSteps.has(s.n) ? 'bg-[#16793C] text-white' : 'bg-(--color-surface) text-(--color-ink-soft)',
-              )}>
-                {completedSteps.has(s.n) ? <Check className="h-4 w-4" /> : s.n}
+          {STEPS.map((s) => {
+            const st = stepStatus(s.n);
+            return (
+              <div
+                key={s.n}
+                className={cn(
+                  'flex items-center gap-4 rounded-xl border px-4 py-3',
+                  st === 'done' ? 'border-[#16793C] bg-[#ECFDF3]' : st === 'ongoing' ? 'border-[#E8742C] bg-[#FFF7E6]' : 'border-(--color-border)',
+                )}
+              >
+                <div className={cn(
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+                  st === 'done' ? 'bg-[#16793C] text-white' : st === 'ongoing' ? 'bg-[#E8742C] text-white' : 'bg-(--color-surface) text-(--color-ink-soft)',
+                )}>
+                  {st === 'done' ? <Check className="h-4 w-4" /> : s.n}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 text-sm font-medium text-(--color-ink)">
+                    <s.Icon className="h-4 w-4 shrink-0 text-(--color-ink-soft)" />
+                    {s.label}
+                  </div>
+                  <p className="mt-0.5 text-[11px] font-semibold" style={{ color: st === 'done' ? '#16793C' : st === 'ongoing' ? '#B45B00' : 'var(--color-ink-muted)' }}>
+                    {st === 'done' ? 'Terminé' : st === 'ongoing' ? 'En cours' : 'Non commencé'}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-(--color-ink)">
-                <s.Icon className="h-4 w-4 text-(--color-ink-soft)" />
-                {s.label}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-8 flex flex-col gap-3">
           {!completedSteps.has(1) && (
             <Button
-              onClick={() => { markStep(1); setPhase('fiches'); startTransition(async () => { await saveRenforcementStep({ matiere_id: matiereId, step: 'fiches' }); }); }}
+              onClick={() => { setStartedSteps((p) => new Set([...p, 1])); setPhase('fiches'); }}
               className="w-full rounded-xl py-3 text-sm font-bold" style={{ background: '#A91D2C' }}
             >
               Commencer le renforcement approfondi <ArrowRight className="ml-2 h-4 w-4" />
@@ -124,7 +145,7 @@ export function RenforcementFlow({
           )}
           {completedSteps.has(1) && !completedSteps.has(2) && (
             <Button
-              onClick={() => { markStep(2); setPhase('flashcards'); startTransition(async () => { await saveRenforcementStep({ matiere_id: matiereId, step: 'flashcards' }); }); }}
+              onClick={() => { setStartedSteps((p) => new Set([...p, 2])); setPhase('flashcards'); }}
               className="w-full rounded-xl py-3 text-sm font-bold" style={{ background: '#A91D2C' }}
             >
               Étape 2 : Flashcards <ArrowRight className="ml-2 h-4 w-4" />
@@ -150,21 +171,47 @@ export function RenforcementFlow({
 
   if (phase === 'fiches') {
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
-          <FileText className="h-8 w-8 text-[#2563EB]" />
+      <div className="mx-auto max-w-lg px-4 py-12 sm:px-6">
+        <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
+            <FileText className="h-8 w-8 text-[#2563EB]" />
+          </div>
+          <h2 className="mt-6 text-xl font-black text-(--color-ink)">
+            Revoir les fiches essentielles de {matiereName}
+          </h2>
+          <p className="mt-3 text-sm text-(--color-ink-soft)">
+            Prenez le temps de relire les fiches de cours pour consolider les notions clés,
+            puis validez l&apos;étape.
+          </p>
         </div>
-        <h2 className="mt-6 text-xl font-black text-(--color-ink)">
-          Revoir les fiches essentielles de {matiereName}
-        </h2>
-        <p className="mt-3 text-sm text-(--color-ink-soft)">
-          Prenez le temps de relire les fiches de cours pour consolider les notions clés.
-        </p>
+
+        {coursFiches.length === 0 ? (
+          <p className="mt-6 rounded-xl border border-dashed border-(--color-border) p-4 text-center text-sm text-(--color-ink-muted)">
+            Aucune fiche disponible dans cette spécialité pour le moment.
+          </p>
+        ) : (
+          <ul className="mt-6 space-y-2">
+            {coursFiches.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/cours/${c.id}/fiche`}
+                  target="_blank"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-ink) transition-colors hover:border-[#2563EB]/50 hover:bg-[#EFF6FF]/50"
+                >
+                  <span className="min-w-0 flex-1 truncate">{c.titre}</span>
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="mt-8 flex flex-col gap-3">
-          <Button asChild className="rounded-xl py-3 text-sm font-bold" style={{ background: '#2563EB' }}>
-            <Link href={`/cours/${firstCoursId}/fiche`}>
-              <FileText className="mr-2 h-4 w-4" /> Ouvrir les fiches
-            </Link>
+          <Button
+            onClick={() => { markStep(1); setPhase('intro'); startTransition(async () => { await saveRenforcementStep({ matiere_id: matiereId, step: 'fiches' }); }); }}
+            className="rounded-xl py-3 text-sm font-bold" style={{ background: '#2563EB' }}
+          >
+            <Check className="mr-2 h-4 w-4" /> J&apos;ai terminé cette étape
           </Button>
           <Button onClick={() => setPhase('intro')} variant="ghost" className="rounded-xl py-3 text-sm font-bold">
             <ArrowLeft className="mr-2 h-4 w-4" /> Retour au parcours
@@ -176,21 +223,47 @@ export function RenforcementFlow({
 
   if (phase === 'flashcards') {
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F3FF]">
-          <Layers3 className="h-8 w-8 text-[#6D28D9]" />
+      <div className="mx-auto max-w-lg px-4 py-12 sm:px-6">
+        <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F3FF]">
+            <Layers3 className="h-8 w-8 text-[#6D28D9]" />
+          </div>
+          <h2 className="mt-6 text-xl font-black text-(--color-ink)">
+            Réactiver les notions clés
+          </h2>
+          <p className="mt-3 text-sm text-(--color-ink-soft)">
+            20 à 30 flashcards recommandées pour réactiver les connaissances,
+            puis validez l&apos;étape.
+          </p>
         </div>
-        <h2 className="mt-6 text-xl font-black text-(--color-ink)">
-          Réactiver les notions clés
-        </h2>
-        <p className="mt-3 text-sm text-(--color-ink-soft)">
-          20 à 30 flashcards recommandées pour réactiver les connaissances.
-        </p>
+
+        {coursFlashcards.length === 0 ? (
+          <p className="mt-6 rounded-xl border border-dashed border-(--color-border) p-4 text-center text-sm text-(--color-ink-muted)">
+            Aucune flashcard disponible dans cette spécialité pour le moment.
+          </p>
+        ) : (
+          <ul className="mt-6 space-y-2">
+            {coursFlashcards.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/cours/${c.id}/flashcards`}
+                  target="_blank"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-(--color-border) px-4 py-2.5 text-sm font-medium text-(--color-ink) transition-colors hover:border-[#6D28D9]/50 hover:bg-[#F5F3FF]/50"
+                >
+                  <span className="min-w-0 flex-1 truncate">{c.titre}</span>
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="mt-8 flex flex-col gap-3">
-          <Button asChild className="rounded-xl py-3 text-sm font-bold" style={{ background: '#6D28D9' }}>
-            <Link href={`/cours/${firstCoursId}/flashcards`}>
-              <Layers3 className="mr-2 h-4 w-4" /> Faire les flashcards
-            </Link>
+          <Button
+            onClick={() => { markStep(2); setPhase('intro'); startTransition(async () => { await saveRenforcementStep({ matiere_id: matiereId, step: 'flashcards' }); }); }}
+            className="rounded-xl py-3 text-sm font-bold" style={{ background: '#6D28D9' }}
+          >
+            <Check className="mr-2 h-4 w-4" /> J&apos;ai terminé cette étape
           </Button>
           <Button onClick={() => setPhase('intro')} variant="ghost" className="rounded-xl py-3 text-sm font-bold">
             <ArrowLeft className="mr-2 h-4 w-4" /> Retour au parcours

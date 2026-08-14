@@ -37,6 +37,8 @@ type Student = {
   alertsPending: number;
   redSpecs: number;
   orangeSpecs: number;
+  epreuvesBlanches: number;
+  lastSignIn: Date | null;
   notes: Note[];
 };
 
@@ -311,13 +313,20 @@ function StudentCard({
 
       {isExpanded && (
         <div className="border-t border-gray-100 px-4 py-5">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <InfoCell label="Dernière connexion" value={
+              s.lastSignIn
+                ? new Date(s.lastSignIn).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+                : 'Jamais'
+            } warn={!s.lastSignIn} />
             <InfoCell label="Dernière révision" value={
               s.lastRevision
                 ? `Il y a ${daysSince} jour${daysSince !== 1 ? 's' : ''}`
                 : 'Jamais'
             } warn={isInactive} />
-            <InfoCell label="Révisions / 30j" value={String(s.revisions30d)} warn={s.revisions30d < 5} />
+            {/* Seuil du cahier des charges : alerte P2 sous 15 révisions / 30 j. */}
+            <InfoCell label="Révisions / 30j" value={String(s.revisions30d)} warn={s.revisions30d < 15} />
+            <InfoCell label="Épreuves blanches réalisées" value={String(s.epreuvesBlanches)} warn={s.epreuvesBlanches === 0} />
             <InfoCell label="Promotion" value={s.promotion ?? '—'} />
             <InfoCell label="Téléphone" value={s.phone ?? '—'} />
           </div>

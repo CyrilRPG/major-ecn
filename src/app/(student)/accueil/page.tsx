@@ -15,6 +15,8 @@ import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { getFaculteContentTotals } from '@/lib/data/faculte-totals';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
+import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
+import { sessionSizesFor } from '@/lib/pedago/status';
 
 export const metadata = { title: 'Accueil' };
 
@@ -126,8 +128,9 @@ async function Dashboard({
   const supabase = await createClient();
 
   // Appels parallèles : agrégats par-utilisateur, arbre du programme, totaux de
-  // contenu partagés et compteur hebdomadaire issu de sa source canonique.
-  const [statsRes, ednRes, cachedTotals, timeRes] = await Promise.all([
+  // contenu partagés, compteur hebdomadaire, et les données des zones 1-3 du
+  // cahier des charges (progression par spécialité + maintien des acquis).
+  const [statsRes, ednRes, cachedTotals, timeRes, maintien, studiedSpecs] = await Promise.all([
     // RPC hors types générés (database.ts) : cast ciblé, cf. incident schema drift.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).rpc('get_accueil_stats', { p_faculte_id: EDN_FACULTE_ID }) as Promise<{ data: StatsResp | null }>,
@@ -148,6 +151,8 @@ async function Dashboard({
       .select('total_seconds')
       .eq('user_id', userId)
       .gte('session_date', startOfUtcIsoWeek()) as Promise<{ data: StudyTimeRow[] | null }>,
+    getMaintienStats(supabase as never, userId),
+    getStudiedSpecialties(supabase as never, userId, scope),
   ]);
 
   const stats = (statsRes.data as StatsResp | null) ?? {
@@ -352,8 +357,150 @@ async function Dashboard({
   const todayFcTarget = 10;
   const todayEstMin = 35;
 
+  /* ---- Zones 1-3 du cahier des charges révisions transversales ---- */
+  const specsFinished = studiedSpecs.filter((s) => s.isFinished).length;
+  const specsInProgress = studiedSpecs.length - specsFinished;
+  const validationsPending = studiedSpecs.filter((s) => s.awaitingValidation).length;
+  const nextAccessible = Math.max(0, colleges.length - studiedSpecs.length);
+  const sizes = sessionSizesFor(studiedSpecs.length);
+  const dailyEst = sizes.daily <= 25 ? '15 minutes' : sizes.daily <= 30 ? '15-20 minutes' : sizes.daily <= 35 ? '20 minutes' : '20-25 minutes';
+  const lastRevLabel = maintien.daysSinceLast === null
+    ? 'Jamais'
+    : maintien.daysSinceLast === 0
+    ? 'Aujourd\'hui'
+    : maintien.daysSinceLast === 1
+    ? 'Hier'
+    : `Il y a ${maintien.daysSinceLast} jours`;
+
   return (
     <>
+      {/* ---- Zones 1-3 (cahier des charges section 2) ---- */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {/* Zone 1 — Progression dans la formation */}
+        <Card>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DBEAFE] text-[#2563EB]">
+              <TrendingUp className="h-4 w-4" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Progression</p>
+          </div>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li className="flex items-center justify-between">
+              <span className="text-(--color-ink-soft)">Spécialités terminées</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{specsFinished}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-(--color-ink-soft)">Spécialités en cours</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{specsInProgress}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-(--color-ink-soft)">Prochaines spécialités accessibles</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{nextAccessible}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-(--color-ink-soft)">Validations en attente</span>
+              <span className={`font-black tabular-nums ${validationsPending > 0 ? 'text-[#6D28D9]' : 'text-(--color-ink)'}`}>{validationsPending}</span>
+            </li>
+          </ul>
+          {validationsPending > 0 && (
+            <p className="mt-3 rounded-lg bg-[#F5F3FF] px-2.5 py-1.5 text-[11px] font-semibold text-[#6D28D9]">
+              {studiedSpecs.filter((s) => s.awaitingValidation).slice(0, 2).map((s) => `${s.nom} terminée — interrogation non réalisée.`).join(' ')}
+            </p>
+          )}
+        </Card>
+
+        {/* Zone 2 — Maintien des acquis (révisions transversales uniquement) */}
+        <Card>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
+              <RefreshCcw className="h-4 w-4" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Maintien des acquis</p>
+          </div>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li className="flex items-center justify-between gap-2">
+              <span className="text-(--color-ink-soft)">Révisions transversales réalisées</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{maintien.revisions30d} / 30 derniers jours</span>
+            </li>
+            <li className="flex items-center justify-between gap-2">
+              <span className="text-(--color-ink-soft)">Dernière révision transversale</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{lastRevLabel}</span>
+            </li>
+            <li className="flex items-center justify-between gap-2">
+              <span className="text-(--color-ink-soft)">Meilleure période de régularité</span>
+              <span className="font-black tabular-nums text-(--color-ink)">{maintien.bestStreak} jour{maintien.bestStreak > 1 ? 's' : ''} consécutifs</span>
+            </li>
+          </ul>
+          {maintien.daysSinceLast !== null && maintien.daysSinceLast >= 2 && maintien.daysSinceLast < 7 && (
+            <p className="mt-3 rounded-lg bg-[#FFF7E6] px-2.5 py-1.5 text-[11px] font-semibold text-[#B45B00]">
+              Vous n&apos;avez pas effectué de révision transversale depuis {maintien.daysSinceLast} jours.
+              Une reprise est recommandée pour maintenir vos acquis.
+            </p>
+          )}
+          {maintien.daysSinceLast !== null && maintien.daysSinceLast >= 7 && (
+            <p className="mt-3 rounded-lg bg-[#FCEAEC] px-2.5 py-1.5 text-[11px] font-semibold text-[#A91D2C]">
+              Attention : aucune révision transversale depuis {maintien.daysSinceLast} jours.
+              {maintien.daysSinceLast >= 14 ? ' Une réévaluation est nécessaire avant de débloquer de nouveaux contenus.' : ' Vos anciennes spécialités ne sont plus suffisamment entretenues.'}
+            </p>
+          )}
+          {(maintien.daysSinceLast === null || maintien.daysSinceLast === 1) && (
+            <p className="mt-3 rounded-lg bg-(--color-sand-100) px-2.5 py-1.5 text-[11px] font-semibold text-(--color-ink-soft)">
+              Votre révision du jour est disponible.
+            </p>
+          )}
+        </Card>
+
+        {/* Zone 3 — Révision du jour (formats selon le nb de spécialités étudiées) */}
+        <Card>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FCEAEC] text-[#C0112E]">
+              <Play className="h-4 w-4" />
+            </span>
+            <p className="text-sm font-bold text-(--color-ink)">Révision du jour</p>
+          </div>
+          <p className="mt-2 text-2xl font-black tabular-nums text-(--color-ink)">
+            {sizes.daily} {qLabel}
+          </p>
+          <p className="text-xs text-(--color-ink-soft)">Temps estimé : {dailyEst}</p>
+          <DiscoveryGateLink
+            href="/revisions-transversales/session?kind=daily"
+            locked={isDecouverte}
+            className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.01]"
+            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+          >
+            <Play className="h-4 w-4" /> Commencer ma révision du jour
+          </DiscoveryGateLink>
+          {sizes.recommended && (
+            <div className="mt-3 border-t border-(--color-border) pt-3">
+              <p className="text-sm font-bold text-(--color-ink)">Révision recommandée · {sizes.recommended} {qLabel}</p>
+              <p className="text-[11px] text-(--color-ink-soft)">
+                {studiedSpecs.length <= 10 ? 'Pour renforcer davantage vos acquis' : studiedSpecs.length <= 15 ? 'Recommandée à ce stade de votre progression' : 'Pour entretenir plus largement les spécialités déjà étudiées'}
+              </p>
+              <DiscoveryGateLink
+                href="/revisions-transversales/session?kind=recommended"
+                locked={isDecouverte}
+                className="mt-1.5 inline-flex items-center gap-1 text-[12px] font-bold text-[#E8742C] hover:underline"
+              >
+                Faire la révision recommandée <ArrowRight className="h-3.5 w-3.5" />
+              </DiscoveryGateLink>
+            </div>
+          )}
+          {sizes.intensive && (
+            <div className="mt-3 border-t border-(--color-border) pt-3">
+              <p className="text-sm font-bold text-(--color-ink)">Révision intensive · {sizes.intensive} {qLabel}</p>
+              <p className="text-[11px] text-(--color-ink-soft)">Pour les périodes de révision approfondie ou les week-ends — jamais obligatoire</p>
+              <DiscoveryGateLink
+                href="/revisions-transversales/session?kind=intensive"
+                locked={isDecouverte}
+                className="mt-1.5 inline-flex items-center gap-1 text-[12px] font-bold text-[#A91D2C] hover:underline"
+              >
+                Lancer la révision intensive <ArrowRight className="h-3.5 w-3.5" />
+              </DiscoveryGateLink>
+            </div>
+          )}
+        </Card>
+      </section>
+
       {/* ---- KPI cards (4) — accents caractéristiques de la plateforme ---- */}
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard accent="#2563EB" Icon={Target} label="Progression globale">

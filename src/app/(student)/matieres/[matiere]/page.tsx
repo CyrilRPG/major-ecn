@@ -11,6 +11,7 @@ import {
   canAccessCours,
   parseScope,
 } from '@/lib/auth/permissions';
+import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -154,39 +155,59 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     .order('created_at', { ascending: false })
     .limit(1);
   const latestEval = evalData?.[0] ?? null;
-  const evalStatus = latestEval?.status as string | null;
+  // Vocabulaire CANONIQUE : la base écrit validee | fragile | insuffisante.
+  // Les anciennes valeurs 'consolider'/'renforcer' n'ont jamais existé en base
+  // — les cartes Consolidation/Renforcement ne s'affichaient donc jamais.
+  const evalStatus = normalizeSpecialtyStatus(latestEval?.status);
+
+  // Spécialité « terminée » : tous les cours abordés (fiche/vidéo/QCM) →
+  // interrogation officielle proposée ; sans interrogation passée, le statut
+  // est « Validation en attente » (spec section 9).
+  const isSpecialtyFinished = cours.length > 0 && cours.every((c) => {
+    const p = c.course_progress?.[0];
+    return !!p?.video_watched || !!p?.fiche_read || (qcmDoneByCourse.get(c.id)?.size ?? 0) > 0;
+  });
+  const awaitingValidation = isSpecialtyFinished && !evalStatus;
 
   // Evaluation / Consolidation / Renforcement cards based on status
   const evalRow: IndexRow = {
     id: '__evaluation__',
     href: `/matieres/${matiere}/evaluation`,
-    title: 'Évaluation de fin de spécialité',
+    title: 'Interrogation officielle Major EVC',
     subtitle: evalStatus === 'validee'
-      ? 'Spécialité validée — vous pouvez repasser l\'évaluation.'
-      : 'Testez vos connaissances sur l\'ensemble de la spécialité.',
+      ? 'Spécialité validée — vous pouvez repasser l\'interrogation.'
+      : awaitingValidation
+      ? `${m.nom} terminée — interrogation non réalisée.`
+      : 'Évaluez votre niveau pour valider cette spécialité.',
     leading: <RowIcon Icon={ClipboardCheck} color="#6D28D9" />,
-    badge: evalStatus === 'validee' ? 'Validée' : evalStatus ? 'À refaire' : 'Nouveau',
+    badge: evalStatus === 'validee'
+      ? 'Validée'
+      : evalStatus
+      ? 'À refaire'
+      : awaitingValidation
+      ? 'Validation en attente'
+      : 'Nouveau',
   };
 
   const actionRows: IndexRow[] = [evalRow];
 
-  if (evalStatus === 'consolider') {
+  if (evalStatus === 'fragile') {
     actionRows.push({
       id: '__consolidation__',
       href: `/matieres/${matiere}/consolidation`,
       title: 'Consolidation',
-      subtitle: 'Revoyez les points faibles et repassez une mini-évaluation.',
+      subtitle: 'Spécialité fragile — revoyez les points faibles puis passez la mini-évaluation de 20 QCM.',
       leading: <RowIcon Icon={RefreshCcw} color="#E8742C" />,
       badge: 'Recommandé',
     });
   }
 
-  if (evalStatus === 'renforcer') {
+  if (evalStatus === 'insuffisante') {
     actionRows.push({
       id: '__renforcement__',
       href: `/matieres/${matiere}/renforcement`,
       title: 'Renforcement approfondi',
-      subtitle: 'Parcours complet : fiches, flashcards, QCM et évaluation finale.',
+      subtitle: 'Spécialité insuffisamment maîtrisée — fiches, flashcards, QCM renforcés et nouvelle évaluation.',
       leading: <RowIcon Icon={ShieldCheck} color="#A91D2C" />,
       badge: 'Prioritaire',
     });

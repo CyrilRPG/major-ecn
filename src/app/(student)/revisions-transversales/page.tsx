@@ -5,74 +5,29 @@ import {
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
-import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { parseScope } from '@/lib/auth/permissions';
+import { getMaintienStats, getStudiedSpecialties, type MaintienStats, type StudiedSpecialty } from '@/lib/pedago/maintien';
+import { sessionSizesFor, STATUS_META } from '@/lib/pedago/status';
 
 export const metadata = { title: 'Révisions transversales' };
 
 /* ------------------------------------------------------------------
    STATE — calcule tout ce qui est affiché à partir des données réelles.
+   Une « spécialité » est une MATIÈRE (collège : cardiologie, pneumologie…),
+   conformément au cahier des charges — pas un item de cours.
 ------------------------------------------------------------------ */
-type SpecRow = {
-  cours_id: string;
-  titre: string;
-  matiere_nom: string;
-  last_revision: Date | null;
-  revisions_30d: number;
-  total_attempts: number;
-  correct_ratio: number;       // 0..1
-  status: 'validee' | 'consolider' | 'renforcer' | 'non_evaluee';
-};
-
 type State = {
   firstName: string;
-  /** Compteur 30 jours glissants. */
-  revisions30d: number;
-  /** Date de dernière révision transversale. */
-  lastRevision: Date | null;
-  /** Nombre total de révisions transversales depuis le début. */
-  totalRevisions: number;
-  /** "Meilleure période" — fixe par défaut tant qu'on n'a pas de streak réel. */
-  bestStreakDays: number;
-  /** Jours écoulés depuis la dernière révision (Infinity si jamais). */
-  daysSinceLast: number;
-  /** Spécialités déjà étudiées (au moins un cours commencé). */
-  specs: SpecRow[];
-  /** Niveau de session adapté selon le nb de spé étudiées. */
+  stats: MaintienStats;
+  specs: StudiedSpecialty[];
   sessionSizes: { daily: number; recommended: number | null; intensive: number | null };
-  /** Historique : les 4-5 dernières sessions. */
   recentSessions: { kind: string; completed_at: Date; score_pct: number }[];
-  /** Unité de question accessible selon la voie (« QCM » ou « QROC »). */
   unit: 'QCM' | 'QROC';
 };
 
 async function buildState(userId: string, firstName: string): Promise<State> {
   const supabase = await createClient();
-  const now = Date.now();
-  const days30Ago = new Date(now - 30 * 86_400_000).toISOString();
 
-  // 1) Sessions de révision transversale
-  const { data: sessRaw } = await supabase
-    .from('transversal_sessions')
-    .select('completed_at, qcm_count, score_correct, kind')
-    .eq('user_id', userId)
-    .not('completed_at', 'is', null)
-    .order('completed_at', { ascending: false });
-
-  const sessions = (sessRaw ?? []) as { completed_at: string; qcm_count: number; score_correct: number; kind: string }[];
-  const revisions30d = sessions.filter((s) => s.completed_at >= days30Ago).length;
-  const lastRevision = sessions.length > 0 ? new Date(sessions[0].completed_at) : null;
-  const totalRevisions = sessions.length;
-  const daysSinceLast = lastRevision
-    ? Math.floor((now - lastRevision.getTime()) / 86_400_000)
-    : Number.POSITIVE_INFINITY;
-  const recentSessions = sessions.slice(0, 5).map((s) => ({
-    kind: s.kind,
-    completed_at: new Date(s.completed_at),
-    score_pct: s.qcm_count > 0 ? Math.round((s.score_correct / s.qcm_count) * 100) : 0,
-  }));
-
-  // 2) Spécialités déjà étudiées : on regarde les cours avec une activité.
   const { data: profileScope } = await supabase
     .from('profiles')
     .select('permission_scope')
@@ -82,145 +37,30 @@ async function buildState(userId: string, firstName: string): Promise<State> {
   // Voie externe : l'unité de question accessible est le QROC.
   const unit = scope.voie === 'externe' ? 'QROC' : 'QCM';
 
-  // course_progress → cours abordés
-  const { data: progressRaw } = await supabase
-    .from('course_progress')
-    .select('cours_id, video_watched, fiche_read, last_seen_at')
-    .eq('user_id', userId);
-  const progress = (progressRaw ?? []) as { cours_id: string; video_watched: boolean | null; fiche_read: boolean | null; last_seen_at: string | null }[];
-  const studiedCoursIds = new Set(
-    progress.filter((p) => p.video_watched || p.fiche_read).map((p) => p.cours_id),
-  );
+  const [stats, specs, { data: sessRaw }] = await Promise.all([
+    getMaintienStats(supabase as never, userId),
+    getStudiedSpecialties(supabase as never, userId, scope),
+    supabase
+      .from('transversal_sessions')
+      .select('completed_at, qcm_count, score_correct, kind')
+      .eq('user_id', userId)
+      .not('completed_at', 'is', null)
+      .order('completed_at', { ascending: false })
+      .limit(5) as never,
+  ]);
 
-  // attempts → ratio de réussite par cours
-  const { data: attemptsRaw } = await supabase
-    .from('qcm_attempts')
-    .select('is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(cours_id))')
-    .eq('user_id', userId);
-  type AttemptRow = { is_correct: boolean; attempted_at: string; qcm_questions: { qcm_series: { cours_id: string } } };
-  const attempts = (attemptsRaw ?? []) as unknown as AttemptRow[];
-
-  const perCours = new Map<string, { total: number; correct: number; last: Date | null; revisions30d: number }>();
-  for (const a of attempts) {
-    const cid = a.qcm_questions.qcm_series.cours_id;
-    const cur = perCours.get(cid) ?? { total: 0, correct: 0, last: null, revisions30d: 0 };
-    cur.total++;
-    if (a.is_correct) cur.correct++;
-    const at = new Date(a.attempted_at);
-    if (!cur.last || at > cur.last) cur.last = at;
-    if (a.attempted_at >= days30Ago) cur.revisions30d++;
-    perCours.set(cid, cur);
-    studiedCoursIds.add(cid);
-  }
-
-  // Récupère les titres + collège
-  const { data: coursRaw } = await supabase
-    .from('cours')
-    .select('id, titre, matiere_id, matieres!inner(nom, semestres!inner(faculte_id))')
-    .in('id', Array.from(studiedCoursIds));
-  type CoursRow = { id: string; titre: string; matiere_id: string; matieres: { nom: string; semestres: { faculte_id: string } } };
-  const coursMap = new Map<string, CoursRow>();
-  for (const c of (coursRaw ?? []) as unknown as CoursRow[]) coursMap.set(c.id, c);
-
-  // Official status from specialty_evaluations table (sections 9-12)
-  const { data: evalRows } = await (supabase as unknown as {
-    from: (t: string) => {
-      select: (s: string) => {
-        eq: (k: string, v: string) => {
-          order: (k: string, o: { ascending: boolean }) => Promise<{
-            data: { matiere_id: string; status: string; created_at: string }[] | null;
-          }>;
-        };
-      };
-    };
-  }).from('specialty_evaluations')
-    .select('matiere_id, status, created_at')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-  const officialStatus = new Map<string, string>();
-  for (const e of evalRows ?? []) {
-    if (!officialStatus.has(e.matiere_id)) officialStatus.set(e.matiere_id, e.status);
-  }
-
-  const specs: SpecRow[] = [];
-  for (const cid of studiedCoursIds) {
-    const c = coursMap.get(cid);
-    if (!c) continue;
-    if (c.matieres.semestres.faculte_id !== EDN_FACULTE_ID) continue;
-    if (!canAccessCollege(scope, c.matiere_id)) continue;
-    const stat = perCours.get(cid);
-    const total = stat?.total ?? 0;
-    const ratio = total > 0 ? (stat!.correct / total) : 0;
-
-    // Use official evaluation status if available, fallback to computed
-    const evalStatus = officialStatus.get(c.matiere_id);
-    let status: SpecRow['status'];
-    if (evalStatus === 'validee' || evalStatus === 'consolider' || evalStatus === 'renforcer') {
-      status = evalStatus;
-    } else {
-      status =
-        total === 0 ? 'non_evaluee' :
-        ratio >= 0.75 ? 'validee' :
-        ratio >= 0.5  ? 'consolider' :
-                         'renforcer';
-    }
-    specs.push({
-      cours_id: cid,
-      titre: c.titre,
-      matiere_nom: c.matieres.nom,
-      last_revision: stat?.last ?? null,
-      revisions_30d: stat?.revisions30d ?? 0,
-      total_attempts: total,
-      correct_ratio: ratio,
-      status,
-    });
-  }
-  // Tri : à renforcer d'abord, puis à consolider, puis le reste
-  specs.sort((a, b) => {
-    const order = { renforcer: 0, consolider: 1, non_evaluee: 2, validee: 3 } as const;
-    return order[a.status] - order[b.status];
-  });
-
-  // Tailles de session selon nb de spé étudiées
-  const n = specs.length;
-  const sessionSizes =
-    n <= 5  ? { daily: 25, recommended: null,  intensive: null  } :
-    n <= 10 ? { daily: 30, recommended: 50,    intensive: null  } :
-    n <= 15 ? { daily: 35, recommended: 60,    intensive: null  } :
-              { daily: 40, recommended: 75,    intensive: 120   };
-
-  // Meilleure période de régularité : on calcule la plus longue série
-  // de jours consécutifs avec au moins une session complétée.
-  let bestStreakDays = 0;
-  if (sessions.length > 0) {
-    const sessionDates = new Set(
-      sessions.map((s) => s.completed_at.slice(0, 10)),
-    );
-    const sortedDates = [...sessionDates].sort();
-    let streak = 1;
-    let maxStreak = 1;
-    for (let i = 1; i < sortedDates.length; i++) {
-      const prev = new Date(sortedDates[i - 1]).getTime();
-      const curr = new Date(sortedDates[i]).getTime();
-      if (curr - prev === 86_400_000) {
-        streak++;
-        if (streak > maxStreak) maxStreak = streak;
-      } else {
-        streak = 1;
-      }
-    }
-    bestStreakDays = maxStreak;
-  }
+  const sessions = ((sessRaw ?? []) as { completed_at: string; qcm_count: number; score_correct: number; kind: string }[]);
+  const recentSessions = sessions.map((s) => ({
+    kind: s.kind,
+    completed_at: new Date(s.completed_at),
+    score_pct: s.qcm_count > 0 ? Math.round((s.score_correct / s.qcm_count) * 100) : 0,
+  }));
 
   return {
     firstName,
-    revisions30d,
-    lastRevision,
-    totalRevisions,
-    bestStreakDays,
-    daysSinceLast,
+    stats,
     specs,
-    sessionSizes,
+    sessionSizes: sessionSizesFor(specs.length),
     recentSessions,
     unit,
   };
@@ -234,14 +74,25 @@ export default async function RevisionsTransversalesPage() {
   const firstName = profile.first_name || 'étudiant';
   const s = await buildState(user.id, firstName);
 
-  // États visuels selon les jours d'absence (spec section 5)
-  const isBilanGlobal     = s.daysSinceLast >= 60;
-  const isAbsenceProlongee = !isBilanGlobal && s.daysSinceLast >= 30;
-  const isInterrupted     = !isBilanGlobal && !isAbsenceProlongee && s.daysSinceLast >= 14;
-  const isWeekAlert       = !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && s.daysSinceLast >= 7;
-  const isAlert           = !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && !isWeekAlert && s.daysSinceLast >= 2;
-  const isUpToDate        = s.daysSinceLast <= 1 && s.totalRevisions > 0;
+  // États visuels selon les jours d'absence (spec section 5).
+  // « Jamais révisé » est un état DISTINCT : pas de bandeau d'absence — l'élève
+  // découvre le module, on ne l'accueille pas avec « 60 jours d'absence ».
+  const days = s.stats.daysSinceLast;
+  const never            = days === null;
+  const isBilanGlobal     = !never && days >= 60;
+  const isAbsenceProlongee = !never && !isBilanGlobal && days >= 30;
+  const isInterrupted     = !never && !isBilanGlobal && !isAbsenceProlongee && days >= 14;
+  const isWeekAlert       = !never && !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && days >= 7;
+  const isAlert           = !never && !isBilanGlobal && !isAbsenceProlongee && !isInterrupted && !isWeekAlert && days >= 2;
+  const isYesterday       = !never && days === 1;
+  const isUpToDate        = !never && days === 0;
   const needsReevaluation = isBilanGlobal || isAbsenceProlongee || isInterrupted;
+  const hasSpecs          = s.specs.length > 0;
+
+  const weakTags = s.specs
+    .filter((sp) => sp.officialStatus === 'insuffisante' || sp.officialStatus === 'fragile')
+    .slice(0, 3)
+    .map((sp) => sp.nom);
 
   return (
     <div className="mx-auto grid w-full max-w-[1640px] gap-6 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_320px]">
@@ -261,17 +112,18 @@ export default async function RevisionsTransversalesPage() {
           </a>
         </header>
 
-        {/* ============ KPI 4 cards — spec section 2 zone 2 ============ */}
+        {/* ============ KPI — Maintien des acquis (spec section 5) ============ */}
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard
             Icon={Calendar}
             iconBg="#F1E8FD" iconFg="#6D28D9"
             label="Révisions transversales"
-            value={`${s.revisions30d} / 30`}
+            value={`${s.stats.revisions30d} / 30`}
             hint="derniers jours"
-            bar={Math.min(100, (s.revisions30d / 30) * 100)}
+            bar={Math.min(100, (s.stats.revisions30d / 30) * 100)}
             barColor={needsReevaluation ? '#A91D2C' : isWeekAlert || isAlert ? '#E8742C' : '#6D28D9'}
             footer={
+              never ? <span className="text-(--color-ink-muted)">Commencez aujourd&apos;hui</span> :
               needsReevaluation ? <span className="text-(--color-danger) font-bold">Régularité interrompue</span> :
               isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">À reprendre rapidement</span> :
                               <span className="text-(--color-success) font-bold">Excellente régularité</span>
@@ -281,50 +133,50 @@ export default async function RevisionsTransversalesPage() {
             Icon={History}
             iconBg="#E7F6EC" iconFg="#16793C"
             label="Dernière révision"
-            value={lastRevisionLabel(s.lastRevision, s.daysSinceLast)}
-            hint={s.lastRevision ? s.lastRevision.toLocaleDateString('fr-FR') : '—'}
+            value={lastRevisionLabel(s.stats.lastRevision, days)}
+            hint={s.stats.lastRevision ? s.stats.lastRevision.toLocaleDateString('fr-FR') : '—'}
             footer={
+              never ? <span className="text-(--color-ink-muted)">Votre révision du jour est disponible</span> :
               needsReevaluation ? <span className="text-(--color-danger) font-bold">Seuil dépassé</span> :
               isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">Une reprise s&apos;impose</span> :
               isUpToDate    ? <span className="text-(--color-success) font-bold">Parfait, continuez !</span> :
+              isYesterday   ? <span className="text-(--color-ink-soft)">Votre révision du jour est disponible</span> :
                               <span className="text-(--color-ink-muted)">—</span>
             }
           />
           <KpiCard
-            Icon={TrendingUp}
+            Icon={RefreshCcw}
             iconBg="#EAF1FB" iconFg="#1E40AF"
-            label="Meilleure période"
-            value={`${s.bestStreakDays} jours`}
-            hint="consécutifs"
-            footer={<span className="text-(--color-ink-muted) font-medium">Votre record actuel</span>}
+            label="Régularité en cours"
+            value={`${s.stats.currentStreak} jour${s.stats.currentStreak > 1 ? 's' : ''}`}
+            hint="consécutifs de révision"
+            footer={<span className="text-(--color-ink-muted) font-medium">{s.stats.totalRevisions} révision{s.stats.totalRevisions > 1 ? 's' : ''} au total</span>}
           />
           <KpiCard
-            Icon={RefreshCcw}
+            Icon={TrendingUp}
             iconBg="#F1E8FD" iconFg="#6D28D9"
-            label="Total révisions"
-            value={`${s.totalRevisions}`}
-            hint="depuis le début"
-            footer={<span className="text-(--color-ink-muted) font-medium">&nbsp;</span>}
+            label="Meilleure période"
+            value={`${s.stats.bestStreak} jour${s.stats.bestStreak > 1 ? 's' : ''}`}
+            hint="consécutifs"
+            footer={<span className="text-(--color-ink-muted) font-medium">Votre record</span>}
           />
         </section>
 
         {/* ============ BANDEAU D'ÉTAT — spec section 5 ============ */}
-        {isBilanGlobal ? (
-          <BannerBilanGlobal days={s.daysSinceLast} />
-        ) : isAbsenceProlongee ? (
-          <BannerAbsenceProlongee days={s.daysSinceLast} />
-        ) : isInterrupted ? (
-          <BannerInterrupted days={s.daysSinceLast} />
-        ) : isWeekAlert ? (
-          <BannerWeekAlert days={s.daysSinceLast} hasIntensive={s.sessionSizes.intensive != null} />
-        ) : isAlert ? (
-          <BannerAlert days={s.daysSinceLast} />
-        ) : isUpToDate ? (
-          <BannerUpToDate />
-        ) : null}
+        {!hasSpecs ? null
+          : isBilanGlobal ? <BannerBilanGlobal days={days!} />
+          : isAbsenceProlongee ? <BannerAbsenceProlongee days={days!} />
+          : isInterrupted ? <BannerInterrupted days={days!} />
+          : isWeekAlert ? <BannerWeekAlert days={days!} hasIntensive={s.sessionSizes.intensive != null} />
+          : isAlert ? <BannerAlert days={days!} />
+          : isYesterday ? <BannerYesterday />
+          : isUpToDate ? <BannerUpToDate />
+          : null}
 
         {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============ */}
-        {needsReevaluation ? (
+        {!hasSpecs ? (
+          <EmptyState unit={s.unit} />
+        ) : needsReevaluation ? (
           <section className="grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
             <RevisionCard
               kind={isBilanGlobal ? 'bilan_global' : isAbsenceProlongee ? 'reevaluation_deep' : 'reevaluation'}
@@ -340,7 +192,7 @@ export default async function RevisionsTransversalesPage() {
                 : isAbsenceProlongee
                 ? 'Pour évaluer votre niveau après cette interruption'
                 : 'Pour vérifier le maintien de vos acquis'}
-              tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
+              tags={weakTags}
             />
             <SpecialtiesPanel specs={s.specs} />
           </section>
@@ -352,7 +204,8 @@ export default async function RevisionsTransversalesPage() {
                 tint="#F1E8FD" tintFg="#6D28D9"
                 title="Révision du jour"
                 count={s.sessionSizes.daily}
-                estMin={s.sessionSizes.daily}
+                estMin={dailyEstMin(s.sessionSizes.daily)}
+                estLabel={dailyEstLabel(s.sessionSizes.daily)}
                 cta="Commencer ma révision du jour"
                 ctaTone="purple"
                 unit={s.unit}
@@ -367,8 +220,8 @@ export default async function RevisionsTransversalesPage() {
                   cta="Faire la révision recommandée"
                   ctaTone="orange"
                   unit={s.unit}
-                  hint="Recommandée à ce stade de votre progression"
-                  tags={s.specs.filter((sp) => sp.status !== 'validee').slice(0, 3).map((sp) => sp.titre)}
+                  hint={recommendedHint(s.specs.length)}
+                  tags={weakTags}
                 />
               )}
             </section>
@@ -383,7 +236,7 @@ export default async function RevisionsTransversalesPage() {
                 cta="Lancer la révision intensive"
                 ctaTone="red"
                 unit={s.unit}
-                hint="Pour les périodes de révision approfondie ou les week-ends"
+                hint="Pour les périodes de révision approfondie ou les week-ends — jamais obligatoire"
               />
             )}
 
@@ -402,9 +255,6 @@ export default async function RevisionsTransversalesPage() {
           <div className="mt-3">
             {priorities(s.specs)}
           </div>
-          <Link href="#priorites" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline">
-            Voir toutes mes priorités <ArrowRight className="h-3 w-3" />
-          </Link>
         </div>
 
         {/* Conseil du jour */}
@@ -447,9 +297,6 @@ export default async function RevisionsTransversalesPage() {
               ))}
             </ul>
           )}
-          <Link href="#history" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline">
-            Voir tout l&apos;historique <ArrowRight className="h-3 w-3" />
-          </Link>
         </div>
       </aside>
     </div>
@@ -459,6 +306,25 @@ export default async function RevisionsTransversalesPage() {
 /* ============================================================
    Composants
    ============================================================ */
+
+function dailyEstMin(count: number): number {
+  // Spec section 2 : 25 → 15 min ; 30 → 15-20 ; 35 → 20 ; 40 → 20-25.
+  if (count <= 25) return 15;
+  if (count <= 30) return 18;
+  if (count <= 35) return 20;
+  return 23;
+}
+function dailyEstLabel(count: number): string {
+  if (count <= 25) return '15 minutes';
+  if (count <= 30) return '15-20 minutes';
+  if (count <= 35) return '20 minutes';
+  return '20-25 minutes';
+}
+function recommendedHint(nSpecs: number): string {
+  if (nSpecs <= 10) return 'Pour renforcer davantage vos acquis';
+  if (nSpecs <= 15) return 'Recommandée à ce stade de votre progression';
+  return 'Pour entretenir plus largement les spécialités déjà étudiées';
+}
 
 function KpiCard({
   Icon, iconBg, iconFg, label, value, hint, bar, barColor, footer,
@@ -490,6 +356,28 @@ function KpiCard({
   );
 }
 
+function EmptyState({ unit }: { unit: string }) {
+  return (
+    <section className="rounded-2xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-14 text-center">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F1E8FD] text-[#6D28D9]">
+        <BookOpen className="h-6 w-6" />
+      </span>
+      <p className="mt-4 text-lg font-bold text-(--color-ink)">Aucune spécialité étudiée pour le moment</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-(--color-ink-soft)">
+        Les révisions transversales piochent des {unit} dans les spécialités que vous avez déjà étudiées.
+        Commencez par regarder un cours, lire une fiche ou faire une série de {unit} : votre première
+        révision du jour se débloquera automatiquement.
+      </p>
+      <Link
+        href="/facultes"
+        className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#6D28D9] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+      >
+        Découvrir les spécialités <ArrowRight className="h-4 w-4" />
+      </Link>
+    </section>
+  );
+}
+
 function BannerUpToDate() {
   return (
     <section className="rounded-2xl border bg-[#E7F6EC]/40 p-5 sm:p-6" style={{ borderColor: '#A2D5B2' }}>
@@ -517,6 +405,28 @@ function BannerUpToDate() {
         <Lightbulb className="h-3.5 w-3.5" />
         Une révision quotidienne est idéale pour garder vos connaissances actives.
       </p>
+    </section>
+  );
+}
+
+/** Après 1 jour sans révision : message léger, pas d'alerte forte (section 5). */
+function BannerYesterday() {
+  return (
+    <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F1E8FD] text-[#6D28D9]">
+            <Sparkles className="h-4.5 w-4.5" />
+          </span>
+          <p className="text-sm font-semibold text-(--color-ink)">Votre révision du jour est disponible.</p>
+        </div>
+        <Link
+          href="/revisions-transversales/session?kind=daily"
+          className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#6D28D9] px-4 py-2 text-sm font-bold text-white shadow-sm transition-transform hover:scale-[1.02]"
+        >
+          Commencer ma révision du jour <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </section>
   );
 }
@@ -608,9 +518,10 @@ function BannerInterrupted({ days }: { days: number }) {
             <p className="text-base font-bold text-(--color-ink)">Maintien des acquis interrompu</p>
             <p className="mt-1 text-sm text-(--color-ink-soft)">
               Vous n&apos;avez pas entretenu vos acquis depuis plus de{' '}
-              <span className="font-bold text-[#A91D2C]">{Number.isFinite(days) ? `${days} jours` : 'longtemps'}</span>.
+              <span className="font-bold text-[#A91D2C]">{days} jours</span>.
               <br />
               Une réévaluation est nécessaire avant de débloquer de nouveaux contenus.
+              Vos anciens contenus, fiches, flashcards et corrections restent accessibles.
             </p>
           </div>
         </div>
@@ -666,7 +577,7 @@ function BannerBilanGlobal({ days }: { days: number }) {
             <p className="text-base font-bold text-(--color-ink)">Bilan global recommandé</p>
             <p className="mt-1 text-sm text-(--color-ink-soft)">
               Vous n&apos;avez pas entretenu vos acquis depuis plus de{' '}
-              <span className="font-bold text-[#A91D2C]">{Number.isFinite(days) ? `${days} jours` : 'longtemps'}</span>.
+              <span className="font-bold text-[#A91D2C]">{days} jours</span>.
               <br />
               Un bilan global est recommandé afin d&apos;identifier les spécialités à reprendre en priorité.
             </p>
@@ -684,11 +595,12 @@ function BannerBilanGlobal({ days }: { days: number }) {
 }
 
 function RevisionCard({
-  kind, tint, tintFg, title, count, estMin, cta, ctaTone, hint, tags, unit = 'QCM',
+  kind, tint, tintFg, title, count, estMin, estLabel, cta, ctaTone, hint, tags, unit = 'QCM',
 }: {
   kind: string;
   tint: string; tintFg: string;
   title: string; count: number; estMin: number;
+  estLabel?: string;
   cta: string; ctaTone: 'purple' | 'orange' | 'red';
   hint?: string;
   tags?: string[];
@@ -735,7 +647,7 @@ function RevisionCard({
 
       {!tags && (
         <p className="mt-3 flex items-center gap-1.5 text-xs text-(--color-ink-soft)">
-          <Calendar className="h-3.5 w-3.5" /> Temps estimé : {estMin} minutes
+          <Calendar className="h-3.5 w-3.5" /> Temps estimé : {estLabel ?? `${estMin} minutes`}
         </p>
       )}
 
@@ -750,93 +662,72 @@ function RevisionCard({
   );
 }
 
-function SpecialtiesPanel({ specs }: { specs: SpecRow[] }) {
+function SpecialtiesPanel({ specs }: { specs: StudiedSpecialty[] }) {
   return (
     <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-6">
       <h2 className="text-base font-bold text-(--color-ink)">Mes spécialités déjà étudiées</h2>
-      {specs.length === 0 ? (
-        <p className="mt-6 text-center text-sm text-(--color-ink-muted)">
-          Aucune spécialité étudiée pour le moment. Commencez un cours pour la voir apparaître ici.
-        </p>
-      ) : (
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[520px] text-sm">
-            <thead>
-              <tr className="border-b border-(--color-border) text-left text-xs font-medium uppercase tracking-wider text-(--color-ink-muted)">
-                <th className="pb-2.5 pr-3">Spécialité</th>
-                <th className="pb-2.5 px-3">Dernière révision</th>
-                <th className="pb-2.5 px-3">Révisions (30j)</th>
-                <th className="pb-2.5 px-3">Régularité</th>
-                <th className="pb-2.5 px-3">Statut officiel</th>
-                <th className="pb-2.5 pl-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {specs.slice(0, 8).map((sp) => (
-                <SpecRowRender key={sp.cours_id} sp={sp} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {specs.length > 8 && (
-        <div className="mt-4 flex justify-center">
-          <Link href="/matieres" className="inline-flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:underline">
-            Voir toutes mes spécialités étudiées <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      )}
+      <p className="mt-0.5 text-xs text-(--color-ink-soft)">
+        {specs.length} spécialité{specs.length > 1 ? 's' : ''} — le statut officiel n&apos;évolue que par une évaluation officielle.
+      </p>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="border-b border-(--color-border) text-left text-xs font-medium uppercase tracking-wider text-(--color-ink-muted)">
+              <th className="pb-2.5 pr-3">Spécialité</th>
+              <th className="pb-2.5 px-3">Avancement</th>
+              <th className="pb-2.5 px-3">Dernière activité</th>
+              <th className="pb-2.5 px-3">Statut officiel</th>
+              <th className="pb-2.5 pl-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {specs.map((sp) => (
+              <SpecRowRender key={sp.matiereId} sp={sp} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
 
-function SpecRowRender({ sp }: { sp: SpecRow }) {
-  const StatusBadge = ({ status }: { status: SpecRow['status'] }) => {
-    const map = {
-      validee:     { dot: '#16793C', label: 'Validée'    },
-      consolider:  { dot: '#E8742C', label: 'À consolider' },
-      renforcer:   { dot: '#A91D2C', label: 'À renforcer' },
-      non_evaluee: { dot: '#9AA1AE', label: 'Non évaluée' },
-    }[status];
-    return (
-      <span className="inline-flex items-center gap-1.5 text-xs">
-        <span className="h-2 w-2 rounded-full" style={{ background: map.dot }} />
-        {map.label}
-      </span>
-    );
-  };
+function SpecRowRender({ sp }: { sp: StudiedSpecialty }) {
+  const meta = STATUS_META[sp.officialStatus ?? 'non_evaluee'];
 
   const ActionBtn = () => {
-    if (sp.status === 'renforcer') {
-      return <Link href={`/cours/${sp.cours_id}`} className="inline-flex items-center rounded-lg border border-[#A91D2C] px-2.5 py-1 text-xs font-bold text-[#A91D2C] hover:bg-[#FCEAEC]">Renforcement</Link>;
+    if (sp.officialStatus === 'insuffisante') {
+      return <Link href={`/matieres/${sp.matiereId}/renforcement`} className="inline-flex items-center rounded-lg border border-[#A91D2C] px-2.5 py-1 text-xs font-bold text-[#A91D2C] hover:bg-[#FCEAEC]">Renforcement approfondi</Link>;
     }
-    if (sp.status === 'consolider') {
-      return <Link href={`/cours/${sp.cours_id}`} className="inline-flex items-center rounded-lg border border-[#E8742C] px-2.5 py-1 text-xs font-bold text-[#E8742C] hover:bg-[#FFEAD9]">Consolider</Link>;
+    if (sp.officialStatus === 'fragile') {
+      return <Link href={`/matieres/${sp.matiereId}/consolidation`} className="inline-flex items-center rounded-lg border border-[#E8742C] px-2.5 py-1 text-xs font-bold text-[#E8742C] hover:bg-[#FFEAD9]">Consolider</Link>;
     }
-    return <Link href={`/cours/${sp.cours_id}`} className="inline-flex items-center rounded-lg border border-(--color-border) px-2.5 py-1 text-xs font-bold text-(--color-primary) hover:bg-(--color-primary-soft)">Réviser</Link>;
+    if (sp.awaitingValidation) {
+      return <Link href={`/matieres/${sp.matiereId}/evaluation`} className="inline-flex items-center rounded-lg border border-[#6D28D9] px-2.5 py-1 text-xs font-bold text-[#6D28D9] hover:bg-[#F1E8FD]">Passer l&apos;interrogation</Link>;
+    }
+    return <Link href={`/matieres/${sp.matiereId}`} className="inline-flex items-center rounded-lg border border-(--color-border) px-2.5 py-1 text-xs font-bold text-(--color-primary) hover:bg-(--color-primary-soft)">Réviser</Link>;
   };
 
-  const ratioPct = Math.round(sp.correct_ratio * 100);
-  const regulLabel = ratioPct >= 75 ? 'Excellente' : ratioPct >= 60 ? 'Bonne' : ratioPct >= 40 ? 'À améliorer' : 'Faible';
-  const regulColor = ratioPct >= 75 ? '#16793C' : ratioPct >= 60 ? '#16793C' : ratioPct >= 40 ? '#E8742C' : '#A91D2C';
+  const pctDone = sp.coursTotal > 0 ? Math.round((sp.coursStudied / sp.coursTotal) * 100) : 0;
 
   return (
     <tr className="border-b border-(--color-border)/50 last:border-b-0">
-      <td className="py-3 pr-3 font-medium text-(--color-ink)">{sp.titre}</td>
-      <td className="py-3 px-3 text-(--color-ink-soft)">
-        {sp.last_revision ? relativeDate(sp.last_revision) : '—'}
-      </td>
-      <td className="py-3 px-3 tabular-nums text-(--color-ink)">{sp.revisions_30d}</td>
+      <td className="py-3 pr-3 font-medium text-(--color-ink)">{sp.nom}</td>
       <td className="py-3 px-3">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-16 overflow-hidden rounded-full bg-(--color-sand-100)">
-            <span className="block h-full rounded-full" style={{ width: `${ratioPct}%`, background: regulColor }} />
+            <span className="block h-full rounded-full" style={{ width: `${pctDone}%`, background: pctDone >= 100 ? '#16793C' : '#6D28D9' }} />
           </span>
-          <span className="text-xs font-medium" style={{ color: regulColor }}>{regulLabel}</span>
+          <span className="text-xs tabular-nums text-(--color-ink-soft)">{sp.coursStudied}/{sp.coursTotal}</span>
         </div>
       </td>
+      <td className="py-3 px-3 text-(--color-ink-soft)">
+        {sp.lastActivity ? relativeDate(sp.lastActivity) : '—'}
+      </td>
       <td className="py-3 px-3">
-        <StatusBadge status={sp.status} />
+        <span className="inline-flex items-center gap-1.5 text-xs">
+          <span className="h-2 w-2 rounded-full" style={{ background: meta.dot }} />
+          {sp.awaitingValidation ? 'Validation en attente' : meta.label}
+        </span>
       </td>
       <td className="py-3 pl-3 text-right">
         <ActionBtn />
@@ -848,8 +739,12 @@ function SpecRowRender({ sp }: { sp: SpecRow }) {
 /* ============================================================
    helpers
    ============================================================ */
-function priorities(specs: SpecRow[]): React.ReactNode {
-  const top = specs.filter((s) => s.status === 'renforcer' || s.status === 'consolider').slice(0, 3);
+function priorities(specs: StudiedSpecialty[]): React.ReactNode {
+  const top = [
+    ...specs.filter((s) => s.officialStatus === 'insuffisante'),
+    ...specs.filter((s) => s.officialStatus === 'fragile'),
+    ...specs.filter((s) => s.awaitingValidation),
+  ].slice(0, 4);
   if (top.length === 0) {
     return (
       <div className="flex items-start gap-2.5">
@@ -864,23 +759,33 @@ function priorities(specs: SpecRow[]): React.ReactNode {
   return (
     <ul className="space-y-3">
       {top.map((s) => {
-        const tone = s.status === 'renforcer' ? '#A91D2C' : '#E8742C';
+        const isRed = s.officialStatus === 'insuffisante';
+        const isOrange = s.officialStatus === 'fragile';
+        const tone = isRed ? '#A91D2C' : isOrange ? '#E8742C' : '#6D28D9';
+        const href = isRed
+          ? `/matieres/${s.matiereId}/renforcement`
+          : isOrange
+          ? `/matieres/${s.matiereId}/consolidation`
+          : `/matieres/${s.matiereId}/evaluation`;
+        const label = isRed ? 'Renforcement' : isOrange ? 'Consolider' : 'Interrogation';
+        const sub = isRed
+          ? 'Niveau insuffisant — action recommandée : renforcement approfondi'
+          : isOrange
+          ? 'Spécialité fragile — action recommandée : consolidation'
+          : `${s.nom} terminée — interrogation non réalisée`;
         return (
-          <li key={s.cours_id} className="flex items-start gap-2.5">
+          <li key={s.matiereId} className="flex items-start gap-2.5">
             <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: tone }} />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-(--color-ink)">{s.titre}</p>
-              <p className="text-xs text-(--color-ink-soft)">
-                Spécialité {s.status === 'renforcer' ? 'fragile' : 'peu entretenue'}
-                {s.last_revision && <> · Dernière révision : {relativeDate(s.last_revision)}</>}
-              </p>
+              <p className="text-sm font-bold text-(--color-ink)">{s.nom}</p>
+              <p className="text-xs text-(--color-ink-soft)">{sub}</p>
             </div>
             <Link
-              href={`/cours/${s.cours_id}`}
+              href={href}
               className="inline-flex shrink-0 items-center rounded-lg border px-2 py-0.5 text-[11px] font-bold"
               style={{ borderColor: tone, color: tone }}
             >
-              {s.status === 'renforcer' ? 'Renforcement' : 'Consolider'}
+              {label}
             </Link>
           </li>
         );
@@ -889,8 +794,8 @@ function priorities(specs: SpecRow[]): React.ReactNode {
   );
 }
 
-function lastRevisionLabel(d: Date | null, daysSince: number): string {
-  if (!d) return 'Jamais';
+function lastRevisionLabel(d: Date | null, daysSince: number | null): string {
+  if (!d || daysSince === null) return 'Jamais';
   if (daysSince === 0) return 'Aujourd\'hui';
   if (daysSince === 1) return 'Hier';
   return `Il y a ${daysSince} jours`;

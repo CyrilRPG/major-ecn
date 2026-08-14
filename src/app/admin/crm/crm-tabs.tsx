@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { CrmGeneral, type GeneralStudent, type GeneralStats, type College } from './crm-general';
 import { CrmPanel } from './crm-panel';
+import { CrmContacter, type ContactCandidate } from './crm-contacter';
 
-type Tab = 'general' | 'transversal';
+type Tab = 'general' | 'transversal' | 'contacter';
 
 type CrmPanelProps = Parameters<typeof CrmPanel>[0];
 
@@ -15,12 +16,14 @@ export function CrmTabs({
   colleges,
   transversalStudents,
   transversalStats,
+  contactCandidates,
 }: {
   generalStudents: GeneralStudent[];
   generalStats: GeneralStats;
   colleges: College[];
   transversalStudents: CrmPanelProps['students'];
   transversalStats: CrmPanelProps['stats'];
+  contactCandidates: ContactCandidate[];
 }) {
   const [tab, setTab] = useState<Tab>('general');
 
@@ -31,6 +34,7 @@ export function CrmTabs({
           {([
             { key: 'general' as const, label: 'Général' },
             { key: 'transversal' as const, label: 'Révisions transversales' },
+            { key: 'contacter' as const, label: `Candidats à contacter${contactCandidates.length > 0 ? ` (${contactCandidates.length})` : ''}` },
           ]).map((t) => (
             <button
               key={t.key}
@@ -50,8 +54,10 @@ export function CrmTabs({
 
       {tab === 'general' ? (
         <CrmGeneral students={generalStudents} stats={generalStats} colleges={colleges} />
-      ) : (
+      ) : tab === 'transversal' ? (
         <CrmPanel students={transversalStudents} stats={transversalStats} />
+      ) : (
+        <CrmContacter candidates={contactCandidates} />
       )}
     </>
   );

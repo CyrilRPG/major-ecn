@@ -14,7 +14,7 @@ type QRow = {
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
   qcm_series: { cours_id: string };
 };
-type AttemptRow = { question_id: string; is_correct: boolean };
+type AttemptRow = { question_id: string; is_correct: boolean; attempted_at: string };
 
 export default async function ConsolidationPage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -56,7 +56,7 @@ export default async function ConsolidationPage({ params }: { params: Promise<{ 
       .order('order_index'),
     supabase
       .from('qcm_attempts')
-      .select('question_id, is_correct')
+      .select('question_id, is_correct, attempted_at')
       .eq('user_id', user.id),
   ]);
 
@@ -64,32 +64,38 @@ export default async function ConsolidationPage({ params }: { params: Promise<{ 
     (q) => q.qcm_items && q.qcm_items.length >= 3,
   );
 
-  const failCount = new Map<string, number>();
+  // Historique par question : nb d'échecs, jamais vue, ancienneté.
   const qIds = new Set(allQ.map((q) => q.id));
+  const attemptStat = new Map<string, { fails: number; last: number }>();
   for (const a of ((attemptsRaw ?? []) as unknown as AttemptRow[])) {
-    if (qIds.has(a.question_id) && !a.is_correct) {
-      failCount.set(a.question_id, (failCount.get(a.question_id) ?? 0) + 1);
-    }
+    if (!qIds.has(a.question_id)) continue;
+    const cur = attemptStat.get(a.question_id) ?? { fails: 0, last: 0 };
+    if (!a.is_correct) cur.fails++;
+    const t = new Date(a.attempted_at).getTime();
+    if (t > cur.last) cur.last = t;
+    attemptStat.set(a.question_id, cur);
   }
 
-  const prioritized = [...failCount.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([id]) => id);
+  // Sélection des 40 QCM ciblés — priorités de la spec section 11 :
+  // 1. QCM ratés (les plus ratés d'abord) ; 2. jamais vus ; 3. anciens
+  // (> 30 jours) ; 4. le reste. Bruit aléatoire léger pour varier les sessions.
+  const now = Date.now();
+  const days30Ms = 30 * 86_400_000;
+  const scored = allQ.map((q) => {
+    const st = attemptStat.get(q.id);
+    let bucket: number;
+    if (st && st.fails > 0) bucket = 0;
+    else if (!st) bucket = 1;
+    else if (now - st.last > days30Ms) bucket = 2;
+    else bucket = 3;
+    const failBoost = st ? Math.min(0.9, st.fails * 0.3) : 0;
+    return { q, score: bucket * 10 - failBoost + Math.random() * 1.5 };
+  });
+  scored.sort((a, b) => a.score - b.score);
 
-  const byId = new Map(allQ.map((q) => [q.id, q]));
   const picked = new Set<string>();
   const consolidationQs: QRow[] = [];
-  for (const id of prioritized) {
-    if (consolidationQs.length >= 40) break;
-    const q = byId.get(id);
-    if (q && !picked.has(id)) { consolidationQs.push(q); picked.add(id); }
-  }
-  const rest = allQ.filter((q) => !picked.has(q.id));
-  for (let i = rest.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [rest[i], rest[j]] = [rest[j], rest[i]];
-  }
-  for (const q of rest) {
+  for (const { q } of scored) {
     if (consolidationQs.length >= 40) break;
     consolidationQs.push(q); picked.add(q.id);
   }

@@ -138,60 +138,57 @@ export default async function StudentLayout({ children }: { children: React.Reac
   }
 
   // ───────────────────────────────────────────────────────────────
-  // Section 15 — Blocage contenu : si l'étudiant n'a pas fait de
-  // révision transversale depuis 14+ jours et qu'il a déjà commencé
-  // au moins une session, seuls les NOUVEAUX contenus sont bloqués.
-  // Restent accessibles : accueil, agenda, dashboard révisions,
-  // évaluations/consolidation/renforcement, corrections, fiches et
-  // flashcards de cours déjà ouverts, contact, formulaires.
+  // Section 15 — Blocage contenu : après 14 jours sans révision
+  // transversale (pour un élève qui en a déjà fait au moins une),
+  // SEULS les NOUVEAUX contenus sont bloqués : un cours jamais ouvert,
+  // ou la page d'une spécialité jamais commencée. Tout le reste —
+  // dashboard, agenda, anciens cours, fiches, flashcards, QCM déjà
+  // accessibles, corrections, épreuves, évaluations/consolidation/
+  // renforcement — reste accessible. Le blocage est levé dès que la
+  // réévaluation est réalisée (la page de session force la réévaluation
+  // exigée au-delà de 14 jours).
   // ───────────────────────────────────────────────────────────────
   if (profile.role === 'student') {
-    const alwaysAllowed = [
-      '/revisions-transversales', '/formulaires/', '/api/', '/logout',
-      '/accueil', '/agenda', '/notes', '/contact', '/entrainement', '/revoir',
-    ];
-    const isOnAllowed = alwaysAllowed.some((p) => pathname === p || pathname.startsWith(p + '/') || pathname.startsWith(p));
-    const isOnMatieresSubpage = pathname.match(/^\/matieres\/[^/]+\/(evaluation|consolidation|renforcement)/);
+    const coursMatch = pathname.match(/^\/cours\/([^/]+)/);
+    const matiereRootMatch = pathname.match(/^\/matieres\/([^/]+)\/?$/);
 
-    if (!isOnAllowed && !isOnMatieresSubpage) {
-      const { data: lastSession } = await (supabase as unknown as {
+    if (coursMatch || matiereRootMatch) {
+      const { data: statsRow } = await (supabase as unknown as {
         from: (t: string) => {
           select: (s: string) => {
             eq: (k: string, v: string) => {
-              not: (k: string, op: string, v: null) => {
-                order: (k: string, o: { ascending: boolean }) => {
-                  limit: (n: number) => Promise<{
-                    data: { completed_at: string }[] | null;
-                  }>;
-                };
-              };
+              maybeSingle: () => Promise<{ data: { last_transversal_revision_date: string | null } | null }>;
             };
           };
         };
-      }).from('transversal_sessions')
-        .select('completed_at')
+      }).from('user_revision_stats')
+        .select('last_transversal_revision_date')
         .eq('user_id', user.id)
-        .not('completed_at', 'is', null)
-        .order('completed_at', { ascending: false })
-        .limit(1);
-      const lastCompletedAt = lastSession?.[0]?.completed_at;
-      if (lastCompletedAt) {
-        const daysSince = Math.floor((Date.now() - new Date(lastCompletedAt).getTime()) / 86_400_000);
-        if (daysSince >= 14) {
-          const coursMatch = pathname.match(/^\/cours\/([^/]+)/);
-          if (coursMatch) {
-            const { data: hasProgress } = await supabase
-              .from('course_progress')
-              .select('cours_id')
-              .eq('user_id', user.id)
-              .eq('cours_id', coursMatch[1])
-              .maybeSingle();
-            if (!hasProgress) {
-              redirect('/revisions-transversales');
-            }
-          } else {
-            redirect('/revisions-transversales');
-          }
+        .maybeSingle();
+      const lastDate = statsRow?.last_transversal_revision_date ?? null;
+      const daysSince = lastDate
+        ? Math.floor((Date.now() - new Date(lastDate).getTime()) / 86_400_000)
+        : null;
+
+      if (daysSince !== null && daysSince >= 14) {
+        if (coursMatch) {
+          const { data: hasProgress } = await supabase
+            .from('course_progress')
+            .select('cours_id')
+            .eq('user_id', user.id)
+            .eq('cours_id', coursMatch[1])
+            .maybeSingle();
+          // Cours jamais ouvert = nouveau contenu → réévaluation d'abord.
+          if (!hasProgress) redirect('/revisions-transversales');
+        } else if (matiereRootMatch) {
+          const { data: matActivity } = await supabase
+            .from('course_progress')
+            .select('cours_id, cours!inner(matiere_id)')
+            .eq('user_id', user.id)
+            .eq('cours.matiere_id', matiereRootMatch[1])
+            .limit(1);
+          // Spécialité jamais commencée = nouveau contenu → réévaluation d'abord.
+          if (!matActivity || matActivity.length === 0) redirect('/revisions-transversales');
         }
       }
     }

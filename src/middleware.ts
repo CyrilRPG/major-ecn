@@ -33,6 +33,12 @@ function isCorsPath(pathname: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Le layout étudiant lit `x-pathname` (blocage section 15, restriction prof,
+  // formulaires obligatoires, interrogation obligatoire). Sans ce header, il
+  // recevait '' et TOUS ces gardes étaient inopérants. Muter request.headers
+  // ici le propage à chaque NextResponse.next({ request }) en aval.
+  request.headers.set('x-pathname', pathname);
+
   // Les routes API gèrent leur propre auth. Les faire passer par updateSession
   // (même en no-op) était inutile et, pour le préflight CORS + heartbeat,
   // ajoutait de la contention Edge sous charge. On pose juste les headers CORS.
