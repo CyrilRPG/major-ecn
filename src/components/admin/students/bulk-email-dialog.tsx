@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Loader2, Mail, Send, X } from 'lucide-react';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export function BulkEmailDialog({
   open,
@@ -28,11 +29,7 @@ export function BulkEmailDialog({
     }
     setStatus('sending'); setResult(null);
     try {
-      const res = await fetch('/api/admin/bulk-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentIds, subject, message }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/bulk-email', { studentIds, subject, message });
       const j = (await res.json().catch(() => ({}))) as { ok?: boolean; sent?: number; failed?: number; total?: number; error?: string };
       if (!res.ok || !j.ok) { setResult(j.error ?? 'Échec de l’envoi.'); setStatus('error'); return; }
       setResult(`${j.sent ?? 0} email(s) envoyé(s)${j.failed ? `, ${j.failed} échec(s)` : ''}.`);

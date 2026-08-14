@@ -23,6 +23,7 @@ import type { Offer } from '@/types/domain';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { ResendActivationButton } from '@/components/admin/resend-activation-button';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type Student = {
   id: string;
@@ -561,11 +562,7 @@ function AssignSessionDialog({
   const submit = () => {
     setError(null);
     start(async () => {
-      const res = await fetch('/api/admin/assign-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_ids: studentIds, evc_session_id: sessionId === 'none' ? null : sessionId }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/assign-session', { student_ids: studentIds, evc_session_id: sessionId === 'none' ? null : sessionId });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
         setError(j.error ?? 'Une erreur est survenue.');

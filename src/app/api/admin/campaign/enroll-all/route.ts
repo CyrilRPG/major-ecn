@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const runtime = 'nodejs';
@@ -20,18 +20,8 @@ export async function POST(req: Request) {
   if (secret && token === secret) {
     authorized = true;
   } else {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { data: me } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .maybeSingle();
-      if (me?.role === 'admin') authorized = true;
-    }
+    const guard = await requireAdminRequest(req);
+    if (guard.ok) authorized = true;
   }
 
   if (!authorized) {

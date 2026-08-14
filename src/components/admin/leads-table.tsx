@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Loader2, Power } from 'lucide-react';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type Lead = {
   id: string;
@@ -26,11 +27,7 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
     setTogglingId(leadId);
     startTransition(async () => {
       try {
-        const res = await fetch('/api/admin/toggle-lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ leadId, active: !currentActive }),
-        });
+        const res = await fetchAvecJetonFrais('/api/admin/toggle-lead', { leadId, active: !currentActive });
         if (res.ok) {
           setLeads((prev) =>
             prev.map((l) => (l.id === leadId ? { ...l, active: !currentActive } : l)),

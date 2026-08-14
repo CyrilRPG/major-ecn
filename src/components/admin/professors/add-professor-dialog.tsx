@@ -19,6 +19,7 @@ import {
   CONTENT_TYPES, CONTENT_TYPE_LABEL,
   PERMISSION_LEVELS, PERMISSION_LEVEL_LABEL, type PermissionLevel,
 } from '@/lib/schemas/professor';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export function AddProfessorDialog({
   colleges,
@@ -60,11 +61,7 @@ export function AddProfessorDialog({
   const onSubmit = (data: AddProfessorInput) => {
     setSubmitError(null);
     start(async () => {
-      const res = await fetch('/api/admin/create-professor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/create-professor', data);
       const j = (await res.json().catch(() => ({}))) as { error?: string; warning?: string };
       if (!res.ok) {
         setSubmitError(j.error ?? 'Erreur à la création.');

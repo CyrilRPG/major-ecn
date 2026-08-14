@@ -12,6 +12,7 @@
  */
 import { useCallback, useMemo, useState } from 'react';
 import { Download, FileSignature, Loader2, MonitorPlay, TriangleAlert, Video } from 'lucide-react';
+import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -70,7 +71,9 @@ export function EmargementsDialog({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/admin/emargements/${studentId}`);
+      // Jeton frais + Bearer : un cookie expiré (onglet admin resté ouvert)
+      // ne peut plus répondre « Non authentifié » — cf. fresh-token.ts.
+      const res = await fetchAuthentifie(`/api/admin/emargements/${studentId}`);
       const json = (await res.json()) as Payload & { error?: string };
       if (!res.ok) throw new Error(json.error ?? 'Chargement impossible');
       setData(json);
@@ -85,6 +88,34 @@ export function EmargementsDialog({
     () => (data?.rows ?? []).filter((r) => filter === 'tous' || r.source === filter),
     [data, filter],
   );
+
+  const [exporting, setExporting] = useState(false);
+  // Export en fetch authentifié + blob : un simple <a href> repose sur le seul
+  // cookie et retombait sur « Non authentifié » quand celui-ci était périmé.
+  const downloadCsv = useCallback(async () => {
+    setExporting(true);
+    setError(null);
+    try {
+      const url = `/api/admin/emargements/${studentId}?format=csv${filter === 'tous' ? '' : `&source=${filter}`}`;
+      const res = await fetchAuthentifie(url);
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error ?? 'Export impossible');
+      }
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      const disposition = res.headers.get('Content-Disposition') ?? '';
+      a.download = /filename="([^"]+)"/.exec(disposition)?.[1] ?? 'emargements.csv';
+      a.click();
+      URL.revokeObjectURL(href);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Export impossible');
+    } finally {
+      setExporting(false);
+    }
+  }, [studentId, filter]);
 
   const filters: { key: Filter; label: string; n?: number }[] = [
     { key: 'tous', label: 'Tous', n: data?.counts.total },
@@ -239,13 +270,15 @@ export function EmargementsDialog({
                 ))}
               </div>
 
-              <a
-                href={`/api/admin/emargements/${studentId}?format=csv${filter === 'tous' ? '' : `&source=${filter}`}`}
-                className="mt-2 inline-flex items-center gap-1.5 self-start rounded-lg border border-(--color-border) px-3 py-2 text-xs font-bold text-(--color-ink-soft) hover:text-(--color-ink)"
+              <button
+                type="button"
+                onClick={() => void downloadCsv()}
+                disabled={exporting}
+                className="mt-2 inline-flex items-center gap-1.5 self-start rounded-lg border border-(--color-border) px-3 py-2 text-xs font-bold text-(--color-ink-soft) hover:text-(--color-ink) disabled:opacity-60"
               >
-                <Download className="h-3.5 w-3.5" />
+                {exporting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
                 Exporter en CSV{filter === 'tous' ? '' : ` (${filter === 'zoom' ? 'Zoom' : 'plateforme'})`}
-              </a>
+              </button>
             </>
           )}
         </DialogContent>

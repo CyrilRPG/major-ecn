@@ -4,13 +4,14 @@ import { ArrowLeft, Eye, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { Button } from './ui/button';
+import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 
 export function ImpersonationBanner({ targetName }: { targetName?: string }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const handleReturn = () => {
     start(async () => {
-      await fetch('/api/admin/stop-impersonation', { method: 'POST' });
+      await fetchAuthentifie('/api/admin/stop-impersonation', { method: 'POST' });
       router.push('/admin/eleves');
       router.refresh();
     });

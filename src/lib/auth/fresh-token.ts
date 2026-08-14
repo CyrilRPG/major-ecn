@@ -45,25 +45,40 @@ export async function getFreshAccessToken(force = false): Promise<string | null>
 }
 
 /**
- * `fetch` JSON authentifié qui rejoue UNE fois après un 401, avec un jeton
- * renouvelé de force. Le 401 est très majoritairement un jeton périmé : le
- * rejeu suffit, et évite de renvoyer l'étudiant vers un cul-de-sac.
+ * `fetch` authentifié (toute méthode) qui rejoue UNE fois après un 401, avec un
+ * jeton renouvelé de force. Le 401 est très majoritairement un jeton périmé :
+ * le rejeu suffit, et évite de renvoyer l'utilisateur vers un cul-de-sac.
+ *
+ * À utiliser pour TOUT appel `fetch` vers une route API depuis une page qui
+ * peut rester longtemps ouverte (panel admin, vidéo, émargement…) : le cookie
+ * y expire au bout d'une heure, le Bearer frais, jamais.
  */
-export async function fetchAvecJetonFrais(
+export async function fetchAuthentifie(
   url: string,
-  body: unknown,
+  init: Omit<RequestInit, 'headers'> & { headers?: Record<string, string> } = {},
 ): Promise<Response> {
   const envoyer = async (token: string | null) =>
     fetch(url, {
-      method: 'POST',
+      ...init,
       headers: {
-        'Content-Type': 'application/json',
+        ...(init.headers ?? {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify(body),
     });
 
   const res = await envoyer(await getFreshAccessToken());
   if (res.status !== 401) return res;
   return envoyer(await getFreshAccessToken(true));
+}
+
+/** Raccourci historique : POST JSON authentifié. */
+export async function fetchAvecJetonFrais(
+  url: string,
+  body: unknown,
+): Promise<Response> {
+  return fetchAuthentifie(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 }

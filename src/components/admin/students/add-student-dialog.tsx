@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 type OfferOption = { id: OfferId; label: string; unlocks: string[] };
 type Mode = 'single' | 'bulk';
@@ -85,11 +86,7 @@ export function AddStudentDialog({
     setSubmitError(null);
     if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
-      const res = await fetch('/api/admin/create-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...identity, ...accessPayload() }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/create-student', { ...identity, ...accessPayload() });
       const j = (await res.json().catch(() => ({}))) as { error?: string; warning?: string };
       if (!res.ok) { setSubmitError(j.error ?? 'Erreur à la création.'); return; }
       resetAll();
@@ -106,11 +103,7 @@ export function AddStudentDialog({
     if (valid.length === 0) { setSubmitError('Ajoutez au moins un email valide (séparés par des virgules).'); return; }
     if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
-      const res = await fetch('/api/admin/create-students-bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emails: valid, ...accessPayload() }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/create-students-bulk', { emails: valid, ...accessPayload() });
       const j = (await res.json().catch(() => ({}))) as {
         error?: string;
         summary?: { total: number; created: number; emailFailed: number; skipped: number; failed: number };

@@ -13,6 +13,7 @@ import {
   addFichePdfAction, deleteFicheAction, moveFicheAction, renameFicheAction,
   replaceFichePdfAction,
 } from '@/app/admin/contenu/[cours]/fiche-pdf-actions';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type ManagedFiche = {
   id: string;
@@ -84,11 +85,7 @@ export function FichesManager({
     cible: { ficheId: string } | { createNew: true; titre: string },
   ): Promise<{ ok: true } | { error: string }> {
     const content_html = await file.text();
-    const res = await fetch(`/api/fiches/${coursId}/render-html`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content_html, save: true, nom_cours: nomCours, annee, ...cible }),
-    });
+    const res = await fetchAvecJetonFrais(`/api/fiches/${coursId}/render-html`, { content_html, save: true, nom_cours: nomCours, annee, ...cible });
     const j = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
     if (!res.ok || !j.ok) return { error: j.error ?? `Échec de la conversion HTML → PDF (${res.status})` };
     return { ok: true };

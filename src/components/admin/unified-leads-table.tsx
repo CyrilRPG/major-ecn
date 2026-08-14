@@ -3,6 +3,7 @@
 import { useState, useMemo, useTransition } from 'react';
 import { Loader2, Power, BookDown, BarChart3, Search, X, Eye } from 'lucide-react';
 import { DiagnosticDetailsDialog } from './diagnostic-details-dialog';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type UnifiedLead = {
   id: string;
@@ -46,11 +47,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     setTogglingId(lead.id);
     startTransition(async () => {
       try {
-        const res = await fetch('/api/admin/toggle-lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ leadId: lead.id, active: !lead.active, source: lead.source }),
-        });
+        const res = await fetchAvecJetonFrais('/api/admin/toggle-lead', { leadId: lead.id, active: !lead.active, source: lead.source });
         if (res.ok) {
           setLeads((prev) => prev.map((l) => (l.id === lead.id && l.source === lead.source ? { ...l, active: !lead.active } : l)));
         }

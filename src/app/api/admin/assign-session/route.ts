@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
 
 const AssignSessionSchema = z.object({
   student_ids: z.array(z.string().uuid()).min(1, 'Aucun élève sélectionné'),
@@ -13,12 +13,8 @@ const AssignSessionSchema = z.object({
  * L'override individuel `access_end` est volontairement préservé.
  */
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-
-  const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
-  if (me?.role !== 'admin') return NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 });
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
 
   const body = await req.json().catch(() => ({}));
   const parsed = AssignSessionSchema.safeParse(body);
@@ -28,12 +24,12 @@ export async function POST(req: Request) {
   const { student_ids, evc_session_id } = parsed.data;
 
   if (evc_session_id) {
-    const { data: session } = await supabase
+    const { data: session } = await guard.auth.supabase
       .from('evc_sessions').select('id').eq('id', evc_session_id).maybeSingle();
     if (!session) return NextResponse.json({ error: 'Session introuvable' }, { status: 404 });
   }
 
-  const { error, count } = await supabase
+  const { error, count } = await guard.auth.supabase
     .from('profiles')
     .update({ evc_session_id }, { count: 'exact' })
     .in('id', student_ids)

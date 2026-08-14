@@ -13,7 +13,8 @@
  * Réservé aux admins.
  */
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,16 +58,13 @@ export async function GET(
   { params }: { params: Promise<{ userId: string }> },
 ) {
   const { userId } = await params;
-  const supabase = await createClient();
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-  const { data: me } = await supabase
-    .from('profiles').select('role').eq('id', user.id).maybeSingle();
-  if (me?.role !== 'admin') return NextResponse.json({ error: 'Réservé admin' }, { status: 403 });
-
+  // Lectures via service-role : la route est réservée admin (garde ci-dessus),
+  // et ne dépend ainsi ni de la RLS ni de l'état du cookie.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any;
+  const db = createAdminClient() as any;
 
   const [{ data: student }, { data: attendances, error: aErr }, { data: presences }, { data: matieres }] =
     await Promise.all([

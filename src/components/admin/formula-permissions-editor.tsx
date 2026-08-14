@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, Loader2, Save, X } from 'lucide-react';
+import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 
 type Props = {
   initialPermissions: Record<string, unknown>[];
@@ -36,7 +37,7 @@ export function FormulaPermissionsEditor({
   const save = () => {
     startSaving(async () => {
       try {
-        const res = await fetch('/api/admin/formula-permissions', {
+        const res = await fetchAuthentifie('/api/admin/formula-permissions', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ permissions }),

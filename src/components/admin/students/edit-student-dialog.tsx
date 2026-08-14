@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
 import type { PermissionScope } from '@/types/domain';
+import { fetchAuthentifie, fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 type OfferOption = { id: OfferId; label: string; unlocks: string[] };
 
@@ -127,18 +128,14 @@ export function EditStudentDialog({
     if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
     start(async () => {
       // 1) Identité
-      const pRes = await fetch('/api/admin/update-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: student.id, first_name: firstName, last_name: lastName, email, phone, address, pseudo }),
-      });
+      const pRes = await fetchAvecJetonFrais('/api/admin/update-profile', { userId: student.id, first_name: firstName, last_name: lastName, email, phone, address, pseudo });
       if (!pRes.ok) {
         const j = (await pRes.json().catch(() => ({}))) as { error?: string };
         setSubmitError(j.error ?? "Erreur lors de la mise à jour de l'identité.");
         return;
       }
       // 2) Accès (formule, collèges, voie) + téléchargement
-      const res = await fetch('/api/admin/update-student', {
+      const res = await fetchAuthentifie('/api/admin/update-student', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

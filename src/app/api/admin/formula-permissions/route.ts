@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const VALID_OFFERS = ['essentiel', 'intensif', 'approfondi'] as const;
@@ -9,12 +9,8 @@ const VALID_KEYS = [
 ] as const;
 
 export async function PUT(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-
-  const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
-  if (me?.role !== 'admin') return NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 });
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
 
   const body = await req.json().catch(() => null);
   if (!body || typeof body !== 'object') {

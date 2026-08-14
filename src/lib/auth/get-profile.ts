@@ -1,6 +1,8 @@
 import 'server-only';
 import { cache } from 'react';
+import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { extractAccessTokenFromCookies } from './access-token-cookie';
 import { getVerifiedUser } from './verified-user';
 import type { Tables } from '@/types/database';
 
@@ -27,15 +29,23 @@ export type Profile = Tables<'profiles'> & {
 export const getCurrentUserAndProfile = cache(async () => {
   const supabase = await createClient();
 
-  // Vérification LOCALE du JWT (cf. verified-user.ts) : chaque rendu de page
-  // faisait sinon un aller-retour réseau vers l'API Auth, en plus de celui du
-  // middleware. `getVerifiedUser()` ne lève jamais d'exception — `getUser()`,
-  // lui, plantait le rendu (500) quand le refresh token était périmé, au lieu
-  // de renvoyer proprement vers /login.
+  // Vérification LOCALE du JWT (cf. verified-user.ts), avec le jeton du cookie
+  // passé EXPLICITEMENT. Sans argument, `getClaims()` lit la session via
+  // `getSession()`, qui RENOUVELLE le refresh token dès que le JWT est expiré.
+  // Or un Server Component ne peut pas écrire de cookies (le setAll de
+  // server.ts avale l'erreur) : le jeton tourné n'était jamais persisté, le
+  // navigateur rejouait l'ANCIEN refresh token à la requête suivante, et la
+  // rotation Supabase finissait par révoquer TOUTE la famille — « Invalid
+  // Refresh Token: Refresh Token Not Found » (772 occurrences, 45 élèves),
+  // élève déconnecté en pleine session. Le SEUL rafraîchisseur serveur est le
+  // middleware, qui, lui, sait réécrire les cookies.
   //
   // Session indéterminée ⇒ `null` : l'appelant (`requireUser`) redirige vers
   // /login, et la reconnexion réécrit les cookies.
-  const user = await getVerifiedUser(supabase);
+  const cookieStore = await cookies();
+  const token = extractAccessTokenFromCookies(cookieStore.getAll());
+  if (!token) return { user: null, profile: null };
+  const user = await getVerifiedUser(supabase, token);
   if (!user) return { user: null, profile: null };
 
   const { data: profile } = await supabase

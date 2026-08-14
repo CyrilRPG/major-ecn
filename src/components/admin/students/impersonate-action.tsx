@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogIn, Loader2, Eye } from 'lucide-react';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -22,10 +23,11 @@ export function ImpersonateAction({ studentId, studentName }: { studentId: strin
   const handleConfirm = () => {
     setError(null);
     start(async () => {
-      const res = await fetch('/api/admin/impersonate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: studentId, name: studentName }),
+      // Jeton frais + Bearer : un cookie expiré (onglet admin resté ouvert)
+      // ne peut plus répondre « Non authentifié » — cf. fresh-token.ts.
+      const res = await fetchAvecJetonFrais('/api/admin/impersonate', {
+        user_id: studentId,
+        name: studentName,
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };

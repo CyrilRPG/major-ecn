@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 
 export type EvcSession = {
   id: string;
@@ -45,7 +46,7 @@ export function SessionsManager({ sessions, counts }: { sessions: EvcSession[]; 
 
   async function call(method: string, url: string, body?: unknown): Promise<boolean> {
     setError(null);
-    const res = await fetch(url, {
+    const res = await fetchAuthentifie(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),

@@ -8,6 +8,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 /**
  * Suppression définitive d'un compte étudiant ou professeur.
@@ -23,11 +24,7 @@ export function DeleteAccountButton({ userId, displayName }: { userId: string; d
   const onDelete = () => {
     setError(null);
     start(async () => {
-      const res = await fetch('/api/admin/delete-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/delete-account', { userId });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
         setError(j.error ?? 'Échec de la suppression.');

@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { CheckCircle2, Copy, Loader2, MailWarning, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 type Reponse = {
   ok?: boolean;
@@ -32,11 +33,7 @@ export function ResendActivationButton({ userId, displayName }: { userId: string
     setLien(null);
     setCopie(false);
     start(async () => {
-      const res = await fetch('/api/admin/resend-activation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/resend-activation', { userId });
       const j = (await res.json().catch(() => ({}))) as Reponse;
 
       // Le lien est TOUJOURS affiché, envoi réussi ou non : c'est le moyen le

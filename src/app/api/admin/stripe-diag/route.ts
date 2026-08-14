@@ -20,7 +20,7 @@
  */
 import { NextResponse } from 'next/server';
 import type Stripe from 'stripe';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getStripe, FORMULES, type FormuleId } from '@/lib/stripe';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
@@ -32,15 +32,12 @@ type Step = { name: string; ok: boolean; details: Record<string, unknown> };
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-  const { data: me } = await supabase.from('profiles').select('role, email').eq('id', user.id).maybeSingle();
-  if (me?.role !== 'admin') return NextResponse.json({ error: 'Réservé admin' }, { status: 403 });
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
 
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get('session_id');
-  const sendTo = searchParams.get('send_to') ?? me.email ?? '';
+  const sendTo = searchParams.get('send_to') ?? guard.auth.user.email ?? '';
 
   const steps: Step[] = [];
 

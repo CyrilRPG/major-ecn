@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdminRequest } from '@/lib/auth/api-guard';
 
 const CreateSessionSchema = z.object({
   id: z.string().min(1, 'Identifiant requis').regex(/^[a-z0-9-]+$/, 'Identifiant : minuscules, chiffres et tirets uniquement'),
@@ -9,19 +9,10 @@ const CreateSessionSchema = z.object({
   is_default: z.boolean().optional(),
 });
 
-async function requireAdminClient() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: NextResponse.json({ error: 'Non authentifié' }, { status: 401 }) };
-  const { data: me } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
-  if (me?.role !== 'admin') return { error: NextResponse.json({ error: 'Réservé aux administrateurs' }, { status: 403 }) };
-  return { supabase };
-}
-
-export async function GET() {
-  const ctx = await requireAdminClient();
-  if ('error' in ctx) return ctx.error;
-  const { data, error } = await ctx.supabase
+export async function GET(req: Request) {
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
+  const { data, error } = await guard.auth.supabase
     .from('evc_sessions')
     .select('id, label, default_access_end, is_default, created_at')
     .order('default_access_end', { ascending: false });
@@ -30,8 +21,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const ctx = await requireAdminClient();
-  if ('error' in ctx) return ctx.error;
+  const guard = await requireAdminRequest(req);
+  if (!guard.ok) return guard.error;
   const body = await req.json().catch(() => ({}));
   const parsed = CreateSessionSchema.safeParse(body);
   if (!parsed.success) {
@@ -41,11 +32,11 @@ export async function POST(req: Request) {
 
   // Une seule session par défaut (index unique partiel) : on libère l'ancienne d'abord.
   if (is_default) {
-    const { error } = await ctx.supabase.from('evc_sessions').update({ is_default: false }).eq('is_default', true);
+    const { error } = await guard.auth.supabase.from('evc_sessions').update({ is_default: false }).eq('is_default', true);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const { error } = await ctx.supabase
+  const { error } = await guard.auth.supabase
     .from('evc_sessions')
     .insert({ id, label, default_access_end, is_default: is_default ?? false });
   if (error) {

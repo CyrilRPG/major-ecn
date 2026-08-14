@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,11 +38,7 @@ export function DeactivateStudentsDialog() {
     const valid = parseEmails(emailsText);
     if (valid.length === 0) { setError('Ajoutez au moins un email valide (séparés par des virgules).'); return; }
     start(async () => {
-      const res = await fetch('/api/admin/deactivate-students-bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emails: valid }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/deactivate-students-bulk', { emails: valid });
       const j = (await res.json().catch(() => ({}))) as {
         error?: string;
         summary?: { total: number; deactivated: number; notFound: number; skippedSelf: number; skippedNonStudent: number; failed: number };

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as tus from 'tus-js-client';
 import { CheckCircle2, Loader2, UploadCloud, Video } from 'lucide-react';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 /**
  * Upload d'une vidéo de cours directement vers Bunny Stream (TUS résumable).
@@ -33,11 +34,7 @@ export function BunnyVideoUpload({
     setPhase('creating');
     try {
       // 1) Crée le conteneur Bunny + récupère l'autorisation TUS.
-      const res = await fetch('/api/admin/videos/bunny/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coursId, title: defaultTitle, type }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/videos/bunny/create', { coursId, title: defaultTitle, type });
       const j = await res.json();
       if (!res.ok) throw new Error(j.error ?? 'Création de la vidéo échouée.');
 

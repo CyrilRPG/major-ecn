@@ -43,6 +43,13 @@ function withBudget<T>(promise: Promise<T>, fallback: T, ms = MIDDLEWARE_BUDGET_
 export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAuthRoute = path === '/login' || path === '/signup';
+  // TOUTES les routes du groupe (student) + /admin. Une route protégée absente
+  // de cette liste est traitée comme publique : le middleware n'y rafraîchit
+  // JAMAIS les cookies, le JWT y expire au bout d'une heure, et la page tente
+  // alors le refresh depuis un Server Component — qui ne peut pas écrire de
+  // cookies. Le refresh token tourné n'est jamais persisté et la rotation
+  // révoque la famille : élève déconnecté en pleine session (« Invalid Refresh
+  // Token », massif sur /revisions-transversales et /profil, oubliées ici).
   const isProtectedRoute =
     path.startsWith('/app') ||
     path.startsWith('/accueil') ||
@@ -51,7 +58,16 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/admin') ||
     path.startsWith('/cours') ||
     path.startsWith('/facultes') ||
-    path.startsWith('/matieres');
+    path.startsWith('/matieres') ||
+    path.startsWith('/revisions-transversales') ||
+    path.startsWith('/profil') ||
+    path.startsWith('/epreuves-blanches') ||
+    path.startsWith('/formulaires') ||
+    path.startsWith('/forum') ||
+    path.startsWith('/notes') ||
+    path.startsWith('/parcours') ||
+    path.startsWith('/presences') ||
+    path.startsWith('/revoir');
 
   // Pages PUBLIQUES (vitrine, blog, guide, APIs…) : aucun appel Supabase.
   if (!isProtectedRoute && !isAuthRoute) {

@@ -17,6 +17,7 @@ import {
   type ContentType, type PermissionLevel,
 } from '@/lib/schemas/professor';
 import { ProfDocumentUpload } from '@/components/professor/prof-document-upload';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type EditProfileFields = {
   id: string;
@@ -136,19 +137,15 @@ export function EditProfileDialog({
     setError(null);
     setSuccess(false);
     start(async () => {
-      const res = await fetch('/api/admin/update-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: profile.id,
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          phone,
-          address,
-          pseudo,
-          can_download: canDownload,
-        }),
+      const res = await fetchAvecJetonFrais('/api/admin/update-profile', {
+        userId: profile.id,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        address,
+        pseudo,
+        can_download: canDownload,
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
@@ -160,16 +157,12 @@ export function EditProfileDialog({
       // type de contenu). Réplique immédiate sur les guards SSR via
       // profiles.permission_scope.
       if (showScope) {
-        const scopeRes = await fetch('/api/admin/update-professor-scope', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: profile.id,
-            permission_type: permType,
-            colleges: permType === 'college' ? scopeColleges : [],
-            cours: permType === 'college' ? scopeCours : [],
-            content_permissions: perms,
-          }),
+        const scopeRes = await fetchAvecJetonFrais('/api/admin/update-professor-scope', {
+          userId: profile.id,
+          permission_type: permType,
+          colleges: permType === 'college' ? scopeColleges : [],
+          cours: permType === 'college' ? scopeCours : [],
+          content_permissions: perms,
         });
         if (!scopeRes.ok) {
           const j = (await scopeRes.json().catch(() => ({}))) as { error?: string };

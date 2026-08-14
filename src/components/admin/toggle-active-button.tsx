@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
+import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export function ToggleActiveButton({
   userId,
@@ -27,11 +28,7 @@ export function ToggleActiveButton({
   const onConfirm = () => {
     setError(null);
     start(async () => {
-      const res = await fetch('/api/admin/toggle-active', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, isActive: next }),
-      });
+      const res = await fetchAvecJetonFrais('/api/admin/toggle-active', { userId, isActive: next });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
         setError(j.error ?? 'Échec de la mise à jour.');
