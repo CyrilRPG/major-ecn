@@ -30,38 +30,14 @@ export async function POST(req: Request) {
 
   let admin;
   try { admin = createAdminClient(); } catch (e) {
-    // Pas de service role configuré → fallback sur le SMTP Supabase, mieux
-    // que rien.
     const msg = e instanceof Error ? e.message : 'Service Supabase indisponible';
     console.error('[forgot-password] admin client init failed', msg);
     return await fallbackPublicReset(email);
   }
 
-  // 1) Trouver le user pour récupérer son prénom (template plus personnel)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: list } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const found = list?.users?.find((u: any) => u.email?.toLowerCase() === email);
-
-  // Si pas de user trouvé : on renvoie OK quand même pour ne pas révéler
-  // l'existence du compte (anti-énumération).
-  if (!found) {
-    return NextResponse.json({ ok: true });
-  }
-
-  let firstName: string | null = null;
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: profile } = await (admin as any)
-      .from('profiles')
-      .select('first_name')
-      .eq('id', found.id)
-      .maybeSingle();
-    firstName = profile?.first_name ?? (found.user_metadata?.first_name as string | undefined) ?? null;
-  } catch { /* ignore */ }
-
-  // 2) Générer un lien recovery via le service-role (ne déclenche PAS d'envoi
-  // d'email côté Supabase — on contrôle l'envoi nous-mêmes avec Resend).
+  // 1) Générer un lien recovery via le service-role. generateLink valide
+  //    l'existence du user en interne — on n'a plus besoin de listUsers (qui
+  //    plafonnait à 500 entrées et manquait silencieusement les comptes suivants).
   const base = siteUrl();
   const redirectTo = `${base}/auth/setup-password`;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,20 +47,44 @@ export async function POST(req: Request) {
     options: { redirectTo },
   });
   if (linkErr) {
+    const msg = (linkErr.message ?? '').toLowerCase();
+    if (msg.includes('not found') || msg.includes('no user')) {
+      return NextResponse.json({ ok: true });
+    }
     console.error('[forgot-password] generateLink failed', linkErr.message);
     return await fallbackPublicReset(email);
   }
+
+  // 2) Prénom pour le template (profiles > user_metadata > null).
+  let firstName: string | null = null;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const userId = (link as any)?.user?.id as string | undefined;
+    if (userId) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: profile } = await (admin as any)
+        .from('profiles')
+        .select('first_name')
+        .eq('id', userId)
+        .maybeSingle();
+      firstName = profile?.first_name ?? null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!firstName) firstName = (link as any)?.user?.user_metadata?.first_name ?? null;
+  } catch { /* ignore */ }
+
+  // 3) Construire l'URL de reset.
   const hashedToken = link?.properties?.hashed_token as string | undefined;
   const resetUrl = hashedToken
     ? `${base}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}&type=recovery&next=${encodeURIComponent('/auth/setup-password')}`
     : (link?.properties?.action_link as string | undefined) ?? `${base}/auth/setup-password`;
 
-  // 3) Envoi via Resend (template Major ECN)
+  // 4) Envoi via Resend (template Major ECN).
   const { subject, html, text } = resetPasswordEmail({ firstName, resetUrl });
   const r = await sendEmail({ to: email, subject, html, text });
   if (r.ok) return NextResponse.json({ ok: true });
 
-  // 4) Fallback : si Resend échoue, on bascule sur la voie publique Supabase.
+  // 5) Fallback Supabase SMTP si Resend échoue.
   console.warn('[forgot-password] Resend failed → fallback Supabase', r.error);
   return await fallbackPublicReset(email);
 }
