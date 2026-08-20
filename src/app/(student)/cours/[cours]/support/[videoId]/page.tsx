@@ -78,9 +78,14 @@ export default async function SupportPage({
 
   const courant = (docId && docs.find((d) => d.id === docId)) || docs[0] || null;
 
+  // Le support prend la couleur de la vidéo dont il dépend : rouge pour un
+  // cours vidéo, violet pour une séance approfondie — comme les cartes de
+  // l'aperçu de l'item.
+  const accent = video.type === 'seance_approfondie' ? '#7C3AED' : '#E4002B';
+
   const entete = (
     <div className="mb-2 sm:mb-3">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7C3AED]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: accent }}>
         {video.cours.matieres?.nom}
       </p>
       <h1 className="mt-0.5 text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
@@ -120,9 +125,12 @@ export default async function SupportPage({
                 className={
                   'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12.5px] font-semibold transition-colors ' +
                   (actif
-                    ? 'border-[#7C3AED] bg-[#F3EAFF] text-[#5B21B6]'
+                    ? ''
                     : 'border-(--color-border) bg-(--color-surface) text-(--color-ink-soft) hover:bg-(--color-sand-100)')
                 }
+                style={actif
+                  ? { borderColor: accent, background: `color-mix(in srgb, ${accent} 12%, white)`, color: accent }
+                  : undefined}
               >
                 <FileText className="h-3.5 w-3.5" />
                 {d.titre?.trim() || `Document ${i + 1}`}
