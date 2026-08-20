@@ -88,6 +88,7 @@ const COLLEGE_TO_SPECIALTY: Record<string, string> = {
   'col-psychiatrie': 'Psychiatrie',
   'col-gynecologie': 'Gynécologie-obstétrique',
   'col-orthopedie': 'Orthopédie',
+  'col-odontologie': 'Odontologie',
 };
 
 function specialtyFromColleges(colleges: string[]): string {
@@ -110,6 +111,12 @@ function specialtyOf(s: Student): string {
 function voieOf(s: Student): string {
   const r = rawScope(s);
   return (r.paid_voie || r.signup?.voie || '').toString().trim();
+}
+/** Voie normalisée pour le filtre : accepte 'interne'/'externe' comme les
+ *  libellés bruts des formulaires ('Voie interne'), cf. parseVoie côté auth. */
+function voieKeyOf(s: Student): 'interne' | 'externe' | '' {
+  const n = voieOf(s).toLowerCase().replace(/^voie\s+/, '');
+  return n === 'interne' || n === 'externe' ? n : '';
 }
 function offerOf(s: Student): Offer {
   return parseScope(s.permission_scope).offer;
@@ -161,6 +168,7 @@ export function StudentsTable({
   const [q, setQ] = useState('');
   const [promo, setPromo] = useState('all');
   const [specialty, setSpecialty] = useState('all');
+  const [voie, setVoie] = useState('all'); // all | interne | externe | none
   const [offer, setOffer] = useState<'all' | Offer>('all');
   const [payment, setPayment] = useState('all'); // all | paid | free
   const [period, setPeriod] = useState('all'); // all | 7 | 30 | 90 | 365
@@ -193,6 +201,7 @@ export function StudentsTable({
       if (q && !full.includes(q.toLowerCase())) return false;
       if (promo !== 'all' && s.promotion !== promo) return false;
       if (specialty !== 'all' && specialtyOf(s) !== specialty) return false;
+      if (voie !== 'all' && voieKeyOf(s) !== (voie === 'none' ? '' : voie)) return false;
       if (offer !== 'all' && offerOf(s) !== offer) return false;
       if (payment === 'paid' && !isPaid(s)) return false;
       if (payment === 'free' && isPaid(s)) return false;
@@ -202,7 +211,7 @@ export function StudentsTable({
       if (!withinPeriod(s.created_at, period)) return false;
       return true;
     });
-  }, [students, q, promo, specialty, offer, payment, access, connexion, period, sessionsById]);
+  }, [students, q, promo, specialty, voie, offer, payment, access, connexion, period, sessionsById]);
 
   const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
   const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
@@ -303,6 +312,15 @@ export function StudentsTable({
           <SelectContent>
             <SelectItem value="all">Toutes spécialités</SelectItem>
             {specialties.map((sp) => <SelectItem key={sp} value={sp}>{sp}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={voie} onValueChange={setVoie}>
+          <SelectTrigger className="w-full lg:w-40"><SelectValue placeholder="Voie" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes voies</SelectItem>
+            <SelectItem value="interne">Voie interne</SelectItem>
+            <SelectItem value="externe">Voie externe</SelectItem>
+            <SelectItem value="none">Non renseignée</SelectItem>
           </SelectContent>
         </Select>
         <Select value={offer} onValueChange={(v) => setOffer(v as 'all' | Offer)}>
@@ -416,7 +434,7 @@ export function StudentsTable({
             filtered.map((s) => {
               const scope = parseScope(s.permission_scope);
               const sp = specialtyOf(s);
-              const voie = voieOf(s);
+              const voieLabel = voieOf(s);
               const accessEnd = effectiveAccessEnd(s, sessionsById);
               const accessExpired = isAccessExpired(s, sessionsById);
               return (
@@ -444,7 +462,7 @@ export function StudentsTable({
                         </p>
                         <p className="truncate font-mono text-[11px] text-(--color-ink-soft) md:hidden">{s.email}</p>
                         <p className="truncate text-[11px] text-(--color-ink-soft) lg:hidden">
-                          {sp ? `${sp}${voie ? ` (${voie})` : ''}` : '—'}
+                          {sp ? `${sp}${voieLabel ? ` (${voieLabel})` : ''}` : '—'}
                         </p>
                         <div className="mt-1 flex flex-wrap items-center gap-1 md:hidden">
                           {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
@@ -457,7 +475,7 @@ export function StudentsTable({
                     </div>
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
-                    <span className="text-sm">{sp ? `${sp}${voie ? ` (${voie})` : ''}` : '—'}</span>
+                    <span className="text-sm">{sp ? `${sp}${voieLabel ? ` (${voieLabel})` : ''}` : '—'}</span>
                   </TableCell>
                   <TableCell className="hidden font-mono text-xs text-(--color-ink-soft) md:table-cell">{s.email}</TableCell>
                   <TableCell className="hidden text-(--color-ink-soft) lg:table-cell">{s.phone ?? 'Non renseigné'}</TableCell>

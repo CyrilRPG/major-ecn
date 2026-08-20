@@ -350,7 +350,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
       {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} welcome={welcome} />}
       {profile.role === 'student' && <OnboardingTour />}
       {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
-        <StudentTutorialPopup offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'} />
+        <StudentTutorialPopup
+          offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'}
+          parcoursMajor={canAccessParcoursMajor}
+        />
       )}
     </div>
   );

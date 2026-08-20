@@ -2,12 +2,15 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import {
-  ArrowLeft, ArrowRight, BookMarked, BookOpen, Check, Columns2,
+  ArrowLeft, ArrowRight, BookMarked, BookOpen, Check, Columns2, Crown,
   GraduationCap, Layers3, MessageCircle, MonitorPlay, NotebookPen,
   Search, Sparkles, Video, X, type LucideIcon,
 } from 'lucide-react';
 
-const STORAGE_KEY = 'major-ecn:student-tutorial-dismissed';
+// Suffixe de version : incrémenté quand une étape est ajoutée, pour que le
+// tutoriel se réaffiche une fois aux élèves qui l'avaient déjà fermé (ici,
+// l'ajout de l'étape « Parcours du Major »).
+const STORAGE_KEY = 'major-ecn:student-tutorial-dismissed:v2';
 
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
@@ -27,6 +30,7 @@ type ContentFlags = {
   video: boolean;
   seanceApprofondie: boolean;
   entrainement: boolean;
+  parcoursMajor: boolean;
 };
 
 function buildSteps(flags: ContentFlags): Step[] {
@@ -151,10 +155,31 @@ function buildSteps(flags: ContentFlags): Step[] {
     ),
   });
 
+  if (flags.parcoursMajor) {
+    steps.push({
+      Icon: Crown,
+      tag: next(),
+      title: 'Parcours du Major',
+      color: '#B8860B', bg: '#FFFBEB', border: '#E9D8A6',
+      body: (
+        <>
+          Un chemin de <strong>42 parcours</strong>, avec <strong>deux nouveaux chaque lundi</strong>.
+          Terminez celui en cours pour ouvrir le suivant. Chacun contient un{' '}
+          <strong>rappel du coach</strong>, un <strong>cas clinique</strong> et des{' '}
+          <strong>QCM</strong>, notés <strong>sur 10</strong>.
+        </>
+      ),
+    });
+  }
+
   return steps;
 }
 
-export function StudentTutorialPopup({ offer }: { offer: 'essentiel' | 'intensif' | 'approfondi' }) {
+export function StudentTutorialPopup({ offer, parcoursMajor = false }: {
+  offer: 'essentiel' | 'intensif' | 'approfondi';
+  /** L'étape « Parcours du Major » n'est montrée qu'aux élèves qui y ont accès. */
+  parcoursMajor?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [neverShow, setNeverShow] = useState(true);
   const [i, setI] = useState(0);
@@ -186,6 +211,7 @@ export function StudentTutorialPopup({ offer }: { offer: 'essentiel' | 'intensif
     video: offer === 'intensif',
     seanceApprofondie: offer === 'approfondi',
     entrainement: offer === 'essentiel' || offer === 'intensif',
+    parcoursMajor,
   };
 
   const steps = buildSteps(flags);
