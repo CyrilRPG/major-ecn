@@ -96,7 +96,7 @@ export function LockedSeanceApprofondieCard({
 
             <div className="px-7 py-6">
               <p className="text-[15px] font-semibold leading-relaxed text-[#1F2937]">
-                Pour accéder aux vidéos de séance approfondie, vous devez d'abord compléter toutes les séances du professeur.
+                Cette séance approfondie est reliée à une séance du professeur : terminez celle-ci pour la débloquer.
               </p>
               <div className="mt-5 space-y-3">
                 <div className="flex items-start gap-3 rounded-xl bg-[#F9FAFB] p-3.5">
@@ -106,7 +106,7 @@ export function LockedSeanceApprofondieCard({
                   <div>
                     <p className="text-sm font-bold text-[#1F2937]">1. Séances du professeur</p>
                     <p className="mt-0.5 text-xs text-[#6B7280]">
-                      Rendez-vous dans « Dossiers progressifs & QI » et complétez chaque séance du professeur.
+                      Rendez-vous dans « Dossiers progressifs & QI » et terminez la séance qui ouvre cette vidéo.
                     </p>
                   </div>
                 </div>

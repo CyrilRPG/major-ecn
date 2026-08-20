@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
+import { estOuverte } from '@/lib/videos/unlock';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
@@ -49,10 +50,11 @@ export default async function SeanceApprofondiePage({
     .eq('kind', 'seance')
     .maybeSingle();
 
-  // Déblocage PROGRESSIF : chaque vidéo est verrouillée par SA séance du
-  // professeur (videos.serie_id). Faire la séance 1 ouvre la vidéo 1, sans
-  // exiger d'avoir fait les séances 2 à 12. Les vidéos sans serie_id gardent
-  // l'ancienne règle (toutes les séances du cours), d'où le calcul des deux.
+  // Déblocage PROGRESSIF : une vidéo RELIÉE à une séance du professeur
+  // (videos.serie_id) s'ouvre avec CETTE séance. Faire la séance 1 ouvre la
+  // vidéo 1, sans exiger d'avoir fait les séances 2 à 12. Une vidéo qui n'est
+  // reliée à aucune séance n'a pas de déblocage : elle est ouverte (cf.
+  // `estOuverte`).
   const { data: seanceSeries } = await supabase
     .from('qcm_series')
     .select('id, label')
@@ -72,7 +74,6 @@ export default async function SeanceApprofondiePage({
       .not('finished_at', 'is', null);
     completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
   }
-  const allSeancesDone = seanceIds.every((id) => completedSerieIds.has(id));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: videos } = await (supabase as any)
@@ -122,11 +123,7 @@ export default async function SeanceApprofondiePage({
     : allSaVideos;
   if (onlyVideoId && saVideos.length === 0) notFound();
 
-  /** Une vidéo ciblant une séance s'ouvre avec CETTE séance ; `unlock_direct`
-   *  (séance sans exercices du professeur associés) est accessible d'emblée ;
-   *  sinon, ancienne règle : toutes les séances du cours. */
-  const isUnlocked = (v: SAVideo) =>
-    isAdmin || !!v.unlock_direct || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesDone);
+  const isUnlocked = (v: SAVideo) => estOuverte(v, completedSerieIds, isAdmin);
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
   if (saVideos.length === 0) {
@@ -154,7 +151,8 @@ export default async function SeanceApprofondiePage({
         </p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">Séances approfondies</h1>
         <p className="mt-1 text-sm text-(--color-ink-soft)">
-          Choisissez la séance à regarder. Chaque vidéo s’ouvre une fois sa séance du professeur terminée.
+          Choisissez la séance à regarder. Celles qui sont reliées à une séance du professeur
+          s’ouvrent une fois cette séance terminée.
         </p>
         <ul className="mt-6 space-y-3">
           {allSaVideos.map((v, i) => {

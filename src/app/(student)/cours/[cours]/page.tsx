@@ -10,6 +10,7 @@ import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
+import { estOuverte } from '@/lib/videos/unlock';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -126,7 +127,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, bunny_video_id, titre, serie_id, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+      .select('id, bunny_video_id, titre, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
       .eq('cours_id', coursId)
       .eq('type', 'seance_approfondie')
       // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -148,7 +149,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // dont la formule est explicitement ciblée y a accès sans être « approfondi ».
   const isApprofondi = hasSeanceApprofondie;
 
-  let allSeancesCompleted = false;
   let completedSerieIds = new Set<string>();
   const seanceLabelById = new Map<string, string>(
     ((seanceSeries ?? []) as { id: string; label: string }[]).map((s) => [s.id, s.label]),
@@ -163,9 +163,6 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         .in('serie_id', seanceIds)
         .not('finished_at', 'is', null);
       completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
-      allSeancesCompleted = seanceIds.every((id: string) => completedSerieIds.has(id));
-    } else {
-      allSeancesCompleted = true;
     }
   }
 
@@ -190,13 +187,13 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
   type SAVid = {
     id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
+    unlock_direct?: boolean | null;
     voies?: string[] | null; offers?: string[] | null;
     denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null;
     video_supports?: SupportOverride[] | null;
   };
   const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
-  const isVideoUnlocked = (v: SAVid) =>
-    isAdmin || (v.serie_id ? completedSerieIds.has(v.serie_id) : allSeancesCompleted);
+  const isVideoUnlocked = (v: SAVid) => estOuverte(v, completedSerieIds, isAdmin);
 
   // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
   // (la vidéo est remplacée par une carte cadenas → popup tarifs).
@@ -320,7 +317,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
                 ? 'Cours vidéo approfondi par le professeur pour aller plus loin.'
                 : gate
                   ? `Terminez « ${gate} » pour débloquer cette vidéo.`
-                  : 'Complétez d\'abord les séances du professeur (DP & QI) pour débloquer cette vidéo.',
+                  : 'Terminez la séance du professeur (DP & QI) qui ouvre cette vidéo.',
               Icon: unlocked ? Video : Lock,
               accent: '#7C3AED',
               bg: '#F3EAFF',
