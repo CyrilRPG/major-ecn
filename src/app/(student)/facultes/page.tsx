@@ -17,7 +17,7 @@ export default async function CollegesPage() {
           Choisissez un item pour accéder à son contenu et lancer un entraînement.
         </p>
       </header>
-      <CollegesGrid scope={scope} />
+      <CollegesGrid scope={scope} isAdmin={profile.role === 'admin'} />
     </div>
   );
 }

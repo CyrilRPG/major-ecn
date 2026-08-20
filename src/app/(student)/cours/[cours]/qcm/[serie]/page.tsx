@@ -26,7 +26,7 @@ export default async function QcmRunPage({
   // Une erreur SQL/RLS ne doit jamais être déguisée en 404 : elle doit remonter.
   if (coursError) throw coursError;
   if (!c || !c.matieres?.semestres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   // Série et questions lues via le client service-role : la RLS de `qcm_series`

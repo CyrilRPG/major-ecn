@@ -24,7 +24,7 @@ export default async function FicheExpressPage({ params }: { params: Promise<{ c
 
   if (!c || !c.matieres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).ficheExpress) redirect(`/cours/${coursId}`);
 
   // Un item peut porter plusieurs fiches : il suffit qu'UNE ait un PDF pour que

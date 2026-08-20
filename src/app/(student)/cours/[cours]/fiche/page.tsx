@@ -53,7 +53,7 @@ export default async function CoursFichePage({
     .maybeSingle();
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).fiche) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'fiche', `/cours/${coursId}`);
 

@@ -36,7 +36,10 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
   const [collegeId, setCollegeId] = useState('');
   const [sousCollegeId, setSousCollegeId] = useState('');
   const [coursId, setCoursId] = useState('');
-  const [type, setType] = useState<VideoType>('seance_approfondie');
+  // Catégorie par défaut : « Cours vidéo ». Une vidéo publiée sans toucher au
+  // sélecteur part donc en Formule Intensive, et les séances approfondies
+  // (Programme Approfondi) restent un choix explicite.
+  const [type, setType] = useState<VideoType>('cours');
 
   const [items, setItems] = useState<VideoLibraryItem[] | null>(null);
   const [videos, setVideos] = useState<VideoLibraryVideo[] | null>(null);

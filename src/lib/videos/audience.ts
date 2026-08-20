@@ -148,12 +148,22 @@ export function audienceSupport(doc: SupportOverride, video: VideoAudience): Vid
   };
 }
 
-/** Un support est-il visible par cet élève ? (audience effective + exclusion). */
+/**
+ * Un support est-il visible par cet élève ?
+ *
+ * Le support SUIT SA SÉANCE : qui n'a pas accès à la séance n'a pas accès à ses
+ * documents. Les permissions propres d'un support ne peuvent donc que
+ * RESTREINDRE l'audience de la vidéo, jamais l'élargir — un support ciblant la
+ * formule Essentielle sur une séance réservée au Programme Approfondi reste
+ * invisible pour un élève Essentiel.
+ */
 export function supportVisible(
   doc: SupportOverride,
   video: VideoAudience,
   options: { offres: readonly Offer[]; voie?: Voie | null; droitFormule: boolean; userId?: string | null },
 ): boolean {
+  if (!videoVisible(video, options)) return false;
+  if (!supportADesPermissionsPropres(doc)) return true;
   return videoVisible(audienceSupport(doc, video), options);
 }
 

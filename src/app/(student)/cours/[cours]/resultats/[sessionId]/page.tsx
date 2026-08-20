@@ -44,7 +44,7 @@ export default async function ResultsPage({
     .maybeSingle();
   if (coursError) throw coursError;
   if (!c || !c.matieres?.semestres) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const { data: attempts } = await supabase
     .from('qcm_attempts')

@@ -47,7 +47,7 @@ export default async function ReviewPage({
     .maybeSingle();
   if (coursError) throw coursError;
   if (!c) notFound();
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   const { data: attempts } = await supabase
     .from('qcm_attempts')

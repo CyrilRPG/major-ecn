@@ -22,8 +22,8 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
     .maybeSingle();
   if (!c || !c.matieres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (!canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
   if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).interrogation) redirect(`/cours/${coursId}`);
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 

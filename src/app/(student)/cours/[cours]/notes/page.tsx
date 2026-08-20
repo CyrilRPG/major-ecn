@@ -17,7 +17,7 @@ export default async function CoursNotesPage({ params }: { params: Promise<{ cou
     .eq('id', coursId)
     .maybeSingle();
   if (!c) redirect('/facultes');
-  if (!canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;

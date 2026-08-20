@@ -17,7 +17,11 @@ type CollegeRow = {
   cours?: { id: string; course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null }[] | null;
 };
 
-export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
+export async function CollegesGrid({ scope, isAdmin = false }: {
+  scope: PermissionScope;
+  /** L'administration voit tous les collèges, quelle que soit sa portée. */
+  isAdmin?: boolean;
+}) {
   const supabase = await createClient();
   const [{ data }, userId] = await Promise.all([
     supabase
@@ -35,7 +39,7 @@ export async function CollegesGrid({ scope }: { scope: PermissionScope }) {
     ((data as unknown as { semestres?: { matieres?: CollegeRow[] }[] } | null)?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
-    .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
+    .filter((m) => !m.parent_matiere_id && (isAdmin || canAccessCollege(scope, m.id)))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   // Progression fiable = QCM distincts faits / QCM totaux (85 %) + couverture (15 %).

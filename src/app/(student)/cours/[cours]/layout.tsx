@@ -78,7 +78,7 @@ export default async function CoursLayout({
   const autoriseParVideo = videosRow.some(
     (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
   );
-  if (!canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
 
   const isAdmin = profile.role === 'admin';
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);

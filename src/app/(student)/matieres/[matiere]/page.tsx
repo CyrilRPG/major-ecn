@@ -26,8 +26,11 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   if (!m || !m.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
+  // L'administration parcourt l'espace élève sans restriction : tous les
+  // collèges et tous les items, y compris ceux en accès restreint.
+  const isAdmin = profile.role === 'admin';
   const collegeAccess = ((m as { access_type?: 'all' | 'specific' }).access_type ?? 'all');
-  if (!canAccessCollege(scope, m.id, collegeAccess)) redirect('/facultes');
+  if (!isAdmin && !canAccessCollege(scope, m.id, collegeAccess)) redirect('/facultes');
 
   const { data: coursAll } = await supabase
     .from('cours')
@@ -38,7 +41,8 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   // Filtrage fin : un prof peut être limité à un sous-ensemble de cours
   // (scope.cours). Cours marqués 'specific' : exige listing explicite.
   const cours = (coursAll ?? []).filter((c) =>
-    canAccessCours(scope, matiere, c.id, (c as { access_type?: 'all' | 'specific' }).access_type ?? 'all')
+    isAdmin
+    || canAccessCours(scope, matiere, c.id, (c as { access_type?: 'all' | 'specific' }).access_type ?? 'all')
   );
   const coursIds = cours.map((c) => c.id);
   const [{ data: attempts }, { data: reviews }, { data: qcmTotalRows }] = coursIds.length

@@ -77,9 +77,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const autoriseParVideo = videosRow.some(
     (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
   );
-  if (!canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
   // Filtrage fin : si le prof est limité à certains cours, on bloque les autres.
-  if (!canAccessCours(scope, c.matiere_id, coursId, coursAccess) && !autoriseParVideo) redirect(`/matieres/${c.matiere_id}`);
+  if (profile.role !== 'admin' && !canAccessCours(scope, c.matiere_id, coursId, coursAccess) && !autoriseParVideo) redirect(`/matieres/${c.matiere_id}`);
 
   await supabase
     .from('course_progress')

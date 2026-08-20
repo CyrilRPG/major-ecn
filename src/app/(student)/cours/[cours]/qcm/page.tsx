@@ -32,7 +32,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   if (coursError) throw coursError;
   if (!c || !c.matieres?.semestres) notFound();
   const scope = parseScope(profile.permission_scope);
-  if (!canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
+  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
 
   const isAdmin = profile.role === 'admin';
