@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
-import { getContentAccess, mergeAccess, scopeOffers, type ContentAccess } from './permissions';
+import { CONTENT_ACCESS_LABELS, getContentAccess, mergeAccess, scopeOffers, type ContentAccess } from './permissions';
 import type { Offer, PermissionScope } from '@/types/domain';
 
 type Row = {
@@ -116,20 +116,8 @@ export const OFFER_LABELS: Record<Offer, string> = {
   approfondi: 'Programme Approfondi',
 };
 
-/** Contenus configurables (ordre + libellé) — alignés sur Config Permissions. */
-export const CONTENT_ACCESS_LABELS: { key: keyof ContentAccess; label: string }[] = [
-  { key: 'fiche', label: 'Fiche de cours' },
-  { key: 'ficheExpress', label: 'Fiche Express' },
-  { key: 'video', label: 'Résumé vidéo' },
-  { key: 'qcm', label: 'QCM / DP / QROC' },
-  { key: 'entrainement', label: 'QCM Entraînement' },
-  { key: 'seanceProf', label: 'Séance du professeur' },
-  { key: 'flashcards', label: 'Flashcards' },
-  { key: 'interrogation', label: 'Interrogation' },
-  { key: 'seanceApprofondie', label: 'Séance approfondie' },
-  { key: 'notes', label: 'Prise de notes' },
-  { key: 'parcoursMajor', label: 'Parcours du Major' },
-];
+/** Réexport de commodité : la constante vit dans `permissions.ts` (client-safe). */
+export { CONTENT_ACCESS_LABELS } from './permissions';
 
 /** Liste des contenus débloqués par une formule (d'après la config). */
 export function unlockedLabels(access: ContentAccess): string[] {

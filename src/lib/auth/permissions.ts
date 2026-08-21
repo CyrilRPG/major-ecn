@@ -283,3 +283,25 @@ export function canAccessAnnalesEvc(scope: PermissionScope): boolean {
     (c) => c === ANNALES_EVC_COLLEGE_ID || c.startsWith('col-mg-'),
   );
 }
+
+/**
+ * Contenus configurables (ordre + libellé) — alignés sur Config Permissions.
+ *
+ * Défini ici et non dans `formula-permissions.ts` : cette constante est lue par
+ * des composants client (éditeur d'accès élève), or `formula-permissions.ts`
+ * importe le client Supabase serveur — l'y laisser tirait `next/headers` dans le
+ * bundle navigateur et cassait le build.
+ */
+export const CONTENT_ACCESS_LABELS: { key: keyof ContentAccess; label: string }[] = [
+  { key: 'fiche', label: 'Fiche de cours' },
+  { key: 'ficheExpress', label: 'Fiche Express' },
+  { key: 'video', label: 'Résumé vidéo' },
+  { key: 'qcm', label: 'QCM / DP / QROC' },
+  { key: 'entrainement', label: 'QCM Entraînement' },
+  { key: 'seanceProf', label: 'Séance du professeur' },
+  { key: 'flashcards', label: 'Flashcards' },
+  { key: 'interrogation', label: 'Interrogation' },
+  { key: 'seanceApprofondie', label: 'Séance approfondie' },
+  { key: 'notes', label: 'Prise de notes' },
+  { key: 'parcoursMajor', label: 'Parcours du Major' },
+];

@@ -5,8 +5,7 @@ import { RotateCcw } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { mergeAccess, type ContentAccess } from '@/lib/auth/permissions';
-import { CONTENT_ACCESS_LABELS } from '@/lib/auth/formula-permissions';
+import { CONTENT_ACCESS_LABELS, mergeAccess, type ContentAccess } from '@/lib/auth/permissions';
 import type { OfferId } from './college-access-picker';
 
 const NO_ACCESS: ContentAccess = {
