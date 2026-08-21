@@ -56,6 +56,13 @@ const MANUAL_QCM_LINES = [
 ];
 const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 
+// Règlements déjà encaissés, déduits du total après remise pour donner le
+// reste à payer. Ajouter une ligne à chaque nouveau versement.
+const REGLEMENTS = [
+  { label: 'Acompte réglé', montant: 6547.69 },
+];
+const REGLE_TOTAL = REGLEMENTS.reduce((s, r) => s + r.montant, 0);
+
 const PALIERS = [
   { seuil: 1500, pct: 10 },
   { seuil: 3000, pct: 16 },
@@ -133,6 +140,9 @@ export function FacturationDashboard({
   const pct = remisePct(data.grand);
   const remiseEur = (data.grand * pct) / 100;
   const net = data.grand - remiseEur;
+  const regle = REGLE_TOTAL;
+  const reste = Math.max(0, net - regle);
+  const partReglee = net > 0 ? Math.min(100, (regle / net) * 100) : 0;
   const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR, imports: 0 };
 
   const pieData = CAT_KEYS
@@ -221,6 +231,35 @@ export function FacturationDashboard({
                 : <>Palier maximum atteint (40 %).</>}
             </p>
           </div>
+        </div>
+
+        {/* Règlement — ce qui a été encaissé et ce qu'il reste à payer */}
+        <div className="mt-6 rounded-2xl bg-white/8 p-5 ring-1 ring-white/10">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-white/55">Total après remise</p>
+              <p className="mt-1 font-display text-2xl font-bold tabular-nums">{eur(net)}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-white/55">Déjà réglé</p>
+              <p className="mt-1 font-display text-2xl font-bold tabular-nums text-[#86EFAC]">− {eur(regle)}</p>
+            </div>
+            <div className="sm:text-right">
+              <p className="text-xs font-medium uppercase tracking-wider text-white/55">Reste à payer</p>
+              <p className="mt-1 font-display text-3xl font-bold tabular-nums text-[#FCA5A5]">{eur(reste)}</p>
+            </div>
+          </div>
+          <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
+            <div
+              className="h-full rounded-full bg-[linear-gradient(90deg,#86EFAC,#22C55E)]"
+              style={{ width: `${partReglee}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-white/60">
+            {partReglee.toFixed(1)} % du total après remise déjà encaissé
+            {REGLEMENTS.length > 1 ? ` · ${REGLEMENTS.length} règlements` : ''}
+            {regle > net && <span className="text-[#86EFAC]"> · trop-perçu de {eur(regle - net)}</span>}
+          </p>
         </div>
       </section>
 
@@ -357,7 +396,7 @@ export function FacturationDashboard({
         {/* avant / après */}
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5">
           <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
-            <Wallet className="h-4 w-4 text-(--color-primary)" /> Total avant / après geste commercial
+            <Wallet className="h-4 w-4 text-(--color-primary)" /> Total, geste commercial et règlement
           </h3>
           <dl className="space-y-2.5 text-sm">
             <Row label="Fiches" value={eur(data.totals.fiche)} />
@@ -370,10 +409,15 @@ export function FacturationDashboard({
             <div className="my-2 border-t border-dashed border-(--color-border)" />
             <Row label="Total avant remise" value={eur(data.grand)} strong />
             <Row label={`Geste commercial (−${pct.toFixed(1)} %)`} value={`− ${eur(remiseEur)}`} accent />
+            <Row label="Total à régler" value={eur(net)} strong />
+            <div className="my-2 border-t border-dashed border-(--color-border)" />
+            {REGLEMENTS.map((r) => (
+              <Row key={r.label} label={r.label} value={`− ${eur(r.montant)}`} accent />
+            ))}
           </dl>
           <div className="mt-4 flex items-end justify-between rounded-2xl bg-[linear-gradient(135deg,#16A34A,#0F7A37)] px-5 py-4 text-white">
-            <span className="text-sm font-medium text-white/85">Total à régler</span>
-            <span className="font-display text-3xl font-bold tabular-nums">{eur(net)}</span>
+            <span className="text-sm font-medium text-white/85">Reste à payer</span>
+            <span className="font-display text-3xl font-bold tabular-nums">{eur(reste)}</span>
           </div>
         </div>
       </section>

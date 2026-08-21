@@ -100,3 +100,9 @@ export function billingLinePrices(line: {
 /** Identifiant du collège « Découverte » (facturation : fiche seule). */
 export const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 
+/**
+ * Collège « Odontologie » de Major ECN : copie de la faculté Major Odontologie
+ * (cf. scripts/dupliquer-odontologie-vers-ecn.mjs). Ses cours vivent dans des
+ * sous-collèges ; la facturation les regroupe sous le nom du collège parent.
+ */
+export const ODONTOLOGIE_COLLEGE_ID = 'col-ecn-odontologie';

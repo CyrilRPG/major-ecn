@@ -1,6 +1,6 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { BILLING_EUR, GEN_FEATURE, billingLinePrices } from '@/lib/ai/cost';
+import { BILLING_EUR, GEN_FEATURE, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
 import { FacturationDashboard, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
@@ -13,7 +13,7 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, odontoRes] = await Promise.all([
     a.rpc('admin_facturation_lines'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
@@ -23,10 +23,16 @@ export default async function AdminFacturationPage() {
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
     a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').in('status', ['ready', 'published', 'cancelled']).not('billed_price_cents', 'is', null),
+    // Collège Odontologie et ses sous-collèges : la RPC renvoie le nom du
+    // sous-collège, la facture les regroupe sous le collège parent.
+    a.from('matieres').select('id, nom').or(`id.eq.${ODONTOLOGIE_COLLEGE_ID},parent_matiere_id.eq.${ODONTOLOGIE_COLLEGE_ID}`),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
   const generations = { epreuves: genExamRes.count ?? 0, interrogations: genInterroRes.count ?? 0 };
+  const odontoMatieres = (odontoRes.data ?? []) as { id: string; nom: string }[];
+  const odontoNom = odontoMatieres.find((m) => m.id === ODONTOLOGIE_COLLEGE_ID)?.nom ?? 'Odontologie';
+  const odontoSousColleges = new Set(odontoMatieres.filter((m) => m.id !== ODONTOLOGIE_COLLEGE_ID).map((m) => m.nom));
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,10 +46,11 @@ export default async function AdminFacturationPage() {
         n_flash: Number(c.n_flash ?? 0),
       };
       const p = billingLinePrices(line);
+      const matiere = (c.matiere_nom as string) ?? '—';
       return {
         id: c.line_id as string,
         titre: c.titre as string,
-        matiere: (c.matiere_nom as string) ?? '—',
+        matiere: odontoSousColleges.has(matiere) ? odontoNom : matiere,
         fichePrice: p.fiche,
         qcmPrice: p.qcm,
         flashPrice: p.flash,
