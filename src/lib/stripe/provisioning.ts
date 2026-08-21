@@ -172,7 +172,7 @@ export async function provisionStudentAccount(
   const approfondiTier = getApprofondiTier(input.approfondiVariant);
 
   // Certaines offres Approfondi sont vendues AVANT la mise en ligne des contenus
-  // (ex. Anesthésie-réanimation) : l'étudiant est prévenu au moment de payer, le
+  // (ex. Odontologie) : l'étudiant est prévenu au moment de payer, le
   // compte est créé mais n'ouvre AUCUN collège. On sort donc avant toute
   // résolution de collège — surtout pas de repli sur la Médecine générale, qui
   // accorderait par erreur un périmètre qui n'a pas été acheté.
@@ -290,6 +290,7 @@ export async function provisionStudentAccount(
     offers: offersField,
     paid_offer: mergedOffer,
     paid_formule: input.formuleId,
+    paid_approfondi_variant: approfondiTier?.id ?? prevScope.paid_approfondi_variant ?? undefined,
     paid_specialty: input.specialty ?? 'Médecine générale',
     // Marque les comptes achetés AVANT la mise en ligne des contenus, pour
     // pouvoir les retrouver et leur ouvrir l'accès le jour du lancement.

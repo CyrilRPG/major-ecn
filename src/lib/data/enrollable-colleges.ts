@@ -35,10 +35,11 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-medecine-interne', name: 'Médecine interne polyvalente' },
   { collegeId: 'col-psychiatrie', name: 'Psychiatrie' },
   { collegeId: 'col-gynecologie', name: 'Gynécologie-obstétrique' },
-  // Aucun collège en base pour cette spécialité : les contenus arrivent. Le
-  // prix est celui de la formule (Essentielle / Intensive sont à prix unique,
-  // indépendant de la spécialité), l'accès est ouvert à la mise en ligne.
-  { collegeId: null, name: 'Anesthésie-réanimation', contentPending: true },
+  // Contenus en ligne depuis le 2026-08-21 (43 items) : l'accès est accordé
+  // dès le paiement, comme pour les autres spécialités.
+  { collegeId: 'col-anesthesie-reanimation', name: 'Anesthésie-réanimation' },
+  { collegeId: 'col-orthopedie', name: 'Orthopédie' },
+  { collegeId: null, name: 'Odontologie', contentPending: true },
 ];
 
 export const ENROLLABLE_SPECIALTY_NAMES = ENROLLABLE_SPECIALTIES.map((s) => s.name);

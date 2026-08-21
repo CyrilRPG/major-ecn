@@ -80,7 +80,7 @@ export type ApprofondiSpecialty = {
 };
 
 /** Spécialités dont le Programme Approfondi est achetable EN LIGNE. Les autres
- *  spécialités (ex. Anesthésie-réanimation) restent en formulaire de rappel. */
+ *  spécialités (ex. Odontologie) restent en formulaire de rappel. */
 export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
   {
     key: 'mg',
@@ -208,8 +208,8 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     ],
   },
   {
-    // Contenus pas encore en ligne : l'offre est achetable, mais le compte est
-    // créé sans accès et l'étudiant est prévenu avant de payer.
+    // Contenus en ligne depuis le 2026-08-21 : l'accès est accordé dès le
+    // paiement, plus aucun avertissement dans le tunnel d'achat.
     key: 'anesthesie-reanimation',
     name: 'Anesthésie-réanimation',
     tiers: [
@@ -217,12 +217,48 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
         id: 'anesth', tier: 'base', tierLabel: 'Approfondi',
         amountCents: 209500, hoursLabel: '36 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_ANESTH',
-        targetCollege: null, contentPending: true,
+        targetCollege: 'col-anesthesie-reanimation',
       },
       {
         id: 'anesth-plus', tier: 'plus', tierLabel: 'Approfondi +',
         amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_ANESTH_PLUS',
+        targetCollege: 'col-anesthesie-reanimation',
+      },
+    ],
+  },
+  {
+    key: 'orthopedie',
+    name: 'Orthopédie',
+    tiers: [
+      {
+        id: 'ortho', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ORTHO',
+        targetCollege: 'col-orthopedie',
+      },
+      {
+        id: 'ortho-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ORTHO_PLUS',
+        targetCollege: 'col-orthopedie',
+      },
+    ],
+  },
+  {
+    key: 'odontologie',
+    name: 'Odontologie',
+    tiers: [
+      {
+        id: 'odonto', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ODONTO',
+        targetCollege: null, contentPending: true,
+      },
+      {
+        id: 'odonto-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_ODONTO_PLUS',
         targetCollege: null, contentPending: true,
       },
     ],

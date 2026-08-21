@@ -8,7 +8,7 @@
  *   1. l'étudiant choisit sa spécialité ;
  *   2. les offres disponibles apparaissent (avec heures / couverture + prix) ;
  *   3. il choisit une offre → formulaire de paiement Stripe (1×/3×/4×).
- * Les spécialités non proposées en ligne (ex. Anesthésie-réanimation) basculent
+ * Les spécialités non proposées en ligne (ex. Odontologie) basculent
  * sur le formulaire de rappel conseiller.
  */
 import { useState } from 'react';

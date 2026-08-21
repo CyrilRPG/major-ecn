@@ -817,3 +817,77 @@ export function relanceInactiveEmail({ firstName, setupUrl }: RelanceArgs) {
 /* ============================================================
    Welcome (existant) — voir welcomeEmail() au-dessus
    ============================================================ */
+
+/* ============================================================
+   Mise en ligne d'une spécialité vendue « contenus à venir »
+   ============================================================ */
+
+type SpecialiteDisponibleArgs = {
+  firstName: string;
+  /** Libellé commercial de la spécialité (ex. « Anesthésie-réanimation »). */
+  specialtyName: string;
+  /** Lien d'activation / de connexion (recovery link ou /login). */
+  setupUrl: string;
+  /** Compte ayant déjà un mot de passe : on l'invite à se connecter, pas à en
+   *  choisir un (cf. lib/admin/student-invite.ts). */
+  dejaActive?: boolean;
+};
+
+/**
+ * Adressé aux étudiants qui ont acheté une spécialité AVANT la publication de
+ * ses contenus (`permission_scope.content_pending`) : leur accès vient d'être
+ * ouvert, on les invite à se connecter. Remplace le message « contenus à venir »
+ * reçu au moment de l'achat.
+ */
+export function specialiteDisponibleEmail({ firstName, specialtyName, setupUrl, dejaActive }: SpecialiteDisponibleArgs) {
+  const hello = firstName && firstName.trim() ? firstName.trim() : 'à vous';
+  const subject = `${specialtyName} est en ligne — votre accès Major ECN est ouvert`;
+  const bodyHtml = `
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#3D3D3D;">
+      Bonjour <strong style="color:#2D2D2D;">${escapeHtml(hello)}</strong>,
+    </p>
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#4A5568;">
+      Lors de votre inscription, nous vous avions indiqué que les contenus
+      d&rsquo;${escapeHtml(specialtyName)} n&rsquo;étaient pas encore disponibles sur la
+      plateforme. C&rsquo;est désormais chose faite&nbsp;: ils sont en ligne, et votre
+      compte a été paramétré avec les accès correspondant à votre formule.
+    </p>
+    <p style="margin:0 0 22px;font-size:15px;line-height:1.7;color:#4A5568;">
+      Vous y retrouverez les fiches de cours, les QCM, les dossiers progressifs et les
+      flashcards de la spécialité. ${dejaActive
+        ? 'Connectez-vous avec vos identifiants habituels pour en profiter.'
+        : 'Cliquez ci-dessous pour choisir votre mot de passe et commencer votre préparation.'}
+    </p>
+    ${buttonHtml(setupUrl, dejaActive ? 'Me connecter' : 'Activer mon espace')}
+    <p style="margin:8px 0 0;font-size:13px;line-height:1.7;color:#5A5A5A;">
+      Une question, un souci de connexion&nbsp;? Répondez simplement à cet email ou écrivez-nous à
+      <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
+      Merci de votre patience.
+    </p>
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#2D2D2D;">
+      À très vite,<br />
+      <strong>L&rsquo;équipe Major ECN</strong>
+    </p>`;
+  const html = layout({
+    subject,
+    eyebrow: 'Vos contenus sont disponibles',
+    title: `${specialtyName} est en ligne`,
+    bodyHtml,
+  });
+  const text = [
+    `Bonjour ${hello},`,
+    '',
+    `Les contenus d'${specialtyName} sont désormais en ligne sur la plateforme Major ECN,`,
+    `et votre compte a été paramétré avec les accès correspondant à votre formule.`,
+    '',
+    `Fiches de cours, QCM, dossiers progressifs et flashcards vous attendent.`,
+    '',
+    dejaActive ? `Me connecter : ${setupUrl}` : `Activer mon espace : ${setupUrl}`,
+    '',
+    `Une question, un souci de connexion ? Écrivez-nous à contact@major-ecn.fr.`,
+    '',
+    `À très vite,`,
+    `L'équipe Major ECN`,
+  ].join('\n');
+  return { subject, html, text };
+}
