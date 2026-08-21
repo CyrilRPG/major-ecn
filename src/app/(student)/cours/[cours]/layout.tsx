@@ -6,7 +6,7 @@ import { StudyConsole } from '@/components/student/study-console';
 import { SplitViewProvider } from '@/components/student/split-view';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { canRead } from '@/lib/schemas/professor';
+import { canRead, canReadAnyQcm } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
@@ -139,7 +139,9 @@ export default async function CoursLayout({
     ? {
         fiche: canRead(profScope, 'fiche'),
         video: canRead(profScope, 'video'),
-        qcm: canRead(profScope, 'qcm'),
+        // L'onglet « DP · QI » porte les trois sous-types : il reste visible dès
+        // qu'un seul est lisible (le contenu, lui, est filtré série par série).
+        qcm: canReadAnyQcm(profScope),
         flashcards: canRead(profScope, 'flashcards'),
       }
     : undefined;

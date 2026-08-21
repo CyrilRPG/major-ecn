@@ -37,6 +37,26 @@
 /** Colonnes minimales à sélectionner pour pouvoir appliquer `canStudentReadSerie`. */
 export const SERIE_ACCESS_COLUMNS = 'id, label, type, kind, allowed_voies, allowed_offers';
 
+/** Sous-type d'une série, au sens des permissions professeur. */
+export type QcmKind = 'qcm' | 'dp' | 'qroc';
+
+/**
+ * Sous-type d'une série — `null` pour une séance du professeur, qui n'est pas
+ * une banque QCM/DP/QROC et ne relève donc d'aucune de ces trois permissions.
+ *
+ * Vérifié sur la totalité des 14 194 séries : `type` ∈ {qcm, seance, qroc} et
+ * toute série `type = 'qcm'` porte un `kind` ∈ {qcm, dp, qroc} non nul. Le
+ * `kind` prime donc sur le libellé — « DP QROC 3 · … » a `kind = 'qroc'`, il
+ * relève de QROC et non de DP.
+ */
+export function serieQcmKind(serie: Pick<SerieAccessRow, 'type' | 'kind'>): QcmKind | null {
+  if (serie.type === 'seance') return null;
+  if (serie.type === 'qroc') return 'qroc';
+  const kind = serie.kind;
+  if (kind === 'dp' || kind === 'qroc' || kind === 'qcm') return kind;
+  return 'qcm';
+}
+
 export type SerieAccessRow = {
   id: string;
   label: string;
@@ -49,6 +69,14 @@ export type SerieAccessRow = {
 export type QcmAccessContext = {
   /** Admin ou professeur : les policies restrictives ne s'appliquent pas. */
   isStaff: boolean;
+  /**
+   * Professeur : sous-types QCM/DP/QROC qu'il a le droit de LIRE
+   * (`permission_scope.content_permissions`). Les policies élève ne s'appliquent
+   * pas au staff, mais ses propres permissions, si — un professeur à qui l'on
+   * retire QROC ne doit plus voir les séries QROC, ici comme dans l'espace élève.
+   * Absent = aucune restriction (admin, ou contexte élève).
+   */
+  staffKinds?: Partial<Record<QcmKind, boolean>>;
   voie: 'interne' | 'externe' | null;
   offers: Set<string>;
   /** Élève Gériatrie consultant un item de Médecine générale (accès bonus). */
@@ -58,6 +86,7 @@ export type QcmAccessContext = {
 const isEntrainementLabel = (label: string) => /entra[iî]nement/i.test(label);
 // Le SQL teste `label !~* '^dp'` : on garde exactement le même critère.
 const isDpLabel = (label: string) => /^dp/i.test(label);
+const isGeriatrieLabel = (label: string) => /g[eé]riatrie/i.test(label);
 
 /**
  * `true` si l'élève a le droit d'ouvrir cette série.
@@ -71,13 +100,28 @@ export function canStudentReadSerie(
   ctx: QcmAccessContext,
   questionFormats?: readonly string[],
 ): boolean {
-  if (ctx.isStaff) return true;
+  // Staff : aucune policy élève (voie, offres, bonus Gériatrie). Un professeur
+  // reste en revanche tenu par SES permissions de contenu — sans quoi retirer
+  // QROC dans sa fiche admin n'avait aucun effet sur ce qu'il voyait.
+  if (ctx.isStaff) {
+    const kind = serieQcmKind(serie);
+    if (!kind || !ctx.staffKinds) return true;
+    return ctx.staffKinds[kind] !== false;
+  }
 
   const label = serie.label ?? '';
   const entrainement = isEntrainementLabel(label);
 
   // qcm_series_geriatrie_mg_block_dp_entrainement_seance
-  if (ctx.geriatrieMgBonus && (serie.type === 'seance' || entrainement || isDpLabel(label))) {
+  // Les DP dont le label contient « gériatrie » passent (séries spécifiquement
+  // conçues pour les élèves gériatrie sur leurs cours MG bonus).
+  if (ctx.geriatrieMgBonus && (serie.type === 'seance' || entrainement || (isDpLabel(label) && !isGeriatrieLabel(label)))) {
+    return false;
+  }
+
+  // qcm_series_geriatrie_only_mg_dp : les séries « gériatrie » sur cours MG
+  // sont réservées aux élèves Gériatrie — les élèves MG classiques ne les voient pas.
+  if (!ctx.geriatrieMgBonus && isGeriatrieLabel(label)) {
     return false;
   }
 

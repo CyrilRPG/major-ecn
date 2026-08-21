@@ -1,6 +1,8 @@
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { getProfessorScope } from '@/lib/auth/prof-content-access';
+import { canRead } from '@/lib/schemas/professor';
 import { GERIATRIE_COLLEGE_ID, MG_COLLEGE_ID } from '@/lib/auth/geriatrie-mg-bonus';
 import type { QcmAccessContext } from './qcm-access-rules';
 
@@ -27,8 +29,20 @@ export async function buildQcmAccessContext(
 ): Promise<QcmAccessContext> {
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
   const scope = parseScope(profile.permission_scope);
+  // Professeur : ses propres droits de lecture par sous-type. L'admin (scope
+  // non professeur) n'est jamais restreint.
+  const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;
   const ctx: QcmAccessContext = {
     isStaff,
+    ...(profScope
+      ? {
+          staffKinds: {
+            qcm: canRead(profScope, 'qcm'),
+            dp: canRead(profScope, 'dp'),
+            qroc: canRead(profScope, 'qroc'),
+          },
+        }
+      : {}),
     voie: scope.voie ?? null,
     offers: new Set<string>(scopeOffers(scope)),
     geriatrieMgBonus: false,

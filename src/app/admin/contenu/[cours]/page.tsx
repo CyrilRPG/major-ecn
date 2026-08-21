@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, Lock, PlayCircle } from 'lucide-react';
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
+import { serieQcmKind } from '@/lib/data/qcm-access-rules';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -123,7 +124,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
       matieres(id, nom, semestre_id, semestres(id, label, faculte_id, facultes(id, nom))),
       videos(id, titre, storage_path, bunny_video_id, type, order_index, video_supports(id)),
       fiches(id, titre, storage_path, pages, content_format, order_index, created_at),
-      qcm_series(id, type, label, annee, qcm_questions(id)),
+      qcm_series(id, type, kind, label, annee, qcm_questions(id)),
       flashcards(id, recto, verso, order_index)
     `)
     .eq('id', coursId)
@@ -164,7 +165,13 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   // Plusieurs fiches possibles par item, dans l'ordre d'affichage élève : la
   // première (order_index le plus bas) est la fiche principale.
   const fichesTriees = trierFiches((c.fiches ?? []) as unknown as ManagedFicheRow[]);
-  const qcmSeries = (c.qcm_series ?? []).filter((s) => s.type === 'qcm');
+  // Un professeur ne voit que les sous-types QCM/DP/QROC qu'il a le droit de
+  // lire : l'onglet regroupe les trois, mais retirer QROC doit faire disparaître
+  // les séries QROC (et « DP QROC », qui portent kind = 'qroc'), pas seulement
+  // l'onglet entier. `qcmSerieIds` en découle : le détail n'est pas chargé non plus.
+  const qcmSeries = (c.qcm_series ?? [])
+    .filter((s) => s.type === 'qcm')
+    .filter((s) => scope === null || can[serieQcmKind(s) ?? 'qcm'].read);
   const annales = (c.qcm_series ?? []).filter((s) => s.type === 'annale');
   const flashcards = (c.flashcards ?? []).sort((a, b) => a.order_index - b.order_index);
 
