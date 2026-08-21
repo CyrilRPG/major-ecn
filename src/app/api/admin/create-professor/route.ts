@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { AddProfessorSchema, CONTENT_TYPES, PERMISSION_LEVELS, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
+import { AddProfessorSchema, CONTENT_TYPES, PERMISSION_LEVELS, QCM_KINDS, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { welcomeEmail } from '@/lib/email/templates';
 
@@ -32,12 +32,18 @@ export async function POST(req: Request) {
 
   const cleanedColleges = permission_type === 'college' ? (colleges ?? []) : [];
   const cleanedCours = permission_type === 'college' ? (cours ?? []).filter((c) => typeof c === 'string') : [];
+  // Les « none » explicites sont persistés (cf. update-professor-scope) : une
+  // clé absente déclenche l'héritage rétrocompat DP/QROC ← qcm, une clé à
+  // 'none' est une absence d'accès ferme.
   const cleanedPermissions: Partial<Record<ContentType, PermissionLevel>> = {};
   for (const t of CONTENT_TYPES) {
     const lvl = content_permissions?.[t];
-    if (lvl && (PERMISSION_LEVELS as readonly string[]).includes(lvl) && lvl !== 'none') {
+    if (lvl && (PERMISSION_LEVELS as readonly string[]).includes(lvl)) {
       cleanedPermissions[t] = lvl;
     }
+  }
+  for (const t of QCM_KINDS) {
+    if (cleanedPermissions[t] === undefined) cleanedPermissions[t] = 'none';
   }
 
   const permission_scope = {

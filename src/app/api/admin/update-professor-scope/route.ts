@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
-  CONTENT_TYPES, PERMISSION_LEVELS,
+  CONTENT_TYPES, PERMISSION_LEVELS, QCM_KINDS,
   UpdateProfessorScopeSchema,
   type ContentType, type PermissionLevel,
 } from '@/lib/schemas/professor';
@@ -61,12 +61,21 @@ export async function POST(req: Request) {
       }
     }
   }
+  // On persiste AUSSI les « none » explicites. Sans cela, retirer un accès
+  // revenait à supprimer la clé — indistinguable d'un scope ancien où la clé
+  // n'a jamais existé —, et la rétrocompat de `effectiveLevel()` faisait
+  // réhériter DP/QROC du niveau « qcm » : l'accès révoqué revenait tout seul.
   const cleanedPermissions: Partial<Record<ContentType, PermissionLevel>> = {};
   for (const t of CONTENT_TYPES) {
     const lvl = content_permissions?.[t];
-    if (lvl && (PERMISSION_LEVELS as readonly string[]).includes(lvl) && lvl !== 'none') {
+    if (lvl && (PERMISSION_LEVELS as readonly string[]).includes(lvl)) {
       cleanedPermissions[t] = lvl;
     }
+  }
+  // Un enregistrement depuis l'admin décrit un état complet : les sous-types
+  // QCM/DP/QROC non transmis sont explicitement « aucun accès », jamais hérités.
+  for (const t of QCM_KINDS) {
+    if (cleanedPermissions[t] === undefined) cleanedPermissions[t] = 'none';
   }
 
   const permission_scope = {

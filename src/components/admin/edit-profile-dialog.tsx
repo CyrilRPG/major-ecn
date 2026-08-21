@@ -64,7 +64,8 @@ function initialScope(raw: unknown): {
   const perms: Partial<Record<ContentType, PermissionLevel>> = { ...(s.content_permissions ?? fromOld) };
   // Rétrocompat : les profs créés avant la séparation n'ont que « qcm ». On fait
   // hériter DP et QROC de qcm à l'ouverture, pour afficher le bon état et ne pas
-  // révoquer leur accès lors de l'enregistrement.
+  // révoquer leur accès lors de l'enregistrement. L'héritage ne concerne QUE les
+  // clés absentes : un 'none' enregistré est une révocation et reste tel quel.
   if (perms.qcm !== undefined) {
     if (perms.dp === undefined) perms.dp = perms.qcm;
     if (perms.qroc === undefined) perms.qroc = perms.qcm;
@@ -162,7 +163,12 @@ export function EditProfileDialog({
           permission_type: permType,
           colleges: permType === 'college' ? scopeColleges : [],
           cours: permType === 'college' ? scopeCours : [],
-          content_permissions: perms,
+          // Record complet : un type laissé sur « Aucun accès » doit être
+          // envoyé comme 'none' (et non omis), sinon la rétrocompat serveur
+          // ferait réhériter DP/QROC du niveau « qcm » au prochain chargement.
+          content_permissions: Object.fromEntries(
+            CONTENT_TYPES.map((t) => [t, perms[t] ?? 'none']),
+          ) as Record<ContentType, PermissionLevel>,
         });
         if (!scopeRes.ok) {
           const j = (await scopeRes.json().catch(() => ({}))) as { error?: string };

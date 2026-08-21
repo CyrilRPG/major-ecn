@@ -76,6 +76,10 @@ export type ProfessorScope = {
  * héritent du niveau « qcm » quand ils ne sont pas définis explicitement — ainsi
  * les professeurs créés avant la séparation, qui n'ont que « qcm », gardent l'accès
  * à l'ensemble QCM + DP + QROC.
+ *
+ * L'héritage ne joue que sur une clé ABSENTE. Les routes admin écrivent toujours
+ * les sous-types QCM/DP/QROC, y compris à 'none' : une révocation explicite est
+ * donc respectée et ne peut pas être réhéritée depuis « qcm ».
  */
 export function effectiveLevel(
   scope: ProfessorScope | null | undefined,
