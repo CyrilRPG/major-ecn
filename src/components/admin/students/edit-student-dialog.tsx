@@ -12,12 +12,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { parseScope, scopeOffers, type ContentAccess } from '@/lib/auth/permissions';
 import { CollegeAccessPicker, OfferPicker, type College, type AccessValue, type OfferId } from './college-access-picker';
+import { ContentAccessEditor, type FormulaAccessMap } from './content-access-editor';
 import type { PermissionScope } from '@/types/domain';
 import { fetchAuthentifie, fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
-type OfferOption = { id: OfferId; label: string; unlocks: string[] };
+type OfferOption = { id: OfferId; label: string; unlocks: string[]; access: ContentAccess };
 
 // 'decouverte' n'est pas administrable : on l'aligne par défaut sur essentiel.
 function adminOfferFrom(rawOffer: string): OfferId {
@@ -95,6 +96,10 @@ export function EditStudentDialog({
   const [downloadColleges, setDownloadColleges] = useState<Set<string>>(new Set(student.download_colleges ?? []));
   const [offersSel, setOffersSel] = useState<OfferId[]>(adminOffersFrom(initialScope));
   const [access, setAccess] = useState<AccessValue>(initialAccess);
+  const [contentOverrides, setContentOverrides] = useState<Record<string, boolean> | null>(
+    initialScope.content_overrides && Object.keys(initialScope.content_overrides).length > 0
+      ? initialScope.content_overrides : null,
+  );
   const [evcSessionId, setEvcSessionId] = useState<string>(student.evc_session_id ?? 'none');
   const [accessEndDate, setAccessEndDate] = useState<string>(isoToDateInput(student.access_end));
 
@@ -116,6 +121,10 @@ export function EditStudentDialog({
       colleges: sc.type === 'college' ? sc.colleges : [],
       voie: sc.voie ?? 'interne',
     });
+    setContentOverrides(
+      sc.content_overrides && Object.keys(sc.content_overrides).length > 0
+        ? sc.content_overrides : null,
+    );
     setEvcSessionId(student.evc_session_id ?? 'none');
     setAccessEndDate(isoToDateInput(student.access_end));
     setSubmitError(null);
@@ -152,6 +161,8 @@ export function EditStudentDialog({
           can_download: canDownload,
           // Droit global → la liste par spécialité devient inutile, on la vide.
           download_colleges: canDownload ? [] : Array.from(downloadColleges),
+          // Surcharges individuelles de contenu.
+          content_overrides: contentOverrides,
           // Période d'accès : session de rattachement + éventuelle date individuelle.
           evc_session_id: evcSessionId === 'none' ? null : evcSessionId,
           access_end: accessEndDate ? new Date(`${accessEndDate}T23:59:59`).toISOString() : null,
@@ -220,6 +231,13 @@ export function EditStudentDialog({
           </div>
 
           <OfferPicker offers={offers} value={offersSel} onChange={setOffersSel} />
+
+          <ContentAccessEditor
+            formulaPermissions={Object.fromEntries(offers.map((o) => [o.id, o.access])) as FormulaAccessMap}
+            selectedOffers={offersSel}
+            overrides={contentOverrides}
+            onChange={setContentOverrides}
+          />
 
           <CollegeAccessPicker colleges={colleges} value={access} onChange={setAccess} />
 

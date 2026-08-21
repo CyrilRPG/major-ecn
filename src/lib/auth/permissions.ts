@@ -42,6 +42,20 @@ function parseVoie(raw: unknown): 'interne' | 'externe' | null {
   return null;
 }
 
+function parseContentOverrides(raw: unknown): Record<string, boolean> | undefined {
+  if (raw && typeof raw === 'object') {
+    const co = (raw as { content_overrides?: unknown }).content_overrides;
+    if (co && typeof co === 'object' && !Array.isArray(co)) {
+      const result: Record<string, boolean> = {};
+      for (const [k, v] of Object.entries(co as Record<string, unknown>)) {
+        if (typeof v === 'boolean') result[k] = v;
+      }
+      if (Object.keys(result).length > 0) return result;
+    }
+  }
+  return undefined;
+}
+
 export function parseScope(raw: unknown): PermissionScope {
   const offers = parseOffers(raw);
   // `offer` = offre d'affichage/de rang. Si une union `offers` est présente, on
@@ -49,20 +63,22 @@ export function parseScope(raw: unknown): PermissionScope {
   const offer = offers ? highestOffer(offers) : parseOffer(raw);
   const voie = parseVoie(raw);
   const offersField = offers ? { offers } : {};
+  const contentOverrides = parseContentOverrides(raw);
+  const overridesField = contentOverrides ? { content_overrides: contentOverrides } : {};
   if (raw && typeof raw === 'object' && 'type' in raw) {
     const t = (raw as { type: unknown }).type;
-    if (t === 'all') return { type: 'all', offer, ...offersField, voie };
+    if (t === 'all') return { type: 'all', offer, ...offersField, voie, ...overridesField };
     if (t === 'college') {
       const cs = (raw as { colleges?: unknown }).colleges;
       const list = Array.isArray(cs) ? cs.filter((x): x is string => typeof x === 'string') : [];
       const co = (raw as { cours?: unknown }).cours;
       const cours = Array.isArray(co) ? co.filter((x): x is string => typeof x === 'string') : undefined;
-      return { type: 'college', colleges: list, offer, ...offersField, voie, ...(cours && cours.length > 0 ? { cours } : {}) };
+      return { type: 'college', colleges: list, offer, ...offersField, voie, ...(cours && cours.length > 0 ? { cours } : {}), ...overridesField };
     }
     // Legacy faculty-scoped accounts → full access (single EVC faculté now).
-    if (t === 'faculty') return { type: 'all', offer, ...offersField, voie };
+    if (t === 'faculty') return { type: 'all', offer, ...offersField, voie, ...overridesField };
   }
-  return { type: 'all', offer, ...offersField, voie };
+  return { type: 'all', offer, ...offersField, voie, ...overridesField };
 }
 
 /** Union des formules détenues par le scope (au moins une). Base de l'accès

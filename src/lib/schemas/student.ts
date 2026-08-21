@@ -40,6 +40,9 @@ export const UpdateStudentSchema = z.object({
    *  `can_download` est vrai — celui-ci accorde le droit sur toutes. */
   download_colleges: z.array(z.string()).optional(),
   voie: z.enum(['interne', 'externe']).optional().nullable(),
+  /** Surcharges individuelles de contenu — clés camelCase de ContentAccess.
+   *  null / objet vide = aucune surcharge (défauts de la formule). */
+  content_overrides: z.record(z.string(), z.boolean()).optional().nullable(),
   /** Session EVC de rattachement (fin d'accès par défaut). null = aucune session. */
   evc_session_id: z.string().optional().nullable(),
   /** Fin d'accès individuelle (ISO) — prime sur la date de la session. null = hérite. */

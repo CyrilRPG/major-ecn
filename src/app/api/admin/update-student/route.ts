@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
 
-  const { id, first_name, last_name, phone, permission_type, colleges, cours, can_download, download_colleges, voie, evc_session_id, access_end } = parsed.data;
+  const { id, first_name, last_name, phone, permission_type, colleges, cours, can_download, download_colleges, voie, content_overrides, evc_session_id, access_end } = parsed.data;
   // Union des formules : `offers` prime ; `offer` (plus haut rang) sert d'offre
   // d'affichage/de rang (paid_offer, paid_formule…).
   const offerList = Array.from(new Set((parsed.data.offers && parsed.data.offers.length > 0 ? parsed.data.offers : [parsed.data.offer]))) as Offer[];
@@ -76,9 +76,12 @@ export async function PATCH(req: Request) {
       ? { paid_specialty: 'Médecine générale' }
       : {};
 
+  const overridesField = content_overrides && Object.keys(content_overrides).length > 0
+    ? { content_overrides } : {};
+
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields }
+      ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields, ...overridesField }
       : {
           type: 'college' as const,
           colleges: collegesAvecBonus,
@@ -88,6 +91,7 @@ export async function PATCH(req: Request) {
           ...meta,
           ...specialtyFields,
           ...voieFields,
+          ...overridesField,
         };
 
   const { error } = await (admin as any)

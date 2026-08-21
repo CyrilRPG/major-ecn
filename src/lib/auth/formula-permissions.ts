@@ -34,6 +34,16 @@ function rowToAccess(row: Row): ContentAccess {
   };
 }
 
+export function applyContentOverrides(base: ContentAccess, overrides: Record<string, boolean>): ContentAccess {
+  const result = { ...base };
+  for (const [key, value] of Object.entries(overrides)) {
+    if (key in result) {
+      (result as Record<string, boolean>)[key] = value;
+    }
+  }
+  return result;
+}
+
 /**
  * Variante à client injecté — utilisable hors contexte React (routes /api/mobile,
  * émission de licence avec le client service-role, etc.). Pas de mémoïsation.
@@ -61,7 +71,9 @@ export async function fetchContentAccessForScopeWith(
   const offers = Array.from(new Set(scopeOffers(scope)));
   if (offers.length === 0) return getContentAccess('decouverte');
   const list = await Promise.all(offers.map((o) => fetchContentAccessWith(client, o)));
-  return list.reduce(mergeAccess);
+  const base = list.reduce(mergeAccess);
+  if (!scope.content_overrides) return base;
+  return applyContentOverrides(base, scope.content_overrides);
 }
 
 /**
@@ -86,11 +98,14 @@ export const fetchContentAccessMulti = cache(async (offersKey: string): Promise<
   return list.reduce(mergeAccess);
 });
 
-/** Accès (union) pour un scope, tenant compte du multi-formules (`offers`). */
-export function fetchContentAccessForScope(scope: PermissionScope): Promise<ContentAccess> {
+/** Accès (union) pour un scope, tenant compte du multi-formules (`offers`)
+ *  et des éventuelles surcharges individuelles (`content_overrides`). */
+export async function fetchContentAccessForScope(scope: PermissionScope): Promise<ContentAccess> {
   // Clé de cache stable : liste triée et dédoublonnée.
   const key = Array.from(new Set(scopeOffers(scope))).sort().join(',');
-  return fetchContentAccessMulti(key);
+  const base = await fetchContentAccessMulti(key);
+  if (!scope.content_overrides) return base;
+  return applyContentOverrides(base, scope.content_overrides);
 }
 
 /** Libellés des formules (offres) — alignés sur la page Config Permissions. */

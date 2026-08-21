@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState, useTransition } from 'react';
+import { useCallback, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Check, ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
@@ -52,6 +52,18 @@ type BatchSeance = {
   deniedUserIds: string[];
   allowedUserIds: string[];
   supports: BatchSupport[];
+};
+
+/* ------------------------------------------------------------------ */
+/*  BatchChanges — modifications groupées d'une vidéo existante        */
+/* ------------------------------------------------------------------ */
+
+type BatchChanges = {
+  rename?: string;
+  replaceLink?: string;
+  audience?: { voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[] };
+  supportRenames?: { supportId: string; titre: string }[];
+  supportAudiences?: { supportId: string; differentes: boolean; voies: string[]; offers: string[] }[];
 };
 
 /* ------------------------------------------------------------------ */
@@ -670,31 +682,42 @@ export function VideoManager({
                 <VideoEditPanel
                   video={v}
                   pending={pending}
-                  onRename={(t) => run(() => renameVideoAction({ videoId: v.id, titre: t }))}
-                  onReplaceLink={(l) => run(() => replaceVideoLinkAction({ videoId: v.id, lien: l }))}
+                  onSaveAll={(changes) =>
+                    run(async () => {
+                      if (changes.rename) {
+                        const r = await renameVideoAction({ videoId: v.id, titre: changes.rename });
+                        if ('error' in r) return r;
+                      }
+                      if (changes.replaceLink) {
+                        const r = await replaceVideoLinkAction({ videoId: v.id, lien: changes.replaceLink });
+                        if ('error' in r) return r;
+                      }
+                      if (changes.audience) {
+                        const r = await updateVideoAudienceAction({
+                          videoId: v.id, ...changes.audience,
+                        });
+                        if ('error' in r) return r;
+                      }
+                      for (const sr of changes.supportRenames ?? []) {
+                        const r = await renameVideoSupportAction(sr);
+                        if ('error' in r) return r;
+                      }
+                      for (const sa of changes.supportAudiences ?? []) {
+                        const r = await updateVideoSupportAudienceAction(sa);
+                        if ('error' in r) return r;
+                      }
+                      return { ok: true as const };
+                    })
+                  }
                   onAddSupports={(files) =>
                     run(async () => {
                       const err = await uploadSupports(v.id, files);
                       return err ? { error: err } : { ok: true };
                     })
                   }
-                  onRenameSupport={(supportId, titre) =>
-                    run(() => renameVideoSupportAction({ supportId, titre }))
-                  }
                   onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
                   onMoveSupport={(supportId, direction) =>
                     run(() => moveVideoSupportAction({ supportId, direction }))
-                  }
-                  onSupportAudience={(supportId, differentes, sVoies, sOffers) =>
-                    run(() => updateVideoSupportAudienceAction({
-                      supportId, differentes, voies: sVoies, offers: sOffers,
-                    }))
-                  }
-                  onAudience={(nextVoies, nextOffers, nextDenied, nextAllowed) =>
-                    run(() => updateVideoAudienceAction({
-                      videoId: v.id, voies: nextVoies, offers: nextOffers,
-                      deniedUserIds: nextDenied, allowedUserIds: nextAllowed,
-                    }))
                   }
                   studentPickerProps={studentPickerProps}
                 />
@@ -1054,29 +1077,28 @@ function BatchSeanceCard({
 /*  VideoEditPanel — édition d'une vidéo existante                     */
 /* ------------------------------------------------------------------ */
 
+type SupportEditState = {
+  titre: string;
+  differentes: boolean;
+  voies: string[];
+  offers: string[];
+};
+
 function VideoEditPanel({
   video,
   pending,
-  onRename,
-  onReplaceLink,
+  onSaveAll,
   onAddSupports,
-  onRenameSupport,
   onRemoveSupport,
   onMoveSupport,
-  onSupportAudience,
-  onAudience,
   studentPickerProps,
 }: {
   video: ManagedVideo;
   pending: boolean;
-  onRename: (titre: string) => void;
-  onReplaceLink: (lien: string) => void;
+  onSaveAll: (changes: BatchChanges) => void;
   onAddSupports: (files: File[]) => void;
-  onRenameSupport: (supportId: string, titre: string) => void;
   onRemoveSupport: (supportId: string) => void;
   onMoveSupport: (supportId: string, direction: 'up' | 'down') => void;
-  onSupportAudience: (supportId: string, differentes: boolean, voies: string[], offers: string[]) => void;
-  onAudience: (voies: string[], offers: string[], deniedUserIds: string[], allowedUserIds: string[]) => void;
   studentPickerProps: {
     students: StudentLite[] | null; loading: boolean; error: string | null; onLoad: () => void;
   };
@@ -1087,12 +1109,93 @@ function VideoEditPanel({
   const [offers, setOffers] = useState<string[]>(video.offers);
   const [denied, setDenied] = useState<string[]>(video.denied_user_ids);
   const [allowed, setAllowed] = useState<string[]>(video.allowed_user_ids);
+
+  const [supportEdits, setSupportEdits] = useState<Record<string, SupportEditState>>(() => {
+    const init: Record<string, SupportEditState> = {};
+    for (const s of video.supports) {
+      const has = (s.voies?.length ?? 0) > 0 || (s.offers?.length ?? 0) > 0;
+      init[s.id] = {
+        titre: s.titre,
+        differentes: has,
+        voies: s.voies && s.voies.length > 0 ? s.voies : video.voies,
+        offers: s.offers && s.offers.length > 0 ? s.offers : video.offers,
+      };
+    }
+    return init;
+  });
+
+  function getSupportEdit(doc: VideoSupportDoc): SupportEditState {
+    return supportEdits[doc.id] ?? {
+      titre: doc.titre,
+      differentes: (doc.voies?.length ?? 0) > 0 || (doc.offers?.length ?? 0) > 0,
+      voies: doc.voies && doc.voies.length > 0 ? doc.voies : video.voies,
+      offers: doc.offers && doc.offers.length > 0 ? doc.offers : video.offers,
+    };
+  }
+
+  function updateSupportEdit(id: string, patch: Partial<SupportEditState>) {
+    setSupportEdits((prev) => {
+      const current = prev[id] ?? getSupportEdit(video.supports.find((s) => s.id === id)!);
+      return { ...prev, [id]: { ...current, ...patch } };
+    });
+  }
+
   const memeListe = (a: string[], b: string[]) => a.slice().sort().join() === b.slice().sort().join();
-  const audienceModifiee =
-    !memeListe(voies, video.voies)
-    || !memeListe(offers, video.offers)
-    || !memeListe(denied, video.denied_user_ids)
-    || !memeListe(allowed, video.allowed_user_ids);
+
+  const isDirty = useMemo(() => {
+    if (titre.trim() !== video.titre) return true;
+    if (lien.trim()) return true;
+    if (!memeListe(voies, video.voies)) return true;
+    if (!memeListe(offers, video.offers)) return true;
+    if (!memeListe(denied, video.denied_user_ids)) return true;
+    if (!memeListe(allowed, video.allowed_user_ids)) return true;
+    for (const s of video.supports) {
+      const edit = getSupportEdit(s);
+      if (edit.titre.trim() !== s.titre) return true;
+      const had = (s.voies?.length ?? 0) > 0 || (s.offers?.length ?? 0) > 0;
+      if (edit.differentes !== had) return true;
+      if (edit.differentes) {
+        if (!memeListe(edit.voies, s.voies ?? [])) return true;
+        if (!memeListe(edit.offers, s.offers ?? [])) return true;
+      }
+    }
+    return false;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [titre, lien, voies, offers, denied, allowed, supportEdits, video]);
+
+  function handleSaveAll() {
+    const changes: BatchChanges = {};
+    if (titre.trim() && titre.trim() !== video.titre) changes.rename = titre.trim();
+    if (lien.trim()) changes.replaceLink = lien.trim();
+    const audienceChanged =
+      !memeListe(voies, video.voies) || !memeListe(offers, video.offers)
+      || !memeListe(denied, video.denied_user_ids) || !memeListe(allowed, video.allowed_user_ids);
+    if (audienceChanged) {
+      changes.audience = { voies, offers, deniedUserIds: denied, allowedUserIds: allowed };
+    }
+    const renames: NonNullable<BatchChanges['supportRenames']> = [];
+    const audiences: NonNullable<BatchChanges['supportAudiences']> = [];
+    for (const s of video.supports) {
+      const edit = getSupportEdit(s);
+      if (edit.titre.trim() && edit.titre.trim() !== s.titre) {
+        renames.push({ supportId: s.id, titre: edit.titre.trim() });
+      }
+      const had = (s.voies?.length ?? 0) > 0 || (s.offers?.length ?? 0) > 0;
+      const audienceModified = edit.differentes !== had
+        || (edit.differentes && (!memeListe(edit.voies, s.voies ?? []) || !memeListe(edit.offers, s.offers ?? [])));
+      if (audienceModified) {
+        audiences.push({
+          supportId: s.id,
+          differentes: edit.differentes,
+          voies: edit.differentes ? edit.voies : [],
+          offers: edit.differentes ? edit.offers : [],
+        });
+      }
+    }
+    if (renames.length > 0) changes.supportRenames = renames;
+    if (audiences.length > 0) changes.supportAudiences = audiences;
+    onSaveAll(changes);
+  }
 
   return (
     <div className="space-y-3 border-t border-(--color-border) bg-(--color-surface-soft) px-3 py-3">
@@ -1100,47 +1203,25 @@ function VideoEditPanel({
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
           Nom
         </label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={titre}
-            onChange={(e) => setTitre(e.target.value)}
-            className="min-w-0 flex-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm"
-          />
-          <Button
-            type="button"
-            size="sm"
-            variant="secondary"
-            disabled={pending || !titre.trim() || titre.trim() === video.titre}
-            onClick={() => onRename(titre)}
-          >
-            Renommer
-          </Button>
-        </div>
+        <input
+          type="text"
+          value={titre}
+          onChange={(e) => setTitre(e.target.value)}
+          className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm"
+        />
       </div>
 
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
           Remplacer la vidéo
         </label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={lien}
-            placeholder="Nouveau lien Bunny.net"
-            onChange={(e) => setLien(e.target.value)}
-            className="min-w-0 flex-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
-          />
-          <Button
-            type="button"
-            size="sm"
-            variant="secondary"
-            disabled={pending || !lien.trim()}
-            onClick={() => { onReplaceLink(lien); setLien(''); }}
-          >
-            Remplacer
-          </Button>
-        </div>
+        <input
+          type="text"
+          value={lien}
+          placeholder="Nouveau lien Bunny.net (laisser vide pour conserver)"
+          onChange={(e) => setLien(e.target.value)}
+          className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
+        />
       </div>
 
       <div>
@@ -1170,18 +1251,6 @@ function VideoEditPanel({
             onChange={setAllowed}
           />
         </div>
-        {audienceModifiee && (
-          <Button
-            type="button"
-            size="sm"
-            variant="secondary"
-            className="mt-2"
-            disabled={pending}
-            onClick={() => onAudience(voies, offers, denied, allowed)}
-          >
-            Enregistrer l'accès
-          </Button>
-        )}
       </div>
 
       <div>
@@ -1198,27 +1267,41 @@ function VideoEditPanel({
                 index={idx}
                 total={video.supports.length}
                 pending={pending}
-                videoVoies={video.voies}
-                videoOffers={video.offers}
-                onRename={(t) => onRenameSupport(doc.id, t)}
+                editState={getSupportEdit(doc)}
+                onEditChange={(patch) => updateSupportEdit(doc.id, patch)}
                 onRemove={() => onRemoveSupport(doc.id)}
                 onMove={(dir) => onMoveSupport(doc.id, dir)}
-                onAudience={(differentes, sVoies, sOffers) => onSupportAudience(doc.id, differentes, sVoies, sOffers)}
               />
             ))}
           </ul>
         )}
 
         <SupportsDropzone
-          libelle={video.supports.length > 0 ? 'Ajouter d’autres PDF' : 'Ajouter un ou plusieurs PDF'}
+          libelle={video.supports.length > 0 ? "Ajouter d’autres PDF" : "Ajouter un ou plusieurs PDF"}
           disabled={pending}
           onFiles={onAddSupports}
         />
         <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-          Chaque support prend pour nom celui de son fichier, sans l'extension ; il se renomme
-          dans la liste ci-dessus. L'élève ouvre l'onglet « Support de la séance » et y retrouve
+          Chaque support prend pour nom celui de son fichier, sans l&apos;extension ; il se renomme
+          dans la liste ci-dessus. L&apos;élève ouvre l&apos;onglet « Support de la séance » et y retrouve
           tous les documents, filigranés à son nom et non téléchargeables.
         </p>
+      </div>
+
+      <div className="flex items-center gap-3 border-t border-(--color-border) pt-3">
+        <Button
+          type="button"
+          disabled={pending || !isDirty}
+          onClick={handleSaveAll}
+        >
+          {pending ? <Loader2 className="animate-spin" /> : <Check />}
+          Enregistrer
+        </Button>
+        {isDirty && (
+          <p className="text-[11px] font-medium text-amber-600">
+            Modifications non enregistrées
+          </p>
+        )}
       </div>
     </div>
   );
@@ -1229,35 +1312,19 @@ function VideoEditPanel({
 /* ------------------------------------------------------------------ */
 
 function SupportLigne({
-  doc, index, total, pending, videoVoies, videoOffers, onRename, onRemove, onMove, onAudience,
+  doc, index, total, pending,
+  editState, onEditChange,
+  onRemove, onMove,
 }: {
   doc: VideoSupportDoc;
   index: number;
   total: number;
   pending: boolean;
-  videoVoies: string[];
-  videoOffers: string[];
-  onRename: (titre: string) => void;
+  editState: SupportEditState;
+  onEditChange: (patch: Partial<SupportEditState>) => void;
   onRemove: () => void;
   onMove: (direction: 'up' | 'down') => void;
-  onAudience: (differentes: boolean, voies: string[], offers: string[]) => void;
 }) {
-  const [titre, setTitre] = useState(doc.titre);
-  const aDesPermsPropres = (doc.voies?.length ?? 0) > 0 || (doc.offers?.length ?? 0) > 0;
-  const [differentes, setDifferentes] = useState(aDesPermsPropres);
-  const [voies, setVoies] = useState<string[]>(doc.voies && doc.voies.length > 0 ? doc.voies : videoVoies);
-  const [offers, setOffers] = useState<string[]>(doc.offers && doc.offers.length > 0 ? doc.offers : videoOffers);
-
-  const memeListe = (a: string[], b: string[]) => a.slice().sort().join() === b.slice().sort().join();
-  const modifie = differentes && (!aDesPermsPropres
-    || !memeListe(voies, doc.voies ?? [])
-    || !memeListe(offers, doc.offers ?? []));
-
-  function basculeDifferentes(next: boolean) {
-    setDifferentes(next);
-    if (!next && aDesPermsPropres) onAudience(false, [], []);
-  }
-
   return (
     <li className="rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1.5">
       <div className="flex items-center gap-2">
@@ -1286,15 +1353,10 @@ function SupportLigne({
         <Paperclip className="h-3.5 w-3.5 shrink-0 text-(--color-ink-muted)" />
         <input
           type="text"
-          value={titre}
-          onChange={(e) => setTitre(e.target.value)}
+          value={editState.titre}
+          onChange={(e) => onEditChange({ titre: e.target.value })}
           className="min-w-0 flex-1 bg-transparent text-sm text-(--color-ink) outline-none"
         />
-        {titre.trim() !== doc.titre && titre.trim() !== '' && (
-          <Button type="button" size="sm" variant="secondary" disabled={pending} onClick={() => onRename(titre)}>
-            Renommer
-          </Button>
-        )}
         <button
           type="button"
           disabled={pending}
@@ -1309,38 +1371,26 @@ function SupportLigne({
       <label className="mt-1.5 flex items-center gap-2 pl-5 text-[12.5px] text-(--color-ink)">
         <input
           type="checkbox"
-          checked={differentes}
+          checked={editState.differentes}
           disabled={pending}
-          onChange={(e) => basculeDifferentes(e.target.checked)}
+          onChange={(e) => onEditChange({ differentes: e.target.checked })}
           className="h-3.5 w-3.5 accent-[#7C3AED]"
         />
         Permissions différentes
-        {!differentes && (
+        {!editState.differentes && (
           <span className="text-[11px] text-(--color-ink-muted)">(hérite de la vidéo)</span>
         )}
       </label>
 
-      {differentes && (
+      {editState.differentes && (
         <div className="mt-2 pl-5">
           <AudiencePicker
-            voies={voies}
-            offers={offers}
+            voies={editState.voies}
+            offers={editState.offers}
             disabled={pending}
-            onVoies={setVoies}
-            onOffers={setOffers}
+            onVoies={(v) => onEditChange({ voies: v })}
+            onOffers={(o) => onEditChange({ offers: o })}
           />
-          {modifie && (
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              className="mt-2"
-              disabled={pending}
-              onClick={() => onAudience(true, voies, offers)}
-            >
-              Enregistrer les permissions du support
-            </Button>
-          )}
         </div>
       )}
     </li>

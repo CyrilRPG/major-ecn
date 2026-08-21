@@ -162,7 +162,7 @@ export function StudentsTable({
 }: {
   students: Student[];
   colleges: { id: string; nom: string; parentId?: string | null }[];
-  offers: { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[] }[];
+  offers: { id: 'essentiel' | 'intensif' | 'approfondi'; label: string; unlocks: string[]; access: import('@/lib/auth/permissions').ContentAccess }[];
   sessions?: EvcSessionOption[];
 }) {
   const [q, setQ] = useState('');

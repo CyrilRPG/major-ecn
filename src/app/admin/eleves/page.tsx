@@ -27,11 +27,15 @@ export default async function ElevesPage() {
   // Les formules ne dépendent d'aucune des autres lectures : elles rejoignent
   // la même vague au lieu d'ajouter un troisième aller-retour derrière.
   const formules = Promise.all(
-    ADMIN_OFFERS.map(async (offer) => ({
-      id: offer,
-      label: OFFER_LABELS[offer],
-      unlocks: unlockedLabels(await fetchContentAccess(offer)),
-    })),
+    ADMIN_OFFERS.map(async (offer) => {
+      const access = await fetchContentAccess(offer);
+      return {
+        id: offer,
+        label: OFFER_LABELS[offer],
+        unlocks: unlockedLabels(access),
+        access,
+      };
+    }),
   );
 
   const [{ data: students }, { data: fac }, { data: evcSessions }, { data: activite }, offers] = await Promise.all([

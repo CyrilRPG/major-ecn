@@ -39,6 +39,10 @@ export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: st
    *  'interne' → pas de QROC ; 'externe' → pas de QCM/DP (sauf item Révisions).
    *  null/absent → aucune restriction de voie. Appliqué côté DB (RLS). */
   voie?: Voie | null;
+  /** Surcharges individuelles des permissions de contenu (admin). Les clés sont
+   *  les noms camelCase de ContentAccess (fiche, video, qcm…). true/false écrase
+   *  le défaut de la formule. Absent ⇒ aucune surcharge. */
+  content_overrides?: Record<string, boolean>;
 };
 
 export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';
