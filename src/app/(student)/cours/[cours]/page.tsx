@@ -9,6 +9,7 @@ import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
+import { estItemAnnales } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
@@ -63,7 +64,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // conservent leurs contrôles d'accès utilisateur.
   const { data: qcmSeriesForAvailability } = await createAdminClient()
     .from('qcm_series')
-    .select('type')
+    .select('type, label')
     .eq('cours_id', coursId);
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
@@ -210,11 +211,31 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       && (!access || access.flashcards ? (flashReviews ?? 0) > 0 : true);
   const interrogationUnlocked = allDone || coursId === PNEUMO_COURS_ID;
 
+  // Item dédié aux ANNALES EVC (« Annales - Médecine générale »,
+  // « Révisions - <Collège> » ne portant que des annales) : une seule carte,
+  // DP · QI. Les six autres cartes du parcours y seraient toutes vides.
+  const isAnnalesItem = estItemAnnales({
+    series: qcmSeriesForAvailability ?? [],
+    fiches: c.fiches,
+    videos: c.videos,
+    flashcards: c.flashcards,
+  });
+
   // Cartes du parcours dans l'ordre pédagogique :
+  //  - Annales      : une seule carte « Dossiers progressifs & QI »
   //  - Méthodologie : une seule carte « Cours vidéo » à venir
   //  - Découverte   : fiche → vidéo (LOCKED popup) → DP & QI → flashcards
   //  - Standard     : fiche → vidéo → DP & QI → flashcards → interrogation
-  let actions: Action[] = isMethodologie
+  let actions: Action[] = isAnnalesItem
+    ? [
+        {
+          href: `/cours/${coursId}/qcm`, label: 'Dossiers progressifs & QI',
+          desc: 'Les annales EVC officielles, corrigées et justifiées par l’équipe Major ECN.',
+          Icon: ClipboardCheck, accent: '#D97706', bg: '#FEF3E2',
+          available: true,
+        },
+      ]
+    : isMethodologie
     ? [
         {
           // Cours vidéo « À venir » : carte non cliquable, badge orange.

@@ -50,7 +50,17 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
   if (!input) return '';
   const html = input.length > maxLen * 4 ? input.slice(0, maxLen * 4) : input;
   const out: string[] = [];
-  const re = /<[^>]+>/g;
+  // Une balise HTML commence par « < » IMMÉDIATEMENT suivi d'une lettre (ou de
+  // « / » puis d'une lettre) : c'est la règle du parseur des navigateurs.
+  // Un « < » isolé — « PaO₂/FiO₂ < 200 mmHg », « 10 < MMSE < 20 » — est du
+  // TEXTE, et doit être échappé, pas interprété.
+  //
+  // INCIDENT : avec l'ancien motif `<[^>]+>`, un « < » de comparaison ouvrait
+  // une pseudo-balise qui courait jusqu'au « > » suivant, c'est-à-dire jusqu'à
+  // la fin de la balise <b> d'après. Le nom lu (« PaO », « MMSE ») n'étant pas
+  // dans la liste blanche, TOUT le fragment était supprimé : le critère
+  // disparaissait de la correction et une balise fermante orpheline restait.
+  const re = /<\/?[a-zA-Z][^>]*>/g;
   let last = 0;
   let m: RegExpExecArray | null;
 
@@ -59,7 +69,7 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
     last = re.lastIndex;
 
     const raw = m[0];
-    const tm = raw.match(/^<\s*(\/?)\s*([a-zA-Z0-9]+)([\s\S]*?)\/?\s*>$/);
+    const tm = raw.match(/^<(\/?)([a-zA-Z0-9]+)([\s\S]*?)\/?\s*>$/);
     if (!tm) continue; // balise malformée → supprimée
 
     const closing = tm[1] === '/';

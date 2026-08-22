@@ -12,6 +12,7 @@ import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-b
 import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
+import { estSerieAnnale } from '@/lib/data/annales';
 
 type SerieListRow = SerieAccessRow & {
   order_index: number;
@@ -62,6 +63,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     .order('order_index');
   if (seriesError) throw seriesError;
   const hideEntrainement = access && !access.entrainement;
+  // Item dédié aux annales EVC : toutes ses séries sont des annales.
+  const itemDAnnales = (rawSeries ?? []).length > 0
+    && (rawSeries as SerieListRow[]).every((s) => estSerieAnnale(s.label));
   const userOffers = scopeOffers(scope);
   const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
   // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
@@ -267,8 +271,10 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
       )}
 
       {/* Entraînements verrouillés (MG uniquement) — template vert trophée + cadenas.
-          Au clic, popup "Information importante - Nouveaux contenus en cours". */}
-      {/^m[eé]decine\s+g[eé]n[eé]rale/i.test(c.matieres.nom) && (
+          Au clic, popup "Information importante - Nouveaux contenus en cours".
+          Jamais sur un item dédié aux annales EVC : son contenu est complet et
+          définitif, rien n'y est « en cours d'intégration ». */}
+      {/^m[eé]decine\s+g[eé]n[eé]rale/i.test(c.matieres.nom) && !itemDAnnales && (
         <LockedTrainingsList
           startIndex={series?.length ?? 0}
           title="Entraînements à venir"
