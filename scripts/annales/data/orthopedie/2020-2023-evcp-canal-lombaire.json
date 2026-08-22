@@ -1,0 +1,88 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf": {
+      "atelier": "annales-orthopedie/corrections-sujets-2020-2023",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Ce corrigé porte deux dossiers de canal lombaire étroit, l’un de 2020 et l’autre de 2023, absents des diaporamas « EVCP 2020 correction » et « connaissances pratiques-2023 » : ce ne sont pas des doublons. Le PDF a un encodage de police défectueux (« ti » rendu « 5 », « tt » rendu « > ») : le texte a été relu sur le rendu image des pages."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier canal lombaire étroit",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf",
+      "orderIndex": 58,
+      "vignette": "Patient adressé pour des lombalgies et une limitation du périmètre de marche. Antécédents notables : thyroïdectomie et prothèses totales de genou bilatérales.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQue recherchez-vous à l’interrogatoire et à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : orientation vers un canal lombaire étroit (claudication radiculaire intermittente, signe du Caddie, antécédents de chirurgie lombaire), vers une fracture lombaire (traumatisme, ostéodensitométrie, suivi oncologique) ou vers d’autres causes (AOMI, pathologies orthopédiques), et les thérapies antalgiques déjà entreprises. À l’examen : examen neurologique complet avec recherche d’un déficit moteur, de signes d’atteinte médullaire, des pouls périphériques, examen de la hanche et recherche de signes de gravité (syndrome de la queue de cheval).",
+          "correctionGenerale": "<b>Interrogatoire du patient</b>\n• Orientation vers un canal lombaire étroit :\n  – recherche d’un syndrome de claudication radiculaire / neurogène intermittent à la marche : lomboradiculalgie à l’effort, périmètre de marche limité, signe du Caddie positif\n  – antécédents de chirurgie lombaire (hernie, etc.)\n• Orientation vers une fracture lombaire :\n  – notion de traumatisme lombaire\n  – notion d’ostéodensitométrie dans le passé\n  – suivi oncologique dans le cadre de la thyroïdectomie\n• Orientation vers d’autres causes :\n  – notion d’AOMI : douleur permanente, ulcères, facteurs de risque cardiovasculaire\n  – pathologies orthopédiques : suivi des PTG, pathologie de hanche éventuelle\n• Thérapies antalgiques médicamenteuses ou non médicamenteuses entreprises\n\n<b>Examen clinique</b>\nExamen neurologique complet :\n• Recherche d’un déficit neurologique moteur / sensitif radiculaire — <b>signe de gravité : déficit moteur < 3/5</b>\n• Atteinte radiculaire : Lasègue / Léri\n• Recherche d’un syndrome rachidien, douleur à la palpation des épineuses (pour une fracture éventuelle)\n• Recherche de signes d’atteinte médullaire : atteinte pyramidale (Babinski, ROT vifs, diffus, polycinétiques), atteinte sensitive et proprioceptive\n• Recherche des pouls périphériques, troubles trophiques à la recherche d’une atteinte vasculaire\n• Examen de la hanche : amplitudes articulaires, limitation douloureuse\n• Recherche des signes de gravité : examen du périnée et des sphincters à la recherche d’un syndrome de la queue de cheval, résidu post-mictionnel, déficit moteur\n\n<b>Retentissement sur la qualité de vie du patient.</b>\n<b>Activité professionnelle passée.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels examens complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "En première intention : radiographies en charge +/− clichés dynamiques, IRM du rachis lombaire non injectée en T1 et T2 Fat Sat (complétée par une IRM médullaire en cas d’atteinte pyramidale), et scanner du rachis lombaire pour la trame osseuse. En seconde intention : ostéodensitométrie, bilan phosphocalcique complet et électroneuromyogramme des membres inférieurs.",
+          "correctionGenerale": "<b>Première intention</b>\n• Radiographies en charge +/− clichés dynamiques : recherche d’une fracture, d’un déséquilibre sagittal, d’une arthrose\n• IRM du rachis lombaire non injectée, séquences T1 / T2 Fat Sat :\n  – en fonction de l’évaluation clinique, avec atteinte pyramidale : compléter par une IRM médullaire\n  – recherche d’une sténose lombaire dégénérative\n• Scanner du rachis lombaire pour évaluer la trame osseuse\n\n<b>Seconde intention</b>\n• Ostéodensitométrie\n• Bilan phosphocalcique complet\n• Électroneuromyogramme des membres inférieurs"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDécrivez l’imagerie.",
+          "images": ["annales-orthopedie/corrections-sujets-2020-2023/figures/img-003-024.png"],
+          "reponseAttendue": "IRM du rachis lombaire en séquences T2, coupes axiales et sagittales, montrant un canal lombaire étroit multiétagé L2-L3 / L3-L4 / L4-L5, prédominant en L5-S1 (classification de Schizas D), avec également une fracture du coin antéro-supérieur de L1 sans recul du mur postérieur et un début de cyphose.",
+          "correctionGenerale": "IRM du rachis lombaire en séquences T2, coupes axiales et sagittales, montrant un canal lombaire étroit multiétagé L2-L3 / L3-L4 / L4-L5, majoritairement en L5-S1.\n\n• <b>L2-L3</b> : débord discal et sténose foraminale bilatérale, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural\n• <b>L3-L4</b> : débord discal et sténose foraminale bilatérale prédominant à gauche, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural\n• <b>L4-L5</b> : débord discal et sténose foraminale bilatérale, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural ; discopathie significative avec diminution de la hauteur discale et œdème du plateau inférieur de L4\n• <b>L5-S1</b> : compression antérieure — discopathie importante avec perte de hauteur du disque et œdème des plateaux de L5 et S1, hernie centrale et paramédiane avec compression des racines S1 dans les récessus ; arthrose des articulations zygapophysaires ; hypertrophie des ligaments jaunes responsable d’une sténose sévère du fourreau dural avec disparition de la graisse épidurale\n\n→ <b>Classification de Schizas D</b>\n\nIl existe également une fracture du coin antéro-supérieur de L1, sans recul du mur postérieur, et un début de cyphose."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelle prise en charge proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Tableau de canal lombaire étroit prédominant en L5-S1 : traitement médical en première intention (repos relatif, ceinture lombaire, antalgiques et AINS en cure courte, infiltrations épidurales et/ou articulaires postérieures, évaluation rhumatologique avec discussion d’un traitement anti-ostéoporotique, kinésithérapie) ; traitement chirurgical en cas d’échec après 8 semaines, après bilan (ENMG, scanner, clichés EOS), par décompression postérieure +/− arthrodèse.",
+          "correctionGenerale": "Il s’agit d’un tableau de canal lombaire étroit, principalement en L5-S1, où la sténose est la plus importante.\n\n<b>Traitement médical en première intention</b>\n• Repos relatif, ceinture de maintien lombaire\n• Antalgiques / cure d’AINS sur une courte durée en cas de majoration des symptômes\n• Discussion d’une ou trois infiltrations : épidurales et/ou des articulaires postérieures\n• Évaluation rhumatologique : optimisation du traitement médical, discussion d’un traitement anti-ostéoporotique du fait de la carence en vitamine D et de la fracture a priori ostéoporotique de L1, après bilan complet (ostéodensitométrie, phosphocalcique)\n• Kinésithérapie lombaire : renforcement musculaire, soulagement des douleurs, autonomisation, prévention de l’aggravation\n\n<b>Traitement chirurgical</b> si échec du traitement médical bien conduit, après évaluation radiologique préchirurgicale à 8 semaines :\n• ENMG\n• Scanner du rachis\n• Clichés radiologiques grand format (EOS)\n→ Discussion d’une décompression postérieure +/− arthrodèse"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2023 - EVCP - Dossier canal lombaire étroit",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf",
+      "orderIndex": 59,
+      "vignette": "Patient présentant des lombo-radiculalgies à l’effort avec un périmètre de marche limité, améliorées à la montée des escaliers et aggravées à la descente.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel diagnostic évoquez-vous et quels sont les diagnostics différentiels ?",
+          "images": [],
+          "reponseAttendue": "Un tableau de claudication radiculaire intermittente à la marche évoquant en premier lieu un canal lombaire étroit ; il faut éliminer les pathologies vasculaires artérielles ou veineuses des membres inférieurs et les pathologies de hanche (coxarthrose, fracture).",
+          "correctionGenerale": "Il s’agit d’un tableau de claudication radiculaire intermittente à la marche, avec un périmètre de marche limité, des lombo-radiculalgies à l’effort et un équivalent du signe du Caddie (amélioration lors de la montée des escaliers, aggravation lors de la descente).\n\nCe tableau fait évoquer en premier lieu le diagnostic de <b>canal lombaire étroit</b>.\n\nIl est essentiel d’éliminer également d’autres diagnostics différentiels :\n• Pathologies vasculaires artérielles / veineuses des membres inférieurs\n• Pathologies de la hanche : coxarthrose, fracture"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie.",
+          "images": [],
+          "reponseAttendue": "Radiographie du rachis lombaire en charge, de face et de profil : signes d’arthrose avec pincement discal L5-S1, perte de hauteur du disque et ostéophytes, arthrose des articulations postérieures, sténose foraminale L5-S1 et antélisthésis de L4 sur L5.",
+          "correctionGenerale": "Radiographie du rachis lombaire en charge, de face et de profil. On visualise des signes d’arthrose :\n• Composante antérieure : pincement discal L5-S1 avec perte de hauteur du disque, présence d’ostéophytes\n• Arthrose des articulations zygapophysaires postérieures\n• Sténose foraminale L5-S1\n• Antélisthésis de L4 sur L5"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDécrivez l’IRM.",
+          "images": [],
+          "reponseAttendue": "IRM du rachis lombaire non injectée, séquences T1 et T2, coupes sagittales : en L4-L5, discopathie avec débord discal et compression postérieure par hypertrophie du ligament longitudinal postérieur et des articulaires postérieures, responsable d’une sténose du fourreau dural ; en L5-S1, discopathie avec perte de hauteur du disque classée Modic 1.",
+          "correctionGenerale": "IRM du rachis lombaire non injectée, en séquences T1 et T2, en coupes sagittales.\n\n• <b>Espace L4-L5</b> : discopathie avec débord discal ; compression postérieure avec hypertrophie du ligament longitudinal postérieur et hypertrophie des articulaires postérieures (mieux visibles en coupes axiales), le tout responsable d’une sténose du fourreau dural\n• <b>Espace L5-S1</b> : discopathie avec perte de hauteur du disque, classée Modic 1 (réaction inflammatoire), avec hypersignal T1/T2 au niveau du plateau inférieur de L5 et du plateau supérieur de S1"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel geste chirurgical proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une libération du canal lombaire étroit par recalibrage lombaire L4-L5 et L5-S1 (spino-laminectomie partielle de L4, complète de L5 et partielle de S1), ablation du ligament jaune, arthrectomie partielle bilatérale et vérification de la liberté des racines L5 et S1 ; deux techniques d’arthrodèse postérieure sont possibles, TLIF ou PLIF.",
+          "correctionGenerale": "Libération du canal lombaire étroit en réalisant un recalibrage lombaire L4-L5 et L5-S1 :\n• Spino-laminectomie partielle de L4, complète de L5 et partielle de S1\n• Ablation du ligament jaune\n• Arthrectomie partielle bilatérale\n• Vérification de la liberté des racines L5 et S1\n\nDeux techniques d’arthrodèse postérieure (ostéosynthèse postérieure + discectomie et mise en place d’une cage intersomatique) :\n• <b>TLIF</b> : arthrodèse intersomatique transforaminale (moins de risque neurologique)\n• <b>PLIF</b> : arthrodèse intersomatique par voie postérieure"
+        }
+      ]
+    }
+  ]
+}

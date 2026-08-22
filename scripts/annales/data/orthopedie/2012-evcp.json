@@ -1,0 +1,87 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP.53 2012 correction.pdf": {
+      "atelier": "annales-orthopedie/evcp-53-2012-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2012 - EVCP - Dossier 1",
+      "annee": 2012,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP.53 2012 correction.pdf",
+      "orderIndex": 10,
+      "vignette": "Un patient de 80 ans, opéré d’une prothèse de hanche pour une fracture du col 3 semaines auparavant, sans pathologie associée, est réadressé par son médecin traitant pour une fièvre évoluant depuis 48 heures.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelle est votre attitude diagnostique ?",
+          "images": [],
+          "reponseAttendue": "Examen clinique à la recherche d’un foyer infectieux (les 3 P : peau, poumons, pipi) et examen de la cicatrice opératoire, puis ECBU, hémocultures, bilan biologique avec CRP et NFS, radiographie de thorax et éventuelle ponction de hanche.",
+          "correctionGenerale": "<b>1) Examen clinique</b>\nRecherche d’un foyer infectieux — les 3 P : peau, poumons, pipi.\n• Dyspnée, toux ; auscultation pulmonaire à la recherche d’un foyer de crépitants\n• Signes fonctionnels urinaires (brûlures mictionnelles, pollakiurie), coloration des urines (urines foncées), bandelette urinaire\n• Examen de la cicatrice opératoire : inflammation péri-cicatricielle, écoulement\n\n<b>2) Examens complémentaires</b>\n• ECBU\n• Hémocultures\n• Bilan biologique avec dosage de la CRP, recherche d’une hyperleucocytose\n• Radiographie de thorax\n• +/− ponction de hanche"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nVous concluez à une infection aiguë sur la prothèse. Quelle est votre attitude thérapeutique ?",
+          "images": [],
+          "reponseAttendue": "Prise en charge médico-chirurgicale : reprise chirurgicale en urgence avec lavage, synovectomie et changement des pièces mobiles — la prothèse peut être conservée car l’infection date de moins d’un mois — associée à une antibiothérapie probabiliste débutée après les prélèvements et adaptée à l’antibiogramme.",
+          "correctionGenerale": "<b>Prise en charge médico-chirurgicale.</b>\nInfection précoce du site opératoire (< 1 mois) : reprise chirurgicale en urgence — chaque jour qui passe augmente le risque d’échec.\nLavage + synovectomie + changement des pièces mobiles. Conservation de la prothèse possible car < 1 mois (absence de biofilm). Le patient est informé du risque d’échec pouvant amener secondairement à une dépose-repose.\n\n<b>Sur le plan chirurgical</b>\n• Reprise de la voie d’abord\n• Parage « carcinologique » des tissus infectés\n• Prélèvements profonds multiples à visée bactériologique\n• Luxation de la prothèse\n• Synovectomie élargie\n• Lavage abondant (Pulsavac), remise au propre\n• Changement des pièces mobiles\n• Réduction, fermeture plan par plan avec drainage\n\n<b>Sur le plan médical</b>\n• Avis des infectiologues\n• Antibiothérapie probabiliste, secondairement adaptée à l’antibiogramme\n• Débutée dès la fin des prélèvements peropératoires\n• Souvent Tazocilline + vancomycine (ou daptomycine) +/− aminoside (gentamicine) si sepsis sévère"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuels sont les critères de surveillance ?",
+          "images": [],
+          "reponseAttendue": "Critères cliniques (température, hémodynamique, cicatrice, douleurs et reprise de l’appui) et paracliniques d’efficacité (décroissance de la CRP, hémocultures négatives, taux sérique d’antibiotique dans la cible) et de tolérance (fonctions rénale et hépatique, NFS), avec radiographie postopératoire.",
+          "correctionGenerale": "<b>1) Critères cliniques</b>\n• Température (décroissance)\n• Hémodynamique (tachycardie, hypotension…)\n• Cicatrice : absence d’écoulement, état de la peau péri-lésionnelle\n• Signes fonctionnels : douleurs, reprise de l’appui\n\n<b>2) Critères paracliniques</b>\nEfficacité du traitement :\n• Décroissance de la CRP, absence d’hyperleucocytose\n• Dosage du taux sérique de l’antibiotique dans la cible\n• Hémocultures négatives\nTolérance :\n• Fonction rénale : ionogramme, urée, créatininémie, calcul de la clairance\n• Fonction hépatique : ASAT, ALAT, GGT, PAL\n• Absence de pancytopénie : NFS\n\n<b>Radiographie postopératoire</b> : bon positionnement des implants, absence de luxation ou de fracture péri-prothétique."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2012 - EVCP - Dossier 2",
+      "annee": 2012,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP.53 2012 correction.pdf",
+      "orderIndex": 11,
+      "vignette": "Une femme âgée de 58 ans, sans antécédent connu, a fait une chute de sa hauteur il y a 3 jours. Elle consulte aux urgences pour des douleurs dorsales permanentes, persistantes et insomniantes depuis cette chute.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez votre examen clinique initial.",
+          "images": [],
+          "reponseAttendue": "Interrogatoire (mécanisme, antécédents, altération de l’état général, ménopause, caractéristiques de la douleur, signes neurologiques) puis examen physique : inspection de la statique rachidienne, examen neurologique complet avec score ASIA, cotation MRC, examen de la sensibilité, examen périnéal et réflexes ostéo-tendineux.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Mécanisme lésionnel, craquement audible\n• Antécédents médicaux, chirurgicaux\n• Signes généraux, altération de l’état général (perte de poids, amaigrissement)\n• Date de la ménopause, traitements substitutifs ?\n• Localisation des douleurs, cotation selon le score EVA\n• Prise d’antalgiques\n• Raideur, sensation d’instabilité\n• Signes neurologiques : paresthésies, sensation de faiblesse des membres\n\n<b>Examen clinique — inspection</b>\n• Analyse de la statique rachidienne (frontale et sagittale)\n• Raideur segmentaire\n• Ecchymose, déformation localisée, saillie d’une épineuse\n\n<b>Examen neurologique</b>\n• Détermination du score ASIA : cotation musculaire (MRC), examen de la sensibilité, examen périnéal\n• Recherche des réflexes ostéo-tendineux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels examens demandez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Radiographies standard du rachis thoraco-lombaire de face et de profil, complétées secondairement par un scanner en cas d’anomalie.",
+          "correctionGenerale": "• Radiographies standard du rachis thoraco-lombaire face + profil\n• Complétées secondairement par un TDM en cas d’anomalies"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nLa radiographie objective un tassement modéré de T8 avec ostéolyse. La patiente est hospitalisée. Quels éléments cliniques supplémentaires recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : altération de l’état général, antécédents familiaux néoplasiques, saignements gynécologiques ou digestifs, tabagisme. À l’examen : recherche d’un primitif — palpation des seins et de la thyroïde, auscultation pulmonaire, bandelette urinaire.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Signes généraux, altération de l’état général (perte de poids, amaigrissement)\n• Antécédents familiaux de pathologies néoplasiques\n• Saignements gynécologiques, sang dans les selles\n• Tabagisme\n\n<b>Examen clinique — recherche d’un primitif</b>\n• Palpation des seins, recherche d’un nodule\n• Palpation de la thyroïde\n• Auscultation pulmonaire\n• Bandelette urinaire : saignement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels examens complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Bilan local par TDM et IRM du rachis dorso-lombaire ; recherche du primitif par scintigraphie osseuse, TDM thoraco-abdomino-pelvien, échographie pelvienne, mammographie, marqueurs tumoraux, EPP et myélogramme ; diagnostic de certitude par biopsie ; bilan phosphocalcique à la recherche d’une hypercalcémie.",
+          "correctionGenerale": "<b>Bilan local</b>\n• TDM + IRM du rachis dorso-lombaire\n\n<b>Recherche du primitif</b>\n• Scintigraphie osseuse\n• TDM thoraco-abdomino-pelvien\n• Échographie pelvienne sus-pubienne et endovaginale (cancer de l’ovaire)\n• Mammographie bilatérale (cancer du sein)\n• Marqueurs tumoraux de différenciation : alpha-fœtoprotéine (CHC), calcitonine (cancer médullaire de la thyroïde), CA 15-3 (sein), CA 125 (ovaire), ACE (adénocarcinome)\n• EPP : pic monoclonal dans la zone des gammaglobulines (myélome)\n• Myélogramme\n\n<b>Diagnostic de certitude</b> = biopsie.\n\n<b>Complications</b>\n• Bilan phosphocalcique (hypercalcémie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelles sont vos principales hypothèses diagnostiques avant les résultats des examens complémentaires ?",
+          "images": [],
+          "reponseAttendue": "Métastases d’un cancer ostéophile (poumon, prostate, rein, sein, thyroïde) ou myélome.",
+          "correctionGenerale": "• Métastases de cancer ostéophile : poumon, prostate, rein, sein, thyroïde\n• Myélome"
+        }
+      ]
+    }
+  ]
+}

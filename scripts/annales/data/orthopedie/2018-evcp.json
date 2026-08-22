@@ -1,0 +1,202 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf": {
+      "atelier": "annales-orthopedie/evcp-2018-correction",
+      "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2018 - EVCP - Dossier 1",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf",
+      "orderIndex": 29,
+      "vignette": "Un homme de 25 ans est ramené par les pompiers aux urgences suite à un accident de moto, pour la prise en charge d’un traumatisme fermé isolé du membre supérieur droit. Il présente des paresthésies digitales. Une radiographie du poignet a été réalisée.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDonnez votre diagnostic.",
+          "images": ["annales-orthopedie/evcp-2018-correction/figures/recadre/img-002-008.png"],
+          "reponseAttendue": "Fracture-luxation trans-scapho-rétro-lunaire du carpe côté droit, type 2 de la classification de Witvoët et Allieu.",
+          "correctionGenerale": "• Fracture-luxation trans-scapho-rétro-lunaire du carpe, côté droit\n• Type 2 de la classification de Witvoët et Allieu"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nRappelez l’innervation sensitive de la main. Quel nerf est le plus probablement atteint ?",
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-006-025.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-006-026.png"
+          ],
+          "reponseAttendue": "L’innervation sensitive de la main est assurée par les nerfs médian, ulnaire et radial ; le nerf le plus probablement atteint ici est le nerf médian.",
+          "correctionGenerale": "L’innervation sensitive de la main est partagée entre le nerf médian, le nerf ulnaire et le nerf radial (voir les schémas ci-dessus).\n\nLe nerf le plus probablement atteint est le <b>nerf médian</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel(s) est (sont) le(s) examen(s) complémentaire(s) d’imagerie que vous demandez ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Aucun autre examen complémentaire n’est nécessaire au diagnostic, et ils ne doivent pas retarder la prise en charge.",
+          "correctionGenerale": "• Pas d’autre examen complémentaire nécessaire pour le diagnostic\n• Ils ne doivent pas retarder la prise en charge"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nPrincipes de la prise en charge thérapeutique.",
+          "images": [],
+          "reponseAttendue": "Réduction en urgence au bloc opératoire et stabilisation impérative : abord postérieur, neurectomie du nerf interosseux postérieur, ostéosynthèse du scaphoïde par vissage, brochage scapho-capitate et brochage triquétro-lunaire.",
+          "correctionGenerale": "• Réduction en urgence au bloc opératoire\n• Stabilisation impérative :\n  – Abord postérieur\n  – Neurectomie du nerf interosseux postérieur\n  – Ostéosynthèse du scaphoïde par vissage\n  – Brochage scapho-capitate\n  – Brochage triquétro-lunaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelles sont les complications prévisibles de ce traumatisme à moyen et long terme ?",
+          "images": [],
+          "reponseAttendue": "Syndrome du canal carpien, pseudarthrose du scaphoïde, SNAC, SLAC, arthrose post-traumatique, raideur et ostéonécrose du lunatum (maladie de Kienböck secondaire).",
+          "correctionGenerale": "• Syndrome du canal carpien\n• Pseudarthrose du scaphoïde\n• SNAC : <i>Scaphoid Nonunion Advanced Collapse</i>\n• SLAC : <i>Scapho-Lunate Advanced Collapse</i>\n• Arthrose post-traumatique\n• Raideur\n• Ostéonécrose du lunatum (maladie de Kienböck secondaire)\n\nBibliographie : L. Obert, F. Loisel, E. Jardin, N. Gasse, D. Lepage — <i>Lésions à haute énergie du poignet</i>."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2018 - EVCP - Dossier 2",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf",
+      "orderIndex": 30,
+      "vignette": "Une femme de 62 ans se présente aux urgences suite à une chute d’escabeau. Elle a une douleur et une impotence fonctionnelle du membre inférieur droit. Il existe une ouverture cutanée transversale sur la face médiale de la cheville, linéaire, mesurant 2 cm.\n\nVoici les radiographies réalisées en urgence.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez avec précision les radiographies.",
+          "images": ["annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"],
+          "reponseAttendue": "Radiographies de la cheville droite de face et de profil : fracture-luxation tri-malléolaire, interligamentaire dans la classification de Duparc et Alnot — trait fibulaire oblique, arrachement horizontal de la malléole médiale, pas d’atteinte de la syndesmose, luxation postéro-latérale du talus et fracture de la malléole postérieure type Volkmann.",
+          "correctionGenerale": "• Radiographie de la cheville droite de face et de profil\n• Fracture-luxation tri-malléolaire\n• Fracture interligamentaire de la classification de Duparc et Alnot :\n  – Trait fibulaire oblique\n  – Arrachement horizontal de la malléole médiale\n  – Pas d’atteinte de la syndesmose (pas de diastasis tibio-fibulaire distal)\n  – Luxation postéro-latérale du talus\n  – Fracture de la malléole postérieure, type Volkmann"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel(s) est (sont) le(s) mécanisme(s) lésionnel(s) de ce traumatisme ?",
+          "images": [],
+          "reponseAttendue": "Rotation externe et hyperflexion plantaire.",
+          "correctionGenerale": "• Rotation externe\n• Hyperflexion plantaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nClassification des fractures ouvertes.",
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/recadre/img-021-089.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-022-094.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-022-095.png"
+          ],
+          "reponseAttendue": "La classification de Cauchoix et Duparc et la classification de Gustilo.",
+          "correctionGenerale": "• Classification de Cauchoix et Duparc\n• Classification de Gustilo"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nConduite à tenir en urgence.",
+          "images": [],
+          "reponseAttendue": "Réduction en urgence par manœuvre externe aux urgences sous antalgie adaptée (manœuvre de l’arrache-botte), lavage de la plaie au sérum physiologique et pansement occlusif, immobilisation temporaire par attelle plâtrée postérieure, contrôle radiologique post-réduction, antibioprophylaxie par Augmentin IV (bolus 2 g puis 1 g × 3/j), puis stabilisation au bloc opératoire.",
+          "correctionGenerale": "• Réduction en urgence par manœuvre externe (aux urgences ++) avec antalgie adaptée IV et/ou gazeuse — manœuvre de l’arrache-botte\n• Lavage de la plaie au sérum physiologique, pansement occlusif (pas de dérivés chlorés ou iodés, cytotoxiques pour le cartilage)\n• Immobilisation temporaire par attelle plâtrée postérieure\n• Contrôle radiologique post-réduction\n• Antibioprophylaxie : Augmentin IV, bolus 2 g puis 1 g × 3/j\n• Puis stabilisation au bloc opératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nPrincipes du traitement.",
+          "images": [],
+          "reponseAttendue": "Si l’état cutané est favorable : parage et lavage abondant, ostéosynthèse première de la malléole externe par plaque tiers-tube par abord latéral, ostéosynthèse de la malléole médiale, +/− ostéosynthèse de la malléole postérieure. Si l’état cutané est précaire : ostéosynthèse temporaire par fixateur externe tibio-calcanéen puis conversion secondaire une fois l’œdème et les phlyctènes résorbés.",
+          "correctionGenerale": "<b>État cutané favorable</b>\n• Parage, lavage abondant\n• Ostéosynthèse première de la malléole externe par plaque 1/3 tube par abord latéral\n• Ostéosynthèse de la malléole médiale (vis ou broche)\n• +/− ostéosynthèse de la malléole postérieure\n\n<b>État cutané précaire</b>\n• Ostéosynthèse temporaire par fixateur externe tibio-calcanéen\n• Conversion secondaire par ostéosynthèse interne une fois l’œdème et les phlyctènes résorbés"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nL’évolution est compliquée par la survenue d’un écoulement suppuré de la cicatrice médiale au 10ᵉ jour postopératoire, avec une température à 37,8 °C. Quel est votre diagnostic et votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Arthrite septique tibio-talienne sur fracture ouverte : reprise chirurgicale avec arthrotomie médiale, prélèvements profonds, synovectomie, lavage abondant (6 à 9 L), changement du matériel d’ostéosynthèse, et antibiothérapie probabiliste IV (vancomycine + tazocilline +/− gentamicine si sepsis sévère) secondairement adaptée à l’antibiogramme.",
+          "correctionGenerale": "<b>Diagnostic</b> : arthrite septique tibio-talienne post-fracture ouverte.\n\n<b>Prise en charge</b>\n• Reprise chirurgicale\n• Arthrotomie médiale\n• Prélèvements profonds à visée bactériologique\n• Synovectomie\n• Lavage abondant au sérum physiologique (6 à 9 L)\n• Changement de la broche / vis d’ostéosynthèse\n• Antibiothérapie probabiliste IV : vancomycine + tazocilline (pipéracilline-tazobactam) +/− gentamicine si sepsis sévère\n• Secondairement adaptée à l’antibiogramme"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2018 - EVCP - Dossier 3",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf",
+      "orderIndex": 31,
+      "vignette": "Un homme de 55 ans souffre d’une gonalgie médiale très handicapante depuis 2 ans, d’allure mécanique. Les traitements médicaux n’ont pas donné d’amélioration suffisante. L’examen clinique montre une déformation en genu varum. Les amplitudes sont cotées 0/10/120. Le genou est sec. Voici les clichés.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel bilan d’imagerie demandez-vous en complément ?",
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-128.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-130.png"
+          ],
+          "reponseAttendue": "Pangonogramme pour l’axe, défilé fémoro-patellaire, cliché en Schuss, clichés en stress varus/valgus et cliché de profil en appui monopodal à la recherche d’une translation tibiale antérieure.",
+          "correctionGenerale": "• Pangonogramme pour l’axe\n• Défilé fémoro-patellaire\n• Schuss\n• Clichés en stress varus / valgus\n• Cliché de profil en appui monopodal : recherche d’une translation tibiale antérieure"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelles sont les options chirurgicales ? Discutez chacune d’elles au décours du bilan d’imagerie.",
+          "images": [],
+          "reponseAttendue": "Ostéotomie tibiale de valgisation (fermeture ou ouverture) si arthrose fémoro-tibiale interne avec défaut d’axe osseux ; prothèse unicompartimentale fémoro-tibiale interne si défaut d’axe minime lié à l’usure et réductible ; prothèse tricompartimentale si lésions des autres compartiments, défaut d’axe important, grade 4 d’Ahlbäck ou subluxation transversale du tibia.",
+          "correctionGenerale": "• <b>Ostéotomie tibiale de valgisation</b> (fermeture / ouverture) — arthrose fémoro-tibiale interne + défaut d’axe osseux\n• <b>Prothèse unicompartimentale fémoro-tibiale interne</b> — défaut d’axe minime lié à l’usure (réductible)\n• <b>Prothèse tricompartimentale</b> :\n  – Si lésions associées des autres compartiments\n  – Si défaut d’axe important au pangonogramme\n  – Grade 4 d’Ahlbäck\n  – Subluxation transversale du tibia sous le fémur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nÀ l’examen clinique, que recherchez-vous qui déterminera votre choix définitif ?",
+          "images": [],
+          "reponseAttendue": "L’absence de laxité du pivot central (une laxité contre-indiquant la PUC), la réductibilité de la déformation, un IMC > 30, des douleurs diffuses avec syndrome fémoro-patellaire et une composante inflammatoire avec épanchement abondant — ces trois derniers orientant vers une PTG.",
+          "correctionGenerale": "• Absence de laxité du pivot central (contre-indication à la PUC)\n• Réductibilité de la déformation\n• IMC > 30 → PTG\n• Douleurs diffuses avec syndrome fémoro-patellaire → PTG\n• Composante inflammatoire avec épanchement abondant → PTG"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nAu troisième jour, le patient présente une dyspnée. Quel diagnostic évoquez-vous en priorité ? Comment le confirmer ?",
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-039-168.png",
+            "annales-orthopedie/evcp-2018-correction/figures/recadre/img-040-173.png"
+          ],
+          "reponseAttendue": "Une embolie pulmonaire : évaluation de la probabilité clinique par le score de Wells, dosage des D-dimères si probabilité faible ou intermédiaire, et angioscanner thoracique (d’emblée si probabilité élevée ou D-dimères positifs) qui visualise le thrombus sous forme d’un defect endoluminal.",
+          "correctionGenerale": "<b>Embolie pulmonaire</b>\n• Évaluation de la probabilité clinique : score de Wells\n• Dosage des D-dimères (probabilité clinique faible ou intermédiaire)\n• Angioscanner thoracique (d’emblée si probabilité clinique élevée ou si D-dimères positifs) : visualise le thrombus (defect endoluminal)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2018 - EVCP - Dossier 4",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf",
+      "orderIndex": 32,
+      "vignette": "Une femme de 64 ans, agent d’entretien, droitière, souffre de l’épaule droite depuis 6 mois.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez votre examen clinique de l’épaule, hors interrogatoire.",
+          "images": [],
+          "reponseAttendue": "Mesure des amplitudes articulaires (EEA, RE1, RE2, RI) ; testing de la coiffe (Jobe, force en RE1 et external rotation lag sign, lift-off, belly press et bear hug, signe du clairon et force en RE2, palm up test, signe du portillon) ; recherche d’un conflit sous-acromial (Yocum, Hawkins, Neer) ; douleurs acromio-claviculaires au cross arm ; recherche d’une instabilité (manœuvre de Patte) ; examen neurologique et recherche d’une amyotrophie.",
+          "correctionGenerale": "<b>Amplitudes articulaires</b>\n• EEA, RE1, RE2, RI\n\n<b>Testing de la coiffe</b>\n• Supra-épineux : manœuvre de Jobe\n• Infra-épineux : force en RE1, external rotation lag sign\n• Subscapulaire : lift-off test, belly press test, bear hug test\n• Petit rond : signe du clairon, force en RE2\n• Long biceps : palm up test\n• Signe du portillon (infra-épineux, petit rond)\n\n<b>Autres</b>\n• Conflit sous-acromial : Yocum, Hawkins, Neer\n• Douleurs acromio-claviculaires au cross arm\n• Recherche d’une instabilité : manœuvre de Patte (appréhension à l’armé du bras)\n• Examen neurologique (névralgie cervico-brachiale), amyotrophie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez l’imagerie en précisant le type d’examen, le plan visualisé et les lésions éventuelles.",
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-045-194.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-045-196.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-045-198.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-045-200.png"
+          ],
+          "reponseAttendue": "Radiographie de l’épaule droite de face : pas de lésion osseuse ni de signe d’arthrose, espace sous-acromial > 7 mm, acromion plat de type 1 de Bigliani, tête humérale centrée. Arthroscanner de l’épaule droite en coupe frontale : rupture transfixiante du supra-épineux de stade II, intégrité de l’infra-épineux. IRM en coupe sagittale T2 Fat Sat.",
+          "correctionGenerale": "<b>Radiographie de l’épaule droite de face</b>\n• Absence de lésion osseuse\n• Absence de signes d’arthrose\n• Espace sous-acromial > 7 mm\n• Acromion plat, type 1 de la classification de Bigliani\n• Tête humérale centrée\n\n<b>Arthroscanner de l’épaule droite, coupe frontale</b>\n• Rupture transfixiante du supra-épineux, stade II\n• Intégrité de l’infra-épineux\n\n<b>IRM, coupe sagittale T2 Fat Sat</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuelle est votre stratégie thérapeutique à 6 mois d’évolution des douleurs ?",
+          "images": [],
+          "reponseAttendue": "Devant l’échec du traitement médical et une lésion réparable (pas de dégénérescence graisseuse, pas de rétraction de stade III) : suture de coiffe sous arthroscopie, +/− ténotomie du biceps, sans acromioplastie.",
+          "correctionGenerale": "• Échec du traitement médical\n• Lésion réparable (pas de dégénérescence graisseuse, pas de rétraction de stade III)\n→ Suture de coiffe sous arthroscopie\n→ +/− ténotomie du biceps\n→ Pas d’acromioplastie\n\n« Le principe d’un traitement médical (médication orale, infiltration, kinésithérapie) de première intention des tendinopathies rompues de la coiffe des rotateurs peut donc être retenu, conformément aux recommandations d’avril 2005 concernant les modalités de prise en charge d’une épaule douloureuse chronique non instable chez l’adulte. En effet, 40 à 80 % des patients ayant une rupture dégénérative des tendons de la coiffe des rotateurs s’améliorent de façon acceptable avec le traitement conservateur à moyen et long terme, et ce d’autant que leur prise en charge a été précoce. Le traitement chirurgical est une proposition conceptuellement logique dans un but de récupération fonctionnelle, en cas d’épaule douloureuse, faible ou invalidante, après échec du traitement conservateur. »"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nLa patiente a finalement été opérée. À trois semaines apparaissent des douleurs de la main avec des difficultés à enrouler les doigts. Quel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome douloureux régional complexe.",
+          "correctionGenerale": "Syndrome douloureux régional complexe."
+        }
+      ]
+    }
+  ]
+}

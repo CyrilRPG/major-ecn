@@ -1,0 +1,105 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCF.53.correction.pdf": {
+      "atelier": "annales-orthopedie/evcf-53-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-003-009.png": "diapositive blanche du diaporama source, sans aucun contenu"
+      }
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2013 - EVCF",
+      "annee": 2013,
+      "type": "EVCF",
+      "source": "ANNALES ORTHOPEDIE/EVCF.53.correction.pdf",
+      "orderIndex": 13,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nAnatomopathologie des fractures de l’humérus distal chez l’enfant. Attitudes diagnostique et thérapeutique.",
+          "images": [
+            "annales-orthopedie/evcf-53-correction/figures/img-002-004.png",
+            "annales-orthopedie/evcf-53-correction/figures/recadre/img-003-008.png",
+            "annales-orthopedie/evcf-53-correction/figures/recadre/img-003-010.png"
+          ],
+          "reponseAttendue": "Cinq entités : fracture supracondylienne, fracture de l’épicondyle médial, fracture du condyle externe, fracture du condyle interne et fracture frontale de l’humérus distal — chacune avec son bilan radiologique et son traitement, orthopédique si peu déplacée, chirurgical si déplacée ou articulaire.",
+          "correctionGenerale": "<b>1) Fracture supracondylienne</b>\nFracture en extension (90 %). Classification de Lagrange et Rigault.\nExamen clinique :\n• Recherche d’un déficit vasculo-nerveux : pouls périphériques, temps de recoloration cutanée, troubles neurologiques (nerf interosseux antérieur ++)\n• Recherche de signes de syndrome des loges\nExamen complémentaire :\n• Radiographies du coude face + profil : hémarthrose, rupture du sablier radiologique\nTraitement :\n• Peu déplacée : BABP (stade I), Blount (stade I ou II)\n• Déplacée : réduction +/− ostéosynthèse, en urgence\n\n<b>2) Fracture de l’épicondyle médial</b>\nRadiographies : rupture de la ligne de Shenton, déplacement (classification de Watson-Jones).\nTraitement :\n• Peu déplacée : BABP en pronation (détente des épitrochléens)\n• Déplacée : ostéosynthèse par brochage (× 2) par un abord permettant le repérage du nerf ulnaire\n\n<b>3) Fracture du condyle externe</b>\nRadiographies : intérêt de l’IRM ou de l’échographie (charnière cartilagineuse).\nTraitement :\n• Non déplacée, persistance de la charnière cartilagineuse : BABP\n• Déplacée, trait de fracture articulaire (risque de pseudarthrose par fuite de liquide articulaire) : ostéosynthèse avec abord articulaire (broches)\n\n<b>4) Fracture du condyle interne</b>\nRare. Radiographies : intérêt de l’IRM ou de l’échographie (charnière cartilagineuse).\nTraitement :\n• Non déplacée, persistance de la charnière cartilagineuse : BABP\n• Déplacée, trait de fracture articulaire (risque de pseudarthrose par fuite de liquide articulaire) : ostéosynthèse avec abord articulaire et repérage du nerf ulnaire (broches ou vis)\n\n<b>5) Fracture frontale de l’humérus distal</b>\nRare, chez l’adolescent de plus de 14 ans. Fracture de Hahn-Steinthal : fracture frontale du capitellum. Fracture articulaire → abord chirurgical et ostéosynthèse (vis enfouies)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\na) Quelles mesures thérapeutiques immédiates prenez-vous à son admission aux urgences de l’hôpital ?",
+          "images": [],
+          "reponseAttendue": "Immobilisation par minerve cervicale rigide, mobilisation en bloc avec maintien de l’axe tête-cou-tronc, plan dur.",
+          "correctionGenerale": "• Immobilisation par minerve cervicale rigide\n• Mobilisation en bloc, maintien de l’axe tête-cou-tronc\n• Plan dur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\nb) Décrire les signes neurologiques pyramidaux pouvant survenir chez ce traumatisé.",
+          "images": [],
+          "reponseAttendue": "Association de signes déficitaires (atteinte du faisceau cortico-spinal) et de signes de spasticité : tétraplégie ou tétraparésie, hypo- ou aréflexie ostéotendineuse à la phase aiguë, Babinski et signe de Hoffmann, abolition des réflexes cutanés abdominaux, troubles vésico-sphinctériens.",
+          "correctionGenerale": "L’association de signes déficitaires (traduisant l’atteinte du faisceau cortico-spinal) et de signes de spasticité (liés à la libération d’activités motrices réflexes normalement inhibées par la voie cortico-spinale) :\n• Tétraplégie / tétraparésie\n• Hypo- ou aréflexie ostéotendineuse (à la phase aiguë : paralysie flasque)\n• Babinski, signe de Hoffmann\n• Abolition des réflexes cutanés abdominaux\n• Troubles vésico-sphinctériens : rétention aiguë d’urine, béance anale (hypotonie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\nc) Décrire la cotation internationale de la force musculaire.",
+          "images": [],
+          "reponseAttendue": "L’échelle MRC, cotée de 0 à 5.",
+          "correctionGenerale": "Échelle MRC (grade 0 à 5) :\n• 0 : pas de contraction musculaire visible\n• 1 : contraction musculaire visible sans mouvement\n• 2 : mouvement des membres mais pas contre la pesanteur\n• 3 : mouvement possible contre la pesanteur mais pas contre résistance\n• 4 : mouvement possible contre au moins une certaine résistance\n• 5 : force normale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\nd) Décrire la classification de Frankel.",
+          "images": ["annales-orthopedie/evcf-53-correction/figures/img-004-014.png"],
+          "reponseAttendue": "Score de Frankel, de A (atteinte neurologique complète) à E (fonctions sensitives et motrices normales).",
+          "correctionGenerale": "<b>Score de Frankel</b>\n• <b>A</b> : atteinte neurologique complète — aucune fonction motrice ou sensorielle conservée en sous-lésionnel\n• <b>B</b> : atteinte neurologique incomplète — fonction sensorielle conservée sous le niveau neurologique\n• <b>C</b> : atteinte neurologique incomplète — fonction motrice conservée sous le niveau neurologique, et majorité de muscles clés avec score moteur ≤ 3\n• <b>D</b> : atteinte neurologique incomplète — fonction motrice conservée sous le niveau neurologique, majorité de muscles clés avec score moteur ≥ 3\n• <b>E</b> : les fonctions sensorielles et motrices sont normales"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\ne) À quel mouvement actif correspondent les niveaux radiculaires C5, C6, C7, C8 et D1 ?",
+          "images": ["annales-orthopedie/evcf-53-correction/figures/img-004-015.png"],
+          "reponseAttendue": "C5 : abduction du bras et rotateurs de l’épaule ; C6 : flexion du coude, supination, flexion du pouce ; C7 : extension du coude, du poignet et des doigts ; C8/D1 : flexion et écartement des doigts.",
+          "correctionGenerale": "• <b>C5</b> — abduction du bras, rotateurs de l’épaule\n• <b>C6</b> — flexion du coude (long supinateur), supination, flexion du pouce\n• <b>C7</b> — extension du coude, du poignet et des doigts, pronation\n• <b>C8 / D1</b> — flexion et écartement des doigts"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\nf) À quels niveaux radiculaires correspondent les réflexes ostéo-tendineux suivants : tricipital, bicipital, styloradial, stylo-ulnaire ?",
+          "images": ["annales-orthopedie/evcf-53-correction/figures/img-004-015.png"],
+          "reponseAttendue": "Tricipital : C7 ; bicipital : C5 ; styloradial : C6 ; stylo-ulnaire : C8-Th1.",
+          "correctionGenerale": "• Tricipital : <b>C7</b>\n• Bicipital : <b>C5</b>\n• Styloradial : <b>C6</b>\n• Stylo-ulnaire (cubito-pronateur) : <b>C8-Th1</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2 — Conduite à tenir devant un traumatisme cervical chez un patient conscient.</b>\n\ng) À quels niveaux radiculaires correspond la sensibilité des territoires suivants : bord latéral du bras, pouce, annulaire, bord médial de l’avant-bras ?",
+          "images": ["annales-orthopedie/evcf-53-correction/figures/img-005-018.png"],
+          "reponseAttendue": "Bord latéral du bras : C6 ; pouce : C6 ; annulaire : C8 ; bord médial de l’avant-bras : Th1.",
+          "correctionGenerale": "• Bord latéral du bras : <b>C6</b>\n• Pouce : <b>C6</b>\n• Annulaire : <b>C8</b>\n• Bord médial de l’avant-bras : <b>Th1</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nCirconstances de survenue, diagnostic, complications et traitement de la luxation gléno-humérale postérieure.",
+          "images": [
+            "annales-orthopedie/evcf-53-correction/figures/img-006-021.png",
+            "annales-orthopedie/evcf-53-correction/figures/img-006-023.png",
+            "annales-orthopedie/evcf-53-correction/figures/img-007-026.png",
+            "annales-orthopedie/evcf-53-correction/figures/img-008-030.png"
+          ],
+          "reponseAttendue": "Luxation rare (3 %), après traumatisme direct antéro-postérieur, force axiale épaule en rotation interne, crise convulsive ou électrocution ; diagnostic clinique (limitation de la rotation externe, bombement postérieur) confirmé par radiographies et TDM ; complications ostéochondrales, capsulo-ligamentaires et nerveuses ; réduction à foyer fermé sous sédation, chirurgie si irréductible ou defect important.",
+          "correctionGenerale": "<b>Circonstances de survenue</b>\n• Rare (3 % des luxations de l’épaule)\n• Traumatisme direct (antéro-postérieur) ou indirect (force axiale, épaule en rotation interne)\n• Épisode convulsif ou électrocution (contraction du deltoïde et du grand dorsal)\n\n<b>Diagnostic — clinique</b>\n• Limitation en actif et en passif de la rotation externe\n• Bombement de la face postérieure de l’épaule\n• Creux de la face antérieure avec processus coracoïde proéminent\n• Clinique souvent peu bruyante comparée à la luxation antérieure : diagnostic souvent manqué aux urgences\n\n<b>Diagnostic — paraclinique</b>\nRadiographies :\n• Disparition de l’interligne gléno-huméral sur le cliché de face\n• Signe de l’ampoule\n• Interruption de l’arc scapulo-huméral\n• Cliché axillaire (plus contributif que le profil)\nTDM :\n• Existence et taille du defect osseux / reverse Hill-Sachs\n• Fracture associée\n\n<b>Complications</b>\n• Lésions ostéochondrales (reverse Hill-Sachs)\n• Lésions capsulo-ligamentaires\n• Lésions de la coiffe des rotateurs\n• Lésions nerveuses (rares)\n• Instabilité résiduelle\n• Omarthrose\n• Ostéonécrose avasculaire\n\n<b>Traitement</b>\nRéduction à foyer fermé par manœuvre externe sous sédation adaptée (au bloc ++ si disponible).\nParfois nécessité d’un abord à foyer ouvert si la luxation est irréductible (engrenée), si le defect huméral est important ou en cas de fracture associée :\n• Technique de McLaughlin par transposition du subscapulaire\n• Technique de McLaughlin modifiée par Neer, par transposition du trochin\n• Allogreffe, autogreffe\n• Arthroplastie…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nAnatomopathologie des fractures du fémur proximal de l’adulte (tête fémorale exclue). Principes de prise en charge.",
+          "images": [
+            "annales-orthopedie/evcf-53-correction/figures/img-008-032.png",
+            "annales-orthopedie/evcf-53-correction/figures/img-009-035.png"
+          ],
+          "reponseAttendue": "Deux entités : la fracture du col fémoral, intracapsulaire, classée en 4 stades de Garden (conservateur aux stades 1-2, arthroplastie aux stades 3-4 en raison du risque d’ostéonécrose), et la fracture du massif trochantérien, extracapsulaire, traitée majoritairement par ostéosynthèse.",
+          "correctionGenerale": "<b>Épidémiologie</b>\n• Traumatisme à basse énergie chez le sujet âgé (ostéoporose)\n• Haute énergie chez le sujet jeune (AVP)\n\n<b>Clinique</b>\n• Impotence fonctionnelle\n• Membre inférieur en abduction – rotation externe\n\n<b>1) Fracture du col fémoral</b>\nFracture intracapsulaire. Classification en 4 stades selon Garden :\n• Stade 1 : coxa valga\n• Stade 2 : non déplacée\n• Stade 3 : coxa vara, persistance d’une charnière\n• Stade 4 : coxa vara, perte de contact complète\nRisque important de lésion de l’artère circonflexe aux stades 3 et 4, avec évolution vers l’ostéonécrose.\nTraitement :\n• Stades 1 et 2 : conservateur — ostéosynthèse (triple vissage, vis-plaque) ; traitement fonctionnel pour certaines équipes si la fracture est engrenée\n• Stades 3 et 4 : traitement radical — arthroplastie intermédiaire (PIH) ou totale (PTH), double mobilité ++, cimentée ou non\nException : la fracture du col chez le sujet jeune est une urgence chirurgicale ++ (réduction et ostéosynthèse).\n\n<b>2) Fracture du massif trochantérien</b>\nFracture extracapsulaire passant par le massif trochantérien : fracture du grand trochanter, du petit trochanter, per-trochantérienne, inter-trochantérienne, sous-trochantérienne.\nRisque d’ostéonécrose plus faible → traitement majoritairement conservateur par ostéosynthèse : clou trochantérien, vis-plaque."
+        }
+      ]
+    }
+  ]
+}

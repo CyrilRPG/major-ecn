@@ -1,0 +1,264 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCF2017.pdf": {
+      "atelier": "annales-orthopedie/evcf2017",
+      "sujetOfficiel": "Annales/Sujets/EVCF_2017/EVCF__2017/EVCF.53.DOC",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2017 - EVCF",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES ORTHOPEDIE/EVCF2017.pdf",
+      "orderIndex": 26,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel(s) est (sont) le (les) nerf(s) de l’élévation latérale du bras (abduction) ?",
+          "images": [],
+          "reponseAttendue": "Le nerf axillaire (deltoïde) et le nerf supra-scapulaire (supra-épineux).",
+          "correctionGenerale": "• Nerf axillaire (deltoïde)\n• Nerf supra-scapulaire (supra-épineux)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels sont les rapports du nerf sciatique avec les muscles pelvi-trochantériens ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-006-012.png"],
+          "reponseAttendue": "Il passe sous le pyramidal, puis en arrière du jumeau supérieur, de l’obturateur interne, du jumeau inférieur et du carré fémoral.",
+          "correctionGenerale": "• Passe sous le pyramidal\n• Puis en arrière du jumeau supérieur, de l’obturateur interne, du jumeau inférieur et du carré fémoral"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuels sont les éléments constitutifs classiques de la coiffe des rotateurs ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/recadre/img-009-018.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-010-019.png"
+          ],
+          "reponseAttendue": "Les muscles supra-épineux, infra-épineux, petit rond et subscapulaire.",
+          "correctionGenerale": "• Muscle supra-épineux\n• Muscle infra-épineux\n• Muscle petit rond\n• Muscle subscapulaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nConcernant le muscle brachio-radial (long supinateur) : quelle est sa fonction principale ? Par quel nerf est-il innervé ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-013-026.png"],
+          "reponseAttendue": "Fléchisseur du coude ; innervé par le nerf radial.",
+          "correctionGenerale": "• Fonction principale : <b>fléchisseur du coude</b>\n• Innervation : <b>nerf radial</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nLors des voies d’abord de l’extrémité supérieure du radius, quelle est la position de l’avant-bras qui permet de protéger la branche motrice du nerf radial ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/recadre/img-016-033.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-017-036.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-018-039.png",
+            "annales-orthopedie/evcf2017/figures/img-019-042.png"
+          ],
+          "reponseAttendue": "La supination.",
+          "correctionGenerale": "Supination."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuelle est la cause principale du pied plat valgus acquis unilatéral du patient âgé ?",
+          "images": [],
+          "reponseAttendue": "Le pied plat dégénératif par dysfonction du tendon du tibial postérieur.",
+          "correctionGenerale": "Pied plat dégénératif par dysfonction du tendon du tibial postérieur."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nLors d’une compression du nerf fibulaire au col de la fibula : quels sont les éléments paralysés ? Quelle est la topographie de l’atteinte sensitive ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-024-054.png",
+            "annales-orthopedie/evcf2017/figures/img-024-055.png"
+          ],
+          "reponseAttendue": "Éléments paralysés : loge latérale (nerf fibulaire superficiel), loge antérieure et muscles intrinsèques dorsaux du pied (nerf fibulaire profond). Atteinte sensitive : dos du pied (NFS) et première commissure (NFP).",
+          "correctionGenerale": "<b>Éléments paralysés</b>\n• Loge latérale (NFS)\n• Loge antérieure (NFP)\n• Muscles intrinsèques dorsaux du pied (NFP)\n\n<b>Topographie de l’atteinte sensitive</b>\n• Dos du pied (NFS)\n• 1ʳᵉ commissure (NFP)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nLors d’une plaie par couteau de l’éminence thénar, quels muscles sont atteints par la section du rameau thénarien du nerf médian ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-027-062.png"],
+          "reponseAttendue": "Le court abducteur du pouce, l’opposant du pouce et le court fléchisseur du pouce (faisceau superficiel).",
+          "correctionGenerale": "• Court abducteur du pouce\n• Opposant du pouce\n• Court fléchisseur du pouce (faisceau superficiel)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°9</b>\n\nDans une hernie discale L4-L5, quelle est la racine comprimée ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-029-067.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-029-068.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-030-071.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-031-074.png",
+            "annales-orthopedie/evcf2017/figures/img-031-075.png",
+            "annales-orthopedie/evcf2017/figures/img-031-077.png"
+          ],
+          "reponseAttendue": "La racine L5 (par ordre de fréquence).",
+          "correctionGenerale": "L5 (par ordre de fréquence)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°10</b>\n\nQuelles sont les 2 causes les plus fréquentes des ostéonécroses non traumatiques de la tête fémorale en France ?",
+          "images": [],
+          "reponseAttendue": "La corticothérapie prolongée et l’œnolisme (la drépanocytose venant ensuite).",
+          "correctionGenerale": "• Corticothérapie prolongée\n• Œnolisme\n• (Drépanocytose)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°11</b>\n\nEntre quelles vertèbres sort la racine C8, et quel est son territoire sensitif à la main ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-036-089.png"],
+          "reponseAttendue": "Entre C7 et T1 ; territoire sensitif au bord cubital de la main, en dedans de l’axe du 4ᵉ doigt.",
+          "correctionGenerale": "• Sortie : entre <b>C7 et T1</b>\n• Territoire sensitif : bord cubital de la main, en dedans de l’axe du 4ᵉ doigt"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°12</b>\n\nDans la classification de Salter et Harris : quelle est la complication du type V ? Quelles fractures sont articulaires ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-039-094.png"],
+          "reponseAttendue": "Complication du type V : l’épiphysiodèse post-traumatique. Fractures articulaires : Salter III et Salter IV.",
+          "correctionGenerale": "• Complication du type V : <b>épiphysiodèse post-traumatique</b>\n• Fractures articulaires : <b>Salter III et Salter IV</b>\n\n<b>Rappel de la classification de Salter et Harris</b> (fractures touchant le cartilage de croissance)\n• Salter I : décollement\n• Salter II : trait métaphysaire\n• Salter III : trait épiphysaire\n• Salter IV : trait métaphyso-épiphysaire\n• Salter V : compression"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°13</b>\n\nDans l’épiphysiolyse chronique de l’extrémité fémorale supérieure de l’adolescent : quel est le signe physique principal à rechercher lors de l’examen clinique ? Quelles incidences radiologiques demandez-vous ? Sur quel repère faites-vous le diagnostic sur le cliché de bassin de face ?",
+          "images": [],
+          "reponseAttendue": "Signe de Drehmann (rotation externe automatique en flexion de hanche) ; bassin de face et hanche de profil ++ ; diagnostic sur la ligne de Klein.",
+          "correctionGenerale": "• <b>Signe physique</b> : rotation externe automatique en flexion de hanche (signe de Drehmann)\n• <b>Incidences</b> : bassin de face, hanche de profil ++\n• <b>Repère diagnostique sur le bassin de face</b> : ligne de Klein"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°14</b>\n\nDans la luxation postérieure d’épaule : quel est le signe clinique pathognomonique ? Quel est le signe le plus évocateur sur la radiographie d’épaule de face ? Quel examen oriente les indications chirurgicales ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-044-095.png",
+            "annales-orthopedie/evcf2017/figures/img-044-096.png",
+            "annales-orthopedie/evcf2017/figures/img-044-097.png",
+            "annales-orthopedie/evcf2017/figures/img-045-098.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-045-099.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-045-100.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-045-101.png",
+            "annales-orthopedie/evcf2017/figures/img-046-102.png",
+            "annales-orthopedie/evcf2017/figures/img-046-103.png",
+            "annales-orthopedie/evcf2017/figures/img-047-104.png",
+            "annales-orthopedie/evcf2017/figures/img-047-105.png"
+          ],
+          "reponseAttendue": "Signe clinique pathognomonique : perte de la rotation externe, active et passive. Signe radiographique de face : disparition de l’interligne gléno-huméral. Examen orientant la chirurgie : le TDM, qui mesure la taille de l’encoche de McLaughlin.",
+          "correctionGenerale": "• <b>Signe clinique pathognomonique</b> : perte de la rotation externe (passive et active)\n• <b>Signe le plus évocateur sur la radiographie de face</b> : disparition de l’interligne gléno-huméral\n• <b>Examen orientant les indications chirurgicales</b> : TDM — taille de l’encoche de McLaughlin\n\n<b>Incidences radiographiques standard à demander</b>\n• Radiographie de face\n• Profil de Lamy\n• Profil de Bloom et Obatta\n\n<b>Immobilisation à proscrire après réduction</b>\nLa rotation interne est proscrite (coude au corps) → immobilisation en rotation neutre."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°15</b>\n\nDans une fracture bi-malléolaire : quelle lésion anatomique explique un diastasis fibulo-tibial ? Quel geste classique doit-on associer à l’ostéosynthèse de ces fractures ?",
+          "images": ["annales-orthopedie/evcf2017/figures/img-050-106.png"],
+          "reponseAttendue": "La lésion de la syndesmose ; il faut ajouter une vis fibulo-tibiale pour fermer la pince, cheville à 90°.",
+          "correctionGenerale": "• <b>Lésion expliquant le diastasis</b> : lésion de la syndesmose\n• <b>Geste associé</b> : ajout d’une vis fibulo-tibiale pour fermeture de la pince, cheville à 90°"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°16</b>\n\nDans les fractures bi-malléolaires par adduction : quelle est la direction du trait malléolaire interne ? Quel est le niveau de la fracture malléolaire externe ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/recadre/img-053-107.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-054-108.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-055-109.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-056-110.png"
+          ],
+          "reponseAttendue": "Il s’agit d’une fracture infra-ligamentaire de la classification de Duparc et Alnot : trait malléolaire interne oblique en haut et en dedans, fracture malléolaire externe horizontale et sous-syndesmotique.",
+          "correctionGenerale": "= fracture infra-ligamentaire de la classification de Duparc et Alnot.\n• <b>Direction du trait malléolaire interne</b> : oblique en haut et en dedans\n• <b>Niveau de la fracture malléolaire externe</b> : horizontal, sous-syndesmotique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°17</b>\n\nAprès une fracture du poignet : quelle lésion peut expliquer la survenue d’une perte de la rétropulsion du pouce ? Quel en est le traitement habituel ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-058-111.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-059-112.png"
+          ],
+          "reponseAttendue": "Une rupture du long extenseur du pouce sur le listel marginal ; traitement chirurgical par abord dorsal et suture directe, ou en cas de rétraction, greffe tendineuse au long palmaire ou transfert de l’extenseur propre de l’index.",
+          "correctionGenerale": "• <b>Lésion</b> : rupture du long extenseur du pouce sur le listel marginal\n• <b>Traitement</b> : chirurgical — abord dorsal et suture directe\n• Si tendon rétracté : greffe tendineuse au long palmaire, ou transfert de l’extenseur propre de l’index"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°18</b>\n\nQuelle est la prise en charge habituelle d’une infection précoce (dans les 15 jours) d’une PTH cimentée mise en place pour fracture du col fémoral ?",
+          "images": [],
+          "reponseAttendue": "Reprise chirurgicale rapide (U2) avec prélèvements profonds, synovectomie et parage des tissus infectés, lavage abondant, changement des pièces mobiles, et antibiothérapie probabiliste (vancomycine + tazocilline +/− gentamicine si sepsis sévère) secondairement adaptée à l’antibiogramme.",
+          "correctionGenerale": "Infection précoce du site opératoire :\n• Reprise chirurgicale rapide (U2)\n• Prélèvements profonds à visée bactériologique\n• Synovectomie, parage chirurgical des tissus infectés\n• Lavage abondant au Karcher\n• Changement des pièces mobiles\n• Antibiothérapie probabiliste secondairement adaptée à l’antibiogramme : vancomycine + tazocilline (pipéracilline + tazobactam) +/− gentamicine si sepsis sévère"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°19</b>\n\nEn urgence, une radiographie de bassin d’une PTH avec cupule double-mobilité montre une tête prothétique au contact de la cupule : quel est votre diagnostic ? Quelle est votre indication thérapeutique ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-064-113.png",
+            "annales-orthopedie/evcf2017/figures/img-064-114.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-065-115.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-066-116.png",
+            "annales-orthopedie/evcf2017/figures/img-066-117.png",
+            "annales-orthopedie/evcf2017/figures/img-067-119.png"
+          ],
+          "reponseAttendue": "Une luxation intraprothétique ; indication de reprise chirurgicale.",
+          "correctionGenerale": "• <b>Diagnostic</b> : luxation intraprothétique\n• <b>Indication thérapeutique</b> : reprise chirurgicale\n\n(Concept de la double mobilité : Gilles Bousquet, 1976.)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°20</b>\n\nDans les suites précoces d’une fracture fermée du tibia traitée par enclouage centromédullaire : quel est le symptôme principal orientant vers un diagnostic de syndrome des loges ? Quelle conduite à tenir après confirmation du diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une douleur intense résistante aux antalgiques de palier III ; aponévrotomie de décharge des 4 loges en urgence (U1).",
+          "correctionGenerale": "• <b>Symptôme principal</b> : douleur intense résistante aux antalgiques de palier III\n• <b>Conduite à tenir</b> : aponévrotomie de décharge des 4 loges en urgence (U1)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°21</b>\n\nLors d’une voie d’abord de PTH par voie de Hueter sur table orthopédique, quels nerfs peuvent être lésés — du fait de la voie d’abord, puis du fait de l’installation ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/img-072-121.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-073-122.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-073-124.png",
+            "annales-orthopedie/evcf2017/figures/img-074-126.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-074-128.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-075-130.png",
+            "annales-orthopedie/evcf2017/figures/img-075-132.png",
+            "annales-orthopedie/evcf2017/figures/img-076-134.png",
+            "annales-orthopedie/evcf2017/figures/img-076-135.png",
+            "annales-orthopedie/evcf2017/figures/img-077-136.png",
+            "annales-orthopedie/evcf2017/figures/img-077-137.jpg"
+          ],
+          "reponseAttendue": "Lié à la voie d’abord : le nerf cutané fémoral latéral, responsable d’une anesthésie de la face latérale de cuisse. Lié à l’installation : le nerf pudendal, responsable de troubles de la fonction érectile, de troubles vésico-sphinctériens et de dysesthésies périnéales.",
+          "correctionGenerale": "<b>Lié à la voie d’abord</b>\n• Nerf cutané fémoral latéral : anesthésie sensitive de la face latérale de la cuisse\n\n<b>Lié à l’installation</b>\n• Nerf pudendal : troubles de la fonction érectile et vésico-sphinctériens, dysesthésies périnéales\n\n<b>Rappel — voie antérieure de Hueter</b>\n• Incision rectiligne depuis l’épine iliaque antéro-supérieure, sur 15-20 cm, en direction du bord externe de la rotule\n• Ouverture de l’aponévrose du muscle tenseur du fascia lata\n• Le tenseur du fascia lata est récliné en dehors, ouverture de l’aponévrose profonde ; prendre garde aux branches du nerf cutané latéral de la cuisse ; section du tendon réfléchi du droit antérieur\n• Décollement à la rugine des adhérences entre psoas et capsule articulaire, puis ouverture de la capsule"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°22</b>\n\nDevant une luxation traumatique du genou : quelle est la principale complication à craindre ? Quel examen complémentaire post-réductionnel devez-vous réaliser ?",
+          "images": [],
+          "reponseAttendue": "Complication vasculaire : rupture de l’artère poplitée. Examen post-réductionnel : IRM pour le bilan ligamentaire.",
+          "correctionGenerale": "• <b>Principale complication</b> : vasculaire — rupture de l’artère poplitée\n• <b>Examen post-réductionnel</b> : IRM (bilan ligamentaire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°23</b>\n\nDevant un panaris pulpaire collecté : quel est le principe du traitement chirurgical ? L’antibiothérapie doit-elle être systématique ?",
+          "images": [],
+          "reponseAttendue": "L’excision ; l’antibiothérapie est systématique pour les panaris pulpaires, mais non systématique pour les panaris péri-unguéaux non compliqués.",
+          "correctionGenerale": "• <b>Principe du traitement chirurgical</b> : excision\n• <b>Antibiothérapie</b> : OUI pour les panaris pulpaires ; non systématique pour les panaris péri-unguéaux non compliqués"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°24</b>\n\nDans les suites d’une fracture diaphysaire du fémur, quel type de consolidation principal est attendu ?",
+          "images": [
+            "annales-orthopedie/evcf2017/figures/recadre/img-084-140.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-085-143.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-086-146.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-087-149.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-088-152.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-089-155.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-090-158.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-091-161.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-092-164.png",
+            "annales-orthopedie/evcf2017/figures/recadre/img-093-167.png"
+          ],
+          "reponseAttendue": "Une consolidation indirecte, par ossification endochondrale.",
+          "correctionGenerale": "Consolidation indirecte par <b>ossification endochondrale</b>.\n\n<b>Take home message : consolidation et stabilité</b>\n• Cicatrisation osseuse <b>directe</b> : ossification endo-membraneuse, mobilité inter-fragmentaire faible, fixation en compression (vis, plaques), pas de cal visible\n• Cicatrisation osseuse <b>indirecte</b> : ossification endochondrale, mobilité inter-fragmentaire modérée, fixation sans compression (placement en compression, enclouage ou embrochage centromédullaire), cal osseux visible"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°25</b>\n\nLors d’une réparation d’un tendon fléchisseur profond d’un doigt long dans le canal digital : quel type de suture est recommandé ? Quel est le délai minimal pour autoriser une flexion contre résistance ?",
+          "images": [],
+          "reponseAttendue": "Un point d’ancrage centro-tendineux à 4 brins (3/0 ou 4/0, nœud enfoui ou latéralisé, point d’entrée à 10 mm — Kleinert, Kessler, Tsuge, McLarney) complété d’un surjet épitendineux 5/0 ou 6/0 ; flexion contre résistance autorisée à partir de la 8ᵉ semaine.",
+          "correctionGenerale": "<b>Type de suture recommandé</b>\n• Point d’ancrage centro-tendineux (solidité) : 4 brins, 3/0 ou 4/0, nœud enfoui ou latéralisé, point d’entrée à 10 mm — Kleinert, Kessler, Tsuge, McLarney\n• Surjet épitendineux (affrontement) : 5/0 ou 6/0\n\n<b>Délai minimal pour la flexion contre résistance</b>\n• À partir de la 8ᵉ semaine"
+        }
+      ]
+    }
+  ]
+}

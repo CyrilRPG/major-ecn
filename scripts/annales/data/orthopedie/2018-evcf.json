@@ -1,0 +1,333 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCF2018correction.pdf": {
+      "atelier": "annales-orthopedie/evcf2018correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2018 - EVCF",
+      "annee": 2018,
+      "type": "EVCF",
+      "source": "ANNALES ORTHOPEDIE/EVCF2018correction.pdf",
+      "orderIndex": 33,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est le signe clinique principal d’une luxation postérieure gléno-humérale ?",
+          "images": [],
+          "reponseAttendue": "La perte de la rotation externe, active et passive.",
+          "correctionGenerale": "Perte de la rotation externe (active et passive)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel est le signe radiologique principal d’une luxation postérieure gléno-humérale sur le cliché de face ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-005-020.png",
+            "annales-orthopedie/evcf2018correction/figures/img-005-021.png",
+            "annales-orthopedie/evcf2018correction/figures/img-005-022.png"
+          ],
+          "reponseAttendue": "La disparition de l’interligne gléno-huméral.",
+          "correctionGenerale": "Disparition de l’interligne gléno-huméral."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDans une luxation postérieure gléno-humérale, quelles incidences radiographiques standard demander ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-007-031.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-032.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-033.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-034.png"
+          ],
+          "reponseAttendue": "Radiographie de face, profil de Lamy et profil de Bloom et Obatta.",
+          "correctionGenerale": "• Radiographie de face\n• Profil de Lamy\n• Profil de Bloom et Obatta"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDans une luxation postérieure gléno-humérale réduite, quelle immobilisation est à proscrire ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-009-043.png",
+            "annales-orthopedie/evcf2018correction/figures/img-009-044.png"
+          ],
+          "reponseAttendue": "La rotation interne (coude au corps) est proscrite : l’immobilisation se fait en rotation neutre.",
+          "correctionGenerale": "La rotation interne est proscrite (coude au corps) → immobilisation en rotation neutre."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nDans l’épicondylite latérale du coude, quel est le tendon habituellement concerné ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-011-053.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-012-058.png"
+          ],
+          "reponseAttendue": "L’extensor carpi radialis brevis.",
+          "correctionGenerale": "<i>Extensor carpi radialis brevis</i> (ECRB)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nDans l’épicondylite latérale du coude : si vous optez pour un traitement orthopédique, quelle articulation immobilisez-vous ?",
+          "images": ["annales-orthopedie/evcf2018correction/figures/img-014-067.png"],
+          "reponseAttendue": "Le poignet.",
+          "correctionGenerale": "Le poignet."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nDans l’épicondylite latérale du coude : quel examen paraclinique de base permet de confirmer le diagnostic ?",
+          "images": ["annales-orthopedie/evcf2018correction/figures/recadre/img-016-076.png"],
+          "reponseAttendue": "L’échographie.",
+          "correctionGenerale": "L’échographie."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nQuel examen paraclinique est obligatoire à la reconnaissance du syndrome du canal carpien en maladie professionnelle ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-018-086.png",
+            "annales-orthopedie/evcf2018correction/figures/img-019-091.png",
+            "annales-orthopedie/evcf2018correction/figures/img-019-092.png"
+          ],
+          "reponseAttendue": "L’électromyogramme.",
+          "correctionGenerale": "L’électromyogramme.\n\n<b>Stimulo-détection</b>\nUne latence distale motrice supérieure à 4 ms et des vitesses de conduction sensitive inférieures à 45 m/s sont considérées comme pathologiques. Les atteintes motrices seront d’emblée chirurgicales."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°9</b>\n\nQuelle est la place de l’épineurotomie dans la chirurgie du canal carpien idiopathique ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-021-101.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-021-102.png"
+          ],
+          "reponseAttendue": "Aucune : elle n’apporte pas de bénéfice par rapport à une simple décompression.",
+          "correctionGenerale": "Aucune : pas de bénéfice par rapport à une simple décompression."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°10</b>\n\nDans les formes cliniques non déficitaires du syndrome du canal carpien : quels sont les principes du traitement de première intention ?",
+          "images": [],
+          "reponseAttendue": "Traitement médical : orthèse nocturne de poignet en position neutre, antalgiques actifs sur les douleurs neurogènes, injection de corticoïdes, adaptation de poste si maladie professionnelle ; les AINS sont inefficaces sauf en cas de ténosynovite.",
+          "correctionGenerale": "<b>Traitement médical</b>\n• Orthèse nocturne de poignet en position neutre\n• Antalgiques actifs sur les douleurs neurogènes (tramadol, Lyrica, Laroxyl…)\n• AINS inefficaces sauf en cas de ténosynovite\n• Injection de corticoïdes\n• Adaptation de poste si maladie professionnelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°11</b>\n\nQuelles sont les deux techniques chirurgicales habituelles dans le traitement du syndrome du canal carpien ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-025-119.png",
+            "annales-orthopedie/evcf2018correction/figures/img-025-120.png"
+          ],
+          "reponseAttendue": "Les techniques à ciel ouvert (conventionnelle, mini-open) et les techniques endoscopiques (1 ou 2 voies).",
+          "correctionGenerale": "• Techniques à ciel ouvert (conventionnelle, mini-open)\n• Techniques endoscopiques (1 ou 2 voies)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°12</b>\n\nQuelle est la structure anatomique à l’origine de la rétraction dans la maladie de Dupuytren ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-027-129.png",
+            "annales-orthopedie/evcf2018correction/figures/img-028-130.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-029-135.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-029-136.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-030-141.png",
+            "annales-orthopedie/evcf2018correction/figures/img-031-147.png",
+            "annales-orthopedie/evcf2018correction/figures/img-031-148.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-032-153.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-033-158.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-033-159.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-034-164.png",
+            "annales-orthopedie/evcf2018correction/figures/img-035-169.png",
+            "annales-orthopedie/evcf2018correction/figures/img-035-170.png",
+            "annales-orthopedie/evcf2018correction/figures/img-035-171.png",
+            "annales-orthopedie/evcf2018correction/figures/img-036-176.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-036-177.png",
+            "annales-orthopedie/evcf2018correction/figures/img-037-182.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-038-187.png",
+            "annales-orthopedie/evcf2018correction/figures/img-038-188.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-039-193.png",
+            "annales-orthopedie/evcf2018correction/figures/img-039-194.png",
+            "annales-orthopedie/evcf2018correction/figures/img-040-200.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-042-209.png"
+          ],
+          "reponseAttendue": "L’aponévrose palmaire et digitale.",
+          "correctionGenerale": "<b>Aponévrose palmaire et digitale.</b>\n\n<b>Maladie de Dupuytren</b>\n• Fibrose rétractile de l’aponévrose palmaire et digitale\n• Brides, nodules\n• Homme > femme, 40-50 ans\n• Débute fréquemment au niveau des 4ᵉ et 5ᵉ rayons\n• Étiologie inconnue : prédisposition génétique, alcool, tabac, diabète\n• Classification de Tubiana\n\n<b>Zone de danger</b> : le passage paume-doigt. L’aponévrose malade passe d’une position superficielle par rapport aux pédicules à une position profonde ou latérale.\n\n<b>Techniques</b>\n• Aponévrotomie à l’aiguille — attention aux lésions vasculo-nerveuses, récidives\n• Aponévrotomie enzymatique par injection locale de collagénases\n• Aponévrectomie : lunettes grossissantes recommandées, de proximal en distal ; incisions ; technique de McCash « paume ouverte » ; lâcher du garrot pour vérifier la vitalité ; fermeture cutanée sans tension, lambeaux si tension excessive ou vitalité douteuse\n• Dermo-fasciectomie\n\n<b>Postopératoire</b>\n• Doigt en extension\n• Mobilisation précoce ++\n• Orthèses dynamiques d’extension\n\n<b>Évolution</b>\nRécidive fréquente (> 60 % des cas à long terme). Facteurs de mauvais pronostic : âge de début jeune (< 40 ans), caractère familial, origine ethnique (anglo-saxonne, scandinave), bilatéralité, lésions ectopiques (voûte plantaire : maladie de Ledderhose ; corps caverneux : maladie de Lapeyronie)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°13</b>\n\nDans la maladie de Dupuytren, en présence de quel signe clinique proposez-vous un traitement chirurgical ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-044-218.png",
+            "annales-orthopedie/evcf2018correction/figures/img-044-219.png"
+          ],
+          "reponseAttendue": "Un déficit d’extension digitale avec gêne fonctionnelle, soit un test de Hueston positif ; il n’y a pas d’indication « esthétique » pour les nodules isolés ou les brides sans rétraction.",
+          "correctionGenerale": "• Déficit d’extension digitale avec gêne fonctionnelle → <b>test de Hueston positif</b>\n• Pas d’indication « esthétique » pour les nodules isolés ou les brides sans rétraction"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°14</b>\n\nLa reconnaissance en maladie professionnelle de la maladie de Dupuytren est-elle possible ?",
+          "images": [],
+          "reponseAttendue": "Non : la maladie de Dupuytren n’est pas reconnue comme une maladie à caractère professionnel.",
+          "correctionGenerale": "Non, la maladie de Dupuytren n’est pas reconnue comme une maladie à caractère professionnel.\n\nBibliographie : C. Leclercq, <i>Maladie de Dupuytren</i>, Cahiers de la SOFCOT 2011, p. 91-108."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°15</b>\n\nEn présence d’une infection sur prothèse totale de cheville à J1, quelle est votre conduite à tenir thérapeutique ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une infection du site opératoire précoce : le sauvetage de la prothèse est licite — lavage, changement du patin, prélèvements bactériologiques peropératoires et antibiothérapie probabiliste secondairement adaptée à l’antibiogramme ; en cas d’échec, arthrodèse en un ou deux temps.",
+          "correctionGenerale": "• Infection du site opératoire précoce\n• Sauvetage de la prothèse licite\n• Lavage, changement du patin\n• Prélèvements bactériologiques peropératoires\n• Antibiothérapie probabiliste secondairement adaptée à l’antibiogramme\n• En cas d’échec : arthrodèse en 1 ou 2 temps"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°16</b>\n\nQuel est le signe clinique pathognomonique de la rupture du tendon calcanéen ?",
+          "images": ["annales-orthopedie/evcf2018correction/figures/recadre/img-051-248.png"],
+          "reponseAttendue": "Le signe de Thompson.",
+          "correctionGenerale": "Signe de Thompson."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°17</b>\n\nQuelles sont les deux techniques chirurgicales habituelles lors de la rupture du tendon calcanéen ?",
+          "images": [],
+          "reponseAttendue": "La technique à ciel ouvert et la technique percutanée.",
+          "correctionGenerale": "• Technique à ciel ouvert\n• Technique percutanée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°18</b>\n\nQuelle est la complication redoutée précoce du traitement chirurgical de la rupture du tendon calcanéen ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-055-265.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-055-266.png"
+          ],
+          "reponseAttendue": "Le risque cutané : nécrose, déhiscence.",
+          "correctionGenerale": "Risque cutané : nécrose, déhiscence."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°19</b>\n\nQuel est le signe neurologique déficitaire précoce dans le syndrome de loge aigu de jambe ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/img-057-275.png",
+            "annales-orthopedie/evcf2018correction/figures/img-057-276.png"
+          ],
+          "reponseAttendue": "L’anesthésie de la première commissure du pied (nerf fibulaire profond).",
+          "correctionGenerale": "Anesthésie de la première commissure du pied (nerf fibulaire profond)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°20</b>\n\nQuel est le signe clinique principal faisant évoquer un syndrome de loge chronique de jambe ?",
+          "images": [],
+          "reponseAttendue": "La douleur : elle survient à l’effort après un seuil ou un délai, oblige à l’arrêt de l’activité et persiste pendant une durée prolongée.",
+          "correctionGenerale": "<b>La douleur</b>\n• Survient à l’effort après un seuil ou un délai\n• Oblige à l’arrêt de l’activité\n• Persiste pendant une durée prolongée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°21</b>\n\nQuel examen complémentaire permet d’étayer le diagnostic d’un syndrome de loge chronique de jambe ?",
+          "images": [],
+          "reponseAttendue": "La prise de la pression des loges, au repos et après l’effort.",
+          "correctionGenerale": "Prise de la pression des loges :\n• Au repos\n• Après l’effort"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°22</b>\n\nCitez les stades de la classification de Lagrange et Rigault dans les fractures en extension de la palette humérale.",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-063-297.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-298.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-299.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-300.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-065-301.png"
+          ],
+          "reponseAttendue": "Stade I : seule la corticale antérieure est rompue, non déplacée. Stade II : fracture des deux corticales, bascule postérieure pure, périoste postérieur intact. Stade III : rotation ou translation, mais les deux fragments restent en contact. Stade IV : déplacement complet, plus aucun contact entre les fragments.",
+          "correctionGenerale": "<b>Fracture en extension (95 %)</b>\n• <b>Stade I</b> : uniquement la corticale antérieure est rompue, non déplacée\n• <b>Stade II</b> : fracture des 2 corticales, bascule postérieure pure, le périoste postérieur reste toujours intact\n• <b>Stade III</b> : dès qu’il y a une rotation ou une translation, mais les 2 fragments restent en contact l’un avec l’autre\n• <b>Stade IV</b> : déplacement complet, il n’y a plus de contact entre les fragments\n\n<b>Fracture en flexion (5 %)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°23</b>\n\nQuels sont les trois angles radiologiques dans le diagnostic de la dysplasie cotyloïdienne de l’adulte ?",
+          "images": ["annales-orthopedie/evcf2018correction/figures/img-068-302.png"],
+          "reponseAttendue": "La coxométrie de hanche : HTE (obliquité du toit du cotyle, normale < 10°), VCE (couverture externe, normale > 25°) et VCA (couverture antérieure, normale > 25°).",
+          "correctionGenerale": "<b>Coxométrie de hanche</b>\n• <b>HTE</b> : obliquité du toit du cotyle (normale < 10°)\n• <b>VCE</b> : couverture externe (normale > 25°)\n• <b>VCA</b> : couverture antérieure (normale > 25°)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°24</b>\n\nLa survenue d’un syndrome périnéal vous fait suspecter une lésion dégénérative ou tumorale située à quel niveau médullaire ?",
+          "images": ["annales-orthopedie/evcf2018correction/figures/img-070-303.png"],
+          "reponseAttendue": "Une compression L1-L2 : syndrome du cône terminal.",
+          "correctionGenerale": "• Compression L1-L2\n• Syndrome du cône terminal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°25</b>\n\nDans l’atteinte traumatique séquellaire du plexus brachial intéressant les racines C5-C6, quelle est la fonction motrice prioritaire à réanimer ?",
+          "images": [],
+          "reponseAttendue": "La flexion du coude.",
+          "correctionGenerale": "La flexion du coude."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°26</b>\n\nQuelles sont les complications évolutives tardives possibles dans les trois ans après une luxation traumatique isolée de la hanche ?",
+          "images": [],
+          "reponseAttendue": "L’ostéonécrose.",
+          "correctionGenerale": "Ostéonécrose."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°27</b>\n\nQuelle est la complication principale initiale après une luxation postérieure traumatique de la hanche ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-305.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-306.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-307.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-079-308.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-080-309.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-081-310.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-083-311.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-083-312.png",
+            "annales-orthopedie/evcf2018correction/figures/img-084-313.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-086-314.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-086-315.png"
+          ],
+          "reponseAttendue": "La lésion du nerf sciatique.",
+          "correctionGenerale": "<b>Lésion du nerf sciatique.</b>\n\n<b>Contexte</b> : traumatisme violent (AVP), fractures-luxations.\n\n<b>Complications précoces</b>\n• Lésions articulaires dans 63 % des cas\n• Le nerf sciatique est atteint dans 7 à 18 % des luxations postérieures\nLe pronostic de récupération est bon pour les lésions isolées de L5 (nerf fibulaire), moins bon en cas de déficit complet L5-S1 (nerf fibulaire + tibial).\n\n<b>Complications secondaires</b>\n• Ostéonécrose de la tête fémorale : 1-10 %, le plus souvent dans les 2 ans\n• Arthrose : très fréquente, jusqu’à 90 % selon certains auteurs — influence du délai de réduction ++\n\n<b>Traitement</b>\n• Réduction en urgence, par manœuvre externe ou réduction sanglante\n• TDM postopératoire, traction 10 jours, décharge sans appui 2 mois, kinésithérapie\n\nRéférences : Tehranzadeh J. et al., AJR 1990 ; Decoulx P. et al., Rev Chir Orthop 1971 ; Hoogaard K., Thomsen P.B., J Bone Joint Surg Am 1987."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°28</b>\n\nQuels sont les deux examens paracliniques permettant le diagnostic précoce d’une nécrose aseptique de la tête fémorale ?",
+          "images": [
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-077-304.png",
+            "annales-orthopedie/evcf2018correction/figures/recadre/img-088-316.png",
+            "annales-orthopedie/evcf2018correction/figures/img-089-317.png",
+            "annales-orthopedie/evcf2018correction/figures/img-089-318.png"
+          ],
+          "reponseAttendue": "L’IRM et la scintigraphie osseuse.",
+          "correctionGenerale": "• IRM\n• Scintigraphie osseuse\n\n<b>Classification ARCO de l’ostéonécrose</b>\nÉtendue de la zone nécrotique : A < 15 %, B = 15-30 %, C > 30 %.\nÉtendue de la zone effondrée : A < 15 %, B = 15-30 %, C > 30 %.\n\nBibliographie : P. Hernigou, <i>Ostéonécroses non traumatiques des épiphyses de l’adulte</i>, EMC 2006 ; P. Chiron, V. Lafontan, N. Reina, <i>Les fractures-luxations de la tête fémorale</i>, Cahiers de la SOFCOT 2012."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°29</b>\n\nDécrivez la classification lésionnelle internationale de Vancouver permettant de poser l’indication thérapeutique dans les fractures péri-prothétiques de la hanche.",
+          "images": ["annales-orthopedie/evcf2018correction/figures/img-093-319.png"],
+          "reponseAttendue": "Type A : trait passant par les trochanters (AG grand trochanter, AL petit trochanter). Type B : trait passant par la tige fémorale (B1 prothèse scellée, B2 descellée, B3 descellée avec faible capital osseux). Type C : trait à distance de la tige (> 1 cm). Type D : trait interprothétique, entre PTH et PTG.",
+          "correctionGenerale": "• <b>Type A</b> : trait de fracture qui passe par les trochanters — AG : grand trochanter ; AL : petit trochanter\n• <b>Type B</b> : trait de fracture qui passe par la tige fémorale — B1 : prothèse scellée ; B2 : prothèse descellée ; B3 : prothèse descellée avec faible capital osseux\n• <b>Type C</b> : trait de fracture qui passe à distance de la tige (> 1 cm)\n• <b>Type D</b> : trait de fracture entre PTH et PTG (interprothétique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°30</b>\n\nQuelles lésions ligamentaires associées à une rupture du ligament croisé antérieur du genou nécessitent un traitement chirurgical précoce ?",
+          "images": [],
+          "reponseAttendue": "Les lésions postéro-latérales (PAPE, LLE), les lésions postéro-médiales (PAPI, LLI) et les lésions du LCP.",
+          "correctionGenerale": "• Lésions postéro-latérales (PAPE, LLE)\n• Lésions postéro-médiales (PAPI, LLI)\n• LCP"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°31</b>\n\nQuelle est la principale lésion anatomique associée à une rupture fraîche du ligament croisé antérieur du genou ?",
+          "images": [],
+          "reponseAttendue": "La lésion du ménisque médial.",
+          "correctionGenerale": "Lésion du ménisque médial."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°32</b>\n\nQuel est le mécanisme principal de la lésion du nerf fibulaire commun dans une entorse grave du genou ?",
+          "images": [],
+          "reponseAttendue": "Une élongation ou une rupture du nerf fibulaire commun lorsqu’il existe une composante varisante du traumatisme.",
+          "correctionGenerale": "Élongation ou rupture du nerf fibulaire commun lorsqu’il existe une composante varisante du traumatisme."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°33</b>\n\nQuel est le signe clinique principal de la rupture de l’appareil extenseur du genou ?",
+          "images": [],
+          "reponseAttendue": "Le clinostatisme : impossibilité de décoller le talon du plan du lit.",
+          "correctionGenerale": "Clinostatisme (impossibilité de décoller le talon du plan du lit)."
+        }
+      ]
+    }
+  ]
+}

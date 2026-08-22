@@ -1,0 +1,214 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP 2021.pdf": {
+      "atelier": "annales-orthopedie/evcp-2021",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-001-003.jpg": "fond géométrique décoratif de la diapositive de titre, sans contenu médical"
+      },
+      "remarque": "Les radiographies de la vignette du sujet n°7 ne sont pas extractibles du diaporama (aucune image n’y est décodable) ; la question 7-3 est par ailleurs restée sans réponse rédigée dans le corrigé."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2021 - EVCP - Questions isolées",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2021.pdf",
+      "orderIndex": 52,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nCitez 3 tests permettant d’évaluer le teres minor.",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-003-012.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-004-016.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-004-017.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-004-018.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-004-019.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-005-023.jpg"
+          ],
+          "reponseAttendue": "Le signe du clairon, la manœuvre de Patte, le signe du portillon (external rotation lag sign) et le drop sign test.",
+          "correctionGenerale": "• <b>Clairon</b> : impossibilité de mettre la main à la bouche sans faire d’abduction (atteinte massive de la coiffe postérieure)\n• <b>Manœuvre de Patte</b> : position en RE2\n• <b>Signe du portillon</b> = external rotation lag sign : rotation interne contre résistance ; à la relâche, le bras du patient part comme un portillon, par déficit des rotateurs latéraux\n• <b>Drop sign test</b>\n\n<b>Petit rond (« teres minor »)</b>\n• Insertion : fosse infra-épineuse, sous l’infra-épineux\n• Terminaison : face postérieure du trochiter\n• Action : rotation externe\n• Innervation : nerf axillaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDonner les 5 signes cliniques d’hyperlaxité constitutionnelle selon les critères de Wilkinson.",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-007-030.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-008-034.png"
+          ],
+          "reponseAttendue": "Hyperextension du coude (recurvatum > 10°), hyperextension du genou (recurvatum > 10°), flexion du pouce permettant de toucher l’avant-bras, extension des doigts au-delà de 90° des MCP de D2 et D5, et hyperextension de cheville.",
+          "correctionGenerale": "<b>Selon Wilkinson</b>\n• Hyperextension du coude : recurvatum > 10°\n• Hyperextension du genou : recurvatum > 10°\n• Flexion du pouce : possibilité de toucher l’avant-bras avec le pouce\n• Extension des doigts : > 90° des MCP de D2 et D5\n• Hyperextension de cheville\n\n<b>Variante modifiée de Beighton</b> : les quatre premiers items, le cinquième étant la flexion du tronc permettant de poser les paumes des mains au sol, jambes tendues."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDonner les 6 éléments constituant le score ISIS selon Boileau.",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-010-041.png",
+            "annales-orthopedie/evcp-2021/figures/img-010-042.png"
+          ],
+          "reponseAttendue": "Le score ISIS de Boileau, détaillé dans le tableau ci-contre.",
+          "correctionGenerale": "Score ISIS de Boileau (voir le tableau ci-dessus)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel est le nom de cette pathologie ? Quelle lésion nerveuse en est la cause ?",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-011-046.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-012-052.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-012-053.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-014-060.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-014-061.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-014-062.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-014-063.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-014-064.jpg"
+          ],
+          "reponseAttendue": "Un winging scapula, par atteinte isolée du nerf thoracique long innervant le muscle serratus antérieur.",
+          "correctionGenerale": "<b>Winging scapula</b> : décollement du bord spinal et de la pointe de la scapula lors de l’antépulsion / abduction.\n\nAtteinte isolée du <b>nerf thoracique long</b> → muscle serratus antérieur.\n\n<b>Traitement</b>\n• Kinésithérapie ++\n• Chirurgical : stabilisation de la scapula + neurolyse du nerf thoracique long\n\n<b>Diagnostic clinique</b>\n• Push-up test\n• Shoulder flexion resistance 30-60° et 100° (pour éliminer une hyperactivité du pectoralis minor)\n• Shoulder protraction against resistance\n• Scapula stabilisation test\n• EMG pour affirmer le diagnostic et suivre la récupération"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelle est cette lésion ? Quel est le traitement de choix ?",
+          "images": ["annales-orthopedie/evcp-2021/figures/img-015-068.jpg"],
+          "reponseAttendue": "Une luxation trans-olécranienne (fracture de l’olécrane + luxation antérieure de l’avant-bras, sans atteinte de la radio-ulnaire proximale ni du ligament annulaire, à la différence d’un Monteggia) ; traitement chirurgical par abord postérieur trans-olécranien, réduction de la tête radiale, ostéosynthèse de l’olécrane par plaque et réparation ligamentaire, avec rééducation précoce.",
+          "correctionGenerale": "<b>Luxation trans-olécranienne</b> : fracture de l’olécrane + luxation antérieure de l’avant-bras.\n→ Pas d’atteinte de la radio-ulnaire proximale, intégrité du ligament annulaire (≠ Monteggia).\n\n<b>Traitement chirurgical ++</b>\n• Abord postérieur (trans-olécranien, via le foyer de fracture)\n• Bilan et réparation des lésions associées (tête radiale, processus coronoïde)\n• Réduction de la tête radiale\n• Ostéosynthèse de l’olécrane (plaque) et restitution anatomique de la cavité sigmoïdienne\n• Réparation des plans ligamentaires si nécessaire\n• Rééducation précoce (J15)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6-1</b>\n\nConcernant les fractures en extension de la palette humérale chez l’enfant : décrivez la classification de Lagrange et Rigault en 4 stades.",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-018-078.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-018-079.jpg"
+          ],
+          "reponseAttendue": "Stade 1 : fracture non déplacée. Stade 2 : perte de l’antéversion physiologique. Stade 3 : bascule et translation postérieure avec trouble de rotation. Stade 4 : perte de contact entre les deux fragments.",
+          "correctionGenerale": "<b>Fracture en « extension »</b>\n• <b>Stade 1</b> : fracture non déplacée\n• <b>Stade 2</b> : perte de l’antéversion physiologique\n• <b>Stade 3</b> : bascule et translation postérieure + trouble de rotation\n• <b>Stade 4</b> : perte de contact entre les 2 fragments"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6-2</b>\n\nQuelle est la lésion nerveuse associée la plus fréquente ?",
+          "images": ["annales-orthopedie/evcp-2021/figures/img-020-086.jpg"],
+          "reponseAttendue": "Le nerf interosseux antérieur, branche du nerf médian, qui naît 5 à 8 cm sous l’épicondyle médial, au-dessus de l’arcade du fléchisseur superficiel des doigts.",
+          "correctionGenerale": "• Nerf interosseux antérieur = branche du nerf médian\n• Naît 5 à 8 centimètres sous l’épicondyle médial, au-dessus de l’arcade du fléchisseur superficiel des doigts"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6-3</b>\n\nQuel est le signe clinique typique ?",
+          "images": ["annales-orthopedie/evcp-2021/figures/img-022-093.jpg"],
+          "reponseAttendue": "L’impossibilité de faire un « O » — signe du bec de canard — par atteinte de la branche motrice du long fléchisseur du pouce et du fléchisseur profond du 2ᵉ doigt.",
+          "correctionGenerale": "• Branche motrice pour le long fléchisseur du pouce et le fléchisseur profond du 2ᵉ doigt\n• Impossibilité de faire un « O » = bec de canard"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6-4</b>\n\nQuel est le traitement du stade 4 ?",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-024-101.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-024-102.jpg"
+          ],
+          "reponseAttendue": "Le périoste postérieur étant lésé, il existe une indication opératoire : brochage en croix (attention au nerf ulnaire) ou brochage selon Judet.",
+          "correctionGenerale": "• Périoste postérieur lésé → indication opératoire\n• Brochage en croix (ATTENTION au nerf ulnaire)\n• Brochage selon Judet"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2021 - EVCP - Dossier 7",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2021.pdf",
+      "orderIndex": 53,
+      "vignette": "Une patiente de 73 ans présentant des troubles cognitifs, dont l’interrogatoire est peu fiable, est amenée aux urgences par les pompiers. Des radiographies sont faites.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7-1</b>\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une fracture péri-prothétique sur PTH.",
+          "correctionGenerale": "Fracture péri-prothétique sur PTH."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7-2</b>\n\nQuelle classification utilisez-vous pour classer cette fracture ?",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-029-122.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-029-123.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-029-124.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-029-125.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-030-129.jpg"
+          ],
+          "reponseAttendue": "La classification de Vancouver, qui croise le niveau de la fracture (A proximal, B autour de la tige, C à distance de la tige) et la stabilité de la tige (1 stable, 2 descellée, 3 ostéolyse ou perte de substance osseuse).",
+          "correctionGenerale": "<b>Classification de Vancouver</b>\n\nNiveau de la fracture :\n• A : proximal\n• B : autour de la tige\n• C : à distance de la tige\n\nStabilité de la tige :\n• 1 : stable\n• 2 : descellée\n• 3 : ostéolyse / perte de substance osseuse\n\n<b>Indice de fixation restant</b> : A/B ; si > 2/3, la prothèse est stable.\nA = hauteur de tige gardant un parfait contact avec l’os ; B = hauteur totale de l’implant."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7-3</b>\n\nÀ quel stade correspond-elle ?",
+          "images": [],
+          "reponseAttendue": "Le diaporama de correction ne comporte pas de réponse rédigée pour cette question.",
+          "correctionGenerale": "Le diaporama de correction ne comporte pas de réponse rédigée pour cette question : la diapositive ne reprend que l’intitulé. Le stade se déduit de la classification de Vancouver rappelée à la question précédente, appliquée aux radiographies de la vignette."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7-4</b>\n\nQuelle est la principale option thérapeutique concernant le fémur ?",
+          "images": ["annales-orthopedie/evcp-2021/figures/recadre/img-034-146.png"],
+          "reponseAttendue": "Le changement de tige pour une tige longue, associé à une ostéosynthèse du fémur par cerclage.",
+          "correctionGenerale": "• Changement de tige pour une tige longue\n• Ostéosynthèse du fémur (cerclage)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7-5</b>\n\nQuelle est votre attitude idéale concernant l’acétabulum ?",
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-036-153.jpg",
+            "annales-orthopedie/evcp-2021/figures/img-036-154.png"
+          ],
+          "reponseAttendue": "Si la cupule est stable et la fracture non déplacée : décharge. Si la cupule est stable mais la fracture déplacée : ostéosynthèse par plaque avec confirmation peropératoire de la stabilité de l’implant (contact osseux > 50 %), sinon ostéosynthèse + révision. Si la cupule est instable : révision avec ablation de la prothèse, stabilisation du foyer et réimplantation d’une cupule de révision, en privilégiant la double mobilité.",
+          "correctionGenerale": "<b>Si cupule stable et fracture non déplacée</b> : décharge.\n\n<b>Si cupule stable mais fracture déplacée</b>\n• Ostéosynthèse par plaque\n• Confirmer en peropératoire la stabilité de l’implant (contact osseux > 50 %)\n• Sinon : ostéosynthèse + révision\n\n<b>Si cupule instable</b>\n• Révision de la cupule : ablation de la prothèse → stabilisation du foyer de fracture → réimplantation d’une cupule de révision (Kerboull, patte de fixation, anneau de Ganz…)\n• Double mobilité à privilégier\n• Abord en fonction de ce qu’on doit réparer, double abord parfois nécessaire"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2021 - EVCP - Dossier 8",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2021.pdf",
+      "orderIndex": 54,
+      "vignette": "Patient de 30 ans adressé en consultation pour une douleur de genou survenue à la suite d’un effort banal.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8-1</b>\n\nDécrivez la radiographie.",
+          "images": ["annales-orthopedie/evcp-2021/figures/img-038-172.jpg"],
+          "reponseAttendue": "Radiographie du genou droit : réactions périostées en feu d’herbe, aspect hétérogène de la densité osseuse et soufflement de la corticale médiale.",
+          "correctionGenerale": "Radiographie de genou droit :\n• Réactions périostées : feu d’herbe\n• Aspect hétérogène de la densité osseuse\n• Soufflement de la corticale médiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8-2</b>\n\nQuelle est votre hypothèse diagnostique principale ?",
+          "images": [],
+          "reponseAttendue": "Un ostéosarcome : homme jeune, critères radiographiques de malignité, localisation près du genou (40 % touchent l’extrémité inférieure du fémur), début insidieux associé à un traumatisme bénin.",
+          "correctionGenerale": "<b>Ostéosarcome</b>\n• Homme jeune\n• Critères de malignité radiographiques\n• Près du genou : 40 % touchent l’extrémité inférieure du fémur\n• Début insidieux associé à un traumatisme bénin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8-3</b>\n\nQuels examens complémentaires d’imagerie demanderiez-vous ?",
+          "images": [],
+          "reponseAttendue": "Radiographie du fémur entier, IRM du membre inférieur (envahissement des parties molles, skip metastases) et bilan d’extension par TDM thoraco-abdomino-pelvien et scintigraphie ou TEP-scan.",
+          "correctionGenerale": "• Radiographie du fémur entier\n• IRM du membre inférieur : envahissement des parties molles, skip metastases\n• Bilan d’extension : TDM thoraco-abdomino-pelvien et scintigraphie ou TEP-scan"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8-4</b>\n\nCitez brièvement les principes de la prise en charge si la lésion est unique.",
+          "images": ["annales-orthopedie/evcp-2021/figures/img-046-198.png"],
+          "reponseAttendue": "Prise en charge dans un centre de référence : chimiothérapie néoadjuvante, exérèse chirurgicale carcinologique, puis chimiothérapie adjuvante.",
+          "correctionGenerale": "• Prise en charge dans un centre de référence\n• Chimiothérapie néoadjuvante\n• Exérèse chirurgicale carcinologique\n• Chimiothérapie adjuvante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8-5</b>\n\nQuelle est votre attitude pratique ?",
+          "images": [],
+          "reponseAttendue": "Annonce de la suspicion diagnostique, bilan d’extension et bilan sanguin, orientation vers un centre de référence pour une prise en charge multidisciplinaire, passage en RCP, biopsie réalisée par l’équipe chirurgicale qui fera l’exérèse, séquence chimiothérapie néoadjuvante – exérèse – chimiothérapie adjuvante, planification préopératoire avec guide de coupe, chirurgie conservatrice ++ et suivi des récidives par IRM.",
+          "correctionGenerale": "• Annonce de la suspicion diagnostique\n• Bilan d’extension + bilan sanguin\n• Référer à un centre de référence pour une prise en charge multidisciplinaire\n• Passage en RCP\n• Biopsie par l’équipe chirurgicale qui réalisera l’exérèse\n• Chimiothérapie néoadjuvante – exérèse – chimiothérapie adjuvante\n• Planification préopératoire +/− guide de coupe\n• Chirurgie conservatrice ++\n• Suivi des récidives par bilan IRM"
+        }
+      ]
+    }
+  ]
+}

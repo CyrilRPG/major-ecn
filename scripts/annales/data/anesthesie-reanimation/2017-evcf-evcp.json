@@ -1,0 +1,361 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF EVCP 2017.pdf": {
+      "atelier": "annales-area/evcf-evcp-2017",
+      "sujetOfficiel": "Annales/Sujets/EVCF_2017/EVCF__2017/EVCF.03.DOC",
+      "figuresIgnorees": {
+        "img-042-189.png": "Pictogramme décoratif (triangle d’avertissement rouge) de la diapositive : aucun contenu médical.",
+        "img-042-190.png": "Masque blanc du même pictogramme d’avertissement : élément graphique, aucun contenu médical."
+      },
+      "remarque": "L’EVCF 2017 d’anesthésie-réanimation comporte deux sujets distincts (anesthésie, 11 questions ; réanimation, 14 questions) : ils sont réunis dans une seule série, chaque question portant la mention de son sujet."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2017 - EVCF",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF EVCP 2017.pdf",
+      "orderIndex": 21,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2017 en anesthésie-réanimation. Elle comporte deux sujets : un <b>sujet Anesthésie</b> (questions 1 à 11) et un <b>sujet Réanimation</b> (questions 1 à 14), tous deux à réponse ouverte et courte, sans vignette clinique commune.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 1</b>\n\nQuels sont les critères de retour à la rue après anesthésie ambulatoire ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-005-024.jpg"],
+          "reponseAttendue": "Un score de Chung ≥ 9 : stabilité des constantes vitales depuis au moins une heure, bonne coloration, absence de saignement, bonne orientation temporo-spatiale, absence de nausées et vomissements, absence de vertige ou de céphalées, patient pouvant boire et manger, urinant spontanément, sans douleur importante et dernière prise d’antalgique > 1 h ; un accompagnateur responsable (2 si retour en voiture privée avec un enfant) ; le patient peut s’asseoir, se mettre debout, marcher, s’habiller seul ; accord de l’anesthésiste et de l’opérateur ; instructions orales et écrites fournies au patient pour la période postopératoire.",
+          "correctionGenerale": "<b>Score de Chung ≥ 9</b>\n• Stabilité des constantes vitales depuis au moins une heure\n• Bonne coloration\n• Saignement absent\n• Bonne orientation temporo-spatiale\n• Absence de nausées et vomissements\n• Absence de vertige ou de céphalées\n• Patient pouvant boire et manger\n• Urine spontanément\n• Pas de douleur importante ; dernière prise d’antalgique > 1 h\n• Un accompagnateur responsable, 2 si retour en voiture privée avec un enfant\n• Peut s’asseoir, se mettre debout, marcher, s’habiller tout seul\n• Accord de l’anesthésiste et de l’opérateur\n• Instructions orales et écrites fournies au patient concernant la période postopératoire\n\n<i>Le score de Chung coté sur 10 porte sur les constantes vitales, la déambulation, les nausées/vomissements, les douleurs et le saignement chirurgical : un score de 9 ou 10 est compatible avec la sortie.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 2</b>\n\nQuels sont les items de la check-list préanesthésique ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-008-037.jpg"],
+          "reponseAttendue": "Avant l’induction : identité du patient, autorisation d’opérer, intervention et site opératoire, mode d’installation, préparation cutanée du patient, matériel nécessaire pour la chirurgie et pour l’anesthésie, risque allergique / risque d’inhalation / risque de saignement, concertation conjointe et oralement ouverte.",
+          "correctionGenerale": "<b>Avant l’induction anesthésique</b>\n• Identité du patient\n• Autorisation d’opérer\n• Intervention et site opératoire\n• Mode d’installation\n• Préparation cutanée du patient\n• Matériel nécessaire pour la chirurgie et pour l’anesthésie\n• Risque allergique / risque d’inhalation / risque de saignement\n• Concertation conjointe et oralement ouverte\n\n<i>La check-list HAS « Sécurité du patient au bloc opératoire » est reproduite : elle comporte trois temps — avant induction anesthésique, avant intervention chirurgicale (temps de pause avant incision) et après intervention (pause avant sortie de salle d’opération).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 3</b>\n\nQuels sont les seuils biologiques d’administration des produits dérivés du sang chez un sujet ASA 1 opéré ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-012-055.png",
+            "annales-area/evcf-evcp-2017/figures/img-011-050.png",
+            "annales-area/evcf-evcp-2017/figures/img-013-060.png",
+            "annales-area/evcf-evcp-2017/figures/img-014-065.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-015-070.png",
+            "annales-area/evcf-evcp-2017/figures/img-016-075.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-017-080.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-018-085.png",
+            "annales-area/evcf-evcp-2017/figures/img-019-090.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-020-095.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-021-100.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-021-101.png"
+          ],
+          "reponseAttendue": "Hémoglobine < 7 g/dL ; plaquettes < 50 000/mm³, ou < 100 000/mm³ en neurochirurgie ; PFC si TP < 40 %, ou < 60 % en neurochirurgie ; fibrinogène si < 1,5 g/L.",
+          "correctionGenerale": "• Hémoglobine < 7 g/dL\n• Plaquettes < 50 000/mm³, ou 100 000 en neurochirurgie\n• PFC si TP < 40 %, ou 60 % en neurochirurgie\n• Fibrinogène si < 1,5 g/L\n\n<b>Rappels de la recommandation transfusionnelle (diapositives)</b>\n• <b>Seuil transfusionnel</b> : la notion correspond à la valeur de la concentration d’hémoglobine en dessous de laquelle il est recommandé de ne pas descendre. Elle a ses limites car d’autres facteurs interviennent : cinétique du saignement, degré de correction de la volémie, tolérance clinique de l’anémie (signes d’insuffisance coronarienne, d’insuffisance cardiaque, tachycardie, hypotension, dyspnée, confusion mentale…). Seuils recommandés en périopératoire : <b>7 g/dL</b> chez les personnes sans antécédents particuliers, <b>10 g/dL</b> chez celles ne tolérant pas cliniquement des concentrations inférieures ou atteintes d’insuffisance coronarienne aiguë ou d’insuffisance cardiaque avérée ou bêta-bloquée, <b>8-9 g/dL</b> chez les personnes ayant des antécédents cardio-vasculaires\n• <b>Anémie chronique</b> : en cas d’anémie chronique bien tolérée et d’acte non hémorragique, l’anesthésie en elle-même ne justifie pas de transfusion\n• <b>Plaquettes</b> : en dehors de l’hémorragie massive, le seuil transfusionnel se situe en règle générale à 50 G/L ; ponction lombaire ou rachianesthésie ≥ 50 G/L (80 G/L proposé pour l’anesthésie péridurale) ; neurochirurgie et prise en charge d’un traumatisme crânien : 100 G/L ; chirurgie du segment postérieur de l’œil : entre 50 et 100 G/L ; obstétrique : au-dessus de 75 G/L la transfusion prophylactique n’est pas recommandée, ni dans le HELLP syndrome ni dans le PTI avant accouchement\n• <b>PFC</b> : l’administration doit être guidée par les tests de laboratoire, le TQ étant potentiellement associé à un saignement anormal lorsqu’il atteint 1,5 à 1,8 fois la valeur témoin (soit un TP de l’ordre de 40 %) ; volume initial 10 à 15 mL/kg ; pas de PFC comme soluté de remplissage ; transfusion de PFC si TP < 50 % chez le traumatisé crânien grave et < 60 % pour la pose d’un capteur de pression intracrânienne\n• <b>Groupes sanguins et compatibilités ABO</b> : les schémas rappellent les antigènes et anticorps naturels de chaque groupe et les compatibilités ABO des globules rouges (O donneur universel → AB receveur universel) et des plasmas (AB donneur universel → O receveur universel)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 4</b>\n\nQuels sont les médicaments et leur posologie pour antagoniser un traitement par anti-vitamine K avant chirurgie urgente ?",
+          "images": [],
+          "reponseAttendue": "Si l’INR n’est pas disponible : concentré de complexe prothrombinique (CCP) 25 UI/kg. Si l’INR est disponible : CCP à dose adaptée à l’INR. Dans les deux cas, vitamine K1 10 mg.",
+          "correctionGenerale": "• Si <b>INR non disponible</b> : concentré de complexe prothrombinique (CCP) <b>25 UI/kg</b>\n• Si <b>INR disponible</b> : CCP en fonction de l’INR\n• <b>Vitamine K1 10 mg</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 5</b>\n\nQuels sont les éléments diagnostiques de la pré-éclampsie ?",
+          "images": [],
+          "reponseAttendue": "Apparition à partir de 20 SA d’une hypertension artérielle avec PAS > 140 mmHg et/ou PAD > 90 mmHg, associée à une protéinurie > 0,3 g/24 h.",
+          "correctionGenerale": "<b>Apparition à partir de 20 SA</b>\n• Hypertension artérielle avec pression artérielle systolique (PAS) > 140 mmHg et/ou pression artérielle diastolique (PAD) > 90 mmHg\n• Protéinurie > 0,3 g/24 h\n\n<b>Facteurs de risque de pré-éclampsie</b>\n• Antécédent de pré-éclampsie\n• Grossesse multiple\n• Première grossesse (nulliparité)\n• Hypertension chronique, pathologie rénale ou diabète\n• Obésité (IMC supérieur à 30)\n• Âge supérieur à 40 ans ou inférieur à 18 ans\n• Antécédents familiaux de pré-éclampsie (mère, grand-mère…)\n• Syndrome des ovaires polykystiques\n• Maladie auto-immune\n• Changement de partenaire sexuel ou insuffisance d’exposition au sperme du partenaire (port prolongé du préservatif)\n\n<b>Dosage de deux marqueurs biologiques</b>\n• PlGF (Placental Growth Factor), facteur de croissance placentaire\n• sFlt-1, récepteur soluble du facteur de croissance vasculaire VEGF"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 6</b>\n\nQuels sont les signes cliniques de sévérité de la pré-éclampsie ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-042-188.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-043-195.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-029-134.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-041-183.png"
+          ],
+          "reponseAttendue": "PAS ≥ 180 mmHg et/ou PAD ≥ 120 mmHg ; douleur abdominale épigastrique et/ou de l’hypochondre droit « en barre », persistante ou intense ; céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, déficit neurologique, troubles de la conscience, réflexes ostéo-tendineux vifs, diffusés et polycinétiques ; détresse respiratoire, œdème aigu du poumon ; HELLP syndrome ; insuffisance rénale aiguë.",
+          "correctionGenerale": "<b>Définition de la pré-éclampsie sévère</b> — ≥ 1 des critères suivants : HTA sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) ou non contrôlée ; protéinurie > 3 g/24 h ; créatininémie ≥ 90 µmol/L ; oligurie ≤ 500 mL/24 h ou ≤ 25 mL/h ; thrombopénie < 100 000/mm³ ; cytolyse hépatique avec ASAT/ALAT > 2N ; douleur abdominale épigastrique et/ou de l’hypochondre droit « en barre » persistante ou intense ; douleur thoracique, dyspnée, œdème aigu du poumon ; signes neurologiques (céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, ROT vifs, diffusés et polycinétiques).\n\n<b>Signes cliniques de gravité de la pré-éclampsie sévère</b>\n• PAS ≥ 180 mmHg et/ou PAD ≥ 120 mmHg\n• Douleur abdominale épigastrique et/ou de l’hypochondre droit « en barre », persistante ou intense\n• Céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, déficit neurologique, troubles de la conscience, réflexes ostéo-tendineux vifs, diffusés et polycinétiques\n• Détresse respiratoire, œdème aigu du poumon\n• HELLP syndrome\n• Insuffisance rénale aiguë\n\n<i>Il n’existe pas de score de prédiction de la gravité : le diagnostic et la classification sont cliniques → connaître les critères cliniques +++.</i>\n\n<b>Thérapeutique (RFE commune SFAR-CNGOF 2020)</b>\n• <b>Quand traiter ?</b> Si pré-éclampsie sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) au repos depuis ≥ 15 minutes\n• <b>Objectifs tensionnels</b> : PAS ≤ 160 mmHg, PAD ≤ 110 mmHg\n• <b>Comment ?</b> Si pré-éclampsie sévère avec 1 signe de gravité clinico-biologique, ou échec d’un traitement antihypertenseur oral → traitement IV\n• <b>Quel antihypertenseur ?</b> En IV : LABÉTALOL en 1ʳᵉ intention ; en cas de contre-indication ou d’échec de la monothérapie, NICARDIPINE ou URAPIDIL en 2ᵉ intention. Si l’HTA est contrôlée sous traitement IV, relais per os par LABÉTALOL en 1ʳᵉ intention, sinon NICARDIPINE ou ALPHA-MÉTHYLDOPA\n• <b>Sulfate de magnésium en anténatal</b> : pré-éclampsie sévère + 1 signe de gravité, ou antécédent d’éclampsie → diminue le risque d’éclampsie et d’hématome rétro-placentaire\n• Pas d’indication à un remplissage systématique ; pas d’administration systématique de glucocorticoïdes, même en cas de HELLP syndrome\n• <b>Surveillance</b> en unité de soins continus si pré-éclampsie avec un signe clinico-biologique de gravité\n• <b>Arrêt de grossesse</b> : entre 24 et 34 SA, poursuivre la grossesse jusqu’à 34 SA en l’absence de signes de gravité surajoutés maternels ou fœtaux ; pas d’intérêt à la césarienne systématique ; en cas d’éclampsie, reporter la naissance après l’administration de sulfate de magnésium si possible, en l’absence d’urgence vitale\n• <b>Anesthésie</b> : en cas de césarienne chez une patiente en pré-éclampsie sévère, anesthésie périmédullaire > anesthésie générale ; si une AG est nécessaire, ajout d’un morphinique ou d’un antihypertenseur à l’induction pour limiter le pic hypertensif — en 1ʳᵉ intention bolus de 0,5 µg/kg de RÉMIFENTANIL, en 2ᵉ intention alfentanil ou esmolol\n• <b>Post-partum</b> : sulfate de magnésium si éclampsie inaugurale en post-partum ; pas de sulfate de magnésium si pré-éclampsie sévère sans éclampsie ; pas de diurétiques ; calcul d’un score de risque pour l’instauration d’un traitement thromboembolique (score du CNGOF 2015) ; imagerie cérébrale systématique ++\n\n<i>Les figures reproduisent l’algorithme de prise en charge thérapeutique de l’HTA au cours de la pré-éclampsie sévère, le tableau des agents antihypertenseurs IV (labétalol, nicardipine, urapidil) avec leurs stratégies de titration et de perfusion continue, la page de garde des RFE SFAR-CNGOF 2020, et le protocole de prévention de la maladie thromboembolique veineuse après césarienne.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 7</b>\n\nQuelles sont les manifestations cliniques de la toxicité des anesthésiques locaux ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-046-210.jpg"],
+          "reponseAttendue": "Signes subjectifs : goût métallique, nausées. Signes neurologiques : céphalées, dysarthrie, vertiges, acouphènes, paresthésies, convulsions, coma. Signes cardiaques : hypotension, collapsus, bloc atrio-ventriculaire, troubles du rythme ventriculaire, arrêt cardio-circulatoire.",
+          "correctionGenerale": "• <b>Signes subjectifs</b> : sensation de goût métallique, nausées\n• <b>Signes neurologiques</b> : céphalées, dysarthrie, vertiges, acouphènes, paresthésies, convulsion, coma\n• <b>Signes cardiaques</b> : hypotension, collapsus, bloc atrio-ventriculaire, troubles du rythme ventriculaire, arrêt cardio-circulatoire\n\n<i>L’aide cognitive SFAR ajoute les dysesthésies bucco-linguales, les secousses musculaires, la confusion, ainsi que les facteurs favorisants (âges extrêmes, patients de petit poids, cardiopathies, hypoxie et acidose, absence d’échoguidage, non-respect des doses maximales) et le contexte d’injection en bolus (immédiat si injection intravasculaire, retardé jusqu’à 60 minutes après le bolus).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 8</b>\n\nComment traiter initialement une intoxication à la ropivacaïne ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-049-223.png"],
+          "reponseAttendue": "Arrêt de l’administration et appel à l’aide ; oxygénation, ou intubation et ventilation mécanique en cas d’ACR ; réanimation cardio-circulatoire en cas d’ACR avec des doses réduites d’adrénaline (elle prolonge le bloc) et sans amiodarone (effet additif avec les anesthésiques locaux) ; bolus d’intralipide 20 % ; benzodiazépines en cas de convulsions généralisées ; surveillance monitorée pendant au moins 6 heures, +/− transfert en SSPI ; dosage du toxique ; information du patient ou de sa famille.",
+          "correctionGenerale": "• <b>Arrêt de l’administration (PMZ)</b>\n• <b>Appel à l’aide (PMZ)</b>\n• Oxygénation, ou intubation et mise sous ventilation mécanique si ACR\n• Réanimation cardio-circulatoire si ACR : <b>diminution des doses d’adrénaline</b> car elle prolonge le bloc ; <b>pas d’amiodarone</b> car effet additif avec les anesthésiques locaux\n• <b>Bolus d’intralipide 20 %</b>\n• Benzodiazépines si convulsions généralisées\n• Surveillance monitorée pendant au moins 6 heures, +/− transfert en SSPI\n• Dosage du toxique\n• <b>Information du patient ou de sa famille (PMZ)</b>\n\n<i>L’aide cognitive précise les modalités de l’émulsion lipidique à 20 % : bolus de 100 mL en 2-3 min si le poids dépasse 70 kg (1,5 mL/kg sinon), à répéter après 5 minutes si l’hémodynamique reste instable (3 bolus maximum), puis perfusion de 250 mL en 15-20 min (0,25 mL/kg/min), portée à 0,5 mL/kg/min si besoin, poursuivie au moins 10 min après le retour à l’équilibre hémodynamique ; dose cumulative maximale 12 mL/kg. Elle rappelle aussi l’arrêt de la chirurgie, l’oxygénothérapie FiO₂ = 1, le dosage du toxique sur tube sec et la déclaration EIAS.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 9</b>\n\nComment antagoniser une curarisation au décours immédiat d’une injection de 0,6 mg/kg de rocuronium ? Quel est le mécanisme d’action de cet antagoniste et son délai d’action ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-052-236.jpg"],
+          "reponseAttendue": "Administration de sugammadex 16 mg/kg. Mécanisme : le sugammadex est une cyclodextrine qui se lie de manière spécifique au rocuronium dans le plasma et forme des complexes rocuronium/sugammadex éliminés par le rein ; cette interaction entraîne une diminution de la quantité de rocuronium disponible pour se fixer sur les récepteurs nicotiniques de la jonction neuromusculaire. Délai d’action : 3 minutes.",
+          "correctionGenerale": "• <b>Administration de sugammadex 16 mg/kg</b>\n• <b>Mécanisme d’action</b> : le sugammadex est une cyclodextrine qui va se lier de manière spécifique avec le rocuronium dans le plasma et former des complexes rocuronium/sugammadex éliminés par le rein ; cette interaction entraîne une diminution de la quantité de rocuronium disponible pour se fixer sur les récepteurs nicotiniques de la jonction neuromusculaire\n• <b>Délai d’action : 3 minutes</b>\n\n<i>L’algorithme SFAR du mode opératoire de la décurarisation avec le sugammadex est reproduit : prérequis — uniquement avec le rocuronium ; décurarisation immédiate 8 à 16 mg/kg (rapport T4/T1 > 0,9 en 3 à 5 min) ; sinon, évaluation visuelle du nombre de réponses au train-de-quatre à l’adducteur du pouce — si N ≥ 2, sugammadex 2 mg/kg ; si N = 0, tester le compte post-tétanique : CPT = 1 ou 2 → sugammadex 4 mg/kg ; CPT = 0 → attendre et maintenir l’anesthésie.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 10</b>\n\nQuels sont les déterminants de la cinétique de la fraction alvéolaire des halogénés ?",
+          "images": [],
+          "reponseAttendue": "Le coefficient de solubilité dans le sang (liposolubilité), la ventilation alvéolaire, le débit de gaz frais (qui détermine la fraction inspirée en gaz halogéné), l’intégrité des alvéoles (gradient de concentration alvéolo-capillaire) et l’effet second gaz.",
+          "correctionGenerale": "• Coefficient de solubilité dans le sang (liposolubilité)\n• Ventilation alvéolaire\n• Débit de gaz frais → fraction inspirée en gaz halogéné\n• Intégrité des alvéoles → gradient de concentration alvéolo-capillaire\n• Effet second gaz"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Anesthésie — Question n° 11</b>\n\nQuels sont les items du score de Lee ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-057-257.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-058-262.jpg"
+          ],
+          "reponseAttendue": "Score de Lee classique : chirurgie à haut risque, coronaropathie, diabète, insuffisance cardiaque, insuffisance rénale chronique, AVC ou AIT.",
+          "correctionGenerale": "<b>Score de Lee classique</b>\n• Chirurgie à haut risque\n• Coronaropathie\n• Diabète\n• Insuffisance cardiaque\n• Insuffisance rénale chronique\n• AVC / AIT\n\n<i>Le premier tableau cote 1 point pour chacun des facteurs cliniques : antécédents de maladie coronarienne, antécédents d’insuffisance cardiaque, antécédent de maladie cérébrovasculaire (AVC ou AIT), tout type de diabète, insuffisance rénale (DFG < 60 mL/min/1,73 m²). Le second rappelle la classification du risque chirurgical — faible (< 1 % : sein, dentaire, thyroïde, ophtalmologie, gynécologie et orthopédie mineures, chirurgie superficielle, RTUP, résection pulmonaire mineure) ; intermédiaire (1-5 % : carotide, anévrisme aortique par voie endovasculaire, tête et cou, intrapéritonéale, intrathoracique non majeure, neuro ou orthopédie majeures, angioplastie périphérique, transplantation rénale, gynécologie ou urologie majeures) ; élevé (> 5 % : tumeur adrénergique, aorte et chirurgie vasculaire majeure, carotide symptomatique, duodénopancréatectomie, résection hépatique, œsophagectomie, revascularisation ou amputation de membre inférieur, pneumonectomie, transplantation pulmonaire ou hépatique, perforation digestive, cystectomie totale).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 1</b>\n\nQuels sont les mécanismes physiopathologiques de survenue d’une hypoxémie ?",
+          "images": [],
+          "reponseAttendue": "Hypoventilation alvéolaire, diminution de la pression inspirée en oxygène, altération du rapport ventilation/perfusion, effet shunt, trouble de la diffusion alvéolo-capillaire. Attention : hypoxémie ne veut pas dire hypoxie.",
+          "correctionGenerale": "<b>ATTENTION : HYPOXÉMIE NE VEUT PAS DIRE HYPOXIE.</b>\n\n• Hypoventilation alvéolaire\n• Diminution de la pression inspirée en oxygène\n• Altération du rapport ventilation sur perfusion\n• Effet shunt\n• Trouble de la diffusion alvéolo-capillaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 2</b>\n\nDans quelles conditions peut-on interpréter la variation de la pression pulsée ?",
+          "images": [],
+          "reponseAttendue": "Fonction ventriculaire droite et gauche normale (FEVG > 0,4), absence de valvulopathie et d’arythmie, monitorage invasif de la pression artérielle, absence de variation de pression intrathoracique d’origine ventilatoire (compliance normale > 30), ventilation en pression ou en volume contrôlé avec un volume courant de 8-12 mL/kg, une fréquence respiratoire < 25/min et une PEP peu élevée, thorax étanche (pas de drainage ni de pneumothorax), pression abdominale normale, et mesure synchronisée avec le cycle du ventilateur.",
+          "correctionGenerale": "• La fonction ventriculaire droite et gauche est normale (FEVG > 0,4)\n• Absence de valvulopathie et d’arythmie\n• Monitorage invasif de la PA, surtout en cas d’utilisation de vasoconstricteurs\n• Absence de variation de pression intrathoracique d’origine ventilatoire : compliance normale > 30\n• La ventilation est réalisée en pression ou en volume contrôlé : volume courant 8-12 mL/kg, fréquence respiratoire < 25/min, PEP peu élevée\n• Pas de drainage ni de pneumothorax (<b>THORAX ÉTANCHE</b>)\n• Pression abdominale normale\n• La mesure est plus fiable si sa période est synchronisée avec le cycle du ventilateur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 3</b>\n\nQuels sont les déterminants du transport artériel en oxygène ?",
+          "images": [],
+          "reponseAttendue": "TaO₂ = Qc × [(Hb × 1,39 × SaO₂) + (0,003 × PaO₂)] : le débit cardiaque, le taux d’hémoglobine, la saturation artérielle en O₂ et la pression artérielle en O₂.",
+          "correctionGenerale": "<b>TaO₂ = Qc × [(Hb × 1,39 × SaO₂) + (0,003 × PaO₂)] = Qc × CaO₂</b>\n\nDonc :\n• Débit cardiaque\n• Taux d’hémoglobine\n• Saturation artérielle en O₂\n• Pression artérielle en O₂"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 4</b>\n\nQuels sont les mécanismes physiopathologiques de l’insuffisance rénale lors d’une rhabdomyolyse ?",
+          "images": [],
+          "reponseAttendue": "Vasoconstriction intra-rénale (hypovolémie relative liée à l’inflammation et à l’œdème musculaire, diminution du NO), toxicité tubulaire rénale (myoglobinurie, peroxydation lipidique), obstruction tubulaire rénale (précipitation associée à la protéine de Tamm-Horsfall) et inflammation rénale (lésions oxydatives).",
+          "correctionGenerale": "• <b>Vasoconstriction intra-rénale</b> : hypovolémie relative liée à l’inflammation et à l’œdème musculaire ; diminution du NO\n• <b>Toxicité tubulaire rénale</b> : myoglobinurie ; peroxydation lipidique\n• <b>Obstruction tubulaire rénale</b> : précipitation associée à la protéine de Tamm-Horsfall\n• <b>Inflammation rénale</b> : lésions oxydatives"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 5</b>\n\nQuelle est la définition de la pression de perfusion cérébrale ?",
+          "images": [],
+          "reponseAttendue": "PPC = PAM − PIC, en mmHg (PPC : pression de perfusion cérébrale ; PAM : pression artérielle moyenne ; PIC : pression intracrânienne).",
+          "correctionGenerale": "<b>PPC = PAM − PIC</b>, en mmHg\n• PPC = pression de perfusion cérébrale\n• PAM = pression artérielle moyenne\n• PIC = pression intracrânienne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 6</b>\n\nQuel est l’objectif de pression de perfusion cérébrale minimale chez le patient cérébro-lésé ?",
+          "images": [],
+          "reponseAttendue": "65 mmHg en présence d’une autorégulation conservée.",
+          "correctionGenerale": "<b>65 mmHg</b> en présence d’une autorégulation conservée."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 7</b>\n\nCitez les mécanismes physiopathologiques responsables d’une diminution de la pression de perfusion cérébrale.",
+          "images": [],
+          "reponseAttendue": "Si l’autorégulation est préservée : cascade de Rosner — la PPC diminue quand la PIC augmente ou quand la PAM diminue. Chez le patient cérébro-lésé, les ACSOS et les lésions secondaires d’origine centrale s’ajoutent aux facteurs précédents.",
+          "correctionGenerale": "• <b>Si l’autorégulation est préservée</b> → cascade de Rosner : la PPC diminue quand la PIC augmente ou quand la PAM diminue\n• <b>Si le patient est cérébro-lésé</b> → les ACSOS et les lésions secondaires d’origine centrale s’ajoutent aux facteurs précédents"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 8</b>\n\nQuels sont les signes échographiques pulmonaires d’une défaillance cardiaque gauche ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-078-345.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-076-335.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-077-340.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-079-350.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-080-355.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-081-360.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-082-365.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-083-370.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-084-375.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-085-380.jpg"
+          ],
+          "reponseAttendue": "Les lignes B, corrélées à l’œdème : échos de répétition des ultrasons bloqués entre les septa œdématiés, surtout en antérieur et latéralement. À l’état normal, on observe des lignes A et un glissement pleural.",
+          "correctionGenerale": "• <b>Lignes B</b>, corrélées à l’œdème → échos de répétition des ultrasons bloqués entre les septa œdématiés, surtout en antérieur et latéralement\n• <b>Normal</b> : lignes A, glissement pleural\n\n<b>Sémiologie échographique pulmonaire illustrée</b>\n• <i>Fig. 2 — Fusées pleurales</i> : artefacts aériens en queue de comète, bien définis comme des rayons laser, à disposition verticale, naissant strictement de la ligne pleurale et s’étendant jusqu’à la limite inférieure de l’écran sans épuisement ; ce sont les « lignes B ». Plusieurs lignes B simultanément visibles définissent des « fusées pleurales ». Diffuses, elles signent le syndrome interstitiel aigu — ici un œdème aigu pulmonaire\n• <i>Fig. 1 — Poumon normal, lignes A</i> : coupe longitudinale d’un espace intercostal ; le dôme des côtes et la ligne pleurale dessinent le signe de la « chauve-souris » ; les lignes horizontales de répétition de la ligne pleurale sont les « lignes A »\n• <i>Fig. 3 — Poumon normal, glissement pleural</i> : en temps-mouvement, les structures superficielles inertes génèrent des lignes horizontales tandis que les artefacts profonds, animés d’une dynamique, génèrent un aspect sablé (signe du « bord de mer »)\n• <i>Fig. 4 — Pleurésie</i> : épanchement pleural sus-phrénique avec consolidation du lobe inférieur ; coupole clairement identifiée ; discrètes septations signant la nature inflammatoire\n• <i>Fig. 5 — Pleurésie, sinusoïde</i> : en mode TM, l’excursion centrifuge inspiratoire de la surface pulmonaire donne le signe de la « sinusoïde », spécifique d’un épanchement pleural et attestant de sa fluidité\n• <i>Fig. 6 — Pneumothorax</i> : abolition du glissement pleural ; en mode temps-mouvement, ensemble de lignes rigoureusement horizontales (signe de la « stratosphère ») et absence absolue de fusées pleurales\n• <i>Fig. 7 — Pneumothorax et point poumon</i> : changement brutal de profil à l’endroit précis où le poumon collabé touche la paroi lors de l’inspiration\n• <i>Fig. 8 — Lignes E</i> : queues de comète naissant d’une ligne superficielle, sans signe de la chauve-souris — nappes gazeuses superficielles d’emphysème pariétal\n• <i>Fig. 9 — Consolidation alvéolaire</i> : consolidation massive du lobe inférieur gauche, avec bronchogrammes aériens dynamiques et absence d’épanchement liquidien\n• <i>Fig. 10 — Atélectasie</i> : atélectasie massive du poumon droit, associant consolidation alvéolaire, attraction médiastinale, abolition du glissement pleural, ascension de la coupole et « pouls pleural »"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 9</b>\n\nQuelle antibiothérapie probabiliste faut-il administrer devant un syndrome méningé fébrile du sujet jeune non allergique présentant une éruption cutanée d’apparition très récente ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-091-408.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-088-393.png",
+            "annales-area/evcf-evcp-2017/figures/img-089-398.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-090-403.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-092-413.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-093-418.png",
+            "annales-area/evcf-evcp-2017/figures/img-094-423.png",
+            "annales-area/evcf-evcp-2017/figures/img-096-433.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-095-428.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-097-438.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-098-443.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-099-448.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-100-453.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-101-458.jpg"
+          ],
+          "reponseAttendue": "Il s’agit d’un purpura fulminans : urgence vitale et thérapeutique — injection IV ou IM d’une dose de CEFTRIAXONE 1 g avant même tout prélèvement.",
+          "correctionGenerale": "<b>URGENCE VITALE ET THÉRAPEUTIQUE ++ (PMZ)</b>\n\n<b>Injection IV ou IM d’une dose de CEFTRIAXONE 1 g avant même tout prélèvement ++</b>\n\n<b>Antibiothérapie avant la PL ?</b> Tout retard à la PL impose d’initier l’antibiothérapie probabiliste. L’antibiothérapie est débutée avant la PL dans 3 situations :\n• <b>purpura fulminans</b>\n• prise en charge hospitalière ne pouvant être réalisée dans les 90 minutes\n• contre-indication à la réalisation de la PL : anomalie connue de l’hémostase, traitement anticoagulant efficace, suspicion de trouble majeur de l’hémostase (saignement actif), risque élevé d’engagement cérébral, instabilité hémodynamique\n→ pratiquer une hémoculture, débuter l’antibiothérapie sans attendre, réaliser la PL dès que possible après correction des anomalies.\n\n<b>Contre-indications à une ponction lombaire immédiate</b>\n• <i>Non neurologiques</i> : infection cutanée étendue au site de ponction ; instabilité hémodynamique ou respiratoire ; troubles de l’hémostase connus (hémophilie, autre coagulopathie, plaquettes < 50 000/mm³) ; traitement anticoagulant à dose efficace ; saignements spontanés évoquant une CIVD. La prise d’antiagrégants plaquettaires ne contre-indique pas la PL\n• <i>Neurologiques</i> (suspicion clinique de processus intracrânien) : signes de localisation (déficit moteur, sensitif, hémianopsie, syndrome cérébelleux), crises épileptiques focales et récentes ; signes d’engagement cérébral (troubles de la vigilance associés à anomalies pupillaires, dysautonomie, crises toniques postérieures, aréactivité, décortication ou décérébration) ; crises convulsives persistantes\n→ Conduite à tenir : au moins une paire d’hémocultures, corticoïdes et antibiothérapie ; TDM cérébral en urgence ; PL si les résultats du TDM ne la contre-indiquent pas.\n\n<b>Traitement de 1ʳᵉ intention selon l’examen direct du LCR</b>\n• <i>Examen direct POSITIF</i> : CG+ (pneumocoque) → céfotaxime 300 mg/kg/j ou ceftriaxone 100 mg/kg/j ; CG− (méningocoque) et BG− (H. influenzae) → céfotaxime 200 mg/kg/j ou ceftriaxone 75 mg/kg/j ; BG+ (Listeria) → amoxicilline 200 mg/kg/j + gentamicine 5 mg/kg ; BG− (E. coli), si enfant < 3 mois → céfotaxime ou ceftriaxone + gentamicine\n• <i>Examen direct NÉGATIF</i> : sans argument pour une listériose → céfotaxime 300 mg/kg/j ou ceftriaxone 100 mg/kg/j (+ gentamicine si enfant < 3 mois) ; avec arguments pour une listériose → mêmes doses + amoxicilline 200 mg/kg/j + gentamicine 5 mg/kg\n• <i>Allergie grave uniquement</i> (œdème de Quincke, choc anaphylactique) : méningocoque → lévofloxacine ou rifampicine ; pneumocoque → vancomycine en perfusion continue + fosfomycine ou rifampicine ; listériose → triméthoprime-sulfaméthoxazole ; Haemophilus ou entérobactérie → lévofloxacine\n\n<b>Corticothérapie</b> : dexaméthasone immédiatement avant ou de façon concomitante à la 1ʳᵉ injection d’antibiotique si l’examen direct est positif évoquant une méningite à pneumocoque (quel que soit l’âge), à méningocoque (chez l’adulte, débattu) ou à <i>Haemophilus influenzae</i> (chez l’enfant et le nourrisson) ; ou si l’examen direct est négatif mais que le LCR est trouble ou que les autres examens permettent de retenir le diagnostic de méningite bactérienne chez l’adulte et chez le nourrisson de 3 à 12 mois. Dose initiale chez l’adulte : 10 mg (0,15 mg/kg chez l’enfant), répétée toutes les 6 heures pendant 4 jours ; si elle n’a pas été initiée avant, elle peut l’être jusqu’à 12 heures.\n\n<b>Traitement antibiotique avec documentation microbiologique</b>\n• Méningocoque : amoxicilline 200 mg/kg/j (ou maintien de la C3G) si CMI amoxicilline ≤ 0,125 mg/L, sinon céfotaxime ou ceftriaxone — durée totale 4 à 7 jours\n• <i>Listeria</i> : amoxicilline 200 mg/kg/j + gentamicine 3-5 mg/kg les 7 premiers jours — 21 jours\n• Streptocoque B : amoxicilline 200 mg/kg/j — 14 à 21 jours\n• <i>Escherichia coli</i> : céfotaxime ou ceftriaxone 200/75 mg/kg (+ gentamicine les 2 premiers jours chez le nourrisson < 3 mois) — 21 jours\n• <i>Haemophilus influenzae</i> : céfotaxime ou ceftriaxone 200/75 mg/kg — 7 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 10</b>\n\nQuelle antibiothérapie probabiliste faut-il administrer devant une péritonite à J10 après chirurgie abdominale sus-mésocolique chez un patient en état de choc septique ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-104-471.jpg"],
+          "reponseAttendue": "Il s’agit d’une péritonite associée aux soins avec choc septique, après chirurgie sus-mésocolique, sans facteur de risque de BLSE, de BMR ou de BHR. Germes visés : BGN, entérocoques, anaérobies, levures, SARM. Bi-antibiothérapie bactéricide IV en urgence : pipéracilline-tazobactam 4 g puis 16 g en perfusion continue, + amikacine 25 à 30 mg/kg (pic dosé 30 minutes après la fin de la perfusion), + vancomycine dose de charge 30 mg/kg puis 15 mg/kg/24 h IVSE, +/− antifongique de type caspofungine 70 mg à J0 puis 50 mg/j. Durée 10 jours (5 à 15 jours selon l’évolution clinique), à réadapter après 48 h selon les résultats bactériologiques.",
+          "correctionGenerale": "Il s’agit d’une <b>péritonite associée aux soins</b>, avec <b>choc septique</b>, pour chirurgie sus-mésocolique, sans facteur de risque de BLSE, de BMR ou de BHR.\n\n<b>Germes visés</b> : BGN, entérocoques, anaérobies, levures, SARM.\n\n<b>Bi-antibiothérapie bactéricide en intraveineux, en urgence ++ (PMZ)</b>\n• Bêta-lactamine à large spectre : <b>pipéracilline-tazobactam</b> 4 g puis 16 g en perfusion continue\n• + aminoside de type <b>amikacine</b> 25 à 30 mg/kg, pic dosé 30 min après la fin de la perfusion\n• + <b>vancomycine</b> : dose de charge de 30 mg/kg puis 15 mg/kg/24 h IVSE\n• +/− <b>antifongique de type caspofungine</b> (si sexe féminin ou antibiothérapie préalable de plus de 48 h) : 70 mg à J0 puis 50 mg/j, à réadapter après 48 h selon les résultats bactériologiques\n• <b>Durée du traitement : 10 jours</b> (entre 5 et 15 jours selon l’évolution clinique)\n\n<b>Péritonites graves</b> : traitement antifongique si 3 critères parmi défaillance hémodynamique, sexe féminin, chirurgie sus-mésocolique, antibiothérapie préalable de plus de 48 h → <b>ÉCHINOCANDINE</b>. Traitement adapté aux germes suspectés, prélèvements d’emblée, recherche de levure si nosocomial, adaptation dès réception des résultats bactériologiques.\n\n<b>Facteurs de risque de BMR</b>\n• Traitement antérieur par C3G ou fluoroquinolone (y compris monodose) dans les 3 mois\n• Portage d’une entérobactérie productrice de BLSE, ou de <i>Pseudomonas aeruginosa</i> résistant à la ceftazidime, sur un prélèvement de moins de 3 mois, quel que soit le site\n• Hospitalisation à l’étranger dans les 12 mois précédents\n• Patient vivant en EHPAD médicalisé ou en soins de longue durée ET porteur d’une sonde à demeure et/ou d’une gastrostomie\n• Échec de traitement par une antibiothérapie à large spectre (C3G, fluoroquinolone ou pipéracilline-tazobactam)\n• Récidive précoce (< 15 jours) d’une infection traitée par pipéracilline-tazobactam pendant au moins 3 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 11</b>\n\nQuelle antibiothérapie probabiliste faut-il administrer devant une pneumopathie communautaire grave du sujet jeune immunocompétent, non allergique ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-111-502.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-109-492.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-110-497.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-112-507.png",
+            "annales-area/evcf-evcp-2017/figures/img-113-512.png",
+            "annales-area/evcf-evcp-2017/figures/img-114-517.png"
+          ],
+          "reponseAttendue": "Une antibiothérapie urgente, double, probabiliste, par voie intraveineuse, ciblant le pneumocoque : C3G + macrolide, soit céfotaxime 3 g/j + spiramycine 3 MUI × 3/j, après réalisation des prélèvements pulmonaires (ECBC, PCR multiplex, antigénuries, hémocultures), réévaluée secondairement à 48-72 h.",
+          "correctionGenerale": "<b>Antibiothérapie urgente, double, probabiliste, par voie intraveineuse, ciblant le pneumocoque (PMZ)</b>\n• <b>C3G + macrolide</b>\n• Céfotaxime 3 g/j + spiramycine 3 MUI × 3/j\n• Après réalisation des prélèvements pulmonaires : ECBC + PCR multiplex + antigénuries + hémocultures\n• Secondairement réévaluée à 48-72 h\n\n<i>Les tableaux reproduits détaillent : l’antibiothérapie probabiliste des PAC en soins intensifs / réanimation (cas général : C3G IV + macrolide IV ou FQAP ; facteurs de risque de </i>Pseudomonas aeruginosa<i> : pipéracilline-tazobactam, céfépime ou carbapénème + amikacine ou tobramycine + macrolide ou FQAP) ; en ambulatoire (sujet sain sans signe de gravité : amoxicilline ou macrolide ; sujet avec comorbidité ou sujet âgé : amoxicilline-acide clavulanique, FQAP ou ceftriaxone) ; en hospitalisation conventionnelle ; les germes responsables des PAVM selon la date de survenue ; et les schémas thérapeutiques d’avis d’experts pour les pneumonies précoces et tardives.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 12</b>\n\nQuels sont les antagonistes NMDA utilisés en anesthésie-analgésie ?",
+          "images": [],
+          "reponseAttendue": "Méthadone, kétamine, mémantine, amantadine, sulfate de magnésium, lidocaïne, protoxyde d’azote, halogénés.",
+          "correctionGenerale": "• Méthadone\n• Kétamine\n• Mémantine\n• Amantadine\n• Sulfate de magnésium\n• Lidocaïne\n• Protoxyde d’azote (N₂O)\n• Halogénés"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 13</b>\n\nQuels sont les facteurs favorisant la coagulopathie lors d’une hémorragie massive ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-120-542.png"],
+          "reponseAttendue": "Acidose, hypothermie, dilution, hypocalcémie.",
+          "correctionGenerale": "• Acidose\n• Hypothermie\n• Dilution\n• Hypocalcémie\n\n<i>Le schéma reproduit la genèse de la coagulopathie du polytraumatisé : d’une part la lésion tissulaire, avec fibrinolyse, inflammation, anticoagulation systémique par la protéine C activée et dysfonction plaquettaire, aboutissant à la coagulopathie traumatique aiguë ; d’autre part l’hémorragie massive, avec choc, remplissage et transfusion massive de CGR, aboutissant à l’acidose, à l’hypothermie et à la dilution.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet Réanimation — Question n° 14</b>\n\nQuel est le traitement du choc anaphylactique ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-124-559.jpg"],
+          "reponseAttendue": "Appel à l’aide, interruption de l’administration du produit suspecté, arrêt de l’intervention, faire venir le chariot d’urgence. Puis oxygène pur et contrôle des voies aériennes ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) en titration de 0,1 à 0,2 mg toutes les 1 à 2 minutes puis bolus augmentés de 1 à 5 mg, adrénaline IVSE à débuter à 0,2 mg/h ; remplissage vasculaire rapide par cristalloïdes 30 mL/kg puis amidons 30 mL/kg ; en cas d’inefficacité, noradrénaline IVSE, glucagon 1 à 2 mg IVD toutes les 5 minutes chez les patients sous bêta-bloquants, options bleu de méthylène ou sugammadex ; en cas de bronchospasme, adrénaline avant salbutamol ; prélèvements précoces impératifs ; hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures.",
+          "correctionGenerale": "<b>APPEL À L’AIDE (PMZ)</b>\n<b>INTERROMPRE l’administration du produit suspecté (PMZ)</b>\n<b>Arrêt de l’intervention (PMZ)</b>\n<b>FAIRE VENIR le chariot d’urgence (PMZ)</b>\n\n• <b>OXYGÈNE PUR et CONTRÔLE DES VOIES AÉRIENNES</b>\n• <b>ADRÉNALINE IVD</b> (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) : titration de 0,1 à 0,2 mg toutes les 1 à 2 min, puis augmenter les bolus de 1 à 5 mg ; adrénaline IVSE à débuter à 0,2 mg/h\n• <b>REMPLISSAGE VASCULAIRE RAPIDE</b> : cristalloïdes (30 mL/kg) puis amidons (30 mL/kg)\n• <b>EN CAS D’INEFFICACITÉ DE L’ADRÉNALINE</b> : noradrénaline IVSE ; glucagon 1 à 2 mg IVD toutes les 5 min (patients traités par bêta-bloquants) ; option bleu de méthylène 1 à 3 mg/kg IVL ; option sugammadex 16 mg/kg si curares stéroïdiens impliqués\n• <b>BRONCHOSPASME</b> : en cas d’hypotension artérielle, ADRÉNALINE avant SALBUTAMOL — salbutamol spray dans la sonde d’intubation ; salbutamol IVD 0,1 à 0,2 mg ; salbutamol IVSE 0,3 à 1,5 mg/h\n• <b>Faire impérativement les premiers prélèvements ++</b>\n• <b>Hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures</b>\n\n<i>L’aide cognitive SFAR reproduite détaille en outre les critères de confirmation et les diagnostics à éliminer, la titration selon le grade (grade II : 20 µg puis 50 µg toutes les 2 min ; grade III : 100 à 200 µg toutes les 1 à 2 min ; grade IV : bolus de 1 mg), la conduite chez la femme enceinte, la surveillance intensive au moins 6 h après disparition des signes et les dosages biologiques (histamine, tryptase, IgE anti-ammoniums quaternaires).</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2017 - EVCP",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES AREA/EVCF EVCP 2017.pdf",
+      "orderIndex": 22,
+      "vignette": "Vous voyez en consultation d’anesthésie une femme de 45 ans, 160 cm, 130 kg, hypertendue traitée par ramipril, présentant une AC/FA de découverte fortuite il y a 3 mois sous apixaban, pour une chirurgie de réduction gastrique (sleeve gastrectomie).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCalculez son indice de masse corporelle.",
+          "images": [],
+          "reponseAttendue": "IMC = poids / taille² = 130 / (1,6 × 1,6) = 50,7 kg/m² (l’unité est obligatoire) : il s’agit d’une obésité morbide, on parle même de super-obésité car l’IMC dépasse 50.",
+          "correctionGenerale": "<b>IMC = Poids / Taille²</b>\nIMC = 130 / (1,6 × 1,6) = <b>50,7 kg/m²</b> <i>(si l’unité n’est pas donnée : zéro à la question)</i>\n\nDonc <b>obésité MORBIDE</b> ; on parle même de <b>super-obésité</b> car l’IMC est supérieur à 50."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nPrescrivez-vous des examens complémentaires en préopératoire ? Si oui, le(s)quel(s) ?",
+          "images": [],
+          "reponseAttendue": "Oui. Biologie : carte de groupe avec 2 déterminations, RAI, ionogramme sanguin complet (IEC), urée et créatininémie (IEC), NFS, discuter les bêta-hCG en cas de risque de grossesse, HbA1c. Imagerie et fonctionnel : échographie cardiaque (FEVG, HVG, valvulopathie, dilatation auriculaire), ECG, polysomnographie si le score STOP-BANG est élevé (≥ 5-6/8) ; pas d’épreuve d’effort malgré des MET < 4 car le score de Lee est < 2.",
+          "correctionGenerale": "<b>OUI +++ (PMZ)</b>\n\n<b>Biologiques</b>\n• Carte de groupe avec 2 déterminations\n• RAI : en cas de transfusion per- ou postopératoire\n• Ionogramme sanguin complet (IEC) : anomalie potassique / natrémique\n• Urée et créatininémie (IEC) : insuffisance rénale chronique\n• NFS : anémie préopératoire ? thrombopénie ?\n• Discuter les bêta-hCG en cas de risque de grossesse\n• HbA1c\n\n<b>Imagerie</b>\n• Échographie cardiaque : FEVG, recherche d’HVG, valvulopathie, dilatation auriculaire\n• Pas d’épreuve d’effort malgré des MET < 4, car le score de Lee est < 2\n\n<b>Autres</b>\n• ECG\n• Polysomnographie si le score STOP-BANG est élevé (≥ 5-6/8)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDécrivez les modalités de gestion préopératoire du traitement antihypertenseur.",
+          "images": [],
+          "reponseAttendue": "Le ramipril est un IEC : arrêt 24 à 48 heures avant la chirurgie.",
+          "correctionGenerale": "• Ramipril prescrit pour l’HTA = <b>IEC</b>\n• <b>Arrêt 24 h à 48 h avant la chirurgie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nDécrivez les modalités de gestion préopératoire du traitement anticoagulant.",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-135-604.png",
+            "annales-area/evcf-evcp-2017/figures/img-136-609.jpg"
+          ],
+          "reponseAttendue": "Il n’y a pas de notion d’insuffisance rénale chronique : l’apixaban (anti-Xa) est arrêté à J-3, SANS RELAIS. Pas de dosage préopératoire, pas d’héparine puisqu’il n’y a pas de relais ; le TP et le TCA sont inutiles en pratique. Proposer un relais vaut zéro à la question.",
+          "correctionGenerale": "• Pas de notion d’insuffisance rénale chronique\n• <b>Apixaban (anti-Xa) = arrêt à J-3, SANS RELAIS</b>\n• Pas de dosage en préopératoire ; pas d’héparine car pas de relais ; TP et TCA inutiles en pratique\n• <i>Si relais : zéro à la question</i>\n\n<b>JAMAIS DE RELAIS AVEC LES AOD +++</b> (≠ avec les AVK)\n\n<i>Le tableau du GIHP rappelle la gestion périopératoire des AOD selon le risque hémorragique : en cas de risque élevé, dernière prise à J-3 pour rivaroxaban, apixaban et édoxaban, à J-4 pour le dabigatran si Cockcroft ≥ 50 mL/min et à J-5 si Cockcroft < 50 mL/min ; pas de relais, pas de dosage ; reprise après le geste à dose prophylactique au moins 6 h après l’acte, à dose curative dès que l’hémostase le permet (24 à 72 h). Le second schéma rappelle qu’un relais est nécessaire sous AVK pour les valves mécaniques, la fibrillation atriale avec antécédent d’AVC et la MTEV de moins de 3 mois, mais jamais sous AOD.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nDécrivez par ordre chronologique les modalités de monitorage et de contrôle des voies aériennes supérieures avant intubation (drogues anesthésiques exclues).",
+          "images": [],
+          "reponseAttendue": "Vérification du jeûne et de la prise d’anti-acides (ranitidine) 30 minutes avant, vérification de l’identité et de la chirurgie, vérification de la VVP, du matériel d’intubation difficile et de ventilation, du matériel d’aspiration ; monitorage par scope cardiotensionnel avec brassard adapté à l’obèse, SpO₂, TOF, EtCO₂ et BIS (objectif 40-60) ; drogues d’urgence et d’induction prêtes, matériel d’intubation prêt (lame métal, manche court, McGrath) ; préoxygénation prolongée en proclive, coussin sous la tête pour aligner tragus et sternum, masque adapté sans fuite, VS-AI-PEP avec PEP haute, durée > 5 minutes, efficacité sur EtO₂ > 90 %.",
+          "correctionGenerale": "<b>Vérifications</b>\n• Vérification du jeûne + anti-acides donnés (ranitidine) 30 min avant\n• Vérification de l’identité et de la chirurgie\n• Vérification de la VVP\n• Vérification du matériel d’intubation difficile (mandrin d’Eschmann, glottiscope, masque laryngé en salle, vidéolaryngoscope disponible) et du matériel de ventilation (insufflateur manuel, bouteille d’O₂, canule de Guedel, respirateur et circuit externe fonctionnels)\n• Vérification du matériel d’aspiration\n\n<b>Monitorage</b>\n• Scope cardiotensionnel avec brassard adapté à l’obèse\n• Oxymétrie de pouls (SpO₂)\n• <b>TOF</b> pour le monitorage de la curarisation\n• <b>EtCO₂</b> branché\n• <b>BIS</b> pour le monitorage de l’hypnose et pour éviter un surdosage en halogéné (stockage adipeux) — objectif BIS 40-60\n\n<b>Préparation</b>\n• Drogues d’urgence prêtes (atropine, éphédrine)\n• Drogues d’induction anesthésique prêtes\n• Matériel d’intubation prêt : lame métal, <b>manche court</b>, McGrath\n\n<b>Préoxygénation prolongée</b> (CRF basse chez l’obèse, risque de désaturation plus précoce)\n• Proclive\n• Coussin sous la tête pour aligner tragus et sternum\n• Masque adapté au visage, sans fuite\n• Ventilation spontanée en VS-AI-PEP, PEP haute\n• Durée prolongée > 5 min\n• Efficacité sur l’EtO₂ > 90 % (FeO₂ > 90 %)\n\n<b>Début d’induction</b> — limiter de toute façon les ventilations manuelles prolongées (intubation à l’apnée ou induction en séquence rapide)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelles sont les règles de l’antibioprophylaxie pour cette patiente ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-142-635.png"],
+          "reponseAttendue": "Pour une sleeve gastrectomie, céfoxitine 2 g IVL, avec réinjection de 1 g toutes les 2 heures si la durée dépasse 2 heures, jusqu’à la fin de la chirurgie. Chez cette patiente dont l’IMC dépasse 50, la dose peut être portée à 4 g.",
+          "correctionGenerale": "<b>Chirurgie bariatrique</b> (recommandations SFAR, avis d’experts)\n• Mise en place d’un anneau gastrique : <b>céfazoline</b> 2 g IVL, puis 1 g toutes les 4 h si la durée dépasse 4 h, jusqu’à la fin de la chirurgie\n• Réalisation d’un court-circuit gastrique ou d’une « sleeve » gastrectomie : <b>céfoxitine</b> 2 g IVL, puis 1 g toutes les 2 h si la durée dépasse 2 h, jusqu’à la fin de la chirurgie\n\n<b>IMC > 50 : la dose peut passer à 4 g.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nVous décidez de faire une induction par propofol et succinylcholine. Donnez la posologie (en mg) des médicaments que vous utilisez pour cette patiente.",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-145-648.png"],
+          "reponseAttendue": "Propofol : 3 à 3,9 mg/kg de poids idéal (1,60 m → 60 kg) ou de poids ajusté (80-90 kg), soit 3 × 90 = 270 mg, en pratique 250 à 300 mg IVD — l’utilisation du poids réel pour le propofol vaut zéro à la question. Succinylcholine : dose sur le poids RÉEL, soit 1 mg/kg = 130 mg IVD, après le propofol.",
+          "correctionGenerale": "• <b>Propofol</b> : 3 à 3,9 mg/kg de <b>poids idéal</b> (1,60 m = 60 kg) ou de <b>poids ajusté</b> (80-90 kg) — 3 × 90 mg = 270 mg, en pratique <b>250 à 300 mg IVD</b>\n  <i>Si le poids réel est utilisé pour le propofol : zéro à la question.</i>\n• <b>Succinylcholine</b> : dose sur le <b>poids RÉEL</b>, soit 1 mg/kg → <b>130 mg IVD</b>, après le propofol\n\n<b>Comment évaluer le poids</b>\n• <b>Poids réel</b> mesuré\n• <b>Poids idéal</b> : homme → 49,9 + 0,89 × (taille en cm − 152,4) ; femme → 45,4 + 0,89 × (taille en cm − 152,4) — tient compte du sexe et de la taille mais pas de la composition corporelle\n• <b>Poids ajusté</b> : poids idéal + Fc × (poids réel mesuré − poids idéal), où Fc est un facteur de correction variable selon le médicament — tient compte du sexe, de la taille et du poids en « enlevant » la masse grasse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nVous envisagez une intubation potentiellement difficile. Quels moyens utilisez-vous pour faciliter l’intubation ?",
+          "images": ["annales-area/evcf-evcp-2017/figures/img-148-661.jpg"],
+          "reponseAttendue": "Deux personnes à la tête, coussin sous la tête en position amendée de Jackson avec alignement tragus-sternum, position proclive, lame de laryngoscope en métal, manche court, appui laryngé (BURP), mandrin long béquillé d’Eschmann, glottiscope (Airtraq®), vidéolaryngoscopie (McGrath®), dispositif supra-glottique (Fastrach®).",
+          "correctionGenerale": "• 2 personnes à la tête (2 MAR, ou 1 IADE + 1 MAR)\n• Coussin sous la tête, <b>position amendée de Jackson</b> — alignement tragus / sternum\n• Position proclive\n• Lame de laryngoscope en métal\n• Manche court\n• Appui laryngé (BURP : Backward, Upward, Rightward Pressure)\n• Mandrin long béquillé d’Eschmann\n• Glottiscope (Airtraq®)\n• Vidéolaryngoscopie (McGrath®…)\n• Dispositif supra-glottique (Fastrach®)\n\n<i>Le schéma illustre la position modifiée de Jackson : la position de la tête, la mise en place d’un coussin sous l’occiput et le laryngoscope permettent d’aligner les trois axes (buccal, pharyngé, laryngé) et de visualiser la glotte.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nVous avez décidé de ventiler la patiente en volume contrôlé durant la chirurgie. Précisez les paramètres de réglage du ventilateur.",
+          "images": [],
+          "reponseAttendue": "Vt 6 à 8 mL/kg de poids idéal et non de poids réel (60 × 7 = 420 mL), PEP haute 7 à 10 cmH₂O pour éviter le dérecrutement, FR selon l’EtCO₂ avec un objectif de 35-40 mmHg, SpO₂ > 97 % avec une FiO₂ de 50-60 % pour limiter les atélectasies, rapport I/E = 1/2, manœuvres de recrutement alvéolaire toutes les 30 minutes (40 cmH₂O pendant 30 secondes), pression de plateau < 30 cmH₂O.",
+          "correctionGenerale": "• <b>Vt 6 à 8 mL/kg de POIDS IDÉAL</b> et non de poids réel : 60 × 7 = 420 mL de volume courant, par exemple\n• <b>PEP haute 7 à 10 cmH₂O</b> (éviter le dérecrutement)\n• FR selon l’EtCO₂, objectif 35-40 mmHg (expiré)\n• SpO₂ > 97 % / FiO₂ 50-60 % → limiter les atélectasies\n• I/E = 1/2\n• Recrutement alvéolaire toutes les 30 min (40 cmH₂O pendant 30 s, ou augmentation progressive de la pression de plateau autour de 40 cmH₂O)\n• Pression de plateau < 30 cmH₂O"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nVous envisagez d’extuber la patiente en fin d’intervention. Quels sont vos critères d’extubation ?",
+          "images": [],
+          "reponseAttendue": "Patiente bien consciente, répondant aux ordres simples, Vt entre 6 et 8 mL/kg en ventilation spontanée ou en VS-AI-PEP avec un faible niveau d’aide (6-7) et une FR > 10, stabilité hémodynamique, absence de saignement anormal dans les drains, position proclive ou assise, recrutement alvéolaire avant extubation, aspiration buccale avant le réveil, décurarisation complète (TOF 4/4, T4/T1 > 90 %), normothermie, réflexes de déglutition et de toux présents, FiO₂ 100 % et EtO₂ > 90 % avec SpO₂ 100 %, matériel de réintubation d’urgence prêt.",
+          "correctionGenerale": "• Patiente bien consciente\n• Répondant aux ordres simples\n• Vt entre 6 et 8 mL/kg en ventilation spontanée ou en VS-AI-PEP avec un faible niveau d’aide (6-7) et une FR > 10\n• Stabilité hémodynamique\n• Pas de saignement anormal dans les redons / drains\n• Position proclive / position assise\n• Recrutement alvéolaire avant extubation\n• Aspiration avant le réveil dans la bouche\n• <b>Décurarisation complète : TOF 4/4, T4/T1 > 90 %</b>\n• Normothermie\n• Réflexes de déglutition et de toux présents\n• FiO₂ 100 % et EtO₂ > 90 % ⇒ SpO₂ 100 % obligatoire\n• Matériel de réintubation d’urgence prêt si besoin ; aspiration prête ; drogues d’urgence et hypnotiques prêts si besoin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nÀ J4, votre patiente est confuse. Le pouls est à 120 bpm, la TA à 150/90 mmHg et la température à 38,5 °C. La SpO₂ est à 85 %. Quels diagnostics évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un tableau de choc, par ordre de probabilité : sepsis sur infection intra-abdominale associée aux soins par fistule digestive à J4 d’une chirurgie bariatrique ; pneumopathie nosocomiale postopératoire (inhalation ?) ; embolie pulmonaire ; syndrome coronarien aigu (infarctus ou type 2 par inadéquation) lié à un sepsis sous-jacent ; hypovolémie avec déshydratation majeure sur pertes digestives non compensées ; œdème aigu du poumon sur poussée d’ACFA rapide liée à la fièvre.",
+          "correctionGenerale": "<b>Tableau de choc +++</b>, par ordre de probabilité :\n1. <b>Sepsis</b> — infection intra-abdominale associée aux soins post-fistule digestive à J4 d’une chirurgie bariatrique <i>(pas de critère stricto sensu de choc septique)</i>\n2. Pneumopathie nosocomiale postopératoire (inhalation ?) / sepsis\n3. Embolie pulmonaire (fébricule, TVP)\n4. Syndrome coronarien aigu (IDM ou type 2 = mismatch) lié à un sepsis sous-jacent\n5. Hypovolémie avec déshydratation majeure sur pertes digestives importantes non compensées\n6. Œdème aigu du poumon (poussée d’ACFA rapide suite à la fièvre d’un sepsis)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nVous décidez de la transférer en réanimation. Le diagnostic de choc septique est retenu. Quelles sont les premières mesures que vous mettez en œuvre ?",
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-171-755.jpg",
+            "annales-area/evcf-evcp-2017/figures/img-173-765.png"
+          ],
+          "reponseAttendue": "Urgence médico-chirurgicale : scope et surveillance rapprochée, bilan biologique en urgence (lactates, GDS, NFS, plaquettes, ScvO₂, RAI, groupes), puis quatre urgences — 1) hémodynamique : remplissage par cristalloïdes 15-30 mL/kg, objectif PAM > 65 voire 70 mmHg, noradrénaline sur VVP dédiée puis VVC, cathéter artériel et monitorage hémodynamique continu (le ΔPP est ininterprétable du fait de l’ACFA) ; 2) respiratoire : oxygénothérapie et ventilation mécanique si besoin ; 3) septique : hémocultures et ECBU, prélèvements peropératoires, pipéracilline-tazobactam à forte dose (bolus 4 g puis 16-20 g/24 h) + amikacine 30 mg/kg + caspofungine 70 mg puis 50 mg/j ; 4) chirurgicale : appel du chirurgien, information de la patiente et de la famille, bilan préopératoire, prélèvements peropératoires, lavage-drainage et suture de la fistule.",
+          "correctionGenerale": "• <b>Urgence médico-chirurgicale (PMZ)</b>\n• Scope cardiotensionnel, surveillance rapprochée\n• Bilan biologique en urgence : lactates, GDS, NFS, plaquettes, ScvO₂, RAI, groupes…\n\n<b>1) Urgence hémodynamique : choc cardio-circulatoire</b>\n• Optimisation hémodynamique : remplissage vasculaire par cristalloïdes en 1ʳᵉ intention (15-30 mL/kg), mais inefficace dans le choc septique\n• Objectif PAM > 65 mmHg, voire 70 mmHg (hypertendue chronique)\n• Ajout d’un vasopresseur : noradrénaline en 1ʳᵉ intention sur VVP dédiée puis VVC dès que possible\n• Pose de cathéter artériel + VVC\n• Monitorage hémodynamique continu si possible (thermodilution transpulmonaire) ou échocardiographie transthoracique ; <b>pas d’interprétation possible du ΔPP car ACFA</b>\n\n<b>2) Optimisation respiratoire</b>\n• Oxygénothérapie et ventilation mécanique si besoin (VNI voire intubation)\n\n<b>3) Urgence septique : antibiothérapie en urgence car choc septique (PMZ)</b>\n• <b>Hémocultures — au moins 2 paires — + ECBU (PMZ)</b>\n• Prélèvement bactériologique peropératoire si possible (délai < 30 min), sinon le plus tôt possible\n• Chirurgie sus-mésocolique et tableau de choc septique :\n  – Bêta-lactamine à large spectre ciblant BGN, entérocoques et anaérobies\n  – Type pipéracilline-tazobactam (TAZOCILLINE®), à dose bactéricide, forte dose, car <b>pas de risque de BMR (PMZ)</b> : 16 à 20 g/24 h après un bolus de 4 g\n  – Association synergique avec <b>amikacine</b> 30 mg/kg de poids calculé (entre poids réel et poids ajusté, soit 80 kg → 2,5 g) sur 30 min, avec taux pic 30 min après la fin de la perfusion, puis dose toutes les 24 h (durée 48-72 h) selon le taux résiduel\n  – Ajout d’un <b>antifongique de type échinocandine</b> : caspofungine 70 mg à J0 puis 50 mg/j (chirurgie sus-mésocolique, sexe féminin et choc septique)\n  – Réadaptation des antibiotiques à 48 h après les résultats des prélèvements\n\n<b>4) Urgence chirurgicale (PMZ)</b> : appeler le chirurgien, l’IBODE, l’IADE et le MAR\n• Prise en charge en urgence\n• <b>Information de la famille et de la patiente (PMZ)</b>\n• Bilan préopératoire : RAI, NFS, coagulation\n• Si nécessité de transfusion : isogroupe (femme en âge de procréer)\n• Prélèvements peropératoires\n• Lavage, drainage, suture de la fistule, drains, fermeture\n\n<b>Pour information</b> (non demandé car il s’agit des premières mesures)\n• Hospitalisation en réanimation au décours +++ (surveillance rapprochée)\n• Thromboprophylaxie à double dose : HBPM énoxaparine 4000 UI/12 h si DFG > 30 mL/min, sinon calciparine 5000 UI/8 h ou /6 h (IMC > 40 et poids ≥ 130 kg)\n• Antalgiques postopératoires : paracétamol, Acupan®, tramadol, PCA morphine — <b>pas d’AINS</b> (contexte septique)\n• TAP bloc ou infiltration à la ropivacaïne\n• Surveillance : efficacité (fièvre, syndrome inflammatoire) et tolérance (éruption cutanée, fonction rénale)\n\n<i>Rappels du corrigé : péritonites graves communautaires → pipéracilline-tazobactam +/− gentamicine 6-8 mg/kg, 5 à 7 j ; nosocomiales → pipéracilline-tazobactam +/− amikacine 25 mg/kg, 5 à 15 j, et carbapénème à large spectre (imipénème 30 mg/kg en 4 injections) +/− amikacine en cas de risque de BMR ; vancomycine 30 mg/kg si suspicion d’entérocoque résistant à l’ampicilline ; en cas d’allergie aux bêta-lactamines → ciprofloxacine 400 mg × 3/j + amikacine + métronidazole 500 mg × 3/j + vancomycine. L’adaptation posologique de la pipéracilline/tazobactam selon la clairance de la créatinine est également rappelée.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nÀ J3, la patiente est intubée, ventilée et sédatée par midazolam et sufentanil. Elle présente une PaO₂ à 85 mmHg sous FiO₂ 100 %. Le diagnostic de SDRA est retenu. Que pouvez-vous faire pour améliorer les échanges gazeux ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’un SDRA sévère (PaO₂/FiO₂ = 85 mmHg < 100). Décubitus ventral, curarisation par un curare d’action prolongée (cisatracurium), ventilation protectrice (Vt 6 mL/kg de poids idéal soit 360 mL, PEP haute jusqu’à une Pplat < 30 cmH₂O, hypercapnie permissive 50-55 mmHg, FiO₂ 100 % et manœuvres de recrutement), humidificateur-réchauffeur sur le respirateur, +/− NO inhalé, puis circulation extracorporelle (décarboxylation, ECMO).",
+          "correctionGenerale": "<b>SDRA sévère</b> car PaO₂/FiO₂ = 85/1 = 85 mmHg < 100 mmHg.\n\n• <b>Décubitus ventral</b>\n• <b>Curarisation</b> par un curare d’action prolongée : cisatracurium\n• <b>Ventilation protectrice</b>\n  – Vt 6 mL/kg de poids idéal → 360 mL\n  – PEP haute, qsp Pplat < 30 cmH₂O\n  – Hypercapnie permissive (50-55 mmHg)\n  – FiO₂ 100 % / recrutement alvéolaire\n• Humidificateur / réchauffeur sur le respirateur\n• +/− NO inhalé (vasodilatation pulmonaire) — <i>pas de preuve d’efficacité retrouvée dans la littérature</i>\n• Puis <b>circulation extracorporelle</b> : décarboxylation, ECMO"
+        }
+      ]
+    }
+  ]
+}

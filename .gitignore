@@ -41,7 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 # Annales DOC sources are large binary blobs — not needed in repo
-Annales/
+/Annales/
 
 # Python bytecode cache
 __pycache__/

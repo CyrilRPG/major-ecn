@@ -1,0 +1,497 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf": {
+      "atelier": "annales-orthopedie/evcp-2020-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-030-131.png": "aplat gris uniforme servant de masque de diapositive, sans aucun contenu",
+        "img-042-184.png": "photographie décorative de fond de diapositive (pile de livres), sans contenu médical",
+        "img-042-185.png": "photographie décorative de fond de diapositive, sans contenu médical"
+      }
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 1",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 42,
+      "vignette": "Mademoiselle X, 21 ans, vient vous consulter pour un problème de luxation épisodique de la rotule. Voici sa radiographie du genou de profil.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est le signe radiologique fondamental en faveur d’un problème d’instabilité rotulienne ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
+          ],
+          "reponseAttendue": "Le signe du croisement.",
+          "correctionGenerale": "Signe du croisement."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelle classification permet d’en évaluer la sévérité ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-006-025.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-006-026.jpg"
+          ],
+          "reponseAttendue": "La classification de Dejour.",
+          "correctionGenerale": "Classification de Dejour."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel diagnostic posez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une dysplasie trochléenne de type C/D.",
+          "correctionGenerale": "Dysplasie trochléenne type C/D."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nComment évaluez-vous la hauteur rotulienne ? Citez 2 index différents en précisant comment les mesurer.",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-010-045.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-010-046.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-010-047.jpg"
+          ],
+          "reponseAttendue": "L’index de Caton-Deschamps (AT/AP) : patella infera si AT/AP < 0,8, valeurs normales entre 0,8 et 1,2, patella alta au-delà de 1,2.",
+          "correctionGenerale": "<b>Index de Caton-Deschamps</b> : AT/AP\n• Patella infera\n• 0,8 < AT/AP < 1,2\n• Patella alta"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nVous demandez un bilan TDM complémentaire. Quelles sont les 2 mesures que vous allez évaluer grâce à cet examen afin d’affiner votre analyse de la pathologie ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-012-056.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-012-057.jpg"
+          ],
+          "reponseAttendue": "La mesure de la TA-GT et la bascule rotulienne.",
+          "correctionGenerale": "• Mesure de la TA-GT\n• Bascule rotulienne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nÀ partir de combien d’épisodes de luxation de rotule peut-on proposer une prise en charge chirurgicale ?",
+          "images": [],
+          "reponseAttendue": "À partir du 2ᵉ épisode, en cas d’échec du traitement médical.",
+          "correctionGenerale": "À partir du 2ᵉ épisode, si échec du traitement médical."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nCitez 3 gestes chirurgicaux qui peuvent être proposés, selon les cas, de façon isolée et/ou combinée pour une instabilité rotulienne récidivante.",
+          "images": [],
+          "reponseAttendue": "Reconstruction du MPFL, abaissement/médialisation de la TTA, trochléoplastie.",
+          "correctionGenerale": "• MPFL\n• Abaissement / médialisation de la TTA\n• Trochléoplastie"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 2",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 43,
+      "vignette": "Une patiente de 80 ans a été opérée d’une prothèse de hanche à double mobilité (tige cimentée, cotyle sans ciment) pour une fracture du col, 3 semaines auparavant, sans pathologie associée. Elle est réadressée par son médecin traitant pour une fièvre évoluant depuis 48 heures et une impotence fonctionnelle douloureuse de la hanche.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est le premier diagnostic à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Une infection du site opératoire précoce.",
+          "correctionGenerale": "Infection du site opératoire (ISO) précoce."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelle en est l’origine la plus probable ?",
+          "images": [],
+          "reponseAttendue": "Une inoculation directe, nosocomiale.",
+          "correctionGenerale": "Inoculation directe, nosocomiale."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel est le germe pathogène le plus probable ?",
+          "images": [],
+          "reponseAttendue": "Un staphylocoque (S. aureus ou staphylocoque à coagulase négative).",
+          "correctionGenerale": "Staphylocoques (<i>S. aureus</i> ou staphylocoques à coagulase négative)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels examens de première intention prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un bilan biologique avec dosage de la CRP, des radiographies standard face + profil, +/− un TDM à la recherche d’une collection profonde.",
+          "correctionGenerale": "• Bilan biologique avec dosage de la CRP\n• Radiographie standard F + P\n• +/− TDM à la recherche d’une collection profonde"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuel examen peut confirmer le diagnostic ? Dans quelles conditions doit-il être réalisé ?",
+          "images": [],
+          "reponseAttendue": "Une ponction de hanche avec analyse bactériologique, réalisée sous contrôle scopique au bloc opératoire, dans des conditions d’asepsie stricte.",
+          "correctionGenerale": "• Ponction de hanche avec analyse bactériologique\n• Sous contrôle scopique, au bloc opératoire\n• Conditions d’asepsie stricte"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nLe diagnostic est confirmé : quels sont les grands principes du traitement ?",
+          "images": [],
+          "reponseAttendue": "Urgence chirurgicale (délai < 1 mois) : lavage au bloc opératoire avec changement des pièces mobiles, luxation de la prothèse, synovectomie élargie, prélèvements bactériologiques multiples, puis antibiothérapie probabiliste postopératoire secondairement adaptée à l’antibiogramme.",
+          "correctionGenerale": "• Urgence chirurgicale, délai < 1 mois\n• Lavage au bloc opératoire + changement des pièces mobiles\n• Luxation de la prothèse\n• Synovectomie élargie\n• Prélèvements bactériologiques multiples\n• Antibiothérapie probabiliste postopératoire (Tazocilline + vancomycine / daptomycine +/− gentamicine si sepsis sévère), secondairement adaptée à l’antibiogramme"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 3",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 44,
+      "vignette": "Vous recevez aux urgences une patiente de 75 ans en bon état général, droitière, qui présente un traumatisme fermé de l’épaule gauche. Vous disposez du bilan radiographique suivant.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-030-130.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-031-136.png"
+          ],
+          "reponseAttendue": "Une fracture de l’extrémité supérieure de l’humérus gauche, céphalo-tubérositaire à 4 parts selon Neer (CT2 de Duparc), avec refend articulaire dans la tête, sur probable ostéoporose.",
+          "correctionGenerale": "• Fracture de l’extrémité supérieure de l’humérus gauche\n• Céphalo-tubérositaire, 4 parts (Neer) — CT2 (Duparc)\n• Refend articulaire dans la tête\n• Ostéoporose ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez votre prise en charge en urgence.",
+          "images": [],
+          "reponseAttendue": "Examen clinique vasculo-nerveux, immobilisation coude au corps, antalgie adaptée, bilan biologique préopératoire et TDM ++ pour le bilan préopératoire.",
+          "correctionGenerale": "• Examen clinique vasculo-nerveux\n• Immobilisation par coude au corps\n• Antalgie adaptée\n• Bilan biologique préopératoire\n• TDM ++ pour bilan préopératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDécrivez les options thérapeutiques et justifiez votre choix.",
+          "images": [],
+          "reponseAttendue": "Traitement orthopédique idéalement en rotation neutre (coussin d’abduction) 6 semaines ; ostéosynthèse conservatrice (brochage Kapandji/Hackethal, enclouage centromédullaire +/− bilboquet, plaque) ; ou arthroplastie radicale (hémiarthroplastie, PTE anatomique, PTE inversée).",
+          "correctionGenerale": "<b>Traitement orthopédique</b>\n• Idéalement en rotation neutre (coussin d’abduction), 6 semaines\n\n<b>Ostéosynthèse — traitement conservateur</b>\n• Brochage (Kapandji / Hackethal)\n• Enclouage centromédullaire +/− bilboquet\n• Plaque\n\n<b>Arthroplastie — traitement radical</b>\n• Hémiarthroplastie / PTE anatomique\n• PTE inversée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDécrivez succinctement les principes techniques du traitement que vous avez choisi.",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-040-174.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-041-179.jpg"
+          ],
+          "reponseAttendue": "Installation en beach chair, voie delto-pectorale ou supéro-externe, ténotomie du biceps, réduction anatomique et fixation des tubérosités, tige spécifique « fracture », position basse de la glène et tilt inférieur.",
+          "correctionGenerale": "• Installation en beach chair\n• Voie delto-pectorale ou supéro-externe\n• Ténotomie du biceps\n• Réduction anatomique et fixation des tubérosités\n• Tige spécifique « fracture »\n• Position basse de la glène\n• Tilt inférieur"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 4",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 45,
+      "vignette": "Un patient de 45 ans consulte pour une volumineuse tuméfaction du coude, sans notion traumatique. Il vous présente les examens ci-dessous. Le radiologue décrit une masse tissulaire hétérogène prenant le contraste.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez votre examen clinique.",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-043-190.png"
+          ],
+          "reponseAttendue": "Interrogatoire (altération de l’état général, ancienneté et évolutivité de la lésion, antécédents notamment carcinologiques) et examen physique (taille, adhérence aux plans profond et superficiel, examen neurologique et recherche de signes de compression, mobilités).",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Altération de l’état général\n• Ancienneté de la lésion\n• Évolutivité ?\n• Antécédents ? Cancer ?\n\n<b>Examen physique</b>\n• Taille, adhérence au plan profond / superficiel\n• Examen neurologique, signes de compression\n• Mobilités"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nHypothèses diagnostiques ?",
+          "images": [],
+          "reponseAttendue": "Lipome ou liposarcome, tumeur à cellules géantes, synovite villonodulaire, sarcome indifférencié…",
+          "correctionGenerale": "• Lipome / liposarcome\n• Tumeur à cellules géantes (TCG)\n• Synovite villonodulaire\n• Sarcome indifférencié…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nStratégie de prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Devant une lésion de plus de 10 cm, hétérogène : avis en RCP, biopsie par microbiopsie scanno-guidée, et bilan d’extension (TDM thoraco-abdomino-pelvien injecté, TEP-scan, scintigraphie).",
+          "correctionGenerale": "• Taille > 10 cm, hétérogène\n• Avis RCP\n• Biopsie : microbiopsie scanno-guidée\n• Bilan d’extension : TDM thoraco-abdomino-pelvien injecté, TEP-scan, scintigraphie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels sont les grands principes du traitement ?",
+          "images": [],
+          "reponseAttendue": "Chimiothérapie néoadjuvante, chirurgie d’exérèse carcinologique en marges saines, puis radiothérapie adjuvante et chimiothérapie postopératoire.",
+          "correctionGenerale": "• Chimiothérapie néoadjuvante\n• Chirurgie d’exérèse carcinologique en marges saines\n• Radiothérapie adjuvante + chimiothérapie postopératoire"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 5",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 46,
+      "vignette": "Un homme de 45 ans arrive aux urgences à la suite d’une chute de sa hauteur. Il présente des douleurs de la hanche droite et une impotence fonctionnelle du membre inférieur droit. Une radiographie a été réalisée (ci-jointe).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ? Et comment classez-vous cette fracture ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-053-232.jpg"
+          ],
+          "reponseAttendue": "Une fracture cervicale vraie du fémur droit, Garden I (engrenée en valgus).",
+          "correctionGenerale": "• Fracture cervicale vraie du fémur droit\n• Garden I (engrenée en valgus)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel traitement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un traitement conservateur en urgence (< 6 h) : ostéosynthèse par triple vissage ou DHS.",
+          "correctionGenerale": "• En urgence (< 6 h)\n• Traitement conservateur : ostéosynthèse par triple vissage ou DHS"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDeux ans après la prise en charge initiale, le patient présente de nouveau des douleurs de la hanche droite. Une IRM a été réalisée (ci-jointe). Quel est votre diagnostic ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-058-253.jpg"
+          ],
+          "reponseAttendue": "Une ostéonécrose de hanche droite, post-traumatique, de stade IIc de l’ARCO.",
+          "correctionGenerale": "• Ostéonécrose de hanche droite, post-traumatique\n• Stade IIc de l’ARCO"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel traitement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un traitement radical : prothèse totale de hanche.",
+          "correctionGenerale": "Traitement radical : prothèse totale de hanche."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 6",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 47,
+      "vignette": "Appel des urgences, lundi soir 20 h. Homme de 37 ans : cotyle explosé ! AVP deux-roues, pas d’atteinte sciatique mais la hanche est luxée. Après réduction au bloc opératoire, la radiographie suivante est obtenue.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez cette fracture. Quelles sont les zones anatomiques atteintes ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-064-280.png"
+          ],
+          "reponseAttendue": "Rupture de la ligne ilio-ischiatique et de la ligne ilio-inguinale, lésion du cadre obturateur, intégrité de l’aile iliaque, et lésion possible de la paroi postérieure.",
+          "correctionGenerale": "• Rupture de la ligne ilio-ischiatique et de la ligne ilio-inguinale\n• Lésion du cadre obturateur\n• Intégrité de l’aile iliaque\n• Lésion de la paroi postérieure ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nLe TDM est fait 24 h après, une chirurgie est programmée ; toujours pas de signe d’atteinte sciatique. Quelles sont vos constatations ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-067-294.png"
+          ],
+          "reponseAttendue": "Une luxation itérative de hanche droite avec fracture associée de la paroi postérieure : fracture transverse + paroi postérieure.",
+          "correctionGenerale": "• Luxation itérative de hanche droite\n• Fracture associée de la paroi postérieure\n• Transverse + paroi postérieure"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nJustifiez l’indication chirurgicale.",
+          "images": [],
+          "reponseAttendue": "Fracture articulaire déplacée avec diastasis, luxation de la tête avec instabilité, chez un patient jeune sans contre-indication chirurgicale : risque majeur d’arthrose et d’ostéonécrose.",
+          "correctionGenerale": "• Fracture articulaire déplacée, diastasis\n• Luxation de la tête avec instabilité\n• Patient jeune sans contre-indication chirurgicale\n→ risque d’arthrose ++ et d’ostéonécrose ++"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nNous sommes à J7. En préopératoire, le bilan échographique montre une thrombose veineuse proximale. Quelles sont les options ?",
+          "images": [],
+          "reponseAttendue": "Anticoagulation curative (HBPM ou HNF), contention veineuse élastique et mobilisation précoce ; en seconde intention : thrombolyse, thrombectomie, filtre cave…",
+          "correctionGenerale": "• Anticoagulation curative (HBPM ou HNF)\n• Contention veineuse élastique\n• Mobilisation précoce\n• 2ᵉ intention : thrombolyse, thrombectomie, filtre cave…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuels sont les risques majeurs à la suite de la chirurgie ?",
+          "images": [],
+          "reponseAttendue": "Risque vasculaire (lésion de l’artère glutéale supérieure), neurologique (lésion du nerf glutéal supérieur responsable d’une boiterie de Trendelenburg, lésion du nerf sciatique), infection et ossifications hétérotopiques.",
+          "correctionGenerale": "• <b>Vasculaire</b> : lésion de l’artère glutéale supérieure\n• <b>Neurologique</b> : lésion du nerf glutéal supérieur (boiterie de Trendelenburg par paralysie du moyen fessier), lésion du nerf sciatique\n• Infection\n• Ossifications hétérotopiques"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 7",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 48,
+      "vignette": "Un patient de 60 ans vous consulte pour des douleurs persistantes de la hanche droite, 2 mois après avoir été renversé par une vague lors d’un séjour aux Antilles. Voici sa radiographie.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelles sont vos hypothèses diagnostiques ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-077-338.jpg"
+          ],
+          "reponseAttendue": "Une fracture-avulsion du petit trochanter sur probable lésion pathologique (métastase).",
+          "correctionGenerale": "Fracture-avulsion du petit trochanter sur probable lésion pathologique (métastase)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels examens complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Radiographie du fémur entier, IRM, TDM thoraco-abdomino-pelvien, scintigraphie osseuse, et bilan étiologique (PSA, EPP).",
+          "correctionGenerale": "• Radiographie du fémur entier\n• IRM\n• TDM thoraco-abdomino-pelvien\n• Scintigraphie osseuse\n• Bilan étiologique : PSA, EPP"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuelle stratégie proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Dossier présenté en RCP, biopsie chirurgicale ou microbiopsie scanno-guidée pour examen anatomopathologique, décharge partielle selon les douleurs, puis selon le bilan : chirurgie de résection carcinologique si métastase unique, ou prise en charge palliative avec enclouage centromédullaire préventif.",
+          "correctionGenerale": "• Dossier présenté en RCP\n• Biopsie chirurgicale ou microbiopsie scanno-guidée pour examen anatomopathologique\n• Décharge partielle selon les douleurs\n• En fonction du bilan : chirurgie de résection carcinologique si métastase unique, ou prise en charge palliative avec enclouage centromédullaire préventif"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 8",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 49,
+      "vignette": "Patiente de 73 ans adressée par son médecin traitant pour des douleurs du dos avec irradiation dans les cuisses et dans les fesses, avec sciatique à bascule épisodique. Dans les antécédents, on retrouve : un bilan phosphocalcique où une hypovitaminose D a été découverte et traitée quelque temps par Uvedose, sans traitement d’ostéoporose prescrit ; une arythmie ; une hypertension artérielle ; des acouphènes traités par Rivotril ; une thyroïdectomie subtotale ; des insuffisances veineuses opérées ; deux PTG avec un très bon résultat.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuels sont les éléments de l’anamnèse et de l’examen clinique à rechercher dans le cadre de l’évaluation fonctionnelle et de l’orientation diagnostique ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-088-383.jpg"
+          ],
+          "reponseAttendue": "À l’interrogatoire : antécédents lombaires, mode et date de début, caractère impulsif, notion de traumatisme, lombalgie associée, rythme mécanique ou inflammatoire, altération de l’état général, troubles sphinctériens. À l’examen : trajet radiculaire, testing musculaire, réflexes ostéotendineux, Lasègue/Léri, déficit neurologique, fièvre, hypoesthésie en selle et tonus du sphincter anal.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents lombaires\n• Début des symptômes : brutal / progressif, à l’effort / au repos, impulsif\n• Traumatisme ?\n• Lombalgie associée\n• Rythme : inflammatoire / mécanique\n• Altération de l’état général\n• Mode d’évolution\n• Symptômes associés, notamment troubles sphinctériens évocateurs d’un syndrome de la queue de cheval\n\n<b>Examen clinique</b>\n• Trajet radiculaire\n• Testing musculaire, réflexes ostéotendineux\n• Signe de Lasègue / Léri\n• Signes neurologiques déficitaires\n• Fièvre\n• Hypo-anesthésie en selle, perte de tonus du sphincter anal\n\n<b>Orientation</b>\n• Lombosciatique commune : monoradiculaire (L5 ou S1), rythme mécanique, lombalgies associées, effort déclenchant, intensité rapidement maximale régressant progressivement, antécédents lombaires\n• Lombosciatique symptomatique : pluriradiculaire, rythme inflammatoire, s’aggravant, sans lombalgie ni effort déclenchant, sujet âgé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel(s) examen(s) complémentaire(s) demandez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Des radiographies standard face + profil du rachis lombaire, un TDM et une IRM du rachis lombaire en séquences T1 et T2.",
+          "correctionGenerale": "• Radiographies standard F + P du rachis lombaire\n• TDM\n• IRM du rachis lombaire, séquences T1 et T2"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nInterprétez les images.",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-091-396.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-092-401.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-093-406.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-094-412.png"
+          ],
+          "reponseAttendue": "IRM du rachis lombaire en coupe sagittale, séquence T2 : fracture-tassement vertébral (Magerl A) de L1, hernie discale médiane L2-L3 et L3-L4.",
+          "correctionGenerale": "• IRM du rachis lombaire en coupe sagittale, séquence T2\n• Fracture-tassement vertébral (Magerl A) de L1\n• Hernie discale médiane L2-L3 et L3-L4"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nProposez le diagnostic et citez les options thérapeutiques médicales et chirurgicales.",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-098-430.png",
+            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-099-435.png"
+          ],
+          "reponseAttendue": "Lombosciatique sur conflit disco-radiculaire L4 et fracture-tassement vertébral L1 cunéiforme de grade II sur probable ostéoporose, sans compression associée. Traitements médicaux : prise en charge de l’ostéoporose, prévention des chutes, antalgiques, reprise rapide de l’activité physique, ceinture de contention. Traitements chirurgicaux : vertébroplastie, ostéosynthèse cimentée, discectomie de libération radiculaire.",
+          "correctionGenerale": "<b>Diagnostic</b>\n• Lombosciatique sur conflit disco-radiculaire (L4)\n• Fracture-tassement vertébral L1 cunéiforme, grade II, sur probable ostéoporose, sans compression associée\n\n<b>Traitements médicaux</b>\n• Prise en charge de l’ostéoporose : apport oral de calcium et de vitamine D, bisphosphonates, traitements substitutifs œstrogéniques\n• Prévention des troubles de la marche, de la vue et de l’équilibre\n• Traitement antalgique\n• Reprise rapide de l’activité physique\n• Ceinture de contention\n\n<b>Traitements chirurgicaux</b>\n• Vertébroplastie\n• Ostéosynthèse cimentée\n• Discectomie pour libération de la racine nerveuse"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 9",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 50,
+      "vignette": "Monsieur S., âgé de 26 ans, est tombé d’un mur d’escalade d’une hauteur de 5 mètres avec réception sur le poignet droit en hyperextension. Il est droitier et charpentier ; il a pour seuls antécédents une appendicectomie et une allergie aux acariens. Il s’agit d’un traumatisme isolé du poignet droit après le premier bilan initial. Les premières radiographies faites aux urgences sont les suivantes.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nSur la radiographie de face, quels repères anatomiques ne sont plus respectés et recherchez-vous pour analyser les lignes de rupture du traumatisme au niveau du carpe ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
+          "reponseAttendue": "Les arcs de Gilula : radiocarpien, médiocarpien proximal et médiocarpien distal.",
+          "correctionGenerale": "<b>Arcs de Gilula</b>\n• Radiocarpien\n• Médiocarpien proximal\n• Médiocarpien distal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une luxation rétro-lunaire du carpe, associée à une fracture marginale de la styloïde radiale.",
+          "correctionGenerale": "• Luxation rétro-lunaire du carpe\n• Fracture marginale de la styloïde radiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nSelon la classification de Herzberg, quel est le stade de degré de déplacement du lunatum ?",
+          "images": [],
+          "reponseAttendue": "Stade II C.",
+          "correctionGenerale": "Stade II C."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel nerf donne souvent des symptômes de type paresthésies dans ce type de traumatisme ?",
+          "images": [],
+          "reponseAttendue": "Le nerf médian.",
+          "correctionGenerale": "Nerf médian."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nEn peropératoire, vous découvrez au testing dynamique en scopie que l’articulation radio-ulnaire distale est instable et se luxe aussi bien en pronation qu’en supination : comment réparez-vous la RUD ?",
+          "images": [],
+          "reponseAttendue": "Par réinsertion du TFCC sur ancre ; en cas d’instabilité persistante, un brochage, mais enraidissant.",
+          "correctionGenerale": "• Réinsertion du TFCC sur ancre\n• Si instabilité persistante : brochage, mais enraidissant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nUne réduction par manœuvre externe et des broches mises en percutané vous semblent-elles suffisantes comme traitement, et pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Non : la réduction est complexe sans abord, il n’y a pas de possibilité de réparation du ligament scapho-lunaire, la fracture articulaire du radius impose un contrôle de la réduction, et le TFCC doit être réparé.",
+          "correctionGenerale": "<b>NON</b>\n• Réduction complexe sans abord\n• Pas de possibilité de réparation du ligament scapho-lunaire\n• Fracture articulaire du radius : nécessité d’un contrôle de la réduction\n• Réparation du TFCC"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nComment se fait classiquement la réparation des ligaments intracarpiens ?",
+          "images": [],
+          "reponseAttendue": "Par abord dorsal, réduction, brochage, puis réinsertion sur ancre et capsulodèse.",
+          "correctionGenerale": "• Abord dorsal\n• Réduction\n• Brochage\n• Réinsertion sur ancre + capsulodèse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nQuelle est la principale complication à moyen terme à surveiller sur le lunatum ?",
+          "images": [],
+          "reponseAttendue": "L’ostéonécrose.",
+          "correctionGenerale": "Ostéonécrose."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2020 - EVCP - Dossier 10",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+      "orderIndex": 51,
+      "vignette": "Patiente de 94 ans, opérée d’une PTH gauche il y a 20 ans, victime d’une chute de sa hauteur avec un traumatisme fermé de la hanche gauche. Il s’agit d’une patiente autonome, Parker 6, marchant avec une canne à l’extérieur. Les antécédents sont marqués par une HTA, une FA justifiant un traitement par Eliquis et un AVC d’origine thrombotique. Voici la radiographie de bassin et les coupes TDM faites aux urgences.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ?",
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+          ],
+          "reponseAttendue": "Une fracture transverse de l’acétabulum gauche, avec descellement de l’implant cotyloïdien et luxation, sur ossifications péri-prothétiques Brooker 4.",
+          "correctionGenerale": "• Fracture de l’acétabulum gauche (transverse)\n• Descellement de l’implant cotyloïdien avec luxation\n• Ossification péri-prothétique Brooker 4 (classification de Brooker)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nProposez un traitement et décrivez les différentes options chirurgicales.",
+          "images": [],
+          "reponseAttendue": "Hospitalisation, bilan préopératoire et reprise chirurgicale unipolaire (en vérifiant la compatibilité des implants et en récupérant le compte rendu opératoire), par voie d’abord postéro-externe de Moore, en prévoyant un anneau de soutien type croix de Kerboull +/− greffe ; autres options : cotyle de reconstruction vissé, jumbo, cup-cage, augments.",
+          "correctionGenerale": "• Hospitalisation\n• Bilan préopératoire\n• Reprise chirurgicale unipolaire (attention à la compatibilité des implants, récupérer le compte rendu opératoire)\n• Voie d’abord postéro-externe de Moore\n• Prévoir un anneau de soutien type croix de Kerboull +/− greffe\n• Autres : cotyle de reconstruction vissé, jumbo, cup-cage, augments"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nComment gérez-vous le traitement par AOD ?",
+          "images": [],
+          "reponseAttendue": "Consultation d’anesthésie, arrêt de l’Eliquis et relais par héparinothérapie, avec dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager l’intervention sans augmentation du risque hémorragique.",
+          "correctionGenerale": "• Consultation d’anesthésie, arrêt de l’Eliquis, relais par héparinothérapie\n• Dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager une intervention sans aucune augmentation du risque hémorragique"
+        }
+      ]
+    }
+  ]
+}

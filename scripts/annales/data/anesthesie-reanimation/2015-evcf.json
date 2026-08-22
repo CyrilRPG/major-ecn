@@ -1,0 +1,227 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF _ EVCP 2015.pdf": {
+      "atelier": "annales-area/evcf-evcp-2015",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Malgré son nom de fichier, ce support (séance du 11/03/2024) ne corrige que l’épreuve de vérification des connaissances FONDAMENTALES 2015, questions 1 à 25 : aucune partie EVCP n’y figure. La diapositive d’aide cognitive « Intoxication aux anesthésiques locaux » est répétée à l’identique aux pages 55 et 57 ; elle est citée une fois par question (14 et 15)."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2015 - EVCF",
+      "annee": 2015,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF _ EVCP 2015.pdf",
+      "orderIndex": 18,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2015 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCitez les principales raisons physiologiques expliquant la rapidité de la désaturation en oxygène chez le petit nourrisson.",
+          "images": [],
+          "reponseAttendue": "Des raisons anatomiques (petite bouche, grosse langue, cartilage cricoïde zone la plus étroite avant 5 ans, zone sous-glottique sujette aux sténoses et à l’œdème, respiration nasale exclusive avant 3 mois), ventilatoires (ventilation minute rapportée au poids 3 fois supérieure à celle de l’adulte, Vt identique mais fréquence respiratoire augmentée, importance de la ventilation alvéolaire par rapport à la CRF) et mécaniques (en position allongée, volume de fermeture supérieur à la CRF d’où un collapsus alvéolaire ; disparition du frein laryngé à l’induction anesthésique ; résistances des VAS élevées et compliance thoracique élevée).",
+          "correctionGenerale": "<b>Étiologies anatomiques</b>\n• Petite bouche – grosse langue\n• Cartilage cricoïde → zone anatomique la plus étroite avant 5 ans\n• Zone sous-glottique → sténoses +/− œdème\n• Respiration nasale chez le nouveau-né < 3 mois\n\n<b>Étiologies ventilatoires</b>\n• Ventilation minute rapportée au poids → 3 fois supérieure à l’adulte\n• Vt identique (6-8 mL/kg) mais augmentation de la FR +++\n• Importance de la ventilation alvéolaire par rapport à la CRF\n\n<b>Étiologies mécaniques</b>\n• En position allongée → volume de fermeture > CRF → collapsus alvéolaire\n• Disparition du frein laryngé à l’induction anesthésique\n\n<b>Sur le plan respiratoire</b>\n• Résistances des VAS élevées mais conductance identique à celle de l’adulte\n• <b>Compliance thoracique plus élevée</b> : absence d’ossification costale qui assure la rigidité de la cage thoracique ; faible tonus des muscles intercostaux ; persistance d’une pression intra-abdominale positive\n→ d’où un collapsus alvéolaire important en fin d’expiration et la nécessité d’une auto-PEP physiologique → petits volumes et hautes fréquences"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nCitez les 4 principaux facteurs de risque de laryngospasme liés à l’anesthésie chez l’enfant.",
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-008-036.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-009-041.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-010-046.png"
+          ],
+          "reponseAttendue": "Anesthésie insuffisante, infection des voies aériennes supérieures, laryngoscopie ou stimulation à un stade intermédiaire de l’anesthésie, tentative d’intubation, manipulation du larynx (amygdalectomie, microchirurgie endolaryngée).",
+          "correctionGenerale": "<b>Définition</b> : fermeture glottique due à une contraction réflexe des muscles laryngés, causée par une stimulation externe ; cordes ventriculaires en position fermée, cartilages aryténoïdes en position ventrale. Elle ne cède pas à l’arrêt de la stimulation. Conséquences : hypoxie et hypercapnie.\n\n<b>Facteurs de risque liés à l’anesthésie</b>\n• Anesthésie insuffisante\n• Infection des VAS\n• Laryngoscopie / stimulation à un stade intermédiaire de l’anesthésie\n• Tentative d’intubation\n• Manipulation du larynx (amygdalectomie, microchirurgie endolaryngée)\n\n<i>Les diapositives reproduites détaillent l’ensemble des facteurs de risque (liés au patient, à la chirurgie et à l’anesthésie), les moyens de prévention à l’induction, à l’entretien et au réveil, ainsi que l’aide cognitive « Laryngospasme en pédiatrie » du CAMR et de l’ADARPEF.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDécrivez les règles de perfusion concernant les apports hydro-électrolytiques en pédiatrie, en dehors de la compensation du jeûne préopératoire.",
+          "images": [],
+          "reponseAttendue": "Règle des 4-2-1 pour les besoins de base : 4 mL/kg/h jusqu’à 10 kg, puis 40 mL + 2 mL/kg/h jusqu’à 20 kg, puis 60 mL + 1 mL/kg/h jusqu’à 40 kg (soit 100 mL/kg/24 h, 1000 + 50 mL/kg/24 h, 1500 + 25 mL/kg/24 h), avec du Ringer lactate. À moduler selon le traumatisme chirurgical : base 4 mL/kg/h, base + traumatisme léger 6 mL/kg/h, modéré 8 mL/kg/h, sévère 10 mL/kg/h. Remplacement des pertes sanguines : volume pour volume avec des dérivés sanguins ou des colloïdes, 3 volumes pour 1 avec des cristalloïdes.",
+          "correctionGenerale": "<b>Règle des 4-2-1 : besoins hydriques de base en fonction du poids</b>\n• 4 mL/kg/h jusqu’à 10 kg → 100 mL/kg sur 24 h\n• + 40 mL + 2 mL/kg/h jusqu’à 20 kg → 1000 + 50 mL/kg sur 24 h\n• + 60 mL + 1 mL/kg/h jusqu’à 40 kg → 1500 + 25 mL/kg sur 24 h\n\n<b>RINGER LACTATE ++</b>\n\n<b>Modulation selon le traumatisme chirurgical</b>\n• Base : 4 mL/kg/h\n• Base + traumatisme léger : 6 mL/kg/h (4 + 2)\n• Base + traumatisme modéré : 8 mL/kg/h (4 + 4)\n• Base + traumatisme sévère : 10 mL/kg/h (4 + 6)\n\n<b>Remplacement des pertes sanguines</b>\n• Volume pour volume avec des dérivés sanguins ou des colloïdes\n• 3 volumes pour 1 volume avec des cristalloïdes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez 4 facteurs de risque d’hypothermie préopératoire chez le petit nourrisson.",
+          "images": [],
+          "reponseAttendue": "Pertes par convection (rapport surface/volume), par évaporation (majeures chez le nouveau-né) et par conduction (support) ; absence de frissons chez le nouveau-né, la production de chaleur reposant sur l’oxydation des acides gras libres issus de la graisse brune, au coût énergétique important. Terrains à risque : prématurés, enfants de petit poids pour leur âge gestationnel, nouveau-nés infectés, hypoxiques ou réanimés à la naissance, nés par césarienne.",
+          "correctionGenerale": "<b>Mécanismes de perte thermique</b>\n• Pertes par <b>convection</b> : rapport surface / volume\n• Pertes par <b>évaporation</b> : majeures chez le nouveau-né\n• Pertes par <b>conduction</b> (support)\n\n<b>Défaut de thermogenèse</b>\n• Absence de frissons chez le nouveau-né\n• Production de chaleur = oxydation des acides gras libres issus des triglycérides (graisse brune), via une lipase sécrétée par les catécholamines → coût énergétique important +++\n\n<b>Terrains à risque</b>\n• Prématurés\n• Enfants de petit poids pour leur âge gestationnel\n• Nouveau-nés infectés ou hypoxiques, réanimés à la naissance\n• Nés par césarienne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nDécrivez les principales caractéristiques pharmacologiques de la morphine chez le nouveau-né et le nourrisson de moins de 6 mois.",
+          "images": [],
+          "reponseAttendue": "Métabolisme hépatique par glucuroconjugaison (UGT) en morphine-3- et morphine-6-glucuronide, le M6 conservant voire majorant les propriétés analgésiques ; chez le nouveau-né, l’immaturité hépatique — influencée par le phénobarbital et la photothérapie — diminue la clairance d’élimination plasmatique et allonge la demi-vie, imposant une adaptation des doses et une surveillance respiratoire rapprochée entre 0 et 6 mois. Il n’y a pas de contre-indication formelle, les indications sont les mêmes que chez l’adulte, la posologie est de 0,2 mg/kg/4 h soit 1,2 mg/kg/j. Les risques principaux sont la dépression respiratoire et la dépendance aux opioïdes.",
+          "correctionGenerale": "<b>Métabolisme</b>\n• Métabolisme hépatique → UGT = glucuroconjugaison → M3- et M6-glucuronide\n• Le M6-glucuronide conserve, voire dépasse, les propriétés analgésiques\n• Chez le nouveau-né : <b>immaturité hépatique</b>, influencée par le phénobarbital et la photothérapie\n\n<b>Conséquences</b>\n• Diminution de la clairance d’élimination plasmatique de la morphine\n• Accroissement de la demi-vie d’élimination\n→ Adaptation des doses et surveillance respiratoire rapprochée entre 0 et 6 mois\n\n<b>Indications et posologies</b>\n• Pas de contre-indication formelle\n• Indications identiques à celles de l’adulte\n• Posologies : 0,2 mg/kg/4 h — 1,2 mg/kg/j\n\n<b>Voies de perception de la douleur</b> : diminution de la modulation supraspinale de la transmission des informations douloureuses → plasticité des voies nerveuses, régulation de la croissance du tissu neuronal\n\n<b>Risques entre 0 et 6 mois</b>\n• Dépression respiratoire\n• Dépendance aux opioïdes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nCitez les principales modifications respiratoires physiologiques chez la femme enceinte.",
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-024-103.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-027-118.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-025-108.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-028-123.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-026-113.png",
+            "annales-area/evcf-evcp-2015/figures/img-029-128.png"
+          ],
+          "reponseAttendue": "Augmentation du volume courant d’environ 40 % à fréquence respiratoire stable, avec diminution de la CRF d’environ 20 % (normalisation en 1 à 3 semaines après l’accouchement) ; augmentation de la ventilation minute, de la VO₂ et du métabolisme basal ; alcalose respiratoire physiologique dès 7 SA (PaCO₂ ≈ 30 mmHg, pH ≈ 7,44, HCO₃⁻ ≈ 20 mEq/L) ; élévation du diaphragme avec raccourcissement du thorax de 4 cm, augmentation du diamètre thoracique de 5 à 7 cm, horizontalisation des côtes et élargissement de la silhouette cardiaque ; œdème et hyperhémie des VAS. L’ensemble expose à une hypoxémie rapide à l’induction et au réveil.",
+          "correctionGenerale": "<b>Volumes pulmonaires</b>\n• Volume courant : <b>+ 40 %</b>, la fréquence respiratoire restant stable\n• <b>CRF : − 20 %</b>\n• Normalisation en 1 à 3 semaines après l’accouchement\n\n<b>Métabolisme et ventilation</b>\n• Augmentation de la ventilation minute (jusqu’à environ + 50 % en fin de grossesse)\n• Augmentation de la VO₂ et du métabolisme basal\n\n<b>Gaz du sang</b> — dès <b>7 SA</b> et jusqu’à 6-8 semaines après l’accouchement\n• PaCO₂ ≈ 30 mmHg\n• pH ≈ 7,44\n• HCO₃⁻ ≈ 20 mEq/L\n\n<b>Modifications mécaniques</b>\n• Élévation du diaphragme\n• Raccourcissement du thorax de 4 cm\n• Augmentation du diamètre thoracique de 5 à 7 cm\n• Horizontalisation des côtes\n• Élargissement de la silhouette cardiaque\n• <b>Œdème et hyperhémie des VAS</b>\n\n<b>Conséquence</b> : l’augmentation de la VO₂, l’augmentation du Vt et la diminution de la CRF concourent à une <b>hypoxémie</b> rapide, notamment à l’induction et au réveil.\n\n<i>La dernière diapositive relie chaque particularité à sa conséquence pratique : seins volumineux → laryngoscope à manche court et sonde 6,5 ; voies aériennes fragiles et œdématiées → arbre décisionnel d’intubation difficile, ALR ≫ AG ; augmentation de la pression intragastrique et baisse du tonus du SIO → estomac plein ; baisse des réserves en O₂ et hausse de la VO₂ → préoxygénation et oxygénation ; compression aorto-cave → décubitus latéral gauche et monitorage de la PA ; hypercoagulabilité → prévention de la TVP.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez les 2 facteurs essentiels d’intubation plus à risque chez la femme enceinte.",
+          "images": [],
+          "reponseAttendue": "Les critères prédictifs classiques d’intubation difficile — antécédent d’intubation difficile, Mallampati > 2, distance thyro-mentonnière < 6 cm, ouverture de bouche < 35 mm — auxquels s’ajoutent chez la femme enceinte des critères aggravants : IMC > 35 kg/m², SAOS avec tour de cou > 45,6 cm, pathologie cervico-faciale et état pré-éclamptique.",
+          "correctionGenerale": "<b>Critères prédictifs d’intubation difficile</b>\n• Antécédent d’intubation difficile\n• Mallampati > 2\n• Distance thyro-mentonnière < 6 cm\n• Ouverture de bouche < 35 mm\n• +/− mobilité mandibulaire, mobilité cervicale\n\n<b>Critères aggravant le risque d’intubation difficile</b>\n• IMC > 35 kg/m²\n• SAOS + tour de cou > 45,6 cm\n• Pathologie cervico-faciale\n• État pré-éclamptique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nCitez les modifications de la physiologie respiratoire au cours de la cœlioscopie.",
+          "images": [],
+          "reponseAttendue": "Hypercapnie par réabsorption du CO₂ insufflé à partir de la cavité péritonéale, augmentation des pressions intrathoraciques par refoulement du diaphragme, diminution de la compliance respiratoire totale, altération du rapport ventilation/perfusion pouvant élargir le gradient PaCO₂-EtCO₂, avec augmentation de l’effet shunt dans les zones déclives et de l’effet espace mort dans les parties antérieures du poumon.",
+          "correctionGenerale": "<b>Conséquences respiratoires de la laparoscopie</b>\n• <b>Hypercapnie</b> par réabsorption du CO₂ insufflé à partir de la cavité péritonéale (limitée par le collapsus des vaisseaux péritonéaux)\n• Augmentation des pressions intrathoraciques (refoulement du diaphragme)\n• Diminution de la compliance respiratoire totale\n• Altération du rapport ventilation-perfusion, pouvant conduire à un élargissement du gradient PaCO₂-EtCO₂\n• Augmentation de l’effet shunt dans les zones déclives\n• Augmentation de l’effet espace mort dans les parties antérieures du poumon"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nCitez les causes d’une hypotension artérielle brutale au cours de la cœlioscopie.",
+          "images": [],
+          "reponseAttendue": "Hypovolémie avec diminution du retour veineux, baisse du débit cardiaque, pneumothorax, embolie gazeuse, embolie pulmonaire, arrêt cardio-respiratoire, et complications chirurgicales (plaies vasculaires, digestives, uro-rénales).",
+          "correctionGenerale": "• Hypovolémie → diminution du retour veineux\n• Baisse du débit cardiaque\n• Pneumothorax\n• Embolie gazeuse\n• Embolie pulmonaire\n• Arrêt cardio-respiratoire\n• Complications chirurgicales : plaies vasculaires / digestives / uro-rénales"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nCitez les déterminants du transport en oxygène aux tissus.",
+          "images": [],
+          "reponseAttendue": "TaO₂ = Qc × [(Hb × 1,39 × SaO₂) + (0,003 × PaO₂)], soit le débit cardiaque et le contenu artériel en oxygène (hémoglobine, saturation artérielle et, marginalement, oxygène dissous).",
+          "correctionGenerale": "<b>TaO₂ = Qc × [(Hb × 1,39 × SaO₂) + (0,003 × PaO₂)] = Qc × [CaO₂]</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCitez 4 facteurs d’agression cérébrale secondaire d’origine systémique (ACSOS) chez le patient cérébro-lésé.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-042-181.jpg"],
+          "reponseAttendue": "Hypoxémie, hypotension, hypocapnie, anémie, acidose, hypercapnie, hyperthermie, hyper- ou hypoglycémie, troubles de la calcémie et de la natrémie.",
+          "correctionGenerale": "• Hypoxémie\n• Hypotension\n• Hypocapnie\n• Anémie\n• Acidose\n• Hypercapnie\n• Hyperthermie\n• Hyper- / hypoglycémie\n• Calcémie / natrémie\n\n<b>Paramètres à monitorer et à corriger — valeurs cibles</b>\n• <i>Oxygénation sanguine</i> : SpO₂ 95-99 %, PaO₂ 80-95 mmHg\n• <i>Capnie</i> : PaCO₂ 35-45 mmHg si HTIC avec intubation\n• <i>PAM</i> : 70-90 mmHg, ≥ 90 mmHg si HTIC\n• <i>Rythme cardiaque</i> : risque de troubles du rythme et de la conduction\n• <i>Glycémie</i> : 1,4-1,8 g/L\n• <i>Natrémie</i> : 135-145 mEq/L\n• <i>Calcémie</i> : 2,2-2,6 mEq/L\n• <i>pH</i> : 7,35-7,45\n• <i>Température</i> : normothermie (36,5-38 °C)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez les causes de diminution de la fraction expirée en gaz carbonique sous anesthésie.",
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-046-198.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-047-203.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-048-208.jpg"
+          ],
+          "reponseAttendue": "De façon progressive : hyperventilation, diminution de la consommation d’O₂ et donc de la production de CO₂. De façon brutale : diminution du débit cardiaque, interruption de la ventilation (débranchement, extubation accidentelle, obstruction).",
+          "correctionGenerale": "<b>Principales causes de diminution de l’EtCO₂</b>\n• <i>Progressive</i> : hyperventilation ; diminution de la consommation d’O₂ et donc de la production de CO₂\n• <i>Brutale</i> : diminution du débit cardiaque ; interruption de la ventilation (débranchement, extubation accidentelle, obstruction…)\n\n<b>Principales causes d’augmentation de l’EtCO₂</b>\n• <i>Progressive</i> : hypoventilation alvéolaire et augmentation de la production de CO₂ (hypercapnie)\n• <i>Brutale</i> : augmentation soudaine du débit cardiaque (RCP efficace, remplissage, drogues inotropes…) ; alcalinisation\n\n<b>Aspects capnographiques illustrés</b>\n• <i>Débranchement ou apnée</i> : effondrement de la courbe d’élimination avec retour brutal au niveau 0\n• <i>Ré-inhalation de CO₂</i> : effondrement brutal de la courbe avec surélévation de la ligne de base\n• <i>Baisse du débit cardiaque</i> : décroissance progressive de la courbe d’élimination\n• <i>Arrêt cardiaque</i> : décroissance brutale allant vers l’absence de courbe\n• <i>Extraction brutale de CO₂</i> : augmentation brutale de la courbe (exemple : apport de bicarbonates)\n• <i>Intubation sélective</i> : asymétrie de ventilation entre les 2 poumons\n• <i>Intubation œsophagienne</i> : pas d’élimination\n• <i>Extubation</i> : courbe similaire à celle de l’intubation œsophagienne\n• Aspects particuliers : oxygénothérapie à haut débit, désadaptation patient/respirateur, bronchospasme, oscillations cardiogéniques, broncho-pneumopathie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nCitez les signes cliniques et paracliniques évocateurs d’hyperthermie maligne.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-053-229.jpg"],
+          "reponseAttendue": "Un état hypermétabolique aigu avec rigidité musculaire déclenché par les anesthésiques volatils halogénés ou la succinylcholine : rigidité, augmentation de la production de CO₂ (PEtCO₂ élevée, tachypnée), hyperthermie et sueurs, tachycardie et marbrures, trismus, et sur le plan paraclinique élévation des CPK, myoglobinurie et acidose postopératoire (rhabdomyolyse).",
+          "correctionGenerale": "<b>Hyperthermie maligne</b> : myopathie génétiquement transmise, de mode autosomique dominant, non liée au sexe, sans expression clinique en dehors de la crise. La crise survient au décours immédiat de l’anesthésie générale.\n\n<b>Déclenchée par</b> les anesthésiques volatils halogénés et la succinylcholine.\n\n<b>CRISE = état hypermétabolique aigu avec rigidité musculaire</b>\n• Rigidité\n• Augmentation de la production de CO₂\n• Hyperthermie\n• Rhabdomyolyse\n\n<i>Le trismus après injection de succinylcholine n’est pas pathognomonique, mais doit imposer la recherche des autres signes d’une crise potentielle et une vigilance accrue.</i>\n\n<b>Éléments de l’aide cognitive SFAR (à suspecter)</b> : halogénés / succinylcholine ; PEtCO₂ élevée et tachypnée ; tachycardie et marbrures ; hyperthermie et sueurs ; trismus et rigidité ; terrain favorisant (myopathie) ; élévation des CPK, myoglobinurie, acidose postopératoire.\n\n<b>À éliminer</b> : anesthésie trop légère, hypoventilation, insufflation de CO₂ ou anomalie du circuit, choc septique, causes rares (crise thyréotoxique, phéochromocytome, syndrome malin des neuroleptiques, syndrome sérotoninergique).\n\n<b>Traitement</b> : appel à l’aide et chariot d’urgence, arrêt de la procédure, obtenir le <b>dantrolène</b> — arrêt des halogénés avec relais IV par propofol, hyperventilation en FiO₂ 100 %, 2ᵉ VVP, kaliémie et gazométrie, mesure de la température centrale, dantrolène 2,5 mg/kg IVD puis 1 mg/kg jusqu’à 10 mg/kg au total, refroidissement jusqu’à 38 °C, traitement de l’hyperkaliémie et de l’acidose métabolique, surveillance de la diurèse."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nDécrivez les signes cliniques de surdosage en anesthésiques locaux.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-055-238.jpg"],
+          "reponseAttendue": "Signes neurologiques : goût métallique, dysarthrie et dysesthésies bucco-linguales, vertiges, nausées, acouphènes, secousses musculaires, malaise, confusion, céphalée, paresthésies, convulsions, coma. Et/ou signes cardio-vasculaires : bradycardie et troubles de conduction, hypotension et collapsus, troubles du rythme ventriculaire et arrêt cardiaque.",
+          "correctionGenerale": "<b>Signes neurologiques</b>\n• Goût métallique\n• Dysarthrie, dysesthésies bucco-linguales\n• Vertiges, nausées, acouphènes\n• Secousses musculaires\n• Malaise, confusion, céphalée, paresthésies\n• Convulsions, coma\n\n<b>et/ou signes cardiovasculaires</b>\n• Bradycardie, troubles de conduction\n• Hypotension, collapsus\n• Trouble du rythme ventriculaire — arrêt cardiaque\n\n<b>Facteurs favorisants</b> : âges extrêmes, patients de petit poids, cardiopathies (rythmiques, ischémiques, insuffisance cardiaque), hypoxie et acidose, absence d’échoguidage, non-respect des doses maximales.\n\n<b>Contexte d’injection d’AL en bolus</b> (par un soignant, le patient ou automatique) : immédiat si l’injection est intravasculaire, retardé jusqu’à 60 minutes après le bolus."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nDécrivez le traitement spécifique en cas de surdosage aux anesthésiques locaux.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-055-238.jpg"],
+          "reponseAttendue": "Appel à l’aide et arrêt de la chirurgie ; arrêt de l’injection d’anesthésiques locaux ; oxygénothérapie FiO₂ 1 (intubation si ACR ou état de mal convulsif) ; émulsion lipidique à 20 % (Intralipide® 20 %) : bolus de 100 mL en 2-3 minutes si le poids dépasse 70 kg (1,5 mL/kg sinon), répété après 5 minutes si l’hémodynamique reste instable (3 bolus maximum), puis perfusion de 250 mL en 15-20 minutes (0,25 mL/kg/min), portée à 0,5 mL/kg/min si besoin, poursuivie au moins 10 minutes après le retour à l’équilibre, dose cumulative maximale 12 mL/kg ; dosage du toxique et déclaration EIAS. En cas de convulsions ou d’ACR : benzodiazépines, réanimation prolongée avec adrénaline titrée à faible dose, amiodarone si arythmie ventriculaire, ECMO si ACR réfractaire, surveillance monitorée au moins 6 heures.",
+          "correctionGenerale": "<b>Traitement — dans tous les cas, dès la suspicion</b>\n• <b>Appel à l’aide, arrêt de la chirurgie</b>\n• Arrêt de l’injection d’anesthésiques locaux\n• Oxygénothérapie FiO₂ = 1 (intubation si ACR ou état de mal convulsif)\n• <b>Émulsion lipidique à 20 %</b> (exemple : Intralipide® 20 %)\n  – Bolus 100 mL en 2-3 min si poids > 70 kg (1,5 mL/kg si poids < 70 kg) ; si l’hémodynamique reste instable, répéter le bolus après 5 minutes (maximum 3 bolus)\n  – Perfusion 250 mL en 15-20 min si poids > 70 kg (0,25 mL/kg/min sinon) ; si l’hémodynamique reste instable, passer à 0,5 mL/kg/min\n  – Continuer la perfusion au moins 10 min après le retour à l’équilibre hémodynamique\n  – Dose cumulative maximale : 12 mL/kg, soit 800 mL maximum pour 70 kg\n• Dosage du toxique (prélèvement sur tube sec)\n• Déclaration EIAS\n\n<b>Si convulsions et/ou arrêt cardio-respiratoire</b>\n• Benzodiazépines si convulsions prolongées (éviter le propofol)\n• <b>Réanimation cardio-respiratoire prolongée (> 1 h)</b>\n  – Adrénaline en dose titrée 0,05 à 0,1 mg (à faible dose)\n  – Amiodarone si arythmie ventriculaire (pas de lidocaïne)\n  – Si ACR réfractaire, envisager une assistance cardio-circulatoire ECMO\n• Surveillance monitorée pendant au minimum 6 heures\n\n<i>Aide cognitive du CAMR (2016, relue en 2021 par le comité douleur ALR).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nDécrivez les effets principaux des morphiniques sur la respiration.",
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-064-283.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-059-258.png",
+            "annales-area/evcf-evcp-2015/figures/img-060-263.png",
+            "annales-area/evcf-evcp-2015/figures/img-061-268.png",
+            "annales-area/evcf-evcp-2015/figures/img-062-273.png",
+            "annales-area/evcf-evcp-2015/figures/img-063-278.png",
+            "annales-area/evcf-evcp-2015/figures/img-065-288.png",
+            "annales-area/evcf-evcp-2015/figures/img-066-293.png",
+            "annales-area/evcf-evcp-2015/figures/img-067-298.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-068-303.png",
+            "annales-area/evcf-evcp-2015/figures/img-069-308.png"
+          ],
+          "reponseAttendue": "Une action dépressive centrale (bradypnée, respiration de Cheyne-Stokes, apnée) par diminution de la sensibilité des centres respiratoires au CO₂ sanguin, avec une composante corticale d’inattention aux stimuli (« on oublie de respirer ») ; une action anti-tussive par dépression du centre de la toux ; et une bronchoconstriction par histamino-libération.",
+          "correctionGenerale": "<b>Actions respiratoires</b>\n\n<b>Action dépressive centrale</b> (bradypnée, Cheyne-Stokes, apnée) avec diminution de la sensibilité des centres respiratoires aux taux sanguins de CO₂ ; en outre, il semble exister une action corticale, une inattention aux stimuli normaux (on « oublie » de respirer).\nElle est rarement limitante par voie orale lors d’un emploi à dose progressivement croissante. Cependant, elle peut limiter l’emploi thérapeutique, en particulier :\n• lors d’une augmentation rapide des concentrations plasmatiques, donc si la morphine est injectée, ou en cas d’escalade trop rapide des doses par voie orale ;\n• quand on prescrit des doses supérieures à celles nécessaires pour supprimer la douleur, car cette dernière se comporte comme un antagoniste de la dépression respiratoire → respecter une escalade progressive des doses (sauf si la respiration est contrôlée mécaniquement).\n\n<b>Action anti-tussive</b> : dépression du centre de la toux. Action peu utilisée dans le cas de la morphine en raison de ses nombreux autres effets (mais c’est le plus puissant anti-tussif connu) ; propriété mise à profit pour la codéine.\n\n<b>Bronchoconstriction</b> par l’intermédiaire d’une histamino-libération.\n\n<i>Les diapositives suivantes du corrigé replacent ces effets dans la pharmacologie générale des opioïdes : opioïdes endogènes et récepteurs µ, κ, δ ; propriétés pharmacocinétiques de la morphine (voies d’administration, premier passage hépatique, diffusion, élimination) ; actions analgésique, psychomotrice et psycho-dysleptique ; action sur le centre du vomissement, le système nerveux autonome, l’œil (myosis) et le rein ; actions spasmogènes sur les muscles lisses (constipation, sphincter d’Oddi, uretère) ; effets divers et principaux effets indésirables ; autres agonistes (codéine, tramadol, fentanyl, méthadone, buprénorphine) et antagonistes (naloxone, naltrexone).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nDécrivez par un schéma la relation « pression-débit » au niveau de la circulation cérébrale chez un sujet sain. Faites un schéma simple.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-071-317.png"],
+          "reponseAttendue": "DSC = PPC / R = (PAM − PIC) / R. Le débit sanguin cérébral reste constant sur une plage de pression de perfusion grâce à l’autorégulation : une baisse de la PPC entraîne une vasodilatation, donc une augmentation du volume sanguin cérébral et de la PIC (cascade vasodilatatrice), tandis qu’une augmentation de la PPC entraîne une vasoconstriction, une baisse du volume sanguin cérébral et de la PIC (cascade vasoconstrictrice).",
+          "correctionGenerale": "<b>DSC = PPC / R = (PAM − PIC) / R</b>\n\n<b>Cascade vasodilatatrice</b> : PPC ↓ → vasodilatation → volume sanguin cérébral ↑ → PIC ↑ (et donc PPC ↓ de nouveau).\n\n<b>Cascade vasoconstrictrice</b> : PPC ↑ → vasoconstriction → volume sanguin cérébral ↓ → PIC ↓."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nCitez et décrivez en une phrase le principe physique régissant les échanges :\n\na) en hémodialyse ;\nb) en hémofiltration.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-075-334.jpg"],
+          "reponseAttendue": "a) Hémodialyse : les échanges à travers la membrane se font par diffusion, régie par le gradient de concentration moléculaire entre le patient et le dialysat ainsi que par le coefficient de diffusion de la molécule. b) Hémofiltration : les échanges se font par convection, possible via un gradient unique de pression hydrostatique qui filtre de manière non sélective les molécules capables de passer la membrane, notamment celles de bas poids moléculaire.",
+          "correctionGenerale": "<b>a) Hémodialyse</b>\nLes échanges à travers la membrane se font grâce au principe de <b>diffusion</b>, qui est régi par le gradient de concentration moléculaire entre le patient et le dialysat, ainsi que par le coefficient de diffusion de la molécule en question.\n\n<b>b) Hémofiltration</b>\nLes échanges à travers la membrane se font grâce au principe de <b>convection</b>, possible via un gradient unique de pression hydrostatique qui filtre de manière non sélective les molécules capables de passer la membrane, notamment les molécules de bas poids moléculaire.\n\n<i>Le schéma compare hémodialyse (circulation à contre-courant du dialysat), hémofiltration (ultrafiltrat et solution de substitution en pré- ou post-dilution) et hémodiafiltration (association des deux).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nEn dehors de l’anticoagulation, quels sont les 4 paramètres de prescription de débit qui figurent sur une prescription médicale d’hémofiltration continue ? (Ne pas donner de valeurs numériques, se limiter aux paramètres de prescription.)",
+          "images": [],
+          "reponseAttendue": "Le débit sanguin, le débit du dialysat, le débit de la perte patient et le débit de réinjection (en pré- ou post-dilution).",
+          "correctionGenerale": "• Débit sanguin\n• Débit du dialysat\n• Débit de la perte patient\n• Débit de réinjection (en pré- ou post-dilution)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nIndiquez, parmi les substances suivantes, celles dont la durée d’action est prolongée en cas d’insuffisance rénale : succinylcholine, rocuronium, atracurium, desflurane, propofol, sufentanil, morphine. Justifiez vos réponses.",
+          "images": [],
+          "reponseAttendue": "La morphine au premier chef : élimination rénale et cycle entéro-hépatique avec glucuroconjugaison en morphine-6-glucuronide (produit actif) et morphine-3-glucuronide ; en cas d’insuffisance rénale, les métabolites s’accumulent avec effet rebond des effets secondaires. Le rocuronium est également concerné (élimination hépatique, biliaire et rénale ++). En revanche, la succinylcholine est dégradée par la butyrylcholinestérase plasmatique et le desflurane a un métabolisme hépatique ; l’atracurium, le propofol et le sufentanil ont un métabolisme principalement hépatique ou extra-hépatique.",
+          "correctionGenerale": "• <b>Morphine</b> → élimination rénale + cycle entéro-hépatique avec glucuroconjugaison → morphine-6-glucuronide (produit actif) + morphine-3-glucuronide. Si l’élimination est normale, elle est complète à 24 h ; en cas d’insuffisance rénale, accumulation des métabolites et effet rebond des effets secondaires.\n• <b>Rocuronium</b> → métabolisme hépatique, élimination hépatique / biliaire / rein ++\n• <b>Succinylcholine</b> → butyrylcholinestérase (enzyme de dégradation plasmatique)\n• <b>Atracurium</b> → métabolisme hépatique, élimination rénale\n• <b>Desflurane</b> → métabolisme hépatique\n• <b>Propofol</b> → métabolisme extra-hépatique, élimination rénale\n• <b>Sufentanil</b> → métabolisme hépatique par le CYP 450, élimination rénale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nQuelle est l’antibiothérapie initiale (sans les doses) des péritonites communautaires chez les patients sans risque allergique et sans signes de gravité ?",
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-082-363.jpg",
+            "annales-area/evcf-evcp-2015/figures/img-083-368.jpg"
+          ],
+          "reponseAttendue": "AMOXICILLINE / ACIDE CLAVULANIQUE + GENTAMICINE, pendant 2 à 3 jours.",
+          "correctionGenerale": "<b>Infection intra-abdominale communautaire sans signe de gravité</b>\n• Pas de nécessité de couvrir les <i>E. coli</i> résistants\n• Pas de nécessité de couvrir les levures\n• Ne pas utiliser la clindamycine ni la céfoxitine en traitement probabiliste\n• Ne pas prendre en compte les entérocoques\n• Cibler entérobactéries + anaérobies\n\n→ <b>AMOXICILLINE / ACIDE CLAVULANIQUE + GENTAMICINE — 2 à 3 jours</b>\n\n<i>Les deux arbres décisionnels SFAR reproduits couvrent la péritonite communautaire (première image) et la péritonite associée aux soins (seconde image), avec les alternatives en cas d’allergie aux bêta-lactamines, de signes de gravité, de facteurs de risque de BMR et d’indication d’un traitement antifongique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 22</b>\n\nCitez les deux thérapeutiques à prescrire et leur mode d’administration en cas d’accident hémorragique sous AVK.",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-085-377.jpg"],
+          "reponseAttendue": "Le concentré de complexe prothrombinique (CCP) par voie intraveineuse — à dose adaptée à l’INR selon le RCP si l’INR est disponible, sinon 25 U/kg (soit 1 mL/kg) — et la vitamine K 10 mg (1 ampoule adulte), en privilégiant la voie orale ; le tout après arrêt des AVK et mesure de l’INR en urgence, avec un objectif d’INR < 1,5.",
+          "correctionGenerale": "<b>Prise en charge hospitalière d’une hémorragie grave (objectif : INR < 1,5)</b>\n1. <b>Arrêt des AVK</b> et mesure de l’INR en urgence\n2. <b>CCP (concentré de complexe prothrombinique) IV</b> :\n   – Si l’INR est disponible : administration à dose adaptée à l’INR, selon le RCP\n   – Si l’INR n’est pas disponible : administration de 25 U/kg (soit 1 mL/kg)\n3. <b>+ Vitamine K 10 mg</b> (1 ampoule adulte ; privilégier la voie orale)\n4. <b>Contrôle de l’INR à 30 minutes</b> : si INR > 1,5, nouvelle dose de CCP selon le RCP\n5. Contrôle de l’INR à 6-8 h"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 23</b>\n\nQuels sont les critères cliniques de diagnostic d’un patient en mort encéphalique ?",
+          "images": [],
+          "reponseAttendue": "Après élimination systématique des facteurs confondants cliniques (hypothermie, imprégnation médicamenteuse ou toxique) : un coma non réactif (score de Glasgow à 3) associé à l’abolition des réflexes du tronc cérébral et de la ventilation spontanée, cette dernière étant vérifiée par une épreuve d’hypercapnie sous oxygénothérapie efficace, en atteignant en apnée une PaCO₂ comprise entre 50 et 60 mmHg.",
+          "correctionGenerale": "L’<b>élimination de facteurs confondants cliniques</b> est systématique : notamment l’hypothermie, l’imprégnation médicamenteuse ou toxique susceptibles d’interférer avec l’examen clinique.\n\n<b>Coma non réactif (score de Glasgow à 3)</b> associé à l’<b>abolition des réflexes du tronc cérébral</b> et de la <b>ventilation spontanée</b>.\n\nPour vérifier la réalité de l’absence de ventilation spontanée, l’<b>épreuve d’hypercapnie</b> doit être effectuée sous couvert d’une oxygénothérapie efficace contrôlée par la SpO₂. Après avoir pris la précaution de ventiler le sujet en normocapnie, il est recommandé d’atteindre en apnée une <b>PaCO₂ comprise entre 50 et 60 mmHg</b> pour affirmer l’absence de mouvements respiratoires."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 24</b>\n\nQuelle est la prise en charge thérapeutique du choc anaphylactique (grade III) ?",
+          "images": ["annales-area/evcf-evcp-2015/figures/img-090-398.png"],
+          "reponseAttendue": "Interrompre l’administration du produit suspecté, appeler à l’aide, arrêter la chirurgie ; contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg ; remplissage vasculaire rapide par 1000 mL de cristalloïdes (grade III), renouvelable ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) en titration de 100 à 200 µg toutes les 1 à 2 minutes pour une PAM ≥ 60 mmHg ; en cas d’inefficacité après 10 minutes, doubler les bolus à 2 mg, adrénaline IVSE à 200 µg/h, noradrénaline IVSE, glucagon si bêta-bloquants, poursuite du remplissage jusqu’à 30 mL/kg ; salbutamol en cas de bronchospasme après correction de l’hypotension ; prélèvements sanguins dès que possible et hémisuccinate d’hydrocortisone 200 mg IVDL.",
+          "correctionGenerale": "<b>Confirmer</b> : hypotension, chute de la capnie, tachycardie, bronchospasme, rash retardé et angio-œdème, ACR.\n<b>Éliminer</b> : embolie pulmonaire ou amniotique, IDM, pneumothorax ou obstruction trachéo-bronchique, surdosage en anesthésiques, hémorragie.\n\n<b>INTERROMPRE l’administration du produit suspecté — APPEL À L’AIDE — STOP chirurgie.</b>\n\n<b>Traiter</b>\n• Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, position de Trendelenburg\n• <b>Remplissage vasculaire rapide</b> : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin\n• <b>Adrénaline IVD</b> (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg\n  – Grade II : 20 µg puis 50 µg toutes les 2 min\n  – <b>Grade III : titration de 100 µg à 200 µg toutes les 1 à 2 min</b>\n  – Grade IV : bolus d’adrénaline de 1 mg\n• <b>En cas d’inefficacité après 10 minutes</b> : doubler les bolus d’adrénaline à 2 mg ; adrénaline IVSE à débuter à 200 µg/h dès 3 bolus IV administrés ; noradrénaline IVSE à débuter à 300 µg – 1 mg/h après 3 bolus d’adrénaline ; glucagon 1 à 2 mg IVDL toutes les 5 min si le patient est sous bêta-bloquant ; poursuivre le remplissage cristalloïde jusqu’à 30 mL/kg ; envisager un monitorage non invasif de la volémie et/ou une échographie cardiaque ; discuter la vasopressine 2 à 10 UI IVD puis 2 UI/h\n• <b>En cas de bronchospasme</b> : après correction de l’hypotension artérielle (le salbutamol pouvant la majorer) — salbutamol en nébulisation ; salbutamol IVD 100 à 200 µg puis relais IVSE 300 µg à 1,5 mg/h\n• Prélèvements sanguins dès que possible\n• Hémisuccinate d’hydrocortisone 200 mg IVDL (dose unique)\n• En cas d’arrêt cardiaque réfractaire : envisager une assistance cardio-circulatoire ECLS/ECMO\n\n<b>Femme enceinte</b> : discuter l’extraction fœtale immédiate si > 20 SA ; décubitus latéral gauche ; remplissage et adrénaline identiques.\n\n<b>Après</b> : surveillance intensive au moins 6 h après la disparition des signes ; information du patient ; rendez-vous en consultation d’allergo-anesthésie ; déclaration à la pharmacovigilance.\n\n<b>Dosages</b> : histamine (tube EDTA) positive < 30 min ; tryptase (tube sec) positive < 30 min, 1 à 2 h et > 24 h ; IgE anti-ammoniums quaternaires (tube sec)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 25</b>\n\nCitez les 2 curares qu’il est indiqué d’utiliser en cas d’intubation oro-trachéale à séquence rapide.",
+          "images": [],
+          "reponseAttendue": "La succinylcholine et le rocuronium.",
+          "correctionGenerale": "• Succinylcholine\n• Rocuronium"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP2015correction.pdf": {
+      "atelier": "annales-orthopedie/evcp2015correction",
+      "sujetOfficiel": "Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.53.DOC",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2015 - EVCP",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2015correction.pdf",
+      "orderIndex": 20,
+      "vignette": "Le 17 mai 2015 a eu lieu sur l’hippodrome d’Auteuil, que l’on appelle « le temple des courses d’obstacles », l’épreuve du Grand Steeple-Chase de Paris, qui a réuni 14 chevaux devant parcourir 6 000 mètres et franchir 23 obstacles légendaires.\n\nLe jeune jockey M. X, 21 ans, 1 m 50, 52 kg, montait le cheval n° 13 quand celui-ci a commis une grosse faute lors du saut de l’obstacle appelé « le gros open ditch », qui mesure 1,50 m de hauteur sur 3,70 m de largeur. Ce jeune jockey a été éjecté violemment à terre avec un traumatisme sévère au niveau du cou et de l’épaule droite, puis du bassin lorsque le cheval suivant n’a pu l’éviter.\n\nLe jockey a été conditionné et emmené aux urgences. Il était alors conscient et se plaignait de douleurs du cou, de l’épaule droite et du bassin. Le bilan réalisé à son arrivée notait des cervicalgies, des troubles de la sensibilité au niveau du moignon de l’épaule droite et au niveau du pouce gauche. Il n’y avait aucun trouble vasculo-nerveux au niveau des membres inférieurs. Enfin, le patient présentait des troubles hémodynamiques sévères sans anomalie thoraco-abdominale patente.\n\nCi-dessous, le bilan radiologique sommaire pratiqué à son admission aux urgences.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nSur la radiographie du rachis de profil, quel diagnostic lésionnel suspectez-vous ?",
+          "images": [
+            "annales-orthopedie/evcp2015correction/figures/img-003-010.png",
+            "annales-orthopedie/evcp2015correction/figures/img-004-020.png"
+          ],
+          "reponseAttendue": "Un listhésis C6-C7 avec augmentation de l’écart inter-épineux et défaut d’alignement des articulaires en « bonnet d’âne » : entorse grave en rotation, voire luxation uni-articulaire C6-C7 ; un complément TDM est requis.",
+          "correctionGenerale": "• Listhésis C6-C7\n• Augmentation de l’écart inter-épineux\n• Défaut d’alignement des articulaires, aspect en bonnet d’âne\n\n→ Entorse grave en rotation, voire luxation uni-articulaire C6-C7.\nComplément TDM requis."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nSur la radiographie de l’épaule droite, quels diagnostics lésionnels suspectez-vous ?",
+          "images": [
+            "annales-orthopedie/evcp2015correction/figures/img-003-012.png",
+            "annales-orthopedie/evcp2015correction/figures/img-006-030.png"
+          ],
+          "reponseAttendue": "Une luxation antéro-inférieure et une fracture du tubercule majeur.",
+          "correctionGenerale": "• Luxation antéro-inférieure\n• Fracture du tubercule majeur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQue fait craindre l’hypoesthésie du moignon de l’épaule ?",
+          "images": [],
+          "reponseAttendue": "Une lésion du nerf axillaire.",
+          "correctionGenerale": "Lésion du nerf axillaire."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelles sont les 3 principales lésions radiologiques sur la radiographie du bassin ?",
+          "images": [
+            "annales-orthopedie/evcp2015correction/figures/img-003-014.png",
+            "annales-orthopedie/evcp2015correction/figures/img-012-058.png",
+            "annales-orthopedie/evcp2015correction/figures/img-013-064.png",
+            "annales-orthopedie/evcp2015correction/figures/img-014-070.png",
+            "annales-orthopedie/evcp2015correction/figures/img-015-072.png",
+            "annales-orthopedie/evcp2015correction/figures/recadre/img-016-073.png",
+            "annales-orthopedie/evcp2015correction/figures/img-017-074.png",
+            "annales-orthopedie/evcp2015correction/figures/img-017-075.png"
+          ],
+          "reponseAttendue": "Une fracture bicolonne du cotyle, une lésion de l’anneau pelvien de type Tile C3, et une fracture trochantéro-diaphysaire du fémur droit.",
+          "correctionGenerale": "• <b>Lésion du cotyle</b> : fracture bicolonne\n• <b>Lésion de l’anneau pelvien</b> : fracture Tile C3\n• <b>Fracture trochantéro-diaphysaire du fémur droit</b>\n\n<b>Cotyle — diagnostic topographique : classification de Judet et Letournel</b>\nFractures élémentaires 55 % : fracture de la paroi postérieure, de la colonne postérieure, de la paroi antérieure, de la colonne antérieure, fracture transversale.\nFractures complexes 45 %, classées en 5 catégories : les fractures en T ; les fractures associées de la paroi et de la colonne postérieures ; les fractures transversales associées à une fracture de la paroi postérieure ; les fractures de la colonne antérieure ou de la paroi antérieure associées à une hémitransversale postérieure ; les fractures des deux colonnes du cotyle.\n\n<b>Anneau pelvien — selon le mécanisme : Young et Burgess</b>\nIntérêt pronostique :\n• APC : saignement ++\n• LC : association fréquente avec un traumatisme crânien\n\n<b>Anneau pelvien — selon la stabilité : classification de Tile</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelle est la complication immédiate à redouter pour ce traumatisme du bassin ?",
+          "images": [],
+          "reponseAttendue": "Un hémopéritoine avec choc hémorragique.",
+          "correctionGenerale": "Hémopéritoine : choc hémorragique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant le rachis — Question n°6</b>\n\nQuel examen demandez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Un TDM du rachis cervical.",
+          "correctionGenerale": "TDM du rachis cervical."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant le rachis — Question n°7</b>\n\nQuels sont les deux principes de la prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Réduction en urgence au bloc sous anesthésie générale, puis stabilisation chirurgicale.",
+          "correctionGenerale": "• Réduction en urgence au bloc sous anesthésie générale\n• Stabilisation chirurgicale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant le rachis — Question n°8</b>\n\nQuelle est la difficulté thérapeutique à attendre ?",
+          "images": [],
+          "reponseAttendue": "Le risque d’aggravation neurologique brutale lors des manœuvres de réduction, par rétropulsion de fragments discaux dans le canal vertébral.",
+          "correctionGenerale": "Risque d’aggravation neurologique brutale lors des manœuvres de réduction, par rétropulsion de fragments discaux dans le canal vertébral."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant l’épaule — Question n°9</b>\n\nQuel est le risque principal lors de la manœuvre de réduction ?",
+          "images": [],
+          "reponseAttendue": "Un refend du col anatomique.",
+          "correctionGenerale": "Refend du col anatomique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant le bassin — Question n°10</b>\n\nL’état hémodynamique est stabilisé. Vous n’avez pas de solution évidente pour traiter chirurgicalement le bassin. Vous devez cependant proposer une prise en charge permettant d’attendre de façon optimale un traitement secondaire. Quels sont les deux principes fondamentaux de ce premier temps ?",
+          "images": [],
+          "reponseAttendue": "Réduction du volume intrapelvien (damage control) et traction pour réduire l’ascension de l’hémibassin.",
+          "correctionGenerale": "• Réduction du volume intrapelvien (damage control)\n• Traction pour réduire l’ascension de l’hémibassin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Concernant la prise en charge globale — Question n°11</b>\n\nHiérarchiser et décrire simplement la prise en charge orthopédique de ces 3 localisations.",
+          "images": [],
+          "reponseAttendue": "Risque vital d’abord : gestion du risque hémorragique du bassin (ceinture, draps, fixateur externe, clamp de Ganz) puis ostéosynthèse secondaire à distance. Puis risque neurologique : réduction et stabilisation du rachis. Enfin risque fonctionnel : réduction et immobilisation de l’épaule, +/− ostéosynthèse secondaire ; ostéosynthèse du fémur par clou centromédullaire.",
+          "correctionGenerale": "<b>Risque vital</b>\nGestion du risque hémorragique du bassin (+/− fémur) :\n• Ceinture, draps\n• Fixateur externe, clamp de Ganz\n• Ostéosynthèse secondaire à distance\n\n<b>Risque neurologique — rachis</b>\n• Réduction\n• Stabilisation\n\n<b>Risque fonctionnel</b>\nÉpaule :\n• Réduction\n• Immobilisation\n• +/− ostéosynthèse secondaire si déplacement du trochin\nFémur :\n• Ostéosynthèse par clou centromédullaire"
+        }
+      ]
+    }
+  ]
+}

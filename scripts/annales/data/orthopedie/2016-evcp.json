@@ -1,0 +1,190 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP2016.pdf": {
+      "atelier": "annales-orthopedie/evcp2016",
+      "sujetOfficiel": "Annales/Sujets/2016_EVCP.pdf",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2016 - EVCP - Dossier 1",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2016.pdf",
+      "orderIndex": 22,
+      "vignette": "Femme de 67 ans, accident domestique, traumatisme isolé de l’épaule droite : fracture de l’extrémité proximale de l’humérus.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nClassification des fractures de l’humérus proximal.",
+          "images": [],
+          "reponseAttendue": "La classification de Neer, fondée sur 4 fragments (tête, tubercule majeur, tubercule mineur, diaphyse), avec de multiples combinaisons, déplacées ou non, les fractures-luxations et les refends articulaires de la tête.",
+          "correctionGenerale": "<b>Classification de Neer</b>\n• 4 fragments : tête, tubercule majeur, tubercule mineur, diaphyse\n• Multiples combinaisons\n• Déplacés / non déplacés\n• Fracture-luxation\n• Refend articulaire de la tête"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nExamen clinique, imagerie, bilan.",
+          "images": [],
+          "reponseAttendue": "Examen clinique : âge, membre dominant, activités, impotence fonctionnelle, attitude du traumatisé du membre supérieur, ecchymose brachio-thoracique de Hennequin, examen du nerf axillaire et du nerf suprascapulaire. Imagerie : radiographies face + profil et TDM, précisant le nombre de fragments, la taille du fragment métaphysaire (> 8 mm) et la conservation de la charnière interne.",
+          "correctionGenerale": "<b>Examen clinique</b>\n• Âge\n• Membre dominant\n• Activités professionnelles, sportives\n• Impotence fonctionnelle\n• Attitude du traumatisé du membre supérieur\n• Ecchymose brachio-thoracique de Hennequin\n• Nerf axillaire (deltoïde, moignon de l’épaule), nerf suprascapulaire\n\n<b>Imagerie</b>\n• Radiographies standard face + profil\n• TDM\n\n<b>Analyse</b>\n• Nombre de fragments (classification)\n• Fragment métaphysaire > 8 mm\n• Conservation de la charnière interne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nFractures céphalo-tubérositaires à 4 fragments : options thérapeutiques.",
+          "images": [],
+          "reponseAttendue": "Traitement orthopédique par immobilisation en rotation neutre si fracture non déplacée ou contre-indication opératoire ; sinon traitement chirurgical par ostéosynthèse (Kapandji/Hackethal, clou centromédullaire, plaque vissée) ou arthroplastie (hémiarthroplastie, prothèse totale inversée) en cas de fracture comminutive ou d’ostéoporose.",
+          "correctionGenerale": "<b>Traitement orthopédique</b>\n• Immobilisation en rotation neutre (à privilégier par rapport à la rotation interne)\n• Fracture non déplacée ou contre-indication opératoire\n\n<b>Traitement chirurgical</b>\nOstéosynthèse (selon la qualité osseuse) :\n• Kapandji / Hackethal\n• Clou centromédullaire\n• Plaque vissée\nArthroplastie (fracture comminutive ++, ostéoporose) :\n• Hémiarthroplastie\n• Prothèse totale inversée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nComplications.",
+          "images": [],
+          "reponseAttendue": "Cals vicieux, ostéonécrose, pseudarthrose, et faillite de l’ostéosynthèse avec démontage sur os ostéoporotique.",
+          "correctionGenerale": "• Cals vicieux\n• Ostéonécrose\n• Pseudarthrose\n• Ostéoporose : faillite de l’ostéosynthèse avec démontage"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2016 - EVCP - Dossier 2",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2016.pdf",
+      "orderIndex": 23,
+      "vignette": "Un rugbyman de 20 ans, espoir au centre de formation de Toulon, victime d’un choc violent direct et externe avec rotation au niveau du genou, arrive aux urgences avec un gros genou et une impotence fonctionnelle.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre examen initial ?",
+          "images": [],
+          "reponseAttendue": "Interrogatoire (craquement audible, sensation de déboîtement), examen vasculaire (pouls périphériques), état cutané, examen neurologique (sensibilité, motricité, SPE ++), recherche d’un syndrome des loges, choc rotulien signant l’hémarthrose, mobilités, flessum et blocages.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Craquement audible\n• Sensation de déboîtement\n\n<b>Examen</b>\n• Examen vasculaire : pouls périphériques\n• État cutané\n• Examen neurologique : sensibilité, motricité (SPE ++)\n• Syndrome des loges\n• Choc rotulien : hémarthrose\n• Mobilités, flessum (antalgique / mécanique), blocages (anse de seau, battant de cloche)\n\nL’examen clinique est souvent difficile en aigu."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels examens complémentaires ?",
+          "images": [],
+          "reponseAttendue": "Radiographies standard du genou face + profil et IRM, recherchant les signes de lésion du LCA (fracture de Segond, avulsion préspinale, translation antérieure spontanée, échancrure vide, contusion du condyle latéral), du LCP (avulsion rétrospinale), du PAPE (arcuate sign, arrachement de la tête fibulaire) et les lésions méniscales associées.",
+          "correctionGenerale": "• Radiographies standard du genou face + profil\n• IRM\n\n<b>Signes en faveur d’une lésion du LCA</b>\n• Fracture de Segond\n• Avulsion de la surface préspinale\n• Translation antérieure spontanée de profil en appui monopodal\nÀ l’IRM : échancrure vide, contusion du condyle latéral +/− image en miroir.\n\n<b>Signes en faveur d’une lésion du LCP</b>\n• Avulsion de la surface rétrospinale\n\n<b>Lésions du PAPE</b>\n• Arcuate sign, arrachement de la tête de la fibula\n\nRecherche de lésions méniscales associées."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Lésion ligamentaire probable, le mécanisme étant en faveur d’une rupture du LCA.",
+          "correctionGenerale": "• Lésion ligamentaire probable\n• Mécanisme en faveur d’une rupture du LCA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelles sont vos propositions, en urgence puis secondairement ?",
+          "images": [],
+          "reponseAttendue": "En urgence : immobilisation par attelle Zimmer, +/− ponction évacuatrice de l’hémarthrose à visée antalgique. Secondairement : ligamentoplastie.",
+          "correctionGenerale": "<b>En urgence</b>\n• Immobilisation par attelle Zimmer\n• +/− ponction évacuation de l’hémarthrose à visée antalgique\n\n<b>Secondairement</b>\n• Ligamentoplastie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nSi le bilan retrouve une lésion du LCA + ménisque interne + point d’angle postéro-externe, quelles sont les possibilités chirurgicales ?",
+          "images": [],
+          "reponseAttendue": "Ligamentoplastie du LCA sous arthroscopie (KJ, DIDT, DT4, TQ), suture méniscale, et reconstruction associée du PAPE — réparation directe si absence de perte de substance ou avulsion osseuse, sinon remplacement type popliteus bypass.",
+          "correctionGenerale": "• Ligamentoplastie du LCA (KJ, DIDT, DT4, TQ) sous arthroscopie\n• Suture méniscale\n• Reconstruction associée du PAPE (facteur de risque d’échec) :\n  – Réparation directe s’il n’y a pas de perte de substance, ou avulsion osseuse\n  – Si réparation impossible → remplacement type popliteus bypass"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nDécrivez le suivi postopératoire.",
+          "images": [],
+          "reponseAttendue": "Attelle d’extension Zimmer 2 semaines, puis attelle articulée pour 6 à 8 semaines au total ; kinésithérapie à partir de la deuxième semaine (renforcement du quadriceps, mobilités articulaires) ; reprise sportive à 6 mois minimum.",
+          "correctionGenerale": "• Attelle d’extension Zimmer 2 semaines\n• Attelle articulée, 6-8 semaines au total\n• Kinésithérapie à partir de la deuxième semaine → renforcement du quadriceps, mobilités articulaires\n• Reprise sportive : 6 mois minimum"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2016 - EVCP - Dossier 3",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2016.pdf",
+      "orderIndex": 24,
+      "vignette": "Un homme de 55 ans consulte pour une diminution de son autonomie, à 200 mètres de marche, avec signe du caddie, résistant au traitement médical (AINS et antalgiques) et ayant déjà bénéficié de 3 infiltrations sans succès.\n\nAntécédents : stents actifs cardiaques depuis un an, sous Kardégic.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre bilan clinique ?",
+          "images": [],
+          "reponseAttendue": "Évaluation fonctionnelle (périmètre de marche, aides techniques, retentissement professionnel), évaluation de la statique rachidienne dans les trois plans (taille, asymétries, gibbosité, déséquilibre frontal au fil à plomb, ILMI, camptocormie) et examen neurologique (radiculalgies, examen médullaire).",
+          "correctionGenerale": "<b>Évaluation fonctionnelle</b>\n• Périmètre de marche\n• Aides techniques\n• Travail : arrêt maladie ? adaptation de poste ?\n\n<b>Évaluation de la statique rachidienne (dans les 3 plans)</b>\n• Mesure de la taille\n• Asymétrie des épaules\n• Asymétrie du pli de taille\n• Gibbosité\n• Déséquilibre frontal : fil à plomb\n• ILMI\n• Camptocormie (faiblesse des muscles érecteurs du tronc)\n\n<b>Examen neurologique</b>\n• Radiculalgies\n• Examen médullaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nComment analysez-vous le bilan d’imagerie ?",
+          "images": [
+            "annales-orthopedie/evcp2016/figures/img-028-112.png",
+            "annales-orthopedie/evcp2016/figures/img-028-114.png",
+            "annales-orthopedie/evcp2016/figures/img-028-116.png",
+            "annales-orthopedie/evcp2016/figures/img-028-118.png",
+            "annales-orthopedie/evcp2016/figures/img-028-120.png",
+            "annales-orthopedie/evcp2016/figures/img-028-122.png"
+          ],
+          "reponseAttendue": "Radiographies du rachis lombaire face + profil : perte de la lordose lombaire, vertèbre sommet L2, dislocation rotatoire ouverte L2-L3, angle de Cobb > 10°. IRM thoraco-lombaire en séquence T2 : hypersignal, discopathie étagée Modic 1/2, hernie discale compressive L1-L2.",
+          "correctionGenerale": "<b>Radiographies du rachis lombaire face + profil</b>\n• Perte de la lordose lombaire\n• Vertèbre sommet : L2\n• Dislocation rotatoire ouverte L2-L3\n• Angle de Cobb > 10°\n\n<b>IRM du rachis thoraco-lombaire, séquence T2</b>\n• Hypersignal\n• Discopathie étagée Modic 1/2\n• Hernie discale compressive L1-L2"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nComment complétez-vous le bilan ?",
+          "images": [],
+          "reponseAttendue": "Clichés du rachis en totalité face et profil (tête fémorale – conduit auditif externe), radiographies dynamiques (bendings) et bilan préopératoire (bilan respiratoire +/− cardiaque, radiographie de thorax, ECG, hémostase).",
+          "correctionGenerale": "• Clichés du rachis en totalité, face et profil (tête fémorale – conduit auditif externe)\n• Radiographies dynamiques (bendings)\n• Bilan préopératoire : bilan respiratoire +/− cardiaque (radiographie de thorax, ECG…), hémostase"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nLe patient a été opéré par arthrodèse postéro-latérale instrumentée et laminectomie. Il remonte dans le service à 18 heures, 6 heures après le réveil, et se plaint de violentes douleurs dans le membre inférieur avec des fourmillements. Que suspectez-vous ? Que faut-il faire ?",
+          "images": [
+            "annales-orthopedie/evcp2016/figures/img-034-160.png",
+            "annales-orthopedie/evcp2016/figures/img-034-161.png"
+          ],
+          "reponseAttendue": "Une compression radiculaire sur hématome postopératoire : IRM en urgence puis reprise chirurgicale pour évacuation de l’hématome, hémostase, +/− mise en place d’un redon.",
+          "correctionGenerale": "• Compression radiculaire sur hématome postopératoire\n• IRM en urgence\n• Reprise chirurgicale pour évacuation de l’hématome, hémostase, +/− mise en place d’un redon"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2016 - EVCP - Dossier 4",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2016.pdf",
+      "orderIndex": 25,
+      "vignette": "Une jeune fille de 30 ans, dépressive, a fait une défenestration du 4ᵉ étage et est tombée sur un sol dur. À l’arrivée des pompiers, elle est inconsciente. Elle est immédiatement intubée et ventilée. Elle est hémodynamiquement instable et arrive aux urgences. Elle est stabilisée par les réanimateurs et vous devez assurer la prise en charge. Le bilan initial ne retrouve pas de lésion cranio-faciale grave ni d’atteinte des organes creux au body scanner.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelles sont les lésions principales à chercher ?",
+          "images": [
+            "annales-orthopedie/evcp2016/figures/img-038-178.png",
+            "annales-orthopedie/evcp2016/figures/img-038-179.png"
+          ],
+          "reponseAttendue": "Détecter et traiter en urgence tout risque vital immédiat : atteinte de la fonction respiratoire (rachis cervical haut, paroi thoracique) et de la fonction circulatoire (hémorragie extériorisée, fracture du fémur ou du bassin, hémopneumothorax, contusion myocardique) ; puis fractures vertébrales avec examen neurologique, fracture du bassin, lésions uro-génitales, fracture du calcanéum et du pilon tibial, perfusion des membres et calcul de l’Injury Severity Score.",
+          "correctionGenerale": "<b>Détecter et traiter en urgence un risque vital immédiat</b>\n\nÉvaluer la fonction respiratoire :\n• Lésions du rachis cervical haut → radiographie du rachis cervical (dégager C7)\n• Atteinte de la paroi thoracique → radiographie thoracique\n\nFonction circulatoire :\n• Hémorragie extériorisée\n• Fracture du fémur\n• Fracture du bassin\n• Hémopneumothorax\n• Dysfonction cardiaque liée à une contusion myocardique\n\n<b>Puis</b>\n• Fractures vertébrales : examen neurologique médullaire, syndrome de la queue de cheval\n• Fracture du bassin\n• Lésions uro-génitales\n• Fracture du calcanéum\n• Fracture du pilon tibial\n• Perfusion des membres, pouls distaux\n• Injury Severity Score"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nLe body scanner a retrouvé une fracture de T12 instable, une fracture de bassin et une fracture ouverte bilatérale des pilons tibiaux stade Gustilo III. La patiente devient hémodynamiquement instable. Que suspectez-vous ? Quelle prise en charge proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un hémopéritoine sur fracture du bassin : mise en place de voies d’abord vasculaires fiables, remplissage et transfusion, contention externe du bassin, embolisation artérielle en urgence +/− fixation externe (clamp de Ganz ou fixateur externe antérieur) +/− packing prépéritonéal.",
+          "correctionGenerale": "• Hémopéritoine sur fracture du bassin\n• Mise en place de voies d’abord vasculaires fiables\n• Remplissage / transfusion\n• Mise en place d’une contention externe du bassin\n• Embolisation artérielle en urgence +/− fixation externe (clamp de Ganz ou fixateur externe antérieur) +/− packing prépéritonéal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuelle prise en charge proposez-vous pour les lésions osseuses ?",
+          "images": [],
+          "reponseAttendue": "Fracture T12 instable : mobilisation en bloc, plan dur. Fractures ouvertes bilatérales des pilons tibiaux Gustilo III : antibioprophylaxie, évaluation vasculaire, parage et lavage abondant, réduction, ostéosynthèse par fixateur externe +/− VAC, en prévoyant des lambeaux secondaires. Fracture du bassin : traction transcondylienne (Tile C) et fixateur externe.",
+          "correctionGenerale": "<b>Fracture T12 instable</b>\n• Mobilisation en bloc\n• Plan dur\n\n<b>Fracture ouverte bilatérale des pilons tibiaux stade Gustilo III</b>\n• Antibioprophylaxie\n• Évaluation vasculaire (signes d’ischémie)\n• Parage, lavage abondant\n• Réduction du foyer fracturaire\n• Ostéosynthèse par fixateur externe +/− VAC\n• Prévoir la possibilité de lambeaux secondaires\n\n<b>Fracture du bassin</b>\n• Traction transcondylienne (Tile C)\n• Fixateur externe"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelle prise en charge proposez-vous lorsque la patiente est hémodynamiquement stable et éveillée ? Quelles techniques de prise en charge pour la fracture fermée du bassin de type Tile C ?",
+          "images": [],
+          "reponseAttendue": "Fracture T12 instable : ostéosynthèse (percutanée ou par abord postérieur). Pilons tibiaux : couverture cutanée par lambeaux et probable ostéosynthèse définitive par fixateur externe, sans conversion secondaire. Bassin : conversion secondaire du fixateur externe par ostéosynthèse interne selon le type de fracture (plaque de symphyse pubienne, vissage sacro-iliaque, fixation postérieure d’une fracture du sacrum).",
+          "correctionGenerale": "<b>Fracture T12 instable</b>\n• Ostéosynthèse (percutanée ou abord postérieur)\n\n<b>Fracture ouverte bilatérale des pilons tibiaux stade Gustilo III</b>\n• Assurer la couverture cutanée par lambeaux\n• Probable ostéosynthèse définitive par fixateur externe (pas de conversion secondaire)\n\n<b>Fracture du bassin</b>\n• Conversion secondaire du fixateur externe par ostéosynthèse interne selon le type de fracture : fixation antérieure par plaque de la symphyse pubienne, vissage sacro-iliaque, fixation postérieure d’une fracture du sacrum"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP2017.pdf": {
+      "atelier": "annales-orthopedie/evcp2017",
+      "sujetOfficiel": "Annales/Sujets/EVCP__2017 - 30 à 76/EVCP__2017 - 30 à 76/EVCP.53.DOC",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2017 - EVCP - Dossier 1",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2017.pdf",
+      "orderIndex": 27,
+      "vignette": "M. Ch., 55 ans, est amené par les pompiers aux urgences à la suite d’une chute d’une échelle. À l’examen clinique, vous retrouvez une douleur et une déformation du genou gauche. L’urgentiste vous a fait le bilan radiologique ci-dessous.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrivez la radiologie.",
+          "images": [
+            "annales-orthopedie/evcp2017/figures/img-003-012.png",
+            "annales-orthopedie/evcp2017/figures/img-003-014.png"
+          ],
+          "reponseAttendue": "Radiographies face + profil du genou gauche : fracture bi-tubérositaire du plateau tibial gauche, complexe et comminutive, Schatzker V, avec subluxation fémoro-tibiale.",
+          "correctionGenerale": "• Radiographie face + profil du genou gauche\n• Fracture bi-tubérositaire du plateau tibial gauche, complexe, comminutive\n• Schatzker V\n• Subluxation fémoro-tibiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelles complications précoces recherchez-vous et comment ?",
+          "images": [],
+          "reponseAttendue": "À court terme : lésions vasculaires (pouls périphériques, index de pression systolique répétés, +/− angioscanner), syndrome des loges (surveillance clinique, mesure des pressions si doute), lésions neurologiques (examen consigné dans le dossier) et lésions cutanées. À moyen terme : infections, nécrose cutanée avec exposition du matériel, complications thrombo-emboliques.",
+          "correctionGenerale": "<b>Court terme</b>\n• Lésions vasculaires : pouls périphériques, ABI répétés, +/− angioscanner\n• Syndrome des loges : surveillance clinique (douleurs, sensibilité), mesure des pressions en cas de doute\n• Lésions neurologiques (nerf fibulaire commun) : examen neurologique initial consigné dans le dossier (valeur médico-légale)\n• Lésions cutanées : écrasement, contusion, fracture ouverte\n\n<b>Moyen terme</b>\n• Infections\n• Nécrose cutanée avec exposition du matériel d’ostéosynthèse\n• Complications thrombo-emboliques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuels examens complémentaires demandez-vous pour guider votre prise en charge, et qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "TDM du genou gauche pour la planification opératoire ; angio-TDM ou artériographie en cas de doute vasculaire ; bilan d’imagerie orienté à la recherche de lésions associées ; IRM à distance pour le bilan méniscal et ligamentaire.",
+          "correctionGenerale": "• TDM du genou gauche pour la planification opératoire\n• Angio-TDM ou artériographie en cas de doute sur une lésion vasculaire\n• Recherche de lésions associées (bilan d’imagerie orienté)\n• IRM (à distance) : bilan des lésions méniscales et ligamentaires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDécrire les moyens thérapeutiques à mettre en œuvre.",
+          "images": [],
+          "reponseAttendue": "Immobilisation par attelle plâtrée cruro-pédieuse, antalgie adaptée, bilan préopératoire, mise à jeun en vue de la prise en charge chirurgicale, et examen neurovasculaire répété.",
+          "correctionGenerale": "• Immobilisation par attelle plâtrée cruro-pédieuse\n• Antalgie adaptée\n• Bilan préopératoire\n• À jeun pour la prise en charge chirurgicale\n• Examen neurovasculaire répété"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nEn l’absence de complications locales, quelle attitude adoptez-vous ? Décrivez votre prise en charge sous forme de compte rendu opératoire.",
+          "images": [],
+          "reponseAttendue": "Installation en décubitus dorsal, garrot à la racine du membre, détersion selon le protocole du CLIN, double voie (antérolatérale + postéromédiale) ou voie médiane avec relèvement de la TTA, ostéosynthèse par plaque anatomique verrouillée, arthrotomie sous-méniscale latérale, relèvement de l’enfoncement de la glène latérale +/− greffe, réduction épiphysaire puis métaphyso-diaphysaire, aponévrotomie de décharge systématique, contrôle scopique et fermeture plan par plan.",
+          "correctionGenerale": "• Installation en décubitus dorsal\n• Garrot à la racine du membre\n• Détersion selon le protocole du CLIN\n• Double voie (antérolatérale + postéromédiale) ou voie médiane avec relèvement de la TTA\n• Ostéosynthèse par plaque anatomique verrouillée\n• Arthrotomie sous-méniscale latérale pour contrôle intra-articulaire\n• Relèvement de l’enfoncement de la glène latérale +/− greffe\n• Réduction de l’épiphyse\n• Réduction de la métaphyse sur la diaphyse\n• Aponévrotomie de décharge systématique\n• Contrôle scopique\n• Fermeture plan par plan"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuelle est votre prescription médicale postopératoire ?",
+          "images": [],
+          "reponseAttendue": "Antalgie adaptée jusqu’au palier III, laxatif et antiémétique si besoin, anticoagulation préventive, surélévation du membre et glaçage, surveillance de l’état cutané, et consigne d’alerte devant une douleur intense résistante aux antalgiques de palier III (syndrome des loges).",
+          "correctionGenerale": "• Antalgie adaptée avec palier III\n• Laxatif, antiémétique si besoin\n• Anticoagulation préventive\n• Surélévation du membre, glaçage\n• Surveillance de l’état cutané\n• Risque de syndrome des loges : prévenir le médecin de garde en cas de douleurs intenses résistantes aux antalgiques de palier III"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nQuelles sont les complications possibles à distance ?",
+          "images": [],
+          "reponseAttendue": "Cals vicieux, raideur articulaire, arthrose post-traumatique et infection du site opératoire.",
+          "correctionGenerale": "• Cals vicieux\n• Raideur articulaire\n• Arthrose post-traumatique\n• Infection du site opératoire (ISO)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2017 - EVCP - Dossier 2",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2017.pdf",
+      "orderIndex": 28,
+      "vignette": "Mme L., 65 ans, droitière, à la retraite, consulte pour des douleurs au niveau de ses deux épaules, avec une prédominance des symptômes du côté droit. La symptomatologie évolue depuis plusieurs années mais s’aggrave depuis quelques mois, réveillant parfois la patiente la nuit. Elle a bénéficié de plusieurs séances de rééducation sans véritable succès. À la douleur s’associe un enraidissement des deux épaules. Pour autant, elle n’a pas une épaule pseudo-paralytique, avec une élévation atteignant l’horizontale.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nComment examinez-vous cette patiente ? Décrivez votre examen.",
+          "images": ["annales-orthopedie/evcp2017/figures/img-019-080.png"],
+          "reponseAttendue": "Mesure des amplitudes articulaires (EEA, RE1, RE2, RI), recherche d’un conflit sous-acromial (Hawkins, Neer, Yocum), recherche d’une arthrose acromio-claviculaire (cross arm test) et examen complet de la coiffe.",
+          "correctionGenerale": "• Amplitudes articulaires : EEA, RE1, RE2, RI\n• Recherche de conflit sous-acromial : Hawkins, Neer, Yocum\n• Recherche d’arthrose acromio-claviculaire : cross arm test\n• Examen de la coiffe (cf. question n°2)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez précisément l’examen clinique de la coiffe des rotateurs.",
+          "images": [
+            "annales-orthopedie/evcp2017/figures/recadre/img-024-098.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-025-099.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-026-100.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-027-101.png",
+            "annales-orthopedie/evcp2017/figures/img-028-102.png",
+            "annales-orthopedie/evcp2017/figures/img-028-103.png",
+            "annales-orthopedie/evcp2017/figures/img-028-104.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-029-105.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-030-106.png"
+          ],
+          "reponseAttendue": "Inspection à la recherche d’une amyotrophie des fosses supra- et infra-épineuses, puis testing analytique : supra-épineux par la manœuvre de Jobe ; infra-épineux par la force en RE1, l’external rotation lag sign et le dropping sign ; petit rond par la force en RE2, le drop sign et le signe du clairon ; subscapulaire par le lift-off de Gerber, le belly press test et le bear hug test ; long biceps par le palm up test.",
+          "correctionGenerale": "<b>Inspection</b>\n• Recherche d’une amyotrophie des fosses supra- et infra-épineuses\n\n<b>Testing analytique</b>\n• <b>Supra-épineux</b> : manœuvre de Jobe\n• <b>Infra-épineux</b> : force en RE1, external rotation lag sign, dropping sign\n• <b>Petit rond (teres minor)</b> : force en RE2, drop sign, signe du clairon\n• <b>Subscapulaire</b> : lift-off (test de Gerber), belly press test, bear hug test\n• <b>Long biceps</b> : palm up test"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDécrivez la radiographie. Quel est votre diagnostic ? Développez.",
+          "images": ["annales-orthopedie/evcp2017/figures/img-033-109.png"],
+          "reponseAttendue": "Radiographie de l’épaule droite de face : omarthrose droite excentrée de stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, sans collapsus de la tête), avec pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral et ostéophytes.",
+          "correctionGenerale": "• Radiographie de l’épaule droite de face\n• Omarthrose droite excentrée, stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, pas de collapsus de la tête)\n• Pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral, ostéophytes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nPour compléter le bilan, vous demandez un examen tomodensitométrique dont voici les images principales. Que vous apporte cet examen ? Comment définissez-vous cette lésion de l’épaule ?",
+          "images": [
+            "annales-orthopedie/evcp2017/figures/img-034-110.png",
+            "annales-orthopedie/evcp2017/figures/img-034-112.png",
+            "annales-orthopedie/evcp2017/figures/img-034-114.png",
+            "annales-orthopedie/evcp2017/figures/img-034-116.png",
+            "annales-orthopedie/evcp2017/figures/img-034-118.png",
+            "annales-orthopedie/evcp2017/figures/img-036-120.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-036-121.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-037-122.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-037-123.png",
+            "annales-orthopedie/evcp2017/figures/img-038-124.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-038-126.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-039-127.png",
+            "annales-orthopedie/evcp2017/figures/img-040-128.png",
+            "annales-orthopedie/evcp2017/figures/img-040-129.png"
+          ],
+          "reponseAttendue": "Arthroscanner de l’épaule droite : rupture du supra-épineux rétracté au stade III de la classification de Patte, dégénérescence graisseuse de stade II de Goutallier, atrophie musculaire de grade I sur la coupe en Y, luxation possible du long biceps, évaluation du stock osseux de la glène (Favard E2) et de la subluxation de la tête, de la version et de l’usure glénoïdienne (Walch A1).",
+          "correctionGenerale": "• Arthroscanner de l’épaule droite\n• Rupture du supra-épineux, rétracté au stade III (classification de Patte)\n• Dégénérescence graisseuse de stade II de Goutallier\n• Atrophie musculaire de grade I (coupe en Y)\n• Luxation du long biceps ?\n• Évaluation du stock osseux de la glène (Favard E2)\n• Évaluation de la subluxation de la tête, de la version et de l’usure de la glène (Walch A1)\n\nRappels : la rétraction tendineuse s’évalue par la classification de Patte, la dégénérescence graisseuse par celle de Goutallier, l’atrophie musculaire — à distinguer de l’infiltration graisseuse — sur la coupe en Y, et la version glénoïdienne, la subluxation de la tête et l’usure par la classification de Walch."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nOn ne note pas chez cette patiente de signe du clairon. À quoi correspond ce test ? Quelle est sa valeur pronostique ?",
+          "images": [],
+          "reponseAttendue": "Il traduit l’extension postérieure d’une rupture du supra-épineux avec atteinte de l’infra-épineux et du petit rond, soit une rupture massive de coiffe, de mauvais pronostic.",
+          "correctionGenerale": "• Extension postérieure d’une rupture du supra-épineux avec atteinte de l’infra-épineux et du petit rond\n• = rupture massive de coiffe, de mauvais pronostic"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuelles sont les possibilités thérapeutiques que vous proposez à cette patiente ? Définissez pour chacune les risques et les bénéfices.",
+          "images": [],
+          "reponseAttendue": "Traitement médical (infiltration, kinésithérapie) : peu invasif mais échec probable. Traitement conservateur (acromioplastie + réparation de coiffe par transfert du grand dorsal) : ne règle pas l’arthrose, risque de récidive élevé. Arthroplastie : hémiarthroplastie pour ostéonécrose ou fracture, prothèse totale anatomique pour omarthrose centrée, prothèse totale inversée à privilégier dans les omarthroses excentrées.",
+          "correctionGenerale": "• <b>Traitement médical</b> : infiltration, kinésithérapie — peu invasif, mais échec probable\n• <b>Traitement conservateur</b> : acromioplastie + réparation de coiffe par transfert du grand dorsal — ne règle pas le problème de l’arthrose, risque de récidive élevé\n• <b>Arthroplastie</b> :\n  – Hémiarthroplastie : ostéonécrose, fracture\n  – Prothèse totale anatomique : omarthrose centrée\n  – Prothèse totale inversée : à privilégier dans les omarthroses excentrées (mobilités conservées malgré des lésions de coiffe, restaure la tension du deltoïde)\n\nComplications des prothèses : cf. question n°7."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nDonnez les complications potentielles des prothèses d’épaule.",
+          "images": [
+            "annales-orthopedie/evcp2017/figures/recadre/img-048-131.png",
+            "annales-orthopedie/evcp2017/figures/img-049-132.png",
+            "annales-orthopedie/evcp2017/figures/img-049-136.png",
+            "annales-orthopedie/evcp2017/figures/img-049-137.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-050-138.png",
+            "annales-orthopedie/evcp2017/figures/img-050-139.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-051-141.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-052-142.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-053-143.png",
+            "annales-orthopedie/evcp2017/figures/img-053-144.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-054-146.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-055-147.png",
+            "annales-orthopedie/evcp2017/figures/recadre/img-056-148.png"
+          ],
+          "reponseAttendue": "Usure de la glène (glénoïdite) après hémiarthroplastie, infections (notamment à Propionibacterium acnes), descellement, luxations, fracture péri-prothétique, rupture secondaire de coiffe (prothèse anatomique) et fracture de fatigue de l’acromion (prothèse inversée).",
+          "correctionGenerale": "• Hémiarthroplastie : usure de la glène (glénoïdite)\n• Infections (<i>Propionibacterium acnes</i>)\n• Descellement\n• Luxations\n• Fracture péri-prothétique\n• Rupture secondaire de coiffe (PTE anatomique)\n• Fracture de fatigue de l’acromion (PTE inversée)\n\nLes figures rappellent la médialisation et l’abaissement du centre de rotation, les indications respectives de l’hémiarthroplastie, de la prothèse totale anatomique et de la prothèse totale inversée, ainsi que les complications.\n\nBibliographie : C. Nérot, <i>Technique d’arthroplastie totale inversée d’épaule de première intention</i>, Cahiers de la SOFCOT, 2013."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF 2014 correction AM.pdf": {
+      "atelier": "annales-area/evcf-2014-correction-am",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2014 - EVCF",
+      "annee": 2014,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF 2014 correction AM.pdf",
+      "orderIndex": 16,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2014 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°1</b>\n\nCitez les 4 mécanismes principaux de l’hypoxie tissulaire (au niveau de la cellule).",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-001-008.png"],
+          "reponseAttendue": "Baisse du débit sanguin dans le tissu (par baisse du débit cardiaque ou redistribution), baisse de la saturation en oxygène du sang, baisse de l’hémoglobine (anémie), altération de l’extraction en O₂ (choc septique, transport altéré).",
+          "correctionGenerale": "1. Baisse du débit sanguin dans le tissu (par baisse du débit cardiaque ou redistribution)\n2. Baisse de la saturation en oxygène dans le sang\n3. Baisse de l’hémoglobine (anémie)\n4. Altération de l’extraction en O₂ (choc septique, transport altéré)\n\n<i>Le schéma rappelle la boucle du transport de l’oxygène : contenu artériel en O₂ (≈ SaO₂ 100 %), débit cardiaque, extraction tissulaire (≈ 25 %) et contenu veineux résiduel (SvO₂ ≈ 75 %).</i>\n\n<i>Source citée par le corrigé : sémiologie des états de choc, SFAR 2001.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°2</b>\n\nQuels sont les déterminants de la pression de perfusion cérébrale ?",
+          "images": [],
+          "reponseAttendue": "PPC = PAM − PIC : les déterminants sont donc la PAM et la PIC, auxquelles s’ajoutent la capnie et la température.",
+          "correctionGenerale": "<b>PPC = PAM − PIC</b>\n\nDonc :\n• PAM\n• PIC\n• Capnie\n• Température"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°3</b>\n\nCitez les 2 mécanismes d’action des nouveaux anticoagulants oraux directs et donnez en DCI un représentant de chaque classe.",
+          "images": [],
+          "reponseAttendue": "Anti-Xa direct (rivaroxaban, apixaban) et anti-IIa direct (dabigatran) : il s’agit d’une inhibition sélective d’un facteur de la coagulation, soit le facteur X, soit le facteur II.",
+          "correctionGenerale": "• <b>Anti-Xa direct</b> : rivaroxaban, apixaban\n• <b>Anti-IIa direct</b> : dabigatran\n\nMécanisme : inhibition sélective d’un facteur de la coagulation (soit le II, soit le X)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°4</b>\n\nComment évaluer la fonction rénale en réanimation ?",
+          "images": [],
+          "reponseAttendue": "Par le DFG mesuré (U × V / P = créatinine urinaire × volume urinaire / créatinine plasmatique), les formules MDRD et CKD-EPI n’étant pas validées en réanimation ; par la diurèse horaire, la créatininémie et sa variation (interprétable si stable), l’urée et sa variation, l’ionogramme urinaire avec natriurèse et kaliurèse.",
+          "correctionGenerale": "• <b>DFG par la formule DFG = U × V / P</b> = créatinine urinaire × volume des urines (diurèse) / créatinine plasmatique\n  <i>NB : MDRD et CKD-EPI ne sont pas validés en réanimation.</i>\n• Diurèse horaire\n• Créatininémie, interprétable si stable, et sa variation\n• Urée et sa variation\n• Ionogramme urinaire\n• Natriurèse et kaliurèse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°5</b>\n\nDonnez la définition de la P50 et citez les facteurs qui l’augmentent.",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-003-025.png"],
+          "reponseAttendue": "La P50 est la pression partielle d’oxygène à laquelle l’hémoglobine est saturée à 50 % : plus sa valeur est faible, plus l’affinité de l’hémoglobine pour l’oxygène est élevée. Elle est augmentée par l’acidose, l’hyperthermie (infection, fièvre), l’hypercapnie et l’augmentation du 2,3-diphosphoglycérate.",
+          "correctionGenerale": "<b>Définition</b> : la pression partielle d’oxygène à laquelle l’hémoglobine est saturée en oxygène à 50 % est appelée P50 ; plus sa valeur est faible, plus l’affinité de l’hémoglobine pour l’oxygène est élevée.\n\n<b>Facteurs augmentant la P50</b> (déviation de la courbe vers la droite)\n• Acidose (baisse du pH)\n• Hyperthermie (infection et fièvre)\n• Augmentation du CO₂ / hypercapnie\n• Augmentation du 2,3-diphosphoglycérate\n\n<i>La courbe de dissociation de l’oxyhémoglobine ci-dessus illustre l’effet Bohr (↑CO₂, ↓pH → déviation à droite) et l’effet Haldane.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°6</b>\n\nQuels sont les agents pharmacologiques utilisés pour la réversion du bloc neuromusculaire induit par les curares non dépolarisants ? Précisez brièvement leur mécanisme d’action.",
+          "images": [],
+          "reponseAttendue": "Les anticholinestérasiques (prostigmine), qui inhibent la cholinestérase, augmentent l’acétylcholine au niveau de la plaque motrice et déplacent de façon compétitive le curare de ses récepteurs ; et le sugammadex, propre au rocuronium, qui capte les molécules de rocuronium dans le compartiment intravasculaire et au niveau neuromusculaire pour former un complexe inactif.",
+          "correctionGenerale": "<b>Anticholinestérasique : prostigmine</b>\n• Inhibe (détruit) la cholinestérase\n• Augmentation de l’acétylcholine au niveau de la plaque motrice\n• Remplacement compétitif : les récepteurs sont fixés par l’acétylcholine et non plus par les curares\n\n<b>Sugammadex</b> (propre au rocuronium)\n• Captation intravasculaire et au niveau neuromusculaire des molécules de rocuronium\n• Le complexe formé devient inactif"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°7</b>\n\nSaturomètre de pouls : citez 4 facteurs qui faussent la mesure.",
+          "images": [],
+          "reponseAttendue": "Lumière intense dirigée vers le capteur, bleu de méthylène, vernis à ongles, monoxyde de carbone.",
+          "correctionGenerale": "• Lumière intense vers le capteur\n• Bleu de méthylène\n• Vernis à ongles\n• Monoxyde de carbone"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°8</b>\n\nHyperthermie maligne : citez au moins 4 facteurs physiopathologiques.",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-004-035.png"],
+          "reponseAttendue": "Anomalie génétique transmissible portant sur le récepteur de la ryanodine (canaux calciques RYR1 et DHPR), libération massive de calcium et augmentation du calcium libre myoplasmique, état de contraction musculaire permanent avec dégagement de chaleur, emballement mitochondrial avec augmentation de la consommation d’O₂ et de la production de CO₂ (acidose respiratoire précoce), puis métabolisme anaérobie et acidose mixte, arrêt des pompes membranaires et souffrance des cellules musculaires (rhabdomyolyse, hyperkaliémie, myoglobinurie).",
+          "correctionGenerale": "<i>Le corrigé répond par la diapositive ci-dessus.</i>\n\n• <b>Anomalie génétique transmissible +++</b> — récepteur de la ryanodine = mutation\n• <b>Libération massive de calcium</b>\n• <b>Hyperactivation mitochondriale</b> → muscles → chaleur, hypercapnie, rigidité\n• Canaux calciques <b>RYR1 et DHPR</b>\n• Augmentation du taux de Ca²⁺ libre myoplasmique\n• État de <b>contraction permanente</b>\n• Dégagement de chaleur\n• Emballement mitochondrial (métabolisme aérobie) : augmentation de la consommation d’O₂ et <b>production de CO₂</b> → <b>acidose respiratoire</b> précoce\n• Épuisement et augmentation du métabolisme anaérobie (↗ lactates) : acidose mixte\n• Arrêt des pompes membranaires consommatrices d’énergie\n• Souffrance des cellules musculaires : <b>rhabdomyolyse, hyperkaliémie, myoglobinurie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°9</b>\n\nEmbolie gazeuse per-cœlioscopie : quelle est l’évolution du tracé capnographique ?",
+          "images": [],
+          "reponseAttendue": "Embolie de CO₂ : élévation faible mais précoce de la PETCO₂. Embolie massive : diminution voire effondrement de la PETCO₂ par blocage des capillaires pulmonaires, augmentation de l’espace mort et élargissement du gradient artério-alvéolaire.",
+          "correctionGenerale": "• <b>Embolie de CO₂</b> : élévation faible mais précoce de la PETCO₂\n• <b>Embolie massive</b> : diminution voire effondrement de la PETCO₂, par blocage des capillaires pulmonaires, augmentation de l’espace mort et élargissement du gradient artério-alvéolaire\n\n<i>Source citée par le corrigé : socle de connaissances « Formation Référent Matériel Anesthésie », SFAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°10</b>\n\nExpliquez brièvement les mécanismes impliqués dans le bloc neuromusculaire dépolarisant.",
+          "images": [],
+          "reponseAttendue": "La succinylcholine, curare dépolarisant, est un agoniste de l’acétylcholine : elle se fixe sur le récepteur nicotinique postsynaptique, dont l’ouverture dépolarise le sarcolemme et génère le potentiel d’action musculaire, qui ouvre les canaux calciques voltage-dépendants ; l’augmentation du calcium cytosolique déclenche la contraction. L’occupation prolongée des récepteurs inhibe ensuite la transmission neuromusculaire : c’est le bloc dépolarisant.",
+          "correctionGenerale": "La succinylcholine se fixe sur le <b>récepteur nicotinique postsynaptique</b> ; l’ouverture du récepteur-canal dépolarise le sarcolemme, générant le potentiel d’action musculaire qui ouvre les canaux calciques voltage-dépendants. L’augmentation de la concentration cytosolique de calcium déclenche la contraction musculaire.\n\nLes récepteurs présynaptiques à l’acétylcholine jouent un rôle déterminant dans la régulation de sa libération, ainsi que diverses protéines des vésicules. La dénervation entraîne une sur-régulation des récepteurs. L’occupation des récepteurs par les curares inhibe la transmission neuromusculaire.\n\nLa succinylcholine, <b>curare dépolarisant</b>, est un <b>agoniste de l’acétylcholine</b> : elle induit un bloc dépolarisant par effet agoniste du récepteur, comme décrit ci-dessus pour l’acétylcholine."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°11</b>\n\nCompensation qualitative et quantitative d’un jeûne préopératoire de 4 h chez un enfant de 15 kg.",
+          "images": [],
+          "reponseAttendue": "Règle des 4-2-1 : 4 × 10 mL + 2 × 5 mL = 50 mL/h, soit 4 × 50 = 200 mL à compenser. Préférer le Ringer lactate, avec administration de 25 mL/kg dans la première heure avant trois ans (15 mL/kg après trois ans), puis du reste de la compensation après la première heure.",
+          "correctionGenerale": "<b>Règle des 4-2-1</b>\n• 4 × 10 mL + 2 × 5 mL = <b>50 mL/h</b>\n• Soit 4 × 50 mL = <b>200 mL</b> à compenser pour 4 heures de jeûne\n\n<b>Qualitatif</b> : préférer le <b>Ringer lactate</b>\n\n<b>Modalités</b> : administration dans la première heure de 25 mL/kg avant trois ans et de 15 mL/kg après trois ans, puis du reste de la compensation après la première heure.\n\n<i>Source citée par le corrigé : « Règles de réhydratation et de jeûne chez l’enfant », MAPAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°12</b>\n\nCitez brièvement les déterminants du transport artériel de l’oxygène.",
+          "images": [],
+          "reponseAttendue": "TaO₂ = CaO₂ × Qc, avec Qc (débit cardiaque) = fréquence cardiaque × volume d’éjection systolique, et CaO₂ (contenu artériel en oxygène) = (Hb × 1,34 × SaO₂) + (0,003 × PaO₂).",
+          "correctionGenerale": "<b>TaO₂ = CaO₂ × Qc</b>\n• <b>Qc</b> (débit cardiaque) = fréquence cardiaque × volume d’éjection systolique\n• <b>CaO₂</b> (contenu artériel en oxygène) = (Hb × 1,34 × SaO₂) + (0,003 × PaO₂)\n\n<i>Source citée par le corrigé : « Hémodynamique périopératoire : oxygénation tissulaire globale ou régionale », MAPAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°13</b>\n\nCitez 2 principes de monitorage peropératoire.",
+          "images": [],
+          "reponseAttendue": "Soit surveillance clinique et surveillance instrumentale, soit surveillance hémodynamique et surveillance respiratoire — en ne citant que deux principes.",
+          "correctionGenerale": "<i>Question difficile : plusieurs façons d’aborder la réponse, mais surtout ne pas citer plus de 2 principes.</i>\n\nSoit :\n• Surveillance clinique\n• Surveillance instrumentale\n\nSoit :\n• Surveillance hémodynamique\n• Surveillance respiratoire\n\n<i>D’autres approches de la question peuvent être envisagées, mais ces deux réponses sont les plus probables.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°14</b>\n\nQuelles sont les informations attendues lors de l’utilisation du compte post-tétanique réalisé à l’adducteur du pouce en peropératoire ?",
+          "images": [],
+          "reponseAttendue": "Le compte post-tétanique (PTC) explore les blocs neuromusculaires profonds : > 10 = bloc intermédiaire (le TOF devient alors plus intéressant), 3 à 10 = bloc profond, ≤ 2 = bloc très profond (trop profond).",
+          "correctionGenerale": "Rechercher des <b>blocs neuromusculaires profonds</b> (PTC) :\n• <b>> 10</b> : bloc intermédiaire → l’utilisation du TOF est alors plus intéressante\n• <b>3-10</b> : bloc profond\n• <b>≤ 2</b> : bloc très profond (trop profond)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°15</b>\n\nCitez, par volume décroissant, les compartiments de stockage de l’oxygène à l’issue d’une préoxygénation.",
+          "images": [],
+          "reponseAttendue": "1) Les poumons et la CRF ; 2) l’hémoglobine et le plasma (globules rouges) ; 3) les cellules et les tissus.",
+          "correctionGenerale": "1. Poumons et CRF\n2. Hémoglobine et plasma ; globules rouges\n3. Cellules et tissus"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°16</b>\n\nCitez 2 indications validées de la ventilation non invasive chez l’adulte.",
+          "images": [],
+          "reponseAttendue": "L’OAP cardiogénique et la décompensation de BPCO (hypercapnique).",
+          "correctionGenerale": "• OAP cardiogénique\n• Décompensation de BPCO (hypercapnique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°17</b>\n\nL’examen d’un homme de 70 ans traumatisé crânien montre : une ouverture des yeux à la douleur, une réponse verbale incompréhensible, un évitement non adapté du côté gauche et une absence de mobilité à droite. Cotez son score de Glasgow.",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-007-061.png"],
+          "reponseAttendue": "Ouverture des yeux à la douleur = 2 ; réponse verbale incompréhensible = 2 ; meilleure réponse motrice, évitement non adapté = 4. Score de Glasgow = 8.",
+          "correctionGenerale": "• <b>Yeux</b> : ouverture à la douleur = 2\n• <b>Verbal</b> : incompréhensible = 2\n• <b>Moteur</b> : évitement non adapté = 4 <i>(on retient la meilleure réponse motrice, donc le côté gauche)</i>\n\n→ <b>Glasgow = 8</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°18</b>\n\nQuelles sont les particularités de la voie sublinguale comparée à la voie orale ?",
+          "images": [],
+          "reponseAttendue": "Absorption par la muqueuse, sans passage digestif, ce qui évite le premier passage hépatique ; passage direct dans le sang, d’où un effet quasi instantané et une pharmacocinétique différente avec un pic plasmatique plus rapide (exemple : la trinitrine).",
+          "correctionGenerale": "• Absorption par la muqueuse\n• Pas de passage digestif : évite le premier passage hépatique\n• Passage dans le sang sans passage par le tube digestif, donc effet quasi instantané\n• Pharmacocinétique différente, avec un pic plasmatique plus rapide\n\n<i>Penser à la trinitrine comme exemple.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°19</b>\n\nConduite à tenir lors d’un bris dentaire au bloc opératoire chez l’adulte.",
+          "images": [],
+          "reponseAttendue": "Récupérer la dent — si elle n’est pas récupérée, réaliser une radiographie de thorax +/− une fibroscopie ; signaler l’événement au chef de service qui contactera la direction hospitalière ; informer le patient, lui remettre les coordonnées d’un stomatologue et du service ainsi qu’un panoramique dentaire ; prendre des photos ; contacter l’assurance professionnelle ; orienter vers un dentiste pour la réparation ; établir un constat descriptif et factuel transmis à l’assureur et conservé dans le dossier.",
+          "correctionGenerale": "• Récupérer la dent ; si elle n’est pas récupérée, réalisation d’une radiographie de thorax +/− fibroscopie\n• Signaler l’événement au chef de service, qui contactera la direction hospitalière\n• Information du patient sur l’événement indésirable ; lui remettre les coordonnées du stomatologue, un panoramique dentaire et les coordonnées du service\n• Prise de photos\n• Contacter l’assurance professionnelle\n• Orienter vers un dentiste pour la prise en charge, la réparation dentaire et la réalisation d’un panoramique dentaire\n• Établir un <b>constat descriptif et factuel</b>, transmis à l’assureur et conservé dans le dossier, comprenant : le rappel des antécédents du patient, un descriptif précis de l’événement, un descriptif précis de la lésion et un commentaire personnel sur l’événement\n\n<i>Source citée par le corrigé : « Bris dentaires périanesthésiques », SFAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°20</b>\n\nQuelles sont les particularités de la prise en charge de l’arrêt cardio-respiratoire secondaire au passage systémique de bupivacaïne ?",
+          "images": [],
+          "reponseAttendue": "Arrêt de la chirurgie, du geste et de toute administration d’anesthésique local, appel à l’aide, réanimation prolongée, doses réduites d’adrénaline (100 à 300 µg par bolus), pas d’amiodarone, intubation et massage cardiaque externe, CEE selon le caractère chocable du rythme, administration d’intralipides selon le protocole local, ECMO à envisager en l’absence de récupération, déclaration à la pharmacovigilance.",
+          "correctionGenerale": "• Arrêt de la chirurgie, du geste, de l’administration de la bupivacaïne et de tout anesthésique local\n• Demander de l’aide\n• <b>Réanimation prolongée</b>\n• <b>Dose réduite d’adrénaline</b> : 100 à 300 µg par bolus\n• <b>Pas d’amiodarone</b>\n• Intubation et massage cardiaque externe\n• CEE selon que le rythme est chocable ou non\n• Envisager une <b>ECMO</b> en cas de non-récupération\n• <b>Administration d’intralipides</b> selon le protocole local\n• Déclaration à la pharmacovigilance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°21</b>\n\nQuels sont les éléments à respecter lors d’un arrêt des thérapeutiques chez un patient inconscient en réanimation ?",
+          "images": [],
+          "reponseAttendue": "Information de la famille et surtout de la personne de confiance, avec proposition d’aide psychologique ; décision collégiale ; élimination des facteurs confondants (hypothermie, sédation, état de mal épileptique…) ; décision écrite dans le dossier (mesure légale) ; confort du patient en premier, avec soins palliatifs (analgésie, sédation). Chez un patient inapte à consentir, au regard de la loi dite « Leonetti », la responsabilité de la décision de limitation ou d’arrêt des traitements et de son application incombe au médecin en charge du malade.",
+          "correctionGenerale": "• Information de la famille et surtout de la <b>personne de confiance</b> ; proposer l’aide d’un psychologue\n• <b>Décision collégiale</b>\n• Élimination des facteurs confondants (hypothermie, sédation, état de mal épileptique…)\n• <b>Décision écrite dans le dossier</b> : mesure légale\n• Confort du patient en premier = soins palliatifs (analgésie, sédation)\n• Chez un patient inapte à consentir, au regard de la loi dite « Leonetti » de 2006, la responsabilité de la décision de limitation ou d’arrêt des traitements et de son application incombe au médecin en charge du malade\n\n<i>Source citée par le corrigé : SRLF, Réanimation vol. 19 n° 8.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°22</b>\n\nQuel est le mode d’action des diurétiques de l’anse ?",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-009-079.png"],
+          "reponseAttendue": "Ce sont des natriurétiques qui bloquent le co-transporteur Na-K-2Cl du pôle luminal des cellules de la branche large ascendante de l’anse de Henlé, inhibant ainsi la réabsorption de sodium, de potassium et de chlore.",
+          "correctionGenerale": "• <b>Natriurétique</b>\n• Échangeur de sodium, d’eau et de potassium bloqué par les diurétiques au niveau de l’anse de Henlé\n\n<b>Détail (figure)</b>\n• L’entrée du NaCl filtré dans les cellules du segment ascendant de l’anse de Henlé est médiée par un <b>co-transporteur Na-K-2Cl</b> situé sur la membrane apicale ; l’énergie de ce transfert est fournie par le gradient électrochimique favorable du sodium\n• Les diurétiques de l’anse (furosémide, bumétanide) agissent au pôle luminal de la cellule tubulaire, <b>inhibent le co-transporteur Na-K-2Cl</b> par compétition avec le site Cl⁻, et permettent une excrétion de 20 à 25 % de la quantité de sodium filtrée\n• Ils provoquent la chute du gradient électrique transépithélial, avec arrêt de la réabsorption paracellulaire des cations divalents (Ca, Mg) : d’où une action importante sur l’<b>élimination du calcium</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°23</b>\n\nCitez les principales bactéries hospitalières résistantes aux antibiotiques chez l’adulte.",
+          "images": ["annales-area/evcf-2014-correction-am/figures/img-010-089.png"],
+          "reponseAttendue": "SARM (Staphylococcus aureus résistant à la méticilline), BLSE (entérobactéries productrices de bêta-lactamases à spectre étendu), ERV (entérocoques résistants à la vancomycine), BHRE (bactéries hautement résistantes émergentes), PAMR (Pseudomonas aeruginosa multirésistants), ABMR (Acinetobacter baumannii multirésistants).",
+          "correctionGenerale": "• <b>SARM</b> : Staphylococcus aureus résistant à la méticilline\n• <b>BLSE</b> : bêta-lactamases à spectre étendu (entérobactéries)\n• <b>ERV</b> : entérocoques résistants à la vancomycine\n• <b>BHRE</b> : bactéries hautement résistantes émergentes\n• <b>PAMR</b> : Pseudomonas aeruginosa multirésistants\n• <b>ABMR</b> : Acinetobacter multirésistants\n\n<i>Le schéma répartit ces bactéries entre le versant nosocomial (ERV, PAMR, ABMR), le versant communautaire (BLSE chez les entérobactéries, PSDP) et les germes intermédiaires (EPC, SARM).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°24</b>\n\nDécrivez l’adaptation cardio-circulatoire du nouveau-né à la vie extra-utérine.",
+          "images": [],
+          "reponseAttendue": "Avec le premier cri, les résistances vasculaires pulmonaires s’effondrent et la circulation pulmonaire se met en place ; l’augmentation du retour veineux pulmonaire élève les pressions des cavités gauches tandis que le clampage du cordon fait chuter les pressions du cœur droit. Les pressions systémiques devenant supérieures aux pressions pulmonaires, les shunts s’inversent (gauche-droite) et le foramen ovale se ferme fonctionnellement ; ces modifications induisent, dans les 4 à 12 heures de vie, une vasoconstriction qui ferme le canal artériel. La fermeture n’est pas définitive avant plusieurs jours, d’où une instabilité circulatoire en période néonatale.",
+          "correctionGenerale": "Avec le premier cri, les <b>résistances vasculaires pulmonaires s’effondrent</b> et la circulation pulmonaire se met en place. L’augmentation du retour veineux pulmonaire dans l’oreillette gauche provoque une augmentation des pressions au niveau des cavités gauches du cœur (OG-VG-Ao), tandis que l’interruption de la circulation ombilicale au clampage du cordon fait chuter les pressions au niveau du cœur droit (OD-VD-AP).\n\nLes pressions de la circulation systémique deviennent alors supérieures à celles de la circulation pulmonaire, entraînant une augmentation du débit sanguin pulmonaire. <b>Les shunts changent de sens</b>, ils deviennent gauche-droite et conduisent à la <b>fermeture fonctionnelle du foramen ovale</b>. Ces modifications de pressions induisent, dans les 4 à 12 heures de vie, une vasoconstriction qui provoque la <b>fermeture du canal artériel</b>.\n\nLa fermeture des shunts n’est pas définitive avant plusieurs jours, ce qui explique une certaine instabilité circulatoire rendant le nouveau-né particulièrement sensible aux variations hémodynamiques en période néonatale."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question N°25</b>\n\nQuelles sont les conséquences circulatoires des efforts inspiratoires à glotte fermée ?",
+          "images": [],
+          "reponseAttendue": "Augmentation brutale de la pression intrathoracique, baisse de la précharge et augmentation de la postcharge, d’où une baisse du débit cardiaque.",
+          "correctionGenerale": "• Augmentation brutale de la pression intrathoracique\n• Baisse de la précharge, augmentation de la postcharge\n• Baisse du débit cardiaque"
+        }
+      ]
+    }
+  ]
+}

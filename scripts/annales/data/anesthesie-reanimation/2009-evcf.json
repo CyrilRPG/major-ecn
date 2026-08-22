@@ -1,0 +1,84 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF 2009 AR.pdf": {
+      "atelier": "annales-area/evcf-2009-ar",
+      "sujetOfficiel": "Annales/Sujets/evcf_2009/EVCF.03.DOC",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2009 - EVCF",
+      "annee": 2009,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF 2009 AR.pdf",
+      "orderIndex": 9,
+      "vignette": "Vous êtes médecin au SAMU et vous avez été appelé pour prendre en charge un patient de 23 ans qui a pris son scooter et qui est retrouvé sur la voie publique. À votre arrivée, le patient casqué est retrouvé dans le coma, les yeux fermés, non réactif, sans réponse verbale ni motrice, avec un traumatisme maxillo-facial associé à une épistaxis.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuel est le score de Glasgow du patient ? Précisez les éléments du score permettant de le calculer.",
+          "images": [],
+          "reponseAttendue": "Glasgow 3/15 : ouverture des yeux 1, réponse verbale 1, réponse motrice 1.",
+          "correctionGenerale": "• Moteur = 1\n• Verbal = 1\n• Yeux = 1\n\n→ <b>Glasgow = 3/15</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nCe patient est un traumatisé crânien. Quels sont les déterminants de l’apport en oxygène au cerveau ? Donnez la formule du contenu artériel en oxygène. Comment réduire la consommation en oxygène du cerveau ?",
+          "images": [],
+          "reponseAttendue": "TaO₂ = débit cardiaque × CaO₂, dont les déterminants sont l’hémoglobine, la SaO₂ et le débit cardiaque ; CaO₂ = 1,34 × Hb × SaO₂ + PaO₂ × 0,0031. La consommation cérébrale en oxygène est réduite par l’hypothermie et la sédation intraveineuse (propofol, benzodiazépines).",
+          "correctionGenerale": "<b>Transport en oxygène</b>\nTaO₂ = Q cardiaque × CaO₂\n• Hb\n• SaO₂\n• Débit cardiaque\n\n<b>Contenu artériel en oxygène</b>\nCaO₂ = 1,34 × Hb × SaO₂ + PaO₂ × 0,0031\n\n<b>Réduction de la consommation d’O₂ du cerveau</b>\n• Hypothermie\n• Sédation IV (propofol / benzodiazépines…)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nDécrivez à l’aide d’un schéma la relation du débit sanguin cérébral (DSC) en fonction de la pression artérielle moyenne (PAM). Nommez cette relation. Donnez l’équation de la pression de perfusion cérébrale (PPC).",
+          "images": ["annales-area/evcf-2009-ar/figures/img-002-000.png"],
+          "reponseAttendue": "Il s’agit de l’autorégulation cérébrale, qui maintient un DSC constant sur une plage de PAM ; PPC = PAM − PIC.",
+          "correctionGenerale": "• <b>PPC = PAM − PIC</b>\n• <b>Autorégulation cérébrale</b> : le DSC reste constant (rappel : DSC = PPC / résistances des vaisseaux cérébraux)\n• En cas d’autorégulation, ce sont les vaisseaux qui se vasodilatent ou se vasoconstrictent pour faire varier les résistances et assurer un DSC stable et constant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nÉnumérez les ACSOS (agressions cérébrales secondaires d’origine systémique) à prévenir chez ce patient.",
+          "images": [],
+          "reponseAttendue": "Moyen mnémotechnique « ACSOS sucré salé » : Anémie, Capnie (hyper- ou hypocapnie), Systolique (hypotension ou HTA), O₂ (hypoxémie), Sueurs et hyperthermie, sucré = hypoglycémie, salé = hyponatrémie ou hypernatrémie.",
+          "correctionGenerale": "<b>ACSOS « sucré salé »</b>\n• <b>A</b> = anémie\n• <b>C</b> = capnie (hypercapnie / hypocapnie)\n• <b>S</b> = systolique : hypotension / HTA\n• <b>O</b> = O₂ (hypoxémie)\n• <b>S</b> = sueurs → hyperthermie\n• <b>Sucré</b> = hypoglycémie\n• <b>Salé</b> = hyponatrémie, hypernatrémie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuels sont les éléments paracliniques spécifiques pour la surveillance à visée cérébrale ?",
+          "images": [],
+          "reponseAttendue": "Doppler transcrânien, PtiO₂, PIC, TDM cérébrales et NIRS.",
+          "correctionGenerale": "• Doppler transcrânien (DTC)\n• PtiO₂\n• PIC\n• TDM cérébrales\n• NIRS"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nÉnumérez les principales classes de solutés de remplissage et leurs principaux effets indésirables.",
+          "images": [],
+          "reponseAttendue": "Cristalloïdes (troubles hydro-électrolytiques et acido-basiques, surcharge vasculaire et œdème pulmonaire, insuffisance rénale par hyperchlorémie) ; colloïdes — HEA (insuffisance rénale, allergie) et gélatines (allergie +++) ; albumines (coût).",
+          "correctionGenerale": "<b>Cristalloïdes</b>\n• Troubles hydro-électrolytiques / troubles acido-basiques\n• Surcharge vasculaire / œdème pulmonaire\n• Insuffisance rénale par hyperchlorémie\n\n<b>Colloïdes</b>\n• HEA : insuffisance rénale, allergie\n• Gélatines : allergie +++\n\n<b>Albumines</b>\n• Coût"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuels sont les effets des agents anesthésiques suivants sur le DSC et la consommation d’oxygène du cerveau : propofol, étomidate, thiopental, kétamine, midazolam ?",
+          "images": [],
+          "reponseAttendue": "Propofol, étomidate et thiopental diminuent le DSC et la consommation cérébrale en oxygène ; la kétamine augmente le DSC sans modifier la consommation ; le midazolam diminue le DSC sans modifier la consommation.",
+          "correctionGenerale": "<b>Effets sur le DSC et la consommation cérébrale en oxygène</b>\n• <b>Propofol</b> : DSC −− / consommation −−\n• <b>Étomidate</b> : DSC −− / consommation −−\n• <b>Thiopental</b> : DSC −− / consommation −−\n• <b>Kétamine</b> : DSC ++ / consommation 0\n• <b>Midazolam</b> : DSC −− / consommation 0"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nCe patient est mis sous noradrénaline. Citez les propriétés de la noradrénaline sur le cœur et les vaisseaux, en précisant les récepteurs impliqués.",
+          "images": ["annales-area/evcf-2009-ar/figures/img-005-002.png"],
+          "reponseAttendue": "Sur les vaisseaux, via les récepteurs α1 et α2 : vasoconstriction puissante augmentant la postcharge, vasoconstriction veineuse augmentant la précharge et augmentation de la perfusion du cœur, du cerveau et du rein. Sur le cœur, via les récepteurs β1 : effet inotrope et chronotrope.",
+          "correctionGenerale": "<b>Vaisseaux</b>\n• Récepteurs α1 et α2 : vasoconstriction puissante\n• Augmentation de la postcharge ; vasoconstriction veineuse permettant d’augmenter la précharge\n• Augmentation de la perfusion des organes (cœur, cerveau, rein)\n\n<b>Cœur</b>\n• Récepteurs β1\n• Inotrope et chronotrope"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nLe patient est ventilé avec une FiO₂ à 60 % et une PEP à 5 cmH₂O. Sa PaO₂ est à 100 mmHg (13 kPa) et sa PaCO₂ à 55 mmHg (7 kPa). Le pH est de 7,32 et les bicarbonates à 27 mEq/L. La fréquence respiratoire est de 12/min et son volume courant de 500 mL. Interprétez les gaz du sang et proposez une modification des réglages du respirateur.",
+          "images": [],
+          "reponseAttendue": "Acidose respiratoire non compensée avec hypercapnie, en cours de compensation rénale, et hypoxémie ; il faut augmenter la fréquence respiratoire, donc le volume minute, pour corriger l’hypercapnie et l’acidose respiratoire.",
+          "correctionGenerale": "• Acidose respiratoire non compensée\n• Hypercapnie\n• Tendance à la compensation rénale (en cours de compensation)\n• Hypoxémie\n\n→ Augmentation de la fréquence respiratoire, et donc du <b>volume minute</b> : correction de l’hypercapnie et de l’acidose respiratoire."
+        }
+      ]
+    }
+  ]
+}

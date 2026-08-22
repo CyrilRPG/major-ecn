@@ -1,0 +1,78 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCF2016 correctionpartie1.pdf": {
+      "atelier": "annales-orthopedie/evcf2016-correctionpartie1",
+      "sujetOfficiel": "Annales/Sujets/EVC2016_EVCF/EVC2016 - EVCF/EVCF.53.DOC",
+      "figuresIgnorees": {},
+      "remarque": "Le fichier est intitulé « partie 1 » : seuls les sujets n°1 et n°2 y figurent. Aucun fichier « partie 2 » n’existe dans le corpus."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2016 - EVCF",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES ORTHOPEDIE/EVCF2016 correctionpartie1.pdf",
+      "orderIndex": 18,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Principes de prise en charge d’une instabilité antérieure chronique de l’épaule.</b>\n\nQuestion n°1 : Les données de l’interrogatoire.",
+          "images": [],
+          "reponseAttendue": "Nombre d’épisodes et fréquence, caractère traumatique ou non et volontaire ou involontaire, âge, pratique et niveau sportifs, membre dominant, travail, antécédents médicaux et chirurgicaux, antécédents familiaux d’hyperlaxité.",
+          "correctionGenerale": "• Nombre d’épisodes, fréquence\n• Caractère traumatique ou non, volontaire / involontaire\n• Âge\n• Pratiques sportives\n• Niveau sportif\n• Membre dominant\n• Travail\n• Antécédents médicaux / chirurgicaux\n• Antécédents familiaux (hyperlaxité)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Principes de prise en charge d’une instabilité antérieure chronique de l’épaule.</b>\n\nQuestion n°2 : Examen clinique et bilan d’imagerie.",
+          "images": [],
+          "reponseAttendue": "Recherche de signes d’appréhension (manœuvre de Patte), de laxité (sulcus test de Neer, tiroir) et d’hyperlaxité multidirectionnelle ; bilan osseux par radiographies trois rotations + profil et scanner ; bilan capsulo-labral par arthroscanner, IRM ou arthro-IRM.",
+          "correctionGenerale": "<b>Examen clinique</b>\n• Signes d’appréhension : manœuvre de Patte (appréhension à l’armé du bras)\n• Signes de laxité : sulcus test de Neer, tiroir\n• Signes d’hyperlaxité multidirectionnelle : recherche d’une instabilité postérieure\n\n<b>Bilan des lésions osseuses</b>\n• Radiographies standard de l’épaule, trois rotations + profil\n• Scanner\n\n<b>Bilan des lésions capsulo-labrales</b>\n• Arthroscanner < IRM < arthro-IRM"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Principes de prise en charge d’une instabilité antérieure chronique de l’épaule.</b>\n\nQuestion n°3 : Anatomopathologie des lésions.",
+          "images": [],
+          "reponseAttendue": "Lésion du bourrelet glénoïdien, lésion capsulaire (poche de décollement de Broca), désinsertion du labrum, ALPSA, lésion SLAP, Bankart osseux, encoche de Malgaigne ou Hill-Sachs, rupture de la coiffe, fracture du trochiter.",
+          "correctionGenerale": "• Lésion du bourrelet glénoïdien\n• Lésion capsulaire : poche de décollement derrière le subscapulaire (BROCA)\n• Désinsertion du labrum\n• ALPSA\n• Lésion SLAP\n• Lésion antéro-inférieure de la glène (Bankart osseux)\n• Lésion postéro-supérieure de la tête humérale (encoche de Malgaigne ou Hill-Sachs)\n• Rupture de la coiffe\n• Fracture du trochiter"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Principes de prise en charge d’une instabilité antérieure chronique de l’épaule.</b>\n\nQuestion n°4 : Schéma thérapeutique — options et complications.",
+          "images": [],
+          "reponseAttendue": "Traitement fonctionnel par kinésithérapie et renforcement des stabilisateurs dynamiques ; traitement chirurgical guidé par le score ISIS (Bankart arthroscopique +/− remplissage postérieur, butée de Latarjet, capsulorraphie) ; complications : récidive, infection, perte d’amplitude en rotation externe et interne, lésions du nerf axillaire ou musculo-cutané.",
+          "correctionGenerale": "<b>Traitement fonctionnel</b>\n• Kinésithérapie, renforcement musculaire (stabilisateurs dynamiques)\n\n<b>Traitement chirurgical</b>\n• Calcul du score ISIS\n• Réinsertion du labrum sous arthroscopie (technique de Bankart)\n• +/− remplissage postérieur\n• Butée osseuse (technique de Latarjet)\n• Capsulorraphie\n\n<b>Complications</b>\n• Récidive (Bankart isolé > butée)\n• Infections\n• Perte d’amplitude en rotation externe et en rotation interne\n• Lésions nerveuses : nerf axillaire, nerf musculo-cutané"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Fractures de la paroi postérieure du cotyle.</b>\n\nQuestion n°1 : Mécanisme.",
+          "images": [],
+          "reponseAttendue": "Syndrome du tableau de bord : hanche en flexion à 90°, adduction neutre — une adduction forcée conduisant plutôt à une luxation pure.",
+          "correctionGenerale": "• Syndrome du tableau de bord\n• Flexion de hanche à 90°, adduction neutre (contre adduction forcée → luxation pure)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Fractures de la paroi postérieure du cotyle.</b>\n\nQuestion n°2 : Bilan clinique et imagerie.",
+          "images": [],
+          "reponseAttendue": "Examen neurologique ++ centré sur le nerf sciatique et recherche de lésions associées dans le cadre d’un polytraumatisme ; radiographies de bassin de face, trois-quarts alaire et trois-quarts obturateur avec analyse des lignes radiologiques, puis TDM avec reconstruction 3D pour la recherche de lésions de la tête et la planification opératoire.",
+          "correctionGenerale": "<b>Bilan clinique</b>\n• Examen neurologique ++ : nerf sciatique\n• Recherche de lésions associées dans le cadre d’un polytraumatisme\n\n<b>Imagerie</b>\n• Bilan radiologique : bassin de face, ¾ alaire, ¾ obturateur, analyse des lignes radiologiques\n• TDM avec reconstruction 3D\n• Recherche de lésions associées de la tête\n• Planification opératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Fractures de la paroi postérieure du cotyle.</b>\n\nQuestion n°3 : Prise en charge (en urgence et en urgence différée).",
+          "images": [],
+          "reponseAttendue": "Traction transcondylienne en urgence, puis ostéosynthèse par plaque vissée dans les 15 jours, avec antibioprophylaxie et prévention des ossifications par indométacine 150 mg/j en 3 prises pendant 30 à 45 jours, ou irradiation de la fosse glutéale.",
+          "correctionGenerale": "• Traction transcondylienne en urgence\n• Ostéosynthèse par plaque vissée dans les 15 jours\n• Antibioprophylaxie\n• Anti-inflammatoire en prévention des ossifications par indométacine : 150 mg/j en 3 prises pendant 30 à 45 jours\n• Radiothérapie : irradiation de la fosse glutéale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Fractures de la paroi postérieure du cotyle.</b>\n\nQuestion n°4 : Complications tardives.",
+          "images": [],
+          "reponseAttendue": "Arthrose, ostéonécrose du cotyle et de la tête fémorale, ossifications hétérotopiques (voies élargies ++), infections.",
+          "correctionGenerale": "• Arthrose\n• Ostéonécrose du cotyle et de la tête fémorale\n• Ossifications hétérotopiques (voies élargies ++)\n• Infections"
+        }
+      ]
+    }
+  ]
+}

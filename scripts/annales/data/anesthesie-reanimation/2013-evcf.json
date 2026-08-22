@@ -1,0 +1,333 @@
+{
+  "sources": {
+    "ANNALES AREA/Correction EVCF 2013.pdf": {
+      "atelier": "annales-area/correction-evcf-2013",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    },
+    "ANNALES AREA/EVCF 2013 correction.pdf": {
+      "atelier": "annales-area/evcf-2013-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2013 - EVCF",
+      "annee": 2013,
+      "type": "EVCF",
+      "source": "ANNALES AREA/Correction EVCF 2013.pdf",
+      "orderIndex": 13,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nCitez 5 paramètres physiologiques influençant la pression intracrânienne.",
+          "images": [],
+          "reponseAttendue": "PAM et PPC, hémoglobine, capnie, sédation, natrémie ; également la position de la tête et le volume sanguin cérébral.",
+          "correctionGenerale": "• PAM et PPC\n• Hémoglobine\n• Capnie\n• Sédation\n• Natrémie\n\nAutres : position de la tête, volume sanguin cérébral…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nCitez 5 facteurs d’agression cérébrale d’origine systémique.",
+          "images": [],
+          "reponseAttendue": "Anémie, capnie (hyper- ou hypocapnie), pression systolique (hypotension ou HTA), hypoxémie, hyperthermie, hypoglycémie et dysnatrémie — moyen mnémotechnique « ACSOS sucré salé ».",
+          "correctionGenerale": "• <b>A</b> = anémie\n• <b>C</b> = capnie (hypercapnie / hypocapnie)\n• <b>S</b> = systolique : hypotension / HTA\n• <b>O</b> = O₂ (hypoxémie)\n• <b>S</b> = sueurs → hyperthermie\n• <b>Sucré</b> = hypoglycémie\n• <b>Salé</b> = hyponatrémie, hypernatrémie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nCitez les médicaments utiles dans la gestion de la pré-éclampsie sévère.",
+          "images": [],
+          "reponseAttendue": "Antihypertenseurs (nicardipine, clonidine, labétalol, urapidil), corticoïdes pour la maturation fœtale, sulfate de magnésium, tocolytiques si besoin, dérivés nitrés en cas d’hypertonie utérine, anesthésiques en cas d’AG, anesthésiques locaux si rachianesthésie et morphinique pendant l’intubation.",
+          "correctionGenerale": "• <b>Anti-HTA</b> : nicardipine, clonidine, bêtabloquant (labétalol), urapidil\n• <b>Corticoïdes</b> pour la maturation fœtale\n• <b>Sulfate de magnésium</b>\n• <b>Tocolytiques</b> si besoin\n• <b>Dérivés nitrés</b> si hypertonie utérine\n• <b>Anesthésiques</b> en cas d’AG\n• <b>Anesthésiques locaux</b> si rachianesthésie (extraction fœtale)\n• <b>Morphinique</b> pendant l’intubation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels sont les signes objectifs de l’intoxication systémique aiguë aux anesthésiques locaux ?",
+          "images": [],
+          "reponseAttendue": "Dysgueusie avec goût métallique, dysarthrie, secousses musculaires, logorrhée ou changement de comportement, acouphènes et phosphènes, troubles de conduction intracardiaque et du rythme, arrêt cardio-respiratoire, coma et convulsions.",
+          "correctionGenerale": "• Dysgueusie, goût métallique\n• Dysarthrie\n• Secousses musculaires\n• Logorrhée (de novo) / changement de comportement (anxiété, agitation…)\n• Signes fonctionnels : acouphènes, phosphènes\n• Troubles de conduction intracardiaque et troubles du rythme\n• Arrêt cardio-respiratoire\n• Coma / troubles de conscience\n• Épilepsie / convulsions"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuels sont les objectifs hémodynamiques de la prise en charge initiale du choc septique ?",
+          "images": [],
+          "reponseAttendue": "PAM > 65 mmHg, diurèse > 0,5 mL/kg/h, lactates < 2 mmol/L, ScvO₂ ≥ 65-70 %.",
+          "correctionGenerale": "• PAM > 65 mmHg\n• Diurèse > 0,5 mL/kg/h\n• Lactates < 2 mmol/L\n• ScvO₂ ≥ 65-70 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nCitez les situations à risque d’hyperactivité bronchique peropératoire.",
+          "images": [],
+          "reponseAttendue": "Hypnose ou analgésie insuffisante, hypothermie, mécanisme allergique, tabagisme préopératoire, infection des voies aériennes supérieures ou maladie respiratoire chronique (asthme, BPCO), utilisation peropératoire de bêtabloquant, prostigmine, sulprostone ou desflurane, et l’intubation.",
+          "correctionGenerale": "• Hypnose / analgésie insuffisante (douleur)\n• Hypothermie\n• Mécanisme allergique\n• Tabagisme préopératoire\n• Infection des VAS préopératoire / maladie chronique respiratoire (asthme, BPCO)\n• Utilisation de bêtabloquant peropératoire / prostigmine / sulprostone / desflurane\n• Intubation orotrachéale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nQuels sont les principes de la prise en charge initiale du choc anaphylactique ?",
+          "images": [
+            "annales-area/correction-evcf-2013/figures/img-003-000.png",
+            "annales-area/correction-evcf-2013/figures/img-003-001.png"
+          ],
+          "reponseAttendue": "Confirmer le diagnostic et éliminer les diagnostics différentiels, appeler à l’aide, interrompre le produit suspecté, faire venir le chariot d’urgence ; traiter par oxygène pur et contrôle des voies aériennes, adrénaline IVD titrée de 0,1 à 0,2 mg toutes les 1 à 2 minutes (bolus augmentés à 1-5 mg puis IVSE 0,2 mg/h si besoin), remplissage vasculaire rapide, noradrénaline ou glucagon en cas d’inefficacité, salbutamol en cas de bronchospasme après l’adrénaline, prélèvements précoces et hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures.",
+          "correctionGenerale": "L’aide cognitive SFAR « Anaphylaxie grade III / IV (choc, bronchospasme) » ci-dessus détaille la conduite à tenir.\n\n<b>Confirmer</b> : hypotension, tachycardie, bronchospasme, rash (retardé) et angio-œdème, arrêt cardio-respiratoire.\n<b>Éliminer</b> : embolie pulmonaire ou amniotique, IDM, surdosage anesthésique, pneumothorax ou obstruction trachéo-bronchique, hémorragie.\n\n<b>Appel à l’aide — interrompre l’administration du produit suspecté — faut-il arrêter l’intervention ? — faire venir le chariot d’urgence.</b>\n\n<b>Traiter</b>\n• Oxygène pur et contrôle des voies aériennes\n• Adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) : titration de 0,1 à 0,2 mg toutes les 1 à 2 min ; si l’objectif tensionnel n’est pas atteint, augmenter les bolus de 1 à 5 mg ; adrénaline IVSE à débuter à 0,2 mg/h\n• Remplissage vasculaire rapide : cristalloïdes (30 mL/kg) puis amidons (30 mL/kg)\n• En cas d’inefficacité de l’adrénaline : noradrénaline IVSE ; glucagon 1 à 2 mg IVD toutes les 5 min (patients sous bêtabloquants) ; options : bleu de méthylène 1 à 3 mg IVD, sugammadex 16 mg/kg si curares stéroïdiens impliqués\n• Bronchospasme : en cas d’hypotension artérielle, adrénaline AVANT salbutamol ; salbutamol spray dans la sonde d’intubation, salbutamol IVD 0,1 à 0,2 mg, salbutamol IVSE 0,3 à 1,5 mg/h\n• Faire impérativement les premiers prélèvements ++\n• Hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures\n\n<b>Femme enceinte</b> : décubitus latéral gauche ; remplissage et adrénaline identiques.\n<b>Arrêt cardiaque réfractaire</b> : réanimation prolongée, envisager une assistance cardio-circulatoire (ECLS/ECMO).\n<b>Après</b> : surveillance intensive au moins 24 h (récurrence), information et exploration allergologique, déclaration au CRPV."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nQuels sont les principes d’une antibiothérapie probabiliste en urgence en contexte de réanimation ?",
+          "images": [],
+          "reponseAttendue": "Fortes doses, débutée le plus rapidement possible après les prélèvements bactériologiques, à large spectre, bactéricide, synergique et double ; adaptée à la fonction rénale, réévaluée à 48 h, limitant les mécanismes de résistance et tenant compte du risque de BMR et de l’écologie du service.",
+          "correctionGenerale": "• Fortes doses\n• Le plus rapidement possible après prélèvement bactériologique\n• Spectre élargi\n• Bactéricide\n• Synergique\n• Double\n• Adaptée à la fonction rénale\n• Réévaluée à 48 h\n• Limitant les mécanismes de résistance\n• Tenant compte des risques de BMR et de l’écologie du service"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°9</b>\n\nQuels sont les déterminants du rapport fraction inspirée sur fraction alvéolaire des agents halogénés ?",
+          "images": ["annales-area/correction-evcf-2013/figures/img-004-002.png"],
+          "reponseAttendue": "Le débit de gaz frais, la ventilation minute, la captation et la solubilité du gaz.",
+          "correctionGenerale": "1. Débit de gaz frais\n2. Ventilation minute\n3. Captation\n4. Solubilité du gaz"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°10</b>\n\nCitez 5 modifications physiologiques de la femme enceinte.",
+          "images": [],
+          "reponseAttendue": "Œdème des voies aériennes supérieures, baisse de la compliance pulmonaire et de la CRF, vidange gastrique diminuée (estomac plein à partir de 20 SA), baisse du retour veineux par compression de la VCI, augmentation des besoins en O₂.",
+          "correctionGenerale": "• Modification des VAS (œdème)\n• Baisse de la compliance pulmonaire et de la CRF\n• Vidange gastrique diminuée (estomac plein à partir de 20 SA)\n• Baisse du retour veineux par compression de la VCI\n• Augmentation des besoins en O₂"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°11</b>\n\nCitez les moyens de gestion et de prévention de l’hypotension artérielle sous rachianesthésie.",
+          "images": [],
+          "reponseAttendue": "Remplissage vasculaire pendant la rachianesthésie, dose d’anesthésique local adaptée et titrée, vasopresseur systématique en bolus ou IVSE, décubitus latéral gauche juste après la rachianesthésie, position allongée pour la ponction.",
+          "correctionGenerale": "• Remplissage vasculaire pendant la rachianesthésie\n• Dose adaptée de l’anesthésique local (titration)\n• Vasopresseur systématique, en bolus ou IVSE\n• Décubitus latéral gauche juste après la rachianesthésie\n• Position allongée pour la ponction"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°12</b>\n\nQuels sont les traitements en urgence de l’hyperkaliémie menaçante ?",
+          "images": [],
+          "reponseAttendue": "Glucose-insuline (5 UI dans 40 mL de G30 % en 10 min, renouvelable une fois), salbutamol 10 mg en aérosol, gluconate de calcium 2 g IVL pour la protection myocardique, épuration extra-rénale avec bain pauvre en potassium, et résine échangeuse d’ions per os ou en lavement.",
+          "correctionGenerale": "• Glucose-insuline : 5 UI dans 40 mL de G30 % en 10 min, renouvelable une fois\n• Salbutamol (bêta-2 mimétique) 10 mg en aérosol\n• Gluconate de calcium 2 g IVL (protection myocardique ; ne traite pas l’hyperkaliémie)\n• Épuration extra-rénale avec bain de dialyse pauvre en K⁺ (2 mmol/L voire 0 mmol/L)\n• Résine échangeuse d’ions, orale ou en lavement (Resikali)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°13</b>\n\nQuels sont les réglages du ventilateur pour une ventilation protectrice ?",
+          "images": [],
+          "reponseAttendue": "Vt 6 à 8 mL/kg de poids idéal théorique en mode VAC, PEP modérée à haute (5 à 10 cmH₂O), pression de plateau < 30 cmH₂O, humidification et réchauffement du circuit, fréquence respiratoire < 40/min pour limiter le risque d’auto-PEP.",
+          "correctionGenerale": "• Vt 6-8 mL/kg de poids idéal théorique (mode VAC)\n• PEP modérée à haute (5 à 10 cmH₂O)\n• Pression de plateau < 30 cmH₂O\n• Humidificateur du circuit et réchauffeur\n• FR < 40/min (limiter le risque d’auto-PEP)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°14</b>\n\nQuelles sont les conséquences de la curarisation résiduelle ?",
+          "images": [],
+          "reponseAttendue": "Baisse de force musculaire, dépression respiratoire avec désaturation et hypercapnie, troubles de déglutition avec inhalation et pneumopathie, et retentissement psychologique.",
+          "correctionGenerale": "• Baisse de force musculaire\n• Dépression respiratoire avec désaturation, hypercapnie\n• Troubles de déglutition et inhalation ; pneumopathie\n• Risque psychologique (traumatisme psychologique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°15</b>\n\nQuels sont les 2 éléments d’orientation diagnostique devant une hyponatrémie ?",
+          "images": [],
+          "reponseAttendue": "Vérifier qu’il s’agit d’une hyponatrémie vraie (glycémie +++, lipides, protidémie), puis évaluer le secteur extracellulaire.",
+          "correctionGenerale": "• Vérifier l’hyponatrémie vraie ⇒ glucose +++ (glycémie sanguine), lipides, protidémie\n• Secteur extracellulaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°16</b>\n\nÉnumérez 5 risques de la transfusion de produits sanguins labiles.",
+          "images": [],
+          "reponseAttendue": "Risque immuno-allergique (fièvre, frissons), incompatibilité de groupe avec hémolyse aiguë, surcharge (TACO, OAP de surcharge), TRALI, transmission de germes, et surdosage en citrate.",
+          "correctionGenerale": "• Risque immuno-allergique (fièvre, frissons)\n• Risque d’incompatibilité de groupe avec hémolyse aiguë\n• Risque de surcharge : TACO / OAP de surcharge\n• Risque de TRALI\n• Risque de transmission de germes / risque infectieux\n• Surdosage en citrate"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°17</b>\n\nQuelles sont les règles de jeûne chez l’enfant de 1 an pour une chirurgie programmée sous AG ?",
+          "images": ["annales-area/correction-evcf-2013/figures/img-006-003.png"],
+          "reponseAttendue": "6 heures pour les solides et le lait 2ᵉ âge, 4 heures pour le lait 1ᵉʳ âge, 2 heures pour les liquides clairs, puis rien jusqu’à l’opération.",
+          "correctionGenerale": "Le corrigé répond par le schéma ci-dessus :\n• <b>− 6 h</b> : solides et lait 2ᵉ âge\n• <b>− 4 h</b> : lait 1ᵉʳ âge\n• <b>− 2 h</b> : liquides clairs\n• Puis rien, jusqu’à l’opération"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°18</b>\n\nQuelles sont les contre-indications à la ventilation non invasive ?",
+          "images": [],
+          "reponseAttendue": "Altération de la conscience (Glasgow < 9), traumatisme maxillo-facial avec brèche ostéo-méningée ou brûlure de la face, vomissements, syndrome occlusif, hémorragie digestive haute, hémorragie ORL ou hémoptysie, épuisement respiratoire nécessitant l’intubation, pneumothorax non drainé ou plaie soufflante, et suites immédiates d’un arrêt cardio-respiratoire.",
+          "correctionGenerale": "• Niveau de conscience altéré, Glasgow < 9\n• Traumatisme maxillo-facial avec brèche ostéo-méningée / brûlure de la face\n• Vomissements\n• Syndrome occlusif haut et bas\n• Hémorragie digestive haute, hémorragie ORL ou hémoptysie\n• Épuisement respiratoire avec nécessité d’intubation\n• Pneumothorax non drainé, plaie soufflante\n• Post-arrêt cardio-respiratoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°19</b>\n\nQuelles sont les conséquences ventilatoires postopératoires d’une laparotomie sus-mésocolique ?",
+          "images": [],
+          "reponseAttendue": "Douleur avec baisse de la compliance pulmonaire et de la CRF, dysfonction diaphragmatique, pneumothorax ou brèche diaphragmatique, atélectasies, et encombrement respiratoire par difficulté à tousser.",
+          "correctionGenerale": "• Douleur et baisse de la compliance pulmonaire, baisse de la CRF\n• Dysfonction diaphragmatique\n• Pneumothorax / brèche diaphragmatique\n• Atélectasies\n• Encombrement respiratoire par effort de toux difficile"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°20</b>\n\nDonnez les moyens d’épargne transfusionnelle dans le cadre d’une chirurgie de prothèse totale de genou.",
+          "images": [],
+          "reponseAttendue": "En préopératoire : NFS, ferritinémie, fer per os ou IV en cas de carence martiale, EPO hebdomadaire à partir de J-21. En peropératoire : cell saver, acide tranexamique et technique chirurgicale mini-invasive. En postopératoire : objectifs d’hémoglobine individualisés et plus bas, fer IV si mauvaise tolérance.",
+          "correctionGenerale": "<b>Préopératoire</b>\n• NFS (anémie, microcytaire ?)\n• Ferritinémie (carence martiale ?)\n• Fer per os systématique si carence martiale : 200 mg/j PO ; IV si très mauvaise tolérance (Venofer® 300 mg / 48 h)\n• EPO (PMZ) chaque semaine en sous-cutané, à débuter 3 semaines avant : J-21, J-14, J-7 et le jour J (600 UI/kg) ; 2ᵉ schéma : 300 UI/kg/j pendant 10 jours\n\n<b>Peropératoire</b>\n• Cell Saver® (récupérateur de sang peropératoire)\n• Acide tranexamique (PMZ) : 1 g en bolus puis selon protocole (antifibrinolytique), IV et en utilisation locale par le chirurgien\n• Technique chirurgicale (micro-incision, techniques mini-invasives)\n\n<b>Postopératoire</b>\n• Revoir les objectifs d’Hb à la baisse pour éviter les transfusions ; objectif individualisé\n• Fer IV si mauvaise tolérance clinique (Venofer®, Ferinject®)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°21</b>\n\nDonnez 5 moyens médicamenteux et non médicamenteux de traitement et de prévention des nausées et vomissements postopératoires.",
+          "images": [],
+          "reponseAttendue": "Dropéridol, ondansétron, dexaméthasone, propofol IVSE ou AIVOC peropératoire, métoclopramide ou érythromycine ; et sur le plan non médicamenteux : vidange gastrique par sonde, position proclive, acupuncture des points anti-émétiques.",
+          "correctionGenerale": "• Dropéridol\n• Ondansétron\n• Dexaméthasone\n• Propofol IVSE / AIVOC peropératoire\n• Métoclopramide / érythromycine (prokinétiques)\n• Vidange gastrique (sonde naso-gastrique)\n• Position proclive\n• Acupuncture / points anti-émétiques"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2013 - EVCF - Corrigé complémentaire",
+      "annee": 2013,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF 2013 correction.pdf",
+      "orderIndex": 14,
+      "vignette": "Second corrigé du même sujet EVCF 2013 d’anesthésie-réanimation, proposé par un autre correcteur : les 21 questions sont identiques, les réponses proposées diffèrent et se complètent.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nCitez 5 paramètres physiologiques influençant la pression intracrânienne.",
+          "images": [],
+          "reponseAttendue": "PaCO₂, natrémie, PaO₂, PAM, pression intra-ventriculaire (hydrocéphalie).",
+          "correctionGenerale": "• PaCO₂\n• Natrémie\n• PaO₂\n• PAM\n• Pression intra-ventriculaire / hydrocéphalie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nCitez 5 facteurs d’agression cérébrale d’origine systémique.",
+          "images": [],
+          "reponseAttendue": "Dysnatrémie, hypercapnie, hypoxie, dysglycémie, hyperthermie.",
+          "correctionGenerale": "• Dysnatrémie\n• Hypercapnie\n• Hypoxie\n• Dysglycémie\n• Hyperthermie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nCitez les médicaments utiles dans la gestion de la pré-éclampsie sévère.",
+          "images": [],
+          "reponseAttendue": "Antihypertenseurs (Loxen, Trandate), antalgiques, sulfate de magnésium 4 g puis IVSE 1 g/h, corticothérapie pour la maturation fœtale.",
+          "correctionGenerale": "• Antihypertenseurs : Loxen / Trandate (inhibiteurs calciques)\n• Antalgiques\n• Sulfate de magnésium 4 g puis IVSE 1 g/h\n• Corticothérapie pour maturation fœtale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels sont les signes objectifs de l’intoxication systémique aiguë aux anesthésiques locaux ?",
+          "images": [],
+          "reponseAttendue": "Malaise, convulsion, coma ; hypotension artérielle et collapsus ; troubles du rythme ventriculaire et BAV ; arrêt cardio-respiratoire.",
+          "correctionGenerale": "• Malaise / convulsion / coma\n• Hypotension artérielle / collapsus\n• Troubles du rythme ventriculaire / BAV\n• Arrêt cardio-respiratoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuels sont les objectifs hémodynamiques de la prise en charge initiale du choc septique ?",
+          "images": [],
+          "reponseAttendue": "Maintien d’une PAM > 65 mmHg, normocardie, remplissage adapté au gain de débit cardiaque (+10 %) en évitant l’excès, et catécholamines rapidement pour contrer la vasoplégie (noradrénaline).",
+          "correctionGenerale": "• Maintien d’une pression artérielle moyenne > 65 mmHg\n• Normocardie\n• Remplissage adapté au gain de Qc (+10 %) — éviter le remplissage excessif\n• Catécholamines rapidement pour contrer la vasoplégie = noradrénaline"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nCitez les situations à risque d’hyperactivité bronchique peropératoire.",
+          "images": [],
+          "reponseAttendue": "Infarctus du myocarde ou cardiopathie, asthme, BPCO, corticothérapie prolongée, surinfection bronchique, pulmonaire ou des VAS, tabagisme, anaphylaxie, laryngoscopie, intubation et halogénés, anesthésie peu profonde, stimulation nociceptive peropératoire.",
+          "correctionGenerale": "• Infarctus du myocarde / cardiopathie\n• Asthme\n• BPCO\n• Corticothérapie prolongée\n• Surinfection bronchique, pulmonaire ou des VAS\n• Tabagisme\n• Anaphylaxie\n• Laryngoscopie / intubation / halogénés\n• Anesthésie peu profonde\n• Stimulation nociceptive peropératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nQuels sont les principes de la prise en charge initiale du choc anaphylactique ?",
+          "images": [],
+          "reponseAttendue": "Appel à l’aide, arrêt du traitement mis en cause, +/− arrêt de l’intervention, chariot d’urgence, oxygène et contrôle des VAS, remplissage vasculaire rapide, adrénaline titrée 0,1 mg/min puis bolus de 1 mg puis IVSE 0,2 mg/h, glucagon si bêtabloquants, gestion du bronchospasme (sévoflurane, salbutamol), HSHC 200 mg/4 h et prélèvements.",
+          "correctionGenerale": "• Appel à l’aide\n• Arrêt du traitement mis en cause\n• +/− arrêt de l’intervention\n• Faire venir le chariot d’urgence\n• Oxygène et contrôle des VAS\n• Remplissage vasculaire rapide\n• Adrénaline : titration de 0,1 mg/min ; si échec, augmentation des bolus à 1 mg ; si échec, IVSE 0,2 mg/h\n• Glucagon si bêtabloquants\n• Gestion du bronchospasme : sévoflurane / salbutamol inhalé, puis IVD 0,1 mg, puis IVSE 0,3 à 1,5 mg/h\n• HSHC 200 mg / 4 h\n• Prélèvements ++"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nQuels sont les principes d’une antibiothérapie probabiliste en urgence en contexte de réanimation ?",
+          "images": [],
+          "reponseAttendue": "Urgente, probabiliste, à spectre élargi, double, synergique, réévaluée à 48-72 h et adaptée secondairement aux prélèvements réalisés.",
+          "correctionGenerale": "• Urgente\n• Probabiliste\n• Spectre élargi\n• Double\n• Synergique\n• Réévaluation à 48-72 h\n• Adaptation secondaire aux prélèvements réalisés"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°9</b>\n\nQuels sont les déterminants du rapport fraction inspirée sur fraction alvéolaire des agents halogénés ?",
+          "images": [],
+          "reponseAttendue": "Le coefficient de solubilité (liposolubilité), la ventilation alvéolaire (fréquence et volume, soit le débit ventilatoire), le débit de gaz frais, l’effet second gaz et le débit cardiaque (coefficient de partage sang/muscle).",
+          "correctionGenerale": "• Coefficient de solubilité = liposolubilité\n• Ventilation alvéolaire : fréquence / volume = débit ventilatoire\n• Débit de gaz frais\n• Effet second gaz\n• Débit cardiaque : coefficient de partage sang/muscle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°10</b>\n\nCitez 5 modifications physiologiques de la femme enceinte.",
+          "images": [],
+          "reponseAttendue": "Augmentation de la VO₂, diminution de la CRF, diminution de la pression du sphincter inférieur de l’œsophage, œdème et hyperhémie des VAS, compression aorto-cave.",
+          "correctionGenerale": "• Augmentation de la VO₂\n• Diminution de la CRF\n• Diminution de la pression du sphincter inférieur de l’œsophage\n• Œdème et hyperhémie des VAS\n• Compression aorto-cave"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°11</b>\n\nCitez les moyens de gestion et de prévention de l’hypotension artérielle sous rachianesthésie.",
+          "images": [],
+          "reponseAttendue": "En prévention : dépistage des sujets à risque, estimation de la volémie, rachianesthésie latéralisée et titrée, préremplissage par colloïdes, phényléphrine ou noradrénaline prophylactique. En gestion : co-remplissage par cristalloïdes ou colloïdes et drogues vasoconstrictives (éphédrine si bradycardie associée, phényléphrine chez la femme enceinte).",
+          "correctionGenerale": "<b>1) Prévention</b>\n• Dépistage des sujets à risque\n• Estimation de la volémie\n• Connaissance du mécanisme physiopathologique = vasodilatation artérielle et veineuse secondaire au bloc sympathique des territoires concernés\n• Rachianesthésie latéralisée / titrée\n• Préremplissage par colloïdes\n• Phényléphrine ou noradrénaline prophylactique\n\n<b>2) Gestion</b>\n• Co-remplissage par cristalloïdes ou colloïdes\n• Drogues vasoconstrictives : éphédrine (si bradycardie associée) ou phényléphrine (femme enceinte, tachycardie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°12</b>\n\nQuels sont les traitements en urgence de l’hyperkaliémie menaçante ?",
+          "images": [],
+          "reponseAttendue": "Gluconate ou chlorure de calcium 10 mL en 10 min IVL, glucose-insuline (100 mL de G30 % + 10 UI IV), agonistes β2 (salbutamol 0,5 mg sur 15 min), diurétiques de l’anse ou acétazolamide, résines échangeuses d’ions, et dialyse — méthode de choix ; les bicarbonates n’ont pas fait la preuve d’un effet.",
+          "correctionGenerale": "• <b>Gluconate ou chlorure de calcium</b> : 10 mL en 10 min IV lent ; effet en 3 min, renouvelable si absence d’effet, durée d’action 30-60 min\n• <b>Glucose + insuline</b> : 100 mL de G30 % en bolus et insuline 10 U IV ; diminution de 0,6 mEq/L de K⁺ en 15 min, effet maximal en 30-60 min\n• <b>Agoniste β2</b> (salbutamol) : effet additif avec insuline-glucose ; en perfusion continue 0,5 mg sur 15 min, diminution du K⁺ d’1 mEq/L après 1 h, action chez 50 % des patients\n• <b>Bicarbonates</b> : aucune modification du K⁺ n’est démontrée\n• <b>Diurétiques</b> : diurétiques de l’anse (furosémide) ou acétazolamide\n• <b>Résines échangeuses d’ions</b> : Kayexalate per os (30 g) ou en lavement ; délai d’action 2 h, effet maximal 6 h ; attention au risque de nécrose colique (1,8 %)\n• <b>Dialyse</b> : méthode de choix, diminution de la kaliémie de 2 mEq/L en 3 h ; attention au rebond du K⁺ à l’arrêt"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°13</b>\n\nQuels sont les réglages du ventilateur pour une ventilation protectrice ?",
+          "images": [],
+          "reponseAttendue": "Volume courant de 6 à 8 mL/kg de poids idéal théorique, fréquence élevée adaptée à un EtCO₂ de 35-40 mmHg, PEP minimale à 5 cmH₂O, pression de plateau < 30 cmH₂O, rapport I/E à 1/2, FiO₂ ajustée pour une SpO₂ de 94-98 %.",
+          "correctionGenerale": "• Volume courant : 6 à 8 mL/kg de poids idéal théorique = petits volumes\n• Haute fréquence adaptée à un EtCO₂ de 35-40 mmHg\n• PEP minimum à 5 cmH₂O\n• Pplat < 30 cmH₂O\n• Rapport I/E à 1/2\n• FiO₂ qsp SpO₂ 94-98 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°14</b>\n\nQuelles sont les conséquences de la curarisation résiduelle ?",
+          "images": [],
+          "reponseAttendue": "Atteinte de la mécanique ventilatoire avec hypoventilation alvéolaire, altération de la réponse à l’hypoxie, et altération de la mécanique pharyngée avec troubles de la déglutition.",
+          "correctionGenerale": "• Atteinte de la mécanique ventilatoire / hypoventilation alvéolaire\n• Altération de la réponse à l’hypoxie / hypoxie\n• Altération de la mécanique pharyngée / troubles de la déglutition"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°15</b>\n\nQuels sont les 2 éléments d’orientation diagnostique devant une hyponatrémie ?",
+          "images": [],
+          "reponseAttendue": "Le volume extracellulaire (examen clinique de la volémie) et la natriurèse sur le ionogramme urinaire.",
+          "correctionGenerale": "• Volume extracellulaire (examen clinique de la volémie)\n• Natriurèse sur le ionogramme urinaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°16</b>\n\nÉnumérez 5 risques de la transfusion de produits sanguins labiles.",
+          "images": [],
+          "reponseAttendue": "Frissons-hyperthermie, urticaire, choc hémolytique, choc anaphylactique, œdème pulmonaire lésionnel.",
+          "correctionGenerale": "• Frissons-hyperthermie\n• Urticaire\n• Choc hémolytique\n• Choc anaphylactique\n• Œdème pulmonaire lésionnel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°17</b>\n\nQuelles sont les règles de jeûne chez l’enfant de 1 an pour une chirurgie programmée sous AG ?",
+          "images": [],
+          "reponseAttendue": "Compensation du jeûne à partir de 4 h, selon la règle des « 4-2-1 » (4 mL/kg pour les 10 premiers kilos, 2 mL/kg de 10 à 20 kg, 1 mL/kg au-delà et jusqu’à 40 kg), répartie sur les 3 premières heures de chirurgie (50 % à H1, 25 % à H2, 25 % à H3), par Ringer lactate, avec des apports glucosés adaptés à la glycémie peropératoire.",
+          "correctionGenerale": "• Compensation du jeûne à partir de 4 h\n• <b>Règle des « 4-2-1 »</b> : 4 mL/kg pour les 10 premiers kilos ; 2 mL/kg pour les kilos entre 10 et 20 kg ; 1 mL/kg au-delà de 20 kg, jusqu’à 40 kg\n• Compensation en volume total répartie sur les 3 premières heures de la chirurgie : 50 % à H1, puis 25 % à H2, puis 25 % à H3\n• Compensation par Ringer lactate pour limiter l’hyponatrémie\n• Apports glucosés adaptés à la glycémie peropératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°18</b>\n\nQuelles sont les contre-indications à la ventilation non invasive ?",
+          "images": [],
+          "reponseAttendue": "Intubation imminente, coma (sauf coma hypercapnique de l’insuffisant respiratoire chronique), épuisement respiratoire, état de choc, troubles du rythme ventriculaire graves, sepsis sévère, suites immédiates d’un arrêt cardio-respiratoire, pneumothorax non drainé ou plaie soufflante, obstruction des VAS, vomissements incoercibles, hémorragie digestive haute, traumatisme cranio-facial grave, phase initiale d’une tétraplégie traumatique, environnement inadapté ou expertise insuffisante de l’équipe.",
+          "correctionGenerale": "• Intubation imminente (sauf préoxygénation en VNI)\n• Coma (sauf coma hypercapnique de l’insuffisant respiratoire chronique)\n• Épuisement respiratoire\n• État de choc\n• Troubles du rythme ventriculaire graves\n• Sepsis sévère\n• Immédiatement après un arrêt cardio-respiratoire\n• Pneumothorax non drainé, plaie thoracique soufflante\n• Obstruction des VAS (sauf apnées du sommeil, laryngo-trachéomalacie)\n• Vomissements incoercibles\n• Hémorragies digestives hautes\n• Traumatisme cranio-facial grave\n• Phase initiale d’une tétraplégie traumatique\n• Environnement inadapté\n• Expertise insuffisante de l’équipe"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°19</b>\n\nQuelles sont les conséquences ventilatoires postopératoires d’une laparotomie sus-mésocolique ?",
+          "images": [],
+          "reponseAttendue": "Syndrome restrictif avec diminution de la capacité vitale, du volume courant et de la CRF, hypoventilation alvéolaire, dyskinésie diaphragmatique, altération de la membrane alvéolo-capillaire et inhalation.",
+          "correctionGenerale": "• Syndrome restrictif avec diminution de la capacité vitale, du volume courant et de la CRF\n• Hypoventilation alvéolaire\n• Dyskinésie diaphragmatique\n• Altération de la membrane alvéolo-capillaire / inhalation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°20</b>\n\nDonnez les moyens d’épargne transfusionnelle dans le cadre d’une chirurgie de prothèse totale de genou.",
+          "images": [],
+          "reponseAttendue": "Technique opératoire validée par un opérateur expérimenté et la moins invasive possible, respect du seuil transfusionnel, récupération de sang autologue, éviter la dilution peropératoire, correction d’une anémie ferriprive, protocole EPO 600 UI/kg/semaine pendant 3 semaines avant l’intervention, transfusion autologue programmée et acide tranexamique.",
+          "correctionGenerale": "• Technique opératoire validée\n• Opérateur expérimenté\n• Technique la moins invasive possible\n• Respect du seuil transfusionnel (7 ou 10 g/dL)\n• Transfusion autologue : système de récupération de sang\n• Éviter la dilution peropératoire\n• Correction d’une anémie ferriprive si Hb < 13 g/dL : fer PO 300 mg/j +/− IV\n• Protocole EPO 600 UI/kg/semaine pendant 3 semaines avant l’intervention (J-21 / J-14 / J-7)\n• Transfusion autologue programmée\n• Acide tranexamique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°21</b>\n\nDonnez 5 moyens médicamenteux et non médicamenteux de traitement et de prévention des nausées et vomissements postopératoires.",
+          "images": [],
+          "reponseAttendue": "Dexaméthasone 4 mg IVD en début d’intervention, dropéridol 0,0625 mg IVL avant le réveil, sétrons en postopératoire (Zophren 4 mg × 3/j IVL), analgésie efficace épargnant les morphiniques (ALR), et hypnose.",
+          "correctionGenerale": "• Dexaméthasone 4 mg IVD en début d’intervention\n• Droleptan 0,0625 mg IVL avant le réveil\n• Sétrons en postopératoire : Zophren 4 mg × 3/j IVL\n• Analgésie efficace avec diminution de la consommation de morphiniques — par exemple ALR\n• Hypnose"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "label": "Annales - Orthopédie - 2012 - EVCF",
+  "annee": 2012,
+  "type": "EVCF",
+  "source": "ANNALES ORTHOPEDIE/EVCF.53 2012 correction.pdf",
+  "orderIndex": 12,
+  "vignette": null,
+  "questions": [
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°1 — Pseudarthrose infectée de jambe sur fracture ostéosynthésée.</b>\n\nQuestion 1 : Définition.",
+      "images": [],
+      "reponseAttendue": "Absence de consolidation osseuse d’une fracture après 6 mois d’évolution, d’origine septique.",
+      "correctionGenerale": "Absence de consolidation osseuse d’une fracture après 6 mois d’évolution, d’origine septique."
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°1 — Pseudarthrose infectée de jambe sur fracture ostéosynthésée.</b>\n\nQuestion 2 : Principaux facteurs de risque locaux et régionaux.",
+      "images": [],
+      "reponseAttendue": "Facteurs locaux : perte de substance osseuse, fracture ouverte, atteinte des parties molles, atteinte nerveuse tronculaire, terrain infecté ou irradié. Facteurs généraux : âge et ostéoporose, diabète, carences vitaminiques, AINS et corticoïdes.",
+      "correctionGenerale": "<b>Facteurs de risque locaux :</b>\n• Perte de substance osseuse\n• Fracture ouverte\n• Atteinte musculaire périfracturaire et/ou perte de substance des parties molles\n• Atteinte nerveuse tronculaire régionale\n• Survenue de la fracture en terrain infecté ou irradié\n\n<b>Facteurs de risque généraux :</b>\n• Âge et ostéoporose (moindre tenue mécanique, diminution du potentiel ostéogénique)\n• Diabète (diminution du PDGF et de la prolifération cellulaire)\n• Carences vitaminiques : déficit en vitamine C, vitamine D, calcium ; hypothyroïdie, malnutrition majeure, ostéomalacie…\n• Médicaments : AINS ++, corticoïdes…"
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°1 — Pseudarthrose infectée de jambe sur fracture ostéosynthésée.</b>\n\nQuestion 3 : Principes du traitement initial.",
+      "images": [],
+      "reponseAttendue": "Prise en charge médico-chirurgicale multidisciplinaire en CRIOAC : chirurgie en deux temps (membrane induite) avec dépose du matériel, débridement, comblement et stabilisation, couverture par lambeau et greffe osseuse ; prélèvements profonds puis antibiothérapie prolongée adaptée ; correction des facteurs généraux.",
+      "correctionGenerale": "Prise en charge médico-chirurgicale associant :\n\n<b>Sur le plan chirurgical :</b>\n• En 2 temps ++ (membrane induite) si perte de substance osseuse ou problème de couverture cutanée\n• Dépose du matériel d’ostéosynthèse contaminé\n• Débridement, exérèse large « carcinologique » des tissus infectés\n• Reperméabilisation du fût\n• Comblement par matériel inerte (spacer en ciment)\n• Stabilisation (fixateur externe, clou, plaque)\n• Drainage et fermeture → lambeaux (même temps ou différé)\n• Apport de tissu osseux : autogreffe cortico-spongieuse vascularisée ou non, allogreffe\n\n<b>Sur le plan infectieux :</b>\n• Prélèvements profonds : bactériologiques, anatomopathologiques (recherche de signes d’ostéite), fongiques\n• Antibiothérapie probabiliste, secondairement adaptée à l’antibiogramme\n• Durée prolongée (3 mois en général)\n• Surveillance biologique de la tolérance\n\n<b>Approche multidisciplinaire ++ (CRIOAC) :</b>\n• Chirurgiens orthopédistes et plasticiens\n• Infectiologues\n• Microbiologiste\n\n<b>Sur le plan général :</b>\n• Lutte contre la dénutrition\n• Arrêt du tabac ++\n• Équilibration d’un diabète\n• Revascularisation si AOMI"
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°2 — Fracture de l’extrémité inférieure du radius de l’enfant avant 8 ans.</b>\n\nQuestion 1 : Décrivez l’analyse radiologique.",
+      "images": [],
+      "reponseAttendue": "Côté ; localisation métaphysaire et atteinte éventuelle du cartilage de conjugaison ; pattern spécifique de l’enfant (motte de beurre, bois vert) ; sens du déplacement, translation, chevauchement.",
+      "correctionGenerale": "• Côté\n• Localisation : métaphysaire ? Atteinte du cartilage de conjugaison ?\n• Pattern spécifique de l’enfant : motte de beurre, bois vert\n• Sens du déplacement\n• Translation\n• Chevauchement"
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°2 — Fracture de l’extrémité inférieure du radius de l’enfant avant 8 ans.</b>\n\nQuestion 2 : Décrivez la principale classification.",
+      "images": [
+        "annales-orthopedie/evcf-53-2012-correction/figures/img-003-024.png"
+      ],
+      "reponseAttendue": "La classification de Salter et Harris, en cinq types.",
+      "correctionGenerale": "<b>Classification de Salter et Harris :</b>\n• <b>Type I</b> : décollement épiphysaire pur. Le pronostic de croissance est bon.\n• <b>Type II</b> : le trait de fracture emprunte le cartilage de croissance sauf à une extrémité où il remonte en zone métaphysaire. Le pronostic de croissance est habituellement bon.\n• <b>Type III</b> : le trait emprunte le cartilage de croissance sauf à une extrémité où il devient épiphysaire. Le pronostic de croissance est compromis surtout s’il persiste un défaut de réduction, même mineur. Il s’agit d’une fracture à trait intra-articulaire.\n• <b>Type IV</b> : le trait sépare un fragment épiphyso-métaphysaire. Le pronostic est souvent mauvais, même si la réduction paraît satisfaisante.\n• <b>Type V</b> : écrasement du cartilage de croissance par un mécanisme de compression. Il n’est en général identifiable que par sa complication : l’épiphysiodèse. Le diagnostic est évoqué a posteriori lorsque le trouble de croissance est constaté."
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°2 — Fracture de l’extrémité inférieure du radius de l’enfant avant 8 ans.</b>\n\nQuestion 3 : Principes thérapeutiques.",
+      "images": [],
+      "reponseAttendue": "Traitement orthopédique en règle : réduction par manœuvre externe, BABP 3 semaines puis manchette 3 semaines avec surveillance radioclinique, et antalgie adaptée. Ostéosynthèse réservée aux fractures ouvertes, instables et à l’adolescent.",
+      "correctionGenerale": "<b>Le traitement orthopédique est généralement la règle :</b>\n• Réduction par manœuvre externe\n• Immobilisation : BABP 3 semaines, puis manchette 3 semaines\n• Surveillance radio-clinique de l’absence de déplacement sous plâtre\n• Traitement de la douleur par antalgiques : paracétamol 15 mg/kg, MEOPA, morphine titrée 0,1 mg/kg, kétamine 0,2 à 0,3 mg/kg en association avec la morphine si la douleur est intense\n\n<b>Traitement chirurgical : ostéosynthèse.</b> Indications :\n• Fracture ouverte (contrôle de la plaie impossible sous plâtre, déplacement)\n• Fracture instable (comminution postérieure, fracture à déplacement antérieur)\n• Adolescent : > 13 ans ½ chez la fille, > 15 ans ½ chez le garçon (potentiel de remodelage faible, prise en charge similaire à l’adulte)"
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°2 — Fracture de l’extrémité inférieure du radius de l’enfant avant 8 ans.</b>\n\nQuestion 4 : Quel est le principal risque évolutif après consolidation ?",
+      "images": [],
+      "reponseAttendue": "L’épiphysiodèse.",
+      "correctionGenerale": "L’épiphysiodèse."
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°3 — Diagnostic d’une mono-arthrite aiguë non traumatique du poignet.</b>\n\nQuestion 1 : Citez les 4 grands groupes étiologiques.",
+      "images": [],
+      "reponseAttendue": "Septique ; microcristalline ; réactionnelle ; inflammatoire systémique.",
+      "correctionGenerale": "<b>Septique</b>\n\n<b>Microcristalline</b>\n• Goutte\n• Chondrocalcinose\n\n<b>Réactionnelle</b>\n• Dans les suites d’une infection digestive ou uro-génitale\n• Syndrome de Fiessinger-Leroy-Reiter (urétrite, conjonctivite, arthrite)\n• Chlamydiae, Yersinia, Shigella, Salmonella, Campylobacter\n\n<b>Inflammatoire systémique</b>\n• Spondylarthrite\n• Polyarthrite rhumatoïde\n• Connectivites\n• Vascularites\n• Sarcoïdose…"
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°3 — Diagnostic d’une mono-arthrite aiguë non traumatique du poignet.</b>\n\nQuestion 2 : Citez les principaux moyens diagnostiques.",
+      "images": [
+        "annales-orthopedie/evcf-53-2012-correction/figures/img-005-042.png"
+      ],
+      "reponseAttendue": "Échographie, radiographie, ponction articulaire (les 3 C : culture et coloration de Gram, cristaux, cellularité) et examens biologiques.",
+      "correctionGenerale": "<b>Échographie</b>\n• Confirmer l’épanchement intra-articulaire\n• Guider la ponction\n• Diagnostics différentiels (enthésite, tendinite…)\n\n<b>Radiographie</b>\n• Liseré de chondrocalcinose\n• Dégénérescence arthrosique, lésion cartilagineuse\n\n<b>Ponction articulaire (les 3 C)</b>\n• Analyse bactériologique : Culture et Coloration de Gram\n• Recherche de microCristaux\n• Cellularité\n\n<b>Examens biologiques</b>\n• Élévation de la VS et de la CRP\n• Uricémie (goutte)\n• Hémocultures\n• Selon les circonstances : sérologies de Lyme, VIH, hépatites B, C et E, brucellose, chikungunya, fièvre Q ; recherche de facteurs rhumatoïdes et d’anti-CCP ; PCR gonocoque / Chlamydiae\n\nL’interprétation du liquide synovial est résumée dans le tableau ci-dessus."
+    },
+    {
+      "format": "qroc",
+      "enonce": "<b>Sujet n°4 — Gonarthrose fémoro-tibiale médiale isolée chez un patient de 50 ans.</b>\n\nQuestion 1 : Citez et décrivez les principales modalités thérapeutiques.",
+      "images": [],
+      "reponseAttendue": "Traitement médical de première intention (kinésithérapie, règles hygiéno-diététiques, infiltrations) puis traitement chirurgical : ostéotomie tibiale de valgisation, prothèse unicompartimentale ou prothèse totale selon le terrain et les lésions associées.",
+      "correctionGenerale": "<b>1) Traitement médical</b>\n• Kinésithérapie\n• Règles hygiéno-diététiques, réduction pondérale\n• +/− infiltration (corticoïdes ou viscosupplémentation)\nToujours à proposer en première intention ++\n\n<b>2) Traitement chirurgical</b>\n\n<b>a) Ostéotomie tibiale de valgisation</b>\nIndications : âge 40-55 ans (RR × 5 si > 56 ans) ; IMC 25-30 (survie à 10 ans de seulement 56 % chez les patients obèses) ; Ahlbäck 1-2 ; tibial bone varus angle > 5° ; non-fumeur ; mobilité complète.\nTechniques : ouverture interne, fermeture externe, parfois double ostéotomie. Résultat fonctionnel bon, notamment sur la reprise des activités sportives.\n\n<b>b) Prothèse unicompartimentale</b>\nIndication idéale : arthrose ou ostéonécrose fémoro-tibiale isolée ; âge > 60 ans ; IMC < 30 ; intégrité du LCA ; absence de flessum ou de raideur ; varus modéré et réductible.\n\n<b>c) Prothèse totale</b>\nSi contre-indication à la PUC : lésions du LCA, instabilité ligamentaire latérale, raideur, déformation fixée, IMC élevé, lésions chondrales associées notamment fémoro-patellaires."
+    }
+  ]
+}

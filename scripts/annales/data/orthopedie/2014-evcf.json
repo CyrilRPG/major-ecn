@@ -1,0 +1,132 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCF2014correction.pdf": {
+      "atelier": "annales-orthopedie/evcf2014correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2014 - EVCF",
+      "annee": 2014,
+      "type": "EVCF",
+      "source": "ANNALES ORTHOPEDIE/EVCF2014correction.pdf",
+      "orderIndex": 19,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Décollement épiphysaire chez l’enfant.</b>\n\nQuestion n°1 : Nommer la classification la plus couramment utilisée et la décrire.",
+          "images": ["annales-orthopedie/evcf2014correction/figures/img-004-016.png"],
+          "reponseAttendue": "La classification de Salter et Harris : I décollement, II trait métaphysaire, III trait épiphysaire, IV trait métaphyso-épiphysaire, V compression.",
+          "correctionGenerale": "<b>Salter et Harris</b>\n• <b>Salter I</b> : décollement\n• <b>Salter II</b> : trait métaphysaire\n• <b>Salter III</b> : trait épiphysaire\n• <b>Salter IV</b> : trait métaphyso-épiphysaire\n• <b>Salter V</b> : compression"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°1 — Décollement épiphysaire chez l’enfant.</b>\n\nQuestion n°2 : Quelle est la principale complication à moyen et long terme et ses deux possibles conséquences cliniques ?",
+          "images": [],
+          "reponseAttendue": "L’épiphysiodèse post-traumatique, responsable d’une inégalité de longueur et d’une déviation axiale.",
+          "correctionGenerale": "<b>Épiphysiodèse post-traumatique</b>\n• Inégalité de longueur\n• Déviation axiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Infection des parties molles de la main.</b>\n\nQuestion n°1 : Définition d’un phlegmon de la main.",
+          "images": ["annales-orthopedie/evcf2014correction/figures/recadre/img-009-037.png"],
+          "reponseAttendue": "Infection au niveau des gaines des tendons fléchisseurs des doigts, le plus souvent à staphylocoques ou streptocoques.",
+          "correctionGenerale": "Infection au niveau des gaines des tendons fléchisseurs des doigts.\nGermes le plus souvent en cause : staphylocoques, streptocoques."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Infection des parties molles de la main.</b>\n\nQuestion n°2 : Décrivez les signes cliniques d’un phlegmon de la main.",
+          "images": [],
+          "reponseAttendue": "Douleur au niveau du cul-de-sac et à l’extension des doigts, rétraction en flexion avec doigt en crochet, signes inflammatoires locaux (douleur, chaleur, rougeur, œdème) et fièvre.",
+          "correctionGenerale": "• Douleurs au niveau du cul-de-sac\n• Douleurs à l’extension des doigts\n• Rétraction en flexion avec doigt en crochet\n• Douleur, chaleur, rougeur, œdème\n• Fièvre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°2 — Infection des parties molles de la main.</b>\n\nQuestion n°3 : Décrire les principes du traitement.",
+          "images": [
+            "annales-orthopedie/evcf2014correction/figures/recadre/img-014-058.png",
+            "annales-orthopedie/evcf2014correction/figures/recadre/img-015-063.png"
+          ],
+          "reponseAttendue": "Prise en charge médico-chirurgicale : urgence chirurgicale avec lavage au bloc, excision de la porte d’entrée, ouverture de la gaine, prélèvements profonds, lavage antérograde abondant, +/− ténosynovectomie et second look, points lâches et rééducation précoce ; antibiothérapie probabiliste par Augmentin IV 48 h puis adaptée à l’antibiogramme.",
+          "correctionGenerale": "<b>Prise en charge médico-chirurgicale.</b>\n\n<b>Urgence chirurgicale</b>\n• Lavage au bloc opératoire\n• Excision de la porte d’entrée\n• Ouverture de la gaine\n• Prélèvements bactériologiques profonds\n• Lavage abondant antérograde\n• +/− ténosynovectomie du fléchisseur dans les formes sévères\n• +/− second look\n• Points lâches\n• Rééducation précoce pour lutter contre l’enraidissement\n\n<b>Traitement médical</b>\n• Antibiothérapie probabiliste par Augmentin IV 48 h\n• Secondairement adaptée à l’antibiogramme\n\nLes figures illustrent le lavage simple de la gaine et la prise en charge des formes sévères."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°3 — La coiffe des rotateurs de l’épaule.</b>\n\nQuestion n°1 : Nommer les muscles qui participent à la coiffe des rotateurs de l’épaule.",
+          "images": [
+            "annales-orthopedie/evcf2014correction/figures/recadre/img-019-080.png",
+            "annales-orthopedie/evcf2014correction/figures/recadre/img-020-085.png"
+          ],
+          "reponseAttendue": "Supra-épineux, infra-épineux, petit rond et subscapulaire.",
+          "correctionGenerale": "• Supra-épineux\n• Infra-épineux\n• Petit rond\n• Subscapulaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°3 — La coiffe des rotateurs de l’épaule.</b>\n\nQuestion n°2 : Quel est le muscle le plus fréquemment atteint, et quel est le principal test clinique mettant en évidence l’atteinte de son tendon ?",
+          "images": [],
+          "reponseAttendue": "Le supra-épineux ; test de Jobe.",
+          "correctionGenerale": "• Muscle le plus fréquemment atteint : <b>supra-épineux</b>\n• Test clinique : <b>test de Jobe</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°3 — La coiffe des rotateurs de l’épaule.</b>\n\nQuestion n°3 : Décrire ce test.",
+          "images": ["annales-orthopedie/evcf2014correction/figures/recadre/img-025-106.png"],
+          "reponseAttendue": "Patient debout de face, bras tendus pouces vers le bas, 30-40° d’abduction : douleur et faiblesse contre résistance de l’examinateur (manœuvre non tenue).",
+          "correctionGenerale": "• Patient debout, de face\n• Bras tendus, pouces vers le bas\n• 30-40° d’abduction\n• Douleurs et faiblesse contre résistance de l’examinateur (manœuvre non tenue)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°4 — Hémarthrose post-traumatique du genou.</b>\n\nQuestion n°1 : Comment fait-on le diagnostic clinique de l’épanchement ?",
+          "images": [],
+          "reponseAttendue": "Par le signe du glaçon.",
+          "correctionGenerale": "Signe du glaçon."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°4 — Hémarthrose post-traumatique du genou.</b>\n\nQuestion n°2 : Quel geste simple permet d’affirmer la nature hématique de l’épanchement, et quelles précautions doivent l’accompagner ?",
+          "images": ["annales-orthopedie/evcf2014correction/figures/img-030-127.png"],
+          "reponseAttendue": "La ponction articulaire, qui retrouve un liquide hématique ; elle impose des règles strictes d’asepsie en raison du risque d’inoculum bactérien.",
+          "correctionGenerale": "• Ponction articulaire qui retrouve un liquide hématique\n• Règles strictes d’asepsie (risque d’inoculum bactérien)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°4 — Hémarthrose post-traumatique du genou.</b>\n\nQuestion n°3 : Quelles sont les 3 causes les plus fréquentes de cette hémarthrose ?",
+          "images": [],
+          "reponseAttendue": "Lésions méniscales, lésions ligamentaires, fracture.",
+          "correctionGenerale": "• Lésions méniscales\n• Lésions ligamentaires\n• Fracture"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°4 — Hémarthrose post-traumatique du genou.</b>\n\nQuestion n°4 : Si le bilan radiologique standard est normal, quel examen d’imagerie demandez-vous et qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une IRM, à la recherche d’une lésion du pivot central et d’une lésion méniscale.",
+          "correctionGenerale": "<b>IRM</b>\n• Recherche d’une lésion du pivot central\n• Recherche d’une lésion méniscale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°5 — Ostéonécrose aseptique de la hanche.</b>\n\nQuestion n°1 : Donnez une définition physiopathologique de l’ostéonécrose aseptique de hanche.",
+          "images": [],
+          "reponseAttendue": "Nécrose ischémique de la tête fémorale, c’est-à-dire mort cellulaire des différents composants de l’os (tissu osseux, moelle osseuse), d’étiologie non infectieuse par définition.",
+          "correctionGenerale": "Nécrose ischémique de la tête fémorale = mort cellulaire des différents composants de l’os (tissu osseux, moelle osseuse).\nÉtiologie non infectieuse par définition."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°5 — Ostéonécrose aseptique de la hanche.</b>\n\nQuestion n°2 : Quelle est la classification radiologique la plus utilisée pour cette pathologie ? En décrire les stades.",
+          "images": [],
+          "reponseAttendue": "La classification d’Arlet et Ficat : stade I radiographie normale, stade II zone de condensation, stade III dissection sous-chondrale, stade IV perte de sphéricité.",
+          "correctionGenerale": "<b>Classification d’Arlet et Ficat</b>\n• <b>Stade I</b> : radiographie normale\n• <b>Stade II</b> : zone de condensation\n• <b>Stade III</b> : dissection sous-chondrale\n• <b>Stade IV</b> : perte de sphéricité"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n°5 — Ostéonécrose aseptique de la hanche.</b>\n\nQuestion n°3 : Citez les causes des nécroses secondaires reconnues de cette affection.",
+          "images": [],
+          "reponseAttendue": "Diabète, alcool, corticothérapie, drépanocytose, causes post-radiques et post-traumatiques.",
+          "correctionGenerale": "• Diabète\n• Alcool\n• Corticothérapie\n• Drépanocytose\n• Post-radique\n• Post-traumatique"
+        }
+      ]
+    }
+  ]
+}

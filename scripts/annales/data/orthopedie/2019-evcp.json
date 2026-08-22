@@ -1,0 +1,372 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP2019correction.pdf": {
+      "atelier": "annales-orthopedie/evcp2019correction",
+      "sujetOfficiel": "Annales/Sujets/2019_EVCP.pdf",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 1 (Épaule)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 35,
+      "vignette": "Monsieur X, âgé de 42 ans, droitier, sans antécédent notable, ouvrier viticole, est hospitalisé en urgence après avoir chuté en moto alors qu’il rentrait du travail. Il a été pris en charge initialement par les pompiers. En box d’examen, il se présente en attitude des traumatisés du membre supérieur et se plaint de l’épaule. Du fait de la cinétique potentiellement haute de l’accident, il est d’emblée envoyé au scanner pour réaliser un body-scanner.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nVous disposez de l’iconographie suivante. Quel est votre diagnostic ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-004-016.jpg",
+            "annales-orthopedie/evcp2019correction/figures/img-005-021.png",
+            "annales-orthopedie/evcp2019correction/figures/img-005-022.png",
+            "annales-orthopedie/evcp2019correction/figures/img-006-027.png",
+            "annales-orthopedie/evcp2019correction/figures/img-007-032.png"
+          ],
+          "reponseAttendue": "Fracture de l’extrémité proximale de l’humérus droit à trois fragments selon la classification de Neer, avec un trait de fracture détachant le tubercule majeur.",
+          "correctionGenerale": "Fracture de l’extrémité proximale de l’humérus droit, à <b>trois fragments</b> selon la classification de <b>Neer</b>, avec trait de fracture détachant le tubercule majeur.\n\nRappels : classification de l’AO et de Neer ; classification de Duparc — la fracture céphalo-tubérositaire correspond au 4 part de Neer."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels sont les éléments radiographiques à prendre en compte pour évaluer le risque de nécrose d’une fracture de l’extrémité supérieure de l’humérus (en général) ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-010-046.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-010-047.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-011-052.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-011-053.png"
+          ],
+          "reponseAttendue": "Le nombre de fragments (4 > 3), la luxation de la tête, la perte de la charnière médiale et un fragment métaphysaire inférieur solidaire de la tête de plus de 8 mm.",
+          "correctionGenerale": "• 4 fragments > 3 fragments\n• Luxation de la tête\n• Perte de la charnière médiale\n• Fragment métaphysaire inférieur solidaire de la tête (> 8 mm)\n\nLa complication redoutée est la <b>nécrose de la tête humérale</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel traitement proposez-vous dans le cas de Monsieur X ? Discutez votre choix thérapeutique.",
+          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-014-066.png"],
+          "reponseAttendue": "Un traitement chirurgical (sujet jeune, actif, travailleur manuel, membre dominant, sans comorbidité ; fracture déplacée avec atteinte du tubercule majeur), par ostéosynthèse plutôt qu’arthroplastie (bon capital osseux, risque de nécrose faible), et par plaque plutôt que clou afin de préserver la coiffe des rotateurs.",
+          "correctionGenerale": "<b>Traitement chirurgical</b> (vs traitement orthopédique)\n• Sujet jeune, actif, travailleur manuel, membre dominant, absence de comorbidités\n• Fracture déplacée avec atteinte du tubercule majeur\n\n<b>Ostéosynthèse</b> (vs arthroplastie)\n• Sujet jeune, bon capital osseux, espérance de vie\n• Risque de nécrose faible\n\n<b>Plaque</b> (vs clou)\n• Préservation de la coiffe des rotateurs"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nVous avez perdu de vue Monsieur X. Il revient 6 ans plus tard, après avoir chuté sur crise comitiale. Il se plaint cette fois-ci de l’épaule gauche. Vous disposez de la radiographie suivante. Quel signe clinique recherchez-vous en faveur du diagnostic que vous retenez ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-015-071.jpg"],
+          "reponseAttendue": "La perte de la rotation externe passive.",
+          "correctionGenerale": "Perte de la rotation externe (passive)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelle est votre attitude thérapeutique pour Monsieur X ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-018-085.png"],
+          "reponseAttendue": "Réduction par manœuvre externe sous anesthésie générale, puis immobilisation par attelle en rotation neutre.",
+          "correctionGenerale": "• Réduction par manœuvre externe sous anesthésie générale\n• Immobilisation par attelle en rotation neutre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\n48 h plus tard, Monsieur X revient aux urgences pour son épaule gauche à nouveau douloureuse, avec le bras en écharpe : il avait retiré son attelle initiale, ne la supportant pas. Un scanner est réalisé, dont voici une coupe. Monsieur X est repris au bloc opératoire et reste instable. Quels sont les traitements possibles ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-019-090.jpg",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-021-100.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-022-105.png",
+            "annales-orthopedie/evcp2019correction/figures/img-023-110.png"
+          ],
+          "reponseAttendue": "Une stabilisation chirurgicale : transfert du subscapulaire (technique de McLaughlin), transfert du subscapulaire pédiculé sur le tubercule mineur (artifice de Neer), comblement de l’encoche par greffe osseuse, butée iliaque postérieure, ou remplacement prothétique si l’encoche dépasse 45 %.",
+          "correctionGenerale": "<b>Stabilisation chirurgicale</b>\n• Transfert du subscapulaire (technique de McLaughlin)\n• Transfert du subscapulaire pédiculé sur le tubercule mineur (artifice de Neer)\n• Comblement de l’encoche par greffe osseuse\n• Butée iliaque postérieure\n• Remplacement prothétique (encoche > 45 %)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nVous avez à nouveau perdu de vue Monsieur X. Il a une impotence fonctionnelle de l’épaule gauche, avec difficulté à élever le bras au-dessus de l’horizontale, et il est douloureux. Sa radiographie est la suivante. Quel est votre diagnostic ? Que proposez-vous ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-024-115.png",
+            "annales-orthopedie/evcp2019correction/figures/img-026-125.png"
+          ],
+          "reponseAttendue": "Une omarthrose excentrée de stade 4b de Hamada et Fukuda ; on propose une arthroplastie (prothèse totale anatomique ou inversée).",
+          "correctionGenerale": "• Omarthrose excentrée, stade 4b de Hamada et Fukuda\n→ Arthroplastie (PTE anatomique / PTE inversée)\n\nBibliographie : T. M. Gregory, <i>Techniques d’ostéosynthèse des fractures récentes à trois ou quatre fragments de l’humérus proximal</i>, Cahiers de la SOFCOT 2012, p. 227-238 ; C. Maynou, P. Hardy, <i>Traitement chirurgical de l’instabilité postérieure de l’épaule</i>, EMC 44-263."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 2 (Genou)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 36,
+      "vignette": "Patiente porteuse d’une prothèse totale de genou droit, sous Eliquis, dont l’évolution postopératoire précoce est marquée par une cicatrice inflammatoire avec écoulement (iconographie ci-dessous).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelle est votre hypothèse diagnostique principale ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-029-138.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-029-139.png"
+          ],
+          "reponseAttendue": "Une infection du site opératoire précoce sur prothèse totale de genou droit.",
+          "correctionGenerale": "Infection du site opératoire (ISO) précoce sur prothèse totale de genou droit."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel geste pouvez-vous proposer pour confirmer votre diagnostic ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-033-156.png"],
+          "reponseAttendue": "Une ponction du liquide articulaire pour analyse bactériologique et cytologique.",
+          "correctionGenerale": "Ponction du liquide articulaire pour analyse bactériologique et cytologique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuelle prise en charge médicale est nécessaire en urgence ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-036-169.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-037-174.png"
+          ],
+          "reponseAttendue": "Une antibiothérapie probabiliste — vancomycine + pipéracilline-tazobactam (+/− gentamicine) — secondairement adaptée à l’antibiogramme, et l’arrêt de l’Eliquis sans relais préopératoire nécessaire.",
+          "correctionGenerale": "• Antibiothérapie probabiliste, secondairement adaptée à l’antibiogramme\n• Vancomycine + pipéracilline-tazobactam (+/− gentamicine)\n• Arrêt de l’Eliquis, pas de relais préopératoire nécessaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelles vont être les difficultés chirurgicales que vous anticipez ?",
+          "images": [],
+          "reponseAttendue": "La couverture cutanée (lambeau) et le saignement.",
+          "correctionGenerale": "• Couverture cutanée (lambeau)\n• Saignement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuels temps chirurgicaux doivent être absolument réalisés ?",
+          "images": [],
+          "reponseAttendue": "Synovectomie élargie, luxation de la prothèse, changement des pièces mobiles, prélèvements multiples, lavage abondant et fermeture de qualité.",
+          "correctionGenerale": "• Synovectomie élargie\n• Luxation de la prothèse\n• Changement des pièces mobiles\n• Prélèvements multiples\n• Lavage abondant (Karcher)\n• Fermeture de qualité"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuelles informations principales donnez-vous à la patiente et à sa famille ?",
+          "images": [],
+          "reponseAttendue": "Le caractère nosocomial de l’infection, la nécessité d’une antibiothérapie prolongée avec surveillance biologique, la possibilité de « sauvetage » de la prothèse du fait de la prise en charge précoce, et en cas d’échec une dépose-repose en un ou deux temps.",
+          "correctionGenerale": "• Infection « nosocomiale »\n• Antibiothérapie prolongée avec surveillance biologique\n• « Sauvetage » de la prothèse possible car prise en charge précoce\n• Si échec : dépose-repose en 1 ou 2 temps"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nComment gérez-vous le traitement médical ?",
+          "images": [],
+          "reponseAttendue": "Antibiothérapie secondairement adaptée à l’antibiogramme dès les résultats bactériologiques, en concertation avec les infectiologues ; surveillance des fonctions rénale et hépatique ; relais temporaire de l’Eliquis par HNF à dose curative (demi-vie courte) en raison du risque de reprise chirurgicale.",
+          "correctionGenerale": "• Antibiothérapie secondairement adaptée à l’antibiogramme dès les résultats bactériologiques ; concertation avec l’équipe d’infectiologie\n• Surveillance des fonctions rénale et hépatique\n• Relais temporaire de l’Eliquis par HNF à dose curative (demi-vie courte), car risque éventuel de reprise chirurgicale\n\nBibliographie : HAS, <i>Prothèse de hanche ou de genou : diagnostic et prise en charge de l’infection dans le mois suivant l’implantation</i>, mars 2014 ; HAS 2008, <i>Prise en charge des surdosages en antivitamine K…</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 3 (Rachis)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 37,
+      "vignette": "Une femme de 75 ans, en bon état général, est tombée cette nuit dans les escaliers sans perte de connaissance. Elle est transportée par les pompiers aux urgences. Elle présente une plaie frontale et une douleur cervicale ; son examen neurologique est normal. Son traitement habituel est : Aspégic 500 mg/jour.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuels sont les 3 clichés radiographiques de débrouillage que vous demandez ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-050-227.png",
+            "annales-orthopedie/evcp2019correction/figures/img-050-228.png"
+          ],
+          "reponseAttendue": "Rachis cervical de face, rachis cervical de profil en dégageant bien les épaules, et cliché de face bouche ouverte.",
+          "correctionGenerale": "• Rachis cervical face\n• Rachis cervical profil (en dégageant bien les épaules)\n• Cliché de face bouche ouverte"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelle est la fracture du rachis qu’il faut suspecter ?",
+          "images": [],
+          "reponseAttendue": "Une fracture de l’apophyse odontoïde.",
+          "correctionGenerale": "Fracture de l’apophyse odontoïde."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDans ce contexte, quels examens d’imagerie complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "TDM du rachis cervical ++, clichés dynamiques en flexion-extension sous contrôle médical à J10, et IRM en présence de signes neurologiques sans retarder la prise en charge.",
+          "correctionGenerale": "• TDM du rachis cervical ++\n• Clichés dynamiques en flexion-extension (sous contrôle médical) à J10\n• IRM : en présence de signes neurologiques (sans retarder la prise en charge)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nL’imagerie confirme l’hypothèse initiale que vous aviez faite en urgence. Quelles mesures immédiates prenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Traction cervicale si la fracture est déplacée, et immobilisation par minerve cervicale rigide.",
+          "correctionGenerale": "• Traction cervicale si déplacée\n• Immobilisation par minerve cervicale rigide"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nDécrivez les deux principales classifications utilisées pour décrire cette lésion. Quel est l’intérêt de chacune d’entre elles ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-059-265.png",
+            "annales-orthopedie/evcp2019correction/figures/img-060-270.png"
+          ],
+          "reponseAttendue": "La classification d’Anderson et D’Alonzo (type I pointe de l’odontoïde, type II corps, type III base passant par les masses latérales de C2) et la classification de Roy-Camille (OBAV, OBAR, HTAL), qui oriente le choix technique.",
+          "correctionGenerale": "<b>Classification d’Anderson et D’Alonzo</b>\n• Type I : fracture de la pointe de l’odontoïde\n• Type II : fracture du corps de l’odontoïde\n• Type III : fracture de la base de l’odontoïde, passant par les masses latérales de C2\n\n<b>Classification de Roy-Camille</b>\n• OBAV : trait de fracture oblique en bas et en avant\n• OBAR : trait de fracture oblique en bas et en arrière\n• HTAL : trait de fracture horizontal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuels sont les traitements possibles ? Donnez les avantages et inconvénients de chacun.",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-063-283.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-064-288.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-065-293.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-066-298.png"
+          ],
+          "reponseAttendue": "Traitement orthopédique par minerve cervicale avec appui sterno-occipito-mentonnier ou halo-vest (non recommandé chez le sujet âgé) : simple et sans risque infectieux, mais risque plus élevé de pseudarthrose et mauvaise tolérance de l’immobilisation prolongée. Traitement chirurgical : mobilisation précoce, mais risque infectieux, faillite mécanique liée à l’ostéoporose et complications vasculaires (plaies de l’artère vertébrale).",
+          "correctionGenerale": "<b>Traitement orthopédique</b> : minerve cervicale avec appui sterno-occipito-mentonnier / halo-vest (non recommandé chez le sujet âgé)\n• Avantages : simplicité, pas de risque d’infection\n• Inconvénients : risque plus élevé de pseudarthrose, notamment chez le sujet âgé ; tolérance de l’immobilisation prolongée\n\n<b>Traitement chirurgical</b>\n• Avantages : mobilisation précoce\n• Inconvénients : risque infectieux, risque de faillite mécanique lié à l’ostéoporose, complications vasculaires (plaies de l’artère vertébrale)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nQuelles sont les deux principales techniques chirurgicales que l’on peut proposer ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-069-311.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-070-316.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-071-321.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-072-326.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-073-331.png",
+            "annales-orthopedie/evcp2019correction/figures/img-073-332.png",
+            "annales-orthopedie/evcp2019correction/figures/img-073-334.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-074-339.png"
+          ],
+          "reponseAttendue": "Le vissage antérieur (traits OBAR, HTAL) et l’arthrodèse postérieure C1-C2 (trait OBAV).",
+          "correctionGenerale": "• <b>Vissage antérieur</b> (OBAR, HTAL) — ostéosynthèse de C2 selon Boehler\n• <b>Arthrodèse postérieure C1-C2</b> (OBAV)\n\nBibliographie : C. Court, <i>Fracture de l’apophyse odontoïde de l’adulte</i>, Cahiers de la SOFCOT 2005."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 4 (Tumeurs)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 38,
+      "vignette": "M. H., patient âgé de 78 ans, en bon état général, présente des douleurs de cuisse gauche depuis 3 semaines.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuels sont les éléments de l’examen clinique qui vous orienteraient vers une origine radiculaire de la douleur ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-080-364.png"],
+          "reponseAttendue": "Des lombalgies, un trajet radiculaire suivant les dermatomes, une abolition des réflexes ostéotendineux, un signe de Lasègue ou de Léri positif, et des troubles génito-sphinctériens évoquant un syndrome de la queue de cheval.",
+          "correctionGenerale": "• Lombalgies\n• Trajet radiculaire (dermatomes)\n• Abolition des réflexes ostéotendineux\n• Signe de Lasègue ou signe de Léri positif\n• Troubles génito-sphinctériens (syndrome de la queue de cheval)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie ci-jointe.",
+          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-081-369.png"],
+          "reponseAttendue": "Radiographie du bassin de face : lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire, avec amincissement des corticales osseuses et sans signe radiologique d’envahissement des parties molles — il existe un risque fracturaire.",
+          "correctionGenerale": "• Radiographie du bassin de face\n• Lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire\n• Amincissement des corticales osseuses\n• Pas de signes radiologiques d’envahissement des parties molles\n• Risque fracturaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nVoici sa radiographie 3 semaines plus tard. Quel est le diagnostic ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-083-379.png"],
+          "reponseAttendue": "Une fracture pathologique de l’extrémité supérieure du fémur gauche, sous-trochantérienne.",
+          "correctionGenerale": "Fracture <b>pathologique</b> de l’extrémité supérieure du fémur gauche, sous-trochantérienne."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nLe bilan retrouve une lésion primitive pulmonaire et vous envisagez un traitement chirurgical de la fracture. Quels éléments doivent être vérifiés auparavant ?",
+          "images": [],
+          "reponseAttendue": "La recherche de localisations multiples (IRM du fémur entier et de l’acétabulum à la recherche d’autres lésions infracliniques), l’appréciation du statut tumoral, de l’espérance de vie et de l’état général, le dosage de la calcémie, ainsi que la recherche et la correction d’une anémie et d’une dénutrition préopératoires.",
+          "correctionGenerale": "• Recherche de localisations multiples : IRM du fémur entier et de l’acétabulum à la recherche d’autres lésions infracliniques\n• Apprécier le statut tumoral, l’espérance de vie et l’état général du patient\n• Dosage de la calcémie\n• Recherche et correction d’une anémie préopératoire\n• Recherche et correction d’une dénutrition"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nLe bilan précédent ne retrouvant pas d’autres anomalies, quelles sont les différentes options de traitement chirurgical ? Décrivez-les succinctement.",
+          "images": [],
+          "reponseAttendue": "Résection-reconstruction par arthroplastie de hanche (prothèse de reconstruction avec appui diaphysaire) offrant une stabilisation durable et un contrôle tumoral local prolongé, chez un patient à espérance de vie prolongée (score de Katagiri faible) ; ou ostéosynthèse par clou gamma long +/− ciment, moins agressive mais potentiellement moins durable, pour une espérance de vie intermédiaire (score de Katagiri élevé).",
+          "correctionGenerale": "<b>Résection / reconstruction</b> : arthroplastie de hanche (prothèse de reconstruction avec appui diaphysaire)\n• Stabilisation durable et contrôle tumoral local prolongé\n• Patient avec espérance de vie prolongée (score de Katagiri faible)\n\n<b>Ostéosynthèse</b> : clou gamma long +/− ciment\n• Stabilisation moins agressive, mais aussi potentiellement moins durable\n• Espérance de vie intermédiaire (score de Katagiri élevé)\n\nBibliographie : D. Biau, P. Anract, <i>Fracture sur os pathologique</i>, EMC 14-031-C-10."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 5 (Hanche)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 39,
+      "vignette": "Madame M., 65 ans, autonome et en bon état général, présente à la suite d’un accident domestique un traumatisme du membre inférieur droit, à type de fracture sur prothèse totale de hanche.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrire la classification de Vancouver.",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-094-425.png"],
+          "reponseAttendue": "Classification des fractures fémorales péri-prothétiques sur PTH : type A trait passant par les trochanters (AG grand trochanter, AL petit trochanter) ; type B trait passant par la tige fémorale (B1 scellée, B2 descellée, B3 descellée avec faible capital osseux) ; type C trait à distance de la tige (> 1 cm) ; type D trait interprothétique entre PTH et PTG.",
+          "correctionGenerale": "Classification des fractures fémorales péri-prothétiques sur PTH.\n• <b>Type A</b> : trait de fracture qui passe par les trochanters — AG : grand trochanter ; AL : petit trochanter\n• <b>Type B</b> : trait de fracture qui passe par la tige fémorale — B1 : prothèse scellée ; B2 : prothèse descellée ; B3 : prothèse descellée avec faible capital osseux\n• <b>Type C</b> : trait de fracture qui passe à distance de la tige (> 1 cm)\n• <b>Type D</b> : trait de fracture entre PTH et PTG (interprothétique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie ci-jointe et indiquez le type fracturaire selon Vancouver.",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-095-431.png"],
+          "reponseAttendue": "Fracture sur prothèse totale de hanche droite cimentée, de type Vancouver B2.",
+          "correctionGenerale": "Fracture sur prothèse totale de hanche droite cimentée, <b>type Vancouver B2</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuelle prise en charge chirurgicale proposez-vous ? Précisez votre argumentaire.",
+          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-099-445.png"],
+          "reponseAttendue": "La prothèse étant descellée chez un sujet jeune en bon état général sans contre-indication anesthésique : changement prothétique avec une tige longue pour appui diaphysaire (vissée ou cimentée), associée à une ostéosynthèse (cerclage, plaque), en évitant les montages trop rigides responsables d’un pic de contrainte en bout de plaque.",
+          "correctionGenerale": "• Prothèse descellée\n• Sujet jeune, en bon état général, pas de contre-indication anesthésique\n• Changement prothétique, prothèse avec tige longue pour appui diaphysaire (vissée ou cimentée)\n• Associée à une ostéosynthèse (cerclage, plaque)\n• Attention aux montages trop rigides (pic de contrainte en bout de plaque)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDans quelles circonstances faudrait-il changer le cotyle ?",
+          "images": [],
+          "reponseAttendue": "En cas d’usure, de descellement, d’incompatibilité des pièces fémorales et acétabulaires, ou d’instabilité préopératoire (cotyle trop vertical ou rétroversé).",
+          "correctionGenerale": "• Usure\n• Descellement\n• Incompatibilité des pièces fémorales et acétabulaires\n• Instabilité préopératoire (cotyle trop vertical ou rétroversé)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2019 - EVCP - Dossier 6 (Orthopédie pédiatrique)",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+      "orderIndex": 40,
+      "vignette": "Enfant de douze ans amené aux urgences pédiatriques à la suite d’une chute de balançoire sur la main droite en hyperextension, avec impotence fonctionnelle et un coude déformé. Une radiographie du coude a été réalisée (ci-jointe).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ? Et comment classez-vous ce type de fracture ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-103-458.png",
+            "annales-orthopedie/evcp2019correction/figures/img-103-460.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-106-462.png"
+          ],
+          "reponseAttendue": "Une fracture supracondylienne du coude droit, stade IV de la classification de Lagrange et Rigault.",
+          "correctionGenerale": "• Fracture supracondylienne du coude droit\n• Stade IV de la classification de Lagrange et Rigault\n\n<b>Rappel — fracture en extension (95 %)</b>\n• Stade I : uniquement la corticale antérieure est rompue, non déplacée\n• Stade II : fracture des 2 corticales, bascule postérieure pure, le périoste postérieur reste intact\n• Stade III : rotation ou translation, mais les 2 fragments restent en contact\n• Stade IV : déplacement complet, il n’y a plus de contact entre les fragments"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelles sont les complications précoces d’une telle fracture ?",
+          "images": ["annales-orthopedie/evcp2019correction/figures/img-108-463.png"],
+          "reponseAttendue": "Complications vasculaires (artère brachiale : absence de pouls radial, doigts blancs), complications nerveuses (nerf interosseux antérieur ++, nerf médian, nerf ulnaire, nerf radial) et syndrome des loges.",
+          "correctionGenerale": "• Complications vasculaires (artère brachiale) : absence de pouls radial, doigts blancs\n• Complications nerveuses (nerf interosseux antérieur ++, nerf médian, nerf ulnaire, nerf radial)\n• Syndrome des loges"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuel traitement proposez-vous ?",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-111-464.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-112-465.png"
+          ],
+          "reponseAttendue": "En urgence : réduction au bloc opératoire sous anesthésie générale, par manœuvre externe (abord antérieur si irréductible du fait d’une incarcération du muscle brachial), puis stabilisation par embrochage percutané type Judet ou brochage en croix avec mini-abord interne.",
+          "correctionGenerale": "<b>En urgence</b>\n• Réduction au bloc opératoire sous anesthésie générale\n• Par manœuvre externe (si irréductible : incarcération du muscle brachial → abord antérieur)\n• Stabilisation par embrochage percutané type Judet, ou brochage en croix avec mini-abord interne\n\n<b>Indications selon le stade</b>\n• Stade 1 : BABP à 90° pendant 4 semaines, ou Blount\n• Stade 2 : Blount, en évitant l’hyperflexion > 110°\n• Stades 3-4 : réduction par manœuvre externe et stabilisation par embrochage percutané (Blount possible pour certains auteurs)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nEst-il nécessaire de proposer une immobilisation postopératoire, et si oui laquelle ?",
+          "images": [],
+          "reponseAttendue": "Oui : une immobilisation postopératoire par simple écharpe contre-écharpe, sans plâtre circulaire.",
+          "correctionGenerale": "Immobilisation postopératoire par simple écharpe contre-écharpe (pas de plâtre circulaire)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelles sont les complications secondaires et tardives d’une telle fracture ? Les citer.",
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-116-466.png",
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-117-467.png",
+            "annales-orthopedie/evcp2019correction/figures/img-117-468.png"
+          ],
+          "reponseAttendue": "Syndrome de Volkmann, déplacement secondaire, raideur et cals vicieux (cubitus varus).",
+          "correctionGenerale": "• Syndrome de Volkmann\n• Déplacement secondaire\n• Raideur\n• Cals vicieux (cubitus varus)\n\nBibliographie : H. De Boeck, <i>Fracture de l’extrémité inférieure de l’humérus chez l’enfant</i>, EMC 44-324."
+        }
+      ]
+    }
+  ]
+}

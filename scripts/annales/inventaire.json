@@ -1,0 +1,2247 @@
+{
+  "genereLe": "2026-08-21",
+  "colleges": {
+    "ANNALES AREA": {
+      "collegeId": "col-anesthesie-reanimation",
+      "nom": "Anesthésie-Réanimation",
+      "codes": [
+        "03"
+      ],
+      "annalesDansLeContenu": false,
+      "fichiers": [
+        {
+          "fichier": "ANNALES AREA/Annale 2020 copie.pdf",
+          "pages": 127,
+          "caracteres": 40807,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 46,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 42,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/Annale 2021.pdf",
+          "pages": 128,
+          "caracteres": 28592,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 37,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 23,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/Annale 2023 copie.pdf",
+          "pages": 101,
+          "caracteres": 41697,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 24,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2023,
+              "occurrences": 22,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/Correction EVCF 2013.pdf",
+          "pages": 7,
+          "caracteres": 9798,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2013,
+              "occurrences": 12,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/Correction EVCP 2025 Dossier 1.pdf",
+          "pages": 15,
+          "caracteres": 18113,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2025,
+              "occurrences": 21,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/Correction sujet 2025 QCM voie interne .pdf",
+          "pages": 32,
+          "caracteres": 55001,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2025,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf",
+          "pages": 9,
+          "caracteres": 7441,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVC 2010.pdf",
+          "pages": 6,
+          "caracteres": 4036,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2010,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2009 AR.pdf",
+          "pages": 6,
+          "caracteres": 4144,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2009,
+              "occurrences": 11,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2010 correction.pdf",
+          "pages": 4,
+          "caracteres": 4817,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2010,
+              "occurrences": 10,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2013 correction.pdf",
+          "pages": 6,
+          "caracteres": 7971,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2013,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2014 correction AM.pdf",
+          "pages": 11,
+          "caracteres": 10911,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2014,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2018.pdf",
+          "pages": 113,
+          "caracteres": 19170,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2018,
+              "occurrences": 65,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF 2024 - Correction .pdf",
+          "pages": 5,
+          "caracteres": 8844,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2024,
+              "occurrences": 7,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF EVCP 2016.pdf",
+          "pages": 142,
+          "caracteres": 31480,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 72,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            },
+            {
+              "type": "EVCP",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF EVCP 2017.pdf",
+          "pages": 178,
+          "caracteres": 41515,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 63,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            },
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 48,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF EVCP 2019 AREA.pdf",
+          "pages": 109,
+          "caracteres": 33942,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 60,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            },
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 49,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES AREA/EVCF _ EVCP 2015.pdf",
+          "pages": 92,
+          "caracteres": 18769,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2015,
+              "occurrences": 64,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2009 Correction PAE.pdf",
+          "pages": 10,
+          "caracteres": 8728,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2009,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2010 Correction PAE.pdf",
+          "pages": 17,
+          "caracteres": 6183,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2010,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2011 corrigé PAE.pdf",
+          "pages": 8,
+          "caracteres": 14438,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2011,
+              "occurrences": 13,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2012 corrigé PAE.pdf",
+          "pages": 15,
+          "caracteres": 12708,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2012,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2013 corrigé PAE.pdf",
+          "pages": 7,
+          "caracteres": 8924,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2013,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2014 corrigé PAE  AM.pdf",
+          "pages": 13,
+          "caracteres": 17358,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2014,
+              "occurrences": 14,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES AREA/EVCP 2018.pdf",
+          "pages": 73,
+          "caracteres": 15853,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 7,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        }
+      ]
+    },
+    "ANNALES CARDIOLOGIE": {
+      "collegeId": "col-cardiologie",
+      "nom": "Cardiologie",
+      "codes": [
+        "07"
+      ],
+      "annalesDansLeContenu": true,
+      "fichiers": [
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 10-07 correction.pdf",
+          "pages": 157,
+          "caracteres": 54465,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 3,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 11-09 correction CARDIOLOGIE.pdf",
+          "pages": 122,
+          "caracteres": 41682,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2024,
+              "occurrences": 16,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2024,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 12-10 correction CARDIOLOGUES.pdf",
+          "pages": 200,
+          "caracteres": 91753,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2018,
+              "occurrences": 2,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 16-10 correction cardiologie .pdf",
+          "pages": 147,
+          "caracteres": 51214,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 7,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 4,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf",
+          "pages": 193,
+          "caracteres": 68477,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2,
+            3
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 2025-06-26 correction copie.pdf",
+          "pages": 139,
+          "caracteres": 52234,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2023,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 4,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 21-05 correction.pdf",
+          "pages": 231,
+          "caracteres": 78138,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 9,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/Séance 25-09 correction CARDIO.pdf",
+          "pages": 133,
+          "caracteres": 44086,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2024,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            3
+          ],
+          "multiAnnales": false
+        }
+      ]
+    },
+    "ANNALES GERIATRIE": {
+      "collegeId": "col-geriatrie",
+      "nom": "Gériatrie",
+      "codes": [
+        "76"
+      ],
+      "annalesDansLeContenu": true,
+      "fichiers": [
+        {
+          "fichier": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
+          "pages": 20,
+          "caracteres": 24164,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES GERIATRIE/Proposition de correction des annales 2024.pdf",
+          "pages": 110,
+          "caracteres": 16995,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        }
+      ]
+    },
+    "ANNALES GYNECOLOGIE": {
+      "collegeId": "col-gynecologie",
+      "nom": "Gynécologie-obstétrique",
+      "codes": [
+        "18",
+        "17"
+      ],
+      "annalesDansLeContenu": false,
+      "fichiers": [
+        {
+          "fichier": "ANNALES GYNECOLOGIE/ANNALES 2020.pdf",
+          "pages": 47,
+          "caracteres": 14054,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2015.pdf",
+          "pages": 26,
+          "caracteres": 8788,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2016.pdf",
+          "pages": 52,
+          "caracteres": 19221,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2017 GYNECO.pdf",
+          "pages": 28,
+          "caracteres": 14219,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2021.pdf",
+          "pages": 42,
+          "caracteres": 16308,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2023.pdf",
+          "pages": 41,
+          "caracteres": 18167,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales 2024.pdf",
+          "pages": 33,
+          "caracteres": 14917,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/Annales gynéco médicale 2021.pdf",
+          "pages": 28,
+          "caracteres": 13729,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/EVCP.2017.pdf",
+          "pages": 8,
+          "caracteres": 12269,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/annale 2018.pdf",
+          "pages": 49,
+          "caracteres": 16755,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/annales 2019 GYNECO.pdf",
+          "pages": 35,
+          "caracteres": 13554,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
+          "pages": 39,
+          "caracteres": 13896,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        }
+      ]
+    },
+    "ANNALES MG": {
+      "collegeId": "col-medecine-generale",
+      "nom": "Médecine générale",
+      "codes": [
+        "71"
+      ],
+      "annalesDansLeContenu": false,
+      "fichiers": [
+        {
+          "fichier": "ANNALES MG/ANNALES 2011/PAE 2011.pdf",
+          "pages": 9,
+          "caracteres": 10892,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2011,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2012/PAE 2012.pdf",
+          "pages": 7,
+          "caracteres": 10551,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2012,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2014/PAE 2014.pdf",
+          "pages": 8,
+          "caracteres": 10134,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2014,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2014,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2015/PAE 2015.pdf",
+          "pages": 9,
+          "caracteres": 10983,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2016/PAE 2016 1.pdf",
+          "pages": 167,
+          "caracteres": 39478,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2017/PAE MG 2017.pdf",
+          "pages": 17,
+          "caracteres": 15461,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2019/ECVF Annales 2019 PAE (correction) copie.pdf",
+          "pages": 11,
+          "caracteres": 10668,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 10,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES MG/ANNALES 2019/EVCP Annales 2019 PAE (correction).pdf",
+          "pages": 15,
+          "caracteres": 19185,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 10,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        }
+      ]
+    },
+    "ANNALES ORTHOPEDIE": {
+      "collegeId": "col-orthopedie",
+      "nom": "Orthopédie",
+      "codes": [
+        "53"
+      ],
+      "annalesDansLeContenu": false,
+      "fichiers": [
+        {
+          "fichier": "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf",
+          "pages": 4,
+          "caracteres": 6632,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF.53 2012 correction.pdf",
+          "pages": 6,
+          "caracteres": 5564,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2012,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF.53.correction.pdf",
+          "pages": 9,
+          "caracteres": 6409,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2013,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2014correction.pdf",
+          "pages": 41,
+          "caracteres": 4914,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2014,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2015correction .pdf",
+          "pages": 57,
+          "caracteres": 6084,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2016 correctionpartie1.pdf",
+          "pages": 18,
+          "caracteres": 3107,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2017.pdf",
+          "pages": 95,
+          "caracteres": 12395,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2018correction.pdf",
+          "pages": 101,
+          "caracteres": 14666,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2019correction.pdf",
+          "pages": 79,
+          "caracteres": 11794,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCF2020 correction.pdf",
+          "pages": 107,
+          "caracteres": 17231,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf",
+          "pages": 10,
+          "caracteres": 8298,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2013,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf",
+          "pages": 51,
+          "caracteres": 10145,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP 2020 correction.pdf",
+          "pages": 126,
+          "caracteres": 17701,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP 2021.pdf",
+          "pages": 48,
+          "caracteres": 7183,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP.53 2012 correction.pdf",
+          "pages": 6,
+          "caracteres": 5141,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2012,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP2015correction.pdf",
+          "pages": 36,
+          "caracteres": 5193,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP2016.pdf",
+          "pages": 47,
+          "caracteres": 9681,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP2017.pdf",
+          "pages": 57,
+          "caracteres": 8392,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
+          "pages": 118,
+          "caracteres": 17932,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES ORTHOPEDIE/connaissances pratiques-2023.pdf",
+          "pages": 51,
+          "caracteres": 12820,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        }
+      ]
+    },
+    "ANNALES PEDIATRIE": {
+      "collegeId": "col-pediatrie",
+      "nom": "Pédiatrie",
+      "codes": [
+        "36"
+      ],
+      "annalesDansLeContenu": true,
+      "fichiers": [
+        {
+          "fichier": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+          "pages": 14,
+          "caracteres": 19459,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2015,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+          "pages": 83,
+          "caracteres": 100711,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+          "pages": 83,
+          "caracteres": 44896,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        }
+      ]
+    },
+    "ANNALES PNEUMOLOGIE BON": {
+      "collegeId": "col-pneumologie",
+      "nom": "Pneumologie",
+      "codes": [
+        "38"
+      ],
+      "annalesDansLeContenu": true,
+      "fichiers": [
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence n°8.pdf",
+          "pages": 131,
+          "caracteres": 22438,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 19,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1
+          ],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n8_sent.pdf",
+          "pages": 132,
+          "caracteres": 23686,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 19,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1
+          ],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
+          "pages": 119,
+          "caracteres": 27013,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 43,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2,
+            3
+          ],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_5_PAE_Formation_pneumo_04062025.pdf",
+          "pages": 285,
+          "caracteres": 37867,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2016,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2017,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": true
+        }
+      ]
+    },
+    "ANNALES PSYCHIATRIE": {
+      "collegeId": "col-psychiatrie",
+      "nom": "Psychiatrie",
+      "codes": [
+        "74"
+      ],
+      "annalesDansLeContenu": false,
+      "fichiers": [
+        {
+          "fichier": "ANNALES PSYCHIATRIE/EVCF.2013-correction.pdf",
+          "pages": 2,
+          "caracteres": 1853,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2013,
+              "occurrences": 7,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/EVCP 2009 (modifié) grille.pdf",
+          "pages": 2,
+          "caracteres": 1293,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2009,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/EVCP 2015-grille.pdf",
+          "pages": 2,
+          "caracteres": 983,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2015,
+              "occurrences": 6,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/Grille EVCP 2011.pdf",
+          "pages": 2,
+          "caracteres": 971,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2011,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/Grille EVCP 2013 grille.pdf",
+          "pages": 3,
+          "caracteres": 1433,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2013,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/Grille EVCP 2014.pdf",
+          "pages": 2,
+          "caracteres": 1071,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2014,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/Grille EVCP 2018.pdf",
+          "pages": 2,
+          "caracteres": 991,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 5,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": true
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/correction connaissance 2023.pdf",
+          "pages": 8,
+          "caracteres": 8844,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2023,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/correction sujet 2 2024.pdf",
+          "pages": 3,
+          "caracteres": 4826,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/correction sujet 3 2024.pdf",
+          "pages": 4,
+          "caracteres": 5827,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PSYCHIATRIE/sujet 4 2024 correction..pdf",
+          "pages": 5,
+          "caracteres": 6996,
+          "annales": [
+            {
+              "type": "?",
+              "annee": 2024,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [],
+          "multiAnnales": false
+        }
+      ]
+    },
+    "ANNALES URGENCE": {
+      "collegeId": "col-mir",
+      "nom": "Médecine d’urgence",
+      "codes": [
+        "43"
+      ],
+      "annalesDansLeContenu": true,
+      "fichiers": [
+        {
+          "fichier": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+          "pages": 19,
+          "caracteres": 31035,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "doc",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2019,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2020,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCF",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            },
+            {
+              "type": "EVCP",
+              "annee": 2021,
+              "occurrences": 1,
+              "typeIncertain": false,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2
+          ],
+          "multiAnnales": true
+        }
+      ]
+    }
+  },
+  "exclusions": [
+    {
+      "dossier": "ANNALES CARDIOLOGIE",
+      "fichier": "ANNALES CARDIOLOGIE/PWP EVC third session  2.pdf",
+      "pages": 26,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES ORL",
+      "fichiers": 63,
+      "motif": "Aucun collège ORL autonome sur la plateforme : ORL n’existe que comme sous-collège de Médecine générale (col-mg-orl), ce qui est une autre chose. Exclusion décidée avec l’utilisateur."
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
+      "pages": 122,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "pages": 288,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_1_PAE_Formation_pneumo_23042025 copie.pdf",
+      "pages": 110,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_2_PAE_Formation_pneumo_30042025.pdf",
+      "pages": 137,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_3_PAE_Formation_pneumo_14052025.pdf",
+      "pages": 111,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_4_PAE_Formation_pneumo_28052025.pdf",
+      "pages": 354,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PNEUMOLOGIE BON",
+      "fichier": "ANNALES PNEUMOLOGIE BON/conference_6&7_PAE_Formation_pneumo.pdf",
+      "pages": 248,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PSYCHIATRIE",
+      "fichier": "ANNALES PSYCHIATRIE/Correction annale maltraitance sur modèle.pdf",
+      "pages": 2,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PSYCHIATRIE",
+      "fichier": "ANNALES PSYCHIATRIE/Correction annale pédopsychiatrie psychose sur modèle.pdf",
+      "pages": 3,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PSYCHIATRIE",
+      "fichier": "ANNALES PSYCHIATRIE/EVCF compilation correction.pdf",
+      "pages": 9,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    },
+    {
+      "dossier": "ANNALES PSYCHIATRIE",
+      "fichier": "ANNALES PSYCHIATRIE/correction vérification connaissances pédopsychiatrie sur modèle.pdf",
+      "pages": 6,
+      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
+    }
+  ]
+}

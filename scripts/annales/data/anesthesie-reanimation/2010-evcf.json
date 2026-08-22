@@ -1,0 +1,214 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF 2010 correction.pdf": {
+      "atelier": "annales-area/evcf-2010-correction",
+      "sujetOfficiel": "Annales/Sujets/evcf_2010_0.pdf",
+      "figuresIgnorees": {},
+      "remarque": "Le corrigé (Florent Sigwalt) ne numérote que les réponses : les intitulés officiels ne sont pas repris. Le sujet officiel 2010 n’existe dans le dépôt que sous forme de PDF scanné, sans couche texte : les énoncés n’ont donc pas pu être restitués et sont signalés comme tels."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2010 - EVCF",
+      "annee": 2010,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF 2010 correction.pdf",
+      "orderIndex": 10,
+      "vignette": "Corrigé de l’épreuve de vérification des connaissances fondamentales 2010 en anesthésie-réanimation (Florent Sigwalt).\n\nLe dossier porte sur un patient de réanimation en choc septique, ventilé, chez qui sont explorés le monitorage hémodynamique, les gaz du sang et la mécanique ventilatoire.\n\n<i>Le corrigé ne reprend pas les intitulés officiels des questions : seules les réponses, numérotées de 1 à 27, y figurent. Le sujet officiel 2010 n’est disponible que sous forme de PDF scanné, sans couche texte.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDonnez la formule du delta PP (variation respiratoire de la pression pulsée).",
+          "images": [],
+          "reponseAttendue": "ΔPP = (Pmax − Pmin) / [(Pmax + Pmin)/2] × 100, exprimé en %.",
+          "correctionGenerale": "ΔPP = (Pmax − Pmin) / [(Pmax + Pmin) / 2] × 100 (%)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuel est le seuil de delta PP retenu ?",
+          "images": [],
+          "reponseAttendue": "ΔPP > 13 %.",
+          "correctionGenerale": "ΔPP > 13 %."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nInterprétez les gaz du sang.",
+          "images": [],
+          "reponseAttendue": "Acidose (pH < 7,35) métabolique (HCO₃⁻ < 22 mM) à trou anionique augmenté (> 12), sans kaliémie, non compensée puisque le pH est anormal, avec un essai de compensation respiratoire marqué par une hypocapnie.",
+          "correctionGenerale": "• Acidose : pH < 7,35\n• Métabolique : HCO₃⁻ < 22 mM\n• À trou anionique augmenté (> 12) ; sans kaliémie\n• Non compensée car le pH est anormal\n• Essai de compensation respiratoire : hypocapnie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuelle est la valeur normale du trou anionique ?",
+          "images": [],
+          "reponseAttendue": "12 ± 4 mmol/L sans kaliémie, 16 ± 4 mmol/L avec kaliémie.",
+          "correctionGenerale": "Trou anionique normal : 12 ± 4 mmol/L sans kaliémie, 16 ± 4 mmol/L avec kaliémie.\n<i>(Zéro à la question si l’unité n’est pas précisée.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nCalculez le trou anionique de ce patient.",
+          "images": [],
+          "reponseAttendue": "Na⁺ − Cl⁻ − HCO₃⁻ = 132 − 105 = 27 mmol/L.",
+          "correctionGenerale": "Na⁺ − Cl⁻ − HCO₃⁻ = 132 − 105 = <b>27 mmol/L</b>.\n<i>(Zéro à la question si l’unité n’est pas précisée.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuel dosage demandez-vous pour expliquer l’origine de l’acidose métabolique ?",
+          "images": [],
+          "reponseAttendue": "Les lactates artériels.",
+          "correctionGenerale": "Lactates <b>artériels</b> — pour expliquer l’origine de l’acidose métabolique.\n<i>(Si le caractère artériel n’est pas précisé : zéro.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nComment expliquez-vous cette anomalie ?",
+          "images": [],
+          "reponseAttendue": "Par une hémodilution, dans un contexte de choc septique avec remplissage vasculaire important très probable, confirmé par l’anémie de dilution.",
+          "correctionGenerale": "Hémodilution, dans un contexte de choc septique avec remplissage vasculaire important très probable — d’ailleurs confirmé par l’anémie de dilution."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°8</b>\n\nDonnez la formule de la compliance statique et calculez-la.",
+          "images": [],
+          "reponseAttendue": "Cstatique = Vt / (Pplateau − PEP) = 650 / (25 − 5) = 32,5 mL/cmH₂O ; elle est diminuée puisque inférieure à 50 mL/cmH₂O.",
+          "correctionGenerale": "Compliance statique = Vt / ΔP = Vt / (Pplateau − PEP)\n\nCS = 650 / (25 − 5) = 650 / 20 = <b>32,5 mL/cmH₂O</b>\n<i>(Zéro à la question si l’unité n’est pas précisée.)</i>\n\nCompliance diminuée, car < 50 mL/cmH₂O."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°9</b>\n\nDéfinissez la pression de plateau. Quelle en est l’unité ?",
+          "images": [],
+          "reponseAttendue": "La pression régnant au sein de l’alvéole en fin d’inspiration, mesurée pendant une pause télé-inspiratoire créée artificiellement ; reflet de la pression alvéolaire, elle permet d’éviter une surdistension et un barotraumatisme. Unité : cmH₂O.",
+          "correctionGenerale": "• Pression régnant au sein de l’alvéole en fin d’inspiration\n• Pression mesurée pendant une pause créée artificiellement à la fin de l’inspiration = pause télé-inspiratoire\n• Reflet de la pression alvéolaire : permet donc d’éviter une surdistension et un barotraumatisme\n• Unité : cmH₂O"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°10</b>\n\nDéfinissez la pression expiratoire positive. Quelle en est l’unité ?",
+          "images": [],
+          "reponseAttendue": "La pression résultante dans le système respiratoire à la fin d’une expiration complète ; unité : cmH₂O.",
+          "correctionGenerale": "• Pression expiratoire positive = pression résultante dans le système respiratoire à la fin d’une expiration complète\n• Unité : cmH₂O"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°11</b>\n\nQuelles complications évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Pneumothorax et contusion pulmonaire.",
+          "correctionGenerale": "• Pneumothorax\n• Contusion pulmonaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°12</b>\n\nQuelle est la valeur attendue ?",
+          "images": [],
+          "reponseAttendue": "210 mmHg.",
+          "correctionGenerale": "210 mmHg.\n<i>(Zéro si l’unité n’est pas précisée.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°13</b>\n\nQuel est votre diagnostic ? Argumentez.",
+          "images": [],
+          "reponseAttendue": "Un SDRA : rapport PaO₂/FiO₂ < 300 (sévère < 100, modéré 100-200, léger 200-300), absence de cause cardiaque expliquant l’œdème pulmonaire (FEVG normale, donc pas d’OAP cardiogénique), OAP lésionnel, évolution de plus de 48 h et opacités alvéolo-interstitielles bilatérales typiques.",
+          "correctionGenerale": "<b>PaO₂ / FiO₂ < 300</b>\n• Sévère : < 100\n• Modéré : 100-200\n• Léger : 200-300\n\n• Pas de cause cardiaque pouvant expliquer l’œdème pulmonaire (FEVG normale) : pas d’OAP cardiogénique\n• OAP lésionnel\n• Évolution > 48 h\n• Opacités alvéolo-interstitielles bilatérales typiques de SDRA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°14</b>\n\nSur quel principe repose cette mesure du débit cardiaque ?",
+          "images": ["annales-area/evcf-2010-correction/figures/img-002-000.png"],
+          "reponseAttendue": "La thermodilution pulmonaire, selon l’équation de Stewart-Hamilton, qui fait intervenir une variation de température et le débit cardiaque.",
+          "correctionGenerale": "Thermodilution pulmonaire / équation de Stewart-Hamilton, faisant intervenir une variation de température et le débit cardiaque.\n\nCO = [(T sang − T bolus) × V bolus × k] / ∫ΔT sang × dT"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°15</b>\n\nComment qualifiez-vous ce profil hémodynamique ?",
+          "images": [],
+          "reponseAttendue": "Un profil hyperkinétique : débit cardiaque élevé et SvO₂ augmentée (trouble de l’extraction) — phase hyperkinétique du choc septique avec défaut d’extraction en O₂.",
+          "correctionGenerale": "<b>Hyperkinétique</b>\n• Débit cardiaque haut et SvO₂ augmentée (trouble de l’extraction)\n• <b>Phase hyperkinétique du choc septique avec défaut d’extraction en O₂</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°16</b>\n\nDonnez la formule des résistances vasculaires systémiques et son unité.",
+          "images": [],
+          "reponseAttendue": "Par application de la loi d’Ohm à la mécanique des fluides : ΔP = RVS × Qc, donc RVS = (PAM − PVC)/Qc, ou encore Qc = (PAM − POD)/Qc × 80 ; résultats en dynes·s·cm⁻⁵ ou mmHg·m⁻³·s.",
+          "correctionGenerale": "U = R × I (électricité)\nΔP = RVS × Qc (application de la loi d’Ohm à la mécanique des fluides)\n\nRVS = ΔP° / Qc = (PAM − PVC) / Qc, ou Qc = (PAM − POD) / Qc × 80\n\nRésultats en <b>dynes·s·cm⁻⁵</b> ou mmHg·m⁻³·s (Qc en m³/s et PAM en mmHg)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°17</b>\n\nDe quoi dépend le contenu artériel en oxygène ?",
+          "images": [],
+          "reponseAttendue": "CaO₂ = 1,34 × Hb × SaO₂ : il dépend donc de l’hémoglobine et de la SaO₂.",
+          "correctionGenerale": "CaO₂ = 1,34 × Hb × SaO₂ → donc <b>Hb et SaO₂</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°18</b>\n\nDonnez la formule de la consommation en oxygène.",
+          "images": [],
+          "reponseAttendue": "VO₂ = (CaO₂ − CvO₂) × Qc.",
+          "correctionGenerale": "VO₂ = (CaO₂ − CvO₂) × Qc\n\n<b>Rappel</b>\n• Extraction en O₂ : EO₂ = VO₂ / DO₂\n• DO₂ = transport = CaO₂ × DC = SaO₂ × 1,34 × Hb × DC"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°19</b>\n\nQuels abords vasculaires sont nécessaires ?",
+          "images": [
+            "annales-area/evcf-2010-correction/figures/img-003-002.jpg",
+            "annales-area/evcf-2010-correction/figures/img-003-003.png"
+          ],
+          "reponseAttendue": "Une voie veineuse centrale en territoire cave supérieur (indispensable) et un cathéter artériel fémoral, indispensable pour capter le bolus froid provenant de la circulation cave supérieure.",
+          "correctionGenerale": "• VVC en système cave supérieur (indispensable)\n• KT artériel fémoral (indispensable pour capter le bolus froid provenant de la circulation cave supérieure)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°20</b>\n\nQuels paramètres de précharge sont mesurés ?",
+          "images": [],
+          "reponseAttendue": "La pression veineuse centrale (PVC) et le volume télédiastolique indexé (VTDI).",
+          "correctionGenerale": "• PVC : pression veineuse centrale\n• VTDI : volume télédiastolique indexé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°21</b>\n\nQuels paramètres de fonction systolique sont mesurés ?",
+          "images": [],
+          "reponseAttendue": "L’index cardiaque et l’index de fonction d’éjection globale.",
+          "correctionGenerale": "• Index cardiaque (IC)\n• Index de fonction d’éjection globale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°22</b>\n\nQuelles épreuves permettent de tester la précharge-dépendance ?",
+          "images": [],
+          "reponseAttendue": "Soit un remplissage vasculaire (bolus de 250 mL de cristalloïde ou colloïde, patient à 30° ou à plat, sans modification de position), soit une épreuve de lever de jambe passif, soit une occlusion télé-expiratoire en ventilation mécanique — en observant la variation du VES et du Qc (delta 5 %).",
+          "correctionGenerale": "<b>Remplissage vasculaire</b>\n• Bolus de 250 mL de cristalloïde ou de colloïde\n• Patient à 30° ou à plat, sans modification de position\n\n<b>Épreuve de lever de jambe passif</b>\n• Patient en position 30°, corps à plat, puis bascule tête en bas en gardant la position 30°\n\n<b>Occlusion télé-expiratoire</b> (pause expiratoire en ventilation mécanique)\n\n→ Variation du VES et du Qc (delta 5 %)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°23</b>\n\nQuel résultat traduit une précharge-dépendance ?",
+          "images": [],
+          "reponseAttendue": "Une précharge-dépendance si le delta VES est supérieur à 10 % après l’épreuve choisie (PiCCO).",
+          "correctionGenerale": "<b>Précharge-dépendance</b> si delta VES > 10 % après l’épreuve choisie (PiCCO)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°24</b>\n\nDe quoi dépend l’EtCO₂ ?",
+          "images": [],
+          "reponseAttendue": "De la ventilation alvéolaire, du débit cardiaque et de la production de CO₂ (métabolisme cellulaire).",
+          "correctionGenerale": "• Ventilation alvéolaire\n• Débit cardiaque\n• Production de CO₂ (métabolisme cellulaire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°25</b>\n\nQuelles causes évoquez-vous devant une baisse brutale de l’EtCO₂ ?",
+          "images": [],
+          "reponseAttendue": "Une embolie gazeuse ou une embolie pulmonaire fibrino-cruorique, une baisse brutale du débit cardiaque par modification du retour veineux (baisse de la précharge par hyperpression intra-abdominale lors de l’insufflation), ou une hémorragie active importante.",
+          "correctionGenerale": "• Embolie gazeuse ou embolie pulmonaire fibrino-cruorique\n• Baisse brutale du débit cardiaque par modification du retour veineux (baisse de la précharge par hyperpression intra-abdominale lors de l’insufflation)\n• Hémorragie active importante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°26</b>\n\nQuelle est votre conduite à tenir immédiate ?",
+          "images": [],
+          "reponseAttendue": "FiO₂ 100 %, remplissage vasculaire pour optimisation hémodynamique, et arrêt du pneumopéritoine (arrêt de l’insufflation).",
+          "correctionGenerale": "• FiO₂ 100 %\n• Remplissage vasculaire (optimisation hémodynamique)\n• Arrêt du pneumopéritoine (arrêt de l’insufflation)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°27</b>\n\nComment expliquez-vous la persistance des anomalies ?",
+          "images": [],
+          "reponseAttendue": "Par un bas débit cardiaque persistant (transport altéré) et une défaillance cardiaque persistante, éventuellement un cœur pulmonaire aigu sur embolie gazeuse.",
+          "correctionGenerale": "• Bas débit cardiaque persistant (transport altéré)\n• Défaillance cardiaque persistante ; cœur pulmonaire aigu sur embolie gazeuse ?"
+        }
+      ]
+    }
+  ]
+}

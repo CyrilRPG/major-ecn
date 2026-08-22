@@ -1,0 +1,184 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/connaissances pratiques-2023.pdf": {
+      "atelier": "annales-orthopedie/connaissances-pratiques-2023",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2023 - EVCP - Dossier 1",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/connaissances pratiques-2023.pdf",
+      "orderIndex": 55,
+      "vignette": "Patient de 20 ans présentant des douleurs du membre inférieur droit, insomniantes, évoluant depuis plus de 3 mois, avec notion de craquement lors d’un faux mouvement et une altération récente de l’état général.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nCommentez le bilan IRM.",
+          "images": ["annales-orthopedie/connaissances-pratiques-2023/figures/img-043-715.jpg"],
+          "reponseAttendue": "IRM du genou droit : lésion touchant le tibia proximal, en hyposignal T1, hétérogène en T2, avec infiltration des parties molles et corticale tibiale soufflée.",
+          "correctionGenerale": "• IRM de genou droit\n• Lésion touchant le tibia proximal\n• T1 : hyposignal\n• T2 : hétérogène\n• Infiltration des parties molles\n• Corticale tibiale soufflée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuels diagnostics évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Chondroblastome, ostéosarcome, sarcome d’Ewing (qui touche le plus souvent les diaphyses).",
+          "correctionGenerale": "• Chondroblastome\n• Ostéosarcome\n• Ewing (touche le plus souvent les diaphyses)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuels autres examens d’imagerie proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Radiographie simple du genou face + profil, radiographie de thorax à la recherche de métastases, TDM thoraco-abdomino-pelvien, TEP-scan, et biopsie chirurgicale.",
+          "correctionGenerale": "• Radiographie simple du genou F + P\n• Radiographie de thorax à la recherche de métastases\n• TDM thoraco-abdomino-pelvien\n• TEP-scan\n• Biopsie chirurgicale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel diagnostic est le plus probable, et sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Un ostéosarcome : fréquence de la pathologie, sexe, âge, altération de l’état général, évolution insidieuse, envahissement des parties molles et localisation métaphyso-épiphysaire.",
+          "correctionGenerale": "<b>Diagnostic</b> : ostéosarcome ?\n\n<b>Arguments</b>\n• Fréquence de la pathologie\n• Sexe\n• Âge\n• Altération de l’état général\n• Évolution insidieuse\n• Envahissement des parties molles\n• Localisation métaphyso-épiphysaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nLe diagnostic histologique malin le plus probable est confirmé à la biopsie. Quelles sont les grandes phases du traitement non chirurgical et chirurgical ?",
+          "images": ["annales-orthopedie/connaissances-pratiques-2023/figures/img-051-848.jpg"],
+          "reponseAttendue": "Prise en charge en centre spécialisé et pluridisciplinaire : chimiothérapie néoadjuvante, chirurgie par l’équipe qui a pratiqué la biopsie avec exérèse large en marges saines et reconstruction (ou amputation), puis chimiothérapie adjuvante — les rechutes dépendant de la qualité de l’exérèse.",
+          "correctionGenerale": "• Centre spécialisé ++\n• Prise en charge pluridisciplinaire +++\n• Chimiothérapie néoadjuvante\n• Chirurgie par l’équipe qui a pratiqué la biopsie ++\n• Exérèse large avec marges saines : reconstruction ou amputation\n• Chimiothérapie adjuvante\n• Les rechutes dépendent de la qualité de l’exérèse\n\n<b>Points clés — ostéosarcome</b>\n• La plus fréquente des tumeurs primitives de l’os : 30 %\n• Homme, 10-20 ans\n• Localisation : métaphyse des os longs — près du genou, loin du coude\n• Douleur insidieuse\n• Bilan : radiographie, IRM, TDM thoraco-abdomino-pelvien ou TEP-scan\n• Métastases : pulmonaires, skip metastases\n• Traitement : chimiothérapie néoadjuvante, chirurgie, chimiothérapie adjuvante\n• 70 % de rémission si non métastasé"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2023 - EVCP - Dossier 2",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/connaissances pratiques-2023.pdf",
+      "orderIndex": 56,
+      "vignette": "Homme de 36 ans, AVP en moto, douleurs et impotence fonctionnelle totale du coude droit.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelle prise en charge en urgence ?",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-003-038.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-004-056.png",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-004-058.png"
+          ],
+          "reponseAttendue": "Il s’agit d’une luxation postérieure du coude avec fractures associées : examen neurologique et cutané, réduction sous sédation, testing de la stabilité, immobilisation par attelle, testing neurologique post-réduction ; traumatisme à haute énergie imposant un examen clinique complet, la recherche de lésions ipsi- et controlatérales et un bilan TDM.",
+          "correctionGenerale": "<b>Luxation postérieure du coude + fractures associées</b>\n• Examen neurologique et des tissus cutanés\n• Réduction du coude sous sédation\n• Testing de la stabilité du coude\n• Immobilisation par attelle\n• Testing neurologique post-réduction\n• Traumatisme à haute énergie = EXAMEN CLINIQUE COMPLET\n• Recherche de lésions ipsilatérales et controlatérales\n• Bilan TDM"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nLe TDM retrouve, associées à la luxation, une fracture de la tête radiale et une fracture du processus coronoïde. Comment s’appelle cette entité lésionnelle ?",
+          "images": ["annales-orthopedie/connaissances-pratiques-2023/figures/img-005-075.jpg"],
+          "reponseAttendue": "La terrible triade du coude : luxation du coude, fracture de la tête radiale et fracture du processus coronoïde.",
+          "correctionGenerale": "<b>Terrible triade du coude</b>\n• Luxation du coude\n• Fracture de la tête radiale\n• Fracture du processus coronoïde"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDécrivez la classification de Morrey des fractures du processus coronoïde.",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-007-108.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-007-109.jpg"
+          ],
+          "reponseAttendue": "Classification de Morrey et Regan : type 1, pointe de la coronoïde ; type 2, moins de 50 % de la hauteur du processus coronoïde ; type 3, plus de 50 % de la hauteur.",
+          "correctionGenerale": "<b>Classification de Morrey et Regan</b>\n• <b>Type 1</b> : pointe de la coronoïde\n• <b>Type 2</b> : < 50 % de la hauteur du processus coronoïde\n• <b>Type 3</b> : > 50 % de la hauteur du processus coronoïde"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nMalgré la réduction, le coude reste instable au-delà de 90° de flexion, avec une laxité en varus/valgus. Quelle stratégie de prise en charge ?",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-009-140.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-010-157.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-011-177.png",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-011-178.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-012-195.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-013-214.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-014-231.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-014-232.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-015-249.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-016-266.jpg"
+          ],
+          "reponseAttendue": "Ostéosynthèse de la coronoïde à travers le defect de la tête radiale (vissage, plaque, ostéosuture ou réinsertion sur ancre), ostéosynthèse de la tête radiale ou arthroplastie si trop comminutive, réparation du plan ligamentaire latéral par réinsertion sur l’épicondyle latéral ; si l’instabilité persiste, réparation du plan médial, puis fixateur externe en dernier recours.",
+          "correctionGenerale": "• <b>Ostéosynthèse de la coronoïde</b> (à travers le defect de la tête radiale) : vissage / plaque, ostéosuture, réinsertion sur ancre\n• <b>Ostéosynthèse de la tête radiale</b>, ou arthroplastie si trop comminutive\n• <b>Réparation du plan ligamentaire latéral</b> : réinsertion sur l’épicondyle latéral, ancre ou point trans-osseux\n• Si toujours instable : réparation du plan médial\n• Si toujours instable : fixateur externe\n\n<b>Points clés — terrible triade du coude</b>\nTrois lésions, de latéral en médial (théorie d’O’Driscoll) : luxation du coude, fracture de la tête radiale, fracture du processus coronoïde.\nObjectifs : restaurer la stabilité et la congruence articulaire, synthéser les fractures, autoriser une mobilisation précoce — « un coude stable mais raide est mieux qu’un coude instable ».\nPrise en charge chirurgicale ++ ; traitement orthopédique par orthèse si coude stable + fracture de tête radiale non déplacée + fracture du processus coronoïde à petit fragment.\nClassifications : Mason pour la tête radiale, Morrey pour le processus coronoïde.\n\n<b>Management, de dedans en dehors</b>\n• Coronoïde : très petit fragment = mépris ; sinon fixation (vissage rétrograde, plaque, broche, ancre, ostéosuture) — toujours considérer la synthèse de la coronoïde\n• Tête radiale : < 3 fragments = ORIF ; comminutive = arthroplastie\n• Plan collatéral latéral : réparation par ancre ou ostéosuture, au centre de rotation de l’épicondyle latéral, mise en tension à 90° de flexion\n• Plan collatéral médial : si instabilité postéro-médiale persistante après traitement des autres lésions\n• TESTING PEROPÉRATOIRE : flexion / extension / pronation / supination — le coude doit être STABLE (interlignes radio-capitellum et ulno-huméral)\n• Si instable : fixateur externe\n\n<b>Postopératoire</b>\n• Immobilisation provisoire en flexion : pronation contre la subluxation postérieure, position neutre si réparation des deux plans collatéraux\n• Protocole de rééducation précoce\n• Prévenir le patient des séquelles : raideur, arthrose, instabilité (à éviter)\n\n<b>Voie d’abord de Kocher</b>\n• Bord antérieur de l’anconé / extensor carpi ulnaris\n• Recherche du raphé musculaire en distal pour trouver l’espace\n• On répare de médial en latéral par le defect laissé par la tête radiale\n• Attention au nerf interosseux postérieur : 4 cm distal à l’interligne radio-capitellaire, autour du col radial — protection par la pronation\n\n<b>Voie d’abord médiale</b> : pour la synthèse de la coronoïde si besoin, attention au nerf ulnaire."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nDans les suites postopératoires, vous retrouvez une douleur dorsale à la mobilisation et à la palpation de la radio-ulnaire distale. Dans ce contexte, quelle complication évoquez-vous ?",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-019-315.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-022-364.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-022-365.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-024-398.jpg"
+          ],
+          "reponseAttendue": "Un syndrome d’Essex-Lopresti.",
+          "correctionGenerale": "<b>Syndrome d’Essex-Lopresti</b>\n• Instabilité longitudinale du cadre antébrachial\n• Traumatisme à haute énergie, sur le poignet, coude en extension\n• 3 étages lésionnels : radio-ulnaire distale, membrane interosseuse, fracture de la tête radiale\n\n<b>Rappel anatomique</b>\nCadre antébrachial : radius + ulna, radio-ulnaires proximale et distale, membrane interosseuse.\nStabilisateurs longitudinaux de l’avant-bras : primaire = tête radiale ; secondaires = membrane interosseuse (70 %) + TFCC (10 %). Une lésion de la membrane interosseuse diminue la transmission des forces du radius à l’ulna.\n\n<b>Clinique</b>\n• Syndrome bipolaire douloureux : poignet + coude\n• Importance de l’examen clinique\n• Limitation de la prono-supination\n• En chronique : douleur latérale du coude (interligne radio-capitellum) et douleur à la radio-ulnaire distale\n\n<b>Imagerie</b>\n• Radiographies face/profil, +/− bilatérales pour comparaison : index radio-ulnaire, clichés dynamiques poing fermé en pronation (ascension du radius)\n• Échographie dynamique : signe de la hernie musculaire\n• IRM\n\n<b>Testing peropératoire</b>\n• <i>Radius joystick test</i> : en pronation maximale, on cherche à induire une translation latérale du radius — possible si la membrane interosseuse est altérée, impossible si elle est intacte\n• <i>Radius pull test</i> : variance ulnaire à la radio-ulnaire distale — 3 mm de migration proximale = lésion probable de la membrane interosseuse ; > 6 mm = lésion de la membrane interosseuse + TFCC\n\n<b>Traitement</b>\nEn aigu, éviter l’ascension du radius : restituer la hauteur du radius (contre-indication à l’excision de la tête radiale) par ostéosynthèse ou arthroplastie ; restaurer l’index radio-ulnaire distal (arthrorise, réparation du TFCC).\nEn chronique, arrêter le processus d’ascension du radius : prothèse de tête radiale pour restituer la hauteur — élément le plus important de la restauration de la stabilité longitudinale ; reconstruction de la membrane interosseuse (allogreffe, tight rope, ligamentoplastie, obliquité 20-25° par rapport à l’axe de l’ulna) ; ostéotomie de raccourcissement de l’ulna si besoin."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2023 - EVCP - Dossier 4",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/connaissances pratiques-2023.pdf",
+      "orderIndex": 57,
+      "vignette": "Patiente de 23 ans admise aux urgences après un AVP en tant que conductrice non ceinturée. Elle est consciente à l’admission, présente une paraplégie flasque, des marques de contusion sur l’hémithorax droit et l’hypochondre droit, et une déformation clinique de la cuisse. TA 100/50 mmHg, FC 100 bpm, SpO₂ 95 %.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuelles imageries sont réalisées en première intention, en urgence ?",
+          "images": [],
+          "reponseAttendue": "Body-TDM et radiographie du membre déformé si le patient est pris en charge dans un trauma center ; sinon radiographie de thorax, radiographie de bassin et radiographie du membre inférieur déformé, puis body-TDM en fonction de la disponibilité.",
+          "correctionGenerale": "• Body-TDM + radiographie du membre déformé si trauma center\n\nOu :\n• Radiographie pulmonaire\n• Radiographie de bassin\n• Radiographie du membre inférieur déformé\n• Puis body-TDM en fonction de la disponibilité"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nLe TDM montre la lésion thoraco-lombaire suivante. Décrire et classifier la lésion (AO/Magerl), et quels éléments expliquent la paraplégie ?",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-028-465.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-030-499.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-030-500.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-031-517.jpg"
+          ],
+          "reponseAttendue": "Une fracture-luxation de L1, classée C2, avec distraction postérieure des épineuses ; la paraplégie s’explique par une compression aiguë de la moelle épinière au-dessus de L1, réalisant un choc spinal.",
+          "correctionGenerale": "• Fracture-luxation L1\n• <b>C2</b>\n• Distraction postérieure des épineuses\n• Compression aiguë de la moelle épinière au-dessus de L1 = choc spinal\n\n<b>Rappel de la classification</b>\n<b>Type A = compression</b> — atteinte purement osseuse corporéale : A1 fracture-tassement, A2 fracture-séparation (fracture en diabolo), A3 fracture comminutive (burst).\n<b>Type B = distraction</b> antérieure ou postérieure — atteinte osseuse et ligamentaire (type Chance) : B1 flexion-distraction postérieure à prédominance ligamentaire, B2 à prédominance osseuse, B3 distraction antérieure (hyperextension) avec cisaillement à travers le disque.\n<b>Type C = composante rotatoire</b> — atteinte osseuse et ligamentaire : C1 type A avec composante rotatoire, C2 type B avec composante rotatoire, C3 trait oblique et cisaillement rotatoire."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nQuels sont les principes de la prise en charge de la fracture thoraco-lombaire avec atteinte neurologique ?",
+          "images": [],
+          "reponseAttendue": "Urgence chirurgicale car le pronostic fonctionnel est en jeu : décompression neurologique et stabilisation vertébrale avec restauration de la hauteur, arthrodèse +/− greffe.",
+          "correctionGenerale": "• Urgence chirurgicale ⟺ pronostic fonctionnel\n• Décompression neurologique\n• Stabilisation vertébrale : restauration de la hauteur, arthrodèse, +/− greffe"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDécrivez la lésion.",
+          "images": [
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-033-550.jpg",
+            "annales-orthopedie/connaissances-pratiques-2023/figures/img-035-584.jpg"
+          ],
+          "reponseAttendue": "Fracture diaphysaire du tiers supérieur/tiers moyen du fémur gauche, transversale, AO type A2, déplacée, avec fragment proximal en abduction et fragment distal en varus.",
+          "correctionGenerale": "• Fracture diaphysaire 1/3 supérieur – 1/3 moyen du fémur gauche\n• Transversale\n• AO type A2\n• Déplacée : fragment proximal en abduction, fragment distal en varus\n\n<b>Biomécanique</b>\n• Fragment proximal en abduction et flexion : moyen et petit fessiers insérés sur le grand trochanter → abduction ; ilio-psoas inséré sur le petit trochanter → flexion\n• Fragment distal en varus et extension : adducteurs insérés sur la face médiale du fémur distal → varus ; gastrocnémiens insérés sur la face postérieure distale du fémur → extension"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelles sont les complications hémodynamiques précoces pouvant survenir avec ce type de fracture ?",
+          "images": [],
+          "reponseAttendue": "Une complication hémorragique avec saignement de plus de 2 litres (tachycardie, hypotension, élévation des lactates, oligurie), et des embolies graisseuses avec désaturation et troubles neurologiques.",
+          "correctionGenerale": "• <b>Hémorragique</b> : saignement > 2 L — tachycardie, hypotension, augmentation des lactates, oligurie\n• <b>Embolies graisseuses</b> : désaturation et troubles neurologiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nLa fracture du fémur a été opérée à foyer ouvert et après dépériostage, par plaque vissée. À 1 an postopératoire, la patiente a récupéré de sa paraplégie ; elle marche avec 2 béquilles et présente toujours une douleur au fémur. Quelle complication évoquez-vous en premier ? Quels examens d’imagerie demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une pseudarthrose du fémur, c’est-à-dire une non-consolidation du foyer de fracture ; bilan radiographique et bilan scanographique.",
+          "correctionGenerale": "• <b>Pseudarthrose du fémur</b> = non-consolidation du foyer de fracture\n• Bilan radiographique\n• Bilan scanographique\n\n<b>Points clés — pseudarthrose</b>\n• Défaut de consolidation au-delà de 6 mois d’une fracture\n• Prévalence : 1-5 % de toutes les fractures\n• Facteurs de risque : foyer ouvert avec évacuation de l’hématome fracturaire, dépériostage, infection, mauvaise réduction (diastasis persistant, interposition de tissus mous), tabagisme\n• Aseptique ou septique ; deux formes aseptiques : hypertrophique (vitale) et atrophique (avitale)\n\n<b>Concepts de prise en charge</b>\nStabilité mécanique, présence de cellules vivantes, apport en cellules osseuses et facteurs de croissance, vascularisation.\n• <b>Pseudarthrose « vitale »</b> (condition mécanique défavorable) : ablation du matériel, alésage/avivement, mise en compression des fragments, ostéosynthèse rigide\n• <b>Pseudarthrose « avitale »</b> (conditions mécanique et biologique défavorables) : ablation du matériel, décortication, débridement, création d’un environnement vascularisé, alésage, greffon osseux, ostéosynthèse stable"
+        }
+      ]
+    }
+  ]
+}

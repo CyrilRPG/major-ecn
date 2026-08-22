@@ -1,0 +1,194 @@
+{
+  "sources": {
+    "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf": {
+      "atelier": "annales-orthopedie/evcp-2013-correction",
+      "sujetOfficiel": "Annales/Sujets/evcp_2013/EVCP.53.pdf",
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Orthopédie - 2013 - EVCP - Dossier 1",
+      "annee": 2013,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf",
+      "orderIndex": 14,
+      "vignette": "Une patiente de 90 ans, gauchère, présentant des troubles mnésiques mais vivant à domicile avec des aides, est conduite aux urgences à la suite d’une chute survenue dans la nuit. Elle présente une impotence fonctionnelle du membre supérieur gauche. On note dans ses antécédents une raideur ancienne de l’épaule gauche.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrire les lésions retrouvées.",
+          "images": [
+            "annales-orthopedie/evcp-2013-correction/figures/img-001-002.png",
+            "annales-orthopedie/evcp-2013-correction/figures/img-001-003.png",
+            "annales-orthopedie/evcp-2013-correction/figures/img-001-004.png"
+          ],
+          "reponseAttendue": "Fracture spiroïde diaphysaire du tiers inférieur de l’humérus gauche, déplacée, sur probable ostéoporose sous-jacente, avec omarthrose et arthrose acromio-claviculaire.",
+          "correctionGenerale": "• Fracture spiroïde diaphysaire du tiers inférieur de l’humérus gauche, déplacée\n• Probable ostéoporose sous-jacente (amincissement cortical, déminéralisation)\n• Omarthrose + arthrose acromio-claviculaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDétaillez les complications spécifiques, chez cette patiente, de ce type de lésion.",
+          "images": [],
+          "reponseAttendue": "Liées à la fracture : lésion immédiate du nerf radial, puis pseudarthrose et cal vicieux avec troubles de rotation. Liées à la chute : conséquences de la station au sol prolongée (TVP, embolie pulmonaire, escarre, déshydratation, hypothermie, rhabdomyolyse) et perte d’autonomie avec institutionnalisation.",
+          "correctionGenerale": "<b>1) Liées à la fracture</b>\nImmédiates :\n• Lésions du nerf radial\nTardives :\n• Pseudarthrose\n• Troubles de rotation, cal vicieux\n\n<b>2) Liées à la chute</b>\nStation au sol prolongée :\n• TVP, embolie pulmonaire\n• Escarre\n• Déshydratation\n• Hypothermie\n• Rhabdomyolyse → hyperkaliémie, insuffisance rénale\nPuis perte d’autonomie, institutionnalisation."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nDiscutez toutes les possibilités thérapeutiques en détaillant les avantages et les inconvénients de chacune des méthodes.",
+          "images": [],
+          "reponseAttendue": "Traitement orthopédique (plâtre pendant, Sarmiento) : non invasif mais risque de cal vicieux, de pseudarthrose et d’immobilisation prolongée. Traitement chirurgical : meilleur résultat fonctionnel et récupération plus rapide, au prix des complications anesthésiques et chirurgicales — enclouage centromédullaire, embrochage fasciculé d’Hackethal, fixateur externe ou plaque.",
+          "correctionGenerale": "<b>Traitement orthopédique</b>\n• Plâtre pendant\n• Sarmiento\n→ non invasif (intéressant en cas de comorbidités ++ ou de contre-indication anesthésique)\n→ risque de consolidation en cal vicieux, de pseudarthrose, immobilisation prolongée\n\n<b>Traitement chirurgical</b>\n→ meilleur résultat fonctionnel, récupération plus rapide\n→ complications anesthésiques et chirurgicales (infection…)\n\nOstéosynthèse :\n• <b>Enclouage centromédullaire</b> → bonne tenue mécanique, simplicité ; mais peut être traumatisant pour la coiffe\n• <b>Embrochage fasciculé d’Hackethal</b> → simple, rapide, peu coûteux ; mais faible rigidité (fracture distale), contrôle mal les rotations, risque de migration, taux de pseudarthrose plus élevé en cas d’erreur technique (défaut de remplissage de la cavité médullaire)\n• <b>Fixateur externe</b> → intérêt en cas de fracture ouverte délabrante\n• <b>Plaque (DCP)</b> → bonne tenue, compression du foyer de fracture, contrôle du nerf ; mais abord chirurgical plus extensif"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2013 - EVCP - Dossier 2",
+      "annee": 2013,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf",
+      "orderIndex": 15,
+      "vignette": "Une femme de 74 ans se plaint d’une douleur dans le bas du dos avec une irradiation vers la face latérale de la cuisse et de la jambe droite. Elle ressent également une douleur dans les mollets qui l’oblige à s’arrêter au bout d’environ 700 mètres. Après 2 minutes de repos, elle peut repartir.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQuels sont les deux principaux diagnostics à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Claudication intermittente sur AOMI ; lombosciatique sur hernie discale ou sténose lombaire.",
+          "correctionGenerale": "• Claudication intermittente sur AOMI\n• Lombosciatique sur hernie discale ou sténose lombaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQue recherchez-vous à l’examen clinique afin de dresser le bilan de la lombalgie et de la sciatalgie, en précisant le niveau radiculaire ?",
+          "images": ["annales-orthopedie/evcp-2013-correction/figures/img-004-011.png"],
+          "reponseAttendue": "Interrogatoire (siège, rythme mécanique ou inflammatoire, impulsivité, mode de début, signes généraux, antécédents) et examen physique : troubles de la statique, mobilités, Lasègue ou Léri, signe de la sonnette, contracture, puis topographie radiculaire (L3, L4, L5, S1), réflexes achilléen et patellaire, cotation MRC.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Siège\n• Rythme : caractère mécanique ou inflammatoire\n• Impulsivité à la toux et à la défécation\n• Début brutal ou progressif\n• Signes généraux (lombalgie commune vs secondaire)\n• Antécédents\n\n<b>Examen physique</b>\nTroubles de la statique :\n• Sagittal : anomalies des lordoses ou des cyphoses\n• Frontal : attitude scoliotique\nMobilités :\n• Raideur en flexion ou en extension\nSigne de Lasègue ou de Léri (Lasègue inversé), signe de la sonnette. Contracture rachidienne localisée.\n\n<b>Topographie radiculaire</b>\n• Cruralgie <b>L3</b> : déficit du psoas ++, quadriceps\n• Cruralgie <b>L4</b> : déficit du quadriceps et du tibial antérieur\n• Sciatique <b>L5</b> : marche sur les talons impossible, hypoesthésie de l’hallux, loge antéro-externe\n• Sciatique <b>S1</b> : marche sur la pointe impossible\n\nAbolition du réflexe achilléen signant l’atteinte radiculaire S1 ; abolition du réflexe patellaire lors de l’atteinte de L4. Cotation de la force musculaire (MRC)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nL’examen neurologique périphérique est peu contributif : quel examen complémentaire pourrait vous aider ?",
+          "images": [],
+          "reponseAttendue": "L’EMG.",
+          "correctionGenerale": "L’EMG (électromyogramme)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nDécrivez l’image ci-jointe. Vers quels diagnostics vous oriente-t-elle ?",
+          "images": ["annales-orthopedie/evcp-2013-correction/figures/img-006-016.png"],
+          "reponseAttendue": "Radiographie du rachis lombaire de profil : pincement L5-S1 avec ostéocondensation sous-chondrale, ostéophytose et spondylolisthésis L4-L5 de stade I de Meyerding, orientant vers une discopathie sévère L5-S1 et une dégénérescence arthrosique de la charnière lombo-sacrée.",
+          "correctionGenerale": "Radiographie du rachis lombaire de profil :\n• Pincement L5-S1 avec ostéocondensation sous-chondrale\n• Ostéophytose\n• Spondylolisthésis L4-L5 (stade I de Meyerding)\n\n→ Discopathie sévère L5-S1, dégénérescence arthrosique de la charnière lombo-sacrée."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuelles mesures thérapeutiques préconisez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "En l’absence de signe de gravité, traitement médical : règles hygiéno-diététiques et réduction pondérale, kinésithérapie, contention par corset lombaire, antalgiques et AINS en poussée, +/− infiltration de corticostéroïdes.",
+          "correctionGenerale": "En l’absence de signe de gravité (déficit moteur < 3, syndrome de la queue de cheval, forme hyperalgique), traitement médical en première intention :\n• Règles hygiéno-diététiques : réduction pondérale\n• Kinésithérapie : renforcement musculaire, verrouillage lombaire, rééducation proprioceptive\n• Contention par corset lombaire / lombostat\n• Antalgiques, AINS si poussée\n• +/− infiltration de corticostéroïdes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°6</b>\n\nQuels trois autres examens d’imagerie demandez-vous pour préciser le diagnostic en vue d’une intervention chirurgicale, et qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Radiographie de face ; TDM pour l’évaluation de l’os, des lésions d’arthrose et de la sténose canalaire ; IRM pour localiser la compression, évaluer le disque, chercher une hernie et une inflammation (œdème osseux en séquence STIR).",
+          "correctionGenerale": "• <b>Radiographie de face</b>\n• <b>TDM</b> : surtout utile pour l’évaluation de l’os et des lésions d’arthrose, et pour la sténose canalaire\n• <b>IRM</b> : localisation de la compression, état du disque, hernie, recherche d’une inflammation (œdème osseux en séquence STIR)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°7</b>\n\nQuel traitement proposez-vous lorsque le périmètre de marche diminue progressivement ?",
+          "images": [],
+          "reponseAttendue": "Une arthrodèse lombo-sacrée.",
+          "correctionGenerale": "→ Arthrodèse lombo-sacrée."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2013 - EVCP - Dossier 3",
+      "annee": 2013,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf",
+      "orderIndex": 16,
+      "vignette": "Une femme de 30 ans se présente aux urgences de l’hôpital à la suite d’une chute d’un lieu élevé sur le poignet droit en hyperextension.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nDécrire en une phrase le résultat du bilan radiologique fait à l’arrivée de la patiente aux urgences, puis donnez votre diagnostic.",
+          "images": [
+            "annales-orthopedie/evcp-2013-correction/figures/img-007-019.png",
+            "annales-orthopedie/evcp-2013-correction/figures/img-007-022.png"
+          ],
+          "reponseAttendue": "Radiographies du poignet droit de face et de profil : horizontalisation du scaphoïde avec signe de l’anneau et interruption des arcs de Gilula de face, perte complète de congruence entre lunatum et capitatum de profil — luxation rétro-lunaire pure du carpe, stade II de la classification de Witvoet.",
+          "correctionGenerale": "Radiographies du poignet droit face + profil :\n• <b>Face</b> : horizontalisation du scaphoïde avec signe de l’anneau ; interruption des arcs de Gilula\n• <b>Profil</b> : perte complète de congruence articulaire entre lunatum et capitatum\n\n→ Luxation rétro-lunaire du carpe (pure), stade II de la classification de Witvoet."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nQuelle est LA complication immédiate que vous devez rechercher à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Une compression du nerf médian.",
+          "correctionGenerale": "Compression du nerf médian."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nUne intervention chirurgicale est-elle indiquée ? Si non, décrivez le traitement que vous proposez. Si oui, décrivez dans quels délais et ses principes.",
+          "images": [],
+          "reponseAttendue": "Oui, en urgence : abord dorsal entre les 3ᵉ et 4ᵉ compartiments, neurectomie du nerf interosseux postérieur, réduction, stabilisation par brochage scapho-lunaire, triquétro-lunaire et capitate, réinsertion du ligament scapho-lunaire sur ancre et capsulodèse dorsale.",
+          "correctionGenerale": "<b>Oui</b>, en urgence.\n• Abord dorsal entre les 3ᵉ et 4ᵉ compartiments\n• Neurectomie du nerf interosseux postérieur\n• Réduction\n• Stabilisation par brochage trans-scapho-lunaire, trans-triquétro-lunaire et capitate\n• Réinsertion du ligament scapho-lunaire sur ancre, capsulodèse dorsale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuels sont les risques évolutifs les plus fréquents dans les suites de ce traumatisme ?",
+          "images": [],
+          "reponseAttendue": "Ostéonécrose du lunatum ++ et instabilité scapho-lunaire résiduelle évoluant vers un poignet SLAC ; sur le plan fonctionnel, raideur, douleurs résiduelles et perte de force.",
+          "correctionGenerale": "• Ostéonécrose du lunatum ++\n• Instabilité scapho-lunaire résiduelle → SLAC\n\nSur le plan fonctionnel :\n• Raideur\n• Douleurs résiduelles, perte de force"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Orthopédie - 2013 - EVCP - Dossier 4",
+      "annee": 2013,
+      "type": "EVCP",
+      "source": "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf",
+      "orderIndex": 17,
+      "vignette": "Un jeune homme de 20 ans se présente aux urgences de l’hôpital pour une impotence fonctionnelle aiguë du membre inférieur droit en dehors de tout traumatisme. Il ressentait des douleurs de la cuisse et du genou droit depuis plusieurs semaines.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°1</b>\n\nQue recherchez-vous lors de votre examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Interrogatoire (profession, sport, antécédents, début des symptômes, caractère mécanique ou inflammatoire de la douleur, trajet radiculaire, signes généraux) puis inspection, palpation avec recherche d’un épanchement, examen neurologique et cotation MRC.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Profession, activités sportives…\n• Antécédents médicaux\n• Début des symptômes\n• Douleurs : caractère mécanique ou inflammatoire, trajet radiculaire ?\n• Signes associés : altération de l’état général, perte de poids, fièvre\n\n<b>Inspection</b>\n• État cutané, signes vasomoteurs\n• Déformation, œdème\n• Boiterie\n\n<b>Palpation</b>\n• Pouls\n• Sensibilité\n• Tuméfaction\n• Épanchement intra-articulaire, choc rotulien\n\n<b>Examen neurologique</b>, réflexes ostéo-tendineux, cotation MRC."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°2</b>\n\nDécrire la radiographie faite à l’arrivée du patient aux urgences.",
+          "images": [
+            "annales-orthopedie/evcp-2013-correction/figures/img-009-027.png",
+            "annales-orthopedie/evcp-2013-correction/figures/img-009-030.png"
+          ],
+          "reponseAttendue": "Radiographie du fémur distal droit de face et de profil : trait de fracture oblique non déplacé, appositions périostées, aspect lytique avec effraction corticale, envahissement des parties molles, triangle de Codman et feux d’herbe — tumeur osseuse d’allure maligne (ostéosarcome ?).",
+          "correctionGenerale": "Radiographie du fémur distal droit face + profil :\n• Trait de fracture non déplacé, oblique\n• Appositions périostées, aspect lytique avec effraction corticale\n• Envahissement des parties molles\n• Triangle de Codman, feux d’herbe\n\n→ Tumeur osseuse d’allure maligne (ostéosarcome ?)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°3</b>\n\nLe bilan biologique réalisé est normal. Donnez votre diagnostic.",
+          "images": [],
+          "reponseAttendue": "Fracture pathologique sur tumeur osseuse présentant des critères de malignité (ostéosarcome ?).",
+          "correctionGenerale": "Fracture pathologique sur tumeur osseuse avec critères de malignité (ostéosarcome ?)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°4</b>\n\nQuel bilan complémentaire loco-régional demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Radiographie du fémur entier de face et de profil et IRM du fémur entier ; bilan d’extension par TDM thoraco-abdomino-pelvien et scintigraphie osseuse.",
+          "correctionGenerale": "<b>Bilan loco-régional</b>\n• Radiographie du fémur entier face + profil\n• IRM du fémur entier\n\n<b>Bilan d’extension</b>\n• TDM thoraco-abdomino-pelvien\n• Scintigraphie osseuse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n°5</b>\n\nQuel est le geste diagnostique fondamental ? Quelle est la précaution principale à prendre pour sa réalisation ?",
+          "images": [],
+          "reponseAttendue": "La biopsie osseuse pour examen anatomopathologique ; le trajet de biopsie doit être discuté en RCP avec le chirurgien du centre de référence qui prendra en charge le patient, car il devra être excisé lors de la chirurgie de reprise.",
+          "correctionGenerale": "<b>Biopsie osseuse pour examen anatomopathologique</b>\n• Le trajet de la biopsie est à discuter en RCP avec le chirurgien du centre de référence qui prendra en charge le patient : il devra être excisé lors de la chirurgie de reprise\n• Scanno-guidée (True-cut) ou chirurgicale"
+        }
+      ]
+    }
+  ]
+}
