@@ -715,6 +715,21 @@
             3
           ],
           "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES CARDIOLOGIE/PWP EVC third session  2.pdf",
+          "pages": 26,
+          "annales": [
+            {
+              "type": "EVCF",
+              "annee": 2025,
+              "occurrences": 1,
+              "typeIncertain": true,
+              "sujetOfficiel": null,
+              "dansLeNom": false
+            }
+          ],
+          "note": "Réintégré manuellement : le classement automatique n’avait pas détecté l’annale, la mention « EVC 2025 » figurant seule sur la diapositive de titre, sans le sigle EVCF/EVCP. Le document corrige trois questions rédactionnelles de l’EVC 2025 (troisième session)."
         }
       ]
     },
@@ -2229,12 +2244,6 @@
     }
   },
   "exclusions": [
-    {
-      "dossier": "ANNALES CARDIOLOGIE",
-      "fichier": "ANNALES CARDIOLOGIE/PWP EVC third session  2.pdf",
-      "pages": 26,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
     {
       "dossier": "ANNALES ORL",
       "fichiers": 63,
