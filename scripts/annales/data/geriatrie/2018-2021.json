@@ -485,7 +485,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 9,
-      "vignette": "Madame X, 82 ans, est hospitalisée en gériatrie aiguë au décours d’une chute avec station au sol de durée indéterminée. Dans le dossier, vous constatez qu’elle a chuté 4 fois au cours des 6 derniers mois.\n\n<i>Énoncé officiel restitué depuis le sujet EVCF 2019, code 76 (Annales/Sujets/EVCF 2019/evcf.76.doc).</i>",
+      "vignette": "Madame X, 82 ans, est hospitalisée en gériatrie aiguë au décours d’une chute avec station au sol de durée indéterminée. Dans le dossier, vous constatez qu’elle a chuté 4 fois au cours des 6 derniers mois.",
       "questions": [
         {
           "format": "qroc",
@@ -560,7 +560,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 10,
-      "vignette": "Un homme de 90 ans est adressé au service d’admission et urgences pour altération de l’état général, perte d’appétit et somnolence depuis quelques jours. Il vit seul, refusant toute aide à domicile.\n\nÀ l’examen clinique, on observe un pli cutané sous-claviculaire, une sécheresse de la muqueuse buccale avec une langue rouge et douloureuse, un abdomen tendu et météorisé, une hyperthermie à 38,2 °C, une fréquence cardiaque à 91 bpm et une pression artérielle à 90/72 mmHg.\n\nLe premier bilan sanguin constate une natrémie à 160 mmol/L, une kaliémie à 3,2 mmol/L, une urémie à 12 mmol/L et une créatininémie à 180 µmol/L.\n\n<i>Énoncé officiel restitué depuis le sujet EVCF 2019, code 76 (Annales/Sujets/EVCF 2019/evcf.76.doc).</i>",
+      "vignette": "Un homme de 90 ans est adressé au service d’admission et urgences pour altération de l’état général, perte d’appétit et somnolence depuis quelques jours. Il vit seul, refusant toute aide à domicile.\n\nÀ l’examen clinique, on observe un pli cutané sous-claviculaire, une sécheresse de la muqueuse buccale avec une langue rouge et douloureuse, un abdomen tendu et météorisé, une hyperthermie à 38,2 °C, une fréquence cardiaque à 91 bpm et une pression artérielle à 90/72 mmHg.\n\nLe premier bilan sanguin constate une natrémie à 160 mmol/L, une kaliémie à 3,2 mmol/L, une urémie à 12 mmol/L et une créatininémie à 180 µmol/L.",
       "questions": [
         {
           "format": "qroc",

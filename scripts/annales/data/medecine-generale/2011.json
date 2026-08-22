@@ -153,7 +153,7 @@
       "type": "EVCP",
       "source": "ANNALES MG/PAE 2011.pdf",
       "orderIndex": 111,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2011.</b>\n\nVous devez traiter tous les sujets. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",

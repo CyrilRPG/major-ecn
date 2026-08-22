@@ -280,7 +280,7 @@
       "type": "EVCP",
       "source": "ANNALES MG/PAE 2016 (1).pdf",
       "orderIndex": 119,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2016.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",

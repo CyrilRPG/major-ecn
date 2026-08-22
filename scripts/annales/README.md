@@ -98,7 +98,14 @@ node scripts/annales/audit.mjs --data scripts/annales/data/orthopedie.json --db
 node scripts/annales/audit-sujets.mjs --extraire      # images des sujets officiels
 node scripts/annales/audit-sujets.mjs --planches      # copies des orphelines à relire
 node scripts/annales/audit-publie.mjs                 # base + téléchargement des images
+npx tsx scripts/annales/audit-realisable.mts          # l'annale est-elle FAISABLE ?
 ```
+
+`audit-realisable.mts` se place du côté de l'élève : item d'accueil, visibilité
+pour treize profils (voie × formule, bonus Gériatrie) en important la règle
+d'accès réelle, présence d'une année exploitable pour la navigation par session,
+puis question par question — énoncé lisible, propositions jouables, corrigé
+présent, images servies.
 
 ### Retoucher du contenu déjà publié
 

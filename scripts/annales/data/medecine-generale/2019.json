@@ -250,7 +250,7 @@
       "type": "EVCP",
       "source": "ANNALES MG/EVCP annales 2019 PAE correction.pdf",
       "orderIndex": 131,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2019.</b>\n\nL’ensemble des sujets est à traiter.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
