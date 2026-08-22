@@ -49,11 +49,12 @@ export default async function ParcoursDetailPage({ params }: { params: Promise<{
   }
   const comp = completions.find((c) => c.parcoursId === parcours.id) ?? null;
 
-  // Ordonner : le cas clinique (QROC) puis les QCM — le rappel est au-dessus.
-  const order = { cas_clinique: 0, qcm: 1 } as const;
+  // Ordonner sur `ordre` seul : c'est la séquence du support d'origine, QCM
+  // compris. Trier par section reléguait les QCM en fin de parcours et cassait
+  // les renvois « à la question N » (cf. parcours 18 et 21).
   const questions: RunnerQuestion[] = loaded.questions
     .slice()
-    .sort((a, b) => (order[a.section] - order[b.section]) || (a.ordre - b.ordre))
+    .sort((a, b) => a.ordre - b.ordre)
     .map((r) => ({
       id: r.id,
       section: r.section,

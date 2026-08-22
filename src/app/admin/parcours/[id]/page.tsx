@@ -53,7 +53,6 @@ export default async function AdminParcoursEditPage({ params }: { params: Promis
     .from('major_parcours_questions')
     .select('id, section, format, ordre, enonce_html, items, reponse_attendue, explication_html, image_path')
     .eq('parcours_id', id)
-    .order('section', { ascending: true })
     .order('ordre', { ascending: true });
 
   const parcours = p as EditorParcours;

@@ -63,7 +63,6 @@ export async function fetchParcoursByNumero(
         .from('major_parcours_questions')
         .select('id, section, format, ordre, enonce_html, items, reponse_attendue, explication_html, image_path')
         .eq('parcours_id', (data as ParcoursRow).id)
-        .order('section', { ascending: true })
         .order('ordre', { ascending: true });
       return { parcours: data as ParcoursRow, questions: (q ?? []) as QuestionRow[], source: 'db' };
     }
