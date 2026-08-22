@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Sparkles, X } from 'lucide-react';
 import {
-  ONBOARDING_KEYS, isMobileViewport, isReplayRequested, readFlag, waitForElement, writeFlag,
+  ONBOARDING_KEYS, declareStep, isMobileViewport, isReplayRequested, markStepActive,
+  markStepDone, readFlag, waitForElement, whenStepTurnComes, writeFlag,
 } from '@/lib/student/onboarding';
 
 /**
@@ -28,23 +29,40 @@ export function ApercuCoachmark() {
   const [mobile, setMobile] = useState(false);
   const started = useRef(false);
 
+  // 5ᵉ étape. Ce composant n'est monté que sur l'Aperçu d'un item : sur toute
+  // autre page l'étape est simplement absente de la file et ne retient pas la
+  // flèche « assistant » qui la suit.
   useEffect(() => {
     if (started.current) return;
-    if (!isReplayRequested() && readFlag(STORAGE_KEY)) return;
-    return waitForElement(TARGET, () => {
-      started.current = true;
-      setMobile(isMobileViewport());
-      setActive(true);
-    }, {
-      // Une modale est déjà ouverte (popup vidéo de l'item, popup d'accueil,
-      // complétion de profil) : on la laisse finir. Le conseil viendra après,
-      // au lieu d'assombrir une fenêtre déjà à l'écran.
-      ready: () => !document.querySelector('[aria-modal="true"], [data-coachmark]'),
+    const vaSAfficher = isReplayRequested() || !readFlag(STORAGE_KEY);
+    const retirer = declareStep('apercu', vaSAfficher);
+    if (!vaSAfficher) return retirer;
+
+    // Deux attentes SÉPARÉES, et c'est essentiel : d'abord son tour, sans
+    // échéance — l'élève lit les trois fenêtres aussi longtemps qu'il veut —
+    // puis seulement la cible, avec une échéance. Les confondre revenait à
+    // décompter le budget de recherche de la grille pendant que les fenêtres
+    // précédentes étaient encore ouvertes : l'étape expirait avant son tour et
+    // se sautait elle-même.
+    let annulerCible: (() => void) | undefined;
+    const annulerTour = whenStepTurnComes('apercu', () => {
+      annulerCible = waitForElement(TARGET, () => {
+        started.current = true;
+        markStepActive('apercu');
+        setMobile(isMobileViewport());
+        setActive(true);
+      }, {
+        // La grille n'est jamais venue : on rend la main plutôt que de bloquer
+        // l'étape suivante.
+        onTimeout: () => markStepDone('apercu'),
+      });
     });
+    return () => { annulerTour(); annulerCible?.(); retirer(); };
   }, []);
 
   const finish = useCallback(() => {
     writeFlag(STORAGE_KEY);
+    markStepDone('apercu');
     setActive(false);
   }, []);
 

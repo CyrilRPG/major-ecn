@@ -8,6 +8,7 @@ import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
 import { StudentTutorialPopup } from '@/components/student/student-tutorial-popup';
 import { OnboardingTour } from '@/components/student/onboarding-tour';
+import { ParcoursMajorPopup } from '@/components/student/parcours-major-popup';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
@@ -352,14 +353,24 @@ export default async function StudentLayout({ children }: { children: React.Reac
         />
       )}
       {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} welcome={welcome} />}
-      {profile.role === 'student' && <OnboardingTour />}
-      {!isDecouverte && profile.role === 'student' && scopeForNav.offer !== 'decouverte' && (
+      {/* Parcours d'accueil, dans l'ordre d'apparition : le gros tutoriel, puis
+          l'annonce du Parcours du Major, puis les flèches sur le menu. Chaque
+          étape attend que l'écran soit libre (cf. lib/student/onboarding).
+
+          Montés aussi pour les administrateurs et les professeurs, mais en
+          `replayOnly` : ils ne s'ouvrent alors que sur « Revoir le tutoriel »,
+          ce qui permet de contrôler en vue étudiant ce que voient les élèves. */}
+      {!isDecouverte && scopeForNav.offer !== 'decouverte' && (
         <StudentTutorialPopup
           offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'}
           parcoursMajor={canAccessParcoursMajor}
-          welcomeActive={welcome.active}
+          replayOnly={profile.role !== 'student'}
         />
       )}
+      {canAccessParcoursMajor && (
+        <ParcoursMajorPopup replayOnly={profile.role !== 'student'} />
+      )}
+      <OnboardingTour replayOnly={profile.role !== 'student'} />
     </div>
   );
 }

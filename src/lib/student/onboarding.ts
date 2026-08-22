@@ -21,7 +21,89 @@ export const ONBOARDING_KEYS = {
   assistant: 'major-ecn:onboarding-assistant-v1',
   /** Popup d'accueil (« Conseils de préparation »). */
   welcome: 'major-ecn:conseils-dismissed',
+  /** Annonce de la section « Parcours du Major ». */
+  parcoursMajor: 'major-ecn:parcours-major-popup-v1',
 } as const;
+
+/**
+ * ORDRE DU PARCOURS D'ACCUEIL — du général au particulier.
+ *
+ *   1. `welcome`       « Bienvenue sur Major ECN » : à quoi sert la plateforme.
+ *   2. `tutorial`      le gros tutoriel pas à pas, qu'on peut passer.
+ *   3. `parcoursMajor` l'annonce de la section Parcours du Major.
+ *   4. `menuTour`      les flèches sur le menu : choisir une matière, un item.
+ *   5. `apercu`        la flèche sur la grille de contenus d'un item.
+ *   6. `assistant`     la flèche sur le bouton Assistant.
+ *
+ * Les trois premières sont des fenêtres qui expliquent ; les trois suivantes
+ * des bulles qui désignent un élément à l'écran. On explique avant de montrer,
+ * et jamais deux choses à la fois.
+ */
+export const ONBOARDING_SEQUENCE = [
+  'welcome', 'tutorial', 'parcoursMajor', 'menuTour', 'apercu', 'assistant',
+] as const;
+
+export type OnboardingStep = (typeof ONBOARDING_SEQUENCE)[number];
+
+/**
+ * File d'attente du parcours.
+ *
+ * Chaque composant s'inscrit au montage en disant s'il compte jouer son étape.
+ * Il n'ouvre sa fenêtre que lorsque TOUTES les étapes qui le précèdent sont
+ * terminées ou déclarées sans objet. Une étape dont le composant n'est pas
+ * monté — la flèche « aperçu » sur une page de fiche, l'annonce du Parcours du
+ * Major pour un élève qui n'y a pas droit — est simplement absente de la
+ * table : elle ne retient personne.
+ *
+ * Ce registre remplace un ordonnancement par délais d'attente. Celui-ci
+ * supposait que l'élève lirait vite : passé un budget fixe, les étapes
+ * suivantes étaient abandonnées, et les flèches du menu ne venaient jamais pour
+ * qui prenait le temps de lire le tutoriel. Un ordre explicite ne dépend plus
+ * du rythme de lecture.
+ */
+type StepState = 'waiting' | 'active' | 'done';
+const stepStates = new Map<OnboardingStep, StepState>();
+
+/** Inscrit une étape. `willRun` à faux = étape sans objet pour cette visite. */
+export function declareStep(step: OnboardingStep, willRun: boolean): () => void {
+  stepStates.set(step, willRun ? 'waiting' : 'done');
+  return () => { stepStates.delete(step); };
+}
+
+export function markStepActive(step: OnboardingStep) { stepStates.set(step, 'active'); }
+export function markStepDone(step: OnboardingStep) { stepStates.set(step, 'done'); }
+
+/** Le tour de `step` est-il venu ? */
+export function stepIsReady(step: OnboardingStep): boolean {
+  for (const s of ONBOARDING_SEQUENCE) {
+    if (s === step) break;
+    const state = stepStates.get(s);
+    // `undefined` = composant non monté, donc rien à attendre de cette étape.
+    if (state === 'waiting' || state === 'active') return false;
+  }
+  // Garde-fou pour les fenêtres hors parcours : popup vidéo d'un item,
+  // complétion de profil obligatoire, formulaire de satisfaction.
+  return !screenIsBusy();
+}
+
+/**
+ * Appelle `onTurn` dès que le tour de l'étape est venu. Sans échéance : l'élève
+ * peut lire aussi longtemps qu'il veut, le sondage ne coûte qu'un
+ * `querySelector`. L'annulation se fait au démontage.
+ */
+export function whenStepTurnComes(
+  step: OnboardingStep,
+  onTurn: () => void,
+  { intervalMs = 400 }: { intervalMs?: number } = {},
+): () => void {
+  let cancelled = false;
+  const id = window.setInterval(() => {
+    if (cancelled || !stepIsReady(step)) return;
+    window.clearInterval(id);
+    onTurn();
+  }, intervalMs);
+  return () => { cancelled = true; window.clearInterval(id); };
+}
 
 /** Ouvre / ferme le tiroir de navigation mobile depuis n'importe quel composant. */
 export const MENU_OPEN_EVENT = 'mecn:menu-open';
@@ -128,6 +210,21 @@ export function waitForElement(
     cancelled = true;
     window.clearInterval(id);
   };
+}
+
+/**
+ * Une fenêtre modale ou une bulle de conseil occupe-t-elle l'écran ?
+ *
+ * Le tiroir de navigation mobile est explicitement écarté : il est bien une
+ * modale au sens de l'accessibilité, mais c'est la visite guidée elle-même qui
+ * l'ouvre pour pouvoir désigner un collège. Le compter ici la faisait se
+ * bloquer sur sa propre action, et aucune flèche n'apparaissait sur téléphone.
+ */
+export function screenIsBusy(): boolean {
+  if (typeof document === 'undefined') return true;
+  return !!document.querySelector(
+    '[aria-modal="true"]:not([data-nav-drawer]), [data-coachmark]',
+  );
 }
 
 /** Seuil `lg` de Tailwind : en dessous, le menu latéral est un tiroir. */

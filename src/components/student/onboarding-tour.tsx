@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, MousePointerClick, X } from 'lucide-react';
 import {
-  MENU_OPEN_EVENT, ONBOARDING_KEYS, isMobileViewport, isReplayRequested,
-  readFlag, writeFlag,
+  MENU_OPEN_EVENT, ONBOARDING_KEYS, declareStep, isMobileViewport, isReplayRequested,
+  markStepActive, markStepDone, readFlag, screenIsBusy, whenStepTurnComes, writeFlag,
 } from '@/lib/student/onboarding';
 
 /**
@@ -57,40 +57,52 @@ export function OnboardingTour({ replayOnly = false }: {
   const [mobile, setMobile] = useState(false);
   const startedRef = useRef(false);
 
-  // Démarrage : une seule fois, dès que le menu est affichable. Sur téléphone
-  // on demande d'abord l'ouverture du tiroir — sans lui, ni les collèges ni les
-  // items n'existent à l'écran.
+  // 4ᵉ étape : les trois fenêtres d'explication passent d'abord. Quand le tour
+  // vient, il reste à faire apparaître le menu — sur téléphone c'est un tiroir,
+  // on l'ouvre nous-mêmes, sinon ni les collèges ni les items n'existent.
   useEffect(() => {
     if (startedRef.current) return;
     const replay = isReplayRequested();
-    if (replayOnly && !replay) return;
-    if (!replay && readFlag(STORAGE_KEY)) return;
+    const vaSAfficher = replay || (!replayOnly && !readFlag(STORAGE_KEY));
+    const retirer = declareStep('menuTour', vaSAfficher);
+    if (!vaSAfficher) return retirer;
 
     let cancelled = false;
-    let tries = 0;
-    const timer = window.setInterval(() => {
+    let cancelMenuWait: (() => void) | undefined;
+
+    const annuler = whenStepTurnComes('menuTour', () => {
       if (cancelled) return;
-      tries += 1;
-      const onMobile = isMobileViewport();
-      if (onMobile) window.dispatchEvent(new Event(MENU_OPEN_EVENT));
-      const menu = visibleTarget('[data-tour="student-menu"]');
-      if (menu) {
-        window.clearInterval(timer);
-        startedRef.current = true;
-        setMobile(onMobile);
-        setActive(true);
-        return;
-      }
-      // ~12 s : au-delà, la page n'a pas de menu (plein écran, erreur de
-      // chargement). On abandonne pour cette visite sans marquer l'étape vue,
-      // elle se représentera à la navigation suivante.
-      if (tries > 40) window.clearInterval(timer);
-    }, 300);
-    return () => { cancelled = true; window.clearInterval(timer); };
+      let tries = 0;
+      const timer = window.setInterval(() => {
+        if (cancelled) return;
+        tries += 1;
+        // Une fenêtre hors parcours est revenue (popup vidéo d'un item) : on la
+        // laisse passer plutôt que de lui superposer une bulle.
+        if (screenIsBusy()) return;
+        const onMobile = isMobileViewport();
+        if (onMobile) window.dispatchEvent(new Event(MENU_OPEN_EVENT));
+        if (visibleTarget('[data-tour="student-menu"]')) {
+          window.clearInterval(timer);
+          startedRef.current = true;
+          markStepActive('menuTour');
+          setMobile(onMobile);
+          setActive(true);
+          return;
+        }
+        // ~12 s : au-delà, la page n'a pas de menu (plein écran, erreur de
+        // chargement). On rend la main pour ne pas retenir les étapes
+        // suivantes ; celle-ci se représentera à la navigation d'après.
+        if (tries > 40) { window.clearInterval(timer); markStepDone('menuTour'); }
+      }, 300);
+      cancelMenuWait = () => window.clearInterval(timer);
+    });
+
+    return () => { cancelled = true; annuler(); cancelMenuWait?.(); retirer(); };
   }, [replayOnly]);
 
   const finish = useCallback(() => {
     writeFlag(STORAGE_KEY);
+    markStepDone('menuTour');
     setActive(false);
   }, []);
 

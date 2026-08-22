@@ -10,7 +10,9 @@ import {
 } from 'lucide-react';
 import { DiscoveryWelcomePopup } from '@/components/espace-decouverte/discovery-welcome-popup';
 import { WELCOME_PAR_DEFAUT, type WelcomeConfig } from '@/lib/student/welcome';
-import { ONBOARDING_KEYS, readFlag, writeFlag } from '@/lib/student/onboarding';
+import {
+  ONBOARDING_KEYS, declareStep, markStepActive, markStepDone, readFlag, writeFlag,
+} from '@/lib/student/onboarding';
 
 // Même clé qu'avant, mais lue et écrite via les helpers du parcours d'accueil :
 // ils la cloisonnent par compte. Le tutoriel pas à pas s'ouvre à la fermeture de
@@ -43,7 +45,11 @@ export function ConseilsCenter({
   // 'closed' = bouton seul dans le header.
   const [mode, setMode] = useState<'popup' | 'panel' | 'closed'>('closed');
   const [section, setSection] = useState<Section>('demarrer');
-  const [neverShow, setNeverShow] = useState(false);
+  // Coché par défaut, comme les autres étapes du parcours d'accueil : le popup
+  // se joue une fois. Décoché, il revenait à CHAQUE chargement de page, ce qui
+  // n'a plus de sens depuis que le bouton « Conseils de préparation » de la
+  // barre du haut donne accès au même contenu à tout moment.
+  const [neverShow, setNeverShow] = useState(true);
 
   // Custom event : permet à la TopBar (ou n'importe quel autre composant)
   // d'ouvrir le panneau Conseils sans avoir besoin d'un context global.
@@ -57,16 +63,24 @@ export function ConseilsCenter({
   // Les utilisateurs Découverte ont leur propre popup d'accueil dédié
   // (DiscoveryWelcomePopup) → on n'affiche PAS le grand popup Conseils
   // standard pour cette population.
+  // Première étape du parcours d'accueil : elle ne dépend de personne, mais
+  // s'inscrit pour que les suivantes sachent qu'elles doivent la laisser finir.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (isDecouverte) return;
-    // Popup désactivé pour cette spécialité (configuration d'administration).
-    if (!welcome.active) return;
-    if (!readFlag(STORAGE_KEY)) setMode('popup');
+    // Popup désactivé pour cette spécialité (configuration d'administration),
+    // ou public Découverte, qui a son propre popup d'accueil.
+    const vaSAfficher = !isDecouverte && welcome.active && !readFlag(STORAGE_KEY);
+    const retirer = declareStep('welcome', vaSAfficher);
+    if (vaSAfficher) {
+      markStepActive('welcome');
+      setMode('popup');
+    }
+    return retirer;
   }, [isDecouverte, welcome.active]);
 
   const closePopup = () => {
     if (neverShow) writeFlag(STORAGE_KEY);
+    markStepDone('welcome');
     setMode('closed');
     window.dispatchEvent(new Event('mecn:welcome-closed'));
   };

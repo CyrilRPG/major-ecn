@@ -185,6 +185,10 @@ export function AppShell({
           role="dialog"
           aria-modal="true"
           aria-label="Menu de navigation"
+          // Le tiroir est une modale pour les lecteurs d'écran, mais PAS une
+          // fenêtre du parcours d'accueil : la visite guidée l'ouvre elle-même
+          // pour désigner les collèges, et se serait crue bloquée par lui.
+          data-nav-drawer
         >
           <div
             className="absolute inset-0 bg-black/50 motion-safe:animate-[fadeIn_.18s_ease-out]"

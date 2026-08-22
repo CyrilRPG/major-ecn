@@ -7,14 +7,16 @@ import {
   Search, Sparkles, Video, X, type LucideIcon,
 } from 'lucide-react';
 
-import { ONBOARDING_KEYS, isReplayRequested, readFlag, writeFlag } from '@/lib/student/onboarding';
+import {
+  ONBOARDING_KEYS, declareStep, isReplayRequested, markStepActive, markStepDone,
+  readFlag, whenStepTurnComes, writeFlag,
+} from '@/lib/student/onboarding';
 
 // Suffixe de version : incrémenté quand une étape est ajoutée, pour que le
 // tutoriel se réaffiche une fois aux élèves qui l'avaient déjà fermé. v2 =
 // ajout de l'étape « Parcours du Major » ; v3 = correctif d'ouverture (le
 // tutoriel n'apparaissait pas quand le popup d'accueil ne s'affichait pas).
 const STORAGE_KEY = ONBOARDING_KEYS.tutorial;
-const WELCOME_KEY = ONBOARDING_KEYS.welcome;
 
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
@@ -180,14 +182,11 @@ function buildSteps(flags: ContentFlags): Step[] {
 }
 
 export function StudentTutorialPopup({
-  offer, parcoursMajor = false, welcomeActive = true, replayOnly = false,
+  offer, parcoursMajor = false, replayOnly = false,
 }: {
   offer: 'essentiel' | 'intensif' | 'approfondi';
   /** L'étape « Parcours du Major » n'est montrée qu'aux élèves qui y ont accès. */
   parcoursMajor?: boolean;
-  /** Le popup d'accueil est-il actif ? S'il ne s'affiche pas, on n'attend pas
-   *  sa fermeture — sinon le tutoriel ne s'ouvrirait jamais. */
-  welcomeActive?: boolean;
   /** Comptes non-élèves (admin, professeur) : le tutoriel ne s'ouvre qu'à la
    *  demande, via « Revoir le tutoriel ». Sans ça, un administrateur qui teste
    *  la vue étudiant ne pouvait jamais voir ce qu'il livre à ses élèves. */
@@ -197,47 +196,31 @@ export function StudentTutorialPopup({
   const [neverShow, setNeverShow] = useState(true);
   const [i, setI] = useState(0);
 
+  // 2ᵉ étape du parcours : le popup d'accueil passe devant.
+  // `?tutoriel=1` rouvre le tutoriel même s'il a déjà été fermé — c'est le
+  // moyen de le revoir sans vider le stockage (cf. « Revoir le tutoriel »).
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    // `?tutoriel=1` rouvre le tutoriel même s'il a déjà été fermé : c'est le
-    // moyen de le revoir sans vider le stockage du navigateur (cf. « Revoir le
-    // tutoriel » dans le menu du compte).
-    if (isReplayRequested()) {
+    const replay = isReplayRequested();
+    const vaSAfficher = replay || (!replayOnly && !readFlag(STORAGE_KEY));
+    const retirer = declareStep('tutorial', vaSAfficher);
+    if (!vaSAfficher) return retirer;
+    const annuler = whenStepTurnComes('tutorial', () => {
+      markStepActive('tutorial');
       setOpen(true);
-      return;
-    }
-    if (replayOnly) return;
-    if (readFlag(STORAGE_KEY)) return;
-
-    // Le popup d'accueil passe en premier QUAND il s'affiche : même condition
-    // que ConseilsCenter (actif, et pas encore fermé définitivement). Sinon
-    // aucun événement `mecn:welcome-closed` ne viendra jamais, et le tutoriel
-    // resterait invisible.
-    const accueilVaSAfficher = welcomeActive && !readFlag(WELCOME_KEY);
-    if (!accueilVaSAfficher) {
-      setOpen(true);
-      return;
-    }
-
-    const handler = () => {
-      setTimeout(() => setOpen(true), 400);
-    };
-    window.addEventListener('mecn:welcome-closed', handler);
-    // Filet de sécurité : si le popup d'accueil est fermé autrement qu'avec sa
-    // croix (navigation, rechargement), aucun événement n'arrive et le
-    // tutoriel n'ouvrait jamais. Passé 12 s sans popup à l'écran, on l'ouvre.
-    const fallback = window.setTimeout(() => {
-      if (!document.querySelector('[data-welcome-popup]')) setOpen(true);
-    }, 12_000);
-    return () => {
-      window.removeEventListener('mecn:welcome-closed', handler);
-      window.clearTimeout(fallback);
-    };
-  }, [welcomeActive, replayOnly]);
+    });
+    return () => { annuler(); retirer(); };
+  }, [replayOnly]);
 
   function close() {
     if (neverShow) writeFlag(STORAGE_KEY);
+    markStepDone('tutorial');
+    setOpen(false);
+  }
+
+  /** Fermeture douce (clic à côté) : l'étape est finie, mais non mémorisée. */
+  function dismiss() {
+    markStepDone('tutorial');
     setOpen(false);
   }
 
@@ -267,7 +250,7 @@ export function StudentTutorialPopup({
       aria-modal="true"
       role="dialog"
       aria-labelledby="student-tutorial-title"
-      onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+      onClick={(e) => { if (e.target === e.currentTarget) dismiss(); }}
     >
       <div
         className="relative max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-[28px] bg-white p-6 shadow-2xl sm:p-8"

@@ -3,34 +3,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, X } from 'lucide-react';
 import {
-  ONBOARDING_KEYS, isMobileViewport, isReplayRequested, readFlag, writeFlag,
+  ONBOARDING_KEYS, declareStep, isMobileViewport, isReplayRequested, markStepActive,
+  markStepDone, readFlag, stepIsReady, writeFlag,
 } from '@/lib/student/onboarding';
 
 /**
- * 4ᵉ flèche du parcours d'onboarding : pointe le bouton « Assistant » présent
+ * Dernière étape du parcours d'accueil : pointe le bouton « Assistant » présent
  * en haut d'un cours. N'apparaît QUE lorsque l'élève est sur un item (le bouton
- * existe) et une seule fois (gate localStorage dédié).
+ * existe) et une seule fois.
  *
- * Deux cas couverts :
- *  - Nouvel élève : après les étapes 1→3 (menu + aperçu), il ouvre un contenu et
- *    découvre ici l'assistant. On attend que l'aperçu (étape 3) soit terminé
- *    pour ne pas superposer deux bulles.
- *  - Élève ayant déjà fait les étapes : seule cette 4ᵉ flèche s'affiche, la
- *    première fois qu'il ouvre un item.
+ * Elle exigeait auparavant que l'étape « aperçu » ait été marquée comme vue.
+ * Sur une page sans grille d'aperçu (fiche, QCM, vidéo…) cette étape ne pouvait
+ * par construction jamais s'y produire : la flèche attendait 20 s puis
+ * renonçait, à chaque visite. La file d'attente du parcours règle le cas : une
+ * étape dont le composant n'est pas monté n'y figure tout simplement pas.
  *
  * Volontairement : on ne parle pas d'« IA » — juste « l'assistant du cours ».
- *
- * La condition d'ouverture exigeait auparavant que l'étape « aperçu » soit
- * marquée comme vue. Sur une page sans grille d'aperçu (fiche, QCM, vidéo…),
- * cette étape ne pouvait par construction jamais s'y produire : la 4ᵉ flèche
- * attendait 20 s puis renonçait, à chaque visite. On ne bloque donc que s'il
- * reste vraiment un conseil affiché à l'écran.
  */
 const STORAGE_KEY = ONBOARDING_KEYS.assistant;
-const APERCU_KEY = ONBOARDING_KEYS.apercu;
 const TARGET = '[data-tour="assistant"]';
-/** Grille d'aperçu : sa présence signale que l'étape 3 a encore lieu d'être. */
-const APERCU_TARGET = '[data-tour="apercu-content"]';
 
 type Rect = { top: number; left: number; width: number; height: number };
 
@@ -40,11 +31,13 @@ export function AssistantCoachmark() {
   const [mobile, setMobile] = useState(false);
   const started = useRef(false);
 
-  // Attend que le bouton assistant soit monté, puis que la place soit libre :
-  // ni l'étape « aperçu » en cours, ni une autre bulle affichée.
+  // 6ᵉ et dernière étape : toutes les autres sont passées, il ne reste qu'à
+  // attendre que le bouton Assistant soit à l'écran.
   useEffect(() => {
     if (started.current) return;
-    if (!isReplayRequested() && readFlag(STORAGE_KEY)) return;
+    const vaSAfficher = isReplayRequested() || !readFlag(STORAGE_KEY);
+    const retirer = declareStep('assistant', vaSAfficher);
+    if (!vaSAfficher) return retirer;
     let tries = 0;
     const id = window.setInterval(() => {
       tries += 1;
@@ -53,22 +46,19 @@ export function AssistantCoachmark() {
         if (tries > 60) window.clearInterval(id); // ~30 s : page sans assistant
         return;
       }
-      // Une bulle est déjà à l'écran (visite guidée, aperçu) : on patiente,
-      // deux conseils simultanés seraient illisibles.
-      if (document.querySelector('[data-coachmark]')) return;
-      // L'étape 3 reste due tant que la grille d'aperçu est là et non validée.
-      const apercuDue = !readFlag(APERCU_KEY) && !!document.querySelector(APERCU_TARGET);
-      if (apercuDue) return;
+      if (!stepIsReady('assistant')) return;
       window.clearInterval(id);
       started.current = true;
+      markStepActive('assistant');
       setMobile(isMobileViewport());
       setActive(true);
     }, 500);
-    return () => window.clearInterval(id);
+    return () => { window.clearInterval(id); retirer(); };
   }, []);
 
   const finish = useCallback(() => {
     writeFlag(STORAGE_KEY);
+    markStepDone('assistant');
     setActive(false);
   }, []);
 
