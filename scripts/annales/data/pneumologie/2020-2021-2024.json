@@ -1,0 +1,1110 @@
+{
+  "sources": {
+    "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf": {
+      "atelier": "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-002-008.jpg": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-002-009.png": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-002-010.jpg": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-002-011.jpg": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-002-012.jpg": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-002-013.jpg": "illustration de la diapositive de cours « ++++ » (page 2) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-003-021.png": "illustration de la diapositive de cours « ++++ » (page 3) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-003-022.jpg": "illustration de la diapositive de cours « ++++ » (page 3) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-003-023.png": "illustration de la diapositive de cours « ++++ » (page 3) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-008-044.jpg": "illustration d’une diapositive de cours sans titre lisible (page 8) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-013-065.jpg": "tableau du schéma vaccinal antipneumococcique, projeté en appui de la question 6 de l’EVCF 2020 : son contenu est transcrit dans la correction de cette question",
+        "img-015-074.png": "tableau des composantes du score BODE, réponse à la question 7 de l’EVCF 2020 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-018-087.jpg": "illustration d’une diapositive de cours sans titre lisible (page 18) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-019-093.png": "illustration d’une diapositive de cours sans titre lisible (page 19) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-020-098.jpg": "illustration d’une diapositive de cours sans titre lisible (page 20) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-022-107.png": "illustration d’une diapositive de cours sans titre lisible (page 22) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-026-125.jpg": "coupe scanographique illustrant la sémiologie de la condensation alvéolaire, projetée après la réponse à la question 9 de l’EVCF 2020 : illustration de cours, distincte du scanner de l’annale",
+        "img-028-134.jpg": "coupe scanographique illustrant le syndrome alvéolaire chronique, projetée après la réponse à la question 9 de l’EVCF 2020 : illustration de cours, distincte du scanner de l’annale",
+        "img-029-139.jpg": "illustration d’une diapositive de cours sans titre lisible (page 29) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-031-148.jpg": "illustration d’une diapositive de cours sans titre lisible (page 31) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-032-153.jpg": "illustration d’une diapositive de cours sans titre lisible (page 32) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-040-187.jpg": "illustration d’une diapositive de cours sans titre lisible (page 40) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-048-220.jpg": "illustration d’une diapositive de cours sans titre lisible (page 48) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-052-237.jpg": "illustration d’une diapositive de cours sans titre lisible (page 52) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-054-246.jpg": "illustration d’une diapositive de cours sans titre lisible (page 54) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-058-263.jpg": "illustration de la diapositive de cours « Intervenants » (page 58) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-060-272.jpg": "illustration d’une diapositive de cours sans titre lisible (page 60) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-071-318.png": "schéma comparant l’apnée obstructive à diaphragme efficace et la parésie diaphragmatique, projeté en appui de la question 1 de l’EVCF 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-073-327.png": "image scannée du sujet officiel reproduisant les énoncés des questions 2, 3 et 4 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-074-332.jpg": "arbre décisionnel de réalisation des explorations polygraphiques du sommeil, projeté en appui de la question 2 de l’EVCF 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-074-333.jpg": "tableau de définition du SAHOS selon la Société de pneumologie de langue française (2010), réponse à la question 2 de l’EVCF 2021 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-077-347.jpg": "schéma du système rénine-angiotensine et de la dégradation de la bradykinine par l’enzyme de conversion, projeté en appui de la question 4 de l’EVCF 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-082-370.jpg": "illustration de la diapositive de cours « Formes nécrosantes » (page 82) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-082-371.jpg": "illustration de la diapositive de cours « Formes nécrosantes » (page 82) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-083-376.png": "illustration de la diapositive de cours « Nodules excavés infectieux » (page 83) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-084-381.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 7 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-093-420.jpg": "illustration de la diapositive de cours « Sclérodermie et poumon » (page 93) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-093-421.png": "illustration de la diapositive de cours « Sclérodermie et poumon » (page 93) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-094-426.jpg": "illustration de la diapositive de cours « Sclérodermie et dyspnée… » (page 94) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-094-427.png": "illustration de la diapositive de cours « Sclérodermie et dyspnée… » (page 94) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-095-432.jpg": "illustration de la diapositive de cours « Adénomégalies calcifiées • Masses de fibrose des lobes sup calcifiées • Emphysème péricicatriciel • Micronodul » (page 95) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-096-437.png": "illustration d’une diapositive de cours sans titre lisible (page 96) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-097-442.jpg": "illustration de la diapositive de cours « Sclérodermie PID » (page 97) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-097-443.png": "illustration de la diapositive de cours « Sclérodermie PID » (page 97) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-097-444.jpg": "illustration de la diapositive de cours « Sclérodermie PID » (page 97) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-099-455.jpg": "illustration de la diapositive de cours « Facteurs de mauvais pronostic » (page 99) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-099-456.png": "illustration de la diapositive de cours « Facteurs de mauvais pronostic » (page 99) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-461.jpg": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-462.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-467.jpg": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-468.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-469.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-470.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-471.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-100-472.png": "illustration de la diapositive de cours « PID sclérodermie pronostic – GOH » (page 100) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-101-477.jpg": "illustration de la diapositive de cours « PID progressive ERJ » (page 101) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-101-478.png": "illustration de la diapositive de cours « PID progressive ERJ » (page 101) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-101-479.png": "illustration de la diapositive de cours « PID progressive ERJ » (page 101) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-102-484.jpg": "illustration de la diapositive de cours « Prise en charge générale » (page 102) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-102-485.png": "illustration de la diapositive de cours « Prise en charge générale » (page 102) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-490.jpg": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-491.png": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-492.jpg": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-493.png": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-494.jpg": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-495.png": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-498.jpg": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-499.png": "illustration de la diapositive de cours « Cyclophosphamide et PID SSc » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-104-504.jpg": "illustration de la diapositive de cours « SLSI » (page 104) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-104-505.png": "illustration de la diapositive de cours « SLSI » (page 104) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-104-506.png": "illustration de la diapositive de cours « SLSI » (page 104) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-511.jpg": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-512.png": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-517.jpg": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-518.png": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-519.jpg": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-520.png": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-527.jpg": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-528.png": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-529.jpg": "illustration de la diapositive de cours « MMF – PID SSc - SLSII » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-534.jpg": "illustration de la diapositive de cours « TOCI - FOCUSSCED » (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-535.png": "illustration de la diapositive de cours « TOCI - FOCUSSCED » (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-540.jpg": "illustration de la diapositive de cours « TOCI - FOCUSSCED » (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-541.png": "illustration de la diapositive de cours « TOCI - FOCUSSCED » (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-542.png": "illustration de la diapositive de cours « TOCI - FOCUSSCED » (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-107-547.jpg": "illustration de la diapositive de cours « Options thérapeutiques » (page 107) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-107-548.png": "illustration de la diapositive de cours « Options thérapeutiques » (page 107) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-108-553.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 11, 12, 13 et 14 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-113-574.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 113) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-114-579.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 114) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-114-580.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 114) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-115-585.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 115) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-116-590.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 116) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-117-596.jpg": "illustration de la diapositive de cours « GPA et poumon » (page 117) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-118-601.jpg": "illustration de la diapositive de cours « GEPA et poumon » (page 118) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-118-602.jpg": "illustration de la diapositive de cours « GEPA et poumon » (page 118) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-119-609.jpg": "illustration de la diapositive de cours « GEPA et poumon » (page 119) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-121-619.jpg": "illustration de la diapositive de cours « Polyangéite microscopique et poumon » (page 121) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-123-628.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 15 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-124-633.jpg": "encadré des recommandations de recherche des anomalies moléculaires dans le CBNPC, projeté en appui de la question 15 de l’EVCF 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-128-651.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 17 et 18 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-130-660.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 19 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-132-669.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 20 de l’EVCF 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-135-682.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 135) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-135-683.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 135) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-136-688.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 136) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-136-689.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 136) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-137-694.jpg": "illustration d’une diapositive de cours sans titre lisible (page 137) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-137-695.jpg": "illustration d’une diapositive de cours sans titre lisible (page 137) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-137-696.jpg": "illustration d’une diapositive de cours sans titre lisible (page 137) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-138-701.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 138) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-138-702.jpg": "illustration de la diapositive de cours « Mésothéliome malin – TDM thoracique » (page 138) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-139-707.jpg": "illustration d’une diapositive de cours sans titre lisible (page 139) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-139-708.jpg": "illustration d’une diapositive de cours sans titre lisible (page 139) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-142-721.jpg": "illustration de la diapositive de cours « Mésothéliome malin – prise en charge » (page 142) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-143-726.jpg": "encadré des traitements de la BPCO réduisant les exacerbations, réponse à la question 20 de l’EVCF 2021 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-157-791.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 8 de l’EVCP 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-157-792.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 9 et 10 de l’EVCP 2021 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-163-820.jpg": "illustration d’une diapositive de cours sans titre lisible (page 163) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-177-885.jpg": "schéma légendé du système de drainage pleural à trois bocaux, réponse à la question 18 de l’EVCP 2021 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-178-890.jpg": "illustration d’une diapositive de cours sans titre lisible (page 178) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-182-909.jpg": "illustration de la diapositive de cours « RT pneumothorax » (page 182) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-183-914.jpg": "illustration d’une diapositive de cours sans titre lisible (page 183) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-187-934.jpg": "tableau des aspects TDM de PIC, PIC probable et indéterminé, réponse à la question 24 de l’EVCP 2021 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-188-939.jpg": "illustration de la diapositive de cours « PIC histologique » (page 188) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-188-940.png": "illustration de la diapositive de cours « PIC histologique » (page 188) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-188-941.jpg": "illustration de la diapositive de cours « PIC histologique » (page 188) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-188-942.jpg": "illustration de la diapositive de cours « PIC histologique » (page 188) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-189-947.jpg": "illustration de la diapositive de cours « PIC radiologique » (page 189) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-189-948.png": "illustration de la diapositive de cours « PIC radiologique » (page 189) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-189-949.jpg": "illustration de la diapositive de cours « PIC radiologique » (page 189) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-189-950.jpg": "illustration de la diapositive de cours « PIC radiologique » (page 189) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-190-955.jpg": "illustration d’une diapositive de cours sans titre lisible (page 190) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-190-956.jpg": "illustration d’une diapositive de cours sans titre lisible (page 190) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-191-961.jpg": "illustration d’une diapositive de cours sans titre lisible (page 191) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-191-962.jpg": "illustration d’une diapositive de cours sans titre lisible (page 191) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-192-967.jpg": "illustration d’une diapositive de cours sans titre lisible (page 192) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-192-968.jpg": "illustration d’une diapositive de cours sans titre lisible (page 192) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-193-973.jpg": "illustration d’une diapositive de cours sans titre lisible (page 193) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-194-978.jpg": "illustration de la diapositive de cours « Exa - cpfe » (page 194) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-195-983.jpg": "illustration de la diapositive de cours « Mise en confrontation radio-histologique » (page 195) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-195-984.png": "illustration de la diapositive de cours « Mise en confrontation radio-histologique » (page 195) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-195-987.jpg": "illustration de la diapositive de cours « Mise en confrontation radio-histologique » (page 195) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-195-988.png": "illustration de la diapositive de cours « Mise en confrontation radio-histologique » (page 195) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-195-989.png": "illustration de la diapositive de cours « Mise en confrontation radio-histologique » (page 195) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-196-994.jpg": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-196-995.png": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-196-1000.jpg": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-196-1001.png": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-196-1002.jpg": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-197-1007.jpg": "illustration d’une diapositive de cours sans titre lisible (page 197) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-198-1012.jpg": "illustration d’une diapositive de cours sans titre lisible (page 198) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-199-1017.jpg": "encadré de la recommandation 34 sur le traitement des exacerbations aiguës de FPI, projeté en appui de la question 25 de l’EVCP 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-199-1018.jpg": "encadré de la recommandation 33 sur la définition de l’exacerbation aiguë de FPI, projeté en appui de la question 25 de l’EVCP 2021 : son contenu est transcrit dans la correction de cette question",
+        "img-204-1039.jpg": "illustration d’une diapositive de cours sans titre lisible (page 204) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-205-1044.jpg": "illustration d’une diapositive de cours sans titre lisible (page 205) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-205-1045.png": "illustration d’une diapositive de cours sans titre lisible (page 205) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-206-1050.jpg": "illustration d’une diapositive de cours sans titre lisible (page 206) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-206-1051.png": "illustration d’une diapositive de cours sans titre lisible (page 206) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-207-1056.png": "illustration d’une diapositive de cours sans titre lisible (page 207) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-209-1065.jpg": "illustration de la diapositive de cours « CPC prise en charge » (page 209) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-212-1079.jpg": "illustration d’une diapositive de cours sans titre lisible (page 212) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-217-1105.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 3 du cas 1 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-219-1115.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 4 et 5 du cas 1 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-220-1121.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 5 et 6 du cas 1 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-223-1134.jpg": "image scannée du sujet officiel reproduisant l’énoncé du cas 2 des annales 2024 et de ses questions 1 et 2 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-226-1150.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 3, 4 et 5 du cas 2 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-227-1156.png": "algorithme de choix entre PPC et VNI dans le syndrome obésité-hypoventilation, projeté en appui de la question 3 du cas 2 des annales 2024 : son contenu est transcrit dans la correction de cette question",
+        "img-229-1166.jpg": "image scannée du sujet officiel reproduisant l’énoncé du cas 3 des annales 2024 et de ses questions 1, 2 et 3 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-230-1171.png": "algorithme de traitement des cancers non épidermoïdes de stade cIV sans altération ciblable, projeté en appui de la question 3 du cas 3 des annales 2024 : son contenu est transcrit dans la correction de cette question",
+        "img-231-1176.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 4 et 5 du cas 3 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-231-1177.jpg": "encadré des modalités de maintenance après chimio-immunothérapie, réponse à la question 4 du cas 3 des annales 2024 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-233-1187.jpg": "image scannée du sujet officiel reproduisant l’énoncé du cas 4 des annales 2024 et de ses questions 1 et 2 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-235-1197.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 3, 4 et 5 du cas 4 des annales 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-237-1207.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 1 à 5 des questions isolées 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-240-1220.jpg": "encadré des indications et modalités de traitement de l’infection tuberculeuse latente, réponse à la question 5 des questions isolées 2024 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-241-1225.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 6 et 7 des questions isolées 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-243-1235.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 8, 9 et 10 des questions isolées 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-244-1240.png": "schéma de la cellularité d’un lavage broncho-alvéolaire normal, réponse à la question 8 des questions isolées 2024 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-247-1255.png": "tableaux des diagnostics fréquents et rares devant des images cavitaires, projeté en appui de la question 10 des questions isolées 2024 : son contenu est transcrit dans la correction de cette question",
+        "img-248-1260.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 11, 12 et 13 des questions isolées 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-251-1273.png": "algorithme diagnostique de la dyskinésie ciliaire primitive, projeté en appui de la question 11 des questions isolées 2024 : son contenu est transcrit dans la correction de cette question",
+        "img-255-1292.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 14 à 19 des questions isolées 2024 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-258-1305.jpg": "algorithme d’évaluation de l’opérabilité fonctionnelle d’un cancer pulmonaire, réponse à la question 16 des questions isolées 2024 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-260-1314.png": "algorithme de traitement des cancers épidermoïdes de stade cIV sans altération ciblable, projeté en appui de la question 17 des questions isolées 2024 : son contenu est transcrit dans la correction de cette question",
+        "img-265-1341.jpg": "illustration de la diapositive de cours « Asthme sévère » (page 265) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-265-1342.png": "illustration de la diapositive de cours « Asthme sévère » (page 265) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-268-1355.jpg": "illustration d’une diapositive de cours sans titre lisible (page 268) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-272-1374.png": "illustration de la diapositive de cours « Assurer le diagnostic » (page 272) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-273-1379.jpg": "illustration de la diapositive de cours « Assurer le diagnostic » (page 273) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-273-1380.jpg": "illustration de la diapositive de cours « Assurer le diagnostic » (page 273) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-279-1409.png": "arbre décisionnel d’évaluation et de traitement des phénotypes d’asthme sévère, projeté en appui de la question 20 des questions isolées 2024 : son contenu est transcrit dans la correction de cette question"
+      },
+      "remarque": "Conférences de pneumologie n° 11 et 12 réunies en un seul diaporama (288 pages). Il achève la correction de l’EVCF 2020 commencée en conférence n° 10 (dont la question 1 provient), corrige l’EVCP 2020, puis annonce explicitement « Correction annales 2021 » (EVCF, 20 questions ; EVCP, 25 questions), puis « Annales 2024 » (4 cas cliniques et 23 questions isolées, intégrés dans un fichier distinct). Les énoncés du sujet officiel sont projetés sous forme d’images scannées, parfois annotées à la main par un étudiant : leur texte est retranscrit dans les énoncés des questions. Plusieurs diapositives ne portent que la réponse ; ces questions sont intégrées avec la mention explicite que l’énoncé n’est pas reproduit, aucune reformulation n’étant inventée. Le conférencier signale lui-même que les images des questions 16 et 17 de l’EVCP 2021 sont de trop mauvaise qualité pour être corrigées. La photographie du visage de la question 15 de l’EVCP 2021, déjà pixellisée par les auteurs de l’épreuve, a été recadrée sur la seule région oculaire. Les sujets officiels 2020, 2021 et 2024 de pneumologie ne figurent pas dans le dépôt."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Pneumologie - 2020 - EVCF",
+      "annee": 2020,
+      "type": "EVCF",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 230,
+      "vignette": "<b>Questions isolées.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : la question 1 est corrigée à la fin de la conférence n° 10, les questions 2 à 10 au début de la conférence n° 11-12.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nRédigez la conclusion de cet enregistrement du sommeil.",
+          "images": [
+            "annales-pneumologie-bon/conference-n10-sent/figures/img-084-220.jpg"
+          ],
+          "reponseAttendue": "Syndrome d’apnées centrales du sommeil sévère.",
+          "correctionGenerale": "• <b>Syndrome d’apnées centrales du sommeil sévère</b>\n\n<i>Définitions rappelées en séance. Apnée : baisse de 90 % du flux nasal pendant au moins 10 secondes. Hypopnée : réduction du flux nasal pendant au moins 10 secondes, soit de 50 %, soit de 30 % associée à une désaturation ou à un micro-éveil. Apnée ou hypopnée obstructive : collapsus des voies aériennes supérieures avec persistance des mouvements respiratoires (SAHOS). Apnée ou hypopnée centrale : défaut de la commande centrale respiratoire avec baisse ou disparition des efforts. Sévérité : absence de SAS si IAH &lt; 5/h ; SAS léger 5-15/h ; modéré 15-30/h ; sévère &gt; 30/h. Respiration de Cheyne-Stokes, deux critères : au moins 3 apnées et/ou hypopnées centrales séparées par des changements d’amplitude respiratoire crescendo-decrescendo, avec des cycles d’une durée minimale de 40 s (le plus souvent 45-90 s) ; et au moins 5 apnées et/ou hypopnées centrales par heure, associées pendant au moins deux heures d’enregistrement à des cycles crescendo-decrescendo. Les cinq formes cliniques de syndrome d’apnées centrales : idiopathique (ACSI), respiration périodique de Cheyne-Stokes (RPCS), respiration périodique en haute altitude (RPHA), apnées centrales dues à des maladies non liées à la RPCS, apnées centrales dues à des médicaments ou drogues ; les apnées complexes correspondent à un syndrome d’apnées centrales apparaissant sous PPC.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction porte sur les causes de masse du médiastin antérieur.</i>",
+          "images": [],
+          "reponseAttendue": "Hyperplasie thymique ou thymome ; lymphome ; métastases ganglionnaires ; tumeurs germinales.",
+          "correctionGenerale": "• <b>Hyperplasie thymique / thymome</b>\n• <b>Lymphome</b>\n• <b>Métastases ganglionnaires</b>\n• <b>Tumeurs germinales</b>\n\n<i>Classification des opacités intrathoraciques médiastinales rappelée en séance. Médiastin antérieur : goitre thyroïdien ou lésions parathyroïdiennes ; lésions thymiques (thymomes, carcinomes thymiques, lymphomes) ; tératomes ; tumeurs germinales séminomateuses ou non séminomateuses ; kystes pleuropéricardiques. Médiastin moyen : adénopathies, kystes bronchogéniques, paragangliomes. Médiastin postérieur : tumeurs neurogènes (schwannomes, neuroblastomes, neurofibromes, paragangliomes). Par tissu d’origine : thymus (kyste thymique, hyperplasie, thymome, carcinome) ; ganglions (lymphome, métastase ganglionnaire de cancer bronchique, lymphangiome) ; graisse (lipome, liposarcome, lipomatose médiastinale) ; nerfs (schwannome) ; cellules germinales primordiales (tumeurs germinales) ; extension d’un organe cervical (goitre, adénome parathyroïdien) ; hernie de Morgagni.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nCitez les 3 maladies (inflammatoire, infectieuse, proliférative) constituant les causes les plus fréquentes de maladies kystiques pulmonaires.",
+          "images": [],
+          "reponseAttendue": "La lymphangioléiomyomatose, l’histiocytose langerhansienne et le syndrome de Gougerot-Sjögren ; le conférencier souligne que le classement par fréquence est difficile.",
+          "correctionGenerale": "• <b>Lymphangioléiomyomatose</b>\n• <b>Histiocytose langerhansienne</b>\n• <b>Gougerot-Sjögren</b>\n• <i>En termes de fréquence, difficile</i>\n\n<i>Causes de maladies kystiques pulmonaires rappelées en séance. L’âge à lui seul est sans valeur pathologique : 15 % des plus de 80 ans ont des kystes. Sans PID associée : lymphangioléiomyomatose, histiocytose langerhansienne, métastases kystiques, infections, syndrome de Birt-Hogg-Dubé, maladie des dépôts de chaînes légères d’immunoglobulines. Avec PID : pneumopathie interstitielle lymphoïde, pneumopathie d’hypersensibilité, syndrome de Gougerot-Sjögren, pneumopathie interstitielle desquamative, bronchiolite folliculaire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez 4 grandes causes de toux persistante à radiographie thoracique normale.",
+          "images": [],
+          "reponseAttendue": "L’asthme, les inhibiteurs de l’enzyme de conversion, le reflux gastro-œsophagien et la rhinite avec jetage postérieur.",
+          "correctionGenerale": "• <b>Asthme</b>\n• <b>IEC</b>\n• <b>RGO</b>\n• <b>Rhinite avec jetage postérieur</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles sont les deux composantes essentielles de la réhabilitation respiratoire ?",
+          "images": [],
+          "reponseAttendue": "L’éducation thérapeutique — mieux comprendre la pathologie, les traitements associés, l’arrêt du tabac, la gestion de la dyspnée — et le réentraînement à l’effort.",
+          "correctionGenerale": "• <b>Éducation thérapeutique</b> : mieux comprendre la pathologie, les traitements associés, l’arrêt du tabac, la gestion de la dyspnée\n• <b>Réentraînement à l’effort</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuel schéma vaccinal antipneumococcique est actuellement recommandé en France ?",
+          "images": [],
+          "reponseAttendue": "Le corrigé ne développe pas cette question. Le schéma actuellement recommandé, exposé par le conférencier lors de la correction de l’EVCF 2018, est : chez l’adulte de 18 ans et plus à risque élevé d’infection invasive à pneumocoque, une dose unique de Prevenar 20 pour ceux n’ayant reçu antérieurement qu’une seule dose de VPC13 ou de VPP23 si la vaccination remonte à plus d’un an, et une dose de Prevenar 20 pour ceux déjà vaccinés par la séquence VPC13-VPP23 en respectant un délai minimal de 5 ans après la précédente injection de VPP23 ; et chez tous les adultes de 65 ans et plus, une dose unique de Prevenar 20.",
+          "correctionGenerale": "<i>Le diaporama pose la question mais n’en développe pas la réponse : la diapositive suivante enchaîne sur la question 7. Le schéma vaccinal détaillé figure dans la correction de la question 1A de l’EVCF 2018 (série « Annales - Pneumologie - 2018 - EVCF »).</i>\n\n• Adulte de 18 ans et plus à risque élevé d’infection invasive à pneumocoque : une dose unique de <b>Prevenar 20®</b> si une seule dose antérieure de VPC13 ou de VPP23 remontant à plus d’un an ; une dose de <b>Prevenar 20®</b> si séquence VPC13-VPP23 déjà reçue, en respectant un délai minimal de 5 ans après la dernière VPP23\n• Tous les adultes de 65 ans et plus : une dose unique de <b>Prevenar 20®</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelles sont les composantes du score BODE ?",
+          "images": [],
+          "reponseAttendue": "L’indice de masse corporelle (B, Body mass index), l’obstruction bronchique appréciée par le VEMS (O, Obstruction), la dyspnée mesurée par l’échelle mMRC (D, Dyspnea) et la capacité d’exercice mesurée par le test de marche de 6 minutes (E, Exercise capacity).",
+          "correctionGenerale": "<i>La réponse est projetée sous forme de tableau.</i>\n• <b>B</b> — <i>Body mass index</i> : indice de masse corporelle\n• <b>O</b> — <i>Obstruction</i> : VEMS en pourcentage de la valeur prédite\n• <b>D</b> — <i>Dyspnea</i> : dyspnée sur l’échelle mMRC\n• <b>E</b> — <i>Exercise capacity</i> : distance parcourue au test de marche de 6 minutes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuels sont les 3 critères permettant de retenir un syndrome obésité-hypoventilation ?",
+          "images": [],
+          "reponseAttendue": "Un IMC supérieur à 30 kg/m² ; une PCO2 supérieure à 45 mmHg ; l’absence de pathologie respiratoire sous-jacente pouvant expliquer les anomalies de l’hématose.",
+          "correctionGenerale": "• <b>IMC &gt; 30</b>\n• <b>PCO2 &gt; 45 mmHg</b>\n• <b>Pas de pathologie respiratoire sous-jacente</b> pouvant expliquer les anomalies de l’hématose\n\n<i>Comorbidités du SOH rappelées en séance : HTA et pathologies cardiovasculaires ; hypertension pulmonaire ; exacerbations et épisodes de décompensation.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nVoici une coupe TDM thoracique effectuée dans un contexte de fièvre à 40 °C d’apparition brutale.\n\nPrécisez les caractéristiques de l’anomalie visible sur cette coupe. Indiquez quel est le syndrome radiologique auquel vous rattachez cette image et formulez une hypothèse diagnostique.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-024-116.jpg"
+          ],
+          "reponseAttendue": "Une condensation alvéolaire lobaire supérieure droite ; le syndrome radiologique est le syndrome alvéolaire (condensation alvéolaire) ; l’hypothèse diagnostique est une pneumopathie infectieuse lobaire supérieure droite en première intention.",
+          "correctionGenerale": "• <b>Condensation alvéolaire lobaire supérieure droite</b>\n• Syndrome radiologique : <b>condensation alvéolaire</b>\n• <b>Pneumopathie infectieuse lobaire supérieure droite</b> en première intention\n\n<i>Causes de condensation alvéolaire aiguë rappelées en séance : pneumopathies infectieuses lobaires ou lobulaires, œdème pulmonaire hémodynamique, œdème pulmonaire lésionnel, infarctus pulmonaire, hémorragies alvéolaires, pneumonie organisée, pneumonie radique aiguë. Syndrome alvéolaire chronique : adénocarcinome lépidique, lymphome pulmonaire, sarcoïdose, pneumopathie chronique à éosinophiles, vascularite à ANCA (condensations ou hémorragie intra-alvéolaire), pneumonie lipidique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelles sont les deux causes les plus fréquentes, non cancéreuses, d’hyperfixation nodulaire du traceur fluoro-désoxyglucose en TEP-scanner ?",
+          "images": [],
+          "reponseAttendue": "Une cause inflammatoire, les nodules rhumatoïdes, et une cause infectieuse, la tuberculose ou une pneumonie ; le conférencier ajoute la fibrose (FPI), où l’hyperfixation est un facteur de mauvais pronostic.",
+          "correctionGenerale": "• <b>Inflammatoire</b> : nodules rhumatoïdes\n• <b>Infectieux</b> : tuberculose / pneumonie\n• ± <b>Fibrose</b> : FPI, où l’hyperfixation est un facteur de mauvais pronostic"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2020 - EVCP",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 231,
+      "vignette": "Mme X., 65 ans, vient vous voir en consultation pour la première fois pour dyspnée. Mme X. est fumeuse à 40 paquets-années et poursuit une consommation d’une vingtaine de cigarettes par jour. Elle présente une dyspnée apparue il y a environ 5 ans, d’aggravation progressive, pour laquelle son médecin traitant a introduit il y a quelques mois un traitement par bêta-2-agoniste de longue durée d’action. Ce traitement a permis une amélioration de la dyspnée.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nInterprétez l’EFR.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-036-170.jpg"
+          ],
+          "reponseAttendue": "Trouble ventilatoire obstructif avec un VEMS à 59 % ; distension thoracique ; trouble de la diffusion.",
+          "correctionGenerale": "• <b>TVO</b> avec <b>VEMS 59 %</b>\n• <b>Distension thoracique</b>\n• <b>Trouble de la diffusion</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les deux traitements pharmacologiques inhalés que vous lui proposez pour améliorer sa dyspnée ?",
+          "images": [],
+          "reponseAttendue": "Une association fixe bêta-2-mimétique + anticholinergique de longue durée d’action, et la mise en place d’un traitement de secours par bronchodilatateur de courte durée d’action.",
+          "correctionGenerale": "• <b>Association fixe β2 + anticholinergiques</b> de longue durée d’action\n• <b>Traitement de secours</b> par bronchodilatateurs de courte durée d’action"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelle prise en charge supplémentaire proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Vaccinations antigrippale, antipneumococcique et anti-COVID ; sevrage tabagique ; maintien d’une activité physique régulière, dont il faut signaler l’importance primordiale.",
+          "correctionGenerale": "• <b>Vaccinations</b> antigrippale, antipneumococcique, anti-COVID\n• <b>Sevrage tabagique</b>\n• <b>Maintien de l’activité physique régulière</b>, en signalant son importance primordiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous revoyez Mme X. au bout de deux ans ; elle ne s’est pas rendue à ses rendez-vous de consultation de suivi. Sa situation s’est dégradée. Elle a présenté deux exacerbations sur l’année écoulée et a du mal à récupérer depuis le dernier épisode. Sa dyspnée s’est aggravée, concerne maintenant la marche sur terrain plat et est cotée à 2 sur l’échelle mMRC. Mme X. a fortement réduit son activité physique et ne sort de chez elle que pour faire ses courses.\n\nÀ quel stade de la classification GOLD se trouve Mme X. ?",
+          "images": [],
+          "reponseAttendue": "Stade GOLD 3 et groupe E.",
+          "correctionGenerale": "• <b>3</b>\n• Et <b>E</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nConcernant le traitement inhalé, quelle modification proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Ajouter une corticothérapie inhalée, sous forme d’association fixe en trithérapie, surtout si les polynucléaires éosinophiles sont supérieurs à 300/mm³ ; probablement à ne pas faire s’ils sont inférieurs à 100/mm³.",
+          "correctionGenerale": "• <b>Ajouter une corticothérapie inhalée</b>, en association fixe, pour une <b>trithérapie</b>\n• <b>++ Si PNE &gt; 300/mm³</b>\n• Probablement à ne pas faire si <b>PNE &lt; 100/mm³</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLe CO-testeur affiche un taux de 20 ppm.\n\nQuels conseils donnez-vous à Mme X. concernant la substitution nicotinique ?",
+          "images": [],
+          "reponseAttendue": "Augmenter la dose du patch à 36 mg/24 h, et essayer la nicotine inhalée ou en gomme.",
+          "correctionGenerale": "• <b>Patch</b> : augmenter la dose à <b>36 mg/24 h</b>\n• Essayer la <b>nicotine inhalée ou en gomme</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nMme X. est admise peu après en réhabilitation respiratoire. Bilan réalisé : gaz du sang PO2 61 mmHg, PCO2 41 mmHg, pH 7,41 ; dyspnée mMRC 2 ; EFR VEMS 45 % de la théorique, VEMS/CVF 40 %, DLCO 43 % ; test de marche de 6 minutes 350 m, dyspnée 7 sur l’échelle de Borg, SpO2 88 % ; force maximale isométrique des quadriceps 65 % de la théorique ; pression inspiratoire maximale 45 cmH2O (50 % de la théorique) ; questionnaire HAD score anxiété 13/21, dépression 11/21 ; questionnaire de St George score total 70.\n\nQuel examen complémentaire proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une épreuve d’effort métabolique.",
+          "correctionGenerale": "• <b>Épreuve d’effort métabolique</b>\n\n<i>Rappels projetés en séance. Le dysfonctionnement musculaire squelettique concerne 20 à 40 % des BPCO : atrophie musculaire et diminution de la force, baisse de la capacité oxydative, réduction de la filière aérobie au sein des muscles périphériques ; il est multifactoriel — déconditionnement, inflammation systémique, stress oxydatif, hypoxémie, dénutrition, tabagisme, vieillissement et traitements. Indications de la réhabilitation respiratoire : patients symptomatiques ou à haut risque d’exacerbation ++, exacerbation récente, conséquences systémiques de la BPCO. Contre-indications : troubles psychiatriques ou cognitifs sévères, comorbidité instable (cardiopathie, insuffisance hépatique), incapacité à réaliser un exercice (arthrose sévère). Mauvaise adhérence prévisible (20-30 % d’abandons) : tabagisme actif, isolement social, dépression, faible force du quadriceps, exacerbations fréquentes, mMRC élevé. Intervenants : médecin, kinésithérapeute, ergothérapeute, nutritionniste, assistant social, infirmière. Programme : réentraînement à l’effort à 50-80 % de la fréquence maximale théorique sans dépasser 4-6 sur l’échelle de Borg ; renforcement musculaire des membres inférieurs en résistance ; électrostimulation neuromusculaire 2-3 séances par semaine ; renforcement des membres supérieurs ; entraînement des muscles inspiratoires (hyperpnée isocapnique, valve inspiratoire à seuil variable) ; gymnastique et assouplissement ; éducation du patient ; kinésithérapie respiratoire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelle prise en charge kinésithérapique proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un travail musculaire axial ; de l’électrostimulation ; une kinésithérapie respiratoire s’il existe un encombrement ; un renforcement musculaire inspiratoire.",
+          "correctionGenerale": "• <b>Musculaire axiale</b>\n• <b>Électrostimulation</b>\n• <b>Respiratoire</b> si encombrement\n• <b>Renforcement musculaire inspiratoire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nDans le cadre de l’éducation thérapeutique, et concernant la prévention des exacerbations, quels objectifs allez-vous proposer à Mme X. ?",
+          "images": [],
+          "reponseAttendue": "La bonne prise des traitements inhalés, en technique et en observance ; la poursuite des activités physiques après la réadaptation respiratoire ; le sevrage tabagique ; veiller aux vaccinations antigrippale, antipneumococcique et anti-COVID ; une supplémentation en vitamine D ; une optimisation nutritionnelle ; éventuellement de l’azithromycine au long cours si les exacerbations persistent après la réadaptation respiratoire et sous trithérapie bien conduite.",
+          "correctionGenerale": "• <b>La bonne prise des traitements inhalés</b> : technique et observance\n• <b>La poursuite des activités physiques</b> après la réadaptation respiratoire\n• <b>Sevrage tabagique</b>\n• <b>Veiller aux vaccinations</b> antigrippale, antipneumococcique, anti-COVID\n• <b>Supplémentation en vitamine D</b>\n• <b>Optimisation nutritionnelle</b>\n• ± <b>Azithromycine au long cours</b> si les exacerbations persistent après la réadaptation respiratoire et sous trithérapie bien conduite"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQue proposez-vous par ailleurs à Mme X. dans le cadre du programme de réhabilitation respiratoire ? Quel examen devez-vous faire avant de l’appareiller pour la déambulation, et dans quel but ?",
+          "images": [],
+          "reponseAttendue": "Une prise en charge sociale auprès d’une assistante sociale, car elle habite en appartement au 3e étage sans ascenseur et a fait auprès de sa mairie plusieurs demandes de relogement sans succès. Avant l’appareillage pour la déambulation, un test de marche de 6 minutes sous oxygène, afin de titrer sur les symptômes et de voir l’effet de l’oxygène sur les capacités à l’effort, notamment sur la sensation de dyspnée d’effort : c’est le seul intérêt de l’oxygène à l’effort.",
+          "correctionGenerale": "• <b>Une prise en charge sociale</b> auprès d’une assistante sociale — « elle est d’autant plus en difficulté qu’elle habite en appartement au 3e étage sans ascenseur ; elle a fait auprès de sa mairie plusieurs demandes de relogement sans succès »\n\n<b>Avant appareillage pour la déambulation</b>\n• <b>Test de marche de 6 minutes sous O2</b>, pour titration sur les symptômes\n• But : voir l’effet de l’O2 sur les capacités à l’effort et notamment sur la sensation de dyspnée d’effort — <b>seul intérêt de l’O2 à l’effort</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2021 - EVCF",
+      "annee": 2021,
+      "type": "EVCF",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 232,
+      "vignette": "<b>Questions isolées — 20 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nSur le tracé polygraphique ventilatoire au cours du sommeil ci-dessous, l’échelle de temps est de 10 secondes entre deux traits rouges verticaux.\n\na) Quel événement respiratoire au cours du sommeil est identifiable ?\nb) Combien de temps dure cet événement, à 10 secondes près ?\nc) Sur quel argument peut-on affirmer la nature de cet événement respiratoire au cours du sommeil ?\nd) Où se situe la chute de la SpO2 de cet événement : dans la partie droite ou la partie gauche du tracé ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-070-313.jpg"
+          ],
+          "reponseAttendue": "a) Une apnée obstructive. b) 40 secondes, le fenêtrage étant de 10 secondes. c) La persistance des mouvements thoraco-abdominaux pendant l’arrêt du flux aérien nasal. d) Sur le deuxième épisode, dans la partie droite du tracé.",
+          "correctionGenerale": "• <b>a) Apnée obstructive</b>\n• <b>b) 40 s</b>, fenêtrage 10 s\n• <b>c) Présence de mouvements thoraco-abdominaux</b>\n• <b>d) 2e épisode, partie droite</b>\n\n<i>Rappel projeté en séance : lors d’une apnée obstructive, la fermeture complète des voies aériennes supérieures s’accompagne de la persistance — voire de l’exagération — des efforts thoraco-abdominaux si le diaphragme est efficace ; en cas de parésie diaphragmatique, le tracé thoracique et le tracé abdominal se désolidarisent.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les critères de définition du syndrome d’apnées-hypopnées obstructives du sommeil (SAHOS) ?",
+          "images": [],
+          "reponseAttendue": "Critère A : somnolence diurne excessive non expliquée par d’autres facteurs. Critère B : au moins deux des critères suivants non expliqués par d’autres facteurs — ronflement sévère et quotidien, sensations d’étouffement ou de suffocation pendant le sommeil, éveils répétés pendant le sommeil, sommeil non réparateur, fatigue diurne, difficultés de concentration, nycturie (plus d’une miction par nuit). Critère C : critère polysomnographique ou polygraphique, apnées + hypopnées ≥ 5 par heure de sommeil. Le SAHOS est retenu si critère A ou B, associé au critère C.",
+          "correctionGenerale": "<i>Définition de la Société de pneumologie de langue française (2010), projetée en séance.</i>\n<b>A</b> — Somnolence diurne excessive non expliquée par d’autres facteurs\n<b>B</b> — Deux au moins des critères suivants, non expliqués par d’autres facteurs :\n  • ronflement sévère et quotidien\n  • sensations d’étouffement ou de suffocation pendant le sommeil\n  • éveils répétés pendant le sommeil\n  • sommeil non réparateur\n  • fatigue diurne\n  • difficultés de concentration\n  • nycturie (plus d’une miction par nuit)\n<b>C</b> — Critère polysomnographique ou polygraphique : apnées + hypopnées ≥ 5 par heure de sommeil\n\n<b>SAHOS si critère A ou B + critère C</b>\n\n<i>L’algorithme diagnostique projeté part de la probabilité prétest : probabilité élevée sans autre signe de pathologie du sommeil ⇒ polygraphie ventilatoire ; signes d’autres pathologies du sommeil ⇒ polysomnographie ; si le diagnostic reste incertain, polysomnographie ± tests d’évaluation objective de la vigilance diurne.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nPour traiter une pneumonie aiguë communautaire grave chez un sujet de 55 ans n’ayant pas de maladie chronique, quels sont les germes qui doivent obligatoirement être dans le spectre de l’antibiothérapie ?",
+          "images": [],
+          "reponseAttendue": "Le pneumocoque, le staphylocoque doré sensible à la méticilline, les entérobactéries (Klebsiella pneumoniae), Haemophilus influenzae et la légionelle.",
+          "correctionGenerale": "• <b>Pneumocoque</b>\n• <b>SASM</b>\n• <b>Entérobactéries</b> : <i>Klebsiella pneumoniae</i>\n• <b><i>Haemophilus influenzae</i></b>\n• <b>Légionelle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est la classe pharmacologique responsable d’une toux dont cet effet indésirable est le plus fréquent parmi toutes les toux d’origine médicamenteuse ?",
+          "images": [],
+          "reponseAttendue": "Les inhibiteurs de l’enzyme de conversion : la toux touche 5 à 20 % des patients traités et apparaît entre 15 jours et 6 mois après le début du traitement.",
+          "correctionGenerale": "• <b>IEC</b> : 5-20 % des patients sous traitement, 15 jours à 6 mois après le début du traitement\n\n<i>Schéma projeté en séance : l’enzyme de conversion transforme l’angiotensine I en angiotensine II et dégrade la bradykinine en peptides inactifs ; son inhibition entraîne une accumulation de bradykinine, à l’origine de la toux — mécanisme absent avec les antagonistes des récepteurs AT1 de l’angiotensine II.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nSur quels critères apprécie-t-on la gravité d’une hémoptysie ?",
+          "images": [],
+          "reponseAttendue": "Sur l’abondance et sur la tolérance respiratoire.",
+          "correctionGenerale": "• <b>Abondance</b>\n• <b>Tolérance respiratoire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nDevant ce cliché radiographique du thorax d’un homme de 55 ans, fumeur, pauci-symptomatique, quels sont les 3 diagnostics que vous évoquez ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-078-352.jpg"
+          ],
+          "reponseAttendue": "Une tuberculose ; une infection nécrosante (staphylocoque, nocardia, actinomyces…) ; un cancer du poumon, notamment épidermoïde — c’est ce dernier diagnostic qui est le plus probable ici, chez un patient pauci-symptomatique et fumeur.",
+          "correctionGenerale": "• <b>Tuberculose</b>\n• <b>Infection nécrosante</b> : staphylocoque, nocardia, actinomyces…\n• <b>Cancer du poumon</b> (notamment épidermoïde)\n• Mais ici, patient pauci-symptomatique et fumeur : <b>++ cancer</b>\n\n<i>Formes nécrosantes illustrées en séance : pneumonie nécrosante à <i>Pseudomonas</i>, gangrène pulmonaire, nodules excavés infectieux.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuels sont les principaux moyens thérapeutiques à mettre en œuvre devant une exacerbation sévère d’un asthme constatée au domicile d’un patient ?",
+          "images": [],
+          "reponseAttendue": "Asseoir le patient ; spray inhalé, au mieux avec une chambre d’inhalation — salbutamol ou terbutaline ± ipratropium, ou en nébulisation si disponible ; éventuellement corticothérapie systémique 1 mg/kg d’équivalent prednisone per os, plafonnée à 60 mg par jour ; et appel du SAMU.",
+          "correctionGenerale": "• <b>Asseoir le patient</b>\n• <b>Spray inhalé</b> (chambre d’inhalation au mieux) : SALBUTAMOL ou TERBUTALINE ± ipratropium — ou en nébulisation si disponible\n• ± <b>Corticothérapie systémique</b> : 1 mg/kg d’équivalent prednisone per os (SOLUPRED® par exemple), plafonné à 60 mg par jour\n• <b>Appel SAMU</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nUn homme de 62 ans (72 kg), sans antécédents médicaux ni allergie connue, se présente au service d’accueil des urgences de votre hôpital. Il se plaint d’une toux, d’une expectoration purulente et de frissons. Il n’a pas de dyspnée. Sa température est à 39,1 °C. La radiographie du thorax ci-dessous et les premiers examens complémentaires simples permettent de conclure à une pneumonie aiguë communautaire. Le CRB65 = 0 (C : conscience, R : rythme respiratoire, B : pression artérielle, 65 : âge physiologique de 65 ans).\n\nQuelle antibiothérapie prescrivez-vous ? (DCI du médicament, posologie, voie d’administration, fréquence des prises et surveillance.)",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-086-390.jpg"
+          ],
+          "reponseAttendue": "Amoxicilline per os, 1 g toutes les 8 heures, pendant 5 jours si l’évolution est favorable ; pas d’hospitalisation, prise en charge au domicile, avec réévaluation clinique à 48-72 heures.",
+          "correctionGenerale": "• <b>Amoxicilline per os 1 g toutes les 8 h</b>, 5 jours si évolution favorable\n• <b>Pas d’hospitalisation</b>\n• <b>Prise en charge au domicile</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelle connectivite se complique-t-elle le plus souvent de pneumopathie interstitielle diffuse ?",
+          "images": [],
+          "reponseAttendue": "La sclérodermie.",
+          "correctionGenerale": "• <b>Sclérodermie</b>\n\n<i>Rappels projetés en séance. Sclérodermie et poumon : la PID et l’HTAP sont les deux premières atteintes ; s’y ajoutent pneumopathies d’aspiration, pleurésies, pneumothorax spontanés, pneumopathies médicamenteuses, pneumoconioses, néoplasies, ± atteinte bronchiolaire. Le risque d’apparition de la PID est maximal les 3 premières années, d’où des EFR tous les 6 mois ; l’extension au scanner et la CVF sont des prédicteurs de survie indépendants ; histologiquement, PINS dans 90 % des cas, PIC dans 10 %. Facteurs de mauvais pronostic : sexe masculin, ethnie noire ou asiatique, absence d’anticorps anticentromères ou présence d’anti-SCL70, atteinte d’emblée sévère, dégradation sévère des EFR, perte de 10 % de la CVF ou de 15 % de la DLCO en un an. Devant une dyspnée chez un sclérodermique, penser aussi à l’atteinte myocardique, péricardique, à l’anémie, à une atteinte diaphragmatique de myopathie inflammatoire associée, ou à une cause psychogène. Options thérapeutiques : mycophénolate mofétil, cyclophosphamide, rituximab en cas d’échec, tocilizumab, nintédanib, abatacept, autogreffe de moelle, transplantation pulmonaire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuel est l’aspect au scanner (pattern) le plus fréquent de la pneumopathie interstitielle diffuse associée à la sclérodermie systémique ? Voir exemple ci-dessous.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-090-407.jpg"
+          ],
+          "reponseAttendue": "Une pneumopathie interstitielle non spécifique (PINS) : verre dépoli diffus, prédominant dans les bases, volontiers central et épargnant l’espace sous-pleural ; réticulations intralobulaires ; bronchectasies centrales ; le plus souvent sans rayon de miel.",
+          "correctionGenerale": "• <b>PINS</b>\n• <b>Verre dépoli diffus</b>, prédominant dans les bases, ± central et épargnant l’espace sous-pleural\n• <b>Réticulations intralobulaires</b>\n• <b>Bronchectasies centrales</b>\n• Le plus souvent : <b>absence de rayon de miel</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuelles sont les trois vascularites systémiques avec présence d’anticorps anti-cytoplasme des polynucléaires neutrophiles (ANCA) le plus souvent associées à une atteinte respiratoire ?",
+          "images": [],
+          "reponseAttendue": "La granulomatose éosinophilique avec polyangéite (GEPA), la granulomatose avec polyangéite (GPA) et la polyangéite microscopique.",
+          "correctionGenerale": "• <b>GEPA</b>\n• <b>GPA</b>\n• <b>Polyangéite microscopique</b>\n\n<i>Atteintes respiratoires rappelées en séance. GPA : nodules pulmonaires, masses, condensations alvéolaires ; hémorragies alvéolaires ; atteinte des voies aériennes. GEPA : asthme tardif, prodromique de la maladie ; infiltrats pulmonaires (pneumopathie organisée et pneumopathie éosinophilique) ; ± hémorragie intra-alvéolaire. Polyangéite microscopique : hémorragies alvéolaires ; PID fibrosantes, avec un aspect de PIC dans 80 % des cas ou de PINS.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nQuelle est la manifestation respiratoire la plus fréquente du lupus érythémateux disséminé ? Pouvez-vous en citer au moins une autre ?",
+          "images": [],
+          "reponseAttendue": "L’épanchement pleural, présent chez 25 % des patients. Autres atteintes : manifestations aspécifiques (embolie pulmonaire, pneumopathies infectieuses), pneumonie aiguë lupique, hémorragie alvéolaire, rares cas de PID chroniques, bronchiolites et dilatations des bronches, hypertension pulmonaire, shrinking lung syndrome.",
+          "correctionGenerale": "• <b>Épanchement pleural</b> : 25 % des patients\n\n<b>Autres atteintes</b>\n• Aspécifiques : embolie pulmonaire et pneumopathies infectieuses\n• <b>Pneumonie aiguë lupique</b>\n• <b>Hémorragie alvéolaire</b>\n• Rares cas de PID chroniques\n• Bronchiolites / DDB\n• <b>HTP</b>\n• <b>Shrinking lung syndrome</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nDans la granulomatose à éosinophiles avec polyangéite (GEPA), l’atteinte pulmonaire est constante ; quel autre organe peut être responsable d’une forme grave de GEPA ?",
+          "images": [],
+          "reponseAttendue": "Le cœur, qui est la principale cause de mortalité ; les atteintes neurologique (surtout périphérique), rénale et digestive sont également possibles.",
+          "correctionGenerale": "• <b>Le cœur : principale cause de mortalité !</b>\n\n<b>Autres</b>\n• Neurologique : ++ périphérique\n• Rénale\n• Digestive"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nQuels sont les moyens d’isolement que vous mettez en place chez un patient admis en hospitalisation pour suspicion de tuberculose pulmonaire maladie ?",
+          "images": [],
+          "reponseAttendue": "Masque FFP2 pour le personnel soignant et les visiteurs ; masque chirurgical pour le patient lorsqu’il sort de sa chambre ; précautions complémentaires de type AIR ; maintenues au moins 14 jours après le début de l’antibiothérapie.",
+          "correctionGenerale": "• <b>Masque FFP2</b> : personnel soignant et visiteurs\n• <b>Masque chirurgical pour le patient</b> quand il sort de sa chambre\n• <b>Précautions AIR</b>\n• <b>Au moins 14 jours</b> après le début de l’antibiothérapie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nChez un patient souffrant d’un adénocarcinome pulmonaire métastatique avec un PS à 0-1 (état de performance), quelles sont les deux informations à même d’influencer le traitement que vous attendez du pathologiste et du biologiste moléculaire ?",
+          "images": [],
+          "reponseAttendue": "Du pathologiste : le statut PD-L1 et l’immunohistochimie ROS1 et ALK. Du biologiste moléculaire : le statut EGFR.",
+          "correctionGenerale": "• <b>Pathologiste</b> : statut PD-L1, immunohistochimie ROS1 et ALK\n• <b>Biologie moléculaire</b> : EGFR\n\n<i>Recommandations projetées en séance : la recherche des anomalies moléculaires est recommandée pour les non-épidermoïdes de stades IB-IIIA réséqués (EGFR) ; et pour les stades métastatiques, dans tous les CBNPC non épidermoïdes et les carcinomes épidermoïdes des non-fumeurs — avant la 1re ligne PD-L1, EGFR, fusions ALK et ROS1 ; pendant la 1re ligne et avant la 2e, KRAS, BRAF et en option RET ; à la 2e ligne et au-delà, HER2, MET, RET, NTRK, NRG1. Les statuts EGFR, ALK et ROS1 doivent impérativement être connus avant de débuter le traitement de 1re ligne en cas de maladie métastatique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nUne femme de 35 ans a présenté plusieurs épisodes de fièvre il y a un mois. Elle a noté l’apparition d’une éruption cutanée, avec élevures fermes fixées (photo ci-dessous). Elle a des douleurs des chevilles cotées 7 sur 10 sur une échelle visuelle analogique. La radiographie thoracique est présentée ci-dessous.\n\nQuel traitement médicamenteux proposez-vous à cette patiente ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-125-638.jpg"
+          ],
+          "reponseAttendue": "Il s’agit a priori d’un syndrome de Löfgren : le traitement est symptomatique — glaçage, éventuellement antalgiques de palier 1 et AINS.",
+          "correctionGenerale": "• <b>A priori Löfgren</b>\n• <b>Traitement symptomatique</b> : glaçage\n• Éventuellement <b>antalgiques de palier 1 et AINS</b>\n\n<i>Rappel des trois syndromes projeté en séance. Löfgren : fièvre, adénopathies hilaires, arthrite de cheville, érythème noueux, ± anergie tuberculinique. Heerfordt : parotidite, paralysie faciale périphérique, uvéite antérieure bilatérale ++. Mikulicz : hypertrophie des glandes lacrymales, parotidite. Spontanément résolutifs en quelques mois ; traitement symptomatique par repos, antalgiques et AINS.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nDans la prise en charge d’un patient ayant un cancer du poumon, quels sont les 3 règles (obligations) du plan cancer à appliquer ?",
+          "images": [],
+          "reponseAttendue": "Le corrigé ne développe pas cette question : la diapositive qui la porte enchaîne directement sur la réponse à la question 18.",
+          "correctionGenerale": "<i>Cette question n’est pas corrigée dans le diaporama : l’énoncé en est projeté, mais la diapositive suivante ne répond qu’à la question 18. Aucune réponse n’est inventée ici. Les obligations du plan cancer sont en revanche détaillées dans la correction de la question 9 de l’EVCP 2018 sujet 1 (RCP, information éclairée du patient, plan personnalisé de soins).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nLa stadification d’un cancer du poumon T(tumor)N(node)M(metastasis) est exprimée sous les formes cTNM et pTNM. Quelles sont les significations du c et du p ?",
+          "images": [],
+          "reponseAttendue": "Le « c » désigne la stadification clinique, fondée sur l’imagerie ; le « p » désigne la stadification anatomopathologique, fondée sur l’analyse de la pièce opératoire.",
+          "correctionGenerale": "• <b>c</b> : imagerie\n• <b>p</b> : anatomopathologique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nUn premier patient appelé A, âgé de 72 ans, présente une insuffisance respiratoire chronique due à une fibrose pulmonaire idiopathique ; ses gaz du sang artériels en état stable (vérifiés à 2 semaines d’intervalle) montrent un pH 7,41, une PaCO2 37 mmHg, une PaO2 58 mmHg et une SaO2 à 88 %. Un second patient appelé B, âgé de 57 ans, présente une insuffisance respiratoire chronique due à un syndrome cyphoscoliotique ; ses gaz du sang artériels en état stable montrent un pH 7,42, une PaCO2 55 mmHg, une PaO2 56 mmHg et une SaO2 à 86 %.\n\nQuel type de traitement de l’insuffisance respiratoire chronique allez-vous instaurer chez le patient A et chez le patient B ?",
+          "images": [],
+          "reponseAttendue": "Patient A : rien pour l’instant — il faut vérifier la NFS, réaliser une échocardiographie et une oxymétrie nocturne, la PaO2 à 58 mmHg ne justifiant une oxygénothérapie de longue durée qu’en présence de signes d’hypoxie tissulaire. Patient B : une ventilation non invasive, l’insuffisance respiratoire chronique restrictive étant hypercapnique.",
+          "correctionGenerale": "• <b>A : rien</b> ⇒ vérifier NFS, ETT, oxymétrie nocturne\n• <b>B : VNI</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nParmi les traitements pharmacologiques de la BPCO ayant une autorisation de mise sur le marché en France et étant remboursés, quel(s) est (sont) celui (ceux) qui diminue(nt) le nombre des exacerbations, et quel(s) est (sont) leur(s) voie(s) d’administration ?",
+          "images": [],
+          "reponseAttendue": "Les bêta-2-mimétiques de longue durée d’action et les anticholinergiques inhalés ; la corticothérapie inhalée ; les associations thérapeutiques bi- ou trithérapies inhalées ; et les macrolides au long cours, par voie orale.",
+          "correctionGenerale": "• <b>β2-mimétiques inhalés</b> de longue durée d’action\n• <b>Anticholinergiques inhalés</b>\n• <b>Corticothérapie inhalée</b>\n• <b>Associations thérapeutiques bi- ou trithérapies inhalées</b>\n• <b>Macrolides au long cours per os</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2021 - EVCP",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 233,
+      "vignette": "<b>Vingt-cinq questions, réparties sur plusieurs observations successives.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. La numérotation du conférencier est décalée d’une unité entre les questions 7 et 10 ; c’est la numérotation du sujet officiel, lisible sur les images, qui est retenue. Le conférencier indique que les images des questions 16 et 17 sont de trop mauvaise qualité pour permettre une correction.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nUne oxymétrie nocturne a été réalisée chez un homme de 61 ans, pesant 98 kg et mesurant 1,70 m. Voici un extrait du tracé.\n\nQuelle est votre conclusion ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-144-731.jpg"
+          ],
+          "reponseAttendue": "Le tracé ne montre pas de modification de la fréquence cardiaque ; il faut se demander s’il existe des fuites, une perte ou des fluctuations du signal, qui limitent l’interprétation.",
+          "correctionGenerale": "• <b>Pas de modification de la fréquence cardiaque</b>\n• <b>Fuites ? Perte / fluctuation du signal ?</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nUne polygraphie ventilatoire a été réalisée. Voici un extrait du tracé.\n\nQuelle est votre conclusion concernant cet extrait du tracé polygraphique ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-146-740.jpg"
+          ],
+          "reponseAttendue": "Il s’agit d’apnées obstructives.",
+          "correctionGenerale": "• <b>Apnées obstructives</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVoici le rapport de la polygraphie ventilatoire.\n\nQuelle est votre conclusion ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-148-749.jpg"
+          ],
+          "reponseAttendue": "Un syndrome d’apnées-hypopnées obstructives du sommeil sévère : index apnées-hypopnées à 73,6/h, avec 322 apnées obstructives (44,4/h), 31 apnées centrales (4,3/h) et 52 hypopnées (7,2/h), et un index de désaturations à 67,1/h.",
+          "correctionGenerale": "• <b>Syndrome d’apnées-hypopnées obstructives du sommeil sévère</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nSi l’enregistrement de la ventilation avait été le suivant, quelle aurait été votre conclusion ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-150-758.jpg"
+          ],
+          "reponseAttendue": "Un syndrome d’apnées-hypopnées obstructives du sommeil sévère, favorisé par le décubitus dorsal : l’index apnées-hypopnées est à 94,5/h en position dorsale (95,5/h) contre 0/h en position non dorsale.",
+          "correctionGenerale": "• <b>Syndrome d’apnées-hypopnées obstructives du sommeil sévère</b>\n• <b>Favorisé par le décubitus dorsal</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nUne autre patiente : une femme de 76 ans, pesant 78 kg pour une taille de 1,55 m, suivie pour une HTA sévère, se plaint de ronflements et d’un sommeil non réparateur. Une polygraphie ventilatoire est réalisée. Voici un extrait du tracé.\n\nQuelle est votre conclusion concernant cet extrait du tracé polygraphique ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-152-767.jpg"
+          ],
+          "reponseAttendue": "Des apnées centrales, avec une respiration de Cheyne-Stokes.",
+          "correctionGenerale": "• <b>Apnées centrales</b>\n• <b>Respiration de Cheyne-Stokes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVoici un rapport de l’enregistrement polygraphique d’un autre patient. Un homme de 56 ans, ronfleur, obèse (IMC 32 kg/m²) et hypertendu a fait l’objet d’un enregistrement polygraphique dont voici le rapport.\n\nQuelle est votre conclusion ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-154-776.jpg"
+          ],
+          "reponseAttendue": "Un syndrome d’apnées-hypopnées obstructives du sommeil léger : index apnées-hypopnées à 7,7/h.",
+          "correctionGenerale": "• <b>Syndrome d’apnées-hypopnées obstructives du sommeil léger</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nUn homme de 79 ans, suivi pour une BPCO de stade GOLD 4 et de groupe D, se voit découvrir un nodule de 11 mm de diamètre, spiculé, situé dans le segment externe du lobe moyen. Ce nodule est hyper-métabolique en tomographie par émission de positons (TEP), comme le montre l’imagerie ci-dessous. Sur la TEP, il existe une adénopathie hyper-métabolique de 9 mm de diamètre, du site 11, qui n’avait pas été identifiée initialement sur le scanner thoracique non injecté ; le reste du bilan d’extension met en évidence une métastase cérébrale unique sous-tentorielle.\n\nComment vous y prendriez-vous pour obtenir un diagnostic histologique de la pathologie tumorale de ce patient ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-156-785.jpg"
+          ],
+          "reponseAttendue": "Par une fibroscopie bronchique.",
+          "correctionGenerale": "• <b>Fibroscopie bronchique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nL’examen que vous avez proposé à la question précédente a permis de poser le diagnostic d’adénocarcinome pulmonaire primitif.\n\nQuel est le stade TNM de cet adénocarcinome ?",
+          "images": [],
+          "reponseAttendue": "T1N1M1, soit un stade IV.",
+          "correctionGenerale": "• <b>T1N1M1</b> ⇒ <b>stade IV</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelle autre information êtes-vous en droit d’attendre à partir du prélèvement qui a permis d’obtenir le diagnostic histologique de ce patient ?",
+          "images": [],
+          "reponseAttendue": "Le statut PD-L1, l’immunohistochimie ROS1 et ALK, et la biologie moléculaire à la recherche d’une mutation EGFR et d’un réarrangement RET.",
+          "correctionGenerale": "• <b>PD-L1</b>\n• <b>Immunohistochimie ROS1 et ALK</b>\n• <b>Biologie moléculaire</b> : mutation EGFR + RET"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nUn autre patient : un homme de 58 ans, plombier chauffagiste, s’est vu découvrir une lésion pulmonaire gauche de 32 mm de diamètre à l’occasion d’une embolie pulmonaire non provoquée. En termes de facteurs de risque, on retient la notion d’un tabagisme cumulé à 25 PA, débuté à l’âge de 19 ans, stoppé tout récemment. Cette lésion est hyper-métabolique en tomographie par émission de positons (TEP). Le bilan d’extension complet montre que cette lésion est isolée.\n\nQuel est le stade TNM de cette tumeur ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-159-801.jpg"
+          ],
+          "reponseAttendue": "T2N0M0.",
+          "correctionGenerale": "• <b>T2N0M0</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nLe bilan de ce patient a comporté des EFR que voici.\n\nInterprétez ces EFR.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-162-815.png"
+          ],
+          "reponseAttendue": "Un trouble ventilatoire obstructif de type BPCO GOLD 2 (VEMS/CVF à 64 %, VEMS à 83 % de la théorique), avec une altération de la diffusion (DLCO corrigée à 55 %).",
+          "correctionGenerale": "• <b>TVO — BPCO GOLD 2</b>\n• <b>Altération de la diffusion</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nQuel sera le traitement de cette lésion ?",
+          "images": [],
+          "reponseAttendue": "Une épreuve fonctionnelle d’exercice puis une lobectomie : le patient est hors indication de segmentectomie, la lésion étant trop grande et non sous-pleurale.",
+          "correctionGenerale": "• <b>EFX puis lobectomie</b>\n• Patient <b>hors segmentectomie</b> : lésion trop grande et non sous-pleurale\n\n<i>Rappels projetés en séance. Stades I et II localisés : chirurgie d’exérèse complète avec curage ganglionnaire radical, selon trois modalités — segmentectomie, lobectomie ++, pneumonectomie, ± tumorectomie, résection atypique, pariétectomie ; privilégier la VATS (moins de douleurs et de complications postopératoires, durée d’hospitalisation réduite) ; si non opérable, radiothérapie stéréotaxique. La segmentectomie n’a fait la preuve de sa non-infériorité que chez des patients de stade IA, âgés de 20 à 85 ans, PS 0-1, avec une tumeur ≤ 2 cm située dans le tiers externe du parenchyme (hors lobe moyen) et un ratio consolidation/tumeur &gt; 0,5.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nL’analyse de la pièce opératoire de ce patient confirme le diagnostic de tumeur pulmonaire primitive (carcinome épidermoïde). On ne retient pas l’indication d’un traitement complémentaire.\n\nQuelles sont les deux démarches médico-administratives que vous entreprenez à ce stade, si celles-ci n’ont pas déjà été entreprises par un de vos confrères ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-168-842.png"
+          ],
+          "reponseAttendue": "La demande d’affection de longue durée et la déclaration en maladie professionnelle, le patient étant plombier chauffagiste, donc exposé à l’amiante.",
+          "correctionGenerale": "• <b>ALD</b>\n• <b>Maladie professionnelle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nUn homme de 61 ans s’est vu découvrir la lésion suivante à l’occasion du bilan d’une toux traînante. Son tabagisme cumulé est à 48 PA, stoppé en 2000. Ses antécédents médicaux se résument à une hypercholestérolémie et à une chirurgie pour hernie discale. Sa symptomatologie est une toux un peu inhabituelle qui évolue depuis quelques mois ; il n’y a pas d’hémoptysie, l’état général est conservé avec un poids stable à 90 kg et une taille de 1,78 m, et il n’y a pas de dyspnée d’effort. L’examen clinique est normal. Le cliché de thorax retrouve une masse se projetant à la partie interne de la clavicule droite. Le scanner thoracique confirme la présence d’une masse à contours spiculés, irréguliers, de 39 mm de plus grand diamètre, située à l’apex droit. Cette masse est hyper-métabolique en tomographie par émission de positons (TEP) ; en raison d’un problème technique, vous n’avez pas eu accès au reste des images de TEP.\n\nQuelle est la classification TNM de cette tumeur ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-169-847.jpg",
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-170-853.jpg"
+          ],
+          "reponseAttendue": "T2NxMx : la taille de 39 mm classe la tumeur T2, mais l’absence d’accès au reste des images de TEP ne permet de conclure ni sur le statut ganglionnaire, ni sur le statut métastatique.",
+          "correctionGenerale": "• <b>T2NxMx</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nUn autre patient se plaint d’une radiculalgie C8-D1 droite.\n\nCette symptomatologie doit vous faire rechercher une tumeur pulmonaire, de localisation bien particulière. Laquelle ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/recadre/img-172-862.png"
+          ],
+          "reponseAttendue": "Une localisation apicale droite : il s’agit d’un syndrome de Pancoast-Tobias, associé ici à un syndrome de Claude Bernard-Horner (ptosis droit visible sur la photographie).",
+          "correctionGenerale": "• <b>Localisation apicale droite</b>\n\n<i>La photographie du sujet officiel montre un ptosis droit, dans le cadre d’un syndrome de Claude Bernard-Horner associé au syndrome de Pancoast-Tobias.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\n<i>Le conférencier indique que les images de cette question sont de trop mauvaise qualité pour permettre une correction ; l’énoncé n’est pas reproduit dans le diaporama.</i>",
+          "images": [],
+          "reponseAttendue": "Cette question n’est pas corrigée : les images du sujet sont de trop mauvaise qualité dans le document dont dispose le conférencier.",
+          "correctionGenerale": "<i>« Images de trop mauvaise qualité » — question non corrigée dans le diaporama, aucune réponse n’est inventée ici.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nUn autre patient : un homme de 78 ans, ancien gros fumeur, tousse depuis 4 mois, crache des expectorations parfois teintées de sang et vous rapporte que sa voix se casse de plus en plus souvent. Vous avez prescrit un cliché de thorax que voici.\n\nVers quelle zone s’orientera prioritairement votre regard ? A, B, C, D ou E. Justifiez.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-175-875.jpg"
+          ],
+          "reponseAttendue": "Cette question n’est pas corrigée par le conférencier, qui note simplement « ??? ». Le tableau — dysphonie par atteinte du nerf récurrent gauche chez un ancien gros fumeur — oriente vers la fenêtre aorto-pulmonaire.",
+          "correctionGenerale": "<i>Le diaporama ne porte que la mention « ??? » : la question n’est pas corrigée et aucune réponse n’est inventée ici. Le contexte (dysphonie par paralysie récurrentielle gauche chez un ancien gros fumeur) oriente classiquement vers la fenêtre aorto-pulmonaire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Questions n° 18 et 19</b>\n\nLes dispositifs stériles, à usage unique, de drainage pleural aspiratif fonctionnent comme un système dit « à trois bocaux » : un bocal qui fonctionne comme une chambre de recueil ; un bocal qui a une fonction valve anti-retour ; et un bocal qui a pour fonction de contrôler le niveau d’aspiration. Ci-dessous sont schématisés ces trois bocaux (bocal gris clair, bocal bleu et bocal rouge).\n\nAttribuez à chacun de ces trois bocaux une des fonctions décrites ci-dessus.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-176-880.jpg"
+          ],
+          "reponseAttendue": "Le bocal le plus proche du patient est la chambre de recueil ; le bocal intermédiaire assure la fonction de valve anti-retour ; le bocal le plus éloigné, relié à l’aspiration, contrôle le niveau de pression négative.",
+          "correctionGenerale": "• Côté <b>patient</b> : <b>bocal de recueil</b>\n• Bocal intermédiaire : <b>fonction valve anti-retour</b>\n• Côté <b>aspiration</b> : <b>bocal de contrôle de la pression négative</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction identifie l’extrémité du dispositif située du côté du patient sur le schéma projeté.</i>",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-179-895.png"
+          ],
+          "reponseAttendue": "L’extrémité A est celle qui est reliée au patient.",
+          "correctionGenerale": "• <b>A : côté patient</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nUn homme de 23 ans, sportif, fumeur de cannabis, consulte aux urgences pour une douleur basi-thoracique gauche apparue la veille au soir alors qu’il regardait la télévision. La douleur est allée en s’atténuant au cours de la nuit. Il n’est pas dyspnéique au repos, ni à la marche. L’auscultation révèle une abolition du murmure vésiculaire à gauche, la percussion révèle un tympanisme de l’hémithorax gauche et les vibrations vocales ne passent pas à gauche. La SpO2 en air ambiant est à 96 % et à la marche à 92 %. Le cliché de thorax met en évidence un pneumothorax gauche.\n\nCe jeune homme est accompagné de sa mère, chez qui il vit. Son domicile est à 10 minutes en voiture de l’hôpital. Quelles sont les attitudes que l’on pourrait proposer face à ce pneumothorax ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-180-900.jpg"
+          ],
+          "reponseAttendue": "Une antalgie de palier 1, une surveillance aux urgences pendant 4 heures, puis une sortie avec consultation et radiographie de thorax dans 48 heures.",
+          "correctionGenerale": "• <b>Antalgie de palier 1</b>\n• <b>Surveillance aux urgences 4 h</b>, puis sortie avec <b>consultation + radiographie de thorax dans 48 h</b>\n\n<i>Sémiologie radiographique du pneumothorax rappelée en séance : clarté de l’hémithorax gauche ; absence d’image vasculaire visible ; image convexe hilaire du poumon rétracté ; ± refoulement médiastinal vers la droite ; abaissement voire inversion de l’hémi-diaphragme gauche ; sinus costo-phrénique latéral profond ; élargissement des espaces intercostaux.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 22</b>\n\nUn homme de 71 ans, ancien fumeur (50 PA), consulte pour une dyspnée d’effort cotée mMRC 1, évoluant depuis 8 mois, associée à une toux sèche. L’examen note des râles crépitants aux bases.\n\nCompte tenu de la cotation de sa dyspnée, quel type d’effort entraîne une dyspnée chez ce patient ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-184-919.jpg"
+          ],
+          "reponseAttendue": "Marcher vite ou marcher en pente.",
+          "correctionGenerale": "• <b>Marcher vite ou en pente</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 23</b>\n\nDes EFR sont réalisées chez ce patient, qui sont les suivantes.\n\nInterprétez ces EFR.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-185-924.png"
+          ],
+          "reponseAttendue": "Un trouble ventilatoire restrictif (CPT à 68 % de la théorique, CVF à 75 %, avec un rapport VEMS/CVF conservé à 108 %) et un trouble de la diffusion (DLCO corrigée à 47-48 %).",
+          "correctionGenerale": "• <b>TVR</b> (trouble ventilatoire restrictif)\n• <b>Trouble de la diffusion</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 24</b>\n\nUne imagerie thoracique est réalisée chez ce patient, qui est la suivante.\n\nQuel aspect radiologique retenez-vous ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-186-929.jpg"
+          ],
+          "reponseAttendue": "Un aspect de pneumopathie interstitielle commune (PIC) : prédominance sous-pleurale et basale, distribution souvent hétérogène, rayon de miel avec ou sans bronchectasies et bronchiolectasies de traction périphériques.",
+          "correctionGenerale": "• <b>Aspect de PIC</b>\n\n<i>Tableau des aspects TDM projeté en séance. Aspect de PIC : prédominance sous-pleurale et basale ; distribution souvent hétérogène (alternance de poumon normal et de fibrose), parfois diffuse, pouvant être asymétrique ; rayon de miel avec ou sans bronchectasies et bronchiolectasies de traction périphériques. Aspect de PIC probable : mêmes topographies ; aspect réticulaire avec bronchectasies ou bronchiolectasies périphériques de traction ; opacités en verre dépoli possibles en faible proportion dans les zones de fibrose. Aspect indéterminé pour la PIC : distribution diffuse sans prédominance sous-pleurale, ou prédominance sous-pleurale et basale d’aspect de PID débutante ; fibrose ne suggérant aucune cause précise. Correspondance histologique de la PIC : fibrose sous-pleurale et paraseptale disséminée ou en patchwork, abondants foyers fibroblastiques, révision architecturale avec rayon de miel et foyers de prolifération de muscles lisses, hétérogénéité spatio-temporelle. Devant un aspect de PIC, discuter les PIC secondaires : PINS-PIC, pneumopathie d’hypersensibilité, mutations du surfactant et téloméropathies, pneumoconioses (asbestose ++), polyarthrite rhumatoïde ++, 10 % des PID de sclérodermie, ± Gougerot-Sjögren, ± myopathies inflammatoires.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 25</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction porte sur l’anomalie radiologique et le diagnostic évolutif.</i>",
+          "images": [],
+          "reponseAttendue": "Du verre dépoli, traduisant une exacerbation aiguë de fibrose pulmonaire idiopathique.",
+          "correctionGenerale": "• <b>Verre dépoli</b>\n• <b>Exacerbation aiguë de FPI</b>\n\n<i>Recommandations projetées en séance. Recommandation 33 : chez un patient ayant un diagnostic confirmé de FPI, il est recommandé de rechercher une exacerbation aiguë en cas d’aggravation récente de la dyspnée, depuis moins d’un mois environ, non liée à une cause extra-parenchymateuse (pneumothorax, pleurésie, embolie pulmonaire) et associée à de nouvelles opacités bilatérales en verre dépoli à l’imagerie, non totalement expliquées par une insuffisance cardiaque ou une surcharge hydrosodée ; un facteur déclenchant doit être recherché (infection, procédure diagnostique, cause médicamenteuse, inhalation). Recommandation 34 : il est proposé de traiter les exacerbations aiguës de la FPI par les corticoïdes.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2024 - EVCP - Cas 1",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 234,
+      "vignette": "Vous recevez en consultation un homme de 34 ans pour une dyspnée d’effort. Il est gérant d’un garage automobile et a été exposé aux poussières dès son enfance, accompagnant régulièrement son père qui était lui-même garagiste. Il fume depuis l’âge de 17 ans environ 20 cigarettes par jour, la première dès le lever du lit, et ne consomme pas de cannabis. Il ne souhaite pas arrêter. Il pèse 65 kg, ce qui est stable pour une taille de 195 cm, soit un indice de masse corporelle de 17 kg/m².\n\nIl ne rapporte qu’une toux avec quelques expectorations claires le matin au réveil, sans autres manifestations la journée. Il a constaté qu’il a du mal à suivre sa femme à la marche en terrain plat, sans pouvoir dater précisément l’apparition de cette dyspnée, raison de sa consultation. Il ne rapporte pas de variabilité de sa symptomatologie ni de gêne ORL saisonnière ou actuelle, ni de bronchites au cours des années précédentes.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nInterprétez ses EFR et précisez ce qui manque.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-213-1084.jpg"
+          ],
+          "reponseAttendue": "Un trouble ventilatoire obstructif : VEMS/CVF inférieur à la limite inférieure de la normale, avec un VEMS à 26 % de la théorique, donc très sévère. Une distension sévère : capacité résiduelle, CRF, CPT et VR/CPT supérieurs à la limite supérieure de la normale. Un trouble de la diffusion : DLCO corrigée inférieure à la limite inférieure de la normale. Il manque un test de réversibilité aux bêta-2-mimétiques.",
+          "correctionGenerale": "• <b>VEMS/CVF &lt; LIN = TVO</b> ; <b>VEMS 26 % : très sévère</b>\n• <b>CV, CRF, CPT et VR/CPT &gt; LSN = distension sévère</b>\n• <b>DLCOc &lt; LIN : trouble de la diffusion</b>\n• Il manque le <b>test de réversibilité</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nVous complétez par une radiographie de thorax que voici. Interprétez-la en précisant ce que vous observez.",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-215-1095.jpg"
+          ],
+          "reponseAttendue": "Clichés de face et de profil, de bonne qualité (6 arcs antérieurs visibles, culs-de-sac dégagés, clavicules symétriques). On observe une horizontalisation des côtes et du diaphragme, une clarté rétrocardiaque et rétrosternale, un petit cœur en goutte : c’est une distension thoracique. On note également une hypertrophie des artères pulmonaires.",
+          "correctionGenerale": "• <b>Face + profil</b>, bonne qualité = 6 arcs antérieurs, culs-de-sac, clavicules symétriques\n• <b>Horizontalisation des côtes et du diaphragme</b>\n• <b>Clarté rétrocardiaque et rétrosternale</b>\n• <b>Petit cœur en goutte</b>\n• ⇒ <b>Distension thoracique</b>\n• <b>Hypertrophie des artères pulmonaires</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVous proposez le diagnostic de bronchopneumopathie chronique obstructive. Quel(s) examen(s) proposez-vous pour compléter le bilan initial de ce patient ?",
+          "images": [],
+          "reponseAttendue": "Un test de réversibilité aux bêta-2-mimétiques, ± un test d’hyperréactivité bronchique selon le scanner ; une NFS et un NT-proBNP ; des gaz du sang ; un scanner thoracique, l’âge imposant d’éliminer un diagnostic différentiel ; et un dosage de l’alpha-1 antitrypsine.",
+          "correctionGenerale": "• <b>Test de réversibilité au β2-mimétique</b> ± test d’hyperréactivité bronchique selon la TDM\n• <b>NFS + NT-proBNP</b>\n• <b>Gaz du sang</b>\n• <b>Scanner thoracique</b> : l’âge impose d’éliminer un diagnostic différentiel\n• <b>Dosage de l’alpha-1 antitrypsine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle(s) prise(s) en charge et quel(s) traitement(s) lui proposez-vous à ce stade ?",
+          "images": [],
+          "reponseAttendue": "Vaccinations antigrippale, anti-COVID et antipneumococcique ; un bronchodilatateur de longue durée d’action bêta-2-mimétique et un bronchodilatateur de courte durée d’action (salbutamol) si besoin ; un sevrage tabagique par nicotine en patch et en gomme ; une prise en charge nutritionnelle.",
+          "correctionGenerale": "• <b>Vaccination</b> antigrippale / COVID / pneumocoque\n• <b>BDLA β2-mimétique</b>\n• <b>BDCA salbutamol</b> si besoin\n• <b>Sevrage tabagique</b> : nicotine patch + gomme\n• <b>Prise en charge nutritionnelle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nIl se présente spontanément 3 semaines plus tard car il présente une rhinite qui s’est rapidement compliquée d’une majoration de sa dyspnée et d’un encombrement bronchique avec expectorations vertes collantes. Il a été voir son médecin traitant qui lui a prescrit de l’amoxicilline 1 g 2 fois par jour pendant 7 jours, mais il voudrait avoir votre avis. Le patient ne rapporte pas d’allergie connue. La fréquence respiratoire est à 21 cycles par minute avec une SpO2 à 93 % en air ambiant, la fréquence cardiaque est régulière à 90 battements par minute, la pression artérielle à 136/79 mmHg et la température à 37,3 °C. L’examen clinique ne note pas de contraction significative des muscles inspiratoires accessoires et l’auscultation retrouve quelques ronchi modérés diffus sans foyer auscultatoire. Vous réalisez un gaz du sang qui retrouve : PaO2 65 mmHg, PaCO2 43 mmHg, pH 7,37 et bicarbonates 25 mmol/L.\n\nQuel diagnostic retenez-vous ? Pensez-vous que l’antibiothérapie proposée soit adaptée ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "On retient le diagnostic d’exacerbation aiguë de BPCO devant la majoration des symptômes respiratoires au-delà de 48 heures sans retour à la normale. L’absence de fièvre et de foyer auscultatoire ne va pas en faveur d’un diagnostic différentiel ; la radiographie de thorax peut aider à l’éliminer. L’antibiothérapie proposée n’est pas adaptée : l’amoxicilline seule est insuffisante et la posologie est inadéquate.",
+          "correctionGenerale": "• On peut retenir le diagnostic d’<b>exacerbation aiguë de BPCO</b> devant la <b>majoration des symptômes respiratoires au-delà de 48 h sans retour à la normale</b>\n• L’<b>absence de fièvre ou de foyer auscultatoire</b> ne va pas en faveur d’un diagnostic différentiel\n• La <b>radiographie de thorax</b> peut aider au diagnostic différentiel\n• L’antibiothérapie proposée est <b>inadaptée</b>, tant par la molécule que par la posologie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelle prise en charge proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une radiographie de thorax et un ECBC ; un passage à l’amoxicilline-acide clavulanique 1 g trois fois par jour ; l’ajout d’un bronchodilatateur de courte durée d’action avec chambre d’inhalation, salbutamol 4 fois par jour ; éventuellement une hospitalisation — une prise en charge ambulatoire peut s’envisager si le patient est fiable et l’entourage disponible.",
+          "correctionGenerale": "<b>Prise en charge de l’exacerbation aiguë de BPCO</b>\n• <b>Radiographie de thorax</b>\n• <b>ECBC</b>\n• <b>Switch en amoxicilline-acide clavulanique 1 g 3 fois par jour</b>\n• <b>Ajout d’un bronchodilatateur de courte durée d’action</b> avec chambre d’inhalation — salbutamol 4 fois par jour en inhalé\n• ± <b>Hospitalisation</b> ; la prise en charge ambulatoire peut s’envisager selon le patient"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2024 - EVCP - Cas 2",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 235,
+      "vignette": "Un patient de 70 ans vient vous voir car il présente une somnolence diurne importante. Il présente une obésité avec un indice de masse corporelle à 36 kg/m². Il est fumeur actif. Il a présenté un infarctus du myocarde il y a deux ans, dont il a parfaitement récupéré. L’échographie cardiaque ne retrouve pas de dysfonction ventriculaire gauche.\n\nL’interrogatoire retrouve un sommeil de mauvaise qualité, avec des difficultés d’endormissement et de maintien du sommeil depuis des mois, associé à des ronflements et des pauses perçues par l’entourage.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel examen allez-vous demander à ce stade ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Une polygraphie ventilatoire : la probabilité clinique de SAHOS est élevée devant l’association somnolence diurne excessive, IMC à 36, tabagisme et antécédent d’infarctus du myocarde, et il n’existe pas de signe évoquant une autre pathologie du sommeil.",
+          "correctionGenerale": "• <b>Polygraphie ventilatoire</b>\n• Justification : somnolence diurne excessive + IMC 36 + tabac + antécédent d’IDM ⇒ probabilité clinique élevée de SAHOS, sans signe d’autre pathologie du sommeil"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nL’examen diagnostique un SAOS avec un IAH à 35/h.\n\nQuel(s) autre(s) examen(s) allez-vous demander à ce stade ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Des gaz du sang et une spirométrie. Les EFR sont indiquées chez ce patient tabagique ou ancien tabagique, avec un IMC supérieur à 30 et des symptômes respiratoires ; les gaz du sang sont indiqués devant un IMC supérieur à 35, une SaO2 à l’éveil inférieure à 94 % ou un syndrome restrictif avec CPT inférieure à 85 %.",
+          "correctionGenerale": "• <b>Gaz du sang</b> + <b>spirométrie</b>\n\n<b>Indications rappelées en séance</b>\n• <b>EFR</b> : patient tabagique ou ancien tabagique ; IMC &gt; 30 ; symptômes respiratoires, en particulier dyspnée d’effort ; BPCO associée\n• <b>Gaz du sang</b> : IMC &gt; 35 ; SaO2 à l’éveil &lt; 94 % ; syndrome restrictif avec CPT &lt; 85 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLes EFR ne retrouvent pas de trouble ventilatoire obstructif, ni restrictif. Les gaz du sang montrent un pH à 7,42, une PaO2 à 65 mmHg, une PaCO2 à 52 mmHg et des HCO3– à 32 mmol/L.\n\nQuel est votre diagnostic précis et quel(s) traitement(s) mettez-vous en place à ce stade ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome obésité-hypoventilation associé à un SAHOS sévère. Le traitement repose sur la pression positive continue et sur une prise en charge nutritionnelle.",
+          "correctionGenerale": "• <b>SOH – SAHOS sévère</b>\n• <b>PPC</b>\n• <b>Prise en charge nutritionnelle</b>\n\n<i>Algorithme projeté en séance : devant un syndrome obésité-hypoventilation, PPC si IAH &gt; 30, ventilation non invasive si IAH &lt; 30 ; en cas de non-réponse à la PPC (contrôle clinique ou gazométrique insuffisant, hospitalisations pour insuffisance respiratoire aiguë sur chronique), basculer vers la VNI.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous revoyez le patient à 4 mois de la mise en place de votre traitement. En dehors de l’efficacité clinique sur les symptômes et la gazométrie artérielle, quel(s) paramètre(s) allez-vous surveiller lors de cette visite ?",
+          "images": [],
+          "reponseAttendue": "L’index apnées-hypopnées résiduel, les fuites et les pressions délivrées par la machine ; une oxymétrie nocturne ; et la réévaluation pondérale ainsi que celle de la prise en charge nutritionnelle.",
+          "correctionGenerale": "• <b>IAH résiduel, fuites, pressions</b>\n• <b>Oxymétrie nocturne</b>\n• <b>Réévaluation pondérale</b> et de la prise en charge nutritionnelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLors de votre visite, tous les éléments surveillés sont normaux sauf la PaCO2, qui est à 48 mmHg.\n\nQuelle est votre proposition thérapeutique pour la suite de la prise en charge de ce patient ?",
+          "images": [],
+          "reponseAttendue": "Poursuivre la PPC.",
+          "correctionGenerale": "• <b>Poursuite de la PPC</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2024 - EVCP - Cas 3",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 236,
+      "vignette": "Madame P., 62 ans, consulte pour la découverte d’une image thoracique anormale dans le cadre d’un bilan de BPCO. Il s’agit d’une patiente tabagique active à 70 PA, à raison de 15 cigarettes par jour. Elle travaille comme femme de ménage. Il n’y a aucun antécédent médico-chirurgical, elle ne prend aucun traitement.\n\nÀ l’interrogatoire, on retrouve une toux associée à une expectoration matinale évoluant depuis plusieurs années, de majoration récente. On retrouve également une dyspnée d’exercice évaluée à 2 étages. À l’examen, le PS est à 1, la patiente est eupnéique au repos, on note la présence d’une distension thoracique. On retrouve également un hippocratisme digital. À l’auscultation, le murmure vésiculaire est légèrement assourdi de manière bilatérale et symétrique, sans bruit surajouté. L’examen cardio-vasculaire est normal.\n\nLe scanner thoracique retrouve une lésion spiculée suspecte de 3 cm du lobe supérieur gauche, associée à des adénopathies médiastinales bilatérales.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel bilan d’extension tumorale allez-vous prescrire à ce stade ?",
+          "images": [],
+          "reponseAttendue": "Un TEP-scanner, un scanner ou une IRM cérébrale, et un scanner abdominal.",
+          "correctionGenerale": "• <b>TEP-scanner</b>\n• <b>TDM / IRM cérébrale</b>\n• <b>TDM abdominal</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe bilan d’extension retrouve malheureusement une maladie au stade IV (lésions hépatiques et surrénaliennes). La biopsie bronchique pose le diagnostic d’adénocarcinome pulmonaire TTF1+, avec une expression de PD-L1 de 35 % en immunohistochimie.\n\nQuelles mutations souhaitez-vous avoir a minima à ce stade ?",
+          "images": [],
+          "reponseAttendue": "EGFR, ALK, ROS1 et RET. Le conférencier précise que la formulation « mutations » est imprécise : ALK et ROS1 sont recherchés en immunohistochimie, non par biologie moléculaire.",
+          "correctionGenerale": "• <b>EGFR, ALK, ROS1, RET</b>\n• <i>La question étant au pluriel, il faut tout citer ; la formulation est un peu fausse, car ALK et ROS1 relèvent de l’immunohistochimie</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVous avez effectué des analyses de biologie moléculaire qui reviennent négatives. Les fonctions rénales et hépatiques sont normales.\n\nQuel traitement systémique allez-vous proposer ?",
+          "images": [],
+          "reponseAttendue": "Une chimiothérapie associée à une immunothérapie, le PS étant à 1 : carboplatine ou cisplatine, pemetrexed et pembrolizumab.",
+          "correctionGenerale": "• <b>Chimiothérapie + immunothérapie</b>, car PS 1\n• <b>Carboplatine / cisplatine</b>\n• <b>Pemetrexed</b>\n• <b>Pembrolizumab</b>\n\n<i>Algorithme des cancers non épidermoïdes de stade cIV sans altération ciblable, projeté en séance : selon le statut PD-L1 (≥ 50 % ou &lt; 50 %), le PS (0-1 ou 2) et l’âge (&lt; ou ≥ 70 ans), les options associent atézolizumab, cémiplimab, pembrolizumab, platine-pemetrexed-pembrolizumab, ou platine-paclitaxel-bévacizumab.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nEn cas de bonne tolérance et d’efficacité de ce traitement, combien de temps allez-vous poursuivre ce traitement de 1re ligne ?",
+          "images": [],
+          "reponseAttendue": "Quatre cycles de chimio-immunothérapie, puis une maintenance par immunothérapie seule ou par chimio-immunothérapie en retirant le sel de platine, pendant 2 ans.",
+          "correctionGenerale": "• <b>4 cycles de chimio-immunothérapie</b>\n• Puis <b>immunothérapie seule</b>, ou chimio-immunothérapie en retirant la platine\n• <b>2 ans</b>\n\n<i>Précisions projetées : pemetrexed-pembrolizumab après 4 cycles de pemetrexed-sels de platine, pour une durée de 35 cycles (2 ans), ou jusqu’à progression ou toxicité inacceptable, pour les carcinomes non épidermoïdes, tous PD-L1 ; pembrolizumab après 4 cycles de paclitaxel-carboplatine-pembrolizumab, à la dose de 200 mg toutes les 3 semaines ou 400 mg toutes les 6 semaines, jusqu’à 2 ans ou jusqu’à progression ou toxicité inacceptable, pour les carcinomes épidermoïdes, tous PD-L1.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle prescription faites-vous en 1re intention pour aider au sevrage tabagique de Mme P. ?",
+          "images": [],
+          "reponseAttendue": "De la nicotine en patch transdermique, 14 mg par jour par exemple, associée à de la nicotine en gomme de 2 mg si besoin, sans dépasser 30 gommes par jour.",
+          "correctionGenerale": "• <b>Nicotine en patch transdermique</b> : 14 mg par jour par exemple\n• <b>+ Nicotine en gomme de 2 mg si besoin</b>, sans dépasser 30 gommes par jour"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2024 - EVCP - Cas 4",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 237,
+      "vignette": "Mme M., née le 01/07/1974, est hospitalisée pour détresse respiratoire aiguë.\n\nElle rapporte un tabagisme actif à 50 PA (6 cigarettes par jour actuellement), un éthylisme sevré. Elle travaillait à mi-temps comme fonctionnaire et est actuellement en arrêt de travail. Elle ne sort plus de chez elle et rapporte une somnolence diurne excessive.\n\nOn note dans ses antécédents un diabète de type 2, une dyslipidémie, une obésité avec un IMC à 38 kg/m², une cirrhose éthylique, une hypothyroïdie et un trouble bipolaire.\n\nElle est prise en charge par les pompiers pour des troubles de la vigilance. Au SAU, on constate une patiente hypoxémique avec des épisodes de désaturations profondes. Elle rapporte une dyspnée de repos. L’auscultation pulmonaire retrouve des râles bronchiques. Le bilan biologique retrouve une hyperleucocytose à 16 000/mm³ à prédominance neutrophilique, les D-dimères sont à 800 ng/mL et le NT-proBNP est normal. La créatininémie est normale. La gazométrie artérielle en air ambiant retrouve : pH 7,35 – PaCO2 66 mmHg – PaO2 41 mmHg – HCO3– 37 mmol/L.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels diagnostics pourraient participer à cette hypoventilation alvéolaire chronique ?",
+          "images": [],
+          "reponseAttendue": "Une BPCO, un syndrome obésité-hypoventilation et un SAHOS, ainsi que la prise de psychotropes.",
+          "correctionGenerale": "• <b>BPCO</b>\n• <b>SOH et SAHOS</b>\n• <b>Psychotropes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuel bilan effectuez-vous en urgence ?",
+          "images": [],
+          "reponseAttendue": "Une radiographie de thorax ; un ECG ; un bilan biologique comprenant ionogramme, urée, créatininémie, CRP, bilan hépatique et CPK ; un dosage des toxiques urinaires, en particulier opioïdes et benzodiazépines ; une alcoolémie ; et des PCR nasopharyngées à la recherche de virus respiratoires selon la période de l’année.",
+          "correctionGenerale": "• <b>Radiographie de thorax</b>\n• <b>ECG</b>\n• <b>Bilan biologique</b> : ionogramme-urée-créatininémie, CRP, bilan hépatique, CPK\n• <b>Dosage des toxiques urinaires</b> : opioïdes, benzodiazépines\n• <b>Alcoolémie</b>\n• <b>PCR nasopharyngées</b> à la recherche de virus respiratoires, selon la période de l’année"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles prises en charge thérapeutiques débutez-vous en urgence ?",
+          "images": [],
+          "reponseAttendue": "Une ventilation non invasive ; une oxygénothérapie titrée ; des nébulisations de bronchodilatateur de courte durée d’action, salbutamol 3 × 5 mg sur une heure ; une antibiothérapie selon la radiographie ; et la mise à jeun.",
+          "correctionGenerale": "• <b>Ventilation non invasive</b>\n• <b>O2 titré</b>\n• <b>Nébulisations de BDCA</b> : salbutamol 3 × 5 mg en 1 h\n• <b>Antibiothérapie selon la radiographie</b>\n• <b>À jeun</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nSur quels critères évaluez-vous l’efficacité de la prise en charge lors de votre suivi à 3 mois ?",
+          "images": [],
+          "reponseAttendue": "Sur les symptômes de SAHOS et d’hypercapnie — somnolence diurne excessive, céphalées matinales, fatigue ; sur la survenue de nouveaux épisodes de décompensation respiratoire ; et sur l’évolution pondérale, c’est-à-dire les résultats de la prise en charge nutritionnelle.",
+          "correctionGenerale": "• <b>Symptômes de SAHOS et d’hypercapnie</b> : somnolence diurne excessive, céphalées matinales, fatigue\n• <b>Nouveaux épisodes de décompensation respiratoire</b>\n• <b>Évolution pondérale</b> : résultats de la prise en charge nutritionnelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels examens faites-vous pour le bilan de cette hypoventilation alvéolaire chronique au décours de l’hospitalisation ?",
+          "images": [],
+          "reponseAttendue": "Des gaz du sang en air ambiant en fin de prise en charge ; une HbA1c et une glycémie à jeun ; une exploration d’une anomalie lipidique ; une spirométrie avec pléthysmographie après l’hospitalisation ; et une polygraphie ventilatoire après l’hospitalisation.",
+          "correctionGenerale": "• <b>Gaz du sang en air ambiant</b> en fin de prise en charge\n• <b>HbA1c et glycémie à jeun</b>\n• <b>Exploration d’une anomalie lipidique</b>\n• <b>Spirométrie + pléthysmographie</b> après l’hospitalisation\n• <b>Polygraphie ventilatoire</b> après l’hospitalisation"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2024 - EVCF",
+      "annee": 2024,
+      "type": "EVCF",
+      "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+      "orderIndex": 238,
+      "vignette": "<b>Questions isolées — 23 questions.</b>\n\nLes énoncés des questions 1 à 19 sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Les énoncés des questions 20 à 23 ne sont pas reproduits : ils sont restitués d’après les intitulés portés par les diapositives de correction, et leur numérotation exacte reste incertaine pour les questions 20 et 21.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQue recherchez-vous comme étiologie devant une toux évoluant depuis au moins 8 semaines à radiographie thoracique normale ?",
+          "images": [],
+          "reponseAttendue": "Un asthme, un reflux gastro-œsophagien, une cause médicamenteuse (IEC et gliptines en premier lieu, puis antagonistes de l’angiotensine II et bêtabloquants), une BPCO ou une bronchite chronique, et un syndrome de toux d’origine des voies aériennes supérieures (rhinosinusite avec jetage postérieur).",
+          "correctionGenerale": "• <b>Asthme</b>, <b>RGO</b>\n• <b>Médicaments</b> : IEC et gliptines &gt; antagonistes de l’angiotensine II, bêtabloquants\n• <b>BPCO, bronchite chronique</b>\n• <b>STOVAS</b> : rhinosinusite avec jetage postérieur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nDans quel cas est-il proposé de réaliser un geste de symphyse pleurale dès le premier épisode de pneumothorax spontané primaire (PSP) ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit ici des indications d’une chirurgie thoracique : fuite persistante au-delà de 3 à 5 jours ; pneumothorax bilatéral d’emblée ; hémopneumothorax ; récidive homolatérale ou controlatérale ; et métiers ou loisirs à risque.",
+          "correctionGenerale": "<i>Ici on parle d’une indication à une chirurgie thoracique.</i>\n• <b>Fuite persistante &gt; 3-5 jours</b>\n• <b>Bilatéral d’emblée</b>\n• <b>Hydro-pneumothorax</b> / hémopneumothorax\n• <b>Récidive homo- ou controlatérale</b>\n• <b>Métiers</b> et loisirs à risque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQu’évaluez-vous chez un sujet qui veut arrêter de fumer ?",
+          "images": [],
+          "reponseAttendue": "Le statut tabagique (paquets-années, nombre de cigarettes par jour, vapotage) ; la dépendance nicotinique par le test de Fagerström ; la motivation, par exemple par l’échelle de Richmond ; les comorbidités (dépression, grossesse) et les traitements en cours. Puis la stratégie : fixer une date, choisir l’aide (substituts nicotiniques combinés en 1re intention) et l’accompagnement.",
+          "correctionGenerale": "• <b>Statut tabagique</b> : paquets-années, cigarettes par jour, vapotage\n• <b>Dépendance nicotinique</b> : test de Fagerström\n• <b>Motivation</b> : échelle de Richmond par exemple\n• <b>Comorbidités</b> : dépression, grossesse ; traitements en cours\n• <b>Stratégie</b> : fixer une date, choisir l’aide (substituts nicotiniques combinés en 1re intention), accompagnement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle(s) étiologie(s) doit (doivent) être systématiquement évoquée(s) devant une pleurésie exsudative lymphocytaire ?",
+          "images": [],
+          "reponseAttendue": "Un cancer — primitif pulmonaire ou pleural, mais aussi métastases (sein, côlon) et lymphome ; une tuberculose ; les maladies de système ; plus rarement une sarcoïdose et un chylothorax.",
+          "correctionGenerale": "<b>Causes de pleurésies exsudatives lymphocytaires</b>\n• <b>Cancer</b> : primitif pulmonaire ou pleural ; métastases (sein, côlon) ; lymphome\n• <b>Tuberculose</b>\n• <b>Maladies de système</b>\n• Plus rares : <b>sarcoïdose</b> et <b>chylothorax</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nDans quelles situations une infection tuberculeuse latente devra-t-elle être traitée ?",
+          "images": [],
+          "reponseAttendue": "Chimioprophylaxie primaire : chez un enfant de moins de 2 ans, ou chez tout sujet ayant une immunodépression sévère, exposé à un sujet porteur d’une tuberculose pulmonaire, avant même le résultat des tests immunologiques. Chimioprophylaxie secondaire, chez les patients les plus à risque de passage à la tuberculose maladie : toute infection tuberculeuse latente chez un sujet de moins de 18 ans ; chez le sujet de 18 ans et plus, en cas de facteur de risque d’évolution rapide (immunodépression) ou d’infection récente (moins de 2 ans), c’est-à-dire dépistée lors de l’enquête autour d’un cas. Modalités : isoniazide en monothérapie 6 mois (5 mg/kg/j), ou isoniazide 4-5 mg/kg/j + rifampicine 10 mg/kg/j pendant 3 à 4 mois ; mêmes précautions et surveillance que pour le traitement de la tuberculose maladie ; déclaration obligatoire de toute infection tuberculeuse latente chez un enfant ou un jeune de moins de 18 ans.",
+          "correctionGenerale": "<b>Objectif</b> : limiter le risque de passage d’une ITL à une tuberculose maladie.\n\n<b>Chimioprophylaxie primaire</b>\n• Enfant &lt; 2 ans, ou tout sujet ayant une immunodépression sévère, exposé à un sujet porteur d’une tuberculose pulmonaire, avant même le résultat des tests immunologiques\n• En pratique, on élimine une tuberculose maladie et on traite sans attendre la preuve de l’ITL\n\n<b>Chimioprophylaxie secondaire</b> (patients les plus à risque de passage à la maladie)\n• ITL chez les sujets de moins de 18 ans\n• ITL chez les sujets ≥ 18 ans : en cas de facteur de risque d’évolution rapide (immunodépression) ; ITL récente (&lt; 2 ans), en pratique dépistée lors de l’enquête autour d’un cas\n\n<b>Modalités</b>\n• <b>INH en monothérapie 6 mois</b> (5 mg/kg/j)\n• <b>INH 4-5 mg/kg/j + RMP 10 mg/kg/j pendant 3 à 4 mois</b>\n• Mêmes précautions et surveillance que lors du traitement d’une tuberculose maladie\n• Ne pas oublier la <b>déclaration obligatoire</b> de toute ITL d’un enfant ou jeune de moins de 18 ans"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuel est le tableau radiologique en faveur d’une fibrose pulmonaire idiopathique ? Quelles sont les lésions élémentaires et leur topographie ?",
+          "images": [],
+          "reponseAttendue": "Un aspect de pneumopathie interstitielle commune, avec des signes de fibrose : réticulations intralobulaires ± septales, bronchectasies et bronchiolectasies de traction, rayon de miel ; de prédominance basale et sous-pleurale.",
+          "correctionGenerale": "• <b>Aspect de pneumopathie interstitielle commune</b>\n• <b>Signes de fibrose</b> :\n  – réticulations intralobulaires ± septales\n  – bronchectasies / bronchiolectasies de traction\n  – rayon de miel\n• <b>Prédominance basale et sous-pleurale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel est le bilan biologique de 1re intention devant une pneumopathie interstitielle diffuse ?",
+          "images": [],
+          "reponseAttendue": "NFS, ionogramme sanguin, créatininémie, CRP ; bilan hépatique (ALAT, ASAT, bilirubine, PAL, GGT, TP) ; anticorps antinucléaires, facteur rhumatoïde, anti-CCP (ACPA), ANCA ; CPK, NT-proBNP ; précipitines sériques aviaires et de moisissures ; électrophorèse des protéines sériques.",
+          "correctionGenerale": "• <b>NFS, ionogramme sanguin, créatininémie, CRP</b>\n• <b>Bilan hépatique</b> : ALAT, ASAT, bilirubine, PAL, GGT, TP\n• <b>Anticorps antinucléaires</b>, <b>facteur rhumatoïde</b>, <b>anti-CCP (ACPA)</b>, <b>ANCA</b>\n• <b>CPK</b>, <b>NT-proBNP</b>\n• <b>Précipitines sériques</b> aviaires et moisissures\n• <b>Électrophorèse des protéines sériques</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nDécrivez la cellularité d’un lavage broncho-alvéolaire normal.",
+          "images": [],
+          "reponseAttendue": "Une cellularité inférieure à 150 000-200 000/mL chez le non-fumeur, et inférieure à 250 000 voire 300 000/mL chez le fumeur ; plus de 90 % de macrophages, moins de 10 % de lymphocytes, moins de 5 % de polynucléaires neutrophiles et moins de 1 % de polynucléaires éosinophiles.",
+          "correctionGenerale": "• <b>Cellularité</b> : &lt; 150 000-200 000/mm³ chez le non-tabagique ; &lt; 250 000 voire 300 000/mm³ chez le tabagique\n• <b>&gt; 90 % de macrophages</b>\n• <b>&lt; 10 % de lymphocytes</b>\n• <b>&lt; 5 % de PNN</b>\n• <b>&lt; 1 % de PNE</b>\n\n<i>Schéma projeté en séance : cellularité 150 000-300 000/mL ; macrophages 85-95 % (dont sidérophages &lt; 10 %) ; lymphocytes 5-10 % (CD4+ 1 / CD8+ 0,6) ; cellules épithéliales &lt; 5 % ; polynucléaires neutrophiles &lt; 5 % ; polynucléaires éosinophiles 0-1 % ; mastocytes 0-1 %.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nCitez les 2 schémas possibles du traitement antibiotique de la coqueluche chez l’adulte selon les recommandations 2024.",
+          "images": [],
+          "reponseAttendue": "Le traitement se prescrit durant les 3 premières semaines d’évolution : clarithromycine 500 mg deux fois par jour pendant 7 jours, ou une dose-poids deux fois par jour (15 mg/kg/j en 2 prises, sans dépasser 500 mg par prise). En cas d’allergie aux macrolides : cotrimoxazole 800/160 mg deux fois par jour pendant 7 jours, ou 6 mg/kg/j de triméthoprime (maximum 1600/320 mg/j) en 2 prises.",
+          "correctionGenerale": "• Se traite durant les <b>3 premières semaines d’évolution</b>\n• <b>Clarithromycine</b> 500 mg × 2/j pendant 7 jours, ou 1 dose-poids × 2/j (15 mg/kg/j en 2 prises, max 500 mg par prise)\n• <b>Allergie aux macrolides</b> : cotrimoxazole 800/160 mg × 2/j pendant 7 jours, ou cotrimoxazole 6 mg/kg/j de TMP (max 1600/320 mg/j) en 2 prises"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nCitez 4 causes non infectieuses à évoquer devant des nodules pulmonaires excavés.",
+          "images": [],
+          "reponseAttendue": "Un cancer, des métastases, une granulomatose avec polyangéite (ancienne maladie de Wegener) et des nodules rhumatoïdes ; également une histiocytose.",
+          "correctionGenerale": "• <b>Cancer</b>\n• <b>Métastases</b>\n• <b>Granulomatose avec polyangéite</b> (ancien Wegener)\n• <b>Nodules rhumatoïdes</b>\n• Aussi : <b>histiocytose</b>\n\n<i>Tableaux projetés en séance. Diagnostics les plus fréquents des images cavitaires : cavité unique à paroi fine — pneumatocèle, bulle d’emphysème ; cavité unique à paroi épaisse — abcès à pyogènes, cancer bronchique ; cavités multiples à paroi fine — pneumatocèles, mycoses, embolies septiques ; cavités multiples à paroi épaisse — abcès à pyogènes, métastases, embolies septiques, mycoses. Diagnostics rares : malformations, infarctus, parasitoses, maladie rhumatoïde, amylose, pneumoconiose, pseudotumeur, lymphome, granulome, sarcoïdose, papillomatose, histiocytose langerhansienne, lymphangioléiomyomatose, maladie des chaînes légères, syndrome de Birt-Hogg-Dubé.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuelles sont les 2 étiologies génétiques à évoquer chez un enfant devant la découverte de dilatations des bronches diffuses, et leurs méthodes de dépistage ?",
+          "images": [],
+          "reponseAttendue": "La dyskinésie ciliaire primitive et la mucoviscidose. Diagnostic de la mucoviscidose à l’âge adulte : deux tests de la sueur anormaux (Cl– > 60 mmol/L) et deux mutations du gène CFTR connues pour causer la maladie, ± étude du potentiel nasal transépithélial ; le dépistage néonatal repose sur le test de Guthrie avec dosage de la trypsine immunoréactive, suivi d’un test génétique s’il est positif. Diagnostic de la dyskinésie ciliaire primitive : mesure du NO nasal, abaissé ; étude du mouvement ciliaire sur brossage nasal ou bronchique ± analyse de l’ultrastructure ciliaire ; analyse génétique.",
+          "correctionGenerale": "• <b>DCP</b> : dyskinésie ciliaire primitive\n• <b>Mucoviscidose</b>\n\n<b>Diagnostic de la mucoviscidose à l’âge adulte</b>\n• 2 tests de la sueur anormaux : Cl– &gt; 60 mmol/L\n• 2 mutations du gène CFTR connues pour causer la maladie\n• ± étude du potentiel nasal transépithélial\n\n<b>Diagnostic de la dyskinésie ciliaire primitive</b>\n1. Mesure du <b>NO nasal</b> : bas dans la DCP\n2. Étude du <b>mouvement ciliaire</b> sur brossage nasal ou bronchique ± analyse de l’ultrastructure ciliaire\n3. <b>Analyse génétique</b>\n\n<i>Vrai dépistage : test de Guthrie à la naissance pour la mucoviscidose, avec dosage de la trypsine immunoréactive ; s’il est positif, test génétique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nSelon les bonnes pratiques cliniques, quels sont les 2 examens à envisager chez un patient présentant des dilatations des bronches avant la prescription de macrolides au long cours, et dans quel but ?",
+          "images": [],
+          "reponseAttendue": "Un ECG, pour calculer le QT corrigé, les macrolides allongeant le QT ; et une audiométrie, en raison du risque de diminution de l’audition sous macrolides au long cours.",
+          "correctionGenerale": "• <b>ECG</b> : calculer le QT corrigé, car les macrolides allongent le QT\n• <b>Audiométrie</b> : risque de diminution de l’audition sous macrolides au long cours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nQuels sont les 5 grands groupes d’hypertension pulmonaire d’après la classification clinique des hypertensions pulmonaires ? Parmi ceux-ci, quels sont les 2 groupes les plus fréquents ?",
+          "images": [],
+          "reponseAttendue": "Groupe 1 : hypertension artérielle pulmonaire, maladie de l’artère pulmonaire. Groupe 2 : hypertension pulmonaire secondaire à une pathologie du cœur gauche, dite post-capillaire. Groupe 3 : hypertension pulmonaire secondaire à une maladie respiratoire chronique. Groupe 4 : hypertension pulmonaire post-embolique ou obstructive. Groupe 5 : mécanismes multifactoriels ou indéterminés. Les deux groupes les plus fréquents sont les groupes 2 et 3.",
+          "correctionGenerale": "1. <b>Hypertension artérielle pulmonaire</b> = maladie de l’artère pulmonaire\n2. <b>Hypertension pulmonaire secondaire à une pathologie du cœur gauche</b> : HTP post-capillaire\n3. <b>Hypertension pulmonaire secondaire à une maladie respiratoire chronique</b>\n4. <b>Hypertension pulmonaire post-embolique / obstructive</b>\n5. <b>Mécanismes multifactoriels ou indéterminés</b>\n\n• Les <b>2 groupes les plus fréquents</b> sont les groupes <b>2</b> et <b>3</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nEn cas de découverte d’hypertension artérielle pulmonaire chez une femme de 40 ans, quel bilan biologique devez-vous réaliser à visée étiologique ?",
+          "images": [],
+          "reponseAttendue": "Des anticorps antinucléaires ; des sérologies VIH, et éventuellement VHB et VHC ; un bilan hépatique.",
+          "correctionGenerale": "<b>Bilan d’une HTAP chez une femme de 40 ans</b>\n• <b>Anticorps antinucléaires</b>\n• <b>Sérologies VIH</b> ± VHB, VHC\n• <b>Bilan hépatique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nQuelle est la durée d’anticoagulation pour un premier épisode d’embolie pulmonaire chez une femme jeune sous contraception œstro-progestative ?",
+          "images": [],
+          "reponseAttendue": "Trois mois : il s’agit d’un premier épisode provoqué par un facteur de risque transitoire majeur, la contraception œstro-progestative.",
+          "correctionGenerale": "• <b>1er épisode sous contraception œstro-progestative : 3 mois</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nQuels seuils de VEMS post-opératoire sont retenus pour juger de l’opérabilité d’un cancer pulmonaire ?",
+          "images": [],
+          "reponseAttendue": "La démarche débute par une spirométrie avec mesure de la DLCO. Si le VEMS et la DLCO sont supérieurs à 80 %, la résection est possible jusqu’à la pneumonectomie. Si le VEMS et/ou la DLCO sont inférieurs à 80 %, on réalise une épreuve d’effort avec mesure de la VO2 max : si la VO2 max est supérieure à 75 % (> 20 mL/kg/min), la résection est possible jusqu’à la pneumonectomie ; si elle est inférieure à 35 % (< 10 mL/kg/min), la pneumonectomie ou la lobectomie ne sont pas recommandées ; entre 35 et 75 %, on estime le VEMS et la DLCO post-opératoires — si le VEMSppo ET la DLCOppo sont supérieurs à 30 %, la résection est possible mais son étendue est à discuter ; si le VEMSppo OU la DLCOppo sont inférieurs à 30 %, on estime la VO2 max post-opératoire, et une VO2 maxppo inférieure à 35 % (< 10 mL/kg/min) contre-indique la pneumonectomie ou la lobectomie.",
+          "correctionGenerale": "<i>Algorithme projeté en séance.</i>\n1. <b>Spirométrie + mesure de la DLCO</b>\n   • VEMS <b>et</b> DLCO &gt; 80 % ⇒ <b>résection possible jusqu’à la pneumonectomie</b>\n   • VEMS <b>et/ou</b> DLCO &lt; 80 % ⇒ épreuve d’effort avec mesure de la VO2 max\n2. <b>VO2 max</b>\n   • &gt; 75 % (&gt; 20 mL/kg/min) ⇒ résection possible jusqu’à la pneumonectomie\n   • 35-75 % (10-20 mL/kg/min) ⇒ estimer le VEMSppo et la DLCOppo (en % de la théorique)\n   • &lt; 35 % (&lt; 10 mL/kg/min) ⇒ <b>pneumonectomie ou lobectomie non recommandée</b>\n3. <b>VEMSppo et DLCOppo</b>\n   • VEMSppo <b>ET</b> DLCOppo &gt; 30 % ⇒ <b>résection possible, étendue à discuter</b>\n   • VEMSppo <b>OU</b> DLCOppo &lt; 30 % ⇒ estimer la VO2 maxppo : &gt; 35 % (&gt; 10 mL/kg/min) ⇒ résection possible, étendue à discuter ; &lt; 35 % (&lt; 10 mL/kg/min) ⇒ pneumonectomie ou lobectomie non recommandée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nQuels éléments cliniques et liés à la tumeur sont indispensables au diagnostic pour décider du traitement de 1re ligne d’un carcinome épidermoïde bronchique de stade avancé ?",
+          "images": [],
+          "reponseAttendue": "L’âge et le PS ; les comorbidités contre-indiquant l’immunothérapie (maladie auto-immune) ou en diminuant l’effet (corticothérapie), qui vont contre l’utilisation d’une immunothérapie seule ; et le statut PD-L1. Accessoirement les fonctions rénale et hépatique, qui ne sont toutefois pas liées à la tumeur.",
+          "correctionGenerale": "<b>1re ligne d’un épidermoïde avancé</b>\n• <b>Âge, PS</b>\n• <b>Comorbidités contre-indiquant l’immunothérapie</b> : maladie auto-immune ; ou en diminuant l’effet : corticothérapie ⇒ va contre l’utilisation d’une immunothérapie seule\n• <b>Statut PD-L1</b>\n• ± fonctions rénale et hépatique — mais non liées à la tumeur\n\n<i>Algorithme des cancers épidermoïdes de stade cIV sans altération ciblable projeté en séance, croisant le statut PD-L1 (≥ 50 % ou &lt; 50 %), le PS (0-1 ou 2) et l’âge (&lt; ou ≥ 70 ans) ; au-delà d’un PS &gt; 2, seuls les soins de support sont proposés.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nUn patient de 72 ans se présente avec un adénocarcinome bronchique de stade 4. Vous envisagez une association chimiothérapie-immunothérapie.\n\nDonnez trois critères de l’interrogatoire qui pourraient vous faire changer d’option.",
+          "images": [],
+          "reponseAttendue": "Trois critères vont contre l’utilisation d’une immunothérapie : une maladie auto-immune ; une pneumopathie interstitielle diffuse, notamment en cas d’aspect de PIC ; une corticothérapie orale prolongée à haute dose. L’âge et la fragilité, ainsi que la présence de mutations ciblables, entrent également en compte.",
+          "correctionGenerale": "• <b>Âge, fragilité</b>\n• <b>Mutations</b>\n\n<b>3 critères à l’interrogatoire contre l’utilisation d’une immunothérapie</b>\n1. <b>Maladie auto-immune</b>\n2. <b>Pneumopathie interstitielle diffuse</b>, notamment en cas de PIC\n3. <b>Corticothérapie orale prolongée à haute dose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nVous rencontrez un patient de 75 ans porteur d’une lésion de 3 cm du lobe supérieur droit. Il a beaucoup fumé, est porteur d’une BPCO de stade 4E et d’une insuffisance coronarienne avec stent actif posé il y a moins de trois mois. Vous envisagez une irradiation en condition stéréotaxique sans histologie.\n\nQuels critères vous seront réclamés en RCP ?",
+          "images": [],
+          "reponseAttendue": "Une spirométrie avec DLCO ; une TEP en position de traitement si possible ; le reste du bilan d’extension. Et surtout une forte suspicion de malignité : lésion évolutive avec un gain de plus de 2 mm à 3 mois d’intervalle au scanner, hypermétabolisme en TEP, lésion infectieuse éliminée, biopsie à risque, taille tumorale inférieure à 5 cm et statut N0.",
+          "correctionGenerale": "• <b>Spirométrie – DLCO</b>\n• <b>TEP en position de traitement</b> si possible\n• <b>Le reste du bilan d’extension</b>\n\n<b>Forte suspicion de malignité</b>\n• Lésion évolutive : gain &gt; 2 mm à 3 mois d’intervalle en TDM\n• Hypermétabolisme en TEP\n• Lésion infectieuse éliminée\n• Biopsie à risque\n• Taille tumorale &lt; 5 cm et <b>N0</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\n<i>L’énoncé n’est pas reproduit dans le diaporama ; la diapositive de correction est intitulée :</i> « Quels critères vous conduisent à envisager une biothérapie chez un patient asthmatique ? »",
+          "images": [],
+          "reponseAttendue": "Un asthme au palier 5 du GINA avec au moins 2 exacerbations par an, malgré une bonne observance et une bonne prise des traitements, l’élimination d’un diagnostic différentiel, la certitude diagnostique, et une prise en charge maximale des facteurs aggravants et des comorbidités.",
+          "correctionGenerale": "• <b>GINA palier V + 2 exacerbations ou plus par an</b>\n• Malgré :\n  – <b>bonne observance</b> et bonne prise des traitements\n  – <b>élimination d’un diagnostic différentiel</b>\n  – <b>certitude diagnostique</b>\n  – <b>prise en charge maximale des facteurs aggravants et comorbidités</b>\n\n<i>Repères projetés en séance. Asthme sévère : 3-5 % des asthmes ; asthme non contrôlé au palier 5 malgré une prise en charge optimale des comorbidités et des facteurs aggravants. Asthme difficile : 20 % des asthmatiques ; palier 4 ou 5 avec facteurs aggravants ou comorbidités insuffisamment pris en charge. Facteurs aggravants : inobservance thérapeutique (75 %, score de MARS), technique de prise (mauvaise dans 80 % des cas), tabac, profession, environnement, désensibilisation bêta-adrénergique, SAHOS, RGO, anxiété-dépression, troubles de la déglutition. Diagnostics différentiels : BPCO, obésité, insuffisance cardiaque, déconditionnement, bronchiectasies, trachéobronchomalacie, dysfonction laryngée, STOVAS, RGO — 15 à 50 % des « asthmes sévères » ne sont pas des asthmes.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\n<i>L’énoncé n’est pas reproduit dans le diaporama ; la diapositive de correction porte sur les cibles thérapeutiques des biothérapies commercialisées en France pour l’asthme sévère.</i>",
+          "images": [],
+          "reponseAttendue": "Omalizumab (XOLAIR) : anti-IgE. Mépolizumab (NUCALA) : anti-IL5. Benralizumab (FASENRA) : anti-IL5R. Dupilumab (DUPIXENT) : anti-IL4 et anti-IL13. Tézépélumab (TEZSPIRE) : anti-TSLP.",
+          "correctionGenerale": "• <b>Omalizumab</b> — XOLAIR® : anti-IgE\n• <b>Mépolizumab</b> — NUCALA® : anti-IL5\n• <b>Benralizumab</b> — FASENRA® : anti-IL5R\n• <b>Dupilumab</b> — DUPIXENT® : anti-IL4 + anti-IL13\n• <b>Tézépélumab</b> — TEZSPIRE® : anti-TSLP"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 22</b>\n\nQuels sont les bénéfices attendus de la réadaptation respiratoire dans la BPCO ?",
+          "images": [],
+          "reponseAttendue": "Amélioration de la dyspnée et de la tolérance à l’effort ; amélioration de la qualité de vie ; amélioration de la survie ; diminution de la survenue des exacerbations ; aide au sevrage tabagique ; amélioration du statut nutritionnel et de l’état anxio-dépressif ; réduction du coût en santé, notamment des hospitalisations pour exacerbation aiguë de BPCO.",
+          "correctionGenerale": "• <b>Dyspnée, tolérance à l’effort</b>\n• <b>Qualité de vie</b>\n• <b>Survie</b>\n• <b>Survenue d’exacerbations</b>\n• <b>Sevrage tabagique</b>\n• <b>Statut nutritionnel</b>\n• <b>État anxio-dépressif</b>\n• <b>Coût en santé</b>, notamment des hospitalisations pour EABPCO"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 23</b>\n\nQuels sont les diagnostics différentiels devant des granulomes épithélioïdes et gigantocellulaires ?",
+          "images": [],
+          "reponseAttendue": "Les infections, par exemple les mycobactérioses ou la tularémie ; les corps étrangers, comme dans la bérylliose et la silicose ; les néoplasies, en particulier les lymphomes et les réactions granulomateuses d’un cancer broncho-pulmonaire ; les vascularites ; la maladie de Crohn ; le déficit immunitaire commun variable ; et les traitements par anti-TNFα et immunothérapie.",
+          "correctionGenerale": "• <b>Infections</b> : mycobactérioses par exemple, tularémie…\n• <b>Corps étrangers</b> : bérylliose, silicose\n• <b>Néoplasies</b> : lymphomes, réaction granulomateuse d’un CBP\n• <b>Vascularites</b>\n• <b>Maladie de Crohn</b>\n• <b>DICV</b>\n• <b>Anti-TNFα et immunothérapie</b>"
+        }
+      ]
+    }
+  ]
+}

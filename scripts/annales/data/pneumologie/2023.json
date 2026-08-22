@@ -1,0 +1,318 @@
+{
+  "sources": {
+    "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf": {
+      "atelier": "annales-pneumologie-bon/conference-n10-sent",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-001-002.png": "image scannée du sujet officiel reproduisant l’énoncé du dossier 2 (observation de M. JZ et fiche IAO) : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-002-005.png": "image scannée du sujet officiel reproduisant les énoncés des questions 1 et 2 du dossier 2 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-004-010.png": "tableaux des scores de Wells et de Genève modifié simplifié, projetés en appui de la question 1 du dossier 2 : leur contenu est intégralement transcrit dans la correction de cette question",
+        "img-005-013.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-006-016.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-007-019.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-008-022.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-009-025.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-009-026.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-010-029.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-010-030.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-010-031.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-010-032.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-010-033.jpg": "coupe scanographique illustrant les signes d’embolie pulmonaire commentés en réponse à la question 2 de l’EVCP 2023 dossier 2 : illustration du corrigé, l’angioscanner du patient n’étant pas reproduit dans le diaporama ; les signes décrits sont transcrits dans la correction",
+        "img-011-036.png": "image scannée du sujet officiel reproduisant les énoncés des questions 3, 4 et 5 du dossier 2 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-018-051.png": "image scannée du sujet officiel reproduisant l’énoncé de la question 6 du dossier 2 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-020-056.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 1 à 5 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-024-065.png": "illustration de la diapositive de cours « Examens diagnostics » (page 24) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-025-068.png": "illustration de la diapositive de cours « Examens diagnostics » (page 25) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-027-073.png": "illustration de la diapositive de cours « Examens diagnostics » (page 27) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-029-078.jpg": "illustration de la diapositive de cours « Formes cliniques » (page 29) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-029-079.jpg": "illustration de la diapositive de cours « Formes cliniques » (page 29) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-031-084.jpg": "illustration de la diapositive de cours « Formes respiratoires » (page 31) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-034-091.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 3 à 8 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-039-102.png": "algorithme de prise en charge des CBNPC de stades cII à cIIIB résécables et opérables, réponse à la question 7 de l’EVCF 2023 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-041-107.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 9 à 13 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-042-110.png": "tableau des altérations moléculaires à rechercher selon le stade du CBNPC, projeté en appui de la question 9 de l’EVCF 2023 : son contenu est transcrit dans la correction de cette question",
+        "img-045-117.jpg": "illustration de la diapositive de cours « EVCF 3 » (page 45) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-048-132.png": "illustration de la diapositive de cours « Assurer le diagnostic » (page 48) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-049-135.jpg": "illustration de la diapositive de cours « Assurer le diagnostic » (page 49) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-049-136.jpg": "illustration de la diapositive de cours « Assurer le diagnostic » (page 49) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-049-137.png": "illustration de la diapositive de cours « Assurer le diagnostic » (page 49) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-049-138.png": "illustration de la diapositive de cours « Assurer le diagnostic » (page 49) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-056-153.jpg": "illustration d’une diapositive de cours sans titre lisible (page 56) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-061-164.png": "illustration de la diapositive de cours « Question 12 » (page 61) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-062-167.jpg": "illustration de la diapositive de cours « Question 13 » (page 62) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-063-170.jpg": "image scannée du sujet officiel reproduisant l’énoncé de la question 14 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-073-193.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 20, 21 et 22 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-076-200.jpg": "algorithme de prise en charge de la toux chronique, projeté en appui de la question 21 de l’EVCF 2023 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-077-203.jpg": "courbe de survie sans récidive après résection selon le stade AJCC, projetée en appui de la question 22 de l’EVCF 2023 : les chiffres de récidive sont transcrits dans la correction de cette question",
+        "img-078-206.jpg": "image scannée du sujet officiel reproduisant les énoncés des questions 23, 24 et 25 de l’EVCF 2023 : son texte est intégralement retranscrit dans les énoncés de la série",
+        "img-080-211.jpg": "schéma du parcours de réhabilitation respiratoire dans la BPCO et de ses bénéfices, réponse à la question 23 de l’EVCF 2023 : son contenu est intégralement transcrit dans la correction de cette question",
+        "img-084-220.jpg": "tracé polygraphique de l’EVCF 2020, cité par la série « Annales - Pneumologie - 2020 - EVCF » dont la source déclarée est la conférence n° 11-12 : il est publié avec cette série et n’est donc pas comptabilisé ici",
+        "img-087-227.jpg": "illustration de la diapositive de cours « SAS – définitions » (page 87) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-090-234.jpg": "illustration de la diapositive de cours « SAS – apnée obstructive » (page 90) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-092-241.png": "illustration de la diapositive de cours « SAHOS – prévalence selon les pathologies » (page 92) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-093-244.jpg": "illustration de la diapositive de cours « SAHOS – complications » (page 93) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-094-247.png": "illustration d’une diapositive de cours sans titre lisible (page 94) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-095-250.png": "illustration de la diapositive de cours « Diagnostic SAHOS » (page 95) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-096-253.jpg": "illustration d’une diapositive de cours sans titre lisible (page 96) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-097-256.png": "illustration d’une diapositive de cours sans titre lisible (page 97) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-098-259.jpg": "illustration d’une diapositive de cours sans titre lisible (page 98) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-099-262.png": "illustration d’une diapositive de cours sans titre lisible (page 99) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-101-268.png": "illustration d’une diapositive de cours sans titre lisible (page 101) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-103-274.jpg": "illustration de la diapositive de cours « ? » (page 103) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-105-280.jpg": "illustration de la diapositive de cours « Définition Cheyne Stokes : 2 critères » (page 105) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-283.png": "illustration d’une diapositive de cours sans titre lisible (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-107-286.png": "illustration d’une diapositive de cours sans titre lisible (page 107) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-108-289.png": "illustration de la diapositive de cours « ? » (page 108) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-109-292.png": "illustration de la diapositive de cours « obstructif » (page 109) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-110-295.png": "illustration de la diapositive de cours « ? » (page 110) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-113-303.jpg": "illustration de la diapositive de cours « PPC – mode d’action » (page 113) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-118-315.jpg": "illustration d’une diapositive de cours sans titre lisible (page 118) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-119-319.jpg": "illustration d’une diapositive de cours sans titre lisible (page 119) : support pédagogique du conférencier, hors iconographie de l’annale"
+      },
+      "remarque": "Conférence de pneumologie n° 10 : correction du second dossier pratique de l’EVCP 2023, puis des 25 questions isolées de l’EVCF 2023, puis annonce explicite de la « Correction annales 2020 » — dont seule la première question est corrigée ici, la suite étant traitée dans la conférence n° 11-12 ; la série « Annales - Pneumologie - 2020 - EVCF » regroupe l’ensemble et est rattachée à cette dernière. Les énoncés du sujet officiel sont projetés sous forme d’images scannées : leur texte est retranscrit dans les énoncés des questions, et les images correspondantes sont déclarées comme telles. Le conférencier signale explicitement que l’image du scanner thoracique appelée par la question 6 de l’EVCF 2023 n’était pas disponible dans les énoncés qu’il a pu récupérer. Les sujets officiels 2020 et 2023 de pneumologie ne figurent pas dans le dépôt."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Pneumologie - 2023 - EVCP - Dossier 2",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
+      "orderIndex": 228,
+      "vignette": "M. JZ, 42 ans, consulte au SAU pour une dyspnée évolutive depuis 2 jours.\n\n<b>Accueil IAO — paramètres vitaux</b>\nFréquence cardiaque 64 puls./min ; pression artérielle systolique (bras droit) 126 mmHg ; pression artérielle diastolique (bras droit) 74 mmHg ; température 37,3 °C ; fréquence respiratoire 20 mvt/min ; saturation O2 100 % ; pas d’oxygène à l’arrivée du patient. Score de Glasgow : comportement adapté. Pas de repos strict au lit, MRT non contacté, pas de secteur psychiatrique prévu, pas d’accident du travail, pas d’intervention addictologique. Conclusion : cotation IAO 2 — urgence relative. ECG à l’admission.\n\nIl n’a aucun antécédent personnel notoire et ne prend aucun traitement. Il est cadre dans un cabinet de conseil et revient d’un déplacement en province en TGV il y a 4 jours. Il ne fume pas et n’a pas de consommation d’alcool excessive. En excellent état général, il pratique la course à pied plusieurs fois par semaine ainsi que le football occasionnellement.\n\nIl a noté qu’il n’arrive plus à monter les deux étages de son immeuble depuis 48 heures. Au repos, il n’est pas gêné. L’interrogatoire ne retrouve pas de toux, pas de crachats, pas de douleur thoracique. L’auscultation pulmonaire est normale, l’auscultation cardiaque aussi. Vous notez une petite asymétrie des mollets avec un œdème discret à gauche, « côté des crampes ».",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nVous suspectez une embolie pulmonaire. Quel(s) examen(s) proposez-vous pour confirmer ou infirmer le diagnostic, en justifiant chacun d’eux ?",
+          "images": [],
+          "reponseAttendue": "Un dosage des D-dimères, qui exclut le diagnostic s’il est inférieur à 500 ng/mL, et un angioscanner si les D-dimères dépassent 500 ng/mL : la probabilité clinique est en effet intermédiaire — immobilisation, signes de thrombose veineuse profonde avec œdème et douleur, absence de signe en faveur d’un diagnostic différentiel, dyspnée nue, absence de tachycardie ; le score de Genève est ici à préférer. Les autres examens n’ont pas d’intérêt diagnostique ; on complète par un bilan standard comportant une NFS (recherche d’anémie) et une créatininémie, nécessaire avant l’injection de produit de contraste.",
+          "correctionGenerale": "• <b>D-dimères</b> : exclusion du diagnostic si &lt; 500 ng/mL\n• <b>Et angioscanner</b> si D-dimères &gt; 500 ng/mL\n• Car <b>probabilité intermédiaire</b> (préférer le score de Genève) :\n  – immobilisation\n  – signes de TVP : œdème et douleur\n  – absence de signe de diagnostic différentiel\n  – dyspnée nue\n  – absence de tachycardie\n• Les autres examens n’ont pas d’intérêt diagnostique\n• <b>Bilan standard</b> : NFS (anémie) et créatininémie (pour l’injection de produit de contraste)\n\n<i>Scores projetés en séance. Score de Wells : antécédents personnels d’EP ou de TVP +1,5 ; chirurgie ou immobilisation &lt; 4 semaines +1,5 ; cancer actif +1 ; hémoptysie +1 ; FC &gt; 100/min +1,5 ; signes de TVP +3 ; diagnostic alternatif moins probable que celui d’EP +3 — probabilité faible 0-1, intermédiaire 2-6, forte ≥ 7. Score modifié simplifié de Genève : &gt; 65 ans, antécédent personnel d’EP ou de TVP, chirurgie ou immobilisation, cancer actif, hémoptysie, douleur spontanée du mollet, FC 75-94/min, FC ≥ 95/min, signes de TVP — chacun +1 ; probabilité faible 0-1, intermédiaire 2-4, forte ≥ 5. Le conférencier précise qu’il n’est pas attendu de savoir calculer le score, mais de savoir estimer la probabilité clinique à partir d’éléments simples ; et que si la fréquence cardiaque est par exemple à 105 bpm, le total assigné est de 2 points (1 point car FC ≥ 75 bpm, 1 point supplémentaire car FC ≥ 95 bpm).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nCompte tenu du bilan biologique (ci-joint), vous avez demandé un angioscanner. Interprétez cet examen.",
+          "images": [],
+          "reponseAttendue": "Signes directs d’embolie pulmonaire : hypodensités centrales, images en rail, occlusion complète avec calibre vasculaire augmenté. Signes indirects : image d’infarctus pulmonaire, condensation triangulaire sous-pleurale. Rechercher également des signes de chronicité.",
+          "correctionGenerale": "<b>Signes directs</b>\n• <b>Hypodensités centrales</b>\n• <b>Images en rail</b>\n• <b>Occlusion complète</b> et calibre vasculaire augmenté\n\n<b>Signes indirects</b>\n• Image d’<b>infarctus pulmonaire</b>, condensation triangulaire sous-pleurale\n\n<b>Signes de chronicité</b> à rechercher également"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDans quel cadre (hospitalier ou ambulatoire) décidez-vous de prendre en charge le patient ? Justifiez votre choix et précisez les grands axes de cette prise en charge.",
+          "images": [],
+          "reponseAttendue": "Une prise en charge ambulatoire : le sPESI est à 0, les marqueurs biologiques cardiaques sont normaux, il n’y a pas de dilatation des cavités droites sur le scanner, le risque est donc faible, et le patient ne présente a priori pas de troubles de la compréhension. Les grands axes sont : anticoagulation curative per os avec première dose donnée aux urgences ; prescription d’un écho-doppler veineux des membres inférieurs et d’une contention veineuse de grade III en l’absence de claudication de jambe ; consultation de réévaluation précoce sur circuit dédié, idéalement à 48 h de la prise en charge (médecin traitant, urgentiste, pneumologue) ; consultation de pneumologie ou de cardiologie à 3 mois et à 6 mois.",
+          "correctionGenerale": "<b>Cadre : ambulatoire</b>\n• <b>sPESI : 0</b>\n• <b>Marqueurs biologiques cardiaques normaux</b>\n• <b>Pas de dilatation des cavités droites</b> au TDM\n• ⇒ <b>risque faible</b>\n• Le patient ne présente a priori pas de troubles de la compréhension\n\n<b>Grands axes</b>\n• <b>Anticoagulation curative per os</b>, première dose donnée aux urgences\n• Prescription d’un <b>écho-doppler veineux des membres inférieurs</b> + <b>contention veineuse de grade III</b> en l’absence de claudication de jambe\n• <b>Consultation de réévaluation précoce sur circuit dédié</b>, idéalement à 48 h (médecin traitant, urgentiste, pneumologue)\n• <b>Consultation de pneumologie ou de cardiologie à 3 mois et à 6 mois</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nRédigez l’ordonnance du traitement que vous proposez au patient. Justifiez votre choix médicamenteux et précisez les quelques éléments d’éducation thérapeutique que vous donnez au patient.",
+          "images": [],
+          "reponseAttendue": "Apixaban (ELIQUIS) 10 mg matin et soir per os pendant 7 jours, puis 5 mg matin et soir per os ; contention veineuse de classe III pour 6 mois, portée la journée ; quantité suffisante pour 6 mois. Autre possibilité : rivaroxaban (XARELTO) 15 mg per os matin et soir pendant 3 semaines, puis 20 mg par jour per os, avec la même contention. Justification : l’anticoagulation per os est plus simple pour le patient, l’apixaban dispense du suivi biologique nécessaire aux AVK et la durée d’anticoagulation à haute dose est plus courte. Éducation thérapeutique : importance de poursuivre le traitement jusqu’au bout, risque d’aggravation de l’embolie en cas de non-prise initiale et risque de récidive en cas d’arrêt en cours de suivi ; prévenir tout personnel médical du traitement en cas de problème de santé ; risque hémorragique, consulter en cas de saignement ; contre-indication des injections intramusculaires (vitamine B12 par exemple) ; interactions médicamenteuses.",
+          "correctionGenerale": "<b>Ordonnance</b>\n• <b>Apixaban (ELIQUIS®)</b> 10 mg matin et soir per os pendant 7 jours, puis 5 mg matin et soir per os\n• <b>Contention veineuse de classe III</b> pour 6 mois, la journée\n• <i>QSP 6 mois</i>\n\n<b>Ou autre possibilité</b>\n• <b>Rivaroxaban (XARELTO®)</b> : 15 mg per os matin et soir pendant 3 semaines, puis 20 mg par jour per os\n• <b>Contention veineuse de classe III</b> pour 6 mois, la journée\n• <i>QSP 6 mois</i>\n\n<b>Justification et éducation thérapeutique</b>\n• Anticoagulation per os : plus de simplicité pour le patient\n• Apixaban : absence de suivi thérapeutique, en comparaison des AVK ; et durée moindre de l’anticoagulation à haute dose\n• Prévenir de :\n  – l’importance de <b>poursuivre le traitement jusqu’au bout</b>\n  – l’absence de prise au début : <b>risque d’aggravation de l’EP</b>\n  – l’arrêt du traitement au cours du suivi : <b>risque de récidive</b>\n  – <b>prévenir le personnel médical</b> en cas de problème de santé\n  – le <b>risque hémorragique</b> : consulter en cas de saignement\n  – la <b>contre-indication des injections intramusculaires</b> (vitamine B12)\n  – les <b>interactions médicamenteuses</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVous revoyez le patient en consultation. Le traitement est bien suivi, bien toléré. Il exprime son inquiétude concernant sa maladie et voudrait comprendre ce qui l’explique. Il demande aussi si un bilan est nécessaire : son généraliste lui a parlé d’un scanner.\n\nQue lui répondez-vous ? Prescrivez-vous un bilan ?",
+          "images": [],
+          "reponseAttendue": "Pas de bilan complémentaire en dehors de la recherche d’un syndrome des antiphospholipides, indiquée car il s’agit d’un premier épisode d’embolie pulmonaire « non provoquée » chez un patient de moins de 50 ans. Pas de recherche de cancer occulte par imagerie : on se limite à la mise à jour des dépistages et on oriente les examens supplémentaires par les points d’appel cliniques.",
+          "correctionGenerale": "• <b>Pas de bilan complémentaire</b>\n• <b>Recherche d’un SAPL seule</b> : 1er épisode d’EP « non provoquée » chez un patient de &lt; 50 ans\n• <b>Pas de recherche de cancer occulte par imagerie</b>\n• <b>Mise à jour des dépistages</b>\n• Orienter les examens supplémentaires par les points d’appel cliniques\n\n<i>Bilan étiologique de la maladie thromboembolique veineuse rappelé en séance. Chercher un facteur de risque : chirurgie, grossesse, pilule. Bilan systématique devant toute TVP ou EP idiopathique : examen clinique, biologie de routine avec NFS et CRP, PSA chez l’homme de plus de 50 ans, examen gynécologique, mammographie et échographie pelvienne chez la femme, recherche de sang dans les selles. Indication de la recherche d’un SAPL : moins de 50 ans, premier épisode de TVP proximale ou d’EP, ou siège inhabituel. Indications du bilan de thrombophilie constitutionnelle (à 2-3 semaines de l’arrêt de l’anticoagulation) : premier épisode de TVP proximale ou d’EP non provoquée avant 50 ans avec antécédent familial au 1er degré de thrombose ; forme récidivante dont au moins un épisode non provoqué avant 50 ans ; épisode non provoqué de siège atypique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLe bilan prescrit est complètement normal. Le patient évolue très bien. Concernant le traitement, quels éléments pouvez-vous prendre en compte pour décider de l’interrompre ou de le poursuivre ?",
+          "images": [],
+          "reponseAttendue": "Interruption si l’évolution est favorable à 6 mois ; poursuite s’il apparaît un nouvel élément anamnestique en faveur d’un facteur persistant majeur. Pour la suite : suivi des D-dimères et réévaluation à la recherche d’un syndrome post-thrombotique.",
+          "correctionGenerale": "• <b>Interruption</b> si évolution favorable à 6 mois\n• <b>Poursuite</b> s’il existe un nouvel élément anamnestique en faveur d’un facteur persistant majeur\n\n<b>Avenir</b>\n• <b>Suivi des D-dimères</b>\n• <b>Réévaluation du syndrome post-thrombotique</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2023 - EVCF",
+      "annee": 2023,
+      "type": "EVCF",
+      "source": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
+      "orderIndex": 229,
+      "vignette": "<b>Questions isolées — 25 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Le conférencier signale que le scanner thoracique appelé par la question 6 n’était pas disponible dans les énoncés qu’il a pu récupérer.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle est l’incidence des cancers bronchiques en France ? Quelle est la mortalité annuelle par cancer bronchique en France ?",
+          "images": [],
+          "reponseAttendue": "Une incidence de 45 000 à 50 000 cas par an et une mortalité de 30 000 par an.",
+          "correctionGenerale": "• <b>Incidence</b> : 45 000 à 50 000 par an\n• <b>Mortalité</b> : 30 000 par an"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuel est l’examen de première intention à la recherche d’un déficit en alpha-1 antitrypsine ? Quelle précaution est-elle à prendre ? Quel(s) examen(s) complémentaire(s) éventuel(s) peuvent être prescrits, et dans quel cas ?",
+          "images": [],
+          "reponseAttendue": "Le dosage de l’alpha-1 antitrypsine. Précaution : son taux augmente physiologiquement dans certaines situations, il faut donc le doser en dehors des périodes infectieuses, de la grossesse et de la prise de contraceptifs, et tenir compte de la présence d’un cancer. Examens associés : pouvoir anti-élastasique, immunoélectrophorèse (phénotypage), et génotype par PCR et séquençage.",
+          "correctionGenerale": "• <b>Dosage de l’alpha-1 antitrypsine</b>\n• <b>Précaution</b> : augmentation physiologique dans certaines situations — doser hors périodes infectieuses, hors grossesse, hors contraceptifs, et prendre en compte la présence d’un cancer\n• <b>Examens associés</b> : pouvoir anti-élastasique ; immunoélectrophorèse ; génotype (PCR et séquençage)\n\n<i>Rappels projetés en séance. Dosage : déficit si &lt; 1,1 g/L — léger 0,9-1,1 g/L, modéré 0,57-0,9 g/L (seuil protecteur contre l’emphysème 0,57 g/L), sévère &lt; 0,57 g/L ; systématique au bilan de toute BPCO. Phénotype par iso-électrophorèse : variants courants M, S, Z ; rares I, F, P ; Null et M déficitaires invisibles. Pathogénicité croissante : M (le plus fréquent, « normal ») ; S (SS abaisse l’A1AT dans 60 % des cas) ; Z (principalement impliqué dans la maladie emphysémateuse) ; M malton (rétention protéique, même pathogénicité que Z) ; Null Q0 (absence totale de production hépatocytaire). MM, MS et SS : pas de pathologie ; MZ et SZ : pas de pathologie en l’absence d’exposition ; ZZ et Z-null : risque de pathologie même sans exposition. Génétique indiquée en cas de discordance phénotype-clinique-dosage ou de suspicion de M malton. Activité anti-élastasique : 175 000-31 500 unités inhibitrices/L, d’intérêt spécifique pour les variants F et Z. Formes respiratoires : emphysème et BPCO essentiellement, aussi asthme et DDB ; tabac +++ ; sibilants plus fréquents que dans la BPCO ; la réversibilité du TVO est un facteur de risque de déclin accéléré du VEMS ; début des symptômes vers 30-40 ans chez le fumeur et 50-60 ans chez le non-fumeur ; déclin moyen du VEMS 50-70 mL/an contre 40-50 mL/an dans la BPCO ; pas de spécificité scanographique, mais prédominance basale de l’emphysème plus fréquente que dans l’emphysème post-tabagique ordinaire. Formes extra-respiratoires : atteintes hépatiques (fibrose, cirrhose, stéatose), panniculites cutanées, association à la granulomatose avec polyangéite, et sur-risque de MTEV, diabète, insuffisance rénale chronique, HTA, anévrysmes et cancers. Traitement : prise en charge de la BPCO +++ ; supplémentation sur indication validée en RCP nationale (moins de 70 ans, phénotype ZZ, sevré du tabac, VEMS 35-70 %) par Alfalastin®, Respreza® ou Prolastin®, inefficace sur l’atteinte hépatique ; dépistage des frères, sœurs, parents et enfants.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDe quels paramètres dépend la stratégie d’initiation de traitement inhalé dans la BPCO ?",
+          "images": [],
+          "reponseAttendue": "De la dyspnée et des exacerbations.",
+          "correctionGenerale": "• <b>Dyspnée</b> et <b>exacerbations</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est l’altération moléculaire actionnable (traitement bénéficiant d’une AMM et d’un remboursement en France) la plus fréquente dans les adénocarcinomes bronchiques avancés ?",
+          "images": [],
+          "reponseAttendue": "La mutation de l’EGFR, en particulier la délétion de l’exon 19, traitée par osimertinib.",
+          "correctionGenerale": "• <b>Mutation EGFR</b> (délétion exon 19)\n• <b>Osimertinib</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles sont les indications de l’oxygénothérapie de longue durée chez les patients atteints de BPCO ?",
+          "images": [],
+          "reponseAttendue": "Sur deux gaz du sang : une PaO2 inférieure à 55 mmHg ; ou une PaO2 entre 55 et 60 mmHg associée à une hypertension pulmonaire (au cathétérisme ou à l’échocardiographie), une polyglobulie, des signes d’insuffisance cardiaque droite, ou des désaturations artérielles nocturnes non apnéiques.",
+          "correctionGenerale": "• <b>2 gaz du sang</b>\n• <b>PO2 &lt; 55 mmHg</b>\n• <b>PO2 55-60 mmHg</b> avec :\n  – hypertension pulmonaire (cathétérisme ou ETT)\n  – polyglobulie\n  – signes d’insuffisance cardiaque droite\n  – désaturations artérielles nocturnes non apnéiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nMonsieur C. M., né en 1967, ECOG PS 0, patient sans antécédent particulier ni exposition professionnelle, tabac actif 40 PA, a fait un épisode de COVID et, devant une toux persistante, son médecin traitant lui prescrit une TDM thoracique (image ci-dessous). Le TEP-scanner montre un SUV à 4 sur cette lésion de 14 mm, sans fixation ganglionnaire ni à distance. L’EFR est normale.\n\nQuelle est votre première hypothèse diagnostique ? Quelle est votre attitude dans ce cas ?\n\n<i>Le conférencier signale que l’image de scanner appelée par cet énoncé n’était pas disponible dans les énoncés qu’il a pu récupérer.</i>",
+          "images": [],
+          "reponseAttendue": "Le corrigé ne développe pas cette question, l’image du scanner n’ayant pas pu être récupérée par le conférencier.",
+          "correctionGenerale": "<i>Cette question n’est pas corrigée dans le diaporama : le conférencier indique que « l’image n’est pas disponible sur les énoncés que j’ai pu récupérer ». Elle est intégrée telle quelle, sans réponse inventée.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nUne analyse moléculaire d’un adénocarcinome bronchique primitif de stade IIB est-elle justifiée ? Si oui, pourquoi ? Si non, pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Oui. Dans les CBNPC de stades cII à cIIIB résécables et opérables, la stratégie dépend du statut PD-L1 et des altérations EGFR et ALK : en cas de PD-L1 inférieur à 1 %, de mutation EGFR ou de réarrangement ALK, on propose une chimiothérapie pré-opératoire optionnelle puis la chirurgie, avec en l’absence de traitement pré-opératoire une chimiothérapie adjuvante cisplatine-vinorelbine (4 cycles) ; en présence d’une mutation EGFR (délétion 19 ou L858R), le traitement adjuvant comporte de l’osimertinib pendant 3 ans. En cas de PD-L1 supérieur ou égal à 1 % avec EGFR et ALK sauvages, une chimio-immunothérapie pré-opératoire est proposée (3 cycles de nivolumab 360 mg toutes les 3 semaines et chimiothérapie à base de sels de platine), puis la chirurgie.",
+          "correctionGenerale": "<b>Oui</b> — l’analyse moléculaire conditionne le traitement péri-opératoire.\n\n<i>Algorithme projeté en séance — CBNPC de stades cII à cIIIB résécables et opérables.</i>\n<b>PD-L1 &lt; 1 %, ou EGFR muté, ou ALK réarrangé</b>\n• Option : chimiothérapie pré-opératoire\n• Chirurgie\n• En l’absence de traitement pré-opératoire : chimiothérapie adjuvante cisplatine + vinorelbine, 4 cycles\n• Options : cisplatine-pemetrexed 4 cycles dans les non-épidermoïdes ; carboplatine-paclitaxel si contre-indication au cisplatine-vinorelbine\n• Si <b>mutation EGFR</b> (Del19 ou L858R) : <b>osimertinib 3 ans</b>\n\n<b>PD-L1 ≥ 1 % et EGFR / ALK sauvages</b>\n• Chimio-immunothérapie pré-opératoire : 3 cycles de nivolumab 360 mg toutes les 3 semaines et chimiothérapie à base de sels de platine (accès précoce)\n• Chirurgie\n• En l’absence de traitement pré-opératoire : chimiothérapie adjuvante cisplatine + vinorelbine, 4 cycles, avec les mêmes options"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuels sont les 3 mécanismes physiopathologiques principaux de l’asthme ?",
+          "images": [],
+          "reponseAttendue": "L’inflammation, l’hyperréactivité bronchique et la bronchoconstriction.",
+          "correctionGenerale": "• <b>Inflammation</b>\n• <b>Hyper-réactivité bronchique</b>\n• <b>Bronchoconstriction</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuels sont les marqueurs tumoraux sériques dont le dosage est recommandé dans le cadre du bilan d’un cancer bronchique avancé ou métastatique ?\n\n<i>Le corrigé répond à cette question par la liste des altérations moléculaires à rechercher.</i>",
+          "images": [],
+          "reponseAttendue": "Le corrigé retient la mutation EGFR, les réarrangements ALK et ROS1, et les réarrangements RET.",
+          "correctionGenerale": "• <b>Mutation EGFR</b>\n• <b>Réarrangement ALK et ROS1</b>\n• <b>Réarrangements RET</b>\n\n<i>Tableau des recherches recommandées selon le stade, projeté en séance : PD-L1 à partir des stades IIA jusqu’aux stades IV avant la 1re ligne ; EGFR des stades IB aux stades IV avant la 1re ligne (non épidermoïdes) ; ALK des stades IIA aux stades IV avant la 1re ligne (IHC, non épidermoïdes) ; ROS1 aux stades IV avant la 1re ligne (non épidermoïdes) ; RET aux stades III et IV avant la 1re ligne ; KRAS, BRAF, HER2, MET ex14, autres MET et NTRK1/2/3 aux stades IV avant la 2e ligne ; NRG1 si disponible ; RB1 (IHC/TNE), STK11, TP53 et KEAP1 aux stades IV avant la 1re ligne.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelles sont les cibles thérapeutiques des biothérapies actuellement commercialisées en France pour le traitement de l’asthme sévère ?",
+          "images": [],
+          "reponseAttendue": "L’IL-5, l’IL-4 et l’IL-13, les IgE et la TSLP.",
+          "correctionGenerale": "• <b>IL-5</b>\n• <b>IL-4 et IL-13</b>\n• <b>IgE</b>\n• <b>TSLP</b>\n\n<i>Molécules correspondantes rappelées en séance : omalizumab (XOLAIR®) anti-IgE ; mépolizumab (NUCALA®) anti-IL5 ; benralizumab (FASENRA®) anti-IL5R ; dupilumab (DUPIXENT®) anti-IL4 + anti-IL13 ; tézépélumab (TEZSPIRE®) anti-TSLP.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuelles sont les maladies respiratoires prédisposant à la survenue d’une infection à pneumocoque ?",
+          "images": [],
+          "reponseAttendue": "La BPCO et l’asthme, le cancer du poumon, les dilatations des bronches, et tout état d’insuffisance respiratoire chronique ; le conférencier ajoute la grippe avec un point d’interrogation.",
+          "correctionGenerale": "• <b>BPCO et asthme</b>\n• <b>Cancer du poumon</b>\n• <b>DDB</b>\n• <b>Tout état d’insuffisance respiratoire chronique</b>\n• (Grippe ?)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nQuelle est la durée de l’immunothérapie de consolidation par durvalumab après une radio-chimiothérapie concomitante ?",
+          "images": [],
+          "reponseAttendue": "12 mois.",
+          "correctionGenerale": "• <b>12 mois</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nQuel est le schéma vaccinal recommandé chez l’adulte pour la vaccination anti-pneumococcique ?",
+          "images": [],
+          "reponseAttendue": "Une injection de PREVENAR 20.",
+          "correctionGenerale": "• <b>1 injection de PREVENAR 20®</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nMonsieur P. V., né en 1950, ancien ingénieur dans l’industrie chimique, à la retraite, sans antécédent particulier en dehors d’un tabagisme à 45 PA actif, présente une toux persistante. La radiographie thoracique retrouve un syndrome pleural droit modéré. L’analyse du liquide pleural montre un taux de protéines pleurales à 35 g/L, avec une présence lymphocytaire à 98 %. Le TDM TAP montre également la présence d’une image d’aspect tumoral d’environ 4 cm au niveau du côlon sigmoïde et une pleurésie droite avec un aspect irrégulier de la plèvre. Le PET-scan montre une fixation au niveau digestif, de cette image tumorale, et une fixation diffuse faible au niveau de la plèvre. Il a une prise en charge chirurgicale digestive qui montre un adénocarcinome CDX2 et CK20 positifs, CK7, TTF1 et Napsine A négatifs. L’analyse du curage ganglionnaire ne montre pas d’envahissement. Une vidéo-thoracoscopie droite est réalisée et montre de multiples bourgeons d’aspect tumoral sur la plèvre viscérale ; l’examen anatomopathologique montre un carcinome avec une positivité pour CK7, TTF1 et Napsine A et une négativité pour CK20 et CDX2.\n\nQuel est le diagnostic pour ce patient ?",
+          "images": [],
+          "reponseAttendue": "Deux cancers synchrones : un carcinome colorectal, et un adénocarcinome bronchique avec métastases pleurales. En effet, un primitif pulmonaire est CK7 positif et CK20 négatif, une métastase digestive est CK7 négative et CK20 positive ; TTF1 et Napsine A sont en faveur d’un primitif pulmonaire, sans être ni spécifiques ni sensibles.",
+          "correctionGenerale": "• <b>Carcinome colorectal</b>\n• <b>Et adénocarcinome bronchique avec métastases pleurales</b>\n\n<b>Repères immunohistochimiques</b>\n• Primitif pulmonaire : <b>CK7+ / CK20−</b>\n• Métastase (digestive) : <b>CK7− / CK20+</b>\n• <b>TTF1 et Napsine A</b> en faveur d’un primitif pulmonaire, mais ni spécifiques ni sensibles"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction porte sur la valeur diagnostique des altérations moléculaires.</i>",
+          "images": [],
+          "reponseAttendue": "Le conférencier juge la question très tendancieuse : la réponse dépend de la mutation et de la fréquence allélique. Pour une mutation L858R de l’EGFR ou pour les réarrangements ALK et ROS1, la spécificité et la valeur prédictive positive sont très bonnes et proches de 100 % ; elles sont moins bonnes pour les autres altérations.",
+          "correctionGenerale": "• <i>Question très tendancieuse</i>\n• Dépend de la <b>mutation</b> et de la <b>fréquence allélique</b>\n• Pour une mutation <b>L858R de l’EGFR</b> ou les <b>réarrangements ALK et ROS1</b> : spécificité et VPP très bonnes, proches de 100 %\n• Moins bonnes pour les autres"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nL’âge constitue-t-il en soi une contre-indication à la mise en œuvre d’un traitement local ou général du cancer bronchique ? Pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Non. L’âge physiologique peut être différent de l’âge civil : tout dépend de l’évolution des capacités fonctionnelles et de l’état de vulnérabilité lié au vieillissement, des comorbidités et du déclin des capacités fonctionnelles propres au patient. Les vraies limites sont l’état général, la volonté du patient de prendre un traitement — qui peut diminuer avec l’âge — et ses comorbidités.",
+          "correctionGenerale": "• <b>Non</b>\n• L’<b>âge physiologique</b> peut être différent de l’âge civil\n• Tout dépend de l’évolution des capacités fonctionnelles et de l’état de vulnérabilité lié au vieillissement, des comorbidités et du déclin des capacités fonctionnelles propres au patient\n• Les <b>vraies limites</b> sont l’état général, la volonté du patient de prendre un traitement — qui peut baisser avec l’âge — et ses comorbidités"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nEn dehors de <i>Streptococcus pneumoniae</i>, quelles sont les 2 bactéries les plus souvent à l’origine des exacerbations de BPCO ?",
+          "images": [],
+          "reponseAttendue": "Haemophilus influenzae et Moraxella catarrhalis.",
+          "correctionGenerale": "• <b><i>Haemophilus influenzae</i></b>\n• <b><i>Moraxella catarrhalis</i></b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nQuel est votre diagnostic radiologique ?",
+          "images": [
+            "annales-pneumologie-bon/conference-n10-sent/figures/img-067-179.jpg"
+          ],
+          "reponseAttendue": "Un emphysème.",
+          "correctionGenerale": "• <b>Emphysème</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction porte sur l’interprétation de l’exploration fonctionnelle respiratoire jointe.</i>\n\nInterprétez ces explorations fonctionnelles respiratoires.",
+          "images": [
+            "annales-pneumologie-bon/conference-n10-sent/figures/img-071-188.jpg"
+          ],
+          "reponseAttendue": "Trouble ventilatoire obstructif sévère, non réversible ; distension associée, sévère ; trouble de la diffusion léger.",
+          "correctionGenerale": "• <b>TVO sévère non réversible</b>\n• <b>Distension associée</b> (sévère)\n• <b>Trouble de la diffusion léger</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nQuel est le rythme de surveillance post-opératoire habituellement recommandé après une chirurgie thoracique pour un cancer bronchique de stade précoce ?",
+          "images": [],
+          "reponseAttendue": "Les 2 premières années : TDM thoracique tous les 6 mois et TDM abdominale une fois par an. Puis TDM thoracique annuelle jusqu’à 5 ans de suivi, puis une TDM tous les 2 ans. Il est possible d’interrompre le suivi selon l’âge, l’état cognitif et la survenue de comorbidités sévères.",
+          "correctionGenerale": "• <b>Les 2 premières années</b> : TDM thoracique tous les 6 mois, TDM abdominale 1 fois par an\n• <b>TDM thoracique annuelle jusqu’à 5 ans</b> de suivi\n• Puis <b>1 TDM tous les 2 ans</b>\n• Possibilité d’<b>interrompre le suivi</b> selon l’âge, l’état cognitif, la survenue de comorbidités sévères"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nQuelle est la définition de la toux chronique ? Quelles sont les 3 causes les plus fréquentes de toux chronique de l’adulte ?",
+          "images": [],
+          "reponseAttendue": "Une toux évoluant depuis au moins 8 semaines. Les trois causes les plus fréquentes sont la rhinosinusite, l’asthme et le reflux gastro-œsophagien.",
+          "correctionGenerale": "• <b>Toux chronique</b> si &gt; 8 semaines\n• <b>Principales causes</b> : rhinosinusite, asthme, RGO\n\n<i>Algorithme projeté en séance. Toux évoluant depuis au moins 8 semaines ⇒ évaluation de la toux (EVA), recherche et prise en charge des complications, radiographie de thorax. En cas de signes d’alarme à l’interrogatoire ou à la radiographie : prise en charge spécifique. Sinon, prise en charge de 1re intention : arrêt du tabagisme et des traitements tussigènes pendant 4 semaines ; si la toux persiste, recherche des 3 causes les plus fréquentes — rhinosinusite (interrogatoire, examen physique, nasofibroscopie), asthme (interrogatoire, examen physique, spirométrie, FeNO), RGO (interrogatoire). Traitements si signes en faveur du diagnostic : rhinosinusite — lavage du nez, corticothérapie nasale ou anti-histaminique, éviction des facteurs favorisants, éducation thérapeutique ; asthme — CSI ± BDLA au moins 4 semaines, éviction des facteurs favorisants, éducation thérapeutique ; RGO — traitement continu au moins 8 semaines, règles hygiéno-diététiques, éducation thérapeutique. En l’absence de diagnostic ou d’amélioration (toux chronique réfractaire ou inexpliquée), explorations de 2e intention : exploration fonctionnelle digestive, TDM thoracique, TDM des sinus ou cone beam, endoscopie bronchique, évaluation du sommeil, exploration fonctionnelle laryngée. En l’absence de cause ou en cas de persistance malgré le traitement des causes retrouvées : discuter les traitements neuromodulateurs et les interventions non pharmacologiques (orthophonie, kinésithérapie).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 22</b>\n\nQuel est le risque de rechute pour les cancers de stade IB-III opérés ? En cas de rechute, quelle est la proportion de celles-ci qui sont des rechutes systémiques ?",
+          "images": [],
+          "reponseAttendue": "Le risque de récidive est de 5 à 10 % par an les 4 premières années, puis de 2 % par an. 25 à 30 % des rechutes sont des rechutes métastatiques. La poursuite du tabac est un facteur de risque majeur.",
+          "correctionGenerale": "• <b>Risque de récidive</b> : 5-10 % par an les 4 premières années, puis 2 % par an\n• <b>25-30 % de rechutes sur métastase</b>\n• <b>Poursuite du tabac</b> : facteur de risque ++"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 23</b>\n\nQuels sont les bénéfices démontrés de la réadaptation respiratoire chez les patients atteints de BPCO ?",
+          "images": [],
+          "reponseAttendue": "Amélioration des symptômes respiratoires, diminution de la fréquence des exacerbations et des admissions hospitalières, aide au sevrage tabagique, amélioration de l’anxiété et de la dépression, et amélioration de la survie.",
+          "correctionGenerale": "• <b>Symptômes respiratoires</b>\n• <b>Fréquence des exacerbations</b>\n• <b>Fréquence des admissions hospitalières</b>\n• <b>Sevrage tabagique</b>\n• <b>Anxiété – dépression</b>\n• <b>Survie</b>\n\n<i>Schéma projeté en séance : patient BPCO avec dyspnée et intolérance à l’effort malgré un traitement pharmacologique optimal ⇒ évaluation avant le programme de réhabilitation respiratoire ⇒ environnement adapté dans un centre de réhabilitation intégré, avec équipe multidisciplinaire et composantes de réentraînement à l’effort, support psychosocial, mesures diététiques et éducation ⇒ minimum 20 sessions, 3 par semaine ⇒ augmentation de la tolérance à l’effort, de l’activité physique, de la qualité de vie, de l’autonomie, du self-management et de la compliance aux traitements, et diminution des symptômes, de l’anxiété, des admissions à l’hôpital et de l’isolement social ⇒ programme de maintenance.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 24</b>\n\nQuels sont les principaux risques dont un(e) patient(e) doit être informé(e) avant la réalisation d’une ponction transthoracique sous scanner ?",
+          "images": [],
+          "reponseAttendue": "L’hémoptysie et le pneumothorax.",
+          "correctionGenerale": "• <b>Hémoptysie</b>\n• <b>Pneumothorax</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 25</b>\n\nQuel est le pourcentage de cancers (tous types confondus) en France qui sont liés au tabac ?",
+          "images": [],
+          "reponseAttendue": "Un cancer sur cinq, soit 20 %.",
+          "correctionGenerale": "• <b>1 cancer sur 5</b>\n• Donc <b>20 %</b>"
+        }
+      ]
+    }
+  ]
+}
