@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import type { Profile } from '@/lib/auth/get-profile';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
+import { MENU_CLOSE_EVENT, MENU_OPEN_EVENT } from '@/lib/student/onboarding';
 
 // Dégradé navy → indigo profond → bordeaux sombre (de haut en bas).
 // Apporte de la chaleur tout en gardant le côté sérieux du navy.
@@ -109,11 +110,36 @@ export function AppShell({
         setPaletteOpen((v) => !v);
       } else if (e.key === 'Escape') {
         setPaletteOpen(false);
+        setMobileOpen(false);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  // Le tiroir mobile est pilotable de l'extérieur : la visite guidée l'ouvre
+  // pour pouvoir pointer les collèges et les items, qui n'existent dans le DOM
+  // que lorsqu'il est déployé.
+  useEffect(() => {
+    const open = () => setMobileOpen(true);
+    const close = () => setMobileOpen(false);
+    window.addEventListener(MENU_OPEN_EVENT, open);
+    window.addEventListener(MENU_CLOSE_EVENT, close);
+    return () => {
+      window.removeEventListener(MENU_OPEN_EVENT, open);
+      window.removeEventListener(MENU_CLOSE_EVENT, close);
+    };
+  }, []);
+
+  // Tiroir ouvert : on gèle le défilement de la page derrière lui. Sans ça, sur
+  // iOS, le doigt fait défiler le contenu sous le voile et le menu paraît
+  // « collé » à une page qui bouge.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [mobileOpen]);
 
   const sidebar = (
     <div className="flex h-full flex-col text-white" style={{ background: SIDEBAR_BG }}>
@@ -149,11 +175,27 @@ export function AppShell({
         <aside data-tour="student-menu" className="hidden w-[260px] shrink-0 lg:block">{sidebar}</aside>
       )}
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer.
+          `data-tour="student-menu"` y figure aussi : la visite guidée mesure le
+          menu RÉELLEMENT visible, qui sur téléphone est ce tiroir et non
+          l'aside desktop (masqué, donc de largeur nulle). */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-[280px] shadow-(--shadow-lifted)">{sidebar}</div>
+        <div
+          className="fixed inset-0 z-50 lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu de navigation"
+        >
+          <div
+            className="absolute inset-0 bg-black/50 motion-safe:animate-[fadeIn_.18s_ease-out]"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div
+            data-tour="student-menu"
+            className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] shadow-(--shadow-lifted) motion-safe:animate-[slideInLeft_.22s_cubic-bezier(0.22,1,0.36,1)]"
+          >
+            {sidebar}
+          </div>
         </div>
       )}
 

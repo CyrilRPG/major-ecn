@@ -2,13 +2,22 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Sparkles, X } from 'lucide-react';
+import {
+  ONBOARDING_KEYS, isMobileViewport, isReplayRequested, readFlag, waitForElement, writeFlag,
+} from '@/lib/student/onboarding';
 
 /**
  * 3ᵉ flèche du parcours d'onboarding : n'apparaît QUE lorsque l'élève ouvre un
- * item pour la première fois et arrive sur l'Aperçu (pas avant). Pointe la grille
- * des contenus et rappelle l'ordre pédagogique. Gate localStorage dédié.
+ * item pour la première fois et arrive sur l'Aperçu. Pointe la grille des
+ * contenus et rappelle l'ordre pédagogique.
+ *
+ * La détection de la cible était une mesure UNIQUE à 700 ms : dès que la page
+ * mettait un peu plus longtemps à se peindre, la condition échouait et rien ne
+ * réessayait — la flèche ne s'affichait plus jamais, et la 4ᵉ (assistant), qui
+ * attend celle-ci, restait bloquée à son tour. On sonde désormais jusqu'à ce
+ * que la grille soit là.
  */
-const STORAGE_KEY = 'major-ecn:onboarding-apercu-v1';
+const STORAGE_KEY = ONBOARDING_KEYS.apercu;
 const TARGET = '[data-tour="apercu-content"]';
 
 type Rect = { top: number; left: number; width: number; height: number };
@@ -16,23 +25,26 @@ type Rect = { top: number; left: number; width: number; height: number };
 export function ApercuCoachmark() {
   const [rect, setRect] = useState<Rect | null>(null);
   const [active, setActive] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const started = useRef(false);
 
   useEffect(() => {
     if (started.current) return;
-    try { if (localStorage.getItem(STORAGE_KEY)) return; } catch { return; }
-    // Attendre que la grille de contenus soit montée + visible.
-    const t = setTimeout(() => {
-      const el = document.querySelector(TARGET) as HTMLElement | null;
-      if (!el || el.getBoundingClientRect().width === 0) return;
+    if (!isReplayRequested() && readFlag(STORAGE_KEY)) return;
+    return waitForElement(TARGET, () => {
       started.current = true;
+      setMobile(isMobileViewport());
       setActive(true);
-    }, 700);
-    return () => clearTimeout(t);
+    }, {
+      // Une modale est déjà ouverte (popup vidéo de l'item, popup d'accueil,
+      // complétion de profil) : on la laisse finir. Le conseil viendra après,
+      // au lieu d'assombrir une fenêtre déjà à l'écran.
+      ready: () => !document.querySelector('[aria-modal="true"], [data-coachmark]'),
+    });
   }, []);
 
   const finish = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* ignore */ }
+    writeFlag(STORAGE_KEY);
     setActive(false);
   }, []);
 
@@ -46,10 +58,11 @@ export function ApercuCoachmark() {
   useEffect(() => {
     if (!active) return;
     measure();
-    window.addEventListener('resize', measure);
+    const onResize = () => { setMobile(isMobileViewport()); measure(); };
+    window.addEventListener('resize', onResize);
     window.addEventListener('scroll', measure, true);
     return () => {
-      window.removeEventListener('resize', measure);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('scroll', measure, true);
     };
   }, [active, measure]);
@@ -64,16 +77,22 @@ export function ApercuCoachmark() {
 
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-  const cardW = 320;
-  // Bulle au-dessus de la grille si la place le permet, sinon en dessous.
-  const above = ringTop > 200;
-  const cardLeft = Math.min(Math.max(ringLeft, 16), vw - cardW - 16);
-  const cardTop = above
-    ? Math.max(16, ringTop - 168)
-    : Math.min(ringTop + ringH + 14, vh - 180);
+  const cardW = mobile ? Math.min(340, vw - 24) : 320;
+  // Bulle au-dessus de la grille si la place le permet, sinon en dessous. Sur
+  // téléphone, la grille occupe presque tout l'écran : la bulle se pose en bas,
+  // dans la zone du pouce.
+  const above = !mobile && ringTop > 200;
+  const cardLeft = mobile
+    ? Math.round((vw - cardW) / 2)
+    : Math.min(Math.max(ringLeft, 16), vw - cardW - 16);
+  const cardTop = mobile
+    ? vh - 210
+    : above
+      ? Math.max(16, ringTop - 168)
+      : Math.min(ringTop + ringH + 14, vh - 180);
 
   return (
-    <div className="fixed inset-0 z-[120]" role="dialog" aria-label="Conseil parcours">
+    <div className="pointer-events-none fixed inset-0 z-[120]" data-coachmark role="dialog" aria-label="Conseil parcours">
       <div
         aria-hidden
         className="pointer-events-none absolute rounded-2xl ring-2 ring-white transition-all duration-300"
@@ -82,12 +101,12 @@ export function ApercuCoachmark() {
       {/* Flèche (pointe vers la grille). */}
       <span
         aria-hidden
-        className="absolute h-3.5 w-3.5 rotate-45 rounded-[3px] bg-white shadow-sm"
+        className="pointer-events-none absolute h-3.5 w-3.5 rotate-45 rounded-[3px] bg-white shadow-sm"
         style={{ left: cardLeft + 28, top: above ? cardTop + 152 : cardTop - 6 }}
       />
       <div
-        className="absolute w-[320px] rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)]"
-        style={{ top: cardTop, left: cardLeft }}
+        className="pointer-events-auto absolute rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)]"
+        style={{ top: cardTop, left: cardLeft, width: cardW }}
       >
         <button
           type="button"

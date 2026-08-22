@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, Shield, UserRound } from 'lucide-react';
+import { GraduationCap, LogOut, Shield, UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,6 +15,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { effectiveSeed } from '@/lib/avatar';
 import { createClient } from '@/lib/supabase/client';
+import { resetOnboarding } from '@/lib/student/onboarding';
 import type { Profile } from '@/lib/auth/get-profile';
 
 export function UserMenu({ profile }: { profile: Profile }) {
@@ -24,6 +25,14 @@ export function UserMenu({ profile }: { profile: Profile }) {
     await supabase.auth.signOut();
     router.push('/login');
     router.refresh();
+  };
+  /** Rejoue tout le parcours d'accueil : popup pas à pas + flèches sur le menu,
+   *  l'aperçu d'un item et l'assistant. Rechargement complet (et non
+   *  `router.push`) pour que chaque composant se remonte et relise un stockage
+   *  vidé — sinon ceux déjà rendus resteraient sur leur décision de départ. */
+  const handleReplayTutorial = () => {
+    resetOnboarding();
+    window.location.assign('/accueil?tutoriel=1');
   };
   return (
     <DropdownMenu>
@@ -59,6 +68,10 @@ export function UserMenu({ profile }: { profile: Profile }) {
             <UserRound />
             Mon profil
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleReplayTutorial}>
+          <GraduationCap />
+          Revoir le tutoriel
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="text-(--color-danger) data-[highlighted]:bg-red-50 dark:data-[highlighted]:bg-red-900/20 data-[highlighted]:text-(--color-danger)">

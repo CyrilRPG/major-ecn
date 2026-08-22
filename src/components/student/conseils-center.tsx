@@ -10,8 +10,13 @@ import {
 } from 'lucide-react';
 import { DiscoveryWelcomePopup } from '@/components/espace-decouverte/discovery-welcome-popup';
 import { WELCOME_PAR_DEFAUT, type WelcomeConfig } from '@/lib/student/welcome';
+import { ONBOARDING_KEYS, readFlag, writeFlag } from '@/lib/student/onboarding';
 
-const STORAGE_KEY = 'major-ecn:conseils-dismissed';
+// Même clé qu'avant, mais lue et écrite via les helpers du parcours d'accueil :
+// ils la cloisonnent par compte. Le tutoriel pas à pas s'ouvre à la fermeture de
+// ce popup ; si l'un lisait la clé cloisonnée et l'autre la clé globale, le
+// tutoriel attendait la fermeture d'un popup que personne n'affichait.
+const STORAGE_KEY = ONBOARDING_KEYS.welcome;
 // Charte cohérente avec le menu (rouge-orange officiel Major ECN)
 const PURPLE = '#E4002B';      // ⇐ alias historique conservé : nom legacy mais valeur rouge
 const PURPLE_SOFT = '#FFE4E8'; // fond accent doux pour items actifs
@@ -57,12 +62,11 @@ export function ConseilsCenter({
     if (isDecouverte) return;
     // Popup désactivé pour cette spécialité (configuration d'administration).
     if (!welcome.active) return;
-    const dismissed = localStorage.getItem(STORAGE_KEY);
-    if (!dismissed) setMode('popup');
+    if (!readFlag(STORAGE_KEY)) setMode('popup');
   }, [isDecouverte, welcome.active]);
 
   const closePopup = () => {
-    if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
+    if (neverShow) writeFlag(STORAGE_KEY);
     setMode('closed');
     window.dispatchEvent(new Event('mecn:welcome-closed'));
   };
@@ -106,7 +110,11 @@ function PopupOverlay({
   onNeverShowChange: (v: boolean) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-3 sm:p-6" aria-modal="true" role="dialog">
+    // `data-welcome-popup` : repère lu par le tutoriel pas à pas, qui s'ouvre
+    // derrière ce popup. Il lui sert à vérifier que l'accueil est bien encore à
+    // l'écran avant de patienter — sans quoi il attendait indéfiniment un
+    // événement de fermeture qui, en cas de navigation, ne venait jamais.
+    <div data-welcome-popup className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-3 sm:p-6" aria-modal="true" role="dialog">
       <div className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-8">
         <button
           onClick={onClose}

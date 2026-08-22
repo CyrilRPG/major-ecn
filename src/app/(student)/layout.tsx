@@ -321,7 +321,11 @@ export default async function StudentLayout({ children }: { children: React.Reac
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    // `data-onboarding-user` : les étapes du tutoriel déjà vues sont mémorisées
+    // PAR COMPTE (cf. lib/student/onboarding). Auparavant elles l'étaient par
+    // navigateur, si bien qu'un élève ouvert en « se connecter en tant que »
+    // héritait des fermetures de l'administrateur et ne voyait plus rien.
+    <div className="flex h-screen flex-col" data-onboarding-user={user.id}>
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="min-h-0 flex-1">
         <AppShell

@@ -1,15 +1,24 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { ArrowRight, MousePointerClick, X } from 'lucide-react';
+import {
+  MENU_OPEN_EVENT, ONBOARDING_KEYS, isMobileViewport, isReplayRequested,
+  readFlag, writeFlag,
+} from '@/lib/student/onboarding';
 
 /**
- * Visite guidée « première connexion » : de mini-flèches + bulles pointent le
- * menu (choisir sa matière → choisir un item → accéder au contenu), pas à pas.
- * Gate localStorage (une seule fois). Desktop uniquement (le menu latéral est
- * masqué sur mobile). S'inspire du coach-mark Découverte existant.
+ * Visite guidée « première connexion » : des mini-flèches et des bulles
+ * pointent le menu (choisir sa matière → ouvrir un item), pas à pas.
+ *
+ * Fonctionne aussi sur téléphone : le menu y est un tiroir, on l'ouvre donc
+ * avant de pointer quoi que ce soit (auparavant la visite s'interrompait
+ * silencieusement dès que le menu latéral était masqué, c'est-à-dire sur tout
+ * mobile). Le voile ne capte plus les clics : l'élève peut réellement cliquer
+ * sur la matière qu'on lui désigne.
  */
-const STORAGE_KEY = 'major-ecn:onboarding-tour-v1';
+const STORAGE_KEY = ONBOARDING_KEYS.tour;
 
 type Step = { selector: string; title: string; body: string; expandFirst?: boolean };
 
@@ -29,45 +38,84 @@ const STEPS: Step[] = [
 
 type Rect = { top: number; left: number; width: number; height: number };
 
-export function OnboardingTour() {
+/** Premier élément RÉELLEMENT affiché : sur mobile, l'aside desktop est encore
+ *  dans le DOM mais masqué (rectangle nul), il ne doit jamais être mesuré. */
+function visibleTarget(selector: string): HTMLElement | null {
+  const all = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
+  return all.find((el) => el.getBoundingClientRect().width > 0) ?? null;
+}
+
+export function OnboardingTour({ replayOnly = false }: {
+  /** Comptes non-élèves (admin, professeur) : la visite ne se lance qu'à la
+   *  demande explicite, via « Revoir le tutoriel » (`?tutoriel=1`). */
+  replayOnly?: boolean;
+}) {
+  const pathname = usePathname();
   const [active, setActive] = useState(false);
   const [step, setStep] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
+  const [mobile, setMobile] = useState(false);
   const startedRef = useRef(false);
 
-  // Démarrage : une seule fois, desktop, quand le menu est présent.
+  // Démarrage : une seule fois, dès que le menu est affichable. Sur téléphone
+  // on demande d'abord l'ouverture du tiroir — sans lui, ni les collèges ni les
+  // items n'existent à l'écran.
   useEffect(() => {
     if (startedRef.current) return;
-    try {
-      if (localStorage.getItem(STORAGE_KEY)) return;
-    } catch { return; }
-    const t = setTimeout(() => {
-      const menu = document.querySelector('[data-tour="student-menu"]') as HTMLElement | null;
-      if (!menu || menu.getBoundingClientRect().width === 0) return; // mobile / pas de menu
-      startedRef.current = true;
-      setActive(true);
-    }, 1100);
-    return () => clearTimeout(t);
-  }, []);
+    const replay = isReplayRequested();
+    if (replayOnly && !replay) return;
+    if (!replay && readFlag(STORAGE_KEY)) return;
+
+    let cancelled = false;
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      if (cancelled) return;
+      tries += 1;
+      const onMobile = isMobileViewport();
+      if (onMobile) window.dispatchEvent(new Event(MENU_OPEN_EVENT));
+      const menu = visibleTarget('[data-tour="student-menu"]');
+      if (menu) {
+        window.clearInterval(timer);
+        startedRef.current = true;
+        setMobile(onMobile);
+        setActive(true);
+        return;
+      }
+      // ~12 s : au-delà, la page n'a pas de menu (plein écran, erreur de
+      // chargement). On abandonne pour cette visite sans marquer l'étape vue,
+      // elle se représentera à la navigation suivante.
+      if (tries > 40) window.clearInterval(timer);
+    }, 300);
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [replayOnly]);
 
   const finish = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* ignore */ }
+    writeFlag(STORAGE_KEY);
     setActive(false);
   }, []);
 
+  // L'élève a suivi la consigne et ouvert un item : la visite a rempli son
+  // office, elle s'efface pour laisser la place au conseil de la page item.
+  // Sans ça, les deux bulles se superposaient.
+  const firstPath = useRef(pathname);
+  useEffect(() => {
+    if (!active) return;
+    if (pathname !== firstPath.current && pathname.startsWith('/cours/')) finish();
+  }, [pathname, active, finish]);
+
   const measure = useCallback(() => {
     const s = STEPS[step];
-    let el = document.querySelector(s.selector) as HTMLElement | null;
+    // Le tiroir mobile se referme à chaque navigation : tant que la visite dure,
+    // on le redemande, sinon la bulle pointerait un menu absent.
+    if (isMobileViewport() && !visibleTarget('[data-tour="student-menu"]')) {
+      window.dispatchEvent(new Event(MENU_OPEN_EVENT));
+    }
+    let el = visibleTarget(s.selector);
     // Étape « ouvrir un item » : si aucun item visible, déroule le 1er collège.
-    if (!el && s.expandFirst) {
-      const m = document.querySelector('[data-tour="matiere"]') as HTMLElement | null;
-      m?.click();
-    }
-    el = document.querySelector(s.selector) as HTMLElement | null;
-    if (!el) {
-      // repli sur le menu pour ne jamais afficher une bulle « dans le vide »
-      el = document.querySelector('[data-tour="student-menu"]') as HTMLElement | null;
-    }
+    if (!el && s.expandFirst) visibleTarget('[data-tour="matiere"]')?.click();
+    el = visibleTarget(s.selector);
+    // Repli sur le menu pour ne jamais afficher une bulle « dans le vide ».
+    if (!el) el = visibleTarget('[data-tour="student-menu"]');
     if (!el) { setRect(null); return; }
     const r = el.getBoundingClientRect();
     setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
@@ -75,14 +123,30 @@ export function OnboardingTour() {
 
   useEffect(() => {
     if (!active) return;
+    setMobile(isMobileViewport());
     measure();
-    const id = window.setTimeout(measure, 260); // laisse le temps au déroulé
-    window.addEventListener('resize', measure);
+    // Le tiroir mobile glisse depuis la gauche (220 ms) et le déroulé d'un
+    // collège prend ~200 ms : mesurer une seule fois plaçait l'anneau sur la
+    // position de DÉPART du tiroir, donc à côté. On la resuit pendant 2 s, le
+    // temps que tout soit posé.
+    let ticks = 0;
+    const follow = window.setInterval(() => {
+      measure();
+      // 20 × 100 ms : au-delà, la cible est stable et les écouteurs ci-dessous
+      // suffisent. Un intervalle plutôt qu'un requestAnimationFrame : ce dernier
+      // est gelé quand l'onglet passe en arrière-plan, et l'anneau restait alors
+      // figé sur la position de départ au retour de l'élève.
+      if (++ticks >= 20) window.clearInterval(follow);
+    }, 100);
+    const onResize = () => { setMobile(isMobileViewport()); measure(); };
+    window.addEventListener('resize', onResize);
     window.addEventListener('scroll', measure, true);
+    window.addEventListener('animationend', measure, true);
     return () => {
-      window.clearTimeout(id);
-      window.removeEventListener('resize', measure);
+      window.clearInterval(follow);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('scroll', measure, true);
+      window.removeEventListener('animationend', measure, true);
     };
   }, [active, step, measure]);
 
@@ -94,18 +158,26 @@ export function OnboardingTour() {
   const ringW = rect.width + pad * 2;
   const ringH = rect.height + pad * 2;
 
-  // Bulle à droite du menu (le menu est à gauche), verticalement alignée.
-  const cardW = 300;
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-  const cardLeft = Math.min(ringLeft + ringW + 16, vw - cardW - 16);
-  const cardTop = Math.min(Math.max(ringTop, 16), Math.max(16, vh - 220));
+  // Desktop : bulle à droite du menu. Mobile : le tiroir occupe déjà 280 px des
+  // 375 px de large — il ne reste pas de place à côté, la bulle passe en bas.
+  const cardW = mobile ? Math.min(340, vw - 24) : 300;
+  const cardLeft = mobile
+    ? Math.round((vw - cardW) / 2)
+    : Math.min(ringLeft + ringW + 16, vw - cardW - 16);
+  const cardTop = mobile
+    ? Math.max(ringTop + ringH + 14, vh - 230)
+    : Math.min(Math.max(ringTop, 16), Math.max(16, vh - 220));
 
   const isLast = step === STEPS.length - 1;
   const s = STEPS[step];
 
   return (
-    <div className="fixed inset-0 z-[120]" role="dialog" aria-label="Visite guidée">
+    // `pointer-events-none` sur le voile : la consigne est de CLIQUER sur la
+    // matière désignée. Tant que le calque captait les clics, c'était
+    // impossible — la visite bloquait ce qu'elle demandait de faire.
+    <div className="pointer-events-none fixed inset-0 z-[120]" data-coachmark role="dialog" aria-label="Visite guidée">
       {/* Spotlight : anneau clair + reste de l'écran assombri (via box-shadow). */}
       <div
         aria-hidden
@@ -115,16 +187,20 @@ export function OnboardingTour() {
           boxShadow: '0 0 0 9999px rgba(15,23,42,0.55)',
         }}
       />
-      {/* Flèche pointant vers la cible (à gauche de la bulle). */}
+      {/* Flèche pointant vers la cible. */}
       <span
         aria-hidden
-        className="absolute h-3.5 w-3.5 rotate-45 rounded-[3px] bg-white shadow-sm transition-all duration-300"
-        style={{ top: cardTop + 26, left: cardLeft - 6 }}
+        className="pointer-events-none absolute h-3.5 w-3.5 rotate-45 rounded-[3px] bg-white shadow-sm transition-all duration-300"
+        style={
+          mobile
+            ? { top: cardTop - 6, left: Math.min(Math.max(ringLeft + ringW / 2, cardLeft + 20), cardLeft + cardW - 20) }
+            : { top: cardTop + 26, left: cardLeft - 6 }
+        }
       />
       {/* Bulle. */}
       <div
-        className="absolute w-[300px] rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)] transition-all duration-300"
-        style={{ top: cardTop, left: cardLeft }}
+        className="pointer-events-auto absolute rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)] transition-all duration-300"
+        style={{ top: cardTop, left: cardLeft, width: cardW }}
       >
         <button
           type="button"

@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, X } from 'lucide-react';
+import {
+  ONBOARDING_KEYS, isMobileViewport, isReplayRequested, readFlag, writeFlag,
+} from '@/lib/student/onboarding';
 
 /**
  * 4ᵉ flèche du parcours d'onboarding : pointe le bouton « Assistant » présent
@@ -16,47 +19,56 @@ import { ArrowRight, MessageCircle, X } from 'lucide-react';
  *    première fois qu'il ouvre un item.
  *
  * Volontairement : on ne parle pas d'« IA » — juste « l'assistant du cours ».
+ *
+ * La condition d'ouverture exigeait auparavant que l'étape « aperçu » soit
+ * marquée comme vue. Sur une page sans grille d'aperçu (fiche, QCM, vidéo…),
+ * cette étape ne pouvait par construction jamais s'y produire : la 4ᵉ flèche
+ * attendait 20 s puis renonçait, à chaque visite. On ne bloque donc que s'il
+ * reste vraiment un conseil affiché à l'écran.
  */
-const STORAGE_KEY = 'major-ecn:onboarding-assistant-v1';
-const APERCU_KEY = 'major-ecn:onboarding-apercu-v1';
+const STORAGE_KEY = ONBOARDING_KEYS.assistant;
+const APERCU_KEY = ONBOARDING_KEYS.apercu;
 const TARGET = '[data-tour="assistant"]';
+/** Grille d'aperçu : sa présence signale que l'étape 3 a encore lieu d'être. */
+const APERCU_TARGET = '[data-tour="apercu-content"]';
 
 type Rect = { top: number; left: number; width: number; height: number };
 
 export function AssistantCoachmark() {
   const [rect, setRect] = useState<Rect | null>(null);
   const [active, setActive] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const started = useRef(false);
 
-  // Attend que le bouton assistant soit monté ET que l'aperçu (étape 3) soit
-  // terminé (ou déjà vu). Sondage léger pour séquencer proprement après l'aperçu.
+  // Attend que le bouton assistant soit monté, puis que la place soit libre :
+  // ni l'étape « aperçu » en cours, ni une autre bulle affichée.
   useEffect(() => {
     if (started.current) return;
-    let done = false;
-    try { if (localStorage.getItem(STORAGE_KEY)) return; } catch { return; }
+    if (!isReplayRequested() && readFlag(STORAGE_KEY)) return;
     let tries = 0;
     const id = window.setInterval(() => {
       tries += 1;
-      if (done) return;
-      let apercuDone = true;
-      try { apercuDone = !!localStorage.getItem(APERCU_KEY); } catch { apercuDone = true; }
       const el = document.querySelector(TARGET) as HTMLElement | null;
-      const visible = !!el && el.getBoundingClientRect().width > 0;
-      if (apercuDone && visible) {
-        done = true;
-        started.current = true;
-        window.clearInterval(id);
-        setActive(true);
-      } else if (tries > 40) {
-        // ~20 s sans conditions réunies → on abandonne pour cette visite.
-        window.clearInterval(id);
+      if (!el || el.getBoundingClientRect().width === 0) {
+        if (tries > 60) window.clearInterval(id); // ~30 s : page sans assistant
+        return;
       }
+      // Une bulle est déjà à l'écran (visite guidée, aperçu) : on patiente,
+      // deux conseils simultanés seraient illisibles.
+      if (document.querySelector('[data-coachmark]')) return;
+      // L'étape 3 reste due tant que la grille d'aperçu est là et non validée.
+      const apercuDue = !readFlag(APERCU_KEY) && !!document.querySelector(APERCU_TARGET);
+      if (apercuDue) return;
+      window.clearInterval(id);
+      started.current = true;
+      setMobile(isMobileViewport());
+      setActive(true);
     }, 500);
     return () => window.clearInterval(id);
   }, []);
 
   const finish = useCallback(() => {
-    try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* ignore */ }
+    writeFlag(STORAGE_KEY);
     setActive(false);
   }, []);
 
@@ -70,10 +82,11 @@ export function AssistantCoachmark() {
   useEffect(() => {
     if (!active) return;
     measure();
-    window.addEventListener('resize', measure);
+    const onResize = () => { setMobile(isMobileViewport()); measure(); };
+    window.addEventListener('resize', onResize);
     window.addEventListener('scroll', measure, true);
     return () => {
-      window.removeEventListener('resize', measure);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('scroll', measure, true);
     };
   }, [active, measure]);
@@ -88,13 +101,15 @@ export function AssistantCoachmark() {
 
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-  const cardW = 300;
+  const cardW = mobile ? Math.min(340, vw - 24) : 300;
   // Bulle sous le bouton (le bouton est en haut à droite), alignée à droite.
-  const cardLeft = Math.min(Math.max(ringLeft + ringW - cardW, 16), vw - cardW - 16);
+  const cardLeft = mobile
+    ? Math.round((vw - cardW) / 2)
+    : Math.min(Math.max(ringLeft + ringW - cardW, 16), vw - cardW - 16);
   const cardTop = Math.min(ringTop + ringH + 14, vh - 190);
 
   return (
-    <div className="fixed inset-0 z-[120]" role="dialog" aria-label="Conseil assistant">
+    <div className="pointer-events-none fixed inset-0 z-[120]" data-coachmark role="dialog" aria-label="Conseil assistant">
       <div
         aria-hidden
         className="pointer-events-none absolute rounded-xl ring-2 ring-white transition-all duration-300"
@@ -107,8 +122,8 @@ export function AssistantCoachmark() {
         style={{ left: Math.min(cardLeft + cardW - 34, ringLeft + ringW - 12), top: cardTop - 6 }}
       />
       <div
-        className="absolute w-[300px] rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)]"
-        style={{ top: cardTop, left: cardLeft }}
+        className="pointer-events-auto absolute rounded-2xl bg-white p-4 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.55)]"
+        style={{ top: cardTop, left: cardLeft, width: cardW }}
       >
         <button
           type="button"

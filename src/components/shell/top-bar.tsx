@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Command as CmdIcon, Lightbulb, PanelLeft, Search } from 'lucide-react';
+import { Command as CmdIcon, Lightbulb, Menu, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
 import { PlatformTimer } from '@/components/student/platform-timer';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -34,17 +34,27 @@ export function TopBar({
 }) {
   const pathname = usePathname();
   return (
-    <header className="flex h-16 items-center gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
+    <header className="flex h-16 items-center gap-2 border-b border-(--color-border) bg-(--color-surface) px-3 sm:gap-3 sm:px-4">
+      {/* Menu.
+          Sur téléphone, l'icône « panneau » ne se lisait pas comme un menu et
+          n'avait aucun libellé : le menu paraissait absent. On affiche donc un
+          hamburger explicite, encadré et légendé « Menu », et on garde l'icône
+          de panneau sur grand écran où le geste est un repli de colonne. */}
       <button
         type="button"
+        data-tour="menu-button"
         onClick={onToggleSidebar}
-        aria-label="Afficher / masquer le panneau"
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) focus-ring"
+        aria-label="Ouvrir le menu de navigation"
+        className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg border border-(--color-border) px-2.5 text-(--color-ink) hover:bg-(--color-sand-100) focus-ring lg:h-9 lg:w-9 lg:justify-center lg:border-0 lg:px-0 lg:text-(--color-ink-soft)"
       >
-        <PanelLeft className="h-4.5 w-4.5" />
+        <Menu className="h-5 w-5 lg:hidden" />
+        <PanelLeft className="hidden h-4.5 w-4.5 lg:block" />
+        <span className="text-[13px] font-semibold lg:hidden">Menu</span>
       </button>
 
-      <span className="text-sm font-medium text-(--color-ink-soft)">{contextLabel(pathname)}</span>
+      <span className="hidden truncate text-sm font-medium text-(--color-ink-soft) sm:inline">
+        {contextLabel(pathname)}
+      </span>
 
       <button
         type="button"

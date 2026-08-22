@@ -7,11 +7,14 @@ import {
   Search, Sparkles, Video, X, type LucideIcon,
 } from 'lucide-react';
 
+import { ONBOARDING_KEYS, isReplayRequested, readFlag, writeFlag } from '@/lib/student/onboarding';
+
 // Suffixe de version : incrémenté quand une étape est ajoutée, pour que le
 // tutoriel se réaffiche une fois aux élèves qui l'avaient déjà fermé. v2 =
 // ajout de l'étape « Parcours du Major » ; v3 = correctif d'ouverture (le
 // tutoriel n'apparaissait pas quand le popup d'accueil ne s'affichait pas).
-const STORAGE_KEY = 'major-ecn:student-tutorial-dismissed:v3';
+const STORAGE_KEY = ONBOARDING_KEYS.tutorial;
+const WELCOME_KEY = ONBOARDING_KEYS.welcome;
 
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
@@ -176,13 +179,19 @@ function buildSteps(flags: ContentFlags): Step[] {
   return steps;
 }
 
-export function StudentTutorialPopup({ offer, parcoursMajor = false, welcomeActive = true }: {
+export function StudentTutorialPopup({
+  offer, parcoursMajor = false, welcomeActive = true, replayOnly = false,
+}: {
   offer: 'essentiel' | 'intensif' | 'approfondi';
   /** L'étape « Parcours du Major » n'est montrée qu'aux élèves qui y ont accès. */
   parcoursMajor?: boolean;
   /** Le popup d'accueil est-il actif ? S'il ne s'affiche pas, on n'attend pas
    *  sa fermeture — sinon le tutoriel ne s'ouvrirait jamais. */
   welcomeActive?: boolean;
+  /** Comptes non-élèves (admin, professeur) : le tutoriel ne s'ouvre qu'à la
+   *  demande, via « Revoir le tutoriel ». Sans ça, un administrateur qui teste
+   *  la vue étudiant ne pouvait jamais voir ce qu'il livre à ses élèves. */
+  replayOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [neverShow, setNeverShow] = useState(true);
@@ -192,18 +201,20 @@ export function StudentTutorialPopup({ offer, parcoursMajor = false, welcomeActi
     if (typeof window === 'undefined') return;
 
     // `?tutoriel=1` rouvre le tutoriel même s'il a déjà été fermé : c'est le
-    // seul moyen de le revoir sans vider le stockage du navigateur.
-    if (new URLSearchParams(window.location.search).get('tutoriel') === '1') {
+    // moyen de le revoir sans vider le stockage du navigateur (cf. « Revoir le
+    // tutoriel » dans le menu du compte).
+    if (isReplayRequested()) {
       setOpen(true);
       return;
     }
-    if (localStorage.getItem(STORAGE_KEY)) return;
+    if (replayOnly) return;
+    if (readFlag(STORAGE_KEY)) return;
 
     // Le popup d'accueil passe en premier QUAND il s'affiche : même condition
     // que ConseilsCenter (actif, et pas encore fermé définitivement). Sinon
     // aucun événement `mecn:welcome-closed` ne viendra jamais, et le tutoriel
     // resterait invisible.
-    const accueilVaSAfficher = welcomeActive && !localStorage.getItem('major-ecn:conseils-dismissed');
+    const accueilVaSAfficher = welcomeActive && !readFlag(WELCOME_KEY);
     if (!accueilVaSAfficher) {
       setOpen(true);
       return;
@@ -213,11 +224,20 @@ export function StudentTutorialPopup({ offer, parcoursMajor = false, welcomeActi
       setTimeout(() => setOpen(true), 400);
     };
     window.addEventListener('mecn:welcome-closed', handler);
-    return () => window.removeEventListener('mecn:welcome-closed', handler);
-  }, [welcomeActive]);
+    // Filet de sécurité : si le popup d'accueil est fermé autrement qu'avec sa
+    // croix (navigation, rechargement), aucun événement n'arrive et le
+    // tutoriel n'ouvrait jamais. Passé 12 s sans popup à l'écran, on l'ouvre.
+    const fallback = window.setTimeout(() => {
+      if (!document.querySelector('[data-welcome-popup]')) setOpen(true);
+    }, 12_000);
+    return () => {
+      window.removeEventListener('mecn:welcome-closed', handler);
+      window.clearTimeout(fallback);
+    };
+  }, [welcomeActive, replayOnly]);
 
   function close() {
-    if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
+    if (neverShow) writeFlag(STORAGE_KEY);
     setOpen(false);
   }
 
@@ -237,13 +257,17 @@ export function StudentTutorialPopup({ offer, parcoursMajor = false, welcomeActi
   const last = i === steps.length - 1;
   const Icon = step.Icon;
 
+  // Clic à côté = fermeture SIMPLE, sans mémoriser « ne plus afficher ». La case
+  // étant cochée par défaut, un clic hors de la fenêtre suffisait à supprimer le
+  // tutoriel définitivement : un geste involontaire coûtait toute la prise en
+  // main. Seuls la croix, « Passer » et la fin du parcours engagent l'oubli.
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-6"
       aria-modal="true"
       role="dialog"
       aria-labelledby="student-tutorial-title"
-      onClick={(e) => { if (e.target === e.currentTarget) close(); }}
+      onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
     >
       <div
         className="relative max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-[28px] bg-white p-6 shadow-2xl sm:p-8"
