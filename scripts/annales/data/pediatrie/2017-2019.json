@@ -1,0 +1,697 @@
+{
+  "sources": {},
+  "series": [
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 1 - Partie 1",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 11,
+      "vignette": "Jean, 5 ans, présente des gonflements des paupières et a pris 2 kg depuis sa dernière consultation il y a 15 jours. Vous relevez à l’examen clinique un œdème déclive, mou, blanc, indolore, des membres inférieurs, prenant le godet.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuel est le diagnostic le plus probable ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome néphrotique idiopathique chez un enfant de 5 ans.",
+          "correctionGenerale": "<b>Syndrome néphrotique (idiopathique) chez un enfant de 5 ans.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuels sont les trois paramètres biologiques chiffrés permettant de le confirmer ?",
+          "images": [],
+          "reponseAttendue": "Protidémie < 60 g/L, albuminémie < 30 g/L, rapport protéinurie/créatininurie > 0,2 g/mmol ou > 2 g/g sur échantillon (ou protéinurie > 50 mg/kg/j sur les urines des 24 h).",
+          "correctionGenerale": "• Protidémie < 60 g/L\n• Albuminémie < 30 g/L\n• Protéinurie/créatininurie > 0,2 g/mmol ou > 2 g/g sur échantillon\n• (Protéinurie > 50 mg/kg/j sur les urines des 24 h)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nParmi ces trois paramètres biologiques, lequel est l’élément clé pour le maintien de la pression oncotique ?",
+          "images": [],
+          "reponseAttendue": "L’albumine.",
+          "correctionGenerale": "<b>Albumine.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nIl est tachycarde, sa pression artérielle est à 75/40 ; vous demandez une radiographie thoracique qui retrouve une diminution de l’index cardiothoracique.\n\nPar quel mécanisme expliquez-vous cette anomalie ?",
+          "images": [],
+          "reponseAttendue": "La diminution de l’albumine entraîne une diminution de la pression oncotique plasmatique et donc une diminution de la volémie.",
+          "correctionGenerale": "<b>Diminution de l’albumine → diminution de la pression oncotique plasmatique → diminution de la volémie.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nDans ce même contexte, si Jean présente une douleur basithoracique droite non fébrile, quel diagnostic craignez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une embolie pulmonaire.",
+          "correctionGenerale": "<b>Embolie pulmonaire.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuelle autre complication pourriez-vous évoquer devant une hématurie macroscopique avec une douleur lombaire droite dans ce même contexte ?",
+          "images": [],
+          "reponseAttendue": "Une thrombose de la veine rénale droite, associée à une glomérulonéphrite extra-membraneuse.",
+          "correctionGenerale": "<b>Thrombose de la veine rénale droite</b>, associée à une glomérulonéphrite extra-membraneuse."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nVous décidez de l’hospitaliser. Dans la nuit, vous êtes appelé à son chevet car il a de la fièvre à 39 °C et mal au ventre. L’examen clinique révèle une défense diffuse.\n\nQuelle complication redoutez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une péritonite primitive dans le cadre d’un syndrome néphrotique.",
+          "correctionGenerale": "<b>Péritonite primitive</b> dans le cadre d’un syndrome néphrotique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nEn dehors des complications, quel est le médicament constituant la base du traitement de fond de cette pathologie ?",
+          "images": [],
+          "reponseAttendue": "La corticothérapie orale, associée aux mesures diététiques (régime pauvre en sel, pauvre en sucres rapides et en graisses, supplémentation en vitamine D et calcium).",
+          "correctionGenerale": "<b>Corticothérapie orale</b>, associée aux mesures diététiques : régime pauvre en sel, pauvre en sucres rapides et en graisses, supplémentation en vitamine D et calcium."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 1 - Partie 2",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 12,
+      "vignette": "Bob, 7 ans, se présente aux urgences pour des douleurs abdominales diffuses avec vomissements. L’examen révèle des lésions cutanées violacées, infiltrées et douloureuses, qui ne s’effacent pas à la vitropression. Il a une boiterie depuis 4 jours et vous constatez une tuméfaction de la cheville droite. La température est à 37 °C.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nComment définissez-vous l’éruption cutanée ?",
+          "images": [],
+          "reponseAttendue": "Un purpura vasculaire.",
+          "correctionGenerale": "<b>Purpura vasculaire.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un purpura rhumatoïde chez un enfant de 7 ans, devant l’aspect de purpura vasculaire, les douleurs abdominales, l’apyrexie et l’œdème de la cheville.",
+          "correctionGenerale": "<b>Purpura rhumatoïde</b> chez un enfant de 7 ans, devant l’aspect de purpura vasculaire, les douleurs abdominales, l’apyrexie et l’œdème de la cheville."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuel est le mécanisme physiopathologique de cette maladie ?",
+          "images": [],
+          "reponseAttendue": "Une vascularite immuno-allergique, avec dépôts de complexes immuns circulants fixant des IgA qui se déposent dans la paroi des capillaires de la peau et du tube digestif ainsi que dans le mésangium des glomérules rénaux.",
+          "correctionGenerale": "<b>Vascularite immuno-allergique</b> avec dépôts de complexes immuns circulants fixant des IgA, qui vont se déposer dans la paroi des capillaires de la peau et du tube digestif ainsi que dans le mésangium des glomérules rénaux."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nL’enfant a une rectorragie. Quel diagnostic suspectez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une invagination intestinale compliquant le purpura rhumatoïde.",
+          "correctionGenerale": "<b>Invagination intestinale</b> compliquant le purpura rhumatoïde."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuel examen d’imagerie est nécessaire pour l’identifier ?",
+          "images": [],
+          "reponseAttendue": "L’échographie abdominale.",
+          "correctionGenerale": "<b>Échographie abdominale.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nSa pression artérielle est à 140/85 à trois reprises malgré la mesure prise allongé au repos. Quelle autre atteinte d’organe craignez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une atteinte rénale, la néphropathie associée au purpura rhumatoïde.",
+          "correctionGenerale": "<b>Atteinte rénale</b> (néphropathie associée au purpura rhumatoïde)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuel examen simple et non invasif réalisez-vous pour étayer votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La bandelette urinaire (et le rapport protéinurie/créatininurie sur échantillon).",
+          "correctionGenerale": "• <b>Bandelette urinaire</b>\n• (Protéinurie/créatininurie sur échantillon)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 1 - Partie 3",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 13,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2017 de pédiatrie, sujet n° 1, partie 3 : questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuelle donnée immunologique sanguine est à rechercher pour le diagnostic de glomérulonéphrite aiguë post-infectieuse ?",
+          "images": [],
+          "reponseAttendue": "La fraction C3 du complément.",
+          "correctionGenerale": "<b>Fraction C3 du complément.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel est le mécanisme de l’anémie dans le SHU par toxi-infection à E. coli O157:H7 ?",
+          "images": [],
+          "reponseAttendue": "Une anémie hémolytique mécanique par destruction des globules rouges par la shigatoxine produite par E. coli.",
+          "correctionGenerale": "<b>Anémie hémolytique mécanique</b> par destruction des globules rouges par la shigatoxine produite par <i>E. coli</i>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nDans le syndrome de Bartter, le mécanisme de l’hyponatrémie est-il une déplétion ou une dilution ?",
+          "images": [],
+          "reponseAttendue": "Une déplétion — à ne pas confondre avec le syndrome de Schwartz-Bartter (SIADH), où le mécanisme est une dilution.",
+          "correctionGenerale": "<b>Déplétion</b> (attention : différent du Schwartz-Bartter (SIADH), où le mécanisme est une <i>dilution</i>)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuel trouble fonctionnel évoquez-vous devant une petite fille présentant régulièrement des infections urinaires à répétition, avec, en dehors de ces épisodes, des fuites urinaires, une pollakiurie, une constipation et des impériosités ?",
+          "images": [],
+          "reponseAttendue": "Une hyperactivité vésicale.",
+          "correctionGenerale": "<b>Hyperactivité vésicale.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuelle complication ophtalmologique est à dépister dans le cadre d’une arthrite juvénile idiopathique ?",
+          "images": [],
+          "reponseAttendue": "L’uvéite (iridocyclite ++).",
+          "correctionGenerale": "<b>Uvéite (iridocyclite ++).</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nEmma, 3 ans, est adressée à votre consultation pour suspicion d’arthrite juvénile idiopathique. Elle présente des douleurs insomniantes, des hématomes, une pâleur conjonctivale et une gingivorragie.\n\nQuel diagnostic différentiel devez-vous évoquer ?",
+          "images": [],
+          "reponseAttendue": "Une hémopathie de type leucémie aiguë.",
+          "correctionGenerale": "<b>Hémopathie type leucémie aiguë.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nVous êtes pédiatre de garde et vous êtes appelé pour un nouveau-né masculin âgé de 3 jours pour anomalie du jet urinaire. Il était porteur d’une urétéro-hydronéphrose bilatérale sur l’échographie du 3ᵉ trimestre. La paroi vésicale était épaissie.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Des valves de l’urètre postérieur.",
+          "correctionGenerale": "<b>Valves de l’urètre postérieur.</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 2",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 14,
+      "vignette": "Une jeune fille de 12 ans consulte aux urgences pédiatriques pour l’apparition d’un purpura cutané depuis 48 h.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nComment confirmer cliniquement le purpura ?",
+          "images": [],
+          "reponseAttendue": "Par l’absence de disparition à la vitropression.",
+          "correctionGenerale": "<b>Absence de disparition à la vitropression.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel score est utilisé pour l’évaluation du purpura ?",
+          "images": [],
+          "reponseAttendue": "Le score de Buchanan.",
+          "correctionGenerale": "<b>Score de Buchanan.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuels sont les 3 éléments d’évaluation clinique de ce score ?",
+          "images": [],
+          "reponseAttendue": "Les lésions cutanées, l’épistaxis, les lésions buccales.",
+          "correctionGenerale": "• Lésions cutanées\n• Épistaxis\n• Lésions buccales"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nLes résultats du bilan biologique montrent : Hb 13 g/dL, VGM 80 µ³, réticulocytes 50 G/L, GB 8 G/L, polynucléaires 6 G/L, lymphocytes 2 G/L, plaquettes 6000/mm³, bilan de coagulation normal.\n\nQuel diagnostic portez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un purpura thrombopénique immunologique.",
+          "correctionGenerale": "<b>Purpura thrombopénique immunologique.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nDevant cette thrombopénie, quel argument biologique tiré de l’observation permet de porter ce diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une thrombopénie isolée avec un bilan de coagulation normal.",
+          "correctionGenerale": "<b>Thrombopénie isolée avec bilan de coagulation normal.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuel est le mécanisme physiopathologique de cette thrombopénie (une réponse) ?",
+          "images": [],
+          "reponseAttendue": "Une destruction périphérique des plaquettes par un mécanisme immunologique, avec fixation sur les plaquettes de complexes immuns circulants ou d’auto-anticorps entraînant leur séquestration et leur destruction intra-splénique.",
+          "correctionGenerale": "<b>Destruction périphérique des plaquettes par un mécanisme immunologique</b>, avec fixation sur les plaquettes de complexes immuns circulants ou d’auto-anticorps, entraînant leur séquestration et leur destruction intra-splénique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nÀ ce stade, avez-vous besoin d’autres examens complémentaires ? Si oui, lesquels ?",
+          "images": [],
+          "reponseAttendue": "Groupe ABO et Rhésus, en cas de nécessité de transfusion.",
+          "correctionGenerale": "<b>Groupe ABO, Rhésus</b> en cas de nécessité de transfusion."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nQuelles sont les 3 alternatives thérapeutiques ?",
+          "images": [],
+          "reponseAttendue": "Abstention thérapeutique, corticothérapie orale, immunoglobulines polyvalentes IV.",
+          "correctionGenerale": "• Abstention thérapeutique\n• Corticothérapie orale\n• Immunoglobulines polyvalentes IV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n6 mois plus tard, cette patiente a présenté 3 épisodes de récidive de sa thrombopénie.\n\nComment qualifiez-vous cette évolution ?",
+          "images": [],
+          "reponseAttendue": "Un PTI chronique.",
+          "correctionGenerale": "<b>PTI chronique.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\nQuel examen demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un myélogramme.",
+          "correctionGenerale": "<b>Myélogramme.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 11</b>\n\nTrois mois plus tard, cette adolescente présente une pâleur avec ictère. La NFS retrouve : Hb 6 g/dL, réticulocytes 400 000/mm³ et plaquettes 5000/mm³.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome d’Evans, association d’une anémie hémolytique auto-immune et d’un PTI.",
+          "correctionGenerale": "<b>Syndrome d’EVANS</b> (association AHAI et PTI)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 12</b>\n\nQuel examen demandez-vous pour confirmer le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Le test de Coombs, recherche d’anticorps dirigés contre des antigènes des globules rouges.",
+          "correctionGenerale": "<b>Test de Coombs</b> (recherche d’anticorps dirigés contre des antigènes de globules rouges)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 13</b>\n\nUn traitement par corticoïdes est mis en route. Quel traitement adjuvant prescrivez-vous ? (une seule réponse)",
+          "images": [],
+          "reponseAttendue": "Une supplémentation en vitamine D et calcium (Cacit® D3).",
+          "correctionGenerale": "<b>Supplémentation vitamine D et calcium</b> (Cacit® D3)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 14</b>\n\nUn régime alimentaire est-il recommandé ? Si oui, lequel ?",
+          "images": [],
+          "reponseAttendue": "Oui : une alimentation pauvre en sel, en graisses et en sucres rapides.",
+          "correctionGenerale": "<b>Oui</b>, alimentation pauvre en sel, en graisses et en sucres rapides."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 1",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 15,
+      "vignette": "Un garçon âgé de 1 mois, exclusivement allaité depuis la naissance, est amené en consultation pour des régurgitations après ses 8-9 tétées quotidiennes. Ces régurgitations sont de faible abondance et ne s’accompagnent ni de pleurs ni de toux. Elles sont apparues à 2 semaines de vie et n’ont pas disparu depuis. Il est né à terme par césarienne le 5 septembre 2016 après une grossesse normale. Son poids de naissance était de 3500 g et sa taille de 50 cm. Il existe un terrain atopique du côté maternel (allergie à l’arachide et eczéma durant l’enfance) et un tabagisme paternel (1 paquet/jour depuis 10 ans).\n\nÀ l’examen, il pèse 4025 g et mesure 52 cm. L’auscultation thoracique, l’examen ORL, la palpation abdominale et l’examen neurologique sont normaux.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuelle est votre attitude thérapeutique devant les régurgitations de ce nourrisson ?",
+          "images": [],
+          "reponseAttendue": "Un traitement symptomatique : pauses lors des tétées, ne pas coucher le bébé immédiatement après la prise alimentaire, inclinaison du lit, arrêt du tabagisme passif, lait épaissi en cas d’allaitement artificiel.",
+          "correctionGenerale": "<b>Traitement symptomatique</b>\n• Pauses lors des tétées\n• Ne pas coucher son bébé immédiatement après la prise alimentaire\n• (Inclinaison du lit ?)\n• Arrêt du tabagisme passif\n• Lait épaissi si allaitement artificiel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nVous suspectez un reflux gastro-œsophagien : effectuez-vous des examens complémentaires pour le confirmer ? Si oui, le(s)quel(s) ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Pas d’examen complémentaire : l’examen général est normal, il n’y a pas de retentissement général, et la prise pondérale est de +17,5 g/j depuis la naissance.",
+          "correctionGenerale": "• <b>Pas d’examen complémentaire</b>\n• Examen général normal\n• Pas de retentissement général\n• Prise pondérale + 17,5 g/j depuis la naissance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles sont les supplémentations vitaminiques à prescrire chez cet enfant ? À quelle dose ?",
+          "images": [],
+          "reponseAttendue": "Vitamine D quotidienne, 1000 à 1200 UI/j ; vitamine K, 2 mg à 1 mois de vie.",
+          "correctionGenerale": "• <b>Vitamine D</b> quotidienne : 1000 à 1200 UI/j\n• <b>Vitamine K</b> : 2 mg à 1 mois de vie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nÀ l’âge de 3 mois, la mère décide de le sevrer et débute une alimentation par un lait 1er âge. Deux jours plus tard apparaît une diarrhée faite de 5-6 selles liquides par jour. Vous suspectez une allergie aux protéines du lait de vache, d’autant plus que l’enfant souffre d’un eczéma important depuis 15 jours. Vous prescrivez un hydrolysat poussé de protéines du lait de vache, qui permet une disparition des symptômes en 48 heures.\n\nPar quel moyen confirmer le diagnostic d’allergie aux protéines du lait de vache (une seule réponse) ?",
+          "images": [],
+          "reponseAttendue": "Par le test de réintroduction des protéines de lait de vache.",
+          "correctionGenerale": "<b>Test de réintroduction des protéines de lait de vache.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nLe diagnostic d’allergie aux protéines du lait de vache a été confirmé chez cet enfant. À quel âge l’alimentation de cet enfant doit-elle être diversifiée ? À quel âge l’arachide peut-elle être introduite chez cet enfant ?",
+          "images": [],
+          "reponseAttendue": "Diversification alimentaire entre 4 et 6 mois ; arachide à 6 mois.",
+          "correctionGenerale": "• Diversification alimentaire entre 4 et 6 mois\n• Arachide à 6 mois"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nÀ l’âge de 4 mois, l’enfant est placé en crèche collective. Quinze jours plus tard survient une diarrhée accompagnée de vomissements. Vous apprenez qu’il existe plusieurs cas de gastro-entérites dans la crèche. À l’examen, la température de l’enfant est de 37,4 °C, il pèse 6200 g, et les examens ORL, neurologique, cutané et abdominal sont normaux. Le dernier poids disponible dans le carnet de santé est celui à l’âge de 2 mois et demi, qui était de 5825 g.\n\nÀ l’exclusion de l’argument de fréquence et de l’âge de l’enfant, quels sont les deux arguments tirés de l’observation en faveur de l’origine virale de cette diarrhée ?",
+          "images": [],
+          "reponseAttendue": "La collectivité et le contexte de contage.",
+          "correctionGenerale": "• Collectivité\n• Contexte de contage"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuelle prise en charge thérapeutique prescrivez-vous (modalités et surveillance comprises) ?",
+          "images": [],
+          "reponseAttendue": "Surveillance quelques heures ; test alimentaire au SRO (1 sachet dans 200 mL d’eau, à donner à volonté en petites quantités) ; paracétamol 15 mg/kg toutes les 6 heures si fièvre ; surveillance de la tolérance digestive (vomissements et diarrhées) et de la température ; hospitalisation si mauvaise tolérance ; si retour à domicile, surveillance du poids et de la tolérance.",
+          "correctionGenerale": "• Surveillance quelques heures\n• Test alimentaire au SRO : 1 sachet dans 200 mL d’eau à donner à volonté, en petites quantités\n• PARACÉTAMOL 15 mg/kg/6 h si fièvre\n• Surveillance de la tolérance digestive (vomissements et diarrhées)\n• Surveillance de la température\n• Hospitalisation si mauvaise tolérance\n• Si retour à domicile : surveillance du poids et de la tolérance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nLe frère de cet enfant ayant souffert de carence martiale à partir de l’âge de 18 mois, les parents vous demandent quels sont les aliments riches en fer qu’ils doivent donner à leur enfant à partir de 18 mois pour éviter une carence martiale. Quels sont les deux groupes d’aliments que vous mentionnez ?",
+          "images": [],
+          "reponseAttendue": "Les sources animales — les viandes (fer héminique) — et les sources végétales — céréales et légumineuses (fer non héminique).",
+          "correctionGenerale": "• <b>Source animale</b> : viandes (fer héminique)\n• <b>Source végétale</b> : céréales, légumineuses (fer non héminique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n2 ans plus tard, une petite sœur naît. Quel conseil alimentaire donnez-vous à la famille pour prévenir l’apparition d’une allergie, compte tenu du terrain atopique maternel ?",
+          "images": [],
+          "reponseAttendue": "Allaitement maternel initial, surveillance lors de la transition, lait hypoallergénique.",
+          "correctionGenerale": "• Allaitement maternel initial\n• Surveillance lors de la transition\n• Lait hypoallergénique"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 2",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 16,
+      "vignette": "Un nourrisson âgé de 5 semaines est amené par ses parents aux urgences pour toux et difficultés alimentaires. Lors de votre examen, vous constatez une polypnée, des sibilants, une rhinorrhée. Vous évoquez une bronchiolite.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les 6 critères d’hospitalisation liés à l’examen physique ?",
+          "images": [],
+          "reponseAttendue": "État général, fréquence respiratoire, fréquence cardiaque, utilisation des muscles accessoires et signes de lutte, saturation en oxygène, perte de poids.",
+          "correctionGenerale": "• État général\n• Fréquence respiratoire\n• Fréquence cardiaque\n• Utilisation des muscles accessoires, signes de lutte\n• Saturation en oxygène\n• Perte de poids"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les 4 critères de gravité anamnestiques ?",
+          "images": [],
+          "reponseAttendue": "L’âge et la prématurité, les antécédents (cardiopathie) et comorbidités, l’alimentation (< 50 %), le contexte socio-économique.",
+          "correctionGenerale": "• Âge, prématurité\n• Antécédents (cardiopathie), comorbidités\n• Alimentation (< 50 %)\n• Contexte socio-économique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVous hospitalisez ce nourrisson. L’interne vous demande quel(s) traitement(s) médicamenteux il doit prescrire, en dehors de la désobstruction rhinopharyngée et des antipyrétiques. Que lui répondez-vous ?",
+          "images": [],
+          "reponseAttendue": "Pas d’autre traitement médicamenteux ; oxygénothérapie si besoin.",
+          "correctionGenerale": "• <b>Pas d’autre traitement médicamenteux</b>\n• Oxygénothérapie si besoin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel est le diagnostic différentiel que vous devez systématiquement évoquer ?",
+          "images": [],
+          "reponseAttendue": "La myocardite aiguë.",
+          "correctionGenerale": "<b>Myocardite aiguë.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nL’examen clinique met en évidence une hépatomégalie : quel examen complémentaire demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une échographie cardiaque (et une radiographie de thorax de face).",
+          "correctionGenerale": "• <b>Échographie cardiaque</b>\n• (Radiographie de thorax de face)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVous revoyez cet enfant en consultation à l’âge de 12 mois pour une toux chronique. La maman vous informe qu’il a déjà fait 3 bronchiolites et qu’il siffle régulièrement.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un asthme du nourrisson.",
+          "correctionGenerale": "<b>Asthme du nourrisson.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nSi vous aviez un seul examen complémentaire à demander, quel est-il ?",
+          "images": [],
+          "reponseAttendue": "La radiographie du thorax de face.",
+          "correctionGenerale": "<b>Radiographie du thorax de face.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelle prise en charge proposez-vous à ce nourrisson ?",
+          "images": [],
+          "reponseAttendue": "Corticostéroïdes inhalés à dose faible, en aérosol doseur avec chambre d’inhalation et masque ; bêta-2 mimétiques en cas de crise ± corticothérapie systémique.",
+          "correctionGenerale": "• Corticostéroïdes inhalés à dose faible, en aérosol doseur avec chambre d’inhalation et masque\n• Bêta-2 mimétiques en cas de crise ± corticothérapie systémique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nLa maman vous informe que son grand frère, âgé de 8 ans, est asthmatique mais n’a jamais eu de bilan. Quels sont les 3 examens complémentaires à proposer ?",
+          "images": [],
+          "reponseAttendue": "Radiographie de thorax, bilan allergologique (IgE totales, IgE spécifiques, prick-tests), EFR.",
+          "correctionGenerale": "• Radiographie de thorax\n• Bilan allergologique (IgE totales, IgE spécifiques, prick-tests)\n• EFR"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2019 - EVCF",
+      "annee": 2019,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 17,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de pédiatrie : questions isolées.\n\n<i>Le corrigé ne traite pas les questions n° 10 et n° 13 de l’épreuve : la numérotation ci-dessous reprend celle du corrigé et comporte donc des sauts.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nComment faire le dépistage de la maladie cœliaque ? Quelle est la stratégie pour confirmer le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Dosage des IgA totales et des IgA anti-transglutaminases ; si positifs, biopsies du grêle pour confirmation diagnostique.",
+          "correctionGenerale": "• IgA totales\n• IgA anti-transglutaminases\n• Si positifs : <b>biopsies du grêle</b> pour confirmation diagnostique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nDans le cadre du diagnostic différentiel de la bronchiolite, quels signes cliniques doivent faire suspecter une myocardite ? Quels examens paracliniques et quels résultats orientent le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Signes d’insuffisance cardiaque : tachycardie en l’absence de fièvre, sudation, hépatomégalie, souffle, œdèmes, turgescence jugulaire. Examens : radiographie de thorax (cardiomégalie), ECG (troubles du rythme, microvoltage), échographie cardiaque (FEVG abaissée).",
+          "correctionGenerale": "<b>Signes d’insuffisance cardiaque</b>\n• Tachycardie en l’absence de fièvre\n• Sudation\n• Hépatomégalie\n• Souffle\n• Œdèmes\n• Turgescence jugulaire\n\n<b>Examens paracliniques</b>\n• Radiographie de thorax : cardiomégalie\n• ECG : troubles du rythme, microvoltage\n• Échographie cardiaque : FEVG abaissée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les signes d’alerte de trouble du neurodéveloppement à l’âge de 24 mois ?",
+          "images": [],
+          "reponseAttendue": "Motricité globale : ne court pas, ne monte pas les escaliers marche par marche, ne shoote pas dans un ballon. Motricité fine : n’empile pas 5 cubes, n’utilise pas seul la cuillère, n’encastre pas des formes géométriques simples. Langage oral : pas plus de 10 mots connus, n’associe pas 2 mots. Socialisation : ne participe pas à des jeux de faire-semblant ou d’imitation, ne s’intéresse pas aux autres enfants.",
+          "correctionGenerale": "<b>Motricité globale</b>\n• Ne court pas\n• Ne monte pas les escaliers marche par marche\n• Ne shoote pas dans un ballon\n\n<b>Motricité fine</b>\n• N’empile pas 5 cubes\n• N’utilise pas seul la cuillère\n• N’encastre pas des formes géométriques simples\n\n<b>Langage oral</b>\n• Pas plus de 10 mots connus\n• N’associe pas 2 mots\n\n<b>Socialisation</b>\n• Ne participe pas à des jeux de faire-semblant ou d’imitation\n• Ne s’intéresse pas aux autres enfants"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nDevant un hématome sous-dural aigu retrouvé au scanner cérébral chez un nourrisson de 3 mois, quelles investigations proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Investigations cliniques : examen clinique complet et minutieux, notamment examen cutané et des téguments, fond d’œil. Investigations biologiques : NFS-plaquettes, hémostase, enzymes hépatiques, toxiques. Investigations radiologiques : radiographies du squelette complet, discuter une scintigraphie osseuse.",
+          "correctionGenerale": "<b>Investigations cliniques</b>\n• Examen clinique complet et minutieux, avec notamment examen cutané et des téguments\n• Fond d’œil\n\n<b>Investigations paracliniques</b>\n• <i>Biologiques</i> : NFS-plaquettes, hémostase ; enzymes hépatiques ; toxiques\n• <i>Radiologiques</i> : radiographies du squelette complet ; discuter une scintigraphie osseuse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nChez un nourrisson d’un mois avec une déshydratation aiguë à diurèse conservée, quelles urgences sont à éliminer ? Quel examen simple et urgent allez-vous réaliser pour orienter le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Diabète insipide, diabète néonatal, insuffisance surrénalienne, atteinte rénale (tubulopathies, uropathies). Examen : bandelette urinaire et glycémie.",
+          "correctionGenerale": "• Diabète insipide\n• Diabète néonatal\n• Insuffisance surrénalienne\n• Atteinte rénale (tubulopathies, uropathies)\n\n<b>Examen</b> : bandelette urinaire ? glycémie ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nUn nourrisson de 3 mois avec diarrhée aiguë et déshydratation présente un choc résistant à 2 remplissages vasculaires avec du sérum physiologique.\n\nQuel diagnostic devez-vous évoquer ? Quel signe clinique doit être recherché ?",
+          "images": [],
+          "reponseAttendue": "Une insuffisance surrénalienne aiguë ; rechercher une virilisation des organes génitaux externes.",
+          "correctionGenerale": "• <b>Insuffisance surrénalienne aiguë</b>\n• Virilisation des OGE ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuels sont les 2 diagnostics à éliminer lorsque vous évoquez un rhume de hanche (synovite aiguë de l’enfant) ?",
+          "images": [],
+          "reponseAttendue": "L’arthrite septique et l’ostéochondrite primitive.",
+          "correctionGenerale": "• Arthrite septique\n• Ostéochondrite primitive"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nDevant des douleurs ostéo-articulaires diffuses chez l’enfant, quelles pathologies graves devez-vous évoquer systématiquement ?",
+          "images": [],
+          "reponseAttendue": "Les hémopathies malignes, la tuberculose disséminée, l’arthrite juvénile idiopathique.",
+          "correctionGenerale": "• Hémopathies malignes\n• Tuberculose disséminée\n• Arthrite juvénile idiopathique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel diagnostic doit être éliminé en urgence chez un nouveau-né présentant des vomissements verts ?",
+          "images": [],
+          "reponseAttendue": "Un volvulus du mésentère commun.",
+          "correctionGenerale": "<b>Volvulus du mésentère commun.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuels sont les éléments cliniques évocateurs d’organicité dans le cadre de douleurs abdominales chroniques chez l’enfant ?",
+          "images": [],
+          "reponseAttendue": "Douleur constante et/ou nocturne, loin de l’ombilic, provoquée par l’alimentation, avec retentissement sur le jeu et l’école, perte de poids, fièvre, anorexie, vomissements, diarrhée chronique, masse abdominale, signes extra-digestifs.",
+          "correctionGenerale": "• Douleur constante et/ou nocturne\n• Loin de l’ombilic\n• Provoquée par l’alimentation\n• Retentissement sur le jeu, l’école\n• Perte de poids\n• Fièvre\n• Anorexie\n• Vomissements\n• Diarrhée chronique\n• Masse abdominale\n• Signes extra-digestifs"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nHyponatrémie : quelles sont les orientations étiologiques chez le nourrisson et le petit enfant ?",
+          "images": [],
+          "reponseAttendue": "Vérifier qu’il s’agit d’une hyponatrémie vraie (éliminer une fausse hyponatrémie liée à une hyperglycémie), puis évaluer la volémie : hypovolémie avec perte de poids (pertes extra-rénales ou rénales) ; normovolémie (SIADH, insuffisance surrénalienne, intoxication à l’eau) ; hypervolémie avec prise de poids (insuffisance cardiaque, syndrome néphrotique, insuffisance rénale avec oligurie).",
+          "correctionGenerale": "• <b>Hyponatrémie vraie ?</b> Éliminer une fausse hyponatrémie (hyperglycémie)\n• <b>Évaluer la volémie</b>\n  – <i>Hypovolémie</i> (perte de poids) : pertes extra-rénales ; pertes rénales\n  – <i>Normovolémie</i> : SIADH / insuffisance surrénalienne / intoxication à l’eau\n  – <i>Hypervolémie</i> (prise de poids) : insuffisance cardiaque, syndrome néphrotique ; insuffisance rénale avec oligurie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nDéfinition de l’hypoxémie et de l’hypoxie aiguë ?",
+          "images": [],
+          "reponseAttendue": "Hypoxémie : diminution de la PaO₂ dans le sang. Hypoxie : défaut d’apport d’O₂ aux cellules.",
+          "correctionGenerale": "• <b>Hypoxémie</b> : diminution de la PaO₂ dans le sang\n• <b>Hypoxie</b> : défaut d’apport d’O₂ aux cellules"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nQuelles sont les 11 maladies à vaccination obligatoire en France en 2019 ?",
+          "images": [],
+          "reponseAttendue": "Diphtérie, tétanos, poliomyélite, coqueluche, Haemophilus influenzae type B, hépatite B, rougeole, oreillons, rubéole, méningocoque C, pneumocoque.",
+          "correctionGenerale": "• Diphtérie\n• Tétanos\n• Poliomyélite\n• Coqueluche\n• <i>Haemophilus influenzae</i> type B\n• Hépatite B\n• Rougeole — Oreillons — Rubéole\n• Méningocoque C\n• Pneumocoque"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2019 - EVCP - Sujet 1",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 18,
+      "vignette": "Un nourrisson âgé de 8 mois arrive aux urgences, amené par ses parents, pour fièvre depuis quelques heures, pleurs incessants et perte d’appétit. Il n’a pas d’antécédent particulier. À l’examen, on note une fièvre à 39 °C, un météorisme abdominal, et il est hypotonique. La fréquence cardiaque est à 190/min, la fréquence respiratoire à 40/min, et le poids à 9,2 kg. Le dernier poids dans le carnet de santé est de 9,1 kg la semaine précédente.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nÀ ce stade, comment évaluez-vous la gravité hémodynamique ?",
+          "images": [],
+          "reponseAttendue": "Cliniquement : fréquence cardiaque, pression artérielle (tardive), aspect général, coloration, palpation des pouls dont les pouls fémoraux, temps de recoloration cutanée, diurèse, conscience.",
+          "correctionGenerale": "<b>Clinique</b>\n• Fréquence cardiaque\n• Pression artérielle (tardif)\n• Aspect général\n• Coloration\n• Palpation des pouls, pouls fémoraux\n• Temps de recoloration cutanée\n• Diurèse\n• Conscience"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nL’examen ORL est normal, tout comme l’auscultation pulmonaire. Quelles sont vos hypothèses diagnostiques ?",
+          "images": [],
+          "reponseAttendue": "Une infection neuroméningée (éliminer une méningite bactérienne), une infection urinaire (pyélonéphrite aiguë), une infection digestive (gastro-entérite débutante).",
+          "correctionGenerale": "• <b>Infection neuroméningée</b> : éliminer une méningite bactérienne\n• <b>Infection urinaire</b> : pyélonéphrite aiguë\n• <b>Infection digestive</b> : gastro-entérite débutante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nL’enfant présente des mouvements anormaux à type de secousses cloniques des 4 membres avec révulsion oculaire.\n\nQuelles sont les hypothèses diagnostiques que vous évoquez en premier lieu ?",
+          "images": [],
+          "reponseAttendue": "Une convulsion fébrile sur infection neuroméningée de type méningite bactérienne.",
+          "correctionGenerale": "<b>Convulsion fébrile sur infection neuroméningée type méningite bactérienne.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nLa convulsion dure depuis 6 min. Sachant qu’il n’a pas de voie d’abord veineuse, quelle est votre attitude thérapeutique (avec posologie pour les médicaments) ?",
+          "images": [],
+          "reponseAttendue": "Protection des voies aériennes supérieures (canule de Guedel, position latérale de sécurité) ; traitement anticonvulsivant par diazépam 0,5 mg/kg (soit 4,5 mg) par voie intra-rectale ; traitement symptomatique par paracétamol IR et mesures associées (découvrir l’enfant) ; oxygénothérapie si besoin.",
+          "correctionGenerale": "• <b>Protection des voies aériennes supérieures</b> : Guedel, position latérale de sécurité\n• <b>Traitement anticonvulsivant</b> : DIAZÉPAM 0,5 mg/kg (4,5 mg) par voie intra-rectale\n• <b>Traitement symptomatique</b> : antipyrétique — PARACÉTAMOL IR ; mesures associées : découvrir l’enfant\n• <b>Traitements associés</b> : oxygénothérapie si besoin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLa crise s’arrête. Quelles mesures de surveillance mettez-vous en place ?",
+          "images": [],
+          "reponseAttendue": "Surveillance clinique : scope (FC, FR, SpO₂), température et TA régulières, conscience (Glasgow pédiatrique).",
+          "correctionGenerale": "<b>Surveillance clinique</b>\n• Scope (FC, FR, SpO₂)\n• Température et TA régulières\n• Conscience (Glasgow pédiatrique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels autres signes cliniques recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Des signes de focalisation neurologique, des signes d’engagement cérébral, la palpation de la fontanelle antérieure, une éruption cutanée (purpura).",
+          "correctionGenerale": "• Signes de focalisation neurologique\n• Signes d’engagement cérébral\n• Palpation de la fontanelle antérieure\n• Éruption cutanée (purpura)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel examen complémentaire devez-vous faire à visée diagnostique ? Quelles en sont les contre-indications ?",
+          "images": [],
+          "reponseAttendue": "Une ponction lombaire avec analyse cytobactériologique et biochimique du liquide céphalo-rachidien. Contre-indications : anomalies connues de l’hémostase, instabilité hémodynamique, purpura fulminans, signes d’engagement cérébral (mydriase unilatérale, hoquet, troubles ventilatoires, mouvements d’enroulement), risque élevé d’engagement cérébral après PL (signes de focalisation neurologique, troubles de la vigilance avec Glasgow < 11, crises convulsives récentes).",
+          "correctionGenerale": "<b>Ponction lombaire</b> avec analyse cytobactériologique et biochimique du liquide céphalo-rachidien.\n\n<b>Contre-indications</b>\n• Anomalies connues de l’hémostase\n• Instabilité hémodynamique\n• Purpura fulminans\n• <i>Signes d’engagement cérébral</i> : mydriase unilatérale ; hoquet ; troubles ventilatoires ; mouvements d’enroulement\n• <i>Risque élevé d’engagement cérébral après PL</i> : signes de focalisation neurologique ; troubles de la vigilance avec Glasgow < 11 ; crises convulsives récentes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nL’enfant a un teint gris. Sans attendre le résultat de votre examen paraclinique, quelle est votre attitude thérapeutique (avec posologie pour les médicaments) ?",
+          "images": [],
+          "reponseAttendue": "Remplissage au sérum physiologique si signes de choc (NaCl 0,9 % 20 mL/kg en 20 min) ; antibiothérapie probabiliste par voie IV, en monothérapie, bactéricide, passant la barrière hémato-encéphalique et secondairement adaptée à l’antibiogramme : céphalosporine de 3ᵉ génération, céfotaxime 300 mg/kg/j ; dexaméthasone 0,15 mg/kg toutes les 6 heures ; paracétamol 15 mg/kg toutes les 6 heures.",
+          "correctionGenerale": "• <b>Remplissage au sérum physiologique</b> si signes de choc : NaCl 0,9 % 20 mL/kg/20 min\n• <b>Antibiothérapie probabiliste par voie IV</b>, en monothérapie, bactéricide, passant la barrière hémato-encéphalique, secondairement adaptée à l’antibiogramme : C3G — <b>CÉFOTAXIME 300 mg/kg/j</b>\n• <b>DEXAMÉTHASONE 0,15 mg/kg/6 h</b>\n• PARACÉTAMOL 15 mg/kg/6 h"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2019 - EVCP - Sujet 3",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
+      "orderIndex": 19,
+      "vignette": "Jules, 7 ans, est adressé aux urgences pour des douleurs des membres inférieurs et une éruption cutanée survenues depuis quelques heures. Il n’a pas d’antécédent particulier et n’a pas eu de traumatisme récent. À l’examen clinique, l’abdomen est sensible et il présente des pétéchies.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel élément clinique primordial fait défaut dans cette observation ?",
+          "images": [],
+          "reponseAttendue": "La température de l’enfant.",
+          "correctionGenerale": "<b>La température de l’enfant.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nDevant cette éruption pétéchiale, quels critères cliniques de gravité recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Sepsis sévère et purpura fulminans (hyperthermie, frissons, extrémités froides, TRC allongé, atteinte des extrémités) ; syndrome hémorragique (saignement extériorisé, atteinte des muqueuses, signes extra-cutanés, signes neurologiques) ; signes reliés à une hémopathie (syndrome tumoral, altération de l’état général).",
+          "correctionGenerale": "• <b>Sepsis sévère, purpura fulminans</b> : hyperthermie, frissons, extrémités froides, TRC allongé, atteinte des extrémités\n• <b>Syndrome hémorragique</b> : saignement extériorisé, atteinte des muqueuses, signes extra-cutanés, signes neurologiques\n• <b>Signes reliés à une hémopathie</b> : syndrome tumoral, altération de l’état général"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont vos hypothèses diagnostiques ?",
+          "images": [],
+          "reponseAttendue": "Une méningite bactérienne, un purpura rhumatoïde, un purpura thrombopénique idiopathique.",
+          "correctionGenerale": "• Méningite bactérienne\n• Purpura rhumatoïde\n• Purpura thrombopénique idiopathique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel est l’examen paraclinique à faire en premier lieu ?",
+          "images": [],
+          "reponseAttendue": "La NFS-plaquettes.",
+          "correctionGenerale": "<b>NFS - plaquettes.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nCet examen est normal et il n’a pas de fièvre. Quel diagnostic retenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un purpura rhumatoïde (triade purpura - douleurs abdominales - arthralgies).",
+          "correctionGenerale": "<b>Purpura rhumatoïde</b> (triade : purpura – douleurs abdominales – arthralgies)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelles sont les caractéristiques des pétéchies du diagnostic évoqué ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’un purpura vasculaire : infiltré, de prédominance déclive, sans atteinte des muqueuses, avec un polymorphisme lésionnel.",
+          "correctionGenerale": "<b>Purpura vasculaire</b>\n• Infiltré\n• Prédominance déclive\n• Pas d’atteinte des muqueuses\n• Polymorphisme lésionnel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelles consignes de surveillance donnez-vous à court terme ?",
+          "images": [],
+          "reponseAttendue": "Surveillance clinique de l’éruption et des douleurs abdominales, et bandelettes urinaires régulières à la recherche d’une protéinurie.",
+          "correctionGenerale": "<b>Surveillance clinique</b>\n• Éruption\n• Douleurs abdominales\n• <b>Bandelettes urinaires régulières</b> à la recherche d’une protéinurie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nIl revient quelques jours plus tard pour des douleurs abdominales paroxystiques et des vomissements. Quel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une invagination intestinale aiguë secondaire à un purpura rhumatoïde.",
+          "correctionGenerale": "<b>Invagination intestinale aiguë secondaire à un purpura rhumatoïde.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel est le principal mécanisme de cette complication ?",
+          "images": [],
+          "reponseAttendue": "La pénétration d’un segment intestinal dans le segment sous-jacent, par retournement en doigt de gant.",
+          "correctionGenerale": "<b>Pénétration d’un segment intestinal dans le segment sous-jacent par retournement en doigt de gant.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuel examen complémentaire est nécessaire pour affirmer votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "L’échographie abdominale.",
+          "correctionGenerale": "<b>Échographie abdominale.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCet examen est normal. Donnez les principes de la prise en charge ultérieure de cet enfant, sachant qu’il continue à vomir.",
+          "images": [],
+          "reponseAttendue": "Hospitalisation, information et accord parental, surveillance des constantes, pose d’une VVP et d’une sonde nasogastrique en aspiration si les vomissements sont importants et continus, enfant à jeun, traitement symptomatique (antispasmodiques, antiémétiques, antalgiques de niveau adapté à la douleur — paracétamol ou nalbuphine), hydratation IV par polyionique.",
+          "correctionGenerale": "• Hospitalisation\n• Information et accord parental\n• Surveillance des constantes\n• Pose de VVP, SNG en aspiration si vomissements importants et continus\n• À jeun\n• <b>Traitement symptomatique</b> : antispasmodiques, antiémétiques ; antalgiques de niveau adapté à la douleur (PARACÉTAMOL ou NALBUPHINE) ; hydratation IV par polyionique"
+        }
+      ]
+    }
+  ]
+}

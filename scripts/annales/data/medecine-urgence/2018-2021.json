@@ -1,0 +1,993 @@
+{
+  "sources": {
+    "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf": {
+      "atelier": "annales-urgence/correction-annales-urgences-2018-a-2021",
+      "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf ; Annales/Sujets/EVCF 2019/EVCF 2019/evcf.77.doc ; Annales/Sujets/2019_EVCP.pdf",
+      "figuresIgnorees": {},
+      "remarque": "Ce corrigé unique couvre huit épreuves (EVCF et EVCP 2018 à 2021) et ne reproduit que ses réponses, numérotées. Les énoncés officiels ont été restitués à partir des sujets présents dans le dépôt lorsqu’ils existent — EVCP 2018 et EVCP 2019 (compilations « toutes spécialités », code 77) et EVCF 2019 (evcf.77.doc). Pour l’EVCF 2018 et pour les sessions 2020 et 2021, le dépôt ne contient pas le sujet officiel : la question est alors identifiée par son numéro seul et le fait est signalé sur chaque question."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine d’urgence - 2018 - EVCF",
+      "annee": 2018,
+      "type": "EVCF",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 1,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2018 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées. Chaque question est donc identifiée par son numéro et par le thème que sa réponse permet d’identifier.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les éléments d’interrogatoire et d’examen physique orientant vers un syndrome occlusif.</i>",
+          "images": [],
+          "reponseAttendue": "Interrogatoire : antécédents chirurgicaux, cancer, syndrome occlusif ; traitement en cours (ralentisseurs de transit, morphiniques). Examen physique : triade douleur abdominale + arrêt des matières et des gaz + nausées/vomissements ; cicatrices abdominales, touchers pelviens, orifices herniaires libres.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents chirurgicaux, cancer, syndrome occlusif\n• Traitement en cours (ralentisseurs de transit, morphiniques)\n\n<b>Examen physique</b>\n• Triade douleur abdominale + arrêt des matières et des gaz + nausées/vomissements\n• Cicatrices abdominales, touchers pelviens, orifices herniaires libres"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les signes de gravité d’un syndrome occlusif.</i>",
+          "images": [],
+          "reponseAttendue": "Terrain avec comorbidités ou immunodépression ; fièvre, défense, contractures, vomissements fécaloïdes.",
+          "correctionGenerale": "• Terrain avec comorbidités ou immunodépression\n• Fièvre, défense, contractures, vomissements fécaloïdes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les éléments cliniques orientant vers un syndrome coronarien aigu.</i>",
+          "images": [],
+          "reponseAttendue": "Interrogatoire : facteurs de risque cardio-vasculaires, antécédents personnels d’IDM et d’angor, antécédents familiaux ; douleur médio-thoracique, constrictive, irradiant vers le bras, le cou, le dos ou la mâchoire, intense, sans position antalgique, survenant au repos ou à l’effort. Examen physique : trinitro-sensibilité ou résistance, nausées et vomissements.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• FDRCV, antécédents personnels d’IDM et d’angor, antécédents familiaux\n• Douleur médio-thoracique, constrictive, irradiant vers bras / cou / dos / mâchoire, intense\n• Pas de position antalgique\n• Survenant au repos ou à l’effort\n\n<b>Examen physique</b>\n• Trinitro-sensibilité / résistance, nausées / vomissements"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les contre-indications neurologiques à la ponction lombaire immédiate (signes de processus expansif intracrânien et d’engagement).</i>",
+          "images": [],
+          "reponseAttendue": "Déficit sensitivo-moteur, hémianopsie latérale homonyme, syndrome cérébelleux, anomalie pupillaire, dysautonomie, crise tonico-clonique généralisée, décortication, décérébration, aréactivité aux stimuli, coma et troubles de la vigilance.",
+          "correctionGenerale": "• Déficit sensitivo-moteur\n• Hémianopsie latérale homonyme\n• Syndrome cérébelleux\n• Anomalie pupillaire\n• Dysautonomie\n• Crise tonico-clonique généralisée\n• Décortication, décérébration\n• Aréactivité aux stimuli\n• Coma, troubles de la vigilance\n\n<i>Source : SPILF, infections neuro-méningées.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation d’un liquide céphalo-rachidien et la conduite thérapeutique.</i>",
+          "images": [],
+          "reponseAttendue": "Méningite purulente (prédominance de PNN), hyperprotéinorachie > 1 g/L, hypoglycorachie (0,4 × glycémie = 2,32, or la glycorachie est < 2,32 mmol/L), présence de cocci Gram positif = pneumocoque. Introduction en urgence d’une C3G 100 mg/kg et de dexaméthasone 10 mg × 4/j pendant 4 jours.",
+          "correctionGenerale": "• Méningite purulente (prédominance de PNN)\n• Hyperprotéinorachie > 1 g/L\n• Hypoglycorachie (0,4 × glycémie = 2,32 ; or glycorachie < 2,32 mmol/L)\n• Présence de CG+ = <b>pneumocoque</b>\n• Introduction de <b>C3G 100 mg/kg</b> et de <b>dexaméthasone 10 mg × 4/j pendant 4 jours</b>, en urgence"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interrogatoire et l’examen physique devant une colique néphrétique.</i>",
+          "images": [],
+          "reponseAttendue": "Interrogatoire : antécédents similaires, apports hydriques, voyage récent, régime alimentaire ; début brutal, douleur intense, « frénétique », débutant en fosse lombaire puis irradiant au flanc et aux organes génitaux externes, localisée à un seul côté ; signes fonctionnels urinaires ? frissons ? Examen physique : fièvre, bandelette urinaire positive (leucocytes ? hématies ?), fosse lombaire douloureuse, douleur abdominale ?",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents similaires, apports hydriques, voyage récent, régime alimentaire\n• Début brutal, douleur intense, « frénétique »\n• Début en fosse lombaire, puis flanc et organes génitaux externes, localisée à un seul côté\n• Signes fonctionnels urinaires ? Frissons ?\n\n<b>Examen physique</b>\n• Fièvre, BU positive (leucocytes ? hématies ?), fosse lombaire douloureuse, douleur abdominale ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le traitement et les consignes de sortie d’une colique néphrétique simple.</i>",
+          "images": [],
+          "reponseAttendue": "En l’absence de complication (PNA obstructive, grossesse, rein unique, douleur résistante à la morphine) : antalgique de palier adapté + AINS + antispasmodiques à discuter. Pas d’alphabloquant, pas d’hyperdiurèse (mais hydratation normale). Poursuite du même régime alimentaire jusqu’au bilan biologique et urinaire à réaliser un mois après. Tamisage des urines pour spectrométrie de masse du calcul.",
+          "correctionGenerale": "• En l’absence de complication (PNA obstructive, grossesse, rein unique, douleur résistante à la morphine) : antalgique de palier adapté + AINS + antispasmodiques à discuter\n• <b>Pas d’alphabloquant, pas d’hyperdiurèse</b> (mais hydratation normale)\n• Poursuite du même régime alimentaire jusqu’au bilan biologique et urinaire à réaliser 1 mois après\n• <b>Tamisage des urines</b> pour spectrométrie de masse du calcul"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les étiologies des chutes répétées de la personne âgée.</i>",
+          "images": [],
+          "reponseAttendue": "Iatrogénie, causes cardiologiques (IDM, troubles du rythme…), vasculaires (hypotension orthostatique +++), neurologiques (AVC, épilepsie…), métaboliques (hypoglycémie, hyponatrémie), environnementales, etc.",
+          "correctionGenerale": "• Iatrogénie\n• Cardiologiques : IDM, troubles du rythme, etc.\n• Vasculaires : <b>hypotension orthostatique +++</b>\n• Neurologiques : AVC, épilepsie, etc.\n• Métaboliques : hypoglycémie, hyponatrémie\n• Environnementales, etc.\n\n<i>Source : HAS, « Chutes répétées chez la personne âgée » — recommandations.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les étiologies d’une confusion aiguë chez la personne âgée.</i>",
+          "images": [],
+          "reponseAttendue": "Iatrogénie, fécalome, globe vésical, infection, douleur, troubles métaboliques (hyponatrémie, hypoglycémie), hypoxie, hypotension, etc.",
+          "correctionGenerale": "• Iatrogénie\n• Fécalome\n• Globe vésical\n• Infection\n• Douleur\n• Troubles métaboliques : hyponatrémie, hypoglycémie\n• Hypoxie\n• Hypotension, etc.\n\n<i>Source : HAS, « Confusion aiguë chez la personne âgée » — argumentaire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les examens complémentaires à réaliser devant un déficit moteur ou sensitif transitoire.</i>",
+          "images": [],
+          "reponseAttendue": "ECG (et scope), scanner cérébral — ou mieux, IRM cérébrale, éventuellement dans le cadre d’une alerte thrombolyse —, bilan lipidique, glycémie ++++++ ; discuter un EEG et une ponction lombaire.",
+          "correctionGenerale": "• ECG (scope)\n• Scanner cérébral (mieux : IRM cérébrale, +/− dans le cadre d’une alerte thrombolyse)\n• Bilan lipidique\n• <b>Glycémie ++++++</b>\n• Discuter EEG et ponction lombaire\n\n<i>Source : CEN, déficit moteur ou sensitif transitoire.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 11</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les critères de gravité d’une pneumonie aiguë communautaire.</i>",
+          "images": [],
+          "reponseAttendue": "Neurologique : troubles de la vigilance, coma. Cardio-vasculaire : PAS < 90 mmHg, FC > 120 bpm, marbrures. Pulmonaire : cyanose, signes de lutte, FR > 30 cpm, insuffisance respiratoire aiguë. Autres : température > 40 °C ou < 36 °C, CURB65/CRB65, qSOFA > 2, lactates > 2 mmol/L, comorbidités, état de choc septique nécessitant des vasopresseurs, PaFi < 250, atteinte multilobaire, urémie, GB < 4 G/L, plaquettes < 100 G/L.",
+          "correctionGenerale": "• <b>Neurologique</b> : troubles de la vigilance, coma\n• <b>Cardio-vasculaire</b> : PAS < 90 mmHg, FC > 120 bpm, marbrures\n• <b>Pulmonaire</b> : cyanose, signes de lutte, FR > 30 cpm, insuffisance respiratoire aiguë\n• <b>Autres</b> : T > 40 °C ou < 36 °C, CURB65/CRB65, qSOFA > 2, lactates > 2 mmol/L, comorbidités, état de choc septique avec nécessité de vasopresseurs, PaFi < 250, atteinte multilobaire, urémie, GB < 4 G/L, plaquettes < 100 G/L\n\n<i>Source : ECN Pilly 2020.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 12</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’évaluation de la gravité et le traitement d’une exacerbation d’asthme.</i>",
+          "images": [],
+          "reponseAttendue": "Selon qu’il s’agit d’une exacerbation légère/modérée ou sévère/AAG : capacité à parler avec des mots ou des phrases, position assise ou penchée en avant, agitation ; utilisation des muscles respiratoires accessoires, sibilants ; FR augmentée ou > 30 cpm, FC > 100-120 bpm, SpO₂ < 95 % voire < 90 % en air ambiant, pouls paradoxal ; DEP > 50 % ou < 50 % de la théorique, DEP < 150 L/min ; pH 7,35-7,55, PO₂ 55-90, PCO₂ 30-45 selon les stades ; cyanose, signes de lutte, pauses respiratoires, silence auscultatoire, bradycardie, troubles de la conscience, hypotension. Traitement : transfert médicalisé et hospitalisation en soins intensifs ou réanimation, bronchodilatateurs de courte durée d’action (bêta-2 mimétiques et anticholinergiques) par nébulisation, bêta-2 mimétique injectable en cas d’échec, corticothérapie IV puis PO, oxygène avec objectif 93-95 % ou ventilation mécanique, arrêt du tabac, traitement du facteur déclenchant, et réévaluation de l’efficacité.",
+          "correctionGenerale": "<b>Évaluation, selon exacerbation légère/modérée ou sévère/AAG</b>\n• Parle avec des mots ou des phrases, assis ou penché en avant, agité ou non\n• Utilisation des muscles respiratoires accessoires, sibilants\n• FR augmentée ou > 30 cpm, FC > 100/120 bpm, SpO₂ < 95 %-90 % en air ambiant, pouls paradoxal\n• DEP > 50 % ou < 50 % de la théorique ; DEP < 150 L/min\n• pH 7,35-7,55, PO₂ 55-90, PCO₂ 30-45 (selon les stades)\n• Cyanose, signes de lutte respiratoire, pauses respiratoires, silence auscultatoire, bradycardie, troubles de la conscience, hypotension\n\n<b>Traitement</b>\n• Transfert médicalisé + hospitalisation en soins intensifs / réanimation\n• Bronchodilatateurs de courte durée d’action, bêta-2 mimétiques et anticholinergiques, par nébulisation (10-15 min toutes les 20 min)\n• Si échec : bêta-2 mimétique injectable (ex. salbutamol IVSE)\n• Corticothérapie IV puis PO, maximum 50 mg/j, 5 à 7 jours\n• O₂ avec objectif 93-95 %, ou ventilation mécanique si gravité\n• Arrêt du tabac, traitement du facteur favorisant / déclenchant (antibiothérapie ?)\n• <b>Réévaluation de l’efficacité</b> : persistance des signes de gravité ? gain de 50-60 L/min de DEP ? DEP > 50 % de la théorique ?\n\n<i>Sources : collège CEMIR ; CEP-SPLF, item 184 asthme.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 13</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le diagnostic, les complications et le bilan d’une luxation d’épaule.</i>",
+          "images": [],
+          "reponseAttendue": "Luxation scapulo-humérale antérieure. Suspicion clinique devant le mécanisme du traumatisme, l’attitude du traumatisé du membre supérieur, le signe de l’épaulette, le coup de hache latéral, le comblement du sillon delto-pectoral et le signe de Berger. Complications : fracture, rupture de la coiffe des rotateurs, atteinte du nerf circonflexe, atteinte de l’artère axillaire, irréductibilité, récidive ou instabilité, algoneurodystrophie, raideur. Bilan avant réduction : radiographie d’épaule de face et scapula de profil.",
+          "correctionGenerale": "<b>Luxation scapulo-humérale antérieure</b>\n\n<b>Suspicion clinique si</b> : mécanisme du traumatisme, attitude du traumatisé du membre supérieur, signe de l’épaulette, coup de hache latéral, comblement du sillon delto-pectoral, signe de Berger.\n\n<b>Complications</b> : fracture, rupture de la coiffe des rotateurs, atteinte du nerf circonflexe, atteinte de l’artère axillaire, irréductibilité de la luxation, récidive ou instabilité, algoneurodystrophie, raideur.\n\n<b>Bilan avant réduction</b> : radiographie d’épaule de face et scapula de profil."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2018 - EVCP - Sujet 1",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 2,
+      "vignette": "Un patient de 56 ans, diabétique, fumeur, appelle le centre 15 à 04 h 57 pour une douleur thoracique d’intensité sévère depuis 04 h 00 du matin, avec sensation de mort imminente, survenue sur une aire d’autoroute. Le centre 15 envoie sur place un véhicule non médicalisé des sapeurs-pompiers (VSAV).\n\n<i>Énoncé officiel restitué depuis le sujet EVCP 2018, code 77 (Annales/Sujets/2018_EVCP.pdf).</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les éléments en faveur d’un problème coronarien identifiés lors de cette régulation ?",
+          "images": [],
+          "reponseAttendue": "Les facteurs de risque cardio-vasculaires, la douleur intense survenant au repos, avec sensation de mort imminente.",
+          "correctionGenerale": "• Facteurs de risque cardio-vasculaires\n• Douleur intense, survenant au repos, avec sensation de mort imminente"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle aurait dû être la réponse immédiate du médecin régulateur et pour quelle(s) raison(s) ?",
+          "images": [],
+          "reponseAttendue": "L’envoi d’un SMUR. Consignes : rester au repos, attendre les secours, chercher de l’aide et un défibrillateur automatisé, garder le contact et rassurer en attendant l’arrivée du SAMU, test à la trinitrine si possible. Raisons : urgence vitale, diagnostique et thérapeutique, avec risque d’arrêt cardio-respiratoire et de mort subite, et nécessité de diminuer le délai jusqu’à la revascularisation.",
+          "correctionGenerale": "• <b>Envoi d’un SMUR</b>\n• Rester au repos, attendre les secours, chercher de l’aide et un défibrillateur automatisé\n• Garder le contact, rassurer en attendant l’arrivée du SAMU\n• Test à la trinitrine si possible\n\n<b>Raisons</b> : urgence vitale, diagnostique et thérapeutique, avec risque d’arrêt cardio-respiratoire et de mort subite ; diminuer le délai jusqu’à la revascularisation."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nÀ 05 h 19, le bilan du VSAV retrouve : « une forte douleur thoracique gauche avec fourmillements au niveau du bras gauche ; le patient gémit ; diabète avec un traitement cardiaque » ; TAS 121 mmHg.\n\nQue doivent faire les sapeurs-pompiers lors de cette prise en charge, en attente d’une équipe médicalisée ?",
+          "images": [],
+          "reponseAttendue": "Oxygène, scope, ECG, test à la trinitrine, prise des constantes, glycémie capillaire, repos, et mesure de la pression artérielle aux deux bras.",
+          "correctionGenerale": "• O₂\n• Scope\n• ECG\n• Test à la trinitrine\n• Constantes\n• Glycémie capillaire (HGT)\n• Repos\n• PA aux 2 bras"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nÀ 05 h 46, un véhicule du SMUR rejoint le VSAV hors de l’autoroute et réalise un tracé ECG.\n\nDécrivez ou dessinez le positionnement des électrodes pour réaliser cet examen ECG.",
+          "images": [],
+          "reponseAttendue": "Faire un schéma d’ECG 18 dérivations, avec V7, V8 et V9 dans le dos et V3R, V4R (et V1) à droite.",
+          "correctionGenerale": "Faire un schéma avec <b>V7, V8, V9</b> dans le dos et <b>V1, V3R, V4R</b> qui partent à droite."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle est votre interprétation du tracé ECG ?",
+          "images": [],
+          "reponseAttendue": "Rythme régulier et sinusal, FC 67 bpm, axe limite gauche ; sus-décalage en V1-V2-V3-V4 avec ondes de Pardee ; pas de trouble du rythme. Donc un SCA ST+ septo-apical, sans miroir.",
+          "correctionGenerale": "• Rythme régulier et sinusal, FC 67 bpm, axe limite gauche\n• Sus-décalage en V1-V2-V3-V4 avec ondes de Pardee\n• Pas de trouble du rythme\n\n→ <b>SCA ST+ septo-apical sans miroir</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels éléments complémentaires, nécessaires pour une prise en charge optimale, recherchez-vous à l’interrogatoire ?",
+          "images": [],
+          "reponseAttendue": "Antécédents, facteurs de risque cardio-vasculaires, habitus (tabac), traitement en cours (antiagrégants, anticoagulants), prise de toxiques, caractéristiques de la douleur, et facteurs de risque hémorragique si une thrombolyse est envisagée.",
+          "correctionGenerale": "• Antécédents, FDRCV, habitus (tabac), traitement en cours (AAP, anticoagulant), prise de toxiques\n• Caractéristiques de la douleur\n• <b>Facteurs de risque d’hémorragie</b> si l’on envisage une thrombolyse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nComment conditionnez-vous ce patient pour le transport ?",
+          "images": [],
+          "reponseAttendue": "Scope, oxygène selon l’objectif (> 90 % ou > 95 % selon les recommandations), pose de 2 VVP avec G5 %, position demi-assise, réassurance, antalgiques et anxiolytiques.",
+          "correctionGenerale": "• Scope, O₂ selon l’objectif (selon les recommandations : > 90 % ou > 95 %)\n• Pose de 2 VVP avec G5 %\n• Position demi-assise, rassurer\n• Antalgiques, anxiolytiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuels sont les horaires importants à prendre en considération pour une démarche thérapeutique adaptée ?",
+          "images": [],
+          "reponseAttendue": "L’angioplastie doit être réalisée dans les 120 minutes à partir du premier ECG — 90 minutes si le patient est pris en charge moins de 2 heures après le début de sa douleur ; sinon, fibrinolyse.",
+          "correctionGenerale": "• <b>Angioplastie dans les 120 minutes à partir du 1ᵉʳ ECG</b> (90 minutes si le patient est pris en charge moins de 2 h après le début de sa douleur)\n• Sinon, <b>fibrinolyse</b>\n\n<i>Source : Vidal, mise à jour octobre 2020.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nL’examen clinique réalisé sur place est le suivant : score de Glasgow 15 (Y4/V5/M6), auscultation pulmonaire claire et symétrique, bruits du cœur réguliers sans souffle, FC 67 bpm, PAS/PAD 162/95 mmHg symétrique aux 2 bras, SpO₂ 100 % en air ambiant, EN 8/10, poids 76 kg (IMC 28,6), taille 163 cm.\n\nLe centre de cathétérisme cardiaque est à 45 minutes de votre situation actuelle. Quelle est la démarche thérapeutique, en la justifiant ?",
+          "images": [],
+          "reponseAttendue": "Le délai à considérer est celui qui sépare le premier ECG du gonflement du ballonnet. La douleur a débuté à 4 h et le premier ECG a été réalisé à 5 h 46, soit moins de 2 heures après le début de la douleur : le délai maximal est donc de 90 minutes. Les 45 minutes de route sont inférieures à 90 minutes : l’angioplastie est donc possible.",
+          "correctionGenerale": "• Délai à considérer : entre le 1ᵉʳ ECG et le ballonnet gonflé\n• Début de la douleur à 4 h, 1ᵉʳ ECG à 5 h 46 = moins de 2 h après le début de la douleur\n• 45 min de route < 90 min entre le 1ᵉʳ ECG et le ballonnet\n\n→ <b>OK pour angioplastie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuels traitements mettez-vous en place dans l’intervalle ?",
+          "images": [],
+          "reponseAttendue": "Kardégic 250-500 mg IVD, un antiagrégant plaquettaire (par exemple prasugrel 60 mg), une anticoagulation curative (par exemple énoxaparine 100 UI/kg 2 fois par jour en SC), de l’oxygène, des antalgiques et des anxiolytiques.",
+          "correctionGenerale": "• Kardégic® 250-500 mg IVD\n• Antiagrégant plaquettaire (ex. prasugrel 60 mg)\n• Anticoagulation curative (ex. énoxaparine 100 UI/kg 2/j SC)\n• O₂, antalgiques et anxiolytiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuelle doit être la surveillance clinique et paraclinique pendant le transport ?",
+          "images": [],
+          "reponseAttendue": "Surveillance clinique avec constantes, scope et douleur ; surveillance paraclinique avec ECG.",
+          "correctionGenerale": "• <b>Surveillance clinique</b> : constantes, scope, douleur\n• <b>Surveillance paraclinique</b> : ECG"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nPendant le transport, le patient présente une crise convulsive et le tracé ECG montre un aspect de fibrillation ventriculaire. Quel est votre premier geste, en le détaillant ?",
+          "images": [],
+          "reponseAttendue": "Un choc électrique externe de 300 J sous anesthésie générale brève, puis reprise de la réanimation cardio-pulmonaire ; puis amiodarone 300 mg IVD pour éviter la récidive.",
+          "correctionGenerale": "• <b>1 CEE 300 J sous AG brève</b>, puis RCP\n• Puis amiodarone 300 mg IVD pour éviter une récidive"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2018 - EVCP - Sujet 2",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 3,
+      "vignette": "Une femme de 31 ans, sans antécédent particulier ni allergie connue, est amenée aux urgences pour une hyperthermie avec frissons.\n\nSes constantes prises par l’infirmière d’accueil sont les suivantes : tension artérielle 105/68 mmHg, fréquence cardiaque 110 bpm, température 39,2 °C, SpO₂ 97 % en air ambiant, score de Glasgow 15.\n\n<i>Énoncé officiel restitué depuis le sujet EVCP 2018, code 77 (Annales/Sujets/2018_EVCP.pdf).</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle constante vitale aurait dû être mesurée ?",
+          "images": [],
+          "reponseAttendue": "La fréquence respiratoire, incluse dans le qSOFA et dans les signes de détresse respiratoire.",
+          "correctionGenerale": "<b>La fréquence respiratoire</b> (incluse dans le qSOFA et dans les signes de détresse respiratoire)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nÀ ce stade, que recherchez-vous comme critères cliniques de gravité du syndrome infectieux ?",
+          "images": [],
+          "reponseAttendue": "Neurologique : troubles de la vigilance, coma, syndrome méningé ou d’HTIC. Cardio-vasculaire : PAS < 90 mmHg, FC > 120 bpm, marbrures. Pulmonaire : cyanose, signes de lutte, FR > 30 cpm, insuffisance respiratoire aiguë. Autres : température > 40 °C ou < 36 °C, CURB65/CRB65, qSOFA > 2, lactates > 2 mmol/L, comorbidités, état de choc septique nécessitant des vasopresseurs, PaFi < 250, atteinte multilobaire, urémie, GB < 4 G/L, plaquettes < 100 G/L (surtout pour les pneumopathies) ; sinon purpura, ventre dur (péritonite) ou crépitants sous-cutanés (fasciite nécrosante).",
+          "correctionGenerale": "• <b>Neurologique</b> : troubles de la vigilance, coma, syndrome méningé ou d’HTIC\n• <b>Cardio-vasculaire</b> : PAS < 90 mmHg, FC > 120 bpm, marbrures\n• <b>Pulmonaire</b> : cyanose, signes de lutte, FR > 30 cpm, insuffisance respiratoire aiguë\n• <b>Autres</b> : T > 40 °C ou < 36 °C, CURB65/CRB65, qSOFA > 2, lactates > 2 mmol/L, comorbidités, état de choc septique avec nécessité de vasopresseurs, PaFi < 250, atteinte multilobaire, urémie, GB < 4 G/L, plaquettes < 100 G/L (surtout pour les pneumopathies) ; sinon purpura, ventre dur (péritonite) ou crépitants sous-cutanés (fasciite nécrosante)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les infections bactériennes parenchymateuses les plus fréquentes observées aux urgences et comment les recherchez-vous à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Pneumologiques (pneumopathie, abcès) : auscultation, toux, expectorations, dyspnée d’effort. Urinaires (infection urinaire, abcès, prostatite) : signes fonctionnels urinaires, lombalgies. Digestives (abcès, notamment hépatiques) : douleur abdominale, troubles du transit, nausées et vomissements, arrêt des matières et des gaz. Cutanéo-muqueuses (dermo-hypodermite, fasciite nécrosante, abcès) : crépitants, érythème, lymphangite, grosse jambe rouge aiguë, adénopathies. Neurologiques (abcès — la méningite stricto sensu n’est pas parenchymateuse) : syndrome méningé, signes d’HTIC, anomalies pupillaires, troubles de la vigilance.",
+          "correctionGenerale": "• <b>Pneumologique</b> (pneumopathie, abcès) : auscultation, toux, expectorations, dyspnée d’effort\n• <b>Urinaire</b> (infection urinaire, abcès, prostatite) : signes fonctionnels urinaires, lombalgies\n• <b>Digestif</b> (abcès, notamment hépatiques ; les organes creux ne sont pas vraiment parenchymateux) : douleur abdominale, troubles du transit, nausées/vomissements, arrêt des matières et des gaz\n• <b>Cutanéo-muqueux</b> (DHBNN, fasciite nécrosante, abcès) : fasciite avec crépitants, érythème, lymphangite, grosse jambe rouge aiguë, adénopathies\n• <b>Neurologique</b> (abcès ; la méningite stricto sensu n’en est pas, les méninges n’étant pas du parenchyme) : syndrome méningé, signes d’HTIC, anomalies pupillaires, troubles de la vigilance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nL’examen clinique est le suivant : bruits du cœur réguliers, sans souffle, pas de signes d’insuffisance cardiaque, auscultation pulmonaire symétrique sans bruits surajoutés, fosse lombaire gauche douloureuse avec contact lombaire, dysurie. Pas de lésion cutanée. Nuque souple.\n\nQuelle est votre principale hypothèse diagnostique ?",
+          "images": [],
+          "reponseAttendue": "Une pyélonéphrite aiguë simple gauche, sans signe de gravité, chez une femme de 31 ans.",
+          "correctionGenerale": "<b>PNA simple gauche sans signe de gravité chez une femme de 31 ans.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels examens paracliniques demandez-vous en 1ʳᵉ intention ?",
+          "images": [],
+          "reponseAttendue": "Bandelette urinaire et ECBU, bêta-hCG, ECG en raison de la tachycardie. Pas d’imagerie.",
+          "correctionGenerale": "• BU et ECBU\n• Bêta-hCG\n• ECG, car tachycardie\n• <b>Pas d’imagerie</b>\n\n<i>Source : ECN Pilly 2020, item 157.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nL’infirmière vous appelle car la situation clinique est évolutive : la patiente est agitée, un peu confuse, la tension artérielle est à 76/43 mmHg, la fréquence cardiaque à 132 bpm, la température à 40,1 °C et la fréquence respiratoire à 32 cycles par minute, la SpO₂ à 94 % en air ambiant.\n\nComment qualifiez-vous cet épisode infectieux ?",
+          "images": [],
+          "reponseAttendue": "Une pyélonéphrite aiguë gauche avec signes de gravité chez une femme de 31 ans, avec un qSOFA supérieur à 2 (égal à 3).",
+          "correctionGenerale": "<b>PNA gauche avec signes de gravité chez une femme de 31 ans, qSOFA > 2 (= 3).</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel est votre conditionnement et votre prise en charge thérapeutique ?",
+          "images": [],
+          "reponseAttendue": "Scope, pose de 2 VVP en urgence, oxygène avec objectif de SpO₂ > 95 %, ECG. Introduction d’une C3G en urgence (avec les mots-clés de l’antibiothérapie) associée à l’amikacine, à visée anti-BGN et pour la bactéricidie. Expansion volémique par NaCl avec un objectif de PAM > 65 mmHg. Le tout après avoir réalisé la biologie, la BU, l’ECBU et les hémocultures.",
+          "correctionGenerale": "• Scope, pose de 2 VVP en urgence, O₂ avec objectif SpO₂ > 95 %, ECG\n• <b>Introduction d’une C3G en urgence</b> (+ mots-clés des antibiotiques) <b>+ amikacine</b>, à visée anti-BGN et de bactéricidie\n• Expansion volémique par NaCl, objectif PAM > 65 mmHg\n• Après avoir fait la biologie + BU, ECBU + hémocultures"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuel examen d’imagerie est nécessaire à ce stade et pour quelle raison ?",
+          "images": [],
+          "reponseAttendue": "Un uroscanner avec injection de produit de contraste, en l’absence d’allergie, d’insuffisance rénale et de grossesse, à la recherche d’arguments pour une pyélonéphrite compliquée (abcès, urinome…).",
+          "correctionGenerale": "• <b>Uroscanner avec injection de produit de contraste</b>\n• En l’absence d’allergie, d’insuffisance rénale et de grossesse\n• À la recherche d’arguments pour une PNA, un abcès, un urinome, etc. (PNA compliquée ?)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nMalgré votre traitement, le score de Glasgow est à 9 (Y2 V3 M4), la tension artérielle est à 70/50 mmHg, la fréquence cardiaque à 125 bpm, la SpO₂ à 91 % sous 3 L par lunettes.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un état de choc septique sur pyélonéphrite chez une femme de 31 ans.",
+          "correctionGenerale": "<b>État de choc septique sur pyélonéphrite chez une femme de 31 ans.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nDécrivez la suite de votre prise en charge thérapeutique.",
+          "images": [],
+          "reponseAttendue": "Poursuite du même traitement (C3G + amikacine), poursuite de l’expansion volémique, introduction d’amines vasopressives, hémisuccinate d’hydrocortisone à discuter, et intubation à discuter en cas de dégradation respiratoire ou neurologique.",
+          "correctionGenerale": "• Poursuite du même traitement (C3G + amikacine)\n• Poursuite de l’expansion volémique\n• Introduction d’amines vasopressives + hémisuccinate d’hydrocortisone à discuter\n• Intubation si dégradation respiratoire ou neurologique, à discuter"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2019 - EVCF",
+      "annee": 2019,
+      "type": "EVCF",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 4,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Énoncés officiels restitués depuis le sujet EVCF 2019, code 77 (Annales/Sujets/EVCF 2019/evcf.77.doc).</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nChez un homme de 60 ans, tabagique, hypertendu, quels sont les 4 principaux diagnostics (en excluant une origine digestive) à évoquer devant une douleur médio-thoracique inaugurale, brutale, survenant au repos ?",
+          "images": [],
+          "reponseAttendue": "Syndrome coronarien aigu, péricardite aiguë, dissection aortique, embolie pulmonaire.",
+          "correctionGenerale": "• Syndrome coronarien aigu\n• Péricardite aiguë\n• Dissection aortique\n• Embolie pulmonaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les éléments de gravité lors d’une intoxication au monoxyde de carbone (CO) ?",
+          "images": [],
+          "reponseAttendue": "Selon les stades de gravité : I = inconfort, fatigue, céphalées ; II = nausées et vomissements, vertiges, malaise ; III = perte de connaissance, faiblesse musculaire, palpitations, tachycardie ; IV = convulsions, coma, déficit localisé, OAP, angor, IDM, choc, acidose métabolique.",
+          "correctionGenerale": "<b>Selon les stades de gravité</b>\n• <b>I</b> = inconfort, fatigue, céphalées\n• <b>II</b> = nausées/vomissements, vertiges, malaise\n• <b>III</b> = perte de connaissance, faiblesse musculaire, palpitations, tachycardie\n• <b>IV</b> = convulsions, coma, déficit localisé, OAP, angor, IDM, choc, acidose métabolique\n\n<i>Source : collège CEMIR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nEn cas de réaction anaphylactique après piqûre d’hyménoptère, quels éléments cliniques définissent les grades III et IV de sévérité ?",
+          "images": [],
+          "reponseAttendue": "Selon la classification de Ring et Messmer : grade III = atteinte multiviscérale sévère avec menace du pronostic vital (état de choc, tachycardie, bradycardie, troubles du rythme, bronchospasme) ; grade IV = arrêt respiratoire et inefficacité cardio-circulatoire.",
+          "correctionGenerale": "<b>Selon la classification de Ring et Messmer</b>\n• <b>Grade III</b> = atteinte multiviscérale sévère avec menace du pronostic vital (état de choc, tachycardie, bradycardie, troubles du rythme, bronchospasme)\n• <b>Grade IV</b> = arrêt respiratoire, inefficacité cardio-circulatoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est votre prise en charge thérapeutique initiale chez un adulte de 75 kg présentant une crise comitiale généralisée ? Quelle est votre prise en charge si la crise persiste dans l’heure qui suit, sans reprise de conscience ?",
+          "images": [],
+          "reponseAttendue": "Mise en condition avec oxygène, position latérale de sécurité et libération des voies aériennes supérieures ; protéger, alerter, sécuriser ; lutte contre les ACSOS et traitement du facteur favorisant. Pour une crise comitiale généralisée isolée, le traitement initial est nul. En cas de persistance sans reprise de conscience (état de mal épileptique) : clonazépam IV 0,015 mg/kg, soit environ 1 mg, ou midazolam IM 0,15 mg/kg, soit environ 11 mg — traitement de 1ʳᵉ ligne, à répéter à 5 minutes en cas d’échec ; puis, en cas de nouvel échec à 5 minutes, traitement de 2ᵉ ligne (valproate de sodium 40 mg/kg IVSE soit 3000 mg, fosphénytoïne 20 mg/kg, phénobarbital 15 mg/kg soit 1200 mg, ou lévétiracétam 30-60 mg/kg soit 2500-4500 mg) ; en cas d’échec à 30 minutes, traitement de 3ᵉ ligne par anesthésie générale et intubation, ou un autre antiépileptique de 2ᵉ ligne non utilisé.",
+          "correctionGenerale": "• Mise en condition avec O₂, position latérale de sécurité, libération des VAS\n• Protéger, alerter, sécuriser\n• Lutte contre les ACSOS, traitement du facteur favorisant\n\n<b>Crise comitiale généralisée</b> (pas d’état de mal) → <b>traitement initial : aucun</b>\n\n<b>Persistance de la crise sans reprise de conscience = état de mal épileptique</b>\n• <i>1ʳᵉ ligne</i> : clonazépam IV 0,015 mg/kg (≈ 1 mg) ou midazolam IM 0,15 mg/kg (≈ 11 mg)\n• Si échec à 5 min : répéter le même traitement\n• Si échec à 5 min : <i>2ᵉ ligne</i> — valproate de sodium 40 mg/kg IVSE (3000 mg), fosphénytoïne 20 mg/kg IVSE, phénobarbital 15 mg/kg IVSE (1200 mg) ou lévétiracétam 30-60 mg/kg IVSE (2500-4500 mg)\n• Si échec à 30 min : <i>3ᵉ ligne</i> — anesthésie générale et intubation, ou autre antiépileptique de 2ᵉ ligne non utilisé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les critères cliniques d’hospitalisation d’une bronchiolite de l’enfant ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation si critères de gravité (forme grave). En cas de forme clinique modérée : au cas par cas, et si oxygénothérapie, support nutritionnel ou au moins un critère de vulnérabilité (âge corrigé < 2 mois, comorbidité, contexte socio-économique défavorisé). En cas de forme clinique légère : au cas par cas.",
+          "correctionGenerale": "• Si <b>critères de gravité</b> (forme grave)\n• Si <b>forme clinique modérée</b> = au cas par cas, et si oxygénothérapie, ou support nutritionnel, ou au moins 1 critère de vulnérabilité (âge corrigé < 2 mois, comorbidité, contexte socio-économique défavorisé)\n• Si <b>forme clinique légère</b> = au cas par cas\n\n<i>Sources : Vidal ; recommandation HAS 2019 sur la bronchiolite.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nL’infirmier organisateur d’accueil (IOA) vous appelle pour un homme de 20 ans, diabétique connu, en rupture thérapeutique, pour polypnée et douleurs abdominales. La fréquence respiratoire est à 40/min, la SpO₂ à 98 %, la température à 37,0 °C, la fréquence cardiaque à 120/min, la tension artérielle à 90/45 mmHg.\n\nQuel paramètre fondamental aurait dû vous être transmis par l’IOA ? Quel est le diagnostic le plus probable ? Quel(s) examen(s) complémentaire(s) prescrivez-vous ? Quelle sera votre prise en charge thérapeutique initiale si le diagnostic le plus probable est confirmé ?",
+          "images": [],
+          "reponseAttendue": "Paramètre manquant : la glycémie capillaire. Diagnostic : acidocétose diabétique chez un patient de 20 ans, diabétique de type 1 en rupture de suivi. Examens : bandelette urinaire, cétonémie, gaz du sang, lactates, bilan biologique standard avec fonction rénale et kaliémie, ECG, troponine, bilan infectieux et radiographie pulmonaire. Traitement : hospitalisation en réanimation, mise en condition avec scope, NaCl pour l’expansion volémique (relais par G5 % dès que la glycémie est < 2,5 g/L, objectif PAM > 65 mmHg), insulinothérapie IVSE avec supplémentation potassique, traitement du facteur déclenchant (antibiothérapie ?), et surveillance rapprochée (glycémie, BU et cétonémie horaires, ionogramme 3 à 4 fois par jour, clinique).",
+          "correctionGenerale": "<b>Paramètre manquant</b> : la <b>glycémie capillaire</b>.\n\n<b>Diagnostic</b> : <b>acidocétose diabétique</b> chez un patient de 20 ans, diabétique de type 1 en rupture de suivi.\n\n<b>Examens complémentaires</b> : BU, cétonémie, gaz du sang, lactates, bilan biologique standard avec fonction rénale et kaliémie, ECG, troponine, bilan infectieux et radiographie pulmonaire.\n\n<b>Traitement</b>\n• Hospitalisation en réanimation\n• Mise en condition avec scope\n• NaCl pour expansion volémique (relais par G5 % dès que la glycémie est < 2,5 g/L ; objectif PAM > 65 mmHg)\n• Insulinothérapie IVSE avec supplémentation potassique\n• Traitement du facteur déclenchant (antibiothérapie ?)\n• <b>Surveillance +++</b> : glycémie, BU et cétonémie horaires ; ionogramme 3-4 fois par jour ; surveillance clinique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nDécrivez la séquence de prise en charge médicale spécialisée d’un arrêt cardiaque réfractaire de l’adulte en fibrillation ventriculaire.",
+          "images": [],
+          "reponseAttendue": "L’arrêt cardio-respiratoire est dit réfractaire si la réanimation cardio-pulmonaire dure depuis plus de 30 minutes. Traitement d’un facteur favorisant ; amiodarone — 1ᵉʳ bolus de 300 mg après le 3ᵉ choc, puis 150 mg, puis 900 mg/24 h IVSE ; discuter un prélèvement multi-organes et l’arrêt de la réanimation.",
+          "correctionGenerale": "• <b>ACR réfractaire si RCP depuis > 30 min</b>\n• Traitement d’un facteur favorisant\n• Amiodarone : 1ᵉʳ bolus 300 mg après le 3ᵉ choc, puis 150 mg, puis 900 mg/24 h IVSE\n• Discuter un prélèvement multi-organes et l’arrêt de la RCP"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelles sont les indications d’un scanner cérébral en cas de traumatisme crânien mineur chez l’adulte ?",
+          "images": [],
+          "reponseAttendue": "Déficit neurologique focalisé, amnésie rétrograde de plus de 30 minutes, Glasgow < 15 à 2 heures du traumatisme, signe de fracture de la base du crâne ou embarrure, plus d’un vomissement, convulsion post-traumatique, traitement par AVK ou antiagrégant plaquettaire. Ou bien perte de conscience ou amnésie des faits associée à un âge > 65 ans, un AVP piéton contre véhicule, une éjection d’un véhicule ou une chute de plus d’un mètre de hauteur.",
+          "correctionGenerale": "• Déficit neurologique focalisé\n• Amnésie rétrograde > 30 min\n• Glasgow < 15 à 2 h du traumatisme\n• Signe de fracture de la base du crâne ou embarrure\n• Plus d’1 vomissement\n• Convulsion post-traumatique\n• Traitement par AVK ou antiagrégant plaquettaire\n\n<b>Ou perte de conscience / amnésie des faits associée à</b> : âge > 65 ans, AVP piéton contre véhicule, éjection d’un véhicule, chute > 1 m de hauteur.\n\n<i>Source : RFE traumatisme crânien léger 2012.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel est le traitement spécifique d’une hémorragie symptomatique sous AVK ?",
+          "images": [],
+          "reponseAttendue": "Hémorragie non grave : suivre les recommandations du surdosage asymptomatique selon la valeur de l’INR, avec contrôle de l’INR le lendemain. Hémorragie grave (4 critères de gravité : retentissement hémodynamique, pronostic vital ou fonctionnel engagé, absence de contrôle par les moyens usuels, nécessité d’une transfusion ou d’un geste hémostatique) : concentré de complexe prothrombinique + 10 mg de vitamine K per os, avec contrôle de l’INR à 30 minutes, objectif INR < 1,5.",
+          "correctionGenerale": "<b>Hémorragie non grave</b> : cf. les recommandations pour le surdosage asymptomatique, selon la valeur de l’INR, avec contrôle de l’INR le lendemain.\n\n<b>Hémorragie grave</b> — 4 critères de gravité : retentissement hémodynamique ; pronostic vital ou fonctionnel engagé ; absence de contrôle par les moyens usuels ; nécessité d’une transfusion ou d’un geste hémostatique.\n→ <b>CCP + 10 mg de vitamine K PO + contrôle de l’INR à 30 min (objectif INR < 1,5)</b>\n\n<i>Source : HAS, surdosage en AVK, situations à risque et accidents hémorragiques.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nDécrivez la démarche diagnostique d’une céphalée brutale inhabituelle chez une migraineuse connue de 50 ans.",
+          "images": [],
+          "reponseAttendue": "Interrogatoire : antécédents, prise de traitement (contraception œstroprogestative), habitus (toxiques), exposition au CO, grossesse ou post-partum, traumatisme, caractéristiques de la douleur. Examen : constantes, poussée hypertensive, fièvre, Glasgow, syndrome méningé, déficit neurologique, anomalie pupillaire, artères temporales, sinus, fond d’œil si possible, nausées et vomissements. Examens : scanner cérébral sans injection — voire angioscanner à la recherche d’une thrombophlébite cérébrale — ou IRM cérébrale si disponible ; ponction lombaire (hémorragie méningée ? méningite ?).",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents, prise de traitement (contraception œstroprogestative), habitus (toxiques)\n• Exposition au CO, grossesse / post-partum, traumatisme\n• Caractéristiques de la douleur\n\n<b>Examen clinique</b>\n• Constantes, poussée hypertensive, fièvre, Glasgow, syndrome méningé, déficit neurologique, anomalie pupillaire, artères temporales, sinus, fond d’œil si possible, nausées/vomissements\n\n<b>Examens complémentaires</b>\n• Scanner cérébral sans injection (voire angioscanner à la recherche d’une thrombophlébite cérébrale), ou IRM cérébrale si disponible\n• Ponction lombaire (hémorragie méningée ? méningite ?)\n\n<i>Source : CEN, céphalée aiguë.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2019 - EVCP - Cas 1",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 5,
+      "vignette": "Une patiente de 37 ans se présente aux urgences pour « malaise ». Elle n’a aucun antécédent médical. Elle a eu une césarienne pour sa seconde grossesse (naissances en 2002 et 2008). Elle ne prend aucun médicament en dehors d’une contraception orale. Elle n’a pas de facteur de risque cardiovasculaire connu.\n\nÀ son arrivée, l’infirmière d’accueil note un score de Glasgow à 15, une pression artérielle à 115/75 mmHg, une fréquence cardiaque à 90/minute, une saturation artérielle (SpO₂) à 96 % à l’air ambiant, une fréquence respiratoire à 18/minute. L’interrogatoire fait apparaître une douleur du mollet depuis plusieurs jours, une dyspnée à l’effort et une « gêne » basithoracique droite. Vous suspectez une embolie pulmonaire.\n\n<i>Énoncé officiel restitué depuis le sujet EVCP 2019, code 77 (Annales/Sujets/2019_EVCP.pdf).</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels signes en faveur du diagnostic sont présents sur cet ECG ? Quels autres signes avez-vous recherchés ?",
+          "images": [],
+          "reponseAttendue": "S1Q3, axe droit, ondes T négatives en inférieur, tachycardie sinusale. À rechercher également : une fibrillation atriale.",
+          "correctionGenerale": "• S1Q3\n• Axe droit\n• Ondes T négatives en inférieur\n• Tachycardie sinusale\n\n<b>À rechercher</b> : fibrillation atriale.\n\n<i>Sources : CEP-SPLF, embolie pulmonaire (item 224, MTEV 2018) ; synthèse DES pneumologie, recommandations MTEV.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nVous voulez écarter le diagnostic. Quel examen pratiquez-vous ? La probabilité étant jugée modérée et le résultat de l’examen normal, est-ce suffisant pour écarter le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Le score de Genève vaut 6, soit une probabilité moyenne : on dose les D-dimères. Oui, cela suffit, car leur valeur prédictive négative est de 99 % : si les D-dimères sont négatifs, il y a 99 % de chances que l’embolie pulmonaire soit éliminée. On arrête donc les explorations et on recherche un autre diagnostic.",
+          "correctionGenerale": "• Selon le <b>score de Genève = 6</b>, la probabilité est <b>moyenne</b>\n• <b>Dosage des D-dimères</b>\n• <b>Oui</b>, car la valeur prédictive négative est de 99 % : si les D-dimères sont négatifs, il y a 99 % de chances que l’EP soit éliminée\n• Donc arrêt des explorations et recherche d’un autre diagnostic"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVous voulez confirmer le diagnostic. Quel examen pratiquez-vous ? La probabilité étant jugée modérée et le résultat de l’examen positif, est-ce suffisant pour débuter le traitement ?",
+          "images": [],
+          "reponseAttendue": "Le même examen (les D-dimères). Non, car il existe de multiples étiologies de faux positifs des D-dimères : il faut donc réaliser un angioscanner thoracique spiralé, en l’absence de contre-indication, à la recherche d’un défect endoluminal d’une artère pulmonaire.",
+          "correctionGenerale": "• Idem (D-dimères)\n• <b>Non</b>, car il existe de multiples étiologies de faux positifs des D-dimères\n• Donc <b>angioscanner thoracique spiralé</b> à réaliser, en l’absence de contre-indication, à la recherche d’un défect endoluminal d’une artère pulmonaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nLe diagnostic étant confirmé, vous devez évaluer le risque chez cette patiente. Quels critères cliniques retenez-vous pour évaluer ce risque ?",
+          "images": [],
+          "reponseAttendue": "Le score sPESI : âge > 80 ans, SpO₂ < 90 %, PAS < 100 mmHg, FC > 110 bpm, cancer, insuffisance cardiaque ou insuffisance respiratoire. Et l’état de choc : PAS < 90 mmHg ou chute de la PAS de plus de 40 mmHg par rapport à l’état de base.",
+          "correctionGenerale": "• <b>Score sPESI</b> : âge > 80 ans, SpO₂ < 90 %, PAS < 100 mmHg, FC > 110 bpm, cancer, insuffisance cardiaque ou insuffisance respiratoire\n• <b>État de choc</b> : PAS < 90 mmHg, ou chute de la PAS > 40 mmHg par rapport à l’état de base"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels examens biologiques sont nécessaires pour évaluer ce risque ?",
+          "images": [],
+          "reponseAttendue": "L’élévation de la troponine et du (NT-pro)BNP.",
+          "correctionGenerale": "• Élévation de la <b>troponine</b> et du <b>(NT-pro)BNP</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuel critère d’imagerie est nécessaire pour évaluer ce risque ?",
+          "images": [],
+          "reponseAttendue": "Un rapport VD/VG supérieur à 0,9 sur l’angioscanner thoracique.",
+          "correctionGenerale": "• <b>Rapport VD/VG > 0,9</b> sur l’angioscanner thoracique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel traitement de première intention proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un traitement possible en ambulatoire en l’absence de signe de gravité : anticoagulation curative par AOD (désormais recommandés en 1ʳᵉ intention), en l’absence de contre-indication et après vérification de la coagulation et de la fonction rénale ; arrêt de la contraception œstroprogestative ; bas de contention ; lever précoce.",
+          "correctionGenerale": "• Traitement possible <b>en ambulatoire</b> en l’absence de signe de gravité\n• <b>Anticoagulation curative par AOD</b> (à présent recommandés en 1ʳᵉ intention), en l’absence de contre-indication et après vérification de la coagulation et de la fonction rénale\n• Arrêt de la contraception œstroprogestative\n• Bas de contention\n• Lever précoce"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nLa patiente s’aggrave brutalement. Quels critères font décider d’une fibrinolyse ?",
+          "images": [],
+          "reponseAttendue": "L’hypotension ou l’état de choc.",
+          "correctionGenerale": "• <b>Hypotension ou état de choc</b> → fibrinolyse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelles contre-indications devez-vous rechercher ?",
+          "images": [],
+          "reponseAttendue": "Les contre-indications à la fibrinolyse, regroupées en absolues et relatives dans les recommandations MTEV du DES de pneumologie.",
+          "correctionGenerale": "Les contre-indications à la fibrinolyse sont regroupées en <b>absolues</b> et <b>relatives</b> dans les recommandations MTEV (DES de pneumologie), page 14 — la présentation y est très claire."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nLa patiente continue de s’aggraver. Son score de Glasgow est à 14, sa pression artérielle à 85/45 mmHg, sa fréquence cardiaque à 115/minute, sa saturation à 92 % à l’air ambiant, sa fréquence respiratoire à 24/minute.\n\nFaut-il envisager un remplissage vasculaire ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Non : il s’agit d’un état de choc obstructif, et le remplissage risquerait d’aggraver la situation.",
+          "correctionGenerale": "<b>Non</b> : état de choc <b>obstructif</b>, avec risque d’aggravation de la situation."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2019 - EVCP - Cas 2",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 6,
+      "vignette": "Vous recevez un appel au SAMU pour un patient de 27 ans qui a fait une chute de trois étages d’un échafaudage. Il parle, il bouge les quatre membres, il n’a pas de saignement visible.\n\n<i>Énoncé officiel restitué depuis le sujet EVCP 2019, code 77 (Annales/Sujets/2019_EVCP.pdf).</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nFaut-il envoyer un SMUR d’emblée ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Oui : il s’agit d’un traumatisme de haute cinétique — chute de 3 étages d’un échafaudage, soit plus de 6 mètres, selon les critères de Vittel.",
+          "correctionGenerale": "<b>Oui</b> : traumatisme de haute cinétique (3 étages d’un échafaudage, soit > 6 m, selon les <b>critères de Vittel</b>)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe chef d’agrès vous donne le bilan suivant : score de Glasgow à 15, pression artérielle à 105/45 mmHg, fréquence cardiaque à 110/minute, saturation à 94 % à l’air ambiant, fréquence respiratoire à 18/minute, probables fractures du fémur et du bras, et douleur vive du rachis et du bassin.\n\nParmi ces informations, lesquelles vous mettent en alerte sur la gravité du patient ?",
+          "images": [],
+          "reponseAttendue": "Les fractures du fémur et du bassin, à haut risque hémorragique.",
+          "correctionGenerale": "• <b>Fractures du fémur + bassin</b> (haut risque hémorragique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVotre examen initial fait apparaître : score de Glasgow à 13, pression artérielle à 95/45 mmHg, fréquence cardiaque à 115/minute, saturation à 94 % à l’air ambiant, fréquence respiratoire à 20/minute ; vous confirmez les fractures fermées du fémur et du bras et suspectez fortement des fractures du rachis lombaire et du bassin.\n\nQue recherchez-vous à l’examen neurologique ?",
+          "images": [],
+          "reponseAttendue": "Le score de Glasgow et une confusion ; un déficit sensitivo-moteur, une anesthésie en selle, un niveau sensitif ; un syndrome rachidien, un syndrome lésionnel et sous-lésionnel ; une rétention aiguë d’urine et le toucher rectal ; les réflexes ostéo-tendineux et le signe de Babinski ; une anisocorie, des anomalies pupillaires et le réflexe photomoteur. L’examen se fait dans le respect de l’axe tête-cou-tronc.",
+          "correctionGenerale": "• Glasgow, confusion\n• Déficit sensitivo-moteur, anesthésie en selle, niveau sensitif\n• Syndrome rachidien, syndrome lésionnel et sous-lésionnel\n• Rétention aiguë d’urine, toucher rectal\n• Réflexes ostéo-tendineux, Babinski\n• Anisocorie, anomalies pupillaires, réflexe photomoteur\n• <b>Examen dans le respect de l’axe tête-cou-tronc</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVoici l’image que vous obtenez à l’échographie d’urgence. Quelle information apporte-t-elle ?",
+          "images": [],
+          "reponseAttendue": "Un hématome sous-capsulaire du foie à l’échographie abdominale.",
+          "correctionGenerale": "<b>Hématome sous-capsulaire du foie</b> sur l’échographie abdominale."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels objectifs de pression artérielle (systolique) vous fixez-vous ?",
+          "images": [],
+          "reponseAttendue": "PAS > 80-90 mmHg en l’absence de traumatisme crânien ; PAS > 120 mmHg s’il existe un traumatisme crânien.",
+          "correctionGenerale": "• <b>PAS > 80-90 mmHg</b> en l’absence de traumatisme crânien\n• <b>PAS > 120 mmHg</b> si traumatisme crânien"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nComment gérez-vous le remplissage vasculaire (produit et volume) ?",
+          "images": [],
+          "reponseAttendue": "Remplissage vasculaire de 20 mL/kg en 20 minutes par NaCl, puis réévaluation à 20 minutes, avec introduction éventuelle d’amines vasopressives.",
+          "correctionGenerale": "• Remplissage vasculaire <b>20 mL/kg en 20 min par NaCl</b>\n• Puis réévaluation à 20 min, +/− introduction d’amines vasopressives"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nEn cas d’inefficacité du remplissage vasculaire, quelle stratégie thérapeutique proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’introduction de noradrénaline.",
+          "correctionGenerale": "• <b>Introduction de noradrénaline</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuel traitement pharmacologique spécifique de l’hémorragie doit être introduit au plus vite ?",
+          "images": [],
+          "reponseAttendue": "L’acide tranexamique (Exacyl®) : 1 g IVD, puis 1 g toutes les 8 heures.",
+          "correctionGenerale": "• <b>Exacyl® 1 g IVD, puis 1 g toutes les 8 h</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nPourquoi le contrôle de la température doit-il être débuté d’emblée ?",
+          "images": [],
+          "reponseAttendue": "Pour la neuroprotection et pour prévenir la coagulopathie secondaire du choc hémorragique du polytraumatisé et la CIVD.",
+          "correctionGenerale": "• <b>Neuroprotection</b>\n• <b>Prévention de la coagulopathie</b> secondaire du choc hémorragique du polytraumatisé et de la CIVD"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nEn quoi le traumatisme du bassin influence-t-il l’orientation hospitalière du patient ?",
+          "images": [],
+          "reponseAttendue": "Il implique un risque hémorragique important avec état de choc hémorragique, imposant la réalisation d’une radiographie du bassin dès le déchocage ; puis, si le patient est stable, un body-scanner — sinon un passage au bloc en urgence.",
+          "correctionGenerale": "• Risque hémorragique important, avec état de choc hémorragique, imposant la <b>radiographie du bassin dans le déchocage</b>\n• Puis, si le patient est stable, <b>body-scanner</b> (sinon bloc en urgence)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2020 - EVCF",
+      "annee": 2020,
+      "type": "EVCF",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 7,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les composantes et les bornes du score de Glasgow.</i>",
+          "images": [],
+          "reponseAttendue": "La réponse oculaire (yeux), la réponse verbale et la réponse motrice ; score minimum de 3 et score maximum de 15.",
+          "correctionGenerale": "• Réponse oculaire (yeux), réponse verbale et réponse motrice\n• Score minimum de <b>3</b> et score maximum de <b>15</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’antidote d’une intoxication aux opioïdes.</i>",
+          "images": [],
+          "reponseAttendue": "La naloxone.",
+          "correctionGenerale": "<b>Naloxone.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’antibiothérapie d’urgence du purpura fulminans.</i>",
+          "images": [],
+          "reponseAttendue": "Ceftriaxone 1 g chez l’adulte et 100 mg/kg chez l’enfant, IV, en urgence, avant tout prélèvement.",
+          "correctionGenerale": "<b>Ceftriaxone 1 g chez l’adulte et 100 mg/kg chez l’enfant, IV, en urgence, avant tout prélèvement.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le germe le plus probable devant une méningite purulente à cocci Gram positif.</i>",
+          "images": [],
+          "reponseAttendue": "Le pneumocoque (Streptococcus pneumoniae).",
+          "correctionGenerale": "<b>Pneumocoque (<i>Streptococcus pneumoniae</i>).</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’antidote d’une intoxication aux benzodiazépines.</i>",
+          "images": [],
+          "reponseAttendue": "Le flumazénil.",
+          "correctionGenerale": "<b>Flumazénil.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation d’une gazométrie artérielle.</i>",
+          "images": [],
+          "reponseAttendue": "Une acidose respiratoire hypercapnique non compensée, avec hypoxémie.",
+          "correctionGenerale": "<b>Acidose respiratoire hypercapnique non compensée avec hypoxémie.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les items et l’intérêt du score qSOFA.</i>",
+          "images": [],
+          "reponseAttendue": "FR ≥ 22 cpm, PAS ≤ 100 mmHg, Glasgow < 15 ou confusion. C’est un score de gravité en cas d’infection, en faveur d’un sepsis ; la mortalité est augmentée si le score est ≥ 2, ce qui rend nécessaire un avis réanimateur.",
+          "correctionGenerale": "• FR ≥ 22 cpm, PAS ≤ 100 mmHg, Glasgow < 15 ou confusion\n• Score de gravité en cas d’infection, en faveur d’un <b>sepsis</b>\n• Mortalité augmentée si ≥ 2 → avis réanimateur nécessaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la définition du choc septique.</i>",
+          "images": [],
+          "reponseAttendue": "Un sepsis avec PAM < 65 mmHg ou lactates > 2 mmol/L malgré un remplissage bien conduit, imposant par conséquent l’introduction d’une amine vasopressive.",
+          "correctionGenerale": "• <b>Sepsis avec PAM < 65 mmHg ou lactates > 2 mmol/L malgré un remplissage bien conduit</b>\n• Nécessité d’introduction d’une amine vasopressive par conséquent"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les facteurs de risque d’entérobactérie résistante aux C3G (BLSE).</i>",
+          "images": [],
+          "reponseAttendue": "Antibiothérapie dans les 3 mois (Augmentin, C3G ou fluoroquinolone), voyage en zone d’endémie dans les 3 mois, anomalie fonctionnelle ou organique de l’arbre urinaire (pour les infections urinaires), infection nosocomiale ou associée aux soins, antécédent de colonisation ou d’infection à entérobactérie résistante aux C3G.",
+          "correctionGenerale": "• Antibiothérapie < 3 mois (Augmentin®, C3G ou fluoroquinolone)\n• Voyage en zone d’endémie < 3 mois\n• Anomalie fonctionnelle ou organique de l’arbre urinaire (pour les infections urinaires)\n• Infection nosocomiale ou liée aux soins (= associée aux soins)\n• Antécédent de colonisation ou d’infection à entérobactérie résistante aux C3G\n\n<i>Source : HAS, antibiothérapie des infections à entérobactéries et à </i>Pseudomonas aeruginosa<i> chez l’adulte.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les contre-indications neurologiques à la ponction lombaire immédiate.</i>",
+          "images": [],
+          "reponseAttendue": "Signes en faveur d’un processus expansif intracrânien : déficit moteur, déficit sensitif, hémianopsie latérale homonyme, syndrome cérébelleux. Signes d’engagement cérébral : troubles de la vigilance associés à des anomalies pupillaires, une dysautonomie, des crises toniques postérieures, une aréactivité aux stimulations, une décortication ou une décérébration. Crises convulsives persistantes.",
+          "correctionGenerale": "• <b>Signes en faveur d’un processus expansif intracrânien</b> : déficit moteur, déficit sensitif, HLH, syndrome cérébelleux\n• <b>Signes d’engagement cérébral</b> : troubles de la vigilance + anomalies pupillaires, ou dysautonomie, ou crises toniques postérieures, ou aréactivité aux stimulations, ou décortication, ou décérébration\n• <b>Crises convulsives persistantes</b>\n\n<i>Source : ECN Pilly 2020, item 148.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 1",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 8,
+      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit de la prise en charge, par régulation puis par le SMUR, d’un homme présentant une douleur thoracique révélant un SCA ST+ inférieur, avec une contre-indication à l’angioplastie par le délai et un recours à la fibrinolyse.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les éléments à recueillir lors de la régulation.</i>",
+          "images": [],
+          "reponseAttendue": "Les antécédents du patient et ses facteurs de risque cardio-vasculaires, l’heure de début de la douleur, les caractéristiques de la douleur (est-elle angineuse ?), l’état de conscience et l’EVA, et le fait qu’il ait déjà essayé la trinitrine.",
+          "correctionGenerale": "• Antécédents du patient + FDRCV\n• Heure de début de la douleur\n• Caractéristiques de la douleur (angineuse ?)\n• État de conscience + EVA\n• A-t-il déjà essayé la trinitrine ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la réponse du médecin régulateur et les consignes données.</i>",
+          "images": [],
+          "reponseAttendue": "Envoi d’un SMUR en urgence (transport médicalisé) ; rassurer le patient et sa femme, rester au calme, position assise ou allongée ; préparer les papiers administratifs et les ordonnances ; garder le contact au téléphone.",
+          "correctionGenerale": "• <b>Envoi d’un SMUR en urgence</b> (transport médicalisé)\n• Rassurer le patient et sa femme, rester au calme, position assise ou allongée\n• Préparer les papiers administratifs + les ordonnances\n• Garder le contact au téléphone"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les premiers gestes de l’équipe SMUR à l’arrivée.</i>",
+          "images": [],
+          "reponseAttendue": "Reprise de l’interrogatoire (antécédents, facteurs de risque cardio-vasculaires, ordonnances), réalisation de l’examen clinique, scope et réalisation d’un ECG, test à la trinitrine.",
+          "correctionGenerale": "• Reprise de l’interrogatoire (notamment antécédents, FDRCV et ordonnances)\n• Réalisation de l’examen clinique\n• Scope et réalisation d’un ECG\n• Test à la trinitrine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation de l’ECG.</i>",
+          "images": [],
+          "reponseAttendue": "ECG 18 dérivations : rythme régulier et sinusal ; sus-décalage avec ondes de Pardee dans le territoire inférieur ; sous-décalage en miroir dans les territoires latéral haut et antérieur ; en faveur d’un SCA ST+ inférieur.",
+          "correctionGenerale": "• ECG 18 dérivations\n• Rythme régulier et sinusal\n• Sus-décalage avec ondes de Pardee dans le territoire inférieur\n• Sous-décalage en miroir dans le territoire latéral haut et antérieur\n\n→ En faveur d’un <b>SCA ST+ inférieur</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’artère coronaire en cause.</i>",
+          "images": [],
+          "reponseAttendue": "L’atteinte de la coronaire droite, car le territoire touché est le territoire inférieur.",
+          "correctionGenerale": "<b>Atteinte de la coronaire droite</b>, car atteinte du territoire inférieur."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les complications de l’infarctus du myocarde.</i>",
+          "images": [],
+          "reponseAttendue": "Troubles du rythme et de la conduction, RIVA ; insuffisance cardiaque ; état de choc cardiogénique, FV, TV, arrêt cardio-respiratoire, décès ; anévrisme ventriculaire, rupture myocardique ; péricardite, syndrome de Dressler.",
+          "correctionGenerale": "• Troubles du rythme et de la conduction, RIVA\n• Insuffisance cardiaque\n• État de choc cardiogénique, FV, TV, arrêt cardio-respiratoire, décès\n• Anévrisme ventriculaire, rupture myocardique\n• Péricardite, syndrome de Dressler"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le choix entre angioplastie et fibrinolyse et sur les contre-indications de la fibrinolyse.</i>",
+          "images": [],
+          "reponseAttendue": "L’angioplastie est recommandée si le délai entre le premier ECG qualifiant et la montée du ballonnet est inférieur à 120 minutes. Ici, le centre de cardiologie interventionnelle est à plus de 2 heures : l’angioplastie est donc contre-indiquée, et l’on recourt à la fibrinolyse IV, après avoir vérifié ses contre-indications.",
+          "correctionGenerale": "• Angioplastie recommandée si le délai <b>1ᵉʳ ECG qualifiant → montée du ballonnet est < 120 min</b>\n• Ici, on est à plus de 2 h du centre de cardiologie interventionnelle : <b>contre-indication à l’angioplastie</b>\n• → <b>Utilisation de la fibrinolyse IV</b>\n\n<b>Contre-indications de l’altéplase (Actilyse®) à la phase aiguë</b> — tous les cas associés à un risque hémorragique élevé :\n• Trouble hémorragique significatif actuel ou au cours des six derniers mois\n• Diathèse hémorragique connue\n• Traitement concomitant par des anticoagulants oraux à dose efficace (par exemple warfarine, INR > 1,3)\n• Hémorragie sévère ou potentiellement dangereuse, manifeste ou récente\n• Antécédents ou suspicion d’hémorragie intracrânienne\n• Suspicion d’hémorragie sous-arachnoïdienne ou antécédent d’hémorragie sous-arachnoïdienne liée à un anévrisme\n• Antécédents de lésion sévère du système nerveux central (néoplasie, anévrisme, intervention chirurgicale intracérébrale ou intrarachidienne)\n• Massage cardiaque externe traumatique récent (moins de 10 jours), accouchement, ponction récente d’un vaisseau non accessible à la compression (veine sous-clavière ou jugulaire)\n• Hypertension artérielle sévère non contrôlée\n• Endocardite bactérienne, péricardite\n• Pancréatite aiguë\n• Ulcères gastro-intestinaux documentés au cours des 3 derniers mois, varices œsophagiennes, anévrisme artériel, malformations artérielles ou veineuses\n• Néoplasie majorant le risque hémorragique\n• Hépatopathie sévère, y compris insuffisance hépatique, cirrhose, hypertension portale (varices œsophagiennes) et hépatite évolutive\n• Intervention chirurgicale ou traumatismes importants au cours des 3 derniers mois\n\n<b>Contre-indications complémentaires dans l’infarctus du myocarde à la phase aiguë</b>\n• Tout antécédent connu d’accident vasculaire cérébral hémorragique ou d’origine inconnue\n• Antécédents connus d’AVC ischémique ou d’AIT au cours des six mois précédents, sauf si l’AVC ischémique à la phase aiguë est survenu dans les 4 h 30 précédentes\n\n<i>Source : VIDAL, SCA ST+.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le traitement médicamenteux d’urgence du SCA ST+.</i>",
+          "images": [],
+          "reponseAttendue": "Il associe antalgiques morphiniques, oxygène nasal si SaO₂ < 95 %, aspirine, clopidogrel ou prasugrel ou ticagrélor, et un anticoagulant (héparine non fractionnée ou énoxaparine). La dose d’aspirine à la phase aiguë est idéalement de 250 mg IV, une administration orale à libération immédiate étant possible si le patient ne vomit pas ; les comprimés gastro-résistants à libération prolongée ne doivent pas être utilisés à la phase aiguë. La posologie de l’aspirine est ensuite de 75 à 160 mg par jour à vie. En cas de fibrinolyse, une dose de charge unique de 300 mg de clopidogrel est recommandée (75 mg si âge > 75 ans), avant la dose d’entretien de 75 mg par jour ; en cas d’angioplastie primaire, cette dose de charge peut être portée à 600 mg.",
+          "correctionGenerale": "<b>Traitement médicamenteux d’urgence</b>\nIl associe antalgiques morphiniques + O₂ nasal (si SaO₂ < 95 %, accord d’experts) + aspirine (grade A) + clopidogrel (grade B), ou prasugrel, ou ticagrélor + un anticoagulant : héparine non fractionnée ou énoxaparine.\n\n• La dose d’aspirine à la phase aiguë est idéalement de <b>250 mg par voie IV</b>, mais l’administration par voie orale à libération immédiate est possible si le patient ne vomit pas. En revanche, les comprimés gastro-résistants à libération prolongée ne doivent pas être utilisés à la phase aiguë. La posologie de l’aspirine est ensuite de <b>75 à 160 mg par jour, à vie</b>.\n• En cas de <b>fibrinolyse</b>, une dose de charge unique de <b>300 mg de clopidogrel</b> est recommandée (75 mg si âge > 75 ans), avant la dose d’entretien de 75 mg par jour.\n• En cas d’<b>angioplastie primaire</b>, cette dose de charge peut être portée à 600 mg (hors AMM), selon les recommandations ESC 2012 et ACCF/AHA 2013.\n\n<i>Source : VIDAL, SCA ST+.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les critères de reperfusion après fibrinolyse.</i>",
+          "images": [],
+          "reponseAttendue": "L’amendement de la douleur thoracique et du segment ST dans les 90 minutes.",
+          "correctionGenerale": "<b>Amendement de la douleur thoracique et du segment ST dans les 90 minutes.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’organisation du transfert du patient.</i>",
+          "images": [],
+          "reponseAttendue": "Transport SMUR médicalisé envoyé sur place ; prévenir le cardiologue de garde dans le centre d’accueil pour préparer la venue du patient ; s’assurer de la bonne coordination des équipes.",
+          "correctionGenerale": "• Transport SMUR médicalisé envoyé sur place\n• Prévenir le cardiologue de garde dans le centre d’accueil pour préparer la venue du patient\n• S’assurer de la bonne coordination des équipes"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 2",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 9,
+      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’une femme jeune consultant pour une douleur de la fosse iliaque droite, chez qui est finalement retenue une grossesse extra-utérine droite rompue avec hémopéritoine.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les hypothèses diagnostiques.</i>",
+          "images": [],
+          "reponseAttendue": "Appendicite, pyélonéphrite aiguë droite, grossesse extra-utérine droite.",
+          "correctionGenerale": "• Appendicite\n• Pyélonéphrite aiguë droite\n• Grossesse extra-utérine droite"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les examens complémentaires à demander.</i>",
+          "images": [],
+          "reponseAttendue": "Biologie avec NFS-plaquettes, ionogramme et fonction rénale, CRP, bilan de coagulation ; bêta-hCG ; hémocultures ; échographie abdomino-pelvienne.",
+          "correctionGenerale": "• Biologie : NFS-plaquettes, ionogramme + fonction rénale, CRP, bilan de coagulation\n• <b>Bêta-hCG</b>\n• Hémocultures\n• <b>Échographie abdomino-pelvienne</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation des résultats.</i>",
+          "images": [],
+          "reponseAttendue": "Syndrome inflammatoire biologique modéré ; élévation des bêta-hCG ; masse latéro-utérine avec sac vitellin, éventuellement avec activité cardiaque et embryon, dans la trompe utérine droite.",
+          "correctionGenerale": "• Syndrome inflammatoire biologique modéré\n• Élévation des bêta-hCG\n• Masse latéro-utérine avec sac vitellin +/− activité cardiaque et embryon dans la trompe utérine droite"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la prise en charge de la grossesse extra-utérine.</i>",
+          "images": [],
+          "reponseAttendue": "Prise en charge chirurgicale par cœlioscopie (salpingotomie), gold standard, mais pratiquée en 1ʳᵉ intention uniquement en cas d’instabilité hémodynamique, de défense abdominale ou d’hémopéritoine. Traitement médicamenteux par méthotrexate si aucun critère de gravité, bêta-hCG < 5000 UI/L, absence de contre-indication au MTX, et patiente compliante vivant à moins d’une heure de l’établissement.",
+          "correctionGenerale": "• <b>Prise en charge chirurgicale par cœlioscopie (salpingotomie)</b>, gold standard, mais pratiquée en 1ʳᵉ intention uniquement si instabilité hémodynamique, défense abdominale ou hémopéritoine\n• <b>Traitement médicamenteux par méthotrexate</b> si 0 critère de gravité + bêta-hCG < 5000 UI/L + pas de contre-indication au MTX + patiente compliante et vivant à moins d’1 h de l’établissement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les examens à réaliser devant une dégradation hémodynamique.</i>",
+          "images": [],
+          "reponseAttendue": "Hémocue et FAST échographie.",
+          "correctionGenerale": "• <b>Hemocue®</b> et <b>FAST échographie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation de l’échographie.</i>",
+          "images": [],
+          "reponseAttendue": "Échographie abdomino-pelvienne montrant un hémopéritoine dans l’espace hépato-rénal (espace de Morison).",
+          "correctionGenerale": "<b>Échographie abdomino-pelvienne avec hémopéritoine dans l’espace hépato-rénal.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la prise en charge du choc hémorragique.</i>",
+          "images": [],
+          "reponseAttendue": "Information et consentement de la patiente ; mise en condition avec 2 VVP ou 1 VVC, scope, mise à jeun et repos strict au lit ; oxygène aux lunettes +/− intubation, objectif SpO₂ > 95 % ; remplissage vasculaire et transfusion sanguine +/− noradrénaline, objectif PAM > 65 mmHg ; biologie en urgence avec bilan de coagulation, NFS-plaquettes et bilan prétransfusionnel ; prise en charge chirurgicale par cœlioscopie (salpingotomie) sans attendre les résultats des examens complémentaires, car il s’agit d’une urgence chirurgicale.",
+          "correctionGenerale": "• Information et consentement de la patiente\n• Mise en condition avec 2 VVP ou 1 VVC + scope + mise à jeun + repos strict au lit\n• O₂ aux lunettes +/− intubation, objectif SpO₂ > 95 %\n• Remplissage vasculaire + transfusion sanguine +/− noradrénaline, objectif PAM > 65 mmHg\n• Biologie en urgence avec bilan de coagulation, NFS-plaquettes et bilan prétransfusionnel\n• <b>Prise en charge chirurgicale par cœlioscopie (salpingotomie) sans attendre les résultats des examens complémentaires</b>, car urgence chirurgicale"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2021 - EVCF",
+      "annee": 2021,
+      "type": "EVCF",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 10,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les contre-indications neurologiques à la ponction lombaire immédiate.</i>",
+          "images": [],
+          "reponseAttendue": "Signes en faveur d’un processus expansif intracrânien : déficit moteur, déficit sensitif, hémianopsie latérale homonyme, syndrome cérébelleux. Signes d’engagement cérébral : troubles de la vigilance associés à des anomalies pupillaires, une dysautonomie, des crises toniques postérieures, une aréactivité aux stimulations, une décortication ou une décérébration. Crises convulsives persistantes.",
+          "correctionGenerale": "• <b>Signes en faveur d’un processus expansif intracrânien</b> : déficit moteur, déficit sensitif, HLH, syndrome cérébelleux\n• <b>Signes d’engagement cérébral</b> : troubles de la vigilance + anomalies pupillaires, ou dysautonomie, ou crises toniques postérieures, ou aréactivité aux stimulations, ou décortication, ou décérébration\n• <b>Crises convulsives persistantes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le traitement à débuter devant une suspicion de méningite bactérienne.</i>",
+          "images": [],
+          "reponseAttendue": "Instauration de dexaméthasone 10 mg toutes les 6 heures et d’une C3G de type céfotaxime à dose méningée.",
+          "correctionGenerale": "<b>Instauration de dexaméthasone 10 mg toutes les 6 h + C3G type céfotaxime à dose méningée.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la conduite à tenir lorsque la ponction lombaire ne peut pas être réalisée immédiatement.</i>",
+          "images": [],
+          "reponseAttendue": "Réalisation de 2 hémocultures, puis réalisation d’un scanner cérébral ou correction du facteur contre-indiquant la ponction lombaire.",
+          "correctionGenerale": "• Réalisation de <b>2 hémocultures</b>\n• Puis réalisation d’un scanner cérébral, ou correction du facteur contre-indiquant la PL"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’orientation devant une méningite à liquide trouble.</i>",
+          "images": [],
+          "reponseAttendue": "Méningite à liquide trouble = méningocoque ou pneumocoque ; isolement gouttelettes ; instauration de dexaméthasone 10 mg toutes les 6 heures et d’une C3G de type céfotaxime à dose méningée.",
+          "correctionGenerale": "• <b>Méningite à liquide trouble = méningocoque ou pneumocoque</b>\n• <b>Isolement gouttelettes</b>\n• Instauration de dexaméthasone 10 mg toutes les 6 h + C3G type céfotaxime à dose méningée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par le tableau reproduit ci-dessous, l’index de Cushman, score de gravité du syndrome de sevrage alcoolique.</i>",
+          "images": ["annales-urgence/correction-annales-urgences-2018-a-2021/figures/img-015-030.jpg"],
+          "reponseAttendue": "L’index de Cushman, score de gravité du syndrome de sevrage alcoolique, coté de 0 à 3 sur sept items : fréquence cardiaque, pression artérielle systolique (selon l’âge), fréquence respiratoire, tremblements, sueurs, agitation et troubles sensoriels. Un score < 7 correspond à un état clinique contrôlé, un score de 7 à 14 à un sevrage modéré, un score > 14 à un sevrage sévère.",
+          "correctionGenerale": "<b>Index de Cushman</b> — index de gravité du syndrome de sevrage alcoolique. Chaque item est coté de 0 à 3 :\n• <b>Fréquence cardiaque</b> : ≤ 80 / 81-100 / 101-120 / > 120\n• <b>Pression artérielle systolique</b> — 18-30 ans : ≤ 125 / 126-135 / 136-145 / > 145 ; 31-50 ans : ≤ 135 / 136-145 / 146-155 / > 155 ; > 50 ans : ≤ 145 / 146-155 / 156-165 / > 165\n• <b>Fréquence respiratoire</b> : ≤ 16 / 17-25 / 26-35 / > 35\n• <b>Tremblements</b> : 0 / main en extension / tout le membre supérieur / généralisés\n• <b>Sueurs</b> : 0 / paumes / paumes et front / généralisées\n• <b>Agitation</b> : 0 / discrète / généralisée contrôlable / généralisée incontrôlable\n• <b>Troubles sensoriels</b> : 0 / gêné par le bruit et la lumière / hallucinations critiquées / hallucinations non critiquées\n\n<b>Interprétation</b>\n• Score < 7 : état clinique contrôlé\n• Score de 7 à 14 : sevrage modéré\n• Score > 14 : sevrage sévère"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le traitement d’une hyperkaliémie.</i>",
+          "images": [],
+          "reponseAttendue": "Épuration extra-rénale en dernier recours ; sulfate de magnésium à visée de cardioprotection ; résine échangeuse d’ions, insuline glucosée, aérosols de salbutamol ; diurétiques de l’anse si hypervolémie, bicarbonate de sodium si hypovolémie ; arrêt des traitements hyperkaliémiants.",
+          "correctionGenerale": "• Épuration extra-rénale en dernier recours\n• Sulfate de magnésium à visée de cardioprotection\n• Résine échangeuse d’ions, insuline glucosée, aérosols de salbutamol\n• Diurétiques de l’anse si hypervolémie ; bicarbonate de sodium si hypovolémie\n• Arrêt des traitements hyperkaliémiants"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les seuils transfusionnels en concentrés de globules rouges.</i>",
+          "images": [],
+          "reponseAttendue": "Le seuil transfusionnel de 7 g/dL est recommandé en l’absence d’insuffisance coronarienne aiguë, y compris chez les patients ayant une cardiopathie chronique équilibrée. En présence d’une insuffisance coronarienne aiguë, le seuil est de 10 g/dL. Le seuil recommandé est de 7 g/dL dans le cadre d’une hémorragie digestive. En cas de neurotraumatisme, le seuil recommandé est de 10 g/dL.",
+          "correctionGenerale": "• Le seuil transfusionnel de <b>7 g/dL</b> est recommandé en l’absence d’insuffisance coronarienne aiguë, y compris chez les patients ayant une cardiopathie chronique équilibrée\n• En présence d’une <b>insuffisance coronarienne aiguë</b>, le seuil transfusionnel est de <b>10 g/dL</b> d’Hb\n• Le seuil transfusionnel recommandé est de <b>7 g/dL</b> dans le cadre d’une hémorragie digestive\n• Si <b>neurotraumatisme</b>, seuil transfusionnel fixé à <b>10 g/dL</b> (CEMIR)\n\n<i>Source : HAS, transfusion de globules rouges homologues — produits, indications, alternatives.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les sites de pose d’une voie intra-osseuse.</i>",
+          "images": [],
+          "reponseAttendue": "La face interne du tibia, la tête proximale de l’humérus et la crête iliaque.",
+          "correctionGenerale": "• Face interne du tibia\n• Tête proximale de l’humérus\n• Crête iliaque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’antidote d’une intoxication aux benzodiazépines.</i>",
+          "images": [],
+          "reponseAttendue": "Le flumazénil.",
+          "correctionGenerale": "<b>Flumazénil.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la posologie de l’adrénaline dans le choc anaphylactique.</i>",
+          "images": [],
+          "reponseAttendue": "En cas d’état de choc anaphylactique, soit un grade III de Ring et Messmer : adrénaline en bolus IV de 100 à 200 µg toutes les 1 à 2 minutes, en titration.",
+          "correctionGenerale": "En cas d’état de choc anaphylactique = <b>grade III de Ring et Messmer</b> : <b>adrénaline en bolus IV de 100 à 200 µg toutes les 1 à 2 minutes</b> (titration)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 11</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’induction en séquence rapide.</i>",
+          "images": [],
+          "reponseAttendue": "Induction en séquence rapide avec un hypnotique d’action rapide de type étomidate 0,5 mg/kg et un curare de courte durée d’action de type succinylcholine 1 mg/kg.",
+          "correctionGenerale": "<b>ISR</b> avec hypnotique d’action rapide type <b>étomidate 0,5 mg/kg</b> + curare de courte durée d’action type <b>succinylcholine 1 mg/kg</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 12</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation d’un ECG et la prise en charge d’un SCA ST+ inférieur.</i>",
+          "images": [],
+          "reponseAttendue": "SCA ST+ inférieur avec miroir antérieur sur l’ECG, en rapport avec une atteinte de la coronaire droite. Urgence diagnostique et thérapeutique : mise en déchoquage et appel du cardiologue interventionnel de garde ; scope, mise en condition, prélèvement d’un bilan biologique, mise à jeun ; aspirine et antiagrégant plaquettaire en urgence, +/− angioplastie ou fibrinolyse selon les délais.",
+          "correctionGenerale": "• <b>SCA ST+ inférieur avec miroir antérieur</b> sur l’ECG = atteinte de la coronaire droite\n• <b>Urgence diagnostique et thérapeutique</b>\n• Mise en déchoquage et appel du cardiologue interventionnel de garde\n• Scope, mise en condition, prélèvement d’un bilan biologique, mise à jeun\n• Aspirine + antiagrégant plaquettaire en urgence, +/− angioplastie ou fibrinolyse selon les délais"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 13</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les moyens de contrôle d’une hémorragie externe.</i>",
+          "images": [],
+          "reponseAttendue": "Pansements compressifs si l’hémorragie est extériorisée ; suture ou agrafage de toute plaie du scalp hémorragique ; mise en place d’un garrot ; administration d’acide tranexamique (Exacyl®) et remplissage vasculaire pour contrebalancer le saignement.",
+          "correctionGenerale": "• Pansements compressifs si hémorragie extériorisée\n• Suture ou agrafe de toute plaie du scalp hémorragique\n• Mise en place d’un garrot\n• Administration d’Exacyl® + remplissage vasculaire pour contrebalancer le saignement"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 1",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 11,
+      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’un patient âgé, dément, vivant en EHPAD et traité par apixaban, admis pour un syndrome occlusif fébrile avec confusion, marbrures, hypotension et défense diffuse.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’analyse syndromique du tableau clinique.</i>",
+          "images": [],
+          "reponseAttendue": "Syndrome occlusif, syndrome confusionnel et syndrome infectieux, réalisant un tableau grave : confusion, marbrures, hypotension avec PAM limite à 68 mmHg, tachycardie > 120 bpm, tachypnée > 30 cpm, toucher rectal douloureux (péritonite) et défense diffuse, avec un qSOFA à 3.",
+          "correctionGenerale": "• Syndrome occlusif\n• Syndrome confusionnel\n• Syndrome infectieux\n\n<b>Tableau grave</b> : confusion, marbrures, hypotension avec PAM limite à 68 mmHg, tachycardie > 120 bpm, tachypnée > 30 cpm, TR douloureux (péritonite) et défense diffuse + <b>qSOFA à 3</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les spécialistes à contacter.</i>",
+          "images": [],
+          "reponseAttendue": "Le réanimateur, le radiologue et le chirurgien digestif.",
+          "correctionGenerale": "• Réanimateur\n• Radiologue\n• Chirurgien digestif"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les hypothèses étiologiques du syndrome occlusif.</i>",
+          "images": [],
+          "reponseAttendue": "Récidive d’ulcère bulbaire duodénal avec sténose (rare) ; syndrome occlusif sur bride ou adhérence après sigmoïdite diverticulaire opérée +++ ; fécalome sur alitement prolongé chez un patient dément vivant en EHPAD et déjà sous laxatifs +++ ; volvulus du sigmoïde ; cancer colorectal, le patient étant âgé ; hématome pariétal sous anticoagulants.",
+          "correctionGenerale": "• Récidive d’ulcère bulbaire duodénal avec sténose (rare)\n• Syndrome occlusif sur bride ou adhérence après sigmoïdite diverticulaire opérée +++\n• Fécalome sur alitement prolongé chez un patient dément vivant en EHPAD et déjà sous laxatifs +++\n• Volvulus du sigmoïde\n• Cancer colorectal, car patient âgé\n• (Hématome pariétal sous anticoagulants)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la prise en charge initiale.</i>",
+          "images": [],
+          "reponseAttendue": "Urgence thérapeutique et diagnostique : arrêt des traitements habituels ; mise à jeun, oxygène avec objectif de SpO₂ > 95 %, repos strict au lit ; mise en place d’une VVC ou de 2 VVP, scope et ECG ; remplissage vasculaire +/− noradrénaline pour un objectif de PAM > 65 mmHg ; sonde nasogastrique en aspiration douce avec compensation volume par volume ; chambre seule, rassurer le patient, lui remettre ses appareils auditifs et ses lunettes ; +/− benzodiazépine de courte durée d’action en cas de persistance de l’agitation ; appel du réanimateur, du radiologue et du chirurgien digestif.",
+          "correctionGenerale": "• <b>Urgence thérapeutique et diagnostique</b>\n• Arrêt des traitements habituels\n• Mise à jeun, O₂ pour objectif SpO₂ > 95 %, repos strict au lit\n• Mise en place d’une VVC ou de 2 VVP, scope et ECG\n• Remplissage vasculaire +/− noradrénaline pour objectif PAM > 65 mmHg\n• <b>SNG en aspiration douce</b> et compensation volume par volume\n• Chambre seule, rassurer le patient, lui mettre ses appareils auditifs et ses lunettes\n• +/− benzodiazépine de courte durée d’action si persistance de l’agitation\n• Appel du réanimateur, du radiologue et du chirurgien digestif"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le bilan biologique.</i>",
+          "images": [],
+          "reponseAttendue": "Bilan biologique avec NFS-plaquettes, ionogramme, fonction rénale, bilan hépatique, CRP, calcémie, glycémie, bilan de coagulation et bilan prétransfusionnel, gaz du sang et lactates ; hémocultures et ECBU.",
+          "correctionGenerale": "• Bilan biologique : NFS-plaquettes, ionogramme, rein, foie, CRP, calcémie, glycémie + bilan de coagulation et prétransfusionnel + gaz du sang + lactates\n• Hémocultures et ECBU"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les éléments à recueillir auprès de l’entourage.</i>",
+          "images": [],
+          "reponseAttendue": "Reprise de l’anamnèse et de l’autonomie habituelle ; directives anticipées, personne de confiance, famille à contacter.",
+          "correctionGenerale": "• Reprise de l’anamnèse, autonomie habituelle\n• Directives anticipées, personne de confiance, famille à contacter"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’indication d’une imagerie.</i>",
+          "images": [],
+          "reponseAttendue": "Oui : un scanner thoraco-abdomino-pelvien injecté, pour le diagnostic positif, de gravité, de localisation et étiologique.",
+          "correctionGenerale": "<b>Oui</b> : scanner thoraco-abdomino-pelvien injecté, pour le diagnostic positif, de gravité, de localisation et étiologique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur la gestion de l’anticoagulant oral direct.</i>",
+          "images": [],
+          "reponseAttendue": "Arrêt de l’apixaban, avec dosage de sa concentration résiduelle et de l’activité anti-Xa. Si le risque hémorragique est élevé — ce qui est le cas — et selon le résultat du dosage lorsqu’il est disponible, administration ou non de concentrés de complexe prothrombinique.",
+          "correctionGenerale": "• <b>Arrêt de l’apixaban</b> + dosage de sa concentration résiduelle et de l’activité anti-Xa\n• Si le risque hémorragique est élevé (comme c’est le cas) et selon le résultat du dosage (si disponible) : administration ou non de <b>CCP</b>\n\n<i>Source : MAPAR, gestion périopératoire des anticoagulants oraux directs.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 2",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
+      "orderIndex": 12,
+      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’une patiente asthmatique, tabagique, appelant pour une dyspnée aiguë sifflante fébrile, évoluant vers un asthme aigu grave.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les éléments à rechercher lors de la régulation téléphonique.</i>",
+          "images": [],
+          "reponseAttendue": "La dyspnée, la parole, la conscience, le tirage, la cyanose, et si possible la fréquence respiratoire et la fréquence cardiaque.",
+          "correctionGenerale": "• Dyspnée, parole, conscience, tirage, cyanose\n• +/− FR et FC si possible"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les consignes de régulation.</i>",
+          "images": [],
+          "reponseAttendue": "Rassurer la patiente, ne pas la laisser seule, la faire rester en position assise ; envoi d’un transport médicalisé SMUR en urgence ; garder le contact téléphonique.",
+          "correctionGenerale": "• Rassurer la patiente, ne pas la laisser seule, rester en position assise\n• <b>Envoi d’un transport médicalisé SMUR en urgence</b>\n• Garder le contact téléphonique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les signes de gravité relevés à l’arrivée.</i>",
+          "images": [],
+          "reponseAttendue": "FC > 120 bpm, FR > 30 cpm, SpO₂ < 90 % (très grave) et présence de sibilants, en faveur d’un asthme aigu grave.",
+          "correctionGenerale": "• FC > 120 bpm, FR > 30 cpm, SpO₂ < 90 % (très grave) et présence de sibilants\n\n→ En faveur d’un <b>asthme aigu grave</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le traitement de l’asthme aigu grave.</i>",
+          "images": [],
+          "reponseAttendue": "Oxygène aux lunettes avec objectif de SpO₂ 94-98 % ; bêta-2 mimétique de type salbutamol 5 mg, 3 aérosols la première heure (toutes les 20 minutes) puis 1 aérosol toutes les 3 à 4 heures ; anticholinergique de type ipratropium 0,5 mg, 1 aérosol la première heure puis 3 par jour ; sulfate de magnésium IV ; corticothérapie 0,5 à 1 mg/kg/j pendant 5 à 7 jours (maximum 80 mg/j) ; antibiothérapie par Augmentin 1 g 3 fois par jour car la patiente est subfébrile ; sevrage tabagique obligatoire.",
+          "correctionGenerale": "• O₂ aux lunettes, objectif SpO₂ 94-98 %\n• <b>Bêta-2 mimétique</b> type salbutamol 5 mg : 3 aérosols la 1ʳᵉ heure (toutes les 20 min), puis 1 aérosol toutes les 3-4 h\n• <b>Anticholinergique</b> type ipratropium 0,5 mg : 1 aérosol la 1ʳᵉ heure, puis 3/j\n• <b>Sulfate de magnésium IV</b>\n• <b>Corticothérapie</b> 0,5 à 1 mg/kg/j pendant 5-7 jours (maximum 80 mg/j)\n• Antibiothérapie, car subfébrile : Augmentin® 1 g × 3/j\n• <b>Sevrage tabagique obligatoire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’interprétation des gaz du sang.</i>",
+          "images": [],
+          "reponseAttendue": "Une alcalose respiratoire non compensée, avec une hypoxémie limite.",
+          "correctionGenerale": "<b>Alcalose respiratoire non compensée avec hypoxémie limite.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’orientation de la patiente.</i>",
+          "images": [],
+          "reponseAttendue": "Hospitalisation en réanimation ou en soins intensifs, du fait de la persistance de signes de gravité avec tachycardie, tachypnée et oxygéno-requérance importante, et d’une possible intubation à venir.",
+          "correctionGenerale": "• Hospitalisation en réanimation ou en soins intensifs\n• Persistance de signes de gravité avec tachycardie, tachypnée et oxygéno-requérance importante\n• Possible intubation à venir"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les critères d’intubation.</i>",
+          "images": [],
+          "reponseAttendue": "Acidose hypercapnique et hypoxémiante (pH < 7,35), bradypnée, tachycardie > 120 bpm, agitation.",
+          "correctionGenerale": "• Acidose hypercapnique et hypoxémiante (pH < 7,35)\n• Bradypnée\n• Tachycardie > 120 bpm\n• Agitation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les signes d’asthme aigu grave menaçant le pronostic vital.</i>",
+          "images": [],
+          "reponseAttendue": "Patient qui se laisse allonger, impossibilité de parler ; confusion ou somnolence ; bradypnée ou pauses respiratoires, bradycardie ; balancement thoraco-abdominal, silence auscultatoire, cyanose ; absence de pouls paradoxal ; DEP non réalisable ou < 150 L/min ; SpO₂ < 90 %, pH < 7,35, PaO₂ < 55 mmHg, PaCO₂ > 45 mmHg.",
+          "correctionGenerale": "• Patient qui se laisse allonger, impossibilité de parler\n• Confus ou somnolent\n• Bradypnée ou pauses respiratoires, bradycardie\n• Balancement thoraco-abdominal, silence auscultatoire, cyanose\n• Pas de pouls paradoxal\n• DEP non réalisable ou < 150 L/min\n• SpO₂ < 90 %, pH < 7,35, PaO₂ < 55 mmHg, PaCO₂ > 45 mmHg"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les complications à évoquer.</i>",
+          "images": [],
+          "reponseAttendue": "Une pneumopathie et un pneumothorax +++.",
+          "correctionGenerale": "• Pneumopathie\n• <b>Pneumothorax +++</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les effets indésirables des bêta-2 mimétiques.</i>",
+          "images": [],
+          "reponseAttendue": "Hypokaliémie, hyperglycémie, troubles du rythme, tachycardie, palpitations, poussée hypertensive.",
+          "correctionGenerale": "• Hypokaliémie\n• Hyperglycémie\n• Troubles du rythme\n• Tachycardie, palpitations\n• Poussée hypertensive"
+        }
+      ]
+    }
+  ]
+}

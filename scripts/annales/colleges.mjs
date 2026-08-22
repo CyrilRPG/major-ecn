@@ -87,6 +87,7 @@ export const ITEMS_ANNALES = {
   'col-psychiatrie': { titre: 'Révisions - Psychiatrie', aCreer: false },
   'col-pediatrie': { titre: 'Révisions - Pédiatrie', aCreer: false },
   'col-mir': { titre: 'Révisions - Médecine d’urgence', aCreer: false },
+  'col-pneumologie': { titre: 'Révisions - Pneumologie', aCreer: true },
   // MG : item propre, placé AVANT les sous-collèges (order_index = 0).
   'col-medecine-generale': { titre: 'Annales - Médecine générale', aCreer: true },
 };

@@ -1,0 +1,553 @@
+{
+  "sources": {
+    "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf": {
+      "atelier": "annales-pediatrie/7-evc-2016-et-2015-corrige",
+      "sujetOfficiel": "Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.36.DOC ; Annales/Sujets/evcf_2015/EVCF.36.DOC ; Annales/Sujets/2016_EVCP.pdf ; Annales/Sujets/EVC2016_EVCF/EVCF.36.DOC",
+      "figuresIgnorees": {},
+      "remarque": "Ce corrigé couvre les sessions 2015 et 2016. Les énoncés ont été restitués intégralement à partir des sujets officiels présents dans le dépôt (code 36). Le corrigé ne traite pas tous les sujets de chaque épreuve : EVCP 2016 sujet n° 3 (méningite néonatale à streptocoque B), EVCF 2016 sujet n° 3 (encéphalopathie anoxo-ischémique), EVCF 2015 sujet n° 1 (ictère néonatal à H12) et EVCP 2015 ne comportent pas de correction pour ces sujets, qui ne sont donc pas intégrés."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCF - Sujet 2",
+      "annee": 2015,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 1,
+      "vignette": "Vous voyez en consultation un enfant âgé de 3 semaines d’origine comorienne. C’est le premier enfant du couple, né à terme au décours d’une grossesse normale suivie en France. Il pesait 3,4 kg à la naissance et 3,250 kg au retour à domicile à J3. La maman l’allaite mais hésite à poursuivre cet allaitement. L’enfant pèse 3,850 kg.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels arguments en faveur de la poursuite de l’allaitement maternel apportez-vous à la maman ?",
+          "images": [],
+          "reponseAttendue": "L’alimentation la plus adaptée à l’enfant, la diminution du risque infectieux, la prévention des maladies atopiques, la promotion des interactions mère-enfant, l’avantage socio-économique.",
+          "correctionGenerale": "• Alimentation la plus adaptée à l’enfant\n• Diminution du risque infectieux\n• Prévention des maladies atopiques\n• Favorise les interactions mère-enfant\n• Avantage socio-économique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les suppléments vitaminiques nécessaires pour cet enfant ?",
+          "images": [],
+          "reponseAttendue": "La vitamine D quotidienne, 400 à 800 UI/j, et la vitamine K, 2 mg à 1 mois de vie.",
+          "correctionGenerale": "• <b>Vitamine D</b> quotidienne, 400 à 800 UI/j\n• <b>Vitamine K</b>, 2 mg à 1 mois de vie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nEn examinant cet enfant, vous notez un ictère cutanéo-muqueux. Devant cet ictère persistant à 3 semaines, quelles sont vos hypothèses diagnostiques, en sachant que les dépistages réalisés au 3ᵉ jour étaient négatifs ?",
+          "images": [],
+          "reponseAttendue": "Ictère au lait de mère, atrésie des voies biliaires, maladie de Gilbert, hémolyse.",
+          "correctionGenerale": "• Ictère au lait de mère\n• Atrésie des voies biliaires\n• Maladie de Gilbert\n• Hémolyse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nLe bilan réalisé en ville montre une bilirubinémie totale à 150 µmol/L avec une bilirubine conjuguée de 50 µmol/L.\n\nQuel est le mécanisme de cet ictère ? Quel diagnostic étiologique doit être évoqué et recherché rapidement devant ce bilan ? Quels sont les deux éléments cliniques à rechercher par l’interrogatoire de la maman ?",
+          "images": [],
+          "reponseAttendue": "Un ictère à bilirubine conjuguée ; il faut évoquer une atrésie des voies biliaires ; rechercher une décoloration des selles et des urines foncées.",
+          "correctionGenerale": "• <b>Ictère à bilirubine conjuguée</b>\n• <b>Atrésie des voies biliaires</b>\n• Décoloration des selles et urines foncées"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCF - Sujet 3",
+      "annee": 2015,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 2,
+      "vignette": "Un nouveau-né de sexe féminin âgé de 72 h présente des vomissements qui semblent s’accentuer depuis la veille. La sage-femme vous précise que le dernier vomissement est d’aspect verdâtre. Le méconium a été émis à H12. À l’examen, l’enfant ne vous paraît pas ballonné.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic étiologique évoquez-vous en priorité ?",
+          "images": [],
+          "reponseAttendue": "Un volvulus sur mésentère commun.",
+          "correctionGenerale": "<b>Volvulus sur mésentère commun.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels examens d’imagerie demandez-vous et que recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "ASP à la recherche d’une anomalie de répartition des clartés aériques ; échographie-Doppler à la recherche d’une inversion de la position des vaisseaux mésentériques.",
+          "correctionGenerale": "• <b>ASP</b> : anomalie de répartition des clartés aériques\n• <b>Échographie-Doppler</b> : inversion de la position des vaisseaux mésentériques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nComment évaluez-vous cliniquement les répercussions de cet état pathologique sur l’état général de l’enfant ?",
+          "images": [],
+          "reponseAttendue": "Sur le plan hémodynamique : FC, TA, TRC, pouls centraux et périphériques. Sur le plan neurologique : état général, conscience.",
+          "correctionGenerale": "• <b>Hémodynamique</b> : FC, TA, TRC ; pouls centraux et périphériques\n• <b>Neurologique</b> : état général, conscience"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous décidez le transfert de cet enfant en milieu spécialisé dans un autre hôpital. Quels sont les éléments de base de votre prise en charge avant ce transfert ?",
+          "images": [],
+          "reponseAttendue": "Prise en charge chirurgicale en urgence ; information des parents ; mise en condition avec 2 voies veineuses périphériques, enfant à jeun, sonde nasogastrique en aspiration, oxygénothérapie si besoin, scope (FC, FR, SpO₂) ; bilan biologique préopératoire (NFS, coagulation, groupe ABO, Rh, RAI) et ionogramme sanguin ; hydratation par sérum physiologique ou glucosé adapté au ionogramme ; antalgique par paracétamol IV 7,5 mg/kg toutes les 6 heures.",
+          "correctionGenerale": "• <b>Prise en charge chirurgicale en urgence</b>\n• Information des parents\n• <b>Mise en condition</b> : 2 voies veineuses périphériques ; à jeun ; sonde nasogastrique en aspiration ; oxygénothérapie si besoin ; scope (FC, FR, SpO₂)\n• <b>Bilan biologique</b> : préopératoire (NFS, coagulation, groupe ABO, Rh, RAI) ; ionogramme sanguin\n• Hydratation par sérum physiologique ou glucosé adapté au ionogramme sanguin\n• Antalgique : <b>paracétamol IV 7,5 mg/kg/6 h</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCP - Sujet 1",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 3,
+      "vignette": "Zoé, âgée de 6 mois, présente une diarrhée aiguë. Cette diarrhée a débuté 6 heures avant la consultation, avec des selles aqueuses incessantes. L’infirmière note : poids 7,350 kg (2 balances différentes), température 37,5 °C. Vous notez une langue sèche, une fontanelle déprimée ; la fréquence cardiaque est à 186/min, la fréquence respiratoire à 46/min, le temps de recoloration est à 3 secondes. Le dernier poids noté sur le carnet de santé, 15 jours auparavant, est de 7,400 kg. Le nourrisson est abattu et hypotonique mais reste réactif.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nDans ce contexte, comment interprétez-vous les données relatives à la fréquence cardiaque à 196/min et à un temps de recoloration à 4 secondes ?",
+          "images": [],
+          "reponseAttendue": "Ce sont des signes de déshydratation extracellulaire.",
+          "correctionGenerale": "<b>Signes de déshydratation extracellulaire.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle complication (un choix) ces données vous font-elles redouter ?",
+          "images": [],
+          "reponseAttendue": "Un choc hypovolémique.",
+          "correctionGenerale": "<b>Choc hypovolémique.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les 2 hypothèses diagnostiques que vous soulevez concernant l’analyse des données relatives au poids indiqué sur le carnet de santé et au poids mesuré ?",
+          "images": [],
+          "reponseAttendue": "Une perte de poids rapide, ou un faux poids (enfant pesé habillé ou en couches).",
+          "correctionGenerale": "• Perte de poids rapide\n• Faux poids (enfant pesé habillé ou en couches)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCet enfant tète encore bien. Vous choisissez de proposer en première intention l’administration d’un soluté de réhydratation par voie orale (SRO), avec surveillance de l’enfant à l’hôpital.\n\nQuels critères de surveillance vous semblent indispensables ?",
+          "images": [],
+          "reponseAttendue": "Surveillance en consultation longue ou en unité d’hospitalisation de courte durée ; surveillance de la prise de SRO ; surveillance du poids ; surveillance de la tolérance digestive (vomissements, diarrhées) ; surveillance des constantes (FC, TA, température, FR).",
+          "correctionGenerale": "• Surveillance en consultation longue ou unité d’hospitalisation de courte durée\n• Surveillance de la prise de SRO\n• Surveillance du poids\n• Surveillance de la tolérance digestive (vomissements, diarrhées)\n• Surveillance des constantes (FC, TA, température, FR)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nL’état de ce patient s’améliore rapidement. Vous proposez un retour à domicile.\n\nComment se prépare et se donne la solution de réhydratation par voie orale ?",
+          "images": [],
+          "reponseAttendue": "Un sachet dans 200 mL d’eau, à donner en petites quantités et à volonté ; se conserve 24 h au réfrigérateur.",
+          "correctionGenerale": "<b>1 sachet dans 200 mL d’eau</b>, à donner en petites quantités et à volonté, se conserve <b>24 h au réfrigérateur</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelle complication peut-on observer lors de la réalimentation, en particulier si la diarrhée a été sévère et prolongée ? Comment se traduit cette complication ?",
+          "images": [],
+          "reponseAttendue": "Une myélinolyse centropontine par correction trop rapide de l’hyponatrémie, se traduisant par une altération de la conscience, une paralysie horizontale du regard, une paralysie pseudobulbaire et une quadriplégie.",
+          "correctionGenerale": "<b>Myélinolyse centropontine</b> par correction trop rapide de l’hyponatrémie\n• Altération de la conscience\n• Paralysie horizontale du regard\n• Paralysie pseudobulbaire\n• Quadriplégie"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCP - Sujet 2",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 4,
+      "vignette": "Au test de dépistage pratiqué à J3 à la maternité, un nouveau-né a été dépisté comme drépanocytaire homozygote SS. Vous êtes amené à annoncer le diagnostic aux parents 6 semaines plus tard.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles sont les 3 principales complications pouvant survenir au cours de la première année de vie ?",
+          "images": [],
+          "reponseAttendue": "L’anémie aiguë, les crises vaso-occlusives, les infections bactériennes sévères.",
+          "correctionGenerale": "• Anémie aiguë\n• Crises vaso-occlusives\n• Infections bactériennes sévères"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nÀ titre préventif, quels sont les deux médicaments à prescrire ?",
+          "images": [],
+          "reponseAttendue": "L’acide folique et la pénicilline V (Oracilline®).",
+          "correctionGenerale": "• Acide folique\n• Pénicilline V (Oracilline®)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelle adaptation vaccinale proposez-vous au cours de la première année de vie ?",
+          "images": [],
+          "reponseAttendue": "Le calendrier vaccinal normal, complété par la vaccination antigrippale annuelle à partir de 6 mois.",
+          "correctionGenerale": "• Calendrier vaccinal normal\n• Vaccination antigrippale annuelle (à partir de 6 mois)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nÀ l’âge de 12 mois, la maman consulte aux urgences ; elle annonce le diagnostic de son enfant, elle est inquiète car son comportement s’est brutalement modifié, il est apyrétique, il dort, refuse de manger.\n\nQuel est votre premier diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un accident vasculaire cérébral.",
+          "correctionGenerale": "<b>Accident vasculaire cérébral.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels examens complémentaires faites-vous en urgence pour confirmer le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Angio-IRM, NFS, groupe ABO, Rh, RAI.",
+          "correctionGenerale": "• Angio-IRM\n• NFS\n• Groupe ABO, Rh, RAI"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\n6 mois plus tard, la maman reconsulte aux urgences car elle trouve son enfant douloureux au niveau d’un membre depuis la nuit, malgré l’ibuprofène administré au domicile.\n\nQuels traitements antalgiques débutez-vous immédiatement aux urgences ?",
+          "images": [],
+          "reponseAttendue": "MEOPA ; nalbuphine IV si EVENDOL < 7 ; morphine IV d’emblée si EVENDOL > 7.",
+          "correctionGenerale": "• <b>MEOPA</b>\n• <b>Nalbuphine IV</b> si EVENDOL < 7\n• <b>Morphine IV</b> d’emblée si EVENDOL > 7"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nPosologies du paracétamol per os et fréquence d’administration ?",
+          "images": [],
+          "reponseAttendue": "15 mg/kg toutes les 6 heures, soit 60 mg/kg/j.",
+          "correctionGenerale": "<b>15 mg/kg toutes les 6 heures (60 mg/kg/j).</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nAprès 48 h d’hospitalisation, l’enfant a 40 °C de température et frissonne. Vous redoutez une infection invasive.\n\nQuel est l’examen complémentaire à prescrire pour faire le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Les hémocultures.",
+          "correctionGenerale": "<b>Hémocultures.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuels sont les trois germes à craindre ?",
+          "images": [],
+          "reponseAttendue": "Le pneumocoque, Haemophilus, les salmonelles.",
+          "correctionGenerale": "• Pneumocoque\n• <i>Haemophilus</i>\n• Salmonelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuel antibiotique prescrire par voie IV en première intention ?",
+          "images": [],
+          "reponseAttendue": "Une céphalosporine de 3ᵉ génération : ceftriaxone ou céfotaxime.",
+          "correctionGenerale": "<b>Céphalosporine de 3ᵉ génération : ceftriaxone ou céfotaxime.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nAvant sa sortie, vous pratiquez de principe une NFS. Son taux d’hémoglobine est à 4 g/dL (son hémoglobine de base est habituellement à 8 g/dL).\n\nQuelle formule utilisez-vous pour calculer le volume globulaire à transfuser ?",
+          "images": [],
+          "reponseAttendue": "(Hb attendue − Hb du malade) × 3 à 4 × poids en kg.",
+          "correctionGenerale": "<b>(Hb attendue − Hb malade) × 3-4 × poids (kg)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nQuel niveau d’hémoglobine ciblez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’hémoglobine de base, soit 8 g/dL.",
+          "correctionGenerale": "<b>Hb de base : 8 g/dL.</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCP - Sujet 3",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 5,
+      "vignette": "Félix, âgé de 20 mois, est adressé aux urgences pour une éruption fébrile.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel est le diagnostic d’urgence à éliminer en priorité ?",
+          "images": [],
+          "reponseAttendue": "Un purpura fulminans dans le cadre d’une infection invasive à méningocoque.",
+          "correctionGenerale": "<b>Purpura fulminans</b> dans le cadre d’une infection invasive à méningocoque."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelles sont les caractéristiques de cette éruption ?",
+          "images": [],
+          "reponseAttendue": "Une éruption purpurique, rapidement extensive, avec au moins 1 élément nécrotique ou ecchymotique de plus de 3 mm.",
+          "correctionGenerale": "• Éruption purpurique\n• Rapidement extensive\n• Avec au moins 1 élément nécrotique ou ecchymotique de plus de 3 mm"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nCe diagnostic est finalement réfuté. En effet, le début a été marqué par une fièvre élevée (40 °C) associée à une dysphagie douloureuse, il y a maintenant 5 jours. Un traitement antibiotique par amoxicilline, démarré depuis 3 jours, n’a pas modifié l’état de l’enfant. La symptomatologie s’est même enrichie avec l’apparition depuis 24 h d’une éruption non prurigineuse du tronc.\n\nÀ l’examen, vous constatez : température 39,5 °C, poids 12,2 kg, FC 140/min ; enfant fatigué et geignard ; auscultation cardio-pulmonaire normale ; abdomen sensible surtout en hypochondre droit ; nuque souple ; hyperhémie conjonctivale bilatérale ; lèvres érythémateuses, sèches et fissurées ; pharyngite non ulcérée ; langue framboisée ; érythème congestif du tronc avec quelques lésions en cocarde ; érythème induré palmo-plantaire ; adénopathie cervicale droite de 2 cm non suppurée.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de Kawasaki.",
+          "correctionGenerale": "<b>Syndrome de Kawasaki.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est votre prescription d’examens complémentaires et qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "NFS et CRP à la recherche d’une hyperleucocytose et d’un syndrome inflammatoire ; ECG à la recherche de troubles du rythme ; échocardiographie à la recherche d’anomalies des coronaires (dilatation, hyperéchogénicité, anévrisme).",
+          "correctionGenerale": "• <b>NFS, CRP</b> : hyperleucocytose, syndrome inflammatoire\n• <b>ECG</b> : troubles du rythme\n• <b>Échocardiographie</b> : anomalies des coronaires (dilatation, hyperéchogénicité, anévrisme)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle est votre attitude thérapeutique des premières heures ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation, information des parents, surveillance scopée, antipyrétique par paracétamol 15 mg/kg toutes les 6 heures per os ou IV, immunoglobulines polyvalentes 2 g/kg, aspirine à dose anti-inflammatoire 80-100 mg/kg/j.",
+          "correctionGenerale": "• Hospitalisation\n• Information des parents\n• Surveillance scopée\n• Antipyrétique : <b>paracétamol 15 mg/kg/6 h</b> par voie orale ou IV\n• <b>Immunoglobulines polyvalentes (2 g/kg)</b>\n• <b>Aspirine à dose anti-inflammatoire (80-100 mg/kg/j)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelle est la conduite du suivi ultérieur, en sortie d’hospitalisation et à long terme ?",
+          "images": [],
+          "reponseAttendue": "Un suivi cardiopédiatrique régulier avec échocardiographie (à 2 semaines puis 6-8 semaines) et de l’aspirine à dose antiplaquettaire (3-5 mg/kg/j).",
+          "correctionGenerale": "• Suivi cardiopédiatrique régulier avec échocardiographie (2 semaines puis 6-8 semaines)\n• <b>Aspirine à dose antiplaquettaire (3-5 mg/kg/j)</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2015 - EVCP - Sujet 4",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 6,
+      "vignette": "Jules, âgé de 10 ans, est emmené aux urgences pour des douleurs abdominales intenses, des vomissements à répétition sans diarrhée et de la fièvre évoluant depuis la veille. À l’examen, l’enfant est pâle, fatigué, et il répond avec difficulté aux questions. Sa fréquence respiratoire est à 40 par minute, sa tension artérielle à 85/45 mmHg, son pouls à 165 par minute. Il pèse 24 kg, sa température est à 39 °C. Sa mère vous signale que, depuis 1 mois, son enfant est fatigué, il se lève plusieurs fois par nuit pour aller aux toilettes et il a perdu 4 kg.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La découverte d’un diabète de type 1 sur probable acidocétose.",
+          "correctionGenerale": "<b>Découverte de diabète de type 1 sur probable acidocétose.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les 4 examens biologiques à réaliser en urgence dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Glycémie veineuse, recherche d’acétone dans les urines, gaz du sang (pH), ionogramme sanguin avec bicarbonates.",
+          "correctionGenerale": "• Glycémie veineuse\n• Recherche d’acétone dans les urines\n• Gaz du sang (pH)\n• Ionogramme sanguin avec bicarbonates"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nPour chacun de ces 4 examens, quelles sont les anomalies à rechercher dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Hyperglycémie, cétonurie positive, pH < 7,25, bicarbonates < 15 mmol/L.",
+          "correctionGenerale": "• Hyperglycémie\n• Cétonurie positive\n• pH < 7,25\n• Bicarbonates < 15 mmol/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel est l’examen paraclinique à réaliser en urgence dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "La glycémie capillaire — qui fait en théorie partie de l’examen clinique — et l’ECG.",
+          "correctionGenerale": "• Glycémie capillaire (en théorie, fait partie de l’examen clinique)\n• ECG"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle anomalie recherchez-vous sur cet examen ?",
+          "images": [],
+          "reponseAttendue": "Une hyperglycémie > 2 g/L et une dyskaliémie.",
+          "correctionGenerale": "• Hyperglycémie > 2 g/L\n• Dyskaliémie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nCitez les 3 grands principes des 24 premières heures de traitement.",
+          "images": [],
+          "reponseAttendue": "Remplissage vasculaire par sérum physiologique 20 mL/kg en 20 min ; hydratation intraveineuse, initialement par sérum physiologique puis par sérum glucosé ; insulinothérapie par voie IV tant que dure la cétose.",
+          "correctionGenerale": "• <b>Remplissage vasculaire</b> : sérum physiologique 20 mL/kg en 20 min\n• <b>Hydratation intraveineuse</b> : initialement par sérum physiologique puis par sérum glucosé\n• <b>Insulinothérapie par voie IV</b> : tant que dure la cétose"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelle est la complication à redouter lors des premières heures de traitement ?",
+          "images": [],
+          "reponseAttendue": "L’œdème cérébral.",
+          "correctionGenerale": "<b>Œdème cérébral.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nL’enfant s’améliore en quelques heures au fur et à mesure de votre prise en charge. Il est conscient, sa TA est à 110/65, sa fréquence cardiaque à 110 par minute, sa fréquence respiratoire à 28/min. Il présente une toux sèche. À l’examen physique, vous retrouvez une diminution du murmure vésiculaire de la base droite.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une pneumopathie d’inhalation.",
+          "correctionGenerale": "<b>Pneumopathie d’inhalation.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel est l’examen indispensable à réaliser pour étayer votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La radiographie du thorax de face.",
+          "correctionGenerale": "<b>Radiographie du thorax de face.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nDonnez les 2 germes les plus fréquemment responsables de cette infection.",
+          "images": [],
+          "reponseAttendue": "Les streptocoques et les pneumocoques.",
+          "correctionGenerale": "• Streptocoques\n• Pneumocoques"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2016 - EVCF - Sujet 1",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 7,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2016 de pédiatrie, sujet n° 1 : questions sur le diabète de type 1 de l’enfant.\n\n<i>Le sujet officiel ne comporte pas de vignette clinique pour ce sujet : il est constitué de questions posées directement.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les motifs de consultation évocateurs du diagnostic de diabète de type 1 chez l’enfant ?",
+          "images": [],
+          "reponseAttendue": "Énurésie nocturne et diurne, polydipsie, amaigrissement malgré une polyphagie, asthénie.",
+          "correctionGenerale": "• Énurésie nocturne et diurne\n• Polydipsie\n• Amaigrissement malgré polyphagie\n• Asthénie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels autres signes cliniques recherchez-vous dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Douleurs abdominales, odeur acétonique de l’haleine, signes de déshydratation, dyspnée de Kussmaul.",
+          "correctionGenerale": "• Douleurs abdominales\n• Odeur acétosique de l’haleine\n• Signes de déshydratation\n• Dyspnée de Kussmaul"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelle conduite à tenir proposez-vous initialement si la consultation a lieu dans un cabinet de ville ?",
+          "images": [],
+          "reponseAttendue": "Une glycémie capillaire immédiatement ou, à défaut, une bandelette urinaire à la recherche d’une glycosurie.",
+          "correctionGenerale": "<b>Glycémie capillaire immédiatement</b> ou, à défaut, <b>bandelette urinaire</b> à la recherche de glycosurie."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est la principale complication à craindre avant la prise en charge de cet enfant ?\n\na) Décrivez-en la prise en charge initiale (surveillance clinique et paraclinique, et les deux grands principes thérapeutiques).\n\nb) Quels sont les principaux risques dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Le coma acidocétosique. a) Hospitalisation, information des parents, remplissage au sérum physiologique si collapsus, hydratation intraveineuse initialement par sérum physiologique puis par glucosé, insulinothérapie intraveineuse tant que dure la cétose ; surveillance clinique (FC, FR, SpO₂, TA, conscience, bilan entrées-sorties, glycémie capillaire, bandelette urinaire) et paraclinique (gaz du sang, ionogramme sanguin, glycémie veineuse réguliers). b) Œdème cérébral par correction trop rapide de la glycémie et de la natrémie, et hypoglycémie.",
+          "correctionGenerale": "<b>Coma acidocétosique.</b>\n\n<b>a) Prise en charge initiale</b>\n• Hospitalisation\n• Information des parents\n• Remplissage au sérum physiologique si collapsus\n• Hydratation intraveineuse, initialement par sérum physiologique puis par glucosé\n• Insulinothérapie intraveineuse tant que dure la cétose\n• <b>Surveillance clinique</b> : FC, FR, SpO₂, TA, conscience, bilan entrées-sorties, glycémie capillaire, BU\n• <b>Surveillance paraclinique</b> : gaz du sang, ionogramme sanguin, glycémie veineuse réguliers\n\n<b>b) Principaux risques</b>\n• Œdème cérébral par correction trop rapide de la glycémie et de la natrémie\n• Hypoglycémie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles sont les informations importantes que vous devez donner aux parents concernant la prise en charge globale et le suivi à long terme de leur enfant (sans détailler l’insulinothérapie) ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une maladie chronique, à vie ; éducation thérapeutique du patient et de sa famille ; prise en charge multidisciplinaire par une équipe spécialisée en diabétologie pédiatrique ; suivi régulier en consultation.",
+          "correctionGenerale": "• Maladie chronique, à vie\n• Éducation thérapeutique du patient et de sa famille\n• Prise en charge multidisciplinaire par une équipe spécialisée en diabétologie pédiatrique\n• Suivi régulier en consultation"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2016 - EVCF - Sujet 2",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 8,
+      "vignette": "Le petit Michael, âgé de 8 mois (8 kg), est amené le 7 octobre 2016 par ses parents aux urgences pour toux et gêne respiratoire avec polypnée, dans un contexte de rhinite familiale. Sa température est de 37,9 °C. Il est né à 38 semaines d’aménorrhée au poids de 2810 grammes. Son père est asthmatique. Au niveau de l’environnement, sa maman fume 15 cigarettes par jour, et a fumé 8 cigarettes par jour pendant la grossesse. Michael a présenté un épisode de bronchiolite à l’âge de 2 mois et un autre à l’âge de 7 mois.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCitez les grands cadres étiologiques à éliminer avant de retenir une étiologie respiratoire (ORL et/ou pulmonaire).",
+          "images": [],
+          "reponseAttendue": "Une cause cardiaque (myocardite), une cause infectieuse, un corps étranger.",
+          "correctionGenerale": "• Cause cardiaque (myocardite)\n• Cause infectieuse\n• Corps étranger"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nÀ l’examen, vous faites les constatations suivantes : fréquence respiratoire 36/min, fréquence cardiaque 140/min, SpO₂ 90 % sous air ambiant, dyspnée bruyante expiratoire avec signes de lutte.\n\nCitez les principales étiologies à évoquer.",
+          "images": [],
+          "reponseAttendue": "Bronchiolite aiguë grave du nourrisson, crise d’asthme du nourrisson, myocardite aiguë.",
+          "correctionGenerale": "• Bronchiolite aiguë grave du nourrisson\n• Crise d’asthme du nourrisson\n• Myocardite aiguë"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDemandez-vous une imagerie pulmonaire à ce stade ? Si oui, laquelle ou lesquelles, et que recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Oui, car il s’agit d’une bronchiolite grave : radiographie du thorax de face, à la recherche d’un foyer de pneumopathie, d’une atélectasie, d’une pleurésie, d’un pneumothorax.",
+          "correctionGenerale": "• <b>Oui</b>, car bronchiolite grave\n• <b>Radiographie du thorax de face</b>\n• Recherche de foyer de pneumopathie, d’atélectasie, de pleurésie, de pneumothorax"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nChez cet enfant, vous faites un diagnostic de sifflement préscolaire, ou asthme du nourrisson.\n\nQuel est le principal agent étiologique responsable du tableau clinique à cette période de l’année (septembre-octobre) ?",
+          "images": [],
+          "reponseAttendue": "Une cause virale : le virus respiratoire syncytial (VRS).",
+          "correctionGenerale": "<b>Cause virale : virus respiratoire syncytial (VRS).</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les mécanismes physiopathologiques de l’asthme ?",
+          "images": [],
+          "reponseAttendue": "Une dyspnée expiratoire sifflante liée à une obstruction bronchique, conséquence d’une inflammation de la paroi bronchique, d’un spasme des muscles lisses et d’une hyperréactivité bronchique, le plus souvent en lien avec des infections respiratoires virales.",
+          "correctionGenerale": "Dyspnée expiratoire sifflante liée à une <b>obstruction bronchique</b>, conséquence :\n• d’une <b>inflammation de la paroi bronchique</b>,\n• d’un <b>spasme des muscles lisses</b>,\n• et d’une <b>hyperréactivité bronchique</b>,\nle plus souvent en lien avec des infections respiratoires virales."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les signes cliniques de gravité d’une crise d’asthme ?",
+          "images": [],
+          "reponseAttendue": "Sibilants rares, murmure vésiculaire diminué ou absent, détresse respiratoire franche avec cyanose, activité impossible, troubles de l’élocution chez le plus grand, chute de la pression artérielle, SpO₂ ≤ 90 %.",
+          "correctionGenerale": "• Sibilants rares, murmure vésiculaire diminué ou absent\n• Détresse respiratoire franche + cyanose\n• Activité impossible\n• Troubles de l’élocution chez le plus grand\n• Chute de la pression artérielle\n• SpO₂ ≤ 90 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelles sont les grandes lignes du traitement en urgence pour cet enfant ?",
+          "images": [],
+          "reponseAttendue": "Oxygénothérapie, bêta-2 mimétiques de courte durée d’action, corticothérapie IV.",
+          "correctionGenerale": "• Oxygénothérapie\n• Bêta-2 mimétiques de courte durée d’action\n• Corticothérapie IV"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2016 - EVCP - Sujet 1",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 9,
+      "vignette": "Anna, 14 ans, se présente aux urgences à 22 heures, avec sa mère, pour des céphalées qui ont débuté dans la journée au collège. Elle a pris du paracétamol (1 g à 19 h) qui ne l’a pas soulagée.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles questions allez-vous lui poser ? (Interrogatoire)",
+          "images": [],
+          "reponseAttendue": "Localisation, type, intensité, durée, fréquence, symptômes associés, évolution temporelle.",
+          "correctionGenerale": "• Localisation\n• Type\n• Intensité\n• Durée\n• Fréquence\n• Symptômes associés\n• Évolution temporelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQue recherchez-vous à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Une hyperthermie, une raideur méningée, un déficit neurologique ou des signes focaux, des troubles visuels.",
+          "correctionGenerale": "• Hyperthermie\n• Raideur méningée\n• Déficit neurologique, signes focaux\n• Troubles visuels"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les critères qui vous font retenir le diagnostic de migraine ?",
+          "images": [],
+          "reponseAttendue": "A. Au moins 5 crises répondant aux critères B à D. B. Crise d’une durée de 1 à 72 heures. C. Céphalée présentant au moins deux des caractéristiques suivantes : localisation unilatérale (mais pouvant être bilatérale, fronto-temporale), caractère pulsatile, intensité modérée ou sévère, aggravation par l’activité physique de routine. D. Durant la céphalée, au moins une des caractéristiques suivantes : nausée et/ou vomissement, photophobie et/ou phonophobie. E. Exclusion, par l’anamnèse, l’examen clinique et neurologique et éventuellement des examens complémentaires, d’une maladie organique pouvant être la cause des céphalées.",
+          "correctionGenerale": "<b>A</b> — Au moins 5 crises répondant aux critères B à D.\n\n<b>B</b> — Crise d’une durée de 1 à 72 heures.\n\n<b>C</b> — La céphalée présente au moins <b>deux</b> des caractéristiques suivantes :\n• Localisation unilatérale (mais peut être bilatérale, fronto-temporale)\n• Pulsatile\n• Intensité modérée ou sévère\n• Aggravation par l’activité physique de routine\n\n<b>D</b> — Durant la céphalée, au moins <b>une</b> des caractéristiques suivantes :\n• Nausée et/ou vomissement\n• Photophobie et/ou phonophobie\n\n<b>E</b> — Exclusion, par l’anamnèse, l’examen clinique et neurologique, éventuellement par des examens complémentaires, d’une maladie organique pouvant être la cause de céphalées."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel traitement médicamenteux (classe, mode d’administration, précautions d’emploi) proposez-vous à cette jeune fille pour cet accès migraineux aigu ?",
+          "images": [],
+          "reponseAttendue": "L’ibuprofène (anti-inflammatoire non stéroïdien) par voie orale, 200 à 400 mg toutes les 6 heures, maximum 1200 mg par jour.",
+          "correctionGenerale": "<b>IBUPROFÈNE</b> (anti-inflammatoire non stéroïdien) par voie orale, <b>200 à 400 mg toutes les 6 heures, maximum 1200 mg par jour</b>."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2016 - EVCP - Sujet 2",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
+      "orderIndex": 10,
+      "vignette": "Jules, 18 mois, est amené aux urgences par ses parents car il présente une diarrhée depuis 2 jours.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles questions allez-vous poser pour orienter votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Altération de l’état général ? Fièvre ? Vomissements ? Aspect des selles ? Diurèse ? Perte de poids ? Diminution de plus de 50 % de la prise alimentaire ?",
+          "correctionGenerale": "• Altération de l’état général ?\n• Fièvre ?\n• Vomissements ?\n• Aspect des selles ?\n• Diurèse ?\n• Perte de poids ?\n• Diminution de plus de 50 % de la prise alimentaire ?"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nL’examen de Jules est rassurant, vous autorisez sa sortie.\n\nDétaillez précisément votre ordonnance.",
+          "images": [],
+          "reponseAttendue": "Soluté de réhydratation oral : 1 sachet dans 200 mL d’eau, à donner à volonté, par petites quantités, à conserver pendant 24 heures au frais. Paracétamol solution buvable pédiatrique : 1 dose-poids × 4 par jour si fièvre.",
+          "correctionGenerale": "• <b>Soluté de réhydratation oral</b>\n  – 1 sachet dans 200 mL d’eau, à donner à volonté, par petites quantités, à conserver pendant 24 heures au frais\n• <b>PARACÉTAMOL solution buvable pédiatrique</b>\n  – 1 dose-poids × 4 par jour si fièvre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nJules se rend aux urgences 48 heures après. Sa maman le trouve pâle et fatigué, elle pense qu’il urine moins. La diarrhée persiste de façon importante, des vomissements sont apparus. Il a pris 200 g.\n\nQuelle est votre première hypothèse diagnostique ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome hémolytique et urémique, devant la diarrhée, la pâleur et la prise de poids.",
+          "correctionGenerale": "<b>Syndrome hémolytique et urémique</b>, devant la diarrhée, la pâleur et la prise de poids."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles anomalies biologiques recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une anémie hémolytique avec présence de schizocytes, une thrombopénie, une insuffisance rénale.",
+          "correctionGenerale": "• Anémie hémolytique avec présence de schizocytes\n• Thrombopénie\n• Insuffisance rénale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle est votre prise en charge initiale et votre orientation ?",
+          "images": [],
+          "reponseAttendue": "Urgence thérapeutique ; hospitalisation en service de soins continus ; information des parents ; correction des troubles hydroélectrolytiques ; si hydratation IV : glucosé, NaCl, pas de potassium ; en cas de surcharge hydrosodée : diurétique de l’anse.",
+          "correctionGenerale": "• <b>Urgence thérapeutique</b>\n• Hospitalisation (service de soins continus)\n• Information des parents\n• Correction des troubles hydroélectrolytiques\n• Si hydratation IV : glucosé, NaCl, <b>pas de potassium</b>\n• En cas de surcharge hydrosodée : diurétique de l’anse"
+        }
+      ]
+    }
+  ]
+}

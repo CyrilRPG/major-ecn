@@ -1,0 +1,654 @@
+{
+  "sources": {
+    "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf": {
+      "atelier": "annales-pediatrie/correction-evc-2024-pediatrie",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction de la session 2024. Le sujet officiel 2024 n’est pas présent dans le dépôt ; les énoncés reproduits ici sont ceux repris par le diaporama lui-même."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCF",
+      "annee": 2024,
+      "type": "EVCF",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 40,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 de pédiatrie : 20 questions, certaines introduites par une courte situation clinique.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nIlyes, 18 mois, est hospitalisé pour une anémie à 6 g/dL.\n\nQuelles sont les caractéristiques cliniques de l’anémie liée à un déficit en G6PD ?",
+          "images": [],
+          "reponseAttendue": "Signes généraux : pâleur, fatigue, tachycardie, dyspnée d’effort voire insuffisance cardiaque si l’anémie est sévère. Ictère d’installation rapide. Urines foncées (hémoglobinurie). Splénomégalie, parfois absente dans les formes aiguës.",
+          "correctionGenerale": "• <b>Signes généraux</b> : pâleur, fatigue, tachycardie, dyspnée d’effort, voire insuffisance cardiaque si anémie sévère\n• Ictère d’installation rapide\n• Urines foncées (hémoglobinurie)\n• Splénomégalie, parfois absente dans les formes aiguës"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuels sont les éléments de l’anamnèse qui plaideront pour un déficit en G6PD ?",
+          "images": [],
+          "reponseAttendue": "Antécédents familiaux (mère porteuse, frères atteints, antécédents d’hémolyse) ; apparition de signes d’hémolyse après exposition à des médicaments (sulfonamides, antipaludéens, certains antibiotiques), à l’ingestion de fèves (favisme) ou à des infections fébriles ; récurrence d’épisodes hémolytiques lors d’expositions similaires ; sexe masculin (expression plus sévère chez les garçons).",
+          "correctionGenerale": "• Antécédents familiaux (mère porteuse, frères atteints, antécédents d’hémolyse)\n• Apparition de signes d’hémolyse après exposition : médicaments (sulfonamides, antipaludéens, certains antibiotiques), ingestion de fèves (favisme), infections fébriles\n• Récurrence d’épisodes hémolytiques lors d’expositions similaires\n• Sexe masculin (expression plus sévère chez les garçons)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nCitez les cardiopathies à risque élevé pour lesquelles une prophylaxie par antibiotiques est indiquée avant des soins à risque élevé.",
+          "images": [],
+          "reponseAttendue": "Les cardiopathies congénitales cyanogènes non réparées (tétralogie de Fallot, transposition des gros vaisseaux, atrésie tricuspide, ventricule unique) ; les cardiopathies congénitales opérées avec prothèses valvulaires ou conduits, et les fermetures de CIV ou CIA pendant les 6 premiers mois post-chirurgie.",
+          "correctionGenerale": "<b>Cardiopathies congénitales cyanogènes non réparées</b>\n• Tétralogie de Fallot, transposition des gros vaisseaux, atrésie tricuspide, ventricule unique\n\n<b>Cardiopathies congénitales opérées</b>\n• Prothèses valvulaires ou conduits\n• Fermetures de CIV ou CIA pendant les 6 premiers mois post-chirurgie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nUn garçon de 2 ans arrive aux urgences pour un malaise avec perte de connaissance.\n\nÉvoquez les éléments à rechercher à l’interrogatoire qui vont vous orienter vers une cause cardiologique.",
+          "images": [],
+          "reponseAttendue": "Antécédents familiaux de mort subite, de cardiopathie congénitale, de syncope, de syndrome du QT long ou de troubles du rythme ; circonstances de déclenchement (effort, pleurs intenses, douleur, mise en position debout, relation avec l’alimentation, l’activité physique ou le sommeil) ; symptômes prodromiques (palpitations, tachycardie persistante, souffle cardiaque antérieur, cyanose, dyspnée, sueurs profuses) ; antécédents de cardiopathie congénitale, de chirurgie cardiaque ou d’infections cardiaques récentes ; médicaments ou intoxications pouvant prolonger le QT ; caractère récurrent des épisodes, leur durée et le mode de récupération ; présence de pâleur, cyanose, souffle, difficultés respiratoires, œdèmes, retard de croissance.",
+          "correctionGenerale": "• Antécédents familiaux de mort subite, cardiopathie congénitale, syncope, syndrome du QT long ou troubles du rythme\n• <b>Déclenchement</b> : effort, pleurs intenses, douleur, mise en position debout (syncope vasovagale vs cardiaque), épisode en relation avec alimentation / activité physique ou sommeil\n• <b>Symptômes prodromiques</b> : palpitations, tachycardie persistante, souffle cardiaque antérieur, cyanose, dyspnée, sueurs profuses avant l’épisode (peu probable à 2 ans)\n• Antécédents de cardiopathie congénitale, chirurgie cardiaque, infections cardiaques récentes\n• Médicaments ou intoxications pouvant prolonger le QT\n• Épisodes récurrents, durée et récupération (récupération rapide = souvent vasovagale ; récupération lente ou signes post-ictaux = autre étiologie)\n• Présence de pâleur, cyanose, souffle, difficultés respiratoires, œdèmes, retard de croissance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nCitez deux cardiopathies dans lesquelles la prostaglandine E (Prostine®) est indiquée à la naissance.",
+          "images": [],
+          "reponseAttendue": "Les cardiopathies à canal artériel dépendant : transposition des gros vaisseaux, coarctation critique, hypoplasie du cœur gauche.",
+          "correctionGenerale": "<b>Persistance du canal artériel dépendant</b>\n• Transposition des gros vaisseaux\n• Coarctation critique\n• Hypoplasie du cœur gauche"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nCitez les deux effets secondaires les plus fréquents du traitement par Prostine®.",
+          "images": [],
+          "reponseAttendue": "L’apnée ou la dépression respiratoire (surtout chez le nouveau-né prématuré), nécessitant une surveillance respiratoire et parfois une ventilation assistée ; la fièvre avec vasodilatation, hypotension et tachycardie (également diarrhée, flushing, bradycardie transitoire possible).",
+          "correctionGenerale": "• <b>Apnée ou dépression respiratoire</b> (surtout chez le nouveau-né prématuré), nécessitant une surveillance respiratoire et parfois une ventilation assistée\n• <b>Fièvre, vasodilatation avec hypotension, tachycardie</b> ; aussi diarrhée, flushing, bradycardie transitoire possible"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuel score de sévérité du syndrome hémorragique est utilisé dans le purpura thrombopénique idiopathique ? À partir de quelle valeur de ce score et/ou à quel nombre de plaquettes doit-on administrer un traitement, et lequel en première intention ?",
+          "images": [],
+          "reponseAttendue": "Le score de Buchanan. Le traitement est indiqué en cas de saignement cliniquement sévère ou de plaquettes < 20-30 G/L selon la situation clinique. En première intention : corticothérapie (prednisone orale 1-2 mg/kg/j ou équivalent, ou une courte cure de dexaméthasone dans certains protocoles) ; immunoglobulines intraveineuses 1 g/kg/j pendant 1 à 2 jours en cas de saignement sévère ou de nécessité d’élévation rapide des plaquettes.",
+          "correctionGenerale": "<b>Score de Buchanan</b>\n\n<b>Critères de traitement</b> : saignement cliniquement sévère, ou plaquettes < 20-30 G/L selon la situation clinique.\n\n<b>Traitement de première intention</b>\n• Corticothérapie (prednisone orale 1-2 mg/kg/j ou équivalent), ou une courte cure de dexaméthasone dans certains protocoles\n• Immunoglobulines intraveineuses (IgIV) 1 g/kg/j pendant 1 à 2 jours si saignement sévère ou nécessité d’élévation rapide des plaquettes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nDans le cadre d’une surcharge en fer post-transfusionnelle, quels sont les organes principalement touchés ? À quel taux de ferritine un traitement est-il nécessaire ?",
+          "images": [],
+          "reponseAttendue": "Le foie (hépatotoxicité, fibrose, cirrhose), le cœur (cardiomyopathie, insuffisance cardiaque), les glandes endocrines (diabète, hypogonadisme, insuffisance thyroïdienne). En pratique, on considère la chélation si la ferritine sérique est supérieure à 1000 ng/mL.",
+          "correctionGenerale": "<b>Organes principalement atteints</b>\n• Foie (hépatotoxicité, fibrose, cirrhose)\n• Cœur (cardiomyopathie, insuffisance cardiaque)\n• Endocrines (diabète, hypogonadisme, insuffisance thyroïdienne)\n\n<b>Seuil de ferritine nécessitant un traitement (chélation)</b> : en pratique, chélation si ferritine sérique > 1000 ng/mL."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nQuelles vaccinations faut-il réaliser après une splénectomie ?",
+          "images": [],
+          "reponseAttendue": "Les vaccins anti-pneumococciques (pneumocoque conjugué PCV13 puis polysaccharidique PPSV23 selon l’âge et le calendrier) et le vaccin anti-méningococcique (sérogroupes A, C, W, Y et B).",
+          "correctionGenerale": "• Vaccins anti-pneumococciques (pneumocoque conjugué PCV13 puis polysaccharidique PPSV23, selon l’âge et le calendrier)\n• Vaccin anti-méningococcique (sérogroupes A, C, W, Y et B)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\nEn cas d’apparition d’une fièvre 15 minutes après le début d’une transfusion, quelles actions immédiates devez-vous réaliser ?",
+          "images": [],
+          "reponseAttendue": "Arrêter immédiatement la transfusion, maintenir l’abord veineux ouvert, vérifier les signes vitaux et évaluer l’état clinique (frissons, douleurs lombaires, hypotension, urines foncées, essoufflement), prélever des échantillons dont des hémocultures, traiter symptomatiquement (antipyrétique, fluides, prise en charge d’un choc éventuel), documenter et notifier l’incident, ne pas réutiliser le sang restant et l’envoyer au laboratoire.",
+          "correctionGenerale": "• <b>Arrêter immédiatement la transfusion</b>\n• Maintenir l’abord veineux ouvert\n• Vérifier les signes vitaux, évaluer l’état clinique (frissons, douleurs lombaires, hypotension, urines foncées, essoufflement)\n• Prélever des échantillons : hémocultures\n• Traiter symptomatiquement (antipyrétique, fluides, prise en charge du choc éventuel)\n• Documenter l’incident et le notifier\n• <b>Ne pas réutiliser le sang restant</b> ; l’envoyer au laboratoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 11</b>\n\nQuelles sont les manifestations cliniques et biologiques typiques d’un syndrome hémolytique et urémique, quelles explorations sont à prévoir, et quelles sont les grandes lignes de la prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Cliniquement, la triade anémie hémolytique microangiopathique (pâleur, ictère) + thrombopénie (purpura, saignement) + insuffisance rénale aiguë (oligurie, œdèmes, hypertension), avec des signes digestifs souvent associés (diarrhée, parfois hémorragique). Biologiquement : hémolyse (hémoglobine basse, réticulocytose, LDH élevé, bilirubine non conjuguée augmentée, haptoglobine basse), schizocytes au frottis, thrombopénie, insuffisance rénale (créatinine et urée élevées, hyperkaliémie). Prise en charge : hospitalisation en pédiatrie/néphrologie pédiatrique avec surveillance intensive ; gestion rénale (restriction hydrique et sodée, dialyse si anurie, hyperkaliémie sévère, acidose réfractaire ou surcharge volémique) ; transfusions de culots globulaires si anémie sévère, en évitant les transfusions plaquettaires sauf saignement majeur ; dans le SHU typique, prise en charge de support ; dans le SHU atypique, envisager l’éculizumab ; antibiotiques généralement évités en cas d’infection à E. coli productrice de Shiga-toxine ; surveillance des complications (HTA, complications neurologiques) et suivi rénal à long terme.",
+          "correctionGenerale": "<b>Manifestations cliniques typiques</b>\n• Triade : anémie hémolytique microangiopathique (pâleur, ictère) ; thrombopénie (purpura, saignement) ; insuffisance rénale aiguë (oligurie, œdèmes, hypertension)\n• Signes digestifs souvent associés (diarrhée, parfois hémorragique) — le SHU associé à <i>E. coli</i> O157:H7 (post-diarrhéique) est fréquent chez l’enfant\n\n<b>Biologie typique</b>\n• Hémolyse : hémoglobine basse, réticulocytose, LDH élevé, bilirubine non conjuguée augmentée, haptoglobine basse\n• Schizocytes au frottis sanguin\n• Thrombopénie\n• Insuffisance rénale : créatinine et urée élevées, troubles ioniques (hyperkaliémie)\n\n<b>Prise en charge — grandes lignes</b>\n• Hospitalisation en pédiatrie / néphrologie pédiatrique ; surveillance intensive\n• <b>Gestion rénale</b> : restriction hydrique/sodée ; dialyse si anurie, hyperkaliémie sévère, acidose réfractaire ou surcharge volémique\n• Transfusions de culots globulaires si anémie sévère ; <b>éviter les transfusions plaquettaires</b> sauf saignement majeur\n• <b>Traitements spécifiques</b> : SHU typique (post-diarrhéique) → prise en charge de support ; SHU atypique (complément) → envisager l’éculizumab\n• Antibiotiques généralement évités si infection à <i>E. coli</i> productrice de Shiga-toxine (ils peuvent aggraver la libération de toxine) — décision spécialisée\n• Surveillance des complications : HTA, complications neurologiques, récupération rénale et suivi à long terme"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 12</b>\n\nQuelles sont les explorations et les étiologies des « urines rouges » en pédiatrie ?",
+          "images": [],
+          "reponseAttendue": "Causes : hématurie vraie (glomérulonéphrite infectieuse ou post-streptococcique, lupus, urolithiase, malformations urologiques, infections urinaires, traumatisme, tumeur rare) ; hémoglobinurie ou myoglobinurie (hémolyse intravasculaire — déficit en G6PD, transfusion incompatible — ou rhabdomyolyse) ; pigments ingérés, aliments ou médicaments (rifampicine, betterave, colorants). Explorations : bandelette urinaire, ECBU, sédiment urinaire (GR dysmorphes vs isomorphes), culture d’urine ; NFS, créatinine, bilan hémolytique, CPK ; échographie rénale et des voies urinaires.",
+          "correctionGenerale": "<b>Causes principales</b>\n• <b>Hématurie vraie</b> : glomérulonéphrite (infectieuse, post-streptococcique, lupus, etc.), urolithiase, malformations urologiques, infections urinaires, traumatisme, tumeur (rare)\n• <b>Hémoglobinurie / myoglobinurie</b> (urines rouge-brun) : hémolyse intravasculaire (déficit en G6PD, transfusion incompatible), rhabdomyolyse\n• <b>Pigments ingérés / aliments / médicaments</b> : rifampicine, betterave, colorants\n\n<b>Explorations</b>\n• Bandelette urinaire (hématurie vs réactif hémoglobine/myoglobine), ECBU, sédiment urinaire (numération de GR dysmorphes vs isomorphes), culture d’urine si infection suspectée\n• Bilan sanguin : NFS, créatinine, bilan hémolytique (si suspicion d’hémoglobinurie), CPK si rhabdomyolyse\n• Imagerie : échographie rénale et des voies urinaires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 13</b>\n\nLors d’une consultation de suivi d’un asthme chez l’enfant, quels diagnostics différentiels doivent être évoqués ?",
+          "images": [],
+          "reponseAttendue": "Reflux gastro-œsophagien, corps étranger bronchique, bronchectasies ou dyskinésie ciliaire primitive, allergies respiratoires ou rhinite non contrôlée, bronchiolite récurrente ou bronchiolite oblitérante post-infectieuse, cardiopathie congénitale, troubles psychogènes.",
+          "correctionGenerale": "• Reflux gastro-œsophagien\n• Corps étranger bronchique\n• Bronchectasies ou dyskinésie ciliaire primitive\n• Allergies respiratoires ou rhinite non contrôlée\n• Bronchiolite récurrente ou bronchiolite oblitérante post-infectieuse\n• Cardiopathie congénitale\n• Troubles psychogènes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 14</b>\n\nClément, 12 ans, présente une perte de 5 kg en 6 mois associée à une asthénie. Depuis 3 mois, il se plaint d’une douleur thoracique fluctuante majorée en décubitus antérieur. Sa mère décrit des pics de fièvre à 38,5 °C pluri-hebdomadaires. Une IRM a été réalisée (figure).\n\nQuels sont les 2 diagnostics à évoquer ?",
+          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-017-068.jpg"],
+          "reponseAttendue": "Une tuberculose maladie (adénopathies médiastinales, altération de l’état général, fièvre) et une tumeur médiastinale de type lymphome (perte de poids, asthénie, sueurs fébriles, douleur thoracique et masse médiastinale à l’IRM).",
+          "correctionGenerale": "• <b>Tuberculose maladie</b> : adénopathies médiastinales, altération de l’état général, fièvre\n• <b>Tumeur médiastinale (lymphome)</b> : perte de poids, asthénie, fièvre (sueurs fébriles), douleur thoracique et signes à l’IRM compatibles avec une masse médiastinale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 15</b>\n\nLéa, âgée de 4 ans, présente depuis 3 mois des réveils nocturnes au rythme de 5 à 7 par nuit, associés à des ronflements et une nycturie. L’examen clinique objective une hypertrophie amygdalienne.\n\nQuelle mesure préconisez-vous ?",
+          "images": [],
+          "reponseAttendue": "Proposer une consultation ORL spécialisée pour évaluer l’indication d’une amygdalectomie ± adénoïdectomie, selon la sévérité, la répétition des infections et le score d’apnée obstructive du sommeil.",
+          "correctionGenerale": "<b>Consultation ORL spécialisée</b> pour évaluer l’indication d’une <b>amygdalectomie ± adénoïdectomie</b> (selon la sévérité, la répétition des infections et le score d’apnée obstructive du sommeil)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 16</b>\n\nCitez les principales caractéristiques cliniques, biologiques et radiologiques de la sténose du pylore.",
+          "images": [],
+          "reponseAttendue": "Cliniquement : survenue généralement entre 2 et 8 semaines de vie, vomissements en jet non bilieux, progressivement intensifs, perte de poids, déshydratation, faim après les vomissements, masse épigastrique battante — olive pylorique mobile et ferme — à la palpation. Biologiquement : alcalose métabolique hypochlorémique, hypokaliémie, hémoconcentration possible. Radiologiquement : échographie abdominale montrant un épaississement pariétal pylorique et un allongement du canal (épaisseur de paroi > 3 mm et longueur du canal > 15-17 mm).",
+          "correctionGenerale": "<b>Clinique</b>\n• Généralement entre 2 et 8 semaines de vie\n• Vomissements en jet non bilieux, progressivement intensifs, perte de poids, déshydratation, faim après vomissements\n• Palpation : masse épigastrique battante / olive pylorique mobile et ferme\n\n<b>Biologie</b>\n• Alcalose métabolique hypochlorémique, hypokaliémie ; hémoconcentration possible\n\n<b>Radiologie</b>\n• Échographie abdominale : épaississement pariétal pylorique et allongement du canal (critères échographiques : épaisseur de la paroi > 3 mm et longueur du canal > 15-17 mm selon les références)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 17</b>\n\nQuelles sont les principales caractéristiques d’un ictère simple chez le nouveau-né ?",
+          "images": [],
+          "reponseAttendue": "Apparition après 24-48 heures de vie, pic de bilirubine entre J3 et J5, bilirubine totale en dessous des seuils pathologiques selon l’âge et le poids, nourrisson en bon état général avec alimentation et prise de poids satisfaisantes, sans signe de maladie, selles et urines normales, bilirubine non conjuguée prédominante sans anomalie biologique associée, résolution spontanée en 1 à 2 semaines.",
+          "correctionGenerale": "• Apparition après 24-48 heures de vie\n• Pic de bilirubine entre J3 et J5\n• Bilirubine totale en dessous des seuils pathologiques selon l’âge et le poids\n• Nourrisson en bon état général, alimentation et prise de poids satisfaisantes, pas de signes de maladie, selles et urines normales\n• Bilirubine non conjuguée prédominante ; pas d’anomalies biologiques associées\n• Résolution spontanée en 1 à 2 semaines"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 18</b>\n\nQuels sont les critères d’une crise convulsive hyperthermique compliquée ?",
+          "images": [],
+          "reponseAttendue": "Durée supérieure à 15 minutes ou plusieurs convulsions successives sans récupération complète entre elles dans les 24 heures ; convulsions focales persistantes ou signes neurologiques focaux persistants après la crise ; âge d’apparition inférieur à 6 mois ou supérieur à 5 ans ; déficit neurologique persistant.",
+          "correctionGenerale": "• Durée > 15 minutes, ou plusieurs convulsions successives sans récupération complète entre elles dans les 24 heures\n• Convulsions focales persistantes, signes neurologiques focaux persistants après la crise\n• Âge d’apparition < 6 mois ou > 5 ans\n• Déficit neurologique persistant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 19</b>\n\nChez l’enfant présentant une céphalée, quels sont les éléments justifiant la réalisation d’une imagerie cérébrale ?",
+          "images": [],
+          "reponseAttendue": "Des signes neurologiques focaux (déficit moteur, troubles visuels, troubles des apprentissages, dysarthrie) ; des céphalées récentes et progressives, nocturnes réveillant le sommeil, ou matinales avec vomissements répétés (HTIC) ; des convulsions, une altération de l’état de conscience, un œdème papillaire à l’examen ophtalmologique.",
+          "correctionGenerale": "• Signes neurologiques focaux (déficit moteur, troubles visuels, troubles des apprentissages, dysarthrie)\n• Céphalées récentes et progressives, céphalées nocturnes réveillant le sommeil, ou céphalées matinales avec vomissements répétés (HTIC)\n• Convulsions, altération de l’état de conscience, œdème papillaire à l’examen ophtalmologique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 20</b>\n\nQuels sont les critères cliniques majeurs de la forme typique de la maladie de Kawasaki ? Quelles sont les mesures thérapeutiques ?",
+          "images": [],
+          "reponseAttendue": "Fièvre ≥ 5 jours obligatoire, associée à 4 des 5 signes suivants : conjonctivite bilatérale non exsudative ; modification des lèvres et de la cavité buccale (lèvres rouges, fissurées, langue framboisée) ; érythème et œdème des mains et des pieds puis desquamation péri-unguéale en phase subaiguë ; éruption polymorphe ; adénopathie cervicale généralement > 1,5 cm. Traitement : immunoglobulines IV 2 g/kg en dose unique (idéalement dans les 10 premiers jours), aspirine à dose anti-inflammatoire en phase aiguë puis à dose antiagrégante (3-5 mg/kg/j) en phase subaiguë, échocardiographie initiale et de suivi, surveillance et prise en charge des complications.",
+          "correctionGenerale": "<b>Critères cliniques majeurs</b> (fièvre ≥ 5 jours obligatoire + 4 des 5 signes)\n1. Conjonctivite bilatérale non exsudative\n2. Modification des lèvres et de la cavité buccale (lèvres rouges, fissurées, langue « fraise »)\n3. Érythème et œdème des mains et des pieds, puis desquamation péri-unguéale en phase subaiguë\n4. Éruption polymorphe (maculopapuleuse, etc.)\n5. Adénopathie cervicale (généralement > 1,5 cm)\n\n<b>Mesures thérapeutiques</b>\n• Immunoglobulines intraveineuses 2 g/kg en dose unique (idéalement dans les 10 premiers jours de la maladie)\n• Aspirine : dose anti-inflammatoire initiale pendant la phase aiguë, puis dose antiagrégante (3-5 mg/kg/j) en phase subaiguë\n• Échocardiographie initiale et de suivi (rechercher dilatation / anévrismes coronaires) ; prise en charge cardiologique si atteinte coronarienne\n• Surveillance et prise en charge des complications"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 1",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 41,
+      "vignette": "Fantine, 5 ans, est amenée pour une constipation. Ses selles sont dures, émises environ tous les 4 jours. Elle se plaint souvent du ventre. Elle présente une attitude de rétention, a peur de pousser.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles questions posez-vous en général pour conforter le diagnostic de constipation ?",
+          "images": [],
+          "reponseAttendue": "Fréquence des selles, consistance (score de Bristol), volume ; efforts de poussée, douleur à la défécation ; notion de rétention volontaire ou refus d’aller à la selle ; présence de fissures anales, rectorragies ; enfant propre, encoprésie éventuelle ; antécédents néonataux avec délai d’émission du méconium ; contexte alimentaire (hydratation, apport en fibres, lait) ; antécédents familiaux de constipation.",
+          "correctionGenerale": "• Fréquence des selles, consistance (score de Bristol), volume\n• Efforts de poussée, douleur à la défécation\n• Notion de rétention volontaire ou refus d’aller à la selle\n• Présence de fissures anales, rectorragies\n• Enfant propre / encoprésie éventuelle\n• Antécédents néonataux : délai d’émission du méconium\n• Contexte alimentaire (hydratation, apport en fibres, lait)\n• Antécédents familiaux de constipation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nChez un nourrisson constipé, quelle question devez-vous poser pour éliminer une pathologie chirurgicale néonatale ?",
+          "images": [],
+          "reponseAttendue": "Le délai d’émission du méconium après la naissance : un retard supérieur à 48 h évoque une maladie de Hirschsprung.",
+          "correctionGenerale": "<b>Délai d’émission du méconium après la naissance</b> — un retard > 48 h évoque une <b>maladie de Hirschsprung</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels éléments cliniques principaux sont nécessaires à analyser ou à rechercher dans ce dossier pour vous assurer du caractère fonctionnel de cette constipation ?",
+          "images": [],
+          "reponseAttendue": "Croissance staturo-pondérale normale ; examen abdominal sans distension majeure ni masse palpable évocatrice de fécalome important ; examen neurologique (réflexe anal, tonus des membres inférieurs, anomalies médullaires cutanées) ; examen de la marge anale (fissures, anomalies anatomiques) ; absence de signes généraux (vomissements, altération de l’état général, cassure pondérale, diarrhée chronique) ; anamnèse compatible avec un trouble du comportement défécatoire (rétention, douleur, peur).",
+          "correctionGenerale": "• Croissance staturo-pondérale normale\n• Examen abdominal : absence de distension majeure, pas de masse palpable évocatrice de fécalome important\n• Examen neurologique : réflexe anal, tonus des membres inférieurs, anomalies médullaires cutanées\n• Examen de la marge anale (fissures, anomalies anatomiques)\n• Absence de signes généraux (vomissements, altération de l’état général, cassure pondérale, diarrhée chronique)\n• Anamnèse compatible avec un trouble du comportement défécatoire (rétention, douleur, peur)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez 4 complications de la constipation.",
+          "images": [],
+          "reponseAttendue": "Encoprésie, fissure anale et rectorragies, fécalome, douleurs abdominales chroniques et anorexie (autres possibles : infections urinaires, reflux vésico-urétéral, altération de la qualité de vie, retard staturo-pondéral dans les formes sévères).",
+          "correctionGenerale": "• Encoprésie\n• Fissure anale / rectorragies\n• Fécalome\n• Douleurs abdominales chroniques / anorexie\n\n<i>(Autres possibles : infections urinaires, reflux vésico-urétéral, altération de la qualité de vie, retard staturo-pondéral si forme sévère.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nFace à un patient de 4 ans consultant pour constipation et présentant une cassure pondérale, citez 4 maladies pouvant être à l’origine de cette constipation.",
+          "images": [],
+          "reponseAttendue": "Maladie cœliaque, hypothyroïdie, mucoviscidose, maladie de Hirschsprung (autres possibles : pathologie neurologique médullaire, intolérance aux protéines du lait de vache).",
+          "correctionGenerale": "• Maladie cœliaque\n• Hypothyroïdie\n• Mucoviscidose\n• Maladie de Hirschsprung\n\n<i>(Autres possibles : pathologie neurologique médullaire, intolérance aux protéines du lait de vache.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nEn cas de suspicion de maladie cœliaque chez cette patiente, quels résultats d’examens biologiques vous permettraient de ne pas faire d’œso-gastro-duodénoscopie, selon les recommandations de l’ESPGHAN ?",
+          "images": [],
+          "reponseAttendue": "Un taux d’anticorps anti-transglutaminase IgA supérieur à 10 fois la normale, confirmé par des anticorps anti-endomysium IgA positifs sur un deuxième prélèvement sanguin, avec des IgA totales normales (pas de déficit en IgA).",
+          "correctionGenerale": "<b>Anticorps anti-transglutaminase IgA > 10 N</b>, confirmés par des <b>anticorps anti-endomysium IgA positifs</b> sur un deuxième prélèvement sanguin, avec des <b>IgA totales normales</b> (pas de déficit en IgA)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez les 4 objectifs principaux de la prise en charge de la constipation fonctionnelle.",
+          "images": [],
+          "reponseAttendue": "Soulager les douleurs abdominales et à la défécation ; obtenir des selles régulières, molles et indolores ; prévenir la rétention volontaire et les récidives ; améliorer la qualité de vie de l’enfant et de sa famille.",
+          "correctionGenerale": "• Soulager les douleurs abdominales / à la défécation\n• Obtenir des selles régulières, molles, indolores\n• Prévenir la rétention volontaire et les récidives\n• Améliorer la qualité de vie de l’enfant et de sa famille"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuels conseils ou règles hygiéno-diététiques pouvez-vous donner pour cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Hydratation suffisante ; augmenter les fibres alimentaires (fruits, légumes, céréales complètes) ; limiter les aliments constipants (riz, chocolat, excès de lait) ; encourager une activité physique régulière ; instaurer un rituel de défécation (mise au pot ou toilettes après les repas, réflexe gastro-colique) ; utiliser un marchepied pour une bonne position physiologique aux toilettes.",
+          "correctionGenerale": "• Hydratation suffisante\n• Augmenter les fibres alimentaires : fruits, légumes, céréales complètes\n• Limiter les aliments constipants : riz, chocolat, excès de lait\n• Encourager une activité physique régulière\n• Instaurer un rituel de défécation : mise au pot ou toilettes après les repas (réflexe gastro-colique)\n• Utiliser un marchepied pour une bonne position physiologique aux toilettes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel traitement de 1ʳᵉ intention prescrivez-vous, à quelle posologie de départ, et quelles précisions apportez-vous sur votre ordonnance pour que votre prise en charge soit la plus adaptée et efficace possible ?",
+          "images": [],
+          "reponseAttendue": "Un laxatif osmotique de 1ʳᵉ intention : le macrogol, à une posologie initiale de 0,4 à 0,8 g/kg/jour, adaptée selon l’effet, avec une augmentation possible jusqu’à 1 g/kg/j en cas de fécalome ou de constipation sévère. Préciser sur l’ordonnance : traitement au long cours (plusieurs mois), à ne pas arrêter trop tôt ; adaptation progressive de la dose selon la consistance des selles (objectif : selles quotidiennes ou tous les 2 jours, molles, non douloureuses) ; absence de dépendance ou d’accoutumance ; association systématique aux mesures hygiéno-diététiques et comportementales.",
+          "correctionGenerale": "• <b>Laxatif osmotique de 1ʳᵉ intention : macrogol</b>\n• <b>Posologie initiale</b> : 0,4 à 0,8 g/kg/jour (adaptée selon l’effet, possible augmentation jusqu’à 1 g/kg/j si fécalome ou constipation sévère)\n\n<b>À préciser sur l’ordonnance</b>\n• Durée de traitement au long cours (plusieurs mois) : ne pas arrêter trop tôt\n• Adapter la dose progressivement selon la consistance des selles (objectif : selles quotidiennes ou tous les 2 jours, molles, non douloureuses)\n• Pas de dépendance ni d’accoutumance\n• Associer systématiquement aux mesures hygiéno-diététiques et comportementales"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 2",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 42,
+      "vignette": "Vous êtes pédiatre aux urgences pédiatriques et vous recevez un petit garçon, Thiago, âgé de 4 ans, adressé par son médecin traitant pour une anémie.\n\nVoici le bilan sanguin. NFS : Hb 8,5 g/dL (N 11,5-14) ; VGM 98 fL (N 80-90) ; réticulocytes 20 G/L (N 40-80) ; leucocytes 8 G/L (N 4,5-13,5) ; neutrophiles 3,1 G/L (N 1,8-8) ; plaquettes 80 G/L (N 175-375).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les 2 diagnostics les plus compatibles avec le bilan biologique ?",
+          "images": [],
+          "reponseAttendue": "Une leucémie aiguë et un neuroblastome avec envahissement médullaire : l’anémie arégénérative normo-macrocytaire et la thrombopénie évoquent une atteinte médullaire.",
+          "correctionGenerale": "<b>Diagnostics principaux</b>\n• Leucémie aiguë\n• Neuroblastome avec envahissement médullaire\n\n<i>(Anémie arégénérative normo-macrocytaire + thrombopénie → évoque une atteinte médullaire.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels examens sont indiqués pour explorer cette anémie ?",
+          "images": [],
+          "reponseAttendue": "Un myélogramme ± biopsie ostéo-médullaire, un frottis sanguin, et un bilan hémolytique en cas de doute (bilirubine, haptoglobine, test de Coombs).",
+          "correctionGenerale": "• Myélogramme ± biopsie ostéo-médullaire\n• Frottis sanguin\n• Bilan hémolytique si doute (bilirubine, haptoglobine, test de Coombs)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nL’examen clinique retrouve une masse abdominale à la palpation. Une échographie abdominale est réalisée, puis complétée par un scanner qui met en évidence les images suivantes (figures).\n\nQuels examens biologiques réalisez-vous en attendant de réaliser la biopsie ?",
+          "images": [
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-036-145.jpg",
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-036-146.jpg"
+          ],
+          "reponseAttendue": "LDH ; catécholamines urinaires (VMA, HVA, dopamine rapportées à la créatinine) ; AFP et bêta-hCG (tumeurs germinales).",
+          "correctionGenerale": "• LDH\n• Catécholamines urinaires (VMA, HVA, dopamine/créatinine)\n• AFP et β-hCG (tumeurs germinales)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous obtenez les résultats suivants : LDH 2696 UI/L (N < 305) ; AFP 2 ng/mL (N 0,9-9) ; dopamine/créatinine 9580 (N < 1300) ; HVA/créatinine 853 (N < 25) ; VMA/créatinine 565 (N < 20).\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un neuroblastome.",
+          "correctionGenerale": "<b>Neuroblastome.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels examens paracliniques spécifiques de cette pathologie demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Scintigraphie à la MIBG (ou TEP-scan si la MIBG est négative) pour le bilan d’extension ; myélogramme et biopsie médullaire à la recherche d’un envahissement ; IRM du rachis si atteinte paraspinale suspectée ; bilan d’extension standard (scanner thoraco-abdomino-pelvien, radiographies osseuses) ; dosage de la NSE ; études génétiques (statut MYCN, anomalies chromosomiques 1p et 11q).",
+          "correctionGenerale": "• <b>Scintigraphie MIBG</b> (ou TEP-scan si MIBG négative) pour le bilan d’extension\n• Myélogramme et biopsie médullaire (recherche d’envahissement)\n• IRM du rachis si atteinte paraspinale suspectée\n• Bilan d’extension standard : scanner thoraco-abdomino-pelvien, radiographies osseuses\n• Dosage de la NSE\n• Études génétiques : statut MYCN, anomalies chromosomiques (1p, 11q)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelle est la cause probable de l’anémie retrouvée ?",
+          "images": [],
+          "reponseAttendue": "Une infiltration médullaire par les cellules tumorales, entraînant une pancytopénie (anémie et thrombopénie).",
+          "correctionGenerale": "<b>Infiltration médullaire par les cellules tumorales</b>, entraînant une pancytopénie (anémie + thrombopénie)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nLes examens paracliniques réalisés sont positifs. Dans quel groupe de risque est classé Thiago ? Quelles sont les grandes lignes du traitement que vous allez proposer à ce patient ?",
+          "images": [],
+          "reponseAttendue": "Devant l’âge supérieur à 18 mois, l’atteinte médullaire, les LDH élevées et l’élévation majeure des catécholamines, il s’agit d’un groupe de haut risque. Traitement : chimiothérapie d’induction, chirurgie d’exérèse si possible, chimiothérapie à haute dose avec autogreffe de cellules souches hématopoïétiques, radiothérapie sur le résidu tumoral, immunothérapie anti-GD2, ± rétinoïdes (différenciation cellulaire).",
+          "correctionGenerale": "<b>Groupe de haut risque</b> — âge > 18 mois, atteinte médullaire, LDH élevée, catécholamines ↑↑.\n\n<b>Traitement</b>\n• Chimiothérapie d’induction\n• Chirurgie d’exérèse si possible\n• Chimiothérapie à haute dose + autogreffe de cellules souches hématopoïétiques\n• Radiothérapie sur le résidu tumoral\n• Immunothérapie anti-GD2\n• ± rétinoïdes (différenciation cellulaire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nVous débutez rapidement une chimiothérapie. Le bilan biologique recontrôlé met alors en évidence : K 6,7 mmol/L ; Na 141 mmol/L ; Cl 101 mmol/L ; acide urique 412 µmol/L ; LDH 3600 UI/L ; créatinine 75 µmol/L.\n\nQuelle complication présente votre patient ? Quelle prise en charge spécifique cela nécessite-t-il ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de lyse tumorale. Prise en charge : hyperhydratation, alcalinisation des urines selon les protocoles locaux, allopurinol ou rasburicase en cas d’hyperuricémie sévère, surveillance rapprochée (ionogramme, fonction rénale, ECG), correction des troubles hydro-électrolytiques notamment de l’hyperkaliémie.",
+          "correctionGenerale": "<b>Syndrome de lyse tumorale</b>\n\n<b>Prise en charge</b>\n• Hyperhydratation\n• Alcalinisation des urines (selon protocoles locaux)\n• Allopurinol ou rasburicase (si hyperuricémie sévère)\n• Surveillance rapprochée (ionogramme, fonction rénale, ECG)\n• Correction des troubles hydro-électrolytiques (hyperkaliémie notamment)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nDix jours après le début de la 2ᵉ cure, la famille de Thiago vous contacte car il présente une fièvre à 39 °C avec frissons.\n\nQuelle prise en charge proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une neutropénie fébrile : hospitalisation immédiate, antibiothérapie IV probabiliste à large spectre dans l’heure (céphalosporine de 3ᵉ génération ± aminoside, ou pipéracilline-tazobactam selon les protocoles), hémocultures, ECBU, recherche d’un foyer infectieux, mesures d’isolement protecteur.",
+          "correctionGenerale": "<b>Neutropénie fébrile</b>\n\n<b>Prise en charge</b>\n• Hospitalisation immédiate\n• <b>Antibiothérapie IV probabiliste à large spectre dans l’heure</b> (céphalosporine de 3ᵉ génération ± aminoside, ou pipéracilline-tazobactam selon les protocoles)\n• Hémocultures, ECBU, recherche d’un foyer infectieux\n• Mesures d’isolement protecteur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\n48 h plus tard, Thiago est apyrétique mais le bilan biologique retrouve : Hb 8,5 g/dL ; 18 000 plaquettes/mm³ ; 1200 GB/mm³ ; 430 PNN/mm³.\n\nÊtes-vous étonné de ce résultat ? Quel traitement préconisez-vous ? Pourquoi ? Comment administrez-vous ce traitement ?",
+          "images": [],
+          "reponseAttendue": "Non : il s’agit d’une aplasie post-chimiothérapie. Transfusion de concentrés plaquettaires si plaquettes < 20 G/L, ou < 50 G/L en cas de saignement ; transfusion de culots globulaires si l’anémie est mal tolérée ; facteurs de croissance hématopoïétiques (G-CSF) en sous-cutané si neutropénie profonde ou prolongée ; isolement protecteur et prévention des infections.",
+          "correctionGenerale": "• <b>NON</b> : aplasie post-chimiothérapie\n• Transfusion de concentrés plaquettaires si < 20 G/L, ou < 50 G/L en cas de saignement\n• Transfusion de culots globulaires si anémie mal tolérée\n• Facteurs de croissance hématopoïétiques (G-CSF) si neutropénie profonde ou prolongée, en sous-cutané\n• Isolement protecteur, prévention des infections"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 3",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 43,
+      "vignette": "Lamine, 7 ans, se présente avec une dyspnée expiratoire sifflante. Il a été fébrile à 38,5 °C la veille pendant 24 h. Il tousse depuis 48 h.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les signes de gravité d’une gêne respiratoire ?",
+          "images": [],
+          "reponseAttendue": "Signes respiratoires : polypnée majeure, tirage intercostal ou sus-sternal, battement des ailes du nez, balancement thoraco-abdominal, respiration paradoxale, silence auscultatoire (asthme aigu grave), SpO₂ < 92 % en air ambiant. Signes hémodynamiques : tachycardie, sueurs, marbrures. Signes neurologiques : troubles de la conscience, agitation, somnolence, cyanose.",
+          "correctionGenerale": "<b>Signes respiratoires</b>\n• Polypnée majeure, tirage intercostal / sus-sternal, battement des ailes du nez\n• Balancement thoraco-abdominal, respiration paradoxale\n• Silence auscultatoire (asthme aigu grave)\n• SpO₂ < 92 % à l’air ambiant\n\n<b>Signes hémodynamiques</b> : tachycardie, sueurs, marbrures\n\n<b>Signes neurologiques</b> : troubles de conscience, agitation, somnolence, cyanose"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLes parents ont déjà débuté un traitement bien conduit de cette crise d’asthme à domicile, sans effet.\n\nQuelle est votre conduite thérapeutique immédiate (molécules, voies d’administration, posologies) ?",
+          "images": [],
+          "reponseAttendue": "Oxygénothérapie si SpO₂ < 94 % ; salbutamol (Ventoline®) en nébulisation 0,15 mg/kg/dose (minimum 2,5 mg, maximum 5 mg) toutes les 20 minutes pendant 1 heure ; bromure d’ipratropium (Atrovent®) en nébulisation associé si crise sévère ; corticothérapie systémique par prednisone ou prednisolone per os 1-2 mg/kg (maximum 60 mg), ou méthylprednisolone IV en cas d’impossibilité orale ou de vomissements ; mise en place d’une surveillance continue (saturométrie, clinique).",
+          "correctionGenerale": "• Oxygénothérapie si SpO₂ < 94 %\n• <b>Salbutamol (Ventoline®) en nébulisation</b> : 0,15 mg/kg/dose (minimum 2,5 mg, maximum 5 mg), toutes les 20 minutes pendant 1 heure\n• <b>Bromure d’ipratropium (Atrovent®) en nébulisation</b> associé si crise sévère\n• <b>Corticothérapie systémique</b> : prednisone/prednisolone per os 1-2 mg/kg (max 60 mg) ; si impossibilité orale ou vomissements : méthylprednisolone IV\n• Mise en place d’une surveillance continue (saturométrie, clinique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires envisagez-vous ?",
+          "images": [],
+          "reponseAttendue": "Aucun examen systématique en cas d’amélioration rapide. En cas de contexte fébrile ou de non-amélioration : radiographie thoracique (pneumopathie, atélectasie, corps étranger), NFS et CRP si suspicion d’infection bactérienne, gaz du sang si détresse respiratoire ou SpO₂ basse.",
+          "correctionGenerale": "• Aucun examen systématique si amélioration rapide\n• <b>Si contexte fébrile ou non-amélioration</b>\n  – Radiographie thoracique (pneumopathie, atélectasie, corps étranger)\n  – NFS, CRP (si suspicion d’infection bactérienne)\n  – Gaz du sang si détresse respiratoire ou SpO₂ basse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles sont les causes que vous évoquez ?",
+          "images": [],
+          "reponseAttendue": "Un déclencheur infectieux viral (le plus fréquent), des allergènes inhalés (acariens, pollens, animaux), l’exercice physique, la pollution ou la fumée de tabac, un corps étranger inhalé (devant un début brutal, unilatéral, sans contexte viral).",
+          "correctionGenerale": "• Déclencheur infectieux viral (le plus fréquent)\n• Allergènes inhalés (acariens, pollens, animaux)\n• Exercice physique\n• Pollution, fumée de tabac\n• Corps étranger inhalé (devant un début brutal, unilatéral, sans contexte viral)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nAucune cause n’est retrouvée, l’état de l’enfant s’améliore.\n\nQuelle est votre ordonnance de sortie pour cette première crise (sans la signer, pour maintenir votre anonymat) ?",
+          "images": [],
+          "reponseAttendue": "Nom, prénom, date de naissance, poids ; corticothérapie courte per os par prednisone ou prednisolone 1-2 mg/kg/j pendant 3 à 5 jours ; salbutamol inhalé, 2 bouffées toutes les 20 min jusqu’à 10 bouffées en cas de crise, à l’aide d’une chambre d’inhalation, puis 2 bouffées toutes les 4 à 6 h pendant 24 à 48 h si les symptômes persistent ; signature et tampon. Mesures générales : vérification de la technique d’inhalation, surveillance de l’apparition de signes de gravité, consultation de suivi auprès du médecin traitant ou du pédiatre dans les jours qui suivent.",
+          "correctionGenerale": "• Nom / prénom / date de naissance / poids\n• <b>Corticothérapie courte per os</b> : prednisone/prednisolone 1-2 mg/kg/j pendant 3 à 5 jours\n• <b>Salbutamol inhalé</b>\n  – 2 bouffées/20 min jusqu’à 10 bouffées en cas de crise, à l’aide d’une chambre d’inhalation\n  – Puis 2 bouffées toutes les 4 à 6 h pendant 24-48 h si symptômes persistants\n• Signature / Tampon\n\n<i>Mesures générales : vérification de la technique d’inhalation ; surveillance de l’apparition de signes de gravité ; consultation de suivi auprès du médecin traitant / pédiatre dans les jours qui suivent.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLes parents vous disent que l’enfant tousse souvent la nuit et au sport, et qu’il est parfois essoufflé sans explication évidente.\n\nComment complétez-vous votre ordonnance ?",
+          "images": [],
+          "reponseAttendue": "Cela évoque un asthme persistant (symptômes nocturnes, à l’effort, intercritiques) : mise en route d’un traitement de fond par corticoïdes inhalés (béclométasone, budésonide, fluticasone) à dose faible, à adapter selon la sévérité, ± bronchodilatateur de longue durée d’action (LABA) uniquement si l’asthme reste mal contrôlé malgré les corticoïdes inhalés.",
+          "correctionGenerale": "Cela évoque un <b>asthme persistant</b> (symptômes nocturnes, à l’effort, intercritiques).\n\n<b>Mise en route d’un traitement de fond</b>\n• Corticoïdes inhalés (béclométasone, budésonide, fluticasone) : dose faible, à adapter selon la sévérité\n• ± bronchodilatateur de longue durée d’action (LABA), seulement si asthme mal contrôlé malgré les corticoïdes inhalés"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 4",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 44,
+      "vignette": "Un nouveau-né de 25 jours est amené en consultation pour un ictère persistant.\n\nC’est le premier enfant, sans antécédent familial particulier. Naissance à terme : poids de naissance 3450 g, taille 50 cm, périmètre crânien 35 cm, bonne adaptation à la vie extra-utérine. Ictère apparu à J4, qui fonce progressivement.\n\nExamen : 3900 g, ictère marqué cutanéo-muqueux, gros foie débordant de 4 cm sur la ligne médio-claviculaire.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQue recherchez-vous cliniquement en urgence ?",
+          "images": [],
+          "reponseAttendue": "Des signes de cholestase (coloration des selles hypo- ou acholiques, couleur foncée des urines) ; des signes de complications hépatiques (hémorragies cutanées ou muqueuses par déficit en facteurs vitamine K dépendants) ; des signes de décompensation hépatique (ascite, œdèmes, encéphalopathie, rare à cet âge) ; une splénomégalie associée ; des signes dysmorphiques ou malformatifs.",
+          "correctionGenerale": "<b>Signes de cholestase</b>\n• Coloration des selles (hypo- ou acholiques)\n• Couleur des urines (foncées)\n\n<b>Signes de complications hépatiques</b>\n• Hémorragies cutanées ou muqueuses (déficit en facteurs vitamine K dépendants)\n\n<b>Signes de décompensation hépatique</b>\n• Ascite, œdèmes, encéphalopathie (rare à cet âge)\n\n• Recherche de splénomégalie associée\n• Recherche de signes dysmorphiques ou malformatifs (syndrome malformatif associé)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels examens complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Bilan biologique hépatique : bilirubine totale et conjuguée, transaminases (ASAT, ALAT), GGT, phosphatases alcalines, TP, TCA, albumine. Bilan infectieux : NFS, CRP, sérologies toxoplasme, rubéole, CMV, HSV, hépatites virales. Échographie abdominale : aspect des voies biliaires (vésicule biliaire présente ou absente, voies biliaires dilatées ou non), foie et rate.",
+          "correctionGenerale": "<b>Bilan biologique hépatique</b>\n• Bilirubine totale et conjuguée\n• Transaminases (ASAT, ALAT)\n• GGT, phosphatases alcalines\n• TP, TCA (troubles de coagulation)\n• Albumine\n\n<b>Bilan infectieux</b>\n• NFS, CRP\n• Sérologies : toxoplasme, rubéole, CMV, HSV, hépatites virales\n\n<b>Échographie abdominale</b>\n• Aspect des voies biliaires (vésicule biliaire présente/absente, voies biliaires dilatées ou non), foie et rate"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuel diagnostic évoquez-vous en premier lieu ?",
+          "images": [],
+          "reponseAttendue": "Une atrésie des voies biliaires : ictère prolongé au-delà de 21 jours, bilirubine conjuguée élevée, hépatomégalie, selles décolorées, vésicule biliaire anormale à l’échographie.",
+          "correctionGenerale": "<b>Atrésie des voies biliaires</b> — ictère prolongé > 21 jours, bilirubine conjuguée élevée, hépatomégalie, selles décolorées, vésicule biliaire anormale à l’échographie."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation rapide en service spécialisé (hépatologie pédiatrique/chirurgie pédiatrique) ; confirmation diagnostique par échographie hépatobiliaire ± cholangiographie (IRM ou per-opératoire) ; traitement chirurgical précoce, idéalement avant 45 jours de vie, par intervention de Kasai (hépato-porto-entérostomie). En attendant : correction du déficit en vitamine K (vitamine K1 IV/IM), nutrition adaptée riche en triglycérides à chaîne moyenne avec vitamines liposolubles (A, D, E, K), surveillance étroite du poids, du foie et du bilan biologique.",
+          "correctionGenerale": "• Hospitalisation rapide en service spécialisé (hépatologie pédiatrique / chirurgie pédiatrique)\n• <b>Confirmation diagnostique</b> : échographie hépatobiliaire ± cholangiographie (IRM ou per-opératoire)\n• <b>Traitement chirurgical précoce</b> (idéalement avant 45 jours de vie) : intervention de <b>Kasai</b> (hépato-porto-entérostomie)\n\n<b>En attendant</b>\n• Correction du déficit en vitamine K (vitamine K1 IV/IM)\n• Nutrition adaptée, riche en triglycérides à chaîne moyenne + vitamines liposolubles (A, D, E, K)\n• Surveillance étroite du poids, du foie et du bilan biologique"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 5",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 45,
+      "vignette": "<b>Première observation.</b> Un enfant âgé de 4 semaines, né à terme avec une bonne évolution post-natale immédiate, arrive aux urgences en raison de difficultés alimentaires avec une prise de poids insuffisante. La maman raconte que depuis quelques jours la prise des biberons est de plus en plus difficile, avec un bébé qui s’essouffle et ne termine pas ses biberons ; il est en sueurs et s’arrête de téter.\n\nConstantes : l’enfant a pris 200 g depuis la naissance. FC 160 bpm au calme, SpO₂ 98 %, FR 70/min, T 36,8 °C, TA 80/60 mmHg.\n\nExamen clinique : enfant asthénique, plutôt pâle, avec polypnée et discret tirage intercostal. L’auscultation cardiaque montre un souffle intense 3/6 en parasternal, en rayon de roue. Le foie est palpé à 2 travers de doigt. Les pouls fémoraux sont correctement palpés.\n\n<b>Deuxième observation.</b> Un nourrisson de 2 mois arrive aux urgences pour difficultés alimentaires. La prise des constantes met en évidence une tachycardie à 210 bpm.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\n<i>Première observation.</i> Vous faites une radiographie de thorax que voici (figure).\n\nQuel est le diagnostic le plus probable ?",
+          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-054-219.jpg"],
+          "reponseAttendue": "Un tableau typique d’insuffisance cardiaque congestive du nourrisson, secondaire à une communication interventriculaire large. Arguments : souffle intense en rayon de roue, polypnée, tachycardie, hépatomégalie, mauvaise prise pondérale, cardiomégalie. L’âge de 4 semaines correspond au moment de la baisse des résistances vasculaires pulmonaires, à l’origine d’un shunt gauche-droite important et d’une insuffisance cardiaque congestive.",
+          "correctionGenerale": "• Tableau typique d’<b>insuffisance cardiaque congestive du nourrisson</b>, secondaire à une <b>communication interventriculaire (CIV) large</b>\n• <b>Arguments</b> : souffle intense en rayon de roue, polypnée, tachycardie, hépatomégalie, mauvaise prise pondérale, cardiomégalie\n• L’âge (4 semaines) correspond au moment de la baisse des résistances vasculaires pulmonaires → shunt gauche-droite important → insuffisance cardiaque congestive"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nVous appelez le cardiopédiatre, qui vous propose d’hospitaliser l’enfant pour échocardiographie et prise en charge.\n\nSi l’échocardiographie confirme votre diagnostic, quel sera le traitement médical qui pourra être mis en place avant une éventuelle correction chirurgicale ?",
+          "images": [],
+          "reponseAttendue": "Traitement de l’insuffisance cardiaque : diurétiques (furosémide 1-2 mg/kg/dose IV ou per os) et IEC (captopril 0,3-0,5 mg/kg/dose, 2 à 3 fois par jour). Mesures associées : apports caloriques adaptés (laits hypercaloriques, fractionnement des repas, gavage si besoin), oxygénothérapie si hypoxémie, surveillance du poids, de la diurèse et du ionogramme. Le but est de stabiliser l’enfant en attente d’une correction chirurgicale ou interventionnelle de la CIV.",
+          "correctionGenerale": "<b>Traitement de l’insuffisance cardiaque</b>\n• Diurétiques : furosémide (1-2 mg/kg/dose IV ou PO)\n• IEC : captopril (0,3-0,5 mg/kg/dose, 2 à 3 fois/jour)\n\n<b>Mesures associées</b>\n• Apports caloriques adaptés (laits hypercaloriques, fractionnement des repas, gavage si besoin)\n• Oxygénothérapie si hypoxémie\n• Surveillance du poids, de la diurèse, du ionogramme\n\n<i>Le but est de stabiliser l’enfant en attente d’une correction chirurgicale ou interventionnelle de la CIV.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\n<i>Deuxième observation.</i> Voici l’ECG fait pendant que les infirmières mettent la sonde gastrique (figure).\n\nDécrivez : le type de tachycardie ; le mécanisme de réduction de cette tachycardie constaté sur l’ECG ; le mécanisme physiopathologique de la tachycardie.",
+          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-057-230.jpg"],
+          "reponseAttendue": "Une tachycardie régulière à QRS fins à 210/min, compatible avec une tachycardie supraventriculaire. La réduction est obtenue par manœuvres vagales (stimulation du nerf vague par la sonde gastrique, réflexe oculocardiaque ou nausées) ; elle peut aussi céder sous adénosine IV. Le mécanisme physiopathologique est une tachycardie par réentrée intra-nodale, ou plus souvent une réentrée par voie accessoire (syndrome de Wolff-Parkinson-White) : le circuit de réentrée permet une activation rapide, régulière, à QRS fins.",
+          "correctionGenerale": "<b>Type de tachycardie</b>\n• Tachycardie régulière à QRS fins à 210/min → compatible avec une <b>tachycardie supraventriculaire (TSV)</b>\n\n<b>Mécanisme de réduction constaté sur l’ECG</b>\n• Réduction par manœuvres vagales (stimulation du nerf vague par la sonde gastrique = réflexe oculocardiaque / nausées)\n• Peut aussi céder sous adénosine IV (si administrée)\n\n<b>Mécanisme physiopathologique</b>\n• Tachycardie par réentrée intra-nodale, ou plus souvent réentrée par voie accessoire (syndrome de Wolff-Parkinson-White)\n• Le circuit de réentrée permet une activation rapide, régulière, à QRS fins — très fréquente"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 6",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 46,
+      "vignette": "Un garçon est né à 37+2 SA avec un poids de 2800 g, une taille de 49 cm et un périmètre crânien de 33 cm, avec un score d’Apgar coté à 6/8/10 et une glycémie capillaire à 3,2 mmol/L à 1 heure de vie. Sa maman, G2P1, n’a pas d’antécédent particulier. La recherche de Streptococcus agalactiae est négative au prélèvement vaginal. La durée de rupture des membranes a été de 13 heures, 6 heures avant le début du travail. La température de la maman était à 38,2 °C en fin de travail et la fréquence cardiaque fœtale à 185 bpm sans ralentissement lors des contractions. Le liquide amniotique a été clair puis teinté. Premier examen clinique normal.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCe nouveau-né justifie-t-il une surveillance particulière ? Si oui, pourquoi et laquelle ?",
+          "images": [],
+          "reponseAttendue": "Oui : le contexte maternel infectieux (fièvre intrapartum, tachycardie fœtale, liquide teinté) fait courir un risque d’infection néonatale bactérienne précoce. Il faut une surveillance clinique rapprochée pendant au moins 48 heures en maternité : température, fréquence respiratoire, fréquence cardiaque, comportement (geignement, hypotonie, difficultés alimentaires), saturation en oxygène, courbe pondérale.",
+          "correctionGenerale": "<b>Oui</b>\n• Contexte maternel infectieux (fièvre intrapartum, tachycardie fœtale, liquide teinté) = risque d’<b>infection néonatale bactérienne précoce</b>\n\n<b>Surveillance clinique rapprochée pendant au moins 48 heures en maternité</b>\n• Température, fréquence respiratoire, fréquence cardiaque\n• Surveillance du comportement (geignement, hypotonie, difficultés alimentaires)\n• Saturation en oxygène\n• Courbe pondérale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nY a-t-il un ou des facteurs de risque démontrés d’infection néonatale bactérienne précoce dans cette histoire ?",
+          "images": [],
+          "reponseAttendue": "Oui : fièvre maternelle intrapartum ≥ 38 °C, tachycardie fœtale > 160 bpm, liquide amniotique teinté.",
+          "correctionGenerale": "• Fièvre maternelle intrapartum ≥ 38 °C\n• Tachycardie fœtale > 160 bpm\n• Liquide amniotique teinté"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nEn retournant au dossier, vous constatez qu’une antibiothérapie a été administrée à la maman. Quel(s) est (sont) le(s) critère(s) qui vous fera(ont) considérer qu’elle était adéquate pour prévenir le risque d’infection néonatale bactérienne précoce ?",
+          "images": [],
+          "reponseAttendue": "Une prophylaxie est considérée comme adéquate si l’antibiotique est actif sur le streptocoque B (ampicilline, pénicilline G, ou céphalosporine de 1ʳᵉ génération, éventuellement amoxicilline ou clindamycine selon les résistances), administré au moins 4 heures avant l’accouchement, par voie intraveineuse, à une posologie adaptée.",
+          "correctionGenerale": "<b>Une prophylaxie est considérée adéquate si</b>\n• Antibiotique actif sur le streptocoque B (ampicilline, pénicilline G, ou céphalosporine de 1ʳᵉ génération ; éventuellement amoxicilline ou clindamycine selon les résistances)\n• Administration ≥ 4 heures avant l’accouchement\n• Voie intraveineuse\n• Posologie adaptée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous êtes alerté à 6 heures de vie, alors que le nouveau-né était en maternité auprès de sa maman, parce qu’il geint. Vous constatez une fréquence cardiaque au repos à 170 bpm, une fréquence respiratoire à 60 cpm, une température à 36,5 °C et un aspect de la peau pâle sans autre particularité. Il n’y a pas de trouble hémodynamique, ni de trouble respiratoire persistant, ni de trouble neurologique, et sa maman n’a pas reçu d’antibiothérapie prolongée.\n\nQue proposez-vous comme traitement de première intention et pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Les signes cliniques sont évocateurs d’une infection néonatale précoce (geignement, tachycardie, polypnée, pâleur) : hospitalisation en néonatologie ; prélèvements bactériologiques (hémoculture, hémogramme, CRP ± ponction lombaire selon l’évolution) ; antibiothérapie probabiliste IV de première intention par céfotaxime + amoxicilline ; surveillance clinique rapprochée et monitorage. Justification : traiter rapidement une infection néonatale bactérienne précoce, potentiellement grave.",
+          "correctionGenerale": "• Signes cliniques évocateurs d’<b>infection néonatale précoce</b> (geignement, tachycardie, polypnée, pâleur)\n• Hospitalisation en néonatologie\n• Prélèvements bactériologiques : hémoculture, hémogramme, CRP ± ponction lombaire selon l’évolution\n• <b>Antibiothérapie probabiliste IV de première intention : céfotaxime + amoxicilline</b>\n• Surveillance clinique rapprochée et monitorage\n\n<i>Justification : traiter rapidement une infection néonatale bactérienne précoce, potentiellement grave.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVotre examen clinique à 48 heures de vie est normal. L’hémoculture prélevée initialement était revenue positive à E. coli K1 en 13 heures. Le liquide céphalo-rachidien prélevé à H24 était stérile avec 22 globules blancs/mm³, une glycorachie à 2,7 mmol/L et une protéinorachie à 1,2 g/L. Un maximum de CRP a été observé à 24 heures de vie avec une valeur de 65 mg/L, et est en décroissance à ce jour.\n\nQuelle est votre proposition thérapeutique ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une infection néonatale précoce confirmée à E. coli K1, avec méningite exclue (ponction lombaire rassurante, LCR stérile). Traitement recommandé : céfotaxime IV seul (bon passage tissulaire et efficacité sur E. coli), pendant 10 jours (infection systémique sans atteinte méningée), avec surveillance clinique, biologique (CRP, NFS) et nutritionnelle, et adaptation secondaire de l’antibiothérapie selon l’antibiogramme.",
+          "correctionGenerale": "• <b>Infection néonatale précoce confirmée à </b><i>E. coli</i><b> K1</b>\n• Méningite exclue (ponction lombaire rassurante, LCR stérile)\n\n<b>Traitement recommandé</b>\n• <b>Céfotaxime IV</b> (céphalosporine de 3ᵉ génération) seul, car bon passage tissulaire et efficacité sur <i>E. coli</i>\n• <b>Durée : 10 jours</b> (infection systémique sans atteinte méningée)\n• Surveillance clinique, biologique (CRP, NFS) et nutritionnelle\n• Adaptation secondaire de l’antibiothérapie selon l’antibiogramme"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 7",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 47,
+      "vignette": "Vous recevez aux urgences Antoine, âgé de 12 ans, adressé par son médecin traitant pour une altération de l’état général fébrile associant pâleur, épistaxis, splénomégalie à l’ombilic et de volumineuses adénopathies cervicales bilatérales.\n\nLes constantes à l’arrivée sont : température 38,7 °C, FC 90 bpm, TA 110/70 mmHg, SaO₂ 94 %. Cliniquement, vous remarquez des hématomes sur le tronc, les avant-bras et les tibias.\n\nLe laboratoire de ville appelle pour transmettre les premiers résultats de l’hémogramme : Hb 9,1 g/dL, plaquettes 70 G/L, GB 380 G/L, formule en attente.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel est le diagnostic le plus probable ?",
+          "images": [],
+          "reponseAttendue": "Une leucémie aiguë lymphoblastique (la plus fréquente chez l’enfant), ou une leucémie aiguë myéloblastique. Arguments : syndrome tumoral (splénomégalie, adénopathies volumineuses), syndrome hémorragique (pétéchies, ecchymoses, épistaxis), pancytopénie partielle (anémie à 9,1 g/dL, thrombopénie à 70 G/L), hyperleucocytose majeure à 380 G/L.",
+          "correctionGenerale": "<b>Leucémie aiguë lymphoblastique (LAL)</b> — la plus fréquente chez l’enfant — ou <b>leucémie aiguë myéloblastique (LAM)</b>.\n\n<b>Arguments</b>\n• Syndrome tumoral (splénomégalie, adénopathies volumineuses)\n• Syndrome hémorragique (pétéchies, ecchymoses, épistaxis)\n• Pancytopénie partielle : anémie (Hb 9,1 g/dL), thrombopénie (70 G/L)\n• Hyperleucocytose majeure (380 G/L)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle complication infectieuse faut-il craindre ? Quel examen complémentaire est indispensable pour la rechercher ?",
+          "images": [],
+          "reponseAttendue": "Une atteinte du système nerveux central par infiltration leucémique (neuroleucémie) : l’examen indispensable est la ponction lombaire, à la recherche de blastes dans le LCR.",
+          "correctionGenerale": "• <b>Complication</b> : atteinte du système nerveux central par infiltration leucémique (<b>neuroleucémie</b>)\n• <b>Examen indispensable</b> : ponction lombaire (recherche de blastes dans le LCR)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelle complication métabolique faut-il rechercher ? Par quels examens complémentaires ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de lyse tumorale (hypercatabolisme lié à la lyse des blastes) : ionogramme sanguin (K⁺, Na⁺, Cl⁻), calcium, phosphore, acide urique, LDH, créatinine et urée.",
+          "correctionGenerale": "<b>Syndrome de lyse tumorale</b> (hypercatabolisme lié à la lyse des blastes)\n\n<b>Examens</b>\n• Ionogramme sanguin : K⁺, Na⁺, Cl⁻\n• Calcium, phosphore\n• Acide urique\n• LDH\n• Créatinine, urée (fonction rénale)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nComment expliquez-vous le syndrome hémorragique cutanéo-muqueux ? Quels examens complémentaires prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Par la thrombopénie (70 G/L), responsable d’épistaxis, d’hématomes et d’ecchymoses ; un trouble de la coagulation associé est possible en cas de CIVD. Examens : NFS de contrôle, hémostase (TP, TCA, fibrinogène, D-dimères).",
+          "correctionGenerale": "• <b>Thrombopénie</b> (70 G/L) responsable d’épistaxis, hématomes, ecchymoses\n• Possible trouble de la coagulation associé si CIVD\n\n<b>Examens complémentaires</b>\n• NFS de contrôle\n• Hémostase : TP, TCA, fibrinogène, D-dimères"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles complications pulmonaires sont à craindre ? Quel examen complémentaire permet de les mettre en évidence en urgence ?",
+          "images": [],
+          "reponseAttendue": "Une leucostase pulmonaire liée à l’hyperleucocytose massive, une infiltration pulmonaire par les blastes, une infection pulmonaire opportuniste. L’examen à réaliser en urgence est la radiographie thoracique (ou la TDM thoracique en cas de doute diagnostique).",
+          "correctionGenerale": "• <b>Leucostase pulmonaire</b> (liée à l’hyperleucocytose massive)\n• Infiltration pulmonaire par les blastes\n• Infection pulmonaire opportuniste\n\n<b>Examen complémentaire en urgence</b> : radiographie thoracique (ou TDM thoracique si doute diagnostique)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 8",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 48,
+      "vignette": "Léa, âgée de 4 ans et demi, consulte aux urgences pour hyperthermie et douleur rétro-orbitaire gauche avec tuméfaction de l’œil gauche. Cette enfant présente depuis plusieurs jours une rhinite purulente. Apparition brutale de douleurs rétro-orbitaires avec état fébrile et gonflement des paupières supérieures. Pas d’antécédent particulier, ni de rhinorrhée chronique, ni d’angine à répétition. Vaccinations à jour.\n\nL’examen clinique aux urgences retrouve un enfant fébrile à 39,5 °C, au teint septique. L’examen ORL retrouve une rhinite postérieure purulente, pas d’angine, des tympans normaux. Paupière œdématiée ; la pression de l’angle interne de l’œil déclenche une violente douleur, avec présence d’œdème à ce niveau.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel est le diagnostic le plus probable ? Sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Une cellulite orbitaire compliquant une sinusite ethmoïdale aiguë. Arguments : âge de 4 ans (pic des sinusites ethmoïdales compliquées), rhinite purulente évoluant depuis plusieurs jours, fièvre élevée avec teint septique, douleur rétro-orbitaire et œdème palpébral supérieur, douleur intense déclenchée à la pression de l’angle interne de l’œil.",
+          "correctionGenerale": "<b>Cellulite orbitaire compliquant une sinusite ethmoïdale aiguë</b>\n\n<b>Arguments</b>\n• Âge (4 ans = pic des sinusites ethmoïdales compliquées)\n• Rhinite purulente évoluant depuis plusieurs jours\n• Fièvre élevée, teint septique\n• Douleur rétro-orbitaire et œdème palpébral supérieur\n• Douleur intense déclenchée à la pression de l’angle interne de l’œil"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les signes à rechercher pour l’atteinte ophtalmologique ?",
+          "images": [],
+          "reponseAttendue": "Chémosis (œdème conjonctival), exophtalmie, douleur ou limitation des mouvements oculaires (ophtalmoplégie), baisse de l’acuité visuelle, diplopie, atteinte du réflexe photomoteur.",
+          "correctionGenerale": "• Chémosis (œdème conjonctival)\n• Exophtalmie\n• Douleur ou limitation des mouvements oculaires (ophtalmoplégie)\n• Baisse de l’acuité visuelle\n• Diplopie\n• Atteinte du réflexe photomoteur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les complications selon la classification de Chandler ?",
+          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-071-289.jpg"],
+          "reponseAttendue": "Cellulite préseptale (groupe I), cellulite orbitaire (groupe II), abcès sous-périosté (groupe III), abcès orbitaire (groupe IV), thrombose du sinus caverneux (groupe V).",
+          "correctionGenerale": "<b>Classification de Chandler</b>\n• <b>Groupe I</b> : cellulite préseptale\n• <b>Groupe II</b> : cellulite orbitaire\n• <b>Groupe III</b> : abcès sous-périosté\n• <b>Groupe IV</b> : abcès orbitaire\n• <b>Groupe V</b> : thrombose du sinus caverneux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuels sont les germes les plus fréquents à cet âge-là ?",
+          "images": [],
+          "reponseAttendue": "Streptococcus pneumoniae, Streptococcus pyogenes (groupe A), Staphylococcus aureus (y compris SARM selon le contexte), Haemophilus influenzae (moins fréquent depuis la vaccination Hib), germes anaérobies (complications sinusiennes).",
+          "correctionGenerale": "• <i>Streptococcus pneumoniae</i>\n• <i>Streptococcus pyogenes</i> (groupe A)\n• <i>Staphylococcus aureus</i> (y compris SARM selon le contexte)\n• <i>Haemophilus influenzae</i> (moins fréquent depuis la vaccination Hib)\n• Germes anaérobies (complications sinusiennes)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuel est le bilan biologique initial à réaliser ?",
+          "images": [],
+          "reponseAttendue": "NFS, CRP, hémoculture, et éventuellement un prélèvement local si un écoulement purulent est accessible.",
+          "correctionGenerale": "• NFS, CRP\n• Hémoculture\n• ± prélèvement local si écoulement purulent accessible"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuel examen complémentaire réaliseriez-vous ? Pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Un scanner orbito-cérébral avec injection de produit de contraste, pour confirmer l’atteinte orbitaire, rechercher une collection sous-périostée ou un abcès orbitaire, et éliminer une thrombose du sinus caverneux ou une extension endocrânienne.",
+          "correctionGenerale": "<b>Scanner orbito-cérébral avec injection de produit de contraste</b>\n• Pour confirmer l’atteinte orbitaire\n• Pour rechercher une collection sous-périostée ou un abcès orbitaire\n• Pour éliminer une thrombose du sinus caverneux ou une extension endocrânienne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel(s) avis spécialisé(s) demanderiez-vous en complément ?",
+          "images": [],
+          "reponseAttendue": "Un avis ORL (origine sinusienne, geste chirurgical éventuel de drainage des sinus) et un avis ophtalmologique (bilan visuel, suivi de l’atteinte orbitaire).",
+          "correctionGenerale": "• <b>ORL</b> : origine sinusienne, geste chirurgical éventuel (drainage des sinus)\n• <b>Ophtalmologiste</b> : bilan visuel, suivi de l’atteinte orbitaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nDétaillez votre conduite thérapeutique à tenir.",
+          "images": [],
+          "reponseAttendue": "Hospitalisation en urgence (risque vital et fonctionnel) ; antibiothérapie IV probabiliste à large spectre : céfotaxime ou ceftriaxone + fosfomycine ou clindamycine, ± vancomycine en contexte de SARM ; antalgie et antipyrétiques ; surveillance rapprochée des constantes, des signes neuro-ophtalmiques et de la CRP ; chirurgie ORL/ophtalmologique si abcès sous-périosté ou orbitaire confirmé, ou en l’absence d’amélioration sous traitement médical intensif.",
+          "correctionGenerale": "• <b>Hospitalisation en urgence</b> (risque vital et fonctionnel)\n• <b>Antibiothérapie IV probabiliste à large spectre</b> : céfotaxime ou ceftriaxone + fosfomycine ou clindamycine ; ± vancomycine si contexte de SARM\n• Antalgie, antipyrétiques\n• Surveillance rapprochée : constantes, signes neuro-ophtalmiques, CRP\n• <b>Chirurgie (ORL / ophtalmo) si</b> : abcès sous-périosté ou orbitaire confirmé ; non-amélioration sous traitement médical intensif"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 9",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
+      "orderIndex": 49,
+      "vignette": "Un adolescent de 13 ans vient consulter avec ses parents suite à l’apparition d’une confusion et de propos incohérents. Contexte de céphalées, avec survenue secondaire d’une hyperthermie 48 h plus tard. Pas de contage infectieux évident, notamment varicelleux. Pas de voyage récent. Pas d’antécédent particulier, pas de traitement de fond. Pas de traumatisme récent. Récurrences herpétiques labiales fréquentes chez sa sœur.\n\nÀ l’examen, il pèse 55 kg, fébrile à 38,9 °C, vigilant, asthénique, FC 72/min, TA 99/66 mmHg, pas de souffle cardiaque, pas d’insuffisance circulatoire. Stable sur le plan respiratoire. Céphalées évaluées EN 5/10, pas de phono-photophobie, doute sur une raideur de nuque mais pas de signe de Kernig, pupilles symétriques et réactives, pas d’hémianopsie latérale homonyme, pas de syndrome cérébelleux, pas de déficit des paires crâniennes, pas de déficit neurologique sensitivo-moteur aigu. Propos incohérents, réponses confuses mais compréhensibles. Reste de l’examen clinique sans particularité.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic suspectez-vous en premier lieu sur l’ensemble du tableau clinique ?",
+          "images": [],
+          "reponseAttendue": "Une encéphalite virale, à évoquer devant les céphalées, la fièvre, la confusion et les propos incohérents (atteinte neuro-psychiatrique) et le contexte d’herpès familial. Le diagnostic le plus probable est l’encéphalite herpétique à HSV1.",
+          "correctionGenerale": "<b>Encéphalite virale</b>, à évoquer devant :\n• Céphalées, fièvre\n• Confusion et propos incohérents (atteinte neuro-psychiatrique)\n• Contexte d’herpès familial\n\n→ Diagnostic le plus probable : <b>encéphalite herpétique (HSV1)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQue proposez-vous comme investigations de première intention ?",
+          "images": [],
+          "reponseAttendue": "Ponction lombaire (cytologie, biochimie, recherche virale et bactérienne) ; imagerie cérébrale (IRM de préférence), avant la PL en cas de signes de focalisation ou d’hypertension intracrânienne ; EEG en cas de suspicion de crises comitiales ou d’encéphalopathie ; bilan biologique standard (NFS, CRP, ionogramme, fonction rénale et hépatique).",
+          "correctionGenerale": "• <b>Ponction lombaire</b> (cytologie, biochimie, recherche virale/bactérienne)\n• <b>Imagerie cérébrale</b> (IRM de préférence) avant la PL si signes de focalisation ou d’hypertension intracrânienne\n• <b>EEG</b> si suspicion de crises comitiales ou d’encéphalopathie\n• Bilan biologique standard : NFS, CRP, ionogramme, fonction rénale/hépatique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVu la situation clinique présente, décrivez les caractéristiques cytologiques et biochimiques attendues après l’analyse du LCR.",
+          "images": [],
+          "reponseAttendue": "Cytologie : pléiocytose lymphocytaire (50 à 500/mm³). Biochimie : normoglycorachie, protéinorachie modérément augmentée (0,5 à 1 g/L).",
+          "correctionGenerale": "<b>Cytologie</b>\n• Pléiocytose lymphocytaire (50-500/mm³)\n\n<b>Biochimie</b>\n• Normoglycorachie\n• Protéinorachie modérément augmentée (0,5-1 g/L)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nDu point de vue infectieux (bactériologique/viral), quelle analyse spécifique à cette situation faut-il précisément demander sur le LCR ?",
+          "images": [],
+          "reponseAttendue": "Des PCR virales : HSV1 en priorité, HSV2, VZV, entérovirus.",
+          "correctionGenerale": "<b>PCR virales</b> : HSV1 (en priorité), HSV2, VZV, entérovirus."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLe bilan biologique et infectieux réalisé aux urgences montre : NFS — GB 11,6 G/L dont 8,2 G/L PNN, Hb 13,9 g/dL ; ionogramme sans anomalie ; fonction rénale normale ; bilan hépatique normal ; CRP 1,8 mg/L ; hémoculture stérile. Ponction lombaire : 380 éléments/mm³ dont 98 % de lymphocytes, normoglycorachie, protéinorachie 0,5 g/L, examen direct négatif, culture stérile ; PCR entérovirus non détecté, PCR HSV1 positif, HSV2 non détecté, VZV non détecté. IRM cérébrale : aspect d’encéphalite temporale aiguë gauche, pas de collection intraparenchymateuse, pas d’hydrocéphalie, pas de thrombophlébite, pas de saignement intracrânien.\n\nAu vu des résultats, quel diagnostic devez-vous évoquer ?",
+          "images": [],
+          "reponseAttendue": "Une encéphalite herpétique à HSV1 : LCR lymphocytaire avec normoglycorachie et protéinorachie modérée, PCR HSV1 positive, IRM montrant une atteinte temporale gauche.",
+          "correctionGenerale": "• LCR lymphocytaire, normoglycorachie, protéinorachie modérée\n• PCR HSV1 positive\n• IRM montrant une atteinte temporale gauche\n\n→ <b>Encéphalite herpétique à HSV1</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nDans ce contexte, quel traitement anti-infectieux prescrire ? À quelle posologie ? Pour quelle durée ?",
+          "images": [],
+          "reponseAttendue": "L’aciclovir IV, 10 mg/kg toutes les 8 heures (soit 30 mg/kg/jour en 3 perfusions), pendant 14 à 21 jours.",
+          "correctionGenerale": "<b>Aciclovir IV</b>\n• Posologie : 10 mg/kg/8 h IV (soit 30 mg/kg/jour en 3 perfusions)\n• Durée : <b>14 à 21 jours</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nEn complément du traitement anti-infectieux, quelles prises en charge doivent être proposées ?",
+          "images": [],
+          "reponseAttendue": "Un traitement symptomatique et de support : anticonvulsivants en cas de crises, antipyrétiques, réhydratation, correction hydro-électrolytique ; une surveillance neurologique en milieu spécialisé (réanimation ou soins continus) ; un suivi neuropsychologique en raison du risque de séquelles cognitives et comportementales ; une rééducation fonctionnelle selon les séquelles éventuelles.",
+          "correctionGenerale": "<b>Symptomatique et de support</b>\n• Anticonvulsivants en cas de crises\n• Antipyrétiques, réhydratation, correction hydro-électrolytique\n\n• Surveillance neurologique en milieu spécialisé (réanimation ou soins continus)\n• <b>Suivi neuropsychologique</b> : risque de séquelles cognitives / comportementales\n• Rééducation fonctionnelle selon les séquelles éventuelles"
+        }
+      ]
+    }
+  ]
+}
