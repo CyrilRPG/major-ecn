@@ -1,0 +1,384 @@
+{
+  "sources": {
+    "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf": {
+      "atelier": "annales-cardiologie/seance-2025-06-05-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-001-000.png": "filigrane « PAE Formation » de la diapositive de titre, sans contenu médical",
+        "img-001-001.png": "filigrane « PAE Formation » de la diapositive de titre, sans contenu médical",
+        "img-001-002.png": "logo PAE Formation de la diapositive de titre, sans contenu médical",
+        "img-013-051.jpg": "planche de recommandations ESC (facteurs anatomiques et techniques en faveur du TAVI ou de la chirurgie) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-013-054.jpg": "planche de recommandations ESC (« Table 6 — Clinical, anatomical and procedural factors that influence the choice of treatment modality ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-014-059.jpg": "planche de recommandations ESC (pathologies cardiaques associées nécessitant un geste chirurgical) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-020-085.png": "extrait de texte des recommandations ESC (§ 12.1.3 « Symptomatic bradycardia, pauses and atrioventricular block ») projeté en rappel après la correction, hors iconographie de l’annale",
+        "img-021-090.jpg": "planche de recommandations ESC (resynchronisation plutôt que stimulation ventriculaire droite chez l’insuffisant cardiaque avec BAV) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-021-091.jpg": "planche de recommandations ESC (« Recommendations for pacing for atrioventricular block ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-032-137.jpg": "diapositive de rappel de cours renvoyant aux recommandations de la Société Française de Cardiologie pour les épreuves d’effort, hors iconographie de l’annale",
+        "img-046-197.jpg": "planche de recommandations ESC (« Management of hyperglycaemia » à la phase aiguë du SCA) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-058-246.png": "planche de recommandations ESC (« Management of atrial fibrillation — acute rate control ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-058-247.jpg": "planche de recommandations ESC (« Cardioversion ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-063-268.jpg": "planche de recommandations ESC (chronologie du traitement antithrombotique après SCA ou SCC chez un patient sous anticoagulant oral) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-064-273.jpg": "planche de recommandations ESC (« Recommendations for patients with AF and an ACS, PCI, or CCS ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-067-286.jpg": "reproduction du questionnaire du test de Fagerström, projetée en rappel après la correction ; le test est nommé dans la réponse attendue",
+        "img-068-291.png": "reproduction du questionnaire du test de Horn (première partie), projetée en rappel après la correction ; le test est nommé dans la réponse attendue",
+        "img-068-292.png": "reproduction du questionnaire du test de Horn (seconde partie), projetée en rappel après la correction ; le test est nommé dans la réponse attendue",
+        "img-069-297.jpg": "reproduction de l’échelle HAD (première partie), projetée en rappel après la correction ; l’échelle est nommée dans la réponse attendue",
+        "img-069-298.jpg": "reproduction de l’échelle HAD (seconde partie), projetée en rappel après la correction ; l’échelle est nommée dans la réponse attendue",
+        "img-075-323.png": "planche de recommandations ESC (« Table 9 — Definitions of hypertension according to office, ambulatory, and home blood pressure levels ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-076-328.png": "planche de recommandations ESC (« Table 3 — Classification of office blood pressure and definitions of hypertension grade ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-092-393.jpg": "planche de recommandations ESC (« Table 14 — critères de Duke modifiés 2015 pour le diagnostic d’endocardite infectieuse ») projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-102-434.jpg": "planche de recommandations ESC (antibiothérapie probabiliste initiale de l’endocardite infectieuse) projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-107-455.jpg": "planche de recommandations ESC (« Table 17 — antibiothérapie de l’endocardite à staphylocoque ») projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-108-460.jpg": "planche de recommandations ESC (suite du tableau d’antibiothérapie de l’endocardite à staphylocoque) projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-113-481.png": "planche de recommandations ESC (« Table 3 — Cardiac conditions at highest risk of infective endocarditis ») projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-114-486.png": "planche de recommandations ESC (« Table 4 — Non-specific prevention measures ») projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-115-491.png": "planche de recommandations ESC (« Table 6 — Recommended prophylaxis for high-risk dental procedures ») projetée dans le cas « Sujet pratique n° 1 », non daté et donc non intégré (cf. remarque)",
+        "img-120-512.png": "extrait de texte des recommandations ESC sur les causes d’insuffisance tricuspide primaire, projeté en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-121-517.jpg": "extrait de texte des recommandations ESC sur la prévalence et les mécanismes de l’insuffisance tricuspide, projeté en rappel après la correction, hors iconographie de l’annale",
+        "img-127-542.jpg": "planche de recommandations ESC (algorithme de prise en charge de l’insuffisance mitrale primaire sévère) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-129-551.jpg": "planche de recommandations ESC (« Recommendations for using leadless pacing ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-133-568.jpg": "planche de recommandations ESC (« Recommendation Table 6 — assess and manage thromboembolic risk in AF ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-134-573.png": "planche de recommandations ESC (« Recommendation Table 20 — anticoagulation in patients undergoing catheter ablation ») projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-138-590.jpg": "planche de recommandations ESC (algorithme « Management of HFrEF ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-142-607.jpg": "planche de recommandations ESC (« Table 5 — The revised Geneva clinical prediction rule for pulmonary embolism ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-145-620.jpg": "planche de recommandations ESC (algorithme de prise en charge de l’embolie pulmonaire aiguë) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-146-625.jpg": "planche de recommandations ESC (« Table 7 — Original and simplified Pulmonary Embolism Severity Index ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-147-630.jpg": "planche de rappel (score HESTIA) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-149-639.jpg": "planche de rappel (tableau des définitions hémodynamiques des hypertensions pulmonaires) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-151-648.jpg": "planche de rappel (classification des hypertensions pulmonaires, groupes 1 et 2) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-151-649.jpg": "planche de rappel (classification des hypertensions pulmonaires, groupes 3 à 5) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-154-662.png": "planche de recommandations ESC (indications du défibrillateur implantable en prévention secondaire) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-155-667.jpg": "planche de recommandations ESC (indications du défibrillateur implantable en prévention primaire) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-155-668.png": "planche de recommandations ESC (LifeVest et contre-indications du défibrillateur implantable) projetée en rappel après la correction, hors iconographie de l’annale",
+        "img-172-741.jpg": "planche de recommandations ESC (algorithme « Cardioversion for atrial fibrillation ») projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question"
+      },
+      "remarque": "Diaporama « Séance du 05/06 » : corrections de la session EVCP de novembre 2021 (sujets n° 1, n° 2 et n° 3) et de l’EVCF de novembre 2021 (16 questions ; la série de questions est projetée deux fois dans le diaporama, une seule série est intégrée). Le sujet officiel 2021 n’est pas présent dans le dépôt : énoncés et vignettes sont restitués à partir du diaporama de correction. Le cas intercalé « Sujet pratique n° 1 » (Mme A., 29 ans, endocardite infectieuse tricuspide chez une patiente toxicomane) ne porte ni année ni référence de session : il n’est pas intégré."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Cardiologie - 2021 - EVCP - Session de novembre - Sujet 1",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf",
+      "orderIndex": 30,
+      "vignette": "Vous êtes appelé aux urgences pour prendre en charge M. X., 83 ans, pour une détresse respiratoire évoluant depuis 3 heures. Il a comme facteurs de risque cardiovasculaire, outre son âge, une HTA et un diabète. Il est suivi pour un adénome de prostate non compliqué. Son traitement comprend : amlodipine 5 mg/jour.\n\nL’urgentiste a réalisé le bilan initial et met en évidence des crépitants bilatéraux symétriques diffus, un souffle éjectionnel systolique et un tirage respiratoire.\n\nConstantes : SpO₂ à 84 %, TA à 145/94 mmHg, FC à 90 bpm, température à 37,1 °C, FR à 25/min.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nLa radiographie thoracique réalisée à l’admission est reproduite ci-dessous.\n\nQuel est votre diagnostic principal ? Sur quels arguments ?",
+          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-003-012.jpg"],
+          "reponseAttendue": "Œdème aigu pulmonaire compliqué d’une détresse respiratoire aiguë, probablement secondaire à une cardiopathie valvulaire de type rétrécissement aortique probablement dégénératif, ou insuffisance mitrale.",
+          "correctionGenerale": "<b>Œdème aigu pulmonaire (OAP), compliqué d’une détresse respiratoire aiguë, probablement secondaire à une cardiopathie valvulaire de type rétrécissement aortique (RA) probablement dégénératif, ou insuffisance mitrale (IM)</b>\n\n• <b>Terrain</b> : homme de 83 ans → RA dégénératif\n• <b>Insuffisance cardiaque aiguë</b> : dyspnée NYHA 4, crépitants pulmonaires diffus\n• <b>Détresse respiratoire aiguë</b> : tirage respiratoire, désaturation avec SpO₂ à 84 %, polypnée avec fréquence respiratoire à 25/min\n• <b>RA ou IM</b> : souffle systolique\n• <b>Radiographie pulmonaire</b> : syndrome alvéolaire en ailes de papillon\n• Par argument de gravité pour l’œdème aigu pulmonaire\n• Par argument de fréquence pour le RA\n• Pas d’argument pour une origine infectieuse de la détresse respiratoire car patient apyrétique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle est votre prise en charge immédiate ?",
+          "images": [],
+          "reponseAttendue": "Urgence thérapeutique ; aucun examen ne doit retarder la prise en charge ; hospitalisation en USIC ou réanimation cardiologique ; mise en condition (position demi-assise, repos strict au lit, 2 VVP, à jeun, oxygénothérapie ± VNI voire intubation, surveillance scopique, sonde urinaire) ; traitement de l’OAP par furosémide IV bolus puis IVSE, supplémentation potassique et dérivés nitrés ; examens complémentaires (ECG, ETT, biologie) ; prise en charge du diabète par insulinothérapie ; surveillance clinique et paraclinique.",
+          "correctionGenerale": "• <b>Urgence thérapeutique</b>\n• Aucun examen ne doit retarder la prise en charge thérapeutique\n• Hospitalisation en unité de soins intensifs de cardiologie (USIC) ou en réanimation cardiologique\n\n<b>Mise en condition</b>\n• Position demi-assise et repos strict au lit\n• Mise en place de 2 voies veineuses de bon calibre\n• À jeun\n• Oxygénothérapie ; mise en place d’une ventilation mécanique non invasive si épuisement respiratoire, voire intubation orotrachéale\n• Surveillance scopique : FC, FR, PA, rythme cardiaque\n• Pose d’une sonde urinaire pour quantification de la diurèse\n\n<b>Prise en charge de l’œdème aigu pulmonaire</b>\n• Diurétique de l’anse IV : furosémide (Lasilix®), bolus de 40 à 80 mg IV, puis IVSE 500 mg/24 h\n• Supplémentation potassique par Diffu-K® en fonction de la surveillance quotidienne de la kaliémie\n• Vasodilatateur artériel et veineux : dérivés nitrés — isosorbide dinitrate (Risordan®), bolus 1-2 mg IVD puis IVSE selon la pression artérielle et l’état respiratoire du patient\n\n<b>Examens complémentaires</b>\n• ECG 12 dérivations : pour rechercher un trouble du rythme supra-ventriculaire et/ou des signes d’ischémie myocardique\n• ETT : évaluation de la fonction systolique et diastolique VG, recherche de troubles de la cinétique segmentaire, évaluation des pressions de remplissage VG, recherche d’un rétrécissement aortique et évaluation de sa sévérité, recherche d’une dilatation et évaluation de la compliance de la veine cave inférieure, évaluation des pressions pulmonaires, recherche d’autres valvulopathies, recherche d’un épanchement péricardique\n• Biologie : NT-proBNP, troponine, CPK, bilan hépatique (ASAT, ALAT, GGT, PAL, bilirubine), ionogramme sanguin, urée, créatinine, TSH, bilan martial, CRP, NFS, plaquettes, lactates, gaz du sang\n\n• Prise en charge du diabète avec surveillance pré- et postprandiale, mise en place d’une insulinothérapie SC ou IV\n\n<b>Surveillance</b>\n• Clinique : TA, FC, FR, SpO₂, signes d’insuffisance cardiaque, diurèse\n• Paraclinique : électrocardiogramme, échographie cardiaque, troponine, CPK, gaz du sang, lactates"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLa situation clinique s’améliore sous traitement médical. Vous avez réalisé une échocardiographie qui retrouve les éléments suivants : FEVG à 35 %, rétrécissement aortique serré.\n\nQuelle intervention proposez-vous ? Quels sont vos arguments ?",
+          "images": [],
+          "reponseAttendue": "Remplacement valvulaire aortique par TAVI, probablement dans le même temps hospitalier : remplacement valvulaire aortique car RA serré ; TAVI car haut risque opératoire (âge, HTA, diabète) et patient de plus de 75 ans ; dans le même temps hospitalier car le RA est responsable d’un OAP avec détresse respiratoire aiguë.",
+          "correctionGenerale": "<b>Remplacement valvulaire aortique (RVA) par TAVI, probablement dans le même temps hospitalier</b>\n• RVA : RA serré\n• TAVI car haut risque opératoire (âge, HTA, diabète), patient > 75 ans\n• Même temps hospitalier car RA responsable d’un OAP avec détresse respiratoire aiguë"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel bilan allez-vous réaliser avant cette intervention ?",
+          "images": [],
+          "reponseAttendue": "Bilan pré-RVA par TAVI : coronarographie, angio-TDM aortique et des axes fémoraux, consultation d’anesthésie, dépistage des foyers infectieux (panoramique dentaire, radiographie des sinus, consultations stomatologique et ORL), EFR, échographie-Doppler des troncs supra-aortiques, évaluation gériatrique, et biologie (groupe sanguin, rhésus, RAI, ionogramme, urée, créatinine, NFS, plaquettes, bilan hépatique).",
+          "correctionGenerale": "<b>Bilan pré-RVA par TAVI</b>\n• Coronarographie pour dépistage et traitement d’éventuelles sténoses coronaires\n• Angio-TDM aortique et des axes fémoraux pour déterminer la voie d’abord pour l’implantation du TAVI, et mesure du diamètre de l’anneau aortique\n• Consultation d’anesthésie\n• Dépistage des foyers infectieux : panoramique dentaire, radiographie des sinus, consultations stomatologique et ORL\n• Explorations fonctionnelles respiratoires (EFR)\n• Échographie-Doppler des troncs supra-aortiques (TSA)\n• Évaluation gériatrique\n• Biologie : groupe sanguin, rhésus, RAI, ionogramme sanguin, urée, créatinine, NFS, plaquettes, bilan hépatique (ASAT, ALAT, PAL, GGT, bilirubine)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLe patient a bénéficié de la prise en charge que vous lui avez proposée. Six mois plus tard, il présente des lipothymies. Vous réalisez l’ECG suivant.\n\nAnalysez le tracé.",
+          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-017-072.jpg"],
+          "reponseAttendue": "Électrocardiogramme 12 dérivations : rythme non sinusal, FC à 30/min, dissociation auriculo-ventriculaire ou blocage d’une onde P sur 2, QRS larges. Au total : trouble conductif de haut grade — bloc auriculo-ventriculaire complet (BAV 3) ou BAV 2/1.",
+          "correctionGenerale": "• Électrocardiogramme (ECG) 12 dérivations\n• Rythme non sinusal\n• FC à 30/min\n• Dissociation auriculo-ventriculaire, ou blocage d’une onde P sur 2\n• QRS larges\n\n<b>Au total : trouble conductif de haut grade — bloc auriculo-ventriculaire (BAV) complet, ou de type 3, ou BAV 2/1.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nAvant ce nouvel événement, vous aviez réalisé une échocardiographie. Quelle va être votre stratégie thérapeutique en fonction de cette réévaluation ?",
+          "images": [],
+          "reponseAttendue": "Si FEVG > 40 % : indication d’un pacemaker double chambre. Si FEVG ≤ 40 % : indication d’un pacemaker triple chambre pour resynchronisation cardiaque.",
+          "correctionGenerale": "• Si FEVG > 40 % : indication d’un <b>pacemaker double chambre</b>\n• Si FEVG ≤ 40 % : indication d’un <b>pacemaker triple chambre</b> pour resynchronisation cardiaque"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Cardiologie - 2021 - EVCP - Session de novembre - Sujet 2",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf",
+      "orderIndex": 31,
+      "vignette": "Un homme de 76 ans doit être opéré d’une arthrose de genou avec pose d’une prothèse. L’anesthésiste prescrit une consultation préopératoire avec un cardiologue.\n\nIl n’a jamais fumé et consomme 2 ou 3 verres de vin par jour. Il n’a pas fait d’analyses biologiques depuis des années et ne connaît pas les antécédents de ses parents, aujourd’hui décédés. Il a présenté des valeurs tensionnelles élevées autour de 160/90 mmHg mais n’a jamais pris de traitement antihypertenseur. Il est sédentaire à cause de son arthrose de genou et pèse 96 kg pour 171 cm. Il ne prend pas de médicaments, sauf de l’alprazolam quand il est très anxieux.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nL’examen clinique est sans particularité, la pression artérielle est à 180/90 mmHg, la fréquence cardiaque à 80 bpm.\n\nPar quels moyens allez-vous, en théorie, confirmer le diagnostic d’hypertension artérielle ?",
+          "images": [],
+          "reponseAttendue": "Par des mesures de pression artérielle répétées en consultation (HTA si PAS > 140 mmHg et/ou PAD > 90 mmHg au cabinet médical, sur 2 mesures par consultation, au cours de 3 consultations successives, sur une période de 3 à 6 mois), par automesure tensionnelle à domicile (3 mesures matin et soir après 5 minutes de repos, 1 minute d’intervalle ; HTA si PA > 135/85 mmHg) ou par MAPA (HTA si PA > 130/80 mmHg sur 24 h, > 135/85 mmHg le jour, > 120/70 mmHg la nuit).",
+          "correctionGenerale": "<b>Mesures de pression artérielle répétées lors de consultations</b>\n• HTA si pression artérielle systolique (PAS) > 140 mmHg et/ou pression artérielle diastolique (PAD) > 90 mmHg, mesurée au cabinet médical, sur 2 mesures par consultation, au cours de 3 consultations successives, sur une période de 3 à 6 mois\n\n<b>Automesure tensionnelle à domicile</b>\n• Avec tensiomètre au bras, 3 mesures le matin et le soir, après 5 minutes de repos, avec une minute d’intervalle entre chaque mesure\n• HTA si PA > 135/85 mmHg\n\n<b>Mesure ambulatoire de la pression artérielle (MAPA)</b> — HTA si :\n• Sur 24 heures : PA > 130/80 mmHg\n• Jour : PA > 135/85 mmHg\n• Nuit : PA > 120/70 mmHg"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe patient vous signale aussi des douleurs scapulaires gauches occasionnelles évoluant depuis plusieurs mois, cédant en quelques minutes, parfois déclenchées par l’effort et aussi par les contrariétés.\n\nQuel diagnostic vous évoque ce type de douleur ?",
+          "images": [],
+          "reponseAttendue": "Un angor d’effort atypique chez un patient de 76 ans : terrain à 3 facteurs de risque cardio-vasculaires (sexe masculin, âge > 50 ans, obésité avec IMC > 32 kg/m²) et probable HTA ; douleurs scapulaires gauches d’effort ou lors d’un stress, cédant rapidement, évoluant depuis plusieurs mois ; pas d’argument pour un diagnostic différentiel.",
+          "correctionGenerale": "<b>Angor d’effort atypique chez un patient de 76 ans</b>\n• <b>Terrain</b> : patient avec 3 facteurs de risque cardio-vasculaires (sexe masculin, âge > 50 ans, obésité avec IMC > 32 kg/m²), probable HTA\n• <b>Clinique</b> : douleurs scapulaires gauches d’effort ou lors d’un stress, cédant rapidement, évoluant depuis plusieurs mois\n• Pas d’argument pour un diagnostic différentiel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nUn électrocardiogramme est réalisé. Comment l’interprétez-vous ?",
+          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-027-116.jpg"],
+          "reponseAttendue": "Électrocardiogramme 12 dérivations : rythme sinusal et régulier, FC à 80/min, espace PR normal, axe gauche, QRS larges > 120 ms avec aspect de bloc de branche gauche complet, pas d’hypertrophie ventriculaire gauche, troubles de repolarisation en rapport avec le trouble conductif (pas de perte de la discordance électrique). Au total : bloc de branche gauche complet.",
+          "correctionGenerale": "• Électrocardiogramme 12 dérivations\n• Rythme sinusal et régulier\n• Fréquence cardiaque (FC) à 80/min\n• Espace PR normal\n• Axe gauche, QRS larges > 120 ms avec aspect de <b>bloc de branche gauche complet</b>\n• Pas d’hypertrophie ventriculaire gauche\n• Pas de trouble de la repolarisation surajouté, pas de perte de la discordance électrique\n\n<b>Au total : bloc de branche gauche complet, avec troubles de repolarisation en rapport avec le trouble conductif.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle réponse faites-vous à l’anesthésiste ?",
+          "images": [],
+          "reponseAttendue": "La chirurgie orthopédique n’est pas possible en l’absence d’explorations cardiologiques complémentaires, notamment une échographie cardiaque transthoracique et un test fonctionnel, voire une coronarographie diagnostique ± thérapeutique d’emblée.",
+          "correctionGenerale": "• La <b>chirurgie orthopédique n’est pas possible</b> en l’absence d’explorations cardiologiques complémentaires, notamment une échographie cardiaque transthoracique (ETT) et un test fonctionnel, voire une coronarographie diagnostique ± thérapeutique d’emblée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles explorations complémentaires demandez-vous dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Une ETT à la recherche de troubles de la cinétique ou d’une dysfonction VG (cardiopathie ischémique), d’une hypertrophie ventriculaire gauche ± obstructive (CMH), d’un rétrécissement aortique serré ou d’une hypertension pulmonaire ; un test fonctionnel (épreuve d’effort, échographie de stress à la dobutamine ou d’effort, scintigraphie myocardique d’effort et/ou pharmacologique, IRM cardiaque de stress) ; un coroscanner ; la réalisation d’une coronarographie diagnostique ± thérapeutique, éventuellement d’emblée sans test fonctionnel préalable.",
+          "correctionGenerale": "<b>ETT, pour rechercher</b>\n• <b>Des troubles de la cinétique et/ou une dysfonction ventriculaire gauche</b> en faveur d’une cardiopathie ischémique → indication d’une coronarographie pour le diagnostic ± le traitement d’une éventuelle coronaropathie, et introduction d’un traitement médicamenteux adapté avant la chirurgie orthopédique, qui sera ± différée selon la durée de la bi-antiagrégation plaquettaire\n• <b>Une hypertrophie ventriculaire gauche</b> ± avec obstruction intra-ventriculaire gauche en faveur d’une cardiomyopathie hypertrophique (CMH) → si CMH, examens complémentaires : échographie d’effort (évaluation de l’obstruction et des symptômes à l’effort), Holter-ECG (recherche de troubles du rythme ventriculaire), IRM myocardique (recherche d’une étiologie) ; introduction d’un traitement adapté ; chirurgie orthopédique selon la réponse au traitement\n• <b>Un rétrécissement aortique (RA) serré</b>, contre-indiquant la chirurgie orthopédique avant la prise en charge du RA serré\n• <b>Une hypertension pulmonaire (HTP)</b> → indication d’un cathétérisme cardiaque droit pour confirmer le diagnostic, examens complémentaires orientés pour déterminer le groupe de l’HTP et introduction d’un traitement adapté ; chirurgie orthopédique selon la réponse au traitement\n\n<b>Test fonctionnel</b>, pour rechercher des arguments en faveur d’une coronaropathie et la réalisation d’une coronarographie diagnostique ± thérapeutique\n• Épreuve d’effort si possible (interprétation selon les recommandations de la SFC)\n• Ou échographie de stress, probablement à la dobutamine du fait de la gonarthrose, voire d’effort\n• Ou scintigraphie myocardique d’effort et/ou pharmacologique\n• Ou IRM cardiaque de stress à la dobutamine\n\n• <b>Coroscanner</b> pour rechercher une lésion coronaire, avec réalisation d’une coronarographie diagnostique ± thérapeutique si suspicion de coronaropathie\n• Il peut être discuté de la réalisation d’une coronarographie diagnostique d’emblée, sans test fonctionnel au préalable"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Cardiologie - 2021 - EVCP - Session de novembre - Sujet 3",
+      "annee": 2021,
+      "type": "EVCP",
+      "source": "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf",
+      "orderIndex": 32,
+      "vignette": "Monsieur X., 55 ans, chauffeur routier, présente les facteurs de risque suivants : surpoids (183 cm – 106 kg), tabagisme actif et diabète depuis 2 ans. Il a pour antécédents une appendicectomie et une chirurgie des dents de sagesse. Son traitement habituel comprend metformine 1000 mg, 2 par jour.\n\nIl présente une douleur thoracique rétrosternale constrictive pour laquelle il est pris en charge par le SAMU : TA 135/85 mmHg, saturation en oxygène 98 %, glycémie à 3,50 g/L. Il bénéficie au domicile d’un traitement par aspirine 250 mg IV, une dose de charge de ticagrélor de 180 mg per os et 0,5 mg/kg de Lovenox® IV. Le patient est admis pour angioplastie primaire à H4 (ECG d’admission : Figure 1 et Figure 2).\n\nLa coronarographie met en évidence une occlusion de l’IVA proximale et une absence de lésion du réseau circonflexe et de la coronaire droite. En conséquence, le patient bénéficie d’une angioplastie avec mise en place d’une endoprothèse active de dernière génération.\n\nÀ J1, le patient est asymptomatique, il ne présente aucun signe de décompensation cardiaque gauche ou droite, la TA est à 135/85 mmHg. L’échocardiographie montre une fraction d’éjection VG à 45 % avec une hypokinésie antérieure et apicale. Il n’existe pas de thrombus intraventriculaire gauche. La surveillance scopique montre quelques salves de TV non soutenues.\n\nDu point de vue biologique : hémoglobine à 16 g/dL, DFG selon MDRD 60 mL/min, pic de troponine 7391 ng/L, HbA1c à 7,8 %, glycémie à jeun 18 mmol/L (3,27 g/L), LDL-cholestérol à 4,33 mmol/L (1,67 g/L), HDL-cholestérol à 1,02 mmol/L, triglycérides à 0,80 mmol/L.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCi-dessous : Figure 1 et Figure 2 (ECG d’admission), puis Figure 3 (ECG à H1 post-angioplastie).\n\nSur l’électrocardiogramme post-angioplastie, quel est le meilleur critère d’évaluation du succès de l’angioplastie primaire ?",
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
+          "reponseAttendue": "La régression des troubles de repolarisation : régression du sus-décalage du segment ST dans le territoire antéro-septal (V1-V2-V3) et latéral haut (D1-aVL), et régression du sous-décalage du segment ST dans les territoires inférieur et latéral bas (D2-D3-aVF-V5-V6).",
+          "correctionGenerale": "<b>Régression des troubles de repolarisation</b>, avec :\n• Régression du sus-décalage du segment ST dans le territoire antéro-septal (V1-V2-V3) et latéral haut (D1-aVL)\n• Régression du sous-décalage du segment ST dans les territoires inférieur et latéral bas (D2-D3-aVF-V5-V6)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe patient présente une hyperglycémie. Quelle stratégie adoptez-vous dès l’admission aux soins intensifs ?",
+          "images": [],
+          "reponseAttendue": "Régime diabétique pauvre en sucre ; surveillance rapprochée des glycémies pré- et postprandiales ; bandelette urinaire à la recherche d’une cétonurie et prise en charge d’une acidocétose ; arrêt de la metformine pendant 48-72 h après la coronarographie ; insulinothérapie sous-cutanée par insuline rapide pour normaliser les glycémies, voire IVSE si besoin ; introduction d’un inhibiteur du SGLT2 (dapagliflozine 10 mg) 48-72 h après la coronarographie.",
+          "correctionGenerale": "• Régime diabétique pauvre en sucre\n• Surveillance rapprochée des glycémies préprandiales et postprandiales\n• Bandelette urinaire pour recherche d’une cétonurie et prise en charge d’une acidocétose\n• <b>Arrêt de la metformine</b> pendant 48-72 h après la coronarographie\n• Mise en place d’une <b>insulinothérapie sous-cutanée</b> avec de l’insuline rapide pour normalisation des glycémies préprandiales et postprandiales ; si besoin, insulinothérapie intraveineuse au pousse-seringue électrique (IVSE)\n• Introduction d’un inhibiteur du SGLT2 : dapagliflozine (Forxiga®) 10 mg, 48-72 h après la coronarographie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLe bilan biologique montre un LDL-cholestérol à 1,67 g/L, mais le patient vous affirme que son bilan biologique était normal lors de sa dernière prise de sang.\n\nLa valeur du LDL-cholestérol réalisée à l’admission est-elle valable ?",
+          "images": [],
+          "reponseAttendue": "Non : pour que la valeur de LDL-cholestérol soit valable, elle doit être réalisée à jeun. Il est probable que le patient n’était pas à jeun lors de son entrée en USIC, donc lors du bilan lipidique. Il faut refaire le bilan lipidique à jeun le lendemain de l’admission.",
+          "correctionGenerale": "• Pour que la valeur de LDL-cholestérol soit valable, elle doit être <b>réalisée à jeun</b>\n• Il est probable que le patient ne soit pas à jeun lors de son entrée en USIC, donc lors du bilan lipidique\n• Par conséquent, la valeur de LDL-cholestérol <b>n’est pas valable</b>\n• Il faut refaire le bilan lipidique à jeun le lendemain de l’admission du patient"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nLe diagnostic est donc un SCA ST+ antérieur.\n\nQuelle(s) stratégie(s) thérapeutique(s) pharmacologique(s) cardiovasculaire(s) allez-vous proposer au patient ? Préciser pour chaque classe thérapeutique les posologies cibles, les durées et les éléments de surveillance.",
+          "images": [],
+          "reponseAttendue": "Bi-antiagrégation plaquettaire pendant 1 an (aspirine + ticagrélor) puis mono-antiagrégation au long cours ; anticoagulation curative par énoxaparine 1 mg/kg/j SC en 2 fois, à arrêter le plus précocement possible, puis relais préventif ; bêtabloquant (bisoprolol, cible FC < 70/min) ; statine (atorvastatine 80 mg/j, cible LDL-c < 0,55 g/L) ; IEC ou ARA2 (périndopril ou valsartan) ; SGLT2 (dapagliflozine 10 mg) 48-72 h après la coronarographie ; en cas de FEVG < 40 % persistante, spironolactone et Entresto® en remplacement de l’IEC/ARA2 ; IPP (pantoprazole) pendant la durée de la bi-antiagrégation ; patch et gomme de nicotine ; prise en charge du diabète (objectif HbA1c < 6,5 %) ; surveillance clinique et biologique.",
+          "correctionGenerale": "<b>Bi-antiagrégation plaquettaire pendant 1 an</b>, puis poursuite d’une mono-antiagrégation plaquettaire au long cours\n• Aspirine : Kardégic® 75 mg ou aspirine 100 mg 1/j\n• Inhibiteurs des récepteurs P2Y12 : ticagrélor (Brilique®) 90 mg 2/jour\n\n<b>Anticoagulation curative</b>\n• À arrêter le plus précocement possible selon l’évaluation de la charge thrombotique coronaire, par énoxaparine (Lovenox®) 1 mg/kg/j SC en 2 fois\n• Relais par une anticoagulation préventive par énoxaparine 0,4 mL SC 1/jour pour la durée de l’hospitalisation\n\n• <b>Bêtabloquant</b> : bisoprolol 1,25 mg au minimum, à majorer progressivement selon la tolérance clinique et hémodynamique jusqu’à 10 mg/j. Cible FC < 70/min. Traitement au long cours\n• <b>Statines</b> : atorvastatine 80 mg/jour ou à dose maximale tolérée. Cible : LDL-c < 0,55 g/L. Traitement au long cours\n• <b>IEC ou ARA2</b>, traitement au long cours : périndopril 2 mg 1 cp/j à majorer jusqu’à 8 mg/j, ou valsartan 80 mg 1 cp/j à majorer jusqu’à 160 mg/j, selon la tolérance clinique, hémodynamique et rénale\n• <b>SGLT2</b> : dapagliflozine (Forxiga®) 10 mg, 48-72 h après la coronarographie. Traitement au long cours\n\n<b>Si persistance d’une FEVG < 40 % sur l’ETT de réévaluation</b>\n• Inhibiteur des minéralocorticoïdes : Aldactone®. Traitement au long cours\n• Valsartan/sacubitril (Entresto®) 24/26 mg 2/j, en remplacement de l’IEC/ARA2. Traitement au long cours\n\n• <b>Inhibiteur de la pompe à protons</b> : pantoprazole 20 mg 1 cp/jour, pendant la durée de la bi-antiagrégation plaquettaire\n• <b>Patch de nicotine</b> : Nicopatch®, posologie selon les signes de manque et la tolérance, et gomme de nicotine Nicopass®\n• <b>Prise en charge du diabète</b>, objectif HbA1c < 6,5 % : réintroduction de la metformine à 48-72 h de la coronarographie et majoration à 1000 mg 3/j, traitement au long cours ; introduction d’un autre antidiabétique selon l’évolution de l’HbA1c\n\n<b>Surveillance</b>\n• Clinique : FC, PA, signes d’insuffisance cardiaque, récidive de douleurs thoraciques, signes de manque ou de surdosage en nicotine, recherche des effets indésirables des traitements\n• Biologique : exploration des anomalies lipidiques et HbA1c à 3 mois ; NFS, plaquettes, ionogramme, urée, créatinine précocement après introduction des IEC/ARA2 ; CPK et bilan hépatique 6 semaines après introduction des statines et en cas de signes d’intolérance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nÀ J2, le patient décrit une dyspnée. L’examen clinique est sans particularité, il n’existe aucun crépitant, l’échocardiographie montre une stabilité des paramètres avec une fraction d’éjection stable à 45 %.\n\nAvant de débuter une thérapeutique de l’insuffisance cardiaque, quelle molécule pourrait, selon vous, avoir cet effet secondaire ?",
+          "images": [],
+          "reponseAttendue": "Le ticagrélor (Brilique®) : la dyspnée est un effet indésirable fréquent de cette molécule.",
+          "correctionGenerale": "• <b>Ticagrélor (Brilique®)</b> : la dyspnée fait partie de ses effets indésirables fréquents"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nÀ J3, le patient présente une dyspnée stable. L’électrocardiogramme montre l’apparition d’une fibrillation atriale avec une cadence ventriculaire aux alentours de 130 battements par minute.\n\nQuels sont les principes du traitement de cette fibrillation atriale à la phase aiguë d’un SCA ST+ antérieur ?",
+          "images": [],
+          "reponseAttendue": "Introduction d’un anticoagulant curatif per os d’emblée ou en relais de l’anticoagulation parentérale (score CHA₂DS₂-VA à 2) : AOD (rivaroxaban, apixaban ou dabigatran) ou AVK avec INR entre 2 et 3. Poursuite d’une bi-antiagrégation plaquettaire avec switch du ticagrélor pour le clopidogrel 75 mg (dose de charge 300 mg) + Kardégic® 75 mg pendant 1 mois, puis mono-antiagrégation avec anticoagulation pendant 1 an. Contrôle de la fréquence cardiaque par majoration du bisoprolol ± digoxine, objectif FC < 110/min. Contrôle du rythme car FA de moins de 48 heures : cardioversion médicamenteuse par amiodarone 600 à 900 mg IVSE, ou cardioversion électrique sous anesthésie générale ± prémédication par Cordarone® ; poursuite au long cours d’un traitement antiarythmique par amiodarone 200 mg 1 cp/jour. Holter-ECG à 1 mois pour dépister une récidive.",
+          "correctionGenerale": "<b>Introduction d’un traitement anticoagulant curatif per os</b>, d’emblée ou en relais de l’anticoagulation parentérale — score CHA₂DS₂-VA à 2, au long cours\n• Anticoagulant oral direct (AOD) : rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour\n• Ou antivitamine K (AVK) — warfarine, objectif INR entre 2 et 3 — avec anticoagulation parentérale en attendant l’efficacité de l’AVK (HNF au PSE ou HBPM sous-cutanée)\n\n<b>Poursuite d’une bi-antiagrégation plaquettaire</b>\n• Switch du ticagrélor pour le clopidogrel 75 mg 1/j avec dose de charge de 300 mg per os, + Kardégic® 75 mg 1/j, pour une durée de 1 mois, puis mono-antiagrégation avec anticoagulation pendant 1 an\n\n<b>Contrôle de la fréquence cardiaque</b>\n• Majoration du bêtabloquant bisoprolol précédemment introduit, selon la PA, ± digoxine per os ou IV, objectif FC < 110/min\n\n<b>Contrôle du rythme cardiaque</b>, car FA de moins de 48 heures\n• Cardioversion médicamenteuse avec amiodarone (Cordarone®) 600 à 900 mg IVSE\n• Ou cardioversion électrique par choc électrique externe sous anesthésie générale, ± avec prémédication par Cordarone® IVSE pour favoriser l’efficacité du choc\n• Poursuite au long cours d’un traitement antiarythmique par amiodarone (Cordarone®) 200 mg 1 cp/jour\n\n• Holter-ECG à 1 mois pour le dépistage d’une récidive de la FA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nLe patient retrouve un rythme sinusal.\n\nQuelle sera votre stratégie antithrombotique par la suite ?",
+          "images": [],
+          "reponseAttendue": "Score CHA₂DS₂-VA à 2, score HAS-BLED à 0 : risque ischémique élevé (diabète, DFG à 60 mL/min, SCA ST+) mais faible risque hémorragique. Trithérapie antithrombotique pendant 1 mois (clopidogrel 75 mg + Kardégic® 75 mg + anticoagulant oral) ; puis bithérapie jusqu’à 1 an après le stenting coronaire (clopidogrel 75 mg + anticoagulant oral, arrêt du Kardégic®) ; puis, après 1 an, monothérapie par anticoagulant oral au long cours (arrêt du clopidogrel).",
+          "correctionGenerale": "• Score CHA₂DS₂-VA à 2, score HAS-BLED à 0\n• Pas de facteur de risque d’hémorragie. Facteurs de risque ischémique : diabète, DFG à 60 mL/min, SCA ST+\n→ <b>Risque ischémique élevé mais faible risque hémorragique</b>\n\n<b>Trithérapie antithrombotique pendant 1 mois</b>\n• Bi-antiagrégation plaquettaire : clopidogrel 75 mg 1/j + Kardégic® 75 mg 1/j\n• Anticoagulation : AOD — rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour ; ou AVK (warfarine, INR 2-3) si contre-indication aux AOD\n\n<b>Après 1 mois : bithérapie antithrombotique jusqu’à 1 an après le stenting coronaire</b>\n• Mono-antiagrégation plaquettaire : clopidogrel 75 mg 1/j ; arrêt du Kardégic® 75 mg 1/j\n• Anticoagulation : idem\n\n<b>Après 1 an : monothérapie antithrombotique au long cours</b>\n• Arrêt du clopidogrel 75 mg 1/j\n• Anticoagulation seule : idem"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nVous interrogez le patient sur son tabagisme (évalué à 40 paquets-années). Le patient vous avoue avoir repris son tabagisme depuis 1 mois, à sa sortie du centre de réadaptation. Il a réduit sa consommation de moitié par rapport à la période préopératoire et ne fume plus que 20 cigarettes par jour.\n\nQuelles sont les méthodes simples d’évaluation de la dépendance tabagique pouvant être disponibles lors d’une consultation ?",
+          "images": [],
+          "reponseAttendue": "L’analyse du monoxyde de carbone expiré en consultation, le test de Fagerström, le test de Horn et l’échelle HAD.",
+          "correctionGenerale": "• Analyse du monoxyde de carbone expiré en consultation\n• <b>Test de Fagerström</b>\n• <b>Test de Horn</b>\n• <b>Échelle HAD</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuels sont les moyens pharmacologiques (et voies d’administration) que vous connaissez, indiqués dans le sevrage tabagique ?",
+          "images": [],
+          "reponseAttendue": "Les substituts nicotiniques (Nicopatch® par voie transdermique, Nicopass® et Nicorette® per os, Nicorette® par inhalation), le bupropion (Zyban®) per os et la varénicline (Champix®) per os.",
+          "correctionGenerale": "<b>Substituts nicotiniques</b>\n• Nicopatch® par voie transdermique\n• Nicopass®, Nicorette® par voie orale\n• Nicorette® par inhalation\n\n• <b>Bupropion (Zyban®)</b> per os\n• <b>Varénicline (Champix®)</b> per os"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nLe patient décrit aussi des myalgies et vous suspectez des myalgies secondaires aux statines.\n\nQuel bilan complémentaire allez-vous prescrire ?",
+          "images": [],
+          "reponseAttendue": "Un bilan biologique avec dosage des CPK.",
+          "correctionGenerale": "• Bilan biologique : <b>dosage des CPK</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nVous demandez une MAPA des 24 heures, réalisée hors de son activité professionnelle :\n• Mesures valides : 51/60\n• Pressions de jour : PAS moyenne 161, PAD moyenne 89\n• Pressions de nuit : PAS moyenne 158, PAD moyenne 81\n\nInterprétez celle-ci.",
+          "images": [],
+          "reponseAttendue": "HTA, car PA diurne > 135/85 mmHg (161/89 mmHg) et PA nocturne > 120/70 mmHg (158/81 mmHg), avec un profil non dipper (pas de baisse ou faible baisse de la pression artérielle en période nocturne).",
+          "correctionGenerale": "<b>HTA</b>, car :\n• PA diurne > 135/85 mmHg : 161/89 mmHg\n• PA nocturne > 120/70 mmHg : 158/81 mmHg\n• <b>Profil non dipper</b> : pas de baisse, ou faible baisse, de la pression artérielle en période nocturne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCompte tenu de cet examen, quelle pathologie associée allez-vous rechercher en priorité ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome d’apnées obstructives du sommeil (SAOS), par polysomnographie ou polygraphie nocturne, car HTA sans baisse de la pression artérielle nocturne, épisode de FA avec trigger ischémique, et obésité avec IMC à 31 kg/m².",
+          "correctionGenerale": "<b>Syndrome d’apnées obstructives du sommeil (SAOS)</b>, par polysomnographie / polygraphie nocturne, car HTA :\n• Sans baisse de la pression artérielle nocturne\n• Épisode de FA, avec trigger ischémique\n• Obésité avec IMC à 31 kg/m²"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nLa pathologie recherchée est prise en charge. Le patient garde des chiffres tensionnels élevés et il est observant. Il est traité par bêtabloquant et IEC aux posologies optimales.\n\nQuelles sont les trois autres classes thérapeutiques que vous pourriez ensuite initier pour prendre en charge son hypertension artérielle ?",
+          "images": [],
+          "reponseAttendue": "Un diurétique thiazidique, un inhibiteur calcique et un inhibiteur des minéralocorticoïdes.",
+          "correctionGenerale": "• Diurétique thiazidique\n• Inhibiteurs calciques\n• Inhibiteurs des minéralocorticoïdes"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Cardiologie - 2021 - EVCF - Session de novembre",
+      "annee": 2021,
+      "type": "EVCF",
+      "source": "ANNALES CARDIOLOGIE/Séance 2025-06-05 correction.pdf",
+      "orderIndex": 33,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les signes échocardiographiques en faveur d’une amylose cardiaque ?",
+          "images": [],
+          "reponseAttendue": "Hypertrophie ventriculaire gauche généralement concentrique, aspect granité et scintillant du myocarde, hypertrophie ventriculaire droite, dysfonction diastolique avec profil transmitral de type restrictif, dilatation bi-atriale, altération du strain ventriculaire gauche avec gradient baso-apical (altération prédominante des segments basaux et préservation des segments apicaux), baisse du Doppler tissulaire ventriculaire gauche et droit.",
+          "correctionGenerale": "• Hypertrophie ventriculaire gauche, généralement concentrique\n• Aspect granité et scintillant du myocarde\n• Hypertrophie ventriculaire droite\n• Dysfonction diastolique avec profil transmitral de type restrictif\n• Dilatation bi-atriale\n• Altération du strain ventriculaire gauche avec gradient baso-apical : altération prédominante au niveau des segments basaux et préservation des segments apicaux\n• Baisse du Doppler tissulaire ventriculaire gauche et droit"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelles sont les étiologies d’insuffisance tricuspide organique ?",
+          "images": [],
+          "reponseAttendue": "Endocardite infectieuse, séquelle de rhumatisme articulaire aigu, syndrome carcinoïde, pathologie myxomateuse, fibrose endomyocardique, dysplasie congénitale de la valve tricuspide (maladie d’Ebstein), traumatisme thoracique, lésion valvulaire iatrogène au cours d’un cathétérisme ou lors de la pose d’un pacemaker.",
+          "correctionGenerale": "• Endocardite infectieuse\n• Séquelle de rhumatisme articulaire aigu\n• Syndrome carcinoïde\n• Pathologie myxomateuse\n• Fibrose endomyocardique\n• Dysplasie congénitale de la valve tricuspide : maladie d’Ebstein\n• Traumatisme thoracique\n• Lésion valvulaire iatrogène au cours d’un cathétérisme ou lors de la pose d’un pacemaker"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nChez un patient sous anticoagulant oral, citez les indications de relais par héparine en période péri-opératoire quand une interruption du traitement oral est nécessaire.",
+          "images": [],
+          "reponseAttendue": "En cas de fibrillation atriale avec antécédents d’AVC, d’AIT ou d’embolies systémiques ; en cas de maladie thromboembolique veineuse (embolie pulmonaire ou thrombose veineuse profonde) datant de moins de 3 mois ou récidivante ; en cas de prothèse valvulaire mécanique.",
+          "correctionGenerale": "• En cas de <b>fibrillation atriale (FA)</b> avec antécédents d’accident vasculaire cérébral (AVC), d’accident ischémique transitoire (AIT) ou d’emboles systémiques\n• En cas de <b>maladie thromboembolique veineuse (MTEV)</b> — embolie pulmonaire (EP) ou thrombose veineuse profonde (TVP) — datant de moins de 3 mois, ou récidivante\n• En cas de présence d’une <b>prothèse valvulaire mécanique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez 6 paramètres échocardiographiques permettant d’évaluer la fonction systolique ventriculaire droite.",
+          "images": [],
+          "reponseAttendue": "L’excursion systolique du plan de l’anneau tricuspide (TAPSE) en mode temps-mouvement en coupe apicale 4 cavités, le pic de l’onde S en Doppler tissulaire pulsé au niveau de l’anneau tricuspide en coupe apicale 4 cavités, la fraction de raccourcissement (surface VD diastolique – surface VD systolique) / surface VD diastolique, et le calcul du débit ventriculaire droit Qp = diamètre CCVD × ITV CCVD × FC.",
+          "correctionGenerale": "• Excursion systolique du plan de l’anneau tricuspide (<b>TAPSE</b>) en temps-mouvement (TM) en coupe apicale 4 cavités\n• Pic de l’<b>onde S</b> en Doppler tissulaire pulsé au niveau de l’anneau tricuspide en coupe apicale 4 cavités\n• <b>Fraction de raccourcissement (FR)</b> : FR = (surface VD diastolique – surface VD systolique) / surface VD diastolique\n• <b>Calcul du débit ventriculaire droit</b> : Qp = diamètre CCVD × ITV<sub>CCVD</sub> × FC"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les 4 principaux critères intervenant dans la décision chirurgicale d’une fuite mitrale sévère asymptomatique ?",
+          "images": [],
+          "reponseAttendue": "FEVG ≤ 60 %, diamètre télésystolique ventriculaire gauche (DTSVG) ≥ 40 mm, nouvel épisode de fibrillation atriale, pression artérielle systolique pulmonaire (PAPS) > 50 mmHg.",
+          "correctionGenerale": "• Fraction d’éjection ventriculaire gauche (FEVG) ≤ 60 %\n• Diamètre télésystolique ventriculaire gauche (DTSVG) ≥ 40 mm\n• Nouvel épisode de fibrillation atriale (FA)\n• Pression artérielle systolique pulmonaire (PAPS) > 50 mmHg"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nCitez les indications actuelles d’implantation de stimulateurs cardiaques sans sonde (ex. : Micra®).",
+          "images": [],
+          "reponseAttendue": "Absence d’accès veineux au niveau des membres supérieurs ; haut risque d’infection de la loge du pacemaker chez un patient ayant des antécédents d’infection de matériel ou chez les patients dialysés.",
+          "correctionGenerale": "• Absence d’accès veineux au niveau des membres supérieurs\n• Haut risque d’infection de la loge du pacemaker chez un patient ayant des antécédents d’infection de matériel, ou chez les patients dialysés\n\n<i>Rappel des recommandations ESC projetées en séance</i> : les stimulateurs sans sonde doivent être considérés (classe IIa) comme alternative aux stimulateurs transveineux lorsqu’il n’existe pas d’accès veineux au membre supérieur, ou lorsque le risque infectieux de la loge est particulièrement élevé (antécédent d’infection, patient hémodialysé) ; ils peuvent être considérés (classe IIb) comme alternative à la stimulation mono-ventriculaire standard en tenant compte de l’espérance de vie et de la décision médicale partagée."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez les contre-indications absolues de l’IRM chez les porteurs de stimulateurs cardiaques.",
+          "images": [],
+          "reponseAttendue": "Boîtiers non IRM-compatibles ; sondes de stimulation épicardiques ; présence de sondes de stimulation ou de défibrillation, ou de vestiges de sondes, persistant dans l’organisme à la suite d’une extraction.",
+          "correctionGenerale": "• Boîtiers non IRM-compatibles\n• Sondes de stimulation épicardiques\n• Présence de sondes de stimulation ou de défibrillation, ou de vestiges de sondes, persistant dans l’organisme à la suite d’une extraction"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelles sont les règles à suivre concernant le traitement antithrombotique avant une cardioversion pour réduire une fibrillation atriale ?",
+          "images": [],
+          "reponseAttendue": "Une anticoagulation efficace pendant au moins 3 semaines, quel que soit le score CHA₂DS₂-VA, avant une cardioversion : anticoagulant oral direct d’emblée (rivaroxaban 20 mg 1/j, apixaban 5 mg 2/j ou dabigatran 150 mg 2/j) ; en cas de contre-indication aux AOD (insuffisance rénale sévère), AVK — warfarine (Coumadine®) — à posologie permettant un INR entre 2 et 3, directement ou en relais d’une anticoagulation parentérale par HBPM ou HNF. Alternative : cardioversion précoce dans les 48 heures suivant le début de la FA, ou après contrôle de la vacuité de l’auricule gauche par ETO ; anticoagulation poursuivie au moins 4 semaines après cardioversion, et au long cours si le score CHA₂DS₂-VA le justifie.",
+          "correctionGenerale": "<b>Anticoagulation efficace pendant au moins 3 semaines</b>, quel que soit le score CHA₂DS₂-VA, avant une cardioversion, par :\n• Anticoagulant oral direct d’emblée : rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour\n• En cas de contre-indication aux anticoagulants oraux directs (insuffisance rénale sévère) : antivitamine K (AVK) — warfarine (Coumadine®) — à une posologie permettant un INR entre 2 et 3, directement ou en relais d’une anticoagulation parentérale par héparine de bas poids moléculaire (HBPM) ou héparine non fractionnée (HNF)\n\n<i>Rappel de l’algorithme ESC « Cardioversion for atrial fibrillation » projeté en séance</i>\n• Vérifier d’abord le statut anticoagulant : si le patient est déjà sous anticoagulant oral efficace, on peut procéder à une cardioversion immédiate ou différée ; sinon, débuter l’anticoagulation dès que possible (AOD, ou AVK avec relais par HBPM/HNF)\n• Vérifier ensuite la durée de l’épisode : cardioversion précoce possible si la FA date de moins de 48 heures ; au-delà de 48 heures ou en cas de durée inconnue, cardioversion élective après au moins 3 semaines d’anticoagulation efficace, ou plus tôt si une ETO exclut un thrombus de l’auricule gauche\n• Après cardioversion : anticoagulation au moins 4 semaines, et au long cours si le score CHA₂DS₂-VA ≥ 1 chez l’homme ou ≥ 2 chez la femme"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nDans quelles indications les AVK sont-ils le seul recours dans le cadre de l’anticoagulation d’une fibrillation atriale ?",
+          "images": [],
+          "reponseAttendue": "Présence d’une prothèse valvulaire mécanique, insuffisance rénale chronique sévère avec DFG < 15 mL/min, syndrome des anti-phospholipides, hypersensibilité aux anticoagulants oraux directs, insuffisance hépatique sévère (cirrhose Child-Pugh B ou C), bioprothèse mitrale implantée depuis moins de 3 mois, grossesse selon le terme, sténose mitrale modérée à sévère.",
+          "correctionGenerale": "• Présence d’une prothèse valvulaire mécanique\n• Insuffisance rénale chronique sévère avec DFG < 15 mL/min\n• Syndrome des anti-phospholipides\n• Hypersensibilité aux anticoagulants oraux directs (AOD)\n• Insuffisance hépatique sévère, cirrhose Child-Pugh B ou C\n• Bioprothèse mitrale implantée depuis moins de 3 mois\n• Grossesse, selon le terme\n• Sténose mitrale modérée à sévère"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelles classes thérapeutiques sont indiquées en première intention dans l’insuffisance cardiaque à fraction d’éjection altérée dans les recommandations ESC 2021 ?",
+          "images": [],
+          "reponseAttendue": "Les inhibiteurs du système rénine-angiotensine-aldostérone (IEC — périndopril ou ramipril ; ou ARA2 — valsartan si intolérance ; ou valsartan/sacubitril 24/26 mg 2/jour), les bêtabloquants (bisoprolol), les inhibiteurs du SGLT2 (dapagliflozine 10 mg/jour) et les inhibiteurs des minéralocorticoïdes (spironolactone).",
+          "correctionGenerale": "<b>Inhibiteur du système rénine-angiotensine-aldostérone</b>\n• Inhibiteur de l’enzyme de conversion : périndopril ou ramipril\n• Ou antagoniste des récepteurs de l’angiotensine (ARA2) : valsartan, si intolérance aux IEC\n• Valsartan/sacubitril 24/26 mg, 2/jour\n\n• <b>Bêtabloquant</b> : bisoprolol\n• <b>Inhibiteurs des SGLT2</b> : dapagliflozine (Forxiga®) 10 mg/jour\n• <b>Inhibiteur des minéralocorticoïdes</b> : spironolactone\n\n<i>Rappel de l’algorithme ESC « Management of HFrEF »</i> : ces quatre classes sont indiquées chez tous les patients pour réduire la mortalité ; le diurétique est ajouté en cas de surcharge volémique, et des traitements complémentaires (resynchronisation, défibrillateur, correction d’une carence martiale, prise en charge de la FA, de la coronaropathie et des valvulopathies, réadaptation cardio-vasculaire) sont réservés à des patients sélectionnés."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nEn cas de fibrillation atriale sur pré-excitation ventriculaire, quels sont les traitements médicamenteux contre-indiqués ?",
+          "images": [],
+          "reponseAttendue": "Les digitaliques (digoxine) et les inhibiteurs calciques non dihydropyridiniques (vérapamil, diltiazem), en raison du risque de fibrillation ventriculaire.",
+          "correctionGenerale": "• <b>Digitaliques</b> : digoxine\n• <b>Inhibiteurs calciques non dihydropyridiniques</b> : vérapamil, diltiazem\n\n→ Risque de <b>fibrillation ventriculaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez les éléments du test de Genève révisé permettant de classifier la probabilité d’une embolie pulmonaire.",
+          "images": [],
+          "reponseAttendue": "Antécédents d’embolie pulmonaire ou de thrombose veineuse profonde (1 point) ; FC entre 75 et 94/min (1 point) ou FC ≥ 95/min (2 points) ; chirurgie ou fracture dans le mois précédent (1 point) ; hémoptysie (1 point) ; cancer actif (1 point) ; douleur unilatérale d’un membre inférieur (1 point) ; douleur à la palpation d’un trajet veineux (1 point) ; âge > 65 ans (1 point). Probabilité faible si score 0-1, modérée si 2-4, élevée si ≥ 5.",
+          "correctionGenerale": "• Antécédents d’embolie pulmonaire (EP) ou de thrombose veineuse profonde (TVP) → 1 point\n• Fréquence cardiaque (FC) entre 75 et 94/min → 1 point ; FC ≥ 95/min → 2 points\n• Chirurgie ou fracture dans le mois précédent → 1 point\n• Hémoptysie → 1 point\n• Cancer actif → 1 point\n• Douleur unilatérale d’un membre inférieur → 1 point\n• Douleur à la palpation d’un trajet veineux → 1 point\n• Âge > 65 ans → 1 point\n\n→ Probabilité d’EP <b>faible</b> si score de Genève à 0-1\n→ Probabilité d’EP <b>modérée</b> si score de Genève à 2-4\n→ Probabilité d’EP <b>élevée</b> si score de Genève ≥ 5"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nCitez les éléments permettant de décider une prise en charge ambulatoire d’une embolie pulmonaire, après diagnostic et mise en route du traitement aux urgences.",
+          "images": [],
+          "reponseAttendue": "Un diagnostic certain d’embolie pulmonaire stable hémodynamiquement, avec un score sPESI = 0 (âge < 80 ans, pas de cancer actif, pas de pathologie pulmonaire chronique, pas d’insuffisance cardiaque chronique, FC < 110/min, PAS > 100 mmHg, SpO₂ > 90 %), pas de dysfonction ventriculaire droite sur l’échographie cardiaque ou le scanner, pas d’autre indication à hospitaliser le patient, présence d’un soutien familial et/ou social, un accès médical facile, et aucun critère du score Hestia.",
+          "correctionGenerale": "<b>Diagnostic certain d’embolie pulmonaire stable hémodynamiquement, avec :</b>\n• Score <b>sPESI = 0</b> : âge < 80 ans, pas de cancer actif, pas de pathologie pulmonaire chronique, pas d’insuffisance cardiaque chronique, FC < 110/min, PAS > 100 mmHg, SpO₂ > 90 %\n• Pas de dysfonction ventriculaire droite sur l’échographie cardiaque ou sur le scanner\n• Pas d’autre indication à hospitaliser le patient\n• Présence d’un soutien familial et/ou social\n• Accès médical facile\n• <b>Aucun critère du score Hestia</b> : instabilité hémodynamique (PAS < 100 mmHg, FC > 100/min) ; indication à une fibrinolyse ou à une embolectomie ; saignement actif ou haut risque de saignement (saignement gastro-intestinal dans les 14 jours, AVC < 4 semaines, chirurgie < 2 semaines, thrombopénie < 75 G/L, HTA non contrôlée avec PAS > 180 mmHg et PAD > 110 mmHg) ; oxygénothérapie nécessaire pour maintenir la SpO₂ > 90 % ; indication d’antalgique intraveineux ; raison médicale ou sociale d’hospitaliser le patient ; clairance de la créatinine < 30 mL/min (formule de Cockcroft) ; insuffisance hépatique sévère ; grossesse ; antécédents de thrombopénie induite par l’héparine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nCitez les critères diagnostiques d’une hypertension pulmonaire (HTP) pré-capillaire et d’une HTP post-capillaire isolée.",
+          "images": [],
+          "reponseAttendue": "HTP pré-capillaire : PAPm > 20 mmHg, PCP < 15 mmHg, RVP > 3 unités Wood. HTP post-capillaire isolée : PAPm > 20 mmHg, PCP > 15 mmHg, RVP < 3 unités Wood. (HTP pré- et post-capillaire combinée : PAPm > 20 mmHg, PCP > 15 mmHg, RVP > 3 unités Wood.)",
+          "correctionGenerale": "<b>HTP pré-capillaire</b>\n• PAPm > 20 mmHg\n• Pression capillaire (PCP) < 15 mmHg\n• Résistance vasculaire pulmonaire (RVP) > 3 unités Wood\n\n<b>HTP post-capillaire isolée</b>\n• PAPm > 20 mmHg\n• PCP > 15 mmHg\n• RVP < 3 unités Wood\n\n<i>Pour mémoire — HTP pré- et post-capillaire combinée</i>\n• PAPm > 20 mmHg, PCP > 15 mmHg, RVP > 3 unités Wood"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nCitez les causes d’HTAP par atteinte du cœur gauche.",
+          "images": [],
+          "reponseAttendue": "Insuffisance cardiaque à FEVG préservée quelle qu’en soit l’étiologie ; insuffisance cardiaque à FEVG altérée quelle qu’en soit l’étiologie ; valvulopathies du cœur gauche ; lésions postcapillaires obstructives congénitales.",
+          "correctionGenerale": "• Insuffisance cardiaque à fraction d’éjection (FEVG) préservée, quelle qu’en soit l’étiologie\n• Insuffisance cardiaque à FEVG altérée, quelle qu’en soit l’étiologie\n• Valvulopathies du cœur gauche\n• Lésions postcapillaires obstructives congénitales"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nCitez les indications d’implantation d’un défibrillateur automatique en prévention primaire dans l’insuffisance cardiaque.",
+          "images": [],
+          "reponseAttendue": "Patient porteur d’une insuffisance cardiaque chronique symptomatique (NYHA 2-3) secondaire à une cardiopathie ischémique, avec une FEVG ≤ 35 % malgré 3 mois de traitement bien conduit (bêtabloquant, inhibiteur du système rénine-angiotensine-aldostérone, inhibiteur des minéralocorticoïdes, inhibiteur du SGLT2, à posologie maximale ou maximale tolérée), avec une espérance de vie de plus d’un an et un statut fonctionnel satisfaisant — recommandation de classe I A.",
+          "correctionGenerale": "• Patient porteur d’une <b>insuffisance cardiaque chronique symptomatique (NYHA 2-3)</b> secondaire à une <b>cardiopathie ischémique</b>, avec une <b>FEVG ≤ 35 %</b> malgré 3 mois de traitement bien conduit (bêtabloquant, inhibiteur du système rénine-angiotensine-aldostérone, inhibiteur des minéralocorticoïdes, inhibiteur du SGLT2, à posologie maximale ou maximale tolérée), avec une espérance de vie de plus de 1 an avec un statut fonctionnel satisfaisant → <b>recommandation I A</b>\n\n<i>Rappel des recommandations ESC projetées en séance</i> : le défibrillateur doit être considéré (classe IIa) dans les mêmes conditions pour une cardiopathie non ischémique. Il n’est pas recommandé dans les 40 jours suivant un infarctus, ni chez les patients en classe NYHA IV avec symptômes sévères réfractaires au traitement pharmacologique, sauf s’ils sont candidats à une resynchronisation, une assistance ventriculaire ou une transplantation cardiaque."
+        }
+      ]
+    }
+  ]
+}
