@@ -353,6 +353,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
         <StudentTutorialPopup
           offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'}
           parcoursMajor={canAccessParcoursMajor}
+          welcomeActive={welcome.active}
         />
       )}
     </div>

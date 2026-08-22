@@ -8,9 +8,10 @@ import {
 } from 'lucide-react';
 
 // Suffixe de version : incrémenté quand une étape est ajoutée, pour que le
-// tutoriel se réaffiche une fois aux élèves qui l'avaient déjà fermé (ici,
-// l'ajout de l'étape « Parcours du Major »).
-const STORAGE_KEY = 'major-ecn:student-tutorial-dismissed:v2';
+// tutoriel se réaffiche une fois aux élèves qui l'avaient déjà fermé. v2 =
+// ajout de l'étape « Parcours du Major » ; v3 = correctif d'ouverture (le
+// tutoriel n'apparaissait pas quand le popup d'accueil ne s'affichait pas).
+const STORAGE_KEY = 'major-ecn:student-tutorial-dismissed:v3';
 
 const INK = '#1F2937';
 const INK_SOFT = '#52607A';
@@ -175,10 +176,13 @@ function buildSteps(flags: ContentFlags): Step[] {
   return steps;
 }
 
-export function StudentTutorialPopup({ offer, parcoursMajor = false }: {
+export function StudentTutorialPopup({ offer, parcoursMajor = false, welcomeActive = true }: {
   offer: 'essentiel' | 'intensif' | 'approfondi';
   /** L'étape « Parcours du Major » n'est montrée qu'aux élèves qui y ont accès. */
   parcoursMajor?: boolean;
+  /** Le popup d'accueil est-il actif ? S'il ne s'affiche pas, on n'attend pas
+   *  sa fermeture — sinon le tutoriel ne s'ouvrirait jamais. */
+  welcomeActive?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [neverShow, setNeverShow] = useState(true);
@@ -186,10 +190,21 @@ export function StudentTutorialPopup({ offer, parcoursMajor = false }: {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // `?tutoriel=1` rouvre le tutoriel même s'il a déjà été fermé : c'est le
+    // seul moyen de le revoir sans vider le stockage du navigateur.
+    if (new URLSearchParams(window.location.search).get('tutoriel') === '1') {
+      setOpen(true);
+      return;
+    }
     if (localStorage.getItem(STORAGE_KEY)) return;
 
-    const welcomeDismissed = localStorage.getItem('major-ecn:conseils-dismissed');
-    if (welcomeDismissed) {
+    // Le popup d'accueil passe en premier QUAND il s'affiche : même condition
+    // que ConseilsCenter (actif, et pas encore fermé définitivement). Sinon
+    // aucun événement `mecn:welcome-closed` ne viendra jamais, et le tutoriel
+    // resterait invisible.
+    const accueilVaSAfficher = welcomeActive && !localStorage.getItem('major-ecn:conseils-dismissed');
+    if (!accueilVaSAfficher) {
       setOpen(true);
       return;
     }
@@ -199,7 +214,7 @@ export function StudentTutorialPopup({ offer, parcoursMajor = false }: {
     };
     window.addEventListener('mecn:welcome-closed', handler);
     return () => window.removeEventListener('mecn:welcome-closed', handler);
-  }, []);
+  }, [welcomeActive]);
 
   function close() {
     if (neverShow) localStorage.setItem(STORAGE_KEY, '1');
