@@ -55,6 +55,11 @@ export const PARCOURS_PROSE = [
   '[&_.encadre_p]:my-1.5 [&_.encadre_ul]:my-1.5 [&_.encadre>*:first-child]:mt-0 [&_.encadre>*:last-child]:mb-0',
   '[&_.etiquette]:mb-1 [&_.etiquette]:block [&_.etiquette]:text-[10.5px] [&_.etiquette]:font-bold',
   '[&_.etiquette]:uppercase [&_.etiquette]:tracking-[0.14em]',
+  // Garde-fou : un encadré dans un encadré ne redessine ni cadre ni étiquette,
+  // pour qu'un contenu mal formé reste un bloc unique et non des poupées russes.
+  '[&_.encadre_.encadre]:my-0 [&_.encadre_.encadre]:rounded-none [&_.encadre_.encadre]:border-0',
+  '[&_.encadre_.encadre]:bg-transparent [&_.encadre_.encadre]:px-0 [&_.encadre_.encadre]:py-0',
+  '[&_.encadre_.encadre_.etiquette]:hidden',
   // Attention — ambre
   '[&_.attention]:border-[#FCD9A4] [&_.attention]:border-l-[#F59E0B] [&_.attention]:bg-[#FFFBF2]',
   '[&_.attention_.etiquette]:text-[#B45309]',
