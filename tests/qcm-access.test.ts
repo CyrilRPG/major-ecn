@@ -15,11 +15,11 @@ test('un DP standard reste ouvert à la voie interne', () => {
 });
 
 test('la voie tranche QCM (interne) et QROC (externe)', () => {
-  const qroc = { id: '1', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc' };
+  const qroc = { id: '1', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: true };
   assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'interne' })), false);
   assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'externe' })), true);
 
-  const qcm = { id: '2', label: 'QCM — Série 1', type: 'qcm', kind: 'qcm' };
+  const qcm = { id: '2', label: 'QCM — Série 1', type: 'qcm', kind: 'qcm', mg_series: true };
   assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'interne' })), true);
   assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'externe' })), false);
 
@@ -130,4 +130,66 @@ test('un admin (aucun staffKinds) garde la totalité du contenu', () => {
   const admin = ctx({ isStaff: true, voie: null, offers: new Set() });
   const qroc = { id: '1', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc' };
   assert.equal(canStudentReadSerie(qroc, admin), true);
+});
+
+test('la règle « gériatrie » ne s’applique qu’aux séries de Médecine générale', () => {
+  // Régression : une série du collège Gériatrie dont le libellé contient
+  // « Gériatrie » (« Annales - Gériatrie - 2019 - EVCF ») était masquée à TOUS
+  // les élèves, alors que la policy SQL `qcm_series_geriatrie_only_mg_dp` la
+  // laisse passer via `or (not qcm_series.mg_series)`.
+  const annale = { id: '1', label: 'Annales - Gériatrie - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: false };
+  assert.equal(canStudentReadSerie(annale, ctx({ voie: 'externe' })), true);
+  assert.equal(canStudentReadSerie(annale, ctx({ voie: null })), true);
+
+  // Sur un item de Médecine générale, en revanche, la réservation demeure.
+  const mgSerie = { id: '2', label: 'DP Gériatrie 1', type: 'qcm', kind: 'qroc', mg_series: true };
+  assert.equal(canStudentReadSerie(mgSerie, ctx({ voie: 'externe' })), false);
+  assert.equal(canStudentReadSerie(mgSerie, ctx({ voie: 'externe', geriatrieMgBonus: true })), true);
+});
+
+test('les annales d’une spécialité restent visibles quelle que soit la voie', () => {
+  const qroc = { id: '1', label: 'Annales - Orthopédie - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: false, is_revisions: true };
+  const qcm = { id: '2', label: 'Annales - Anesthésie-Réanimation - 2025 - EVCF - QCM', type: 'qcm', kind: 'qcm', mg_series: false, is_revisions: true };
+  // Pas d'`allowed_voies` sur les annales : les élèves sans voie voient tout…
+  assert.equal(canStudentReadSerie(qroc, ctx({ voie: null })), true);
+  assert.equal(canStudentReadSerie(qcm, ctx({ voie: null })), true);
+  // …et hors Médecine générale, la voie ne masque rien.
+  for (const voie of ['interne', 'externe'] as const) {
+    assert.equal(canStudentReadSerie(qroc, ctx({ voie })), true);
+    assert.equal(canStudentReadSerie(qcm, ctx({ voie })), true);
+  }
+});
+
+test('les annales de Médecine générale suivent la voie via leur kind', () => {
+  // L'item MG s'appelle « Annales - Médecine générale » : `is_revisions` est
+  // faux, l'exception « Révisions » ne joue pas et la voie tranche.
+  const qroc = { id: '1', label: 'Annales - Médecine générale - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: true, is_revisions: false };
+  const qcm = { id: '2', label: 'Annales - Médecine générale - 2019 - EVCF - QCM', type: 'qcm', kind: 'qcm', mg_series: true, is_revisions: false };
+  assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'externe' })), true);
+  assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'interne' })), false);
+  assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'interne' })), true);
+  assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'externe' })), false);
+});
+
+test('la voie ne trie les séries QUE sur les items de Médecine générale', () => {
+  // Régression : la règle voie ↔ kind s'appliquait à tous les collèges. Les
+  // annales EVC d'une spécialité étant presque toutes des QROC, aucun élève
+  // « interne » de Gériatrie, Psychiatrie ou Orthopédie n'en voyait une seule.
+  const annaleSpecialite = { id: '1', label: 'Annales - Orthopédie - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: false, is_revisions: true };
+  assert.equal(canStudentReadSerie(annaleSpecialite, ctx({ voie: 'interne' })), true);
+  assert.equal(canStudentReadSerie(annaleSpecialite, ctx({ voie: 'externe' })), true);
+
+  // Sur un item de Médecine générale, la voie tranche toujours.
+  const qrocMg = { id: '2', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: true };
+  assert.equal(canStudentReadSerie(qrocMg, ctx({ voie: 'interne' })), false);
+  assert.equal(canStudentReadSerie(qrocMg, ctx({ voie: 'externe' })), true);
+});
+
+test('voie externe : l’exception « Révisions » de la policy SQL est rejouée', () => {
+  // `is_revisions` : sur un item « Révisions… » de Médecine générale, la voie
+  // externe garde accès aux séries QCM/DP, comme le prévoit le SQL.
+  const qcmMgRevisions = { id: '1', label: 'QCM — Série 1', type: 'qcm', kind: 'qcm', mg_series: true, is_revisions: true };
+  const qcmMgProgramme = { id: '2', label: 'QCM — Série 1', type: 'qcm', kind: 'qcm', mg_series: true, is_revisions: false };
+  assert.equal(canStudentReadSerie(qcmMgRevisions, ctx({ voie: 'externe' })), true);
+  assert.equal(canStudentReadSerie(qcmMgProgramme, ctx({ voie: 'externe' })), false);
 });

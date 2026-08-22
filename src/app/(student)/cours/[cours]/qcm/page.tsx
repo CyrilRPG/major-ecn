@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, Star, Trophy, Sparkles } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, ScrollText, Star, Trophy, Sparkles } from 'lucide-react';
 import { requireUser, profPageReadGuard, canEditCoursContent, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -72,6 +72,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     if (s.type === 'seance') return 0;                 // Séance du professeur
     if (/entra[iî]nement/i.test(s.label)) return 1;    // Entraînement
     if (/^dp\b/i.test(s.label)) return 2;              // DP (couvre « DP … » et « DP QROC … »)
+    if (/^annales?\b/i.test(s.label)) return 4;        // Annales EVC corrigées (après les banques)
     return 3;                                          // QCM / QROC de base
   };
   const series = ((rawSeries ?? []) as unknown as SerieListRow[])
@@ -112,6 +113,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   // « DP 1 » (DP QCM) → traitement rouge + icône DP.
   const isDp = (label: string) => /^dp\b/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
+  // « Annales - <Collège> - <Année> - <Type> » : annales EVC officielles corrigées par
+  // Major ECN. Catégorie à part entière (ambre), distincte des banques maison.
+  const isAnnale = (label: string) => /^annales?\b/i.test(label);
   const isSeance = (s: { type?: string | null }) => s.type === 'seance';
 
   // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
@@ -188,9 +192,12 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
             const seance = isSeance(s);
             const dpQroc = isDpQroc(s.label);
             const qroc = isQroc(s.label);
-            // Violet=Séance, vert=Entraînement, teal=QROC/DP-QROC (voie externe),
-            // rouge=DP, bleu=QCM standard (voie interne).
-            const theme = seance
+            const annale = isAnnale(s.label);
+            // Ambre=Annale EVC, violet=Séance, vert=Entraînement,
+            // teal=QROC/DP-QROC (voie externe), rouge=DP, bleu=QCM standard (voie interne).
+            const theme = annale
+              ? { bar: '#B45309', bg: '#FEF3C7', fg: '#92400E', Icon: ScrollText,    kindLabel: 'Annale' }
+              : seance
               ? { bar: '#7C3AED', bg: '#F3EAFF', fg: '#5B21B6', Icon: Sparkles,      kindLabel: 'Séance du prof' }
               : entr
               ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }

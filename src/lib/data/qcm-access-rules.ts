@@ -35,7 +35,7 @@
  */
 
 /** Colonnes minimales à sélectionner pour pouvoir appliquer `canStudentReadSerie`. */
-export const SERIE_ACCESS_COLUMNS = 'id, label, type, kind, allowed_voies, allowed_offers';
+export const SERIE_ACCESS_COLUMNS = 'id, label, type, kind, allowed_voies, allowed_offers, mg_series, is_revisions';
 
 /** Sous-type d'une série, au sens des permissions professeur. */
 export type QcmKind = 'qcm' | 'dp' | 'qroc';
@@ -64,6 +64,13 @@ export type SerieAccessRow = {
   kind?: string | null;
   allowed_voies?: string[] | null;
   allowed_offers?: string[] | null;
+  /** Série portée par un item de Médecine générale (colonne calculée par trigger).
+   *  Cantonne les règles « gériatrie » et « voie » aux collèges MG, comme les
+   *  policies SQL. */
+  mg_series?: boolean | null;
+  /** Série portée par un item « Révisions… » (colonne calculée par trigger).
+   *  Exception de la policy `qcm_series_voie_restrict` pour la voie externe. */
+  is_revisions?: boolean | null;
 };
 
 export type QcmAccessContext = {
@@ -121,7 +128,13 @@ export function canStudentReadSerie(
 
   // qcm_series_geriatrie_only_mg_dp : les séries « gériatrie » sur cours MG
   // sont réservées aux élèves Gériatrie — les élèves MG classiques ne les voient pas.
-  if (!ctx.geriatrieMgBonus && isGeriatrieLabel(label)) {
+  //
+  // Le garde-fou `mg_series` est ESSENTIEL et reproduit le `or (not
+  // qcm_series.mg_series)` de la policy SQL : sans lui, la règle s'appliquerait
+  // aussi hors Médecine générale et masquerait à TOUT LE MONDE une série du
+  // collège Gériatrie dont le libellé contient « gériatrie » — par exemple
+  // « Annales - Gériatrie - 2019 - EVCF ».
+  if (serie.mg_series === true && !ctx.geriatrieMgBonus && isGeriatrieLabel(label)) {
     return false;
   }
 
@@ -137,12 +150,18 @@ export function canStudentReadSerie(
   const allowedOffers = serie.allowed_offers;
   if (allowedOffers?.length && !allowedOffers.some((o) => ctx.offers.has(o))) return false;
 
-  // qcm_series_voie_restrict : hors entraînements, une série de type `qcm`
-  // suit la voie de l'élève (interne → QCM, externe → QROC).
-  if (serie.type === 'qcm' && !entrainement && ctx.voie) {
+  // qcm_series_voie_restrict : la voie de concours ne trie les séries QUE sur les
+  // items de Médecine générale (`not mg_series` dans la policy SQL), et la voie
+  // externe garde accès à tout sur un item « Révisions… » (`is_revisions`).
+  //
+  // Ces deux gardes manquaient ici. Sans elles, la règle s'appliquait aussi aux
+  // collèges de spécialité, où elle n'a aucun sens : les annales EVC y sont
+  // presque toutes des QROC, si bien que TOUS les élèves « interne » d'une
+  // spécialité (Gériatrie, Psychiatrie, Médecine interne…) n'en voyaient aucune.
+  if (serie.type === 'qcm' && !entrainement && ctx.voie && serie.mg_series === true) {
     const kind = serie.kind ?? 'qcm';
     if (ctx.voie === 'interne' && kind === 'qroc') return false;
-    if (ctx.voie === 'externe' && kind !== 'qroc') return false;
+    if (ctx.voie === 'externe' && kind !== 'qroc' && serie.is_revisions !== true) return false;
   }
 
   return true;
