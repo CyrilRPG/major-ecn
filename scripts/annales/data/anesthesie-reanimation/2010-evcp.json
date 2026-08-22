@@ -21,7 +21,7 @@
       "annee": 2010,
       "type": "EVCP",
       "source": "ANNALES AREA/EVCP 2010 Correction PAE.pdf",
-      "orderIndex": 11,
+      "orderIndex": 4,
       "vignette": "Un garçon de 18 mois, 10 kg, arrive aux urgences à 16 heures pour une avulsion unguéale de l’index de la main droite (doigt dans une porte). La fin de son dernier repas est estimée à 12 h 30 ; l’accident a eu lieu à 15 heures. L’indication chirurgicale est posée : parage et suture d’une plaie pulpo-unguéale.\n\n<b>Réflexes pédiatrie</b>\n• Information des parents et de l’enfant\n• Autorisation parentale\n• Dose adaptée au poids pour les médicaments, taille du matériel adaptée au poids\n• Jeûne différent chez l’enfant : il dépend de l’âge et de l’alimentation (lait maternel ou non)\n• Référence = « le petit Armand » (Aide-mémoire d’anesthésie pédiatrique)",
       "questions": [
         {
@@ -38,14 +38,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°2</b>\n\nQuels sont les arguments qui justifieraient la réalisation d’un contrôle de l’hémostase préopératoire ?",
-          "images": ["annales-area/evcp-2010-correction-pae/figures/img-009-080.png"],
+          "images": [
+            "annales-area/evcp-2010-correction-pae/figures/img-009-080.png"
+          ],
           "reponseAttendue": "Le bilan d’hémostase n’est pas recommandé si la marche est acquise, l’interrogatoire fiable et la chirurgie non hémorragique. Il se justifie devant des antécédents familiaux ou personnels évocateurs : hémorragie disproportionnée par rapport à la chirurgie, saignement lors d’une circoncision ou d’une extraction dentaire, hémarthrose, épistaxis, ecchymoses, pétéchies, saignement au cordon ombilical, saignement prolongé après ponction veineuse ou coupure.",
           "correctionGenerale": "<b>Examens complémentaires</b>\n• <b>NFS</b> : chirurgie potentiellement hémorragique, hémoglobinopathie\n• <b>Groupe, RAI</b> si chirurgie hémorragique\n• <b>Hémostase</b> :\n  – Non recommandée si marche acquise + interrogatoire fiable + chirurgie non hémorragique\n  – <b>L’interrogatoire est primordial</b> : antécédents familiaux ; antécédents personnels → hémorragie disproportionnée par rapport à la chirurgie, saignement lors d’une circoncision ou d’une extraction dentaire, hémarthrose, épistaxis, ecchymoses, pétéchies, saignement au cordon ombilical, saignement prolongé après une ponction veineuse ou une coupure\n• <b>Radiographie de thorax</b> : rare\n• <b>ECG</b> : exceptionnel"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question N°3</b>\n\nQuels sont les pré-requis administratifs à contrôler avant la prise en charge chirurgicale de cet enfant ?",
-          "images": ["annales-area/evcp-2010-correction-pae/figures/img-010-088.png"],
+          "images": [
+            "annales-area/evcp-2010-correction-pae/figures/img-010-088.png"
+          ],
           "reponseAttendue": "L’autorisation d’opérer signée par les deux parents ++++, le respect du jeûne, la vérification depuis la consultation pré-anesthésique et la recherche de faits nouveaux, la vérification de l’identité, de la chirurgie et du côté ; il faut obtenir le consentement éclairé des parents et de l’enfant.",
           "correctionGenerale": "• <b>Autorisation d’opérer ++++</b>, signée par les 2 parents\n• Jeûne\n• Vérification depuis la consultation pré-anesthésique ; faits nouveaux\n• Vérification de l’identité\n• Vérification de la chirurgie et du côté\n\n<b>Obtenir le consentement éclairé des parents et de l’enfant</b> — cela requiert : la présence de l’enfant, de ses parents et du carnet de santé ; l’indication chirurgicale, la date de programmation et la durée prévisible."
         },
@@ -101,7 +105,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°9</b>\n\nChez le nourrisson, quels éléments pharmacocinétiques conduisent à la prudence pour l’utilisation de la morphine en postopératoire ?",
-          "images": ["annales-area/evcp-2010-correction-pae/figures/img-005-042.png"],
+          "images": [
+            "annales-area/evcp-2010-correction-pae/figures/img-005-042.png"
+          ],
           "reponseAttendue": "L’augmentation de la durée d’élimination (clairance plus faible) expose à un risque d’accumulation, donc à un haut risque de dépression respiratoire prolongée ; les clairances hépatique et rénale sont plus faibles.",
           "correctionGenerale": "• Augmentation de la durée d’élimination (clairance plus faible) = risque d’accumulation → <b>haut risque de dépression respiratoire prolongée</b>\n• Clairances hépatique et rénale plus faibles\n\n<b>Rappel des posologies de morphine du corrigé</b>\n• Titration : 100 µg/kg puis 25 µg/kg jusqu’à EVA ou OPS < 3\n• PCA : dilution 1 mg/mL ; bolus 20 à 40 µg/kg ; période réfractaire 6 min ; dose maximale sur 4 heures = poids (kg)/2 mg ; débit continu si nécessaire 20 µg/kg/h (10 µg/kg/h avant 3 mois)\n• Morphine IVSE (quand la PCA est impossible) : 20 µg/kg/h = 0,5 mg/kg/j\n• Morphine per os à libération immédiate : 0,2 mg/kg/prise, 6 prises par jour"
         },
@@ -132,20 +138,24 @@
       "annee": 2010,
       "type": "EVCP",
       "source": "ANNALES AREA/EVC 2010.pdf",
-      "orderIndex": 12,
+      "orderIndex": 5,
       "vignette": "Second corrigé du même sujet EVCP 2010 d’anesthésie-réanimation, proposé par un autre correcteur.\n\nUn garçon de 18 mois, 10 kg, arrive aux urgences à 16 heures pour une avulsion unguéale de l’index de la main droite (doigt dans une porte). La fin de son dernier repas est estimée à 12 h 30 ; l’accident a eu lieu à 15 heures. L’indication chirurgicale est posée : parage et suture d’une plaie pulpo-unguéale.\n\n<i>Ce corrigé ne développe pas les questions 4, 9 et 10 : elles sont traitées dans la série « Annales - Anesthésie-Réanimation - 2010 - EVCP ».</i>",
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Question N°1</b>\n\nQuelles sont les particularités de l’évaluation pré-anesthésique chez un enfant de cet âge ?",
-          "images": ["annales-area/evc-2010/figures/img-001-008.jpg"],
+          "images": [
+            "annales-area/evc-2010/figures/img-001-008.jpg"
+          ],
           "reponseAttendue": "Un interrogatoire évaluant le développement et les courbes de croissance, l’hémostase, le déroulement de la grossesse, l’anxiété de l’enfant et des parents, les facteurs de risque de complications respiratoires peropératoires et le risque anaphylactique ; un examen clinique évaluant la difficulté d’accès vasculaire, recherchant hématomes et ecchymoses, une infection en cours et des critères d’intubation ou de ventilation difficiles.",
           "correctionGenerale": "<i>L’image reproduit le sujet officiel scanné de l’épreuve.</i>\n\n<b>Interrogatoire</b>\n• Évaluation du développement et des courbes de croissance\n• <b>Évaluation de l’hémostase</b> : recherche de la marche — si la marche est acquise, recherche d’hématomes et d’ecchymoses ; diathèse hémorragique ; antécédents familiaux de maladies de l’hémostase\n• Renseignements sur la grossesse : prématurité ? anomalies congénitales, maladies métaboliques\n• Évaluation de l’anxiété de l’enfant et des parents\n• Recherche de facteurs de risque de problèmes respiratoires peropératoires : tabagisme passif, infection des VADS, asthme, SAOS, RGO\n• Anaphylaxie\n\n<b>Examen clinique</b>\n• Évaluation de la difficulté d’accès vasculaire\n• Recherche d’hématomes et d’ecchymoses\n• Auscultation cardio-pulmonaire à la recherche d’une infection en cours\n• Recherche de facteurs d’intubation / ventilation difficiles : malformations faciales, état dentaire"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question N°2</b>\n\nQuels sont les arguments qui justifieraient la réalisation d’un contrôle de l’hémostase préopératoire ?",
-          "images": ["annales-area/evc-2010/figures/img-003-025.png"],
+          "images": [
+            "annales-area/evc-2010/figures/img-003-025.png"
+          ],
           "reponseAttendue": "Si la marche n’est pas acquise, il est recommandé de compléter l’évaluation clinique par un bilan biologique (TCA, numération plaquettaire). Si la marche est acquise, le bilan se justifie devant des hématomes et ecchymoses, un antécédent d’hémorragie anormalement prolongée lors de coupures ou de chirurgies précédentes, une bosse séro-sanguine à la naissance, une hémorragie à la chute du cordon, une hématurie macroscopique, un hématome post-vaccination, ou des antécédents familiaux de troubles héréditaires de l’hémostase et une consanguinité.",
           "correctionGenerale": "L’arbre décisionnel repose sur l’<b>acquisition de la marche</b> :\n• <b>Marche acquise</b> → comme chez l’adulte : score hémorragique fondé sur l’interrogatoire et l’examen clinique, ± bilan d’hémostase\n• <b>Marche non acquise</b> → l’anamnèse est peu informative : <b>bilan d’hémostase systématique</b> (TCA, numération plaquettaire)\n\n<b>Si la marche est acquise, les arguments sont :</b>\n• Hématomes et ecchymoses\n• Antécédent d’hémorragie anormalement prolongée lors des coupures ou de chirurgies précédentes, bosse séro-sanguine à la naissance, hémorragie à la chute du cordon, hématurie macroscopique, hématome post-vaccination\n• Antécédents familiaux de troubles de l’hémostase héréditaires, consanguinité"
         },

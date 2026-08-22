@@ -1,0 +1,367 @@
+{
+  "sources": {
+    "ANNALES AREA/Annale 2023 copie.pdf": {
+      "atelier": "annales-area/annale-2023-copie",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "L’EVCF 2023 d’anesthésie-réanimation comporte deux parties (pharmacologie et physiologie), réunies dans une seule série. La numérotation d’origine du support est conservée : la partie pharmacologie comporte deux questions portant le numéro 8. L’EVCP 2023 comporte deux sujets cliniques distincts, restitués en deux séries."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2023 - EVCF",
+      "annee": 2023,
+      "type": "EVCF",
+      "source": "ANNALES AREA/Annale 2023 copie.pdf",
+      "orderIndex": 30,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 en anesthésie-réanimation. Elle comporte deux parties : <b>pharmacologie</b> et <b>physiologie</b>, toutes deux à réponse ouverte et courte, sans vignette clinique commune.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 1</b>\n\nQuelle est la conséquence pratique des différences de pressions de vapeur saturante entre les agents anesthésiques halogénés ?",
+          "images": [],
+          "reponseAttendue": "Chaque agent anesthésique halogéné a une pression de vapeur saturante spécifique, qui détermine sa capacité à se vaporiser à une température donnée : la conséquence pratique est la nécessité d’un dosage et de vaporisateurs spécifiques pour chaque agent, afin d’administrer la concentration correcte dans les gaz inspirés en fonction de la température.",
+          "correctionGenerale": "<b>Pression de vapeur saturante</b> = pression partielle maximale de vapeur dans l’atmosphère qui surmonte le liquide.\n\nChaque agent anesthésique halogéné a une pression de vapeur saturante spécifique, qui détermine sa capacité à se vaporiser à une température donnée.\n\n<b>Conséquence pratique</b> → <b>dosage et vaporisateurs spécifiques ++ pour chaque agent</b>, afin d’administrer la concentration correcte dans les gaz inspirés en fonction de la température.\n\nUne pression de vapeur élevée (ex. : desflurane) = vaporisation plus facile = augmentation du risque de surdosage.\n\nLa pression de vapeur saturante est influencée par la température : dans les environnements plus froids, un vaporisateur non chauffé pourrait délivrer une quantité insuffisante de cet agent ; à l’inverse, dans des conditions plus chaudes, un agent avec une pression de vapeur élevée pourrait être surdosé si l’appareil n’est pas ajusté."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 2</b>\n\nQuelle relation existe-t-il entre la solubilité des halogénés dans le sang et leur concentration cérébrale/alvéolaire ?",
+          "images": [],
+          "reponseAttendue": "Plus la solubilité d’un agent halogéné dans le sang (coefficient de partage sang/gaz) est faible, plus la concentration alvéolaire — et donc cérébrale — est obtenue rapidement, et donc plus l’induction et le réveil anesthésiques sont rapides.",
+          "correctionGenerale": "<b>La solubilité = coefficient de partage sang/gaz</b> → mesure la capacité d’un agent à se dissoudre dans le sang par rapport à sa phase gazeuse.\n\nLa <b>concentration alvéolaire</b> (ou pression partielle de l’agent anesthésique dans les alvéoles) reflète directement la <b>concentration cérébrale</b>.\n\n<b>Agents à faible solubilité dans le sang</b> (coefficient de partage sang/gaz bas) : desflurane, sévoflurane\n→ Passage rapide des alvéoles pulmonaires au sang, peu de temps dans le sang, rapidement transporté vers le cerveau\n→ Augmentation rapide de la concentration alvéolaire et cérébrale = <b>induction et réveil rapides</b>\n\n<b>Agents à haute solubilité dans le sang</b> (coefficient de partage sang/gaz élevé) : halothane\n→ Agent plus « retenu » dans le sang avant de passer au cerveau, car il s’y dissout davantage\n→ Augmentation plus lente de la concentration alvéolaire, une plus grande quantité d’agent étant nécessaire pour saturer le sang avant que le cerveau atteigne une concentration anesthésique efficace = <b>induction et réveil plus lents</b>\n\n<b>Plus la solubilité d’un agent halogéné est faible, plus la concentration alvéolaire/cérébrale sera obtenue rapidement, et donc plus l’induction et le réveil anesthésiques seront rapides.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 3</b>\n\nQuelle relation existe-t-il entre la liposolubilité et la puissance des halogénés ?",
+          "images": [],
+          "reponseAttendue": "C’est la règle de Meyer-Overton : plus un anesthésique est liposoluble, plus il est puissant (il atteint plus facilement les membranes lipidiques neuronales) ; il existe une corrélation inverse entre la liposolubilité d’un agent et la concentration nécessaire pour induire l’anesthésie. Halothane > sévoflurane > desflurane.",
+          "correctionGenerale": "Relation entre liposolubilité des agents anesthésiques halogénés et puissance = <b>règle de Meyer-Overton</b>\n\n→ Plus un anesthésique est liposoluble, plus il est puissant (il atteint plus facilement les membranes lipidiques neuronales)\n→ Corrélation inverse entre la liposolubilité d’un agent et la concentration nécessaire pour induire l’anesthésie\n\n<b>Halothane > sévoflurane > desflurane</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 4</b>\n\nDéfinissez la concentration alvéolaire minimale (CAM ou MAC) d’un agent anesthésique halogéné.",
+          "images": [],
+          "reponseAttendue": "La CAM (ou MAC) est le paramètre utilisé pour quantifier la puissance anesthésique d’un agent volatil : c’est la concentration alvéolaire de cet agent nécessaire pour empêcher 50 % des patients de réagir, par un mouvement, à un stimulus chirurgical douloureux tel qu’une incision cutanée. Plus la MAC est basse, plus l’agent est puissant.",
+          "correctionGenerale": "<b>Concentration alvéolaire minimale (CAM ou MAC)</b> = paramètre utilisé pour quantifier la puissance anesthésique d’un agent anesthésique volatil, tel que les halogénés\n\n= concentration alvéolaire d’un agent anesthésique nécessaire pour <b>empêcher 50 % des patients de réagir (par un mouvement) à un stimulus chirurgical douloureux</b>, tel qu’une incision cutanée.\n\n<b>Plus la MAC est basse, plus l’agent anesthésique est puissant.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 5</b>\n\nCitez quatre éléments démographiques, environnementaux ou pharmacologiques diminuant la MAC d’un agent anesthésique halogéné.",
+          "images": [],
+          "reponseAttendue": "L’âge (la MAC diminue avec l’âge), l’hypothermie, l’usage de certains médicaments (opioïdes, sédatifs et autres agents anesthésiques utilisés en combinaison), l’alcoolisation aiguë (l’alcoolisation chronique augmentant au contraire la MAC) et la grossesse.",
+          "correctionGenerale": "• <b>Âge</b> : diminution de la MAC avec l’âge\n• <b>Température corporelle</b> : hypothermie = diminution de la MAC\n• <b>Usage de certains médicaments</b> : les opioïdes, les sédatifs et d’autres agents anesthésiques réduisent la MAC lorsqu’ils sont utilisés en combinaison\n• <b>Alcool</b> : augmentation de la MAC si alcoolisation chronique / diminution si alcoolisation aiguë\n• <b>Grossesse</b> : diminution de la MAC pendant la grossesse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 6</b>\n\nCitez une interaction des agents anesthésiques halogénés avec les curares non dépolarisants et deux conséquences pratiques de cette interaction en cas d’anesthésie longue sous halogénés.",
+          "images": [],
+          "reponseAttendue": "Les halogénés potentialisent l’effet des curares non dépolarisants, par diminution de la libération d’acétylcholine au niveau des jonctions neuromusculaires et augmentation de la sensibilité des récepteurs nicotiniques : le muscle squelettique devient plus sensible aux curares, ce qui réduit la dose nécessaire pour obtenir une paralysie musculaire adéquate. Conséquences pratiques en cas d’anesthésie longue : 1) prolongation de la paralysie musculaire ; 2) risque accru de surdosage ou de curarisation résiduelle.",
+          "correctionGenerale": "Les agents anesthésiques halogénés <b>potentialisent l’effet des curares non dépolarisants</b> par :\n→ diminution de la libération d’acétylcholine au niveau des jonctions neuromusculaires\n→ augmentation de la sensibilité des récepteurs nicotiniques\n\nLes halogénés = augmentation de la sensibilité du muscle squelettique aux curares = réduction de la dose de curare nécessaire pour obtenir une paralysie musculaire adéquate.\n\n<b>Conséquences pratiques en cas d’anesthésie longue sous halogénés</b>\n1. <b>Prolongation de la paralysie musculaire</b>\n2. <b>Risque accru de surdosage ou de curarisation résiduelle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 7</b>\n\nCitez un effet commun aux agents anesthésiques halogénés et aux morphinomimétiques sur le contrôle central de la ventilation.",
+          "images": [],
+          "reponseAttendue": "La dépression respiratoire : les halogénés agissent sur les centres respiratoires du tronc cérébral (notamment le bulbe rachidien) en diminuant la réponse à l’hypercapnie ; les morphinomimétiques agissent également sur ces centres, en diminuant la sensibilité à l’hypercapnie et à l’hypoxie.",
+          "correctionGenerale": "Effet commun aux agents anesthésiques halogénés et aux morphinomimétiques (opioïdes) sur le contrôle central de la ventilation = <b>dépression respiratoire</b>\n\n• <b>Halogénés</b> : action sur les centres respiratoires du tronc cérébral (notamment dans le bulbe rachidien) → diminution de la réponse à l’hypercapnie\n• <b>Morphinomimétiques</b> : action sur les centres respiratoires du tronc cérébral → diminution de la sensibilité à l’hypercapnie (augmentation du CO₂) et à l’hypoxie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 8</b>\n\nCitez 3 mécanismes de l’hyperalgésie induite par les morphinomimétiques.",
+          "images": [],
+          "reponseAttendue": "1) Activation du système glutamatergique et des récepteurs NMDA, avec augmentation de l’excitabilité neuronale dans les voies de la douleur et sensibilisation centrale ; 2) augmentation des voies descendantes facilitatrices de la douleur issues du tronc cérébral, augmentant la sensibilité à la douleur des neurones de la corne dorsale de la moelle épinière ; 3) production de médiateurs pro-inflammatoires par activation des cellules gliales (microglie et astrocytes), qui libèrent des cytokines (TNF-α, IL-1β, IL-6) et augmentent la sensibilité des neurones.",
+          "correctionGenerale": "<b>Hyperalgésie induite par les morphinomimétiques</b> = augmentation paradoxale de la sensibilité à la douleur après l’administration prolongée d’opioïdes.\n\n<b>Mécanismes</b>\n1. <b>Activation du système glutamatergique et des récepteurs NMDA</b> : augmentation de l’excitabilité neuronale dans les voies de la douleur, conduisant à une sensibilisation centrale\n2. <b>Augmentation des voies descendantes facilitatrices de la douleur</b> (tronc cérébral) : augmentation de la sensibilité à la douleur des neurones de la corne dorsale de la moelle épinière\n3. <b>Production de médiateurs pro-inflammatoires</b> : activation des cellules gliales (microglie et astrocytes), qui libèrent des cytokines pro-inflammatoires (TNF-α, IL-1β, IL-6) et augmentent la sensibilité des neurones"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 8 (bis)</b>\n\nPour les morphinomimétiques, citez deux propriétés qui caractérisent la fraction diffusible et les paramètres physicochimiques qui les sous-tendent.\n\n<i>Le support de correction numérote deux questions successives « n° 8 » : la numérotation d’origine est conservée.</i>",
+          "images": [],
+          "reponseAttendue": "1) La lipophilie (liposolubilité) : plus un morphinomimétique est lipophile, plus il diffuse facilement à travers les membranes lipidiques — paramètre physicochimique : le coefficient de partage octanol/eau (log P), plus il est élevé, plus la fraction diffusible est importante (le fentanyl est beaucoup plus lipophile que la morphine). 2) Le degré d’ionisation : plus la molécule est non ionisée, plus sa fraction diffusible est élevée — paramètre physicochimique : le pKa, pH auquel 50 % de la molécule est ionisée ; plus le pKa est proche du pH sanguin, plus la fraction non ionisée diffusible est grande (la morphine, de pKa ≈ 8, est en grande partie ionisée à pH physiologique, contrairement au sufentanil).",
+          "correctionGenerale": "<b>Fraction diffusible des morphinomimétiques</b> = portion de la molécule capable de diffuser librement à travers les membranes biologiques (barrières hémato-encéphalique et cellulaire) pour atteindre ses sites d’action.\n\n<b>1. Lipophilie / liposolubilité</b>\nPlus un morphinomimétique est lipophile, plus il peut facilement diffuser à travers les membranes lipidiques.\n→ <i>Paramètre physicochimique</i> : coefficient de partage octanol/eau (ou log P). Plus la valeur du log P est élevée, plus la molécule est lipophile et plus sa fraction diffusible est importante. Par exemple, le fentanyl est beaucoup plus lipophile que la morphine, ce qui lui permet de diffuser plus rapidement et d’agir plus vite.\n\n<b>2. Degré d’ionisation (pKa)</b>\nPlus la molécule est non ionisée, plus sa fraction diffusible est élevée.\n→ <i>Paramètre physicochimique</i> : pKa = pH auquel 50 % de la molécule est ionisée. Plus le pKa est proche du pH sanguin, plus la fraction non ionisée (diffusible) est grande. Par exemple, la morphine, avec un pKa d’environ 8, est en grande partie ionisée à pH physiologique, ce qui limite sa diffusion rapide, contrairement à des opioïdes comme le sufentanil, qui a un pKa plus bas et est donc plus diffusible."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 9</b>\n\nDéfinissez la demi-vie contextuelle d’un agent intraveineux.",
+          "images": [],
+          "reponseAttendue": "C’est le temps nécessaire pour que la concentration plasmatique de l’agent diminue de moitié après l’arrêt d’une perfusion continue, en tenant compte de la durée de l’administration. Elle augmente avec la durée de la perfusion, du fait de l’accumulation du médicament dans les tissus périphériques (graisseux et musculaires) et d’une redistribution plus lente : le propofol a une demi-vie contextuelle courte, le thiopental une demi-vie contextuelle plus longue.",
+          "correctionGenerale": "<b>Demi-vie contextuelle</b> = temps nécessaire pour que la concentration plasmatique de l’agent diminue de moitié après l’arrêt d’une perfusion continue, <b>en tenant compte de la durée de l’administration</b>.\n\n• <b>Variation en fonction de la durée de la perfusion</b> : la demi-vie contextuelle dépend du contexte de l’administration, c’est-à-dire de la durée de la perfusion continue. Plus la perfusion est longue, plus la demi-vie contextuelle tend à augmenter — cela est dû à l’accumulation du médicament dans les tissus périphériques et à une redistribution plus lente après une longue perfusion.\n• <b>Accumulation dans les compartiments</b> (notamment les tissus graisseux et musculaires) : plus la perfusion dure, plus l’agent s’y accumule.\n• <b>Différence entre les agents</b> : propofol = demi-vie contextuelle courte ; thiopental = demi-vie contextuelle plus longue."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Pharmacologie — Question n° 10</b>\n\nExpliquez pourquoi la demi-vie contextuelle du rémifentanil est fixe.",
+          "images": [],
+          "reponseAttendue": "Parce que son métabolisme est indépendant des organes : il est hydrolysé par les estérases plasmatiques en un métabolite inactif presque immédiatement après son entrée dans la circulation, donc dégradé à vitesse constante dans le plasma ; il n’y a pas d’accumulation tissulaire, si bien que même lors de perfusions prolongées, la décroissance est rapide et prévisible après l’arrêt, indépendamment de la durée d’administration. La demi-vie contextuelle du rémifentanil est de 3 à 5 minutes.",
+          "correctionGenerale": "• <b>Métabolisme indépendant, par des estérases plasmatiques</b> : hydrolyse en un métabolite inactif presque immédiatement après son entrée dans la circulation → dégradation à vitesse constante dans le plasma\n• <b>Absence d’accumulation tissulaire</b> : du fait de ce métabolisme indépendant, même lors de perfusions prolongées → baisse rapide et prévisible après l’arrêt de la perfusion, indépendamment de sa durée d’administration\n\n<b>Demi-vie contextuelle du rémifentanil = 3 à 5 minutes.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 1</b>\n\nEn situation physiologique, dans quel compartiment la plus grande partie du volume sanguin circulant se situe-t-elle ?",
+          "images": [],
+          "reponseAttendue": "Dans le compartiment veineux, qui contient 60 à 70 % du volume sanguin circulant (veines et veinules). Les veines sont des vaisseaux capacitifs, à paroi plus mince et plus souple que les artères, capables de se dilater et d’accumuler de grandes quantités de sang sans augmenter la pression : elles assurent la régulation du retour veineux. Le système artériel en contient environ 15 %, les capillaires et le cœur environ 15 %.",
+          "correctionGenerale": "<b>Situation physiologique</b> : volume sanguin circulant = <b>compartiment veineux à 60 à 70 %</b> (veines et veinules).\n\nLes veines sont des <b>vaisseaux capacitifs</b> : paroi plus mince et plus souple que celle des artères, permettant la dilatation et l’accumulation de grandes quantités de sang sans augmenter la pression → <b>régulation du retour veineux</b>.\n\n• Système artériel = 15 %\n• Capillaires / cœur = 15 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 2</b>\n\nÉcrivez la loi de Poiseuille adaptée au retour veineux, faisant intervenir les termes de l’équation suivante : retour veineux, pression systémique moyenne, pression atriale droite, résistances au retour veineux.",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-031-090.jpg",
+            "annales-area/annale-2023-copie/figures/img-031-091.jpg"
+          ],
+          "reponseAttendue": "Retour veineux (RV) = [pression systémique moyenne (PSM) − pression atriale droite (PAD)] / résistances au retour veineux (RVR). Le retour veineux est donc proportionnel à la différence de pression entre la pression systémique moyenne et la pression atriale droite, et inversement proportionnel aux résistances au retour veineux.",
+          "correctionGenerale": "<b>Retour veineux (RV) = [Pression systémique moyenne (PSM) − Pression atriale droite (PAD)] / Résistances au retour veineux (RVR)</b>\n\n<i>Loi de Poiseuille : ΔP = (8 η L / π R⁴) × Dv, soit débit = ΔP / résistance (fonction de la viscosité, de la longueur et du rayon du vaisseau).</i>\n\n• Le retour veineux est <b>proportionnel à la différence de pression</b> entre la pression systémique moyenne et la pression atriale droite\n• Le retour veineux est <b>inversement proportionnel aux résistances au retour veineux</b>\n\n<b>Augmentation du retour veineux</b>\n• Augmentation de la pression systémique moyenne\n• Diminution de la pression atriale droite\n• Diminution des résistances au retour veineux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 3</b>\n\nDonnez une définition « physiologique » de la précharge ventriculaire.",
+          "images": [],
+          "reponseAttendue": "La précharge ventriculaire est la pression exercée sur les parois du ventricule au début de la systole, c’est-à-dire la quantité de sang contenue dans le ventricule à la fin de la diastole. Elle est influencée par le retour veineux et le volume de remplissage du ventricule pendant la diastole, et elle influence la force de contraction du ventricule (loi de Starling).",
+          "correctionGenerale": "<b>Précharge ventriculaire</b> = pression exercée sur les parois du ventricule au début de la systole = <b>quantité de sang dans le ventricule à la fin de la diastole</b>.\n\n<b>Influencée par</b>\n• Le retour veineux\n• Le volume de remplissage du ventricule pendant la diastole\n\n<b>Influence</b>\n• La force de contraction du ventricule (<b>loi de Starling</b> : le ventricule est capable d’augmenter sa force de contraction en réponse à un volume de remplissage plus élevé)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 4</b>\n\nExpliquez comment la volémie peut influencer, per se (par elle-même), la résistance au retour veineux.",
+          "images": [],
+          "reponseAttendue": "Par trois voies. Sur la pression veineuse centrale : l’augmentation de la volémie augmente la PVC, réduit la différence de pression entre les veines et l’oreillette droite et donc diminue la résistance au retour veineux ; la diminution de la volémie fait l’inverse. Sur la compliance veineuse : l’augmentation de la volémie augmente la pression dans les veines, les dilate, augmente leur compliance et diminue la résistance au retour veineux ; la diminution de la volémie réduit la pression et la compliance veineuses, d’où une plus grande résistance. Sur la distribution du sang : plus le volume disponible pour remplir les veines est grand, plus la résistance au retour veineux diminue.",
+          "correctionGenerale": "<b>Effet sur la pression veineuse centrale (PVC)</b>\n• <i>Augmentation de la volémie</i> : augmentation de la PVC → différence de pression entre veines et oreillette droite réduite = <b>diminution de la résistance au retour veineux</b> (facilite le retour du sang vers le cœur)\n• <i>Diminution de la volémie</i> : baisse de la PVC = augmentation de la résistance au retour veineux\n\n<b>Influence sur la compliance veineuse</b>\n• <i>Augmentation de la volémie</i> : augmentation de la pression dans les veines = dilatation des veines = augmentation de leur compliance = diminution de la résistance au retour veineux\n• <i>Diminution de la volémie</i> : réduction du volume sanguin = réduction de la pression dans les veines = diminution de leur compliance = plus grande résistance au retour veineux\n\n<b>Influence sur la distribution du sang</b>\n• <i>Augmentation de la volémie</i> : augmentation du volume de sang disponible pour remplir les veines = diminution de la résistance au retour veineux\n• <i>Diminution de la volémie</i> : diminution du volume sanguin = diminution du volume veineux disponible = augmentation de la résistance au retour veineux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 5</b>\n\nFaites correspondre aux numéros indiqués sur le schéma ci-dessous (représentant le compartiment veineux) les termes appropriés :\n\n• Volume non contraint (VNC)\n• Pression systémique moyenne (PSM)\n• Volume contraint (VC)\n• Pression atriale droite (POD)\n• Inverse des résistances au retour veineux (1/RRV)",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-037-110.jpg",
+            "annales-area/annale-2023-copie/figures/img-038-112.jpg"
+          ],
+          "reponseAttendue": "1 = pression systémique moyenne (PSM) ; 2 = volume contraint (VC) ; 3 = inverse des résistances au retour veineux (1/RRV) ; 4 = volume non contraint (VNC) ; 5 = pression atriale droite (POD).",
+          "correctionGenerale": "• <b>1</b> = Pression systémique moyenne (PSM)\n• <b>2</b> = Volume contraint (VC)\n• <b>3</b> = Inverse des résistances au retour veineux (1/RRV)\n• <b>4</b> = Volume non contraint (VNC)\n• <b>5</b> = Pression atriale droite (POD)\n\n<i>Le schéma corrigé (B. Cholley, SFAR 2006) représente la capacitance du réservoir veineux : le volume contraint génère la pression systémique moyenne, et le gradient « moteur » du retour veineux est PSM − POD, selon la loi de Poiseuille RV = (PSM − POD)/R_RV.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 6</b>\n\nDéfinissez l’espace mort anatomique et l’espace mort alvéolaire. Que représentent-ils à eux deux ?",
+          "images": [],
+          "reponseAttendue": "L’espace mort anatomique est la partie des voies respiratoires où le gaz ne participe pas aux échanges gazeux — voies respiratoires supérieures (nez, pharynx, larynx) et voies respiratoires inférieures jusqu’aux bronches et bronchioles de gros calibre, soit environ 150 mL chez l’adulte. L’espace mort alvéolaire est la partie des poumons où l’air atteint les alvéoles mais où les échanges gazeux ne se produisent pas ou sont inefficaces (alvéoles non ventilées correctement, ou dont la perfusion sanguine est insuffisante). À eux deux, ils représentent l’espace mort total, c’est-à-dire le volume d’air inhalé qui ne participe pas aux échanges gazeux efficaces : le reflet de l’efficacité de la ventilation pulmonaire.",
+          "correctionGenerale": "<b>Espace mort anatomique</b> : partie des voies respiratoires où le gaz ne participe pas aux échanges gazeux → voies respiratoires supérieures (nez, pharynx, larynx) + voies respiratoires inférieures jusqu’à la bronche principale (y compris les bronches et les bronchioles de plus gros calibre) — environ <b>150 mL</b> chez un adulte.\n\n<b>Espace mort alvéolaire</b> : partie des poumons où l’air atteint les alvéoles mais où les échanges gazeux ne se produisent pas ou sont inefficaces → alvéoles non ventilées correctement, ou alvéoles dont la perfusion sanguine est insuffisante.\n\nIls représentent à eux deux l’<b>espace mort total</b> : volume d’air inhalé qui ne participe pas aux échanges gazeux efficaces → <b>reflet de l’efficacité de la ventilation pulmonaire</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 7</b>\n\nGazométriquement, comment distinguer hypoventilation alvéolaire et shunt chez un patient hypoxémique en ventilation spontanée et à l’air ambiant ?",
+          "images": [],
+          "reponseAttendue": "Hypoventilation alvéolaire : PaCO₂ élevée et PaO₂ basse, avec amélioration significative sous oxygène. Shunt : PaCO₂ normale et PaO₂ basse (somme PaO₂ + PaCO₂ < 120 mmHg), avec amélioration seulement modérée sous oxygène.",
+          "correctionGenerale": "<b>Hypoventilation alvéolaire</b>\n• PaCO₂ élevée + PaO₂ basse\n• Amélioration significative avec l’oxygène\n\n<b>Shunt</b>\n• PaCO₂ normale + PaO₂ basse (< 120 mmHg pour la somme PaO₂ + PaCO₂)\n• Amélioration modérée avec l’oxygène"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 8</b>\n\nPar quelle manœuvre simple peut-on différencier le shunt vrai de l’effet shunt chez un patient ventilé ?",
+          "images": [],
+          "reponseAttendue": "Par la manœuvre d’augmentation de la fraction inspirée d’oxygène (FiO₂). Shunt vrai : faible ou pas d’amélioration de la PaO₂ avec l’augmentation de la FiO₂, le gradient alvéolo-artériel restant élevé. Effet shunt : amélioration significative de la PaO₂ avec l’augmentation de la FiO₂, le gradient alvéolo-artériel tendant à se réduire.",
+          "correctionGenerale": "<b>Manœuvre de l’augmentation de la fraction d’oxygène inspiré (FiO₂)</b>\n\n• <b>Shunt vrai</b> : faible ou pas d’amélioration de la PaO₂ avec l’augmentation de la FiO₂ ; le gradient A-a reste élevé\n• <b>Effet shunt</b> : amélioration significative de la PaO₂ avec l’augmentation de la FiO₂ ; le gradient A-a tend à se réduire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 9</b>\n\nDéfinissez la vasoconstriction pulmonaire hypoxique (VPH) et, brièvement, deux mécanismes qu’elle fait intervenir.",
+          "images": [],
+          "reponseAttendue": "La vasoconstriction pulmonaire hypoxique est la contraction des artères pulmonaires en réponse à une hypoxie alvéolaire, dont l’objectif est d’optimiser le rapport ventilation/perfusion en redirigeant le flux sanguin vers des zones pulmonaires mieux ventilées. Mécanismes : 1) réaction des cellules endothéliales, qui produisent des médiateurs vasoconstricteurs (endothéline-1, sérotonine) en réponse à l’hypoxie, entraînant la contraction des muscles lisses des parois vasculaires pulmonaires ; 2) effet direct de l’hypoxie sur les muscles lisses pulmonaires (mécanismes locaux), avec contraction des cellules musculaires lisses et augmentation de la résistance vasculaire.",
+          "correctionGenerale": "<b>Vasoconstriction pulmonaire hypoxique (VPH)</b> = contraction des artères pulmonaires en réponse à une hypoxie alvéolaire.\n→ <b>Objectif</b> : optimisation du rapport ventilation/perfusion, en redirigeant le flux sanguin vers des zones pulmonaires mieux ventilées.\n\n<b>Mécanismes impliqués</b>\n1. <b>Réaction des cellules endothéliales</b> : production de médiateurs vasoconstricteurs (endothéline-1, sérotonine) en réponse à l’hypoxie = contraction des muscles lisses dans les parois des vaisseaux pulmonaires\n2. <b>Effet sur les muscles lisses pulmonaires</b> : stimulation directe des muscles lisses par l’hypoxie (mécanismes locaux) = contraction des cellules musculaires lisses des vaisseaux pulmonaires, augmentant la résistance vasculaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Physiologie — Question n° 10</b>\n\nCitez trois situations ou agents médicamenteux qui inhibent la vasoconstriction pulmonaire hypoxique.",
+          "images": [],
+          "reponseAttendue": "L’oxygénothérapie (qui réduit l’hypoxie alvéolaire et donc le stimulus), le décubitus ventral, les antagonistes des récepteurs de l’endothéline, les inhibiteurs de la PDE5, les agonistes des récepteurs des prostaglandines, la nitroglycérine et les autres nitrates, les inhibiteurs calciques, ainsi que les analgésiques et sédatifs (influence indirecte).",
+          "correctionGenerale": "• <b>Oxygénothérapie</b> : réduit l’hypoxie alvéolaire, diminuant ainsi le stimulus pour la vasoconstriction\n• <b>Décubitus ventral</b>\n• <b>Antagonistes des récepteurs de l’endothéline</b> : bloquent l’action de l’endothéline-1, vasoconstricteur puissant\n• <b>Inhibiteurs de la PDE5</b> : augmentent les niveaux de GMP cyclique, favorisant la vasodilatation et diminuant la vasoconstriction pulmonaire\n• <b>Agonistes des récepteurs des prostaglandines</b> : imitent la prostacycline, induisant une vasodilatation\n• <b>Nitroglycérine et autres nitrates</b> : favorisent la vasodilatation via l’augmentation du GMP cyclique\n• <b>Inhibiteurs calciques</b>\n• <b>Analgésiques et sédatifs</b> : peuvent influencer indirectement la réponse vasoconstrictrice"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2023 - EVCP - Sujet 1",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES AREA/Annale 2023 copie.pdf",
+      "orderIndex": 31,
+      "vignette": "<b>Sujet 1 : amygdalectomie</b>\n\nUn enfant de 4 ans (17 kg), accompagné de sa mère (divorcée depuis 6 mois), présente une symptomatologie d’apnées obstructives du sommeil. Une indication d’amygdalectomie est portée par le chirurgien.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQui doit signer l’autorisation d’opérer ?",
+          "images": [],
+          "reponseAttendue": "Une intervention chirurgicale nécessite l’autorisation des deux titulaires de l’autorité parentale, même en cas de séparation : donc les deux parents. L’autorisation peut toutefois n’être signée que par un seul parent lorsqu’un seul des deux dispose de l’autorité parentale, ou lorsque l’un des deux ne peut être physiquement présent — dans ce cas, une indication doit être inscrite dans le dossier de l’enfant.",
+          "correctionGenerale": "Une intervention chirurgicale nécessite l’<b>autorisation des deux titulaires de l’autorité parentale</b>, même en cas de séparation.\n\nDonc : <b>les deux parents</b>.\n\nL’autorisation peut toutefois n’être signée que par un seul parent :\n• lorsqu’un seul des deux dispose de l’autorité parentale ;\n• lorsque l’un des deux ne peut être physiquement présent — dans ce cas, une indication doit être inscrite dans le dossier de l’enfant."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle évaluation préanesthésique proposez-vous ?",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-053-160.jpg",
+            "annales-area/annale-2023-copie/figures/img-054-165.png",
+            "annales-area/annale-2023-copie/figures/img-055-169.jpg",
+            "annales-area/annale-2023-copie/figures/img-053-161.jpg"
+          ],
+          "reponseAttendue": "Antécédents personnels de l’enfant (grossesse, naissance), poids de naissance, allergies, antécédents familiaux, évaluation du risque respiratoire — avec dépistage du SAOS par l’interrogatoire des parents (ronflement plus de la moitié du temps, ronflement bruyant, difficultés ou lutte pour respirer, pauses respiratoires observées, réveil fatigué le matin ; la présence d’au moins 3 symptômes est prédictive d’un SAOS et augmente le risque d’événements respiratoires peropératoires) — et évaluation du risque hémorragique.",
+          "correctionGenerale": "• Antécédents personnels de l’enfant (grossesse, naissance)\n• Poids de naissance\n• Allergies\n• Antécédents familiaux\n• <b>Évaluation du risque respiratoire</b>\n• <b>Évaluation du risque hémorragique</b>\n\n<b>Dépister un SAOS : interrogatoire des parents</b>\n« Pendant que votre enfant dort :\n1) Ronfle-t-il plus de la moitié du temps ?\n2) Ronfle-t-il bruyamment ?\n3) Présente-t-il des difficultés pour respirer ou lutte-t-il pour respirer ?\n4) Avez-vous déjà remarqué que votre enfant s’arrête de respirer pendant la nuit ?\n5) Est-ce que votre enfant se réveille fatigué le matin ? »\n\n<b>La présence de ≥ 3 symptômes est prédictive d’un SAOS</b> → augmentation du risque d’événements respiratoires peropératoires.\n\n<b>Signes témoins de troubles respiratoires lors d’une hypertrophie amygdalienne</b> (en gras, les signes les plus discriminants)\n• <i>Symptômes nocturnes</i> : ronflement, <b>pauses respiratoires</b>, <b>sueurs</b>, énurésie, parasomnie, <b>sommeil agité</b>, position anormale pendant le sommeil (tête en hyperextension)\n• <i>Symptômes à l’éveil</i> : difficultés de réveil, <b>irritabilité au réveil</b>, hyperactivité, troubles de l’attention et de la mémoire, <b>asthénie au réveil</b>, somnolence diurne, céphalées matinales ou vomissement, anorexie au petit déjeuner, <b>respiration buccale</b>, troubles de la croissance (tardifs)\n\n<b>Questionnaire STBUR</b> — « The STBUR questionnaire for predicting perioperative respiratory adverse events in children at risk for sleep-disordered breathing » (<i>Pediatric Anesthesia</i>).\n\n<b>Évaluation du risque hémorragique — questionnaire de Watson-Williams</b> : une réponse à une question de type A, ou deux réponses à une question de type B, signalent une histoire clinique positive de trouble de l’hémostase ; ces questions sont à poser aussi aux parents et dans la fratrie.\n• <i>Type A</i> : saignement de plus de 24 heures ou transfusion après un acte chirurgical (circoncision, amygdalectomie…) ? hémorragie prolongée ou récidive hémorragique après 24 heures suite à une extraction dentaire ? antécédents d’hématurie inexpliquée ? consommation de salicylés ou d’AINS au cours des deux semaines précédentes ? ecchymoses anormales, pétéchies, signes de malnutrition ou de malabsorption, signes de maladie hépatique ou hématologique à l’examen ?\n• <i>Type B</i> : incidents précédents chez les parents ou chez les hommes du côté maternel ? ecchymoses faciles sans cause apparente ? épistaxis ayant nécessité un tamponnement chirurgical ? sites de ponction veineuse saignant plus de 15 minutes après le pansement ? tendance anormale au saignement déjà signalée ?\n\n<i>Référence citée : « Pediatric tonsillectomy: clinical practice guidelines », SFORL / AFCA / SFAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLe chirurgien propose une prise en charge ambulatoire. Précisez les critères permettant de valider une prise en charge ambulatoire.",
+          "images": [],
+          "reponseAttendue": "Âge de plus de 3 ans ; information, compréhension et adhésion des parents ; domicile à moins d’une heure d’un centre hospitalier, capacité d’appel du 15, et présence de 2 accompagnants si le retour se fait en voiture. Et absence des critères d’exclusion suivants : hypertrophie amygdalienne obstructive avec signes d’insuffisance cardiaque droite, comorbidité cardiorespiratoire, obésité, troubles obstructifs à risque respiratoire postopératoire élevé, anomalies de l’hémostase, classe ASA > II, anomalies ou traitements neurologiques entraînant une hypotonie responsable d’hypoventilation, anomalies malformatives ou tumorales cervico-faciales responsables d’obstruction des voies respiratoires.",
+          "correctionGenerale": "<b>Critères requis</b>\n• Âge : plus de 3 ans\n• Information, compréhension et adhésion des parents\n• Domicile à moins d’une heure d’un centre hospitalier — capacité d’appel du 15 — si retour en voiture, présence de 2 accompagnants\n\n<b>Absence des critères suivants</b>\n• Hypertrophie amygdalienne obstructive avec signes d’insuffisance cardiaque droite\n• Comorbidité cardiorespiratoire\n• Obésité\n• Troubles obstructifs à risque respiratoire postopératoire élevé\n• Anomalies de l’hémostase\n• Classe ASA > II\n• Anomalies ou traitements neurologiques entraînant une hypotonie responsable d’hypoventilation\n• Anomalies malformatives ou tumorales cervico-faciales responsables d’obstruction des voies respiratoires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nPrescrivez-vous un bilan biologique préopératoire ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Si l’interrogatoire est négatif : AUCUN. Pas de prescription systématique d’un bilan d’hémostase, car l’enfant a acquis la marche ; pas de recherche systématique d’apnées du sommeil par polysomnographie si l’interrogatoire et l’examen clinique sont sans particularité.",
+          "correctionGenerale": "<b>Si l’interrogatoire est négatif : AUCUN.</b>\n\n• Pas de prescription systématique d’un bilan d’hémostase, car l’enfant a acquis la marche\n• Pas de recherche systématique d’apnées du sommeil par polysomnographie si l’interrogatoire et l’examen clinique sont sans particularité"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle est votre prescription préopératoire concernant le jeûne et la prémédication ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Jeûne : privilégier un jeûne non strict — 6 h pour les solides, 1 h pour les liquides clairs dans la limite de 3 mL/kg. Prémédication : non systématique ; en présence de facteurs de risque de troubles du comportement postopératoire (âge, anxiété de l’enfant et des parents, antécédents), clonidine 2 à 4 µg/kg per os.",
+          "correctionGenerale": "<b>Jeûne</b> : privilégier un <b>jeûne non strict</b>\n• 6 h pour les solides\n• 1 h pour les liquides clairs, dans la limite de 3 mL/kg\n\n<b>Prémédication</b> : non systématique\n• Si facteurs de risque de troubles du comportement postopératoire (âge, anxiété de l’enfant et des parents, antécédents) : <b>CLONIDINE 2 à 4 µg/kg PO</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLe matin de l’intervention, les parents vous précisent que l’enfant est enrhumé depuis 2 jours, avec une rhinorrhée claire et une température à 37,8 °C ce matin. Décidez-vous de récuser ou d’anesthésier l’enfant ? Justifiez votre réponse.",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-063-193.jpg"
+          ],
+          "reponseAttendue": "Anesthésie validée, car il s’agit d’une infection des voies aériennes supérieures légère (toux sèche, rhinorrhée claire), qui autorise l’anesthésie avec mesures préventives.",
+          "correctionGenerale": "<b>Décision : anesthésie validée, car IVAS légère.</b>\n\n<b>Algorithme</b> — IVAS actuelle ou datant de 2 semaines :\n• <b>Urgence ?</b> → <b>Oui</b> : anesthésie avec mesures préventives\n• <b>Non</b> → évaluer la gravité de l’IVAS :\n  – <b>Sévère</b> (rhinorrhée purulente, toux productive, sibilants, fièvre, abattement) → report et réévaluation dans 2 semaines\n  – <b>Moyenne</b> (rhinorrhée purulente, toux productive) → décision individualisée\n  – <b>Légère</b> (toux sèche, rhinorrhée claire) → <b>anesthésie avec mesures préventives</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nSi vous décidez d’anesthésier l’enfant, décrivez l’induction anesthésique que vous allez réaliser.",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-065-200.jpg"
+          ],
+          "reponseAttendue": "Préparation des voies aériennes supérieures : chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une nébulisation de salbutamol avant l’anesthésie générale (2,5 mg si le poids est inférieur à 20 kg, 5 mg au-delà). Induction inhalatoire au sévoflurane. Discuter une prémédication pharmacologique et/ou non pharmacologique.",
+          "correctionGenerale": "<b>Préparation des VAS</b> — recommandation SFAR 2018 :\n<b>R11</b> — Chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une <b>nébulisation de salbutamol avant l’anesthésie générale</b> <i>(grade 2+, accord FORT)</i>.\n<i>Posologies : < 20 kg = 2,5 mg ; > 20 kg = 5 mg.</i>\n\n<b>Induction inhalatoire : SÉVOFLURANE.</b>\n\n<b>Discuter une prémédication pharmacologique et/ou non pharmacologique.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelle méthode de contrôle des voies aériennes choisissez-vous ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Une intubation orotrachéale avec sonde à ballonnet, car la chirurgie est douloureuse et impose une anesthésie générale profonde, et car le geste chirurgical expose à un risque d’inhalation.",
+          "correctionGenerale": "→ <b>Intubation orotrachéale avec sonde à ballonnet</b>\n\n• Chirurgie douloureuse : AG profonde\n• Geste chirurgical : risque d’inhalation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelle stratégie de prévention des vomissements postopératoires mettez-vous en œuvre ? Justifiez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Prévention systématique des NVPO, avec une injection peropératoire et un suivi postopératoire rapproché : ondansétron (Zophren®) 0,1 à 0,15 mg/kg et dexaméthasone 0,15 mg/kg par voie intraveineuse.",
+          "correctionGenerale": "<b>Prévention des NVPO systématique</b> — une injection peropératoire et un suivi postopératoire rapproché +++\n\n• <b>Ondansétron (Zophren®)</b> : 0,1 à 0,15 mg/kg\n• <b>Dexaméthasone</b> : 0,15 mg/kg par voie intraveineuse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nRédigez vos prescriptions postopératoires.",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-072-223.jpg",
+            "annales-area/annale-2023-copie/figures/img-070-216.jpg",
+            "annales-area/annale-2023-copie/figures/img-073-227.jpg",
+            "annales-area/annale-2023-copie/figures/img-074-231.jpg"
+          ],
+          "reponseAttendue": "Analgésie : relais par paracétamol 15 mg/kg, recours à la nalbuphine 0,05 à 0,2 mg/kg IVL à la demande selon protocole ; ordonnance de sortie avec paracétamol 15 mg/kg/6 h per os systématiquement pendant 2 jours et Solupred 1 mg/kg/j per os, débuté à J+1 et poursuivi jusqu’à J+2. NVPO et ingesta : recours au dropéridol 30 µg/kg IVL, poursuite de l’ondansétron 0,1 mg/kg PO, recours à la métopimazine 5 mg en suppositoire, reprise des boissons à H+2 et de l’alimentation à H+4. Sortie au minimum à H+6 après vérification de la reprise de l’alimentation, de l’absence de saignement et de la compréhension des consignes.",
+          "correctionGenerale": "<b>Postopératoire</b>\n\n<i>Analgésie</i>\n• Relais paracétamol 15 mg/kg\n• Recours : nalbuphine 0,05-0,2 mg/kg IVL à la demande, selon protocole\n• Vérification de l’ordonnance de sortie : paracétamol 15 mg/kg/6 h PO systématiquement pendant 2 jours ; Solupred 1 mg/kg/j PO (débuté à J+1 postopératoire et à poursuivre jusqu’à J+2)\n\n<i>NVPO / ingesta</i>\n• Recours dropéridol 30 µg/kg IVL\n• Poursuite de l’ondansétron 0,1 mg/kg PO\n• Recours : métopimazine 5 mg en suppositoire\n• Reprise des boissons : H+2 postopératoire\n• Reprise de l’alimentation : H+4 postopératoire\n\n<i>Sortie</i>\n• Minimum H+6 postopératoire, après vérification de la reprise de l’alimentation, de l’absence de saignement par le chirurgien et de la compréhension des consignes d’ambulatoire par le parent\n\n<b>Rappel du protocole peropératoire</b> : co-induction inhalatoire (sévoflurane) et IV, ou IV seule si grand enfant (sufentanil 0,1-0,2 µg/kg puis propofol 2 mg/kg) ; intubation orotrachéale avec sonde préformée, attention à la mobilisation ; risque d’obstruction des voies aériennes et de laryngo-broncho-spasme. Entretien anesthésique volatil (sévoflurane) ; prévention des NVPO par Solumédrol 1 mg/kg + ondansétron 0,1 mg/kg ; analgésie postopératoire selon la « stratégie corticoïdes » avec paracétamol 15 mg/kg IVL. Réveil : aspiration des sécrétions et du sang, ablation du packing pharyngé, extubation vigile en décubitus latéral +/− Trendelenburg (<i>tonsil position</i>), limitation des stimulations laryngées (<i>no touch strategy</i>).\n\n<b>Recommandation 16 (SFORL)</b> : « L’antalgie postopératoire recommandée après amygdalectomie est la suivante (accord professionnel) : une administration de paracétamol de façon systématique, à horaires programmés ; en cas de risque respiratoire accru, l’option AINS sera privilégiée compte tenu de l’absence de risque de dépression respiratoire ; en cas de risque hémorragique accru, l’option tramadol sera privilégiée compte tenu de l’absence de majoration du risque hémorragique et initiée en hospitalisation conventionnelle en l’absence de SAHOS ou de SARVAS préopératoire ; les deux autres options thérapeutiques (AINS modifiée et corticoïdes) peuvent être utilisées mais n’ont pas fait l’objet d’études spécifiques. En cas d’effet antalgique insuffisant, malgré le schéma prescrit, une nouvelle évaluation médicale est recommandée. »\n\n<b>Options antalgiques comparées</b>\n• <i>À l’hôpital</i> — option AINS : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os, ibuprofène en hospitalisation. Option tramadol : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os, tramadol en hospitalisation (non ambulatoire). Option corticoïdes : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os. Option AINS modifiée : morphine en SSPI, paracétamol IV ou per os, ibuprofène en hospitalisation.\n• <i>À la maison</i> — option AINS : paracétamol per os + ibuprofène. Option tramadol : paracétamol per os + tramadol. Option corticoïdes : paracétamol per os + prednisolone. Option AINS modifiée : paracétamol per os + ibuprofène."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCet enfant présente un saignement incontrôlable 2 heures après la fin de l’intervention ; une indication de reprise chirurgicale est portée. Décrivez votre induction anesthésique dans ce contexte.",
+          "images": [],
+          "reponseAttendue": "Urgence médico-chirurgicale, avec information des parents. Induction en séquence rapide par voie intraveineuse, avec protection des voies aériennes par une sonde d’intubation à ballonnet (aspiration et chariot d’urgence avec matériel d’intubation difficile à disposition). Compensation des pertes de sang, 3 volumes pour 1 volume, par des cristalloïdes. Groupe sanguin et RAI.",
+          "correctionGenerale": "• <b>Urgence médico-chirurgicale</b>\n• <b>Information des parents</b>\n• <b>Induction en séquence rapide par voie intraveineuse</b>, avec protection des voies aériennes par une sonde d’intubation à ballonnet (aspiration et chariot d’urgence avec matériel d’intubation difficile à disposition)\n• <b>Compensation des pertes de sang 3 volumes pour 1 volume</b> par des cristalloïdes\n• <b>Groupe sanguin + RAI</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2023 - EVCP - Sujet 2",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES AREA/Annale 2023 copie.pdf",
+      "orderIndex": 32,
+      "vignette": "<b>Sujet 2 : fracture de l’extrémité supérieure du fémur</b>\n\nMadame M., âgée de 83 ans, est hospitalisée le jeudi 20/07/2023 après-midi dans le service d’orthopédie pour une fracture de l’extrémité supérieure du fémur gauche. Elle habite seule dans un pavillon. Elle a été retrouvée au sol chez elle. Elle dit avoir trébuché la veille vers 17 h et avoir passé la nuit au sol.\n\nAntécédents : hypertension artérielle, arythmie complète par fibrillation auriculaire et bronchopneumopathie chronique obstructive. Elle a été victime d’un accident ischémique transitoire il y a 4 mois. Sa dernière consultation de cardiologie remonte à 2 mois. Elle a été opérée d’une hystérectomie il y a 20 ans et d’une prothèse du genou droit il y a 5 ans.\n\nTraitements : bisoprolol, amlodipine, acide acétylsalicylique (Kardégic®), dabigatran, atorvastatine et salbutamol en aérosol (Ventoline®). Elle ne se rappelle pas de la dernière prise des médicaments.\n\nExamen clinique : poids 82 kg, taille 162 cm, température tympanique 36,7 °C, pression artérielle 154/92 mmHg, fréquence cardiaque 92 bpm, SpO₂ 94 % à l’air ambiant, auscultation cardiopulmonaire normale, pas de signes de décompensation cardiaque, pas de critères d’intubation ni de ventilation difficile.\n\nLe chirurgien propose de l’opérer d’une prothèse intermédiaire de la hanche le vendredi 21/07/2023 après-midi. Il vous appelle pour l’évaluation pré-anesthésique.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels autres éléments recherchez-vous à l’interrogatoire et à l’examen physique pour compléter l’évaluation de Madame M. ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : recherche d’allergie, d’antécédents de complications en lien avec l’anesthésie, d’antécédents de saignements peropératoires ; évaluation neurologique (conscience, déficit) ; évaluation de la douleur par l’ENS ; compréhension de l’information reçue sur la nécessité de la chirurgie en urgence ; antécédents de décompensation de BPCO et d’hospitalisations. À l’examen clinique : évaluation de la fracture (ouverte ? signes de compression vasculaire ou nerveuse ? hématome ?) et recherche de points de compression cutanés et d’escarres.",
+          "correctionGenerale": "<b>INTERROGATOIRE</b>\n• Recherche d’allergie, d’antécédents de complications en lien avec l’anesthésie, d’antécédents de saignements peropératoires\n• Évaluation neurologique : conscience, déficit\n• Évaluation de la douleur par l’ENS\n• Compréhension de l’information reçue sur la nécessité de la chirurgie en urgence\n• Décompensations de BPCO / hospitalisations\n\n<b>EXAMEN CLINIQUE</b>\n• Évaluation de la fracture : ouverte ? signes de compression vasculaire ou nerveuse ? hématome ?\n• Recherche de points de compression cutanés / escarres"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels examens paracliniques demandez-vous ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Groupe sanguin et RAI ; NFS-plaquettes ; ionogramme sanguin, urée, créatinine et CPK (nuit passée au sol, risque de rhabdomyolyse) ; dosage de l’anti-IIa (dabigatran) ; ECG ; bilan hépatique.",
+          "correctionGenerale": "• <b>Groupe sanguin, RAI</b>\n• <b>NFS, plaquettes</b>\n• <b>Ionogramme sanguin, urée, créatinine, CPK</b>\n• <b>Dosage de l’anti-IIa DABIGATRAN</b>\n• <b>ECG</b>\n• <b>Bilan hépatique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLe bilan sanguin fait le 21/07/2023 à 10 h retrouve un débit de filtration glomérulaire (DFG) à 40 mL/min et un taux de dabigatran à 60 ng/mL. Quelle est votre conduite à tenir ? Argumentez.",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-085-265.jpg"
+          ],
+          "reponseAttendue": "Il s’agit d’une chirurgie à risque hémorragique élevé (hors neurochirurgie), réalisée en urgence, avec un dosage de dabigatran supérieur à 50 ng/mL : il faut donc arrêter le dabigatran et administrer l’idarucizumab 5 g IVL.",
+          "correctionGenerale": "• Chirurgie à <b>risque hémorragique élevé</b> (non neurochirurgie)\n• <b>En urgence</b>\n• <b>Dosage du dabigatran > 50 ng/mL</b>\n\n→ <b>ARRÊT DU DABIGATRAN</b>\n→ <b>IDARUCIZUMAB 5 g IVL</b>\n\n<i>L’algorithme GIHP « Procédure invasive non programmée pour un patient traité par anticoagulant oral direct » est reproduit : pour une procédure à risque hémorragique élevé (seuil [AOD] ≤ 50 ng/mL, ou ≤ 30 ng/mL si anesthésie neuraxiale ou geste neuraxial), on mesure la concentration en dabigatran ou en AOD anti-Xa ; si le résultat n’est pas disponible rapidement, idarucizumab 5 g IV pour le dabigatran, ou discussion des CCP 25-50 UI/kg pour les anti-Xa ; si la concentration est au-dessus du seuil, même conduite ; si elle est au-dessous, la procédure invasive peut être réalisée. Après le geste, thromboprophylaxie veineuse si nécessaire, puis reprise de l’anticoagulation curative selon le risque hémorragique et thrombotique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nFinalement, le chirurgien décide de reporter l’intervention au lundi 24/07/2023 par manque de matériel. Quels sont les principes de votre prescription en attendant la chirurgie ?",
+          "images": [],
+          "reponseAttendue": "Information de la patiente ; prise en charge de la douleur avec objectif ENS < 3 par analgésie multimodale ; immobilisation ; réhydratation ; surveillance de la rhabdomyolyse ; aérosols de Ventoline® quotidiens ; thromboprophylaxie par Lovenox® à dose préventive (et, en l’absence d’antagonisation, prévoir un nouveau dosage du dabigatran).",
+          "correctionGenerale": "• <b>Information de la patiente</b>\n• <b>Prise en charge de la douleur</b> avec objectif ENS < 3, par analgésie multimodale\n• <b>Immobilisation</b>\n• <b>Réhydratation</b>\n• <b>Surveillance de la rhabdomyolyse</b>\n• <b>Aérosols de Ventoline® quotidiens</b>\n• <b>Thromboprophylaxie par LOVENOX® préventif</b> (si pas d’antagonisation, prévoir un nouveau dosage)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLe lundi 24/07/2023, vous prenez en charge la patiente au bloc opératoire. Une anesthésie générale a été décidée. Décrivez votre conduite à tenir pour l’induction de l’anesthésie.",
+          "images": [],
+          "reponseAttendue": "Patiente âgée, fracture donc douleur et consommation préalable de morphiniques fortement probable ; même à jeun, une gastroparésie est hautement probable, donc il faut discuter une induction en séquence rapide (avec Esmeron®). L’objectif est le maintien de la pression artérielle moyenne : prévoir de la noradrénaline à l’induction. Compte tenu de l’âge et des antécédents cardiologiques, privilégier un maintien de l’anesthésie par voie intraveineuse.",
+          "correctionGenerale": "• Patiente âgée / fracture = douleur / consommation préalable de morphiniques fortement probable\n• Même si la patiente est à jeun, une <b>gastroparésie est hautement probable</b>\n• <b>Discuter une induction en séquence rapide +++++</b> (Esmeron®)\n• <b>Objectif : maintien de la pression artérielle moyenne</b> → prévoir de la noradrénaline à l’induction\n• Âge et antécédents cardiologiques : privilégier le <b>maintien de l’anesthésie par voie intraveineuse</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nEn peropératoire, la patiente présente une désaturation à 82 % avec une augmentation des pressions des voies aériennes (pression de crête à 40 cmH₂O), une pression artérielle à 75/35 mmHg et une fréquence cardiaque à 142 bpm. L’auscultation pulmonaire retrouve des râles sibilants bilatéraux. Les pertes sanguines sont estimées à 200 mL.\n\nQuels sont les diagnostics à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Un état de choc associé à un bronchospasme : choc anaphylactique ; choc cardiogénique (embolie pulmonaire, embolie au ciment, embolie graisseuse, œdème aigu pulmonaire, infarctus ou ACFA) ; cause respiratoire (pneumothorax par rupture d’emphysème, obstruction trachéo-bronchique).",
+          "correctionGenerale": "<b>État de choc + bronchospasme</b>\n\n• <b>Anaphylactique</b>\n• <b>Cardiogénique</b>\n  – Embolie pulmonaire\n  – Embolie au ciment\n  – Embolie graisseuse\n  – Œdème aigu pulmonaire / infarctus ou ACFA\n• <b>Respiratoire</b>\n  – Pneumothorax (rupture d’emphysème)\n  – Obstruction trachéo-bronchique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nVous retenez le diagnostic de choc anaphylactique. Quelle est votre prise en charge immédiate ?",
+          "images": [
+            "annales-area/annale-2023-copie/figures/img-093-290.jpg"
+          ],
+          "reponseAttendue": "Interrompre l’administration du produit suspecté, appeler à l’aide, arrêter la chirurgie. Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg. Remplissage vasculaire rapide : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin. Adrénaline IVD (1 mg dilué dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg : grade II 20 µg puis 50 µg toutes les 2 min ; grade III titration de 100 à 200 µg toutes les 1 à 2 min ; grade IV bolus de 1 mg. En cas d’inefficacité après 10 minutes : doubler les bolus à 2 mg, adrénaline IVSE 200 µg/h, noradrénaline IVSE, glucagon si bêta-bloquant, poursuite du remplissage jusqu’à 30 mL/kg, discussion de la vasopressine. En cas de bronchospasme, salbutamol après correction de l’hypotension. Prélèvements sanguins dès que possible et hémisuccinate d’hydrocortisone 200 mg IVDL.",
+          "correctionGenerale": "<b>CHOC ANAPHYLACTIQUE AU BLOC OPÉRATOIRE — grades ≥ II</b>\n\n<b>CONFIRMER</b> : hypotension, chute de la capnie, tachycardie, bronchospasme, rash retardé et angio-œdème (œdème laryngé, confusion avec un œdème angioneurotique), ACR.\n<b>ÉLIMINER</b> : embolie pulmonaire ou amniotique, IDM, pneumothorax ou obstruction trachéo-bronchique, surdosage en anesthésiques, hémorragie.\n\n<b>INTERROMPRE l’administration du produit suspecté — APPEL À L’AIDE — STOP chirurgie.</b>\n\n<b>TRAITER</b>\n• Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg\n• <b>Remplissage vasculaire rapide</b> : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin\n• <b>Adrénaline IVD</b> (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg\n  – Grade II : 20 µg puis 50 µg toutes les 2 min (attention à la double dilution de l’adrénaline dans ce cas)\n  – Grade III : titration de 100 µg à 200 µg toutes les 1 à 2 min\n  – Grade IV : bolus d’adrénaline de 1 mg (cf. aide cognitive ACR)\n• <b>En cas d’inefficacité après 10 minutes</b> : doubler les bolus d’adrénaline à 2 mg ; adrénaline IVSE à débuter à 200 µg/h dès 3 bolus IV administrés ; noradrénaline IVSE à débuter à 300 µg – 1 mg/h après 3 bolus d’adrénaline ; glucagon 1 à 2 mg IVDL toutes les 5 min si le patient est sous bêta-bloquant ; poursuivre le remplissage cristalloïde jusqu’à 30 mL/kg ; considérer un monitorage non invasif de la volémie et/ou une échographie cardiaque ; discuter la vasopressine 2 à 10 UI IVD puis 2 UI/h\n• <b>En cas de bronchospasme</b> : après correction de l’hypotension artérielle (le salbutamol pouvant la majorer) — salbutamol en nébulisation (spray peu efficace dans la sonde d’intubation) ; salbutamol IVD 100 à 200 µg (ampoule de 0,5 mg diluée dans 10 mL = 50 µg/mL), relais IVSE 300 µg à 1,5 mg/h\n• Prélèvements sanguins dès que possible\n• Hémisuccinate d’hydrocortisone 200 mg IVDL (dose unique)\n• En cas d’arrêt cardiaque réfractaire : envisager une assistance cardio-circulatoire ECLS/ECMO\n\n<b>FEMME ENCEINTE</b> : discuter une extraction fœtale immédiate si > 20 SA ; décubitus latéral gauche ; remplissage et adrénaline identiques.\n\n<b>APRÈS</b> : surveillance intensive au moins 6 h après la disparition des signes ; information du patient ; prise de rendez-vous en consultation d’allergo-anesthésie ; déclaration à la pharmacovigilance.\n\n<b>Dosages</b> : histamine (tube EDTA) recommandée < 30 min ; tryptase (tube sec) < 30 min, 1 à 2 h et > 24 h ; IgE anti-ammoniums quaternaires (tube sec)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nAprès un séjour en unité de surveillance continue, la patiente est transférée dans le service d’orthopédie à J2 postopératoire. À J3 postopératoire, l’infirmière du service vous appelle car Madame M. présente une altération de son état de conscience avec des convulsions de l’hémicorps gauche. À votre arrivée : score de Glasgow 7, pression artérielle 178/102 mmHg, fréquence cardiaque 135 bpm et SpO₂ 90 % sous 6 L/min d’oxygène aux lunettes nasales.\n\nQuelle est votre conduite à tenir immédiate ?",
+          "images": [],
+          "reponseAttendue": "Urgence médico-chirurgicale : hospitalisation en soins intensifs, mise en condition (scope, perfusion, dextro). Traitement symptomatique : protection des voies aériennes supérieures par intubation orotrachéale, maintien de l’anesthésie générale, maintien de la pression de perfusion cérébrale > 65 mmHg, respect de l’HTA avec PAS < 180 mmHg dans l’attente du scanner. Prise en charge diagnostique : scanner cérébral avec et sans injection. Information des proches.",
+          "correctionGenerale": "• <b>Urgence médico-chirurgicale</b>\n• <b>Hospitalisation en soins intensifs</b>\n• <b>Mise en condition</b> : scope, perfusion, dextro\n\n<b>Traitement symptomatique</b>\n• Protection des voies aériennes supérieures par intubation orotrachéale\n• Maintien de l’anesthésie générale\n• Maintien de la pression de perfusion cérébrale > 65 mmHg\n• Respect de l’HTA avec PAS < 180 mmHg dans l’attente du scanner\n\n<b>Prise en charge diagnostique</b>\n• Scanner cérébral avec et sans injection\n\n<b>Information des proches</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nMadame M. est prise en charge en réanimation pour un accident vasculaire cérébral sylvien étendu droit. En dehors de l’hypotension artérielle, quelles sont les agressions cérébrales secondaires d’origine systémique (ACSOS) à prévenir ?",
+          "images": [],
+          "reponseAttendue": "Les dysglycémies, les dysnatrémies, l’hypoxie et l’hyperoxie, l’hypo- et l’hypercapnie, l’hyperthermie et l’anémie.",
+          "correctionGenerale": "• <b>Dysglycémies</b>\n• <b>Dysnatrémies</b>\n• <b>Hypoxie / hyperoxie</b>\n• <b>Hypo- ou hypercapnie</b>\n• <b>Hyperthermie</b>\n• <b>Anémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nÀ J2 d’hospitalisation en réanimation, Madame M. présente une mydriase bilatérale. Une mort encéphalique est suspectée. Quels sont les éléments cliniques du diagnostic de la mort encéphalique ?",
+          "images": [],
+          "reponseAttendue": "En l’absence de facteurs confondants (sédation, hypothermie) : un coma aréactif avec un score de Glasgow à 3, associé à la perte de l’ensemble des réflexes du tronc cérébral — cornéen, photomoteur, oculo-céphalogyre, oculo-cardiaque, toux — et à l’abolition de la ventilation spontanée, contrôlée par l’épreuve d’hypercapnie.",
+          "correctionGenerale": "<b>En l’absence de facteurs confondants</b> (sédation, hypothermie) :\n\n<b>Coma aréactif, GLASGOW 3</b>, avec perte de l’ensemble des réflexes du tronc cérébral :\n• Cornéen\n• Photomoteur\n• Oculo-céphalogyre\n• Oculo-cardiaque\n• Toux\n• <b>Ventilation spontanée</b> — contrôlée par l’épreuve d’hypercapnie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nComment confirmer le diagnostic en vue d’un prélèvement d’organes ?",
+          "images": [],
+          "reponseAttendue": "Par un angioscanner cérébral injecté, ou par deux EEG de 20 minutes réalisés à 4 heures d’intervalle.",
+          "correctionGenerale": "• <b>Angioscanner cérébral injecté</b>\n• <b>2 EEG de 20 minutes réalisés à 4 heures d’intervalle</b>"
+        }
+      ]
+    }
+  ]
+}

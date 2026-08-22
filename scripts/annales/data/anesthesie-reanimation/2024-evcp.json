@@ -1,0 +1,143 @@
+{
+  "sources": {
+    "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf": {
+      "atelier": "annales-area/corrige-evcp-2024-area-b",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Le corrigé reproduit les questions mais non les énoncés cliniques complets des deux cas : les vignettes ci-dessous sont reconstituées à partir des seuls éléments cités dans le corrigé, et signalées comme telles."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2024 - EVCP - Cas clinique 1",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf",
+      "orderIndex": 34,
+      "vignette": "<i>Le corrigé ne reproduit pas l’énoncé officiel du cas. Les éléments cliniques qu’il mentionne sont les suivants :</i>\n\nPatient admis dans un état comateux, dans un contexte de fibrillation auriculaire sous anticoagulation orale, avec un déficit neurologique brutal. Le scanner cérébral en coupe axiale montre une hypodensité au sein d’une artère cérébrale — le tronc basilaire —, le scanner injecté passant par le tronc cérébral et les citernes de la base du crâne.\n\nLes gaz du sang retrouvent : pH 7,34 ; HCO₃⁻ 12 mmol/L ; PaCO₂ 22 mmHg.\n\nL’évolution est ensuite marquée par une hypotension réfractaire, une fièvre et des marbrures.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels examens initiaux devez-vous prescrire afin d’évaluer ce patient dans cet état comateux ?",
+          "images": [],
+          "reponseAttendue": "Examens biologiques : glycémie capillaire immédiate, NFS, ionogramme, urée, créatinine, bilan hépatique, hémostase, recherche de toxiques. Imagerie : scanner cérébral sans injection en urgence puis injecté. ECG, hémocultures si suspicion infectieuse. L’objectif est de rechercher une cause neurologique (AVC) ou métabolique (hypoglycémie, troubles hydro-électrolytiques).",
+          "correctionGenerale": "<b>Examens biologiques</b> : glycémie capillaire immédiate, NFS, ionogramme, urée, créatinine, bilan hépatique, hémostase, recherche de toxiques.\n\n<b>Imagerie</b> : scanner cérébral sans injection en urgence, puis injecté.\n\n<b>Autres</b> : ECG, hémocultures si suspicion infectieuse.\n\n<b>Objectif</b> : rechercher une cause neurologique (AVC) ou métabolique (hypoglycémie, troubles hydro-électrolytiques)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel est votre diagnostic le plus probable ?",
+          "images": [],
+          "reponseAttendue": "Un accident vasculaire cérébral ischémique d’origine cardio-embolique, du tronc cérébral : le contexte associe une fibrillation auriculaire, une anticoagulation orale et un déficit neurologique brutal ; la TDM en coupe axiale montre une hypodensité au sein du tronc basilaire, et la TDM injectée passe par le tronc cérébral et les citernes de la base du crâne.",
+          "correctionGenerale": "<b>Contexte</b> : fibrillation auriculaire, anticoagulation orale, déficit neurologique brutal.\n\n<b>Diagnostic le plus probable = accident vasculaire cérébral ischémique d’origine cardio-embolique.</b>\n\nTDM en coupe axiale : hypodensité au sein d’une artère cérébrale = tronc basilaire ; TDM injectée passant par le tronc cérébral et les citernes de la base du crâne.\n\n→ <b>AVC ISCHÉMIQUE DU TRONC CÉRÉBRAL.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nCalculez le score de Glasgow du patient. Quelle est la conduite à tenir en urgence ?",
+          "images": [
+            "annales-area/corrige-evcp-2024-area-b/figures/img-008-056.png"
+          ],
+          "reponseAttendue": "Glasgow : ouverture oculaire 1, réponse verbale 1, réponse motrice 3 → score total 5/15. Conduite à tenir : urgence thérapeutique — intubation orotrachéale pour protection des voies aériennes (GCS ≤ 8) après induction en séquence rapide, ventilation mécanique avec neuroprotection, sédation IVSE par propofol et sufentanil, lutte contre les ACSOS, transfert en USINV ou en réanimation, et bilan complet.",
+          "correctionGenerale": "<b>Score de Glasgow</b>\n• Ouverture oculaire = 1\n• Réponse verbale = 1\n• Réponse motrice = 3\n→ <b>Score total = 5/15</b>\n\n<b>Conduite à tenir</b>\n• <b>Urgence thérapeutique</b>\n• <b>Intubation orotrachéale</b> pour protection des voies aériennes (GCS ≤ 8), après induction en séquence rapide\n• Ventilation mécanique après intubation, avec neuroprotection\n• Sédation IVSE : propofol / sufentanil\n• <b>Lutte contre les ACSOS</b>\n• Transfert en USINV / réanimation\n• Bilan complet\n\n<b>Rappel — composantes du score de Glasgow</b>\n• <i>Ouverture oculaire (E)</i> : 4 spontanée ; 3 à la demande ; 2 à la douleur ; 1 aucune\n• <i>Réponse verbale (V)</i> : 5 orientée ; 4 confuse ; 3 mots inappropriés ; 2 sons incompréhensibles ; 1 aucune\n• <i>Réponse motrice (M)</i> : 6 obéit aux ordres ; 5 localisation de la douleur ; 4 retrait ; 3 flexion anormale ; 2 extension ; 1 aucune"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nDéfinissez l’équilibre acido-basique de ce patient. Quelles étiologies évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "pH 7,34, HCO₃⁻ 12 mmol/L, PaCO₂ 22 mmHg : il s’agit d’une acidose métabolique partiellement compensée. Étiologies : acidocétose diabétique, acidose lactique (hypoperfusion, sepsis), intoxications (méthanol, éthylène glycol), insuffisance rénale débutante — la plus probable étant une décompensation diabétique acidocétosique sur sepsis.",
+          "correctionGenerale": "pH 7,34 ; HCO₃⁻ 12 mmol/L ; PaCO₂ 22 mmHg → <b>acidose métabolique partiellement compensée</b>.\n\n<b>Étiologies</b>\n• Acidocétose diabétique\n• Acidose lactique (hypoperfusion, sepsis)\n• Intoxications (méthanol, éthylène glycol)\n• Insuffisance rénale débutante\n\n<b>Le plus probable</b> : une décompensation diabétique acidocétosique sur sepsis."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuelle est votre hypothèse diagnostique la plus probable ? Quelles étiologies sont à évoquer devant ce tableau ?",
+          "images": [],
+          "reponseAttendue": "Un tableau compatible avec un choc septique (hypotension réfractaire, fièvre, marbrures). Étiologies : infection sur cathéter (Staphylococcus aureus, staphylocoque à coagulase négative, entérocoques), foyer urinaire ou pulmonaire — en premier lieu une pneumopathie acquise sous ventilation mécanique compliquée d’un choc septique.",
+          "correctionGenerale": "Tableau compatible avec un <b>choc septique</b> (hypotension réfractaire, fièvre, marbrures).\n\n<b>Étiologies</b>\n• Infection sur cathéter (<i>Staphylococcus aureus</i>, staphylocoque à coagulase négative, entérocoques)\n• Foyer urinaire ou pulmonaire\n\n→ Une <b>PAVM compliquée d’un choc septique</b> en premier lieu +++"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuelle est votre prise en charge en urgence ?",
+          "images": [
+            "annales-area/corrige-evcp-2024-area-b/figures/img-008-057.png"
+          ],
+          "reponseAttendue": "Monitorage intensif en réanimation ; antibiothérapie probabiliste en urgence, IV, à large spectre (par exemple pipéracilline-tazobactam 4 g puis 16 g/jour au PSE, ± vancomycine selon le contexte) après prélèvements, en bithérapie avec l’amikacine 25 mg/kg/jour, réévaluée à H48 ; hémisuccinate d’hydrocortisone 200 mg/jour ; ventilation protectrice 6 à 8 mL/kg avec pression de plateau < 30 cmH₂O ; retrait du cathéter s’il est suspect et selon le différentiel de pousse ; expansion volémique et vasopresseurs (noradrénaline) si l’hypotension persiste ; recherche et contrôle du foyer infectieux.",
+          "correctionGenerale": "• Monitorage intensif, réanimation\n• <b>Antibiothérapie probabiliste en urgence, IV, à large spectre</b> (ex. : pipéracilline-tazobactam 4 g puis 16 g/jour au PSE ± vancomycine selon le contexte) après prélèvements, + <b>bithérapie par amikacine 25 mg/kg/jour</b> ; réévaluation à H48\n• Hémisuccinate d’hydrocortisone 200 mg/jour\n• Ventilation protectrice 6 à 8 mL/kg, pression de plateau < 30 cmH₂O\n• Retrait du cathéter s’il est suspect et selon le différentiel de pousse\n• Expansion volémique, vasopresseurs (noradrénaline) si hypotension persistante\n• Recherche et contrôle du foyer infectieux\n\n<b>Prise en charge du choc septique (SFAR/SRLF)</b>\n• <i>Suspicion de sepsis grave</i> → prélever hémocultures, examens complémentaires\n• <i>Expansion volémique</i> → 30 mL/kg de cristalloïdes\n• <i>Antibiothérapie probabiliste</i> → dans l’heure, suivant le diagnostic\n• <i>Vasopresseur (noradrénaline)</i> → si PAM < 65 mmHg malgré remplissage\n• <i>Contrôle du foyer</i> → retrait de cathéter, drainage, chirurgie si besoin"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuels sont les deux diagnostics les plus probables à évoquer ? Quels sont les 2 examens complémentaires que vous proposez ?",
+          "images": [],
+          "reponseAttendue": "Diagnostics probables : 1) endocardite infectieuse à SAMS ; 2) infection de cathéter avec bactériémie à SAMS. Examens : échocardiographie transœsophagienne et hémocultures répétées (sur voie centrale et en périphérie), complétées par une PCR multiplex.",
+          "correctionGenerale": "<b>Diagnostics probables</b>\n1. Endocardite infectieuse à SAMS\n2. Infection de cathéter avec bactériémie à SAMS\n\n<b>Examens</b>\n• Échocardiographie transœsophagienne\n• Hémocultures répétées (sur voie centrale et en périphérie) + PCR multiplex"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nQuel est le cadre légal de la décision de limitation et arrêt des traitements actifs (LATA) ?",
+          "images": [],
+          "reponseAttendue": "La loi Leonetti-Claeys (2016) : décision collégiale, inscrite dans le dossier ; prise en compte des directives anticipées et de la personne de confiance ; proportionnalité des soins et refus de l’obstination déraisonnable ; possibilité d’une sédation profonde et continue maintenue jusqu’au décès en cas de souffrance réfractaire.",
+          "correctionGenerale": "<b>Cadre légal : loi Leonetti-Claeys (2016)</b>\n• Décision collégiale, inscrite dans le dossier\n• Prise en compte des directives anticipées / de la personne de confiance\n• Proportionnalité des soins, refus de l’obstination déraisonnable\n• Possibilité de sédation profonde et continue maintenue jusqu’au décès si souffrance réfractaire"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2024 - EVCP - Cas clinique 2",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf",
+      "orderIndex": 35,
+      "vignette": "<i>Le corrigé ne reproduit pas l’énoncé officiel du cas. Les éléments cliniques qu’il mentionne sont les suivants :</i>\n\nPatiente enceinte présentant de la fièvre, des lombalgies, une hyperleucocytose et une dilatation pyélocalicielle gauche à l’imagerie.\n\nElle présente par ailleurs un déficit en facteur XI et un antécédent de syndrome de Guillain-Barré.\n\nL’évolution impose une césarienne en « code rouge », au cours de laquelle survient une intubation impossible malgré plusieurs techniques.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une pyélonéphrite aiguë obstructive gravidique GAUCHE : fièvre, lombalgies, leucocytose et dilatation pyélocalicielle gauche.",
+          "correctionGenerale": "<b>Pyélonéphrite aiguë obstructive gravidique GAUCHE</b> (fièvre, lombalgies, leucocytose, dilatation pyélocalicielle gauche)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nDécrivez le traitement qui sera entrepris.",
+          "images": [],
+          "reponseAttendue": "Hospitalisation en obstétrique avec plateau technique chirurgical ; antibiothérapie IV adaptée à la grossesse — céphalosporine de 3ᵉ génération (céfotaxime ou ceftriaxone) ± amikacine ; antalgie et hydratation IV ; surveillance obstétricale rapprochée (échographie et monitoring). Devant l’obstacle (cavités pyélocalicielles dilatées à gauche), drainage en urgence des voies urinaires par sonde JJ ou néphrostomie.",
+          "correctionGenerale": "• Hospitalisation en obstétrique, avec plateau technique chirurgical\n• <b>Antibiothérapie IV adaptée à la grossesse</b> : céphalosporine de 3ᵉ génération ± amikacine → <b>CÉFOTAXIME ou CEFTRIAXONE</b>\n• Antalgie IV et hydratation IV\n• Surveillance obstétricale rapprochée (échographie et monitoring)\n• <b>OBSTACLE, car cavités pyélocalicielles dilatées à gauche</b> → <b>drainage en urgence des voies urinaires</b> (sonde JJ, néphrostomie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles analgésies lui proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’analgésie péridurale est la référence, après avis d’hémostase clinique (correction préalable du déficit en facteur XI si nécessaire) et avis neurologique (antécédent de syndrome de Guillain-Barré). En cas de contre-indication : PCA de morphine ou de rémifentanil IV.",
+          "correctionGenerale": "<b>Analgésie péridurale de référence.</b>\n\n• <b>AVIS HÉMOSTASE CLINIQUE</b> : correction préalable du déficit en facteur XI si nécessaire\n• <b>AVIS NEUROLOGIQUE</b> (syndrome de Guillain-Barré)\n\n<b>Alternative si contre-indication</b> : PCA morphine ou rémifentanil IV."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nDe quel délai dispose-t-on entre la décision et le clampage du cordon ?",
+          "images": [],
+          "reponseAttendue": "En césarienne code rouge, le délai recommandé est inférieur à 15 minutes (decision-to-delivery interval).",
+          "correctionGenerale": "En césarienne <b>code rouge</b> : délai recommandé <b>< 15 minutes</b> (<i>decision-to-delivery interval</i>)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nDécrivez votre prise en charge avant l’incision.",
+          "images": [],
+          "reponseAttendue": "Préoxygénation en FiO₂ 100 % pendant 3 à 5 minutes — la CRF est diminuée, d’où l’importance de la préoxygénation ; mise en place d’une VVP de bon calibre ; matériel d’intubation difficile prêt ; induction en séquence rapide par propofol 2-3 mg/kg ou thiopental 5 mg/kg (poids ajusté) + succinylcholine 1 mg/kg (poids réel) ; vérification du matériel de ventilation et d’aspiration ; monitorage maternel et fœtal ; préparation transfusionnelle (groupe, RAI, TGV, dépôt de sang, EFS) si risque hémorragique ; antibioprophylaxie par céfazoline 2 g IVL.",
+          "correctionGenerale": "• <b>Préoxygénation 100 % FiO₂ pendant 3 à 5 min</b> — la CRF est diminuée, d’où l’importance de la préoxygénation +++\n• Mise en place d’une VVP de bon calibre\n• Matériel d’intubation difficile prêt\n• <b>Induction en séquence rapide</b> : propofol 2-3 mg/kg ou thiopental 5 mg/kg (poids ajusté) + succinylcholine 1 mg/kg (poids réel)\n• Vérification du matériel de ventilation et d’aspiration\n• Monitorage maternel et fœtal\n• Préparation transfusionnelle (groupe / RAI / TGV / dépôt de sang / EFS) si risque hémorragique\n• <b>Antibioprophylaxie : céfazoline 2 g IVL</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuelle est la conduite à tenir devant une intubation impossible malgré plusieurs techniques ?",
+          "images": [
+            "annales-area/corrige-evcp-2024-area-b/figures/img-009-065.png"
+          ],
+          "reponseAttendue": "Ne pas multiplier les tentatives : la priorité reste l’oxygénation. Ventilation au masque si possible ; utilisation d’un dispositif supraglottique (masque laryngé de 2ᵉ génération) ; si la ventilation est impossible, césarienne avec masque laryngé ou cricothyroïdotomie d’urgence.",
+          "correctionGenerale": "• <b>Ne pas multiplier les tentatives. La priorité reste l’oxygénation.</b>\n• Ventilation au masque si possible\n• Utilisation d’un dispositif supraglottique (masque laryngé de 2ᵉ génération)\n• Si ventilation impossible : césarienne avec masque laryngé, ou cricothyroïdotomie d’urgence\n\n<b>Algorithme d’intubation difficile en obstétrique (SFAR 2022)</b>\n1. Préoxygénation optimale\n2. 2 tentatives maximum d’intubation (vidéolaryngoscope recommandé)\n3. Si échec → dispositif supraglottique (masque laryngé de 2ᵉ génération)\n4. Si ventilation impossible → césarienne immédiate avec masque laryngé ou cricothyroïdotomie\n5. Limiter l’hypoxémie materno-fœtale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuel bloc de paroi bilatéral proposez-vous pour l’analgésie post-césarienne ? Où se fait l’injection ? Quels produits utilisez-vous ?",
+          "images": [],
+          "reponseAttendue": "a) Un bloc TAP (Transversus Abdominis Plane). b) L’injection se fait entre l’oblique interne et le transverse de l’abdomen. c) Anesthésique local de longue durée d’action : ropivacaïne 200 mg ou lévobupivacaïne 150 mg ; adjuvants : dexaméthasone IV, ou clonidine (Catapressan®) périnerveuse 0,25 à 0,5 µg/kg.",
+          "correctionGenerale": "a) <b>Bloc TAP</b> (Transversus Abdominis Plane)\nb) Injection <b>entre l’oblique interne et le transverse de l’abdomen</b>\nc) <b>AL de longue durée d’action</b> : ropivacaïne 200 mg, lévobupivacaïne 150 mg\n\n<b>Adjuvant</b> : dexaméthasone IV — Catapressan® périnerveux 0,25-0,5 µg/kg\n\n<i>Références bibliographiques citées par le corrigé : SFAR (sepsis grave et choc septique, 2021 ; analgésie obstétricale, 2022 ; hémorragies graves, 2020) ; SRLF/SFAR (états de choc en réanimation, 2020) ; HAS (limitation et arrêt des traitements actifs, loi Leonetti-Claeys, 2016) ; ESAIC (difficult airway management in obstetrics, 2021 ; coagulation disorders perioperative management, 2020) ; SRLF (comas non traumatiques, 2019 ; directives anticipées et fin de vie en réanimation, 2020) ; Singer M et al. (Sepsis-3, JAMA 2016) ; ACOG (pyelonephritis in pregnancy, 2021) ; CNGOF (césarienne en urgence, 2022) ; CDC (prevention of catheter-related infections, 2021) ; Resuscitation Council UK (airway algorithms, 2020) ; WHO (safe childbirth checklist, 2021).</i>"
+        }
+      ]
+    }
+  ]
+}

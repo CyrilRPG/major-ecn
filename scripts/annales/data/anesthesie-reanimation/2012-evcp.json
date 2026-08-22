@@ -14,7 +14,7 @@
       "annee": 2012,
       "type": "EVCP",
       "source": "ANNALES AREA/EVCP 2012 corrigé PAE.pdf",
-      "orderIndex": 14,
+      "orderIndex": 7,
       "vignette": "Un homme de 55 ans, d’environ 80 kg pour 1,80 m, sans antécédent, est admis aux urgences de votre hôpital pour un syndrome douloureux abdominal évoluant depuis 48 heures.\n\nÀ l’admission, le patient est conscient (Glasgow 15), FC 120/min, PA 100/60 mmHg, fréquence respiratoire 28/min, SpO₂ 95 % à l’air ambiant, température 39 °C. L’abdomen présente une contracture généralisée. Les orifices herniaires sont libres.\n\nLes résultats biologiques obtenus aux urgences sont les suivants : GB 20 000/mm³, Hb 15 g/100 mL, plaquettes 300 000/mm³, Na 145 mM, K 4 mM, créatinine plasmatique 120 µM, urée 18 mM, protides 80 g/L, TP 100 %, TCA 30/30.\n\n<b>Réflexes</b>\n• Recommandations sur le choc septique\n• Antibiothérapie selon les recommandations SFAR sur les infections intra-abdominales\n• Bien connaître les algorithmes SFAR d’intubation difficile prévue et non prévue\n• Savoir prescrire une PCA morphine en postopératoire\n• Mots-clés et organisation de la réponse par thème (cardio-vasculaire, infectieux…)\n• Connaître les indications d’isolement contact (BMR et <i>Clostridium difficile</i>)\n• Chaque traitement = surveillance de l’efficacité et de la tolérance + préciser les objectifs des thérapeutiques (exemple : O₂ et SpO₂ > 96 %…)",
       "questions": [
         {
@@ -38,14 +38,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nCitez les principes du traitement médicamenteux que vous prescrivez en attendant le passage au bloc opératoire.",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-006-044.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-006-044.png"
+          ],
           "reponseAttendue": "Optimisation hémodynamique (remplissage par cristalloïdes 30 mL/kg pour PAM > 65 mmHg et diurèse > 0,5 mL/kg/h, amines vasopressives si besoin), antibiothérapie probabiliste en urgence (bêta-lactamine + aminoside ; Tazocilline + gentamicine si choc septique), antalgiques (paracétamol et titration morphinique), anti-émétiques, anti-acides en prévention de l’induction en séquence rapide, oxygénothérapie pour SpO₂ > 96 %.",
           "correctionGenerale": "<b>Optimisation hémodynamique</b>\n• Remplissage vasculaire par cristalloïdes 30 mL/kg pour une PAM > 65 mmHg et une diurèse > 0,5 mL/kg/h (PAM à 73 mmHg dans le cas clinique)\n• Amines vasopressives si PAD < 40 mmHg ou si PAM < 65 mmHg malgré le remplissage\n• Correction de l’hypovolémie (probable insuffisance rénale aiguë fonctionnelle) et de l’hémoconcentration (hyperprotidémie, Hb > 14)\n• <b>Objectifs</b> : PAM > 65 mmHg ; diurèse > 0,5 mL/kg/h ; lactates artériels < 2 mmol/L ; ScvO₂ > 70 %\n\n<b>Antibiothérapie en urgence</b>\n• Bêta-lactamine + aminoside ; en l’absence de critère de choc septique : amoxicilline + acide clavulanique + gentamicine, ou C3G type céfotaxime 2 g/8 h + métronidazole 500 mg/8 h + gentamicine 8 mg/kg en 30 min (taux pic à 30 min)\n• <b>Si choc septique : Tazocilline® + gentamicine</b>\n• Large spectre, bactéricide, au moins double, probabiliste\n• En urgence, sans attendre les prélèvements en cas de choc septique\n• Ciblant les germes communautaires : entérobactéries sauvages (BGN), anaérobies\n• Réévaluation à 48 h\n\n<i>L’arbre décisionnel SFAR de la péritonite communautaire est reproduit ci-dessus : en l’absence d’allergie aux bêta-lactamines et de signes de gravité → amoxicilline-acide clavulanique + gentamicine ou céfotaxime/ceftriaxone + métronidazole ; avec signes de gravité → pipéracilline-tazobactam + gentamicine ; en cas d’allergie → lévofloxacine + métronidazole + gentamicine ou tigécycline ; traitement antifongique si indiqué → échinocandine (caspofungine, micafungine ou anidulafungine).</i>\n\n<b>Antalgiques</b>\n• Paracétamol 1 g IVL\n• Titration morphinique IV pour une EVA < 3/10\n\n<b>Autres</b>\n• Anti-émétiques : ondansétron 4 mg/6 h si besoin\n• <b>Anti-acides en prévention de l’induction en séquence rapide</b> (haut risque d’inhalation) : ranitidine 300 mg × 2 comprimés effervescents (PMZ)\n• Oxygénothérapie pour une SpO₂ > 96 %"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nLors de votre examen préanesthésique, vous évaluez l’accès aux voies aériennes par la classification de Mallampati. Décrivez les différents stades de celle-ci.",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-007-052.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-007-052.png"
+          ],
           "reponseAttendue": "Classe I : visualisation complète du voile du palais, de la luette et des piliers. Classe II : visualisation complète de la luette, les piliers ne sont plus visibles. Classe III : seule la base de la luette est visible. Classe IV : le voile du palais n’est pas visible.",
           "correctionGenerale": "<b>Score de Mallampati</b>\n• <b>Classe I</b> : visualisation complète du voile du palais (luette et piliers visibles)\n• <b>Classe II</b> : visualisation complète de la luette\n• <b>Classe III</b> : visualisation de la seule base de la luette\n• <b>Classe IV</b> : le voile du palais n’est pas visible du tout"
         },
@@ -59,14 +63,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nLa première tentative d’intubation trachéale est un échec. Que faites-vous ?",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-009-066.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-009-066.png"
+          ],
           "reponseAttendue": "Appliquer l’aide cognitive SFAR « intubation difficile imprévue » (recommandations 2017) : appeler à l’aide, chariot d’intubation difficile, deuxième tentative après optimisation de la position, mandrin d’Eschmann, vidéolaryngoscope ; pas de ventilation d’emblée tant que la SpO₂ reste > 90 %, mais ventilation manuelle indispensable en cas de désaturation, +/− dispositif supraglottique. La priorité est l’oxygénation. Penser au certificat d’intubation difficile.",
           "correctionGenerale": "→ <b>Fiche d’aide cognitive SFAR et recommandations 2017 +++</b> (algorithme « intubation difficile imprévue » reproduit ci-dessus : appel à l’aide dans tous les cas + chariot + maintien de l’anesthésie + leadership).\n\n• <b>Appeler à l’aide</b>\n• 2ᵉ tentative\n• <b>Chariot d’intubation difficile</b>\n• Pas de ventilation d’emblée tant que la SpO₂ est > 90 % (induction en séquence rapide avec haut risque d’inhalation)\n• Optimisation de la position : coussin sous la tête, BURP, appui, position amendée de Jackson\n• Mandrin d’Eschmann (long béquillé)\n• Vidéolaryngoscope en cas d’échec, ou glottiscope (Airtraq®)\n• <b>Ventilation manuelle indispensable si désaturation < 90 %</b>, +/− dispositif supraglottique (masque laryngé, Fastrach®)\n\n<b>La priorité = l’oxygénation.</b>\n\nOn pensera au <b>certificat d’intubation difficile</b>."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nEn postopératoire immédiat, quel est votre protocole d’antalgie incluant une PCA morphine ?",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-010-074.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-010-074.png"
+          ],
           "reponseAttendue": "Paracétamol 1 g/6 h, néfopam 20 mg/6 h ou 120 mg/24 h au PSE, lidocaïne IVSE 1 mg/kg/h si débutée en peropératoire (sous scope), antispasmodiques (phloroglucinol), pas d’AINS en contexte infectieux ; PCA morphine : dilution 1 mg/mL, bolus 1 mg, période réfractaire 7 minutes, pas de débit continu, dose maximale 20 mg par 4 heures, dropéridol 2,5 mg dans 50 mL.",
           "correctionGenerale": "• Paracétamol 1 g / 6 h\n• Néfopam 20 mg / 6 h, ou 120 mg par 24 h au PSE\n• Lidocaïne IVSE si débutée en peropératoire : 1 mg/kg/h (sous surveillance scopée)\n• <b>PCA morphine</b> :\n  – Dilution 1 mg/mL\n  – Bolus 1 mg\n  – Période réfractaire : 7 minutes\n  – Pas de débit continu\n  – Dose maximale par 4 h : 20 mg\n  – Dropéridol 2,5 mg dans 50 mL (anti-émétique associé)\n  – <i>Efficacité</i> : EVA, toux, mobilisation (cf. question suivante)\n  – <i>Tolérance</i> : prurit, conscience, FR, apnée\n• Antispasmodiques : phloroglucinol\n• <b>Pas d’AINS en contexte infectieux</b>\n\n<i>Le schéma ci-dessus rappelle le montage d’une pompe PCA et le remplissage de la cassette-réservoir.</i>"
         },
@@ -94,14 +102,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 11</b>\n\nQuels sont les principes de votre prise en charge thérapeutique ?",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-014-100.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-014-100.png"
+          ],
           "reponseAttendue": "Urgence chirurgicale et infectieuse : appeler le chirurgien et l’anesthésiste, informer le patient et sa famille, rien ne doit retarder la chirurgie. 1) Bilan en urgence (NFS-plaquettes, TP-TCA, groupe-RAI, ionogramme, GDS-lactates-ScvO₂, bilan hépatique, troponine, hémocultures). 2) Équipement et réanimation avant le bloc (VVP, remplissage 30 mL/kg, noradrénaline, antibiothérapie probabiliste à large spectre après prélèvements, +/− antifongique, oxygénothérapie, SNG, anti-acides, antalgiques). 3) Au bloc : induction en séquence rapide sous vasopresseurs, puis lavage et drainage chirurgical.",
           "correctionGenerale": "• <b>Urgence chirurgicale</b> — appeler le chirurgien et l’anesthésiste\n• <b>Urgence infectieuse +++</b> car choc septique\n• Information du patient et de sa famille\n• <b>Rien ne doit retarder la chirurgie</b>\n\n<b>1) Bilan en urgence</b>\n• NFS-plaquettes (anémie, thrombopénie)\n• TP, TCA (CIVD ?)\n• Groupe, RAI\n• Ionogramme, urée, créatininémie (IRA ? troubles métaboliques ?)\n• ScvO₂ sur VVC dès que possible (sévérité du choc)\n• GDS + lactates artériels\n• Bilan hépatique (foie de choc)\n• Troponine (tolérance cardiaque)\n• Hémocultures (2 paires)\n\n<b>2) Équipement du patient et réanimation avant le bloc</b>\n• Pose de 2 voire 3 VVP\n• Remplissage vasculaire en urgence 30 mL/kg pour une PAM > 65 mmHg et une diurèse > 0,5 mL/kg/h\n• Vasopresseur : noradrénaline sur VVP dédiée en attendant la VVC, pour une PAM > 65 mmHg\n• <b>Antibiothérapie en urgence ++++</b>, après prélèvements chirurgicaux si possible (ne pas attendre en cas de choc septique) : large spectre, probabiliste, bactéricide, double, ciblant les BGN, les anaérobies et le risque de BLSE\n  – Bêta-lactamine à large spectre en l’absence d’allergie : Tazocilline® s’il n’y a pas de risque de BLSE, sinon carbapénème type imipénème 1 g puis 1 g/8 h (risque de BMR)\n  – Aminoside : amikacine (Amiklin®) 30 mg/kg en 30 min, taux pic 30 min après la fin de la perfusion puis selon la résiduelle\n  – Réévaluation à 48 h\n• +/− antifongique à large spectre en cas de choc septique : caspofungine (échinocandines)\n• Oxygénothérapie pour une SpO₂ > 95 % (masque haute concentration)\n• Pose d’une SNG si nécessaire\n• Anti-acides (ranitidine)\n• Antalgiques et antipyrétiques\n\n<i>L’arbre décisionnel SFAR de la péritonite associée aux soins est reproduit ci-dessus : sans facteur de risque de BMR → pipéracilline-tazobactam + amikacine ± vancomycine ; avec facteurs de risque de BMR → imipénème ou méropénème ± amikacine ± vancomycine ; en cas d’allergie aux bêta-lactamines → ciprofloxacine ou aztréonam + métronidazole + amikacine + vancomycine, ou tigécycline + ciprofloxacine ; traitement antifongique si indiqué → échinocandine.</i>\n\n<b>3) Au bloc</b>\n• Préparation du matériel d’intubation\n• Vérification des drogues d’urgence\n• <b>Induction en séquence rapide</b> : hypnotique d’action rapide — kétamine 3 mg/kg ; curare d’action rapide — succinylcholine 1 mg/kg de poids réel (en l’absence de contre-indication, hyperkaliémie ++) ; aspiration prête et chariot d’intubation difficile ; induction sous vasopresseur (noradrénaline)\n• En peropératoire : pose de VVC et de KT artériel, sans retarder la prise en charge chirurgicale\n• <b>Lavage et drainage chirurgical</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 12</b>\n\nLa bactériologie peropératoire isole un <i>E. coli</i> producteur de bêta-lactamase. Quel antibiotique prescrivez-vous et quelles précautions prendrez-vous ?",
-          "images": ["annales-area/evcp-2012-corrige-pae/figures/img-015-108.png"],
+          "images": [
+            "annales-area/evcp-2012-corrige-pae/figures/img-015-108.png"
+          ],
           "reponseAttendue": "BLSE = carbapénème + isolement contact. Mesures d’isolement contact (chambre seule, signalisation, information du personnel, gants et surblouse, solution hydro-alcoolique), imipénème 1 g d’emblée puis 1 g/8 h, et amikacine 30 mg/kg en 30 minutes.",
           "correctionGenerale": "<b>BLSE = bêta-lactamase à spectre étendu → PÉNÈME + ISOLEMENT CONTACT</b>\n\n<b>Mesures d’isolement contact +++</b>\n• Chambre seule\n• Pancarte d’information « contact » + information du personnel\n• Gants et surblouse\n• Solution hydro-alcoolique\n\n<b>Antibiothérapie</b>\n• Bêta-lactamine à large spectre : carbapénème — imipénème 1 g d’emblée, puis 1 g/8 h\n• Amikacine 30 mg/kg en 30 minutes"
         }

@@ -1,0 +1,1556 @@
+{
+  "sources": {
+    "ANNALES AREA/Correction sujet 2025 QCM voie interne .pdf": {
+      "atelier": "annales-area/correction-sujet-2025-qcm-voie-interne",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Sujet CF-03 « voie interne » 2025 : 40 QCM. La série est laissée sans vignette clinique afin que le champ « kind » calculé par la base reste « qcm » — c’est-à-dire le format réservé à la voie interne."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2025 - EVCF - QCM voie interne",
+      "annee": 2025,
+      "type": "EVCF",
+      "source": "ANNALES AREA/Correction sujet 2025 QCM voie interne .pdf",
+      "orderIndex": 36,
+      "vignette": null,
+      "questions": [
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 1</b>\n\nConcernant la transmission ascendante du message douloureux nociceptif, quels éléments participent directement à cette transmission ?",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-003-022.png",
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-003-021.png"
+          ],
+          "correctionGenerale": "<i>Les figures rappellent, d’une part, les types de fibres nerveuses (A-alpha : proprioception, myélinisée, 13-20 µm, 80-120 m/s ; A-beta : toucher, myélinisée, 6-12 µm, 35-90 m/s ; A-delta : douleur mécanique et thermique, myélinisée, 1-5 µm, 5-40 m/s ; C : douleur mécanique, thermique et chimique, non myélinisée, 0,2-1,5 µm, 0,5-2 m/s), d’autre part la synapse glutamatergique avec ses récepteurs kaïnate, AMPA, NMDA et métabotropiques et ses transporteurs plasmiques et vésiculaires.</i>\n\n<i>Références utiles : Miller ; Guyton ; revue de neurophysiologie de la douleur.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Les fibres Aδ et C",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les fibres Aδ, myélinisées et rapides, et les fibres C, amyéliniques et lentes, sont les principales afférences nociceptives primaires (sensibilité thermo-algique)."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Les récepteurs NMDA",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les récepteurs NMDA postsynaptiques de la corne dorsale participent à la transmission et surtout à la sensibilisation centrale du message nociceptif."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Les fibres Aβ et C",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les fibres Aβ véhiculent principalement les informations tactiles et proprioceptives. Elles ne sont pas des fibres nociceptives primaires en situation physiologique."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le glutamate",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le glutamate est le principal neurotransmetteur excitateur libéré par les afférences nociceptives dans la corne dorsale."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Les récepteurs α-adrénergiques",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les récepteurs α2-adrénergiques interviennent surtout dans les systèmes inhibiteurs descendants et la modulation de la douleur, non dans la transmission ascendante directe."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 2</b>\n\nLa vitesse d’induction par les halogénés peut être modifiée par :",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : Miller’s Anesthesia, anesthésiques inhalés.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La ventilation alvéolaire",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’augmentation de la ventilation alvéolaire accélère l’élévation de la fraction alvéolaire de l’agent."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La concentration inspirée en halogéné",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une concentration inspirée plus élevée accélère l’induction par effet de concentration."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Les modifications du débit cardiaque",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une augmentation du débit cardiaque accroît la captation sanguine, ralentissant en général la montée de la concentration alvéolaire des agents solubles."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La solubilité de l’agent",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Plus le coefficient de partage sang/gaz est faible, plus l’induction est rapide."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le type de circuit anesthésique",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le volume du circuit, le débit de gaz frais, l’absorption par les matériaux et la réinhalation influencent la vitesse de délivrance de l’agent."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 3</b>\n\nConcernant la pharmacodynamie de la kétamine, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Miller ; RCP kétamine/eskétamine ; littérature sur l’effet antidépresseur.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle agit comme un agoniste des récepteurs NMDA.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La kétamine est un <b>antagoniste non compétitif</b> des récepteurs NMDA."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle possède un effet bronchoconstricteur.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Elle a plutôt un effet <b>bronchodilatateur</b> et préserve généralement la ventilation spontanée."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle a un effet de stimulation sympathique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Elle augmente le tonus sympathique, avec élévation habituelle de la fréquence cardiaque et de la pression artérielle, sauf épuisement catécholaminergique."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle possède un effet antidépresseur.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La kétamine, et surtout l’eskétamine, ont un effet antidépresseur rapide démontré à doses subanesthésiques. C’est d’ailleurs l’objet de nombreuses études actuellement."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle augmente le risque d’hypoglycémie.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’hypoglycémie n’est pas un effet pharmacodynamique caractéristique de la kétamine."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 4</b>\n\nConcernant la pharmacologie des anesthésiques locaux, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, ALR périnerveuse ; Miller, anesthésiques locaux.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Les anesthésiques locaux sont des agonistes des canaux sodiques.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les anesthésiques locaux <b>bloquent</b> de façon réversible les canaux sodiques voltage-dépendants ; ils n’en sont pas agonistes."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La forme diffusible des anesthésiques locaux est la forme ionisée.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La forme <b>non ionisée</b>, liposoluble, traverse la membrane axonale ; la forme ionisée se lie ensuite au canal depuis la face intracellulaire."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Plus le pKa de l’anesthésique local est bas, plus l’installation du bloc sera rapide.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — À pH physiologique, un pKa plus proche de 7,4 augmente la fraction non ionisée et accélère l’installation du bloc. Le pKa d’un anesthésique local détermine la vitesse d’installation d’un bloc nerveux en régissant la quantité de molécules non ionisées capables de traverser la membrane cellulaire : les agents à faible pKa agissent plus rapidement que ceux à pKa élevé."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une inflammation locale, par l’acidose qu’elle crée, risque de réduire l’efficacité des anesthésiques locaux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’acidose tissulaire augmente la fraction ionisée extracellulaire et diminue la pénétration nerveuse, réduisant l’efficacité."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le risque de résorption systémique des anesthésiques locaux est plus important au niveau fémoral qu’au niveau intrapleural.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La résorption est classiquement plus rapide dans les sites très vascularisés, notamment intercostal/intrapleural, que dans les blocs périphériques fémoraux."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 5</b>\n\nConcernant la pharmacologie des anesthésiques locaux, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, Toxicité systémique aiguë des anesthésiques locaux ; RFE ALR périnerveuse.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La lévobupivacaïne, forme lévogyre de la bupivacaïne, est moins cardiotoxique que cette dernière.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La lévobupivacaïne est l’énantiomère S(−) de la bupivacaïne et présente une marge de sécurité cardiovasculaire supérieure à celle du racémate."
+            },
+            {
+              "lettre": "B",
+              "enonce": "L’acidose et l’hypoxie sont des facteurs favorisant l’intoxication aux anesthésiques locaux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’hypoxie et l’acidose majorent la toxicité neurologique et cardiaque et réduisent l’efficacité de la réanimation."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’intoxication aux anesthésiques locaux ne survient uniquement que lors d’une injection intravasculaire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Une toxicité systémique peut suivre une injection intravasculaire, mais aussi une résorption extravasculaire importante et retardée."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’injection intramusculaire d’anesthésiques locaux est sans conséquence.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Une injection intramusculaire peut entraîner douleur, lésion locale et résorption systémique ; elle n’est pas anodine."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Un patient devenant dysarthrique après une anesthésie locorégionale est fortement suspect d’une intoxication aux anesthésiques locaux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La dysarthrie est un signe neurologique précoce compatible avec une toxicité systémique des anesthésiques locaux."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 6</b>\n\nQuels sont les éléments parmi les suivants qui peuvent modifier le volume de distribution des antibiotiques ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Roberts et al., pharmacocinétique des antibiotiques en soins critiques ; recommandations de monitorage thérapeutique.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "L’hypoalbuminémie.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’hypoalbuminémie augmente la fraction libre des molécules fortement liées et peut modifier leur volume apparent de distribution."
+            },
+            {
+              "lettre": "B",
+              "enonce": "L’ECMO.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le circuit et la membrane d’ECMO séquestrent certains médicaments et augmentent le volume de distribution apparent."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’insuffisance rénale aiguë.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’insuffisance rénale aiguë s’accompagne souvent de surcharge hydrosodée, d’œdèmes et d’altérations de la liaison protéique."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La dysfonction hépatique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La dysfonction hépatique modifie l’albuminémie, le compartiment hydrique et parfois la distribution tissulaire."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La fuite capillaire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La fuite capillaire augmente le secteur interstitiel et le volume de distribution des antibiotiques hydrophiles."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 7</b>\n\nParmi les antibiotiques suivants, lequel ou lesquels est (sont) bactéricide(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Goodman & Gilman ; référentiels SPILF.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Pénicillines",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les pénicillines sont bactéricides par inhibition de la synthèse de la paroi bactérienne."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Macrolides",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les macrolides sont classiquement bactériostatiques, malgré une activité bactéricide possible dans certaines conditions."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Glycopeptides",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les glycopeptides sont bactéricides sur la plupart des bactéries Gram positif sensibles."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Sulfamides",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les sulfamides sont classiquement bactériostatiques ; l’association triméthoprime-sulfaméthoxazole peut devenir bactéricide sur certains germes."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Fluoroquinolones",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les fluoroquinolones sont bactéricides par inhibition des topoisomérases bactériennes."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 8</b>\n\nConcernant le cycle respiratoire, quelle(s) est (sont) la (les) proposition(s) exacte(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : West’s Respiratory Physiology ; Guyton & Hall.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Au repos, la durée de l’inspiration représente un tiers de la durée du cycle respiratoire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Au repos, le rapport inspiration/expiration est proche de 1/2 ; l’inspiration représente donc environ un tiers du cycle."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le muscle principal inspiratoire est le diaphragme.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le diaphragme est le principal muscle inspiratoire au repos."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La course diaphragmatique est proche de 10 cm au repos.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La course diaphragmatique au repos est d’environ 1 à 2 cm ; elle peut atteindre 7 à 10 cm lors d’une inspiration profonde."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Au repos, la phase expiratoire est un phénomène passif faisant intervenir les forces de rétraction élastique du poumon et de la cage thoracique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’expiration calme est passive, liée au recul élastique pulmonaire et thoracique."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Les muscles intercostaux sont uniquement mis en jeu lors des phases d’expiration active.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les intercostaux externes participent à l’inspiration ; les intercostaux internes peuvent participer à l’expiration forcée."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 9</b>\n\nConcernant la diffusion alvéolo-capillaire de l’oxygène et du CO₂, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : West’s Respiratory Physiology.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle est proportionnelle à la surface d’échange de la membrane alvéolo-capillaire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Selon la loi de Fick, la diffusion est proportionnelle à la surface d’échange et au gradient de pression."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La constante de diffusion de l’O₂ est supérieure à celle du CO₂.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le CO₂ diffuse environ 20 fois plus facilement que l’O₂, principalement du fait de sa plus grande solubilité."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La diffusion de l’O₂ à travers la membrane alvéolo-capillaire est rapide car le gradient de pression alvéolo-capillaire en O₂ est important.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le gradient alvéolo-capillaire d’O₂ est important et l’équilibration est normalement rapide."
+            },
+            {
+              "lettre": "D",
+              "enonce": "À l’état physiologique, l’équilibration des pressions partielles des gaz (O₂ et CO₂) de part et d’autre de la membrane alvéolo-capillaire nécessite une seconde au repos.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Au repos, l’équilibration survient en environ 0,25 seconde, alors que le temps de transit capillaire est d’environ 0,75 seconde."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La différence alvéolo-artérielle en CO₂ est nulle à l’état physiologique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La différence alvéolo-artérielle de PCO₂ est physiologiquement très faible et habituellement considérée comme nulle. Attention, cela ne veut pas dire que l’EtCO₂ = PaCO₂, car l’EtCO₂ n’est pas le reflet précis de la PACO₂."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 10</b>\n\nConcernant le débit cardiaque, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Guyton & Hall ; Miller, physiologie cardiovasculaire.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il s’adapte à la pression artérielle.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le débit cardiaque s’adapte surtout aux besoins métaboliques ; la pression artérielle résulte du débit cardiaque et des résistances vasculaires."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il est distribué dans les différents organes en fonction des résistances vasculaires.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La distribution régionale dépend des résistances vasculaires propres à chaque territoire."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Il est identique en tout point de l’arbre vasculaire artériel.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le débit se divise à chaque bifurcation ; il n’est donc pas identique dans chaque branche de l’arbre artériel. Il faut imaginer un cours d’eau qui se diviserait : le débit est divisé dans chaque bras."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il peut diminuer lorsque les résistances vasculaires augmentent.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — À contractilité et précharge constantes, une augmentation de postcharge peut réduire le volume d’éjection et le débit cardiaque. C’est l’un des mécanismes de l’OAP hypertensif (OAP flash)."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il participe au transport en oxygène.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le débit cardiaque est un déterminant majeur du transport artériel en oxygène."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 11</b>\n\nConcernant la pression artérielle, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<b>Complément sur l’item B</b> — la pression de perfusion coronaire (PPC) est définie comme la différence entre la pression diastolique aortique moyenne et la pression du sinus coronaire ou de la cavité ventriculaire gauche en télédiastole. La mesure de la pression aortique n’étant pas accessible en clinique, on recourt à la pression artérielle moyenne (PAM), valeur la plus voisine de celle de la racine aortique ; la pression télédiastolique du VG est remplacée par celle de l’OG, évaluée par la PAPO :\n\n<b>PPC = PAM − PAPO</b>\n\nLa PPC physiologique est > 50 mmHg ; en dessous de cette valeur, l’ischémie survient. La PAM doit donc rester > 65 mmHg pour assurer une perfusion myocardique globalement satisfaisante. Comme sa pression systolique est beaucoup plus basse que celle de l’aorte, le VD jouit d’une perfusion coronarienne systolo-diastolique : 40 à 50 % de son flux coronarien total est systolique.\n\n<i>Références utiles : SFAR, gestion hémodynamique périopératoire ; Miller.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La pression artérielle systolique chute plus rapidement lors d’un état de choc si le patient est sous anesthésie générale.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’anesthésie générale atténue les réponses sympathiques compensatrices ; la pression systolique peut donc chuter plus précocement lors d’une hypovolémie ou d’un choc."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La perfusion de la coronaire droite dépend de la pression artérielle systolique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La perfusion coronaire est surtout reliée au gradient entre pression aortique et pression ventriculaire ; la perfusion du ventricule gauche est principalement diastolique. Le VD jouit, lui, d’une perfusion coronarienne systolo-diastolique : 40 à 50 % de son flux coronarien total est systolique. On peut donc valider cette proposition."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’hypotension peropératoire est un facteur indépendant de morbidité.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La profondeur et la durée de l’hypotension peropératoire sont associées indépendamment à des complications rénales, myocardiques et neurologiques."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La pression artérielle moyenne est toujours supérieure à la pression artérielle diastolique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Par définition, la pression artérielle moyenne se situe entre les pressions systolique et diastolique, et est supérieure à la diastolique en présence d’une pression pulsée positive."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le débit de perfusion dépend de la pression artérielle moyenne.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le débit de perfusion d’un organe dépend du gradient de pression, dont la PAM constitue le principal terme d’entrée dans la circulation systémique."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 12</b>\n\nÀ propos de la décurarisation, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : SFAR 2018, Curarisation et décurarisation en anesthésie.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Sa pratique diminue la fréquence des micro-inhalations postopératoires.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La curarisation résiduelle favorise faiblesse pharyngée, obstruction et inhalation ; une décurarisation adaptée réduit ces complications."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle peut être réalisée par une dose de 400 à 500 µg/kg de néostigmine associée à l’atropine.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La dose usuelle de néostigmine est de l’ordre de <b>40 à 50 µg/kg</b>, et non 400 à 500 µg/kg, associée à un antimuscarinique."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La néostigmine est contre-indiquée chez l’insuffisant rénal.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’insuffisance rénale n’est pas une contre-indication absolue, mais elle prolonge l’effet de la néostigmine et de certains curares, et impose prudence et monitorage."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le sugammadex est un chélateur des curares non dépolarisants de type benzylisoquinoline.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le sugammadex encapsule surtout les curares <b>aminostéroïdes</b> (rocuronium, vécuronium), pas les benzylisoquinolines."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il faut attendre au minimum un TOF de 2/4 pour antagoniser un curare non dépolarisant d’action intermédiaire par la néostigmine.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La néostigmine n’est efficace que lorsque la récupération spontanée est déjà engagée, classiquement avec au moins deux réponses au TOF. Les recommandations préconisent même d’attendre 4 réponses au TOF pour maximiser l’efficacité."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 13</b>\n\nLes hormones suivantes sont susceptibles de modifier la kaliémie :",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Guyton & Hall ; néphrologie / physiologie endocrinienne.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le cortisol.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Un excès de cortisol peut exercer une activité minéralocorticoïde et favoriser une hypokaliémie."
+            },
+            {
+              "lettre": "B",
+              "enonce": "L’aldostérone.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’aldostérone augmente la sécrétion distale de potassium."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Les catécholamines.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les catécholamines β2-adrénergiques font entrer le potassium dans les cellules et peuvent diminuer la kaliémie — exemple : aérosol de salbutamol."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’insuline.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’insuline stimule la Na⁺/K⁺-ATPase et favorise l’entrée intracellulaire du potassium."
+            },
+            {
+              "lettre": "E",
+              "enonce": "L’hormone antidiurétique.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’ADH régule principalement l’eau libre au niveau du tube collecteur (selon la présence d’aquaporines) ; elle n’est pas un déterminant hormonal majeur direct de la kaliémie."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 14</b>\n\nConcernant le sévoflurane, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Miller’s Anesthesia ; RCP sévoflurane.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La concentration alvéolaire minimale (MAC 50) est d’environ 2 % chez l’adulte de 40 ans.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La MAC du sévoflurane est proche de 2 % chez l’adulte jeune et diminue avec l’âge."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le métabolisme hépatique est négligeable.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Environ 3 à 5 % du sévoflurane est métabolisé par le CYP2E1 ; ce métabolisme est faible mais non négligeable."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’élimination est pulmonaire et rénale sous forme inchangée.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La majeure partie est éliminée inchangée par les poumons ; les métabolites fluorés sont éliminés par le rein (composé A)."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Son effet irritant le contre-indique pour l’induction par inhalation.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le sévoflurane est peu irritant et particulièrement adapté à l’induction inhalatoire."
+            },
+            {
+              "lettre": "E",
+              "enonce": "À forte concentration, il diminue le débit sanguin cérébral.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Il diminue le métabolisme cérébral mais provoque aussi une vasodilatation cérébrale dose-dépendante ; à forte concentration, le débit sanguin cérébral peut augmenter."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 15</b>\n\nConcernant la contraction cardiaque, quelles sont les propositions exactes ?",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-013-093.png",
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-014-101.png"
+          ],
+          "correctionGenerale": "<i>Les figures détaillent le cycle attachement-détachement des ponts d’union actine-myosine (1. à l’état non activé, la tropomyosine masque le site de fixation de la myosine sur l’actine ; 2. le calcium provenant du réticulum se fixe sur la troponine et entraîne le glissement de la tropomyosine ; 3. formation des ponts d’union ; 4. libération d’ADP et de P provoquant la rotation de la tête de myosine ; 5. fixation d’ATP sur la tête de myosine provoquant son détachement de l’actine ; 6. hydrolyse de l’ATP provoquant le redressement de la tête de myosine) et, pour les muscles lisses, les cascades de contraction (Ca²⁺-calmoduline → MLCK active → myosine ATPase active → augmentation de la tension musculaire) et de relaxation (myosine phosphatase → diminution de l’activité de la myosine ATPase → diminution de la tension musculaire).</i>\n\n<i>Références utiles : Guyton & Hall ; Braunwald, physiologie du cardiomyocyte.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La contraction cardiaque est due à l’activation des protéines contractiles par le calcium.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le calcium cytosolique se lie à la troponine C et permet l’interaction actine-myosine."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La principale source de calcium lors de la contraction est le milieu extracellulaire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’entrée calcique extracellulaire déclenche surtout une libération beaucoup plus importante depuis le réticulum sarcoplasmique, qui est <b>intracellulaire</b>."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La troponine I cardiaque est une protéine impliquée dans la régulation de la contraction et de la relaxation du cardiomyocyte.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La troponine I inhibe l’interaction actine-myosine au repos et participe à la régulation contraction-relaxation."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’un des effets de la stimulation β-adrénergique est de diminuer l’entrée du calcium à travers le sarcolemme.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La stimulation β1 <b>augmente</b> l’entrée de calcium par les canaux de type L et la libération sarcoplasmique."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La relaxation cardiaque est un phénomène passif ne consommant pas d’énergie.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La relaxation est active : la recapture du calcium par SERCA et l’extrusion membranaire consomment de l’énergie."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 16</b>\n\nConcernant les atélectasies secondaires à l’anesthésie générale, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, ventilation périopératoire ; Miller.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elles peuvent être prévenues par l’application d’une PEP avant même le début de l’induction.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’application précoce d’une PEP/CPAP pendant la préoxygénation, associée à des manœuvres de recrutement, limite la formation d’atélectasies."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elles peuvent entraîner une désaturation peropératoire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les atélectasies créent un bas rapport V/Q ou un shunt et peuvent provoquer une désaturation."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elles peuvent être dépistées par une radiographie thoracique réalisée sur table d’opération.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une radiographie thoracique peut objectiver une atélectasie, même si l’échographie et le scanner sont plus sensibles."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elles disparaissent dès le réveil.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Elles peuvent persister après le réveil, particulièrement après chirurgie abdominale ou chez l’obèse."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elles peuvent persister plus de 24 heures après l’anesthésie chez le patient obèse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Chez l’obèse, la réduction de la CRF et la fermeture des petites voies aériennes favorisent une persistance au-delà de 24 heures."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 17</b>\n\nConcernant la pression veineuse centrale, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Guyton & Hall ; monitorage hémodynamique.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle est mesurée par rapport à un zéro de référence situé sur la ligne axillaire moyenne.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le zéro de référence est placé au niveau de l’oreillette droite, approximé par l’axe phlébostatique à la ligne axillaire moyenne."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle est normalement comprise entre 4 et 8 cmH₂O.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une PVC normale est souvent donnée autour de 4 à 8 cmH₂O, selon la position et la ventilation."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle augmente lorsque le débit cardiaque augmente.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Une augmentation du débit cardiaque par amélioration de la fonction de pompe tend plutôt à diminuer la pression auriculaire droite, toutes choses égales par ailleurs."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle diminue chez le sujet en position demi-assise.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La position demi-assise diminue le retour veineux central et peut abaisser la PVC mesurée correctement référencée."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle diminue lors de la manœuvre de Valsalva.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La manœuvre de Valsalva augmente la pression intrathoracique et la PVC mesurée."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 18</b>\n\nConcernant le syndrome de perfusion du propofol, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Miller ; revues sur le propofol infusion syndrome.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il a été décrit surtout chez le sujet âgé.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le syndrome de perfusion du propofol a été initialement décrit chez l’enfant, puis chez l’adulte gravement malade ; il n’est pas surtout une affection du sujet âgé."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Il peut entraîner le décès du patient.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Il peut évoluer vers une défaillance multiviscérale, une bradyarythmie et le décès."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Sa physiopathologie inclut un effet du propofol sur la mitochondrie.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La dysfonction mitochondriale et l’altération de l’oxydation des acides gras jouent un rôle central."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le tableau clinique comporte une acidose métabolique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’acidose métabolique lactique est un élément classique du tableau."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Comme pour l’anaphylaxie, cet effet est indépendant de la dose et de la durée d’administration.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le risque est lié à la dose et à la durée, notamment lors de fortes doses prolongées, ainsi qu’aux catécholamines et corticoïdes."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 19</b>\n\nConcernant le rapport ventilation/perfusion (V/Q), quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : West’s Respiratory Physiology.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le rapport V/Q moyen pour l’ensemble du poumon est d’environ 1.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le rapport V/Q moyen global est proche de 0,8 à 1."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une diminution du rapport V/Q produit un effet shunt.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Un rapport V/Q bas se rapproche d’un shunt lorsque la ventilation devient très faible par rapport à la perfusion."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une diminution du rapport V/Q produit un effet espace mort.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’effet espace mort correspond à un rapport V/Q <b>élevé</b>, avec ventilation d’unités peu perfusées."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le shunt entraîne une hypoxémie.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le shunt est une cause majeure d’hypoxémie et répond imparfaitement à l’oxygène."
+            },
+            {
+              "lettre": "E",
+              "enonce": "L’espace mort entraîne une hypoxémie.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’espace mort entraîne surtout une inefficacité ventilatoire et une tendance à l’hypercapnie ; l’hypoxémie n’est pas son effet direct obligatoire."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 20</b>\n\nConcernant la physiologie rénale, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Guyton & Hall ; KDIGO, physiopathologie de l’IRA.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le débit physiologique de filtration glomérulaire est de plusieurs litres par heure.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Un DFG normal d’environ 120 mL/min correspond à environ 7 L/h et 170 L/j."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Les protéines plasmatiques sont filtrées au niveau du glomérule puis réabsorbées au niveau du tubule proximal.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La barrière glomérulaire retient l’essentiel des protéines plasmatiques ; seules de petites quantités filtrées sont réabsorbées proximalement."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’augmentation de la pression dans le capillaire glomérulaire augmente la filtration glomérulaire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une augmentation de la pression hydrostatique capillaire glomérulaire accroît la pression nette de filtration."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’augmentation des résistances artériolaires efférentes diminue la filtration glomérulaire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Une constriction efférente modérée augmente initialement la pression glomérulaire et maintient ou augmente le DFG ; une constriction extrême peut secondairement le diminuer."
+            },
+            {
+              "lettre": "E",
+              "enonce": "L’augmentation des résistances artériolaires efférentes diminue la perfusion du parenchyme rénal.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La constriction efférente augmente la résistance vasculaire rénale et diminue le débit sanguin rénal et la perfusion péritubulaire."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 21</b>\n\nConcernant les interactions cardio-pulmonaires en ventilation en pression positive, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR/SRLF, monitorage hémodynamique ; Guyton ; Miller.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "L’insufflation peut diminuer le volume d’éjection systolique du ventricule droit par diminution du retour veineux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’augmentation de pression intrathoracique réduit le gradient de retour veineux et peut diminuer la précharge et l’éjection du VD."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Les interactions cardio-pulmonaires sont directement impliquées dans la survenue du collapsus de reventilation.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le passage à la ventilation en pression positive peut précipiter un collapsus chez un patient précharge-dépendant ou en défaillance droite."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La ventilation en pression positive induit une augmentation de la postcharge relative du ventricule gauche, ce qui peut avoir un effet défavorable au cours de l’insuffisance ventriculaire gauche.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La pression positive <b>diminue</b> la pression transmurale du VG et donc sa postcharge ; cet effet est souvent bénéfique dans l’insuffisance ventriculaire gauche."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’estimation de la précharge-dépendance du débit cardiaque est une application directe des interactions cœur-poumon en ventilation contrôlée.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Les variations respiratoires de pression pulsée ou de volume d’éjection exploitent directement ces interactions en ventilation contrôlée."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une augmentation aiguë de la postcharge du ventricule droit peut diminuer l’éjection du ventricule gauche par interdépendance ventriculaire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une dilatation aiguë du VD déplace le septum et réduit le remplissage et l’éjection du VG."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 22</b>\n\nParmi les propositions suivantes concernant l’électrophysiologie cardiaque, laquelle (lesquelles) est (sont) exacte(s) ?",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-019-137.png"
+          ],
+          "correctionGenerale": "<i>La figure rappelle les phases du potentiel d’action ventriculaire et les courants correspondants : phase 0 (I_Na, Nav1.5+β), phase 1 (I_to, Kv4.3+KChIP2), phase 2 (I_Ca, Cav1.2+β2+α2δ ; I_Kur, Kv1.5+Kvβ2.1), phase 3 (I_Kr, Kv7.1+MiRP1 ; I_Ks, Kv11.1+minK) et phase 4 (I_K1, Kir2.x).</i>\n\n<i>Références utiles : Guyton & Hall ; Braunwald.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Tous les cardiomyocytes sont doués d’automaticité.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Tous les cardiomyocytes sont excitables, mais l’automaticité spontanée est surtout une propriété des cellules nodales et du système de conduction."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La phase de dépolarisation rapide du potentiel d’action d’un cardiomyocyte ventriculaire correspond à une entrée de potassium dans la cellule.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La phase 0 du cardiomyocyte ventriculaire est due à une entrée rapide de <b>sodium</b>."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La phase de plateau du potentiel d’action d’un cardiomyocyte ventriculaire correspond à une sortie de calcium de la cellule.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La phase 2 associe une <b>entrée</b> de calcium par les canaux L à une sortie de potassium."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Les cellules pacemaker sont caractérisées par une pente de dépolarisation diastolique lente ; cette pente détermine la fréquence cardiaque.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La pente de dépolarisation diastolique spontanée des cellules pacemaker détermine leur fréquence de décharge."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Dans les cellules du faisceau de His, la vitesse de conduction est rapide du fait d’une vitesse de dépolarisation (phase 0) élevée.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Dans le réseau His-Purkinje, la phase 0 sodique rapide explique une conduction très élevée."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 23</b>\n\nConcernant le métabolisme du sodium, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-020-145.png"
+          ],
+          "correctionGenerale": "<i>Le schéma du néphron rappelle la répartition de la réabsorption du sodium : tube contourné proximal 65 %, branche large ascendante de l’anse 25 %, tube contourné distal 5-8 %, tube collecteur 1,5 %, avec les transporteurs correspondants (NHE3, NBC1, Na⁺/K⁺-ATPase, NKCC2, ROMK, NCC, ENaC).</i>\n\n<i>Références utiles : Guyton & Hall ; physiologie rénale.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le sodium constitue la principale substance extracellulaire osmotiquement active.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le sodium et ses anions accompagnateurs constituent l’essentiel de l’osmolarité efficace extracellulaire."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le sodium est le principal déterminant de l’état d’hydratation extracellulaire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le contenu corporel total en sodium est le déterminant principal du volume extracellulaire."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Sa concentration normale par litre d’eau plasmatique est d’environ 152 mmol/L.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La natrémie mesurée autour de 140 mmol/L de plasma correspond à environ 150-152 mmol/L d’eau plasmatique, le plasma contenant environ 93 % d’eau."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Dans le néphron, la plus grande partie du sodium filtré est réabsorbée au niveau du tube contourné distal.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Environ 65 % du sodium filtré est réabsorbé dans le tube <b>proximal</b>, non dans le tube distal."
+            },
+            {
+              "lettre": "E",
+              "enonce": "L’aldostérone module la réabsorption du sodium par le tube contourné proximal.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’aldostérone agit surtout sur le néphron distal et le tube contourné <b>distal</b>."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 24</b>\n\nL’effet de l’anesthésie générale par propofol ou halogéné sur l’électroencéphalogramme (EEG) est caractérisé par :",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-021-153.png"
+          ],
+          "correctionGenerale": "<i>La figure illustre les effets des hypnotiques sur l’EEG : à l’éveil, oscillations rapides de faible amplitude ; sous anesthésie générale, ralentissement des oscillations et augmentation de l’amplitude ; enfin, burst suppression.</i>\n\n<i>Références utiles : Miller ; recommandations sur le monitorage EEG traité.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Un accroissement significatif des ondes bêta aux fortes concentrations d’anesthésiques.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les ondes bêta sont surtout augmentées aux <b>faibles</b> concentrations ; l’approfondissement produit ensuite un ralentissement, des ondes delta, puis un burst suppression."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une diminution de la valeur de l’indice bispectral (BIS).",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’approfondissement de l’anesthésie par propofol ou halogéné diminue globalement le BIS."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une augmentation de l’entropie du signal EEG.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’entropie EEG <b>diminue</b> lorsque le signal devient plus régulier et moins complexe sous anesthésie."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une alternance d’ondes delta et d’ondes thêta aux faibles concentrations d’anesthésiques.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Aux faibles concentrations, on observe plutôt une activation bêta ; les ondes lentes apparaissent avec l’approfondissement."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une diminution de l’amplitude du signal électrique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Aux concentrations très profondes, l’amplitude globale diminue avec apparition de suppressions électriques ; l’item doit être compris dans ce contexte de profondeur croissante."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 25</b>\n\nÀ propos de l’effet pharmacodynamique du propofol sur l’indice bispectral de l’EEG (BIS), quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Miller ; études BIS et mémorisation ; recommandations de monitorage EEG.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Un BIS à 40 garantit l’absence de mouvement à l’incision.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le BIS évalue surtout la composante hypnotique corticale et ne garantit pas l’immobilité (différente de la curarisation), qui dépend surtout de l’effet spinal et de l’analgésie."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Un BIS à 50 donne une très forte probabilité d’absence de mémorisation.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Un BIS proche de 40-60 est associé à une faible probabilité de conscience et de mémorisation explicite, sans garantie absolue."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Un BIS à 30 est probablement associé à la présence de burst suppression.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Un BIS autour de 30 est fréquemment associé à une anesthésie très profonde et peut s’accompagner de burst suppression."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le BIS peut varier en cas de curarisation associée du patient.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La curarisation réduit l’activité EMG frontale et peut diminuer artificiellement le BIS, surtout chez un patient peu hypnotisé."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le BIS varie de manière linéaire avec la quantité d’anesthésique administrée.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La relation concentration-effet est sigmoïde et influencée par l’âge, les co-médications, l’EMG et les artefacts. C’est une relation <b>inversée et non linéaire</b> +++."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 26</b>\n\nConcernant les particularités pharmacologiques des agents anesthésiques chez le patient obèse, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, prise en charge anesthésique du patient obèse ; Miller.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elles imposent de titrer l’administration du propofol lors de l’induction.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le propofol doit être titré à l’effet, en évitant une dose calculée simplement sur le poids total."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elles entraînent un risque plus élevé de mémorisation périopératoire que chez le patient non obèse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’obésité est associée à un risque accru de mémorisation, notamment en cas de sous-dosage et de difficulté de monitorage."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elles conduisent à mettre en route plus rapidement l’entretien de l’anesthésie par le propofol après la dose d’induction que chez le patient non obèse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La redistribution rapide après le bolus d’induction justifie de débuter rapidement l’entretien, pour éviter une baisse de concentration au site effet."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elles imposent de calculer la dose de sufentanil sur le poids réel du patient.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La dose de sufentanil ne doit pas être calculée mécaniquement sur le poids réel ; le poids maigre ou ajusté et la titration sont préférables — <b>poids ajusté ++</b>."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elles conduisent à calculer la dose de succinylcholine à l’induction de l’anesthésie sur le poids réel du patient.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La succinylcholine est classiquement dosée sur le poids total chez l’obèse, afin d’obtenir des conditions d’intubation fiables."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 27</b>\n\nEn se référant aux caractéristiques pharmacologiques de la céfazoline administrée par voie intraveineuse pour l’antibioprophylaxie en chirurgie urologique, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : SFAR 2024, Antibioprophylaxie en chirurgie et médecine interventionnelle.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle doit être administrée juste avant l’induction anesthésique.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le repère pertinent est le délai avant <b>incision</b>, non l’induction elle-même ; l’administration ne doit pas être trop précoce."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle doit être administrée dans l’heure qui précède l’incision chirurgicale.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La céfazoline doit être administrée dans les 60 minutes précédant l’incision, idéalement complètement perfusée avant celle-ci."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle doit être poursuivie pendant 24 à 48 heures en postopératoire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’antibioprophylaxie est généralement limitée à la période opératoire et ne doit pas être prolongée 24-48 h sans indication infectieuse."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Les réinjections peropératoires se font toutes les deux demi-vies de l’antibiotique.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une réinjection est indiquée lorsque l’intervention dépasse environ deux demi-vies, ou en cas de pertes sanguines majeures."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La posologie est doublée chez le patient obèse ayant un indice de masse corporelle supérieur à 35 kg/m².",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Les recommandations françaises prévoient classiquement un doublement de la dose de bêta-lactamine chez l’obèse avec un IMC > 50 kg/m²."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 28</b>\n\nEn se référant aux caractéristiques pharmacologiques de la vancomycine administrée par voie intraveineuse pour l’antibioprophylaxie en chirurgie orthopédique, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : SFAR 2024, Antibioprophylaxie en chirurgie et médecine interventionnelle.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle doit être administrée à la posologie de 20 mg/kg en perfusion d’une heure chez le patient de poids normal.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La vancomycine prophylactique est utilisée autour de 15-20 mg/kg et perfusée lentement, au minimum sur une heure, pour limiter le syndrome de perfusion."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle doit être débutée au moins 30 minutes avant l’incision chirurgicale.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La perfusion doit être commencée suffisamment tôt ; au moins 30 minutes avant l’incision est compatible avec l’objectif d’une perfusion achevée avant l’incision. On parle de 30 à 60 minutes."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle doit être administrée à la posologie de 20 mg/kg de poids réel chez le patient obèse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La dose est calculée sur le poids réel, avec adaptation pratique et plafonnement selon les protocoles locaux."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle doit être utilisée en dose unique, sans réinjection peropératoire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Sa longue demi-vie permet habituellement une dose unique sans réinjection peropératoire."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle ne doit jamais être administrée en cas de chirurgie prothétique articulaire du fait de sa mauvaise diffusion intra-articulaire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La vancomycine est précisément utilisée dans certaines chirurgies prothétiques en cas d’allergie ou de risque de staphylocoque résistant ; elle n’est pas contre-indiquée par une mauvaise diffusion articulaire. Une bonne alternative est la daptomycine."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 29</b>\n\nEn se référant aux caractéristiques pharmacologiques des antiarythmiques suivants administrés par voie intraveineuse, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, toxicité aux anesthésiques locaux ; recommandations sur l’intoxication digitalique et l’amiodarone.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le gluconate de calcium fait partie du traitement du surdosage en sulfate de magnésium.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le calcium intraveineux antagonise les effets du magnésium et fait partie du traitement d’un surdosage symptomatique en sulfate de magnésium."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le gluconate de calcium fait partie du traitement du surdosage en digoxine compliqué d’hyperkaliémie menaçante.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Uniquement pour la partie hyperkaliémique (protection myocardique). Le traitement spécifique d’une intoxication digitalique sévère avec hyperkaliémie repose sur les fragments Fab anti-digoxine ; le calcium n’est pas le traitement de référence et reste discuté."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’administration intraveineuse d’Intralipide® fait partie du traitement des intoxications sévères à la lidocaïne.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une émulsion lipidique IV fait partie du traitement d’une toxicité systémique grave à la lidocaïne."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La pupille mydriatique sous corticostéroïdes est un signe de surdosage en digoxine.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La proposition est incohérente sur le plan clinique ; la mydriase sous corticostéroïdes n’est pas un signe de surdosage digitalique."
+            },
+            {
+              "lettre": "E",
+              "enonce": "L’augmentation de la TSH sous traitement par amiodarone est toujours un signe d’hypothyroïdie.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Une élévation isolée et transitoire de TSH peut survenir sous amiodarone sans hypothyroïdie clinique ; l’interprétation repose aussi sur la T4 libre et le contexte."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 30</b>\n\nPhysiologiquement, le travail obstétrical d’une femme à terme de sa grossesse :",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : CNGOF ; Chestnut’s Obstetric Anesthesia.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Comporte trois stades successifs.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le travail comprend classiquement trois stades : dilatation, expulsion fœtale et délivrance."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le premier stade du travail comprend une phase active suivie d’une phase de latence.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La phase de latence <b>précède</b> la phase active au premier stade."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Le premier stade du travail s’étend du début du travail jusqu’à la dilatation complète du col utérin.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le premier stade va du début du travail à la dilatation cervicale complète."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le deuxième stade du travail se termine par la naissance de l’enfant.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le deuxième stade s’étend de la dilatation complète à la naissance."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le troisième stade, ou délivrance, comprend l’expulsion du placenta et des membranes.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le troisième stade correspond à l’expulsion du placenta et des membranes."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 31</b>\n\nConcernant la physiologie de la femme enceinte au cours d’une grossesse normale, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : CNGOF ; Chestnut’s Obstetric Anesthesia ; SFAR obstétrique.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Le débit cardiaque maternel augmente de 30 à 50 % de sa valeur de base en fin de grossesse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le débit cardiaque augmente d’environ 30 à 50 % au cours de la grossesse."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La pression artérielle maternelle augmente de manière marquée au cours du premier et du deuxième trimestre.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La pression artérielle <b>diminue</b> souvent légèrement au premier et au deuxième trimestre, du fait de la baisse des résistances vasculaires."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La compression de l’aorte par l’utérus gravide lorsque la femme est en décubitus dorsal entraîne une réduction du retour veineux au cœur.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La compression aorto-cave en décubitus dorsal réduit le retour veineux et peut diminuer le débit cardiaque."
+            },
+            {
+              "lettre": "D",
+              "enonce": "L’utérus gravide entraîne en fin de grossesse une diminution de la capacité résiduelle fonctionnelle respiratoire.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La CRF diminue en fin de grossesse du fait de l’élévation diaphragmatique."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le délai d’apnée sans hypoxie est réduit chez la femme enceinte en fin de grossesse.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’augmentation de la consommation d’O₂ et la diminution de la CRF raccourcissent le temps d’apnée tolérable."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 32</b>\n\nConcernant la physiologie du nourrisson, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR, anesthésie pédiatrique ; Smith’s Anesthesia for Infants and Children.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Il est exposé à un risque accru d’hypothermie du fait d’un rapport surface cutanée/poids plus élevé.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le rapport surface/poids élevé et les faibles réserves augmentent les pertes thermiques."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Son volume sanguin total est de 80 mL/kg de poids.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le volume sanguin du nourrisson est approximativement de 75 à 80 mL/kg."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La pression artérielle systolique ne doit pas descendre sous la valeur de 55 mmHg avant l’âge d’un an.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Une PAS < 55 mmHg chez le nourrisson est une valeur anormalement basse, couramment utilisée comme seuil d’alerte, selon l’âge exact et le contexte."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Il est exposé à un délai d’apnée sans hypoxie plus court que l’adulte.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La consommation d’O₂ élevée et la faible CRF raccourcissent le délai avant désaturation."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il est moins exposé que l’adulte au risque d’atélectasie sous ventilation mécanique.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le nourrisson est <b>davantage</b> exposé à la fermeture des petites voies aériennes et aux atélectasies sous anesthésie."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 33</b>\n\nLes modifications physiologiques et anatomiques de la femme enceinte à terme sont associées à :",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Chestnut’s Obstetric Anesthesia ; SFAR obstétrique.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Une réduction de la filière laryngée et trachéale.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’œdème muqueux et l’engorgement vasculaire réduisent le calibre des voies aériennes supérieures."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Une augmentation de la capacité résiduelle fonctionnelle.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La capacité résiduelle fonctionnelle <b>diminue</b> à terme."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Une préoxygénation au masque en FiO₂ 100 % plus rapide.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La baisse de CRF accélère la dénitrogénation et donc la préoxygénation, mais réduit aussi les réserves d’O₂ et diminue donc considérablement la tolérance à l’apnée avant la désaturation."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Une augmentation du rapport consommation d’oxygène/capacité résiduelle fonctionnelle.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La consommation d’O₂ augmente tandis que la CRF diminue ; leur rapport augmente nettement."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Une augmentation de la consommation d’oxygène.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La consommation d’O₂ maternelle augmente d’environ 20 à 30 % à terme."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 34</b>\n\nConcernant la précharge-dépendance du myocarde sain, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : SFAR/SRLF, remplissage vasculaire et précharge-dépendance ; Monnet & Teboul.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Elle se définit par le degré d’étirement des fibres myocardiques en fin de systole.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La précharge correspond à l’étirement des fibres en fin de <b>diastole</b>, avant la contraction."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Elle peut être évaluée de manière fiable par la mesure de la pression veineuse centrale.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La PVC est un mauvais prédicteur de réponse au remplissage."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Elle peut être évaluée par des indices dynamiques tels que la variation respiratoire de la pression artérielle pulsée (VPP).",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La variation de pression pulsée est un indice dynamique validé sous ventilation contrôlée et dans des conditions strictes."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Elle peut être évaluée par des indices dynamiques en cas de fibrillation atriale.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La fibrillation atriale rend les indices respiratoires peu fiables, en raison de la variabilité battement à battement."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Elle peut être évaluée par des indices dynamiques en ventilation spontanée.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La ventilation spontanée et les efforts irréguliers limitent fortement la validité des indices dynamiques standards."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 35</b>\n\nConcernant la physiologie du retour veineux au cœur, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Guyton & Hall ; physiologie du retour veineux.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Environ 30 % du volume sanguin est contenu dans le réservoir veineux systémique.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le système veineux contient environ <b>60 à 70 %</b> du volume sanguin total, non 30 %."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La pression qui règne dans l’oreillette droite est la pression qui s’oppose au retour veineux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La pression auriculaire droite constitue la pression d’aval qui s’oppose au retour veineux."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Le ventricule droit agit comme une pompe qui facilite le retour veineux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — En abaissant la pression auriculaire droite, le ventricule droit entretient le gradient de retour veineux ; la formulation est acceptable au sens fonctionnel."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La pression systémique moyenne est la pression motrice du retour veineux.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La pression systémique moyenne de remplissage est la pression d’amont motrice du retour veineux."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le débit cardiaque est une grandeur régulée.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — À l’état stable, débit cardiaque et retour veineux sont égaux et leur niveau est régulé selon les besoins métaboliques et les réflexes cardiovasculaires."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 36</b>\n\nDans des conditions physiologiques, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
+          "images": [
+            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-029-210.png"
+          ],
+          "correctionGenerale": "<i>Le schéma rappelle la répartition des compartiments hydriques : 70 % de liquide intracellulaire (LIC) et 30 % de liquide extracellulaire (LEC), ce dernier se répartissant en 7,5 % de plasma et autres liquides corporels et 22,5 % de liquide interstitiel.</i>\n\n<i>Référence utile : Guyton & Hall.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "L’eau représente le principal constituant du corps humain.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’eau est le principal constituant pondéral de l’organisme."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le compartiment hydrique le plus important est représenté par le liquide extracellulaire.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le compartiment <b>intracellulaire</b> représente environ deux tiers de l’eau totale et est le plus volumineux."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’eau traverse librement les membranes cellulaires.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’eau traverse rapidement les membranes cellulaires, notamment via les aquaporines, pour équilibrer les osmolarités."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Au sein du compartiment extracellulaire, le secteur intravasculaire contient plus d’eau que le secteur interstitiel.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Dans le secteur extracellulaire, l’interstitium contient environ trois quarts de l’eau, contre un quart pour le plasma."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La proportion du volume liquidien total par rapport au poids du corps varie avec l’âge.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La proportion d’eau corporelle diminue avec l’âge et varie aussi avec le sexe et la masse grasse."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 37</b>\n\nConcernant les anesthésiques d’induction, les médicaments suivants diminuent le plus souvent le volume d’éjection systolique :",
+          "images": [],
+          "correctionGenerale": "<i>Référence utile : Miller’s Anesthesia, agents d’induction.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Thiopental.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le thiopental diminue précharge, contractilité et pression artérielle, surtout en hypovolémie."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Étomidate.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — L’étomidate préserve généralement le volume d’éjection et l’hémodynamique."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Propofol.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le propofol réduit le retour veineux par vasodilatation et peut diminuer la contractilité."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Midazolam.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le midazolam peut diminuer le volume d’éjection, surtout avec des opioïdes ou chez le patient fragile."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Kétamine.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La kétamine augmente habituellement le tonus sympathique, la fréquence et le débit cardiaque, sauf épuisement catécholaminergique."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 38</b>\n\nQuels sont les grands déterminants du transport artériel en oxygène ?",
+          "images": [],
+          "correctionGenerale": "<b>DO₂ = DC × [1,34 × Hb × SaO₂ + 0,003 × PaO₂]</b>\n\n<i>Références utiles : Guyton ; Miller.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "La pression artérielle.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La pression artérielle conditionne la perfusion mais n’entre pas directement dans la formule du transport artériel en oxygène."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le débit cardiaque.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le transport en O₂ est le produit du débit cardiaque par le contenu artériel en O₂."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’hémoglobine.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’hémoglobine détermine l’essentiel de la capacité de transport de l’O₂."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La saturation artérielle en oxygène (SaO₂).",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La SaO₂ détermine la fraction des sites de l’hémoglobine occupés."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La pression artérielle en oxygène (PaO₂).",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — La PaO₂ contribue à la faible fraction d’O₂ dissous et influence la saturation via la courbe de dissociation."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 39</b>\n\nQuelles sont, parmi les séquences d’induction suivantes (hors curare), celles qui sont logiques d’un point de vue pharmacocinétique en vue d’une intubation trachéale ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Miller’s Anesthesia ; pharmacocinétique au site effet des opioïdes.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Propofol, puis sufentanil, puis intubation.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le sufentanil a un délai d’effet maximal plus lent que le propofol ; l’administrer après le propofol expose à intuber avant son effet maximal."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Étomidate, puis rémifentanil, puis intubation.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le rémifentanil a un délai d’action très court ; administré après l’étomidate avec un intervalle adapté, il peut atteindre rapidement un effet suffisant."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Sufentanil, puis étomidate, puis intubation.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le sufentanil doit être administré avant l’hypnotique, pour synchroniser son pic d’effet avec l’intubation."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Propofol, puis alfentanil, puis intubation.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — L’alfentanil a un délai d’action rapide et peut être administré après le propofol, avec un bref délai avant l’intubation."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Propofol, puis intubation, puis sufentanil.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Administrer l’opioïde après l’intubation ne prévient pas la réponse sympathique à la laryngoscopie."
+            }
+          ]
+        },
+        {
+          "format": "qcm",
+          "enonce": "<b>QCM 40</b>\n\nParmi les propositions suivantes, laquelle (lesquelles) compte(nt) pour un point dans le score qSOFA ?",
+          "images": [],
+          "correctionGenerale": "<i>Références utiles : Singer et al., Sepsis-3, JAMA 2016 ; Surviving Sepsis Campaign 2021 ; SRLF.</i>",
+          "items": [
+            {
+              "lettre": "A",
+              "enonce": "Fréquence cardiaque supérieure à 100/min.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La fréquence cardiaque ne fait pas partie du qSOFA."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Pression artérielle systolique inférieure à 100 mmHg.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Le critère qSOFA est une pression artérielle systolique ≤ 100 mmHg. L’item écrit « < 100 » vise manifestement ce critère, mais omet la valeur exactement égale à 100."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Score de Glasgow à 14.",
+              "isCorrect": true,
+              "justification": "<b>VRAI</b> — Toute altération de la conscience, définie par un Glasgow < 15, vaut un point ; un Glasgow à 14 répond donc au critère."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Température supérieure à 39 °C.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — La température ne fait pas partie du qSOFA."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Fréquence respiratoire supérieure à 20/min.",
+              "isCorrect": false,
+              "justification": "<b>FAUX</b> — Le seuil qSOFA est une fréquence respiratoire ≥ 22/min ; « > 20/min » est trop large et n’est pas le seuil exact."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

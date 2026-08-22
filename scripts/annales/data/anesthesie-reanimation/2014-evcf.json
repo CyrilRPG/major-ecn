@@ -12,13 +12,15 @@
       "annee": 2014,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2014 correction AM.pdf",
-      "orderIndex": 16,
+      "orderIndex": 11,
       "vignette": "Épreuve de vérification des connaissances fondamentales 2014 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Question N°1</b>\n\nCitez les 4 mécanismes principaux de l’hypoxie tissulaire (au niveau de la cellule).",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-001-008.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-001-008.png"
+          ],
           "reponseAttendue": "Baisse du débit sanguin dans le tissu (par baisse du débit cardiaque ou redistribution), baisse de la saturation en oxygène du sang, baisse de l’hémoglobine (anémie), altération de l’extraction en O₂ (choc septique, transport altéré).",
           "correctionGenerale": "1. Baisse du débit sanguin dans le tissu (par baisse du débit cardiaque ou redistribution)\n2. Baisse de la saturation en oxygène dans le sang\n3. Baisse de l’hémoglobine (anémie)\n4. Altération de l’extraction en O₂ (choc septique, transport altéré)\n\n<i>Le schéma rappelle la boucle du transport de l’oxygène : contenu artériel en O₂ (≈ SaO₂ 100 %), débit cardiaque, extraction tissulaire (≈ 25 %) et contenu veineux résiduel (SvO₂ ≈ 75 %).</i>\n\n<i>Source citée par le corrigé : sémiologie des états de choc, SFAR 2001.</i>"
         },
@@ -46,7 +48,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°5</b>\n\nDonnez la définition de la P50 et citez les facteurs qui l’augmentent.",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-003-025.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-003-025.png"
+          ],
           "reponseAttendue": "La P50 est la pression partielle d’oxygène à laquelle l’hémoglobine est saturée à 50 % : plus sa valeur est faible, plus l’affinité de l’hémoglobine pour l’oxygène est élevée. Elle est augmentée par l’acidose, l’hyperthermie (infection, fièvre), l’hypercapnie et l’augmentation du 2,3-diphosphoglycérate.",
           "correctionGenerale": "<b>Définition</b> : la pression partielle d’oxygène à laquelle l’hémoglobine est saturée en oxygène à 50 % est appelée P50 ; plus sa valeur est faible, plus l’affinité de l’hémoglobine pour l’oxygène est élevée.\n\n<b>Facteurs augmentant la P50</b> (déviation de la courbe vers la droite)\n• Acidose (baisse du pH)\n• Hyperthermie (infection et fièvre)\n• Augmentation du CO₂ / hypercapnie\n• Augmentation du 2,3-diphosphoglycérate\n\n<i>La courbe de dissociation de l’oxyhémoglobine ci-dessus illustre l’effet Bohr (↑CO₂, ↓pH → déviation à droite) et l’effet Haldane.</i>"
         },
@@ -67,7 +71,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°8</b>\n\nHyperthermie maligne : citez au moins 4 facteurs physiopathologiques.",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-004-035.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-004-035.png"
+          ],
           "reponseAttendue": "Anomalie génétique transmissible portant sur le récepteur de la ryanodine (canaux calciques RYR1 et DHPR), libération massive de calcium et augmentation du calcium libre myoplasmique, état de contraction musculaire permanent avec dégagement de chaleur, emballement mitochondrial avec augmentation de la consommation d’O₂ et de la production de CO₂ (acidose respiratoire précoce), puis métabolisme anaérobie et acidose mixte, arrêt des pompes membranaires et souffrance des cellules musculaires (rhabdomyolyse, hyperkaliémie, myoglobinurie).",
           "correctionGenerale": "<i>Le corrigé répond par la diapositive ci-dessus.</i>\n\n• <b>Anomalie génétique transmissible +++</b> — récepteur de la ryanodine = mutation\n• <b>Libération massive de calcium</b>\n• <b>Hyperactivation mitochondriale</b> → muscles → chaleur, hypercapnie, rigidité\n• Canaux calciques <b>RYR1 et DHPR</b>\n• Augmentation du taux de Ca²⁺ libre myoplasmique\n• État de <b>contraction permanente</b>\n• Dégagement de chaleur\n• Emballement mitochondrial (métabolisme aérobie) : augmentation de la consommation d’O₂ et <b>production de CO₂</b> → <b>acidose respiratoire</b> précoce\n• Épuisement et augmentation du métabolisme anaérobie (↗ lactates) : acidose mixte\n• Arrêt des pompes membranaires consommatrices d’énergie\n• Souffrance des cellules musculaires : <b>rhabdomyolyse, hyperkaliémie, myoglobinurie</b>"
         },
@@ -130,7 +136,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°17</b>\n\nL’examen d’un homme de 70 ans traumatisé crânien montre : une ouverture des yeux à la douleur, une réponse verbale incompréhensible, un évitement non adapté du côté gauche et une absence de mobilité à droite. Cotez son score de Glasgow.",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-007-061.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-007-061.png"
+          ],
           "reponseAttendue": "Ouverture des yeux à la douleur = 2 ; réponse verbale incompréhensible = 2 ; meilleure réponse motrice, évitement non adapté = 4. Score de Glasgow = 8.",
           "correctionGenerale": "• <b>Yeux</b> : ouverture à la douleur = 2\n• <b>Verbal</b> : incompréhensible = 2\n• <b>Moteur</b> : évitement non adapté = 4 <i>(on retient la meilleure réponse motrice, donc le côté gauche)</i>\n\n→ <b>Glasgow = 8</b>"
         },
@@ -165,14 +173,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question N°22</b>\n\nQuel est le mode d’action des diurétiques de l’anse ?",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-009-079.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-009-079.png"
+          ],
           "reponseAttendue": "Ce sont des natriurétiques qui bloquent le co-transporteur Na-K-2Cl du pôle luminal des cellules de la branche large ascendante de l’anse de Henlé, inhibant ainsi la réabsorption de sodium, de potassium et de chlore.",
           "correctionGenerale": "• <b>Natriurétique</b>\n• Échangeur de sodium, d’eau et de potassium bloqué par les diurétiques au niveau de l’anse de Henlé\n\n<b>Détail (figure)</b>\n• L’entrée du NaCl filtré dans les cellules du segment ascendant de l’anse de Henlé est médiée par un <b>co-transporteur Na-K-2Cl</b> situé sur la membrane apicale ; l’énergie de ce transfert est fournie par le gradient électrochimique favorable du sodium\n• Les diurétiques de l’anse (furosémide, bumétanide) agissent au pôle luminal de la cellule tubulaire, <b>inhibent le co-transporteur Na-K-2Cl</b> par compétition avec le site Cl⁻, et permettent une excrétion de 20 à 25 % de la quantité de sodium filtrée\n• Ils provoquent la chute du gradient électrique transépithélial, avec arrêt de la réabsorption paracellulaire des cations divalents (Ca, Mg) : d’où une action importante sur l’<b>élimination du calcium</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question N°23</b>\n\nCitez les principales bactéries hospitalières résistantes aux antibiotiques chez l’adulte.",
-          "images": ["annales-area/evcf-2014-correction-am/figures/img-010-089.png"],
+          "images": [
+            "annales-area/evcf-2014-correction-am/figures/img-010-089.png"
+          ],
           "reponseAttendue": "SARM (Staphylococcus aureus résistant à la méticilline), BLSE (entérobactéries productrices de bêta-lactamases à spectre étendu), ERV (entérocoques résistants à la vancomycine), BHRE (bactéries hautement résistantes émergentes), PAMR (Pseudomonas aeruginosa multirésistants), ABMR (Acinetobacter baumannii multirésistants).",
           "correctionGenerale": "• <b>SARM</b> : Staphylococcus aureus résistant à la méticilline\n• <b>BLSE</b> : bêta-lactamases à spectre étendu (entérobactéries)\n• <b>ERV</b> : entérocoques résistants à la vancomycine\n• <b>BHRE</b> : bactéries hautement résistantes émergentes\n• <b>PAMR</b> : Pseudomonas aeruginosa multirésistants\n• <b>ABMR</b> : Acinetobacter multirésistants\n\n<i>Le schéma répartit ces bactéries entre le versant nosocomial (ERV, PAMR, ABMR), le versant communautaire (BLSE chez les entérobactéries, PSDP) et les germes intermédiaires (EPC, SARM).</i>"
         },

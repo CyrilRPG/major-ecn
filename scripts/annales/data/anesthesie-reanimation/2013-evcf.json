@@ -17,7 +17,7 @@
       "annee": 2013,
       "type": "EVCF",
       "source": "ANNALES AREA/Correction EVCF 2013.pdf",
-      "orderIndex": 13,
+      "orderIndex": 8,
       "vignette": null,
       "questions": [
         {
@@ -82,7 +82,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°9</b>\n\nQuels sont les déterminants du rapport fraction inspirée sur fraction alvéolaire des agents halogénés ?",
-          "images": ["annales-area/correction-evcf-2013/figures/img-004-002.png"],
+          "images": [
+            "annales-area/correction-evcf-2013/figures/img-004-002.png"
+          ],
           "reponseAttendue": "Le débit de gaz frais, la ventilation minute, la captation et la solubilité du gaz.",
           "correctionGenerale": "1. Débit de gaz frais\n2. Ventilation minute\n3. Captation\n4. Solubilité du gaz"
         },
@@ -138,7 +140,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°17</b>\n\nQuelles sont les règles de jeûne chez l’enfant de 1 an pour une chirurgie programmée sous AG ?",
-          "images": ["annales-area/correction-evcf-2013/figures/img-006-003.png"],
+          "images": [
+            "annales-area/correction-evcf-2013/figures/img-006-003.png"
+          ],
           "reponseAttendue": "6 heures pour les solides et le lait 2ᵉ âge, 4 heures pour le lait 1ᵉʳ âge, 2 heures pour les liquides clairs, puis rien jusqu’à l’opération.",
           "correctionGenerale": "Le corrigé répond par le schéma ci-dessus :\n• <b>− 6 h</b> : solides et lait 2ᵉ âge\n• <b>− 4 h</b> : lait 1ᵉʳ âge\n• <b>− 2 h</b> : liquides clairs\n• Puis rien, jusqu’à l’opération"
         },
@@ -177,7 +181,7 @@
       "annee": 2013,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2013 correction.pdf",
-      "orderIndex": 14,
+      "orderIndex": 9,
       "vignette": "Second corrigé du même sujet EVCF 2013 d’anesthésie-réanimation, proposé par un autre correcteur : les 21 questions sont identiques, les réponses proposées diffèrent et se complètent.",
       "questions": [
         {

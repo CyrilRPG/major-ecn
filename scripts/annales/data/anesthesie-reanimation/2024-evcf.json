@@ -1,0 +1,172 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF 2024 - Correction .pdf": {
+      "atelier": "annales-area/evcf-2024-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {}
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2024 - EVCF",
+      "annee": 2024,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF 2024 - Correction .pdf",
+      "orderIndex": 33,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 en anesthésie-réanimation : 21 questions à réponse ouverte et courte, sans vignette clinique commune. Chaque réponse du corrigé est accompagnée de sa référence bibliographique.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nUne césarienne réalisée avec l’injection de rocuronium est terminée. Aucune réponse n’est observée au train de quatre à l’adducteur du pouce. Quelle est votre conduite à tenir ?",
+          "images": [],
+          "reponseAttendue": "L’absence de réponse au TOF signifie qu’il existe encore un bloc neuromusculaire profond : il ne faut pas extuber la patiente. On peut envisager l’administration de sugammadex à la dose de 4 mg/kg (quand le PTC est ≥ 1/10) pour antagoniser un bloc profond induit par le rocuronium.",
+          "correctionGenerale": "En cas d’absence de réponse au TOF (train de quatre), cela signifie qu’il existe encore un <b>bloc neuromusculaire profond</b>. <b>Il ne faut pas extuber la patiente.</b>\n\nOn peut envisager l’administration de <b>sugammadex à la dose de 4 mg/kg</b> (quand PTC ≥ 1/10) pour antagoniser un bloc profond induit par le rocuronium.\n\n<i>Référence : SFAR – Recommandations sur le monitorage de la curarisation (2020).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelles sont les règles de jeûne en anesthésie pédiatrique en ambulatoire, et la particularité pour le retour à domicile en voiture ?",
+          "images": [],
+          "reponseAttendue": "Règles de jeûne : 6 h pour les solides, 4 h pour le lait maternisé, 3 h pour le lait maternel, 1 h pour l’eau claire. Pour le retour à domicile, un enfant doit être accompagné par deux adultes si le retour se fait en voiture (un conducteur et un accompagnant).",
+          "correctionGenerale": "<b>Règles de jeûne</b>\n• 6 h pour les solides\n• 4 h pour le lait maternisé\n• 3 h pour le lait maternel\n• 1 h pour l’eau claire\n\n<b>Retour à domicile</b> : un enfant doit être accompagné par <b>deux adultes si le retour se fait en voiture</b> (un conducteur et un accompagnant).\n\n<i>Référence : SFAR – Recommandations de jeûne préopératoire (2022).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nÀ partir de ce schéma de la physiologie respiratoire, quel est le volume concerné par la préoxygénation ? Indiquez le numéro correspondant à ce volume.",
+          "images": [
+            "annales-area/evcf-2024-correction/figures/img-001-007.png"
+          ],
+          "reponseAttendue": "La capacité résiduelle fonctionnelle (CRF), qui correspond au volume numéro 5 sur le schéma.",
+          "correctionGenerale": "Le volume concerné est la <b>capacité résiduelle fonctionnelle (CRF)</b>, qui correspond souvent au <b>volume numéro 5</b> sur les schémas classiques.\n\n<i>Le schéma annoté du corrigé identifie, autour du tracé spirométrique, le volume de réserve inspiratoire (VRI) et le volume résiduel, et encadre le volume 5 correspondant à la CRF.</i>\n\n<i>Référence : Ganong WF, </i>Review of Medical Physiology<i>.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nDonnez le nom de la classe médicamenteuse de l’énoxaparine, précisez la dose et la fréquence d’administration de l’énoxaparine pour la prévention thromboembolique postopératoire d’une appendicectomie chez l’obèse (sans insuffisance rénale) selon l’indice de masse corporelle.",
+          "images": [],
+          "reponseAttendue": "L’énoxaparine est une héparine de bas poids moléculaire. IMC < 40 : 40 mg SC par jour. IMC ≥ 40 : 40 mg SC toutes les 12 heures. NB : tinzaparine, si IMC > 40 : 75 UI/kg en une injection SC.",
+          "correctionGenerale": "L’énoxaparine est une <b>héparine de bas poids moléculaire</b>.\n\n• <b>IMC < 40</b> : 40 mg SC/j\n• <b>IMC ≥ 40</b> : 40 mg SC/12 h\n\n<i>NB : tinzaparine — si IMC > 40 : 75 UI/kg en 1 injection SC.</i>\n\n<i>Référence : SFAR – Prévention du risque thromboembolique veineux en chirurgie (2024).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLors de la consultation d’anesthésie, précisez quel est l’intérêt de calculer le score de Lee modifié et donnez les éléments pris en compte dans le calcul de ce score.",
+          "images": [],
+          "reponseAttendue": "Il permet d’évaluer le risque d’événement cardio-vasculaire pour une chirurgie NON cardiaque, et donc de choisir les explorations complémentaires de la réserve coronaire. Éléments : insuffisance rénale quel que soit le stade, diabète insulino-dépendant ou non, antécédent d’ischémie cardiaque, antécédent d’insuffisance cardiaque, antécédent d’AVC ou d’AIT, chirurgie à risque (vasculaire, thoracique, abdominale majeure).",
+          "correctionGenerale": "<b>Intérêt</b> : évaluer le risque d’événement cardio-vasculaire pour la chirurgie <b>NON cardiaque</b> → choix des explorations complémentaires de la réserve coronaire.\n\n<b>Éléments pris en compte</b>\n• Insuffisance rénale, quel que soit le stade\n• Diabète insulino-dépendant ou non\n• Antécédent d’ischémie cardiaque\n• Antécédent d’insuffisance cardiaque\n• Antécédent d’AVC / AIT\n• Chirurgie à risque (vasculaire, thoracique, abdominale majeure)\n\n<i>Référence : Lee TH, </i>Circulation<i>, 1999, révisé en 2024.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLa spectroscopie proche infrarouge (NIRS) est utilisée pour monitorer l’oxymétrie tissulaire cérébrale dans le cadre d’un pontage coronarien sous CEC. À l’exclusion d’un problème technique, quels paramètres peuvent induire une diminution de l’oxymétrie cérébrale ?",
+          "images": [],
+          "reponseAttendue": "L’hypotension, l’hypoxémie, l’hypocapnie, un hématocrite bas, une baisse du débit cardiaque ou du débit de CEC, et une obstruction carotidienne.",
+          "correctionGenerale": "• Hypotension\n• Hypoxémie\n• Hypocapnie\n• Hématocrite bas\n• Baisse du débit cardiaque ou du débit de CEC\n• Obstruction de la carotide\n\n<i>Référence : Murkin JM, </i>Anesth Analg<i>, 2007.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelle(s) valeur(s) de la pression artérielle fera(ont) évoquer chez une femme enceinte une pré-éclampsie gravidique sévère sans signe de gravité ?",
+          "images": [
+            "annales-area/evcf-2024-correction/figures/img-002-016.png"
+          ],
+          "reponseAttendue": "PAS ≥ 160 mmHg ou PAD ≥ 110 mmHg.",
+          "correctionGenerale": "<b>PAS ≥ 160 mmHg ou PAD ≥ 110 mmHg.</b>\n\n<i>Aide cognitive SFAR 2020 : PRÉ-ÉCLAMPSIE SÉVÈRE — PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg = URGENCE HYPERTENSIVE ⇒ DÉBUTER ou MAJORER LE TRAITEMENT ANTIHYPERTENSEUR.</i>\n\n<i>Référence : Collège National des Gynécologues et Obstétriciens Français (CNGOF) ; recommandation SFAR 2020.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nÀ la naissance, lors de l’adaptation à la vie extra-utérine, quelles sont les modifications cardiovasculaires ?",
+          "images": [],
+          "reponseAttendue": "Fermeture du canal artériel, fermeture du foramen ovale, baisse des résistances pulmonaires, augmentation des résistances systémiques, mise en fonction de la respiration.",
+          "correctionGenerale": "• Fermeture du canal artériel\n• Fermeture du foramen ovale\n• Baisse des résistances pulmonaires\n• Augmentation des résistances systémiques\n• Mise en fonction de la respiration\n\n<i>Référence : Guyton & Hall, </i>Physiologie médicale<i>.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nCitez 5 interventions chirurgicales parmi les plus à risque de développement d’une douleur chronique postopératoire.",
+          "images": [],
+          "reponseAttendue": "Thoracotomie, amputation, chirurgie mammaire, chirurgie de la hernie inguinale, sternotomie.",
+          "correctionGenerale": "• Thoracotomie\n• Amputation\n• Chirurgie mammaire\n• Chirurgie de la hernie inguinale\n• Sternotomie\n\n<i>Référence : Kehlet H, </i>Lancet<i>, 2006.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuels sont les facteurs de risque qui prédisposent à une complication cardiaque du dropéridol ?",
+          "images": [],
+          "reponseAttendue": "QT long congénital ou acquis, hypokaliémie, hypomagnésémie, bradycardie, administration concomitante de médicaments allongeant l’intervalle QT, antécédents de troubles du rythme.",
+          "correctionGenerale": "• QT long congénital ou acquis\n• Hypokaliémie\n• Hypomagnésémie\n• Bradycardie\n• Administration concomitante de médicaments allongeant l’intervalle QT\n• Antécédents de troubles du rythme\n\n<i>Référence : FDA Black Box Warning ; SFAR – Médicaments allongeant le QT.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuels sont les objectifs du monitorage neuromusculaire à l’adducteur du pouce pour obtenir une curarisation complète des muscles abdominaux ?",
+          "images": [],
+          "reponseAttendue": "TOF = 0 et PTC (compte post-tétanique) entre 1 et 3, ce qui correspond à un bloc profond adapté pour la chirurgie abdominale majeure.",
+          "correctionGenerale": "• <b>TOF = 0</b>\n• <b>PTC (post-tetanic count) entre 1 et 3</b>\n\n→ Cela correspond à un <b>bloc profond</b> adapté pour la chirurgie abdominale majeure.\n\n<i>Référence : Naguib M, </i>Anesthesiology<i>, 2009.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez les mécanismes physiopathologiques des céphalées par brèche dure-mérienne.",
+          "images": [],
+          "reponseAttendue": "Une hypotension intracrânienne due à la fuite de LCR, entraînant une traction des structures méningées et vasculaires sensibles, et donc l’activation des récepteurs nociceptifs.",
+          "correctionGenerale": "<b>Hypotension intracrânienne</b> due à la fuite de LCR → <b>traction des structures méningées et vasculaires sensibles</b> → <b>activation des récepteurs nociceptifs</b>.\n\n<i>Référence : Turnbull DK, </i>Br J Anaesth<i>, 2003.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nPrécisez quelles sont les conséquences physiopathologiques cérébrales d’une hyponatrémie sévère (sodium plasmatique inférieur à 125 mmol/L) et énumérez ces manifestations cliniques.",
+          "images": [],
+          "reponseAttendue": "Un œdème cérébral avec élévation de la pression intracrânienne. Signes : nausées, vomissements, confusion, convulsions, coma.",
+          "correctionGenerale": "<b>Œdème cérébral avec élévation de la pression intracrânienne.</b>\n\n<b>Signes</b> : nausées, vomissements, confusion, convulsions, coma.\n\n<i>Référence : Adrogué HJ, </i>N Engl J Med<i>, 2000.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nCitez 5 facteurs prédictifs de ventilation au masque facial difficile chez l’adulte.",
+          "images": [],
+          "reponseAttendue": "IMC > 30, barbe, âge > 55 ans, édentation, ronflement ou SAOS connu.",
+          "correctionGenerale": "• IMC > 30\n• Barbe\n• Âge > 55 ans\n• Édentation\n• Ronflement ou SAOS connu\n\n<i>Référence : Kheterpal S, </i>Anesthesiology<i>, 2006.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nPrécisez le mécanisme d’action de l’atracurium, sa posologie recommandée pour l’intubation ainsi que sa voie métabolique.",
+          "images": [],
+          "reponseAttendue": "C’est un bloqueur non dépolarisant des récepteurs nicotiniques ; posologie 0,5 mg/kg ; métabolisme par hydrolyse spontanée (élimination de Hofmann) et par les estérases plasmatiques.",
+          "correctionGenerale": "• <b>Mécanisme d’action</b> : bloqueur non dépolarisant des récepteurs nicotiniques\n• <b>Posologie</b> : 0,5 mg/kg\n• <b>Métabolisme</b> : hydrolyse spontanée (voie de Hofmann) et estérases plasmatiques\n\n<i>Référence : </i>Martindale: The Complete Drug Reference<i>.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nDécrivez les signes cliniques d’un choc anaphylactique de grade III et le traitement médicamenteux.",
+          "images": [],
+          "reponseAttendue": "Signes : collapsus cardiovasculaire, hypoxémie, bronchospasme sévère, perte de connaissance. Traitement : adrénaline IM ou IV, remplissage vasculaire, oxygénothérapie, antihistaminiques, corticoïdes.",
+          "correctionGenerale": "<b>Signes</b> : collapsus cardiovasculaire, hypoxémie, bronchospasme sévère, perte de connaissance.\n\n<b>Traitement</b> : adrénaline IM ou IV, remplissage vasculaire, oxygénothérapie, antihistaminiques, corticoïdes.\n\n<i>Références : Ring J, </i>Allergy<i>, 1985 ; SFAR – Prise en charge de l’anaphylaxie.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nCitez cinq mécanismes pouvant expliquer une hypoxémie.",
+          "images": [],
+          "reponseAttendue": "Hypoventilation alvéolaire, effet shunt, inégalités des rapports ventilation/perfusion, altération de la diffusion, baisse de la FiO₂.",
+          "correctionGenerale": "• Hypoventilation alvéolaire\n• Effet shunt\n• Inégalités des rapports ventilation/perfusion (V/Q)\n• Diffusion altérée\n• Baisse de la FiO₂\n\n<i>Référence : West JB, </i>Pulmonary Pathophysiology<i>.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nLa consultation du dossier informatisé de pneumologie d’un patient vous apporte les renseignements suivants — épreuves fonctionnelles respiratoires : VEMS 46 % (0,9 L), VEMS post-bêta-2 mimétique 49 % (+60 mL), VEMS/CVF 55 %, VEMS/CVF post-bêta-2 mimétique 57 %, VR 115 %, DLCO 50 %, DLCO/VA 65 %.\n\nInterprétez les EFR.",
+          "images": [],
+          "reponseAttendue": "Syndrome obstructif modéré non réversible, de stade GOLD 3 (VEMS compris entre 30 et 50 % ; le stade 4 correspond à un VEMS < 30 %), avec hyperinflation modérée (VR élevé) et altération de la diffusion, compatible avec une BPCO.",
+          "correctionGenerale": "<b>Syndrome obstructif modéré non réversible</b> (stade 3 GOLD, car le VEMS est compris entre 30 et 50 % ; NB : VEMS < 30 % = stade 4) avec <b>hyperinflation modérée</b> (VR élevé) et <b>altération de la diffusion</b>, compatible avec une <b>BPCO</b>.\n\n<i>Référence : ATS/ERS Task Force, </i>Eur Respir J<i>, 2005.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nAu cours d’une anesthésie générale pour cholécystectomie chez une patiente de 40 ans sans antécédent survient un arrêt cardiaque. La réanimation cardiovasculaire est débutée immédiatement (pas de no-flow).\n\nÀ partir de quel délai considérez-vous que la poursuite du massage cardiaque devient futile ? Existe-t-il une alternative au massage cardiaque externe ?",
+          "images": [],
+          "reponseAttendue": "En l’absence de retour à une circulation spontanée après 30 minutes malgré une réanimation bien conduite, la poursuite peut être jugée futile. Une alternative est la circulation extracorporelle (ECPR) dans les centres équipés.",
+          "correctionGenerale": "En l’absence de <b>ROSC après 30 minutes</b> malgré une réanimation bien conduite, la poursuite peut être jugée futile.\n\nUne alternative est la <b>circulation extracorporelle (ECPR)</b> dans les centres équipés.\n\n<i>Référence : ERC Guidelines 2021.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nChez un patient en peropératoire sous anesthésie générale, intubé et ventilé, vous observez une chute brutale de l’ETCO₂. Quels sont les principaux mécanismes qui peuvent expliquer cette situation ?",
+          "images": [],
+          "reponseAttendue": "Embolie gazeuse, embolie pulmonaire, arrêt cardiaque, déconnexion du circuit, fuite ou obstruction de la sonde, hypotension sévère par baisse brutale du débit cardiaque (induction, saignement…).",
+          "correctionGenerale": "• Embolie gazeuse\n• Embolie pulmonaire\n• Arrêt cardiaque\n• Déconnexion du circuit\n• Fuite ou obstruction de la sonde\n• Hypotension sévère (baisse brutale du débit cardiaque : induction, saignement…)\n\n<i>Référence : </i>Miller’s Anesthesia<i>, 9ᵉ édition.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nChez un patient devant bénéficier d’une chirurgie du rachis, vous envisagez à la consultation de réaliser une stratégie d’épargne sanguine. Citez les différents moyens pouvant être mis en œuvre.",
+          "images": [],
+          "reponseAttendue": "Fer IV, EPO, acide tranexamique, autotransfusion (récupérateur de sang), hypotension contrôlée, techniques chirurgicales atraumatiques (abord mini-invasif).",
+          "correctionGenerale": "• Fer IV\n• EPO\n• Acide tranexamique\n• Autotransfusion (récupérateur de sang)\n• Hypotension contrôlée\n• Techniques chirurgicales atraumatiques (abord mini-invasif)\n\n<i>Référence : SFAR – Stratégie d’épargne sanguine, 2017.</i>"
+        }
+      ]
+    }
+  ]
+}

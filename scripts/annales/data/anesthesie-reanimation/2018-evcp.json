@@ -12,7 +12,7 @@
       "annee": 2018,
       "type": "EVCP",
       "source": "ANNALES AREA/EVCP 2018.pdf",
-      "orderIndex": 24,
+      "orderIndex": 19,
       "vignette": "Vous voyez en consultation pré-anesthésique un homme de 70 ans, adressé pour une colectomie gauche par voie cœlioscopique pour cancer.\n\nLes antécédents associent : cardiopathie ischémique avec stent actif datant de mars 2016, hypertension artérielle, fibrillation atriale paroxystique et diabète de type 2. Le patient a été vu en consultation par son cardiologue en avril 2017.\n\nSon traitement associe : rivaroxaban (Xarelto®), bisoprolol (Bisoce®), Kardégic® 75 mg, atorvastatine (Tahor®), metformine (Glucophage®), ramipril (Triatec®).\n\nÀ l’examen clinique, vous notez un poids de 75 kg pour 175 cm, avec une perte récente de 10 kg en 3 mois. La pression artérielle mesurée est de 130/70 mmHg, la fréquence cardiaque est à 72 bpm. Il n’existe pas de tabagisme actif et l’auscultation cardio-respiratoire est normale. Le patient vous indique qu’il peut monter 2 étages.",
       "questions": [
         {
@@ -25,7 +25,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nInterprétez l’ECG suivant.",
-          "images": ["annales-area/evcp-2018/figures/img-005-024.jpg"],
+          "images": [
+            "annales-area/evcp-2018/figures/img-005-024.jpg"
+          ],
           "reponseAttendue": "Rythme régulier sinusal, confirmant le caractère paroxystique de l’ACFA ; ondes Q de nécrose dans le territoire inférieur (II, III, aVF), stigmate d’un infarctus du myocarde constitué ; trouble de la repolarisation avec sous-décalage du ST antérieur en V2-V3, non significatif ; BAV du 1ᵉʳ degré (PR > 0,20 s) ; hémibloc antérieur gauche (déviation axiale gauche), soit un bloc bifasciculaire ; QT normal.",
           "correctionGenerale": "• <b>Rythme régulier sinusal</b>, confirmant le caractère paroxystique de l’ACFA\n• <b>Ondes Q de nécrose dans le territoire inférieur (II, III, aVF)</b>, stigmate de l’infarctus du myocarde constitué (cardiopathie ischémique connue)\n• Trouble de repolarisation : sous-décalage du ST antérieur en V2-V3, non significatif\n• <b>BAV du 1ᵉʳ degré</b> : trouble de conduction, PR > 0,20 s\n• <b>Hémibloc antérieur gauche</b> (déviation axiale gauche)\n• Donc <b>bloc bifasciculaire</b> (BAV 1 + HBAG)\n• QT normal"
         },
@@ -46,14 +48,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuels sont les éléments cliniques principaux à rechercher à la consultation anesthésique pour évaluer le retentissement du diabète ?",
-          "images": ["annales-area/evcp-2018/figures/img-014-061.jpg"],
+          "images": [
+            "annales-area/evcp-2018/figures/img-014-061.jpg"
+          ],
           "reponseAttendue": "Raisonner en termes de micro- et de macroangiopathies. Microangiopathies : gastroparésie (ballonnements, nausées et vomissements postprandiaux), neuropathie (questionnaire DN4), plaies chroniques des membres inférieurs, œdèmes des membres inférieurs et quantification de la diurèse (micro-albuminurie, protéinurie), ouverture de bouche et signe du prieur (risque d’intubation difficile), troubles visuels et acuité visuelle (rétinopathie), dysautonomie cardiovasculaire (hypotension orthostatique, ECG). Macroangiopathies : angor d’effort et de repos, claudication des membres inférieurs, souffle carotidien.",
           "correctionGenerale": "Toujours raisonner en termes de <b>microangiopathies</b> et de <b>macroangiopathies</b>.\n\n<b>Atteintes MICROANGIOPATHIQUES</b>\n• Recherche d’une <b>gastroparésie</b> : ballonnements postprandiaux, vomissements, nausées postprandiales\n• Recherche d’une <b>neuropathie</b> : questionnaire DN4 sur les douleurs neuropathiques\n• Plaies chroniques, notamment aux membres inférieurs\n• Œdème des membres inférieurs, notamment dans le cadre d’une micro-albuminurie ; protéinurie si l’atteinte rénale est plus importante ; diurèse à quantifier\n• <b>Ouverture de bouche et signe du prieur</b> : risque d’intubation difficile\n• Troubles visuels / acuité visuelle (rétinopathie diabétique)\n• <b>Dysautonomie cardiovasculaire</b> : hypotension orthostatique / ECG\n\n<b>Atteintes MACROANGIOPATHIQUES</b>\n• Atteinte cardio-vasculaire : angor d’effort et de repos\n• Claudication des membres inférieurs\n• Sténose carotidienne : souffle carotidien\n\n<i>L’arbre décisionnel SFAR « Rechercher et évaluer les complications spécifiques du diabète » précise le bilan minimal (interrogatoire, PA couché/debout, ECG de repos, bandelette urinaire, créatininémie) et distingue l’atteinte coronaire — symptomatique, ou asymptomatique à suspecter devant d’autres atteintes artérielles, une protéinurie, une insuffisance rénale ou un score calcique coronaire > 400 —, la gastroparésie (« estomac plein », risque d’intubation) et la neuropathie autonome cardiaque (tachycardie permanente, QTc > 440 ms, ischémie ou IDM silencieux, hypotension orthostatique ou postprandiale, hypoglycémie grave non ressentie, absence de diminution nocturne de la PA au holter). Il rappelle l’importance du dialogue avec le patient diabétique et l’évaluation du contrôle glycémique par l’HbA1c.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nQuelle gestion du traitement réalisez-vous en préopératoire ?",
-          "images": ["annales-area/evcp-2018/figures/img-017-074.jpg"],
+          "images": [
+            "annales-area/evcp-2018/figures/img-017-074.jpg"
+          ],
           "reponseAttendue": "Rivaroxaban : arrêt, dernière prise à J-3, sans relais (anti-Xa). Bisoprolol : à poursuivre en périopératoire, y compris à J0. Kardégic 75 mg : à poursuivre car stent coronarien, la balance bénéfice/risque étant en faveur du maintien. Atorvastatine : pas d’arrêt. Metformine : arrêt la veille au soir, pas de prise à J0, reprise dès que la voie orale est possible et en l’absence d’insuffisance rénale postopératoire. Ramipril : pas de prise à J0. Surveillance des glycémies en préopératoire et mise en place d’un protocole d’insuline sous-cutanée adapté aux dextros.",
           "correctionGenerale": "• <b>Rivaroxaban (Xarelto®)</b> : STOP — dernière prise à <b>J-3, SANS RELAIS</b> car « -xaban »\n• <b>Bisoprolol (Bisoce®)</b> : à poursuivre en périopératoire, y compris à J0\n• <b>Kardégic® 75 mg</b> : à poursuivre car stent coronarien, la balance bénéfice/risque étant en faveur du maintien\n• <b>Atorvastatine (Tahor®)</b> : pas d’arrêt\n• <b>Metformine (Glucophage®)</b> : stop la veille au soir et pas de prise à J0 ; reprise dès que la voie orale est possible et en l’absence d’insuffisance rénale postopératoire\n• <b>Ramipril (Triatec®)</b> : pas de prise à J0\n\n<b>Surveillance des glycémies en préopératoire</b> et mise en place d’un protocole d’insuline sous-cutanée adapté aux dextros.\n\n<i>Le tableau SFAR de la période préopératoire détaille, en fonction de la glycémie capillaire, les apports sucrés et les doses d’insuline analogue ultra-rapide à administrer la veille au soir, au coucher, en cas de besoin nocturne et le matin de l’intervention, ainsi que la règle « repas normal + antidiabétiques oraux sauf metformine » la veille et « pas de prise d’ADO » le jour de l’intervention.</i>"
         },
@@ -81,7 +87,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nQuelle antibioprophylaxie prescrivez-vous (avec les doses) ?",
-          "images": ["annales-area/evcp-2018/figures/img-026-111.png"],
+          "images": [
+            "annales-area/evcp-2018/figures/img-026-111.png"
+          ],
           "reponseAttendue": "Pour une colectomie : céfoxitine 2 g IVL lors de la chirurgie, avec réinjection de 1 g toutes les 2 heures si la durée dépasse 2 heures, jusqu’à la fin de la chirurgie ; la veille au soir, tobramycine 200 mg per os en dose unique et métronidazole 1 g per os en dose unique. En cas de portage rectal d’entérobactérie BLSE, l’antibioprophylaxie doit être active sur la souche identifiée.",
           "correctionGenerale": "<b>Chirurgie colorectale et appendiculaire</b> (recommandations SFAR)\n\nPour une <b>colectomie</b> (comme pour l’amputation abdomino-périnéale, la proctectomie et le rétablissement de continuité) :\n• <b>La veille au soir</b> : tobramycine 200 mg per os en dose unique + métronidazole 1 g per os en dose unique <i>(grade 1 et avis d’experts)</i>\n• <b>Lors de la chirurgie</b> : <b>céfoxitine 2 g IVL</b>, puis 1 g si la durée dépasse 2 h, puis toutes les 2 h jusqu’à la fin de la chirurgie <i>(grade 1)</i>\n• Si portage rectal d’entérobactérie BLSE : antibioprophylaxie active sur la souche identifiée <i>(avis d’experts)</i>\n\n<i>Pour une appendicectomie programmée : céfoxitine 2 g IVL, puis 1 g si la durée dépasse 2 h, puis toutes les 2 h jusqu’à la fin de la chirurgie.</i>"
         },

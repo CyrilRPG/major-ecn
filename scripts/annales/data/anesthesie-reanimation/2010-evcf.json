@@ -13,7 +13,7 @@
       "annee": 2010,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2010 correction.pdf",
-      "orderIndex": 10,
+      "orderIndex": 3,
       "vignette": "Corrigé de l’épreuve de vérification des connaissances fondamentales 2010 en anesthésie-réanimation (Florent Sigwalt).\n\nLe dossier porte sur un patient de réanimation en choc septique, ventilé, chez qui sont explorés le monitorage hémodynamique, les gaz du sang et la mécanique ventilatoire.\n\n<i>Le corrigé ne reprend pas les intitulés officiels des questions : seules les réponses, numérotées de 1 à 27, y figurent. Le sujet officiel 2010 n’est disponible que sous forme de PDF scanné, sans couche texte.</i>",
       "questions": [
         {
@@ -110,7 +110,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°14</b>\n\nSur quel principe repose cette mesure du débit cardiaque ?",
-          "images": ["annales-area/evcf-2010-correction/figures/img-002-000.png"],
+          "images": [
+            "annales-area/evcf-2010-correction/figures/img-002-000.png"
+          ],
           "reponseAttendue": "La thermodilution pulmonaire, selon l’équation de Stewart-Hamilton, qui fait intervenir une variation de température et le débit cardiaque.",
           "correctionGenerale": "Thermodilution pulmonaire / équation de Stewart-Hamilton, faisant intervenir une variation de température et le débit cardiaque.\n\nCO = [(T sang − T bolus) × V bolus × k] / ∫ΔT sang × dT"
         },

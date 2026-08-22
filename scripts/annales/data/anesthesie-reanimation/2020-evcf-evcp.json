@@ -16,13 +16,15 @@
       "annee": 2020,
       "type": "EVCF",
       "source": "ANNALES AREA/Annale 2020 copie.pdf",
-      "orderIndex": 28,
+      "orderIndex": 23,
       "vignette": "Épreuve de vérification des connaissances fondamentales 2020 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.",
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nQuelles sont les questions à poser pour évaluer cliniquement le risque hémorragique lors de la consultation d’anesthésie ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-003-014.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-003-014.jpg"
+          ],
           "reponseAttendue": "Les six questions du questionnaire HEMSTOP de dépistage du risque hémorragique lié au patient : consultation ou traitement antérieur pour un saignement prolongé ou inhabituel ; tendance aux bleus de plus de 2 cm ou aux hématomes importants ; reconsultation du dentiste pour un saignement après extraction dentaire ; saignement anormal après une intervention chirurgicale ; antécédents familiaux de maladie de la coagulation (Willebrand, hémophilie) ; et, pour les femmes, traitement pour règles trop abondantes ou saignement anormal après un accouchement. Le score est établi sur le nombre de « oui ».",
           "correctionGenerale": "<b>Questionnaire HEMSTOP de dépistage du risque hémorragique lié au patient</b>\n\nLes items suivants peuvent évoquer la possibilité d’un trouble de l’hémostase :\n1. Avez-vous déjà consulté un médecin ou reçu un traitement pour un saignement prolongé ou inhabituel, par exemple un saignement de nez ou une petite coupure ?\n2. Avez-vous tendance à faire des bleus de plus de 2 cm ou des hématomes importants, sans choc ou traumatisme, ou bien après un choc ou un traumatisme sans importance ?\n3. Avez-vous reconsulté votre dentiste pour un saignement après une extraction dentaire ?\n4. Avez-vous saigné de manière anormale après une intervention chirurgicale, par exemple une opération pour les végétations ou les amygdales, ou après une circoncision ?\n5. Y a-t-il des membres de votre famille proche suivis pour une maladie de la coagulation responsable de saignements importants, par exemple maladie de Willebrand ou hémophilie ?\n6. <b>Pour les femmes</b> : (a) avez-vous consulté un médecin ou reçu un traitement pour des règles trop abondantes ? (b) avez-vous saigné de façon anormale après un accouchement ?\n\n<i>Le score est établi sur le nombre de « OUI » obtenus sur ces 6 questions.</i>"
         },
@@ -57,14 +59,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nComment traiter initialement une intoxication aux anesthésiques locaux ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-014-059.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-014-059.jpg"
+          ],
           "reponseAttendue": "Appel à l’aide et arrêt de la chirurgie ; arrêt de l’injection d’anesthésiques locaux ; oxygénothérapie FiO₂ = 1 (intubation si ACR ou état de mal convulsif) ; émulsion lipidique à 20 % (bolus 100 mL en 2-3 min si poids > 70 kg, ou 1,5 mL/kg, répétable après 5 min, maximum 3 bolus ; puis perfusion 250 mL en 15-20 min, ou 0,25 mL/kg/min, portée à 0,5 mL/kg/min si l’hémodynamique reste instable, poursuivie au moins 10 min après le retour à l’équilibre, dose cumulative maximale 12 mL/kg) ; dosage du toxique sur tube sec ; déclaration EIAS. En cas de convulsions ou d’ACR : benzodiazépines, réanimation prolongée (> 1 h) avec adrénaline en dose titrée 0,05 à 0,1 mg, amiodarone si arythmie ventriculaire, ECMO si réfractaire ; surveillance monitorée au moins 6 heures.",
           "correctionGenerale": "<b>APPEL À L’AIDE — ARRÊT de la chirurgie</b>\n\n<b>TRAITEMENT : dans tous les cas, dès la suspicion</b>\n• Arrêt de l’injection d’anesthésiques locaux\n• Oxygénothérapie FiO₂ = 1 (intubation si ACR ou état de mal convulsif)\n• <b>Émulsion lipidique à 20 %</b> (exemple : Intralipide® 20 %)\n  – Bolus 100 mL en 2-3 min si poids > 70 kg (1,5 mL/kg si poids < 70 kg) ; si l’hémodynamique est instable, répéter le bolus après 5 minutes (maximum 3 bolus)\n  – Perfusion 250 mL en 15-20 min si poids > 70 kg (0,25 mL/kg/min si poids < 70 kg) ; si l’hémodynamique reste instable, passer à 0,5 mL/kg/min\n  – Continuer la perfusion au moins 10 min après le retour à l’équilibre hémodynamique (dose cumulative maximale : 12 mL/kg, soit 800 mL maximum pour 70 kg)\n• Dosage du toxique (prélèvement sur tube sec)\n• Déclaration EIAS\n\n<b>Si convulsions et/ou arrêt cardio-respiratoire</b>\n• Benzodiazépines si convulsions prolongées (éviter le propofol)\n• Réanimation cardio-respiratoire prolongée (> 1 h)\n  – Adrénaline en dose titrée 0,05 à 0,1 mg (à faible dose)\n  – Amiodarone si arythmie ventriculaire (pas de lidocaïne)\n  – Si ACR réfractaire, envisager une assistance cardio-circulatoire ECMO\n• Surveillance monitorée pendant au minimum 6 heures"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nComment antagoniser une curarisation au décours immédiat d’une injection de 0,6 mg/kg de rocuronium ? Quel est le mécanisme d’action de cet antagoniste et son délai d’action ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-016-068.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-016-068.jpg"
+          ],
           "reponseAttendue": "Sugammadex 8 à 16 mg/kg, utilisable uniquement avec les curares non dépolarisants stéroïdiens. Mécanisme : encapsulation plasmatique spécifique du curare (1:1), formant un complexe stable éliminé par le rein ; la dose est définie en fonction de la profondeur du bloc et la décurarisation est toujours possible. Délai d’action : moins de 5 minutes.",
           "correctionGenerale": "<b>SUGAMMADEX</b>\n• Avec les curares non dépolarisants stéroïdiens\n• → Encapsulation plasmatique spécifique des curares (1:1)\n• → Formation d’un complexe stable éliminé par le rein\n• → Dose définie en fonction de la profondeur du bloc / toujours possible\n• → <b>Délai d’action < 5 minutes</b>\n\n<i>Algorithme 2 de la SFAR (recommandation 2018), mode opératoire de la décurarisation avec le sugammadex : prérequis — uniquement avec le rocuronium ; décurarisation immédiate sugammadex 8 à 16 mg/kg (rapport T4/T1 > 0,9 en 3 à 5 min) ; sinon, évaluation visuelle du nombre de réponses au train-de-quatre à l’adducteur du pouce (N = 0 à 4) — si N ≥ 2, sugammadex 2 mg/kg ; si N = 0, tester le compte post-tétanique : CPT = 1 ou 2 → sugammadex 4 mg/kg ; CPT = 0 → attendre et maintenir l’anesthésie, recontrôler le CPT plus tard.</i>"
         },
@@ -94,7 +100,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nQuels sont les critères de retour à la rue après anesthésie ambulatoire ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-030-132.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-030-132.jpg"
+          ],
           "reponseAttendue": "Il est souhaitable d’utiliser un score facile à mettre en œuvre : le score de Chung, qui cote sur 10 les constantes vitales, la déambulation, les nausées et vomissements, les douleurs et le saignement chirurgical — un score de 9 ou 10 est compatible avec la sortie. Il n’est pas recommandé d’imposer une réalimentation liquide et solide avant la sortie, ni d’exiger une miction en l’absence de facteur de risque lié au patient ou au type de chirurgie après anesthésie générale ou bloc périphérique, ni d’attendre la levée complète du bloc périphérique sous réserve de protéger le membre, d’informer le patient et de s’assurer d’une aide à domicile. En cas de bloc périmédullaire, la vérification de la déambulation est obligatoire. En cas de rachianesthésie, appréciation clinique et au mieux échographique du volume vésical résiduel. En cas d’absence d’accompagnant imprévue, rechercher une alternative avant l’hospitalisation.",
           "correctionGenerale": "<i>Recommandation SFAR 2009.</i>\n\nIl est souhaitable d’utiliser un score pour autoriser la sortie, facile à mettre en œuvre.\n\n<b>Score de CHUNG</b> (total sur 10 ; un score de 9 ou 10 est compatible avec la sortie)\n• <b>Constantes vitales</b> (température, pouls, respiration) : variation < 20 % par rapport aux valeurs préopératoires = 2 ; variation comprise entre 20 et 40 % = 1 ; variation > 40 % = 0\n• <b>Déambulation</b> : démarche assurée, sans vertige = 2 ; marche possible avec assistance = 1 ; démarche non assurée, vertiges = 0\n• <b>Nausées et/ou vomissements</b> : minimes = 2 ; modérés = 1 ; sévères = 0\n• <b>Douleurs</b> : minimes = 2 ; modérées = 1 ; sévères = 0\n• <b>Saignement chirurgical</b> : minime = 2 ; modéré = 1 ; sévère = 0\n\n<b>Il n’est pas recommandé :</b>\n• d’imposer une réalimentation liquide et solide avant la sortie\n• d’exiger une miction pour autoriser la sortie, en l’absence de facteur de risque lié au patient ou au type de chirurgie, après anesthésie générale ou bloc périphérique\n  → si rachianesthésie : appréciation clinique et au mieux échographique du volume vésical résiduel + absence de facteur de risque lié au patient et au type de chirurgie\n• d’attendre la levée complète du bloc en cas de bloc périphérique → sous réserve d’assurer la protection du membre, d’informer le patient et de s’assurer d’une aide à domicile\n\n<b>En cas de bloc périmédullaire</b> : vérification de la déambulation obligatoire.\n\n<b>Si absence d’accompagnant imprévue</b> : rechercher une alternative avant l’hospitalisation."
         },
@@ -129,14 +137,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 15</b>\n\nQuels sont les facteurs favorisant la coagulopathie lors d’une hémorragie massive ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-043-185.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-043-185.jpg"
+          ],
           "reponseAttendue": "Acidose, hypothermie, dilution, hypocalcémie.",
           "correctionGenerale": "• Acidose\n• Hypothermie\n• Dilution\n• Hypocalcémie\n\n<i>Le schéma reproduit la genèse de la coagulopathie chez le polytraumatisé : d’une part la lésion tissulaire, avec fibrinolyse, inflammation, anticoagulation systémique par la protéine C activée et dysfonction plaquettaire, aboutissant à la coagulopathie traumatique aiguë ; d’autre part l’hémorragie massive, avec choc, remplissage et transfusion massive de CGR, aboutissant à l’acidose, à l’hypothermie et à la dilution.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 16</b>\n\nQuel est le traitement d’une réaction anaphylactique per-anesthésique grave ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-045-196.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-045-196.jpg"
+          ],
           "reponseAttendue": "Appel à l’aide, interruption de l’administration du produit suspecté, arrêt de l’intervention, chariot d’urgence. Puis oxygène pur, contrôle des voies aériennes et VVP de bon calibre ; remplissage vasculaire rapide (cristalloïdes 30 mL/kg puis amidons 30 mL/kg) ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) — grade III : titration de 0,1 à 0,2 mg toutes les 1 à 2 min ; grade IV : 1 à 2 mg toutes les 2 min ; si l’objectif tensionnel n’est pas atteint, adrénaline IVSE à débuter à 0,2 mg/h. En cas d’inefficacité : bleu de méthylène 1 à 3 mg/kg IVDL, glucagon 1 à 2 mg IVDL toutes les 5 min si bêta-bloquant, noradrénaline IVSE, sugammadex 16 mg/kg si rocuronium. Bronchospasme : adrénaline en 1ʳᵉ intention avant le salbutamol si hypotension, puis salbutamol en nébulisation, IVD 0,1 à 0,2 mg, IVSE 0,3 à 1,5 mg/h. Prélèvements impératifs, hémisuccinate d’hydrocortisone 200 mg IVDL.",
           "correctionGenerale": "<b>ANAPHYLAXIE GRADE III / IV (choc, bronchospasme)</b>\n\n<b>CONFIRMER</b> : hypotension, tachycardie, bronchospasme, EtCO₂ basse, rash retardé et angio-œdème (plutôt œdème laryngé, confusion avec un œdème angioneurotique), ACR.\n<b>ÉLIMINER</b> : embolie pulmonaire ou amniotique, IDM, surdosage anesthésique, pneumothorax ou obstruction trachéo-bronchique, hémorragie.\n\n<b>APPEL À L’AIDE — INTERROMPRE l’administration du produit suspecté — ARRÊTER L’INTERVENTION — chariot d’urgence.</b>\n\n<b>TRAITER</b>\n• Oxygène pur, contrôle des voies aériennes et VVP de bon calibre\n• Remplissage vasculaire rapide : cristalloïdes 30 mL/kg puis amidons 30 mL/kg\n• <b>Adrénaline IVD</b> (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL)\n  – Grade III : titration de 0,1 à 0,2 mg toutes les 1 à 2 min\n  – Grade IV : 1 à 2 mg toutes les 2 min\n  – Si l’objectif tensionnel n’est pas atteint : adrénaline IVSE à débuter à 0,2 mg/h\n• <b>En cas d’inefficacité de l’adrénaline</b> : bleu de méthylène 1 à 3 mg/kg IVDL ; glucagon 1 à 2 mg IVDL toutes les 5 min (patient sous bêta-bloquant) ; noradrénaline IVSE ; discuter le sugammadex 16 mg/kg si rocuronium\n• <b>Bronchospasme</b> : si hypotension artérielle, adrénaline en 1ʳᵉ intention (avant le salbutamol, qui peut majorer l’hypotension) ; salbutamol en nébulisation (spray peu efficace dans la sonde d’intubation) ; salbutamol IVD 0,1 à 0,2 mg (ampoule de 0,5 mg diluée dans 10 mL = 0,05 mg/mL) ; salbutamol IVSE 0,3 à 1,5 mg/h\n• <b>Faire impérativement les premiers prélèvements</b>\n• Hémisuccinate d’hydrocortisone 200 mg IVDL (dose unique)\n• <b>Femme enceinte</b> : discuter une extraction fœtale immédiate ; décubitus latéral gauche ; remplissage et adrénaline identiques\n• En cas d’arrêt cardiaque réfractaire : envisager une assistance cardio-circulatoire ECLS/ECMO\n\n<b>APRÈS</b> : surveillance intensive au moins 24 h (récurrence) ; information du patient et prise de rendez-vous en consultation d’allergologie ; déclaration au CRPV.\n\n<b>Dosages</b> : histamine (tube EDTA sur glace) et tryptase (tube EDTA ou sec) selon les délais < 30 min, 1 à 2 h et > 24 h ; IgE anti-ammoniums quaternaires (tube sec)."
         },
@@ -150,7 +162,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 18</b>\n\nEn réanimation, pour évaluer la précharge-dépendance d’un patient en ventilation mécanique en utilisant les variations respiratoires de la pression pulsée, quels éléments doit-on absolument vérifier pour assurer la validité de cette démarche ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-050-217.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-050-217.jpg"
+          ],
           "reponseAttendue": "Les conditions optimales de validité du ΔPP : pas ou peu de déclenchement du respirateur par le patient, volume courant > 8 mL/kg, compliance pulmonaire ≥ 30 mL/cmH₂O, rythme cardiaque régulier, rapport fréquence cardiaque/fréquence respiratoire > 3,6, fonction ventriculaire droite normale, pression abdominale non élevée.",
           "correctionGenerale": "<b>Le ΔPP en pratique</b> (Comité Réanimation SFAR)\n\nΔPP (PPV) = (PPmax − PPmin) / [(PPmax + PPmin)/2]\n\n<b>Variation respiratoire de la pression pulsée et prédiction de la réponse au remplissage</b>\n• ≤ 9 % → réponse au remplissage peu probable\n• 10-12 % → zone d’incertitude\n• ≥ 13 % → réponse au remplissage probable\n<i>(sous couvert des critères de validité optimaux)</i>\n\n<b>Conditions optimales de validité</b>\n• Pas ou peu de déclenchement du respirateur par le patient\n• Volume courant > 8 mL/kg\n• Compliance pulmonaire ≥ 30 mL/cmH₂O\n• Rythme cardiaque régulier\n• Fréquence cardiaque / fréquence respiratoire > 3,6\n• Fonction ventriculaire droite normale\n• Pression abdominale non élevée"
         },
@@ -181,7 +195,7 @@
       "annee": 2020,
       "type": "EVCP",
       "source": "ANNALES AREA/Annale 2020 copie.pdf",
-      "orderIndex": 29,
+      "orderIndex": 24,
       "vignette": "Vous prenez en charge Hugo, un enfant de 3 ans et demi, pour une amygdalectomie. C’est un enfant en pleine forme, qui vient de faire sa rentrée en maternelle.",
       "questions": [
         {
@@ -217,7 +231,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nAu final, fausse alerte : l’enfant est apyrétique et présente une rhinorrhée claire et une auscultation normale. Vous décidez de maintenir la chirurgie. Comment préparez-vous l’enfant avant son arrivée au bloc opératoire ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-069-305.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-069-305.jpg"
+          ],
           "reponseAttendue": "Préparation des voies aériennes supérieures : chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une nébulisation de salbutamol avant l’anesthésie générale (2,5 mg si le poids est inférieur à 20 kg, 5 mg au-delà). Induction inhalatoire au sévoflurane. Discuter une prémédication pharmacologique et/ou non pharmacologique, par exemple clonidine 2 à 3 µg/kg per os.",
           "correctionGenerale": "<b>Préparation des VAS</b> — recommandation SFAR 2018 :\n<b>R11</b> — Chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une <b>nébulisation de salbutamol avant l’anesthésie générale</b> <i>(grade 2+, accord FORT)</i>.\n<i>Posologies : < 20 kg = 2,5 mg ; > 20 kg = 5 mg.</i>\n\n<b>Induction inhalatoire : SÉVOFLURANE.</b>\n\n<b>Discuter une prémédication pharmacologique et/ou non pharmacologique.</b>\n\n<b>CLONIDINE 2 à 3 µg/kg PO</b>\n• <i>Pharmacodynamie</i> : récepteurs alpha-2 périphériques et centraux ; sédation, anxiolyse, réduction du tonus sympathique, épargne des anesthésiques IV et inhalés\n• <i>Pharmacocinétique</i> : Tmax 1 à 3 h ; pas d’effet de premier passage ; taux de liaison aux protéines plasmatiques 30-40 % ; demi-vie plasmatique moyenne 13 h ; élimination rénale 65 %"
         },
@@ -238,7 +254,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 7</b>\n\nQuelles sont les modalités de l’analgésie postopératoire ?",
-          "images": ["annales-area/annale-2020-copie/figures/img-076-334.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-076-334.jpg"
+          ],
           "reponseAttendue": "En peropératoire : prévention des NVPO par Solumédrol 1 mg/kg + ondansétron 0,1 mg/kg, et analgésie postopératoire selon la « stratégie corticoïdes » avec paracétamol 15 mg/kg IVL. En postopératoire : relais par paracétamol 15 mg/kg, recours à la nalbuphine 0,05 à 0,2 mg/kg IVL à la demande selon protocole ; vérification de l’ordonnance de sortie — paracétamol 15 mg/kg/6 h per os systématiquement pendant 2 jours et Solupred 1 mg/kg/j per os, débuté à J+1 postopératoire et poursuivi jusqu’à J+2.",
           "correctionGenerale": "<b>Protocole d’amygdalectomie en unité de chirurgie ambulatoire</b>\n\n<b>Préopératoire — conditions UCA</b> : enfant > 3 ans ; classe ASA 1 ou 2 ; sans comorbidités majorant le risque respiratoire ; sans troubles d’hémostase.\n\n<b>Peropératoire</b>\n• <i>Induction</i> : co-induction inhalatoire (sévoflurane) et IV, ou IV seule si grand enfant (sufentanil 0,1-0,2 µg/kg puis propofol 2 mg/kg) ; intubation orotrachéale avec sonde préformée, attention à la mobilisation (billot) ; risque : obstruction des voies aériennes, laryngo-broncho-spasme\n• <i>Entretien</i> : entretien anesthésique volatil (sévoflurane) ; prévention des NVPO — Solumédrol 1 mg/kg + ondansétron 0,1 mg/kg ; <b>analgésie postopératoire : stratégie dite « CORTICOÏDES »</b> — paracétamol 15 mg/kg IVL + Solumédrol (cf. ci-dessus)\n• <i>Réveil</i> : aspiration des sécrétions et du sang dans la bouche et le pharynx (canule rigide de Yankauer) ; ablation du packing pharyngé (si utilisé pour l’adénoïdectomie) ; extubation vigile en décubitus latéral +/− Trendelenburg (<i>tonsil position</i>) ; limiter les stimulations laryngées (<i>no touch strategy</i>)\n\n<b>Postopératoire</b>\n• <i>Analgésie</i> : relais paracétamol 15 mg/kg ; recours à la nalbuphine 0,05-0,2 mg/kg IVL à la demande selon protocole ; vérification de l’ordonnance de sortie — paracétamol 15 mg/kg/6 h PO systématiquement pendant 2 jours, Solupred 1 mg/kg/j PO (débuté à J+1 postopératoire et à poursuivre jusqu’à J+2)\n• <i>NVPO / ingesta</i> : recours au dropéridol 30 µg/kg IVL ; poursuite de l’ondansétron 0,1 mg/kg PO ; recours à la métopimazine 5 mg en suppositoire ; reprise des boissons à H+2 postopératoire ; reprise de l’alimentation à H+4 postopératoire\n• <i>Sortie</i> : minimum H+6 postopératoire, après vérification de la reprise de l’alimentation, de l’absence de saignement par le chirurgien et de la bonne compréhension des consignes d’ambulatoire par le parent"
         },
@@ -256,7 +274,7 @@
       "annee": 2020,
       "type": "EVCP",
       "source": "ANNALES AREA/Annale 2020 copie.pdf",
-      "orderIndex": 30,
+      "orderIndex": 25,
       "vignette": "Un homme de 65 ans est conduit par le SAMU au déchocage pour malaise, douleurs épigastriques et vomissements de sang.\n\nSes antécédents sont une fibrillation auriculaire, une dyslipidémie, une AOMI de stade 3 et une cardiopathie ischémique, pour lesquels son traitement habituel comprend Kardégic®, atorvastatine, Xarelto® (rivaroxaban) et aténolol.\n\nSa femme vous rapporte qu’il prend du Profénid® depuis plusieurs jours pour une sciatique.\n\nDe garde en réanimation, vous voyez ce patient : il est conscient mais désorienté, franchement pâle, avec des extrémités froides, des marbrures des genoux, un temps de recoloration à 5 secondes. TA : 85/45 mmHg, pouls 140 bpm, SpO₂ 95 % en air ambiant. Il récidive devant vous un vomissement de sang, relativement important.",
       "questions": [
         {
@@ -324,7 +342,7 @@
       "annee": 2020,
       "type": "EVCP",
       "source": "ANNALES AREA/Annale 2020 copie.pdf",
-      "orderIndex": 31,
+      "orderIndex": 26,
       "vignette": "On adresse aux urgences M. D. pour douleurs abdominales brutales et syndrome septique.\n\nCe patient de 65 ans n’a pas d’antécédent notable, mais sa femme vous rapporte une perte de 6 kg les 2 derniers mois, « un peu de sang dans les selles » de temps en temps, et un traitement antibiotique en cours pour bronchite. Pas d’autre antécédent, notamment allergique.\n\nCliniquement : patient confus, marbré des genoux, temps de recoloration de 5 secondes, auscultation cardio-pulmonaire normale, abdomen distendu, douloureux, contracture généralisée, pas de bruit hydro-aérique.\n\nSpO₂ 96 %, TA 75/50 mmHg, pouls 130 bpm, FR 32/min, température 39,5 °C.\n\nBiologie : Na⁺ 135 mmol/L, HCO₃⁻ 15 mmol/L, pH 7,25, pO₂ 85 mmHg, K⁺ 4 mmol/L, urée 20 mmol/L, pCO₂ 28 mmHg, SaO₂ 96 %, Cl⁻ 105 mmol/L, créatinine 190 µmol/L, CO₂ total 15 mmol/L, lactates 5,6 mmol/L.",
       "questions": [
         {
@@ -351,7 +369,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nLe patient est en choc septique : quelle est votre thérapeutique anti-infectieuse probabiliste ? N’utilisez que des dénominations communes internationales (DCI) ou des noms de familles de molécules.",
-          "images": ["annales-area/annale-2020-copie/figures/img-125-544.jpg"],
+          "images": [
+            "annales-area/annale-2020-copie/figures/img-125-544.jpg"
+          ],
           "reponseAttendue": "Il s’agit d’une péritonite communautaire avec signes de gravité, chez un patient non allergique : pipéracilline-tazobactam + gentamicine, associés à une échinocandine (caspofungine, micafungine ou anidulafungine) si un traitement antifongique est indiqué.",
           "correctionGenerale": "<b>Arbre décisionnel — péritonite communautaire</b>\n• <b>Allergie aux bêta-lactamines ?</b>\n  – <b>Oui</b> → lévofloxacine + métronidazole + gentamicine, OU tigécycline\n  – <b>Non</b> → <b>signes de gravité ?</b>\n    · <b>Oui</b> → <b>pipéracilline-tazobactam + gentamicine</b>\n    · <b>Non</b> → amoxicilline-acide clavulanique + gentamicine, OU céfotaxime/ceftriaxone + métronidazole\n• <b>Traitement antifongique ?</b>\n  – <b>Oui</b> → échinocandine (caspofungine, micafungine ou anidulafungine)\n\n<i>Les signes de gravité sont définis selon les critères présentés dans le préambule des recommandations ; l’indication du traitement antifongique suit les critères définis dans la recommandation R15.</i>"
         },

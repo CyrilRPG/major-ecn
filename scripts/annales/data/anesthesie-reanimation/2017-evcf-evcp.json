@@ -16,20 +16,24 @@
       "annee": 2017,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF EVCP 2017.pdf",
-      "orderIndex": 21,
+      "orderIndex": 16,
       "vignette": "Épreuve de vérification des connaissances fondamentales 2017 en anesthésie-réanimation. Elle comporte deux sujets : un <b>sujet Anesthésie</b> (questions 1 à 11) et un <b>sujet Réanimation</b> (questions 1 à 14), tous deux à réponse ouverte et courte, sans vignette clinique commune.",
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Sujet Anesthésie — Question n° 1</b>\n\nQuels sont les critères de retour à la rue après anesthésie ambulatoire ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-005-024.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-005-024.jpg"
+          ],
           "reponseAttendue": "Un score de Chung ≥ 9 : stabilité des constantes vitales depuis au moins une heure, bonne coloration, absence de saignement, bonne orientation temporo-spatiale, absence de nausées et vomissements, absence de vertige ou de céphalées, patient pouvant boire et manger, urinant spontanément, sans douleur importante et dernière prise d’antalgique > 1 h ; un accompagnateur responsable (2 si retour en voiture privée avec un enfant) ; le patient peut s’asseoir, se mettre debout, marcher, s’habiller seul ; accord de l’anesthésiste et de l’opérateur ; instructions orales et écrites fournies au patient pour la période postopératoire.",
           "correctionGenerale": "<b>Score de Chung ≥ 9</b>\n• Stabilité des constantes vitales depuis au moins une heure\n• Bonne coloration\n• Saignement absent\n• Bonne orientation temporo-spatiale\n• Absence de nausées et vomissements\n• Absence de vertige ou de céphalées\n• Patient pouvant boire et manger\n• Urine spontanément\n• Pas de douleur importante ; dernière prise d’antalgique > 1 h\n• Un accompagnateur responsable, 2 si retour en voiture privée avec un enfant\n• Peut s’asseoir, se mettre debout, marcher, s’habiller tout seul\n• Accord de l’anesthésiste et de l’opérateur\n• Instructions orales et écrites fournies au patient concernant la période postopératoire\n\n<i>Le score de Chung coté sur 10 porte sur les constantes vitales, la déambulation, les nausées/vomissements, les douleurs et le saignement chirurgical : un score de 9 ou 10 est compatible avec la sortie.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Sujet Anesthésie — Question n° 2</b>\n\nQuels sont les items de la check-list préanesthésique ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-008-037.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-008-037.jpg"
+          ],
           "reponseAttendue": "Avant l’induction : identité du patient, autorisation d’opérer, intervention et site opératoire, mode d’installation, préparation cutanée du patient, matériel nécessaire pour la chirurgie et pour l’anesthésie, risque allergique / risque d’inhalation / risque de saignement, concertation conjointe et oralement ouverte.",
           "correctionGenerale": "<b>Avant l’induction anesthésique</b>\n• Identité du patient\n• Autorisation d’opérer\n• Intervention et site opératoire\n• Mode d’installation\n• Préparation cutanée du patient\n• Matériel nécessaire pour la chirurgie et pour l’anesthésie\n• Risque allergique / risque d’inhalation / risque de saignement\n• Concertation conjointe et oralement ouverte\n\n<i>La check-list HAS « Sécurité du patient au bloc opératoire » est reproduite : elle comporte trois temps — avant induction anesthésique, avant intervention chirurgicale (temps de pause avant incision) et après intervention (pause avant sortie de salle d’opération).</i>"
         },
@@ -82,21 +86,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet Anesthésie — Question n° 7</b>\n\nQuelles sont les manifestations cliniques de la toxicité des anesthésiques locaux ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-046-210.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-046-210.jpg"
+          ],
           "reponseAttendue": "Signes subjectifs : goût métallique, nausées. Signes neurologiques : céphalées, dysarthrie, vertiges, acouphènes, paresthésies, convulsions, coma. Signes cardiaques : hypotension, collapsus, bloc atrio-ventriculaire, troubles du rythme ventriculaire, arrêt cardio-circulatoire.",
           "correctionGenerale": "• <b>Signes subjectifs</b> : sensation de goût métallique, nausées\n• <b>Signes neurologiques</b> : céphalées, dysarthrie, vertiges, acouphènes, paresthésies, convulsion, coma\n• <b>Signes cardiaques</b> : hypotension, collapsus, bloc atrio-ventriculaire, troubles du rythme ventriculaire, arrêt cardio-circulatoire\n\n<i>L’aide cognitive SFAR ajoute les dysesthésies bucco-linguales, les secousses musculaires, la confusion, ainsi que les facteurs favorisants (âges extrêmes, patients de petit poids, cardiopathies, hypoxie et acidose, absence d’échoguidage, non-respect des doses maximales) et le contexte d’injection en bolus (immédiat si injection intravasculaire, retardé jusqu’à 60 minutes après le bolus).</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Sujet Anesthésie — Question n° 8</b>\n\nComment traiter initialement une intoxication à la ropivacaïne ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-049-223.png"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-049-223.png"
+          ],
           "reponseAttendue": "Arrêt de l’administration et appel à l’aide ; oxygénation, ou intubation et ventilation mécanique en cas d’ACR ; réanimation cardio-circulatoire en cas d’ACR avec des doses réduites d’adrénaline (elle prolonge le bloc) et sans amiodarone (effet additif avec les anesthésiques locaux) ; bolus d’intralipide 20 % ; benzodiazépines en cas de convulsions généralisées ; surveillance monitorée pendant au moins 6 heures, +/− transfert en SSPI ; dosage du toxique ; information du patient ou de sa famille.",
           "correctionGenerale": "• <b>Arrêt de l’administration (PMZ)</b>\n• <b>Appel à l’aide (PMZ)</b>\n• Oxygénation, ou intubation et mise sous ventilation mécanique si ACR\n• Réanimation cardio-circulatoire si ACR : <b>diminution des doses d’adrénaline</b> car elle prolonge le bloc ; <b>pas d’amiodarone</b> car effet additif avec les anesthésiques locaux\n• <b>Bolus d’intralipide 20 %</b>\n• Benzodiazépines si convulsions généralisées\n• Surveillance monitorée pendant au moins 6 heures, +/− transfert en SSPI\n• Dosage du toxique\n• <b>Information du patient ou de sa famille (PMZ)</b>\n\n<i>L’aide cognitive précise les modalités de l’émulsion lipidique à 20 % : bolus de 100 mL en 2-3 min si le poids dépasse 70 kg (1,5 mL/kg sinon), à répéter après 5 minutes si l’hémodynamique reste instable (3 bolus maximum), puis perfusion de 250 mL en 15-20 min (0,25 mL/kg/min), portée à 0,5 mL/kg/min si besoin, poursuivie au moins 10 min après le retour à l’équilibre hémodynamique ; dose cumulative maximale 12 mL/kg. Elle rappelle aussi l’arrêt de la chirurgie, l’oxygénothérapie FiO₂ = 1, le dosage du toxique sur tube sec et la déclaration EIAS.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Sujet Anesthésie — Question n° 9</b>\n\nComment antagoniser une curarisation au décours immédiat d’une injection de 0,6 mg/kg de rocuronium ? Quel est le mécanisme d’action de cet antagoniste et son délai d’action ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-052-236.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-052-236.jpg"
+          ],
           "reponseAttendue": "Administration de sugammadex 16 mg/kg. Mécanisme : le sugammadex est une cyclodextrine qui se lie de manière spécifique au rocuronium dans le plasma et forme des complexes rocuronium/sugammadex éliminés par le rein ; cette interaction entraîne une diminution de la quantité de rocuronium disponible pour se fixer sur les récepteurs nicotiniques de la jonction neuromusculaire. Délai d’action : 3 minutes.",
           "correctionGenerale": "• <b>Administration de sugammadex 16 mg/kg</b>\n• <b>Mécanisme d’action</b> : le sugammadex est une cyclodextrine qui va se lier de manière spécifique avec le rocuronium dans le plasma et former des complexes rocuronium/sugammadex éliminés par le rein ; cette interaction entraîne une diminution de la quantité de rocuronium disponible pour se fixer sur les récepteurs nicotiniques de la jonction neuromusculaire\n• <b>Délai d’action : 3 minutes</b>\n\n<i>L’algorithme SFAR du mode opératoire de la décurarisation avec le sugammadex est reproduit : prérequis — uniquement avec le rocuronium ; décurarisation immédiate 8 à 16 mg/kg (rapport T4/T1 > 0,9 en 3 à 5 min) ; sinon, évaluation visuelle du nombre de réponses au train-de-quatre à l’adducteur du pouce — si N ≥ 2, sugammadex 2 mg/kg ; si N = 0, tester le compte post-tétanique : CPT = 1 ou 2 → sugammadex 4 mg/kg ; CPT = 0 → attendre et maintenir l’anesthésie.</i>"
         },
@@ -209,7 +219,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet Réanimation — Question n° 10</b>\n\nQuelle antibiothérapie probabiliste faut-il administrer devant une péritonite à J10 après chirurgie abdominale sus-mésocolique chez un patient en état de choc septique ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-104-471.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-104-471.jpg"
+          ],
           "reponseAttendue": "Il s’agit d’une péritonite associée aux soins avec choc septique, après chirurgie sus-mésocolique, sans facteur de risque de BLSE, de BMR ou de BHR. Germes visés : BGN, entérocoques, anaérobies, levures, SARM. Bi-antibiothérapie bactéricide IV en urgence : pipéracilline-tazobactam 4 g puis 16 g en perfusion continue, + amikacine 25 à 30 mg/kg (pic dosé 30 minutes après la fin de la perfusion), + vancomycine dose de charge 30 mg/kg puis 15 mg/kg/24 h IVSE, +/− antifongique de type caspofungine 70 mg à J0 puis 50 mg/j. Durée 10 jours (5 à 15 jours selon l’évolution clinique), à réadapter après 48 h selon les résultats bactériologiques.",
           "correctionGenerale": "Il s’agit d’une <b>péritonite associée aux soins</b>, avec <b>choc septique</b>, pour chirurgie sus-mésocolique, sans facteur de risque de BLSE, de BMR ou de BHR.\n\n<b>Germes visés</b> : BGN, entérocoques, anaérobies, levures, SARM.\n\n<b>Bi-antibiothérapie bactéricide en intraveineux, en urgence ++ (PMZ)</b>\n• Bêta-lactamine à large spectre : <b>pipéracilline-tazobactam</b> 4 g puis 16 g en perfusion continue\n• + aminoside de type <b>amikacine</b> 25 à 30 mg/kg, pic dosé 30 min après la fin de la perfusion\n• + <b>vancomycine</b> : dose de charge de 30 mg/kg puis 15 mg/kg/24 h IVSE\n• +/− <b>antifongique de type caspofungine</b> (si sexe féminin ou antibiothérapie préalable de plus de 48 h) : 70 mg à J0 puis 50 mg/j, à réadapter après 48 h selon les résultats bactériologiques\n• <b>Durée du traitement : 10 jours</b> (entre 5 et 15 jours selon l’évolution clinique)\n\n<b>Péritonites graves</b> : traitement antifongique si 3 critères parmi défaillance hémodynamique, sexe féminin, chirurgie sus-mésocolique, antibiothérapie préalable de plus de 48 h → <b>ÉCHINOCANDINE</b>. Traitement adapté aux germes suspectés, prélèvements d’emblée, recherche de levure si nosocomial, adaptation dès réception des résultats bactériologiques.\n\n<b>Facteurs de risque de BMR</b>\n• Traitement antérieur par C3G ou fluoroquinolone (y compris monodose) dans les 3 mois\n• Portage d’une entérobactérie productrice de BLSE, ou de <i>Pseudomonas aeruginosa</i> résistant à la ceftazidime, sur un prélèvement de moins de 3 mois, quel que soit le site\n• Hospitalisation à l’étranger dans les 12 mois précédents\n• Patient vivant en EHPAD médicalisé ou en soins de longue durée ET porteur d’une sonde à demeure et/ou d’une gastrostomie\n• Échec de traitement par une antibiothérapie à large spectre (C3G, fluoroquinolone ou pipéracilline-tazobactam)\n• Récidive précoce (< 15 jours) d’une infection traitée par pipéracilline-tazobactam pendant au moins 3 jours"
         },
@@ -237,14 +249,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet Réanimation — Question n° 13</b>\n\nQuels sont les facteurs favorisant la coagulopathie lors d’une hémorragie massive ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-120-542.png"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-120-542.png"
+          ],
           "reponseAttendue": "Acidose, hypothermie, dilution, hypocalcémie.",
           "correctionGenerale": "• Acidose\n• Hypothermie\n• Dilution\n• Hypocalcémie\n\n<i>Le schéma reproduit la genèse de la coagulopathie du polytraumatisé : d’une part la lésion tissulaire, avec fibrinolyse, inflammation, anticoagulation systémique par la protéine C activée et dysfonction plaquettaire, aboutissant à la coagulopathie traumatique aiguë ; d’autre part l’hémorragie massive, avec choc, remplissage et transfusion massive de CGR, aboutissant à l’acidose, à l’hypothermie et à la dilution.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Sujet Réanimation — Question n° 14</b>\n\nQuel est le traitement du choc anaphylactique ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-124-559.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-124-559.jpg"
+          ],
           "reponseAttendue": "Appel à l’aide, interruption de l’administration du produit suspecté, arrêt de l’intervention, faire venir le chariot d’urgence. Puis oxygène pur et contrôle des voies aériennes ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) en titration de 0,1 à 0,2 mg toutes les 1 à 2 minutes puis bolus augmentés de 1 à 5 mg, adrénaline IVSE à débuter à 0,2 mg/h ; remplissage vasculaire rapide par cristalloïdes 30 mL/kg puis amidons 30 mL/kg ; en cas d’inefficacité, noradrénaline IVSE, glucagon 1 à 2 mg IVD toutes les 5 minutes chez les patients sous bêta-bloquants, options bleu de méthylène ou sugammadex ; en cas de bronchospasme, adrénaline avant salbutamol ; prélèvements précoces impératifs ; hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures.",
           "correctionGenerale": "<b>APPEL À L’AIDE (PMZ)</b>\n<b>INTERROMPRE l’administration du produit suspecté (PMZ)</b>\n<b>Arrêt de l’intervention (PMZ)</b>\n<b>FAIRE VENIR le chariot d’urgence (PMZ)</b>\n\n• <b>OXYGÈNE PUR et CONTRÔLE DES VOIES AÉRIENNES</b>\n• <b>ADRÉNALINE IVD</b> (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) : titration de 0,1 à 0,2 mg toutes les 1 à 2 min, puis augmenter les bolus de 1 à 5 mg ; adrénaline IVSE à débuter à 0,2 mg/h\n• <b>REMPLISSAGE VASCULAIRE RAPIDE</b> : cristalloïdes (30 mL/kg) puis amidons (30 mL/kg)\n• <b>EN CAS D’INEFFICACITÉ DE L’ADRÉNALINE</b> : noradrénaline IVSE ; glucagon 1 à 2 mg IVD toutes les 5 min (patients traités par bêta-bloquants) ; option bleu de méthylène 1 à 3 mg/kg IVL ; option sugammadex 16 mg/kg si curares stéroïdiens impliqués\n• <b>BRONCHOSPASME</b> : en cas d’hypotension artérielle, ADRÉNALINE avant SALBUTAMOL — salbutamol spray dans la sonde d’intubation ; salbutamol IVD 0,1 à 0,2 mg ; salbutamol IVSE 0,3 à 1,5 mg/h\n• <b>Faire impérativement les premiers prélèvements ++</b>\n• <b>Hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures</b>\n\n<i>L’aide cognitive SFAR reproduite détaille en outre les critères de confirmation et les diagnostics à éliminer, la titration selon le grade (grade II : 20 µg puis 50 µg toutes les 2 min ; grade III : 100 à 200 µg toutes les 1 à 2 min ; grade IV : bolus de 1 mg), la conduite chez la femme enceinte, la surveillance intensive au moins 6 h après disparition des signes et les dosages biologiques (histamine, tryptase, IgE anti-ammoniums quaternaires).</i>"
         }
@@ -255,7 +271,7 @@
       "annee": 2017,
       "type": "EVCP",
       "source": "ANNALES AREA/EVCF EVCP 2017.pdf",
-      "orderIndex": 22,
+      "orderIndex": 17,
       "vignette": "Vous voyez en consultation d’anesthésie une femme de 45 ans, 160 cm, 130 kg, hypertendue traitée par ramipril, présentant une AC/FA de découverte fortuite il y a 3 mois sous apixaban, pour une chirurgie de réduction gastrique (sleeve gastrectomie).",
       "questions": [
         {
@@ -299,21 +315,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nQuelles sont les règles de l’antibioprophylaxie pour cette patiente ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-142-635.png"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-142-635.png"
+          ],
           "reponseAttendue": "Pour une sleeve gastrectomie, céfoxitine 2 g IVL, avec réinjection de 1 g toutes les 2 heures si la durée dépasse 2 heures, jusqu’à la fin de la chirurgie. Chez cette patiente dont l’IMC dépasse 50, la dose peut être portée à 4 g.",
           "correctionGenerale": "<b>Chirurgie bariatrique</b> (recommandations SFAR, avis d’experts)\n• Mise en place d’un anneau gastrique : <b>céfazoline</b> 2 g IVL, puis 1 g toutes les 4 h si la durée dépasse 4 h, jusqu’à la fin de la chirurgie\n• Réalisation d’un court-circuit gastrique ou d’une « sleeve » gastrectomie : <b>céfoxitine</b> 2 g IVL, puis 1 g toutes les 2 h si la durée dépasse 2 h, jusqu’à la fin de la chirurgie\n\n<b>IMC > 50 : la dose peut passer à 4 g.</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nVous décidez de faire une induction par propofol et succinylcholine. Donnez la posologie (en mg) des médicaments que vous utilisez pour cette patiente.",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-145-648.png"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-145-648.png"
+          ],
           "reponseAttendue": "Propofol : 3 à 3,9 mg/kg de poids idéal (1,60 m → 60 kg) ou de poids ajusté (80-90 kg), soit 3 × 90 = 270 mg, en pratique 250 à 300 mg IVD — l’utilisation du poids réel pour le propofol vaut zéro à la question. Succinylcholine : dose sur le poids RÉEL, soit 1 mg/kg = 130 mg IVD, après le propofol.",
           "correctionGenerale": "• <b>Propofol</b> : 3 à 3,9 mg/kg de <b>poids idéal</b> (1,60 m = 60 kg) ou de <b>poids ajusté</b> (80-90 kg) — 3 × 90 mg = 270 mg, en pratique <b>250 à 300 mg IVD</b>\n  <i>Si le poids réel est utilisé pour le propofol : zéro à la question.</i>\n• <b>Succinylcholine</b> : dose sur le <b>poids RÉEL</b>, soit 1 mg/kg → <b>130 mg IVD</b>, après le propofol\n\n<b>Comment évaluer le poids</b>\n• <b>Poids réel</b> mesuré\n• <b>Poids idéal</b> : homme → 49,9 + 0,89 × (taille en cm − 152,4) ; femme → 45,4 + 0,89 × (taille en cm − 152,4) — tient compte du sexe et de la taille mais pas de la composition corporelle\n• <b>Poids ajusté</b> : poids idéal + Fc × (poids réel mesuré − poids idéal), où Fc est un facteur de correction variable selon le médicament — tient compte du sexe, de la taille et du poids en « enlevant » la masse grasse"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 8</b>\n\nVous envisagez une intubation potentiellement difficile. Quels moyens utilisez-vous pour faciliter l’intubation ?",
-          "images": ["annales-area/evcf-evcp-2017/figures/img-148-661.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2017/figures/img-148-661.jpg"
+          ],
           "reponseAttendue": "Deux personnes à la tête, coussin sous la tête en position amendée de Jackson avec alignement tragus-sternum, position proclive, lame de laryngoscope en métal, manche court, appui laryngé (BURP), mandrin long béquillé d’Eschmann, glottiscope (Airtraq®), vidéolaryngoscopie (McGrath®), dispositif supra-glottique (Fastrach®).",
           "correctionGenerale": "• 2 personnes à la tête (2 MAR, ou 1 IADE + 1 MAR)\n• Coussin sous la tête, <b>position amendée de Jackson</b> — alignement tragus / sternum\n• Position proclive\n• Lame de laryngoscope en métal\n• Manche court\n• Appui laryngé (BURP : Backward, Upward, Rightward Pressure)\n• Mandrin long béquillé d’Eschmann\n• Glottiscope (Airtraq®)\n• Vidéolaryngoscopie (McGrath®…)\n• Dispositif supra-glottique (Fastrach®)\n\n<i>Le schéma illustre la position modifiée de Jackson : la position de la tête, la mise en place d’un coussin sous l’occiput et le laryngoscope permettent d’aligner les trois axes (buccal, pharyngé, laryngé) et de visualiser la glotte.</i>"
         },

@@ -13,7 +13,7 @@
       "annee": 2015,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF _ EVCP 2015.pdf",
-      "orderIndex": 18,
+      "orderIndex": 13,
       "vignette": "Épreuve de vérification des connaissances fondamentales 2015 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
       "questions": [
         {
@@ -100,7 +100,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 11</b>\n\nCitez 4 facteurs d’agression cérébrale secondaire d’origine systémique (ACSOS) chez le patient cérébro-lésé.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-042-181.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-042-181.jpg"
+          ],
           "reponseAttendue": "Hypoxémie, hypotension, hypocapnie, anémie, acidose, hypercapnie, hyperthermie, hyper- ou hypoglycémie, troubles de la calcémie et de la natrémie.",
           "correctionGenerale": "• Hypoxémie\n• Hypotension\n• Hypocapnie\n• Anémie\n• Acidose\n• Hypercapnie\n• Hyperthermie\n• Hyper- / hypoglycémie\n• Calcémie / natrémie\n\n<b>Paramètres à monitorer et à corriger — valeurs cibles</b>\n• <i>Oxygénation sanguine</i> : SpO₂ 95-99 %, PaO₂ 80-95 mmHg\n• <i>Capnie</i> : PaCO₂ 35-45 mmHg si HTIC avec intubation\n• <i>PAM</i> : 70-90 mmHg, ≥ 90 mmHg si HTIC\n• <i>Rythme cardiaque</i> : risque de troubles du rythme et de la conduction\n• <i>Glycémie</i> : 1,4-1,8 g/L\n• <i>Natrémie</i> : 135-145 mEq/L\n• <i>Calcémie</i> : 2,2-2,6 mEq/L\n• <i>pH</i> : 7,35-7,45\n• <i>Température</i> : normothermie (36,5-38 °C)"
         },
@@ -118,21 +120,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 13</b>\n\nCitez les signes cliniques et paracliniques évocateurs d’hyperthermie maligne.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-053-229.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-053-229.jpg"
+          ],
           "reponseAttendue": "Un état hypermétabolique aigu avec rigidité musculaire déclenché par les anesthésiques volatils halogénés ou la succinylcholine : rigidité, augmentation de la production de CO₂ (PEtCO₂ élevée, tachypnée), hyperthermie et sueurs, tachycardie et marbrures, trismus, et sur le plan paraclinique élévation des CPK, myoglobinurie et acidose postopératoire (rhabdomyolyse).",
           "correctionGenerale": "<b>Hyperthermie maligne</b> : myopathie génétiquement transmise, de mode autosomique dominant, non liée au sexe, sans expression clinique en dehors de la crise. La crise survient au décours immédiat de l’anesthésie générale.\n\n<b>Déclenchée par</b> les anesthésiques volatils halogénés et la succinylcholine.\n\n<b>CRISE = état hypermétabolique aigu avec rigidité musculaire</b>\n• Rigidité\n• Augmentation de la production de CO₂\n• Hyperthermie\n• Rhabdomyolyse\n\n<i>Le trismus après injection de succinylcholine n’est pas pathognomonique, mais doit imposer la recherche des autres signes d’une crise potentielle et une vigilance accrue.</i>\n\n<b>Éléments de l’aide cognitive SFAR (à suspecter)</b> : halogénés / succinylcholine ; PEtCO₂ élevée et tachypnée ; tachycardie et marbrures ; hyperthermie et sueurs ; trismus et rigidité ; terrain favorisant (myopathie) ; élévation des CPK, myoglobinurie, acidose postopératoire.\n\n<b>À éliminer</b> : anesthésie trop légère, hypoventilation, insufflation de CO₂ ou anomalie du circuit, choc septique, causes rares (crise thyréotoxique, phéochromocytome, syndrome malin des neuroleptiques, syndrome sérotoninergique).\n\n<b>Traitement</b> : appel à l’aide et chariot d’urgence, arrêt de la procédure, obtenir le <b>dantrolène</b> — arrêt des halogénés avec relais IV par propofol, hyperventilation en FiO₂ 100 %, 2ᵉ VVP, kaliémie et gazométrie, mesure de la température centrale, dantrolène 2,5 mg/kg IVD puis 1 mg/kg jusqu’à 10 mg/kg au total, refroidissement jusqu’à 38 °C, traitement de l’hyperkaliémie et de l’acidose métabolique, surveillance de la diurèse."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 14</b>\n\nDécrivez les signes cliniques de surdosage en anesthésiques locaux.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-055-238.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-055-238.jpg"
+          ],
           "reponseAttendue": "Signes neurologiques : goût métallique, dysarthrie et dysesthésies bucco-linguales, vertiges, nausées, acouphènes, secousses musculaires, malaise, confusion, céphalée, paresthésies, convulsions, coma. Et/ou signes cardio-vasculaires : bradycardie et troubles de conduction, hypotension et collapsus, troubles du rythme ventriculaire et arrêt cardiaque.",
           "correctionGenerale": "<b>Signes neurologiques</b>\n• Goût métallique\n• Dysarthrie, dysesthésies bucco-linguales\n• Vertiges, nausées, acouphènes\n• Secousses musculaires\n• Malaise, confusion, céphalée, paresthésies\n• Convulsions, coma\n\n<b>et/ou signes cardiovasculaires</b>\n• Bradycardie, troubles de conduction\n• Hypotension, collapsus\n• Trouble du rythme ventriculaire — arrêt cardiaque\n\n<b>Facteurs favorisants</b> : âges extrêmes, patients de petit poids, cardiopathies (rythmiques, ischémiques, insuffisance cardiaque), hypoxie et acidose, absence d’échoguidage, non-respect des doses maximales.\n\n<b>Contexte d’injection d’AL en bolus</b> (par un soignant, le patient ou automatique) : immédiat si l’injection est intravasculaire, retardé jusqu’à 60 minutes après le bolus."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 15</b>\n\nDécrivez le traitement spécifique en cas de surdosage aux anesthésiques locaux.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-055-238.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-055-238.jpg"
+          ],
           "reponseAttendue": "Appel à l’aide et arrêt de la chirurgie ; arrêt de l’injection d’anesthésiques locaux ; oxygénothérapie FiO₂ 1 (intubation si ACR ou état de mal convulsif) ; émulsion lipidique à 20 % (Intralipide® 20 %) : bolus de 100 mL en 2-3 minutes si le poids dépasse 70 kg (1,5 mL/kg sinon), répété après 5 minutes si l’hémodynamique reste instable (3 bolus maximum), puis perfusion de 250 mL en 15-20 minutes (0,25 mL/kg/min), portée à 0,5 mL/kg/min si besoin, poursuivie au moins 10 minutes après le retour à l’équilibre, dose cumulative maximale 12 mL/kg ; dosage du toxique et déclaration EIAS. En cas de convulsions ou d’ACR : benzodiazépines, réanimation prolongée avec adrénaline titrée à faible dose, amiodarone si arythmie ventriculaire, ECMO si ACR réfractaire, surveillance monitorée au moins 6 heures.",
           "correctionGenerale": "<b>Traitement — dans tous les cas, dès la suspicion</b>\n• <b>Appel à l’aide, arrêt de la chirurgie</b>\n• Arrêt de l’injection d’anesthésiques locaux\n• Oxygénothérapie FiO₂ = 1 (intubation si ACR ou état de mal convulsif)\n• <b>Émulsion lipidique à 20 %</b> (exemple : Intralipide® 20 %)\n  – Bolus 100 mL en 2-3 min si poids > 70 kg (1,5 mL/kg si poids < 70 kg) ; si l’hémodynamique reste instable, répéter le bolus après 5 minutes (maximum 3 bolus)\n  – Perfusion 250 mL en 15-20 min si poids > 70 kg (0,25 mL/kg/min sinon) ; si l’hémodynamique reste instable, passer à 0,5 mL/kg/min\n  – Continuer la perfusion au moins 10 min après le retour à l’équilibre hémodynamique\n  – Dose cumulative maximale : 12 mL/kg, soit 800 mL maximum pour 70 kg\n• Dosage du toxique (prélèvement sur tube sec)\n• Déclaration EIAS\n\n<b>Si convulsions et/ou arrêt cardio-respiratoire</b>\n• Benzodiazépines si convulsions prolongées (éviter le propofol)\n• <b>Réanimation cardio-respiratoire prolongée (> 1 h)</b>\n  – Adrénaline en dose titrée 0,05 à 0,1 mg (à faible dose)\n  – Amiodarone si arythmie ventriculaire (pas de lidocaïne)\n  – Si ACR réfractaire, envisager une assistance cardio-circulatoire ECMO\n• Surveillance monitorée pendant au minimum 6 heures\n\n<i>Aide cognitive du CAMR (2016, relue en 2021 par le comité douleur ALR).</i>"
         },
@@ -158,14 +166,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 17</b>\n\nDécrivez par un schéma la relation « pression-débit » au niveau de la circulation cérébrale chez un sujet sain. Faites un schéma simple.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-071-317.png"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-071-317.png"
+          ],
           "reponseAttendue": "DSC = PPC / R = (PAM − PIC) / R. Le débit sanguin cérébral reste constant sur une plage de pression de perfusion grâce à l’autorégulation : une baisse de la PPC entraîne une vasodilatation, donc une augmentation du volume sanguin cérébral et de la PIC (cascade vasodilatatrice), tandis qu’une augmentation de la PPC entraîne une vasoconstriction, une baisse du volume sanguin cérébral et de la PIC (cascade vasoconstrictrice).",
           "correctionGenerale": "<b>DSC = PPC / R = (PAM − PIC) / R</b>\n\n<b>Cascade vasodilatatrice</b> : PPC ↓ → vasodilatation → volume sanguin cérébral ↑ → PIC ↑ (et donc PPC ↓ de nouveau).\n\n<b>Cascade vasoconstrictrice</b> : PPC ↑ → vasoconstriction → volume sanguin cérébral ↓ → PIC ↓."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 18</b>\n\nCitez et décrivez en une phrase le principe physique régissant les échanges :\n\na) en hémodialyse ;\nb) en hémofiltration.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-075-334.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-075-334.jpg"
+          ],
           "reponseAttendue": "a) Hémodialyse : les échanges à travers la membrane se font par diffusion, régie par le gradient de concentration moléculaire entre le patient et le dialysat ainsi que par le coefficient de diffusion de la molécule. b) Hémofiltration : les échanges se font par convection, possible via un gradient unique de pression hydrostatique qui filtre de manière non sélective les molécules capables de passer la membrane, notamment celles de bas poids moléculaire.",
           "correctionGenerale": "<b>a) Hémodialyse</b>\nLes échanges à travers la membrane se font grâce au principe de <b>diffusion</b>, qui est régi par le gradient de concentration moléculaire entre le patient et le dialysat, ainsi que par le coefficient de diffusion de la molécule en question.\n\n<b>b) Hémofiltration</b>\nLes échanges à travers la membrane se font grâce au principe de <b>convection</b>, possible via un gradient unique de pression hydrostatique qui filtre de manière non sélective les molécules capables de passer la membrane, notamment les molécules de bas poids moléculaire.\n\n<i>Le schéma compare hémodialyse (circulation à contre-courant du dialysat), hémofiltration (ultrafiltrat et solution de substitution en pré- ou post-dilution) et hémodiafiltration (association des deux).</i>"
         },
@@ -196,7 +208,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 22</b>\n\nCitez les deux thérapeutiques à prescrire et leur mode d’administration en cas d’accident hémorragique sous AVK.",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-085-377.jpg"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-085-377.jpg"
+          ],
           "reponseAttendue": "Le concentré de complexe prothrombinique (CCP) par voie intraveineuse — à dose adaptée à l’INR selon le RCP si l’INR est disponible, sinon 25 U/kg (soit 1 mL/kg) — et la vitamine K 10 mg (1 ampoule adulte), en privilégiant la voie orale ; le tout après arrêt des AVK et mesure de l’INR en urgence, avec un objectif d’INR < 1,5.",
           "correctionGenerale": "<b>Prise en charge hospitalière d’une hémorragie grave (objectif : INR < 1,5)</b>\n1. <b>Arrêt des AVK</b> et mesure de l’INR en urgence\n2. <b>CCP (concentré de complexe prothrombinique) IV</b> :\n   – Si l’INR est disponible : administration à dose adaptée à l’INR, selon le RCP\n   – Si l’INR n’est pas disponible : administration de 25 U/kg (soit 1 mL/kg)\n3. <b>+ Vitamine K 10 mg</b> (1 ampoule adulte ; privilégier la voie orale)\n4. <b>Contrôle de l’INR à 30 minutes</b> : si INR > 1,5, nouvelle dose de CCP selon le RCP\n5. Contrôle de l’INR à 6-8 h"
         },
@@ -210,7 +224,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 24</b>\n\nQuelle est la prise en charge thérapeutique du choc anaphylactique (grade III) ?",
-          "images": ["annales-area/evcf-evcp-2015/figures/img-090-398.png"],
+          "images": [
+            "annales-area/evcf-evcp-2015/figures/img-090-398.png"
+          ],
           "reponseAttendue": "Interrompre l’administration du produit suspecté, appeler à l’aide, arrêter la chirurgie ; contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg ; remplissage vasculaire rapide par 1000 mL de cristalloïdes (grade III), renouvelable ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) en titration de 100 à 200 µg toutes les 1 à 2 minutes pour une PAM ≥ 60 mmHg ; en cas d’inefficacité après 10 minutes, doubler les bolus à 2 mg, adrénaline IVSE à 200 µg/h, noradrénaline IVSE, glucagon si bêta-bloquants, poursuite du remplissage jusqu’à 30 mL/kg ; salbutamol en cas de bronchospasme après correction de l’hypotension ; prélèvements sanguins dès que possible et hémisuccinate d’hydrocortisone 200 mg IVDL.",
           "correctionGenerale": "<b>Confirmer</b> : hypotension, chute de la capnie, tachycardie, bronchospasme, rash retardé et angio-œdème, ACR.\n<b>Éliminer</b> : embolie pulmonaire ou amniotique, IDM, pneumothorax ou obstruction trachéo-bronchique, surdosage en anesthésiques, hémorragie.\n\n<b>INTERROMPRE l’administration du produit suspecté — APPEL À L’AIDE — STOP chirurgie.</b>\n\n<b>Traiter</b>\n• Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, position de Trendelenburg\n• <b>Remplissage vasculaire rapide</b> : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin\n• <b>Adrénaline IVD</b> (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg\n  – Grade II : 20 µg puis 50 µg toutes les 2 min\n  – <b>Grade III : titration de 100 µg à 200 µg toutes les 1 à 2 min</b>\n  – Grade IV : bolus d’adrénaline de 1 mg\n• <b>En cas d’inefficacité après 10 minutes</b> : doubler les bolus d’adrénaline à 2 mg ; adrénaline IVSE à débuter à 200 µg/h dès 3 bolus IV administrés ; noradrénaline IVSE à débuter à 300 µg – 1 mg/h après 3 bolus d’adrénaline ; glucagon 1 à 2 mg IVDL toutes les 5 min si le patient est sous bêta-bloquant ; poursuivre le remplissage cristalloïde jusqu’à 30 mL/kg ; envisager un monitorage non invasif de la volémie et/ou une échographie cardiaque ; discuter la vasopressine 2 à 10 UI IVD puis 2 UI/h\n• <b>En cas de bronchospasme</b> : après correction de l’hypotension artérielle (le salbutamol pouvant la majorer) — salbutamol en nébulisation ; salbutamol IVD 100 à 200 µg puis relais IVSE 300 µg à 1,5 mg/h\n• Prélèvements sanguins dès que possible\n• Hémisuccinate d’hydrocortisone 200 mg IVDL (dose unique)\n• En cas d’arrêt cardiaque réfractaire : envisager une assistance cardio-circulatoire ECLS/ECMO\n\n<b>Femme enceinte</b> : discuter l’extraction fœtale immédiate si > 20 SA ; décubitus latéral gauche ; remplissage et adrénaline identiques.\n\n<b>Après</b> : surveillance intensive au moins 6 h après la disparition des signes ; information du patient ; rendez-vous en consultation d’allergo-anesthésie ; déclaration à la pharmacovigilance.\n\n<b>Dosages</b> : histamine (tube EDTA) positive < 30 min ; tryptase (tube sec) positive < 30 min, 1 à 2 h et > 24 h ; IgE anti-ammoniums quaternaires (tube sec)."
         },

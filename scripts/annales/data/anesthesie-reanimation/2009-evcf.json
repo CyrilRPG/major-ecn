@@ -12,7 +12,7 @@
       "annee": 2009,
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2009 AR.pdf",
-      "orderIndex": 9,
+      "orderIndex": 1,
       "vignette": "Vous êtes médecin au SAMU et vous avez été appelé pour prendre en charge un patient de 23 ans qui a pris son scooter et qui est retrouvé sur la voie publique. À votre arrivée, le patient casqué est retrouvé dans le coma, les yeux fermés, non réactif, sans réponse verbale ni motrice, avec un traumatisme maxillo-facial associé à une épistaxis.",
       "questions": [
         {
@@ -32,7 +32,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 3</b>\n\nDécrivez à l’aide d’un schéma la relation du débit sanguin cérébral (DSC) en fonction de la pression artérielle moyenne (PAM). Nommez cette relation. Donnez l’équation de la pression de perfusion cérébrale (PPC).",
-          "images": ["annales-area/evcf-2009-ar/figures/img-002-000.png"],
+          "images": [
+            "annales-area/evcf-2009-ar/figures/img-002-000.png"
+          ],
           "reponseAttendue": "Il s’agit de l’autorégulation cérébrale, qui maintient un DSC constant sur une plage de PAM ; PPC = PAM − PIC.",
           "correctionGenerale": "• <b>PPC = PAM − PIC</b>\n• <b>Autorégulation cérébrale</b> : le DSC reste constant (rappel : DSC = PPC / résistances des vaisseaux cérébraux)\n• En cas d’autorégulation, ce sont les vaisseaux qui se vasodilatent ou se vasoconstrictent pour faire varier les résistances et assurer un DSC stable et constant"
         },
@@ -67,7 +69,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 8</b>\n\nCe patient est mis sous noradrénaline. Citez les propriétés de la noradrénaline sur le cœur et les vaisseaux, en précisant les récepteurs impliqués.",
-          "images": ["annales-area/evcf-2009-ar/figures/img-005-002.png"],
+          "images": [
+            "annales-area/evcf-2009-ar/figures/img-005-002.png"
+          ],
           "reponseAttendue": "Sur les vaisseaux, via les récepteurs α1 et α2 : vasoconstriction puissante augmentant la postcharge, vasoconstriction veineuse augmentant la précharge et augmentation de la perfusion du cœur, du cerveau et du rein. Sur le cœur, via les récepteurs β1 : effet inotrope et chronotrope.",
           "correctionGenerale": "<b>Vaisseaux</b>\n• Récepteurs α1 et α2 : vasoconstriction puissante\n• Augmentation de la postcharge ; vasoconstriction veineuse permettant d’augmenter la précharge\n• Augmentation de la perfusion des organes (cœur, cerveau, rein)\n\n<b>Cœur</b>\n• Récepteurs β1\n• Inotrope et chronotrope"
         },
