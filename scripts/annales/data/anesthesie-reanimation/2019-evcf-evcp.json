@@ -1,0 +1,310 @@
+{
+  "sources": {
+    "ANNALES AREA/EVCF EVCP 2019 AREA.pdf": {
+      "atelier": "annales-area/evcf-evcp-2019-area",
+      "sujetOfficiel": "Annales/Sujets/EVCF 2019/EVCF 2019/evcf.03.doc",
+      "figuresIgnorees": {},
+      "remarque": "L’EVCP 2019 d’anesthésie-réanimation comporte deux sujets cliniques distincts, restitués ici en deux séries."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2019 - EVCF",
+      "annee": 2019,
+      "type": "EVCF",
+      "source": "ANNALES AREA/EVCF EVCP 2019 AREA.pdf",
+      "orderIndex": 25,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.\n\n<b>Classement des questions proposé par le corrigé</b>\n• <b>Questions incontournables</b> : vous ne pouvez pas ne pas les connaître ; si vous perdez des points là, vous ne les regagnerez nulle part.\n• <b>Questions de cours</b> : basées sur les recommandations +/− récentes ; plus vous en connaissez, plus vous gagnez de points.\n• <b>Questions « bonus »</b> : questions difficiles, spécifiques ; si vous répondez juste et méthodiquement, ce sont les points qui font la différence.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCitez 5 mécanismes majeurs impliqués dans la coagulopathie traumatique.",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-004-028.jpg"],
+          "reponseAttendue": "Gravité du traumatisme avec activation du facteur tissulaire et consommation des facteurs ; état de choc et hypoperfusion tissulaire ; hypothermie ; dilution des facteurs (hémodilution) ; acidose. S’y ajoutent la dysfonction plaquettaire, le déficit en protéine C activée et l’hypocalcémie.",
+          "correctionGenerale": "• Gravité du traumatisme / activation du facteur tissulaire / consommation des facteurs\n• État de choc / hypoperfusion tissulaire\n• Hypothermie\n• Dilution des facteurs (hémodilution)\n• Acidose\n\n<i>Autres mécanismes</i> : dysfonction plaquettaire, déficit en protéine C activée, hypocalcémie.\n\n<b>Diagnostic</b>\n• INR > 1,5\n• Déficit de base ≥ 6\n• Shock index ≥ 0,9 (fréquence cardiaque / PAS)\n• Score Red Flag ≥ 2 (pelvis instable, shock index ≥ 1, intubation, Hb ≤ 13 g/dL, PAM ≤ 70 mmHg)\n\n<b>Traitement</b>\n• Acide tranexamique\n• Protocole de transfusion massive plasma:plaquettes:CGR > 1:1:2\n• <b>Damage control resuscitation</b> : damage control surgery, correction de l’hypothermie, prévention de l’hémodilution, hypotension permissive, transfusion précoce\n\n<i>Source citée : conférence d’essentiel SFAR 2019 « Coagulopathie aiguë traumatique ».</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nEn cas d’hémorragie non contrôlée après 60 minutes en post-partum, quels sont les éléments thérapeutiques à réaliser en urgence après échec de la prise en charge correcte (après administration des prostaglandines et de l’acide tranexamique) ?",
+          "images": [
+            "annales-area/evcf-evcp-2019-area/figures/img-009-052.png",
+            "annales-area/evcf-evcp-2019-area/figures/img-008-047.png"
+          ],
+          "reponseAttendue": "Option du ballon de tamponnement ; après césarienne ou en cas de doute sur un saignement interne, échographie pour éliminer un hémopéritoine. Si l’hémodynamique est instable et/ou l’hémorragie massive et/ou l’embolisation non disponible → chirurgie conservatrice (ligatures artérielles et/ou plicature utérine) ; si l’hémodynamique est stable et l’embolisation disponible → embolisation. En parallèle : remplissage vasculaire, bilans biologiques et lactates répétés, poursuite de la sulprostone (2ᵉ ampoule sur 5 h), renouvellement de l’acide tranexamique 1 g sur 4 h, fibrinogène (objectif ≥ 2 g/L), calcium 1 g IVL, activation du protocole de transfusion massive (CGR objectif > 8 g/dL, PFC ratio 1:1 à 1:2, plaquettes > 50 G/L) et réanimation du choc hémorragique. En cas de poursuite du saignement : hystérectomie interannexielle, ou option du facteur VII activé recombinant 60-90 µg/kg.",
+          "correctionGenerale": "<b>Poursuite du saignement — après échec du traitement médical</b>\n• Option : <b>ballon de tamponnement</b>\n• Post-césarienne ou doute sur un saignement interne : <b>échographie</b> pour éliminer un hémopéritoine\n• <b>Hémodynamique instable et/ou hémorragie massive et/ou embolisation non disponible → CHIRURGIE CONSERVATRICE</b> (ligatures artérielles et/ou plicature utérine)\n• <b>Stabilité hémodynamique et embolisation disponible → EMBOLISATION</b>\n\n<b>En parallèle</b>\n• Remplissage vasculaire\n• Bilans biologiques + lactates répétés (si besoin, cathéter artériel)\n• Poursuite de la sulprostone : 2ᵉ ampoule sur 5 h\n• Acide tranexamique : renouvellement 1 g sur 4 h\n• Fibrinogène (objectif ≥ 2 g/L)\n• Calcium 1 g IVL\n• Activation du protocole de transfusion massive : CGR (objectif > 8 g/dL), PFC (ratio 1:1 à 1:2), plaquettes (objectif > 50 G/L)\n• Réanimation du choc hémorragique : noradrénaline, cathéters artériel et central\n\n<b>Si le saignement persiste encore</b>\n• <b>HYSTÉRECTOMIE INTERANNEXIELLE</b>\n• Option : facteur VII activé recombinant 60-90 µg/kg\n\n<i>La seconde image reproduit l’aide cognitive complète « Hémorragie du post-partum » (saignement > 500 mL ou diagnostic indirect), incluant les 30 premières minutes (appel de l’équipe, sac de recueil gradué, feuille spécifique HPP, monitorage, ocytocine 5 à 10 UI IVL, remplissage par cristalloïdes, éphédrine ou néosynéphrine pour une PAM de 60-65 mmHg, oxygénothérapie, hémoglobine capillaire, vérification de la carte de groupe et des RAI, prévention de l’hypothermie, antibioprophylaxie ; délivrance artificielle, révision utérine, sondage vésical évacuateur, examen de la filière, sutures, massage utérin) puis les 30 minutes suivantes (sulprostone une ampoule de 0,5 mg dans 50 mL de NaCl 0,9 % sur une heure, acide tranexamique 1 g IVL en 10 minutes, 2ᵉ VVP ≥ 16 G, bilan, sondage vésical à demeure, précommande de PSL, induction en séquence rapide si AG nécessaire).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les critères d’éligibilité pour une chirurgie en ambulatoire d’un patient ASA III ?",
+          "images": [],
+          "reponseAttendue": "Pathologie stabilisée sous traitement adapté ; interférence de l’intervention avec la pathologie ou son traitement considérée comme négligeable ; accord préalable entre anesthésiste et opérateur.",
+          "correctionGenerale": "• Pathologie stabilisée sous traitement adapté\n• Interférence de l’intervention, avec la pathologie ou son traitement, considérée comme négligeable\n• Accord préalable entre anesthésiste et opérateur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuels sont les 5 éléments modifiant la pharmacocinétique des médicaments intraveineux chez l’obèse ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-013-073.jpg"],
+          "reponseAttendue": "Augmentation du volume de distribution (masse grasse > masse maigre), augmentation de la fixation protéique des médicaments, augmentation de la clairance rénale, modification de la distribution des médicaments lipophiles avec risque d’accumulation, modification du métabolisme hépatique et augmentation du débit cardiaque.",
+          "correctionGenerale": "• Augmentation du volume de distribution (masse grasse > masse maigre)\n• Augmentation de la fixation protéique des médicaments\n• Augmentation de la clairance rénale\n• Modification de la distribution des médicaments lipophiles, avec risque d’accumulation\n• Modification du métabolisme hépatique / débit cardiaque augmenté\n\n<b>Conséquences pratiques</b>\n• <b>Agents très lipophiles</b> (barbituriques, benzodiazépines, sufentanil, suxaméthonium, atracurium) → stockés dans les graisses = retard à atteindre l’équilibre → <b>poids réel</b>, attention si administration continue\n• <b>Agents moyennement lipophiles</b> (propofol) → stockés dans la masse grasse et dans la masse maigre → <b>poids idéal à l’induction, poids réel à l’entretien</b>\n• <b>Agents hydrophiles</b> (rocuronium, rémifentanil) → masse maigre (plus faible chez l’obèse) → <b>poids idéal théorique</b>\n\n<b>Formules du poids idéal</b>\n• Homme = taille (cm) − 100 − (taille − 150) / 4\n• Femme = taille (cm) − 100 − (taille − 150) / 2\n\n<i>Source citée : « Pharmacologie des agents anesthésiques chez l’obèse », 52ᵉ congrès national d’anesthésie et de réanimation, SFAR.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nEn réanimation, lors d’une épreuve de remplissage par 250 mL de cristalloïdes à la recherche d’une précharge-dépendance, quels éléments doit-on vérifier afin de s’assurer de la validité de cette épreuve chez un patient en ventilation mécanique ?",
+          "images": [],
+          "reponseAttendue": "Conditions de réalisation : absence de défaillance ventriculaire droite sévère, absence de syndrome du compartiment abdominal, absence de déclenchement respiratoire par le patient, rythme régulier et sinusal. Analyse dynamique : variation du débit cardiaque (ou du volume d’éjection systolique) ≥ 10-15 %, mesurée par échocardiographie (variation de l’ITV sous-aortique), doppler œsophagien, thermodilution transpulmonaire (PiCCO) ou cathéter de Swan-Ganz.",
+          "correctionGenerale": "<b>Conditions de réalisation</b>\n• Absence de défaillance ventriculaire droite sévère\n• Absence de syndrome du compartiment abdominal\n• Absence de déclenchement respiratoire par le patient\n• Rythme régulier, sinusal\n\n<b>Analyse dynamique (évolutivité)</b>\n• Variation du débit cardiaque (variation du volume d’éjection systolique ; DC = VES × FC) ≥ 10-15 %\n• Mesurée par : échocardiographie (variation de l’ITV sous-aortique), doppler œsophagien (ΔVES), PiCCO (thermodilution transpulmonaire, ΔVESi), Swan-Ganz"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuelles sont les règles de jeûne périopératoire pour un enfant de 18 mois ?",
+          "images": [],
+          "reponseAttendue": "Eau et liquides clairs jusqu’à H-1, dans la limite de 3 mL/kg ; lait maternel jusqu’à H-4 ; solides ou laits artificiels jusqu’à H-6. Reprise de l’alimentation : eau à H+2, solides et lait maternel à H+4.",
+          "correctionGenerale": "• Eau et liquides clairs : jusqu’à <b>H-1</b>, dans la limite de 3 mL/kg\n• Lait maternel : jusqu’à <b>H-4</b>\n• Solides ou laits artificiels : jusqu’à <b>H-6</b>\n\n<b>Reprise de l’alimentation</b>\n• Eau : H+2\n• Solides / lait maternel : H+4"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuels sont les déterminants du débit sanguin cérébral ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-023-126.png"],
+          "reponseAttendue": "DSC = VO₂ / (CaO₂ − CvO₂) et DSC = PPC / résistances cérébrales, avec PPC = PAM − PIC. Les déterminants sont donc la consommation cérébrale en oxygène, le contenu artériel et le contenu veineux en O₂, la PAM (débit cardiaque, PVC) et la PIC, ainsi que les résistances cérébrales (CMRO₂, PaCO₂, pH, température).",
+          "correctionGenerale": "<b>Formules</b>\n• DSC = VO₂ / (CaO₂ − CvO₂)\n• DSC = PPC / résistances cérébrales\n• PPC = PAM − PIC\n\n<b>Déterminants</b>\n• Consommation cérébrale en O₂ (VO₂)\n• Contenu artériel en O₂ : CaO₂ = SaO₂ × Hb × 1,34 + PaO₂ × 0,03\n• Contenu veineux en O₂ : CvO₂ = SvO₂ × Hb × 1,34 + PvO₂ × 0,03\n• <b>PPC = PAM − PIC</b> : débit cardiaque, PVC\n• <b>Résistances cérébrales</b> : consommation cérébrale en oxygène (CMRO₂), PaCO₂, pH, température\n\n<i>Le schéma illustre la cascade vasodilatatrice (PPC ↓ → vasodilatation → volume sanguin cérébral ↑ → PIC ↑) et la cascade vasoconstrictrice (PPC ↑ → vasoconstriction → volume sanguin cérébral ↓ → PIC ↓).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelles peuvent être les manifestations cardio-vasculaires d’une intoxication aux anesthésiques locaux ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-025-137.png"],
+          "reponseAttendue": "Bradycardie et troubles de conduction, hypotension et collapsus, troubles du rythme ventriculaire et arrêt cardiaque.",
+          "correctionGenerale": "<b>Signes cardiovasculaires</b>\n• Bradycardie, troubles de conduction\n• Hypotension, collapsus\n• Trouble du rythme ventriculaire — arrêt cardiaque\n\n<i>L’aide cognitive SFAR rappelle en outre les signes neurologiques (goût métallique, dysarthrie, dysesthésies bucco-linguales, vertiges, nausées, acouphènes, secousses musculaires, malaise, confusion, céphalée, paresthésies, convulsion, coma), les facteurs favorisants (âges extrêmes, patients de petit poids, cardiopathies, hypoxie, acidose, absence d’échoguidage, non-respect des doses maximales) et le contexte d’injection d’AL en bolus (immédiat si injection intravasculaire, retardé jusqu’à 60 minutes après le bolus).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuels sont les effets et les conséquences de l’anesthésie générale sur la capacité résiduelle fonctionnelle ?",
+          "images": [],
+          "reponseAttendue": "Baisse de la CRF, par collapsus alvéolaire, avec pour conséquence une augmentation des résistances bronchiques.",
+          "correctionGenerale": "• <b>Baisse de la CRF</b>\n→ par collapsus alvéolaire\n→ augmentation des résistances bronchiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuels sont les déterminants de la concentration alvéolaire des halogénés à la phase d’équilibre ?",
+          "images": [],
+          "reponseAttendue": "La pression partielle en gaz (concentration de gaz, soit la fraction alvéolaire), la captation tissulaire (solubilité de l’agent, débit sanguin, gradient alvéolo-capillaire), la ventilation alvéolaire, le débit de gaz frais et l’effet second gaz en cas d’utilisation de N₂O.",
+          "correctionGenerale": "• Pression partielle en gaz = concentration de gaz → fraction alvéolaire\n• <b>Captation tissulaire</b> : solubilité de l’agent + débit sanguin + gradient alvéolo-capillaire\n• Ventilation alvéolaire\n• Débit de gaz frais\n• Effet second gaz si utilisation du N₂O"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCitez 5 causes d’acidose métabolique aiguë à trou anionique augmenté.",
+          "images": [
+            "annales-area/evcf-evcp-2019-area/figures/img-032-172.png",
+            "annales-area/evcf-evcp-2019-area/figures/img-033-177.png"
+          ],
+          "reponseAttendue": "Hyperlactatémie, acidocétose diabétique, ingestion d’éthylène glycol, intoxication au méthanol, intoxication à l’aspirine (salicylés).",
+          "correctionGenerale": "• Hyperlactatémie\n• Acidocétose diabétique\n• Ingestion d’éthylène glycol\n• Intoxication au méthanol\n• Intoxication à l’aspirine (salicylés)\n\n<b>Rappels — troubles acido-basiques</b>\n\n<i>Tableau 4 : acidoses métaboliques avec trou anionique plasmatique augmenté</i>\n• <b>Acidose lactique</b> — causes : hypoxie tissulaire (choc), biguanides, insuffisance hépatocellulaire ; anion indosé : lactate\n• <b>Acidocétoses</b> — causes : diabète, alcool, jeûne ; anion indosé : β-hydroxybutyrate\n• <b>Intoxications</b> — aspirine (salicylates), éthylène glycol/antigel (glyoxalate, oxalate), méthanol (formate)\n• <b>Insuffisance rénale</b> — sulfates, phosphates, hippurate ; <i>en cas d’insuffisance rénale, le trou anionique n’est que discrètement augmenté, car il y a également un défaut d’excrétion d’acide par le rein</i>\n\n<i>Tableau 3 : principales causes d’acidose métabolique selon le mécanisme</i>\n• <b>Accumulation aiguë d’acide</b> — trou anionique augmenté : acidose lactique, acidocétose, intoxication acide exogène (salicylate, éthylène glycol, méthanol) ; trou anionique normal : intoxication aux acides chlorés (chlorure d’ammonium, HCl)\n• <b>Perte de bicarbonate</b> — trou anionique normal : diarrhées, anastomoses urétéro-intestinales, acidose tubulaire proximale (type 2)\n• <b>Excrétion rénale d’acide diminuée</b> — trou anionique augmenté : insuffisance rénale ; trou anionique normal : acidose tubulaire distale hyperkaliémique (type 4) par défaut de production de NH₄⁺ (hypoaldostéronisme), acidose tubulaire distale (type 1) par défaut de sécrétion distale d’H⁺"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez 5 examens complémentaires préopératoires recommandés chez un patient de 67 ans, diabétique de type 2, sans antécédent hémorragique, programmé pour une prothèse totale de hanche.",
+          "images": [],
+          "reponseAttendue": "RAI (recherche d’agglutinines irrégulières), groupe sanguin avec 2 déterminations, NFS, ECG et HbA1c.",
+          "correctionGenerale": "• <b>RAI</b> = recherche d’agglutinines irrégulières\n• <b>Groupe sanguin</b>, 2 déterminations sanguines\n• <b>NFS</b>\n• <b>ECG</b>\n• <b>HbA1c</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nCitez 5 contre-indications au suxaméthonium (ou succinylcholine).",
+          "images": [],
+          "reponseAttendue": "Allergie, maladie neuromusculaire (myopathie), hyperkaliémie, antécédent d’hyperthermie maligne, déficit en pseudocholinestérase.",
+          "correctionGenerale": "• Allergie\n• Maladie neuromusculaire : myopathie\n• Hyperkaliémie\n• Antécédent d’hyperthermie maligne\n• Déficit en pseudocholinestérase"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nQuels sont les principes généraux d’une antibiothérapie pour une péritonite secondaire avec choc septique ?",
+          "images": [
+            "annales-area/evcf-evcp-2019-area/figures/img-041-216.jpg",
+            "annales-area/evcf-evcp-2019-area/figures/img-041-217.jpg"
+          ],
+          "reponseAttendue": "Antibiothérapie intraveineuse, en bithérapie voire trithérapie, bactéricide, probabiliste à large spectre, ciblant les BGN, les cocci Gram positif (entérocoques) et les anaérobies, +/− les champignons ; à bonne pénétration tissulaire, adaptée à la fonction rénale, débutée en urgence sans attendre les documentations bactériologiques, réévaluée à 48 h et adaptée à l’antibiogramme. Ici : bêta-lactamine — pipéracilline-tazobactam (Tazocilline®) en l’absence de BMR et de BLSE — + aminoside (amikacine) +/− glycopeptide (vancomycine) + antifongique selon critères (caspofungine), pendant 5 à 15 jours.",
+          "correctionGenerale": "<b>Plan de réponse « antibiothérapie » = PS BABAR</b>\n• <b>P</b>arentérale : voie IV +/− relais PO\n• <b>S</b>ynergique : préciser si mono- ou bi-antibiothérapie\n• <b>B</b>actéricide\n• <b>A</b>ctive sur le germe présumé, ou probabiliste à large spectre adaptée secondairement à l’antibiogramme\n• <b>B</b>onne pénétration tissulaire\n• <b>A</b>daptée à : absence de contre-indications (ALLERGIES !, grossesse), fonction rénale, antibiogramme\n• <b>R</b>apidement débutée, en urgence, +/− après réalisation de prélèvements (à préciser selon le contexte)\n\nPuis seulement : molécule (DCI) et durée.\n\n<b>Application</b>\n• Intraveineuse\n• En bithérapie, voire trithérapie\n• Bactéricide\n• Probabiliste à large spectre, ciblant BGN et CG+ (entérocoques), anaérobies +, +/− champignons\n• À bonne pénétration tissulaire\n• Adaptée à la fonction rénale\n• En urgence, sans attendre les documentations bactériologiques\n• Réévaluée à 48 h et adaptée à l’antibiogramme\n\n<b>Ici</b> : bêta-lactamine — pipéracilline-tazobactam (Tazocilline®), en l’absence de BMR et de BLSE — + aminoside (amikacine) +/− glycopeptide (vancomycine) + antifongique selon critères (caspofungine), pendant <b>5 à 15 jours</b>.\n\n<b>Critères de traitement antifongique</b> : défaillance hémodynamique ; sexe féminin ; chirurgie sus-mésocolique ; antibiothérapie depuis plus de 48 heures.\n\n<i>L’arbre décisionnel SFAR/SRLF « Péritonite associée aux soins » est reproduit, ainsi que la page de garde des recommandations « Prise en charge des infections intra-abdominales ».</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nQuelles sont les questions à poser pour évaluer cliniquement le risque hémorragique lors de la consultation d’anesthésie ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-044-232.jpg"],
+          "reponseAttendue": "Le questionnaire HEMSTOP de dépistage du risque hémorragique lié au patient : avez-vous déjà consulté un médecin ou reçu un traitement pour un saignement prolongé ou inhabituel (par exemple un saignement de nez ou une petite coupure) ? Avez-vous tendance à faire des bleus de plus de 2 cm ou des hématomes importants, sans choc ou traumatisme, ou après un choc ou un traumatisme sans importance ? Avez-vous reconsulté votre dentiste pour un saignement après une extraction dentaire ? Avez-vous saigné de manière anormale après une intervention chirurgicale (végétations, amygdales, circoncision) ? Y a-t-il des membres de votre famille proche suivis pour une maladie de la coagulation responsable de saignements importants (maladie de Willebrand, hémophilie) ? Pour les femmes : avez-vous consulté ou reçu un traitement pour des règles trop abondantes, ou saigné de façon anormale après un accouchement ? Le score est établi sur le nombre de « oui » obtenus à ces 6 questions.",
+          "correctionGenerale": "<b>Questionnaire HEMSTOP de dépistage du risque hémorragique lié au patient</b>\n\nLes items suivants peuvent évoquer la possibilité d’un trouble de l’hémostase :\n1. Avez-vous déjà consulté un médecin ou reçu un traitement pour un saignement prolongé ou inhabituel, par exemple un saignement de nez ou une petite coupure ?\n2. Avez-vous tendance à faire des bleus de plus de 2 cm ou des hématomes importants, sans choc ou traumatisme, ou bien après un choc ou un traumatisme sans importance ?\n3. Avez-vous reconsulté votre dentiste pour un saignement après une extraction dentaire ?\n4. Avez-vous saigné de manière anormale après une intervention chirurgicale, par exemple une opération pour les végétations ou les amygdales, ou après une circoncision ?\n5. Y a-t-il des membres de votre famille proche suivis pour une maladie de la coagulation responsable de saignements importants, par exemple maladie de Willebrand ou hémophilie ?\n6. <b>Pour les femmes</b> : (a) avez-vous consulté un médecin ou reçu un traitement pour des règles trop abondantes — par exemple contraception orale (« pilule »), traitement par fer, médicament pour coaguler le sang comme l’Exacyl® ? (b) avez-vous saigné de façon anormale après un accouchement ?\n\n<i>Le score est établi sur le nombre de « OUI » obtenus à ces 6 questions.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nCitez les principales caractéristiques d’une douleur neuropathique à l’interrogatoire.",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-046-243.jpg"],
+          "reponseAttendue": "Les items du questionnaire DN4 : la douleur présente-t-elle une brûlure, une sensation de froid douloureux, des décharges électriques ? Est-elle associée dans la même région à des fourmillements, des picotements, des engourdissements, des démangeaisons ? Est-elle localisée dans un territoire où l’examen met en évidence une hypoesthésie au tact ou à la piqûre ? Est-elle provoquée ou augmentée par le frottement ? Un score supérieur ou égal à 4/10 rend le test positif.",
+          "correctionGenerale": "<b>Questionnaire DN4</b> — outil d’aide au diagnostic ; lorsqu’une douleur neuropathique est suspectée chez l’adulte.\n\n<i>Mode d’emploi</i> : l’examinateur interroge lui-même le patient et remplit le questionnaire ; à chaque item, le patient doit répondre par « oui » ou « non » ; à la fin, le soignant comptabilise les réponses, 1 pour chaque item « oui » et 0 pour chaque item « non » ; la somme obtenue donne le score du patient, noté sur 10 ; si le score est égal ou supérieur à 4/10, le test est positif.\n\n<b>Question 1 — La douleur présente-t-elle une ou plusieurs des caractéristiques suivantes ?</b>\n1. Brûlure\n2. Sensation de froid douloureux\n3. Décharges électriques\n\n<b>Question 2 — La douleur est-elle associée, dans la même région, à un ou plusieurs des symptômes suivants ?</b>\n4. Fourmillements\n5. Picotements\n6. Engourdissements\n7. Démangeaisons\n\n<b>Question 3 — La douleur est-elle localisée dans un territoire où l’examen met en évidence :</b>\n8. Hypoesthésie au tact\n9. Hypoesthésie à la piqûre\n\n<b>Question 4 — La douleur est-elle provoquée ou augmentée par :</b>\n10. Le frottement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nQuels sont les critères spécifiques du parcours anesthésique permettant la dispense de séjour en salle de surveillance post-interventionnelle ?",
+          "images": [],
+          "reponseAttendue": "Patient de classe ASA 1, 2 ou 3 équilibré ; chirurgie sans risque vital ou fonctionnel postopératoire, idéalement précisée dans une charte de fonctionnement avec les chirurgiens ; utilisation d’une anesthésie locorégionale périphérique, sans complication per-anesthésique ni sédation intraveineuse peropératoire ; respect d’un délai depuis l’injection d’anesthésique local supérieur à 45 min pour un bloc plexique du membre supérieur et à 60 min pour un bloc plexique du membre inférieur ; critères de sortie de SSPI remplis, notés dans le dossier médical, et décision de sortie directe portée dans ce dossier avec le nom et la signature du médecin. Ce n’est jamais une obligation : le médecin anesthésiste-réanimateur peut demander un passage en SSPI.",
+          "correctionGenerale": "• Patient de classe <b>ASA 1, 2 ou 3 équilibré</b>\n• Chirurgie sans risque vital ou fonctionnel postopératoire ; l’idéal est de le préciser dans une charte de fonctionnement avec les chirurgiens\n• Utilisation d’une <b>anesthésie locorégionale périphérique</b>, sans complication per-anesthésique ni sédation intraveineuse peropératoire\n• Respect d’un <b>délai depuis l’injection d’anesthésique local</b> : supérieur à 45 min pour un bloc plexique du membre supérieur, à 60 min pour un bloc plexique du membre inférieur — afin d’être certain d’avoir dépassé le pic de résorption de l’anesthésique local et écarté le risque de toxicité\n• <b>Critères de sortie de SSPI remplis</b>\n• Notation de ces critères dans le dossier médical (feuille d’anesthésie)\n• Décision de sortie directe portée dans ce dossier, avec le nom et la signature du médecin\n\n<i>Dans tous les cas, ce n’est pas une obligation : le médecin anesthésiste-réanimateur peut ne pas l’autoriser et demander un passage en SSPI.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nQuelles sont les conditions indispensables encadrant la réalisation d’une limitation ou d’un arrêt des thérapeutiques actives selon la loi Claeys-Leonetti en réanimation ?",
+          "images": [],
+          "reponseAttendue": "Ce sont les modalités qui s’appliquent à un patient inapte à consentir : responsabilité de la décision revenant au médecin en charge du patient, procédure de réflexion collégiale, prise en compte des directives anticipées écrites, expression indirecte des souhaits du patient par la personne de confiance désignée, implication des proches et de l’équipe paramédicale, présence obligatoire d’un consultant extérieur, traçabilité de la décision, accompagnement des proches et soins de confort en cas d’arrêt des thérapeutiques actives.",
+          "correctionGenerale": "Les modalités légales de limitation des thérapeutiques en réanimation sont celles qui s’appliquent à un <b>patient inapte à consentir</b> :\n• Responsabilité de la décision qui revient au <b>médecin en charge du patient</b>\n• <b>Procédure de réflexion collégiale</b>\n• Prise en compte des <b>directives anticipées écrites</b>\n• Expression indirecte des souhaits du patient par la <b>personne de confiance désignée</b>\n• Implication des proches et de l’équipe paramédicale\n• <b>Présence obligatoire d’un consultant extérieur</b>\n• Traçabilité de la décision\n• Accompagnement des proches\n• Soins de confort si arrêt des thérapeutiques actives"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nQuelles sont les mesures à prendre pour prévenir l’hypothermie en périopératoire ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-053-278.jpg"],
+          "reponseAttendue": "Vérifier la température de la salle et éviter l’hypothermie iatrogène, réchauffement externe à air pulsé, réchauffeur de perfusion, monitorage de la température (sonde rectale, œsophagienne ou urinaire), liquide d’irrigation réchauffé par l’équipe chirurgicale.",
+          "correctionGenerale": "• Vérifier la température de la salle, éviter l’hypothermie iatrogène\n• <b>Réchauffement externe</b> (à air pulsé)\n• <b>Réchauffeur de perfusion</b>\n• <b>Monitorage de la température</b> (sonde rectale, œsophagienne ou urinaire)\n• Liquide d’irrigation réchauffé (par l’équipe chirurgicale)\n\n<i>Source citée : recommandations formalisées d’experts SFAR 2018, « Prévention de l’hypothermie peropératoire accidentelle au bloc opératoire chez l’adulte ».</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nChez un patient sous ventilation mécanique et présentant un syndrome de détresse respiratoire aiguë, quels sont les grands principes de la prise en charge ventilatoire ?",
+          "images": [],
+          "reponseAttendue": "Ventilation protectrice, curarisation, manœuvres de recrutement et décubitus ventral, moyens de suppléance (épuration extracorporelle du CO₂, ECMO). Paramètres de la ventilation protectrice : Vt bas 6-8 mL/kg (voire 4 à 8) de poids idéal théorique, PEP croissante et personnalisée, élevée (≥ 8 cmH₂O), Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O, FR selon la capnie avec hypercapnie permissive (PaCO₂ 45-55 mmHg, pH > 7,30), FiO₂ selon l’hypoxémie (PaO₂ 65-85 mmHg).",
+          "correctionGenerale": "• <b>Ventilation protectrice</b>\n• <b>Curarisation</b>\n• <b>Manœuvres de recrutement / décubitus ventral</b>\n• <b>Moyens de suppléance</b> : épuration extracorporelle du CO₂, ECMO\n\n<b>Ventilation protectrice — paramètres</b>\n• Vt bas : 6-8 mL/kg (voire 4 à 8) de poids idéal théorique\n• PEP croissante, personnalisée : PEP élevée ++ (PEP ≥ 8 cmH₂O)\n• Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O\n• FR selon la capnie (PaCO₂) ; hypercapnie permissive (PaCO₂ 45-55, pH > 7,30)\n• FiO₂ selon l’hypoxémie (PaO₂ 65-85)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2019 - EVCP - Sujet 1",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES AREA/EVCF EVCP 2019 AREA.pdf",
+      "orderIndex": 26,
+      "vignette": "Vous voyez en consultation pré-anesthésie un homme de 80 ans, barbu, pour une chirurgie réglée de résection transurétrale de prostate. L’intervention est prévue dans 8 jours.\n\nSes antécédents : hypertension artérielle ; arythmie chronique par fibrillation auriculaire ; infections urinaires multiples dans les derniers mois.\n\nSon traitement habituel : rivaroxaban (Xarelto®) 1 cp/jour ; bisoprolol (Bisoce®) 2,5 mg/jour ; valsartan (Tareg®) 40 mg/jour.\n\nÀ l’examen clinique, il mesure 172 cm et pèse 90 kg. Pas d’essoufflement. Activité physique limitée par une douleur de hanche droite. Il ne se plaint pas de reflux œsophagien. Tension artérielle : 130/75 mmHg. Fréquence cardiaque : 75/min, irrégulière. Clairance de la créatinine à 70 mL/min/m² il y a 6 mois (formule MDRD).\n\n<b>Classement des questions proposé par le corrigé</b>\n• <b>Questions prioritaires</b> : questions de cours, simples, quasi indépendantes du cas ; si vous perdez des points là, vous ne les regagnerez nulle part.\n• <b>Questions de rédaction</b> : basées sur le cas clinique, longues, plan de réponse indispensable.\n• <b>Questions « bonus »</b> : difficiles, spécifiques.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCalculez son indice de masse corporelle (IMC).",
+          "images": [],
+          "reponseAttendue": "IMC = poids / taille² = 90 / (1,72 × 1,72) = 90 / 2,96 = 30 kg/m² (l’unité est obligatoire). Il existe donc une obésité modérée, car l’IMC est ≥ 30.",
+          "correctionGenerale": "IMC = Poids / Taille²\nIMC = 90 / (1,72 × 1,72) = 90 / 2,96 = <b>30 kg/m²</b>\n\n<i>Pas d’unité = zéro à la question.</i>\n\nIl existe donc une <b>obésité modérée</b>, car l’IMC est ≥ 30."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les items du score de Lee ? Quel est le score de Lee de ce patient ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-063-331.jpg"],
+          "reponseAttendue": "Items du score de Lee, 1 point chacun : antécédents de maladie coronarienne, antécédents d’insuffisance cardiaque, antécédent de maladie cérébrovasculaire (AVC ou AIT), tout type de diabète, insuffisance rénale (DFG < 60 mL/min/1,73 m²). Chez ce patient, le score de Lee vaut 0 : il n’est pas précisé si la cardiopathie rythmique se complique d’une insuffisance cardiaque, et il n’y a pas de notion d’ACFA emboligène. Il n’y a donc pas d’exploration cardiaque fonctionnelle de la réserve coronaire.",
+          "correctionGenerale": "<b>Items du score de Lee</b> (1 point chacun)\n• Antécédents de maladie coronarienne\n• Antécédents d’insuffisance cardiaque\n• Antécédent de maladie cérébrovasculaire (accident vasculaire cérébral ou accident ischémique transitoire)\n• Tout type de diabète\n• Insuffisance rénale (DFG < 60 mL/min/1,73 m²)\n\n<b>Donc LEE = 0 chez ce patient</b>, car on ne précise pas si la cardiopathie rythmique est compliquée d’une insuffisance cardiaque et qu’il n’y a pas de notion d’ACFA emboligène.\n\n→ Donc <b>pas d’exploration cardiaque fonctionnelle de la réserve coronaire</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nCitez les explorations préopératoires complémentaires indispensables.",
+          "images": [],
+          "reponseAttendue": "ECG préopératoire (ACFA ? signes d’ischémie chronique — ondes T, ondes Q ? bloc de conduction ?) ; ECBU préopératoire +++ compte tenu des infections urinaires multiples, permettant une antibiothérapie préopératoire si nécessaire ; urée, créatininémie et ionogramme ; groupe sanguin avec 2 déterminations et RAI ; NFS. Pas de bilan d’hémostase et pas de dosage de l’AOD si la fonction rénale est normale.",
+          "correctionGenerale": "• <b>ECG préopératoire</b> : recherche d’ACFA ? signes d’ischémie chronique (ondes T, ondes Q…) ? bloc de conduction ?\n• <b>ECBU préopératoire +++</b> (indispensable notamment au vu des infections urinaires multiples) : antibiothérapie préopératoire possible en cas d’infection urinaire\n• <b>Urée, créatininémie, ionogramme</b> : réévaluation de la fonction rénale et recherche d’un trouble ionique\n• <b>Groupe sanguin, 2 déterminations, et RAI</b> : bilan prétransfusionnel (chirurgie potentiellement hémorragique)\n• <b>NFS</b> : évaluation de la réserve en hémoglobine préopératoire, recherche d’une thrombopénie\n\n<b>PAS DE BILAN D’HÉMOSTASE.</b>\n<b>PAS DE DOSAGE DE L’AOD si la fonction rénale est normale +++.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles consignes lui donnez-vous pour la gestion de ses traitements habituels ? Justifiez vos décisions.",
+          "images": [],
+          "reponseAttendue": "Arrêt de l’AOD (rivaroxaban) : dernière prise à J-3, ou J-5 si une anesthésie périmédullaire est souhaitée. Bisoprolol : bêta-bloquant, donc poursuite y compris la prise à J0 (risque de rebond en cas d’arrêt). Valsartan : antagoniste des récepteurs de l’angiotensine 2 — pas de prise à J0, mais prise la veille et reprise le lendemain en l’absence de complication per- et postopératoire (risque d’hypotension peropératoire majeure sur système sympathique bloqué par l’AG ou la rachianesthésie).",
+          "correctionGenerale": "• <b>Rivaroxaban (AOD)</b> : STOP — dernière prise à <b>J-3</b>, ou <b>J-5</b> si une anesthésie périmédullaire est souhaitée\n• <b>Bisoprolol</b> : bêta-bloquant, donc <b>poursuite</b>, y compris la prise à J0 (risque de rebond en cas d’arrêt)\n• <b>Valsartan</b> : antagoniste des récepteurs de l’angiotensine 2 — <b>pas de prise à J0</b>, mais prise la veille et reprise le lendemain en l’absence de complication per- et postopératoire (risque d’hypotension peropératoire majeure sur un système sympathique bloqué par l’AG ou la rachianesthésie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les critères de ventilation difficile au masque que vous identifiez chez ce patient ? Quels autres critères recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Présents chez ce patient : IMC > 26 kg/m², barbe, âge > 55 ans. À rechercher : difficulté à la protraction mandibulaire, absence de dents, ronflements nocturnes. La ventilation est à risque d’impossibilité si la distance thyro-mentonnière est inférieure à 60 mm et qu’il existe des ronflements.",
+          "correctionGenerale": "<b>Présents chez notre patient</b>\n• Poids : IMC > 26 kg/m²\n• Barbe\n• Âge > 55 ans\n\n<b>À rechercher</b>\n• Difficulté à la protraction mandibulaire\n• Absence de dents\n• Ronflements nocturnes\n\n<b>Ventilation à risque d’impossibilité si :</b>\n• Distance thyro-mentonnière < 60 mm\n• Ronflements"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les critères d’intubation difficile que vous recherchez chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Distance thyro-mentonnière < 65 mm, ouverture de bouche < 2 doigts, Mallampati > 2, circonférence du cou > 60 cm, rétro- ou prognathie, antécédents d’intubation difficile ; ainsi que radiothérapie cervicale ou faciale, brûlure cervico-faciale, SAOS, IMC > 35 kg/m².",
+          "correctionGenerale": "• Distance thyro-mentonnière < 65 mm\n• Ouverture de bouche < 2 doigts\n• Mallampati > 2\n• Circonférence de cou > 60 cm\n• Rétro- ou prognathie\n• Antécédents d’intubation difficile\n\n<b>Facteurs associés</b>\n• Radiothérapie cervicale ou faciale\n• Brûlure cervico-faciale\n• SAOS\n• IMC > 35 kg/m²"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelles consignes pour le jeûne préopératoire donnez-vous au patient ?",
+          "images": [],
+          "reponseAttendue": "Jeûne libéral, car il n’y a pas de RGO : liquides clairs (eau, jus de pomme, thé, café sans lait) jusqu’à 2 heures avant l’heure de la chirurgie ; solides jusqu’à 6 heures avant. NB : le patient obèse a la même vidange gastrique que le patient non obèse — c’est le RGO qui caractérise le risque.",
+          "correctionGenerale": "<b>Jeûne libéral</b> (liquides clairs jusqu’à 2 heures avant la chirurgie), car il n’y a pas de RGO.\n• <b>Liquides clairs</b> (eau, jus de pomme, thé, café sans lait) : jusqu’à H-2 de l’heure de chirurgie\n• <b>Solides</b> : jusqu’à H-6 de l’heure de la chirurgie\n\n<i>NB : le patient obèse a la même vidange gastrique que le patient non obèse ; c’est le RGO qui caractérise le risque.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelles sont les contre-indications à la rachianesthésie ?",
+          "images": [],
+          "reponseAttendue": "Refus formel du patient, trouble de l’hémostase connu, acquis ou congénital, traitement anticoagulant non arrêté ou antiagrégant (sauf aspirine), infection au point de ponction, valvulopathie aortique sévère (rétrécissement aortique serré), cardiopathie sévère obstructive, allergie aux anesthésiques locaux, maladies neurologiques en poussée aiguë.",
+          "correctionGenerale": "• Refus formel du patient\n• Trouble de l’hémostase connu, acquis ou congénital\n• Traitement anticoagulant non arrêté ou antiagrégant (sauf aspirine)\n• Infection au point de ponction\n• Valvulopathie aortique sévère : rétrécissement aortique serré\n• Cardiopathie sévère obstructive\n• Allergie aux anesthésiques locaux\n• Maladies neurologiques « en poussée aiguë »"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nVous décidez de réaliser une rachianesthésie pour le geste opératoire, avec 10 mg de bupivacaïne (injection unique). Dix minutes plus tard, le patient présente une pression artérielle moyenne à 50 mmHg.\n\nCitez les vasopresseurs que vous pourriez utiliser.",
+          "images": [],
+          "reponseAttendue": "Alpha-1 +++ et bêta-1 : éphédrine, étiléfrine ; alpha-1 +++ et bêta-1 : noradrénaline. Les alpha-1 purs sont à éviter car ils n’augmentent pas le débit cardiaque lors des injections : la phényléphrine abaisse même le débit cardiaque en cas de précharge-indépendance.",
+          "correctionGenerale": "• <b>Alpha-1 +++ / bêta-1</b> : éphédrine, étiléfrine\n• <b>Alpha-1 +++ / bêta-1</b> : noradrénaline\n• <b>Alpha-1 pur</b> : à éviter car pas d’augmentation du débit cardiaque lors des injections — la phényléphrine entraîne une baisse du débit cardiaque en cas de précharge-indépendance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nLe patient est en salle de surveillance post-interventionnelle. Il présente une confusion-agitation.\n\nQuelles sont vos hypothèses diagnostiques ?",
+          "images": [],
+          "reponseAttendue": "Confusion médicamenteuse (morphinique, benzodiazépine, kétamine), AVC ou AIT ischémique ou hémorragique (ACFA), hypoglycémie, intoxication aux anesthésiques locaux, globe urinaire sur caillotage, TURP syndrome (hyponatrémie sévère liée au passage de glycocolle), sepsis postopératoire urinaire, choc hémorragique, fécalome, douleur, troubles cognitifs sous-jacents.",
+          "correctionGenerale": "• Confusion médicamenteuse : morphinique, benzodiazépine, kétamine\n• AVC / AIT (ACFA) : ischémique ou hémorragique\n• Hypoglycémie\n• Intoxication aux anesthésiques locaux\n• Globe urinaire sur caillotage\n• <b>TURP syndrome</b> (hyponatrémie sévère en lien avec le passage de glycocolle)\n• Sepsis postopératoire urinaire\n• Choc hémorragique (hypotension)\n• Fécalome\n• Douleur\n• Troubles cognitifs sous-jacents ? (80 ans)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Anesthésie-Réanimation - 2019 - EVCP - Sujet 2",
+      "annee": 2019,
+      "type": "EVCP",
+      "source": "ANNALES AREA/EVCF EVCP 2019 AREA.pdf",
+      "orderIndex": 27,
+      "vignette": "Vous voyez en consultation pré-anesthésique aux urgences une femme de 75 ans pour une fracture de l’extrémité supérieure du fémur gauche, pour laquelle une indication de prothèse de hanche est prévue. La fracture est secondaire à une chute accidentelle.\n\nAntécédents : hypertension artérielle, avec un suivi cardiologique il y a 1 mois et une échocardiographie normale ; pas d’autre antécédent.\n\nSon traitement habituel : amlodipine (Amlor®) 5 mg/jour.\n\nÀ l’interrogatoire, la patiente est autonome et fait son jardinage. À l’examen clinique, vous ne retrouvez pas de signe prédictif de ventilation au masque ni d’intubation difficiles. La patiente n’est pas à jeun.\n\nBilan biologique réalisé aux urgences : numération sanguine normale, bilan d’hémostase normal, groupe sanguin et RAI déterminés, ECG normal, ionogramme, urée et créatininémie sans anomalie.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nDu point de vue anesthésique, sous quel délai pouvez-vous réaliser l’anesthésie ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une urgence : pas de délai sur le plan anesthésique. On peut néanmoins attendre 6 heures après le dernier repas, la chirurgie devant être réalisée dans les 24 à 48 heures (réduction de la morbi-mortalité) sans être vitale ; mais la douleur et l’iléus réflexe ou paralytique peuvent prolonger le jeûne classique et laisser persister un risque d’inhalation.",
+          "correctionGenerale": "• <b>URGENCE = pas de délai sur le plan anesthésique</b>\n• En revanche, possibilité d’attendre 6 h après le dernier repas, car la chirurgie est urgente dans les 24-48 h (réduction de la morbi-mortalité) et non vitale\n• Mais la douleur et un iléus réflexe ou paralytique peuvent prolonger un jeûne classique, et donc laisser persister un risque d’inhalation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nVous réalisez une anesthésie générale avec une induction en séquence rapide. L’intubation trachéale est réalisée sans complication.\n\nQuels sont les 5 principaux critères d’une bonne antibioprophylaxie ?",
+          "images": [],
+          "reponseAttendue": "Période de prescription courte (parfois 24 à 48 heures maximum) ; posologie élevée, à bonne pénétration tissulaire ; posologie à doubler en cas de poids > 100 kg et d’IMC > 35 kg/m² ; réalisée avant l’incision (pour les céphalosporines) ; antibiotique ciblant les germes classiquement retrouvés au niveau du site opératoire. Pour deux produits d’efficacité équivalente, choisir le moins cher.",
+          "correctionGenerale": "• Période de prescription <b>courte</b>, parfois pendant 24 h – 48 h maximum\n• <b>Posologie élevée</b>, à bonne pénétration tissulaire\n• Posologie à <b>doubler</b> en cas de poids > 100 kg et d’IMC > 35 kg/m²\n• Réalisée <b>avant l’incision</b> (pour les céphalosporines)\n• Antibiotique <b>ciblant les germes classiquement retrouvés au niveau du site opératoire</b>\n\n<i>Pour deux produits à efficacité équivalente : choisir le moins cher.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les 2 mesures de précaution à prendre avant la pose du ciment pour la prothèse ?",
+          "images": [],
+          "reponseAttendue": "Un remplissage vasculaire optimal pour assurer une parfaite hémodynamique (PAM comprise entre −20 % et +20 % de la PAM de pré-induction, et ne devant pas être inférieure à −15 % de la PAM de pré-induction) et une FiO₂ à 100 %.",
+          "correctionGenerale": "• <b>Remplissage vasculaire optimal</b> pour assurer une parfaite hémodynamique : PAM comprise entre −20 % et +20 % de la PAM de pré-induction, et ne devant pas être inférieure à −15 % de la PAM de pré-induction\n• <b>FiO₂ 100 %</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nÀ J3 dans le service d’orthopédie (4ᵉ jour d’hospitalisation au total), la patiente présente une gêne respiratoire avec une polypnée à 27/min et une saturation à 90 % sous masque à haute concentration. La pression artérielle moyenne est de 53 mmHg et la fréquence cardiaque à 95/min. Sa température est à 38,4 °C.\n\nLe diagnostic retenu est une pneumopathie postopératoire. Quelles étaient les autres hypothèses diagnostiques ?",
+          "images": [],
+          "reponseAttendue": "Embolie pulmonaire (fibrino-cruorique ou graisseuse, mais moins probable car il s’agit d’une fracture du col et non de la diaphyse) ; choc septique ou sepsis à porte d’entrée ostéo-articulaire (la donnée du lactate manque pour parler stricto sensu de choc septique) ; OAP postopératoire d’étiologie coronarienne ; choc hémorragique (hématome ?).",
+          "correctionGenerale": "• <b>Embolie pulmonaire</b> (fibrino-cruorique ou graisseuse, mais moins probable : il s’agit d’une fracture du col et non de la diaphyse)\n• <b>Choc septique ou sepsis à porte d’entrée ostéo-articulaire</b> <i>(NB : la donnée du lactate manque pour parler stricto sensu de choc septique)</i>\n• <b>OAP postopératoire</b> (étiologie coronarienne)\n• <b>Choc hémorragique</b> (hématome ?)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles sont les grandes lignes de votre prise en charge thérapeutique immédiate ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-102-514.png"],
+          "reponseAttendue": "Plan : hospitalisation avec modalités, conditionnement, traitement étiologique, traitement symptomatique, traitement curatif, traitement des complications, traitement du terrain, traitement préventif, soins associés, surveillance. Concrètement : transfert en urgence en réanimation ou soins intensifs ; 2 VVP de bon calibre et mise à jeun ; prise en charge de la défaillance respiratoire (préoxygénation renforcée, induction en séquence rapide par kétamine 3 mg/kg et succinylcholine 1 mg/kg ou rocuronium 1,2 mg/kg, intubation, ventilation assistée contrôlée, maintien de la sédation et de la curarisation) ; prise en charge de la défaillance hémodynamique (adrénaline prête, noradrénaline IVSE pour une PAM > 65-70 mmHg avant induction, VVC et cathéter artériel, sonde urinaire, scope, remplissage si précharge-dépendance) ; antibiothérapie IV double, bactéricide, probabiliste, à large spectre après prélèvements (C3G type céfotaxime 1 à 2 g/8 h, 7 jours, à adapter à 48-72 h) ; protocole d’insuline IVSE ; prévention de la maladie thromboembolique par HBPM, prévention de l’ulcère de stress, pose d’une SNG ; isolement protecteur, appel de la famille ; surveillance clinique et biologique rapprochée.",
+          "correctionGenerale": "<b>Plan de réponse</b> : hospitalisation (modalités !) — conditionnement — traitement étiologique (porte d’entrée / facteur déclenchant ++) — traitement symptomatique — traitement curatif — traitement des complications — traitement du terrain / décompensation des tares — traitement préventif — soins associés — surveillance.\n\n<b>Hospitalisation</b> : transfert en urgence en réanimation ou en soins intensifs.\n\n<b>Conditionnement</b> : mise en condition — pose de 2 voies veineuses périphériques de bon calibre ; mise à jeun.\n\n<b>1/ Défaillance respiratoire</b>\n• Pré-oxygénation renforcée avant intubation orotrachéale par Optiflow / VNI, FiO₂ 100 %\n• Préparation du matériel d’intubation et des drogues d’induction et d’entretien ; vérification de la présence d’une sonde d’aspiration à fort débit, du stéthoscope, du scope, du ventilateur prêt à l’utilisation\n• <b>Induction en séquence rapide</b> : hypnotique d’action rapide — kétamine 3 mg/kg (intéressante pour son faible impact hémodynamique et son effet bronchodilatateur) ; curare d’action rapide — succinylcholine 1 mg/kg, ou rocuronium 1,2 mg/kg en cas d’hyperkaliémie ou d’allergie à la succinylcholine\n• Intubation orotrachéale ; ventilation en VAC ; maintien de la sédation et de la curarisation\n\n<b>2/ Défaillance hémodynamique</b>\n• Adrénaline prête : 1 mg/mL et 0,1 mg/mL\n• Noradrénaline IVSE pour une PAM > 65-70 mmHg avant l’induction\n• Pose de VVC et de cathéter artériel (afin d’anticiper une mise en décubitus ventral) — sonde urinaire — scope\n• Remplissage vasculaire si précharge-dépendance\n\n<b>Traitement curatif</b>\n• <b>EN URGENCE</b>, après réalisation des prélèvements (aspiration bronchique, hémocultures, antigénuries)\n• Antibiothérapie intraveineuse, (double), bactéricide, probabiliste, à large spectre\n• Pneumopathie associée aux soins, <b>précoce (< 5 jours)</b> → ciblant les BGN ++ et les CG+, sans cibler <i>Pseudomonas</i> car précoce\n• Céphalosporine de 3ᵉ génération, par exemple <b>céfotaxime 1 à 2 g/8 h</b>, à adapter à la fonction rénale\n• Pour une durée de 7 jours, à adapter à l’antibiogramme à 48-72 h\n\n<b>Traitement du terrain</b> : protocole d’insuline IVSE.\n\n<b>Traitement préventif</b> : prévention de la maladie thromboembolique par HBPM ; prévention de l’ulcère de stress ; pose d’une SNG.\n\n<b>Soins associés</b> : isolement protecteur (contact et air) ; appel de la famille.\n\n<b>Surveillance</b>\n• Clinique rapprochée : scope, PA, température, diurèse, SpO₂, neurologique\n• Biologique rapprochée : GDS + lactates, NFS, ionogramme sanguin\n\n<i>L’algorithme reproduit précise les indications de la prophylaxie de l’ulcère de stress : antécédent de maladie ulcéreuse, traitement antiagrégant, nutrition entérale, ventilation mécanique, coagulopathie ou insuffisance rénale.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nL’évolution est défavorable sous traitement, avec une hypoxémie persistante et l’apparition d’une agitation. La lactatémie est à 3,4 mmol/L. Vous placez la patiente sous ventilation mécanique invasive. Le ratio PaO₂/FiO₂ post-intubation est mesuré à 145.\n\nComment adaptez-vous votre antibiothérapie ?",
+          "images": ["annales-area/evcf-evcp-2019-area/figures/img-107-537.png"],
+          "reponseAttendue": "Il s’agit d’un choc septique avéré sur pneumopathie associée aux soins à J4 postopératoire. Poursuite de la C3G IV pendant 7 à 10 jours, car il n’y a pas de facteur de risque de BMR et la pneumopathie est précoce, MAIS ajout d’un aminoside de type gentamicine ou d’une fluoroquinolone, pour une bithérapie efficace, bactéricide et synergique, du fait du choc septique. Gentamicine 8 mg/kg, durée 48-72 h, injection unique ; pic à 30 minutes de la fin d’une perfusion réalisée sur 30 minutes, soit 1 heure après le début de la perfusion ; taux résiduel toutes les 24 heures, avant toute nouvelle injection.",
+          "correctionGenerale": "<b>Choc septique avéré</b>, sur pneumopathie associée aux soins à J4 postopératoire.\n\n<b>Antibiothérapie</b>\n• Poursuite de la <b>C3G IV pendant 7 à 10 jours</b>, car il n’y a pas de facteur de risque de BMR et la pneumopathie est précoce\n• <b>MAIS ajout d’un aminoside de type gentamicine, ou d’une fluoroquinolone</b>, pour une bithérapie efficace, bactéricide et synergique — car il s’agit d’un choc septique\n• Posologie de la gentamicine : <b>8 mg/kg</b> — durée 48-72 h — injection unique\n• Pic à 30 minutes de la fin de la perfusion réalisée sur 30 minutes, soit 1 heure après le début de la perfusion\n• Taux résiduel toutes les 24 heures, avant toute nouvelle injection\n\n<i>Le tableau IV « Protocole de soin n° 4 suggéré par les experts : schémas thérapeutiques » est reproduit : pneumonie précoce < 5 jours en l’absence de choc septique ou de facteurs de risque de BMR → bêta-lactamine inactive contre </i>P. aeruginosa<i> (amoxicilline/acide clavulanique ou C3G type céfotaxime, 3 à 6 g/j) ; pneumonie précoce et choc septique → même bêta-lactamine + aminoside (gentamicine 8 mg/kg/j) ou fluoroquinolone (ofloxacine 200 mg × 2/j) ; pneumonie tardive ≥ 5 jours ou facteur de risque de bacille à Gram négatif non fermentant → bêta-lactamine active contre </i>P. aeruginosa<i> (ceftazidime 6 g/j, céfépime 4 à 6 g/j, pipéracilline-tazobactam 16 g/j, imipénème-cilastatine 3 g/j ou méropénème 3 à 6 g/j) + amikacine 30 mg/kg/j ou ciprofloxacine 400 mg × 3/j ; facteurs de risque de SARM → ajout de vancomycine ou de linézolide.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nComment réglez-vous les paramètres du ventilateur ?",
+          "images": [],
+          "reponseAttendue": "Ventilation protectrice : Vt bas 6-8 mL/kg (voire 4 à 8) de poids idéal théorique ; PEP croissante, personnalisée et élevée (≥ 8 cmH₂O) ; Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O ; FR selon la capnie, avec hypercapnie permissive (PaCO₂ 45-55 mmHg, pH > 7,30) ; FiO₂ selon l’hypoxémie (PaO₂ 65-85 mmHg).",
+          "correctionGenerale": "<b>Ventilation protectrice — paramètres</b>\n• Vt bas : 6-8 mL/kg (voire 4 à 8) de poids idéal théorique\n• PEP croissante, personnalisée : PEP élevée ++ (PEP ≥ 8 cmH₂O)\n• Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O\n• FR selon la capnie (PaCO₂) ; hypercapnie permissive (PaCO₂ 45-55, pH > 7,30)\n• FiO₂ selon l’hypoxémie (PaO₂ 65-85)"
+        }
+      ]
+    }
+  ]
+}
