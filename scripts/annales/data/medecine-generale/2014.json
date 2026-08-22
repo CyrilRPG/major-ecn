@@ -1,0 +1,515 @@
+{
+  "sources": {
+    "ANNALES MG/PAE 2014.pdf": {
+      "atelier": "annales-mg/pae-2014",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2014 (EVCF : 4 parties ; EVCP : 7 parties). Le sujet officiel 2014 n’est pas présent dans le dépôt : les énoncés sont reconstitués à partir du corrigé, qui n’en donne qu’un résumé — ils sont donc plus succincts que les énoncés originaux."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2014 - EVCF",
+      "annee": 2014,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE 2014.pdf",
+      "orderIndex": 114,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2014.</b>\n\nLe sujet officiel n’étant pas disponible dans le dépôt, les énoncés ci-dessous sont reconstitués à partir du corrigé et sont donc plus succincts que les énoncés originaux.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 1 : vaccinations — Question 1</b>\n\nVaccinations d’un nourrisson de 2 mois, né à terme, d’une mère immigrée malienne.\n\nQuelles vaccinations proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Le BCG, le DTP, la coqueluche, l’hépatite B, l’Haemophilus influenzae et le pneumocoque.",
+          "correctionGenerale": "• <b>BCG</b>\n• <b>DTP</b>\n• <b>Coqueluche</b>\n• <b>Hépatite B</b>\n• <b>Haemophilus influenzae</b>\n• <b>Pneumocoque</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 1 : vaccinations — Question 2</b>\n\nQuelles vaccinations sont obligatoires chez cet enfant ?",
+          "images": [],
+          "reponseAttendue": "Le DTP, l’hépatite B et le BCG.",
+          "correctionGenerale": "• <b>DTP</b>\n• <b>Hépatite B</b>\n• <b>BCG</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 1 : vaccinations — Question 3</b>\n\nParmi ces vaccins, lesquels sont des vaccins vivants ?",
+          "images": [],
+          "reponseAttendue": "Le BCG et le ROR.",
+          "correctionGenerale": "<b>Vaccins vivants</b>\n• <b>BCG</b>\n• <b>ROR</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 2 : hypertension — Question 1</b>\n\nUn homme de 82 ans, sans antécédent, consulte pour une vaccination antigrippale. Sa pression artérielle est mesurée à 160/80 mmHg.\n\nComment confirmez-vous le diagnostic d’hypertension artérielle ?",
+          "images": [],
+          "reponseAttendue": "Trois possibilités : la réalisation de 2 autres mesures de pression artérielle au cabinet sur une période de 3 à 6 mois (avec au moins 2 mesures par consultation) ; l’automesure tensionnelle ; ou la mesure ambulatoire de la pression artérielle (MAPA).",
+          "correctionGenerale": "<b>Trois possibilités</b>\n• Réalisation de 2 autres mesures de PA au cabinet sur une période de 3 à 6 mois, avec au moins 2 mesures par consultation\n• <b>Automesure tensionnelle (AMT)</b>\n• <b>Mesure ambulatoire de la pression artérielle (MAPA)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 2 : hypertension — Question 2</b>\n\nQuelle classe thérapeutique privilégiez-vous en première intention chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Les diurétiques thiazidiques.",
+          "correctionGenerale": "• <b>Diurétiques thiazidiques</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 2 : hypertension — Question 3</b>\n\nQuelles sont les deux classes thérapeutiques qu’il est déconseillé d’associer ?",
+          "images": [],
+          "reponseAttendue": "Les IEC et les ARA2. Pour mémoire, les 5 classes de première intention sont les inhibiteurs calciques, les IEC, les ARA2, les diurétiques thiazidiques et les bêtabloquants.",
+          "correctionGenerale": "• Les deux classes qu’il est déconseillé d’associer sont les <b>IEC</b> et les <b>ARA2</b>\n\n<i>NB — rappel des 5 classes thérapeutiques de première intention</i> : inhibiteurs calciques, IEC, ARA2, diurétiques thiazidiques, bêtabloquants"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1, sujet 2 : hypertension — Question 4</b>\n\nQuel objectif tensionnel retenez-vous chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "L’objectif théorique chez un patient sans antécédent est de 140/90 mmHg. Cependant, ce patient a plus de 80 ans : selon les recommandations de la Société française d’hypertension artérielle, on tolère une PAS jusqu’à 150 mmHg, le risque étant l’hypotension orthostatique si le contrôle tensionnel est trop strict.",
+          "correctionGenerale": "• L’objectif théorique de pression artérielle chez un patient sans antécédent est de <b>140/90 mmHg</b>\n• Cependant, ce patient a plus de 80 ans : selon les recommandations de la Société française d’hypertension artérielle, on tolère une <b>PAS jusqu’à 150 mmHg</b>, le risque pour le patient étant l’hypotension orthostatique si le contrôle de la PA est trop strict"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 : thrombopénie — Question 1</b>\n\nUne femme de 35 ans, sans antécédent, consulte pour des ecchymoses spontanées de plus en plus fréquentes. Elle a reçu des antibiotiques 3 semaines plus tôt pour une bronchite.\n\nQuel examen demandez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Une NFS-plaquettes.",
+          "correctionGenerale": "• <b>NFS-plaquettes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 : thrombopénie — Question 2</b>\n\nComment éliminez-vous une fausse thrombopénie ?",
+          "images": [],
+          "reponseAttendue": "Par un prélèvement sur tube citraté ; par un frottis sanguin mettant en évidence des amas plaquettaires ; ou en effectuant une deuxième détermination sur un nouveau prélèvement avec un autre anticoagulant. Ici, une fausse thrombopénie est éliminée d’emblée car la thrombopénie s’accompagne de signes cliniques (ecchymoses).",
+          "correctionGenerale": "<b>Plusieurs possibilités</b>\n• Prélèvement sur tube citraté\n• Frottis sanguin mettant en évidence des amas plaquettaires\n• Effectuer une deuxième détermination sur un nouveau prélèvement avec un autre anticoagulant\n\n<i>NB : ici, une fausse thrombopénie est éliminée d’emblée, car la thrombopénie s’accompagne de signes cliniques de thrombopénie (ecchymoses).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 : thrombopénie — Question 3</b>\n\nQuels sont les grands mécanismes de thrombopénie ?",
+          "images": [],
+          "reponseAttendue": "Les thrombopénies périphériques, d’origine immunologique ou non, et les thrombopénies centrales, constitutionnelles ou acquises.",
+          "correctionGenerale": "• <b>Thrombopénies périphériques</b>, d’origine immunologique ou non\n• <b>Thrombopénies centrales</b>, constitutionnelles ou acquises"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 : thrombopénie — Question 4</b>\n\nQue recherchez-vous à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Des signes de gravité : saignement extériorisé (digestif, respiratoire, urinaire), bulles hémorragiques intra-buccales, hémorragies rétiniennes, hémorragie intra-cérébrale.",
+          "correctionGenerale": "<b>On recherche des signes de gravité</b>\n• Saignement extériorisé : digestif, respiratoire, urinaire\n• Bulles hémorragiques intra-buccales\n• Hémorragies rétiniennes\n• Hémorragie intra-cérébrale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 : anémie microcytaire — Question 1</b>\n\nUne femme de 22 ans, sans antécédent ni traitement, consulte pour asthénie et pâleur. Les constantes sont normales. La biologie montre une anémie microcytaire avec thrombocytose, sans syndrome inflammatoire.\n\nQuelles hypothèses évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une carence martiale, un syndrome inflammatoire chronique et une thalassémie.",
+          "correctionGenerale": "• <b>Carence martiale</b>\n• <b>Syndrome inflammatoire chronique</b>\n• <b>Thalassémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 : anémie microcytaire — Question 2</b>\n\nQuel diagnostic retenez-vous et quel bilan demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une anémie par carence martiale, à confirmer par un bilan martial : soit la ferritine seule, soit fer + coefficient de saturation de la transferrine, ou fer + capacité totale de fixation, ou fer + transferrine.",
+          "correctionGenerale": "• <b>Anémie par carence martiale</b>\n• <b>Bilan martial</b> :\n  – Soit la ferritine seule\n  – Soit fer + coefficient de saturation de la transferrine (CST), ou fer + capacité totale de fixation (CTF), ou fer + transferrine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 : anémie microcytaire — Question 3</b>\n\nUne transfusion est-elle indiquée ?",
+          "images": [],
+          "reponseAttendue": "Non, car l’anémie est bien tolérée et le taux d’hémoglobine n’atteint pas le seuil transfusionnel.",
+          "correctionGenerale": "• <b>Non</b>, car l’anémie est bien tolérée et l’hémoglobine n’atteint pas le seuil de transfusion"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 : anémie microcytaire — Question 4</b>\n\nQuels mécanismes de carence martiale évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une carence d’apports en fer, une malabsorption du fer et une perte de fer par saignements chroniques.",
+          "correctionGenerale": "• <b>Carence d’apports en fer</b>\n• <b>Malabsorption du fer</b>\n• <b>Perte de fer</b> (saignements chroniques)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 1 : maladie de Horton — Question 1</b>\n\nDéfinissez la maladie de Horton.",
+          "images": [],
+          "reponseAttendue": "Une vascularite systémique primitive à cellules géantes, correspondant à une panartérite segmentaire et focale des artères de grand et moyen calibre.",
+          "correctionGenerale": "• <b>Vascularite systémique primitive à cellules géantes</b>, correspondant à une panartérite segmentaire et focale des artères de grand et moyen calibre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 1 : maladie de Horton — Question 2</b>\n\nQuelle est la complication à redouter et par quels mécanismes ?",
+          "images": [],
+          "reponseAttendue": "L’atteinte fonctionnelle oculaire, souvent irréversible, pouvant conduire à la cécité. Les mécanismes sont l’atteinte des artères irriguant les différentes parties de l’œil : artère centrale de la rétine (OACR), artères ciliaires postérieures (NOIAA), et névrite optique rétrobulbaire (NORB).",
+          "correctionGenerale": "• <b>Atteinte fonctionnelle oculaire</b> : atteinte souvent irréversible, pouvant conduire à la cécité\n\n<b>Mécanismes</b>\n• Atteinte des artères irriguant les différentes parties de l’œil :\n  – Artère centrale de la rétine → <b>OACR</b>\n  – Artères ciliaires postérieures → <b>NOIAA</b>\n  – <b>NORB</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 1 : maladie de Horton — Question 3</b>\n\nQuel examen confirme le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La biopsie de l’artère temporale.",
+          "correctionGenerale": "• <b>Biopsie de l’artère temporale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 1 : maladie de Horton — Question 4</b>\n\nQuel est le traitement, et selon quelles modalités ?",
+          "images": [],
+          "reponseAttendue": "Une corticothérapie. Traitement d’attaque par prednisone per os 0,5 à 0,7 mg/kg/jour, puis décroissance jusqu’à la dose d’entretien, à débuter dès la normalisation de la VS et de façon progressive ; traitement d’entretien à la dose minimale efficace, maintenu 1 à 3 ans, avec sevrage chez les patients asymptomatiques depuis plusieurs semaines.",
+          "correctionGenerale": "• <b>Corticothérapie</b>\n\n<b>Modalités</b>\n• Traitement d’attaque : prednisone per os 0,5-0,7 mg/kg/jour\n• Puis décroissance jusqu’à la dose d’entretien :\n  – À débuter dès que la VS est normalisée\n  – Diminution progressive\n• Traitement d’entretien :\n  – Dose minimale efficace, maintenue 1 à 3 ans\n  – Sevrage chez les patients asymptomatiques depuis plusieurs semaines"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 1 : maladie de Horton — Question 5</b>\n\nQuelle anomalie de l’hémogramme attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire (anémie inflammatoire).",
+          "correctionGenerale": "• <b>Anémie microcytaire</b>\n\n<i>NB — rappel du bilan martial selon l’étiologie</i>\n• <b>Carence martiale</b> : fer sérique diminué, CTF très augmentée, CST diminué, transferrine diminuée, récepteur soluble de la transferrine (RST) augmenté\n• <b>Inflammation chronique</b> : fer sérique diminué, CTF diminuée, CST normal, transferrine augmentée, RST normal\n• <b>Carence + inflammation</b> : fer sérique diminué, CTF diminuée ou normale, CST diminué ou normal, transferrine augmentée ou normale, RST augmenté\n• <b>Thalassémie</b> : fer sérique augmenté, CTF normale, CST normal, transferrine augmentée, RST normal\n• <b>Anémie sidéroblastique</b> : tous les paramètres normaux\n• <b>Atransferrinémie</b> : fer sérique très diminué, RST augmenté"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 2 : syndrome inflammatoire biologique — Question 1</b>\n\nComment définissez-vous un syndrome inflammatoire biologique ?",
+          "images": [],
+          "reponseAttendue": "Par une hyperleucocytose et une augmentation des paramètres de l’inflammation.",
+          "correctionGenerale": "• <b>Hyperleucocytose</b> et <b>augmentation des paramètres de l’inflammation</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 2 : syndrome inflammatoire biologique — Question 2</b>\n\nCitez les principaux marqueurs de l’inflammation.",
+          "images": [],
+          "reponseAttendue": "La CRP, la procalcitonine (PCT) et le fibrinogène.",
+          "correctionGenerale": "• <b>CRP</b>\n• <b>Procalcitonine (PCT)</b>\n• <b>Fibrinogène</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 2 : syndrome inflammatoire biologique — Question 3</b>\n\nCitez des causes d’augmentation de la VS en dehors d’un syndrome inflammatoire.",
+          "images": [],
+          "reponseAttendue": "Une anémie sévère, une hypercholestérolémie, un traitement par héparine, une hypergammaglobulinémie (lupus, myélome) et une hémodilution (grossesse, insuffisance cardiaque…).",
+          "correctionGenerale": "• <b>Anémie sévère</b>\n• <b>Hypercholestérolémie</b>\n• <b>Traitement par héparine</b>\n• <b>Hypergammaglobulinémie</b> (lupus, myélome)\n• <b>Hémodilution</b> : grossesse, insuffisance cardiaque…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 2 : syndrome inflammatoire biologique — Question 4</b>\n\nQuel marqueur suivez-vous pour évaluer l’évolution ?",
+          "images": [],
+          "reponseAttendue": "La CRP.",
+          "correctionGenerale": "• <b>CRP</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3, sujet 2 : syndrome inflammatoire biologique — Question 5</b>\n\nQuelle anomalie de l’hémogramme accompagne un syndrome inflammatoire chronique ?",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire (comme dans le sujet 1).",
+          "correctionGenerale": "• <b>Anémie microcytaire</b> (idem sujet 1)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 1 : grosse jambe rouge aiguë fébrile — Question 1</b>\n\nQuelle est l’étiologie la plus probable ?",
+          "images": [],
+          "reponseAttendue": "Une cause infectieuse : l’érysipèle.",
+          "correctionGenerale": "• <b>Infectieuse : érysipèle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 1 : grosse jambe rouge aiguë fébrile — Question 2</b>\n\nQuel est le germe en cause ?",
+          "images": [],
+          "reponseAttendue": "Le streptocoque β-hémolytique du groupe A.",
+          "correctionGenerale": "• <b>Streptocoque β-hémolytique du groupe A</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 1 : grosse jambe rouge aiguë fébrile — Question 3</b>\n\nQuel critère fait retenir l’hospitalisation ?",
+          "images": [],
+          "reponseAttendue": "La présence de signes généraux importants.",
+          "correctionGenerale": "• <b>Présence de signes généraux importants</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 1 : grosse jambe rouge aiguë fébrile — Question 4</b>\n\nQuel traitement antibiotique prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une antibiothérapie systémique antistreptococcique par β-lactamine en monothérapie pendant 7 jours : pénicilline G injectable (traitement de référence) ou pénicilline A per os — amoxicilline 50 à 100 mg/kg en 3 prises quotidiennes.",
+          "correctionGenerale": "<b>Antibiothérapie systémique antistreptococcique : β-lactamine en monothérapie, 7 jours</b>\n• Pénicilline G injectable (référence)\n• Pénicilline A per os : amoxicilline 50-100 mg/kg en 3 prises quotidiennes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 1 : grosse jambe rouge aiguë fébrile — Question 5</b>\n\nQuels sont les critères de guérison ?",
+          "images": [],
+          "reponseAttendue": "L’apyrexie, la disparition des signes locaux et la normalisation du bilan biologique.",
+          "correctionGenerale": "• <b>Apyrexie</b>\n• <b>Disparition des signes locaux</b>\n• <b>Normalisation du bilan biologique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 2 : lombalgie aiguë non traumatique de l’adulte jeune — Question 1</b>\n\nDéfinissez la lombosciatique commune.",
+          "images": [],
+          "reponseAttendue": "Une pathologie associant lombalgies et radiculalgie (sciatique), de durée habituellement spontanément régressive en 15 jours.",
+          "correctionGenerale": "• Pathologie associant <b>lombalgies et radiculalgie (sciatique)</b>, de durée habituellement spontanément régressive en 15 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 2 : lombalgie aiguë non traumatique de l’adulte jeune — Question 2</b>\n\nQuels sont les signes de gravité imposant une prise en charge urgente ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de la queue de cheval, un déficit moteur < 3/5 et une sciatique hyperalgique (douleur résistant aux antalgiques de palier 3).",
+          "correctionGenerale": "• <b>Syndrome de la queue de cheval</b>\n• <b>Déficit moteur < 3/5</b>\n• <b>Sciatique hyperalgique</b> : douleur résistant aux antalgiques de palier 3"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 2 : lombalgie aiguë non traumatique de l’adulte jeune — Question 3</b>\n\nQuel examen d’imagerie demandez-vous en urgence ?",
+          "images": [],
+          "reponseAttendue": "Une IRM lombaire, séquences T1, T2 et T1 après injection de gadolinium.",
+          "correctionGenerale": "• <b>IRM lombaire</b>, séquences T1, T2 et T1 avec injection de gadolinium"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4, sujet 2 : lombalgie aiguë non traumatique de l’adulte jeune — Question 4</b>\n\nQuelle est la conduite à tenir ?",
+          "images": [],
+          "reponseAttendue": "Un traitement chirurgical en urgence.",
+          "correctionGenerale": "• <b>Traitement chirurgical en urgence</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2014 - EVCP",
+      "annee": 2014,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE 2014.pdf",
+      "orderIndex": 115,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2014.</b>\n\nLe sujet officiel n’étant pas disponible dans le dépôt, les énoncés ci-dessous sont reconstitués à partir du corrigé et sont donc plus succincts que les énoncés originaux.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 1</b>\n\nUn homme de 54 ans présente une altération de l’état général, une diarrhée et une hépatomégalie à bord non tranchant.\n\nAntécédents et mode de vie : bronchite chronique, dépression, consommation d’alcool de 60 g/j, pancréatite aiguë 5 ans plus tôt, tabagisme non sevré à 25 paquets-années. Poids 81 kg pour 2 m.\n\nCalculez son IMC.",
+          "images": [],
+          "reponseAttendue": "IMC = poids / taille², soit 81 / 2² ≈ 20 ; le corrigé retient une valeur de 17.",
+          "correctionGenerale": "• <b>IMC = poids / taille²</b>, soit environ <b>17</b> selon le corrigé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 2</b>\n\nQu’en concluez-vous sur l’état nutritionnel du patient, sachant que son ancien poids de forme était de 84 kg ?",
+          "images": [],
+          "reponseAttendue": "Un IMC à 17 correspond à une dénutrition, et l’ancien poids de forme à 84 kg témoigne d’un amaigrissement important.",
+          "correctionGenerale": "• IMC à 17 : correspond à une <b>dénutrition</b>\n• Ancien poids de forme à 84 kg : il y a donc un <b>amaigrissement important</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 3</b>\n\nQuelles hypothèses diagnostiques évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une pancréatite chronique ; une dépression ou une néoplasie.",
+          "correctionGenerale": "• <b>Pancréatite chronique</b>\n• Dépression ou néoplasie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 4</b>\n\nQuelle anomalie de l’hémogramme attendez-vous chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Une anémie macrocytaire arégénérative.",
+          "correctionGenerale": "• <b>Anémie macrocytaire arégénérative</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 5</b>\n\nQuels marqueurs biologiques permettent d’évaluer la dénutrition ?",
+          "images": [],
+          "reponseAttendue": "L’albumine et la préalbumine.",
+          "correctionGenerale": "• <b>Albumine</b>\n• <b>Préalbumine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 — Question 6</b>\n\nQuel diagnostic retenez-vous finalement ?",
+          "images": [],
+          "reponseAttendue": "Une pancréatite chronique.",
+          "correctionGenerale": "• <b>Pancréatite chronique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 — Question 1</b>\n\nUn homme de 65 ans consulte pour une thrombose veineuse profonde du membre inférieur droit, sans signe d’embolie pulmonaire associé. Antécédents : lombalgies chroniques. Poids 70 kg. Biologie sans anomalie.\n\nUne dose d’HBPM de 4000 UI/jour est-elle adaptée ?",
+          "images": [],
+          "reponseAttendue": "Non, car cette dose correspond à un traitement préventif et non curatif de la TVP. Il faut ici soit un schéma à 1 injection par jour à 175 UI/kg/injection (soit environ 13 000 UI/j), soit un schéma à 2 injections par jour à 100 UI/kg/injection (soit 14 000 UI/j).",
+          "correctionGenerale": "• <b>Non</b>, car cette dose correspond à un traitement <b>préventif</b> et non curatif de la TVP\n• Il faut ici :\n  – Schéma à 1 injection/jour : 175 UI/kg/injection, soit environ 13 000 UI/j\n  – Schéma à 2 injections/jour : 100 UI/kg/injection, soit 14 000 UI/j"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 — Question 2</b>\n\nQuelle mesure associée prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Des bas de contention.",
+          "correctionGenerale": "• <b>Bas de contention</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 — Question 3</b>\n\nQuelle classe médicamenteuse est à éviter chez ce patient traité pour ses lombalgies chroniques ?",
+          "images": [],
+          "reponseAttendue": "Les AINS.",
+          "correctionGenerale": "• <b>AINS</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 1 — Question 4</b>\n\nLe patient présente secondairement une tuméfaction douloureuse de la cuisse gauche. Quel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un hématome du quadriceps gauche, faisant suite à un probable surdosage en AVK.",
+          "correctionGenerale": "• <b>Hématome du quadriceps gauche</b>, suite à un probable <b>surdosage en AVK</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 — Question 1</b>\n\nUn homme de 70 ans présente des accès fébriles vespéraux, des sueurs et un souffle systolo-diastolique au foyer aortique. Antécédent : remplacement valvulaire aortique par bioprothèse. Traitement : AVK, bêtabloquants, statines, diurétiques de l’anse. Biologie : hyperleucocytose à PNN et CRP augmentée (syndrome inflammatoire), sans insuffisance rénale.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une endocardite infectieuse.",
+          "correctionGenerale": "• <b>Endocardite infectieuse</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 — Question 2</b>\n\nQuel examen microbiologique réalisez-vous en priorité ?",
+          "images": [],
+          "reponseAttendue": "Des hémocultures.",
+          "correctionGenerale": "• <b>Hémocultures</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 — Question 3</b>\n\nQuelle antibiothérapie débutez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une bi-antibiothérapie synergique par voie intraveineuse, d’abord probabiliste, de type amoxicilline ou amoxicilline-acide clavulanique associée à la gentamicine.",
+          "correctionGenerale": "• <b>Bi-antibiothérapie synergique par voie IV</b>, d’abord probabiliste : amoxicilline ou amoxicilline-acide clavulanique + gentamicine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2, sujet 2 — Question 4</b>\n\nQuel examen d’imagerie demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une échographie cardiaque transthoracique complétée d’une échographie transœsophagienne.",
+          "correctionGenerale": "• <b>ETT + ETO</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 — Question 1</b>\n\nApparition brutale d’un trouble de la parole chez une femme de 49 ans, présentant comme facteurs de risque cardio-vasculaire un diabète et une HTA.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un accident vasculaire cérébral.",
+          "correctionGenerale": "• <b>Accident vasculaire cérébral (AVC)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 — Question 2</b>\n\nQue demandez-vous à l’interrogatoire et comment qualifiez-vous la symptomatologie ?",
+          "images": [],
+          "reponseAttendue": "L’heure de début des symptômes — élément essentiel — et la présence d’autres troubles que celui de la parole. La symptomatologie neurologique correspond à une aphasie.",
+          "correctionGenerale": "<b>À demander</b>\n• <b>Heure de début des symptômes</b> (élément essentiel)\n• Présence d’autres troubles que celui de la parole\n\n<b>Symptomatologie neurologique</b>\n• <b>Aphasie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 — Question 3</b>\n\nQuelle est votre conduite à tenir immédiate ?",
+          "images": [],
+          "reponseAttendue": "Appeler le SAMU et faire transférer la patiente vers un hôpital disposant d’une unité neuro-vasculaire (stroke unit).",
+          "correctionGenerale": "• <b>Appeler le SAMU</b> et l’amener dans un hôpital disposant d’une <b>unité neuro-vasculaire (stroke unit)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 — Question 4</b>\n\nQuels sont les facteurs de risque d’AVC, et lesquels sont présents chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Les facteurs de risque cardio-vasculaire (tabac, HTA, dyslipidémie, diabète), l’âge > 65 ans, la consommation chronique d’alcool, la migraine et, dans une moindre mesure, l’obésité, le syndrome métabolique, la sédentarité et le SAOS. Cette patiente présente un diabète et une HTA, qui ont pu favoriser la survenue de la pathologie.",
+          "correctionGenerale": "• <b>Facteurs de risque cardio-vasculaire</b> : tabac, HTA, dyslipidémie, diabète\n• <b>Âge > 65 ans</b>\n• <b>Consommation chronique d’alcool</b>\n• <b>Migraine</b>\n• Dans une moindre mesure : obésité, syndrome métabolique, sédentarité, SAOS\n\n→ Ici, la patiente présente un <b>diabète</b> et une <b>HTA</b>, qui ont pu favoriser la survenue de la pathologie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 — Question 1</b>\n\nUn homme de 35 ans présente une violente douleur du creux épigastrique. Il n’y a pas d’anomalie clinique, biologique ni électrocardiographique, et pas de facteur de risque cardio-vasculaire.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un ulcère gastro-duodénal.",
+          "correctionGenerale": "• <b>Ulcère gastro-duodénal</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 — Question 2</b>\n\nQuel examen confirme le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une fibroscopie œso-gastro-duodénale (FOGD).",
+          "correctionGenerale": "• <b>Fibroscopie œso-gastro-duodénale (FOGD)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 — Question 3</b>\n\nQuel traitement instaurez-vous et pour quelle durée ?",
+          "images": [],
+          "reponseAttendue": "Un inhibiteur de la pompe à protons : simple dose pendant 4 semaines en cas d’ulcère duodénal, simple dose pendant 8 semaines en cas d’ulcère gastrique.",
+          "correctionGenerale": "<b>Inhibiteur de la pompe à protons (IPP)</b>\n• Si ulcère duodénal : IPP simple dose pendant 4 semaines\n• Si ulcère gastrique : IPP simple dose pendant 8 semaines"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 — Question 4</b>\n\nL’ulcère est lié à Helicobacter pylori. Quel traitement d’éradication proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une thérapie séquentielle : IPP double dose pendant 10 jours, associé à une antibiothérapie séquentielle — amoxicilline 1 g × 2/j pendant 5 jours, puis clarithromycine 500 mg × 2/j + métronidazole 500 mg × 2/j pendant 5 jours.",
+          "correctionGenerale": "<b>Ulcère à Helicobacter pylori : thérapie séquentielle</b>\n• IPP double dose pendant 10 jours, associé à :\n• Antibiothérapie séquentielle :\n  – Amoxicilline 1 g × 2/j pendant 5 jours, puis\n  – Clarithromycine 500 mg × 2/j + métronidazole 500 mg × 2/j pendant 5 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 — Question 1</b>\n\nUne femme de 82 ans présente depuis 48 heures des douleurs rachidiennes importantes avec impossibilité de se lever, un ralentissement idéomoteur, une asthénie et des crampes des membres inférieurs.\n\nAntécédents et traitements : HTA sous inhibiteur calcique ; AINS et IPP depuis 4 jours.\n\nBiologie : anémie qui s’est majorée, insuffisance rénale chronique avec acutisation, CRP discrètement augmentée.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une insuffisance rénale aiguë sur insuffisance rénale chronique.",
+          "correctionGenerale": "• <b>Insuffisance rénale aiguë sur insuffisance rénale chronique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 — Question 2</b>\n\nQuels facteurs déclenchants retenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Les AINS et la déshydratation, liée à l’impossibilité de se lever.",
+          "correctionGenerale": "• <b>AINS</b>\n• <b>Déshydratation</b>, du fait de l’impossibilité de se lever"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 — Question 3</b>\n\nQuels examens complémentaires demandez-vous devant les douleurs rachidiennes ?",
+          "images": [],
+          "reponseAttendue": "Une calcémie à la recherche d’une hypercalcémie, et une IRM du rachis en séquences T1, T2 et T1 après injection de gadolinium.",
+          "correctionGenerale": "• Recherche d’une <b>hypercalcémie</b>\n• <b>IRM du rachis</b>, séquences T1, T2, T1 + gadolinium"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 — Question 4</b>\n\nQuelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "L’arrêt des AINS avec contre-indication définitive, et la réhydratation.",
+          "correctionGenerale": "• <b>Arrêt des AINS</b> et contre-indication définitive\n• <b>Réhydratation</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Question 1</b>\n\nUn homme de 80 ans présente une maladie d’Alzheimer sévère depuis 10 ans et un cancer de la prostate avec métastases osseuses. Il est traité par morphine à libération prolongée.\n\nQuels traitements associez-vous à la morphine ?",
+          "images": [],
+          "reponseAttendue": "Des antalgiques de palier 1 (épargne morphinique) et des laxatifs.",
+          "correctionGenerale": "• <b>Antalgiques de palier 1</b> (épargne morphinique)\n• <b>Laxatifs</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Questions 2 et 3</b>\n\nLe patient reçoit 200 mg par jour de morphine à libération prolongée. Que pensez-vous de la posologie d’interdose proposée ?",
+          "images": [],
+          "reponseAttendue": "Une interdose doit correspondre à 1/6 de la dose quotidienne de forme à libération prolongée, soit ici 200/6 ≈ 33 mg per os. La posologie d’interdose proposée est donc trop faible.",
+          "correctionGenerale": "• Une interdose doit correspondre à <b>1/6 de la dose quotidienne en libération prolongée</b>, soit ici 200/6 ≈ <b>33 mg per os</b>\n• La posologie d’interdose proposée est donc <b>trop faible</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Question 4</b>\n\nQuelles échelles utilisez-vous pour évaluer la douleur chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Les échelles DOLOPLUS et ALGOPLUS.",
+          "correctionGenerale": "• <b>DOLOPLUS</b>\n• <b>ALGOPLUS</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Question 5</b>\n\nDevant une aggravation de l’agitation, quelles causes recherchez-vous en priorité ?",
+          "images": [],
+          "reponseAttendue": "Un globe vésical et un fécalome.",
+          "correctionGenerale": "• <b>Globe vésical</b>\n• <b>Fécalome</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Question 6</b>\n\nQuelle anomalie métabolique recherchez-vous, compte tenu des métastases osseuses ?",
+          "images": [],
+          "reponseAttendue": "Une hypercalcémie.",
+          "correctionGenerale": "• <b>Hypercalcémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 — Question 7</b>\n\nVous devez passer à la voie sous-cutanée. Quelle dose prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "1 mg de morphine per os équivaut à 0,5 mg de morphine sous-cutanée : une dose de 200 mg/24 h per os correspondra donc à 100 mg/24 h en sous-cutané.",
+          "correctionGenerale": "• 1 mg de morphine per os = <b>0,5 mg de morphine SC</b>\n• Donc, ici, une dose de 200 mg/24 h per os correspondra à une dose de <b>100 mg/24 h SC</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 7 — Question 1</b>\n\nUn homme de 83 ans est hospitalisé pour bilan de chute. Antécédents et traitements : HTA sous ARA2, hypertrophie bénigne de prostate sous alpha-bloquant. Pas d’atteinte traumatique en dehors d’une contusion frontale. Le TDM cérébral est sans anomalie. L’ECG montre une fibrillation atriale.\n\nQuelle est votre prise en charge de cette fibrillation atriale ?",
+          "images": [],
+          "reponseAttendue": "En fonction de la fréquence cardiaque, ralentir le cœur pour obtenir un rythme entre 80 et 110 bpm, par bêtabloquants en première intention en l’absence de contre-indication ; une anticoagulation, le score CHA₂DS₂-VASc étant ici > 3 — d’abord héparine, puis AVK avec objectif d’INR entre 2 et 3, à maintenir à vie ; puis discuter une cardioversion selon la tolérance.",
+          "correctionGenerale": "• En fonction de la fréquence cardiaque, <b>ralentir le cœur</b> pour obtenir un rythme de 80-110 bpm (bêtabloquants en première intention en l’absence de contre-indication)\n• <b>Anticoagulation</b> (CHA₂DS₂-VASc ici > 3) : d’abord héparine, puis AVK avec objectif d’INR entre 2 et 3, à maintenir à vie\n• Puis discuter une <b>cardioversion</b> en fonction de la tolérance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 7 — Question 2</b>\n\nQuelles étiologies de fibrillation atriale recherchez-vous chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "L’HTA (traitée par valsartan) et une valvulopathie. À noter que l’alfuzosine peut, à une fréquence indéterminée (très rare selon le Vidal), être responsable d’une fibrillation atriale.",
+          "correctionGenerale": "• <b>HTA</b> (traitement par valsartan)\n• <b>Valvulopathie</b>\n\n<i>NB : l’alfuzosine peut, à une fréquence indéterminée (très rare selon le Vidal), être responsable d’une fibrillation atriale.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 7 — Question 3</b>\n\nDevant la répétition des chutes, que décidez-vous concernant l’anticoagulation ?",
+          "images": [],
+          "reponseAttendue": "L’arrêt des anticoagulants, car le risque hémorragique devient supérieur au risque embolique : le rapport bénéfice-risque est défavorable aux anticoagulants.",
+          "correctionGenerale": "• <b>Arrêt des anticoagulants</b>, car le risque hémorragique devient supérieur au risque embolique (rapport bénéfice-risque défavorable aux anticoagulants)"
+        }
+      ]
+    }
+  ]
+}

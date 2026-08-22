@@ -1,0 +1,284 @@
+{
+  "sources": {
+    "ANNALES MG/PAE 2012.pdf": {
+      "atelier": "annales-mg/pae-2012",
+      "sujetOfficiel": "Annales/Sujets/evcf_2012/EVCF.71.DOC (EVCF uniquement)",
+      "figuresIgnorees": {},
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2012 (EVCF : 6 parties ; EVCP : 2 dossiers). Les énoncés et la numérotation officielle de l’EVCF ont été restitués à partir du sujet du dépôt (EVCF.71.DOC de 2012). Le sujet officiel de l’EVCP 2012 n’est pas présent dans le dépôt : les énoncés de cette épreuve sont reconstitués à partir du corrigé, qui n’en donne qu’un résumé — ils sont donc plus succincts que l’énoncé original."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2012 - EVCF",
+      "annee": 2012,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE 2012.pdf",
+      "orderIndex": 112,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2012.</b>\n\nChaque question rappelle l’énoncé de la partie à laquelle elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 : hématologie — Question 1</b>\n\nUne femme de 34 ans se présente en consultation avec l’hémogramme suivant :\n• Globules rouges : 3,9 millions/mm³\n• Hémoglobine : 8 g/dL\n• VGM : 68 fL\n• Hématocrite : 27 %\n• Plaquettes : 510 000/mm³\n• Globules blancs : 6 300/mm³ — PNN 62 %, PNE 2 %, PNB 0, lymphocytes 28 %, monocytes 8 %\n\nDécrivez les anomalies de l’hémogramme.",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire (Hb 8 g/dL, VGM 68 fL) et une thrombocytose (510 000/mm³), avec un nombre d’hématies et un hématocrite diminués. La formule leucocytaire est normale.",
+          "correctionGenerale": "• <b>Anémie microcytaire</b> (Hb à 8 g/dL, VGM à 68 fL)\n• <b>Thrombocytose</b> (plaquettes à 510 000/mm³)\n• Hématocrite diminué, nombre d’hématies diminué\n• Leucocytes et formule leucocytaire normaux (PNN 3906/mm³, PNE 126/mm³, lymphocytes 1764/mm³, monocytes 504/mm³)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 : hématologie — Question 2</b>\n\nConcernant la lignée érythrocytaire, citez les 2 mécanismes physiopathologiques principaux envisageables.",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire par carence martiale et une anémie microcytaire secondaire à une inflammation chronique.",
+          "correctionGenerale": "• <b>Anémie microcytaire par carence martiale</b>\n• <b>Anémie microcytaire secondaire à une inflammation chronique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 : hématologie — Question 3</b>\n\nQuel est l’examen biologique courant le plus adapté pour faire un premier tri entre ces mécanismes ? (Une seule réponse.)",
+          "images": [],
+          "reponseAttendue": "La ferritinémie.",
+          "correctionGenerale": "• <b>Ferritine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 1 : hématologie — Question 4</b>\n\nQuel est le résultat attendu de cet examen pour chacun des 2 mécanismes ?",
+          "images": [],
+          "reponseAttendue": "Dans l’anémie par carence martiale, la ferritine est diminuée. Dans l’anémie secondaire à une inflammation chronique, la ferritine est augmentée.",
+          "correctionGenerale": "• <b>Anémie par carence martiale</b> : ferritine diminuée\n• <b>Anémie secondaire à une inflammation chronique</b> : ferritine augmentée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2 : cardio-vasculaire — Question 1</b>\n\nVous êtes appelé au domicile de M. G., 65 ans, 1 m 78, 95 kg, hypertendu traité, tabagique chronique, pour une violente douleur de la jambe gauche survenue 4 heures auparavant et persistant depuis. À votre arrivée, vous notez une jambe gauche blanche et froide.\n\nQuelle est votre principale hypothèse diagnostique ? (Sans détailler.)",
+          "images": [],
+          "reponseAttendue": "Une ischémie aiguë du membre inférieur gauche.",
+          "correctionGenerale": "• <b>Ischémie aiguë du membre inférieur gauche</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2 : cardio-vasculaire — Question 2</b>\n\nTenant compte de votre hypothèse, quels sont les 3 signes cliniques que vous devez rechercher à ce stade sur ce membre inférieur gauche ?",
+          "images": [],
+          "reponseAttendue": "La recherche des pouls, la localisation de la froideur et de l’abolition des pouls, et la recherche d’un déficit sensitif et moteur.",
+          "correctionGenerale": "• <b>Recherche des pouls</b>\n• <b>Localisation de la froideur et de l’abolition des pouls</b>\n• <b>Recherche d’un déficit sensitif et d’un déficit moteur</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2 : cardio-vasculaire — Question 3</b>\n\nCes 3 signes vont vous apporter des renseignements importants pour votre prise en charge thérapeutique. Quels sont ces 3 renseignements ?",
+          "images": [],
+          "reponseAttendue": "La recherche des pouls apporte la confirmation diagnostique ; la localisation de la froideur et de l’abolition des pouls donne la topographie de l’occlusion ; la recherche des déficits sensitif et moteur permet d’évaluer la sévérité.",
+          "correctionGenerale": "• Recherche des pouls → <b>confirmation diagnostique</b>\n• Localisation de la froideur et de l’abolition des pouls → <b>topographie de l’occlusion</b>\n• Recherche des déficits sensitif et moteur → <b>évaluation de la sévérité</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 2 : cardio-vasculaire — Question 4</b>\n\nQuels sont les 2 grands mécanismes physiopathologiques que vous devez évoquer de principe pour expliquer la symptomatologie aiguë présentée par M. G. ? (Sans détailler.)",
+          "images": [],
+          "reponseAttendue": "Une thrombose artérielle in situ et une embolie sur artère saine.",
+          "correctionGenerale": "• <b>Thrombose artérielle in situ</b>\n• <b>Embolie sur artère saine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 : polypathologie du sujet âgé — Question 1</b>\n\nPatiente de 85 ans adressée aux urgences après une chute (retrouvée sur le sol par sa voisine) et confuse.\n\nAntécédents : HTA, diabète de type II, ostéoporose, AC/FA.\nConditions de vie : veuve depuis 3 mois, vit seule, autonome auparavant.\nTraitement : warfarine (Coumadine®) ; bêtabloquant Cardensiel® 2,5 mg, 1 cp/jour ; Diamicron® 60 LM, 1 cp le matin ; Amlor® (amlodipine) 5 mg, 1 cp/jour ; Contramal® LP (tramadol) 2 cp/jour ; Lexomil® ½ cp le soir depuis quelques jours.\nBilan biologique : glycémie 0,70 g/L, Na 147 mmol/L, K 4 mmol/L, créatinine 120 µmol/L, urée 15 mmol/L, INR 2,10.\n\nCitez 5 mécanismes favorisant ou précipitant la chute chez cette patiente.",
+          "images": [],
+          "reponseAttendue": "Le sexe féminin, l’âge > 80 ans, la fibrillation atriale, le traitement antihypertenseur (inhibiteur calcique), la polymédication (plus de 4 médicaments), le traitement par benzodiazépine, et accessoirement la confusion et la déshydratation intracellulaire (hypernatrémie).",
+          "correctionGenerale": "• <b>Sexe féminin</b>\n• <b>Âge > 80 ans</b>\n• <b>Fibrillation atriale</b>\n• <b>Traitement antihypertenseur</b> (inhibiteur calcique)\n• <b>Polymédication</b> (plus de 4 médicaments)\n• <b>Traitement par benzodiazépine</b>\n• Et accessoirement : confusion ; déshydratation intracellulaire (hypernatrémie à 147 mmol/L)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 : polypathologie du sujet âgé — Question 2</b>\n\nCitez les 5 caractéristiques principales du syndrome confusionnel.",
+          "images": [],
+          "reponseAttendue": "L’apparition brutale ; d’importantes fluctuations dans le temps ; un déficit attentionnel (absence de réponse aux questions ou réponses à côté, regard dans le vide, distractibilité ou hyporéactivité aux stimuli) ; une désorientation temporo-spatiale (perplexité, fausses réponses) ; une altération du fonctionnement cognitif — désorganisation intellectuelle (discours diffluent, sans suite logique, logorrhée ou quasi-mutisme), troubles de la mémoire antérograde et rétrograde, troubles moteurs (agitation, apathie, stupeur, mutisme), pseudo-délire onirique, troubles du sommeil avec inversion du rythme nycthéméral et somnolence fluctuante.",
+          "correctionGenerale": "• <b>Apparition brutale</b>\n• <b>Importantes fluctuations dans le temps</b>\n• <b>Déficit attentionnel</b> : absence de réponse aux questions ou réponses à côté, regard dans le vide, distractibilité ou hyporéactivité aux stimuli\n• <b>Désorientation temporo-spatiale</b> : perplexité, fausses réponses\n• <b>Altération du fonctionnement cognitif</b> :\n  – Désorganisation intellectuelle : discours diffluent, sans suite logique ; logorrhée ou quasi-mutisme\n  – Troubles de la mémoire antérograde et rétrograde\n  – Troubles moteurs : agitation, apathie ou stupeur, mutisme\n  – Pseudo-délire onirique\n  – Troubles du sommeil : inversion du rythme nycthéméral, somnolence fluctuante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 3 : polypathologie du sujet âgé — Question 3</b>\n\nCitez 5 causes possibles de l’insuffisance rénale chez cette patiente.",
+          "images": [],
+          "reponseAttendue": "Une insuffisance rénale chronique liée à l’HTA (néphropathie hypertensive) ; une insuffisance rénale chronique liée au diabète (néphropathie diabétique) ; une insuffisance rénale aiguë fonctionnelle ; une insuffisance rénale aiguë par nécrose tubulaire aiguë ; une insuffisance rénale obstructive.",
+          "correctionGenerale": "• <b>Insuffisance rénale chronique liée à l’HTA</b> (néphropathie hypertensive)\n• <b>Insuffisance rénale chronique liée au diabète</b> (néphropathie diabétique)\n• <b>Insuffisance rénale aiguë fonctionnelle</b>\n• <b>Insuffisance rénale aiguë par nécrose tubulaire aiguë</b>\n• <b>Insuffisance rénale obstructive</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 : rhumatologie — Question 1</b>\n\nUne patiente âgée de 55 ans consulte pour des lombalgies évoluant depuis 9 semaines. Il existe un syndrome rachidien à l’examen clinique.\n\nCitez les 5 principaux diagnostics que vous devez évoquer.",
+          "images": [],
+          "reponseAttendue": "Une lombalgie chronique mécanique, c’est-à-dire une lombalgie commune discale ; et des lombalgies chroniques inflammatoires : spondylodiscite subaiguë ou chronique, métastase vertébrale, spondylarthrite, myélome.",
+          "correctionGenerale": "<b>Lombalgie chronique mécanique</b>\n• Lombalgie commune discale\n\n<b>Lombalgies chroniques inflammatoires</b>\n• Spondylodiscite subaiguë ou chronique\n• Métastase vertébrale\n• Spondylarthrite\n• Myélome"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 : rhumatologie — Question 2</b>\n\nCitez les 3 signes cliniques qui imposent une prise en charge en urgence.",
+          "images": [],
+          "reponseAttendue": "La fièvre, l’altération de l’état général et les signes de souffrance médullaire.",
+          "correctionGenerale": "• <b>Fièvre</b>\n• <b>Altération de l’état général</b>\n• <b>Signes de souffrance médullaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 4 : rhumatologie — Question 3</b>\n\nEn dehors de l’urgence, citez les 4 examens paracliniques contribuant au diagnostic étiologique.",
+          "images": [],
+          "reponseAttendue": "Des radiographies du rachis de face, de profil et éventuellement de 3/4 ; une IRM du rachis en séquences T1, T2 et T1 après injection de gadolinium ; la recherche d’un syndrome inflammatoire (NFS-plaquettes, CRP) ; et des hémocultures en cas de fièvre.",
+          "correctionGenerale": "• <b>Radiographies du rachis</b> de face, de profil ± 3/4\n• <b>IRM du rachis</b> : T1, T2, T1 après injection de gadolinium\n• <b>Recherche d’un syndrome inflammatoire</b> : NFS-plaquettes, CRP\n• <b>Hémocultures</b> si fièvre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 : infectiologie — Question 1</b>\n\nVous accueillez un patient âgé de 42 ans, se plaignant d’une toux traînante dans un contexte d’asthénie et d’amaigrissement. Il est fébrile depuis 3 semaines environ. Ce patient, originaire d’Ukraine, vit en France depuis 3 ans avec sa famille dans des conditions précaires. Sa radiographie du thorax retrouve un infiltrat du lobe supérieur gauche.\n\nQuel est le diagnostic le plus probable ? (Un seul diagnostic.)",
+          "images": [],
+          "reponseAttendue": "Une tuberculose.",
+          "correctionGenerale": "• <b>Tuberculose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 : infectiologie — Question 2</b>\n\nQuelles mesures immédiates mettez-vous en œuvre dans la prise en charge de ce patient ?",
+          "images": [],
+          "reponseAttendue": "L’hospitalisation, l’isolement respiratoire et la déclaration au CLAT.",
+          "correctionGenerale": "• <b>Hospitalisation</b>\n• <b>Isolement respiratoire</b>\n• Déclaration au CLAT (centre de lutte antituberculeuse)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 : infectiologie — Question 3</b>\n\nQuelles sont les techniques microbiologiques permettant d’établir le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Le prélèvement : en première intention, en cas de toux avec expectorations, un ECBC ; en l’absence d’expectoration ou en cas d’échec, un tubage gastrique le matin à jeun avant le premier lever ; en cas de nouvel échec, une fibroscopie bronchique avec lavage broncho-alvéolaire. L’analyse microbiologique : examen direct après coloration de Ziehl-Neelsen ; culture sur milieu solide de Löwenstein-Jensen ou en milieu liquide ; identification du micro-organisme (BAAR) ; antibiogramme.",
+          "correctionGenerale": "<b>Prélèvement</b>\n• En première intention, si toux avec expectorations : ECBC\n• Si pas d’expectoration ou échec : tubage gastrique le matin à jeun, avant le premier lever\n• Si échec : fibroscopie bronchique avec lavage broncho-alvéolaire\n\n<b>Analyse microbiologique des prélèvements</b>\n• Examen direct après coloration de Ziehl-Neelsen\n• Culture : milieu solide de Löwenstein-Jensen ou milieu liquide\n• Identification du micro-organisme (BAAR)\n• Antibiogramme"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 5 : infectiologie — Question 4</b>\n\nQuelle maladie associée devez-vous rechercher, et quel examen supplémentaire demandez-vous ? (Un seul.)",
+          "images": [],
+          "reponseAttendue": "Une infection par le VIH, à rechercher par une sérologie VIH.",
+          "correctionGenerale": "• Recherche d’une <b>infection par le VIH</b> par <b>sérologie VIH</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 : digestif — Question 1</b>\n\nUn homme de 50 ans, travaillant dans le bâtiment, se présente avec des douleurs abdominales aiguës épigastriques transfixiantes. Il est amené aux urgences par le SMUR. L’inspection montre un patient allongé, pâle, parlant difficilement. Le patient est fumeur chronique (25 paquets-années) et déclare avoir majoré récemment sa consommation d’alcool en raison de soucis familiaux et professionnels. Il n’a pas d’antécédent particulier en dehors de céphalées assez fréquentes.\n\nQuelles sont les 4 principales causes de la douleur que vous devez évoquer en urgence chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Une pancréatite aiguë, un ulcère gastro-duodénal, un infarctus du myocarde inférieur et une dissection aortique.",
+          "correctionGenerale": "• <b>Pancréatite aiguë</b>\n• <b>Ulcère gastro-duodénal</b>\n• <b>IDM inférieur</b>\n• <b>Dissection aortique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 : digestif — Question 2</b>\n\nÉnumérez les signes habituels d’un état de choc.",
+          "images": [],
+          "reponseAttendue": "Une hypotension avec PAS < 90 mmHg (ou une chute de plus de 30 mmHg) avec pression artérielle différentielle pincée et collapsus des veines superficielles ; une tachycardie > 120/min avec pouls filant et tachypnée ; une diminution du débit sanguin cutané (froideur et cyanose des extrémités, des lobes des oreilles et de l’extrémité du nez, pâleur, marbrures surtout aux genoux, peau moite, sueurs, temps de recoloration cutanée > 3 s) ; une confusion mentale, une obnubilation ou une prostration (réduction du débit cérébral) ; une oligurie < 0,5 mL/kg/h à confirmer par sondage vésical (redistribution du débit cardiaque) ; des signes de détresse respiratoire.",
+          "correctionGenerale": "• <b>Hypotension</b> avec PAS < 90 mmHg (ou chute > 30 mmHg), avec pression artérielle différentielle pincée et collapsus des veines superficielles\n• <b>Tachycardie > 120/min</b> avec pouls filant, et tachypnée\n• <b>Diminution du débit sanguin cutané</b> :\n  – Froideur et cyanose des extrémités, des lobes des oreilles et de l’extrémité du nez\n  – Pâleur\n  – Marbrures (aux genoux surtout)\n  – Peau moite, sueurs\n  – Temps de recoloration cutanée > 3 secondes\n• <b>Confusion mentale, obnubilation, prostration</b> (réduction du débit cérébral)\n• <b>Oligurie < 0,5 mL/kg/h</b>, à confirmer par sondage vésical (redistribution du débit cardiaque)\n• <b>Signes de détresse respiratoire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Partie 6 : digestif — Question 3</b>\n\nÉnumérez les signes habituels d’une irritation péritonéale.",
+          "images": [],
+          "reponseAttendue": "La douleur abdominale, la défense abdominale, la contracture, la douleur du cul-de-sac de Douglas au toucher rectal, les signes de Rovsing et de Blumberg, et l’iléus fonctionnel.",
+          "correctionGenerale": "• <b>Douleur abdominale</b>\n• <b>Défense abdominale</b>\n• <b>Contracture</b>\n• <b>Douleur du cul-de-sac de Douglas au toucher rectal</b>\n• <b>Signes de Rovsing et de Blumberg</b>\n• <b>Iléus fonctionnel</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2012 - EVCP",
+      "annee": 2012,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE 2012.pdf",
+      "orderIndex": 113,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2012.</b>\n\nLe sujet officiel n’étant pas disponible dans le dépôt, les énoncés ci-dessous sont reconstitués à partir du corrigé et sont donc plus succincts que l’énoncé original.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 1</b>\n\nUne femme de 75 ans se présente pour une altération de l’état général, de la fièvre, des céphalées temporales, des douleurs articulaires des épaules et une claudication intermittente de la mâchoire.\n\nAntécédents et mode de vie : diabète de type 2 sous biguanides, hystérectomie et ovariectomie, chute dans l’année précédente, tabagisme actif. Poids 86 kg pour 1 m 60, soit un IMC à 33 (obésité de grade 1). La pression artérielle est normale.\n\nBiologie : hyperleucocytose à polynucléaires neutrophiles ; VS et CRP augmentées (syndrome inflammatoire) ; cholestase hépatique.\n\nQuels signes recherchez-vous à l’interrogatoire et à l’examen clinique ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : la recherche de complications oculaires (cécité transitoire ou définitive) et d’une hyperesthésie du cuir chevelu. À l’examen clinique : une induration des artères temporales, avec ou sans abolition du pouls temporal.",
+          "correctionGenerale": "<b>Signes à l’interrogatoire</b>\n• Recherche de complications oculaires : cécité transitoire ou définitive\n• Hyperesthésie du cuir chevelu\n\n<b>Signe clinique</b>\n• Induration des artères temporales, ± abolition du pouls temporal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 2</b>\n\nQuelles complications ophtalmologiques redoutez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’occlusion de l’artère centrale de la rétine (OACR) et la neuropathie optique ischémique antérieure aiguë (NOIAA). À noter que la névrite optique rétrobulbaire est, elle, responsable d’une baisse d’acuité visuelle douloureuse.",
+          "correctionGenerale": "• <b>Occlusion de l’artère centrale de la rétine (OACR)</b>\n• <b>Neuropathie optique ischémique antérieure aiguë (NOIAA)</b>\n\n<i>NB : la névrite optique rétrobulbaire (NORB) est responsable d’une baisse d’acuité visuelle douloureuse.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 3</b>\n\nUn mois après la mise en route de la corticothérapie, la patiente présente une soif, une asthénie et une obnubilation.\n\nExamen physique : pli cutané (déshydratation extracellulaire), muqueuse buccale sèche (déshydratation intracellulaire). Constantes : pression artérielle basse, tachycardie, ± polypnée.\n\nBiologie : glycémie 46 mmol/L (soit environ 8 g/L), natrémie 135 mmol/L mais natrémie corrigée par la glycémie à 147 mmol/L (déshydratation intracellulaire), insuffisance rénale, bandelette urinaire +++ pour le glucose.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un coma hyperosmolaire, secondaire à la décompensation du diabète de type 2 par la corticothérapie.",
+          "correctionGenerale": "• <b>Coma hyperosmolaire</b>, suite à la décompensation du diabète de type 2 par la corticothérapie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 4</b>\n\nLa patiente présente ensuite une violente douleur de la fesse droite avec des lésions érythémato-vésiculeuses disposées sur un métamère.\n\nDe quoi s’agit-il et que proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un zona, favorisé par la corticothérapie au long cours (effet immunosuppresseur). Aucune molécule ne guérit la maladie elle-même, mais l’aciclovir ou le valaciclovir prescrit dans les 72 heures suivant le début des symptômes permet de diminuer le risque de douleurs post-zostériennes.",
+          "correctionGenerale": "• Violente douleur de la fesse droite avec lésions érythémato-vésiculeuses sur un métamère = <b>zona</b>, favorisé par la corticothérapie au long cours (effet immunosuppresseur)\n• Aucune molécule ne guérira la maladie en elle-même, mais l’<b>aciclovir ou le valaciclovir</b> prescrit moins de 72 heures après le début des symptômes permettra de diminuer le risque de douleurs post-zostériennes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 5</b>\n\nQuelle complication redoutez-vous à distance ?",
+          "images": [],
+          "reponseAttendue": "Les douleurs post-zostériennes.",
+          "correctionGenerale": "• <b>Douleurs post-zostériennes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 6</b>\n\nLa corticothérapie doit-elle être interrompue ?",
+          "images": [],
+          "reponseAttendue": "Non.",
+          "correctionGenerale": "• <b>Non</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 7</b>\n\nQuelles vaccinations proposez-vous à cette patiente ?",
+          "images": [],
+          "reponseAttendue": "La vaccination antigrippale une fois par an et la vaccination antipneumococcique tous les 5 ans.",
+          "correctionGenerale": "• <b>Vaccination antigrippale</b> : 1/an\n• <b>Vaccination antipneumococcique</b> : 1 tous les 5 ans"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 1 — Question 8</b>\n\nQuelles mesures d’accompagnement de la corticothérapie au long cours mettez-vous en place ?",
+          "images": [],
+          "reponseAttendue": "Des mesures hygiéno-diététiques (restriction ou suppression des sucres d’absorption rapide, limitation des apports sodés et supplémentation potassique selon la dose et le type de corticoïdes, régime enrichi en laitages et protides, activité physique régulière) ; la prévention de la déperdition osseuse (apport calcique suffisant et 800 UI de vitamine D par jour, association de bisphosphonates si la corticothérapie est prolongée au-delà de 3 mois à une dose > 7,5 mg/jour d’équivalent prednisone) ; des mesures spécifiques (modification du traitement du diabète connu, avec majoration des besoins en insuline) ; et une surveillance (dépistage des infections, poids, TA, œdèmes périphériques, signes cliniques d’insuffisance cardiaque, biologie avec exploration des anomalies lipidiques, glycémie et glycosurie, ostéodensitométrie si corticothérapie > 3 mois à dose > 7,5 mg/jour, mesure de la pression intra-oculaire du fait du risque de glaucome chronique).",
+          "correctionGenerale": "<b>Mesures hygiéno-diététiques</b>\n• Restriction ou suppression des sucres d’absorption rapide\n• Limitation des apports sodés et supplémentation potassique (selon la dose et le type de corticoïdes)\n• Régime enrichi en laitages et protides\n• Activité physique régulière\n\n<b>Prévention de la déperdition osseuse</b>\n• Apport calcique suffisant + 800 UI de vitamine D/jour\n• Association de bisphosphonates lorsque la corticothérapie est prolongée au-delà de 3 mois à une dose > 7,5 mg/jour d’équivalent prednisone\n\n<b>Mesures plus spécifiques</b>\n• Modification du traitement du diabète connu (majoration des besoins en insuline)\n\n<b>Surveillance</b>\n• Dépistage des infections\n• Poids\n• Tension artérielle\n• Œdèmes périphériques\n• Signes cliniques d’insuffisance cardiaque\n• Biologie : exploration des anomalies lipidiques, glycémie et glycosurie\n• Ostéodensitométrie si corticothérapie > 3 mois à une dose > 7,5 mg/jour\n• Pression intra-oculaire (risque de glaucome chronique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 1</b>\n\nUn homme de 65 ans se présente aux urgences pour une altération de l’état général et des crachats hémoptoïques, puis une hémoptysie d’un demi-verre (soit environ 50 mL).\n\nAntécédents, traitements et mode de vie : consommation d’alcool importante, tabagisme d’environ 20 paquets-années, primo-infection tuberculeuse à 10 ans, cardiopathie ischémique stentée traitée par aspirine, statine et bêtabloquant.\n\nClinique : râles bronchiques droits, fébricule, pression artérielle à la limite de la normale, fréquence cardiaque normale.\n\nCette hémoptysie est-elle grave ?",
+          "images": [],
+          "reponseAttendue": "Non. Le patient n’étant pas en insuffisance respiratoire chronique, le seuil définissant une hémoptysie grave est de 200 mL de sang par heure ; or il a expectoré un demi-verre, soit 50 mL : l’hémoptysie n’est donc pas grave.",
+          "correctionGenerale": "• Le patient n’est pas en insuffisance respiratoire chronique : le seuil pour parler d’<b>hémoptysie grave</b> est de <b>200 mL de sang par heure</b>\n• Or, ici, le patient a expectoré un demi-verre, soit 50 mL : <b>l’hémoptysie n’est donc pas grave</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 2</b>\n\nQuels éléments feraient parler d’hémoptysie grave chez un autre patient ?",
+          "images": [],
+          "reponseAttendue": "Un terrain d’insuffisance respiratoire chronique et la répétition des épisodes dans les 24 heures.",
+          "correctionGenerale": "• <b>Terrain d’insuffisance respiratoire chronique</b>\n• <b>Répétition des épisodes dans les 24 heures</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 3</b>\n\nQuels diagnostics évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une tuberculose maladie, un aspergillome sur caverne tuberculeuse et une néoplasie pulmonaire.",
+          "correctionGenerale": "• <b>Tuberculose maladie</b>\n• <b>Aspergillome sur caverne tuberculeuse</b>\n• <b>Néoplasie pulmonaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 4</b>\n\nLa radiographie thoracique montre une opacité parenchymateuse para-hilaire droite à contours flous.\n\nQuels examens complémentaires demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un scanner thoracique injecté et une fibroscopie bronchique.",
+          "correctionGenerale": "• <b>Scanner thoracique injecté</b>\n• <b>Fibroscopie bronchique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 5</b>\n\nQuelle est votre prise en charge de l’hémoptysie ?",
+          "images": [],
+          "reponseAttendue": "L’isolement respiratoire ; une oxygénothérapie avec objectif de SpO₂ > 90 % ; la protection des voies aériennes par mise en décubitus latéral du côté droit ; une embolisation artérielle bronchique ; un traitement endobronchique si le saignement est toujours présent lors de la fibroscopie bronchique, par injection d’adrénaline, de terlipressine ou de sérum glacé dans les bronches via le canal opérateur du fibroscope. À noter que les agents vasoconstricteurs intraveineux de type terlipressine sont ici contre-indiqués du fait de la cardiopathie ischémique.",
+          "correctionGenerale": "• <b>Isolement respiratoire</b>\n• <b>Oxygénothérapie</b> avec objectif de SpO₂ > 90 %\n• <b>Protection des voies aériennes</b> : mise en décubitus latéral du côté droit\n• <b>Embolisation artérielle bronchique (EAB)</b>\n• Traitement endobronchique si le saignement est toujours présent lors de la fibroscopie bronchique : injection par le canal opérateur du fibroscope d’adrénaline, de terlipressine ou de sérum glacé dans les bronches\n\n<i>NB : ici, les agents vasoconstricteurs intraveineux de type terlipressine sont contre-indiqués du fait de la cardiopathie ischémique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 6</b>\n\nLe patient présente un syndrome confusionnel sans récidive d’hémoptysie, avec un examen neurologique normal.\n\nQuelles hypothèses évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un delirium tremens, une ivresse alcoolique et une méningite tuberculeuse.",
+          "correctionGenerale": "• <b>Delirium tremens</b>\n• <b>Ivresse alcoolique</b>\n• <b>Méningite tuberculeuse</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Dossier 2 — Question 7</b>\n\nLe diagnostic de tuberculose maladie est retenu. Quelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "L’isolement respiratoire ; un bilan pré-thérapeutique (NFS-plaquettes, bilan hépatique, créatinine, natrémie, uricémie, examen ophtalmologique avec champ visuel, vision des couleurs et fond d’œil, sérologies VIH, VHB et VHC) ; une quadrithérapie antituberculeuse associant isoniazide, rifampicine, éthambutol et pyrazinamide pendant 2 mois, puis isoniazide et rifampicine pendant 4 mois ; une supplémentation en vitamine B6 ; l’information du patient, notamment sur la coloration orange des sécrétions liée à la rifampicine ; la déclaration obligatoire avec notification anonyme à l’ARS et à l’InVS et signalement nominatif urgent dans les 48 heures au CLAT ; et une demande de prise en charge à 100 % au titre de l’ALD, pour 2 ans.",
+          "correctionGenerale": "• <b>Isolement respiratoire</b>\n\n<b>Bilan pré-thérapeutique</b>\n• NFS-plaquettes\n• Bilan hépatique\n• Créatinine\n• Natrémie\n• Uricémie\n• Examen ophtalmologique avec champ visuel, vision des couleurs et fond d’œil\n• Sérologies VIH, VHB, VHC\n\n<b>Thérapie antituberculeuse</b>\n• Association isoniazide + rifampicine + éthambutol + pyrazinamide pendant 2 mois, puis\n• Association isoniazide + rifampicine pendant 4 mois\n\n• <b>Supplémentation en vitamine B6</b>\n• <b>Information du patient</b>, en le prévenant notamment de la coloration orange des sécrétions liée à la rifampicine\n• <b>Déclaration obligatoire</b> avec notification anonyme à l’ARS et à l’InVS, et signalement nominatif urgent dans les 48 h au CLAT\n• <b>Demande de prise en charge à 100 % au titre de l’ALD</b> : ALD pour 2 ans"
+        }
+      ]
+    }
+  ]
+}

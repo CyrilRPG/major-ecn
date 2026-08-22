@@ -204,9 +204,21 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
 
       const mgChildren = (mg.children ?? []).map((ch) => ({ ...ch }));
 
+      // Médecine générale porte aussi des cours DIRECTS (les annales EVC de MG).
+      // Sans ce sous-collège, ils disparaîtraient pour les élèves gériatrie,
+      // puisque seuls `mg.children` étaient réattachés.
+      const mgSub: NavCollege = {
+        id: 'col-medecine-generale-main',
+        nom: mg.nom,
+        iconKey: mg.iconKey,
+        colorHex: mg.colorHex,
+        cours: mg.cours,
+      };
+
       ger.cours = [];
       ger.children = [
         ...(gerSub.cours.length > 0 ? [gerSub] : []),
+        ...(mgSub.cours.length > 0 ? [mgSub] : []),
         ...mgChildren,
       ];
 

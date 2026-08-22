@@ -1799,44 +1799,49 @@
           "multiAnnales": false
         },
         {
-          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n8_sent.pdf",
-          "pages": 132,
-          "caracteres": 23686,
-          "annales": [
-            {
-              "type": "EVCP",
-              "annee": 2018,
-              "occurrences": 19,
-              "typeIncertain": false,
-              "sujetOfficiel": "compilation",
-              "dansLeNom": false
-            }
-          ],
-          "sujetsNumerotes": [
-            1
-          ],
-          "multiAnnales": false
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_1_PAE_Formation_pneumo_23042025 copie.pdf",
+          "pages": 110,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
         },
         {
-          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
-          "pages": 119,
-          "caracteres": 27013,
-          "annales": [
-            {
-              "type": "EVCP",
-              "annee": 2018,
-              "occurrences": 43,
-              "typeIncertain": false,
-              "sujetOfficiel": "compilation",
-              "dansLeNom": false
-            }
-          ],
-          "sujetsNumerotes": [
-            1,
-            2,
-            3
-          ],
-          "multiAnnales": false
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
+          "pages": 288,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_2_PAE_Formation_pneumo_30042025.pdf",
+          "pages": 137,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_3_PAE_Formation_pneumo_14052025.pdf",
+          "pages": 111,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_4_PAE_Formation_pneumo_28052025.pdf",
+          "pages": 354,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
         },
         {
           "fichier": "ANNALES PNEUMOLOGIE BON/conference_5_PAE_Formation_pneumo_04062025.pdf",
@@ -1878,6 +1883,64 @@
           ],
           "sujetsNumerotes": [],
           "multiAnnales": true
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/conference_6&7_PAE_Formation_pneumo.pdf",
+          "pages": 248,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
+          "pages": 122,
+          "caracteres": null,
+          "annales": [],
+          "sujetsNumerotes": [],
+          "multiAnnales": true,
+          "note": "Réintégré manuellement : le diaporama corrige bien des annales EVC, repérées par les intertitres « Correction annales <année> » et la numérotation « EVCF n » / « EVCP n », que la détection automatique (type + année accolés) ne voyait pas."
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n8_sent.pdf",
+          "pages": 132,
+          "caracteres": 23686,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 19,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1
+          ],
+          "multiAnnales": false
+        },
+        {
+          "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
+          "pages": 119,
+          "caracteres": 27013,
+          "annales": [
+            {
+              "type": "EVCP",
+              "annee": 2018,
+              "occurrences": 43,
+              "typeIncertain": false,
+              "sujetOfficiel": "compilation",
+              "dansLeNom": false
+            }
+          ],
+          "sujetsNumerotes": [
+            1,
+            2,
+            3
+          ],
+          "multiAnnales": false
         }
       ]
     },
@@ -2176,48 +2239,6 @@
       "dossier": "ANNALES ORL",
       "fichiers": 63,
       "motif": "Aucun collège ORL autonome sur la plateforme : ORL n’existe que comme sous-collège de Médecine générale (col-mg-orl), ce qui est une autre chose. Exclusion décidée avec l’utilisateur."
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
-      "pages": 122,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
-      "pages": 288,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_1_PAE_Formation_pneumo_23042025 copie.pdf",
-      "pages": 110,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_2_PAE_Formation_pneumo_30042025.pdf",
-      "pages": 137,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_3_PAE_Formation_pneumo_14052025.pdf",
-      "pages": 111,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_4_PAE_Formation_pneumo_28052025.pdf",
-      "pages": 354,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
-    },
-    {
-      "dossier": "ANNALES PNEUMOLOGIE BON",
-      "fichier": "ANNALES PNEUMOLOGIE BON/conference_6&7_PAE_Formation_pneumo.pdf",
-      "pages": 248,
-      "motif": "Aucune annale (type EVCF/EVCP + année) détectable : support de cours ou document annexe"
     },
     {
       "dossier": "ANNALES PSYCHIATRIE",

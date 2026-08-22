@@ -1,0 +1,272 @@
+{
+  "sources": {
+    "ANNALES MG/PAE 2011.pdf": {
+      "atelier": "annales-mg/pae-2011",
+      "sujetOfficiel": "Annales/Sujets/evcf_2011/EVCF.71.DOC et Annales/Sujets/evcp_2011/EVCP.71.DOC",
+      "figuresIgnorees": {
+        "img-006-012.png": "algorithme HAS de prise en charge d’une exacerbation de BPCO, projeté en rappel après la correction ; son contenu est retranscrit dans la correction de la question correspondante"
+      },
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2011 (EVCF : 8 sujets ; EVCP : 8 sujets). Les énoncés et la numérotation officielle ont été restitués à partir des sujets du dépôt (EVCF.71.DOC et EVCP.71.DOC de 2011) ; le corrigé n’en donnait qu’un résumé télégraphique."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2011 - EVCF",
+      "annee": 2011,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE 2011.pdf",
+      "orderIndex": 110,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2011.</b>\n\nVous devez traiter tous les sujets. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 : pathologie vasculaire — Question 1</b>\n\nPatient de 70 ans opéré d’une prothèse de hanche gauche. À J10, il présente une thrombose veineuse profonde proximale du membre inférieur gauche malgré une prophylaxie par Lovenox® 40.\n\nHb = 9 g/dL — plaquettes = 200 G/L — créatinine = 110 µmol/L — poids = 70 kg.\n\nÉnumérez les classes thérapeutiques anticoagulantes possibles initialement.",
+          "images": [],
+          "reponseAttendue": "Les héparines : héparines de bas poids moléculaire (HBPM) et héparine non fractionnée (HNF) ; et les anticoagulants oraux directs : rivaroxaban, dabigatran.",
+          "correctionGenerale": "<b>Héparines</b>\n• Héparine de bas poids moléculaire (HBPM)\n• Héparine non fractionnée (HNF)\n\n<b>Anticoagulants oraux directs</b>\n• Rivaroxaban, dabigatran…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 : pathologie vasculaire — Question 2</b>\n\nSi le patient présente une clairance à 22 mL/min, quel traitement anticoagulant proposerez-vous alors ?",
+          "images": [],
+          "reponseAttendue": "L’héparine non fractionnée : en cas d’insuffisance rénale avec un DFG < 30 mL/min, c’est la seule héparine utilisable.",
+          "correctionGenerale": "• Si insuffisance rénale avec DFG < 30 mL/min : <b>héparine non fractionnée (HNF)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : psychiatrie — Question 1</b>\n\nUn patient de 60 ans vient pour un état de fatigue qui évolue depuis plusieurs mois. Il n’a plus d’appétit, il se réveille trop tôt vers 4 heures du matin. L’hypothèse diagnostique principale est un syndrome dépressif.\n\nCitez au moins 4 critères majeurs et au moins 2 critères mineurs d’un état dépressif.",
+          "images": [],
+          "reponseAttendue": "Définition de l’épisode dépressif caractérisé selon le DSM-5. Critère A : rupture avec l’état antérieur, avec au moins 5 symptômes sur plus de 2 semaines, dont au moins un critère majeur — humeur dépressive et diminution marquée de l’intérêt ou du plaisir. Critères mineurs : perte ou gain de poids significatif, ou diminution ou augmentation de l’appétit ; insomnie ou hypersomnie ; agitation ou ralentissement psychomoteur ; fatigue ou perte d’énergie ; sentiment de dévalorisation ou de culpabilité ; diminution de l’aptitude à penser, à se concentrer, indécision ; pensées de mort récurrentes, idées suicidaires. Critère B : détresse cliniquement significative ou altération du fonctionnement social, professionnel ou d’un autre domaine important. Critère C : symptômes non imputables aux effets d’une substance ou d’une affection médicale générale. L’épisode ne correspond pas à un trouble psychotique et il n’y a jamais eu d’épisode maniaque ou hypomaniaque.",
+          "correctionGenerale": "<b>Définition de l’épisode dépressif caractérisé (DSM-5)</b>\n\n<b>A.</b> Rupture avec l’état antérieur, avec plus de 5 des symptômes suivants sur plus de 2 semaines (en gras : les critères majeurs)\n• <b>Humeur dépressive</b>\n• <b>Diminution marquée de l’intérêt ou du plaisir</b>\n• Perte ou gain de poids significatif, ou diminution ou augmentation de l’appétit\n• Insomnie ou hypersomnie\n• Agitation ou ralentissement psychomoteur\n• Fatigue ou perte d’énergie\n• Sentiment de dévalorisation ou de culpabilité\n• Diminution de l’aptitude à penser, à se concentrer, indécision\n• Pensées de mort récurrentes, idées suicidaires\n\n<b>B.</b> Détresse cliniquement significative, ou altération du fonctionnement social, professionnel ou d’un autre domaine important\n\n<b>C.</b> Symptômes non imputables aux effets d’une substance ou d’une affection médicale générale\n\n<b>D.</b> Ne correspond pas à un trouble psychotique\n\n<b>E.</b> Jamais eu d’épisode maniaque ou hypomaniaque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : psychiatrie — Question 2</b>\n\nCitez au moins 2 classes thérapeutiques médicamenteuses et au moins 2 thérapeutiques non médicamenteuses de la dépression.",
+          "images": [],
+          "reponseAttendue": "Classes d’antidépresseurs : inhibiteurs sélectifs de la recapture de la sérotonine (ISRS) en première intention, inhibiteurs de la recapture de la sérotonine et de la noradrénaline (IRSNa), antidépresseurs tricycliques, et — très peu utilisés — IMAO A et B. Thérapeutiques non médicamenteuses : psychothérapies (de soutien, cognitivo-comportementale, d’inspiration psychanalytique, familiale, interpersonnelle) et électro-convulsivothérapie, réservée aux formes graves ou résistantes.",
+          "correctionGenerale": "<b>Classes d’antidépresseurs</b>\n• Première intention : inhibiteurs sélectifs de la recapture de la sérotonine (ISRS)\n• Inhibiteurs de la recapture de la sérotonine et de la noradrénaline (IRSNa)\n• Antidépresseurs tricycliques\n• Très peu utilisés : IMAO A et B\n\n<b>Thérapeutiques non médicamenteuses</b>\n• Psychothérapie : de soutien, thérapie cognitivo-comportementale, d’inspiration psychanalytique, thérapie familiale, thérapie interpersonnelle\n• Électro-convulsivothérapie (uniquement dans les formes graves ou résistantes)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 : dermatologie — Question 1</b>\n\nCitez 6 caractéristiques cliniques de l’érythème noueux.",
+          "images": [],
+          "reponseAttendue": "Des nodules (nouures) d’apparition aiguë : fermes, non fluctuants, en relief ; à surface érythémateuse ou de couleur normale, prenant ensuite les teintes de la biligénie ; de 1 à 3 cm de diamètre ; douloureux ou sensibles à la palpation ; siégeant de façon bilatérale, surtout en région prétibiale et aux genoux, parfois aux mollets, cuisses et fesses, rarement aux membres supérieurs ; en nombre variable, de 4 à 12.",
+          "correctionGenerale": "<b>Nodules (nouures) d’apparition aiguë</b>\n• Fermes, non fluctuants, en relief\n• Surface érythémateuse ou de couleur normale, puis prenant les couleurs de la biligénie\n• Taille de 1 à 3 cm de diamètre\n• Douloureux ou sensibles à la palpation\n• Siègent de façon bilatérale, surtout en régions prétibiales et aux genoux, parfois aux mollets, cuisses et fesses, rarement aux membres supérieurs\n• Nombre variable, de 4 à 12"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 : dermatologie — Question 2</b>\n\nCitez 5 étiologies principales en dehors des causes idiopathiques.",
+          "images": [],
+          "reponseAttendue": "L’infection à streptocoque β-hémolytique du groupe A (première cause chez l’adulte en France) ; la sarcoïdose (deuxième cause) ; la primo-infection tuberculeuse ; les causes médicamenteuses (sulfamides, AINS, salicylés, pyrazolés, œstroprogestatifs, dérivés halogénés, sels d’or…) ; la yersiniose. On évoque également d’autres infections (Chlamydia psittaci, mycoplasme, rickettsies, Salmonella typhi, brucellose, pasteurellose, leptospirose, Campylobacter jejuni, tularémie, MNI, CMV, hépatites B et C, parvovirus B19, syphilis, rougeole, oreillons, paludisme, trypanosomiases, helminthiases, histoplasmose, dermatophyties), les colites inflammatoires (RCH, maladie de Crohn), la maladie de Behçet, les connectivites et vascularites (lupus, polyarthrite rhumatoïde, maladie de Horton, maladie de Takayasu, polychondrite chronique atrophiante) et les hémopathies et cancers (lymphome de Hodgkin, lymphomes non hodgkiniens, leucémies aiguës).",
+          "correctionGenerale": "• <b>Infection à streptocoque β-hémolytique du groupe A</b> : première cause chez l’adulte en France\n• <b>Sarcoïdose</b> (deuxième cause)\n• <b>Primo-infection tuberculeuse</b>\n• <b>Médicaments</b> : sulfamides, AINS, salicylés, pyrazolés, œstroprogestatifs, dérivés halogénés, sels d’or…\n• <b>Yersiniose</b> (Yersinia enterocolitica ou pseudotuberculosis)\n• Autres infections : Chlamydia psittaci, mycoplasme, rickettsies, Salmonella typhi, brucellose, pasteurellose, leptospirose, Campylobacter jejuni, tularémie, MNI, CMV, hépatites B et C, parvovirus B19, syphilis, rougeole, oreillons, paludisme, trypanosomiases, helminthiases, histoplasmose, dermatophyties…\n• Colites inflammatoires : rectocolite hémorragique, maladie de Crohn\n• Maladie de Behçet\n• Lupus érythémateux disséminé, polyarthrite rhumatoïde, maladie de Horton, maladie de Takayasu, polychondrite chronique atrophiante…\n• Lymphome de Hodgkin, lymphomes non hodgkiniens, leucémies aiguës, cancers"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 : hépatologie — Question 1</b>\n\nCitez les anomalies biologiques caractéristiques d’une cytolyse hépatique.",
+          "images": [],
+          "reponseAttendue": "L’élévation des transaminases : ASAT > 30 UI/L et ALAT > 40 UI/L.",
+          "correctionGenerale": "<b>Cytolyse : élévation des transaminases</b>\n• ASAT > 30 UI/L\n• ALAT > 40 UI/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 : hépatologie — Question 2</b>\n\nCitez les 2 examens biologiques essentiels pour apprécier la gravité hépatique d’une cytolyse hépatique aiguë.",
+          "images": [],
+          "reponseAttendue": "Le taux de prothrombine (TP) et le facteur V.",
+          "correctionGenerale": "• <b>Taux de prothrombine (TP)</b>\n• <b>Facteur V</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 : hépatologie — Question 3</b>\n\nCitez 2 virus hépatotropes pouvant provoquer une cytolyse hépatique chronique (plus de 6 mois).",
+          "images": [],
+          "reponseAttendue": "Le virus de l’hépatite B (VHB) et le virus de l’hépatite C (VHC).",
+          "correctionGenerale": "• <b>Virus de l’hépatite B (VHB)</b>\n• <b>Virus de l’hépatite C (VHC)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 : neurologie — Question 1</b>\n\nFemme de 80 ans, retrouvée à terre dans son jardin. Elle présente une hémiplégie gauche totale et proportionnelle. Elle est aphasique.\n\nQuel est le diagnostic probable, avec la topographie exacte ? Qu’en déduisez-vous sur ce cas particulier ?",
+          "images": [],
+          "reponseAttendue": "Un accident vasculaire cérébral ischémique sylvien droit profond. La patiente étant aphasique, l’hémisphère droit est son hémisphère majeur : la patiente est donc gauchère.",
+          "correctionGenerale": "• <b>Accident vasculaire cérébral (AVC) ischémique sylvien droit profond</b>\n• Patiente aphasique : l’aphasie signe que l’hémisphère touché est l’hémisphère majeur → la patiente est <b>gauchère</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 : neurologie — Question 2</b>\n\nQuels sont les 2 mécanismes étiopathogéniques ?",
+          "images": [],
+          "reponseAttendue": "L’athérosclérose et la fibrillation atriale (cardiopathie emboligène).",
+          "correctionGenerale": "• <b>Athérosclérose</b>\n• <b>Fibrillation atriale</b> (cardiopathie emboligène)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 : neurologie — Question 3</b>\n\nCitez 5 facteurs de risque.",
+          "images": [],
+          "reponseAttendue": "L’hypertension artérielle, le diabète de type 2, la dyslipidémie, le tabagisme et l’âge supérieur à 50 ans.",
+          "correctionGenerale": "• <b>HTA</b>\n• <b>Diabète de type 2</b>\n• <b>Dyslipidémie</b>\n• <b>Tabagisme</b>\n• <b>Âge > 50 ans</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : hématologie — Question 1</b>\n\nCitez 2 étiologies non toxiques de thrombopénie de cause centrale.",
+          "images": [],
+          "reponseAttendue": "L’infiltration médullaire et la myélodysplasie.",
+          "correctionGenerale": "• <b>Infiltration médullaire</b>\n• <b>Myélodysplasie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : hématologie — Question 2</b>\n\nCitez 2 circonstances rendant indiscutable la réalisation d’un myélogramme dans la prise en charge d’un purpura thrombopénique immunologique.",
+          "images": [],
+          "reponseAttendue": "Chez l’enfant : organomégalie, douleurs osseuses ou altération de l’état général ; anomalie des autres lignées ou frottis évoquant une atteinte centrale ; PTI réfractaire aux thérapeutiques usuelles (IgIV, corticoïdes) ; avant corticothérapie ; avant splénectomie. Chez l’adulte : âge > 60 ans ; anomalie des autres lignées ou du frottis ; organomégalie ; absence de réponse au traitement de première ligne ; avant splénectomie, voire avant rituximab.",
+          "correctionGenerale": "<b>Chez l’enfant — indiqué si</b>\n• Organomégalie, douleurs osseuses, altération de l’état général\n• Anomalie des autres lignées, ou frottis évoquant une atteinte centrale\n• PTI réfractaire aux thérapeutiques usuelles (IgIV, corticoïdes)\n• Avant corticothérapie\n• Avant splénectomie\n\n<b>Chez l’adulte — indiqué si</b>\n• Âge > 60 ans\n• Anomalie des autres lignées, anomalie du frottis\n• Organomégalie\n• Absence de réponse au traitement de première ligne\n• Avant splénectomie, voire avant rituximab"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 : néphrologie — Question 1</b>\n\nUne femme de 65 ans se présente à votre cabinet car elle présente des œdèmes des membres inférieurs depuis 15 jours. Dans ses antécédents, on note une hypertension artérielle, un angor stable, une hystérectomie pour un fibrome. Son traitement comporte : pravastatine (40 mg/j), aténolol (100 mg/j), Esidrex® (25 mg/j) et aspirine (75 mg/j).\n\nL’examen clinique retrouve des œdèmes des membres inférieurs, blancs, mous, indolores et prenant le godet. Le poids est augmenté à 75 kg (prise récente de 5 kg). La pression artérielle est de 168/90 mmHg. La fréquence cardiaque est à 85/min. Le reste de l’examen clinique est normal.\n\nLe bilan biologique est le suivant : glycémie à 5,5 mmol/L, kaliémie à 4 mEq/L, natrémie à 128 mEq/L, créatinine à 250 µmol/L, urée à 35 mmol/L, protides à 64 g/L, hématocrite à 39 %.\n\nDevant une insuffisance rénale, quels sont les 4 éléments paracliniques à rechercher en faveur d’une insuffisance rénale aiguë ?",
+          "images": [],
+          "reponseAttendue": "Une créatinine antérieure normale sur un bilan récent (élevée en cas d’insuffisance rénale chronique) ; des reins de taille normale à l’échographie rénale et des voies urinaires (diminuée dans l’insuffisance rénale chronique, sauf exceptions) ; l’absence d’anémie à la NFS-plaquettes (anémie normocytaire arégénérative dans l’insuffisance rénale chronique) ; une calcémie normale (diminuée dans l’insuffisance rénale chronique).",
+          "correctionGenerale": "<b>Comparaison insuffisance rénale aiguë (IRA) / insuffisance rénale chronique (IRC)</b>\n\n• <b>Bilan antérieur récent</b> — IRA : créatinine normale. IRC : créatinine déjà élevée\n• <b>Échographie rénale et des voies urinaires</b> — IRA : reins de taille normale. IRC : reins de taille diminuée (sauf exceptions)\n• <b>NFS-plaquettes</b> — IRA : pas d’anémie. IRC : anémie normocytaire arégénérative\n• <b>Calcémie</b> — IRA : normale. IRC : diminuée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 : néphrologie — Question 2</b>\n\nDéfinissez l’état d’hydratation de la patiente.",
+          "images": [],
+          "reponseAttendue": "Une hyperhydratation globale : la natrémie diminuée à 128 mEq/L (norme 135-145 mmol/L) traduit une hyperhydratation intracellulaire, et les œdèmes des membres inférieurs une hyperhydratation extracellulaire.",
+          "correctionGenerale": "• <b>Natrémie diminuée</b> (normale : 135-145 mmol/L) → hyperhydratation intracellulaire\n• <b>Œdèmes des membres inférieurs</b> → hyperhydratation extracellulaire\n\n→ <b>Hyperhydratation globale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : santé publique — Question 1</b>\n\nVous lisez dans une revue de formation pratique de médecine générale une mise au point sur un test au Quantiféron dans le diagnostic de tuberculose chez des personnes « contact » en France. La sensibilité de ce test est de 79 %, la spécificité de 80 %.\n\nQuelle est votre définition de la sensibilité d’un test, de la spécificité ?",
+          "images": [],
+          "reponseAttendue": "La sensibilité est le nombre de tests positifs rapporté au nombre de malades (T+/M+) : elle correspond à la capacité du test à identifier comme malades les personnes qui ont réellement la maladie (vrais positifs). La spécificité est le nombre de tests négatifs rapporté au nombre de non-malades (T−/M−) : elle correspond à la capacité du test à identifier comme non malades les personnes qui n’ont pas la maladie (vrais négatifs).",
+          "correctionGenerale": "• <b>Sensibilité</b> = nombre de tests positifs / nombre de malades (T+/M+) → capacité du test à identifier comme malades les personnes qui ont vraiment la maladie (vrais positifs)\n• <b>Spécificité</b> = nombre de tests négatifs / nombre de non-malades (T−/M−) → capacité du test à identifier comme non malades les personnes qui n’ont pas la maladie (vrais négatifs)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : santé publique — Question 2</b>\n\nQuelle est la conséquence d’une spécificité de 80 % ?",
+          "images": [],
+          "reponseAttendue": "Une spécificité de 80 % signifie que, sur 100 personnes non malades, le test en identifie 80 comme non malades : 20 personnes non malades sur 100 sont donc classées à tort comme positives — ce sont des faux positifs.",
+          "correctionGenerale": "• Une spécificité à 80 % signifie que, sur 100 personnes non malades, le test en identifie 80 comme non malades\n• Les 20 autres personnes non malades sont classées à tort comme positives : ce sont des <b>faux positifs</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2011 - EVCP",
+      "annee": 2011,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE 2011.pdf",
+      "orderIndex": 111,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2011.</b>\n\nVous devez traiter tous les sujets. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 : endocrinologie — Question 1</b>\n\nUne patiente de 42 ans consulte pour la découverte d’une petite masse cervicale antérieure. À la palpation, vous confirmez qu’il s’agit d’un nodule thyroïdien unique d’environ 2 cm.\n\nQuels sont les éléments d’interrogatoire et d’examen clinique qui vous paraissent essentiels (en dehors des signes d’une éventuelle dysthyroïdie) ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : antécédents personnels et familiaux d’irradiation cervicale, de cancer thyroïdien, de NEM2 ou de maladies rares ; statut iodé ; tabagisme ; anamnèse ; signes fonctionnels (le plus souvent aucun), signes de compression, signes en faveur d’une étiologie. À l’examen physique : sur le plan local, palpation cervicale du nodule (consistance, sensibilité, taille, adhérence au plan profond) et du reste du parenchyme thyroïdien, recherche d’autres nodules et d’adénopathies cervicales ; sur le plan régional, recherche d’adénopathies cervicales et de signes de compression ; sur le plan général, signes de dysthyroïdie, signes en faveur de métastases, signes en faveur d’un cancer médullaire de la thyroïde ou d’une NEM2, altération de l’état général.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents personnels et familiaux : irradiation cervicale, cancer thyroïdien, NEM2, maladies rares\n• Statut iodé\n• Tabagisme\n• Anamnèse\n• Signes fonctionnels : aucun le plus souvent ; signes de compression ; signes en faveur d’une étiologie\n\n<b>Examen physique</b>\n• <b>Local — palpation cervicale</b> : nodule (consistance, sensibilité, taille, adhérence au plan profond) ; reste du parenchyme thyroïdien, autres nodules, adénopathies cervicales\n• <b>Régional</b> : recherche d’adénopathies cervicales, signes de compression\n• <b>Général</b> : signes de dysthyroïdie, signes en faveur de métastases, signes en faveur d’un cancer médullaire de la thyroïde ou d’une NEM2, altération de l’état général"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 : endocrinologie — Question 2</b>\n\nCitez les deux examens complémentaires à réaliser.",
+          "images": [],
+          "reponseAttendue": "Le dosage de la TSH et l’échographie thyroïdienne.",
+          "correctionGenerale": "• <b>TSH</b>\n• <b>Échographie thyroïdienne</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : infectiologie — Question 1</b>\n\nUne femme de 54 ans, ménopausée, sous hormonothérapie substitutive, sans antécédent particulier, se présente à votre cabinet avec les signes suivants : fièvre à 40 °C, douleur brutale de l’hémithorax gauche, fréquence respiratoire 15/min, TA 130/60 mmHg, pouls 110/min.\n\nQuel diagnostic le plus probable évoquez-vous ? Sur quels éléments sémiologiques cliniques vous basez-vous pour le confirmer ?",
+          "images": [],
+          "reponseAttendue": "Une pneumonie aiguë communautaire gauche. Éléments en faveur d’une pneumonie plutôt que d’une bronchite : fièvre > 37,8 °C, tachycardie > 100 bpm, polypnée > 25/min, douleur thoracique de type pleural, absence d’infection des voies respiratoires hautes, signes auscultatoires en foyer (crépitants), souffle tubaire, impression globale de gravité. À l’inverse, la bronchite se caractérise par une fièvre en général peu élevée, une brûlure rétrosternale à la toux, une toux plus ou moins précédée d’une infection des voies respiratoires hautes et une auscultation normale ou des râles bronchiques diffus.",
+          "correctionGenerale": "<b>Pneumonie aiguë communautaire gauche</b>\n\n<b>Éléments à rechercher</b>\n\n<i>En faveur d’une pneumonie</i>\n• Fièvre > 37,8 °C\n• Tachycardie > 100 bpm\n• Polypnée > 25/min\n• Douleur thoracique de type pleural\n• Absence d’infection des voies respiratoires hautes\n• Signes auscultatoires en foyer (crépitants)\n• Souffle tubaire\n• Impression globale de gravité\n\n<i>En faveur d’une bronchite</i>\n• Fièvre en général peu élevée\n• Brûlure rétrosternale à la toux\n• Toux plus ou moins précédée d’une infection des voies respiratoires hautes\n• Auscultation normale ou râles bronchiques diffus"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : infectiologie — Question 2</b>\n\nQuel serait votre traitement de première intention ? Rédigez votre ordonnance.",
+          "images": [],
+          "reponseAttendue": "Amoxicilline 1 g × 3/jour pendant 7 jours, et paracétamol 1 g × 3/jour.",
+          "correctionGenerale": "• <b>Amoxicilline 1 g × 3/jour pendant 7 jours</b>\n• <b>Paracétamol 1 g × 3/jour</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 : métabolisme — Question 1</b>\n\nUn homme de 60 ans vous consulte pour une fatigue récente sans point d’appel particulier. Dans le bilan biologique que vous demandez, vous découvrez une hypercalcémie (3 mmol/L, ou 120 mg/L). Il ne prend aucun traitement.\n\nQuels sont les 3 principaux diagnostics que vous évoquez ?",
+          "images": [],
+          "reponseAttendue": "Une hyperparathyroïdie primaire, un myélome multiple des os et des métastases osseuses.",
+          "correctionGenerale": "• <b>Hyperparathyroïdie primaire</b>\n• <b>Myélome multiple des os</b>\n• <b>Métastases osseuses</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 : métabolisme — Question 2</b>\n\nQuels sont les 3 examens biologiques utiles au diagnostic étiologique que vous devez effectuer avant le recours au spécialiste ?",
+          "images": [],
+          "reponseAttendue": "Le dosage de la PTH, l’électrophorèse des protéines plasmatiques (EPP) et les radiographies du squelette.",
+          "correctionGenerale": "• <b>PTH</b>\n• <b>Électrophorèse des protéines plasmatiques (EPP)</b>\n• <b>Radiographies du squelette</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 : pneumologie — Question 1</b>\n\nMonsieur X, âgé de 78 ans, fumeur depuis l’âge de 20 ans (un paquet par jour), aux antécédents de cardiopathie ischémique, est porteur d’une bronchopneumopathie chronique obstructive (BPCO). Il consulte pour la cinquième fois dans l’année pour une exacerbation de sa BPCO avec fièvre à 38,5 °C.\n\nSur quels critères cliniques principaux portez-vous le diagnostic d’exacerbation d’origine infectieuse ?",
+          "images": [],
+          "reponseAttendue": "La fièvre et les critères d’Anthonisen : augmentation du volume de l’expectoration, aspect purulent de l’expectoration, augmentation de la dyspnée. Pour mémoire, le diagnostic positif d’exacerbation de BPCO repose sur une majoration des symptômes respiratoires, débutant de façon aiguë, durant plus de 48 h ou justifiant une modification thérapeutique.",
+          "correctionGenerale": "• <b>Fièvre</b>\n\n<b>Critères d’Anthonisen</b>\n• Augmentation du volume de l’expectoration\n• Aspect purulent de l’expectoration\n• Augmentation de la dyspnée\n\n<i>NB — diagnostic positif d’exacerbation de BPCO</i> : majoration des symptômes respiratoires, débutant de façon aiguë, durant plus de 48 h ou justifiant une modification thérapeutique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 : pneumologie — Question 2</b>\n\nQuelles catégories de traitements médicamenteux prescrivez-vous (en dehors de l’oxygène) ?",
+          "images": [],
+          "reponseAttendue": "L’adaptation du traitement bronchodilatateur — augmentation des doses ou de la fréquence d’administration des β2-agonistes, avec évaluation de l’intérêt d’une nébulisation ou de l’ajout d’un anticholinergique — poursuivie jusqu’à amélioration des symptômes ; une corticothérapie orale (prednisone 30 à 40 mg/j pendant 7 à 10 jours) en cas d’augmentation nette de la dyspnée ou de VEMS < 50 % ; une antibiothérapie en cas de purulence franche de l’expectoration ou de dyspnée au moindre effort, dont le choix dépend du stade de sévérité et des facteurs de risque, pour une durée de 7 à 14 jours (10 en moyenne) ; sans oublier l’intensification des soins de kinésithérapie, la prise en charge d’un éventuel tabagisme et le traitement des comorbidités.",
+          "correctionGenerale": "<i>Réponse donnée sous forme de l’algorithme HAS de prise en charge de l’exacerbation de BPCO, retranscrit ci-dessous.</i>\n\n<b>Adaptation du traitement</b>\n• Augmentation des doses ou de la fréquence d’administration des β2-agonistes de courte durée d’action :\n  – Évaluer l’intérêt d’une administration par nébulisation, ou de l’ajout d’un anticholinergique\n  – Jusqu’à amélioration des symptômes\n• <b>Corticothérapie orale</b> : prednisone per os 30 à 40 mg/j pendant 7 à 10 jours, en cas d’augmentation nette de la dyspnée ou si VEMS < 50 %\n• <b>Antibiothérapie</b> en cas de purulence franche de l’expectoration ou de dyspnée au moindre effort :\n  – Choix de l’antibiotique selon le stade de sévérité et les facteurs de risque\n  – Durée du traitement : 7 à 14 jours (10 en moyenne)\n• Intensification des soins de kinésithérapie\n• Prise en charge d’un éventuel tabagisme\n• Traitement des comorbidités\n\n<i>L’algorithme rappelle en outre les critères d’hospitalisation</i> : sujet âgé (> 70 ans), comorbidités, BPCO sévère (stade III) ou très sévère (stade IV), signes cliniques ou gazométriques de gravité immédiate, nécessité d’une oxygénothérapie, dégradation rapide, augmentation marquée des symptômes ou dégradation majeure par rapport à l’état de base (cyanose, œdèmes des membres inférieurs, troubles de la conscience), exacerbations fréquentes ou épisode récent d’évolution défavorable, difficulté diagnostique, patient isolé ou aides à domicile insuffisantes."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 : gastro-entérologie — Question 1</b>\n\nHomme de 72 ans qui se présente pour épigastralgies. Ses antécédents : HTA, cardiopathie ischémique, diabète non insulino-dépendant, gonarthrose. Son traitement : aspirine, amlodipine, metformine, aténolol et kétoprofène si douleurs.\n\nLa douleur est présente depuis 48 heures, intense, à type de crampes, plus ou moins calmée par l’alimentation. Elle le réveille la nuit. Il n’y a pas d’irradiation, ni nausées ni vomissements, et le ventre est souple.\n\nQuel est le risque immédiat chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Un ulcère gastro-duodénal compliqué d’hémorragie : le patient prend de l’aspirine et un AINS à la demande, sans protection par IPP.",
+          "correctionGenerale": "• Diagnostic principal : <b>ulcère gastro-duodénal</b>\n• <b>Risque immédiat : ulcère hémorragique</b> — le patient prend de l’aspirine et un AINS à la demande, sans inhibiteur de la pompe à protons"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 : gastro-entérologie — Question 2</b>\n\nCitez 5 diagnostics différentiels à éliminer pouvant entraîner un risque vital.",
+          "images": [],
+          "reponseAttendue": "Un infarctus du myocarde inférieur, une pancréatite aiguë, un infarctus mésentérique, une dissection aortique et une embolie pulmonaire.",
+          "correctionGenerale": "• <b>IDM inférieur</b>\n• <b>Pancréatite aiguë</b>\n• <b>Infarctus mésentérique</b>\n• <b>Dissection aortique</b>\n• <b>Embolie pulmonaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : gériatrie — Question 1</b>\n\nEn période hivernale, vous êtes appelé chez une dame de 84 ans. Elle a été retrouvée par terre par sa voisine. Elle présente une confusion récente et inhabituelle selon son entourage.\n\nCitez 3 éléments importants de l’examen clinique.",
+          "images": [],
+          "reponseAttendue": "L’examen neurologique, le toucher rectal et la palpation abdominale.",
+          "correctionGenerale": "• <b>Examen neurologique</b>\n• <b>Toucher rectal</b>\n• <b>Palpation abdominale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : gériatrie — Question 2</b>\n\nCitez 5 hypothèses diagnostiques.",
+          "images": [],
+          "reponseAttendue": "Une infection, une rétention aiguë d’urine, un fécalome, une cause iatrogène et des troubles hydro-électrolytiques.",
+          "correctionGenerale": "• <b>Infection</b>\n• <b>Rétention aiguë d’urine</b>\n• <b>Fécalome</b>\n• <b>Cause iatrogène</b>\n• <b>Troubles hydro-électrolytiques</b>…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 : cardiologie — Question 1</b>\n\nMadame M., 81 ans, traitée pour hypertension artérielle, est suivie par vos soins depuis 5 ans. Elle vit en maison de retraite. Sous traitement, la situation est satisfaisante. Lors d’une consultation, alors que Madame M. reste asymptomatique avec un examen clinique normal, vous retrouvez un rythme cardiaque irrégulier, à 74 pulsations par minute en moyenne, avec un électrocardiogramme qui confirme une fibrillation auriculaire permanente sans autre anomalie.\n\nQuel bilan biologique complémentaire réalisez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un ionogramme sanguin avec urée et créatinine, une NFS-plaquettes, un bilan d’hémostase (TP, TCA) et un dosage de la TSH.",
+          "correctionGenerale": "• <b>Ionogramme sanguin, urée, créatinine</b>\n• <b>NFS-plaquettes</b>\n• <b>TP, TCA</b>\n• <b>TSH</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 : cardiologie — Question 2</b>\n\nDevant la normalité de celui-ci, quel traitement au long cours mettez-vous en œuvre et avec quel objectif ? Argumentez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Le ralentissement de la fréquence cardiaque n’est pas nécessaire (elle est spontanément à 74/min). Il faut en revanche une prise en charge du risque thromboembolique au long cours, à vie, car la patiente a un score CHA₂DS₂-VASc à 3 (> 2) : traitement anticoagulant de référence par AVK — warfarine en priorité — ou, seulement si la FA n’est pas valvulaire, par anticoagulant oral direct (dabigatran, rivaroxaban, apixaban). Objectif d’INR entre 2 et 3 sous AVK.",
+          "correctionGenerale": "• <b>Ralentissement de la fréquence cardiaque non nécessaire</b> : elle est spontanément à 74/min\n• <b>Prise en charge du risque thromboembolique au long cours, à vie</b>, car la patiente a un score CHA₂DS₂-VASc à 3 (> 2)\n\n<b>Choix du traitement anticoagulant</b>\n• Traitement de référence : AVK, et en priorité la warfarine\n• Alternative (seulement si la FA n’est pas valvulaire) : anticoagulant oral direct — dabigatran, rivaroxaban, apixaban\n• <b>Objectif d’INR : 2-3</b>\n\n<i>Rappel du score CHA₂DS₂-VASc</i>\n• C — insuffisance cardiaque congestive / FEVG altérée : 1\n• H — HTA : 1\n• A — âge 65-74 ans : 1 ; âge > 75 ans : 2\n• D — diabète : 1\n• S — AVC / AIT : 2\n• V — atteinte vasculaire (IDM, artériopathie périphérique) : 1\n• Sexe féminin : 1"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : rhumatologie — Question 1</b>\n\nVous recevez une patiente de 74 ans pour une lombalgie aiguë invalidante, sans notion de traumatisme. Elle n’a pas d’antécédents médicaux ni chirurgicaux. L’examen clinique retrouve une raideur rachidienne, avec un examen neurologique normal. Les radiographies du rachis lombaire et du bassin retrouvent une fracture-tassement de L1.\n\nQuel est le diagnostic étiologique le plus probable ? Citez deux autres diagnostics étiologiques à évoquer.",
+          "images": [],
+          "reponseAttendue": "La cause la plus probable est une fracture vertébrale ostéoporotique. Les deux autres diagnostics à évoquer sont une fracture vertébrale sur myélome multiple des os et une fracture vertébrale sur métastase osseuse d’un cancer ostéophile. Plus rarement : une ostéomalacie.",
+          "correctionGenerale": "• Cause la plus probable : <b>fracture vertébrale ostéoporotique</b>\n• Deux autres diagnostics à évoquer : <b>fracture vertébrale sur myélome multiple des os</b> et <b>fracture vertébrale sur métastase osseuse d’un cancer ostéophile</b>\n• NB — autre cause, plus rare : ostéomalacie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : rhumatologie — Question 2</b>\n\nCitez 4 explorations biologiques complémentaires à envisager en première intention.",
+          "images": [],
+          "reponseAttendue": "Le bilan d’ostéoporose de première intention selon la HAS : NFS-plaquettes, VS et CRP ; électrophorèse des protéines plasmatiques ; bilan phosphocalcique sérique et urinaire ; 25-OH-vitamine D ; créatinine et créatininurie ; phosphatases alcalines. En deuxième intention, en cas de suspicion d’ostéoporose secondaire : PTH, TSH, cortisolurie des 24 heures, coefficient de saturation de la transferrine, testostérone plasmatique.",
+          "correctionGenerale": "<b>Bilan d’ostéoporose de première intention (HAS)</b>\n• NFS-plaquettes, VS, CRP\n• Électrophorèse des protéines plasmatiques (EPP)\n• Bilan phosphocalcique sérique et urinaire\n• 25-OH-vitamine D\n• Créatinine et créatininurie\n• Phosphatases alcalines (PAL)\n\n<i>NB — en deuxième intention, si suspicion d’ostéoporose secondaire</i>\n• PTH\n• TSH\n• Cortisolurie des 24 heures\n• Coefficient de saturation de la transferrine\n• Testostérone plasmatique"
+        }
+      ]
+    }
+  ]
+}

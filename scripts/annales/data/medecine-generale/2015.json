@@ -1,0 +1,408 @@
+{
+  "sources": {
+    "ANNALES MG/PAE 2015.pdf": {
+      "atelier": "annales-mg/pae-2015",
+      "sujetOfficiel": "Annales/Sujets/evcf_2015/EVCF.71.DOC et Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.71.DOC",
+      "figuresIgnorees": {
+        "img-003-000.png": "tableau de rappel du score de Child-Pugh et de la survie associée, projeté en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-007-002.png": "tableau de rappel (« Tableau 4 — synthèse des traitements médicamenteux de niveau de preuve A ou B des douleurs neuropathiques ») projeté en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-008-004.png": "tableau de rappel (« Tableau 9 — synthèse des arguments scientifiques pour les traitements non médicamenteux des douleurs neuropathiques ») projeté en rappel après la correction ; son contenu est retranscrit dans la correction de la question",
+        "img-009-006.png": "diapositive de rappel (recommandations sur l’interruption des AVK avant un acte programmé) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question"
+      },
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2015 (EVCF : 11 sujets ; EVCP : 2 sujets). Les énoncés et la numérotation officielle ont été restitués à partir des sujets du dépôt (EVCF.71.DOC et EVCP.71.DOC de 2015) ; le tracé d’électrophorèse des protéines du sujet 1 de l’EVCF provient du sujet officiel."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2015 - EVCF",
+      "annee": 2015,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE 2015.pdf",
+      "orderIndex": 116,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2015.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 1</b>\n\nVous voyez en consultation de médecine générale de ville Madame L., âgée de 79 ans, qui se plaint depuis 2 mois d’une asthénie persistante, inhabituelle. À cette asthénie s’associent des céphalées surtout matinales. Ces symptômes sont apparus dans les suites du décès de son fils, mort accidentellement.\n\nOn retrouve dans ses antécédents une hépatite B guérie post-transfusionnelle en 1963, un ulcère gastroduodénal révélé par une hématémèse en 1992, une thyroïdite auto-immune diagnostiquée il y a 20 ans nécessitant un traitement par Levothyrox® 75 µg, et une cholécystectomie il y a 3 ans. Il n’y a pas de notion d’allergie médicamenteuse ou alimentaire. Cette patiente a eu 3 enfants, n’a pas eu de traitement hormonal substitutif et était jusqu’ici en pleine forme. Elle est traitée par captopril pour une HTA.\n\nL’examen clinique semble sans particularité ; pression artérielle 160/97 mmHg, poids 72 kg pour 1 m 68.\n\nCette patiente vous présente un premier bilan biologique réalisé par son médecin traitant, révélant : hémoglobine 10,2 g/dL, VGM 68 µm³, globules blancs 6 800/mm³, plaquettes 460 000/mm³, VS 38 mm à la 1<sup>re</sup> heure, CRP 25 mg/L, fibrinogène 5,3 g/L, électrophorèse des protéines montrant un composant monoclonal dont vous avez le tracé ci-dessous. Transaminases normales, phosphatases alcalines à 1,5 fois la normale avec des γGT à 3 fois la normale, bilirubine totale 10 mg/L, créatininémie 16 mg/L, calcémie 95 mg/L, glycémie 1,80 g/L.\n\nLes céphalées étant rebelles au paracétamol, Mme L. prend tous les jours depuis 3 semaines 150 mg de diclofénac qu’elle a trouvé chez sa voisine qui souffre d’arthrose.\n\nQuelles sont les 4 manifestations cliniques ou biologiques de l’observation qui peuvent être liées à la consommation des AINS ?",
+          "images": ["sujets/EVCF-71-2015/EVCF.71.2015_html_baadf35d.jpg"],
+          "reponseAttendue": "Les céphalées, l’ulcère gastro-duodénal (avec l’anémie microcytaire par saignement digestif), l’HTA par résistance au traitement antihypertenseur, et l’insuffisance rénale.",
+          "correctionGenerale": "• <b>Céphalées</b>\n• <b>Ulcère gastro-duodénal</b> (et l’anémie microcytaire qui en découle)\n• <b>HTA par résistance au traitement antihypertenseur</b>\n• <b>Insuffisance rénale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 2</b>\n\nCitez 1 examen biologique complémentaire nécessaire pour tenter de mieux caractériser l’anémie.",
+          "images": [],
+          "reponseAttendue": "La ferritinémie.",
+          "correctionGenerale": "• <b>Ferritine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 3</b>\n\nÀ l’issue de la consultation, quelle décision prenez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’arrêt immédiat des AINS et l’hospitalisation.",
+          "correctionGenerale": "• <b>Arrêt des AINS</b> — impératif\n• <b>Hospitalisation</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 1</b>\n\nUne femme âgée de 75 ans présente depuis 1 mois des céphalées temporales associées à une asthénie inhabituelle. Elle est traitée pour hypertension artérielle depuis 10 ans par inhibiteur de l’enzyme de conversion.\n\nSon examen clinique montre une fébricule à 38,2 °C, une perte de 4 kg, une raideur douloureuse des épaules ; la pression artérielle est à 140/90 mmHg. L’auscultation cardiorespiratoire, l’examen abdominal et l’examen neurologique sont normaux. La VS est à 100 mm/h, la CRP à 150 mg/L.\n\nQuel est le diagnostic le plus probable ?",
+          "images": [],
+          "reponseAttendue": "Une maladie de Horton associée à une pseudo-polyarthrite rhizomélique.",
+          "correctionGenerale": "• <b>Maladie de Horton avec pseudo-polyarthrite rhizomélique (PPR)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 2</b>\n\nQuelle complication grave peut survenir à tout moment ?",
+          "images": [],
+          "reponseAttendue": "Une complication oculaire : neuropathie optique ischémique antérieure aiguë (NOIAA), occlusion de l’artère centrale de la rétine (OACR) ou névrite optique rétrobulbaire (NORB).",
+          "correctionGenerale": "• <b>Complication oculaire</b> : NOIAA, OACR, NORB"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 3</b>\n\nQuel traitement faut-il envisager rapidement ?",
+          "images": [],
+          "reponseAttendue": "Une corticothérapie.",
+          "correctionGenerale": "• <b>Corticothérapie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 1</b>\n\nUne femme de 78 ans est admise aux urgences pour une dyspnée apparue quelques heures auparavant, au petit matin, avec impression de manque d’air. À l’examen clinique, la pression artérielle est à 140/80 mmHg, il n’y a pas de fièvre ni de douleur thoracique. L’auscultation retrouve des râles crépitants des deux champs pulmonaires. La saturation est à 90 % en air ambiant. L’électrocardiogramme est inchangé par rapport à celui du trimestre précédent, avec une onde Q en D2, D3, aVF, pas de trouble de la repolarisation et une hypertrophie ventriculaire gauche.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un œdème aigu pulmonaire : terrain (séquelle d’IDM inférieur, hypertrophie ventriculaire gauche), dyspnée d’apparition brutale, râles crépitants des deux champs pulmonaires.",
+          "correctionGenerale": "• <b>Œdème aigu pulmonaire (OAP)</b>\n• Arguments : terrain (séquelle d’IDM, HVG), dyspnée d’apparition brutale, râles crépitants des deux champs pulmonaires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 2</b>\n\nQuelles sont les quatre mesures essentielles initiales du traitement de cette patiente ?",
+          "images": [],
+          "reponseAttendue": "La position demi-assise, l’oxygénothérapie, les diurétiques de l’anse et les dérivés nitrés IV (trinitrine).",
+          "correctionGenerale": "• <b>Position demi-assise</b>\n• <b>Oxygénothérapie</b>\n• <b>Diurétiques de l’anse</b>\n• <b>Dérivés nitrés IV</b> (trinitrine)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 3</b>\n\nCompte tenu des éléments de l’observation, quels facteurs déclenchants sont à rechercher pour expliquer cet épisode aigu ?",
+          "images": [],
+          "reponseAttendue": "Une rupture ou une observance imparfaite du traitement, un excès de sel alimentaire, une infection (notamment une surinfection bronchique), une anémie et une cause iatrogène.",
+          "correctionGenerale": "• <b>Rupture ou observance imparfaite du traitement</b>\n• <b>Excès de sel alimentaire</b>\n• <b>Infection</b> : surinfection bronchique…\n• <b>Anémie</b>\n• <b>Cause iatrogène</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 4</b>\n\nSon traitement habituel comporte : aspirine 75 mg/jour, simvastatine 20 mg le soir, furosémide 40 mg/jour.\n\nQuelles sont les deux classes thérapeutiques manquantes chez cette patiente dans le cadre de sa prise en charge au long cours ?",
+          "images": [],
+          "reponseAttendue": "Les bêtabloquants et les IEC. La patiente ayant fait un infarctus du myocarde, elle doit recevoir le « BASIC » : bêtabloquant, aspirine, statine, IEC et correction des facteurs de risque cardio-vasculaire. Elle reçoit ici du furosémide pour son insuffisance cardiaque, probablement séquellaire de l’IDM.",
+          "correctionGenerale": "• Patiente ayant eu un IDM : elle doit être traitée selon le « <b>BASIC</b> » — <b>B</b>êtabloquants, <b>A</b>spirine, <b>S</b>tatines, <b>I</b>EC, <b>C</b>orrection des facteurs de risque cardio-vasculaire\n• Ici, elle reçoit du furosémide pour son insuffisance cardiaque, probablement séquellaire de l’IDM\n\n→ Il manque donc les <b>bêtabloquants</b> et les <b>IEC</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 1</b>\n\nUn homme de 55 ans est adressé aux urgences à 9 heures du matin. Il a été retrouvé à terre ce matin à 6 heures par sa femme. L’examen retrouve un déficit brachio-céphalique droit, un signe de Babinski droit, une aphasie. La pression artérielle est à 160/90 mmHg, le pouls est régulier. Le reste de l’examen clinique est sans particularité, T° 37,5 °C. L’interrogatoire de sa femme retrouve la notion de palpitations.\n\nQuel est votre diagnostic et sa topographie ?",
+          "images": [],
+          "reponseAttendue": "Un AVC ischémique sylvien superficiel gauche (territoire superficiel de l’artère cérébrale moyenne).",
+          "correctionGenerale": "• <b>AVC ischémique sylvien superficiel gauche</b> — territoire superficiel de l’artère cérébrale moyenne"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 2</b>\n\nVous demandez un scanner cérébral. Qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Les signes retrouvés au scanner lors d’un AVC ischémique : aucun (scanner normal) ; le signe de la « trop belle artère » ; une dédifférenciation substance blanche / substance grise ; une hypodensité lorsque l’infarctus est constitué.",
+          "correctionGenerale": "<b>Signes retrouvés au scanner lors d’un AVC ischémique</b>\n• Aucun : scanner normal\n• Signe de la « trop belle artère »\n• Dédifférenciation substance blanche / substance grise\n• Hypodensité lorsque l’infarctus est constitué"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 3</b>\n\nQuel est le mécanisme le plus probable chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "Un mécanisme embolique sur fibrillation atriale paroxystique.",
+          "correctionGenerale": "• Le plus probable est un <b>mécanisme embolique sur fibrillation atriale paroxystique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 4</b>\n\nQuelles explorations paracliniques proposez-vous pour déterminer l’étiologie ?",
+          "images": [],
+          "reponseAttendue": "Un ECG et un Holter-ECG ; une échographie cardiaque transthoracique et un écho-Doppler des troncs supra-aortiques ; une glycémie et une exploration des anomalies lipidiques.",
+          "correctionGenerale": "• <b>ECG, Holter-ECG</b>\n• <b>ETT, écho-Doppler des troncs supra-aortiques</b>\n• <b>Glycémie, exploration des anomalies lipidiques (EAL)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 5</b>\n\nEn fonction du mécanisme évoqué à la question 3, quels sont les principes du traitement ?",
+          "images": [],
+          "reponseAttendue": "Le patient n’est pas en fibrillation atriale au moment de l’examen (pouls régulier). Il faut donc : prévenir les complications emboliques par une anticoagulation au long cours (score CHA₂DS₂-VASc > 2 du fait de l’AVC) ; et maintenir le rythme sinusal par un antiarythmique.",
+          "correctionGenerale": "• Ici, le patient n’est pas en FA : le pouls est régulier\n• Donc :\n  – <b>Prévention des complications emboliques</b> par anticoagulation au long cours (CHA₂DS₂-VASc > 2 du fait de l’AVC)\n  – <b>Maintien du rythme sinusal</b> par un antiarythmique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 1</b>\n\nUn patient de 22 ans se présente aux urgences pour un ictère franc apparu de façon rapidement progressive sur trois jours. Il a des nausées mais pas de fièvre. Il n’y a pas d’anomalie à la palpation de l’abdomen, notamment pas de défense. Il avait fait la veille, à la demande de son médecin traitant, quelques examens complémentaires qu’il vous apporte : numération formule sanguine normale, bilirubine totale 82 (N < 17), phosphatases alcalines 300 (N < 125), γGT 312 (N < 30), ALAT 1022 (N < 50), ASAT 780 (N < 50). Il n’y a pas de signe de choc ni de signe d’insuffisance cardiaque droite aiguë.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une hépatite aiguë.",
+          "correctionGenerale": "• <b>Hépatite aiguë</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 2</b>\n\nDans l’urgence, quelle complication faut-il redouter et quels signes cliniques recherchez-vous pour diagnostiquer cette complication ?",
+          "images": [],
+          "reponseAttendue": "Une hépatite fulminante. On recherche les signes d’encéphalopathie hépatique : grade 1 — troubles de l’attention et du caractère (euphorie, anxiété) ; grade 2 — léthargie ou apathie, désorientation temporo-spatiale, comportement inapproprié ; grade 3 — somnolence marquée, confusion, désorientation temporo-spatiale ; grade 4 — coma.",
+          "correctionGenerale": "• <b>Hépatite fulminante</b>\n\n<b>Recherche des signes d’encéphalopathie hépatique</b>\n• Grade 1 : troubles de l’attention et du caractère (euphorie, anxiété)\n• Grade 2 : léthargie ou apathie, désorientation temporo-spatiale, comportement inapproprié\n• Grade 3 : somnolence marquée, confusion, désorientation temporo-spatiale\n• Grade 4 : coma"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 3</b>\n\nQuel examen biologique simple permet de confirmer ou d’éliminer cette complication ?",
+          "images": [],
+          "reponseAttendue": "Le taux de prothrombine (TP).",
+          "correctionGenerale": "• <b>Taux de prothrombine (TP)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 4</b>\n\nQuelles sont les principales étiologies du diagnostic évoqué à la question 1 ?",
+          "images": [],
+          "reponseAttendue": "Une hépatite virale aiguë ; une hépatite médicamenteuse ; une hépatite toxique (alcool, amanite phalloïde, solvants, drogues) ; une hépatite auto-immune ; une migration lithiasique ; une ischémie hépatique (foie de choc). Plus rarement : maladie de Wilson (lors d’un arrêt brutal de la D-pénicillamine), syndrome de Budd-Chiari, infiltration maligne diffuse du foie (hémopathie, carcinome).",
+          "correctionGenerale": "• <b>Hépatite virale aiguë</b>\n• <b>Hépatite médicamenteuse</b>\n• <b>Hépatite toxique</b> : alcool, amanite phalloïde, solvants, drogues\n• <b>Hépatite auto-immune</b>\n• <b>Migration lithiasique</b>\n• <b>Ischémie hépatique</b> : foie de choc\n• Rares : maladie de Wilson (lors d’un arrêt brutal de la D-pénicillamine), syndrome de Budd-Chiari, infiltration maligne diffuse du foie (hémopathie, carcinome)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 — Question 1</b>\n\nUn homme de 55 ans se présente pour un méléna sur terrain de cirrhose.\n\nCitez les 3 étiologies de cirrhose.",
+          "images": [],
+          "reponseAttendue": "L’origine alcoolique ; l’origine infectieuse (infection chronique par le VHB ou le VHC) ; la stéatohépatite non alcoolique (NASH).",
+          "correctionGenerale": "• <b>Alcoolique</b>\n• <b>Infectieuse</b> : infection chronique par le VHB ou le VHC\n• <b>NASH</b> (stéatohépatite non alcoolique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 — Question 2</b>\n\nQuels sont les 5 éléments à rechercher pour classer la gravité de la cirrhose selon le score de Child-Pugh ? (Les valeurs ne sont pas attendues.)",
+          "images": [],
+          "reponseAttendue": "L’ascite, la bilirubine, l’albumine, l’INR (ou le TP) et l’encéphalopathie.",
+          "correctionGenerale": "<i>Réponse donnée sous forme du tableau du score de Child-Pugh, retranscrit ci-dessous.</i>\n\n• <b>Ascite</b> : absente (1 point) — modérée (2 points) — tendue ou réfractaire aux diurétiques (3 points)\n• <b>Bilirubine (µmol/L)</b> : < 35 (1) — 35-50 (2) — > 50 (3)\n• <b>Albumine (g/L)</b> : > 35 (1) — 28-35 (2) — < 28 (3)\n• <b>INR / TP</b> : INR < 1,7 et TP > 50 % (1) — INR 1,7-2,2 et TP 40-50 % (2) — INR > 2,2 et TP < 40 % (3)\n• <b>Encéphalopathie</b> : absente (1) — légère à modérée, stade 1-2 (2) — sévère, stade 3-4 (3)\n\n<i>Le pronostic de la cirrhose est établi en fonction du score total</i> : Child-Pugh A (5-6 points) survie à 1 an de 100 % ; Child-Pugh B (7-9 points) survie à 1 an de 80 % ; Child-Pugh C (10-15 points) survie à 1 an de 45 %."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 — Question 3</b>\n\nCitez les causes possibles de ce saignement au vu du terrain.",
+          "images": [],
+          "reponseAttendue": "Les causes d’hémorragie digestive haute : rupture de varices œsophagiennes et ulcère gastro-duodénal hémorragique en premier lieu ; puis œsophagite, syndrome de Mallory-Weiss et tumeurs ; plus rarement ulcération de Dieulafoy, wirsungorragie et hémobilie.",
+          "correctionGenerale": "<b>Hémorragie digestive haute</b>\n• <b>Rupture de varices œsophagiennes</b> +++\n• <b>Ulcère gastro-duodénal hémorragique</b> +++\n• Œsophagite +\n• Syndrome de Mallory-Weiss +\n• Tumeurs +\n• Ulcération de Dieulafoy (rare)\n• Wirsungorragie (rare)\n• Hémobilie (très rare)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 — Question 4</b>\n\nQuels sont les 2 signes cliniques qui orientent vers une prise en charge urgente ?",
+          "images": [],
+          "reponseAttendue": "Les signes de choc et les signes de décompensation de la cirrhose.",
+          "correctionGenerale": "• <b>Signes de choc</b>\n• <b>Signes de décompensation de la cirrhose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 1</b>\n\nUn homme âgé de 60 ans, chauffeur de taxi, souffre d’insomnie d’endormissement associée à des troubles anxieux généralisés, et bénéficie d’un traitement par bromazépam, zopiclone et paroxétine depuis 3 mois. Il consulte pour une majoration de son asthénie et de ses ronflements, avec apparition d’une somnolence avérée. Il pèse 90 kg et mesure 1 m 60.\n\nPrécisez la formule de calcul de l’index de masse corporelle.",
+          "images": [],
+          "reponseAttendue": "IMC = poids / taille², soit ici 90 / 1,60² ≈ 35 kg/m², correspondant à une obésité de grade 2.",
+          "correctionGenerale": "• <b>IMC = poids / taille²</b>\n• Ici : 90 kg pour 1 m 60 → IMC ≈ 35 kg/m², soit une <b>obésité de grade 2</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 2</b>\n\nQuel diagnostic évoquez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome d’apnées obstructives du sommeil.",
+          "correctionGenerale": "• <b>Syndrome d’apnées obstructives du sommeil (SAOS)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 3</b>\n\nCitez un examen pouvant confirmer ce diagnostic.",
+          "images": [],
+          "reponseAttendue": "Une polygraphie ventilatoire nocturne.",
+          "correctionGenerale": "• <b>Polygraphie ventilatoire nocturne</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 4</b>\n\nDans son traitement, quel est celui qui peut être à l’origine de l’aggravation de son état clinique ?",
+          "images": [],
+          "reponseAttendue": "Le zopiclone et le bromazépam : les benzodiazépines et apparentés sont contre-indiqués chez un patient présentant un SAOS.",
+          "correctionGenerale": "• <b>Zopiclone et bromazépam</b> : les benzodiazépines et apparentés sont contre-indiqués chez un patient porteur d’un SAOS"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 5</b>\n\nEn cas de diagnostic positif, quelles sont vos propositions thérapeutiques ?",
+          "images": [],
+          "reponseAttendue": "La prise en charge du surpoids et de l’obésité ; l’éviction des médicaments et substances aggravant le SAOS (benzodiazépines, myorelaxants, morphiniques, consommation excessive d’alcool le soir) ; l’optimisation de la prise en charge des facteurs de risque cardio-vasculaire et des facteurs favorisant le SAOS ; la ventilation par pression positive continue, traitement de référence ; et, le patient étant chauffeur de taxi, un test de latence d’endormissement pour déterminer son aptitude à conduire.",
+          "correctionGenerale": "• <b>Prise en charge du surpoids / de l’obésité</b>\n• <b>Éviction des médicaments et substances aggravant le SAOS</b> : benzodiazépines, myorelaxants, morphiniques, consommation d’alcool en quantité excessive le soir\n• Optimisation de la prise en charge des facteurs de risque cardio-vasculaire et des facteurs favorisant le SAOS\n• <b>Ventilation par pression positive continue (PPC)</b> : traitement de référence\n• Patient chauffeur de taxi : lui faire passer un <b>test de latence d’endormissement</b> pour déterminer sa capacité à conduire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 6</b>\n\nCitez les 2 comorbidités les plus fréquemment associées à la pathologie diagnostiquée.",
+          "images": [],
+          "reponseAttendue": "Un risque d’accident de la route multiplié par 2 à 3, et une HTA — surtout diastolique et à prédominance nocturne (60 % des patients hypertendus ont un SAOS modéré à sévère).",
+          "correctionGenerale": "• <b>Risque d’accident de la route</b> multiplié par 2 à 3\n• <b>HTA</b>, surtout diastolique et à prédominance nocturne (60 % des patients hypertendus ont un SAOS modéré à sévère)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 7</b>\n\nAu vu de la situation du patient (pathologie, traitement pris), quel conseil primordial devez-vous lui prodiguer ?",
+          "images": [],
+          "reponseAttendue": "Adopter une meilleure hygiène de vie et respecter les règles hygiéno-diététiques : cela permettra d’améliorer à la fois le SAOS, les insomnies et le trouble anxieux généralisé.",
+          "correctionGenerale": "• <b>Meilleure hygiène de vie, règles hygiéno-diététiques</b> : elles permettront une amélioration du SAOS, des insomnies et du trouble anxieux généralisé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 — Question 1</b>\n\nUn patient de 70 ans présente une asthénie. L’électrophorèse des protéines sériques montre une gammapathie monoclonale dont le pic est évalué à 10 g/L.\n\nQue recherchez-vous à l’examen clinique en faveur d’une hémopathie maligne ?",
+          "images": [],
+          "reponseAttendue": "Des signes de résorption osseuse (douleurs osseuses, impotence fonctionnelle, fractures pathologiques, radiculalgies) ; un syndrome d’hyperviscosité et une insuffisance médullaire (altération de l’état général, signes d’anémie, signes neurologiques, signes neurosensoriels : céphalées, vertiges, somnolence, troubles visuels et auditifs) ; un syndrome tumoral (adénopathies, hépatosplénomégalie). À noter que le syndrome d’hyperviscosité est peu probable ici, le pic n’étant qu’à 10 g/L.",
+          "correctionGenerale": "<b>Signes de résorption osseuse</b>\n• Douleurs osseuses\n• Impotence fonctionnelle\n• Fractures pathologiques\n• Radiculalgies\n\n<b>Syndrome d’hyperviscosité et insuffisance médullaire</b> (peu probable ici : pic à 10 g/L seulement)\n• Altération de l’état général\n• Signes d’anémie\n• Signes neurologiques\n• Signes neurosensoriels : céphalées, vertiges, somnolence, troubles visuels et auditifs\n\n<b>Syndrome tumoral</b>\n• Adénopathies, hépatosplénomégalie\n\n<i>NB : un pic monoclonal fait évoquer un myélome en premier lieu, mais aussi une MGUS, une maladie de Waldenström ou une leucémie lymphoïde chronique.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 — Question 2</b>\n\nDevant un examen clinique normal, quel est le bilan biologique de première intention ?",
+          "images": [],
+          "reponseAttendue": "Une immunofixation des protéines sériques ; une électrophorèse et une immunofixation des protéines urinaires ; un myélogramme ; une NFS-plaquettes ; un ionogramme sanguin avec urée et créatinine ; une calcémie.",
+          "correctionGenerale": "• <b>Immunofixation des protéines sériques</b>\n• <b>Électrophorèse et immunofixation des protéines urinaires</b>\n• <b>Myélogramme</b>\n• <b>NFS-plaquettes</b>\n• <b>Ionogramme sanguin, urée, créatinine</b>\n• <b>Calcémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 1</b>\n\nUne femme de 70 ans est adressée aux urgences pour un syndrome confusionnel isolé, sans notion de chute ou de traumatisme crânien. De ses antécédents, on retient une hypertension artérielle traitée depuis 10 ans par amlodipine (Amlor®) 10 mg/j et un syndrome dépressif traité par paroxétine (Deroxat®) 20 mg/j.\n\nLes constantes sont : PA 145/75 mmHg, FC 90/min, FR 20/min, température 37,2 °C. Il n’y a pas de signe d’insuffisance cardiaque, d’œdème ni de signe de localisation neurologique.\n\nLes données biologiques sont : natrémie 120 mmol/L, kaliémie 4 mmol/L, protides 62 g/L, créatinine 102 µmol/L, hématocrite 45 %, glycémie 7 mmol/L, calcémie 2,34 mmol/L.\n\nQuel diagnostic évoquez-vous pour expliquer la confusion ?",
+          "images": [],
+          "reponseAttendue": "Une hyponatrémie.",
+          "correctionGenerale": "• <b>Hyponatrémie</b> (natrémie à 120 mmol/L)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 2</b>\n\nQuelle(s) mesure(s) thérapeutique(s) à visée étiologique effectuez-vous en premier lieu ?",
+          "images": [],
+          "reponseAttendue": "L’hyponatrémie étant sévère (< 120 mmol/L) et symptomatique, une perfusion de chlorure de sodium hypertonique, avec une correction de 1 à 2 mmol/L/h dans les 3 à 4 premières heures jusqu’à résolution des symptômes, sans dépasser 8 à 12 mmol/L sur les 24 premières heures.",
+          "correctionGenerale": "• Hyponatrémie <b>sévère</b> (< 120 mmol/L) et <b>symptomatique</b> : <b>perfusion de chlorure de sodium hypertonique</b>\n• Correction de 1 à 2 mmol/L/h dans les 3-4 premières heures, jusqu’à résolution des symptômes\n• Sans dépasser 8 à 12 mmol/L sur les 24 premières heures"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 10 — Questions 1 et 2</b>\n\nMadame X, 87 ans, démente à un stade sévère mais habituellement calme, vivant en institution (EHPAD), est amenée aux urgences de l’hôpital pour des chutes itératives douloureuses. Parmi les comorbidités, on note une hypertension artérielle et une cirrhose.\n\nSon ordonnance actuelle comporte :\n• Zolpidem (Stilnox®), 1 comprimé au coucher\n• Rispéridone (Risperdal®) 1 mg le soir, prescription pour 3 mois\n• Lorazépam (Temesta®) 1 mg, 1 comprimé matin et soir\n• Ibuprofène (Advil®) 200 mg, 1 comprimé matin et soir\n• Paracétamol (Dafalgan®) 500 mg, 1 gélule matin et soir\n• Amlodipine (Amlor®) 5 mg, 1 gélule par jour\n• Ramipril (Triatec®) 2,5 mg, 1 comprimé par jour\n• Bromazépam (Lexomil®), en cas d’anxiété, ¼ de comprimé à renouveler\n• Donépézil (Aricept®) 10 mg, 1 comprimé par jour\n\nParmi cette ordonnance, citez 5 médicaments ou associations de médicaments qui posent problème, et décrivez brièvement pourquoi.",
+          "images": [],
+          "reponseAttendue": "La prescription d’AINS, à éviter chez le sujet âgé (risque de complications très élevé) ; l’association AINS + IEC, avec un risque d’insuffisance rénale ; le paracétamol, contre-indiqué chez l’insuffisant hépatique grave ; la rispéridone, non indiquée chez un patient dément mais non agité et majorant le risque de chute chez le sujet âgé ; la prescription de deux benzodiazépines et d’un apparenté, soit une duplication de classe médicamenteuse, avec des durées non respectées (benzodiazépine anxiolytique à ne pas prescrire au-delà de 12 semaines, apparenté hypnotique au-delà de 4 semaines) et une majoration du risque de chute chez le sujet âgé.",
+          "correctionGenerale": "• <b>Prescription d’AINS</b> : à éviter chez le sujet âgé, le risque de complications liées aux AINS y étant très élevé\n• <b>Association AINS + IEC</b> : risque d’insuffisance rénale\n• <b>Paracétamol</b> : contre-indiqué chez l’insuffisant hépatique grave\n• <b>Rispéridone</b> : non indiquée chez un patient dément mais non agité, et majore le risque de chute chez le sujet âgé\n• <b>Prescription de deux benzodiazépines et d’un apparenté</b> :\n  – Duplication de prescription d’une même classe médicamenteuse\n  – Benzodiazépine à visée anxiolytique : à ne pas prescrire plus de 12 semaines\n  – Apparenté aux benzodiazépines à visée hypnotique : à ne pas prescrire plus de 4 semaines\n  – Majoration du risque de chute chez le sujet âgé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 11 — Question 1</b>\n\nVous êtes appelé au domicile de Madame B, 50 ans, qui présente une crise d’asthme.\n\nDonnez une définition de l’asthme.",
+          "images": [],
+          "reponseAttendue": "Une maladie inflammatoire chronique des voies aériennes inférieures associant des symptômes respiratoires (dyspnée, sifflement, oppression thoracique et/ou toux) et une obstruction des voies aériennes variant au cours du temps. Elle correspond à une hyperréactivité bronchique, c’est-à-dire une bronchoconstriction exagérée lors de l’exposition à divers stimuli, pharmacologiques (métacholine) ou mécaniques (air sec).",
+          "correctionGenerale": "• <b>Maladie inflammatoire chronique des voies aériennes inférieures</b> associant :\n  – Des symptômes respiratoires : dyspnée, sifflement, oppression thoracique et/ou toux\n  – Une obstruction des voies aériennes variant au cours du temps\n• Correspond à une <b>hyperréactivité bronchique</b> : bronchoconstriction exagérée lors de l’exposition à divers stimuli\n  – Pharmacologiques : métacholine\n  – Mécaniques : air sec"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 11 — Question 2</b>\n\nCitez au moins 5 signes cliniques respiratoires de gravité imposant des décisions thérapeutiques immédiates.",
+          "images": [],
+          "reponseAttendue": "Dans l’exacerbation sévère et l’asthme aigu grave : le patient parle avec des mots, est assis penché en avant, est agité, a une FR > 30/min, utilise les muscles respiratoires accessoires, a une FC > 120 bpm, une SpO₂ < 90 % en air ambiant et un DEP < 50 % de la meilleure valeur (ou de la valeur théorique si elle est inconnue). Les critères de gravité extrême de l’asthme aigu grave sont les signes de détresse respiratoire et de choc : cyanose, respiration paradoxale, pauses respiratoires, silence auscultatoire, bradycardie, collapsus, troubles de la conscience.",
+          "correctionGenerale": "<b>Exacerbation sévère et asthme aigu grave (AAG)</b>\n• Parle avec des mots\n• Assis penché en avant\n• Agité\n• FR > 30/min\n• Utilisation des muscles respiratoires accessoires\n• FC > 120 bpm\n• SpO₂ < 90 % en air ambiant\n• DEP < 50 % de la meilleure valeur (théorique si inconnue)\n\n<i>À comparer à l’exacerbation légère à modérée</i> : parle avec des phrases, préfère la position assise à la position allongée, non agité, augmentation de la FR, pas d’utilisation des muscles respiratoires accessoires, FC > 100 bpm, SpO₂ < 95 % en air ambiant, DEP > 50 % de la meilleure valeur.\n\n<b>Critères de gravité extrême de l’AAG</b> — signes de détresse respiratoire et signes de choc\n• Cyanose\n• Respiration paradoxale\n• Pauses respiratoires\n• Silence auscultatoire\n• Bradycardie\n• Collapsus\n• Troubles de la conscience"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 11 — Question 3</b>\n\nQuel traitement de première intention dans cette situation ? Donnez un exemple (DCI).",
+          "images": [],
+          "reponseAttendue": "Les bronchodilatateurs β2-mimétiques de courte durée d’action : salbutamol, terbutaline.",
+          "correctionGenerale": "• Traitement clé lors d’une crise d’asthme : <b>bronchodilatateurs β2-mimétiques de courte durée d’action</b> — salbutamol, terbutaline"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 11 — Question 4</b>\n\nCitez au moins une classe thérapeutique contre-indiquée chez un patient asthmatique.",
+          "images": [],
+          "reponseAttendue": "Les bêtabloquants. À noter que l’asthme peut être associé à une intolérance à l’aspirine, dans le cadre du syndrome de Widal.",
+          "correctionGenerale": "• <b>Bêtabloquants</b>\n\n<i>NB : l’asthme peut être associé à une intolérance à l’aspirine, dans le cadre du syndrome de Widal.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 11 — Question 5</b>\n\nQuel outil d’autosurveillance peut-on proposer au patient ? À partir de quelle valeur le patient doit-il s’alarmer ?",
+          "images": [],
+          "reponseAttendue": "Le débit expiratoire de pointe (DEP), débit maximal instantané mesuré lors d’une expiration forcée. La crise d’asthme est sévère si le DEP est < 50 % : le patient doit alors s’alarmer. À noter qu’en dessous de 80 %, l’asthme est déjà considéré comme non contrôlé.",
+          "correctionGenerale": "• <b>Débit expiratoire de pointe (DEP)</b> : débit maximal instantané mesuré lors d’une expiration forcée\n• <b>Crise d’asthme sévère si DEP < 50 %</b> : le patient doit donc s’alarmer\n\n<i>NB : cependant, à partir d’une valeur < 80 %, un asthme est dit non contrôlé.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2015 - EVCP",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE 2015.pdf",
+      "orderIndex": 117,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2015.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 1</b>\n\nMonsieur D., 45 ans, chauffeur poids lourd, se présente aux urgences. Il n’a pas d’antécédents médicaux particuliers en dehors d’un surpoids. Il présente depuis 48 heures une douleur lombaire irradiant dans le membre inférieur droit, à la face postérieure de la cuisse, de la jambe et du talon, et sur la face plantaire du pied. À l’examen clinique, il existe un signe de Lasègue à 30 degrés à droite. La température est à 37,1 °C, la pression artérielle à 135/80 mmHg, le pouls à 100/min. L’échelle visuelle analogique de la douleur est à 7/10.\n\nPrécisez votre diagnostic avec le territoire anatomique concerné.",
+          "images": [],
+          "reponseAttendue": "Une lombosciatique droite de territoire S1.",
+          "correctionGenerale": "• <b>Lombosciatique droite de territoire S1</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 2</b>\n\nQuels sont les éléments cliniques de gravité qui justifieraient un avis neurochirurgical ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de la queue de cheval, un déficit moteur < 3/5 et une sciatique hyperalgique résistante aux antalgiques de palier 3.",
+          "correctionGenerale": "• <b>Syndrome de la queue de cheval</b>\n• <b>Déficit moteur < 3/5</b>\n• <b>Sciatique hyperalgique</b> résistante aux antalgiques de palier 3"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 3</b>\n\nL’examen clinique ne montre pas de signe de gravité. À ce stade, réalisez-vous un ou des examen(s) d’imagerie ? Si oui, lequel ou lesquels ?",
+          "images": [],
+          "reponseAttendue": "Aucun.",
+          "correctionGenerale": "• <b>Aucun</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 4</b>\n\nQuelles sont les modalités de prise en charge thérapeutique de première intention, avec les mesures associées ?",
+          "images": [],
+          "reponseAttendue": "Du repos les premiers jours, avec un arrêt de travail le plus court possible (3 à 5 jours) ; des antalgiques — ici une association de paliers I et II, l’EVA étant entre 4 et 7 — des AINS et des myorelaxants en phase aiguë ; une orthèse lombaire rigide pendant 4 à 6 semaines ; une rééducation dès la disparition des douleurs. Mesures associées : diminution de la surcharge pondérale, éviction des sports violents, reprise prudente et progressive de l’activité, éventuelle adaptation du poste et éventuelle déclaration en maladie professionnelle.",
+          "correctionGenerale": "• <b>Repos</b> les premiers jours, arrêt de travail le plus court possible (3-5 jours)\n• <b>Antalgiques</b> : ici association de palier I et II, car EVA entre 4 et 7\n• <b>AINS</b> et <b>myorelaxants</b> en phase aiguë\n• <b>Orthèse lombaire rigide</b> pendant 4 à 6 semaines\n• <b>Rééducation</b> dès la disparition des douleurs\n\n<b>Mesures associées</b>\n• Diminution de la surcharge pondérale\n• Éviction des sports violents\n• Reprise de l’activité prudente et progressive\n• ± Adaptation du poste de travail\n• ± Déclaration en maladie professionnelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 5</b>\n\nAprès une amélioration initiale, le patient est revu 6 mois plus tard devant la persistance d’un fond douloureux, dans le même territoire, malgré le traitement initial bien conduit. À l’interrogatoire, il décrit des décharges électriques, des brûlures, des fourmillements et des picotements dans le territoire du membre inférieur droit. L’IRM lombaire montre une protrusion discale lombaire sans conflit radiculaire.\n\nQuel type de douleur présente-t-il ?",
+          "images": [],
+          "reponseAttendue": "Des douleurs neuropathiques.",
+          "correctionGenerale": "• <b>Douleurs neuropathiques</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 6</b>\n\nQuelles classes médicamenteuses pouvez-vous utiliser devant ce type de douleurs ? Donnez un exemple de médicament pour chaque classe.",
+          "images": [],
+          "reponseAttendue": "Les antidépresseurs tricycliques, par exemple l’amitriptyline, et les antiépileptiques, par exemple la gabapentine.",
+          "correctionGenerale": "• <b>Antidépresseurs tricycliques</b> : amitriptyline\n• <b>Antiépileptiques</b> : gabapentine\n\n<i>Rappel du tableau de synthèse projeté en séance (traitements de niveau de preuve A ou B des douleurs neuropathiques)</i>\n• <b>Antidépresseurs tricycliques</b> — amitriptyline, imipramine, clomipramine : niveau de preuve 1, grade A, recommandés en 1<sup>re</sup> intention ; maprotiline : niveau 2, grade B, recommandée en 2<sup>de</sup> intention\n• <b>Antidépresseurs IRSNA</b> — duloxétine : niveau 1, grade A, recommandée en 1<sup>re</sup> intention dans la polyneuropathie douloureuse du diabète ; venlafaxine : niveau 1, grade A, recommandée en 2<sup>de</sup> intention\n• <b>Antiépileptiques</b> — gabapentine : niveau 1, grade A, recommandée en 1<sup>re</sup> intention ; prégabaline : niveau 1, grade A, recommandée en 1<sup>re</sup> intention"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 7</b>\n\nQuelles thérapeutiques non médicamenteuses pouvez-vous proposer devant ce type de douleurs ?",
+          "images": [],
+          "reponseAttendue": "La kinésithérapie, la neurostimulation transcutanée, la neurostimulation médullaire et la thérapie cognitivo-comportementale.",
+          "correctionGenerale": "• <b>Kinésithérapie</b>\n\n<i>Rappel du tableau de synthèse projeté en séance (traitements non médicamenteux des douleurs neuropathiques, niveau de preuve 2, grade B)</i>\n• <b>Neurostimulation transcutanée</b> : recommandée dans la douleur neuropathique périphérique localisée\n• <b>Neurostimulation médullaire</b> : recommandée dans les lombosciatiques chroniques postopératoires avec radiculalgie prédominante\n• <b>Thérapie cognitivo-comportementale</b> : peut être proposée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 1</b>\n\nMadame G., 78 ans, doit bénéficier de la mise en place d’une prothèse totale du genou droit. Il s’agit d’une patiente hypertendue présentant un antécédent de fibrillation auriculaire paroxystique, mais n’ayant jamais présenté de complication embolique.\n\nElle reçoit un traitement antihypertenseur par inhibiteur de l’enzyme de conversion (ramipril 5 mg, 1 cp/jour) et un inhibiteur calcique (amlodipine 5 mg, 1 gélule/jour), associé à un traitement anticoagulant par antivitamine K (warfarine 4 mg/jour).\n\nSur quels éléments confirmez-vous l’indication du traitement anticoagulant au long cours par warfarine ?",
+          "images": [],
+          "reponseAttendue": "Sur le score CHA₂DS₂-VASc, la patiente ayant une FA non valvulaire : insuffisance cardiaque 0, HTA 1, âge > 75 ans 2, diabète 0, AVC 0, atteinte vasculaire 0, sexe féminin 1 — soit un score de 4 (> 2), ce qui justifie l’anticoagulation au long cours.",
+          "correctionGenerale": "<b>Patiente avec FA non valvulaire : calcul du score CHA₂DS₂-VASc</b>\n• Insuffisance cardiaque congestive : 0\n• HTA : 1\n• Âge > 75 ans : 2\n• Diabète : 0\n• Stroke (AVC/AIT) : 0\n• Atteinte vasculaire (IDM, AOMI) : 0\n• Sexe féminin : 1\n\n→ <b>CHA₂DS₂-VASc = 4</b> (> 2), ce qui justifie l’anticoagulation au long cours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 2</b>\n\nPrécisez quels sont les examens complémentaires nécessaires au bilan de sa cardiopathie et au suivi de cette patiente pour la conduite du traitement antihypertenseur et anticoagulant.",
+          "images": [],
+          "reponseAttendue": "Pour le bilan de la fibrillation atriale : une échographie cardiaque transthoracique, un ionogramme sanguin avec urée et créatinine, et une TSH. Pour la conduite du traitement anticoagulant : l’INR. Pour la conduite du traitement antihypertenseur : le potassium et la créatinine.",
+          "correctionGenerale": "<b>Bilan de la fibrillation atriale</b>\n• ETT\n• Ionogramme sanguin, urée, créatinine\n• TSH\n\n<b>Conduite du traitement anticoagulant</b>\n• INR\n\n<b>Conduite du traitement antihypertenseur</b>\n• Potassium, créatinine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 3</b>\n\nDans la perspective de la mise en place de la prothèse de genou, quelle stratégie thérapeutique faut-il adopter vis-à-vis du traitement anticoagulant au regard des recommandations ?",
+          "images": [],
+          "reponseAttendue": "Pas de relais AVK-héparine préopératoire, car la patiente n’a pas d’antécédent d’embolie liée à sa fibrillation atriale : arrêt des AVK sans relais préopératoire par héparine, avec un objectif d’INR au moment de l’intervention < 1,5. Reprise des AVK dans les 24 à 48 h ou, si elle n’est pas possible, héparine à dose curative si le risque hémorragique est contrôlé.",
+          "correctionGenerale": "• <b>Pas de relais AVK-héparine préopératoire</b>, car la patiente n’a pas d’antécédent d’embolie liée à sa FA\n\n<i>Rappel des recommandations projetées en séance — actes programmés nécessitant l’interruption des AVK (objectif : INR au moment de l’intervention < 1,5, ou < 1,2 en neurochirurgie)</i>\n• <b>ACFA sans antécédent embolique, MTEV à risque modéré</b> : arrêt des AVK <b>sans</b> relais préopératoire par héparine ; reprise des AVK dans les 24-48 h ou, si elle n’est pas possible, héparine à dose curative si le risque hémorragique est contrôlé\n• <b>Valves mécaniques (tout type), ACFA avec antécédent embolique, MTEV à haut risque</b> : arrêt des AVK <b>avec</b> relais préopératoire par héparine à dose curative ; reprise des AVK dans les 24-48 h ou, si elle n’est pas possible, héparine à dose curative si le risque hémorragique est contrôlé\n• L’héparinothérapie à dose curative ne doit pas être reprise avant la 6<sup>e</sup> heure postopératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 4</b>\n\nAu cours de la surveillance, vous revoyez la patiente avec un INR à 8. Quelle est la conduite thérapeutique à adopter dans cette situation dans les 24 premières heures ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’un surdosage asymptomatique avec un INR à 8 (6 < INR < 10) chez une patiente dont l’objectif est un INR entre 2 et 3 : arrêt des AVK, vitamine K 1 à 2 mg per os, vérification de l’INR 24 heures plus tard, et recherche de la cause du surdosage.",
+          "correctionGenerale": "<b>Surdosage asymptomatique avec INR à 8 (6 < INR < 10), chez une patiente dont l’objectif est un INR entre 2 et 3</b>\n• <b>Arrêt des AVK</b>\n• <b>Vitamine K 1-2 mg per os</b>\n• <b>Vérification de l’INR 24 h plus tard</b>\n• <b>Recherche de la cause du surdosage</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 5</b>\n\nMme G. a passé les mois d’hiver chez ses enfants ; vous la revoyez 6 mois plus tard. Son traitement a été modifié : en raison d’une instabilité de l’INR, la warfarine a été remplacée par le dabigatran, 1 cp à 150 mg × 2 par jour (anticoagulant oral direct).\n\nElle vient de présenter un épisode de diarrhée fébrile l’empêchant de s’alimenter. Alors que la situation digestive commençait à s’améliorer, vous mesurez une PA à 110/70 mmHg couchée et 80/60 mmHg debout, avec une FC à 100 bpm. La patiente signale des lipothymies aux levers.\n\nQuels sont les risques associés à cet épisode ?",
+          "images": [],
+          "reponseAttendue": "Une hypotension orthostatique par probable déshydratation extracellulaire liée à la diarrhée, avec un risque de chute et un risque d’insuffisance rénale ; et un risque de diminution de l’efficacité du dabigatran.",
+          "correctionGenerale": "• <b>Hypotension orthostatique</b> par probable déshydratation extracellulaire liée à la diarrhée :\n  – <b>Risque de chute</b>\n  – <b>Risque d’insuffisance rénale</b>\n• <b>Risque de diminution de l’efficacité du dabigatran</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 6</b>\n\nQuelles précautions prenez-vous pour les limiter ?",
+          "images": [],
+          "reponseAttendue": "La réhydratation de la patiente, un lever progressif, et éventuellement des bas de contention.",
+          "correctionGenerale": "• <b>Réhydratation de la patiente</b>\n• <b>Lever progressif</b>\n• ± <b>Bas de contention</b>"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "sources": {
+    "ANNALES MG/PAE MG 2017.pdf": {
+      "atelier": "annales-mg/pae-mg-2017",
+      "sujetOfficiel": "Annales/Sujets/EVCF_2017/EVCF__2017/EVCF.71.DOC et Annales/Sujets/EVCP__2017 - 30 à 76/EVCP.71.DOC",
+      "figuresIgnorees": {
+        "img-001-002.png": "diapositive de rappel de cours : formule de Cockcroft et Gault et définition de ses paramètres ; son contenu est retranscrit dans la correction de la question",
+        "img-011-024.png": "tableau de rappel de cours (choix préférentiel d’antihypertenseur selon les comorbidités) ; son contenu est retranscrit dans la correction de la question"
+      },
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2017 (EVCF : 3 sujets, 15 questions ; EVCP : 4 sujets). Les énoncés et la numérotation officielle ont été restitués à partir des sujets du dépôt (EVCF.71.DOC et EVCP.71.DOC de 2017)."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2017 - EVCF",
+      "annee": 2017,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE MG 2017.pdf",
+      "orderIndex": 120,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2017.</b>\n\nL’ensemble des sujets est à traiter. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 : insuffisance rénale — Question 1</b>\n\nVous recevez dans votre service un homme de 60 ans hypertendu (180/105 mmHg, pouls 98/min) avec une asthénie persistante depuis 6 mois ayant conduit à la réalisation d’un bilan biologique par son médecin généraliste. Le patient mesure 1 m 70 pour un poids de 80 kg.\n\nLe bilan a mis en évidence les anomalies suivantes : natrémie 127 mmol/L, kaliémie 5,6 mmol/L, réserve alcaline 18 mmol/L, chlore 102 mmol/L, urée 15 mmol/L, créatinine 280 µmol/L, albumine 40 g/L, calcémie 2 mmol/L, phosphorémie 2 mmol/L, hémoglobine 8,5 g/dL, VGM 92 fL, hématocrite 42 %, CCMH 33 g/dL, réticulocytes 25 000/mm³. Le reste de l’hémogramme est normal.\n\nDonnez les éléments permettant le calcul de la clairance de la créatinine, en dehors de la créatininémie, selon Cockcroft chez ce patient.",
+          "images": [],
+          "reponseAttendue": "Le sexe (ici masculin, k = 1,23), le poids et l’âge. La clairance de la créatinine selon Cockcroft chez ce patient est de 28 mL/min.",
+          "correctionGenerale": "<b>Éléments pris en compte dans la formule de Cockcroft, en dehors de la créatininémie</b>\n• <b>Sexe</b> : ici masculin, k = 1,23\n• <b>Poids</b>\n• <b>Âge</b>\n\n→ Clairance de la créatinine selon Cockcroft chez ce patient = <b>28 mL/min</b>\n\n<i>Rappel de la formule projetée en séance</i> : Cl<sub>Cr</sub> = [(140 − âge) / créatininémie] × poids × k, avec Cl<sub>Cr</sub> l’estimation de la clairance de la créatinine en mL/min, la créatininémie en µmol/L, l’âge en années, le poids en kg, et k = 1,23 chez l’homme et 1,04 chez la femme."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 : insuffisance rénale — Question 2</b>\n\nDécrivez et interprétez les anomalies que vous identifiez sur le ionogramme sanguin et la fonction rénale.",
+          "images": [],
+          "reponseAttendue": "Une hyponatrémie (normale 135-145 mmol/L) ; une hyperkaliémie (normale 3,5-5,0 mmol/L) ; une réserve alcaline diminuée (normale 22-30 mmol/L) ; une urée augmentée (normale 2,5-7,5 mmol/L) ; une créatinine augmentée avec un DFG selon Cockcroft à 28 mL/min, soit une insuffisance rénale sévère ; une calcémie corrigée par l’albumine à 2,0 mmol/L, soit une hypocalcémie (normale 2,2-2,6 mmol/L) ; une hyperphosphorémie (normale 0,8-1,35 mmol/L). Au total : des signes en faveur d’une insuffisance rénale chronique avec troubles du métabolisme phosphocalcique, acidose métabolique chronique et troubles hydro-électrolytiques.",
+          "correctionGenerale": "• <b>Hyponatrémie</b> (normale entre 135 et 145 mmol/L)\n• <b>Hyperkaliémie</b> (normale entre 3,5 et 5,0 mmol/L)\n• <b>Réserve alcaline (HCO₃⁻) diminuée</b> (normale entre 22 et 30 mmol/L)\n• <b>Augmentation de l’urée</b> (normale 2,5-7,5 mmol/L)\n• <b>Augmentation de la créatinine</b>, avec un DFG selon Cockcroft à 28 mL/min : <b>insuffisance rénale sévère</b>\n• <b>Calcémie corrigée par l’albumine à 2,0 mmol/L</b> : hypocalcémie (normale entre 2,2 et 2,6 mmol/L)\n• <b>Hyperphosphorémie</b> (normale entre 0,8 et 1,35 mmol/L)\n\n→ Signes en faveur d’une <b>insuffisance rénale chronique</b> avec troubles du métabolisme phosphocalcique, acidose métabolique chronique et troubles hydro-électrolytiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 : insuffisance rénale — Question 3</b>\n\nLa diurèse de ce patient est à 1500 mL/24 heures. Chez ce patient, quels sont les arguments en faveur du caractère chronique d’une insuffisance rénale, et quel élément manque-t-il dans cette observation pour conforter cette hypothèse ?",
+          "images": [],
+          "reponseAttendue": "Présents ici : l’anémie normocytaire arégénérative et l’hypocalcémie. Absents et à rechercher : des valeurs anciennes de créatinine et une atrophie rénale à l’échographie.",
+          "correctionGenerale": "<b>Arguments en faveur de la chronicité présents ici</b>\n• Anémie normocytaire arégénérative\n• Hypocalcémie\n\n<b>Absents et à rechercher</b>\n• Valeurs anciennes de créatinine\n• Atrophie rénale à l’échographie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 : insuffisance rénale — Question 4</b>\n\nQuel examen d’imagerie demandez-vous et qu’en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une échographie-Doppler rénale et des voies excrétrices urinaires, à la recherche d’une diminution du volume des reins (ou au contraire d’une augmentation de volume, présente dans certaines causes d’insuffisance rénale), et pour la recherche étiologique : obstruction au niveau des voies excrétrices, anomalie du flux vasculaire en faveur d’une néphropathie vasculaire.",
+          "correctionGenerale": "<b>Échographie-Doppler rénale et des voies excrétrices urinaires</b>, à la recherche de :\n• Une <b>diminution du volume des reins</b> (ou au contraire une augmentation de volume, présente dans certaines causes d’insuffisance rénale)\n• Une <b>étiologie</b> :\n  – Obstruction au niveau des voies excrétrices\n  – Anomalie du flux vasculaire en faveur d’une néphropathie vasculaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 : insuffisance rénale — Question 5</b>\n\nCaractérisez l’anémie présentée par le patient. Quel est son mécanisme et quel traitement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une anémie normocytaire arégénérative, par carence en érythropoïétine dans le cadre de l’insuffisance rénale chronique. Traitement par EPO, avec un objectif d’hémoglobine entre 10 et 12 g/dL.",
+          "correctionGenerale": "• <b>Anémie normocytaire arégénérative par carence en EPO</b>, dans le cadre de l’insuffisance rénale chronique\n• <b>Traitement par EPO</b>, avec objectif d’hémoglobine de 10 à 12 g/dL"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 : tabagisme — Question 1</b>\n\nUn homme de 63 ans consulte son médecin généraliste pour une toux invalidante diurne et nocturne apparue depuis quelques mois. Cet homme a fumé 20 cigarettes par jour entre 15 et 19 ans, puis 30 cigarettes par jour jusqu’à 55 ans, puis 5 cigarettes par jour depuis.\n\nÀ combien de paquets-années s’élève l’intoxication tabagique de ce patient ?",
+          "images": [],
+          "reponseAttendue": "59,5 paquets-années : 1 paquet/jour pendant 5 ans (5 PA), puis 1,5 paquet/jour pendant 35 ans (52,5 PA), puis 0,25 paquet/jour pendant 8 ans (2 PA).",
+          "correctionGenerale": "• 1 paquet de cigarettes = 20 cigarettes\n• 1 paquet/j pendant 5 ans = 5 PA\n• 1,5 paquet/j pendant 35 ans = 52,5 PA\n• 0,25 paquet/j pendant 8 ans = 2 PA\n\n→ <b>Tabagisme à 59,5 paquets-années</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 : tabagisme — Question 2</b>\n\nQuelles sont les quatre principales néoplasies favorisées par l’action du tabac ?",
+          "images": [],
+          "reponseAttendue": "Le cancer broncho-pulmonaire, le cancer épidermoïde de l’œsophage, le cancer de la vessie et les cancers des voies aéro-digestives supérieures.",
+          "correctionGenerale": "• <b>Cancer broncho-pulmonaire</b>\n• <b>Cancer épidermoïde de l’œsophage</b>\n• <b>Cancer de la vessie</b>\n• <b>Cancers des voies aéro-digestives supérieures</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 : tabagisme — Question 3</b>\n\nQuelles mesures devez-vous proposer à ce patient pour prévenir les infections broncho-pulmonaires ?",
+          "images": [],
+          "reponseAttendue": "La vaccination antigrippale une fois par an (la vaccination antipneumococcique uniquement en cas d’insuffisance respiratoire chronique associée), le sevrage tabagique, la limitation de l’exposition aux polluants, une activité physique régulière et une alimentation équilibrée.",
+          "correctionGenerale": "• <b>Vaccination antigrippale</b> une fois par an (vaccination antipneumococcique uniquement en cas d’insuffisance respiratoire chronique associée)\n• <b>Sevrage tabagique</b>\n• <b>Limitation de l’exposition aux polluants</b>\n• <b>Activité physique régulière et alimentation équilibrée</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 : tabagisme — Question 4</b>\n\nVous suspectez une bronchite chronique. Comment affirmez-vous le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Le diagnostic est clinique : une toux productive quotidienne ou quasi-quotidienne pendant au moins 3 mois par an, au cours de deux années consécutives.",
+          "correctionGenerale": "• <b>Diagnostic clinique</b> : toux productive quotidienne ou quasi-quotidienne, au moins 3 mois par an, au cours de deux années consécutives"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 : tabagisme — Question 5</b>\n\nLe patient revient vous voir car il est essoufflé. Vous prescrivez une gazométrie artérielle dont les résultats sont les suivants : pH 7,36 ; PO₂ 67 mmHg ; PCO₂ 54 mmHg ; réserve alcaline 32 mmol/L ; saturation 92 %.\n\nInterprétez ces résultats.",
+          "images": [],
+          "reponseAttendue": "pH diminué : acidose. PO₂ diminuée : hypoxémie. PCO₂ augmentée et réserve alcaline augmentée. SaO₂ diminuée : hypoxie. Au total : acidose respiratoire partiellement compensée (donc chronique), avec hypoxémie et hypoxie.",
+          "correctionGenerale": "• <b>pH diminué</b> : acidose\n• <b>PO₂ diminuée</b> : hypoxémie\n• <b>PCO₂ augmentée</b> et <b>réserve alcaline augmentée</b>\n• <b>SaO₂ diminuée</b> : hypoxie\n\n→ <b>Acidose respiratoire partiellement compensée (chronique), avec hypoxémie et hypoxie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : rétention aiguë d’urine de l’homme adulte — Question 1</b>\n\nCitez les causes principales.",
+          "images": [],
+          "reponseAttendue": "L’hypertrophie bénigne de prostate, la prostatite, le cancer de la prostate ; les causes neurologiques centrales (SEP, compression médullaire, maladie de Parkinson, AVC) et périphériques (diabète) ; les causes médicamenteuses (anticholinergiques dont collyres mydriatiques et traitements de l’instabilité vésicale, neuroleptiques — surtout phénothiazines, antidépresseurs tricycliques imipraminiques, certains antiparkinsoniens, antalgiques d’usage courant comme le néfopam et le tiémonium, bronchodilatateurs bêta-mimétiques à action secondaire anticholinergique, antihistaminiques, morphiniques, sympathomimétiques, β2-mimétiques, inhibiteurs calciques) ; la sténose de l’urètre post-traumatique ou post-infectieuse ; le caillotage vésical ; et d’autres causes : prolapsus génital chez la femme, fécalome, phimosis serré.",
+          "correctionGenerale": "• <b>Hypertrophie bénigne de prostate (HBP)</b>\n• <b>Prostatite</b>\n• <b>Cancer de la prostate</b>\n\n<b>Causes neurologiques</b>\n• Centrales : SEP, compression médullaire, maladie de Parkinson, AVC\n• Périphériques : diabète\n\n<b>Causes médicamenteuses</b>\n• Anticholinergiques : collyres mydriatiques, anticholinergiques utilisés dans l’instabilité vésicale\n• Neuroleptiques : phénothiazines surtout\n• Antidépresseurs tricycliques imipraminiques\n• Certains antiparkinsoniens\n• Antalgiques d’usage courant : néfopam, tiémonium\n• Bronchodilatateurs bêta-mimétiques à action secondaire anticholinergique\n• Antihistaminiques, morphiniques, sympathomimétiques, β2-mimétiques, inhibiteurs calciques\n\n• <b>Sténose de l’urètre</b> post-traumatique ou post-infectieuse\n• <b>Caillotage vésical</b>\n• Autres : prolapsus génital chez la femme, fécalome, phimosis serré"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : rétention aiguë d’urine de l’homme adulte — Question 2</b>\n\nQuels sont les éléments cliniques principaux évocateurs de rétention aiguë d’urine ?",
+          "images": [],
+          "reponseAttendue": "Un terrain à risque ; un événement déclenchant (boissons trop abondantes, long voyage assis, prise de médicaments) ; des signes fonctionnels : état algique (la rétention peut cependant être indolore chez le diabétique ou le traumatisé du rachis), anxiété, agitation, envie d’uriner permanente ; et à la palpation abdominale, un globe vésical, qui fait le diagnostic positif — voussure à convexité supérieure en hypogastre, matité à la percussion sus-pubienne, souvent douloureuse et augmentant l’envie d’uriner.",
+          "correctionGenerale": "• <b>Terrain à risque</b>\n• <b>Événement déclenchant</b> : boissons trop abondantes, long voyage assis, prise de médicaments\n\n<b>Signes fonctionnels</b>\n• État algique — <i>peut être indolore chez le diabétique ou le traumatisé du rachis</i>\n• Anxiété, agitation\n• Envie d’uriner permanente\n\n<b>Palpation abdominale : globe vésical — diagnostic positif</b>\n• Voussure à convexité supérieure en hypogastre\n• Matité à la percussion sus-pubienne, souvent douloureuse (augmente l’envie d’uriner)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : rétention aiguë d’urine de l’homme adulte — Question 3</b>\n\nQuelles sont les deux prises en charge d’urgence envisageables ?",
+          "images": [],
+          "reponseAttendue": "Le sondage à demeure et le cathétérisme sus-pubien.",
+          "correctionGenerale": "• <b>Sondage à demeure</b>\n• <b>Cathétérisme sus-pubien</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : rétention aiguë d’urine de l’homme adulte — Question 4</b>\n\nQuels examens de laboratoire vous paraissent indispensables ?",
+          "images": [],
+          "reponseAttendue": "Aucun examen n’est indispensable en urgence. Bilan de retentissement : ionogramme sanguin, urée, créatinine. Bilan étiologique : ECBU systématique. Bilan d’hémostase si drainage par cathéter sus-pubien.",
+          "correctionGenerale": "• <b>Aucun examen indispensable en urgence</b>\n• <b>Bilan de retentissement</b> : ionogramme sanguin, urée, créatinine\n• <b>Bilan étiologique</b> : ECBU systématique\n• <b>Bilan d’hémostase</b> si drainage par cathéter sus-pubien"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : respiratoire — Question 5</b>\n\nQuels sont les deux paramètres physiopathologiques de la mécanique respiratoire ?",
+          "images": [],
+          "reponseAttendue": "Le volume courant et le volume résiduel.",
+          "correctionGenerale": "• <b>Volume courant</b>\n• <b>Volume résiduel</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : respiratoire — Question 6</b>\n\nQuels sont les trois signes caractéristiques d’une intoxication due aux opiacés ?",
+          "images": [],
+          "reponseAttendue": "La somnolence, la bradypnée et le myosis.",
+          "correctionGenerale": "• <b>Somnolence</b>\n• <b>Bradypnée</b>\n• <b>Myosis</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : respiratoire — Question 7</b>\n\nQuelles sont les 2 causes principales de cette intoxication ?",
+          "images": [],
+          "reponseAttendue": "Le surdosage médicamenteux et le mésusage ou surdosage chez le toxicomane.",
+          "correctionGenerale": "• <b>Surdosage médicamenteux</b>\n• <b>Mésusage / surdosage chez le toxicomane</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : respiratoire — Question 8</b>\n\nQuelle est la prise en charge clinique immédiate ?",
+          "images": [],
+          "reponseAttendue": "Le surdosage morphinique se traduit par une somnolence importante avec bradypnée < 10/min. Si le score de sédation est à 2 (somnolent) avec FR < 10/min : réadapter le traitement. Si le score de sédation est à 3 (yeux fermés, répondant à l’appel) avec FR < 8/min : interrompre l’administration d’opioïde, administrer de l’oxygène, stimuler le malade, injecter une ampoule de 0,4 mg de naloxone diluée dans 9 mL de sérum physiologique en IVD ou SC puis 1 mL toutes les 2 minutes (soit 0,04 mg) jusqu’à obtenir une FR > 10/min, garder une voie d’abord et poursuivre la surveillance au-delà de 4 heures.",
+          "correctionGenerale": "<b>Surdosage morphinique = somnolence importante avec bradypnée < 10/min</b>\n\n• <b>Score de sédation 2</b> (somnolent) et FR < 10/min : réadapter le traitement\n• <b>Score de sédation 3</b> (yeux fermés, répondant à l’appel) et FR < 8/min :\n  – Interruption de l’administration d’opioïde\n  – Administration d’oxygène\n  – Stimuler le malade\n  – Une ampoule de 0,4 mg de naloxone pour 1 mL + 9 mL de sérum physiologique, en IVD ou SC, puis 1 mL toutes les 2 min (soit 0,04 mg) jusqu’à FR > 10/min\n  – Garder une voie d’abord\n  – Au-delà de 4 h : surveillance"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : respiratoire — Question 9</b>\n\nQuels sont les deux principaux mécanismes physiopathologiques d’une exacerbation de BPCO ?",
+          "images": [],
+          "reponseAttendue": "Une origine infectieuse et une cause environnementale (majoration du tabagisme, polluants extérieurs…).",
+          "correctionGenerale": "• <b>Origine infectieuse</b>\n• <b>Cause environnementale</b> : majoration du tabagisme, polluants extérieurs…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : douleur — Question 10</b>\n\nSur une douleur cancéreuse résistante aux morphiniques et aux anti-inflammatoires, quel type de douleur doit être évoqué, en dehors de la composante psychologique ?",
+          "images": [],
+          "reponseAttendue": "Une douleur de type neuropathique.",
+          "correctionGenerale": "• <b>Douleur de type neuropathique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : douleur — Question 11</b>\n\nQuelles sont les deux grandes classes médicamenteuses utilisées sur ce type de douleur ?",
+          "images": [],
+          "reponseAttendue": "Les antidépresseurs tricycliques et les antiépileptiques.",
+          "correctionGenerale": "• <b>Antidépresseurs tricycliques</b>\n• <b>Antiépileptiques</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : hémodynamique — Question 12</b>\n\nCitez les 4 principaux mécanismes physiopathologiques d’état de choc.",
+          "images": [],
+          "reponseAttendue": "Le choc cardiogénique, le choc distributif, le choc obstructif et le choc hémorragique (hypovolémique).",
+          "correctionGenerale": "• <b>Choc cardiogénique</b>\n• <b>Choc distributif</b>\n• <b>Choc obstructif</b>\n• <b>Choc hémorragique</b> (hypovolémique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : hémodynamique — Question 13</b>\n\nDécrivez les principales caractéristiques de la douleur d’origine coronarienne.",
+          "images": [],
+          "reponseAttendue": "Douleur angineuse typique : rétrosternale en barre d’un pectoral à l’autre, ou verticale, ou précordiale ; de type constrictif, angoissante ; d’intensité variable ; avec des irradiations dans le cou, les épaules, les mâchoires, les bras, les avant-bras, les poignets et le dos. Mode de survenue : à l’effort ou lors d’un stress émotionnel dans l’angor stable ; au repos ou en récupération après effort dans le SCA ST+. Évolution : cédant en 5 minutes au repos ou en moins d’1 minute à la prise de trinitrine dans l’angor stable ; prolongée au-delà de 20 minutes et trinitro-résistante dans le SCA ST+. La douleur peut être atypique : simple brûlure rétrosternale, douleur localisée à l’épigastre (IDM inférieur), douleur uniquement au niveau des irradiations, voire absence de douleur.",
+          "correctionGenerale": "<b>Douleur angineuse typique</b>\n• Rétrosternale en barre d’un pectoral à l’autre, ou verticale, ou précordiale\n• De type constrictif, angoissante\n• D’intensité variable\n• Irradiations dans le cou, les épaules, les mâchoires, les bras, les avant-bras, les poignets, le dos\n\n<b>Mode de survenue</b>\n• Angor stable : survenue à l’effort ou lors d’un stress émotionnel\n• SCA ST+ : survenue au repos ou en récupération après un effort\n\n<b>Évolution</b>\n• Angor stable : cède en 5 min au repos, ou en moins d’1 min à la prise de trinitrine\n• SCA ST+ : prolongée au-delà de 20 min, trinitro-résistante\n\n<b>La douleur peut être atypique</b>\n• Simple brûlure rétrosternale\n• Douleur localisée à l’épigastre (IDM inférieur)\n• Douleur uniquement au niveau des irradiations\n• La douleur peut manquer"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : hémodynamique — Question 14</b>\n\nQuel examen faites-vous immédiatement ?",
+          "images": [],
+          "reponseAttendue": "Un électrocardiogramme.",
+          "correctionGenerale": "• <b>ECG</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 : hémodynamique — Question 15</b>\n\nQuels signes recherchez-vous sur cet examen pour évoquer un syndrome coronarien aigu ?",
+          "images": [],
+          "reponseAttendue": "Dans le SCA ST− : un sous-décalage du segment ST horizontal ou descendant > 1 mm dans deux dérivations contiguës ; plus rarement un sus-décalage du segment ST horizontal ou convexe vers le haut régressant après administration de trinitrine ; une inversion transitoire de l’onde T lorsque la négativation ou la positivation d’une onde T préalablement négative dépasse 1 mm. Dans le SCA ST+ : des ondes T pointues, symétriques et amples ; un sus-décalage du segment ST (onde de Pardee) présent dès les premières minutes, débutant au point J et englobant l’onde T, convexe vers le haut, siégeant en regard du territoire ischémique, > 1 mm en dérivations frontales et > 2 mm en dérivations précordiales, retrouvé sur au moins 2 dérivations contiguës ; un sous-décalage en miroir ; un bloc de branche gauche récent ; et une onde Q de nécrose apparaissant à la 6e-12e heure, de topographie identique au décalage qui l’a précédée, signe direct de nécrose constituée lorsqu’elle dépasse 0,04 s et 1 mm.",
+          "correctionGenerale": "<b>SCA ST−</b>\n• Caractéristique : sous-décalage du segment ST horizontal ou descendant > 1 mm dans deux dérivations contiguës\n• Plus rarement : sus-décalage du segment ST horizontal ou convexe vers le haut, qui régresse après administration de trinitrine (diagnostic différentiel avec le SCA ST+)\n• Inversion transitoire de l’onde T, de valeur diagnostique lorsque :\n  – Négativation de l’onde T avec variation > 1 mm\n  – Positivation d’une onde T préalablement négative avec variation > 1 mm\n\n<b>SCA ST+</b>\n• Ondes T pointues, symétriques, amples\n• <b>Sus-décalage du segment ST (onde de Pardee)</b> :\n  – Présent dès les premières minutes\n  – Débute au point J et englobe l’onde T\n  – Convexe vers le haut\n  – Siège en regard du territoire ischémique\n  – > 1 mm en dérivations frontales (DI-aVL, DII-DIII-aVF) et > 2 mm en dérivations précordiales (V1-V6)\n  – Retrouvé sur au moins 2 dérivations contiguës\n• Sous-décalage en miroir (dérivations opposées à celles du sus-décalage)\n• BBG récent : a valeur de sus-décalage lorsqu’il est associé à une symptomatologie typique\n• <b>Onde Q de nécrose</b> : apparaît à la 6<sup>e</sup>-12<sup>e</sup> heure ; topographie identique à celle du décalage qui l’a précédée ; signe direct de nécrose constituée lorsqu’elle dépasse 0,04 s et 1 mm"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2017 - EVCP",
+      "annee": 2017,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE MG 2017.pdf",
+      "orderIndex": 121,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2017.</b>\n\nTous les sujets sont à traiter. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 1</b>\n\nPatient de 65 ans, retraité depuis quelques mois. Antécédents et facteurs de risque : surpoids (IMC à 29), tabagisme à 25 paquets-années interrompu il y a 10 ans, HTA traitée par prazosine.\n\nLa famille l’amène aux urgences car lors du petit déjeuner (90 minutes plus tôt) il a présenté des troubles de l’élocution et a lâché son bol. Vous constatez qu’il est hémiparétique à droite et aphasique.\n\nQuel diagnostic évoquez-vous en premier ?",
+          "images": [],
+          "reponseAttendue": "Un accident vasculaire cérébral gauche.",
+          "correctionGenerale": "• <b>Accident vasculaire cérébral gauche</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 2</b>\n\nQuel examen complémentaire faut-il réaliser ?",
+          "images": [],
+          "reponseAttendue": "Une IRM cérébrale avec séquences de diffusion, T2*, T2 FLAIR et angio-RM.",
+          "correctionGenerale": "• <b>IRM cérébrale</b> avec séquences de diffusion, T2*, T2 FLAIR et angio-RM (ARM)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 3</b>\n\nEn l’absence d’hémorragie, quelle stratégie de prise en charge proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une hospitalisation en urgence en unité neuro-vasculaire ; une mise en condition (alitement avec redressement de la tête à 30°, prévention des attitudes vicieuses, pose d’une VVP, libération des voies aériennes supérieures) ; une thrombolyse IV par rt-PA (0,1 mg/kg en bolus IVD puis 0,9 mg/kg en 1 heure IVSE) ; de l’aspirine 160-300 mg/j 24 heures après la thrombolyse ; la lutte contre les agressions cérébrales secondaires d’origine systémique (respect de la poussée tensionnelle jusqu’à 185/110, lutte contre l’hyperthermie, l’hypoxémie et l’hypercapnie, l’hyperglycémie et l’hypoglycémie sévère, les troubles de la déglutition, les troubles hydro-électrolytiques, l’œdème cérébral et l’HTIC sans corticoïdes, contrôle des crises d’épilepsie) ; le nursing ; une kinésithérapie motrice précoce ; la prévention des complications thromboemboliques (bas de contention, HBPM à dose préventive à partir de 24 heures après la thrombolyse) ; le contrôle des troubles psychiques ; la prise en charge de la douleur ; et l’information du malade et de ses proches.",
+          "correctionGenerale": "• <b>Hospitalisation en urgence en unité neuro-vasculaire (stroke unit)</b>\n\n<b>Mise en condition</b>\n• Positionnement initial : alitement avec redressement de la tête à 30°, prévention des attitudes vicieuses\n• Pose d’une voie veineuse périphérique\n• Libération des voies aériennes supérieures\n\n• <b>Thrombolyse IV par rt-PA</b> : 0,1 mg/kg en bolus IVD puis 0,9 mg/kg en 1 heure IVSE\n• <b>Traitements antithrombotiques</b> : 24 heures après la thrombolyse, aspirine 160-300 mg/j (prévention de la récidive précoce)\n\n<b>Lutte contre les agressions cérébrales secondaires d’origine systémique (ACSOS)</b>\n• Respect de la poussée tensionnelle jusqu’à 185/110 mmHg\n• Lutte contre l’hyperthermie : paracétamol dès que T° > 37,5 °C\n• Lutte contre l’hypoxémie et l’hypercapnie : oxygénothérapie si SaO₂ < 95 %, aspiration si encombrement bronchique\n• Lutte contre l’hyperglycémie et l’hypoglycémie sévère : insulinothérapie si glycémie > 1,8 g/L, glucosé si glycémie < 0,5 g/L\n• Lutte contre les troubles de la déglutition : à rechercher systématiquement ; si présents, suspension de l’alimentation orale ± sonde naso-gastrique\n• Lutte contre les troubles hydro-électrolytiques (hyponatrémie surtout)\n• Lutte contre l’œdème cérébral et l’HTIC — <b>pas de corticoïdes</b>\n• Contrôle des crises d’épilepsie\n\n• <b>Nursing</b> : prévention des escarres, soins de bouche…\n• <b>Kinésithérapie motrice précoce</b>\n• <b>Prévention des complications thromboemboliques</b> : bas de contention, HBPM à dose préventive à partir de 24 h après la thrombolyse\n• Contrôle des troubles psychiques\n• Prise en charge de la douleur\n• Information du malade et de ses proches"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 4</b>\n\nLa pression artérielle est alors à 155/85 mmHg : que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "On tolère l’HTA : la faire baisser exposerait à une aggravation de l’ischémie cérébrale.",
+          "correctionGenerale": "• On <b>tolère l’HTA</b> — sinon, risque d’aggravation de l’ischémie cérébrale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 5</b>\n\nPourquoi faut-il réaliser un ECG ?",
+          "images": [],
+          "reponseAttendue": "Pour le bilan étiologique : recherche d’une cardiopathie emboligène, de type fibrillation auriculaire.",
+          "correctionGenerale": "• Pour le <b>bilan étiologique</b> : recherche d’une cardiopathie emboligène, de type fibrillation auriculaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 6</b>\n\nComment le résultat de l’ECG peut-il orienter votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "S’il existe une cardiopathie à fort risque emboligène, un traitement par anticoagulant peut être indiqué.",
+          "correctionGenerale": "• En cas de <b>cardiopathie à fort risque emboligène</b>, un traitement par <b>anticoagulant</b> peut être indiqué"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 1 — Question 7</b>\n\nVous le revoyez en consultation un mois plus tard. Il a toujours le même traitement. Sa pression artérielle est à 155/85 mmHg (confirmée par automesures). Que proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Le contrôle de l’HTA avec un objectif de PA < 140/90 mmHg, en remplaçant la prazosine par un antihypertenseur de première intention — diurétique thiazidique, IEC (ou ARA2) ou inhibiteur calcique ; une statine avec objectif de LDL-cholestérol < 0,7 g/L (prévention secondaire) ; des règles hygiéno-diététiques ; et un antiagrégant plaquettaire au long cours, de préférence l’aspirine, puis le clopidogrel, puis l’association dipyridamole-aspirine.",
+          "correctionGenerale": "• <b>Contrôle de l’HTA</b>, objectif PA < 140/90 mmHg : switch vers un antihypertenseur de première intention — diurétique thiazidique, IEC (sinon ARA2) ou inhibiteur calcique\n• <b>Statine</b> : objectif LDL-cholestérol < 0,7 g/L (prévention secondaire)\n• <b>Règles hygiéno-diététiques</b>\n• <b>Antiagrégant plaquettaire au long cours</b>, préférentiellement : 1° aspirine, 2° clopidogrel, 3° dipyridamole + aspirine\n\n<i>Rappel du tableau projeté en séance — choix préférentiel d’antihypertenseur selon les comorbidités</i>\n• Patient diabétique à partir du stade microalbuminurie, ou insuffisant rénal : IEC ou ARA2\n• Patient avec insuffisance rénale ou protéinurie : IEC ou ARA2\n• Patient insuffisant cardiaque : IEC (sinon ARA2), bêtabloquants ayant l’AMM dans cette indication, diurétiques\n• Patient coronarien : IEC, bêtabloquants\n• <b>Patient post-AVC : diurétiques thiazidiques, IEC (sinon ARA2) et inhibiteurs calciques</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 1</b>\n\nVous recevez aux urgences M. G., 85 ans, adressé pour chute au domicile. Son aide ménagère a appelé les pompiers en le découvrant au sol dans ses toilettes ce matin.\n\nConstantes à l’arrivée : TA 105/65 mmHg, pouls 110 bpm, température auriculaire 37,5 °C, saturation 92 % en air ambiant. Il est désorienté, sans signe méningé ni de localisation neurologique. L’électrocardiogramme est normal hormis une tachycardie sinusale.\n\nVous contactez son médecin traitant qui vous détaille ses antécédents : éthylo-tabagisme chronique, HTA, dépression. Ses traitements : périndopril 4 mg/j, nicardipine 50 mg/12 h, hydrochlorothiazide 25 mg/j (ajout récent en raison d’une HTA insuffisamment contrôlée), paroxétine 20 mg/j, bromazépam 6 mg/j, aspirine 75 mg/j.\n\nQuelles sont les 3 principales causes de chute à évoquer chez ce patient ?",
+          "images": [],
+          "reponseAttendue": "L’intoxication alcoolique ; la polymédication, en particulier l’utilisation d’une trithérapie antihypertensive et de psychotropes ; l’hypotension artérielle.",
+          "correctionGenerale": "• <b>Intoxication alcoolique</b>\n• <b>Polymédication</b> — notamment l’utilisation d’une trithérapie antihypertensive et de psychotropes\n• <b>Hypotension artérielle</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 2</b>\n\nIl n’a pas pu se relever seul. Vous notez une ecchymose frontale et il ressent une douleur fessière.\n\nQuel(s) examen(s) d’imagerie demandez-vous ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Un scanner cérébral non injecté, du fait de l’ecchymose frontale et des troubles cognitifs chez un patient sous aspirine, à la recherche d’un hématome intracrânien ; et une radiographie du bassin, du fait de la douleur fessière et de l’impossibilité de se relever, à la recherche d’une fracture.",
+          "correctionGenerale": "• <b>Scanner cérébral non injecté</b>\n• <b>Radiographie du bassin</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 3</b>\n\nLe patient continue à présenter des troubles cognitifs malgré la normalité des examens d’imagerie. Suggérez 2 éléments à vérifier à l’examen clinique.",
+          "images": [],
+          "reponseAttendue": "Un toucher rectal à la recherche d’un fécalome et une palpation abdominale à la recherche d’un globe vésical.",
+          "correctionGenerale": "• <b>Toucher rectal</b> à la recherche d’un fécalome\n• <b>Palpation abdominale</b> à la recherche d’un globe vésical"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 4</b>\n\nVoici ses premiers résultats biologiques : leucocytes 9,8 × 10⁹/L, hémoglobine 9,4 g/dL, VGM 75 fL, globules rouges 3,5 × 10¹²/L, plaquettes 350 × 10⁹/L, sodium 120 mmol/L, potassium 4,8 mmol/L, chlore 87 mmol/L, bicarbonates 24 mmol/L, urée 15 mmol/L, créatinine 212 µmol/L, glucose 5,5 mmol/L, calcium 2,2 mmol/L, protides 65 g/L, CPK 5200 UI/L.\n\nQuelles anomalies significatives identifiez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire, une hyponatrémie, une hypochlorémie, une élévation de la créatinine et une élévation des CPK.",
+          "correctionGenerale": "• <b>Anémie microcytaire</b>\n• <b>Hyponatrémie</b>\n• <b>Hypochlorémie</b>\n• <b>Élévation de la créatinine</b>\n• <b>CPK augmentées</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 5</b>\n\nQuelles sont les causes possibles de l’anomalie du ionogramme sanguin ?",
+          "images": [],
+          "reponseAttendue": "Une ingestion d’eau supérieure aux capacités physiologiques d’excrétion (potomanie, syndrome « tea and toast ») ; un seuil de déclenchement de la sécrétion d’ADH abaissé (« reset osmostat ») ; une excrétion d’eau diminuée, soit avec ADH basse et défaut rénal primaire d’excrétion d’eau (IRC avec DFG < 20 mL/min), soit avec ADH élevée — par stimulus volémique (hypovolémie vraie de toutes causes de déshydratation extracellulaire, ou hypovolémie efficace associée à une hyperhydratation extracellulaire : insuffisance cardiaque, cirrhose, syndrome néphrotique) ou par sécrétion inappropriée d’ADH (SIADH).",
+          "correctionGenerale": "<b>Ingestion d’eau supérieure aux capacités physiologiques d’excrétion</b>\n• Potomanie\n• Syndrome « tea and toast »\n\n<b>Seuil de déclenchement de la sécrétion d’ADH abaissé</b> : « reset osmostat »\n\n<b>Excrétion d’eau diminuée</b>\n• ADH basse, associée à un défaut rénal primaire d’excrétion d’eau : IRC avec DFG < 20 mL/min\n• ADH élevée :\n  – Par stimulus volémique de la sécrétion d’ADH : hypovolémie vraie (toutes causes de déshydratation extracellulaire) ; hypovolémie efficace associée à une hyperhydratation extracellulaire (insuffisance cardiaque, cirrhose, syndrome néphrotique)\n  – Par <b>sécrétion inappropriée d’ADH (SIADH)</b>\n\n<b>Étiologies de SIADH</b>\n• <i>Sécrétion hypothalamique inappropriée</i> : affections du SNC (méningite, méningo-encéphalite, abcès, AVC, SEP, polyradiculonévrite, porphyrie aiguë, traumatisme crânien) ; affections pulmonaires (pneumopathies bactériennes et virales, insuffisance respiratoire aiguë, tuberculose, cancers, asthme, ventilation assistée avec PEEP) ; post-opératoire ; syndromes nauséeux importants ; médicaments (carbamazépine, psychotropes, médicaments émétisants)\n• <i>Sécrétion tumorale ectopique d’ADH</i> : carcinomes bronchiques, cancers prostatiques, digestifs, lymphomes…\n• <i>Endocrinopathies</i> : hypothyroïdie, insuffisance cortico-surrénalienne, adénome à prolactine\n• <i>Potentialisation de l’effet de l’ADH par certains médicaments</i> : sulfamides hypoglycémiants, théophylline, clofibrate\n• <i>Apport exogène d’ADH ou d’analogue</i> : ADH, dDAVP, ocytocine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 6</b>\n\nLe patient est hospitalisé en service de médecine pour rééquilibration hydro-électrolytique. Quelle(s) classe(s) médicamenteuse(s) utilisez-vous pour l’anticoagulation prophylactique ?",
+          "images": [],
+          "reponseAttendue": "Les HBPM, l’héparine non fractionnée ou le fondaparinux.",
+          "correctionGenerale": "• <b>HBPM</b>\n• <b>HNF</b>\n• <b>Fondaparinux</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 2 — Question 7</b>\n\nAprès 3 jours d’hospitalisation, l’infirmière vous signale avoir découvert un méléna dans le lit du patient. À la gastroscopie, quelles sont les 3 anomalies que vous vous attendez à observer de façon la plus probable ?",
+          "images": [],
+          "reponseAttendue": "Un ulcère gastro-duodénal, des signes d’hypertension portale (varices œsophagiennes) et une œsophagite.",
+          "correctionGenerale": "• <b>Ulcère gastro-duodénal</b>\n• <b>Hypertension portale</b> (varices œsophagiennes)\n• <b>Œsophagite</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 1</b>\n\nUn homme de 70 ans se plaint d’une douleur d’apparition brutale de la base thoracique gauche, associée à une dyspnée. Dans les antécédents, on note une hypertension artérielle bien équilibrée sous amlodipine, un diabète de type 2 traité par sulfamides hypoglycémiants, un polype colique réséqué et une gonarthrose. Il existe un tabagisme actif. L’examen clinique montre une température à 38,0 °C, une fréquence cardiaque régulière à 95/min, une saturation en oxygène à 92 % en air ambiant et une tension artérielle à 154/91 mmHg.\n\nQuelles sont les 3 hypothèses diagnostiques que vous devez évoquer ?",
+          "images": [],
+          "reponseAttendue": "Une embolie pulmonaire, une pneumonie aiguë communautaire et un pneumothorax.",
+          "correctionGenerale": "• <b>Embolie pulmonaire</b>\n• <b>Pneumonie aiguë communautaire</b>\n• <b>Pneumothorax</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 2</b>\n\nDans l’hypothèse d’une embolie pulmonaire, quel examen permet de confirmer ce diagnostic ?",
+          "images": [],
+          "reponseAttendue": "L’angioscanner thoracique multibarrettes.",
+          "correctionGenerale": "• <b>Angioscanner thoracique multibarrettes</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 3</b>\n\nL’embolie pulmonaire est confirmée. Quel bilan pré-thérapeutique prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une NFS-plaquettes, un bilan d’hémostase (TP, TCA) et un ionogramme sanguin avec urée et créatinine.",
+          "correctionGenerale": "• <b>NFS-plaquettes</b>\n• <b>TP, TCA</b>\n• <b>Ionogramme sanguin, urée, créatinine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 4</b>\n\nDans l’hypothèse où le bilan pré-thérapeutique est normal, quel type de traitement anticoagulant prescrivez-vous d’emblée ?",
+          "images": [],
+          "reponseAttendue": "Une héparine de bas poids moléculaire à dose curative, soit 100 UI/kg/12 h ou 150 UI/kg/jour.",
+          "correctionGenerale": "• <b>Héparine de bas poids moléculaire à dose curative</b> : 100 UI/kg/12 h ou 150 UI/kg/jour"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 5</b>\n\nDans l’hypothèse où l’hémogramme montre un taux d’hémoglobine de 9,7 g/dL avec un VGM à 74 fL, quels éléments d’interrogatoire cherchez-vous compte tenu de ce résultat ?",
+          "images": [],
+          "reponseAttendue": "La recherche d’un syndrome anémique, souvent bien toléré du fait de son installation progressive ; la recherche d’antécédents ou de signes de pathologie inflammatoire chronique (altération de l’état général) ; et la recherche d’un syndrome carentiel (sidéropénie) : fragilité des phanères (ongles cassants ou déformés, chute des cheveux) et fragilité des muqueuses (glossite, œsophagite avec épigastralgies ou dysphagie, perlèche, rhagades).",
+          "correctionGenerale": "• Recherche d’un <b>syndrome anémique</b>, souvent bien toléré (installation progressive)\n• Recherche d’<b>antécédents ou de signes de pathologie inflammatoire chronique</b> : altération de l’état général\n• Recherche d’un <b>syndrome carentiel (sidéropénie)</b> :\n  – Fragilité des phanères : ongles cassants ou déformés, chute des cheveux\n  – Fragilité des muqueuses : glossite, œsophagite avec épigastralgies ou dysphagie, perlèche, rhagades"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 3 — Question 6</b>\n\nDans ce contexte d’anémie microcytaire, quel est le diagnostic le plus probable ? Quel examen demandez-vous pour le confirmer ?",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire par carence martiale, à confirmer par une ferritinémie.",
+          "correctionGenerale": "• Diagnostic le plus probable : <b>anémie microcytaire par carence martiale</b>\n• Examen de confirmation : <b>ferritinémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 1</b>\n\nUn homme de 45 ans est amené aux urgences par les pompiers suite à une chute sur la voie publique. Il présente une plaie du scalp. On note plusieurs passages aux urgences cette année dans des circonstances identiques. Il a comme antécédents des séjours en hospitalisation psychiatrique et un traitement injectable retard mensuel par halopéridol, 4 ampoules, administré en centre médico-psychologique. Il est actuellement au chômage et vit en foyer d’hébergement d’urgence.\n\nÀ son arrivée, on retrouve une plaie du cuir chevelu de 5 cm ; il est logorrhéique et tient des propos familiers. La pression artérielle est de 130/80 mmHg, le pouls à 90/min, la température à 37,6 °C, la saturation en oxygène à 96 %. L’éthylomètre pratiqué est à 0,8 en air expiré.\n\nSix heures après son admission aux urgences, l’infirmière vous appelle pour une crise convulsive, en phase de récupération. À ce stade, que demandez-vous comme investigations indispensables, sachant que votre examen clinique est normal ?",
+          "images": [],
+          "reponseAttendue": "Un bilan biologique (NFS-plaquettes, TP, TCA, ionogramme sanguin, urée, créatinine, bilan hépatique, glycémie, alcoolémie, calcémie, phosphorémie, magnésémie) ; un scanner cérébral sans et avec injection de produit de contraste, ou une IRM cérébrale sans et avec injection de gadolinium ; et un EEG post-critique dans les 24 à 48 heures suivant la crise.",
+          "correctionGenerale": "<b>Bilan biologique</b>\n• NFS-plaquettes, TP, TCA\n• Ionogramme sanguin, urée, créatinine\n• Bilan hépatique\n• Glycémie\n• Alcoolémie\n• Calcémie, phosphorémie, magnésémie\n\n• <b>Scanner cérébral sans et avec injection de produit de contraste</b>, ou IRM cérébrale sans et avec injection de gadolinium\n• <b>EEG post-critique</b> dans les 24-48 heures suivant la crise"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 2</b>\n\nLes examens complémentaires sont normaux. Quelques heures plus tard, le patient s’agite, hurle, dit qu’il voit son chien aboyer dans la pièce et qu’il faut lui donner à manger. La température est de 38,6 °C, le pouls à 120/min, la tension artérielle à 180/120 mmHg. L’examen clinique est toujours sans particularité.\n\nQuels sont les principaux diagnostics à poser ?",
+          "images": [],
+          "reponseAttendue": "Un delirium tremens et une intoxication alcoolique.",
+          "correctionGenerale": "• Le patient présente une agitation avec zoopsies, une fièvre, une tachycardie et une hypertension, le reste de l’examen étant normal\n• Diagnostics à évoquer : <b>delirium tremens</b> et <b>intoxication alcoolique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 3</b>\n\nQue prescrivez-vous comme traitement en première intention ?",
+          "images": [],
+          "reponseAttendue": "Une hydratation par sérum physiologique, une benzodiazépine IV et une vitaminothérapie B1, B6 et PP.",
+          "correctionGenerale": "• <b>Hydratation</b> par sérum physiologique\n• <b>Benzodiazépine IV</b>\n• <b>Vitaminothérapie B1, B6, PP</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 4</b>\n\nLe diagnostic de Gayet-Wernicke est posé chez ce patient dans les suites de l’hospitalisation. Quels sont les trois principaux signes cliniques qui évoquent ce diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome confusionnel ; des signes oculomoteurs (paralysie oculomotrice, paralysie de fonction, nystagmus) ; des troubles de l’équilibre par syndrome cérébelleux statique.",
+          "correctionGenerale": "• <b>Syndrome confusionnel</b>\n• <b>Signes oculomoteurs</b> : paralysie oculomotrice, paralysie de fonction, nystagmus\n• <b>Troubles de l’équilibre</b> : syndrome cérébelleux statique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 5</b>\n\nQuel est le traitement à préconiser dans le syndrome de Gayet-Wernicke ?",
+          "images": [],
+          "reponseAttendue": "De la vitamine B1 par voie intraveineuse, en urgence.",
+          "correctionGenerale": "• <b>Vitamine B1 IV en urgence</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet n° 4 — Question 6</b>\n\na) En l’absence de traitement, quelle peut être l’évolution à terme de ce syndrome ?\nb) Quels en sont les trois principaux signes cliniques ?",
+          "images": [],
+          "reponseAttendue": "a) L’évolution vers un syndrome de Korsakoff. b) Ses principaux signes cliniques sont une amnésie à prédominance antérograde, des fausses reconnaissances et des fabulations.",
+          "correctionGenerale": "<b>a) Évolution</b>\n• <b>Syndrome de Korsakoff</b>\n\n<b>b) Principaux signes cliniques</b>\n• Amnésie à prédominance antérograde\n• Fausses reconnaissances\n• Fabulations"
+        }
+      ]
+    }
+  ]
+}

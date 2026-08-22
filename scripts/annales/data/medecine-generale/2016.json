@@ -1,0 +1,483 @@
+{
+  "sources": {
+    "ANNALES MG/PAE 2016 (1).pdf": {
+      "atelier": "annales-mg/pae-2016-1",
+      "sujetOfficiel": "Annales/Sujets/EVC2016_EVCF/EVC2016 - EVCF/EVCF.71.DOC et Annales/Sujets/2016_EVCP.pdf (section « MEDECINE GENERALE »)",
+      "figuresIgnorees": {
+        "img-034-260.jpg": "diapositive de rappel de cours (classification fonctionnelle NYHA de la dyspnée) ; son contenu est retranscrit dans la correction de la question",
+        "img-131-973.jpg": "tableau de rappel de cours (facteurs de risque de maladie thromboembolique veineuse, persistants et transitoires, classés par odds ratio) ; son contenu est retranscrit dans la correction de la question"
+      },
+      "remarque": "Corrigé PAE de l’épreuve de Médecine générale 2016, sous forme de diaporama question/réponse (EVCF : 10 sujets ; EVCP : 5 sujets). Les énoncés reproduits dans le diaporama sont ceux du sujet officiel."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Médecine générale - 2016 - EVCF",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES MG/PAE 2016 (1).pdf",
+      "orderIndex": 118,
+      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2016.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 1</b>\n\nVous êtes médecin généraliste. À votre consultation, un patient âgé de 50 ans présente une dysarthrie depuis son réveil.\n\nQuels signes recherchez-vous ? (3 réponses au maximum)\nA) Céphalées — B) Diarrhée — C) Aphasie — D) Toux — E) Dysesthésies",
+          "images": [],
+          "reponseAttendue": "Réponses A, C et E. Le premier diagnostic à évoquer devant une dysarthrie d’apparition brutale est l’AVC : on recherche donc les autres signes d’AVC — déficit moteur, dysesthésies, céphalées (souvent lors des AVC hémorragiques, en lien avec l’hypertension intracrânienne), aphasie.",
+          "correctionGenerale": "• Premier diagnostic à évoquer devant une dysarthrie d’apparition brutale : <b>AVC</b>\n• On recherche donc les autres signes d’AVC : déficit moteur, dysesthésies, céphalées (souvent lors des AVC hémorragiques, en lien avec l’HTIC), aphasie\n\n→ <b>Réponse = A, C, E</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 2</b>\n\nQuels facteurs de risque recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "L’HTA en premier lieu, le tabac, l’hypercholestérolémie, le diabète, l’alcoolisme chronique et la migraine ; et, avec un faible niveau de preuve, l’obésité, le syndrome métabolique, l’absence d’activité physique et le SAOS.",
+          "correctionGenerale": "• <b>HTA</b> ++\n• <b>Tabac</b>\n• <b>Hypercholestérolémie</b>\n• <b>Diabète</b>\n• <b>Alcoolisme chronique</b>\n• <b>Migraine</b>\n• Faible niveau de preuve : obésité, syndrome métabolique, absence d’activité physique, SAOS"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 3</b>\n\nDevant ce tableau clinique, quel diagnostic évoquez-vous en premier ?",
+          "images": [],
+          "reponseAttendue": "Un AVC.",
+          "correctionGenerale": "• <b>AVC</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 4</b>\n\nQuel est le paramètre qui conditionne la prise en charge interventionnelle ?",
+          "images": [],
+          "reponseAttendue": "Le délai depuis l’apparition de la dysarthrie.",
+          "correctionGenerale": "• <b>Délai depuis l’apparition de la dysarthrie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 5</b>\n\nÀ l’arrivée à l’hôpital, quel examen doit être pratiqué ?",
+          "images": [],
+          "reponseAttendue": "Une IRM cérébrale en urgence, avec séquences de diffusion, T2 FLAIR, T2* et angio-RM (permettant l’étude du polygone de Willis).",
+          "correctionGenerale": "• <b>IRM cérébrale en urgence</b>, avec séquences de diffusion, T2 FLAIR, T2* et ARM (angio-RM, qui permet l’étude du polygone de Willis)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : diabète de type 2 — Question 1</b>\n\nQuels sont les paramètres cliniques essentiels de surveillance d’un patient diabétique de type 2, en dehors de tout signe d’appel ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire, quantifier l’activité physique, un éventuel tabagisme et une éventuelle consommation d’alcool (recherche de comorbidités) ; la mesure de la PA en consultation ± automesure tensionnelle ; la prise du poids et le calcul de l’IMC ; l’auscultation des vaisseaux sanguins (carotides, aorte, artères rénales, fémorales) à la recherche d’un souffle vasculaire ; la recherche des pouls périphériques et la mesure de l’IPS ; l’examen neurologique ; et l’examen des pieds.",
+          "correctionGenerale": "• À l’interrogatoire : quantifier l’activité physique, un éventuel tabagisme, une éventuelle consommation d’alcool (recherche de comorbidités)\n• <b>Mesure de la PA</b> en consultation ± automesure tensionnelle (prévention des complications cardiovasculaires du diabète)\n• <b>Prise du poids et calcul de l’IMC</b> (prévention des complications cardiovasculaires)\n• <b>Auscultation des vaisseaux sanguins</b> (carotides, aorte, artères rénales, fémorales) à la recherche d’un souffle vasculaire\n• <b>Recherche des pouls périphériques et mesure de l’IPS</b> (en faveur d’une AOMI)\n• <b>Examen neurologique</b> (à la recherche d’une neuropathie diabétique)\n• <b>Examen des pieds</b> (prévention des complications podologiques du diabète)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 : diabète de type 2 — Question 2</b>\n\nCitez les examens paracliniques indispensables annuellement, ou plus fréquemment, chez ce patient.",
+          "images": [],
+          "reponseAttendue": "L’HbA1c 2 à 4 fois par an ; un bilan lipidique ; la créatininémie avec calcul de la clairance ; la recherche d’une microalbuminurie avec calcul du rapport microalbuminurie/créatininurie sur échantillon ; un ECG de repos ; une consultation d’ophtalmologie (fond d’œil ± angiographie à la fluorescéine) ; une consultation stomatologique ; et une épreuve d’effort en cas de signes d’appel ou de risque cardio-vasculaire élevé.",
+          "correctionGenerale": "• <b>HbA1c</b> : 2 à 4 fois par an (suivi du diabète)\n• <b>Bilan lipidique</b> (recherche de comorbidités, adaptation du traitement hypolipémiant)\n• <b>Créatininémie avec calcul de la clairance</b> (néphropathie diabétique)\n• <b>Recherche d’une microalbuminurie</b>, avec calcul du rapport microalbuminurie/créatininurie sur échantillon\n• <b>ECG de repos</b>\n• <b>Consultation d’ophtalmologie</b> : fond d’œil ± angiographie à la fluorescéine\n• <b>Consultation stomatologique</b>\n• <b>Épreuve d’effort</b> en cas de signes d’appel ou de risque cardio-vasculaire élevé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 : dyspnée — Question 1</b>\n\nDevant une gêne respiratoire sifflante, rapportée ou présente, quels sont les principaux diagnostics à évoquer : chez le nourrisson, chez l’enfant, chez l’adulte et chez le sujet âgé ?",
+          "images": [],
+          "reponseAttendue": "Chez le nourrisson : pour un 1er épisode, la bronchiolite (infection des voies respiratoires à VRS) et une cardiopathie congénitale ; en cas de répétition des épisodes, on parlera d’asthme du nourrisson. Chez l’enfant : la crise d’asthme. Chez l’adulte : BPCO, asthme, obstacle des voies aériennes supérieures (tumeur ORL, corps étranger méconnu, tumeurs trachéales ou médiastinales) ; devant une dyspnée sifflante à début tardif, on évoquera une pneumopathie interstitielle diffuse, une aspergillose broncho-pulmonaire allergique ou une granulomatose éosinophilique avec polyangéite (Churg et Strauss). Chez le sujet âgé : en plus des diagnostics de l’adulte, une insuffisance cardiaque congestive et, plus rarement, une pneumopathie infectieuse. À partir de 6 mois, il faut toujours évoquer un corps étranger inhalé.",
+          "correctionGenerale": "<b>Chez le nourrisson</b>\n• Pour un 1<sup>er</sup> épisode : <b>bronchiolite</b> (infection des voies respiratoires à VRS) et <b>cardiopathie congénitale</b>\n• En cas de répétition des épisodes : <b>asthme du nourrisson</b>\n\n<b>Chez l’enfant</b>\n• Le diagnostic principal à évoquer est la <b>crise d’asthme</b>\n\n<b>Chez l’adulte</b>\n• BPCO\n• Asthme\n• Obstacle des voies aériennes supérieures : tumeur ORL, corps étranger méconnu, tumeurs trachéales ou médiastinales\n• En cas de dyspnée sifflante à début tardif : pneumopathie interstitielle diffuse, aspergillose broncho-pulmonaire allergique, granulomatose éosinophilique avec polyangéite (Churg et Strauss)\n\n<b>Chez le sujet âgé</b>\n• En plus des diagnostics de l’adulte : <b>insuffisance cardiaque congestive</b> et, plus rarement, pneumopathie d’origine infectieuse\n\n<b>!! À partir de 6 mois, toujours évoquer un corps étranger inhalé.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 1</b>\n\nVous êtes médecin généraliste dans un service de psychiatrie et vous accueillez un patient adulte jeune présentant un trouble du comportement, dont vous ne connaissez pas l’ancienneté.\n\nQuelles sont les étiologies organiques que vous évoquez en urgence ?\nA) drogues illicites — B) hypokaliémie — C) hypoglycémie — D) hémorragie cérébro-méningée — E) érysipèle — F) intoxication au CO — G) tumeur cérébrale — H) intoxication tabagique",
+          "images": [],
+          "reponseAttendue": "Réponses A, C, D, F et G. Devant un trouble du comportement possiblement aigu, il faut éliminer une origine organique avant d’évoquer un trouble psychiatrique : drogues illicites, hypoglycémie, hémorragie cérébro-méningée, intoxication au CO, tumeur cérébrale. Les autres étiologies à évoquer sont la méningo-encéphalite herpétique (ou autre), l’hypercalcémie, l’intoxication éthylique aiguë, le delirium tremens (sevrage en alcool) et l’encéphalopathie hépatique.",
+          "correctionGenerale": "• Devant un trouble du comportement possiblement aigu, il faut éliminer une origine organique avant d’évoquer un trouble psychiatrique :\n  – <b>Drogues illicites</b>\n  – <b>Hypoglycémie</b>\n  – <b>Hémorragie cérébro-méningée</b>\n  – <b>Intoxication au CO</b>\n  – <b>Tumeur cérébrale</b>\n\n• Les autres étiologies à évoquer sont :\n  – Méningo-encéphalite herpétique (ou autre)\n  – Hypercalcémie\n  – Intoxication éthylique aiguë\n  – Delirium tremens (sevrage en alcool)\n  – Encéphalopathie hépatique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 1</b>\n\nMme M., patiente de 76 ans, autonome à domicile, présente depuis 2 mois une dyspnée progressivement croissante, dès le début de la marche, aggravée récemment. Elle a pris 3 kg en 2 mois. Elle vient vous voir en consultation au cabinet.\n\nAntécédents : prothèse de hanche droite, allergie à l’aspirine.\n\nL’examen clinique retrouve une température à 38 °C, une tension artérielle à 160/93 mmHg. Elle présente des œdèmes des membres inférieurs prenant le godet jusqu’à mi-mollets, des crépitants dans les 2 bases pulmonaires, quelques ronchi diffus et une expectoration jaunâtre. L’électrocardiogramme s’inscrit en rythme sinusal à 85/min sans trouble de la repolarisation.\n\nQuel est votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Une poussée d’insuffisance cardiaque avec œdème aigu pulmonaire.",
+          "correctionGenerale": "• <b>Poussée d’insuffisance cardiaque avec OAP</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 2</b>\n\nCompte tenu des éléments de l’observation, quels facteurs déclenchants sont à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Devant une détérioration progressive : rupture ou observance imparfaite du traitement, écart de régime (sel), infection — notamment une surinfection bronchique, ce qui semble être le cas ici avec les crépitants et les expectorations — exacerbation de BPCO, anémie, dysthyroïdie, cause iatrogène (antiarythmique déprimant la fonction cardiaque, bêtabloquant, AINS, inhibiteur calcique), et autres causes (dysfonction rénale, exacerbation d’asthme, HTA non contrôlée, alcool, drogues). Si la détérioration avait été plus rapide, il aurait fallu évoquer une arythmie (FA), un SCA et ses complications aiguës, une embolie pulmonaire, une poussée hypertensive, ou d’autres causes (dissection aortique, tamponnade, complications péri-opératoires).",
+          "correctionGenerale": "<b>Facteurs entraînant la décompensation d’une insuffisance cardiaque — détérioration progressive</b>\n• Rupture ou observance imparfaite du traitement\n• Écart de régime : sel ++\n• Infection : surinfection bronchique (semble ici être le cas ++, avec crépitants et expectorations), exacerbation de BPCO\n• Anémie\n• Dysthyroïdie\n• Iatrogène : antiarythmique déprimant la fonction cardiaque, bêtabloquant, AINS, inhibiteur calcique\n• Autres : dysfonction rénale, exacerbation d’asthme, HTA non contrôlée, alcool, drogues\n\n<i>NB — si la détérioration avait été plus rapide, il aurait fallu évoquer</i>\n• Arythmie : FA\n• SCA et ses complications aiguës\n• Embolie pulmonaire\n• Poussée hypertensive\n• Autres : dissection aortique, tamponnade, complications péri-opératoires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 3</b>\n\nIl existe une classification clinique de la dyspnée. Comment s’appelle-t-elle ? À quel stade est la patiente ?",
+          "images": [],
+          "reponseAttendue": "La classification fonctionnelle NYHA, validée pour les pathologies cardiaques : classe I, patient asymptomatique ; classe II, essoufflement ou fatigue pour les efforts inhabituels (plus de 2 étages) ; classe III, essoufflement ou fatigue pour les efforts de la vie courante (2 étages ou moins) ; classe IV, gêne permanente existant au repos. La patiente, essoufflée dès le début de la marche, relève de la classe III. Les autres échelles quantitatives de dyspnée sont l’EVA, l’échelle de Borg (en aigu) et l’échelle mMRC (en chronique).",
+          "correctionGenerale": "<b>Classification fonctionnelle NYHA</b>\n• Classe I : patient asymptomatique\n• Classe II : patient éprouvant un essoufflement ou de la fatigue pour les efforts inhabituels (≈ plus de 2 étages)\n• Classe III : patient éprouvant un essoufflement ou de la fatigue pour les efforts de la vie courante (≈ 2 étages ou moins)\n• Classe IV : gêne permanente existant au repos\n\n→ La patiente, essoufflée dès le début de la marche, relève de la <b>classe III</b>.\n\n<i>Rappel des échelles quantitatives de dyspnée</i>\n• <b>EVA</b>\n• <b>Échelle de Borg</b> : en aigu, pour évaluer la dyspnée après réalisation d’un exercice prédéterminé (TM6…), dyspnée notée de 0 à 10\n• <b>Échelle mMRC</b>, en chronique : stade 0 — essoufflé uniquement pour un effort important ; stade 1 — essoufflé en se dépêchant à plat ou en montant une pente légère ; stade 2 — marche moins vite que les gens de son âge à plat, ou doit s’arrêter en marchant à son pas à plat ; stade 3 — s’arrête pour respirer après 90 m ou quelques minutes à plat ; stade 4 — trop essoufflé pour quitter sa maison, ou essoufflé rien qu’en s’habillant\n• <b>L’échelle NYHA n’est validée que pour les pathologies cardiaques.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 4</b>\n\nQuelles classes thérapeutiques prescrivez-vous dans le but d’améliorer rapidement la symptomatologie ?",
+          "images": [],
+          "reponseAttendue": "À visée symptomatique : les diurétiques de l’anse. La prise en charge complète comporte un régime sans sel strict, un traitement déplétif par furosémide, un IEC ou un ARA2 en l’absence de contre-indication, pas de bêtabloquant à la phase aiguë (mais introduction à posologie croissante à distance de l’épisode aigu), l’insistance sur la nécessité d’une activité physique en dehors des épisodes aigus, et la vaccination contre la grippe et le pneumocoque.",
+          "correctionGenerale": "• À visée symptomatique uniquement : <b>diurétiques de l’anse</b> ++\n\n<b>Prise en charge thérapeutique complète chez cette patiente</b>\n• Régime <b>sans sel strict</b>\n• Traitement symptomatique déplétif par <b>furosémide</b>\n• <b>IEC ou ARA2</b> en l’absence de contre-indication\n• <b>Pas de bêtabloquant à la phase aiguë</b> ; ils seront en revanche introduits à posologie croissante à distance de l’épisode aigu\n• Insister sur la nécessité d’une <b>activité physique</b> en dehors des épisodes aigus\n• <b>Vaccination</b> contre la grippe et le pneumocoque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 5</b>\n\nQuel est le paramètre échographique permettant de classer cette pathologie ?",
+          "images": [],
+          "reponseAttendue": "La FEVG (fraction d’éjection du ventricule gauche) : elle permet de classer l’insuffisance cardiaque en différenciant les insuffisances cardiaques à fonction systolique abaissée (FEVG < 40 %) des insuffisances cardiaques à fonction systolique préservée, ou insuffisances cardiaques diastoliques (FEVG > 40 %).",
+          "correctionGenerale": "• <b>FEVG (fraction d’éjection du ventricule gauche)</b> : permet de classer l’insuffisance cardiaque en différenciant\n  – les insuffisances cardiaques à <b>fonction systolique abaissée</b> (FEVG < 40 %)\n  – des insuffisances cardiaques à <b>fonction systolique préservée</b>, ou insuffisances cardiaques diastoliques (FEVG > 40 %)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : douleur — Question 1</b>\n\nComment évaluez-vous la douleur de vos patients (qu’il s’agisse d’une douleur aiguë ou chronique) ?",
+          "images": [],
+          "reponseAttendue": "Soit par auto-évaluation, le patient évaluant lui-même sa douleur à l’aide d’échelles numériques ou visuelles (douleur entre 0 et 10, EVA) ; soit par hétéro-évaluation, la douleur étant évaluée par un observateur extérieur — méthode privilégiée chez le petit enfant (échelle des 6 visages) ou chez la personne âgée (échelle Doloplus).",
+          "correctionGenerale": "• La douleur peut s’évaluer soit par <b>auto-évaluation</b> (le patient évalue lui-même sa douleur), en utilisant des échelles numériques ou visuelles (douleur entre 0 et 10, EVA par exemple)\n• Soit par <b>hétéro-évaluation</b> (la douleur du patient est évaluée par un observateur extérieur), qu’on privilégie chez le petit enfant (échelle des 6 visages) ou chez la personne âgée (échelle Doloplus)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : douleur — Question 2</b>\n\nQuels sont les deux principaux éléments à identifier lors de l’évaluation d’une douleur chronique, et qui permettront le choix d’un traitement et la surveillance évolutive ?",
+          "images": [],
+          "reponseAttendue": "Le type de douleur (nociceptive ou neuropathique) et l’existence d’un fond douloureux (par opposition à des douleurs paroxystiques).",
+          "correctionGenerale": "• Le <b>type de douleur</b> : nociceptive vs neuropathique\n• L’existence d’un <b>fond douloureux</b> vs des douleurs paroxystiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : douleur — Question 3</b>\n\nQuelle est la classification la plus communément utilisée pour les médicaments antalgiques ? Citez un médicament (molécule ou nom commercial) appartenant à chacune des catégories de cette classification.",
+          "images": [],
+          "reponseAttendue": "La classification de l’OMS, par paliers de 1 à 3, en fonction de l’intensité de la douleur et du pouvoir antalgique du traitement. Palier 1 : paracétamol (ou AINS). Palier 2 : tramadol (ou codéine). Palier 3 : morphine.",
+          "correctionGenerale": "• La classification la plus utilisée est la <b>classification de l’OMS</b> : par paliers 1 à 3, en fonction de l’intensité de la douleur et du pouvoir antalgique du traitement\n\n• <b>Palier 1</b> : paracétamol (ou AINS)\n• <b>Palier 2</b> : tramadol (ou codéine)\n• <b>Palier 3</b> : morphine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : douleur — Question 4</b>\n\nQuelles sont les deux grandes familles pharmacologiques utilisées pour le traitement des douleurs neuropathiques ? Citez un médicament (molécule ou nom commercial) appartenant à chacune de ces deux familles.",
+          "images": [],
+          "reponseAttendue": "Les antiépileptiques (gabapentine — Neurontin®, ou prégabaline — Lyrica®) et les antidépresseurs, en particulier les tricycliques (amitriptyline — Laroxyl®).",
+          "correctionGenerale": "• <b>Antiépileptiques</b> : gabapentine (Neurontin®) ou prégabaline (Lyrica®)\n• <b>Antidépresseurs</b>, en particulier les tricycliques : amitriptyline (Laroxyl®)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 6 : douleur — Question 5</b>\n\nQuels sont les principaux critères de suivi d’un traitement par un antalgique morphinique ?",
+          "images": [],
+          "reponseAttendue": "L’efficacité, suivie par l’EVA ou une échelle d’hétéro-évaluation, permettant d’adapter les posologies ; et la tolérance, en évitant un surdosage par la surveillance de la fréquence respiratoire (absence de pause respiratoire, absence de bradypnée), de l’état neurologique (absence d’hallucinations, de confusion) et par la recherche des effets secondaires des morphiniques (rétention urinaire, constipation, prurit…).",
+          "correctionGenerale": "• <b>Efficacité</b> : suivi par l’EVA ou une échelle d’hétéro-évaluation → adaptation des posologies\n• <b>Tolérance</b> : éviter un surdosage en surveillant\n  – la fréquence respiratoire (absence de pause respiratoire, absence de bradypnée)\n  – l’état neurologique (absence d’hallucinations, de confusion)\n  – les effets secondaires des morphiniques : rétention urinaire, constipation, prurit…"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 1</b>\n\nMlle L., 20 ans, vous consulte parce qu’elle présente en période froide une décoloration des doigts des deux mains qui deviennent blancs, associée à une diminution de la sensibilité des doigts. Ce phénomène est spontanément résolutif en quelques minutes.\n\nQuel diagnostic évoquez-vous devant ces symptômes ? Sur quels éléments ?",
+          "images": [],
+          "reponseAttendue": "Un phénomène (ou syndrome) de Raynaud, ici probablement une maladie de Raynaud, c’est-à-dire un syndrome de Raynaud idiopathique. Éléments : âge jeune, sexe féminin, survenue au froid, phase blanche avec décoloration des doigts des deux mains épargnant habituellement le pouce, résolution spontanée en quelques minutes.",
+          "correctionGenerale": "• Il s’agit d’un <b>phénomène (ou syndrome) de Raynaud</b>, ici probablement une <b>maladie de Raynaud</b> (syndrome de Raynaud idiopathique)\n\n<b>Éléments en faveur</b>\n• Âge jeune\n• Sexe féminin\n• Survenue au froid\n• Phase blanche avec décoloration des doigts des deux mains, épargnant habituellement le pouce\n• Spontanément résolutif en quelques minutes\n\n<i>Rappel sur le syndrome de Raynaud</i> : acrosyndrome vasomoteur paroxystique évoluant en 3 phases successives — phase syncopale (« blanche ») ischémique, obligatoire pour porter le diagnostic (pâleur, froideur des extrémités ± diminution de la sensibilité, durée de quelques minutes à quelques heures) ; phase cyanique (« bleue ») asphyxique (bleuissement des zones atteintes, quelques minutes) ; phase hyperhémique (« rouge ») de récupération (recoloration et réchauffement des extrémités, dysesthésies gênantes puis douloureuses, quelques minutes). Il touche un ou plusieurs doigts d’une ou des deux mains, parfois les orteils, le nez, les oreilles, la langue. Circonstances déclenchantes : froid ++, humidité, émotion."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 2</b>\n\nParmi les éléments suivants, lequel serait en faveur d’une forme non bénigne, syndromique ou organique de ce phénomène ?\nA) Son âge — B) Atteinte bilatérale et symétrique des doigts — C) Présence de troubles trophiques (nécrose ou ulcération digitale) — D) Pouls radial et cubital perçus — E) Recul évolutif de plus de 2 ans",
+          "images": [],
+          "reponseAttendue": "Réponse C : la présence de troubles trophiques. Les autres éléments en faveur d’une cause organique sont la survenue tardive (après 40 ans), le sexe masculin, le déclenchement spontané ou l’absence de rémission estivale, l’asymétrie ou l’unilatéralité, l’abolition d’un pouls, le non-respect du pouce, des anomalies cliniques évocatrices de sclérodermie et une manœuvre d’Allen positive.",
+          "correctionGenerale": "• L’élément en faveur d’une cause organique parmi ceux proposés est la <b>présence de troubles trophiques</b> (réponse C)\n\n<b>On y ajoutera également</b>\n• Survenue tardive (après 40 ans)\n• Sexe masculin\n• Déclenchement spontané / absence de rémission estivale\n• Asymétrie / unilatéralité\n• Abolition d’un pouls\n• Non-respect du pouce\n• Anomalies cliniques évocatrices de sclérodermie\n• Manœuvre d’Allen positive"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 3</b>\n\nTous les critères de bénignité de ce phénomène sont réunis. Des examens sont-ils nécessaires ?",
+          "images": [],
+          "reponseAttendue": "Non : devant un syndrome de Raynaud sans critère d’organicité, il n’est pas indispensable de réaliser des examens complémentaires.",
+          "correctionGenerale": "• Devant un syndrome de Raynaud <b>sans critère d’organicité</b>, il n’est <b>pas indispensable de réaliser des examens complémentaires</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 4</b>\n\nElle présente en fait des signes en faveur d’une organicité, c’est-à-dire d’une forme non idiopathique ou secondaire de ce phénomène. Vous souhaitez réaliser un bilan de première intention. Parmi les propositions suivantes, lesquelles retenez-vous ?\nA) NFS — B) Anticorps antinucléaires — C) Capillaroscopie — D) Ferritinémie — E) Artériographie des membres supérieurs",
+          "images": [],
+          "reponseAttendue": "Réponses A, B et C. La NFS recherche un syndrome inflammatoire biologique ; les anticorps antinucléaires recherchent une maladie auto-immune pourvoyeuse de Raynaud (polyarthrite rhumatoïde, lupus, Sjögren, sclérodermie) ; la capillaroscopie confirmera l’existence d’une microangiopathie spécifique et orientera le diagnostic étiologique. Il n’y a pas d’intérêt au dosage de la ferritinémie (en dehors du syndrome inflammatoire biologique, pour lequel on dose seulement la CRP), ni à une artériographie des membres supérieurs, en tout cas lorsque les pouls sont présents.",
+          "correctionGenerale": "<b>Le bilan d’un syndrome de Raynaud d’allure secondaire comprend</b>\n• <b>NFS</b> : recherche d’un syndrome inflammatoire biologique\n• <b>Anticorps antinucléaires</b> : recherche d’une maladie auto-immune pourvoyeuse de Raynaud (polyarthrite rhumatoïde, lupus, Sjögren, sclérodermie)\n• <b>Capillaroscopie</b> : confirmera l’existence d’une microangiopathie spécifique et permettra d’orienter le diagnostic étiologique\n\n• Pas d’intérêt au dosage de la <b>ferritinémie</b> (en dehors du syndrome inflammatoire biologique, mais on dosera alors seulement la CRP)\n• Pas d’intérêt à une <b>artériographie des membres supérieurs</b>, en tout cas lorsque les pouls sont présents"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 7 — Question 5</b>\n\nParmi les classes de médicaments suivantes, laquelle est contre-indiquée en présence de ce syndrome ?\nA) Antithyroïdiens de synthèse — B) Diurétiques — C) Bêtabloquants — D) Benzodiazépines — E) Morphiniques",
+          "images": [],
+          "reponseAttendue": "Réponse C : les bêtabloquants. Les autres médicaments inducteurs sont la bromocriptine, les sympathomimétiques nasaux, la bléomycine, la vinblastine, la ciclosporine, l’interféron alpha, et d’autres : ergot de seigle et dérivés, amphétamines, cocaïne, arsenic, chlorure de polyvinyle.",
+          "correctionGenerale": "• Les traitements contre-indiqués dans cette situation sont principalement les <b>bêtabloquants</b>\n\n<i>NB — autres médicaments inducteurs</i>\n• Bromocriptine\n• Sympathomimétiques nasaux\n• Bléomycine, vinblastine, ciclosporine\n• Interféron alpha\n• Autres : ergot de seigle et dérivés, amphétamines, cocaïne, arsenic, chlorure de polyvinyle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : hématologie — Question 1</b>\n\nCitez les 3 principales causes de thrombocytose.",
+          "images": [],
+          "reponseAttendue": "Les causes réactionnelles, de loin les plus fréquentes (taux souvent < 800 G/L) : stress (chirurgie, accouchement…), syndrome inflammatoire, carence martiale, splénectomie ; et, plus rarement, les syndromes myéloprolifératifs : thrombocytémie essentielle, maladie de Vaquez, LLC, myélofibrose primitive.",
+          "correctionGenerale": "<b>Réactionnelles</b> ++ (taux souvent < 800 G/L)\n• Stress : chirurgie, accouchement…\n• Syndrome inflammatoire\n• Carence martiale\n• Splénectomie\n\n<b>Plus rarement, liées à un syndrome myéloprolifératif</b>\n• Thrombocytémie essentielle, maladie de Vaquez, LLC, myélofibrose primitive"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : hématologie — Question 2</b>\n\nQuelles anomalies de l’hémogramme peuvent s’observer lors d’une carence en vitamine B12 ?",
+          "images": [],
+          "reponseAttendue": "Une anémie macrocytaire arégénérative en premier lieu ; une leuconeutropénie et une thrombopénie sont possibles ; et l’on peut observer des signes biologiques d’hémolyse intra-médullaire (avortement intra-médullaire).",
+          "correctionGenerale": "• <b>Anémie macrocytaire arégénérative</b> ++\n• <b>Leuconeutropénie et thrombopénie</b> possibles\n• Présence de <b>signes biologiques d’hémolyse intra-médullaire</b> (avortement intra-médullaire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : hématologie — Question 3</b>\n\nQuelle est la définition d’une agranulocytose ?",
+          "images": [],
+          "reponseAttendue": "Une neutropénie < 500/mm³, hors contexte de chimiothérapie aplasiante.",
+          "correctionGenerale": "• <b>Agranulocytose = neutropénie < 500/mm³</b>, hors contexte de chimiothérapie aplasiante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 8 : hématologie — Question 4</b>\n\nQuel est le principal risque d’une thrombopénie induite par l’héparine ?",
+          "images": [],
+          "reponseAttendue": "Le risque de thrombose.",
+          "correctionGenerale": "• <b>Risque de thrombose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 1</b>\n\nCitez 3 causes ou mécanismes d’augmentation de la vitesse de sédimentation.",
+          "images": [],
+          "reponseAttendue": "Un syndrome inflammatoire biologique, la grossesse, un âge élevé, une anémie, une hypergammaglobulinémie, un syndrome néphrotique, une insuffisance rénale, une hyperlipidémie.",
+          "correctionGenerale": "• <b>Syndrome inflammatoire biologique</b>\n• <b>Grossesse</b>\n• <b>Âge élevé</b>\n• <b>Anémie</b>\n• <b>Hypergammaglobulinémie</b>\n• <b>Syndrome néphrotique</b>\n• <b>Insuffisance rénale</b>\n• <b>Hyperlipidémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 2</b>\n\nQuelle est la 1<sup>re</sup> cause à évoquer devant des céphalées récentes associées à un syndrome inflammatoire chez un sujet de plus de 70 ans ? (Une seule réponse.)",
+          "images": [],
+          "reponseAttendue": "La maladie de Horton.",
+          "correctionGenerale": "• <b>Maladie de Horton</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 3</b>\n\nCitez le marqueur biologique spécifique d’inflammation de prescription courante. (Une seule réponse.)",
+          "images": [],
+          "reponseAttendue": "La CRP.",
+          "correctionGenerale": "• <b>CRP</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 9 — Question 4</b>\n\nQuel type d’anémie est associé à l’inflammation chronique ?",
+          "images": [],
+          "reponseAttendue": "Une anémie microcytaire, et donc arégénérative.",
+          "correctionGenerale": "• <b>Anémie microcytaire</b> (et donc arégénérative)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 10 : démence — Question 1</b>\n\nCitez 3 mécanismes de syndrome démentiel chronique.",
+          "images": [],
+          "reponseAttendue": "La démence neurodégénérative (maladie d’Alzheimer en premier lieu), la démence vasculaire, et la démence secondaire à une cause organique.",
+          "correctionGenerale": "• <b>Démence neurodégénérative</b> : Alzheimer +++\n• <b>Démence vasculaire</b>\n• <b>Démence secondaire à une cause organique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 10 : démence — Question 2</b>\n\nUn syndrome confusionnel doit faire rechercher :\n• Hypokaliémie\n• Hypercalcémie\n• Hypothyroïdie\n• Dyslipidémie\n• Hyponatrémie",
+          "images": [],
+          "reponseAttendue": "L’hypokaliémie, l’hypercalcémie, l’hypothyroïdie et l’hyponatrémie — mais pas la dyslipidémie.",
+          "correctionGenerale": "• <b>Hypokaliémie</b>\n• <b>Hypercalcémie</b>\n• <b>Hypothyroïdie</b>\n• <b>Hyponatrémie</b>\n\n→ La <b>dyslipidémie</b> n’est pas une cause de syndrome confusionnel.\n\n<i>Rappel des causes métaboliques de syndrome confusionnel</i>\n• Troubles hydro-électrolytiques : hypo- ou hypernatrémie, hypokaliémie, hypo- ou hypercalcémie\n• Troubles de la glycémie : hypoglycémie, acidocétose, décompensation hyperosmolaire\n• Troubles de l’équilibre acido-basique\n• Endocrinopathies : insuffisance surrénale aiguë, hypo- ou hyperthyroïdie, insuffisance antéhypophysaire aiguë\n• Anémie\n• Carences vitaminiques : thiamine, PP, B12, folates"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 10 : démence — Question 3</b>\n\nL’imagerie de référence dans le diagnostic d’une démence est l’IRM cérébrale : vrai ou faux ?",
+          "images": [],
+          "reponseAttendue": "Vrai.",
+          "correctionGenerale": "• <b>Vrai</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 10 : démence — Question 4</b>\n\nParmi les principaux effets des anticholinestérasiques, une proposition est fausse :\nA) Vomissement — B) Confusion — C) Neutropénie — D) Bradycardie — E) Chute",
+          "images": [],
+          "reponseAttendue": "La proposition fausse est C : la neutropénie ne fait pas partie des effets indésirables des anticholinestérasiques. Les vomissements, la confusion, la bradycardie et les chutes en sont des effets reconnus.",
+          "correctionGenerale": "• La proposition fausse est la <b>C : neutropénie</b>\n• Les vomissements, la confusion, la bradycardie et les chutes sont, eux, des effets indésirables reconnus des anticholinestérasiques"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Médecine générale - 2016 - EVCP",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES MG/PAE 2016 (1).pdf",
+      "orderIndex": 119,
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2016.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 1</b>\n\nM. O., âgé de 78 ans, a présenté à plusieurs reprises à votre consultation une pression artérielle de 170/80 mmHg.\n\nQuelle forme d’hypertension artérielle suspectez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une HTA systolique de grade 2 du sujet âgé, probablement essentielle.",
+          "correctionGenerale": "• On suspecte une <b>HTA systolique de grade 2 du sujet âgé</b>, probablement essentielle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 2</b>\n\nComment pouvez-vous valider le diagnostic d’hypertension artérielle ? Détaillez votre réponse.",
+          "images": [],
+          "reponseAttendue": "Le diagnostic d’HTA est confirmé si ces chiffres tensionnels ont été observés à deux reprises au cours de trois consultations successives, sur une période de 3 à 6 mois. On peut également avoir recours à une automesure tensionnelle ou à un Holter tensionnel sur 24 h (MAPA) pour confirmer le diagnostic.",
+          "correctionGenerale": "• Le diagnostic d’HTA est <b>confirmé si ces chiffres tensionnels ont été observés à deux reprises au cours de trois consultations successives, sur une période de 3 à 6 mois</b>\n• On peut également avoir recours à une <b>automesure tensionnelle (AMT)</b> ou à un <b>Holter tensionnel sur 24 h (MAPA)</b> pour confirmer le diagnostic"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 3</b>\n\nVous envisagez de prescrire un traitement antihypertenseur ; quels bénéfices sur le pronostic cardiovasculaire en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une réduction de la constitution de plaques d’athérome, et donc de toutes les maladies liées à l’athérosclérose (maladie coronaire, AVC, AOMI, anévrisme de l’aorte abdominale…) ; une réduction du risque d’AVC hémorragique ; et une augmentation de la survie.",
+          "correctionGenerale": "• <b>Réduction de la constitution de plaques d’athérome</b>, et donc de toutes les maladies en lien avec l’athérosclérose : maladie coronaire, AVC, AOMI, anévrisme de l’aorte abdominale…\n• <b>Réduction du risque d’AVC hémorragique</b>\n• <b>Augmentation de la survie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 4</b>\n\nQuelles sont les 2 classes d’antihypertenseurs à envisager en priorité chez M. O. ?",
+          "images": [],
+          "reponseAttendue": "En première intention chez la personne âgée, on privilégiera un inhibiteur calcique ou un diurétique thiazidique à faible dose. On évitera les IEC (sauf en cas de diabète associé), en raison du risque d’insuffisance rénale aiguë fonctionnelle majoré en cas de déshydratation.",
+          "correctionGenerale": "• En première intention chez la personne âgée, on privilégiera un traitement par <b>inhibiteur calcique</b> ou par <b>diurétique thiazidique à faible dose</b>\n• On évitera les <b>IEC</b> (sauf si diabète associé), en raison du risque d’insuffisance rénale aiguë fonctionnelle majoré en cas de déshydratation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 1 — Question 5</b>\n\nM. O. est désormais traité pour son hypertension artérielle. Il reçoit aussi de l’alfuzosine pour le traitement d’une hypertrophie bénigne de la prostate. Il décrit des lipothymies le matin au lever.\n\nQuel diagnostic suspectez-vous ? Argumentez votre diagnostic.",
+          "images": [],
+          "reponseAttendue": "Des épisodes d’hypotension orthostatique, étant donné le caractère positionnel (passage de la position allongée à la position debout), le type de malaise (lipothymie, sans syncope) et la prise de traitements favorisants : antihypertenseurs et alphabloquants (alfuzosine).",
+          "correctionGenerale": "• Il s’agit probablement d’épisodes d’<b>hypotension orthostatique</b>, étant donné :\n  – Le caractère positionnel (passage de la position allongée à la position debout)\n  – Le type de malaise (lipothymie, pas de syncope)\n  – La prise de traitements favorisants : antihypertenseurs et alphabloquants (alfuzosine)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 1</b>\n\nM. H., 88 ans, vit seul à domicile ; il est veuf et bénéficie d’une aide ménagère une fois par semaine ; il conduit encore sa voiture.\n\nAntécédents : hypertension artérielle traitée par amlodipine ; diabète de type II sous metformine 500 × 3 ; prothèse de hanche droite (il y a 5 ans). Son poids est de 75 kg pour 172 cm.\n\nLe bilan d’une anémie fait découvrir un cancer colique droit avec métastases hépatiques et osseuses. Une décision d’abstention thérapeutique a été prise. M. H. reçoit du tramadol LP 100 mg × 2 et du paracétamol pour ses douleurs.\n\nIl est hospitalisé aux urgences pour un syndrome confusionnel récent. L’interrogatoire ne retrouve pas de chute récente. On ne note pas d’ictère. Le bilan hépatique est normal, il est apyrétique ; à l’examen clinique, pas de signe évoquant un sepsis.\n\nQuelles sont les principales étiologies de cette confusion ?\n• Hypercalcémie — Surdosage en paracétamol — Métastase cérébrale — Rétention d’urine — Fécalome",
+          "images": [],
+          "reponseAttendue": "L’hypercalcémie (car métastases osseuses), la métastase cérébrale (maladie déjà métastatique), la rétention urinaire (traitement par tramadol, qui est un opioïde) et le fécalome (traitement par tramadol). On élimine le surdosage en paracétamol, qui pourrait éventuellement donner un syndrome confusionnel par le biais d’une encéphalopathie hépatique, mais il n’y a pas d’ictère et le bilan hépatique est normal.",
+          "correctionGenerale": "<b>Parmi les causes de syndrome confusionnel à évoquer chez ce patient</b>\n• <b>Hypercalcémie</b> — car métastases osseuses\n• <b>Métastase cérébrale</b> — car maladie déjà métastatique\n• <b>Rétention urinaire</b> — car traitement par tramadol, qui est un opioïde\n• <b>Fécalome</b> — car traitement par tramadol\n\n• On élimine le <b>surdosage en paracétamol</b>, qui pourrait éventuellement donner un syndrome confusionnel par le biais d’une encéphalopathie hépatique — mais il n’y a pas d’ictère et le bilan hépatique est normal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 2</b>\n\nLe syndrome confusionnel est résolu. M. H. décrit maintenant des douleurs dorsales avec irradiation en hémi-ceinture, malgré un traitement récent par tramadol LP 100 mg × 2. Vous suspectez une douleur d’origine métastatique osseuse.\n\nCitez 3 échelles d’évaluation de la douleur que vous connaissez.",
+          "images": [],
+          "reponseAttendue": "L’échelle numérique simple (douleur cotée de 0 à 10), l’échelle visuelle analogique (EVA) et l’échelle Doloplus (hétéro-évaluation de la douleur en gériatrie).",
+          "correctionGenerale": "• <b>Échelle numérique simple</b> (douleur cotée de 0 à 10)\n• <b>Échelle visuelle analogique (EVA)</b>\n• <b>Échelle Doloplus</b> (hétéro-évaluation de la douleur en gériatrie)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 3</b>\n\nLa douleur dorsale en hémi-ceinture évoque un certain type de douleur. Laquelle évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une douleur de type neuropathique.",
+          "correctionGenerale": "• L’irradiation en hémi-ceinture évoque une <b>douleur de type neuropathique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 4</b>\n\nCitez 3 classes thérapeutiques à utiliser pour ce type de douleur.\n• Antiépileptique — Antidépresseur — Neuroleptique — Morphinique — Antiparkinsonien",
+          "images": [],
+          "reponseAttendue": "Les antiépileptiques, les antidépresseurs et les morphiniques (en 2<sup>e</sup> intention).",
+          "correctionGenerale": "<b>On utilisera, pour une douleur neuropathique</b>\n• <b>Antiépileptiques</b>\n• <b>Antidépresseurs</b>\n• <b>Morphiniques</b> (en 2<sup>e</sup> intention)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 5</b>\n\nUne autre composante de la douleur nécessite la mise en place d’un antalgique de palier III. Le patient est soulagé par oxycodone 5 mg × 4 prises par jour.\n\nQuelle est la posologie de la dose continue d’oxycodone LP ?",
+          "images": [],
+          "reponseAttendue": "Les interdoses représentent environ 1/6 à 1/10 de la dose totale de morphiniques LP. Le patient recevant 5 mg d’interdose toutes les 6 heures, la dose totale quotidienne équivaut à 30 à 50 mg, soit environ 20 mg d’Oxycontin® LP matin et soir.",
+          "correctionGenerale": "• On calcule habituellement les interdoses en utilisant environ <b>1/6 à 1/10 de la dose totale de morphiniques LP</b>\n• Ici, le patient reçoit 5 mg d’interdose toutes les 6 heures, donc une dose totale quotidienne de morphine de 30 à 50 mg, soit environ <b>20 mg d’Oxycontin® LP matin et soir</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 6</b>\n\nMalheureusement, l’état de M. H. s’aggrave : il développe une occlusion intestinale. Dans ce contexte, citez les étiologies de cette occlusion.\n• Carcinose péritonéale — Effet indésirable des morphiniques — Occlusion sur bride — Sténose du pylore — Obstruction colique tumorale",
+          "images": [],
+          "reponseAttendue": "La carcinose péritonéale, l’effet indésirable des morphiniques et l’obstruction colique tumorale. Il ne peut pas s’agir d’une sténose pylorique (maladie du nouveau-né, ou complication d’un cancer de l’estomac) ni d’une occlusion sur bride chez ce patient n’ayant jamais eu d’intervention chirurgicale abdominale.",
+          "correctionGenerale": "<b>Parmi les étiologies proposées, on évoque chez ce patient</b>\n• <b>Carcinose péritonéale</b>\n• <b>Effet indésirable des morphiniques</b>\n• <b>Obstruction colique tumorale</b>\n\n• Il ne peut pas s’agir d’une <b>sténose pylorique</b> (maladie du nouveau-né, ou complication d’un cancer de l’estomac) ni d’une <b>occlusion sur bride</b> chez ce patient n’ayant jamais eu d’intervention chirurgicale abdominale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 7</b>\n\nCitez le traitement symptomatique médicamenteux de l’occlusion sur carcinose péritonéale.\n• Corticothérapie à forte dose — Corticothérapie à faible dose — Sandostatine — Bêtabloquant — Hydratation parentérale",
+          "images": [],
+          "reponseAttendue": "La corticothérapie à forte dose (1 à 2 mg/kg par voie IV), la sandostatine (antisécrétoire, pour diminuer le volume des selles et donc l’inconfort) et l’hydratation parentérale (pour compenser la création d’un troisième secteur, source de déshydratation). Pas d’intérêt des bêtabloquants.",
+          "correctionGenerale": "<b>Parmi les propositions, on utilisera dans la carcinose péritonéale</b>\n• <b>Corticothérapie à forte dose</b> : 1 à 2 mg/kg par voie IV\n• <b>Sandostatine</b> : antisécrétoire, pour diminuer le volume des selles et donc l’inconfort\n• <b>Hydratation parentérale</b> : pour compenser la création d’un troisième secteur, source de déshydratation\n\n• <b>Pas d’intérêt des bêtabloquants</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 1</b>\n\nUne patiente de 75 ans consulte aux urgences pour une dyspnée aiguë brutale.\n\nAntécédents : HTA, diabète de type II, prothèse de hanche gauche opérée il y a 10 ans, obésité (1 m 60 pour 80 kg, IMC à 31 kg/m²), coloscopie il y a 3,5 ans trouvant un polype, réséqué.\n\nTraitement habituel : metformine, Esidrex®, atorvastatine, amlodipine.\n\nBiologie : TP, TCA et NFS normaux ; clairance de la créatinine à 55 mL/min. On suspecte une embolie pulmonaire.\n\nQue recherchez-vous à l’examen clinique et à l’interrogatoire pour évoquer le diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La recherche de facteurs de risque, constitutionnels (anomalies d’un bilan de thrombophilie connues chez le patient ou dans sa famille) et acquis ; les signes fonctionnels d’embolie pulmonaire : douleur thoracique (75 %) de type pleural, éventuellement majorée par la percussion ou la pression des côtes ; malaise, lipothymie, syncope ; dyspnée isolée (20 %), souvent d’apparition brutale ; état de choc (5 %), avec ou sans signes d’insuffisance cardiaque droite ; expectorations hémoptoïques modérées (sang noir). À l’examen clinique : tachypnée quasi constante, tachycardie, fébricule (voire jusqu’à 39 °C) avec dissociation pouls-température, signes de thrombose veineuse (< 25 %), signes d’insuffisance cardiaque droite (< 10 %), auscultation pulmonaire souvent normale ou foyer de crépitants localisés en cas d’infarctus pulmonaire.",
+          "correctionGenerale": "<b>Recherche de facteurs de risque</b>\n• Constitutionnels : anomalies d’un bilan de thrombophilie connues chez le patient ou dans sa famille\n• Acquis — <i>rappel du tableau projeté en séance</i> :\n  – <b>Majeurs (odds ratio > 6)</b> : chirurgie récente (< 3 mois), traumatisme des membres inférieurs (< 3 mois), hospitalisation pour affection médicale aiguë (< 3 mois) — tous transitoires ; cancer avec chimiothérapie (< 2 ans) — persistant\n  – <b>Modérés (2 < odds ratio < 6)</b> : contraception œstroprogestative, traitement hormonal substitutif, grossesse / post-partum — transitoires ; antécédent de MTEV, insuffisance cardiaque congestive — persistants\n  – <b>Faibles (odds ratio < 2)</b> : varices, obésité — persistants ; voyage prolongé > 6 h — transitoire\n\n<b>Signes fonctionnels d’embolie pulmonaire</b>\n• Douleur thoracique (75 %), de type pleural ± majorée par la percussion ou la pression des côtes\n• Malaise, lipothymie, syncope\n• Dyspnée isolée (20 %), souvent d’apparition brutale\n• État de choc (5 %), avec ou sans signes d’insuffisance cardiaque droite\n• Expectorations hémoptoïques modérées (sang noir)\n\n<b>Examen clinique</b>\n• Tachypnée quasi constante\n• Tachycardie\n• Fébricule (voire jusqu’à 39 °C), avec dissociation pouls-température\n• Signes de thrombose veineuse < 25 %\n• Signes d’insuffisance cardiaque droite < 10 %\n• Auscultation pulmonaire : souvent normale ; foyer de crépitants localisés en cas d’infarctus pulmonaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 2</b>\n\nLe score clinique de probabilité d’EP est élevé. Parmi les examens complémentaires suivants, lesquels, s’ils sont positifs, permettent de confirmer le diagnostic ?\n• Angioscanner thoracique — Scintigraphie pulmonaire — Écho-Doppler veineux des membres inférieurs — Gaz du sang — Épreuve d’effort",
+          "images": [],
+          "reponseAttendue": "L’angioscanner thoracique ; la scintigraphie pulmonaire de ventilation/perfusion (si contre-indication à l’angioscanner) ; l’écho-Doppler veineux des membres inférieurs — une phlébite associée à une probabilité élevée d’EP rendant l’EP certaine.",
+          "correctionGenerale": "<b>Les examens permettant de confirmer le diagnostic d’embolie pulmonaire en cas de probabilité élevée sont</b>\n• <b>Angioscanner thoracique</b>\n• <b>Scintigraphie pulmonaire de ventilation/perfusion</b> (si contre-indication à l’angioscanner)\n• <b>Écho-Doppler veineux des membres inférieurs</b> : si phlébite + probabilité élevée d’EP → EP certaine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 3</b>\n\nLe diagnostic d’EP est confirmé. Quels sont les critères de gravité parmi les suivants ?\n• Fréquence cardiaque = 80/min — Pression artérielle systolique = 90 mmHg — SpO₂ = 88 % — Fréquence respiratoire 20/min — Choc cardiogénique",
+          "images": [],
+          "reponseAttendue": "Une PAS à 90 mmHg (état de choc obstructif, EP massive) et le choc cardiogénique. La FC à 80/min n’est pas un signe de gravité : il existe habituellement une tachycardie en cas d’EP, mais elle peut être absente, en particulier en cas de prise de bêtabloquants. La SaO₂ à 88 % en air ambiant n’est pas un signe de gravité, sauf s’il existe une hypoxémie profonde non corrigée par l’oxygénothérapie. La FR à 20/min est presque normale.",
+          "correctionGenerale": "<b>Les critères de gravité d’une embolie pulmonaire parmi ceux proposés sont</b>\n• <b>PAS = 90 mmHg</b> : état de choc obstructif, EP massive\n• <b>Choc cardiogénique</b>\n\n• La <b>FC à 80/min</b> n’est pas un signe de gravité : il existe habituellement une tachycardie en cas d’EP, mais elle peut être absente (en particulier en cas de prise de bêtabloquants)\n• La <b>SaO₂ à 88 % en air ambiant</b> n’est pas un signe de gravité, sauf s’il existe une hypoxémie profonde non corrigée par l’oxygénothérapie\n• La <b>FR à 20/min</b> est presque normale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 4</b>\n\nEn 2016, citez les classes thérapeutiques que vous proposez dans le traitement d’une EP sans gravité, pendant la première semaine.",
+          "images": [],
+          "reponseAttendue": "Deux possibilités : soit l’introduction immédiate d’un anticoagulant oral direct, efficace d’emblée et utilisé seul, utilisable en cas d’insuffisance rénale modérée comme ici ; soit un traitement classique par AVK (Coumadine®) à introduire dès J1, mais sous couvert d’une héparinothérapie par HBPM (énoxaparine). Dans tous les cas, on prescrira également une contention veineuse des membres inférieurs.",
+          "correctionGenerale": "<b>2 possibilités</b>\n• Introduction immédiate d’un <b>anticoagulant oral direct</b>, qui sera efficace d’emblée et seul ; ils sont utilisables en cas d’insuffisance rénale modérée, comme ici\n• Ou traitement classique par <b>AVK</b> (Coumadine®) à introduire dès J1, mais sous couvert d’une héparinothérapie par <b>HBPM</b> (énoxaparine)\n\n• Dans tous les cas, on prescrira également une <b>contention veineuse des membres inférieurs</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 5</b>\n\nSur le scanner, on découvre des nodules pulmonaires suspects. Quelle est la classe thérapeutique, parmi celles citées ci-dessus, qui est recommandée les 3 premiers mois ?",
+          "images": [],
+          "reponseAttendue": "En cas de néoplasie probable ou confirmée, on n’utilisera ni les AVK ni les AOD : on maintiendra un traitement par HBPM au long cours, par voie sous-cutanée, jusqu’à rémission du cancer.",
+          "correctionGenerale": "• En cas de néoplasie probable ou confirmée, on n’utilisera pas les AVK ni les AOD : on maintiendra un traitement par <b>HBPM au long cours</b> (par voie sous-cutanée) jusqu’à rémission du cancer"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 1</b>\n\nM. T., âgé de 58 ans, consulte pour une altération de l’état général avec une perte de poids de 7 kg en 1 mois et demi. Il décrit des épigastralgies et une diarrhée évoluant depuis plus de 3 mois (selles non glairo-sanglantes).\n\nAntécédents : éthylisme chronique, tabagisme actif à 50 paquets-années, pneumopathie infectieuse traitée il y a 2 mois, crise comitiale inaugurale de sevrage alcoolique, fracture de fémur il y a 10 ans.\n\nÀ l’examen clinique : poids 50 kg, taille 1,70 m, TA 100/60 mmHg, FC 95/min, T° 37,2 °C. Pâleur cutanéo-muqueuse, mauvais état bucco-dentaire, douleur à la palpation épigastrique, pas d’organomégalie, abolition des réflexes ostéotendineux achilléens et rotuliens bilatéraux, dysesthésies chroniques douloureuses en chaussettes remontant jusqu’aux genoux. Le reste de l’examen clinique est sans particularité notable.\n\nCalculez l’indice de masse corporelle. S’agit-il d’un état normal, d’une dénutrition, d’une surcharge pondérale ou d’une obésité ?",
+          "images": [],
+          "reponseAttendue": "IMC = poids (kg) / taille² (m) = 17,3, ce qui correspond à une dénutrition (IMC < 18).",
+          "correctionGenerale": "• <b>IMC = poids (kg) / taille² (m) = 17,3</b> → <b>dénutrition</b> (IMC < 18)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 2</b>\n\nLa NFS montre une anémie à 8,2 g/dL, VGM 105 µm³, réticulocytes 62 000/mm³, leucocytes 8200/mm³, plaquettes 112 000/mm³. Urée 2 mmol/L (N 2,8-7,6), créatinine 40 µmol/L (N 53-89). ALAT 65 UI/L (N 8-30), ASAT 45 UI/L (N 8-35), γGT 300 UI/L (N < 55), bilirubine totale 9 mg/L (N < 10), phosphatases alcalines 220 UI/L (N 30-100). Ferritine 400 ng/mL (N 12-300), fibrinogène 3 g/L (N 2-4), CRP 3 mg/L (N < 5).\n\nComment qualifiez-vous cette anémie ? Normocytaire, macrocytaire, microcytaire, régénérative ou arégénérative ?",
+          "images": [],
+          "reponseAttendue": "Une anémie (Hb < 13 g/dL) macrocytaire (VGM > 100) arégénérative (réticulocytes < 100 000).",
+          "correctionGenerale": "• <b>Anémie</b> (< 13 g/dL) <b>macrocytaire</b> (VGM > 100) <b>arégénérative</b> (réticulocytes < 100 000)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 3</b>\n\nComment interprétez-vous le bilan hépatique ? Cholestase ictérique, cholestase anictérique, cytolyse, absence de cytolyse, insuffisance hépatocellulaire, hypertension portale ?",
+          "images": [],
+          "reponseAttendue": "Une cholestase anictérique (augmentation des γGT et des PAL, mais pas de la bilirubine) et une cytolyse à 2 N prédominant sur les ALAT. Pas d’insuffisance hépatocellulaire (le TP n’est pas donné dans l’énoncé, mais le fibrinogène est normal). L’hypertension portale n’est pas dépistée par le bilan biologique.",
+          "correctionGenerale": "• <b>Cholestase anictérique</b> : augmentation des γGT et des PAL, mais pas de la bilirubine\n• <b>Cytolyse (2 N)</b> prédominant sur les ALAT\n• <b>Pas d’insuffisance hépatocellulaire</b> : le TP n’est pas donné dans l’énoncé, mais le fibrinogène est normal\n• L’<b>hypertension portale</b> n’est pas dépistée par le bilan biologique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 4</b>\n\nQuel est le mécanisme possible de cette anémie ? Hémolytique, inflammatoire, par carence martiale, par carence en folates ou par carence en vitamine D ?",
+          "images": [],
+          "reponseAttendue": "Une anémie par carence en folates, chez ce patient alcoolique dénutri.",
+          "correctionGenerale": "• Il s’agit probablement d’une <b>anémie par carence en folates</b>, chez ce patient alcoolique dénutri"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 5</b>\n\nQuelle étiologie évoquez-vous devant les anomalies de l’examen neurologique ? Hématome sous-dural, syndrome de Guillain-Barré, lombosciatique, myopathie alcoolique ou polynévrite ?",
+          "images": [],
+          "reponseAttendue": "Devant l’existence de dysesthésies en chaussettes associées à une abolition des réflexes achilléens et rotuliens, on évoque en priorité une polyneuropathie sensitive longueur-dépendante secondaire à l’éthylisme chronique.",
+          "correctionGenerale": "• Devant l’existence de <b>dysesthésies en chaussettes</b> associées à une <b>abolition des réflexes achilléens et rotuliens</b>, on évoque en priorité une <b>polyneuropathie sensitive longueur-dépendante secondaire à l’éthylisme chronique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 6</b>\n\nQuelle pathologie évoquez-vous devant l’ensemble du tableau clinique : épigastralgies, diarrhée chronique et amaigrissement ? Pancréatite chronique alcoolique, cirrhose éthylique, ulcère gastro-duodénal, intolérance au lactose ou maladie de Whipple ?",
+          "images": [],
+          "reponseAttendue": "Une pancréatite chronique calcifiante secondaire à un éthylisme chronique, entraînant un tableau de malabsorption responsable de la dénutrition et de la diarrhée (stéatorrhée).",
+          "correctionGenerale": "• Il s’agit probablement d’une <b>pancréatite chronique calcifiante secondaire à un éthylisme chronique</b>, entraînant un tableau de malabsorption responsable de la dénutrition et de la diarrhée (stéatorrhée)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 7</b>\n\nM. T. revient en consultation 10 jours après, avec un complément de bilan. Il se plaint d’une soif intense inhabituelle et continue à perdre du poids.\n\nQuelle complication redoutez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome polyuro-polydipsique lié à un diabète secondaire à la pancréatite chronique calcifiante.",
+          "correctionGenerale": "• Il s’agit probablement d’un <b>syndrome polyuro-polydipsique lié à un diabète secondaire à la pancréatite chronique calcifiante</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 8</b>\n\nQuelles sont les 3 mesures hygiéno-diététiques que vous préconisez à votre patient ?",
+          "images": [],
+          "reponseAttendue": "Le sevrage alcoolique, la réduction de la consommation de sucres à index glycémique élevé et le sevrage tabagique.",
+          "correctionGenerale": "• <b>Sevrage alcoolique</b>\n• <b>Réduction de la consommation de sucres à index glycémique élevé</b>\n• <b>Sevrage tabagique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 1</b>\n\nMme G., 45 ans, vient pour une vaccination antigrippale. Elle est asthmatique. Une glycémie à jeun est retrouvée à 1,31 g/L. Elle reçoit uniquement une contraception œstro-progestative depuis 10 ans. Elle fume 1 paquet de cigarettes par jour. À l’examen : poids stable de 80 kg pour 1 m 60, PA 130/80 mmHg, examen clinique normal.\n\nComment faire le diagnostic de diabète sucré en France ?\n• Une seule glycémie à jeun supérieure à 1,26 g/L suffit — Une deuxième glycémie à jeun supérieure à 1,10 g/L suffit — Un dosage d’HbA1c est nécessaire pour établir le diagnostic — En cas de signes cliniques (asthénie, polyuro-polydipsie), une seule glycémie supérieure à 2 g/L suffit au diagnostic de diabète — Une cétonurie positive permet un diagnostic de diabète",
+          "images": [],
+          "reponseAttendue": "Pour faire le diagnostic de diabète de type 2, il faut soit une seule glycémie > 2 g/L en présence de signes évocateurs, soit 2 glycémies à jeun supérieures à 1,26 g/L. La cétonurie se voit également en cas de jeûne prolongé (cétose de jeûne) et ne permet donc pas le diagnostic.",
+          "correctionGenerale": "<b>Pour faire le diagnostic de diabète de type 2, il faut</b>\n• Une seule glycémie > 2 g/L en présence de signes évocateurs\n• Ou 2 glycémies à jeun supérieures à 1,26 g/L\n\n• La <b>cétonurie</b> se voit également en cas de jeûne prolongé (cétose de jeûne) : elle ne permet donc pas de poser le diagnostic"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 2</b>\n\nLe diagnostic de diabète est établi. Quelle est votre stratégie thérapeutique initiale, sachant que la fonction rénale est normale et que l’HbA1c est de 7,3 % ?",
+          "images": [],
+          "reponseAttendue": "Le traitement de première intention du diabète de type 2 : les règles hygiéno-diététiques, associées à un traitement par biguanide (metformine) seul.",
+          "correctionGenerale": "<b>Traitement de 1<sup>re</sup> intention dans le diabète de type 2</b>\n• <b>Règles hygiéno-diététiques</b> +\n• <b>Traitement par biguanide (metformine) seul</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 5 — Question 3</b>\n\nUn examen ophtalmologique est demandé. Quel(s) est (sont) le(s) facteur(s) prédisposant à la survenue d’une rétinopathie diabétique ?",
+          "images": [],
+          "reponseAttendue": "L’ancienneté du diabète, un mauvais équilibre glycémique et une HTA non contrôlée. Les facteurs aggravants de la rétinopathie diabétique sont la puberté et l’adolescence, la grossesse, une poussée tensionnelle, une équilibration trop rapide de la glycémie, la chirurgie de la cataracte (risque de progression dans l’année postopératoire) et la décompensation rénale.",
+          "correctionGenerale": "<b>Facteurs prédisposant à la survenue d’une rétinopathie diabétique</b>\n• <b>Ancienneté du diabète</b> ++\n• <b>Mauvais équilibre glycémique</b> ++\n• <b>HTA non contrôlée</b> ++\n\n<i>NB — facteurs aggravants de la rétinopathie diabétique</i>\n• Puberté / adolescence\n• Grossesse\n• Poussée tensionnelle\n• Équilibration trop rapide de la glycémie\n• Chirurgie de la cataracte : risque de progression dans l’année postopératoire\n• Décompensation rénale"
+        }
+      ]
+    }
+  ]
+}
