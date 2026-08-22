@@ -383,7 +383,10 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 8</b>\n\nUn patient de 60 ans, originaire d’Afrique du Nord et séjournant en France depuis deux ans, est adressé aux urgences pour altération de l’état général fébrile. Une leuconeutropénie est identifiée par les explorations biologiques.\n\nA) Décrivez la radiographie de thorax et les coupes tomodensitométriques disponibles.\nB) Quelle est l’hypothèse étiologique principale ?\nC) Dans le cadre de cette étiologie, quel(s) mécanisme(s) physiopathologique(s) est (sont) impliqué(s) ?",
-          "images": [],
+          "images": [
+            "annales-pneumologie-bon/conference-6-7-pae-formation-pneumo/figures/img-112-416.jpg",
+            "annales-pneumologie-bon/conference-6-7-pae-formation-pneumo/figures/img-113-419.jpg"
+          ],
           "reponseAttendue": "A/ Radiographie thoracique de face de bonne qualité montrant un syndrome interstitiel diffus ; au scanner, une micronodulation de répartition hématogène, avec une composante bronchiolaire devant la confluence de certaines lésions. B/ Une miliaire tuberculeuse. C/ Une « bactériémie à Mycobacterium tuberculosis » associée à une atteinte des voies aériennes, avec risque de greffe tuberculeuse multi-systémique.",
           "correctionGenerale": "<b>A) Description</b>\n• <b>Radiographie thoracique de face</b> de bonne qualité : <b>syndrome interstitiel diffus</b>\n• <b>TDM</b> : <b>micronodulation de répartition hématogène</b>, avec composante bronchiolaire devant la confluence de certaines lésions\n\n<b>B) Hypothèse étiologique</b>\n• <b>Miliaire tuberculeuse</b>\n\n<b>C) Mécanismes physiopathologiques</b>\n• « <b>Bactériémie à <i>Mycobacterium tuberculosis</i></b> » associée à une atteinte des voies aériennes\n• Avec <b>risque de greffe tuberculeuse multi-systémique</b>"
         },

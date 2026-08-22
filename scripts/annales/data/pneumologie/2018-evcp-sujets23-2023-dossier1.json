@@ -1,0 +1,277 @@
+{
+  "sources": {
+    "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf": {
+      "atelier": "annales-pneumologie-bon/conference-n9-sent",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-001-005.png": "illustration de la diapositive de cours « EVCP 2018 Sujet 2 » (page 1) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-001-009.png": "illustration de la diapositive de cours « EVCP 2018 Sujet 2 » (page 1) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-013-060.jpg": "illustration d’une diapositive de cours sans titre lisible (page 13) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-017-078.png": "illustration de la diapositive de cours « EVCP 2018 Sujet 2 Q8 » (page 17) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-024-109.png": "illustration de la diapositive de cours « Essai NOTT 1980 » (page 24) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-032-142.jpg": "illustration de la diapositive de cours « VNI et EABPCO : les grands principes » (page 32) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-036-159.jpg": "illustration de la diapositive de cours « Sevrage de la VNI » (page 36) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-036-160.png": "illustration de la diapositive de cours « Sevrage de la VNI » (page 36) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-037-167.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO » (page 37) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-037-168.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO » (page 37) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-037-169.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO » (page 37) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-037-170.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO » (page 37) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-037-171.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO » (page 37) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-038-176.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO : indication » (page 38) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-040-185.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO : modalités ventilatoires » (page 40) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-040-186.png": "illustration de la diapositive de cours « VNI au long cours BPCO : modalités ventilatoires » (page 40) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-040-191.jpg": "illustration de la diapositive de cours « VNI au long cours BPCO : modalités ventilatoires » (page 40) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-040-192.png": "illustration de la diapositive de cours « VNI au long cours BPCO : modalités ventilatoires » (page 40) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-041-197.jpg": "illustration de la diapositive de cours « A parte : la réduction de volume dans la BPCO Physiopathologie » (page 41) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-041-198.png": "illustration de la diapositive de cours « A parte : la réduction de volume dans la BPCO Physiopathologie » (page 41) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-041-201.jpg": "illustration de la diapositive de cours « A parte : la réduction de volume dans la BPCO Physiopathologie » (page 41) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-041-202.png": "illustration de la diapositive de cours « A parte : la réduction de volume dans la BPCO Physiopathologie » (page 41) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-042-207.jpg": "illustration de la diapositive de cours « A parte : la réduction de volume dans la BPCO Physiopathologie » (page 42) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-045-220.jpg": "illustration de la diapositive de cours « Valves endobronchiques » (page 45) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-046-225.jpg": "illustration de la diapositive de cours « Valves endobronchiques » (page 46) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-047-230.jpg": "illustration d’une diapositive de cours sans titre lisible (page 47) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-048-235.jpg": "illustration d’une diapositive de cours sans titre lisible (page 48) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-049-240.jpg": "illustration d’une diapositive de cours sans titre lisible (page 49) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-064-304.jpg": "illustration de la diapositive de cours « EVCP 2018 Sujet 3 Q6 » (page 64) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-065-310.jpg": "illustration d’une diapositive de cours sans titre lisible (page 65) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-067-319.png": "illustration d’une diapositive de cours sans titre lisible (page 67) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-068-324.png": "illustration d’une diapositive de cours sans titre lisible (page 68) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-068-325.png": "illustration d’une diapositive de cours sans titre lisible (page 68) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-071-338.png": "illustration de la diapositive de cours « EVCP 2018 Sujet 3 Q7 » (page 71) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-082-383.jpg": "illustration de la diapositive de cours « Fibrose pulmonaire » (page 82) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-082-384.jpg": "illustration de la diapositive de cours « Fibrose pulmonaire » (page 82) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-082-385.jpg": "illustration de la diapositive de cours « Fibrose pulmonaire » (page 82) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-083-390.jpg": "illustration de la diapositive de cours « Opacités linéaires interlobulaires irrégulières » (page 83) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-083-391.jpg": "illustration de la diapositive de cours « Opacités linéaires interlobulaires irrégulières » (page 83) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-084-396.jpg": "illustration de la diapositive de cours « Forme fibrosante compliquée d’aspergillose pulmonaire » (page 84) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-086-405.png": "illustration de la diapositive de cours « HTP et sarcoïdose » (page 86) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-088-414.jpg": "illustration de la diapositive de cours « ERS 2022 » (page 88) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-090-423.jpg": "illustration de la diapositive de cours « Mesures associées à une CT » (page 90) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-090-424.png": "illustration de la diapositive de cours « Mesures associées à une CT » (page 90) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-091-429.png": "illustration d’une diapositive de cours sans titre lisible (page 91) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-094-442.png": "illustration de la diapositive de cours « Le Nintédanib dans la sarcoïdose » (page 94) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-096-451.png": "illustration de la diapositive de cours « EVCP – Dossier 1 » (page 96) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-097-456.png": "illustration d’une diapositive de cours sans titre lisible (page 97) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-099-465.jpg": "illustration de la diapositive de cours « Question 2 » (page 99) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-101-474.png": "illustration de la diapositive de cours « Question 3 » (page 101) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-106-495.png": "illustration d’une diapositive de cours sans titre lisible (page 106) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-109-508.jpg": "illustration de la diapositive de cours « Imagerie thoracique » (page 109) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-110-513.jpg": "illustration d’une diapositive de cours sans titre lisible (page 110) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-110-514.jpg": "illustration d’une diapositive de cours sans titre lisible (page 110) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-110-515.jpg": "illustration d’une diapositive de cours sans titre lisible (page 110) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-111-520.jpg": "illustration de la diapositive de cours « Rares formes graves et hypoxémiantes » (page 111) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-114-534.png": "illustration de la diapositive de cours « Question 5 » (page 114) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-114-535.jpg": "illustration de la diapositive de cours « Question 5 » (page 114) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-116-545.jpg": "illustration de la diapositive de cours « Pneumopathies à répétition » (page 116) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-116-546.jpg": "illustration de la diapositive de cours « Pneumopathies à répétition » (page 116) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-119-560.png": "illustration de la diapositive de cours « Diagnostic DICV » (page 119) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-119-565.jpg": "illustration de la diapositive de cours « Diagnostic DICV » (page 119) : support pédagogique du conférencier, hors iconographie de l’annale",
+        "img-119-566.png": "illustration de la diapositive de cours « Diagnostic DICV » (page 119) : support pédagogique du conférencier, hors iconographie de l’annale"
+      },
+      "remarque": "Conférence de pneumologie n° 9 : correction des deuxième et troisième dossiers pratiques de l’EVCP 2018, puis annonce explicite de la « Correction annales 2023 » et correction du premier dossier pratique de l’EVCP 2023. Plusieurs diapositives ne portent que la réponse, sans l’énoncé : ces questions sont intégrées avec la mention explicite que l’énoncé n’est pas reproduit dans le corrigé, aucune reformulation n’étant inventée. Pour le dossier 2023, les énoncés sont eux-mêmes projetés sous forme d’images du sujet officiel : leur texte est retranscrit dans les énoncés des questions. Les sujets officiels 2018 et 2023 de pneumologie ne figurent pas dans le dépôt."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Pneumologie - 2018 - EVCP - Sujet 2",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
+      "orderIndex": 225,
+      "vignette": "M. P, 60 ans, vous est adressé pour une dyspnée chronique. Veuf depuis 20 ans, sans enfant, il était ingénieur informaticien et est retraité depuis peu. Il fume depuis l’âge de 17 ans, entre 1 et 2 paquets de cigarettes par jour.\n\nIl souffre d’une dyspnée d’effort s’aggravant progressivement depuis quelques années et l’ayant peu à peu conduit à limiter ses activités (mMRC estimé à 3). Il s’y associe une toux chronique avec des expectorations muqueuses matinales, volontiers verdâtres lors d’épisodes bronchitiques aigus hivernaux survenant 1 à 2 fois par an. De tels épisodes sont le plus souvent traités par un antibiotique pendant quelques jours et des fluidifiants bronchiques. Son médecin traitant lui a suggéré de suspendre son tabagisme et de consulter un pneumologue il y a déjà plusieurs années ; il dit s’être habitué à cet état mais reconnaît maintenant son handicap.\n\nÀ l’examen clinique, la fréquence cardiaque est à 85/min, la pression artérielle à 130/80 mmHg, la saturation à 92 % en air ambiant, la fréquence respiratoire à 20/min. Il est apyrétique. L’auscultation pulmonaire note une diminution bilatérale du murmure vésiculaire prédominant à la partie supérieure des champs pulmonaires et un frein expiratoire franc. Il n’y a pas de signe clinique d’hypertension pulmonaire ni d’insuffisance cardiaque gauche.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles sont vos hypothèses diagnostiques et sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Une BPCO post-tabagique : tabagisme actif de longue durée, dyspnée permanente et bronchite chronique, épisodes fréquents d’infections bronchiques, diminution du murmure vésiculaire et frein expiratoire. Un asthme ou un chevauchement asthme-BPCO (ACOS) : symptômes respiratoires chroniques, frein expiratoire diffus. Une dilatation des bronches : expectorations et toux chroniques, épisodes d’infection bronchique récidivants.",
+          "correctionGenerale": "• <b>BPCO post-tabagique</b>\n  – Tabagisme actif de longue durée\n  – Dyspnée permanente + bronchite chronique\n  – Épisodes fréquents d’infections bronchiques\n  – Diminution du murmure vésiculaire + frein expiratoire\n• <b>Asthme / ACOS</b> : symptômes respiratoires chroniques, frein expiratoire diffus\n• <b>Dilatation des bronches</b> : expectorations et toux chroniques, épisodes d’infection bronchique récidivants"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nInterprétez cette radiographie de thorax.",
+          "images": [
+            "annales-pneumologie-bon/conference-n9-sent/figures/img-004-022.jpg"
+          ],
+          "reponseAttendue": "Distension thoracique : abaissement et aplatissement du diaphragme, visibilité de plus de 6 arcs costaux antérieurs avec horizontalisation des côtes, cœur vertical, espace clair rétrosternal supérieur à 4,4 cm sur le cliché de profil, clarté rétro-cardiaque, et piégeage diffus avec course diaphragmatique inférieure à 4 cm en comparant les clichés en inspiration et en expiration.",
+          "correctionGenerale": "• <b>Abaissement et aplatissement du diaphragme</b>\n• <b>Visibilité de &gt; 6 arcs costaux antérieurs</b>, avec horizontalisation\n• <b>Cœur vertical</b>\n• <b>Espace clair rétrosternal</b> sur le cliché de profil &gt; 4,4 cm\n• <b>Piégeage diffus</b> : course diaphragmatique &lt; 4 cm en comparant les clichés en inspiration et en expiration\n\n<b>Mots clés</b>\n• Distension thoracique\n• Aplatissement du diaphragme et horizontalisation des côtes\n• Clarté rétrosternale et rétro-cardiaque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuel(s) autre(s) examen(s) demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une spirométrie ; des gaz du sang ; une numération formule sanguine et un NT-proBNP ; un scanner thoracique low dose de dépistage du cancer du poumon.",
+          "correctionGenerale": "• <b>Spirométrie</b>\n• <b>Gaz du sang</b>\n• <b>NFS</b>, <b>NT-proBNP</b>\n• <b>Scanner thoracique low dose</b> de dépistage du cancer du poumon"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question : seule l’exploration fonctionnelle respiratoire y figure, suivie de son interprétation.</i>\n\nInterprétez les résultats ci-dessous.",
+          "images": [
+            "annales-pneumologie-bon/conference-n9-sent/figures/img-008-039.jpg"
+          ],
+          "reponseAttendue": "Trouble ventilatoire obstructif avec Tiffeneau à 36 % ; VEMS à 28 % de la théorique, non réversible (il ne gagne que 1 %), soit un stade GOLD 4 ; distension thoracique avec CPT à 148 % et VR/CPT à 65,80 ; altération de la diffusion avec DLCO à 28 %.",
+          "correctionGenerale": "• <b>TVO</b> : Tiffeneau 36 %\n• <b>VEMS 28 %</b>, non réversible (prend 1 %) ⇒ <b>GOLD 4</b>\n• <b>Distension thoracique</b> : CPT 148 %, VR/CPT 65,80\n• <b>Altération de la diffusion</b> : DLCO 28 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les critères de gravité de la maladie ?",
+          "images": [],
+          "reponseAttendue": "Sur le plan clinique : exacerbateur fréquent, dyspnée invalidante (mMRC 3) avec handicap ressenti. Sur le plan fonctionnel : VEMS inférieur à 30 %, distension statique sévère, hypoxémie de repos.",
+          "correctionGenerale": "<b>Clinique</b>\n• <b>Exacerbateur fréquent</b>\n• <b>Dyspnée invalidante</b> : mMRC 3, avec « handicap ressenti »\n\n<b>Fonctionnel</b>\n• <b>VEMS &lt; 30 %</b>\n• <b>Distension statique sévère</b>\n• <b>Hypoxémie de repos</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\n<i>Le diaporama ne reproduit pas l’énoncé de cette question ; la correction porte sur la prise en charge à proposer à ce stade.</i>",
+          "images": [],
+          "reponseAttendue": "Introduction d’un bronchodilatateur de longue durée d’action associé à un traitement de secours : bêta-2-mimétique ou anticholinergique de longue durée d’action en monothérapie, plus salbutamol au besoin. Sevrage tabagique. Vaccinations antigrippale, antipneumococcique et anti-SARS-CoV-2. Proposition d’une réadaptation respiratoire. Discussion d’une consultation spécialisée en vue d’une transplantation pulmonaire.",
+          "correctionGenerale": "• <b>Introduction d’un bronchodilatateur de longue durée d’action + traitement de secours</b> : β2-mimétique ou anticholinergique de longue durée d’action en monothérapie + salbutamol au besoin\n• <b>Sevrage tabagique</b>\n• <b>Vaccination</b> antigrippale, antipneumococcique, anti-SARS-CoV-2\n• Proposer une <b>réadaptation respiratoire</b>\n• (Discuter d’une consultation spécialisée pour une <b>transplantation pulmonaire</b>)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nVous lui faites prélever des gaz du sang artériels, en air ambiant, qui montrent : pH 7,40 ; PaO2 = 57 mmHg ; PaCO2 = 46 mmHg ; CO2 total = 29 mmHg ; SaO2 = 91 %.\n\nQuelle est votre interprétation ?",
+          "images": [],
+          "reponseAttendue": "Acidose respiratoire compensée et hypoxémie.",
+          "correctionGenerale": "• <b>Acidose respiratoire compensée</b>\n• <b>Hypoxémie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nExiste-t-il une indication, sur ce résultat, à une oxygénothérapie de longue durée ?",
+          "images": [],
+          "reponseAttendue": "Non. Dans l’insuffisance respiratoire chronique obstructive, l’oxygénothérapie de longue durée est indiquée si la PaO2 est inférieure à 55 mmHg, ou inférieure à 60 mmHg en présence de signes d’hypoxie tissulaire (polyglobulie avec hématocrite > 55 %, hypertension pulmonaire au cathétérisme ou à l’échocardiographie, signes d’insuffisance ventriculaire droite avec œdèmes des membres inférieurs, désaturation artérielle nocturne non apnéique). Dans l’insuffisance respiratoire chronique restrictive, le seuil est une PaO2 inférieure à 60 mmHg. Ici la PaO2 est à 57 mmHg mais sans signe d’hypoxie associé, et le conférencier souligne que le patient est probablement anémié.",
+          "correctionGenerale": "• <b>Non</b> — et le conférencier note que le patient est probablement anémié\n\n<b>Rappel</b>\n• Définition de l’insuffisance respiratoire chronique : PaO2 &lt; 70 mmHg sur plusieurs gaz du sang à l’état stable\n• Complications de l’IRC : polyglobulie, rétention hydrosodée, hypertension pulmonaire du groupe 3\n\n<b>Indications de l’oxygénothérapie de longue durée</b>\n• <b>IRC obstructive</b> : PaO2 &lt; 55 mmHg ; ou PaO2 &lt; 60 mmHg avec signe d’hypoxie — polyglobulie (Ht &gt; 55 %), hypertension pulmonaire (cathétérisme ou ETT), signes d’insuffisance ventriculaire droite (œdèmes des membres inférieurs ++), désaturation artérielle nocturne non apnéique (au moins 88 %)\n• <b>IRC restrictive</b> : PaO2 &lt; 60 mmHg\n• <b>Extension</b> aux autres causes parenchymateuses d’IRC selon les modalités de l’IRC obstructive : pneumopathies interstitielles diffuses parvenues au stade de la fibrose ; dilatations des bronches et mucoviscidose ; hypertension pulmonaire quelle qu’en soit l’étiologie ; séquelles de tuberculose ; dysplasie bronchopulmonaire de l’enfant\n\n<i>Effets de l’hypoxémie rappelés en séance : augmentation du volume courant à partir de 60 mmHg et surtout 55 mmHg ; dilatation des vaisseaux périphériques avec tachycardie compensatrice et augmentation du travail myocardique ; vasoconstriction pulmonaire hypoxique et remodelage artériel pulmonaire ; augmentation de l’EPO ; déclin de la fonction mitochondriale et métabolisme anaérobie du lactate ; à des niveaux plus bas, altération de la vigilance. Effets à court terme de l’oxygénothérapie : amélioration de la dyspnée d’effort dans la BPCO, d’où l’intérêt des exercices sous O2 en réadaptation ; amélioration des performances à l’effort si l’hypoxémie est majeure ; prévention de l’épuisement respiratoire dans l’insuffisance respiratoire aiguë. Effets à long terme : réduction de la mortalité chez le BPCO (essais MRC 1970-1981, n = 87, 2 L 15 h/24 h versus rien, 19 décès sur 42 dans le groupe O2 contre 30 sur 45 dans le groupe contrôle à 5 ans ; et NOTT 1980, n = 203, mortalité globale plus importante sous O2 nocturne seule).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelques semaines plus tard, le patient consulte aux urgences de votre hôpital. Il se plaint d’une aggravation assez brutale de sa dyspnée depuis 5 jours, l’empêchant de sortir de chez lui et l’ayant même conduit à suspendre son tabagisme. À l’examen clinique, la fréquence cardiaque est à 105/min, la pression artérielle à 155/90 mmHg, la saturation à 85 % en air ambiant, la fréquence respiratoire à 28/min, la température corporelle à 37,8 °C. L’auscultation cardio-pulmonaire note une diminution bilatérale du murmure vésiculaire, des sibilants diffus et des râles bronchiques bilatéraux. Vous notez également de discrets œdèmes des membres inférieurs bilatéraux prenant le godet, une cyanose des lèvres et une expiration à lèvres pincées.\n\nQuel(s) facteur(s) déclenchant(s) évoquez-vous dans ce contexte d’exacerbation ?",
+          "images": [],
+          "reponseAttendue": "Avant tout un facteur infectieux, bactérien et/ou viral : c’est le plus fréquent et celui pour lequel il existe un levier thérapeutique. Mais aussi une possible poussée d’insuffisance cardiaque, évoquée par les œdèmes des membres inférieurs signalés dans l’énoncé.",
+          "correctionGenerale": "• <b>Infectieux avant tout</b> : bactérien et/ou viral — le plus fréquent, et celui pour lequel il y a un levier thérapeutique\n• Mais aussi possible <b>poussée d’insuffisance cardiaque</b> : œdèmes des membres inférieurs dans l’énoncé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuel(s) examen(s) complémentaire(s) prescrivez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Une radiographie de thorax ; des gaz du sang ; un bilan biologique standard (NFS, ionogramme, urée, créatininémie, CRP) ; un NT-proBNP ; un ECBC.",
+          "correctionGenerale": "• <b>Radiographie de thorax</b>\n• <b>Gaz du sang</b>\n• <b>Bilan biologique standard</b> : NFS, ionogramme-urée-créatininémie, CRP\n• <b>NT-proBNP</b>\n• <b>ECBC</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Questions n° 11 et 12</b>\n\nVous obtenez les résultats des gaz du sang artériels prélevés à votre patient à son arrivée, sous 3 L d’oxygène : pH 7,25 ; PaO2 63 mmHg ; PaCO2 68 mmHg ; CO2 total 31 mEq/L ; SaO2 93 %.\n\nQuel traitement mettez-vous en œuvre immédiatement ?",
+          "images": [],
+          "reponseAttendue": "Une ventilation non invasive, car le pH est inférieur à 7,35 sur une acidose respiratoire ; associée à un bronchodilatateur de courte durée d’action par voie nébulisée — salbutamol ou terbutaline — administré juste avant, pendant l’installation de l’appareil.",
+          "correctionGenerale": "• <b>Ventilation non invasive !</b> car pH &lt; 7,35 sur acidose respiratoire\n• <b>Bronchodilatateur de courte durée d’action par voie nébulisée</b> : salbutamol ou terbutaline, juste avant, pendant l’installation de l’appareil\n\n<i>Grands principes de la VNI dans l’EABPCO, projetés en séance. Lieu de prise en charge : à débuter aux urgences, en USI ou USC, ou en pneumologie si le personnel et le matériel sont adaptés ; la poursuite dépend de la gravité et des facteurs de risque d’échec — facteur de succès : amélioration des gaz du sang à 1-2 h de VNI ; risque d’échec si les signes de détresse respiratoire aiguë persistent sous VNI ou si la tolérance est mauvaise. Matériel : masque facial en première intention (il diminue les fuites buccales) ; masque nasal possible chez le patient coopérant car plus confortable ; modes barométriques, qui offrent la meilleure adaptation ventilateur-patient. Réglages initiaux : aide inspiratoire 8-18 cmH2O à adapter selon l’évolution clinique (fréquence respiratoire, mise en jeu des muscles accessoires) et la gazométrie ; PEP 4-6 cmH2O ; pas de règle sur la durée d’application, par intermittence et la nuit à la phase aiguë ; contrôle gazométrique à 2 h. Sevrage : non codifié, progressif, en espaçant les séances diurnes puis en arrêtant les séances nocturnes ; facteurs de dépendance à la VNI : IMC bas, étiologie non infectieuse de l’exacerbation, pH bas à l’admission. VNI au long cours dans la BPCO : après une insuffisance respiratoire aiguë avec acidose respiratoire, si l’hypercapnie résiduelle dépasse 53 mmHg de PCO2 à 2-4 semaines de l’épisode ; à l’état stable, si la PCO2 est ≥ 55 mmHg avec des signes d’hypoventilation diurne malgré l’oxygénothérapie de longue durée.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2018 - EVCP - Sujet 3",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
+      "orderIndex": 226,
+      "vignette": "Une femme de 26 ans, infirmière depuis 2 ans, caucasienne, n’ayant jamais quitté la métropole, vous est adressée en consultation devant la découverte fortuite d’une radiographie thoracique anormale, réalisée devant une toux traînante. Ce cliché montre des adénopathies hilaires bilatérales et symétriques et un probable syndrome interstitiel bilatéral.\n\nEn dehors de la toux, cette femme est asymptomatique. Elle a été vaccinée par le BCG dans sa petite enfance et son Tubertest était encore positif deux ans avant l’investigation actuelle. Elle est non fumeuse et n’a aucun antécédent pathologique. Son examen clinique est normal. La biologie sanguine ne montre pas de syndrome inflammatoire. Son Tubertest est négatif.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle est votre interprétation de l’imagerie thoracique ?",
+          "images": [
+            "annales-pneumologie-bon/conference-n9-sent/figures/img-051-249.jpg"
+          ],
+          "reponseAttendue": "Adénopathies latéro-trachéale droite basse, para-aortique et rétro-œsophagienne ; syndrome interstitiel dont la lésion élémentaire principale est le micronodule, de topographie sous-pleurale, péribronchovasculaire et scissurale : il s’agit donc en premier lieu d’une sarcoïdose.",
+          "correctionGenerale": "• <b>Adénopathies</b> latéro-trachéale droite basse + para-aortique + rétro-œsophagienne\n• <b>Syndrome interstitiel</b>\n  – Lésion élémentaire principale : <b>micronodule</b>\n  – Topographie : <b>sous-pleurale, péribronchovasculaire, scissurale</b>\n• ⇒ <b>SARCOÏDOSE EN PREMIER LIEU</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nInterprétez et justifiez les explorations fonctionnelles respiratoires.",
+          "images": [
+            "annales-pneumologie-bon/conference-n9-sent/figures/img-053-258.jpg"
+          ],
+          "reponseAttendue": "Pas de trouble ventilatoire obstructif, car le rapport VEMS/CV est supérieur à 70 %. Syndrome restrictif, la CPT étant inférieure à 80 %, d’atteinte modérée puisque la CVF est à 76 %. Pas d’altération significative de la diffusion.",
+          "correctionGenerale": "• <b>Pas de TVO</b> : car VEMS/CV &gt; 70 %\n• <b>Syndrome restrictif</b> : CPT &lt; 80 %, atteinte modérée car CVF 76 %\n• <b>Pas d’altération significative de la diffusion</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuelle est votre hypothèse diagnostique devant ce tableau radiologique (une seule réponse) ?",
+          "images": [],
+          "reponseAttendue": "Une sarcoïdose.",
+          "correctionGenerale": "• <b>Sarcoïdose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Questions n° 4 et 5</b>\n\nSur la base de l’imagerie, quels examens permettraient une confirmation diagnostique ?",
+          "images": [],
+          "reponseAttendue": "Une biopsie des glandes salivaires accessoires ; si elle est négative, des biopsies des éperons bronchiques avec lavage broncho-alvéolaire, ou une écho-endoscopie bronchique. On recherche des granulomes avec cellules épithélioïdes et gigantocellulaires.",
+          "correctionGenerale": "• <b>BGSA</b> (biopsie des glandes salivaires accessoires)\n• Si négatif : <b>biopsies des éperons bronchiques et LBA</b>, ou <b>EBUS</b>\n• On recherche des <b>granulomes</b>, des <b>cellules épithélioïdes et gigantocellulaires</b>\n\n<i>Rappels projetés en séance. Bilan de 1re intention : biopsies et cultures spécifiques ; RT + EFR + ECG ; hémogramme, urée et créatininémie, PAL, ASAT/ALAT ; bilan phosphocalcique et calciurie ++ ; examens ophtalmologiques (lampe à fente, tonométrie, fond d’œil) ; sérologie VIH ; test tuberculinique ; enzyme de conversion sérique, utile au monitorage tous les 3-6 mois si elle est élevée initialement. Priorité aux biopsies superficielles, dans l’ordre : biopsie cutanée (ne jamais biopsier un érythème noueux ; biopsier les sarcoïdes à petits ou gros nodules), biopsie des glandes salivaires, biopsie d’adénopathies périphériques ou de nodules conjonctivaux. Endoscopie et histologie pneumologiques : 1re intention biopsie des éperons bronchiques proximaux ; 2e intention ponction de ganglions médiastinaux par EBUS ++ ou médiastinoscopie (sensibilité proche de 100 %) ; 3e intention biopsies transbronchiques étagées, cryobiopsies transbronchiques ou biopsie pulmonaire chirurgicale. LBA : hypercellularité &gt; 200 000/mL, alvéolite lymphocytaire avec CD4/CD8 &gt; 3,5. Biopsie : granulome épithélioïde et gigantocellulaire sans nécrose caséeuse centrale.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVos examens de 1re intention sont non contributifs ; de nouvelles biopsies sont réalisées sous anesthésie générale. Au cours de l’intervention apparaît brutalement une hypotension (TA 80/40) avec tachycardie sinusale et rash cutané généralisé ; l’anesthésiste évoque en 1re intention un choc anaphylactique.\n\nPeut-on confirmer ce diagnostic en temps réel ?",
+          "images": [],
+          "reponseAttendue": "Oui au sens où le diagnostic d’anaphylaxie est clinique ; mais non pour la confirmation biologique, la tryptase sérique ne s’interprétant que par rapport à la tryptase de base, qui ne peut pas être connue à la phase aiguë. Le conférencier juge la question ambiguë et considère qu’il faut répondre « non », puisqu’on demande la confirmation du diagnostic.",
+          "correctionGenerale": "• <b>Oui</b>, car le diagnostic est <b>clinique</b>\n• <b>Et non</b>, car la confirmation biologique par la <b>tryptase sérique</b> n’est interprétable que par rapport à la tryptase de base, qui ne peut pas être connue à la phase aiguë\n• <i>Le conférencier juge la question ambiguë et considère qu’il faut la tenir pour fausse, puisqu’on demande ici la confirmation du diagnostic</i>\n\n<i>Rappel : l’anaphylaxie est une réaction allergique avec manifestations systémiques ; causes principales — médicaments, aliments, venins d’hyménoptères.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelle est votre conduite à tenir immédiate ?",
+          "images": [],
+          "reponseAttendue": "Adrénaline en intraveineux immédiatement et remplissage vasculaire ; arrêt des curares et de la perfusion d’antibioprophylaxie s’il y en a une ; éventuellement noradrénaline si la défaillance hémodynamique persiste. Doses d’adrénaline : 0,5 mg en intramusculaire chez l’adulte ; en intraveineux, en général avec un anesthésiste ou un réanimateur.",
+          "correctionGenerale": "• <b>Adrénaline IV immédiatement</b> / <b>remplissage vasculaire</b>\n• <b>Arrêt des curares</b> / de la perfusion d’antibioprophylaxie s’il y en a une\n• ± <b>noradrénaline</b> si la défaillance hémodynamique persiste\n• <b>Doses d’adrénaline</b> : IM 0,5 mg pour l’adulte ; IV en général avec l’anesthésiste ou le réanimateur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nLe diagnostic de l’atteinte respiratoire a été confirmé.\n\nQuelles atteintes extra-respiratoires viscérales justifiant un traitement systémique de cette maladie recherchez-vous ? Sur l’atteinte respiratoire radiologique et fonctionnelle, existe-t-il une indication à un traitement systémique ?",
+          "images": [],
+          "reponseAttendue": "Atteintes extra-respiratoires à rechercher : cardiaque avant tout (ECG et interrogatoire à la recherche de palpitations, de syncopes, de douleurs thoraciques d’effort) ; neurologique (clinique) ; hypercalcémie ; ophtalmologique (examen systématique par un ophtalmologue) ; rhumatologique (clinique) ; hépatique (biologique) ; éventuellement cutanée. Sur l’atteinte respiratoire, la question est tendancieuse : une surveillance de 3 à 6 mois est possible, mais les indications thérapeutiques classiques sont un stade II ou III associé à une dyspnée, ou à des EFR anormales (CV < 70 %), ou à une maladie progressive (aggravation radiologique ou fonctionnelle) ; un stade IV avec signes d’activité persistante ; une atteinte bronchique avec sténose endobronchique ou trouble ventilatoire obstructif.",
+          "correctionGenerale": "<b>Atteintes extra-respiratoires à rechercher</b>\n• <b>Cardiaque ++</b> : ECG, interrogatoire — palpitations, syncopes, douleurs thoraciques à l’effort\n• <b>Neurologique</b> : clinique\n• <b>Hypercalcémie</b>\n• <b>Ophtalmologique</b> : examen par un ophtalmologue systématique\n• <b>Rhumatologique</b> : clinique\n• <b>Hépatique</b> : biologique\n• ± cutanée — ici on parle de traitements systémiques\n\n<b>Indication à un traitement systémique sur l’atteinte respiratoire</b> <i>(question jugée tendancieuse par le conférencier)</i>\n1. Une <b>surveillance de 3 à 6 mois</b> est possible\n2. <b>Traiter</b> selon les indications classiques :\n   • Stades II et III <b>ET</b> dyspnée, ou EFR anormale (CV &lt; 70 %), ou maladie progressive (aggravation radiologique ou fonctionnelle)\n   • Stade IV + signes d’activité persistante\n   • Atteinte bronchique avec sténose endobronchique ou TVO\n\n<i>Principes rappelés en séance : traiter les formes altérant la qualité de vie, sévères ou à risque, et les maladies progressives à risque ; il n’existe pas de critère thérapeutique absolu. Histoire naturelle : deux tiers de guérisons spontanées, 80 % de guérisons en moins de 2 ans, rémission rare après 5 ans d’évolution, 10 à 30 % de traitements prolongés. La sarcoïdose pulmonaire avancée concerne 10-20 % des cas et associe fibrose, bronchectasies et hypertension pulmonaire, avec 10-20 % de décès. Traitement des formes respiratoires : corticothérapie systémique 0,3-0,5 mg/kg (max 20-40 mg/j), méthotrexate jusqu’à 15 mg/semaine, anti-TNFα 3 mg/kg par mois, hydroxychloroquine, nintédanib (OFEV®), transplantation pulmonaire. Corticothérapie : dose maximale 6-8 semaines, décroissance mensuelle puis 10 mg/j pendant 3 mois ; absence de réponse à 3 mois = absence définitive de réponse ; rechute dans 50 % des cas à 2-6 mois pendant la décroissance ; corticodépendance au-delà de 10 mg/j ; la règle est l’épargne cortisonique. Ne pas supplémenter en vitamine D dans la sarcoïdose.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Pneumologie - 2023 - EVCP - Dossier 1",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES PNEUMOLOGIE BON/Conférence_n9_sent.pdf",
+      "orderIndex": 227,
+      "vignette": "Mademoiselle D, âgée de 24 ans, se présente aux urgences en juin 2021 pour une fièvre persistante.\n\nElle est institutrice, non fumeuse, et vit chez ses parents avec sa jeune sœur. Cette patiente n’a pas d’antécédents particuliers en dehors d’infections respiratoires répétées depuis l’âge de 8 ans. Elle a présenté en particulier 2 pneumopathies, en 2005 (lobaire moyenne) et 2007 (lobaire inférieure droite), avant une longue période sans symptôme.\n\nSur l’année écoulée, elle a déjà été traitée 2 fois pour des infections respiratoires basses. Elle présente un troisième épisode, avec pneumopathie infectieuse gauche (cf. radiographie thoracique), pris en charge depuis 48 h par AMOXICILLINE, prescrit par son médecin traitant. Malgré la prise scrupuleuse de ce traitement à la posologie de 1 gramme matin, midi et soir, la fièvre persiste, ce qui l’amène aux urgences.\n\nLa patiente n’a pas voyagé dans les 6 mois précédents. Cliniquement, elle pèse 46 kg pour 159 cm. La saturation en air est à 94 %. La fièvre est à 39 °C. On retrouve un foyer de crépitants de la base gauche. La tension artérielle est à 12/8, la fréquence respiratoire à 16/min. La patiente est bien vigilante.\n\nUn angioscanner thoracique est réalisé. Il élimine une embolie pulmonaire et confirme le foyer alvéolaire de la base gauche.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQue pensez-vous de l’antibiothérapie prescrite à domicile par le médecin traitant ?",
+          "images": [],
+          "reponseAttendue": "C’est la bonne conduite à tenir : il s’agit d’une patiente jeune, sans comorbidité a priori, et l’amoxicilline 1 g trois fois par jour est le traitement de référence de la pneumonie aiguë communautaire en l’absence d’allergie.",
+          "correctionGenerale": "• Patiente <b>jeune, sans comorbidité</b> (a priori)\n• <b>Amoxicilline 1 g 3 fois par jour</b> est la bonne conduite à tenir en l’absence d’allergie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe médecin de garde qui la prend en charge aux urgences vous appelle pour savoir quels sont les examens à visée infectieuse à réaliser avant de débuter une antibiothérapie de seconde ligne. Que répondez-vous ?",
+          "images": [],
+          "reponseAttendue": "Des hémocultures ; un ECBC ; une PCR nasopharyngée à la recherche de Mycoplasma pneumoniae et de Chlamydia pneumoniae ; une antigénurie légionelle. En l’absence de gravité ou de signe de gravité, il n’y a pas lieu de rechercher l’antigénurie pneumocoque.",
+          "correctionGenerale": "• <b>Hémocultures</b>\n• <b>ECBC</b>\n• <b>PCR nasopharyngée</b> <i>Mycoplasma pneumoniae</i> et <i>Chlamydia pneumoniae</i>\n• <b>Antigénurie légionelle</b>\n• En l’absence de gravité ou de signe de gravité : <b>pas de recherche d’antigénurie pneumocoque</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nSa jeune sœur a également eu récemment des symptômes respiratoires avec toux, fièvre et dyspnée. Étant allergique aux pénicillines, elle a été traitée par un autre antibiotique que l’amoxicilline, avec une rapide efficacité.\n\nQuel agent pathogène bactérien évoquez-vous alors ?",
+          "images": [],
+          "reponseAttendue": "Mycoplasma pneumoniae : sujets jeunes, contexte épidémique, profession d’institutrice, échec des bêta-lactamines, absence de gravité.",
+          "correctionGenerale": "• <b><i>Mycoplasma pneumoniae</i></b>\n  – Sujets jeunes\n  – Contexte épidémique\n  – Institutrice\n  – Échec des bêta-lactamines\n  – Absence de gravité\n\n<i>Rappels projetés en séance. Microbiologie et épidémiologie : 4 espèces de mycoplasmes chez l’Homme dont <i>pneumoniae</i> ; 2 % des pneumonies aiguës communautaires, jusqu’à 10-15 % en Europe en contexte épidémique (2010-2011) ; touche essentiellement les jeunes enfants et les jeunes adultes, et les personnes vivant en lieux étroits (ménages, écoles, université, milieu militaire) ; transmission par gouttelettes ; incidence maximale en fin d’automne et début d’hiver. Formes respiratoires : bronchite aiguë, parfois avec sibilants sans asthme ; pneumonie avec toux peu productive, symptômes oropharyngés, rhinorrhée, otites associées, rarement hypoxémiante ; aggravation des symptômes d’asthme. Atteintes extra-respiratoires : neurologiques (Guillain-Barré, encéphalites, myélites), cutanées (érythème polymorphe, urticaire, RIME, nécrolyse épidermique toxique), hémolyse infra-clinique, cardiaques (péricardite, myocardite), troubles gastro-intestinaux, hépatite, glomérulonéphrite. Diagnostic : PCR nasopharyngée (ne distingue pas infection active et portage asymptomatique ; sensibilité 48 % si moins de 21 jours, spécificité 98 %), PCR sur LBA de meilleure sensibilité, sérologie de peu d’intérêt. Imagerie peu spécifique : infiltrats micronodulaires, verre dépoli patchy, disposition centro-lobulaire, condensations lobaires, infiltrations péribronchovasculaires et épaississements des voies aériennes.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\n<i>Le diaporama ne reproduit que la fin de l’énoncé de cette question, qui portait sur l’antibiothérapie à proposer et sa durée.</i>\n\nQuel traitement antibiotique proposez-vous, et pour quelle durée ?",
+          "images": [],
+          "reponseAttendue": "Remplacer l’amoxicilline par un macrolide : clarithromycine 500 mg deux fois par jour, ou azithromycine 500 mg le premier jour puis 250 mg par jour de J2 à J5. Soit 5 jours de traitement si l’évolution est favorable à 48 h.",
+          "correctionGenerale": "• <b>Switch de l’amoxicilline par un macrolide</b>\n  – <b>Clarithromycine</b> 500 mg × 2 par jour\n  – Ou <b>azithromycine</b> 500 mg par jour le premier jour, puis 250 mg par jour de J2 à J5\n• Soit <b>5 jours</b> si l’évolution est favorable à 48 h de traitement\n\n<i>Alternatives rappelées en séance : pristinamycine 1 g × 3/j pendant 7 jours ; doxycycline (200 mg/j pendant 7 jours si le poids dépasse 60 kg ; 200 mg à J1 puis 100 mg/j de J2 à J7 en dessous de 60 kg) ; lévofloxacine 500 mg × 1/j pendant 7 jours. Si les macrolides ne sont pas accessibles : spiramycine ou roxithromycine. L’indication thérapeutique est la pneumonie : ne pas traiter les bronchites.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLa patiente est traitée en ambulatoire et va mieux. Vous la revoyez à 4 semaines avec une radiographie des poumons et le scanner thoracique joint. Elle est très inquiète de devoir faire face à de nouvelles infections respiratoires et voudrait comprendre pourquoi elle est en situation de fragilité respiratoire.\n\nSachant que les épisodes infectieux ont débuté dans l’enfance, quelles sont les 3 principales étiologies de dilatations des bronches à évoquer ?",
+          "images": [
+            "annales-pneumologie-bon/conference-n9-sent/figures/img-114-533.png"
+          ],
+          "reponseAttendue": "Un déficit immunitaire commun variable ; une mucoviscidose ; des séquelles post-infectieuses.",
+          "correctionGenerale": "• <b>DICV</b>\n• <b>Mucoviscidose</b>\n• <b>Séquelles post-infectieuses</b>\n\n<i>Démarche devant des pneumopathies à répétition, projetée en séance. Deux situations à distinguer. Sur la même région anatomique, il s’agit d’une anomalie anatomique : compression extrinsèque trachéale ou bronchique, anomalie endobronchique, bronchectasies localisées, sténose bronchique, fistules, séquestration, anomalies congénitales, kyste. Sur des régions anatomiques différentes, avec d’autres infections associées : syndrome sino-pulmonaire (mucoviscidose, dyskinésie ciliaire primitive, CFTR-like disease), pneumonies non infectieuses (pneumopathie organisée ++), déficits immunitaires. Déficits immunitaires secondaires : VIH, hémopathies dont myélome multiple et LLC, corticothérapie au long cours et maladies de système. Déficits immunitaires primitifs : DICV, SPAD (specific antibody deficiency). Bilan : NFS, électrophorèse des protéines sériques, sérologie VIH, dosage pondéral des IgG, IgA et IgM, sérologies post-vaccinales, ± sous-classes d’IgG et immunophénotypage lymphocytaire. Diagnostic de DICV : manifestations cliniques (infections, auto-immunité, lymphoprolifération), IgG basses, IgA ou IgM basses associées, sérologies post-vaccinales diminuées dans 60 % des cas, après élimination des causes secondaires et ± génétiques.</i>"
+        }
+      ]
+    }
+  ]
+}
