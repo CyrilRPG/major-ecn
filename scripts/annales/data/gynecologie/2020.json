@@ -1,0 +1,350 @@
+{
+  "sources": {
+    "ANNALES GYNECOLOGIE/ANNALES 2020.pdf": {
+      "atelier": "annales-gynecologie/annales-2020",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2020 : une épreuve de connaissances fondamentales (21 questions isolées) et deux cas pratiques."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2020 - EVCF",
+      "annee": 2020,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/ANNALES 2020.pdf",
+      "orderIndex": 19,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 de gynécologie-obstétrique : 21 questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles sont les différentes possibilités de contraception du lendemain et sous quel délai maximum doivent-elles être mises en place ?",
+          "images": [],
+          "reponseAttendue": "Le lévonorgestrel (Norlevo®) : 1 comprimé dans les 72 h maximum après le rapport sexuel à risque. L’ulipristal (EllaOne®) : 1 comprimé dans les 5 jours après le rapport à risque. Le DIU au cuivre : pose possible dans les 5 jours suivant le rapport.",
+          "correctionGenerale": "• <b>LÉVONORGESTREL (Norlevo®)</b> : 1 cp dans les 72 h maximum après le rapport sexuel à risque\n• <b>ULIPRISTAL (EllaOne®)</b> : 1 cp dans les 5 jours après le rapport sexuel à risque\n• <b>DIU au cuivre</b> : pose possible dans les 5 jours suivant le rapport"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle est la précaution d’usage des macroprogestatifs (type acétate de nomégestrol ou promégestone) chez une patiente qui a un traitement de plus de 5 ans ?",
+          "images": [],
+          "reponseAttendue": "Réaliser une IRM cérébrale : elle est à faire en cas de symptômes évocateurs d’un méningiome, et à proposer, en cas de traitement prolongé (à partir de 5 ans), aux patientes de plus de 35 ans ; remettre une fiche d’information.",
+          "correctionGenerale": "• <b>Réaliser une IRM cérébrale</b>\n• Faire réaliser une IRM cérébrale en cas de symptômes évocateurs d’un méningiome\n• En cas de traitement prolongé (à partir de 5 ans), proposer aux patientes de plus de 35 ans une imagerie cérébrale par IRM\n• Donner une fiche d’information"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nComment s’effectue actuellement le dépistage du cancer du col de l’utérus chez la femme sans antécédent cervical ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé pour toutes les femmes asymptomatiques âgées de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis, s’ils sont normaux, tous les 3 ans ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif réalisation d’un frottis cervico-utérin pour cytologie.",
+          "correctionGenerale": "• Dépistage organisé pour toutes les femmes asymptomatiques âgées de <b>25 à 65 ans</b>\n• <b>25 à 30 ans</b> : 2 FCV à 1 an d’intervalle ; si normal, tous les 3 ans\n• <b>30 à 65 ans</b> : test HPV — si négatif tous les 5 ans ; si positif, faire réaliser un frottis cervico-utérin pour cytologie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles sont les modalités du dépistage du cancer du sein en France ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé de masse par mammographie : 2 clichés (face et oblique externe), tous les 2 ans, avec double lecture par des radiologues, chez les femmes de 50 à 74 ans.",
+          "correctionGenerale": "<b>Dépistage organisé de masse par mammographie</b>\n• 2 clichés (face + oblique externe)\n• Tous les 2 ans\n• Double lecture par des radiologues\n• De 50 à 74 ans"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels signes cliniques devez-vous rechercher à l’interrogatoire en cas de suspicion d’endométriose ?",
+          "images": [],
+          "reponseAttendue": "Une dysménorrhée primaire (avec évaluation de la douleur par EVA ou EN, prise d’antalgiques régulière, efficacité des anti-inflammatoires, absentéisme scolaire ou professionnel), des ménorragies, des douleurs inter-cycle, une dyspareunie profonde, balistique et positionnelle avec retentissement sur la vie sexuelle, des symptômes digestifs (dyschésie, épreintes, ténesme, troubles du transit, rectorragies cycliques), des symptômes urinaires (cystalgies cataméniales, pollakiurie, dysurie, hématurie cyclique, douleur lombaire), une infertilité, et plus rarement une douleur scapulaire, un pneumothorax cataménial ou une sciatalgie.",
+          "correctionGenerale": "• <b>Dysménorrhée primaire</b> ; évaluation de la douleur par EVA ou EN ; prise d’antalgiques régulière, efficacité des anti-inflammatoires ; absentéisme scolaire ou professionnel\n• <b>Ménorragies</b>\n• Douleur inter-cycle\n• <b>Dyspareunie</b> : profonde, balistique, positionnelle ; retentissement sur la vie sexuelle\n• <b>Symptômes digestifs</b> : dyschésie, épreintes, ténesme, troubles du transit, rectorragies cycliques\n• <b>Symptômes urinaires</b> : cystalgies cataméniales, pollakiurie, dysurie, hématurie cyclique, douleur lombaire (compression des uretères)\n• <b>Infertilité</b>\n• Autres, plus rares : douleur scapulaire, pneumothorax cataméniaux (localisation diaphragmatique), sciatalgie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les facteurs de risque qui feront réaliser le dépistage du diabète gestationnel ?",
+          "images": [],
+          "reponseAttendue": "Un âge supérieur à 35 ans, un IMC supérieur à 25, un antécédent personnel de diabète gestationnel, un antécédent de macrosomie, un antécédent familial au 1ᵉʳ degré de diabète.",
+          "correctionGenerale": "• Âge > 35 ans\n• IMC > 25\n• Antécédent personnel de diabète gestationnel\n• Antécédent de macrosomie\n• Antécédent familial au 1ᵉʳ degré de diabète"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelles sont les limites d’âge gestationnel recommandées pour la mesure de la clarté nucale (dépistage des aneuploïdies) ?",
+          "images": [],
+          "reponseAttendue": "Entre 11 SA et 13 SA + 6 jours.",
+          "correctionGenerale": "<b>11 SA - 13+6 SA.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuel examen complémentaire proposez-vous à une patiente dont le risque de trisomie 21 estimé par le dépistage combiné au premier trimestre est de 1/350 ?",
+          "images": [],
+          "reponseAttendue": "Un diagnostic prénatal non invasif par prélèvement de l’ADN libre circulant fœtal dans le sang maternel.",
+          "correctionGenerale": "<b>Diagnostic prénatal non invasif par prélèvement de l’ADN libre circulant fœtal dans le sang maternel.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQue proposer en cas de sérologie rubéole négative en début de grossesse ?",
+          "images": [],
+          "reponseAttendue": "Un contrôle de la sérologie à 18 SA, une vaccination en post-partum et des mesures de précaution pour éviter les contages.",
+          "correctionGenerale": "• Contrôle de la sérologie à 18 SA\n• Vaccination en post-partum\n• Mesures de précaution pour éviter les contages"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuel examen proposez-vous à une patiente rhésus négatif avec un conjoint rhésus positif ?",
+          "images": [],
+          "reponseAttendue": "Le génotypage du rhésus fœtal.",
+          "correctionGenerale": "<b>Génotypage du rhésus fœtal.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCitez trois complications spécifiques des grossesses monochoriales.",
+          "images": [],
+          "reponseAttendue": "Le syndrome transfuseur-transfusé, la séquence anémie-polyglobulie (TAPS), la masse acardiaque.",
+          "correctionGenerale": "• Syndrome transfuseur-transfusé\n• Séquence anémie-polyglobulie (TAPS)\n• Masse acardiaque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez les 4 critères diagnostiques d’infection intra-utérine (ex-chorioamniotite) avant terme.",
+          "images": [],
+          "reponseAttendue": "Fièvre > 38 °C ; contractions utérines douloureuses et douleur utérine, mise en travail spontanée ; liquide purulent ; tachycardie fœtale > 160 bpm.",
+          "correctionGenerale": "• Fièvre > 38 °C\n• Contractions utérines douloureuses et douleur utérine, mise en travail spontanée\n• Liquide purulent\n• Tachycardie fœtale > 160 bpm"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nFacteurs pronostiques d’un cancer du sein.",
+          "images": [],
+          "reponseAttendue": "Le stade, le grade, la présence d’emboles vasculaires, la présence des récepteurs hormonaux, HER2, le Ki-67.",
+          "correctionGenerale": "• Le stade\n• Le grade\n• La présence d’emboles vasculaires\n• La présence des récepteurs hormonaux\n• HER2\n• Ki-67"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nCritères de prise en charge chirurgicale d’une GEU.",
+          "images": [],
+          "reponseAttendue": "Bêta-hCG > 5000, masse latéro-utérine > 4 cm, hémopéritoine, suivi impossible, activité cardiaque, antécédent de GEU homolatérale, grossesse hétérotopique, contre-indication au méthotrexate (insuffisance hépatique ou rénale), trouble de l’hémostase ou traitement anticoagulant.",
+          "correctionGenerale": "• Bêta-hCG > 5000\n• Masse latéro-utérine > 4 cm\n• Hémopéritoine\n• Suivi impossible\n• Activité cardiaque\n• Antécédent de GEU homolatérale\n• Grossesse hétérotopique\n• Contre-indication au méthotrexate (insuffisance hépatique ou rénale)\n• Trouble de l’hémostase, traitement anticoagulant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nQue prescrivez-vous pour réaliser un bilan de réserve ovarienne chez une patiente de 40 ans ?",
+          "images": [],
+          "reponseAttendue": "En première partie de cycle, entre J2 et J5 : une échographie pelvienne pour le compte des follicules antraux, et le dosage de la FSH, de la LH, de l’œstradiol et de l’AMH.",
+          "correctionGenerale": "• En première partie de cycle, entre J2 et J5\n• Échographie pelvienne pour le compte des follicules antraux\n• Dosage FSH, LH, œstrogène, AMH"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nQuelle(s) exploration(s) demandez-vous dans la prise en charge d’une incontinence urinaire de la femme ?",
+          "images": [],
+          "reponseAttendue": "Une échographie rénale et des voies urinaires, un ECBU, et un bilan urodynamique (cystomanométrie, débitmétrie, profilométrie urétrale).",
+          "correctionGenerale": "• Échographie rénale et des voies urinaires\n• ECBU\n• Bilan urodynamique : cystomanométrie, débitmétrie, profilométrie urétrale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nQuelle est l’antibiothérapie des infections génitales hautes non compliquées, en l’absence d’allergie connue : molécules, posologie, durée ?",
+          "images": [],
+          "reponseAttendue": "Ceftriaxone 1 g IM ou IV en 1 dose ; doxycycline 100 mg deux fois par jour per os pendant 10 jours ; métronidazole 500 mg deux fois par jour per os pendant 10 jours.",
+          "correctionGenerale": "• <b>Ceftriaxone 1 g IM ou IV</b>, 1 dose\n• <b>Doxycycline 100 mg</b> deux fois par jour, per os, pendant 10 jours\n• <b>Métronidazole 500 mg</b> deux fois par jour, per os, pendant 10 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nCritères diagnostiques d’un HELLP syndrome dans un contexte de pré-éclampsie.",
+          "images": [],
+          "reponseAttendue": "Hémolyse avec LDH > 600 UI/L, ASAT/ALAT > 2N, thrombopénie < 100 000/mm³.",
+          "correctionGenerale": "• Hémolyse : LDH > 600 UI/L\n• ASAT/ALAT > 2N\n• Thrombopénie < 100 000/mm³"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nDécrivez la classification ACR des images mammographiques en précisant la conduite à tenir pour chaque catégorie.",
+          "images": [],
+          "reponseAttendue": "ACR 0 : incomplet, mauvaise qualité → refaire. ACR 1 : mammographie normale → nouvelle mammographie à 2 ans. ACR 2 : aspect bénin → nouvelle mammographie à 2 ans. ACR 3 : aspect probablement bénin → surveillance rapprochée à 4-6 mois. ACR 4 : aspect suspect → biopsie. ACR 5 : aspect malin → biopsie. ACR 6 : cancer prouvé à la biopsie.",
+          "correctionGenerale": "• <b>ACR 0</b> : incomplet, mauvaise qualité → refaire\n• <b>ACR 1</b> : mammographie normale → nouvelle mammographie à 2 ans\n• <b>ACR 2</b> : aspect bénin → nouvelle mammographie à 2 ans\n• <b>ACR 3</b> : aspect probablement bénin → surveillance rapprochée 4 à 6 mois\n• <b>ACR 4</b> : aspect suspect → biopsie\n• <b>ACR 5</b> : aspect malin → biopsie\n• <b>ACR 6</b> : cancer prouvé à la biopsie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nDécrivez cette image ovarienne (figure). Quels critères essentiels vous manquent pour définir la prise en charge ?",
+          "images": ["annales-gynecologie/annales-2020/figures/img-021-084.jpg"],
+          "reponseAttendue": "Une échographie pelvienne par voie endovaginale, en coupe sagittale de l’utérus avec l’ovaire en arrière, Douglas sec, montrant un kyste ovarien d’allure fonctionnelle car liquidien pur, sans végétation ni cloison. Il manque le doppler et la taille du kyste.",
+          "correctionGenerale": "• Échographie pelvienne par voie endovaginale\n• Coupe sagittale de l’utérus avec ovaire en arrière\n• Douglas sec\n• <b>Kyste ovarien d’allure fonctionnelle</b> car liquidien pur, sans végétation, sans cloison\n\n<b>Il manque</b> : le doppler et la taille de ce kyste."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nPrincipes de la chirurgie des cancers de l’ovaire avancés.",
+          "images": [],
+          "reponseAttendue": "Après validation en RCP, dans un centre expert, chirurgie si une résection R0 est possible : laparotomie médiane sous anesthésie générale, péritonectomie étendue, hystérectomie élargie et annexectomie bilatérale, curage pelvien et lombo-aortique, et résection de toutes les lésions de carcinose.",
+          "correctionGenerale": "• Après validation en RCP\n• Dans un centre expert\n• Chirurgie si résection R0 possible\n• Laparotomie médiane sous anesthésie générale\n• Péritonectomie étendue, hystérectomie élargie et annexectomie bilatérale, curage pelvien et lombo-aortique + résection de toutes les lésions de carcinose"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2020 - EVCP - Cas 1",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/ANNALES 2020.pdf",
+      "orderIndex": 20,
+      "vignette": "Madame G., âgée de 34 ans, a pour antécédents une appendicectomie par cœlioscopie à l’âge de 18 ans et un accouchement par voie basse à terme il y a deux ans (grossesse sans particularité). Elle pèse 67 kg pour 1,75 m. Son groupe sanguin est A rhésus positif. Elle se présente pour son échographie du 1ᵉʳ trimestre à 13 SA + 4 jours.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nL’échographie montre qu’il s’agit d’une grossesse gémellaire. Décrivez les éléments échographiques permettant de préciser la chorionicité sur le cliché ci-dessous.",
+          "images": ["annales-gynecologie/annales-2020/figures/img-024-097.png"],
+          "reponseAttendue": "Deux membranes amniotiques avec un seul placenta, et le signe du T : il s’agit d’une grossesse monochoriale biamniotique.",
+          "correctionGenerale": "• Deux membranes amniotiques avec un placenta\n• <b>Signe du T</b>\n• <b>Diagnostic de grossesse monochoriale biamniotique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nPrécisez le rythme des échographies obstétricales pour cette grossesse gémellaire. Quels éléments doivent être recherchés lors de chacune de ces échographies ?",
+          "images": [],
+          "reponseAttendue": "Une échographie toutes les deux semaines, avec mesure systématique des dopplers (ombilical, cérébral moyen surtout pour dépister le TAPS), quantité de liquide, présence des vessies, biométries.",
+          "correctionGenerale": "• <b>Une échographie toutes les deux semaines</b>\n• Mesure systématique des dopplers : DO ; ACM ++ pour dépister le TAPS\n• Quantité de liquide\n• Présence des vessies\n• Biométries"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nMadame G. se présente aux urgences d’une maternité de type 1 à 24 SA + 3 jours pour des contractions utérines douloureuses depuis 2 heures. Elle ne rapporte pas de perte de liquide amniotique ou de saignement. La hauteur utérine est à 40 cm.\n\nQuelle est votre suspicion diagnostique ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome transfuseur-transfusé avec hydramnios chez le receveur, provoquant une menace d’accouchement prématuré.",
+          "correctionGenerale": "<b>Syndrome transfuseur-transfusé avec hydramnios chez le receveur, provoquant une menace d’accouchement prématuré.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nComment la confirmer ?",
+          "images": [],
+          "reponseAttendue": "Par une échographie avec mesure des quantités de liquide, des vessies, des dopplers, des biométries et du col utérin.",
+          "correctionGenerale": "<b>Échographie</b> avec mesure des quantités de liquide, vessies, doppler, biométries, mesure du col utérin."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Une tocolyse par atosiban, une corticothérapie anténatale par 12 mg de bétaméthasone, et un transfert dans une maternité de niveau 3 avec équipe de référence pour discuter un traitement par laser.",
+          "correctionGenerale": "• Tocolyse par <b>atosiban</b>\n• Corticothérapie anténatale : 12 mg de bétaméthasone\n• Transfert dans une maternité de niveau 3, avec équipe de référence, pour discussion d’un traitement par <b>laser</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nL’évolution est favorable. À quel âge gestationnel faut-il programmer l’accouchement dans ce type de grossesse gémellaire, hors complication ?",
+          "images": [],
+          "reponseAttendue": "Entre 36 et 37 SA.",
+          "correctionGenerale": "<b>36-37 SA.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nJ1 est céphalique et J2 en siège. Quelle voie d’accouchement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un accouchement par voie basse.",
+          "correctionGenerale": "<b>Accouchement par voie basse.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nAprès l’accouchement du premier jumeau, que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Le but est d’effectuer l’accouchement dans les 15 min suivant J1 : vérification de la présentation par un toucher vaginal. Si siège : grande extraction du siège. Si transverse : version puis grande extraction du siège. Si céphalique : selon l’opérateur et les conditions cliniques — accouchement céphalique si engagement, sinon version par manœuvre interne à membranes intactes puis grande extraction du siège. Réinjection dans la péridurale avant les manœuvres internes.",
+          "correctionGenerale": "• Le but est d’effectuer l’accouchement dans les 15 min suivant J1 : vérification de la présentation par un toucher vaginal\n• <b>Si siège</b> : grande extraction du siège\n• <b>Si transverse</b> : version puis grande extraction du siège\n• <b>Si céphalique</b> : selon l’opérateur et les conditions cliniques — accouchement céphalique si engagement ; si non engagement, VMI à membranes intactes puis grande extraction du siège\n• Réinjection dans la péridurale avant les manœuvres internes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nLe placenta est venu 5 minutes après l’expulsion, accompagné d’une hémorragie de sang rouge évaluée à plus de 800 mL. Quelle doit être votre prise en charge initiale ?",
+          "images": [],
+          "reponseAttendue": "Appel de l’anesthésiste, révision utérine, massage utérin, sondage urinaire, révision sous valve ± suture périnéale, prise de constantes rapprochée, ocytocine 5 unités en IVD après révision (jusqu’à 40 UI au maximum), antibioprophylaxie par C3G IV, oxygène et réchauffement, remplissage vasculaire par cristalloïdes, Hemocue®, check-list HPP, quantification des saignements avec sac de recueil et pesée des compresses.",
+          "correctionGenerale": "• Appel de l’anesthésiste\n• <b>Révision utérine</b>\n• Massage utérin\n• Sondage urinaire\n• Révision sous valve ± suture périnéale\n• Prise de constantes rapprochée\n• <b>Ocytocine 5 unités en IVD</b> (après révision), jusqu’à 40 UI maximum\n• Antibioprophylaxie : C3G IV\n• O₂, réchauffement\n• Remplissage vasculaire : cristalloïdes\n• Hemocue®\n• Check-list HPP\n• Quantification des saignements : sac de recueil et pesée des compresses"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nLe saignement persiste au bout de 20 minutes et dépasse 1 litre. Quelle est la prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Poursuite du massage utérin, sondage urinaire à demeure, sulprostone (Nalador®) 500 µg sur 30 min, acide tranexamique (Exacyl®) 500 mg, poursuite de la réanimation médicale (deuxième voie veineuse, bilan NFS-plaquettes et hémostase, commande de CGR, PFC et fibrinogène) ; en cas de poursuite, pose d’un ballon de tamponnement intra-utérin.",
+          "correctionGenerale": "• Poursuite du massage utérin\n• Sondage urinaire à demeure\n• <b>Sulprostone (Nalador®) 500 µg (1 ampoule) sur 30 min</b>\n• Exacyl® 500 mg (1 ampoule)\n• Poursuite de la réanimation médicale : pose d’une deuxième voie veineuse ; bilan NFS-plaquettes, hémostase ; commande de CGR, PFC, fibrinogène\n• Si poursuite : pose d’un <b>ballon de tamponnement intra-utérin</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nVous n’avez pas d’accès à l’embolisation : quelles techniques chirurgicales pourraient être nécessaires ?",
+          "images": [],
+          "reponseAttendue": "Une prise en charge chirurgicale par voie haute : capitonnage utérin (point de Cho ou B-Lynch), triple ligature vasculaire étagée, hystérectomie d’hémostase.",
+          "correctionGenerale": "• <b>Prise en charge chirurgicale par voie haute</b>\n• Capitonnage utérin : point de Cho ou B-Lynch\n• Triple ligature vasculaire étagée\n• Hystérectomie d’hémostase"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2020 - EVCP - Cas 2",
+      "annee": 2020,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/ANNALES 2020.pdf",
+      "orderIndex": 21,
+      "vignette": "Vous voyez en consultation Mme V., G3P2, âgée de 42 ans, dans le cadre de son suivi gynécologique.\n\nElle présente comme principaux antécédents une obésité avec un IMC à 30 kg/m², un tabagisme actif à raison de 10 cigarettes par jour, un antécédent d’infection génitale haute à Chlamydia il y a 2 ans, traité par antibiothérapie seule, et une kystectomie ovarienne droite il y a 5 ans par cœlioscopie. À noter un antécédent familial de cancer de l’endomètre et de cancer du côlon.\n\nElle a une contraception par DIU au cuivre et présente des ménométrorragies. Vous recevez les résultats de son FCV, revenant LSIL, HPV 16+.\n\n<i>Points d’appel : tabac et antécédent d’IST = facteurs de risque de cancer du col ; antécédents familiaux évocateurs d’un syndrome de Lynch.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuels sont les facteurs de risque de dysplasie cervicale chez cette patiente et que recherchez-vous à l’interrogatoire dans ce sens ?",
+          "images": [],
+          "reponseAttendue": "Le tabac, l’antécédent d’infection génitale à infection sexuellement transmissible, le HPV positif ; on recherche un changement de partenaire et une immunodépression.",
+          "correctionGenerale": "• Tabac\n• Antécédent d’infection génitale à infection sexuellement transmissible\n• HPV +\n\n<b>À rechercher</b> : changement de partenaire, immunodépression"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelle est votre prise en charge face à cette anomalie du FCV ?",
+          "images": [],
+          "reponseAttendue": "La réalisation d’une colposcopie pour biopsie ciblée, et une aide au sevrage tabagique.",
+          "correctionGenerale": "• <b>Réalisation d’une colposcopie pour biopsie ciblée</b>\n• Aide au sevrage tabagique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLes examens réalisés retrouvent une dysplasie de haut grade de type CIN II-III. Quelle attitude thérapeutique proposez-vous à la patiente ?",
+          "images": [],
+          "reponseAttendue": "La réalisation d’une conisation.",
+          "correctionGenerale": "<b>Réalisation d’une conisation.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel serait le suivi ultérieur en cas de confirmation d’une dysplasie de haut grade ? En cas de berges non in sano, devez-vous reprendre les berges chirurgicalement ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance rapprochée par test HPV 4 à 6 mois après la conisation ; pas de reprise chirurgicale si les berges ne sont pas in sano.",
+          "correctionGenerale": "• Surveillance rapprochée par <b>test HPV 4 à 6 mois après la conisation</b>\n• <b>Pas de reprise chirurgicale</b> si berges non in sano"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVous explorez les ménométrorragies de cette patiente. Il existe une bonne tolérance clinique et biologique, sans anémie ferriprive.\n\nQuel examen complémentaire devez-vous prescrire en première intention ? Que recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une échographie pelvienne par voie abdominale et endovaginale, à la recherche d’une lésion endométriale ou intra-cavitaire : polype, fibrome, adénomyose, hypertrophie endométriale.",
+          "correctionGenerale": "• <b>Échographie pelvienne par voie abdominale et endovaginale</b>\n• Recherche d’une lésion endométriale ou intra-cavitaire : polype, fibrome, adénomyose, hypertrophie endométriale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les éléments cliniques qui aggravent les ménorragies chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "La présence d’un DIU au cuivre.",
+          "correctionGenerale": "<b>La présence d’un DIU au cuivre.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelle est votre prise en charge thérapeutique pour cette patiente concernant ses ménorragies, si l’échographie ne retrouve pas d’anomalie ?",
+          "images": [],
+          "reponseAttendue": "Un changement de contraception.",
+          "correctionGenerale": "<b>Changement de contraception.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuel(s) type(s) de contraception non définitive pouvez-vous conseiller à cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Un DIU au lévonorgestrel, une pilule microprogestative, un implant à l’étonogestrel.",
+          "correctionGenerale": "• DIU au lévonorgestrel\n• Pilule microprogestative\n• Implant à l’étonogestrel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuels sont les antécédents personnels contre-indiquant une contraception œstroprogestative chez Mme V. ?",
+          "images": [],
+          "reponseAttendue": "L’âge de 42 ans, le tabac, l’obésité.",
+          "correctionGenerale": "• Âge 42 ans\n• Tabac\n• Obésité"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nDécrivez cette imagerie : voie utilisée, coupe, pathologie retrouvée.",
+          "images": ["annales-gynecologie/annales-2020/figures/img-045-182.jpg"],
+          "reponseAttendue": "Une échographie pelvienne endovaginale, en coupe sagittale de l’utérus, montrant une lésion intra-cavitaire pouvant faire évoquer un polype ou un fibrome de type 0. Il manque le doppler pour conclure.",
+          "correctionGenerale": "• Échographie pelvienne endovaginale\n• Coupe sagittale de l’utérus\n• <b>Lésion intra-cavitaire</b> pouvant faire évoquer un polype ou un fibrome de type 0\n• <b>Il manque le doppler</b> pour conclure"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuelle serait votre attitude s’il s’agissait du résultat de l’échographie de cette patiente ?",
+          "images": [],
+          "reponseAttendue": "La proposition d’une hystéroscopie opératoire pour résection de cette lésion et envoi en anatomopathologie, sous anesthésie générale ou loco-régionale.",
+          "correctionGenerale": "• Proposition d’une <b>hystéroscopie opératoire</b> pour résection de cette lésion et envoi en anatomopathologie\n• Sous anesthésie générale ou loco-régionale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nLe résultat histologique du polype de l’endomètre retrouve un adénocarcinome endométrioïde de grade 1.\n\nQuel syndrome familial évoquez-vous ? Quel doit être le bilan ? Quel sera le traitement de cette patiente, qui n’a plus de désir de grossesse ?",
+          "images": [],
+          "reponseAttendue": "Un syndrome de Lynch ; bilan par coloscopie et IRM pelvienne ; traitement par hystérectomie totale élargie avec annexectomie bilatérale.",
+          "correctionGenerale": "• <b>Syndrome de Lynch</b>\n• Bilan : coloscopie, IRM pelvienne\n• Traitement : <b>hystérectomie totale élargie avec annexectomie bilatérale</b>"
+        }
+      ]
+    }
+  ]
+}

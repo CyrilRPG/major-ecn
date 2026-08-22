@@ -1,0 +1,566 @@
+{
+  "sources": {
+    "ANNALES GYNECOLOGIE/Annales 2015.pdf": {
+      "atelier": "annales-gynecologie/annales-2015",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-024-097.png": "logo du CNGOF figurant en pied de diapositive, sans contenu médical"
+      },
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2015 (deux cas pratiques et l’épreuve de connaissances fondamentales). Le sujet officiel 2015 de gynécologie-obstétrique n’a pas été utilisé : le corrigé reproduit lui-même les intitulés."
+    },
+    "ANNALES GYNECOLOGIE/Annales 2016.pdf": {
+      "atelier": "annales-gynecologie/annales-2016",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-014-056.png": "logo du CNGOF figurant en pied de diapositive, sans contenu médical"
+      },
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2016 (deux cas pratiques et deux cas de connaissances fondamentales)."
+    },
+    "ANNALES GYNECOLOGIE/Annales 2017 GYNECO.pdf": {
+      "atelier": "annales-gynecologie/annales-2017-gyneco",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2017."
+    },
+    "ANNALES GYNECOLOGIE/EVCP.2017.pdf": {
+      "atelier": "annales-gynecologie/evcp-2017",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Seconde correction, rédigée et beaucoup plus détaillée, du même sujet EVCP 2017 que celui traité par le diaporama « Annales 2017 GYNECO.pdf ». Les deux corrections ont été réunies dans une seule série : la réponse du diaporama est donnée en premier, la correction détaillée ensuite."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2015 - EVCP - Cas 1",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2015.pdf",
+      "orderIndex": 1,
+      "vignette": "Mme Nathalie M., âgée de 30 ans, consulte suite à la réalisation d’une échographie pelvienne qui a mis en évidence un fibrome utérin sous-muqueux de 2 cm, de découverte fortuite (patiente asymptomatique).",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nCitez les différents types de myomes en contact avec la cavité utérine selon la classification de la FIGO.",
+          "images": ["annales-gynecologie/annales-2015/figures/img-003-012.jpg"],
+          "reponseAttendue": "Les myomes de type 0 (pédiculé, endocavitaire), de type 1 (sous-muqueux, moins de 50 % intramural), de type 2 (sous-muqueux, au moins 50 % intramural) et de type 3 (en contact avec l’endomètre, 100 % intramural).",
+          "correctionGenerale": "<b>Système de sous-classification des léiomyomes (FIGO)</b>\n• <b>S — Sous-muqueux</b>\n  – <b>0</b> : pédiculé, endocavitaire\n  – <b>1</b> : < 50 % intramural\n  – <b>2</b> : ≥ 50 % intramural\n• <b>A — Autres</b>\n  – <b>3</b> : est en contact avec l’endomètre, 100 % intramural\n  – <b>4</b> : intramural\n  – <b>5</b> : sous-séreux, ≥ 50 % intramural\n  – <b>6</b> : sous-séreux, < 50 % intramural\n  – <b>7</b> : sous-séreux, pédiculé\n  – <b>8</b> : autre (à préciser, par exemple cervical, parasitaire)\n• <b>Léiomyomes hybrides</b> (affectent tant l’endomètre que la séreuse) : deux nombres liés par un trait d’union — le premier désigne la relation avec l’endomètre, le second la relation avec la séreuse. Exemple <b>2-5</b> : simultanément sous-muqueux et sous-séreux, moins de la moitié du diamètre se trouvant à la fois dans la cavité endométriale et dans la cavité péritonéale.\n\n→ Les types en contact avec la cavité utérine sont donc les types <b>0, 1, 2 et 3</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuelle prise en charge proposez-vous ici ?",
+          "images": [],
+          "reponseAttendue": "Aucune prise en charge, la patiente étant asymptomatique.",
+          "correctionGenerale": "<b>Si asymptomatique : aucune prise en charge.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nCette patiente vous annonce qu’elle vit en couple depuis 2 ans, sans contraception, et qu’elle désire une grossesse sans succès jusqu’ici. Un bilan d’infertilité comprenant bilan hormonal et spermogramme du conjoint est par ailleurs normal.\n\nQue proposez-vous à cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Une hystéroscopie opératoire pour résection des fibromes, sous anesthésie générale ou loco-régionale, avec envoi de la pièce en anatomopathologie et gel anti-adhérentiel à l’acide hyaluronique en fin d’intervention ; la prescription d’une hystérosalpingographie pour compléter le bilan ; une prise en charge en Aide Médicale à la Procréation si tout le bilan est normal.",
+          "correctionGenerale": "• <b>Hystéroscopie opératoire pour résection des fibromes</b>\n  – Anesthésie générale ou loco-régionale\n  – Envoi de la pièce en anatomopathologie\n  – Gel anti-adhérentiel à l’acide hyaluronique en fin d’intervention\n• Prescription d’une <b>hystérosalpingographie</b> pour compléter le bilan\n• Prise en charge en <b>Aide Médicale à la Procréation</b> si tout le bilan est normal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nElle reconsulte 3 ans plus tard pour des ménorragies. Le bilan échographique met en évidence 2 fibromes, l’un de type 5 de 6 cm et l’autre de type 6 de 4 cm.\n\nQuelles explorations proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une IRM pelvienne devant l’évolution rapide et la taille des fibromes, à la recherche de signes d’atypie, de signes de sarcome et de complications (compression), complétée par une échographie rénale en cas de signe de compression des uretères ; une NFS-plaquettes avec ferritine à la recherche d’une anémie et d’une carence martiale ; des bêta-hCG.",
+          "correctionGenerale": "• <b>IRM pelvienne</b> : évolution rapide et taille des fibromes\n  → Recherche de signes d’atypie, de signes de sarcome, de complications (compression)\n  → Échographie rénale si signe de compression des uretères\n• <b>NFS-plaquettes, ferritine</b> : recherche d’une anémie, d’une carence martiale\n• <b>Bêta-hCG</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nEn fonction des résultats, quelles mesures thérapeutiques immédiates proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "La correction de la carence martiale ; des progestatifs en première intention, per os ou par DIU au lévonorgestrel ; en deuxième intention, en l’absence de signe d’atypie et si le projet de grossesse est accompli, une embolisation, une radiofréquence ou une hystérectomie totale inter-annexielle ; en l’absence de signe d’atypie et en cas de projet de grossesse, une myomectomie par laparotomie ou cœlioscopie ; en cas de signe d’atypie, une RCP avec bilan d’extension comportant un TDM thoracique et une hystérectomie totale élargie par laparotomie.",
+          "correctionGenerale": "• Correction de la carence martiale\n• <b>Progestatifs en première intention</b> : per os ou DIU au lévonorgestrel\n• <b>En deuxième intention</b>\n  – Si aucun signe d’atypie et projet de grossesse accompli : embolisation, radiofréquence ou hystérectomie totale inter-annexielle\n  – Si aucun signe d’atypie et projet de grossesse : myomectomie par laparotomie ou cœlioscopie\n  – Si signe d’atypie : RCP, bilan d’extension avec TDM thoracique, hystérectomie totale élargie par laparotomie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nSon médecin traitant lui a parlé d’une embolisation artérielle du fibrome. Qu’en pensez-vous dans ce contexte ?",
+          "images": [],
+          "reponseAttendue": "Elle peut être envisagée s’il n’y a pas de complication autre que l’anémie ; en cas de désir de grossesse, l’effet de l’embolisation sur la fertilité n’est pas encore connu, avec un risque d’embolisation ovarienne.",
+          "correctionGenerale": "• Peut être envisagée s’il n’y a pas de signe de complication autre que l’anémie\n• Si désir de grossesse : effet de l’embolisation sur la fertilité non encore connu (risque d’embolisation ovarienne)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2015 - EVCP - Cas 2",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2015.pdf",
+      "orderIndex": 2,
+      "vignette": "Mme D., 36 ans, G2P1, débute sa deuxième grossesse. Dans ses antécédents, on relève un diabète gestationnel au cours de la 1ʳᵉ grossesse, avec accouchement normal à terme d’un garçon de 4200 g. Elle a un IMC à 30 kg/m².",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle complication gravidique redoutez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une récidive de diabète gestationnel.",
+          "correctionGenerale": "<b>Récidive de diabète gestationnel.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuelles mesures proposez-vous dès ce début de grossesse ?",
+          "images": [],
+          "reponseAttendue": "Un dosage de la glycémie à jeun à partir de 8 SA, des mesures hygiéno-diététiques pour limiter la prise de poids, et de l’acide folique 0,4 mg.",
+          "correctionGenerale": "• Dosage de la glycémie à jeun à partir de 8 SA\n• Mesures hygiéno-diététiques pour limiter la prise de poids\n• Acide folique 0,4 mg"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nNous sommes à présent à 24 SA, les examens initiaux étaient normaux. Quel examen prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une hyperglycémie provoquée par voie orale après 75 g de sucre, avec glycémie à jeun (T0), à 1 h (T1) et à 2 h (T2).",
+          "correctionGenerale": "<b>Hyperglycémie provoquée par voie orale après 75 g de sucre</b>\n• T0 : glycémie à jeun\n• T1 : glycémie à 1 h\n• T2 : glycémie à 2 h"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle interprétation en faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Le diagnostic de diabète gestationnel est retenu si au moins un résultat est pathologique : glycémie à jeun ≥ 0,92 g/L, T1 ≥ 1,80 g/L, T2 ≥ 1,53 g/L.",
+          "correctionGenerale": "<b>Diabète gestationnel si au moins un résultat parmi :</b>\n• T0 (glycémie à jeun) ≥ 0,92 g/L\n• T1 ≥ 1,80 g/L\n• T2 ≥ 1,53 g/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nIl s’avère que cette patiente présente un diabète gestationnel. Quelles mesures hygiéno-diététiques proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un régime diabétique : diminution des sucres rapides, limitation des aliments riches en graisse, des légumes (½) et des féculents (¼) à chaque repas, une alimentation fractionnée en 3 repas et 2 à 3 collations ; une activité physique adaptée à la grossesse (marche, natation).",
+          "correctionGenerale": "<b>Régime diabétique</b>\n• Diminution des sucres rapides\n• Limiter les aliments riches en graisse\n• Des légumes (½) et des féculents (¼) à chaque repas\n• Alimentation fractionnée : 3 repas + 2 à 3 collations\n\n<b>Activité physique adaptée à la grossesse</b> : marche, natation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nLa patiente présente une glycémie à jeun à 1 g/L et 1,4 g/L en post-prandial. Quelle attitude adopter ?",
+          "images": [],
+          "reponseAttendue": "Une consultation avec un diabétologue, la mise en place d’une insulinothérapie, en débutant par une insuline lente le soir.",
+          "correctionGenerale": "• Consultation avec un diabétologue\n• Mise en place d’une insulinothérapie\n• Débuter par une insuline lente le soir"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nÀ 38 SA, la patiente sous insuline est bien équilibrée, avec une estimation du poids fœtal à 3500 g. Quelle est votre conduite à tenir ?",
+          "images": [],
+          "reponseAttendue": "Le diabète étant bien équilibré et sans retentissement fœtal, il n’y a pas de nécessité de déclenchement : la patiente est à revoir à terme pour un déclenchement si elle n’a pas accouché.",
+          "correctionGenerale": "• Diabète bien équilibré sans retentissement fœtal : <b>pas de nécessité de déclenchement</b>\n• Patiente à revoir à terme pour un déclenchement si elle n’a pas accouché"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2015 - EVCF",
+      "annee": 2015,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/Annales 2015.pdf",
+      "orderIndex": 3,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2015 de gynécologie-obstétrique : 10 questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nConduite à tenir devant un frottis ASC-US : définition et conduite à tenir.",
+          "images": [],
+          "reponseAttendue": "ASC-US désigne des anomalies des cellules malpighiennes de signification indéterminée. Devant un frottis ASC-US, on demande le résultat du test HPV ; s’il est positif, on réalise une colposcopie pour biopsies ciblées.",
+          "correctionGenerale": "• <b>ASC-US</b> = anomalies des cellules malpighiennes de signification indéterminée\n• Devant un FCV ASC-US : résultat du <b>test HPV</b> ; si positif, réalisation d’une <b>colposcopie pour biopsies ciblées</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nMétrorragies post-ménopausiques : principales hypothèses diagnostiques.",
+          "images": [],
+          "reponseAttendue": "Une pathologie endo-utérine (polype, léiomyome sous-muqueux, hyperplasie endométriale, cancer de l’endomètre, cancer du col, atrophie endométriale, adénomyose — rare en post-ménopause), une iatrogénie (anticoagulants), un mauvais dosage d’un traitement hormonal substitutif.",
+          "correctionGenerale": "<b>Pathologie endo-utérine</b>\n• Polype\n• Léiomyome sous-muqueux\n• Hyperplasie endométriale, cancer de l’endomètre, cancer du col\n• Atrophie endométriale\n• Adénomyose (rare en post-ménopause)\n\n• <b>Iatrogénie</b> : anticoagulants\n• Mauvais dosage d’un traitement hormonal substitutif"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDéfinition et conduite à tenir diagnostique devant une mammographie classée ACR 5.",
+          "images": [],
+          "reponseAttendue": "Un aspect malin à la radiologie, indiquant la réalisation d’une biopsie.",
+          "correctionGenerale": "<b>Aspect malin à la radiologie indiquant la réalisation d’une biopsie.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nPrincipes de la prise en charge thérapeutique d’une torsion d’annexe chez une femme jeune.",
+          "images": [],
+          "reponseAttendue": "Une cœlioscopie en urgence, idéalement dans les 6 heures après le début de la douleur ; les examens diagnostiques ne doivent pas retarder la prise en charge ; sous anesthésie générale, pour détorsion de l’ovaire et kystectomie si nécessaire ; pas d’annexectomie, même en cas de suspicion de nécrose.",
+          "correctionGenerale": "• <b>Cœlioscopie en urgence</b>, dans l’idéal dans les 6 heures après le début de la douleur\n• Les examens diagnostiques ne doivent pas retarder la prise en charge\n• Sous anesthésie générale\n• Détorsion de l’ovaire et kystectomie si nécessaire\n• <b>Pas d’annexectomie, même si suspicion de nécrose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nLe fibroadénome du sein : définition, modes de découverte, prise en charge.",
+          "images": [],
+          "reponseAttendue": "Le fibroadénome est une petite masse bénigne de tissu fibreux et de tissu glandulaire qui se développe dans le sein. Il est de découverte fortuite ou révélé par un nodule palpé : masse qui se développe lentement, souvent indolore, sans écoulement du mamelon ; il n’est pas affecté par les variations hormonales liées aux menstruations mais peut grossir pendant la grossesse ou l’allaitement. Pas de prise en charge spécifique en l’absence de symptôme ; en cas de symptôme invalidant ou de fibroadénome volumineux, possibilité de tumorectomie.",
+          "correctionGenerale": "• Le fibroadénome est une petite masse bénigne de tissu fibreux et de tissu glandulaire qui se développe dans le sein\n• <b>Découverte</b> : fortuite, ou sur nodule palpé — masse qui se développe lentement, souvent indolore, sans écoulement du mamelon. Le fibroadénome n’est pas affecté par les variations hormonales liées aux menstruations, mais peut grossir lorsqu’une femme est enceinte ou qu’elle allaite\n• <b>Prise en charge</b> : aucune prise en charge spécifique en l’absence de symptôme ; si symptôme invalidant ou fibroadénome volumineux, possibilité de tumorectomie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nExamens à réaliser et à prescrire dans le cadre de la 1ʳᵉ consultation d’une grossesse.",
+          "images": [],
+          "reponseAttendue": "Sérologies toxoplasmose, rubéole, hépatite B, hépatite C, syphilis, VIH (avec accord de la patiente) ; NFS-plaquettes (ferritine) ; glycémie à jeun en cas de facteur de risque de diabète gestationnel ; TSH si facteur de risque ; groupage et RAI ; protéinurie et bandelette urinaire ; vérifier si le dépistage du cancer du col est à jour, sinon FCV ou test HPV ; échographie du 1ᵉʳ trimestre entre 11 et 13+6 SA ; examen gynécologique si non à jour, avec palpation des seins et examen au spéculum.",
+          "correctionGenerale": "• Sérologies : toxoplasmose, rubéole, hépatite B, hépatite C, syphilis, VIH (avec accord de la patiente)\n• NFS-plaquettes (ferritine)\n• Glycémie à jeun : si facteur de risque de diabète gestationnel\n• TSH : si facteur de risque\n• Groupage, RAI\n• Protéinurie, bandelette urinaire\n• Vérifier si le dépistage du cancer du col est à jour ; sinon FCV ou test HPV\n• Échographie du 1ᵉʳ trimestre entre 11 et 13+6 SA\n• Examen gynécologique si non à jour : palpation des seins, examen au spéculum"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nPrise en charge thérapeutique d’une menace d’accouchement prématuré à 28 semaines.",
+          "images": [],
+          "reponseAttendue": "Hospitalisation en maternité de niveau 3 ; corticothérapie anténatale par 2 doses de 12 mg de bétaméthasone IM (Célestène®) à 24 h d’intervalle ; tocolyse en l’absence de contre-indication (infection intra-utérine, malformation fœtale grave, RCIU sévère, MFIU, pathologie maternelle telle que pré-éclampsie ou syndrome hémorragique, accouchement imminent) par anticalcique — nifédipine per os — ou antagoniste de l’ocytocine — atosiban (Tractocile®) IV en dose de charge puis entretien sur 48 h ; sulfate de magnésium 4 g en dose de charge puis 1 à 2 g/h jusqu’à l’accouchement, maximum 12 h, en cas d’accouchement imminent ; immunoprophylaxie anti-D si non réalisée, chez une patiente de rhésus négatif avec RAI négatives et rhésus fœtal positif ou ininterprétable.",
+          "correctionGenerale": "• <b>Hospitalisation en maternité de niveau 3</b>\n\n<b>Corticothérapie anténatale</b>\n• 2 doses de 12 mg de bétaméthasone IM (Célestène®) à 24 h d’intervalle\n\n<b>Tocolyse</b> — en l’absence de contre-indication (infection intra-utérine, malformation fœtale grave, RCIU sévère, MFIU, pathologie maternelle — pré-éclampsie, syndrome hémorragique —, accouchement imminent)\n• Anticalcique : nifédipine per os — 30 mg, 10 mg, LP 20 mg selon les disponibilités\n• Antagoniste de l’ocytocine : atosiban (Tractocile®) IV — dose de charge puis entretien sur 48 h\n\n<b>Sulfate de magnésium</b>\n• 4 g en dose de charge puis 1 à 2 g/h en entretien jusqu’à l’accouchement, maximum 12 h\n• En cas d’accouchement imminent\n\n<b>Immunoprophylaxie anti-D</b> si non réalisée, si rhésus négatif, RAI négatives, rhésus fœtal positif ou ininterprétable"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nBilan biologique d’une cholestase gravidique.",
+          "images": [],
+          "reponseAttendue": "Acides biliaires à jeun, TGO et TGP (ASAT, ALAT), à réaliser toutes les semaines.",
+          "correctionGenerale": "• Acides biliaires à jeun\n• TGO, TGP (ASAT, ALAT)\n• À réaliser toutes les semaines\n\n<i>RPC 2023.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nSurveillance échographique d’une grossesse gémellaire.",
+          "images": [],
+          "reponseAttendue": "Grossesse monochoriale biamniotique : une échographie tous les 15 jours à partir de 14 SA, avec mesure systématique des dopplers (ombilical, cérébral moyen — surtout pour dépister le TAPS, en reportant sur les courbes), quantité de liquide, vessies, biométries, et morphologie standard. Grossesse bichoriale biamniotique : échographie mensuelle avec croissance fœtale et morphologie standard. Grossesse monochoriale monoamniotique : échographie tous les 15 jours.",
+          "correctionGenerale": "<b>Monochoriale biamniotique</b>\n• 1 échographie tous les 15 jours à partir de 14 SA\n• Mesure systématique des dopplers : DO ; ACM ++ pour dépister le TAPS (faire les courbes !)\n• Quantité de liquide, vessies, biométries\n• + morphologie standard\n\n<b>Bichoriale biamniotique</b>\n• Échographie mensuelle : croissance fœtale + morphologie standard\n\n<b>Monochoriale monoamniotique</b>\n• Échographie tous les 15 jours"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nDépistage précoce de la trisomie 21.",
+          "images": [],
+          "reponseAttendue": "Au 1ᵉʳ trimestre (entre 11 et 13+6 SA), calcul du risque combiné de trisomie 21 à partir des données maternelles (âge), échographiques (clarté nucale, LCC) et biologiques (bêta-hCG, PAPP-A). Si le risque est inférieur à 1/1000 : faible risque, surveillance standard. Entre 1/50 et 1/1000 : risque intermédiaire, DPNI par dosage de l’ADN libre circulant ; s’il est positif, un prélèvement invasif de confirmation s’impose. Le DPNI est proposé d’emblée en cas de grossesse gémellaire ou d’antécédent de T21. Si le risque est supérieur à 1/50 : prélèvement invasif pour caryotype fœtal — biopsie de trophoblaste avant 14 SA, amniocentèse après 14-16 SA.",
+          "correctionGenerale": "<b>Au 1ᵉʳ trimestre (entre 11 et 13+6 SA) : calcul du risque combiné de trisomie 21</b>\n• Données maternelles : âge\n• Données échographiques : clarté nucale, LCC\n• Données biologiques : bêta-hCG, PAPP-A\n\n<b>Interprétation</b>\n• < 1/1000 : faible risque → surveillance standard\n• Entre 1/50 et 1/1000 : risque intermédiaire → <b>DPNI</b> (dosage de l’ADN libre circulant T21). Si positif, prélèvement invasif de confirmation. <i>NB : DPNI direct en cas de grossesse gémellaire ou d’antécédent de T21 (risque de récurrence).</i>\n• > 1/50 : <b>prélèvements invasifs</b> pour caryotype fœtal — biopsie de trophoblaste (< 14 SA), amniocentèse (> 14-16 SA)"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2016 - EVCP - Cas 1",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2016.pdf",
+      "orderIndex": 4,
+      "vignette": "Madame M., âgée de 30 ans, 2 enfants, traitée il y a trois ans pour une chlamydiose, revient d’un séjour dans un club de vacances. Elle consulte pour des douleurs pelviennes apparues depuis 4 jours et des métrorragies qu’elle décrit comme abondantes, après 7 semaines d’aménorrhée. La température est à 37,2 °C. Madame M. vous dit croire être enceinte.\n\n<i>Points d’appel : facteur de risque d’IST, d’infertilité tubaire et de GEU ; douleur pelvienne progressive, métrorragies, retard de règles et antécédent → GEU jusqu’à preuve du contraire.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nCitez quatre causes de métrorragies du premier trimestre.",
+          "images": [],
+          "reponseAttendue": "Grossesse intra-utérine évolutive (nidation, hématome décidual), grossesse extra-utérine, fausse couche spontanée ou grossesse arrêtée, lyse d’un jumeau (rare), môle hydatiforme.",
+          "correctionGenerale": "• Grossesse intra-utérine évolutive : nidation, hématome décidual\n• Grossesse extra-utérine\n• Fausse couche spontanée, grossesse arrêtée\n• Lyse d’un jumeau (rare)\n• Môle hydatiforme"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nDevant ces métrorragies et une suspicion de grossesse, présentez votre démarche clinique diagnostique.",
+          "images": [],
+          "reponseAttendue": "Le premier diagnostic à éliminer, devant sa gravité, est la grossesse extra-utérine. Il faut rechercher les facteurs de risque de GEU à l’interrogatoire, dont certains sont déjà connus (tabac, antécédent d’infection, de chirurgie abdominale), et les signes cliniques de GEU : douleur pelvienne latéralisée, métrorragies plutôt de faible abondance et de sang foncé.",
+          "correctionGenerale": "• Le premier diagnostic à éliminer, devant sa gravité, est la <b>grossesse extra-utérine</b>\n• Recherche des facteurs de risque de GEU à l’interrogatoire, dont certains sont déjà connus : tabac, antécédent d’infection, de chirurgie abdominale\n• Recherche des signes cliniques de GEU : douleur pelvienne latéralisée, métrorragies plutôt de faible abondance, de sang foncé"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nDécrivez et détaillez votre examen clinique.",
+          "images": [],
+          "reponseAttendue": "Prise des constantes à la recherche d’un trouble hémodynamique ; palpation abdominale à la recherche d’une défense ou d’une masse pelvienne ; examen au spéculum (aspect du col, présence, origine et abondance des saignements, leucorrhées) ; toucher vaginal (masse latéro-utérine, douleur à la mobilisation).",
+          "correctionGenerale": "• Prise des constantes : recherche d’un trouble hémodynamique\n• Palpation abdominale : recherche d’une défense, d’une masse pelvienne\n• Examen au spéculum : aspect du col, présence, origine et abondance des saignements, leucorrhées\n• Toucher vaginal : masse latéro-utérine, douleur à la mobilisation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuels examens paracliniques faut-il faire en urgence ? Quelles informations attendez-vous de ces examens ?",
+          "images": [],
+          "reponseAttendue": "NFS-plaquettes (Hemocue® si saignement abondant) pour l’évaluation de la gravité ; groupage et RAI dans le cadre de la grossesse ; bêta-hCG quantitatifs ; échographie pelvienne par voie abdominale et endovaginale à la recherche d’un épanchement intra-abdominal (espace de Morison, cul-de-sac de Douglas), d’une vacuité utérine ou d’un sac gestationnel avec vésicule vitelline et embryon (LCC, activité cardiaque), d’un hématome décidual, d’une pathologie utérine, et d’une masse latéro-utérine ou d’un kyste ovarien. La confrontation des bêta-hCG et de l’échographie permet de conclure : vacuité utérine avec bêta-hCG < 1500 = grossesse de localisation indéterminée ; vacuité utérine avec bêta-hCG > 1500 = en faveur d’une GEU ; sac gestationnel avec vésicule vitelline = grossesse intra-utérine d’évolutivité indéterminée ; sac gestationnel intra-utérin avec embryon de LCC < 7 mm sans activité cardiaque = évolutivité indéterminée, LCC > 7 mm sans activité cardiaque = grossesse arrêtée.",
+          "correctionGenerale": "• <b>NFS-plaquettes</b> (Hemocue® si saignement abondant) : évaluation de la gravité\n• <b>Groupage, RAI</b> : dans le cadre de la grossesse\n• <b>Bêta-hCG quantitatifs</b>\n• <b>Échographie pelvienne, voies abdominale et endovaginale</b>\n  – Épanchement intra-abdominal : espace de Morison inter-hépato-rénal, cul-de-sac de Douglas rétro-utérin\n  – Utérus : vacuité utérine, sac gestationnel, vésicule vitelline, embryon (mesure de la LCC), activité cardiaque, hématome décidual, pathologie utérine (fibromes, polype)\n  – Annexes : ovaire, kyste ovarien, corps jaune, masse latéro-utérine\n\n<b>Conclusion selon les deux examens</b>\n• <b>Vacuité utérine</b> : bêta-hCG < 1500 → grossesse de localisation indéterminée ; bêta-hCG > 1500 → en faveur d’une GEU\n• <b>Sac gestationnel avec vésicule vitelline</b> → grossesse intra-utérine, évolutivité indéterminée\n• <b>Sac gestationnel intra-utérin avec embryon</b> : LCC < 7 mm sans activité cardiaque → évolutivité indéterminée ; LCC > 7 mm sans activité cardiaque → grossesse arrêtée"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nTrois signes indirects présents simultanément vous orientent vers le diagnostic de GEU. Lesquels ?",
+          "images": [],
+          "reponseAttendue": "La douleur pelvienne, les métrorragies et l’antécédent de chlamydiose.",
+          "correctionGenerale": "• Douleur pelvienne\n• Métrorragies\n• Antécédent de chlamydiose"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuels sont les facteurs de risque de GEU les plus fréquemment rencontrés ?",
+          "images": [],
+          "reponseAttendue": "Antécédent d’infection génitale haute, antécédent de GEU, tabac, antécédent de chirurgie abdominale et tubaire, atteinte tubaire (endométriose, malformation utérine), âge supérieur à 35 ans, DIU, FIV.",
+          "correctionGenerale": "• Antécédent d’infection génitale haute\n• Antécédent de GEU\n• Tabac\n• Antécédent de chirurgie abdominale et tubaire\n• Atteinte tubaire (endométriose, malformation utérine)\n• Âge > 35 ans\n• DIU\n• FIV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuels signes échographiques pensez-vous voir ?",
+          "images": [],
+          "reponseAttendue": "Une masse latéro-utérine, une vacuité utérine, un épanchement intra-abdominal.",
+          "correctionGenerale": "• Masse latéro-utérine\n• Vacuité utérine\n• Épanchement intra-abdominal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nLe diagnostic de GEU est établi ; vous envisagez un traitement médical. Sur quels arguments reposera votre décision ?",
+          "images": [],
+          "reponseAttendue": "Sur l’absence de contre-indication : bêta-hCG > 5000, masse latéro-utérine > 4 cm, hémopéritoine, suivi impossible, activité cardiaque, antécédent de GEU homolatérale, grossesse hétérotopique, contre-indication au méthotrexate (insuffisance hépatique ou rénale, trouble de l’hémostase, traitement anticoagulant) ; et sur le choix de la patiente.",
+          "correctionGenerale": "<b>Absence de contre-indication</b>\n• Bêta-hCG > 5000\n• Masse latéro-utérine > 4 cm\n• Hémopéritoine\n• Suivi impossible\n• Activité cardiaque\n• Antécédent de GEU homolatérale\n• Grossesse hétérotopique\n• Contre-indication au méthotrexate (insuffisance hépatique ou rénale, trouble de l’hémostase, traitement anticoagulant)\n\n<b>Choix de la patiente</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nUn traitement par méthotrexate est retenu : comment l’organisez-vous ?",
+          "images": [],
+          "reponseAttendue": "À J1, injection de méthotrexate 1 mg/kg IM ; surveillance de la décroissance des bêta-hCG, avec un résultat attendu de plus de 30 % à J7 ou de plus de 15 % entre J4 et J7, puis une fois par semaine jusqu’à négativation ; en cas de mauvaise décroissance, une 2ᵉ dose à J7 ou une chirurgie ; explication des complications à la patiente avec les symptômes devant la faire reconsulter (malaise, douleur brutale).",
+          "correctionGenerale": "• À J1 : injection de <b>méthotrexate 1 mg/kg IM</b>\n• Surveillance de la décroissance des bêta-hCG : résultat attendu > 30 % à J7, ou > 15 % entre J4 et J7\n• Puis une fois par semaine jusqu’à négativation\n• Si mauvaise décroissance : possible 2ᵉ dose à J7, ou chirurgie\n• Explication des complications à la patiente, avec les symptômes devant la faire reconsulter : malaise, douleur brutale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\nÀ J7, la patiente est asymptomatique, l’examen clinique et l’échographie sont inchangés par rapport à l’état initial, le taux de bêta-hCG est identique au taux initial. Que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Une 2ᵉ injection de méthotrexate, ou la chirurgie.",
+          "correctionGenerale": "<b>2ᵉ injection de méthotrexate ou chirurgie.</b>\n\n<i>Cf. RPC GEU 2024.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2016 - EVCP - Cas 2",
+      "annee": 2016,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2016.pdf",
+      "orderIndex": 5,
+      "vignette": "Madame D., âgée de 38 ans, enceinte de 30 SA, vous consulte aux urgences d’une maternité de type 1 pour diminution des mouvements actifs. Elle a déjà accouché il y a 3 ans, par césarienne, en raison d’une dystocie cervicale, d’un enfant qui pesait 3800 g. La grossesse actuelle est unique.\n\n<i>Points d’appel : prématurité sévère, transfert en maternité adaptée, utérus cicatriciel avec mauvais pronostic de tentative de voie basse après césarienne.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nDécrivez l’examen clinique d’une patiente à 33 SA (sans l’interrogatoire).",
+          "images": [],
+          "reponseAttendue": "Prise de la tension artérielle, poids, palpation abdominale avec hauteur utérine (environ 32 cm) et présentation fœtale, toucher vaginal, recherche de métrorragies et de perte de liquide amniotique, palpation des mollets, recherche d’œdèmes, enregistrement du rythme cardiaque fœtal avec tocométrie.",
+          "correctionGenerale": "• Prise de TA\n• Poids\n• Palpation abdominale : hauteur utérine (environ 32 cm), présentation fœtale\n• TV, recherche de métrorragies, de perte de liquide amniotique\n• Palpation des mollets, recherche d’œdèmes\n• ERCF avec tocométrie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nÀ l’examen, sa pression artérielle est de 150/100 mmHg. Sa taille est de 1,65 m pour 63 kg. Quels sont les deux examens paracliniques essentiels à demander chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Un bilan urinaire (bandelette urinaire et protéinurie sur créatininurie) et sanguin (bilan vasculo-rénal : NFS-plaquettes, ionogramme, créatinine, bilan hépatique TGO/TGP, LDH) ; une échographie fœtale (estimation du poids fœtal, présentation, liquide amniotique, placenta et recherche d’hématome, mouvements actifs fœtaux, doppler ombilical et cérébral moyen).",
+          "correctionGenerale": "<b>Bilan</b>\n• Urinaire : BU et protéinurie sur créatininurie\n• Sanguin : bilan vasculo-rénal — NFS-plaquettes, ionogramme, créatinine, bilan hépatique (TGO, TGP), LDH\n\n<b>Échographie fœtale</b>\n• EPF, présentation, liquide amniotique, placenta (hématome), mouvements actifs fœtaux, doppler ombilical et cérébral moyen"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nLe diagnostic de HELLP syndrome est posé chez cette patiente. Quelle est la définition de ce syndrome ?",
+          "images": [],
+          "reponseAttendue": "Une microangiopathie gravidique associant hémolyse, élévation des enzymes hépatiques et thrombopénie.",
+          "correctionGenerale": "<b>Microangiopathie gravidique</b>\n• Hémolyse\n• Élévation des enzymes hépatiques\n• Thrombopénie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez les différents éléments de prise en charge de cette patiente (sans entrer dans le détail des prescriptions ni des doses).",
+          "images": [],
+          "reponseAttendue": "Hospitalisation en SSPI avec surveillance continue, transfert en maternité de niveau 3 après stabilisation clinique et biologique ; consultations d’anesthésie et de pédiatrie ; traitement antihypertenseur si TA > 14/9 ; sulfate de magnésium avec surveillance des ROT, de la saturation et de la vigilance ; maturation pulmonaire fœtale par une cure de bétaméthasone 12 mg à 24 h d’intervalle ; surveillance fœtale par RCF ; surveillance maternelle par monitoring tensionnel et bilan sanguin toutes les 6 h ; décision d’extraction fœtale dont le timing dépend de l’évolution clinique et biologique, si possible après les 48 h de corticothérapie.",
+          "correctionGenerale": "• Hospitalisation en SSPI, surveillance continue ; transfert en maternité de niveau 3 si stabilisation clinique et biologique\n• Consultations d’anesthésie et de pédiatrie\n• Traitement antihypertenseur si TA > 14/9\n• <b>Sulfate de magnésium</b> avec surveillance des ROT, de la saturation, de la vigilance\n• Maturation pulmonaire fœtale : cure de corticoïdes, bétaméthasone 12 mg à 24 h d’intervalle\n• Surveillance fœtale : RCF\n• Surveillance maternelle : monitoring tensionnel, bilan sanguin régulier (toutes les 6 h)\n• Décision d’extraction fœtale : timing en fonction de l’évolution clinique et biologique, si possible après les 48 h de corticothérapie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nEn cas de nécessité, quels sont les traitements antihypertenseurs recommandés au cours de la grossesse ?",
+          "images": [],
+          "reponseAttendue": "Un bêtabloquant (labétalol, Trandate®), un anticalcique (nicardipine, Loxen®) en première intention, un antihypertenseur central (méthyldopa, Aldomet®), l’urapidil (Eupressyl®).",
+          "correctionGenerale": "• Bêtabloquant : labétalol (Trandate®)\n• Anticalcique : nicardipine (Loxen®) → <b>en première intention</b>\n• Antihypertenseur central : méthyldopa (Aldomet®)\n• Urapidil (Eupressyl®)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les traitements antihypertenseurs contre-indiqués au cours de la grossesse ?",
+          "images": [],
+          "reponseAttendue": "Les IEC et les antagonistes des récepteurs de l’angiotensine (sartans), formellement contre-indiqués ; les diurétiques sont à éviter.",
+          "correctionGenerale": "• <b>IEC et antagonistes des récepteurs de l’angiotensine (sartans)</b> : formellement contre-indiqués\n• Diurétiques : à éviter"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez, sans commentaire, l’ensemble des éléments cliniques et paracliniques qui devraient faire porter le diagnostic de pré-éclampsie sévère chez ce type de patiente.",
+          "images": ["annales-gynecologie/annales-2016/figures/recadre/img-022-090.png"],
+          "reponseAttendue": "Une HTA sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) ou non contrôlée, une protéinurie > 3 g/24 h, une créatininémie ≥ 90 µmol/L, une oligurie ≤ 500 mL/24 h ou ≤ 25 mL/h, une thrombopénie < 100 000/mm³, une cytolyse hépatique avec ASAT/ALAT > 2N, une douleur abdominale épigastrique et/ou de l’hypochondre droit « en barre » persistante ou intense, une douleur thoracique, une dyspnée, un œdème aigu du poumon, des signes neurologiques (céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, réflexes ostéo-tendineux vifs, diffusés et polycinétiques), un déficit neurologique, des troubles de la conscience, une crise d’éclampsie, un HELLP syndrome, une insuffisance rénale aiguë.",
+          "correctionGenerale": "<i>La réponse est donnée par la reproduction du texte des recommandations (figure ci-dessus).</i>\n\n<b>Signes de gravité</b>\n• PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg\n• Douleur épigastrique et/ou de l’hypochondre droit « en barre »\n• Céphalées intenses et rebelles\n• Troubles visuels ou auditifs\n• Déficit neurologique\n• Troubles de la conscience\n• ROT vifs, diffusés, polycinétiques\n• Crise d’éclampsie\n• Détresse respiratoire, œdème aigu du poumon\n• HELLP syndrome\n• Insuffisance rénale aiguë\n\n<b>En cas de crise d’éclampsie, la perfusion de sulfate de magnésium est indiquée d’emblée.</b>\n\n<b>HELLP syndrome</b> : hémolyse (LDH > 600 UI/L) + ASAT/ALAT > 2N + plaquettes < 100 000/mm³\n\n<b>Insuffisance rénale aiguë</b> : doublement des valeurs de créatininémie ou élévation > 1,1 mg/dL (> 96 µmol/L)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nDécrivez les éléments qu’il est nécessaire de rechercher en échographie dans cette situation.",
+          "images": [],
+          "reponseAttendue": "La présentation fœtale et les mouvements actifs, le placenta (position par rapport à la cicatrice, signes d’hématome rétroplacentaire), la quantité de liquide amniotique (index de liquide amniotique ou plus grande citerne), l’estimation du poids fœtal, les dopplers ombilical et cérébral moyen ± Arantius.",
+          "correctionGenerale": "• Présentation fœtale, mouvements actifs\n• Placenta : position (par rapport à la cicatrice), signes d’hématome rétroplacentaire\n• Quantité de liquide amniotique : index de liquide amniotique ou plus grande citerne\n• Estimation du poids fœtal\n• Doppler : DO et ACM ± Arantius"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nL’enregistrement du RCF réalisé le jour de l’hospitalisation figure ci-dessous. Décrivez ce tracé.",
+          "images": ["annales-gynecologie/annales-2016/figures/img-024-099.jpg"],
+          "reponseAttendue": "Un rythme de base à 140 bpm, variable, réactif, avec une perte de signal (pouls maternel) ou un ralentissement ; la tocométrie est ininterprétable et le pouls maternel manque.",
+          "correctionGenerale": "• Rythme de base 140 bpm\n• Variable\n• Réactif\n• Perte de signal (pouls maternel) ou ralentissement\n• Tocométrie ininterprétable\n• Manque du pouls maternel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelle est votre attitude face à ce tracé ?",
+          "images": [],
+          "reponseAttendue": "Poursuivre le tracé avec le pouls maternel et une tocométrie bien étalonnée, prendre la tension artérielle, réaliser un examen clinique à la recherche de contractions, d’une hypertonie, et un toucher vaginal recherchant des métrorragies et une modification cervicale.",
+          "correctionGenerale": "• Poursuite du tracé avec pouls maternel et tocométrie bien étalonnée\n• Prise de la tension artérielle\n• Examen clinique : contraction, hypertonie ; TV : métrorragies, modification cervicale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCinq minutes plus tard surviennent des métrorragies accompagnées de douleurs abdominales. Quels sont les trois diagnostics essentiels que vous évoquez chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Un hématome rétroplacentaire, une rupture utérine, un placenta prævia ± accreta.",
+          "correctionGenerale": "• Hématome rétroplacentaire\n• Rupture utérine\n• Placenta prævia ± accreta"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nUne césarienne est réalisée. Le fœtus extrait pèse 1050 g, et son score d’Apgar est à 4 à 1 minute, 9 à 5 minutes. Décrivez les éléments qui constituent le score d’Apgar.",
+          "images": [],
+          "reponseAttendue": "La coloration (cyanose globale, cyanose des extrémités, rose), le tonus (hypotonie, léger tonus, mouvements actifs), la réactivité (aucune, faible, forte), la respiration (aucune, superficielle, cri), la fréquence cardiaque (0, < 100, > 100 bpm).",
+          "correctionGenerale": "• <b>Coloration</b> : cyanose globale / cyanose des extrémités / rose\n• <b>Tonus</b> : hypotonie / léger tonus / mouvements actifs\n• <b>Réactivité</b> : aucune / faible / forte\n• <b>Respiration</b> : aucune / superficielle / cri\n• <b>Fréquence cardiaque</b> : 0 / < 100 / > 100 bpm"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nAu cours de la césarienne, il est impossible de délivrer le placenta. L’hémorragie atteint 1800 mL. Quels sont vos diagnostics ? Justifiez-les.",
+          "images": [],
+          "reponseAttendue": "Une hémorragie de la délivrance (saignement > 500 cc), par hypotonie utérine sur retard de délivrance ou par délivrance impossible sur accrétion placentaire (antécédent de césarienne), avec une possible CIVD compliquant le HELLP syndrome et l’hémorragie de la délivrance.",
+          "correctionGenerale": "• <b>Hémorragie de la délivrance</b> : saignement > 500 cc\n• Hypotonie utérine sur retard de délivrance\n• Délivrance impossible sur <b>accrétion placentaire</b> : antécédent de césarienne\n• Possible <b>CIVD</b> compliquant le HELLP syndrome et l’hémorragie de la délivrance"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2016 - EVCF - Cas 1",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/Annales 2016.pdf",
+      "orderIndex": 6,
+      "vignette": "Vous recevez en consultation Mme T., âgée de 42 ans, pour un suivi gynécologique qu’elle n’a plus eu depuis sa dernière grossesse. Elle utilise comme méthode contraceptive un dispositif intra-utérin au cuivre.\n\nLe dernier frottis, réalisé il y a 8 ans, retrouvait un résultat « ASC-US ». Un suivi avait été programmé par son gynécologue mais la patiente n’avait pas eu le temps de le faire.\n\nElle a accouché 4 fois par les voies naturelles d’enfants qui se portent bien. Vous notez à l’interrogatoire qu’elle fume 10 cigarettes par jour depuis 10 ans.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nQue signifie le résultat ASC-US ? Quelles conduites à tenir auraient pu être proposées devant les résultats de son frottis ASC-US il y a 8 ans ?",
+          "images": [],
+          "reponseAttendue": "ASC-US désigne des anomalies des cellules malpighiennes de signification indéterminée. Devant un frottis ASC-US : résultat du test HPV, et si positif, réalisation d’une colposcopie pour biopsies ciblées.",
+          "correctionGenerale": "• <b>ASC-US</b> = anomalies des cellules malpighiennes de signification indéterminée\n• Devant un FCV ASC-US : résultat du <b>test HPV</b> ; si positif, réalisation d’une <b>colposcopie pour biopsies ciblées</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nCitez les 4 principaux cofacteurs associés au développement du cancer du col de l’utérus.",
+          "images": [],
+          "reponseAttendue": "Le tabac, la co-infection par HSV, les partenaires multiples avec rapports précoces et antécédent d’IST, l’immunodépression.",
+          "correctionGenerale": "• Tabac\n• Co-infection HSV\n• Partenaires multiples, rapports précoces, antécédent d’IST\n• Immunodépression"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nDevant un frottis initialement ASC-US, quelle est la probabilité de lésion de haut grade ?",
+          "images": [],
+          "reponseAttendue": "5 à 10 %.",
+          "correctionGenerale": "<b>5 à 10 %.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles sont les indications de la prévention secondaire du cancer du col de l’utérus en France ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé pour toutes les femmes asymptomatiques âgées de 25 à 65 ans : de 25 à 30 ans, 2 prélèvements cervico-vaginaux pour cytologie à 1 an d’intervalle, puis, s’ils sont normaux, tous les 3 ans ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif prélèvement pour cytologie cervicale.",
+          "correctionGenerale": "• Dépistage organisé pour toutes les femmes asymptomatiques âgées de <b>25 à 65 ans</b>\n• <b>25 à 30 ans</b> : 2 prélèvements cervico-vaginaux (cytologie cervicale) à 1 an d’intervalle ; si normal, tous les 3 ans\n• <b>30 à 65 ans</b> : <b>test HPV</b> — si négatif tous les 5 ans, si positif → prélèvement pour cytologie cervicale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVous réalisez un frottis lors de cette consultation. Décrivez sa réalisation.",
+          "images": [],
+          "reponseAttendue": "Un frottis cervico-vaginal réalisé après pose du spéculum et consentement de la patiente, avec un Cervexbrush® ou une Cytobrush®, intéressant l’orifice cervical endo- et exocervical, dans le but de prélever des cellules de la totalité de la zone de jonction ; à réaliser en dehors des règles et de tout traitement local ou anti-infectieux ; deux techniques : étalement sur lames, peu utilisé aujourd’hui, ou milieu liquide, à préférer.",
+          "correctionGenerale": "• Frottis cervico-vaginal à réaliser après pose du spéculum, après consentement de la patiente\n• <b>Matériel</b> : Cervexbrush®, Cytobrush®\n• Intéresse l’orifice cervical endo- et exocervical\n• <b>But</b> : prendre des cellules de la totalité de la zone de jonction\n• À réaliser en dehors des règles, de tout traitement local ou anti-infectieux\n• 2 techniques : étalement sur lames (peu utilisé maintenant) ou <b>milieu liquide, à préférer</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVous recevez le résultat du frottis : « frottis présentant des anomalies cellulaires évoquant une lésion intra-épithéliale de haut grade avec présence de nombreux koïlocytes ». Interprétez ce résultat.",
+          "images": [],
+          "reponseAttendue": "Lésion intra-épithéliale de haut grade : plus de la moitié de l’épaisseur de l’épithélium malpighien présente des cellules métaplasiques. Les koïlocytes sont des cellules infectées par le virus HPV.",
+          "correctionGenerale": "• <b>Lésion intra-épithéliale de haut grade</b> : plus de la moitié de l’épaisseur de l’épithélium malpighien présente des cellules métaplasiques\n• <b>Koïlocytes</b> : cellules infectées par le virus HPV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuel est l’examen complémentaire à pratiquer dans ce cas ? Décrivez sa réalisation.",
+          "images": [],
+          "reponseAttendue": "Une colposcopie, après consentement de la patiente : examen du col et du vagin à la loupe binoculaire, en 3 temps — sans préparation (vascularisation, zone érythémateuse, condylome), après acide acétique à 5 % (qui limite la zone de jonction, les lésions étant acidophiles, blanches), après lugol (les lésions étant iodo-négatives, jaunes). Le but est de rechercher des zones de transformation anormales (TAG 1 ou 2), acidophiles et iodo-négatives, pour orienter les biopsies. L’examen est satisfaisant et interprétable si la totalité de la zone de jonction est vue. On réalise un compte rendu avec un dessin, voire des photos des zones biopsiées, et on envoie les biopsies numérotées en anatomopathologie.",
+          "correctionGenerale": "<b>Colposcopie</b>, après consentement de la patiente\n• Examen du col et du vagin à la loupe binoculaire\n• <b>3 temps d’examen</b>\n  – Sans préparation : vascularisation, zone érythémateuse, condylome\n  – Acide acétique à 5 % : permet de limiter la zone de jonction, les lésions sont acidophiles (blanches)\n  – Lugol : les lésions sont iodo-négatives (jaunes)\n• But : rechercher des zones de transformation anormales (TAG 1 ou 2), acidophiles et iodo-négatives, pour orienter les biopsies\n• Satisfaisante et interprétable si la totalité de la zone de jonction est vue\n• Réalisation d’un compte rendu avec un dessin, voire des photos des zones biopsiées\n• Envoi des biopsies numérotées en anatomopathologie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nLe résultat de cet examen confirme la présence d’une lésion de haut grade — CIN3. Quels sont les deux principaux génotypes d’HPV responsables de lésions de haut grade du col de l’utérus ? Quel traitement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Les HPV 16 et 18 ; traitement par conisation à l’anse bipolaire.",
+          "correctionGenerale": "• <b>HPV 16 et 18</b>\n• Traitement : <b>conisation à l’anse bipolaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuelles sont les complications de ce traitement ?",
+          "images": [],
+          "reponseAttendue": "Les complications de l’anesthésie (locale, loco-régionale ou générale), l’hémorragie per-opératoire ou retardée à la chute d’escarre, et à long terme la sténose du col avec difficulté de surveillance et le risque obstétrical (prématurité), surtout en cas de conisations multiples.",
+          "correctionGenerale": "• Complications de l’anesthésie, qui peut être locale, loco-régionale ou générale\n• Hémorragie per-opératoire ou retardée, à la chute d’escarre\n• <b>À long terme</b> : sténose du col avec difficulté de surveillance ; risque obstétrical (prématurité), surtout si plusieurs conisations"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nMme T. vous demande s’il existe une indication de dépistage chez sa fille de 14 ans ? Celle de 18 ans ? Si non, que pouvez-vous proposer et selon quelles modalités ?",
+          "images": [],
+          "reponseAttendue": "Pas de dépistage avant 25 ans ; en revanche, une vaccination en prévention primaire, pour tous les enfants de 11 à 14 ans, avec un rattrapage possible jusqu’à 19 ans, selon un schéma à 2 doses (M0-M6).",
+          "correctionGenerale": "• <b>Pas de dépistage avant 25 ans</b>\n• En revanche, <b>vaccination en prévention primaire</b>\n• Pour tous les enfants de 11 à 14 ans, rattrapage possible jusqu’à 19 ans\n• Schéma 2 doses : M0, M6"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2016 - EVCF - Cas 2",
+      "annee": 2016,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/Annales 2016.pdf",
+      "orderIndex": 7,
+      "vignette": "Vous recevez pour sa première consultation de suivi de grossesse une patiente de 35 ans, d’origine caucasienne. Il s’agit d’une 1ʳᵉ grossesse. Elle mesure 1,65 m et pèse 54 kg. Elle est de groupe A rhésus négatif. Elle vous montre le compte rendu d’une échographie de dépistage faite le jour même, ayant permis de dater la grossesse à 15 SA. La clarté nucale a été mesurée à 2,4 mm.\n\n<i>Points d’appel : IMC normal ; rhésus négatif → génotypage et prévention de l’allo-immunisation ; datation tardive.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nÀ ce terme, quelle stratégie de dépistage de la trisomie 21 proposez-vous à la patiente ? Argumentez.",
+          "images": [],
+          "reponseAttendue": "Un dépistage séquentiel du 2ᵉ trimestre, car à 15 SA la valeur de la clarté nucale ne peut pas être prise en compte, avec dosage des marqueurs sériques : hCG total et alpha-fœtoprotéine.",
+          "correctionGenerale": "• <b>Dépistage séquentiel du 2ᵉ trimestre</b>, car à 15 SA la valeur de la clarté nucale ne peut pas être prise en compte\n• Marqueurs sériques : <b>hCG total, alpha-fœtoprotéine</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuel intervalle de mesure de longueur cranio-caudale (LCC) permet de mesurer une clarté nucale ?",
+          "images": [],
+          "reponseAttendue": "De 45 à 84 mm, soit entre 11 SA et 13 SA + 6 jours.",
+          "correctionGenerale": "<b>45 à 84 mm</b>, soit entre 11 SA et 13 SA + 6 jours."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les critères qui permettent de calculer le score de Herman ?",
+          "images": [],
+          "reponseAttendue": "Coupe sagittale stricte (2 points), calipers bien positionnés (2 points), continuité de la peau du dos (2 points), tête en position neutre (1 point), amnios visible (1 point), agrandissement suffisant (1 point).",
+          "correctionGenerale": "• Coupe sagittale stricte : 2 pts\n• Calipers bien positionnés : 2 pts\n• Continuité de la peau du dos : 2 pts\n• Tête en position neutre : 1 pt\n• Amnios visible : 1 pt\n• Agrandissement suffisant : 1 pt"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nLe résultat du test prescrit à la question 1 est 1/240. Quelle est la signification de ce résultat ? Quelle(s) information(s) donnez-vous à la patiente ?",
+          "images": [],
+          "reponseAttendue": "Un risque de 1/240 d’avoir un enfant atteint de trisomie 21, considéré comme intermédiaire ; on propose de réaliser un diagnostic non invasif de trisomie 21 par dosage de l’ADN libre circulant fœtal — s’il est négatif, arrêt des investigations, s’il est positif, proposition d’un caryotype par ponction de liquide amniotique.",
+          "correctionGenerale": "• 1 risque de 1/240 d’avoir un enfant atteint de trisomie 21\n• Il s’agit d’un <b>risque considéré comme intermédiaire</b>\n• Proposition de réaliser un <b>diagnostic non invasif de trisomie 21 par dosage de l’ADN libre circulant fœtal</b> : si négatif, arrêt des investigations ; si positif, proposition d’un caryotype par ponction de liquide amniotique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nCitez les 2 paramètres échographiques qui permettent de dater avec le plus de précision une grossesse découverte à 16 SA.",
+          "images": [],
+          "reponseAttendue": "Le périmètre crânien et le BIP, au 50ᵉ percentile.",
+          "correctionGenerale": "<b>Périmètre crânien et BIP</b>, au 50ᵉ percentile."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVous prescrivez à la patiente un bilan biologique de début de grossesse. Quelle est votre prescription ?",
+          "images": [],
+          "reponseAttendue": "Sérologies toxoplasmose, hépatite B (Ag HBs), hépatite C, syphilis, VIH (avec accord de la patiente), rubéole ; NFS-plaquettes (ferritine) ; RAI ; protéinurie et glycosurie ; glycémie à jeun ; TSH ; génotypage du rhésus fœtal.",
+          "correctionGenerale": "• Sérologies : toxoplasmose, hépatite B (Ag HBs), hépatite C, syphilis, VIH (avec accord de la patiente), rubéole\n• NFS-plaquettes (ferritine)\n• RAI\n• Protéinurie, glycosurie\n• Glycémie à jeun\n• (TSH)\n• <b>Génotypage du rhésus fœtal</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nLa sérologie toxoplasmose est négative. Quelle est votre attitude ? Détaillez.",
+          "images": [],
+          "reponseAttendue": "La patiente n’est pas immunisée contre la toxoplasmose : information sur les mesures hygiéno-diététiques, et sérologie toxoplasmose mensuelle pendant toute la grossesse et 3 semaines après l’accouchement.",
+          "correctionGenerale": "• Patiente non immunisée contre la toxoplasmose\n• Information de la patiente sur les mesures hygiéno-diététiques\n• <b>Sérologie toxoplasmose mensuelle</b> pendant toute la grossesse et 3 semaines après l’accouchement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelle est votre attitude concernant le rhésus de la patiente ?",
+          "images": [],
+          "reponseAttendue": "Prescription du génotypage du rhésus fœtal. S’il est positif : prévention de l’allo-immunisation par Rophylac® 300 µg à 28 SA (administré par une IDE, avec RAI négatives dans les 72 h précédentes, certificat remis à la patiente avec le numéro de lot ; efficace 12 semaines) ; en cas de risque d’hémorragie fœto-maternelle, Rophylac® 200 µg dans les 72 h après RAI (efficace 9 semaines). Si le génotypage est négatif ou indéterminé : contrôler le prélèvement à 2 semaines et après 15 SA ; s’il est négatif, pas de prévention, avec RAI à 6 et 9 mois.",
+          "correctionGenerale": "• <b>Prescription du génotypage du rhésus fœtal</b>\n• <b>Si génotypage positif</b> : prévention de l’allo-immunisation\n  – Rophylac® 300 µg à 28 SA (par IDE, avec RAI négatives dans les 72 h précédentes, certificat remis à la patiente avec numéro de lot ; efficace 12 semaines)\n  – Si risque d’hémorragie fœto-maternelle : Rophylac® 200 µg dans les 72 h après RAI (efficace 9 semaines)\n• <b>Si génotypage négatif ou indéterminé</b> : contrôler le prélèvement à 2 semaines et après 15 SA → si négatif, pas de prévention ; RAI à 6 et 9 mois\n\n<i>Point RPC 2024 : pas de Rophylac® avant 12 SA pour les fausses couches, IVG et métrorragies ; absence de recommandation pour les GEU.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nConcernant le suivi échographique proposé en France, combien d’échographies de dépistage sont-elles prévues pour une grossesse non compliquée et à quel(s) terme(s) ? Citez leurs principaux objectifs respectifs.",
+          "images": [],
+          "reponseAttendue": "Trois échographies. Au 1ᵉʳ trimestre, entre 11 et 13+6 SA : datation par mesure de la LCC, mesure de la clarté nucale, diagnostic de gémellité, dépistage de certaines anomalies morphologiques (membres avec 3 segments, coupe du cœur 4 cavités, BIP et DAT), position du trophoblaste. Au 2ᵉ trimestre, vers 22 SA : biométrie fœtale avec estimation du poids fœtal (BIP, PC, PA, LF), position du placenta avec coupe du col et insertion cordonale, quantité de liquide amniotique, morphologie complète. Au 3ᵉ trimestre, vers 32 SA : biométrie avec EPF et courbe de croissance, position du placenta, quantité de liquide, morphologie et dépistage des anomalies de maturation (cérébrale, rénale, cardiaque, rachis).",
+          "correctionGenerale": "<b>Échographie du 1ᵉʳ trimestre, entre 11 et 13+6 SA</b>\n• Datation de la grossesse par mesure de la LCC\n• Mesure de la clarté nucale\n• Diagnostic de gémellité\n• Dépistage de certaines anomalies morphologiques : membres avec 3 segments, coupe du cœur 4 cavités, BIP et DAT\n• Position du trophoblaste\n\n<b>Échographie du 2ᵉ trimestre, vers 22 SA</b>\n• Biométrie fœtale avec estimation du poids fœtal : BIP, PC, PA, LF\n• Position du placenta, coupe du col, position de l’insertion cordonale\n• Quantité de liquide amniotique\n• Morphologie : BIP, PC, cervelet, cœur 4 cavités, VG/Ao, VD/AP, bifurcation de l’artère pulmonaire, 3 vaisseaux, situs, vessie avec artères ombilicales, diaphragme, reins, nez-bouche, globes oculaires, profil, membres, sexe, rachis avec continuité de la peau du dos, vésicule biliaire\n\n<b>Échographie du 3ᵉ trimestre, vers 32 SA</b>\n• Biométrie avec EPF et courbe de croissance\n• Position du placenta\n• Quantité de liquide\n• Morphologie, dépistage des anomalies de maturation : cérébrale (coupe du cervelet), rénale, cardiaque (4 cavités, VG/Ao, VD/AP avec bifurcation, 3 vaisseaux), rachis"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nSi 2 embryons avaient été visualisés lors de l’échographie du 1ᵉʳ trimestre, comment aurait-on pu définir la chorionicité ?",
+          "images": [],
+          "reponseAttendue": "Entre 10 et 14 SA, l’étude de la jonction amnios/chorion est la technique la plus fiable. Le diagnostic de grossesse bichoriale est au mieux porté devant l’association de 2 placentas séparés, avec présence du signe du lambda. Pour le diagnostic de grossesse monochoriale, le meilleur signe échographique est l’existence d’une insertion en T de la membrane inter-amniotique.",
+          "correctionGenerale": "• Entre 10 et 14 SA, l’étude de la <b>jonction amnios/chorion</b> est la technique la plus fiable\n• <b>Grossesse bichoriale</b> : au mieux porté devant l’association de 2 placentas séparés — présence du <b>signe du lambda</b>\n• <b>Grossesse monochoriale</b> : le meilleur signe échographique est l’existence d’une <b>insertion en T</b> de la membrane inter-amniotique"
+        }
+      ]
+    }
+  ]
+}

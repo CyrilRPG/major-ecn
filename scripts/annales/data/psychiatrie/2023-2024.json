@@ -1,0 +1,374 @@
+{
+  "sources": {
+    "ANNALES PSYCHIATRIE/correction connaissance 2023.pdf": {
+      "atelier": "annales-psychiatrie/correction-connaissance-2023",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Corrigé reprenant les intitulés officiels des 25 questions de l’épreuve de connaissances fondamentales 2023. Le sujet officiel 2023 n’est pas présent dans le dépôt, mais le corrigé reproduit les questions."
+    },
+    "ANNALES PSYCHIATRIE/correction sujet 2 2024.pdf": {
+      "atelier": "annales-psychiatrie/correction-sujet-2-2024",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-001-000.png": "aplat de fond de la mise en page du document, sans contenu",
+        "img-001-006.png": "logo Major ECN de l’en-tête du document, sans contenu médical"
+      },
+      "remarque": "Corrigé du sujet n° 2 de l’épreuve pratique 2024. Le sujet officiel 2024 n’est pas présent dans le dépôt : les intitulés des questions sont repris par le corrigé, mais l’énoncé du cas ne l’est pas et a dû être reconstitué à partir des éléments cités dans les réponses."
+    },
+    "ANNALES PSYCHIATRIE/correction sujet 3 2024.pdf": {
+      "atelier": "annales-psychiatrie/correction-sujet-3-2024",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Corrigé du sujet n° 3 de l’épreuve pratique 2024. Le sujet officiel 2024 n’est pas présent dans le dépôt : l’énoncé du cas n’est pas reproduit par le corrigé."
+    },
+    "ANNALES PSYCHIATRIE/sujet 4 2024 correction..pdf": {
+      "atelier": "annales-psychiatrie/sujet-4-2024-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Corrigé du sujet n° 4 de l’épreuve pratique 2024. Le sujet officiel 2024 n’est pas présent dans le dépôt : l’énoncé du cas n’est pas reproduit par le corrigé. Le sujet n° 1 de cette session ne figure pas dans le dossier des corrigés."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Psychiatrie - 2023 - EVCF",
+      "annee": 2023,
+      "type": "EVCF",
+      "source": "ANNALES PSYCHIATRIE/correction connaissance 2023.pdf",
+      "orderIndex": 8,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de psychiatrie : 25 questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nÉnumérez les principaux signes cliniques du trouble du déficit de l’attention avec hyperactivité (TDAH).",
+          "images": [],
+          "reponseAttendue": "Syndrome d’inattention : difficultés à soutenir l’attention et la concentration, distractibilité, difficulté à organiser et planifier les tâches, perte d’objets, oublis fréquents. Syndrome d’hyperactivité/impulsivité : instabilité motrice, impulsivité (pas d’anticipation des conséquences), sautes d’humeur, crises de colère, comportements agressifs, précipitation (répond sans attendre la fin des questions, interrompt les autres, difficulté à attendre son tour). Les symptômes doivent exister dans au moins 2 contextes (école et maison), depuis l’enfance (avant 12 ans), et entraîner un retentissement fonctionnel depuis plus de 6 mois.",
+          "correctionGenerale": "<b>Syndrome d’inattention</b>\n• Difficultés à soutenir l’attention / la concentration\n• Distractibilité\n• Difficulté à organiser les tâches / à planifier\n• Perte d’objets\n• Oublis fréquents\n\n<b>Syndrome d’hyperactivité / impulsivité</b>\n• Instabilité motrice\n• Impulsivité (pas d’anticipation des conséquences), sautes d’humeur, crises de colère, comportements agressifs\n• Précipitation : répond sans attendre la fin des questions, interrompt les autres, difficulté à attendre son tour\n\n<b>Les symptômes doivent avoir existé dans ≥ 2 contextes</b> (par exemple école et maison), <b>depuis l’enfance</b> (avant 12 ans), et entraîner un <b>retentissement fonctionnel depuis plus de 6 mois</b>."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuel est le signe biologique de gravité qu’on recherche en cas de vomissements provoqués dans le cadre d’un trouble du comportement alimentaire ?",
+          "images": [],
+          "reponseAttendue": "Une hypokaliémie sévère (< 3,0 mmol/L), exposant aux troubles du rythme cardiaque (torsades de pointes, arrêt cardiaque) et au risque de décès brutal.",
+          "correctionGenerale": "<b>Hypokaliémie sévère (< 3,0 mmol/L)</b>\n\n<b>Conséquences</b>\n• Troubles du rythme cardiaque (torsades de pointes, arrêt cardiaque)\n• Risque de décès brutal"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nCitez au moins 4 troubles neurodéveloppementaux.",
+          "images": [],
+          "reponseAttendue": "Trouble du spectre de l’autisme (TSA), trouble déficitaire de l’attention avec ou sans hyperactivité (TDAH), troubles spécifiques des apprentissages (dyslexie, dyscalculie…), trouble développemental de la coordination (dyspraxie, dysgraphie), trouble du développement intellectuel, trouble de la communication, tics.",
+          "correctionGenerale": "1. Trouble du spectre de l’autisme (TSA)\n2. Trouble déficitaire de l’attention avec ou sans hyperactivité (TDAH)\n3. Troubles spécifiques des apprentissages (anciennement dyslexie, dyscalculie, etc.)\n4. TDC : trouble développemental de la coordination (anciennement dyspraxie, dysgraphie)\n\n• Trouble du développement intellectuel (TDI) = handicap intellectuel\n• Trouble de la communication\n• Tics"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez les deux catégories de symptômes qui caractérisent les troubles du spectre de l’autisme (TSA).",
+          "images": [],
+          "reponseAttendue": "Les déficits persistants de la communication et des interactions sociales, et le caractère restreint et répétitif des comportements, des intérêts ou des activités.",
+          "correctionGenerale": "1. Déficits (persistants) de la communication et des interactions sociales\n2. Caractère restreint et répétitif des comportements, des intérêts ou des activités"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nCitez 4 hypothèses diagnostiques principales à évoquer lors d’un premier passage à l’acte suicidaire à l’adolescence.",
+          "images": [],
+          "reponseAttendue": "Épisode dépressif caractérisé, trouble bipolaire à début précoce, trouble du comportement alimentaire (anorexie mentale), trouble lié à l’usage de substance. Penser également à rechercher des violences intrafamiliales, du harcèlement, une rupture sentimentale.",
+          "correctionGenerale": "1. Épisode dépressif caractérisé\n2. Trouble bipolaire à début précoce\n3. TCA (anorexie mentale)\n4. Trouble lié à l’usage de substance\n\n<i>Penser à rechercher : violences intrafamiliales, harcèlement, rupture sentimentale.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nDécrivez les deux types de conduite à tenir en urgence en cas de suspicion de trauma par abus sexuel intrafamilial.",
+          "images": ["annales-psychiatrie/correction-connaissance-2023/figures/img-003-021.jpg"],
+          "reponseAttendue": "Mesures de protection immédiate : signalement judiciaire à destination du procureur (article 40 du CPP) ; si danger immédiat, extraction du milieu avec hospitalisation en UAPED (unité d’accueil des enfants en danger). En situation moins urgente : transmission à la CRIP (cellule de recueil des informations préoccupantes, article 375 du Code civil). Chez l’adulte : rédaction d’un certificat circonstancié et proposition d’aller déposer plainte, avec prise en charge dans des maisons d’accueil.",
+          "correctionGenerale": "<b>Mesures de protection immédiate</b>\n1. Signalement judiciaire à destination du procureur (art. 40 CPP)\n2. Si danger immédiat : extraction du milieu avec hospitalisation en <b>UAPED</b> (unité d’accueil des enfants en danger)\n\n• Face à une situation de maltraitance, le médecin doit être le protecteur de l’enfant\n• Situation moins urgente : transmission à la <b>CRIP</b> — cellule de recueil (art. 375 du Code civil)\n• La suspicion d’une situation de danger chez un enfant doit conduire à l’évaluation de l’ensemble des enfants vivant dans les mêmes conditions\n\n<b>Chez l’adulte</b>\n1. Rédaction d’un certificat circonstancié\n2. Proposer d’aller déposer plainte / prise en charge dans des maisons d’accueil\n\n<i>La figure (fig. 10.4) reproduit l’orientation initiale en cas de situation de danger diagnostiquée : devant une situation de maltraitance grave, un refus de soins urgents, une nécessité de protection urgente ou de constat médico-légal urgent (notamment infraction à caractère sexuel datant de moins de 5 jours), l’orientation est hospitalière avec signalement judiciaire ; sinon, ne pas rester seul face à la situation et prendre l’avis du médecin référent Protection de l’enfance du conseil départemental ou du service hospitalier référent.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez les deux principales catégories de molécules prescrites dans le TDAH.",
+          "images": [],
+          "reponseAttendue": "Les psychostimulants (méthylphénidate, 1ʳᵉ intention, AMM dès 6 ans en France) et les non-stimulants (atomoxétine, inhibiteur de la recapture de la noradrénaline).",
+          "correctionGenerale": "1. <b>Psychostimulants</b> : méthylphénidate (1ʳᵉ intention, AMM dès 6 ans en France)\n2. <b>Non-stimulants</b> : atomoxétine (inhibiteur de la recapture de la noradrénaline)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuelle classe médicamenteuse est contre-indiquée chez la femme enceinte dans le cadre du traitement du trouble bipolaire ?",
+          "images": [],
+          "reponseAttendue": "Les thymorégulateurs à risque tératogène élevé, c’est-à-dire les antiépileptiques : le valproate de sodium (formellement contre-indiqué, risque de spina bifida et de troubles neurodéveloppementaux) et la carbamazépine (tératogène, malformations du tube neural). Le lithium constitue une contre-indication relative.",
+          "correctionGenerale": "<b>Thymorégulateurs à risque tératogène élevé : antiépileptiques</b>\n• <b>Valproate de sodium</b> : formellement contre-indiqué (risque de spina bifida, troubles neurodéveloppementaux)\n• <b>Carbamazépine</b> : tératogène (malformations du tube neural)\n\n<i>Alternatives : le lithium est une contre-indication relative.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nCitez les risques les plus importants lors d’un épisode dépressif en période périnatale.",
+          "images": [],
+          "reponseAttendue": "Le risque suicidaire maternel, le risque d’infanticide (rare mais dramatique), l’altération du lien mère-enfant avec retentissement sur le développement psycho-affectif de l’enfant, le désengagement des soins prénataux avec risques néonataux indirects (négligence), et le risque évolutif de trouble bipolaire.",
+          "correctionGenerale": "1. Risque suicidaire maternel\n2. Risque d’infanticide (rare mais dramatique)\n3. Altération du lien mère-enfant → retentissement sur le développement psycho-affectif de l’enfant\n4. Désengagement des soins prénataux → risques néonataux indirects (négligence)\n5. Risque évolutif de trouble bipolaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelles sont les caractéristiques principales du syndrome de stress post-traumatique (SSPT) de l’enfant ?",
+          "images": [],
+          "reponseAttendue": "Selon le DSM-5 : syndrome de répétition ou d’intrusion (cauchemars, jeux répétitifs, dessins, flash-backs), évitement des stimuli associés au trauma (personnes, lieux), altération négative de l’humeur et de la cognition (culpabilité, tristesse), hyperréactivité neurovégétative (irritabilité, sursauts, troubles du sommeil). Spécificité pédiatrique : les enfants rejouent souvent le trauma de façon répétitive (jeu symbolique) et par le dessin.",
+          "correctionGenerale": "<b>Selon le DSM-5</b>\n1. Syndrome de répétition / d’intrusion (cauchemars, jeux répétitifs, dessins, flash-backs)\n2. Évitement des stimuli associés au trauma (personnes, lieux)\n3. Altération négative de l’humeur et de la cognition (culpabilité, tristesse)\n4. Hyperréactivité neurovégétative (irritabilité, sursauts, troubles du sommeil)\n\n<i>Spécificité pédiatrique : les enfants rejouent souvent le trauma de façon répétitive (jeu symbolique) + dessins.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nCitez deux complications graves du sevrage en alcool.",
+          "images": [],
+          "reponseAttendue": "Le delirium tremens (confusion, hallucinations, agitation, risque vital) et les crises convulsives de sevrage (crises tonico-cloniques généralisées).",
+          "correctionGenerale": "1. <b>Delirium tremens</b> (confusion, hallucinations, agitation, risque vital)\n2. <b>Crises convulsives de sevrage</b> (épilepsie tonico-clonique généralisée)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 12</b>\n\nCitez 4 médicaments (DCI) utilisés dans le trouble de l’usage d’alcool.",
+          "images": [],
+          "reponseAttendue": "Naltrexone (1ʳᵉ intention, anti-craving), acamprosate (1ʳᵉ intention, anti-craving), disulfirame (2ᵉ intention, effet antabuse), nalméfène, baclofène.",
+          "correctionGenerale": "<b>Maintien de l’arrêt de l’alcool</b>\n1. Naltrexone (1ʳᵉ intention — anti-craving)\n2. Acamprosate (1ʳᵉ intention — anti-craving)\n3. Disulfirame (2ᵉ intention — effet antabuse)\n4. Nalméfène (contrôle de la consommation d’alcool)\n5. Baclofène"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 13</b>\n\nCitez deux traitements de substitution opioïde (DCI).",
+          "images": [],
+          "reponseAttendue": "La méthadone et la buprénorphine (± naloxone : Suboxone®).",
+          "correctionGenerale": "1. Méthadone\n2. Buprénorphine (± naloxone : Suboxone®)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 14</b>\n\nQuels sont les deux critères de la dépendance à une substance ?",
+          "images": [],
+          "reponseAttendue": "La perte de contrôle de la consommation et la poursuite de l’usage malgré les conséquences négatives.",
+          "correctionGenerale": "1. Perte de contrôle de la consommation\n2. Poursuite de l’usage malgré les conséquences négatives\n\n<i>Autres critères DSM-5 (11 au total, regroupés en 4 dimensions) : tolérance, sevrage, craving, temps consacré, etc.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 15</b>\n\nCitez au moins 4 caractéristiques cliniques de la personnalité état-limite (borderline).",
+          "images": [],
+          "reponseAttendue": "Instabilité affective, instabilité interpersonnelle, instabilité de l’image de soi et de l’identité, peur intense de l’abandon, troubles du comportement liés à l’impulsivité (automutilations et comportements suicidaires répétés).",
+          "correctionGenerale": "1. Instabilité affective\n2. Instabilité interpersonnelle\n3. Instabilité de l’image de soi et de l’identité\n4. Peur intense de l’abandon\n5. Troubles du comportement liés à l’impulsivité (automutilations et comportements suicidaires répétés)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 16</b>\n\nCitez 2 ISRS (DCI) ayant l’AMM dans le trouble panique.",
+          "images": [],
+          "reponseAttendue": "La paroxétine et la sertraline.",
+          "correctionGenerale": "1. Paroxétine\n2. Sertraline\n\n<i>(+ fluoxétine, citalopram : hors champ demandé.)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 17</b>\n\nQuel est le bilan biologique pré-thérapeutique du lithium ?",
+          "images": [],
+          "reponseAttendue": "Recherche de contre-indications et d’interactions médicamenteuses : examen clinique et interrogatoire ; NFS-plaquettes, glycémie à jeun, ionogramme, créatininémie, urée, calcémie ; TSH et T4 ; ECG ; bilan urinaire (créatininurie, protéinurie, glycosurie) ; bêta-hCG. Une surveillance régulière est indispensable (risque de néphrotoxicité et de dysthyroïdie).",
+          "correctionGenerale": "<b>Recherche de contre-indications et d’interactions médicamenteuses</b>\n1. Examen clinique + interrogatoire\n2. NFS-plaquettes, glycémie à jeun, ionogramme, créatininémie, urée, calcémie\n3. TSH, T4\n4. ECG (non demandé ici, mais y penser)\n5. Bilan urinaire (créatininurie, protéinurie, glycosurie)\n6. Bêta-hCG\n\n<i>Surveillance régulière indispensable (risque de néphrotoxicité et de dysthyroïdie).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 18</b>\n\nCitez au moins deux pathologies hormonales pouvant influencer l’humeur.",
+          "images": [],
+          "reponseAttendue": "L’hypothyroïdie (dépression) et l’hyperthyroïdie (anxiété, agitation) ; également le syndrome de Cushing et l’hyperparathyroïdie.",
+          "correctionGenerale": "1. Hypothyroïdie (dépression)\n2. Hyperthyroïdie (anxiété, agitation)\n\n<i>(+) Syndrome de Cushing, hyperparathyroïdie.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 19</b>\n\nCitez les TROIS éléments d’évaluation du risque suicidaire.",
+          "images": [],
+          "reponseAttendue": "Le modèle RUD : risque, urgence, dangerosité — avec recherche des facteurs de risque (trouble psychiatrique actif, antécédent de tentative de suicide, expression d’idées suicidaires).",
+          "correctionGenerale": "<b>Modèle RUD</b> : <b>R</b>isque, <b>U</b>rgence, <b>D</b>angerosité\n\n<b>Recherche des facteurs de risque</b>\n• Trouble psychiatrique actif\n• Antécédent de tentative de suicide\n• Expression d’idées suicidaires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 20</b>\n\nQuels troubles cognitifs peuvent être retrouvés dans l’épisode dépressif caractérisé ?",
+          "images": [],
+          "reponseAttendue": "Troubles de l’attention, troubles de la mémoire (mémoire de travail, de rappel), troubles de la concentration, difficulté à prendre des décisions (indécision).",
+          "correctionGenerale": "• Troubles de l’attention\n• Troubles de la mémoire (mémoire de travail, de rappel)\n• Troubles de la concentration\n• Difficulté à prendre des décisions = indécision\n\n<i>Ne pas confondre avec un trouble neurocognitif : les symptômes n’y sont pas réversibles après traitement.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 21</b>\n\nVrai ou faux : les idées suicidaires sont banales chez le sujet âgé et ne font pas forcément évoquer un épisode dépressif ?",
+          "images": [],
+          "reponseAttendue": "Faux : chez la personne âgée, toute idée suicidaire doit faire évoquer une dépression jusqu’à preuve du contraire ; le risque suicidaire est particulièrement élevé dans cette population.",
+          "correctionGenerale": "<b>Faux.</b> Chez la personne âgée, toute idée suicidaire doit faire évoquer une dépression jusqu’à preuve du contraire. Le risque suicidaire est particulièrement élevé dans cette population."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 22</b>\n\nDiagnostic différentiel d’un syndrome dépressif du sujet âgé.",
+          "images": [],
+          "reponseAttendue": "Un trouble neurocognitif débutant (démence débutante), à distinguer par un test thérapeutique par ISRS.",
+          "correctionGenerale": "<b>Trouble neurocognitif débutant</b> (démence débutante) → test / épreuve ISRS."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 23</b>\n\nCitez les différentes modalités d’hospitalisation en psychiatrie (sans abréviations).",
+          "images": [],
+          "reponseAttendue": "Les soins psychiatriques libres (L3211-1), les soins psychiatriques à la demande d’un tiers (L3212-1), les soins psychiatriques à la demande d’un tiers en urgence (L3212-3), les soins psychiatriques sur décision du représentant de l’État — le préfet — (L3213-1), et les soins psychiatriques pour péril imminent sans tiers (L3212-1-II-2 du CSP).",
+          "correctionGenerale": "• <b>Soins psychiatriques libres</b> — SL — L3211-1\n• <b>Soins psychiatriques à la demande d’un tiers</b> — SPDT — L3212-1\n• <b>Soins psychiatriques à la demande d’un tiers en urgence</b> — SPDTU — L3212-3\n• <b>Soins psychiatriques sur décision du représentant de l’État (préfet)</b> — SDRE / SPDRE — L3213-1\n• <b>Soins psychiatriques pour péril imminent sans tiers</b> — SPPI — L3212-1-II-2 du CSP"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 24</b>\n\nQuelles sont les modalités d’hospitalisation en psychiatrie pour une personne écrouée ?",
+          "images": [],
+          "reponseAttendue": "Les soins psychiatriques à la demande d’un représentant de l’État (SPDRE), article L3214-3 du Code de la santé publique : prise en charge sans consentement, en unité hospitalière spécialement aménagée (UHSA).",
+          "correctionGenerale": "<b>Soins psychiatriques à la demande d’un représentant de l’État (SPDRE)</b>\n• Article L3214-3 du Code de la santé publique\n• Prise en charge sans consentement, en <b>unité hospitalière spécialement aménagée (UHSA)</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 25</b>\n\nCitez les cinq mesures juridiques de protection des majeurs.",
+          "images": [],
+          "reponseAttendue": "Sauvegarde de justice, curatelle simple, curatelle renforcée, tutelle, mandat de protection future, habilitation familiale.",
+          "correctionGenerale": "1. Sauvegarde de justice\n2. Curatelle simple\n3. Curatelle renforcée\n4. Tutelle\n5. Mandat de protection future\n6. Habilitation familiale"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2024 - EVCP - Sujet 2",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/correction sujet 2 2024.pdf",
+      "orderIndex": 9,
+      "vignette": "<i>L’énoncé officiel de ce cas n’est pas reproduit par le corrigé et le sujet officiel 2024 n’est pas présent dans le dépôt. D’après les éléments cités dans les réponses, il s’agit d’un ancien militaire hospitalisé après une crise convulsive de sevrage, consommant une bouteille d’alcool par jour depuis plusieurs années, présentant des reviviscences nocturnes et diurnes de la mort violente d’un camarade au combat, avec insomnies majeures, culpabilité, isolement et chutes à répétition.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nDans le contexte précis de ce patient, que faudra-t-il bien rechercher ?",
+          "images": [],
+          "reponseAttendue": "Une évaluation psychiatrique complète à la recherche d’un risque suicidaire (modèle RUD) et les complications somatiques : état de sevrage alcoolique (tremblements, sueurs, anxiété, confusion, hallucinations, risque maximal d’accident de sevrage à 48 h — delirium tremens ou crise convulsive), conséquences somatiques de l’alcoolisme (atteintes hépatiques, neuropathies, carences notamment en vitamine B1, chutes et traumatismes), bilan post-crise convulsive (ionogramme, scanner cérébral, EEG si besoin), recherche de signes de syndrome de Gayet-Wernicke ou de Korsakoff.",
+          "correctionGenerale": "<b>a. Évaluation psychiatrique complète à la recherche d’un risque suicidaire</b>\n• Modèle <b>RUD</b> : le risque suicidaire est une urgence psychiatrique — recherche des facteurs de vulnérabilité, de la dangerosité (moyens accessibles) et de l’urgence (scénario, intentionnalité)\n\n<b>b. Complications somatiques</b>\n• <b>État de sevrage alcoolique</b> : tremblements, sueurs, anxiété, confusion, hallucinations ; risque d’accident de sevrage maximal 48 h après l’arrêt — delirium tremens ou crises convulsives de sevrage\n• Conséquences somatiques de l’alcoolisme : atteintes hépatiques, neuropathies, carences (notamment vitamine B1), chutes / traumatismes\n• Bilan post-crise convulsive : ionogramme, scanner cérébral, EEG si besoin\n• Recherche de signes de syndrome de Gayet-Wernicke / Korsakoff"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les deux diagnostics principaux ?",
+          "images": [],
+          "reponseAttendue": "Un trouble de stress post-traumatique (TSPT) et un trouble de l’usage d’alcool sévère avec dépendance (selon le DSM-5).",
+          "correctionGenerale": "1. <b>Trouble de stress post-traumatique (TSPT)</b>\n2. <b>Trouble de l’usage d’alcool sévère avec dépendance</b> (selon le DSM-5)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nSur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Pour le TSPT : critère A (exposition à un événement traumatique — mort violente d’un camarade au combat), critère B (reviviscences nocturnes et diurnes, cauchemars intrusifs), critère C (évitement, alcool pour faire disparaître les souvenirs), critère D (altérations négatives de la cognition et de l’humeur : culpabilité, isolement, perte de lien familial), critère E (hyperactivation neurovégétative : insomnies majeures, anxiété chronique), critère F (symptômes > 1 mois), critère G (altération du fonctionnement), critère H (non imputable aux toxiques ou à une autre affection médicale) ; installation depuis plusieurs années avec retentissement sévère. Pour le trouble de l’usage d’alcool sévère : consommation quotidienne et massive (1 bouteille/j), perte de contrôle, usage malgré les conséquences, craving, tolérance, altération du fonctionnement familial et social, accident de sevrage avec crise convulsive récente, isolement, chutes à répétition, mise en danger.",
+          "correctionGenerale": "<b>1. Trouble de stress post-traumatique (TSPT)</b>\n• <b>Critère A</b> : exposition à un événement traumatique (mort violente d’un camarade au combat)\n• <b>Critère B</b> : reviviscences nocturnes et diurnes, cauchemars intrusifs\n• <b>Critère C</b> : évitement (alcool pour « faire disparaître » les souvenirs)\n• <b>Critère D</b> : altérations négatives de la cognition et de l’humeur (culpabilité, sentiment d’isolement, perte de lien familial)\n• <b>Critère E</b> : hyperactivation neurovégétative (insomnies majeures, anxiété chronique)\n• <b>Critère F</b> : symptômes > 1 mois\n• <b>Critère G</b> : altération du fonctionnement\n• <b>Critère H</b> : non imputable aux toxiques ou à une autre affection médicale\n• Installation depuis plusieurs années, retentissement sévère\n\n<b>2. Trouble de l’usage d’alcool sévère avec dépendance (DSM-5)</b>\n• Consommation quotidienne et massive (1 bouteille/j)\n• Perte de contrôle, usage malgré les conséquences, craving, tolérance\n• Altération du fonctionnement familial et social\n• Accident de sevrage : crise convulsive récente\n• Utilisation malgré des conséquences graves : isolement, chutes à répétition, mise en danger"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nIl ne présente plus d’idées suicidaires mais souhaite rentrer chez lui et maintenir l’arrêt de l’alcool (à 48 h d’hospitalisation). Quelle est votre position ? Sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Maintien de l’hospitalisation en milieu psychiatrique ou addictologique avec surveillance étroite, afin de prévenir les complications du sevrage alcoolique (risque élevé entre H48 et J7 : crises convulsives de sevrage, delirium tremens), d’éviter une rechute alcoolique immédiate (solitude à domicile, absence de relais immédiat pour des soins, besoin d’une prise en charge coordonnée et multidisciplinaire — psychiatre, addictologue, infirmier, travailleur social, CSAPA), et de compléter la mise au point diagnostique (dépression, PTSD, risque suicidaire, troubles neurocognitifs à explorer).",
+          "correctionGenerale": "<b>Position</b> : maintien de l’hospitalisation en milieu psychiatrique ou addictologique, avec surveillance étroite.\n\n<b>Arguments</b>\n1. <b>Prévenir les complications du sevrage alcoolique</b> : risque élevé de H48 à J7 — crises convulsives de sevrage, delirium tremens\n2. <b>Éviter une rechute alcoolique immédiate</b> : solitude à domicile et absence de relais immédiat pour des soins → besoin d’une prise en charge coordonnée et multidisciplinaire (psychiatre, addictologue, infirmier, travailleur social) — CSAPA\n3. <b>Mise au point diagnostique</b> : évaluer la dépression, le PTSD, le risque suicidaire, les troubles neurocognitifs"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuel(s) traitement(s) et quel protocole de surveillance prescrivez-vous pour les jours suivants ?",
+          "images": [],
+          "reponseAttendue": "Traitement du sevrage alcoolique en prévention du delirium tremens et des crises convulsives : benzodiazépines à demi-vie longue (diazépam) ou oxazépam, en schéma dégressif selon le score CIWA-Ar ou l’index de Cushman ; vitamines B1 (250 mg/j IM ou IV pendant 3 jours en prévention du Gayet-Wernicke, puis relais per os), B6, PP et B12 per os ; hydratation et correction hydro-électrolytique. Traitement symptomatique et anxiolytique à court terme : hydroxyzine ou loxapine si agitation anxieuse, en surveillant le risque de sédation excessive et de chutes. Surveillance clinique rapprochée : échelle CIWA-Ar toutes les 4 à 6 h pendant les 72 premières heures, surveillance neurologique, paramètres vitaux, entretiens psychiatriques quotidiens avec évaluation du risque suicidaire. Préparation de la suite du parcours : entretien motivationnel, engagement dans un sevrage structuré (CSAPA, suivi addictologique), projet de soins à moyen terme (TCC, EMDR, soutien psychologique, antidépresseur si nécessaire), évaluation sociale. Traitement du TSPT dans un second temps : thérapies centrées trauma (EMDR, TCC, thérapie d’exposition prolongée), antidépresseurs ISRS (sertraline) validés selon la HAS, accompagnement social et réinsertion.",
+          "correctionGenerale": "<b>1. Traitement du sevrage alcoolique</b> — prévention du DT et des crises convulsives de sevrage\n• Benzodiazépines à demi-vie longue : diazépam (Valium®) ou oxazépam (Séresta®), en dégressif selon le score CIWA-Ar / index de Cushman\n• Vitamines B1, B6, PP, B12 : B1 IM ou IV 250 mg/j pendant 3 jours (prévention du Gayet-Wernicke) puis relais per os ; B6, PP, B12 per os\n• Hydratation et correction hydro-électrolytique\n\n<b>2. Traitement symptomatique et anxiolytique à court terme</b>\n• Hydroxyzine ou loxapine si agitation anxieuse, en alternative ou complément ponctuel aux benzodiazépines\n• Surveillance : vigilance sur le risque de sédation excessive et de chutes\n\n<b>3. Surveillance clinique rapprochée</b>\n• Échelle CIWA-Ar toutes les 4-6 h pendant les 72 premières heures\n• Surveillance neurologique (risque de récidive de crise convulsive)\n• Paramètres vitaux : FC, PA, température, saturation\n• Surveillance de l’état psychiatrique : entretiens quotidiens, risque suicidaire\n\n<b>4. Préparation de la suite du parcours</b>\n• Entretien motivationnel + engagement dans un sevrage structuré (abstinence, consommation contrôlée — CSAPA, suivi addictologique)\n• Projet de soins à moyen terme : soins post-trauma (TCC, EMDR), soutien psychologique, traitement antidépresseur si nécessaire\n• Évaluation sociale et orientation vers une solution transitoire si le retour à domicile est à risque\n\n<b>5. Traitement du TSPT (dans un second temps)</b>\n• Après stabilisation, prise en charge spécialisée : thérapies centrées trauma — EMDR, TCC, thérapie d’exposition prolongée\n• Antidépresseurs ISRS (ex. sertraline), validés dans le TSPT selon la HAS\n• Travail d’accompagnement social et réinsertion"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2024 - EVCP - Sujet 3",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/correction sujet 3 2024.pdf",
+      "orderIndex": 10,
+      "vignette": "<i>L’énoncé officiel de ce cas n’est pas reproduit par le corrigé et le sujet officiel 2024 n’est pas présent dans le dépôt. D’après les éléments cités dans les réponses, il s’agit d’une patiente ayant enjambé une rambarde en niant toute intention suicidaire, présentant un épisode dépressif caractérisé avec idées de dévalorisation, anhédonie, ralentissement, hypersomnie et asthénie, sous ISRS récemment introduit, avec des antécédents d’épisodes dépressifs (prépa, IVG, retour de voyage) résistants à plusieurs traitements.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’évaluation du risque suicidaire et les modalités de prise en charge.</i>",
+          "images": [],
+          "reponseAttendue": "L’enjeu est d’identifier une crise suicidaire, urgence psychiatrique définie comme un état transitoire et réversible de déséquilibre psychique pouvant conduire au suicide. Facteurs de risque : trouble psychiatrique actif (épisode dépressif caractérisé), conduite ambiguë à potentiel létal (enjambement de rambarde), dénégation peu crédible d’intention suicidaire, idées de dévalorisation, anhédonie, ralentissement, hypersomnie, asthénie, initiation récente d’un ISRS, isolement relatif, fatigue professionnelle, absence de facteurs protecteurs. Évaluation par le modèle RUD (risque, urgence, dangerosité). Conclusion : risque suicidaire au moins moyen associé à un EDC, justifiant une hospitalisation psychiatrique immédiate, en soins libres ou sans consentement (SPPI ou SPDTU).",
+          "correctionGenerale": "<b>I. Évaluation du risque suicidaire</b>\n\nL’enjeu est d’identifier une <b>crise suicidaire</b>, urgence psychiatrique définie comme un état transitoire et réversible de déséquilibre psychique pouvant conduire au suicide si une prise en charge adaptée n’est pas rapidement instaurée.\n\n<b>A. Balance facteurs protecteurs / facteurs de risque</b>\n• Trouble psychiatrique actif (épisode dépressif caractérisé)\n• Conduite ambiguë à potentiel létal (enjambement de rambarde)\n• Dénégation peu crédible d’intention suicidaire\n• Idées de dévalorisation, anhédonie, ralentissement, hypersomnie et asthénie\n• Initiation récente d’un ISRS (risque de TS augmenté en début de traitement)\n• Isolement relatif et fatigue professionnelle\n• Absence de facteurs protecteurs clairement exprimés\n\n<b>B. Modèle d’évaluation RUD</b>\n1. <b>Risque</b> : troubles psychiatriques, antécédents personnels/familiaux, éléments déclencheurs\n2. <b>Urgence</b> : existence d’un scénario suicidaire, appliqué mais dénié ; patiente isolée ; ralentissement psychomoteur\n3. <b>Dangerosité</b> : précipitation possible partout sur la voie publique\n\n<b>C. Conclusion clinique</b>\nRisque suicidaire au moins moyen + EDC → <b>hospitalisation psychiatrique immédiate</b>, en soins libres ou sans consentement (SPPI / SPDTU).\n\n<b>II. Modalités de prise en charge</b>\nLa crise suicidaire est une urgence psychiatrique absolue.\n\n<b>A. Hospitalisation en soins psychiatriques sans consentement (SPDTU ou SPPI)</b>\n• Si risque grave d’atteinte à l’intégrité et tiers présent → SPDTU (art. L3212-3 CSP) ; si péril imminent, pas de tiers et refus de soins → SPPI (art. L3212-1-II-2 CSP)\n• Objectifs : sécuriser, compléter l’évaluation, débuter le traitement d’un trouble psychiatrique sous-jacent, mettre en place un suivi structuré\n\n<b>B. En cas de refus d’hospitalisation, de risque faible ou modéré et d’absence de trouble psychiatrique actif</b> — <i>ce qui n’est pas le cas ici</i>\n• Surveillance rapprochée, consultation sous 48-72 h\n• Information du réseau familial ou social (avec accord)\n• Coordination avec le médecin traitant / psychiatre référent\n• Mise en place d’un plan de crise structuré"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuel est votre diagnostic complet à ce stade ?",
+          "images": [],
+          "reponseAttendue": "Un trouble dépressif récurrent sans symptôme psychotique, résistant. Arguments : au moins 5 symptômes pendant au moins 2 semaines avec retentissement fonctionnel (humeur dépressive, anhédonie, troubles du sommeil, asthénie, idées de dévalorisation) ; au moins 2 épisodes distincts dans l’histoire (prépa, IVG, post-voyage), durables (> 4 mois), séparés par des intervalles libres ; absence de symptômes psychotiques ; pas mieux expliqué par une autre affection ; argument de fréquence. Résistance thérapeutique : non-réponse à au moins 2 antidépresseurs de classes différentes, bien conduits, et échec d’une psychothérapie structurée (TCC).",
+          "correctionGenerale": "<b>I. Diagnostic principal</b>\nTrouble dépressif récurrent sans symptôme psychotique, résistant.\n\n<b>II. Arguments cliniques</b>\n• ≥ 5 symptômes pendant ≥ 2 semaines avec retentissement fonctionnel : humeur dépressive, anhédonie, troubles du sommeil, asthénie, idées de dévalorisation\n• ≥ 2 épisodes distincts dans l’histoire (prépa, IVG, post-voyage), durables (> 4 mois), séparés par des intervalles libres\n• Absence de symptômes psychotiques\n• Pas mieux expliqué par une autre affection\n• Argument de fréquence\n\n<b>III. Résistance thérapeutique</b>\n• Non-réponse à ≥ 2 antidépresseurs de classes différentes, bien conduits\n• Échec d’une psychothérapie structurée (TCC)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels éléments orientent vers un trouble bipolaire ? Que recherchez-vous et comment ?",
+          "images": [],
+          "reponseAttendue": "Éléments en faveur : âge de début précoce (adolescence, jeune adulte), épisodes déclenchés par des événements positifs (post-voyage, réussite académique), non-réponse aux antidépresseurs et inefficacité des thymorégulateurs en add-on, plusieurs épisodes thymiques sur plus de 10 ans. À rechercher : antécédents de syndrome hypomaniaque (> 4 jours) ou maniaque (> 7 jours) — humeur élevée, réduction du besoin de sommeil, fuite des idées, hyperactivité avec ou sans altération du fonctionnement ; antécédents familiaux de trouble bipolaire ; variabilité thymique rapide (cyclothymie) ; trouble mixte ou à cycles rapides ; caractéristiques psychotiques lors des épisodes thymiques ; trouble lié à l’usage de substance. Méthodologie : entretien structuré (anamnèse et biographie), hétéro-anamnèse auprès de l’entourage avec accord du patient, analyse fine du parcours de soins, professionnel et socio-familial.",
+          "correctionGenerale": "<b>I. Éléments cliniques en faveur d’un trouble bipolaire</b>\n• Âge de début précoce (adolescence, jeune adulte)\n• Épisodes déclenchés par des événements positifs (post-voyage, réussite académique)\n• Non-réponse aux antidépresseurs, inefficacité des thymorégulateurs en <i>add-on</i>\n• Plusieurs épisodes thymiques sur > 10 ans\n\n<b>II. Éléments à rechercher</b>\n• Antécédents de syndrome hypomaniaque (> 4 j) ou maniaque (> 7 j) : humeur élevée, réduction du besoin de sommeil, fuite des idées, hyperactivité avec ou sans altération du fonctionnement\n• Antécédents familiaux de TB\n• Notion de variabilité thymique rapide (cyclothymie)\n• Trouble mixte ou à cycles rapides\n• Caractéristiques psychotiques lors des épisodes thymiques\n• Trouble lié à l’usage de substance (fréquemment associé au TB)\n\n<b>III. Méthodologie de recherche</b>\n• Entretien structuré : anamnèse et biographie\n• Hétéro-anamnèse : recueil d’informations auprès de l’entourage avec accord du patient\n• Analyse fine du parcours de soins, du parcours professionnel, de la situation socio-familiale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQu’allez-vous rechercher pour expliquer le caractère prolongé de l’épisode actuel ?",
+          "images": [],
+          "reponseAttendue": "Des étiologies psychiatriques (erreur diagnostique — trouble bipolaire méconnu —, comorbidités anxieuses, addictives, TCA, PTSD, personnalité pathologique) ; des facteurs somatiques métaboliques, neurologiques ou endocriniens (hypothyroïdie, SAOS, douleurs chroniques, carences) ; des contextes psychosociaux délétères (isolement, précarité, violence) ; des éléments thérapeutiques iatrogènes (mésusage de psychotropes, traitements inadaptés, mauvaise observance, métabolisme rapide). Bilan complémentaire : NFS, TSH, ionogramme, bilan hépatique et rénal, B12, folates, sérologies avec accord de la patiente (TPHA-VDRL, VIH, VHB, VHC) ; imagerie cérébrale par IRM, à défaut TDM.",
+          "correctionGenerale": "<b>I. Étiologies psychiatriques</b>\n• Mauvais diagnostic (ex. trouble bipolaire méconnu)\n• Comorbidités anxieuses, addictives, TCA, PTSD\n• Personnalité pathologique (évitante, dépendante…)\n\n<b>II. Facteurs somatiques</b> — métaboliques, neurologiques, endocriniens\n• Hypothyroïdie, SAOS, douleurs chroniques, carences\n\n<b>III. Contextes psychosociaux délétères</b> : isolement, précarité, violence\n\n<b>IV. Éléments thérapeutiques iatrogènes</b>\n• Mésusage de psychotropes (BZD)\n• Traitements inadaptés\n• Mauvaise observance (dosage médicamenteux : métaboliseur rapide)\n\n<b>V. Bilan complémentaire</b>\n• Biologique : NFS, TSH, ionogramme, bilan hépatique / rénal, B12, folates, sérologies avec accord de la patiente (TPHA-VDRL, VIH, VHB, VHC)\n• Imagerie cérébrale : IRM au mieux, sinon TDM"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les grands principes de votre prise en charge thérapeutique ?",
+          "images": [],
+          "reponseAttendue": "Une réévaluation diagnostique complète, reposée après exclusion d’un trouble bipolaire, d’un trouble de la personnalité, d’un trouble lié à l’usage de substance et d’une étiologie somatique, toxicologique ou environnementale. Traitement pharmacologique : si un traitement médicamenteux est repris, choix raisonné entre association antidépresseur + antipsychotique atypique (aripiprazole, olanzapine), protocole kétamine, protocole thyroxine. Traitements non médicamenteux : TCC, électroconvulsivothérapie recommandée en 2ᵉ ou 3ᵉ ligne dans les épisodes résistants selon la HAS, stimulation magnétique transcrânienne (rTMS) en cas de refus ou de contre-indication à l’ECT, activité physique adaptée, psychoéducation. Soutien social et suivi : réintégration dans un réseau de soins structuré (hôpital de jour, CATTP), travail pluridisciplinaire en CMP (psychiatre, psychologue, médecin généraliste, assistante sociale), psychoéducation.",
+          "correctionGenerale": "<b>I. Réévaluation diagnostique complète</b>\nReposée après exclusion d’un trouble bipolaire, d’un trouble de la personnalité, d’un trouble lié à l’usage de substance, d’une étiologie somatique, toxicologique ou environnementale.\n\n<b>II. Traitement pharmacologique</b>\n• Si traitement médicamenteux repris : choix raisonné entre association antidépresseur + antipsychotique atypique (aripiprazole / olanzapine), protocole kétamine, protocole thyroxine\n\n<b>III. Traitements non médicamenteux</b>\n• Thérapies : TCC\n• <b>Électroconvulsivothérapie (ECT)</b> : recommandée en 2ᵉ/3ᵉ ligne dans les épisodes résistants selon la HAS\n• Stimulation magnétique transcrânienne (rTMS) si refus ou contre-indication à l’ECT\n• Activité physique adaptée\n• Psychoéducation\n\n<b>IV. Soutien social et suivi</b>\n• Réintégration dans un réseau de soins structuré : hôpital de jour (HDJ), CATTP\n• Travail pluridisciplinaire en CMP (psychiatre, psychologue, médecin généraliste, assistante sociale)\n• Psychoéducation"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2024 - EVCP - Sujet 4",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/sujet 4 2024 correction..pdf",
+      "orderIndex": 11,
+      "vignette": "<i>L’énoncé officiel de ce cas n’est pas reproduit par le corrigé et le sujet officiel 2024 n’est pas présent dans le dépôt. D’après les éléments cités dans les réponses, il s’agit de Paul, jeune homme présentant depuis la petite enfance un déficit de réciprocité sociale, des difficultés pragmatiques du langage, une pauvreté de la communication non verbale, des stéréotypies motrices (frottement des mains), une hyperréactivité sensorielle (bruits, odeurs), des intérêts circonscrits et persévérants (les trains) ; il présente secondairement, après une rupture sentimentale, un épisode d’agitation psychomotrice avec logorrhée, hyperphonie, humeur élevée et insomnie sans fatigue. Une tante maternelle est traitée efficacement par lithium.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuel est le diagnostic principal ?",
+          "images": [],
+          "reponseAttendue": "Un trouble du spectre de l’autisme sans déficience intellectuelle ni trouble du langage (anciennement « syndrome d’Asperger ») : début très précoce dans la petite enfance, sexe masculin (sex-ratio 1/4), et selon le DSM-5 déficit persistant de la communication et des interactions sociales associé au caractère restreint des comportements, activités et intérêts — ici déficit de réciprocité sociale, difficulté pragmatique du langage, pauvreté de la communication non verbale, stéréotypies motrices, hyperréactivité aux stimuli sensoriels, angoisses et peurs inhabituelles, intérêts circonscrits et persévérants.",
+          "correctionGenerale": "<b>Trouble du spectre de l’autisme (TSA) sans déficience intellectuelle ni trouble du langage</b> (anciennement « syndrome d’Asperger » dans les classifications antérieures), car :\n• Début très précoce : petite enfance — évaluation sur la symptomatologie actuelle + la trajectoire développementale\n• Sexe masculin (sex-ratio = 1/4)\n• <b>DSM-5</b> : déficit persistant de la communication et des interactions sociales + caractère restreint des comportements, activités et intérêts\n• Ici : déficit de réciprocité sociale (1), difficulté pragmatique du langage (2), pauvreté de la communication non verbale (3), stéréotypies motrices (4), hyperréactivité aux stimuli sensoriels (5), angoisses / peurs inhabituelles, intérêts circonscrits et persévérants"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel est le diagnostic différentiel dans ce cas clinique ?",
+          "images": [],
+          "reponseAttendue": "Un trouble anxieux, en particulier la phobie sociale : crainte d’agir de façon embarrassante ou humiliante sous le regard et le jugement d’autrui, anxiété dans les interactions sociales — mais sans difficultés qualitatives de communication non verbale ni intérêts restreints —, anticipation anxieuse, évitements multiples des interactions sociales, évolution de plus de 6 mois, terrain de jeune homme.",
+          "correctionGenerale": "<b>Trouble anxieux : phobie sociale</b> — crainte d’agir de façon embarrassante ou humiliante sous le regard et le jugement d’autrui\n• Anxiété dans les interactions sociales, mais <b>pas</b> de difficultés qualitatives de communication non verbale ni d’intérêts restreints\n• Anticipation anxieuse\n• Évitements multiples des interactions sociales\n• Évolution > 6 mois\n• Terrain : jeune homme\n\n<b>Pour rappel — critères DSM-5 de l’anxiété sociale</b>\n<b>A.</b> Peur ou anxiété marquée d’une ou plusieurs situations sociales durant lesquelles le sujet est exposé à un possible examen par autrui (interactions sociales, être observé, prise de parole).\n<b>B.</b> Crainte d’agir de façon embarrassante ou humiliante (jugement négatif).\n<b>C.</b> Les situations sociales provoquent presque toujours une peur ou une anxiété immédiate.\n<b>D.</b> Les situations sociales sont évitées ou vécues avec une anxiété intense.\n<b>E.</b> La peur/anxiété est disproportionnée par rapport à la menace réelle.\n<b>F.</b> La durée est ≥ 6 mois.\n<b>G.</b> Retentissement significatif sur les domaines fonctionnels ou souffrance importante.\n<b>H./I.</b> Non dû aux substances, ni à une affection médicale ou psychiatrique.\n<b>J.</b> Si une affection médicale est présente, la peur est sans rapport direct ou disproportionnée (bégaiement, maladie dermatologique visible, etc.)."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuels sont les principaux critères à identifier dans ce diagnostic ?",
+          "images": [],
+          "reponseAttendue": "La recherche d’un TSA repose sur un examen clinique multidisciplinaire, un entretien semi-structuré avec les parents (ADI-R), une observation semi-structurée de l’enfant (ADOS), un bilan orthophonique et un bilan psychomoteur, la recherche de comportements-problème, un test de QI total, et les critères DSM-5 : déficits persistants de la communication et des interactions sociales dans de multiples contextes ; caractère restreint et répétitif des comportements, intérêts ou activités ; début précoce des symptômes ; retentissement fonctionnel sur la vie scolaire et sociale ; non mieux expliqué par un déficit intellectuel ou un retard global du développement.",
+          "correctionGenerale": "<b>Recherche d’un TSA</b> : examen clinique multidisciplinaire, entretien semi-structuré avec les parents (<b>ADI-R</b>), observation semi-structurée de l’enfant (<b>ADOS</b>), bilan orthophonique et bilan psychomoteur. Recherche de comportements-problème, test de QI total.\n\n<b>Critères DSM-5</b>\n1. <b>Déficits persistants de la communication et des interactions sociales</b> dans de multiples contextes : difficultés à comprendre autrui, absence de compréhension des codes sociaux, regard fuyant, anxiété sociale, isolement relationnel, expression émotionnelle atypique\n2. <b>Caractère restreint et répétitif des comportements, des intérêts ou des activités</b> : intérêt spécifique intense pour les trains, comportement stéréotypé (frottement des mains), hypersensibilité sensorielle (bruits, odeurs)\n3. Début précoce des symptômes (enfance)\n4. Retentissement fonctionnel sur la vie scolaire et sociale\n5. Non mieux expliqué par un déficit intellectuel ou un retard global du développement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuel traitement conseillez-vous ? Avec quelles précautions ?",
+          "images": [],
+          "reponseAttendue": "Une intervention psycho-éducative individualisée : le TSA est un trouble du neurodéveloppement et la prise en charge est multimodale, centrée sur les compétences sociales, la communication et l’autonomie (TCC adaptée, groupes d’habiletés sociales, entraînement à la gestion des émotions). Un traitement médicamenteux uniquement symptomatique : en cas d’anxiété sociale majeure, un ISRS (sertraline, fluoxétine) et une benzodiazépine de type alprazolam ponctuellement pour les situations sociales anxiogènes avec anxiété anticipatoire majeure ; surveillance étroite sous ISRS (risque d’aggravation comportementale, de virage maniaque, en particulier en cas d’antécédents familiaux de trouble de l’humeur). Adaptation de l’environnement : soutien familial, accompagnement scolaire, reconnaissance MDPH (AESH, PPS), adaptation des examens et des oraux si besoin.",
+          "correctionGenerale": "<b>1. Intervention psycho-éducative individualisée</b>\n• Le TSA est un trouble du neurodéveloppement → prise en charge multimodale centrée sur les compétences sociales, la communication, l’autonomie\n• Thérapies recommandées : TCC adaptée, groupes d’habiletés sociales, entraînement à la gestion des émotions\n\n<b>2. Traitement médicamenteux symptomatique</b> — il ne traite pas le TSA, qui est un trouble neurodéveloppemental\n• Si anxiété sociale majeure : antidépresseur de type ISRS (sertraline, fluoxétine), et anxiolytique de type alprazolam ponctuellement pour les situations sociales anxiogènes avec anxiété anticipatoire majeure\n• <b>Surveillance étroite en cas d’ISRS</b> : risque d’aggravation comportementale, de virage maniaque, particulièrement en cas d’antécédents familiaux de trouble de l’humeur\n\n<b>3. Adaptation de l’environnement, soutien familial et accompagnement scolaire</b>\n• Reconnaissance MDPH (AESH, PPS) ; si besoin, adaptation des examens et des oraux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuel diagnostic retenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un épisode maniaque avec éléments psychotiques partiels (thématiques de grandeur), entrant dans le cadre d’un trouble bipolaire de type 1 : homme jeune, argument de fréquence (1 %), syndrome maniaque (agitation psychomotrice, logorrhée, hyperphonie, humeur élevée, insomnie sans fatigue) évoluant depuis plus de 7 jours, avec un facteur déclenchant (rupture sentimentale) et une altération marquée du fonctionnement.",
+          "correctionGenerale": "<b>Épisode maniaque avec éléments psychotiques partiels</b> (thématiques de grandeur) → <b>trouble bipolaire de type 1</b>, car :\n• Homme jeune\n• Argument de fréquence (1 %)\n• Syndrome maniaque : agitation psychomotrice, logorrhée, hyperphonie, augmentation de l’humeur, insomnie sans fatigue\n• Évolution > 7 jours\n• Facteur déclenchant : rupture sentimentale\n• Altération marquée du fonctionnement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQuels sont les 2 principaux diagnostics différentiels à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Un épisode maniaque secondaire à une cause somatique, à exclure en priorité : cause endocrinologique (hyperthyroïdie), cause neurologique (encéphalite auto-immune anti-NMDA, tumeur cérébrale), substance psychoactive ou iatrogénie (corticoïdes, amphétamines). Et un trouble schizo-affectif, devant l’association d’un syndrome maniaque et d’un syndrome positif évoluant depuis plus de 1 mois.",
+          "correctionGenerale": "<b>1. Épisode maniaque-<i>like</i> somatique</b>, à exclure en priorité\n• Cause endocrinologique : hyperthyroïdie\n• Cause neurologique : encéphalite auto-immune (anti-NMDA), tumeurs cérébrales\n• Substance psychoactive ou iatrogénie (corticoïdes, amphétamines…)\n\n<b>2. Trouble schizo-affectif</b>\n• Car syndrome maniaque et syndrome positif, évolution > 1 mois\n• Diagnostic différentiel classique d’un épisode maniaque inaugural"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nDans quel cadre diagnostique situez-vous maintenant l’épisode actuel de Paul ?",
+          "images": [],
+          "reponseAttendue": "Un épisode maniaque dans le cadre d’un trouble bipolaire de type 1, survenant chez un sujet avec un TSA associé : antécédents familiaux, retour à l’état antérieur, argument de fréquence, âge classique de 18 à 35 ans.",
+          "correctionGenerale": "<b>Épisode maniaque dans le cadre d’un trouble bipolaire de type 1, survenant chez un sujet avec TSA associé</b>\n• Antécédents familiaux\n• Retour à l’état antérieur\n• Argument de fréquence\n• Âge classique : 18-35 ans"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nSur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Évolution thymique biphasique (épisode dépressif suivi d’un épisode maniaque caractérisé) ; symptomatologie maniaque typique (insomnie, logorrhée, idées de grandeur, agitation psychomotrice, hyperactivité, euphorie, irritabilité) ; caractère inaugural chez un adolescent, fréquent dans les troubles bipolaires ; antécédents familiaux de trouble bipolaire au 2ᵉ degré (tante maternelle traitée efficacement par lithium) ; retentissement fonctionnel majeur sur le plan relationnel et familial, avec nécessité de prise en charge urgente ; retour à l’état antérieur après traitement thymorégulateur, compatible avec une forme typique de trouble bipolaire.",
+          "correctionGenerale": "• Évolution thymique biphasique : épisode dépressif suivi d’un épisode maniaque caractérisé\n• Symptomatologie maniaque typique : insomnie, logorrhée, idées de grandeur, agitation psychomotrice, hyperactivité, euphorie, irritabilité\n• Caractère inaugural chez un adolescent, fréquent dans les troubles bipolaires\n• Antécédents familiaux de trouble bipolaire au 2ᵉ degré (tante maternelle traitée efficacement par lithium)\n• Retentissement fonctionnel majeur sur le plan relationnel et familial, avec nécessité de prise en charge urgente\n• Retour à l’état antérieur après traitement thymorégulateur, compatible avec une forme typique de trouble bipolaire\n\n<b>Pour rappel — critères diagnostiques DSM-5 de l’épisode maniaque</b>\n<b>A.</b> Humeur anormale persistante ≥ 1 semaine (ou hospitalisation immédiate) : élevée, expansive ou irritable.\n<b>B.</b> ≥ 3 symptômes (ou ≥ 4 si l’humeur est uniquement irritable) :\n1. Augmentation de l’estime de soi / idées de grandeur\n2. Réduction du besoin de sommeil (se sentir reposé après 3 h de sommeil)\n3. Logorrhée (besoin de parler constamment)\n4. Fuite des idées / tachypsychie\n5. Distractibilité (attention facilement détournée par des stimuli extérieurs)\n6. Augmentation de l’activité orientée vers un but (social, scolaire, professionnel)\n7. Engagement excessif dans des activités à potentiel de conséquences dommageables (achats inconsidérés, sexualité à risque…)\n<b>C.</b> Retentissement fonctionnel sévère : altération sociale ou professionnelle marquée, hospitalisation nécessaire, présence possible de symptômes psychotiques.\n<b>D.</b> Non imputable à une substance ou à une affection médicale générale."
+        }
+      ]
+    }
+  ]
+}

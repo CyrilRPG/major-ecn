@@ -1,0 +1,728 @@
+{
+  "sources": {
+    "ANNALES GYNECOLOGIE/Annales 2023.pdf": {
+      "atelier": "annales-gynecologie/annales-2023",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2023 de gynécologie-obstétrique : une épreuve de connaissances fondamentales (questions isolées) et deux cas pratiques."
+    },
+    "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf": {
+      "atelier": "annales-gynecologie/annales-gyneco-med-2023",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-015-061.png": "masque blanc de la mise en page de la diapositive, superposé à l’algorithme, sans contenu propre"
+      },
+      "remarque": "Diaporama de correction de la session 2023 de gynécologie médicale : trois cas pratiques et une épreuve de connaissances fondamentales."
+    },
+    "ANNALES GYNECOLOGIE/Annales 2024.pdf": {
+      "atelier": "annales-gynecologie/annales-2024",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2024 : une épreuve de connaissances fondamentales par thèmes et deux cas pratiques."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2023 - EVCF",
+      "annee": 2023,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/Annales 2023.pdf",
+      "orderIndex": 28,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie-obstétrique : questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels sont les signes cliniques de pré-éclampsie sévère en France ?",
+          "images": [],
+          "reponseAttendue": "Une HTA sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) ou non contrôlée ; une oligurie ≤ 500 mL/24 h ou ≤ 25 mL/h ; une douleur abdominale épigastrique et/ou une douleur de l’hypochondre droit « en barre » persistante ou intense ; une douleur thoracique, une dyspnée, un œdème aigu du poumon ; des signes neurologiques (céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, réflexes ostéo-tendineux vifs, diffusés et polycinétiques).",
+          "correctionGenerale": "• Une HTA sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) ou non contrôlée\n• Une oligurie ≤ 500 mL/24 h ou ≤ 25 mL/h\n• Une douleur abdominale épigastrique et/ou une douleur de l’hypochondre droit « en barre » persistante ou intense\n• Une douleur thoracique, une dyspnée, un œdème aigu du poumon\n• Des signes neurologiques : céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, réflexes ostéo-tendineux vifs, diffusés et polycinétiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuels sont les 5 critères biologiques de pré-éclampsie sévère en France ?",
+          "images": [],
+          "reponseAttendue": "Une protéinurie > 3 g/24 h, une créatininémie ≥ 90 µmol/L, une thrombopénie < 100 000/mm³, une cytolyse hépatique avec ASAT/ALAT > 2N, une hémolyse avec LDH > 600 UI/L.",
+          "correctionGenerale": "• Une protéinurie > 3 g/24 h\n• Une créatininémie ≥ 90 µmol/L\n• Une thrombopénie < 100 000/mm³\n• Une cytolyse hépatique avec ASAT/ALAT > 2N\n• Une hémolyse avec LDH > 600 UI/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles sont les indications de dépistage du diabète gestationnel en France ?",
+          "images": [],
+          "reponseAttendue": "En présence d’un facteur de risque : âge > 35 ans, IMC > 25, antécédent personnel de diabète gestationnel, antécédent de macrosomie, antécédent familial au 1ᵉʳ degré de diabète ; et en cours de grossesse en cas de macrosomie fœtale ou d’hydramnios.",
+          "correctionGenerale": "<b>Si facteur de risque de diabète gestationnel</b>\n• Âge > 35 ans\n• IMC > 25\n• Antécédent personnel de diabète gestationnel\n• Antécédent de macrosomie\n• Antécédent familial au 1ᵉʳ degré de diabète\n\n<b>En cours de grossesse</b> : si macrosomie fœtale, hydramnios"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nMme P., 38 ans, se présente pour métrorragies et un test urinaire de grossesse positif. L’examen du col est normal cliniquement et vous réalisez le cliché d’échographie endovaginale suivant.\n\nQuelle est votre suspicion diagnostique principale ? Quels éléments paracliniques supplémentaires peuvent renforcer votre hypothèse et comment la confirmer ?",
+          "images": ["annales-gynecologie/annales-2023/figures/img-005-020.jpg"],
+          "reponseAttendue": "Une môle hydatiforme (grossesse molaire) : le taux de bêta-hCG est très élevé, parfois avec une hyperthyroïdie associée ; l’échographie recherche des kystes ovariens. Confirmation par une aspiration endocavitaire avec examen anatomopathologique en urgence, à la recherche d’une môle.",
+          "correctionGenerale": "• <b>Môle hydatiforme / grossesse molaire</b>\n• Taux de bêta-hCG très élevé, parfois hyperthyroïdie associée\n• Échographie : recherche de kystes ovariens\n• <b>Aspiration endocavitaire avec anatomopathologie en urgence</b> : recherche de môle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nEn France, quels sont les critères et conditions pour accepter une demande d’interruption médicale de grossesse pour motif médical fœtal ?",
+          "images": [],
+          "reponseAttendue": "Une demande du couple devant une affection d’une particulière gravité, reconnue comme incurable au moment du diagnostic, pour l’enfant à naître ; quel que soit le terme de la grossesse ; après validation en CPDPN (centre pluridisciplinaire de diagnostic prénatal) réunissant au minimum 3 médecins dont au moins 2 spécialités différentes, la demande étant validée et signée par deux médecins thésés membres du CPDPN ; avec consentement du couple.",
+          "correctionGenerale": "• Demande du couple devant une <b>affection d’une particulière gravité reconnue comme incurable au moment du diagnostic</b> pour l’enfant à naître\n• <b>Quel que soit le terme de la grossesse</b>\n• Après validation en <b>CPDPN</b> (centre pluridisciplinaire de diagnostic prénatal) : minimum 3 médecins, dont 2 spécialités différentes au minimum ; demande validée et signée par deux médecins thésés membres du CPDPN\n• Consentement du couple"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nPrécisez les modalités de surveillance spécifique d’une grossesse gémellaire monochoriale biamniotique et expliquez pourquoi.",
+          "images": [],
+          "reponseAttendue": "Une consultation obstétricale par mois ; une échographie tous les 15 jours dès 14 SA, à la recherche d’un syndrome transfuseur-transfusé, d’un TAPS, d’un RCIU sélectif, et de malformations plus fréquentes chez les jumeaux ; avec mesure systématique des dopplers (ombilical pour dépister le STT, cérébral moyen pour dépister le TAPS), de la quantité de liquide et des vessies (pour dépister le STT), et des biométries.",
+          "correctionGenerale": "• <b>1 consultation obstétricale par mois</b>\n• <b>1 échographie tous les 15 jours dès 14 SA</b> : recherche de STT, TAPS, RCIU sélectif ; recherche de malformations, plus fréquentes chez les jumeaux\n• Mesure systématique des dopplers : DO (pour dépister le STT) ; ACM (pour dépister le TAPS)\n• Quantité de liquide (pour dépister le STT)\n• Vessies (pour dépister le STT)\n• Biométries"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuels sont les principaux signes associés à une chorioamniotite (infection intra-utérine gravidique) ?",
+          "images": [],
+          "reponseAttendue": "Cliniquement, au moins 2 critères : fièvre > 38 °C sans cause extra-gynécologique d’infection, contractions utérines douloureuses et douleur utérine avec mise en travail spontanée, liquide purulent, tachycardie fœtale > 160 bpm. Biologiquement : syndrome inflammatoire avec augmentation de la CRP et des leucocytes (non obligatoire).",
+          "correctionGenerale": "<b>Clinique — au moins 2 critères</b>\n• Fièvre > 38 °C sans cause extra-gynécologique d’infection\n• Contractions utérines douloureuses et douleur utérine, mise en travail spontanée\n• Liquide purulent\n• Tachycardie fœtale > 160 bpm\n\n<b>Biologie</b>\n• Syndrome inflammatoire biologique avec augmentation de la CRP et des leucocytes (non obligatoire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nIndication, justification et modalités de l’administration prophylactique d’ocytocine lors de la troisième phase du travail, après un accouchement voie basse ?",
+          "images": [],
+          "reponseAttendue": "Après tout accouchement par les voies naturelles, en prévention de l’hémorragie du post-partum : injection d’ocytocine 5 à 10 UI en IV, ou en IM s’il n’y a pas de voie disponible, au dégagement de l’épaule, ou après la délivrance si elle n’a pas été réalisée avant. L’hémorragie de la délivrance représente 5 à 10 % des accouchements, et cette administration prophylactique permet de réduire ce risque d’environ 60 %.",
+          "correctionGenerale": "• Après tout accouchement par les voies naturelles, en prévention de l’hémorragie du post-partum\n• <b>Injection d’ocytocine 5 à 10 UI en IV</b>, ou en IM s’il n’y a pas de voie disponible, au dégagement de l’épaule, ou après la délivrance si non réalisée avant\n• L’hémorragie de la délivrance représente 5 à 10 % des accouchements ; cette administration prophylactique permet de réduire ce risque d’environ 60 %\n\n<i>Source : <i>Intravenous versus intramuscular prophylactic oxytocin for reducing blood loss in the third stage of labour</i>, Cochrane Database of Systematic Reviews 2020.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nChez une patiente rhésus négatif à 14 semaines d’aménorrhée dont la première recherche d’agglutinines irrégulières (RAI) est négative, quels sont les principes de la prévention de l’allo-immunisation anti-D ?",
+          "images": [],
+          "reponseAttendue": "Si le groupe sanguin du père est rhésus négatif et sûr, pas de prévention. Sinon, réalisation d’un génotypage du rhésus fœtal : s’il est négatif, à renouveler une fois — si confirmé, pas de prévention ; s’il est positif ou indéterminé, immunoprophylaxie anti-D par Rophylac® 300 µg à 28 SA après dosage des RAI ; en cas de risque d’hémorragie fœto-maternelle, Rophylac® 200 µg dans les 72 h après dosage des RAI et test de Kleihauer ; injection de Rophylac® 200 µg en post-partum, à adapter au test de Kleihauer.",
+          "correctionGenerale": "• Si groupe sanguin du père rhésus négatif et sûr : <b>pas de prévention</b>\n• Sinon : réalisation d’un <b>génotypage du rhésus fœtal</b>\n  – <b>Si négatif</b> : à renouveler une fois ; si confirmation → pas de prévention\n  – <b>Si positif ou indéterminé</b> : immunoprophylaxie anti-D par <b>Rophylac® 300 µg à 28 SA</b> après dosage des RAI\n• Si risque d’hémorragie fœto-maternelle : <b>Rophylac® 200 µg dans les 72 h</b> après dosage des RAI et test de Kleihauer\n• Injection de Rophylac® en post-partum, 200 µg, à adapter au test de Kleihauer"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\nQuels éléments anatomiques (du fœtus et des annexes) identifiez-vous sur ce cliché d’échographie chez une femme à 11 SA ? Quel est le diagnostic probable ?",
+          "images": ["annales-gynecologie/annales-2023/figures/img-012-049.jpg"],
+          "reponseAttendue": "Deux chorions et deux amnios, avec le signe du lambda : il s’agit d’une grossesse gémellaire bichoriale biamniotique.",
+          "correctionGenerale": "• 2 chorions et 2 amnios\n• <b>Signe du LAMBDA</b>\n• <b>Grossesse gémellaire bichoriale biamniotique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 11</b>\n\nFace à un écoulement du mamelon, quels signes orientent vers une pathologie mammaire ?",
+          "images": [],
+          "reponseAttendue": "Un écoulement sanglant, unipore et unilatéral ; la présence d’un nodule mammaire homolatéral ; des signes cutanés au niveau du mamelon avec rétraction ou inflammation.",
+          "correctionGenerale": "• Écoulement sanglant\n• Unipore, unilatéral\n• Présence d’un nodule mammaire homolatéral\n• Signes cutanés au niveau du mamelon, avec rétraction ou inflammation"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 12</b>\n\nQuelle prise en charge pour un adénocarcinome in situ découvert par biopsie du col à 16 semaines de grossesse ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance colposcopique chaque trimestre pour diagnostiquer l’évolution vers une lésion invasive ; pas de traitement pendant la grossesse ; traitement en post-partum.",
+          "correctionGenerale": "• <b>Surveillance colposcopique chaque trimestre</b> pour diagnostiquer l’évolution vers l’invasif\n• <b>Pas de traitement pendant la grossesse</b>\n• Traitement en post-partum\n\n<i>Source : AP-HP, réseau cancer et grossesse.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 13</b>\n\nQuelles sont les indications de conservation ovocytaire pour endométriose chez une femme en âge de procréer ?",
+          "images": [],
+          "reponseAttendue": "En cas d’endométriose avec atteinte ovarienne (endométriomes bilatéraux), de chirurgie ovarienne bilatérale ou récidivante ; à discuter avec la patiente en cas d’endométriose profonde ; en fonction de la réserve ovarienne (dosage de l’AMH et compte des follicules antraux). La nouvelle loi de bioéthique 2021 autorise l’auto-conservation des gamètes sans condition d’infertilité (29-37 ans).",
+          "correctionGenerale": "• Si endométriose avec atteinte ovarienne (endométriomes bilatéraux), chirurgie ovarienne bilatérale, récidivante\n• À discuter avec la patiente si endométriose profonde\n• En fonction de la réserve ovarienne : dosage de l’AMH et compte des follicules antraux\n• <b>Nouvelle loi de bioéthique 2021</b> : auto-conservation des gamètes autorisée sans condition d’infertilité (29-37 ans)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 14</b>\n\nÀ propos de l’anatomie féminine au niveau pelvien :\n\nA. Précisez la position habituelle de l’uretère au croisement des vaisseaux iliaques, à droite et à gauche.\nB. Précisez la position de l’uretère sous-ligamentaire et pré-ligamentaire par rapport à l’artère utérine.\nC. Quelle est la première branche de division du tronc antérieur de l’artère iliaque interne à destination viscérale ?",
+          "images": ["annales-gynecologie/annales-2023/figures/img-016-066.jpg"],
+          "reponseAttendue": "A. À gauche, l’uretère croise l’artère iliaque commune ; à droite, l’artère iliaque externe. B. L’uretère pelvien croise l’artère utérine en passant en dehors et en arrière de celle-ci. C. L’artère ombilicale.",
+          "correctionGenerale": "• <b>A.</b> À gauche, l’uretère croise l’<b>artère iliaque commune</b> ; à droite, l’<b>artère iliaque externe</b>\n• <b>B.</b> L’uretère pelvien croise l’artère utérine en passant <b>en dehors et en arrière</b> de celle-ci\n• <b>C.</b> L’<b>artère ombilicale</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 15</b>\n\nCitez les trois principales contre-indications absolues à la contraception œstroprogestative.",
+          "images": [],
+          "reponseAttendue": "Un antécédent personnel de thrombose veineuse ou artérielle et la thrombophilie ; la migraine avec aura ; le cancer du sein — soit une pathologie vasculaire, métabolique et carcinologique.",
+          "correctionGenerale": "• Antécédent personnel de thrombose veineuse ou artérielle, thrombophilie\n• Migraine avec aura\n• Cancer du sein\n\n→ <b>Pathologie vasculaire, métabolique, carcinologique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 16</b>\n\nExpliquez les modalités de la contraception d’urgence.",
+          "images": [],
+          "reponseAttendue": "La pilule du lendemain, prise en charge à 100 %, délivrée sans ordonnance et gratuite pour les mineures : lévonorgestrel 1,5 mg per os (Norlevo®) dans les 72 h (3 jours) suivant le rapport sexuel à risque, ou acétate d’ulipristal (EllaOne®) dans les 120 h (5 jours), contre-indiqué en cas d’insuffisance hépatique chronique ou d’asthme sévère ; à renouveler en cas de vomissement dans les 30 min suivant la prise. Le DIU au cuivre, dans les 5 jours, nécessitant une prescription et une pose par un médecin ou une sage-femme.",
+          "correctionGenerale": "<b>Pilule du lendemain</b>\n• Prise en charge à 100 %\n• Délivrance sans ordonnance\n• Gratuite pour les mineures\n• <b>Lévonorgestrel 1,5 mg per os (Norlevo®)</b> : dans les 72 h (3 jours) du rapport sexuel à risque\n• <b>Acétate d’ulipristal (EllaOne®)</b> : dans les 120 h (5 jours) du rapport sexuel à risque — CI : insuffisance hépatique chronique, asthme sévère\n• À renouveler si vomissement dans les 30 min après la prise\n\n<b>DIU au cuivre</b>\n• Dans les 5 jours\n• Nécessité de prescription et de pose par un médecin ou une sage-femme"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 17</b>\n\nÀ propos de l’interruption volontaire de grossesse (IVG) en France :\n\nA. Quel est le délai légal de recours à l’IVG en France ?\nB. Quelles sont les deux molécules prescrites pour pratiquer l’IVG médicamenteuse ?\nC. En dehors du terme de la grossesse, quelle condition est nécessaire pour accéder à l’IVG pour une patiente mineure ?",
+          "images": [],
+          "reponseAttendue": "A. 16 SA, soit 14 semaines de grossesse. B. La mifépristone et le misoprostol. C. Être accompagnée d’un adulte de son choix, l’entretien psycho-social étant obligatoire.",
+          "correctionGenerale": "• <b>A.</b> <b>16 SA, 14 SG</b>\n• <b>B.</b> <b>MIFÉPRISTONE</b> et <b>MISOPROSTOL</b>\n• <b>C.</b> Accompagnée d’un adulte de son choix (entretien psycho-social obligatoire)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 18</b>\n\nQuelles sont les modalités de prévention du cancer du col en France ?",
+          "images": [],
+          "reponseAttendue": "Prévention primaire par la vaccination anti-HPV, pour tous les enfants de 11 à 14 ans avec rattrapage possible jusqu’à 19 ans, selon un schéma à 2 doses (M0-M6), par le Gardasil 9® (qui protège contre les HPV 6, 11, 16, 18, 31, 33, 45, 52 et 58). Prévention secondaire par un dépistage organisé pour toutes les femmes asymptomatiques de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis tous les 3 ans si normal ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif FCV.",
+          "correctionGenerale": "<b>Prévention primaire : vaccination anti-HPV</b>\n• Pour tous les enfants de 11 à 14 ans, rattrapage possible jusqu’à 19 ans\n• Schéma 2 doses : M0, M6\n• <b>Gardasil 9®</b> (protège contre les HPV 6, 11, 16, 18, 31, 33, 45, 52 et 58)\n\n<b>Prévention secondaire : dépistage organisé</b>\n• Pour toutes les femmes asymptomatiques âgées de 25 à 65 ans\n• 25 à 30 ans : 2 FCV à 1 an d’intervalle ; si normal, tous les 3 ans\n• 30 à 65 ans : test HPV — si négatif tous les 5 ans, si positif → FCV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 19</b>\n\nQuelles sont les modalités du dépistage organisé du cancer du sein en France chez une patiente sans facteur de risque identifié ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage de masse organisé : 2 clichés (face et oblique externe), tous les 2 ans, avec double lecture radiologique, dans la population de 50 à 74 ans, pris en charge à 100 %.",
+          "correctionGenerale": "• Dépistage de masse organisé\n• 2 clichés (face + oblique externe)\n• Tous les 2 ans\n• Double lecture radiologique\n• Population : 50 à 74 ans\n• Pris en charge à 100 %"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2023 - EVCP - Cas 1",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2023.pdf",
+      "orderIndex": 29,
+      "vignette": "Mme A., 40 ans, d’origine gabonaise, consulte à 10 semaines d’aménorrhée pour une 2ᵉ grossesse obtenue naturellement après interruption de sa contraception par pilule microprogestative.\n\nLa première grossesse a conduit deux ans auparavant à une césarienne à 27 SA pour pré-éclampsie sévère. Mme A. avait donné naissance à une petite fille de 720 g, qui a présenté une hémorragie intraventriculaire cérébrale dans les jours suivant la naissance, mais sans conséquence clinique actuelle.\n\nMme A. mesure 162 cm et pèse habituellement 82 kg (IMC 31). Dans ses antécédents, on note une tonsillectomie pharyngienne sans complication. Elle fume 5 cigarettes par jour. Elle travaille comme infirmière en réanimation.\n\nLes examens réalisés pour la grossesse par le médecin traitant montrent : sérologie négative pour la toxoplasmose, les virus des hépatites B et C, la syphilis et le VIH ; sérologie positive pour la rubéole ; groupe sanguin valide (A+, Kell+) et recherche d’agglutinines irrégulières négative ; TSH 0,8 UI/L ; albuminurie 0,15 g/L ; glycosurie négative.\n\nLa patiente est nauséeuse et vomit depuis 10 jours. Ce jour, la pression artérielle est mesurée à 135/85 mmHg. Vous travaillez dans une maternité de type 1 et vous souhaitez prendre en charge cette patiente, qui souhaite un suivi hospitalier compte tenu de ses antécédents.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuel(s) est (sont) le(s) facteur(s) de risque de pré-éclampsie présent(s) dans le dossier de Mme A. ?",
+          "images": [],
+          "reponseAttendue": "L’âge de 40 ans, l’antécédent de pré-éclampsie sévère avec RCIU, l’obésité, la suspicion d’HTA chronique, l’origine africaine.",
+          "correctionGenerale": "• Âge 40 ans\n• Antécédent de pré-éclampsie sévère avec RCIU\n• Obésité\n• Suspicion d’HTA chronique\n• Origine africaine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuel traitement médicamenteux allez-vous proposer à Mme A. pour réduire le risque de pré-éclampsie, et suivant quelles modalités ?",
+          "images": [],
+          "reponseAttendue": "L’aspirine 100 à 160 mg le soir au coucher, à commencer avant 16 SA et jusqu’à 36 SA.",
+          "correctionGenerale": "<b>Aspirine 100 à 160 mg le soir au coucher, à commencer avant 16 SA et jusqu’à 36 SA.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nVous revoyez Mme A. à 12 SA. Elle a débuté le traitement préventif prescrit et elle a effectué une échographie hier, à 11 SA + 6 jours, dont voici un cliché. La patiente souhaite un dépistage de la trisomie 21.\n\nQuel examen est recommandé en première intention dans le cas de Mme A. et quel en est le principe ?",
+          "images": ["annales-gynecologie/annales-2023/figures/img-026-107.jpg"],
+          "reponseAttendue": "Le dépistage du risque combiné de trisomie 21, comprenant le dosage des marqueurs PAPP-A et bêta-hCG, l’âge maternel, et la mesure de la clarté nucale (avec une LCC dans les normes, entre 45 et 84 mm, correspondant à 11 à 13+6 SA). Le résultat rend un risque d’avoir un enfant atteint de trisomie 21.",
+          "correctionGenerale": "<b>Dépistage du risque combiné de trisomie 21, comprenant</b>\n• Dosage des marqueurs PAPP-A et bêta-hCG\n• L’âge maternel\n• La mesure de la clarté nucale (LCC dans les normes : 11 à 13+6 SA, entre 45 et 84 mm)\n\n→ Le résultat rend un <b>risque d’avoir un enfant atteint de trisomie 21</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nEn cas de risque intermédiaire de trisomie 21, quel examen est désormais recommandé chez Mme A. et quels en sont les principes ?",
+          "images": [],
+          "reponseAttendue": "Le dépistage prénatal non invasif par dosage de l’ADN libre circulant fœtal dans le sang maternel, pour la recherche des trisomies 13, 18 et 21.",
+          "correctionGenerale": "<b>Dépistage prénatal non invasif par dosage de l’ADN libre circulant fœtal dans le sang maternel</b>, pour la recherche des trisomies 13, 18 et 21."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nLe test demandé n’est pas en faveur d’une trisomie 21 fœtale. Vous revoyez Mme A. à 24 SA, elle va bien. La patiente n’est plus nauséeuse et ne vomit plus. L’échographie morphologique était normale à 22 SA, avec un poids fœtal au 15ᵉ percentile, un périmètre crânien au 35ᵉ percentile, un périmètre abdominal et une longueur fémorale au 10ᵉ percentile. La pression artérielle est de 135/95 mmHg et son poids de 85 kg. L’albuminurie est à 0,2 g/L.\n\nQuels éléments de surveillance clinique et paraclinique mettez-vous en place dans le contexte décrit ?",
+          "images": [],
+          "reponseAttendue": "La réalisation d’un cycle tensionnel voire d’une MAPA pour adapter le traitement antihypertenseur si nécessaire ; le prélèvement d’un bilan vasculo-rénal (NFS-plaquettes, TGO, TGP, urée, créatinine, protéinurie sur créatininurie) ; une échographie avec doppler utérin, dopplers fœtaux et contrôle de la croissance fœtale — si les dopplers fœtaux sont normaux, contrôle de croissance dans 3 semaines ; si le bilan est normal, surveillance ambulatoire de la pression artérielle et des signes fonctionnels d’HTA ; dépistage du diabète gestationnel par HGPO entre 24 et 28 SA.",
+          "correctionGenerale": "• Réalisation d’un cycle tensionnel, voire d’une <b>MAPA</b> (mesure ambulatoire de la pression artérielle), pour adapter le traitement antihypertenseur si nécessaire\n• Prélèvement d’un <b>bilan vasculo-rénal</b> : NFS-plaquettes, TGO, TGP, urée, créatinine, protéinurie sur créatininurie\n• <b>Échographie</b> : doppler utérin, dopplers fœtaux et contrôle de la croissance fœtale ; si dopplers fœtaux normaux, contrôle de croissance dans 3 semaines\n• Si bilan normal : surveillance ambulatoire de la pression artérielle et des signes fonctionnels d’HTA\n• <b>Dépistage du diabète gestationnel par HGPO entre 24 et 28 SA</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nVous revoyez la patiente à 28 SA en consultation dans votre structure hospitalière. La patiente se sent fatiguée. Elle pèse 92 kg, les mouvements fœtaux sont bien perçus et elle n’a pas de contractions. Sa pression artérielle est à 150/100 mmHg. L’albuminurie sur jet est à 0,55 g/L.\n\nQuel est votre diagnostic ? Quels sont les éléments de votre prise en charge immédiate ?",
+          "images": [],
+          "reponseAttendue": "Une suspicion de pré-éclampsie (+ 7 kg, œdèmes). Prise en charge : bilan vasculo-rénal (NFS-plaquettes, TGO, TGP, urée, créatinine, protéinurie sur créatininurie) ; traitement antihypertenseur par nicardipine ou labétalol per os avec surveillance tensionnelle ; RCF ; échographie fœtale (estimation du poids fœtal, dopplers fœtaux, liquide amniotique, placenta) ; corticothérapie anténatale par 12 mg de bétaméthasone ; transfert dans une maternité de niveau 3.",
+          "correctionGenerale": "• <b>Suspicion de pré-éclampsie</b>\n• <b>Bilan vasculo-rénal</b> : NFS-plaquettes, TGO, TGP, urée, créatinine, protéinurie sur créatininurie\n• Traitement antihypertenseur par <b>nicardipine ou labétalol per os</b> et surveillance tensionnelle\n• RCF\n• Échographie fœtale : EPF, dopplers fœtaux, liquide amniotique, placenta\n• <b>Corticothérapie anténatale par 12 mg de bétaméthasone</b>\n• Transfert dans une maternité de niveau 3"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nLes examens biologiques montrent des plaquettes à 82 G/L, des ASAT à 100 UI/L et des ALAT à 98 UI/L.\n\nQuelle est votre suspicion diagnostique et comment pouvez-vous rechercher une hémolyse dans ce contexte ? Justifiez.",
+          "images": [],
+          "reponseAttendue": "Un HELLP syndrome, devant la thrombopénie et la cytolyse dans un contexte de pré-éclampsie. On recherche une hémolyse par le dosage de la NFS, des LDH, de l’haptoglobine et des schizocytes : en cas d’hémolyse, les LDH sont augmentées, l’haptoglobine effondrée et les schizocytes élevés.",
+          "correctionGenerale": "• <b>HELLP syndrome</b> : car thrombopénie et cytolyse dans un contexte de pré-éclampsie\n• Dosage de la NFS et des LDH, de l’haptoglobine et des schizocytes\n• <b>En cas d’hémolyse</b> : LDH augmentées, haptoglobine effondrée, schizocytes élevés"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2023 - EVCP - Cas 2",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2023.pdf",
+      "orderIndex": 30,
+      "vignette": "Vous assurez le suivi gynécologique de Mme L., 57 ans, depuis de nombreuses années, et elle vous demande un rendez-vous urgent au décours d’un bilan sénologique de dépistage retrouvant un foyer de microcalcifications ACR 3 du quadrant supéro-externe du sein gauche, pour lequel une simple surveillance lui a été proposée.\n\nElle ne présente aucun antécédent familial de cancer du sein, de l’ovaire, de l’utérus, du côlon, de la prostate ou de l’estomac.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuelle est la valeur prédictive positive (VPP) de lésions néoplasiques associées à une classification ACR 3 (à 5 % près) ?",
+          "images": [],
+          "reponseAttendue": "Inférieure à 2 %.",
+          "correctionGenerale": "<b>< 2 %.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuelle stratégie proposez-vous à Mme L. ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance dans 4 à 6 mois par échographie et mammographie.",
+          "correctionGenerale": "<b>Surveillance dans 4 à 6 mois par échographie et mammographie.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nFinalement, Mme L. a effectué un nouvel examen sénologique qui classe cette fois ces calcifications ACR 4 fort. Aucun nodule n’est perçu cliniquement.\n\nLe radiologue a alors pratiqué un prélèvement macrobiopsique retrouvant un aspect de carcinome infiltrant non spécifique SBR II (3, 2, 1) sans embole, avec carcinome canalaire in situ, exprimant fortement les récepteurs aux œstrogènes (RE 90 %, intensité forte), modérément les récepteurs à la progestérone (RP 20 %, intensité modérée), sans surexpression de la protéine HER2-neu en immuno-histochimie (score une croix, négatif), Ki-67 30 %.\n\nQuelles sont les modalités de la prise en charge de votre patiente ?",
+          "images": [],
+          "reponseAttendue": "Consultation d’annonce ; plan personnalisé de soins remis à la patiente lors de la consultation ; demande de prise en charge en ALD 100 % par le médecin généraliste ; validation du plan personnalisé de soins en RCP ; proposition de soins de support ; consultation d’anesthésie ; chirurgie ambulatoire par tumorectomie après repérage par harpon, associée à une procédure du ganglion sentinelle, avec pose d’un clip sur le lit de la tumorectomie et envoi de la pièce repérée en anatomopathologie.",
+          "correctionGenerale": "• Consultation d’annonce\n• Plan personnalisé de soins remis à la patiente lors de la consultation\n• Demande de prise en charge en ALD 100 % par le médecin généraliste\n• Validation du plan personnalisé de soins en réunion de concertation pluridisciplinaire\n• Proposition de soins de support\n• Consultation d’anesthésie\n• <b>Chirurgie ambulatoire</b> : tumorectomie après repérage par harpon, associée à une procédure du ganglion sentinelle ; pose d’un clip sur le lit de la tumorectomie ; envoi de la pièce repérée en anatomopathologie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nLe résultat histologique définitif retrouve une lésion de carcinome infiltrant non spécifique de 20 mm réséquée en marges saines pour la composante infiltrante et in situ, SBR II (3, 2, 1), sans embole, avec contingent in situ de 20 %, RE 100 % intensité forte, RP 20 % intensité modérée, score HER2 négatif, Ki-67 30 %, sans envahissement ganglionnaire axillaire sentinelle (pT1c N0(sn) R0).\n\nQuelle est la condition préalable aux traitements adjuvants ?",
+          "images": [],
+          "reponseAttendue": "La présentation en réunion de concertation pluridisciplinaire.",
+          "correctionGenerale": "<b>Présentation en réunion de concertation pluridisciplinaire.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuelles sont les options thérapeutiques adjuvantes du cancer infiltrant du sein ?",
+          "images": [],
+          "reponseAttendue": "La radiothérapie du lit tumoral après tumorectomie ; l’hormonothérapie si les récepteurs hormonaux sont positifs ; la chimiothérapie en cas de risque élevé (femme jeune, grade élevé, HER2 +, triple négatif) ; la thérapie ciblée par trastuzumab si HER2 +.",
+          "correctionGenerale": "• <b>Radiothérapie du lit tumoral</b> : après tumorectomie\n• <b>Hormonothérapie</b> : si récepteurs hormonaux positifs\n• <b>Chimiothérapie</b> : en cas de risque élevé (femme jeune, grade élevé, HER2 +, triple négatif…)\n• <b>Thérapie ciblée par trastuzumab</b> si HER2 +"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nAfin de mieux préciser le bénéfice attendu d’une chimiothérapie adjuvante pour Mme L., quel examen complémentaire proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une signature multigénique (génomique), lorsque les facteurs histo-pronostiques ne sont pas suffisants pour statuer sur le bénéfice d’une chimiothérapie adjuvante.",
+          "correctionGenerale": "• <b>Signature multigénique / génomique</b>\n• Lorsque les facteurs histo-pronostiques ne sont pas suffisants pour statuer sur le bénéfice d’une chimiothérapie adjuvante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nMme L. a 2 filles âgées de 30 et 32 ans. Elle s’interroge sur la pertinence d’une consultation d’oncogénétique. Que lui répondez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un seul cas index après 50 ans ne justifie pas de recherche de BRCA. Les indications de consultation d’oncogénétique sont, sur l’histoire personnelle : cancer du sein isolé ≤ 40 ans, isolé et triple négatif ≤ 60 ans, bilatéral dont le plus précoce ≤ 50 ans, chez l’homme quel que soit l’âge, cancer de l’ovaire de haut grade quel que soit l’âge, ou apparenté d’une famille présentant une mutation connue. Sur l’histoire familiale : 3 cas de cancers du sein dans la même branche parentale au 1ᵉʳ ou 2ᵉ degré ; 2 cas dans la même branche parentale au 1ᵉʳ ou 2ᵉ degré dont un bilatéral, ou un diagnostiqué avant 40 ans, ou un avant 50 ans et le 2ᵉ avant 70 ans ; 1 cas de cancer de l’ovaire quel que soit le grade avec un antécédent familial de cancer du sein ou des ovaires chez une apparentée au 1ᵉʳ ou 2ᵉ degré.",
+          "correctionGenerale": "<b>Un seul cas index après 50 ans : pas de nécessité de recherche de BRCA.</b>\n\n<b>Indications de consultation d’oncogénétique</b>\n<b>Histoire personnelle</b>\n• Cancer du sein : isolé ≤ 40 ans ; isolé et triple négatif ≤ 60 ans ; bilatéral dont le plus précoce ≤ 50 ans ; chez l’homme, quel que soit l’âge\n• Cancer de l’ovaire de haut grade, quel que soit l’âge\n• Apparenté d’une famille présentant une mutation connue\n\n<b>Histoire familiale</b>\n• 3 cas de cancers du sein dans la même branche parentale au 1ᵉʳ ou 2ᵉ degré\n• 2 cas de cancers du sein dans la même branche parentale au 1ᵉʳ ou 2ᵉ degré, dont un bilatéral, ou 1 diagnostiqué avant 40 ans, ou 1 avant 50 ans et le 2ᵉ avant 70 ans\n• 1 cas de cancer de l’ovaire, quel que soit le grade, avec un antécédent familial de cancer du sein ou des ovaires chez une apparentée au 1ᵉʳ ou 2ᵉ degré"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nÀ quel rythme organisez-vous la surveillance sénologique de Mme L. à l’issue de sa prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance clinique tous les 6 mois pendant 5 ans puis tous les ans à vie, et une surveillance radiologique par mammographie et échographie mammaire bilatérale et des creux axillaires à 6 mois, puis tous les ans.",
+          "correctionGenerale": "• Surveillance clinique tous les 6 mois pendant 5 ans, puis tous les ans à vie\n• Surveillance radiologique par mammographie et échographie mammaire bilatérale et des creux axillaires à 6 mois, puis tous les ans"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie médicale - 2023 - EVCP - Cas 1",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
+      "orderIndex": 31,
+      "vignette": "Mme M. se présente à votre consultation. Elle est âgée de 36 ans, en couple depuis 2 ans, et vient pour des règles abondantes. Elle n’a pas d’antécédent particulier en dehors d’un tabagisme à 20 cigarettes/jour, d’une IVG chirurgicale à 22 ans et d’un antécédent de cancer du sein chez sa mère à 52 ans.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQue recherchez-vous à l’interrogatoire ?",
+          "images": [],
+          "reponseAttendue": "Les antécédents gynécologiques (âge des ménarches, cycles réguliers ou irréguliers), la date des dernières règles, l’abondance des saignements (nombre de changes par jour), leur durée, la contraception, le désir de grossesse, la date de la dernière consultation avec dépistage du cancer du col, l’existence d’une mutation génétique retrouvée à la suite du cancer du sein chez sa mère, d’autres antécédents de cancer dans la famille, la prise de médicaments, ainsi que des signes d’anémie et une dysménorrhée ou dyspareunie associée.",
+          "correctionGenerale": "• Antécédents gynécologiques : âge des ménarches, présence de cycles réguliers ou irréguliers\n• Date des dernières règles\n• Abondance des saignements : nombre de changes par jour\n• Durée des saignements\n• Contraception\n• Désir de grossesse\n• Date de la dernière consultation avec dépistage du cancer du col\n• Mutation génétique retrouvée à la suite du cancer du sein chez sa mère\n• Autre antécédent de cancer dans la famille\n• Prise de médicaments\n• Signes d’anémie ; dysménorrhée, dyspareunie associées"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nVotre interrogatoire confirme des ménorragies. Quels premiers examens, hors radiologie, prescrivez-vous ?",
+          "images": [],
+          "reponseAttendue": "Bêta-hCG quantitatifs, NFS-plaquettes et ferritine, groupe sanguin et RAI, bilan de coagulation (TP, TCA, fibrinogène).",
+          "correctionGenerale": "• Bêta-hCG quantitatifs\n• NFS, plaquettes, ferritine\n• Groupe sanguin et RAI\n• Bilan de coagulation : TP, TCA, fibrinogène"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles anomalies recherchez-vous sur l’échographie pelvienne réalisée ?",
+          "images": [],
+          "reponseAttendue": "Sur une échographie pelvienne par voie abdominale et intravaginale : une pathologie endocavitaire (polype, fibrome, hyperplasie endométriale) avec mesure de l’épaisseur endométriale et prise de doppler ; une pathologie utérine de type adénomyose ; et l’analyse des annexes.",
+          "correctionGenerale": "• <b>Échographie pelvienne par voie abdominale et intravaginale</b>\n• Recherche de pathologie endocavitaire : polype, fibrome, hyperplasie endométriale — mesure de l’épaisseur endométriale avec prise de doppler\n• Recherche de pathologie utérine : adénomyose\n• Analyse des annexes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nÀ l’échographie pelvienne, l’endomètre est mesuré à 15 mm en phase folliculaire précoce. Il n’y a pas d’autre anomalie retrouvée. Quels examens prévoyez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une biopsie endométriale et une hystéroscopie diagnostique ± opératoire.",
+          "correctionGenerale": "• Biopsie endométriale\n• Hystéroscopie diagnostique ± opératoire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nLe bilan est négatif. Mme M. ne souhaite pas de grossesse. Que lui proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une contraception par pose d’un DIU au lévonorgestrel.",
+          "correctionGenerale": "• Contraception par <b>pose d’un DIU au lévonorgestrel</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nMme M. revient vous voir 8 mois après pour des ménorragies persistantes malgré votre prise en charge. Que lui proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une hystéroscopie opératoire avec endométrectomie ou thermocoagulation de l’endomètre.",
+          "correctionGenerale": "<b>Hystéroscopie opératoire avec endométrectomie ou thermocoagulation de l’endomètre.</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie médicale - 2023 - EVCP - Cas 2",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
+      "orderIndex": 32,
+      "vignette": "Mme Z., 25 ans, se présente à votre consultation. Elle a eu ses ménarches à 12 ans et des cycles réguliers. Elle est en aménorrhée secondaire depuis l’âge de 20 ans. Elle est G0P0. Elle n’a pas d’antécédent médico-chirurgical.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels sont votre interrogatoire et votre examen clinique ?",
+          "images": [],
+          "reponseAttendue": "Interrogatoire : antécédents familiaux, allergies, tabac, présence de douleurs pelviennes associées (dysménorrhée), rapports sexuels et dyspareunie, contraception, autres symptômes endocrinologiques (troubles du transit, bouffées de chaleur, céphalées, troubles visuels, troubles de l’humeur, irritabilité, asthénie, galactorrhée). Examen clinique : poids, prise des constantes, palpation abdominale à la recherche d’une douleur pelvienne, examen vulvaire, examen au spéculum avec frottis cervico-vaginal, toucher vaginal, examen des seins et des aires ganglionnaires.",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents familiaux\n• Allergies, tabac\n• Présence de douleurs pelviennes associées : dysménorrhée\n• Rapports sexuels, dyspareunie\n• Contraception\n• Autres symptômes endocrinologiques : troubles du transit, bouffées de chaleur, céphalées, troubles visuels, troubles de l’humeur, irritabilité, asthénie, galactorrhée\n\n<b>Examen clinique</b>\n• Poids, prise des constantes\n• Palpation abdominale à la recherche d’une douleur pelvienne\n• Examen vulvaire, examen au spéculum avec frottis cervico-vaginal, toucher vaginal\n• Examen des seins et des aires ganglionnaires"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuels sont les examens complémentaires que vous prescrivez ?",
+          "images": [],
+          "reponseAttendue": "Bêta-hCG quantitatifs, FSH, LH, œstradiol, prolactine, TSH, testostérone ; test aux progestatifs (Duphaston®) ; échographie abdominale et endovaginale.",
+          "correctionGenerale": "• Bêta-hCG quantitatifs, FSH, LH, œstradiol, prolactine, TSH, testostérone\n• Test aux progestatifs (Duphaston®)\n• Échographie abdominale et endovaginale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nLes explorations retrouvent un hypogonadisme hypogonadotrope. En l’interrogeant à nouveau, elle vous explique avoir perdu 8 kg par rapport à son poids de forme. Elle sélectionne son alimentation et pratique 6 heures de footing par semaine.\n\nQuels examens demandez-vous pour terminer le bilan étiologique ?",
+          "images": [],
+          "reponseAttendue": "La recherche d’autres déficits hypophysaires : ACTH, TSH, GH, prolactine ; en cas d’autre déficit, réalisation d’une IRM hypophysaire.",
+          "correctionGenerale": "• Recherche d’autres déficits hypophysaires : ACTH, TSH, GH, prolactine\n• Si autre déficit : réalisation d’une <b>IRM hypophysaire</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuel examen demandez-vous pour le bilan de retentissement de la carence œstrogénique ?",
+          "images": [],
+          "reponseAttendue": "Une densitométrie osseuse.",
+          "correctionGenerale": "<b>Densitométrie osseuse.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuelle prise en charge proposez-vous ?",
+          "images": ["annales-gynecologie/annales-gyneco-med-2023/figures/img-015-060.png"],
+          "reponseAttendue": "Le premier diagnostic retenu est celui d’un hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire : prise en charge psychologique, prise en charge nutritionniste et endocrinologique.",
+          "correctionGenerale": "• Le premier diagnostic retenu est celui d’un <b>hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire</b>\n• Prise en charge psychologique\n• Prise en charge nutritionniste et endocrinologique\n\n<i>La figure reproduit l’arbre décisionnel de l’aménorrhée secondaire : élimination des diagnostics de grossesse et de ménopause, dosages FSH, LH, TSH, prolactine, estradiol, testostérone et test aux progestatifs ; puis, selon les résultats, FSH élevée + estradiol bas (caryotype : 45X0 ou mosaïques, 46XX, insuffisance ovarienne prématurée → substitution estro-progestative), hyperprolactinémie (IRM hypophysaire, agoniste dopaminergique ± chirurgie), testostérone très élevée (cortisol libre urinaire, test au Synacthène® sur la 17-OH-progestérone, échographie ± IRM pelvienne, scanner surrénalien → bloc en 21-hydroxylase à révélation tardive ou tumeur virilisante), FSH basse + LH basse + estradiol bas (insuffisance gonadotrope : recherche de TCA ou d’exercice intense, autre déficit hypophysaire → IRM hypophysaire), FSH normale + estradiol normal + hirsutisme + testostérone élevée (échographie ovarienne, 17-OH-progestérone → SOPK ou bloc en 21-hydroxylase).</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie médicale - 2023 - EVCP - Cas 3",
+      "annee": 2023,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
+      "orderIndex": 33,
+      "vignette": "Mme M. se présente à votre consultation avec le résultat d’un frottis anormal : test HPV positif et cytologie cervicale HSIL. Elle est âgée de 34 ans, elle est G0P0. Elle n’a pas d’antécédent particulier en dehors d’un tabagisme à 20 cigarettes/jour.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuelles sont les modalités de dépistage du cancer du col en France ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé pour toutes les femmes asymptomatiques âgées de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis à refaire tous les 3 ans si normal ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif FCV.",
+          "correctionGenerale": "• Dépistage organisé pour toutes les femmes asymptomatiques âgées de <b>25 à 65 ans</b>\n• <b>25 à 30 ans</b> : 2 FCV à 1 an d’intervalle ; si normal, à refaire tous les 3 ans\n• <b>30 à 65 ans</b> : test HPV — si négatif tous les 5 ans ; si positif → FCV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQue proposez-vous à cette patiente devant ce frottis anormal ?",
+          "images": [],
+          "reponseAttendue": "La réalisation d’une colposcopie pour biopsies ciblées.",
+          "correctionGenerale": "<b>Réalisation d’une colposcopie pour biopsies ciblées.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nOn retrouve une CIN 2. Quelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "La réalisation d’une conisation.",
+          "correctionGenerale": "<b>Réalisation d’une conisation.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nLa patiente est opérée et l’anatomopathologie confirme une lésion de haut grade in sano. Comment doit se dérouler le suivi ?",
+          "images": ["annales-gynecologie/annales-gyneco-med-2023/figures/img-020-082.jpg"],
+          "reponseAttendue": "Un test HPV à 6 mois : s’il est positif, colposcopie ; s’il est négatif, test HPV à 3 ans.",
+          "correctionGenerale": "• <b>Test HPV à 6 mois</b>\n  – Colposcopie si positif\n  – Si négatif : test HPV à 3 ans\n\n<i>La figure reproduit l’algorithme de suivi d’une lésion histologique malpighienne intra-épithéliale de haut grade traitée : test HPV haut risque à 6 mois (M6) ; si HPV négatif, test HPV à 1 an (M18) puis à 3 ans (M42) et à 3 ans (M78), puis surveillance prolongée sans limite d’âge ; si HPV positif, colposcopie avec examen de la vulve et du vagin et biopsie si nécessaire. Il n’y a pas d’indication de reprise chirurgicale quel que soit le statut des marges, et le suivi est similaire pour tous les traitements (destruction, résection, hystérectomie).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nDoit-on rechercher d’autres localisations d’HPV et comment ?",
+          "images": [],
+          "reponseAttendue": "Oui : recherche de condylomes ; recherche d’HPV vulvaire et vaginal pendant la colposcopie, avec colorant au niveau de la paroi vaginale ; en cas de déficit immunitaire, possibilité de recherche d’HPV sur la marge anale et l’oropharynx par écouvillonnage.",
+          "correctionGenerale": "• Recherche de <b>condylomes</b>\n• HPV vulvaire et vaginal : pendant la colposcopie, avec colorant au niveau de la paroi vaginale\n• En cas de déficit immunitaire : possibilité de recherche d’HPV sur la marge anale et l’oropharynx par écouvillonnage"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nQu’aurait-on pu proposer en prévention primaire ? Quelles en sont les modalités en France ?",
+          "images": [],
+          "reponseAttendue": "La vaccination contre le papillomavirus, pour tous les enfants de 11 à 14 ans, avec rattrapage possible jusqu’à 26 ans, selon un schéma à 2 doses (M0-M6).",
+          "correctionGenerale": "• <b>VACCINATION contre le papillomavirus</b>\n• Pour tous les enfants de 11 à 14 ans, rattrapage possible jusqu’à 26 ans\n• Schéma 2 doses : M0, M6"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie médicale - 2023 - EVCF",
+      "annee": 2023,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
+      "orderIndex": 34,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie médicale : questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels vaccins recommandez-vous durant la grossesse ? À quel terme de la grossesse ?",
+          "images": [],
+          "reponseAttendue": "COVID : à n’importe quel terme. Grippe, en période épidémique : à n’importe quel terme. Coqueluche : à partir de 20 semaines d’aménorrhée et jusqu’à 36 semaines d’aménorrhée. VRS : entre 32 SA et 36 SA.",
+          "correctionGenerale": "• <b>COVID</b> : n’importe quel terme\n• <b>Grippe</b>, en période épidémique : n’importe quel terme\n• <b>Coqueluche</b> : à partir de 20 SA et jusqu’à 36 SA\n• <b>VRS</b> : entre 32 SA et 36 SA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuelles sont les modalités de dépistage organisé du cancer du sein dans la population générale en France ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé par mammographie : 2 clichés (face et oblique externe), tous les 2 ans, avec double lecture par des radiologues, dans la population de 50 à 74 ans.",
+          "correctionGenerale": "<b>Dépistage organisé du cancer du sein par mammographie</b>\n• 2 clichés (face + oblique externe)\n• Tous les 2 ans\n• Double lecture par des radiologues\n• Population : 50 à 74 ans"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles sont les contre-indications absolues à la prescription d’une contraception œstroprogestative ?",
+          "images": [],
+          "reponseAttendue": "Les antécédents personnels ou familiaux avant 50 ans d’événements thromboemboliques, une thrombophilie biologique, les migraines avec aura, un cancer hormono-dépendant.",
+          "correctionGenerale": "• Antécédents personnels ou familiaux avant 50 ans d’événements thromboemboliques\n• Thrombophilie biologique\n• Migraines avec aura\n• Cancer hormono-dépendant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuels sont les signes cliniques évocateurs de l’endométriose ?",
+          "images": [],
+          "reponseAttendue": "À l’interrogatoire : dysménorrhée primaire, ménorragies en cas d’adénomyose, douleurs inter-cycle, dyspareunie profonde, balistique et positionnelle, symptômes digestifs et urinaires, symptômes plus rares (douleur scapulaire, pneumothorax cataméniaux, sciatalgie) et infertilité. À l’examen clinique : palpation abdominale (nodule cutané sur cicatrice), toucher vaginal (douleurs +++, utérus peu mobile, induration des ligaments utéro-sacrés, nodules du Douglas), spéculum (recherche de nodules bleutés), ± toucher rectal (recherche d’un nodule du torus, d’une atteinte digestive basse).",
+          "correctionGenerale": "<b>Interrogatoire</b>\n• <b>Dysménorrhée primaire</b> : prise d’antalgiques régulière, efficacité des anti-inflammatoires, augmentation des doses et des paliers ; absentéisme scolaire ou professionnel ; évaluation de la douleur par EVA ou EN\n• Ménorragies : si adénomyose\n• Douleur inter-cycle\n• <b>Dyspareunie</b> : profonde, balistique, positionnelle\n• <b>Symptômes digestifs</b> : dyschésie, épreintes, ténesme, troubles du transit, rectorragies cycliques\n• <b>Symptômes urinaires</b> : cystalgies cataméniales, pollakiurie, dysurie, hématurie cyclique, douleur lombaire\n• Autres, plus rares : douleur scapulaire, pneumothorax cataméniaux, sciatalgie\n• <b>Infertilité</b>\n\n<b>Signes à l’examen clinique</b>\n• Palpation abdominale : nodule cutané sur cicatrice\n• TV : douleurs +++, utérus peu mobile, induration des ligaments utéro-sacrés, nodules du Douglas\n• Spéculum : recherche de nodules bleutés\n• ± TR : recherche d’un nodule du torus, atteinte digestive basse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nQuelle est la définition de l’insuffisance ovarienne prématurée ? Quel est le bilan paraclinique étiologique effectué devant une insuffisance ovarienne prématurée ?",
+          "images": [],
+          "reponseAttendue": "L’association d’un critère clinique — aménorrhée primaire ou secondaire de plus de quatre mois, ou spanioménorrhée de plus de 4 mois survenant avant l’âge de 40 ans — et d’un critère biologique : un taux de FSH élevé, supérieur à 25 UI/L, contrôlé à deux reprises à plus de 4 semaines d’intervalle, avec un taux d’estradiol bas. Bilan génétique : caryotype en première intention chez toutes, après signature d’un consentement éclairé ; recherche en biologie moléculaire d’une prémutation du gène FMR1 en deuxième intention (syndrome de l’X fragile). Bilan auto-immun : anticorps antithyroïdiens (anti-TPO), TSH ; anticorps anti-21-hydroxylase en cas de suspicion de trouble auto-immun. Penser également au bilan de retentissement : osseux (ostéodensitométrie), facteurs de risque cardiovasculaires, gynécologique (fertilité avec CFA et AMH, retentissement sur les muqueuses, sexualité).",
+          "correctionGenerale": "<b>Définition — association d’un critère clinique et d’un critère biologique</b>\n• <b>Critère clinique</b> : aménorrhée primaire ou secondaire de plus de quatre mois, ou spanioménorrhée de plus de 4 mois, survenant avant l’âge de 40 ans\n• <b>Critère biologique</b> : taux de FSH élevé, supérieur à 25 UI/L, contrôlé à deux reprises à plus de 4 semaines d’intervalle ; le taux d’estradiol est bas\n\n<b>Bilan génétique</b>\n• Un <b>caryotype</b> en première intention chez toutes, après signature d’un consentement éclairé\n• Une recherche en biologie moléculaire d’une <b>prémutation du gène FMR1</b> en deuxième intention, après signature d’un consentement (syndrome de l’X fragile)\n\n<b>Bilan auto-immun</b>\n• Anticorps antithyroïdiens (anti-TPO), TSH\n• Anticorps anti-21-hydroxylase (anti-21-OH) en cas de suspicion de trouble auto-immun\n\n<b>Bilan du retentissement</b>\n• Osseux : ostéodensitométrie ; attention aux facteurs de risque cardiovasculaires\n• Gynécologique : fertilité (CFA, AMH), retentissement sur les muqueuses, sexualité\n\n<i>Recommandations HAS, PNDS insuffisance ovarienne prématurée (avril 2021).</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nDevant une infertilité du couple hétérosexuel, quel est le bilan étiologique de première intention à prescrire ? Quels sont les objectifs pour chacun ?",
+          "images": [],
+          "reponseAttendue": "Chez la femme : bilan hormonal J2-J4 (FSH, LH, œstradiol, AMH si prise en charge en AMP envisagée) pour évaluer la réserve ovarienne ; prolactine et TSH pour rechercher des troubles hormonaux ; hystérosalpingographie ou HyFoSy pour la perméabilité tubaire ; échographie pelvienne abdominale et endovaginale à J2-J4, avec cavité utérine en 3D et compte des follicules antraux, pour la réserve ovarienne et la recherche de malformation utérine ou de pathologie intra-cavitaire ; sérologies (toxoplasmose, rubéole si non vaccinée, VIH, syphilis, hépatites B et C) pour le bilan préconceptionnel. Chez l’homme : spermogramme, spermocytogramme et spermoculture après 5 jours d’abstinence, pour la concentration, la mobilité et la morphologie des spermatozoïdes, à recontrôler à 3 mois si pathologique ; sérologies VIH, syphilis, hépatites B et C pour le bilan préconceptionnel.",
+          "correctionGenerale": "<b>Femme</b>\n• <b>Bilan hormonal J2-J4</b> : FSH, LH, œstradiol (AMH si prise en charge en AMP envisagée) → évaluation de la réserve ovarienne\n• <b>Prolactine, TSH</b> → recherche de troubles hormonaux\n• <b>Hystérosalpingographie / HyFoSy</b> → perméabilité tubaire\n• <b>Échographie pelvienne abdominale et endovaginale à J2-J4</b> : cavité utérine avec 3D, compte des follicules antraux → réserve ovarienne, recherche de malformation utérine, recherche de pathologie intra-cavitaire (polype, fibrome, adénomyose)\n• <b>Sérologies</b> : toxoplasmose, rubéole si non vaccinée, VIH, syphilis, hépatites C et B → bilan préconceptionnel\n\n<b>Homme</b>\n• <b>Spermogramme, spermocytogramme, spermoculture</b> après 5 jours d’abstinence : concentration, mobilité, morphologie des spermatozoïdes ; à recontrôler à 3 mois si pathologique\n• <b>Sérologies</b> : VIH, syphilis, hépatites C et B → bilan préconceptionnel\n\n<i>Normes du spermogramme (OMS 2021) : numération > 39 millions de spermatozoïdes ; mobilité progressive > 30 % ; vitalité > 54 % ; concentration de cellules rondes < 1 million/mL ; formes typiques > 4 %. En cas d’oligospermie : testostérone totale, LH, FSH ; en cas de troubles de la libido avec dysfonction sexuelle ou de gynécomastie : prolactine.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nComment faites-vous le diagnostic de SOPK selon les recommandations internationales 2023 ?",
+          "images": [],
+          "reponseAttendue": "Au moins 2 critères parmi : oligo- ou anovulation ; hyperandrogénie clinique (hirsutisme, séborrhée, acné, spanioménorrhée) et/ou biologique (androsténédione, sulfate de DHEA, AMH) ; ovaires polykystiques en échographie (au moins 20 follicules par ovaire, ou ovaire de volume ≥ 10 mL, ou follicules par section ≥ 10) — ou AMH élevée (ESHRE 2023) ; avec exclusion des autres causes (hyperplasie congénitale des surrénales, tumeurs sécrétrices d’androgènes, syndrome de Cushing).",
+          "correctionGenerale": "<b>Au moins 2 critères parmi</b>\n• Oligo- ou anovulation\n• Hyperandrogénie clinique (hirsutisme, séborrhée, acné, spanioménorrhée) et/ou biologique (androsténédione et sulfate de DHEA, AMH)\n• Ovaires polykystiques en échographie : au moins 20 follicules/ovaire, ou ovaire de volume ≥ 10 mL, ou follicules par section ≥ 10\n\n<b>Et exclusion des autres causes</b> : hyperplasie congénitale des surrénales, tumeurs sécrétrices d’androgènes, syndrome de Cushing — ou hormone antimüllérienne (AMH) élevée (ESHRE 2023)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nQuels sont les publics ayant accès à l’AMP en France ? Et ceux qui n’y ont pas accès ?",
+          "images": [],
+          "reponseAttendue": "Ont accès : les couples hétérosexuels, les couples homosexuels de femmes et les femmes seules, avec une limite d’âge de 43 ans pour la femme et 60 ans pour l’homme. N’ont pas accès : les couples homosexuels d’hommes.",
+          "correctionGenerale": "<b>Ont accès</b>\n• Couple hétérosexuel\n• Couple homosexuel de femmes\n• Femme seule\n• Femme < 43 ans, homme < 60 ans\n\n<b>Pas d’accès</b> : couples homosexuels d’hommes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nChez quelles patientes faut-il réaliser un dépistage du diabète gestationnel ? Comment ?",
+          "images": [],
+          "reponseAttendue": "Chez les patientes ayant un facteur de risque : âge > 35 ans, IMC > 25, antécédent personnel de diabète gestationnel, antécédent de macrosomie, antécédent familial au 1ᵉʳ degré de diabète. Modalités : glycémie à jeun au premier trimestre après 8 SA (norme < 0,92 g/L) ; HGPO entre 24 et 28 SA si la glycémie à jeun du premier trimestre est < 0,92 g/L — glycémie à jeun, 75 g de sucre per os, puis glycémie à 1 h et 2 h ; normes 0,92 / 1,80 / 1,53 g/L.",
+          "correctionGenerale": "<b>Patientes concernées</b>\n• Âge > 35 ans\n• IMC > 25\n• Antécédent personnel de diabète gestationnel\n• Antécédent de macrosomie\n• Antécédent familial au 1ᵉʳ degré de diabète\n\n<b>Modalités</b>\n• Glycémie à jeun au premier trimestre, après 8 SA : < 0,92 g/L\n• <b>HGPO entre 24 et 28 SA</b> si glycémie à jeun du premier trimestre < 0,92 g/L : glycémie à jeun, 75 g de sucre per os puis glycémie à 1 h et 2 h — normes 0,92 / 1,80 / 1,53 g/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 10</b>\n\nQuels éléments prenez-vous en compte pour définir votre prise en charge des fibromes ?",
+          "images": [],
+          "reponseAttendue": "En premier lieu les symptômes (saignements, douleurs, pesanteur pelvienne, retentissement urinaire ou digestif), puis le désir de grossesse et l’évolutivité des fibromes.",
+          "correctionGenerale": "• Le premier élément à prendre en compte est <b>les symptômes</b> : saignements, douleurs, pesanteur pelvienne, retentissement urinaire ou digestif\n• <b>Désir de grossesse</b>\n• <b>Évolutivité des fibromes</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2024 - EVCF",
+      "annee": 2024,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/Annales 2024.pdf",
+      "orderIndex": 35,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 de gynécologie-obstétrique : questions isolées, regroupées par thèmes.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nDétaillez le bilan et la prise en charge initiale d’une patiente qui présente des contractions utérines régulières et un col à 15 mm à l’échographie à 28 semaines.",
+          "images": [],
+          "reponseAttendue": "Bilan : ERCF ; NFS-plaquettes, CRP, groupe et rhésus, RAI si non connus, sérologie toxoplasmose si non à jour ; prélèvement vaginal et ECBU ; amniodiag ; échographie (présentation, position du placenta, quantité de liquide amniotique, estimation du poids fœtal). Prise en charge : tocolyse par nifédipine per os ou atosiban IV ; corticothérapie anténatale à visée de maturation pulmonaire par 12 mg de bétaméthasone IM à 24 h d’intervalle ; transfert en maternité de niveau adapté, de type 3 ; consultation d’anesthésie ; information pédiatrique.",
+          "correctionGenerale": "<b>Bilan</b>\n• ERCF\n• NFS-plaquettes, CRP ; groupe, rhésus, RAI (si non connus) ; sérologie toxoplasmose si non à jour\n• PV, ECBU\n• Amniodiag\n• Échographie : présentation, position du placenta, quantité de liquide amniotique, EPF\n\n<b>Prise en charge</b>\n• <b>Tocolyse par NIFÉDIPINE per os ou ATOSIBAN IV</b>\n• <b>Corticothérapie anténatale</b> à visée de maturation pulmonaire : 12 mg de bétaméthasone IM (Célestène®) à 24 h d’intervalle\n• Transfert en maternité de niveau adapté, de type 3\n• Consultation d’anesthésie\n• Information pédiatrique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nExpliquez les différentes étapes et les modalités du dépistage de la trisomie 21 en France.",
+          "images": [],
+          "reponseAttendue": "Un dépistage non obligatoire, reposant au 1ᵉʳ trimestre (entre 11 et 13+6 SA) sur le calcul du risque combiné à partir de l’âge maternel, de la clarté nucale et de la LCC (entre 45 et 84 mm), et des bêta-hCG et de la PAPP-A ; au 2ᵉ trimestre (> 14 SA) sur le calcul séquentiel du risque à partir de l’hCG total et de l’alpha-fœtoprotéine. Le résultat donne un risque de 1/X : inférieur à 1/1000, poursuite de la surveillance habituelle ; entre 1/50 et 1/1000, proposition d’un DPNI par dosage de l’ADN libre circulant T21 — si le résultat est positif, un prélèvement invasif de confirmation doit être réalisé ; le DPNI est proposé en première intention en cas de grossesse gémellaire ou d’antécédent de T21 ; supérieur à 1/50, réalisation d’un prélèvement invasif de type biopsie de trophoblaste (< 14 SA) ou amniocentèse, selon le terme, pour établir le caryotype fœtal. Enfin, des signes échographiques sont recherchés tout au long de la grossesse.",
+          "correctionGenerale": "<b>Dépistage non obligatoire, qui repose sur</b>\n• <b>Au 1ᵉʳ trimestre (entre 11 et 13+6 SA)</b> : calcul du risque combiné — données maternelles (âge), échographiques (clarté nucale, LCC entre 45 et 84 mm), biologiques (bêta-hCG, PAPP-A)\n• <b>Au 2ᵉ trimestre (> 14 SA)</b> : calcul séquentiel du risque — hCG total, alpha-fœtoprotéine\n\n<b>Le résultat donne un risque : 1/X</b>\n• <b>< 1/1000</b> : poursuite de la surveillance habituelle\n• <b>Entre 1/50 et 1/1000</b> : proposition de DPNI (diagnostic prénatal non invasif) par dosage de l’ADN libre circulant T21. Si le résultat est positif, un prélèvement invasif de confirmation doit être réalisé. <i>À noter : le DPNI est proposé en première intention en cas de grossesse gémellaire ou d’antécédent de T21.</i>\n• <b>> 1/50</b> : réalisation d’un prélèvement invasif de type biopsie de trophoblaste (< 14 SA) ou amniocentèse, en fonction du terme, pour établir le caryotype fœtal\n\n• Signes échographiques, tout au long de la grossesse"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nQuelles sont les modalités du dépistage organisé du cancer du sein en France ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage de masse organisé, entre 50 et 74 ans, par mammographie : 2 clichés (face et oblique externe), tous les 2 ans, avec double lecture par des radiologues, pris en charge à 100 %.",
+          "correctionGenerale": "• Dépistage de masse organisé\n• Entre 50 et 74 ans\n• Mammographie : 2 clichés (face + oblique externe)\n• Tous les 2 ans\n• Double lecture par des radiologues\n• Prise en charge à 100 %"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nPrécautions, information, contre-indications (citez-en 3) et modalités d’administration (citez les produits médicamenteux en DCI, sans les posologies) d’une interruption volontaire de grossesse par méthode médicamenteuse en France.",
+          "images": [],
+          "reponseAttendue": "Précautions : datation de la grossesse (< 16 SA), signature du consentement, localisation de la grossesse (éliminer une GEU). Information : symptômes devant faire consulter en urgence l’établissement de santé partenaire (saignement très abondant, malaise, douleur), contraception, nécessité d’une surveillance post-IVG par dosage des bêta-hCG, proposition d’un entretien social, information sur les modalités de prise en charge de l’échec (aspiration), remise du dossier-guide. Contre-indications : troubles de l’hémostase, contre-indication aux médicaments (asthme sévère, allergie aux prostaglandines, porphyrie, insuffisance surrénalienne chronique), grossesse sur DIU. Modalités : à J1, prise de mifépristone per os lors de la consultation, en présence du médecin, de la sage-femme ou du pharmacien ; 24 à 48 h après, prise de misoprostol per os ; prise en charge en ambulatoire jusqu’à 9 SA.",
+          "correctionGenerale": "<b>Précautions</b>\n• Datation de la grossesse (< 16 SA)\n• Signature du consentement\n• Localisation de la grossesse (éliminer une GEU)\n\n<b>Informations</b>\n• Symptômes devant faire consulter en urgence l’établissement de santé partenaire (saignement très abondant, malaise, douleur)\n• Contraception\n• Nécessité d’une surveillance post-IVG par réalisation de bêta-hCG\n• Proposition d’un entretien social\n• Information sur les modalités de prise en charge de l’échec (aspiration)\n• Remise du dossier-guide\n\n<b>Contre-indications</b>\n• Troubles de l’hémostase\n• Contre-indication aux médicaments : asthme sévère, allergie aux prostaglandines, porphyrie, insuffisance surrénalienne chronique\n• Grossesse sur DIU\n\n<b>Modalités d’administration</b>\n• À J1 : prise de <b>MIFÉPRISTONE</b> per os, lors de la consultation, en présence du médecin, de la sage-femme ou du pharmacien\n• 24 à 48 h après : prise de <b>MISOPROSTOL</b> per os\n• La prise en charge se fera en ambulatoire jusqu’à 9 SA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5 — Infertilité</b>\n\n1. Quel est le délai optimal recommandé en France pour débuter les explorations de fertilité du couple, en l’absence d’antécédents orientant vers une pathologie du système reproductif, pour un couple dont la femme a moins de 35 ans ?\n2. Et si elle a plus de 35 ans ?\n3. Quel bilan faites-vous en première intention pour rechercher une éventuelle malformation utérine chez une patiente infertile ?\n4. Citez 2 examens d’imagerie pouvant être réalisés pour évaluer la perméabilité tubaire, en l’absence d’antécédents pouvant faire suspecter une pathologie tubaire ou pelvienne.\n5. Quels sont les critères faisant évoquer une baisse de la réserve ovarienne ?\n6. Quels dosages hormonaux sont à réaliser pour confirmer une baisse de la réserve ovarienne ?\n7. Bilan à réaliser en première intention chez un homme en cas d’infertilité ?",
+          "images": [],
+          "reponseAttendue": "1. 1 an. 2. 6 mois. 3. Une échographie pelvienne par voie endovaginale avec coupe 3D de la cavité. 4. L’hystérosalpingographie et l’HyFoSy. 5. Une baisse du compte des follicules antraux (inférieur à 5) et une AMH basse (inférieure à 1), à interpréter en fonction de l’âge. 6. AMH, FSH, LH et œstradiol, à faire entre J2 et J4. 7. Spermogramme, spermocytogramme, spermoculture, et sérologies VIH, hépatite B, hépatite C, syphilis.",
+          "correctionGenerale": "1. <b>1 an</b>\n2. <b>6 mois</b>\n3. <b>Échographie pelvienne par voie endovaginale avec coupe 3D de la cavité</b>\n4. <b>Hystérosalpingographie ; HyFoSy</b>\n5. Baisse du compte des follicules antraux (< 5), AMH basse (< 1), à interpréter en fonction de l’âge\n6. <b>AMH, FSH (LH), œstradiol</b>, à faire entre J2 et J4\n7. <b>Spermogramme, spermocytogramme, spermoculture</b> ; sérologies VIH, hépatite B, hépatite C, syphilis"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6 — Cancer de l’endomètre</b>\n\n1. Quels sont les types histologiques de cancer de l’endomètre ?\n2. Quel est le stade FIGO d’un cancer de l’endomètre limité au corps utérin et envahissant plus de la moitié du myomètre, sans atteindre la séreuse ?",
+          "images": [],
+          "reponseAttendue": "1. L’adénocarcinome endométrioïde (type 1) et les formes non endométrioïdes de type 2 (carcinome séreux, carcinosarcome, carcinome indifférencié). 2. Le stade IB.",
+          "correctionGenerale": "1. <b>Adénocarcinome endométrioïde (type 1)</b> ou <b>non endométrioïde de type 2</b> (carcinome séreux, carcinosarcome, carcinome indifférencié)\n2. <b>Stade IB</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7 — Cancer du col (dépistage)</b>\n\n1. Quelles sont les modalités du schéma vaccinal contre le papillomavirus en France ?\n2. Quelles sont les modalités du dépistage organisé des lésions précancéreuses du col en France ?\n3. Quels sont les modalités et principes généraux de la colposcopie ?",
+          "images": [],
+          "reponseAttendue": "1. Pour tous les enfants de 11 à 14 ans, schéma à 2 doses (M0-M6), avec rattrapage possible jusqu’à 26 ans (3 doses : M0, M2, M6). 2. Toutes les femmes asymptomatiques de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis tous les 3 ans si normal ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif réalisation d’un FCV ; en cas d’anomalie au frottis, réalisation d’une colposcopie. 3. Examen du col et du vagin à la loupe binoculaire, en 3 temps : sans préparation, après application d’acide acétique à 5 % (qui permet de visualiser la zone de jonction, les lésions étant acidophiles, blanches) et après application de lugol (les lésions étant iodo-négatives, jaunes) ; elle permet de rechercher des zones de transformation anormales ou atypiques (TAG) qu’il faut biopsier ; elle est dite satisfaisante si la zone de jonction est vue en totalité ; on réalise un compte rendu avec un schéma montrant la zone de jonction, les TAG et les endroits biopsiés.",
+          "correctionGenerale": "<b>1. Schéma vaccinal</b>\n• Pour tous les enfants de 11 à 14 ans : schéma 2 doses, M0-M5\n• Rattrapage possible jusqu’à 26 ans : 3 doses, M0-M2-M6\n\n<b>2. Dépistage organisé</b>\n• Toutes les femmes asymptomatiques âgées de 25 à 65 ans\n• 25 à 30 ans : 2 FCV à 1 an d’intervalle ; si normal, tous les 3 ans\n• 30 à 65 ans : test HPV — si négatif tous les 5 ans ; si positif, réalisation d’un FCV\n• Si anomalie au frottis : réalisation d’une <b>colposcopie</b>\n\n<b>3. Colposcopie</b>\n• Examen du col et du vagin à la loupe binoculaire\n• <b>3 temps d’examen</b> : sans préparation ; application d’acide acétique à 5 %, qui permet de visualiser la zone de jonction, les lésions étant acidophiles (blanches) ; application de lugol, les lésions étant iodo-négatives (jaunes)\n• Elle permet de rechercher des <b>zones de transformation anormales / atypiques (TAG)</b> qu’il faut biopsier\n• Elle est dite <b>satisfaisante</b> si la zone de jonction est vue en totalité\n• Réalisation d’un compte rendu avec un schéma de la colposcopie montrant la zone de jonction, les TAG et les endroits biopsiés"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8 — Pathologies bénignes de l’endomètre</b>\n\n1. Décrivez la classification FIGO 2011 des myomes.\n2. Quel bilan diagnostique en cas de ménométrorragies ?\n3. Quels sont les grands principes du traitement médical ?",
+          "images": ["annales-gynecologie/annales-2024/figures/img-012-048.jpg"],
+          "reponseAttendue": "1. Les myomes sous-muqueux : type 0 (pédiculé, endocavitaire), type 1 (< 50 % intramural), type 2 (≥ 50 % intramural) ; les autres : type 3 (en contact avec l’endomètre, 100 % intramural), type 4 (intramural), type 5 (sous-séreux, ≥ 50 % intramural), type 6 (sous-séreux, < 50 % intramural), type 7 (sous-séreux, pédiculé), type 8 (autre, par exemple cervical ou parasitaire) ; les léiomyomes hybrides sont désignés par deux nombres liés par un trait d’union (par exemple 2-5). 2. Une échographie pelvienne par voie abdominale et endovaginale. 3. Prise en charge symptomatique : traitement de la carence martiale si nécessaire, acide tranexamique en cas de saignement très abondant. Prise en charge étiologique : mise en place d’une contraception ou changement de celle-ci, par exemple par un dispositif intra-utérin au lévonorgestrel.",
+          "correctionGenerale": "<b>1. Classification FIGO des léiomyomes</b>\n• <b>S — Sous-muqueux</b> : 0 (pédiculé, endocavitaire) ; 1 (< 50 % intramural) ; 2 (≥ 50 % intramural)\n• <b>A — Autres</b> : 3 (en contact avec l’endomètre, 100 % intramural) ; 4 (intramural) ; 5 (sous-séreux, ≥ 50 % intramural) ; 6 (sous-séreux, < 50 % intramural) ; 7 (sous-séreux, pédiculé) ; 8 (autre, à préciser — cervical, parasitaire)\n• <b>Léiomyomes hybrides</b> (affectent tant l’endomètre que la séreuse) : deux nombres liés par un trait d’union, le premier désignant la relation avec l’endomètre, le second la relation avec la séreuse. Exemple 2-5 : simultanément sous-muqueux et sous-séreux, moins de la moitié du diamètre se trouvant à la fois dans la cavité endométriale et dans la cavité péritonéale\n\n<b>2. Bilan diagnostique en cas de ménométrorragies</b>\n• Échographie pelvienne par voie abdominale et endovaginale\n\n<b>3. Grands principes du traitement médical</b>\n• <i>Prise en charge symptomatique</i> : traitement de la carence martiale si nécessaire ; en cas de saignement très abondant, acide tranexamique\n• <i>Prise en charge étiologique</i> : mise en place d’une contraception ou changement de celle-ci, par exemple dispositif intra-utérin au lévonorgestrel"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2024 - EVCP - Cas 1",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2024.pdf",
+      "orderIndex": 36,
+      "vignette": "Madame K., 28 ans, primigeste, est admise aux urgences d’une maternité de type 3 à 33 SA pour des céphalées importantes et des œdèmes au niveau des membres inférieurs. Elle mentionne également une sensibilité au niveau de l’abdomen, sans contraction utérine perçue. Elle ne présente pas d’antécédents médicaux notables en dehors d’une obésité (IMC 32 kg/m²) et d’un tabagisme actif. Vous notez une prise de poids rapide dans les dernières semaines (8 kilos en un mois).\n\nÀ l’admission, la tension artérielle est à 160/100 et la bandelette urinaire détecte des protéines à 3+.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels sont les éléments qui permettent de suspecter le diagnostic de pré-éclampsie chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Les céphalées, la barre épigastrique, les œdèmes, la protéinurie à la bandelette, l’hypertension artérielle, et les facteurs de risque : primigeste, obésité, tabac.",
+          "correctionGenerale": "• Céphalées\n• Barre épigastrique\n• Œdèmes\n• Protéinurie à la bandelette\n• Hypertension artérielle\n• <b>Facteurs de risque</b> : primigeste, obésité, tabac"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQuels examens biologiques sont nécessaires pour confirmer le diagnostic et évaluer la gravité de la situation ?",
+          "images": [],
+          "reponseAttendue": "Un bilan vasculo-rénal : NFS-plaquettes, bilan hépatique (TGO, TGP), ionogramme, créatinine, urée, acide urique, LDH, haptoglobine, schizocytes, bilan d’hémostase (TP, TCA, fibrinogène) ; et une protéinurie sur créatininurie sur échantillon.",
+          "correctionGenerale": "• <b>Bilan vasculo-rénal</b> : NFS-plaquettes ; bilan hépatique TGO, TGP ; ionogramme, créatinine, urée ; acide urique ; LDH, haptoglobine, schizocytes ; bilan d’hémostase (TP, TCA, fibrinogène)\n• <b>Protéinurie sur créatininurie sur échantillon</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nLa protéinurie sur échantillon est à 1,7 g/L, la protéinurie des 24 h est en cours. L’analyse sanguine que vous avez prescrite ne retrouve pas d’anomalie. L’échographie montre un fœtus en présentation céphalique, de bonne vitalité, avec un poids estimé à 1900 g (20ᵉ percentile), un doppler ombilical avec résistance augmentée mais une diastole positive, et une quantité de liquide amniotique normale ; il n’existe pas de décollement placentaire. Un monitoring fœtal montre un rythme cardiaque à 135 bpm, oscillant et réactif, sans décélération.\n\nQuelle prise en charge thérapeutique initiale proposez-vous pour cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation ; mise en place d’un traitement antihypertenseur (alpha-méthyldopa, labétalol ou nicardipine) ; corticothérapie anténatale à visée de maturation pulmonaire par 12 mg de bétaméthasone IM à 24 h d’intervalle ; sulfate de magnésium devant le signe de gravité que constitue la barre épigastrique.",
+          "correctionGenerale": "• Hospitalisation\n• Mise en place d’un <b>traitement antihypertenseur</b> : alpha-méthyldopa, labétalol, nicardipine\n• <b>Corticothérapie anténatale</b> à visée de maturation pulmonaire : 12 mg de bétaméthasone IM (Célestène®) à 24 h d’intervalle\n• <b>Sulfate de magnésium</b> devant un signe de gravité (barre épigastrique)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nLa prise en charge initiale est efficace : la tension artérielle se normalise autour de 130/80 et les signes fonctionnels (céphalées et barre épigastrique) régressent sous traitement.\n\nSi la situation de Madame K. reste stable en hospitalisation, qu’envisagez-vous concernant le terme et les modalités d’accouchement ?",
+          "images": [],
+          "reponseAttendue": "Un accouchement à programmer à 37 semaines au maximum : la balance bénéfice-risque est en faveur de l’accouchement au-delà de ce terme, car il n’y a plus de prématurité et le risque de complications sévères et imprévisibles, maternelles et fœtales, est trop important (éclampsie, HRP, OAP, ARCF, MFIU). S’il n’y a pas de complication, l’accouchement pourra être déclenché pour une tentative d’accouchement par les voies naturelles.",
+          "correctionGenerale": "• <b>Accouchement à programmer à 37 semaines au maximum</b> : la balance bénéfice-risque est en faveur de l’accouchement au-delà de ce terme, car il n’y a plus de prématurité et le risque de complications sévères et imprévisibles, maternelles et fœtales, est trop important (éclampsie, HRP, OAP, ARCF, MFIU…)\n• S’il n’y a pas de complication, l’accouchement pourra être déclenché pour une tentative d’accouchement par les voies naturelles"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nMalheureusement, la situation se dégrade et une césarienne est réalisée à 33 semaines et 4 jours pour HTA sévère non contrôlée. La césarienne se déroule sans complication et Madame K. donne naissance à une fille de 1980 g, bien portante.\n\nQuelles sont vos prescriptions pour la prise en charge et la surveillance en post-partum immédiat de Mme K. ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance de la tension artérielle avec poursuite du traitement jusqu’à normalisation ; une surveillance du bilan vasculo-rénal jusqu’à amélioration ; une surveillance de la cicatrice de césarienne ; une surveillance de la montée laiteuse et de la mise en place de l’allaitement si la mère le souhaite ; une prévention thromboembolique par bas de contention et thromboprophylaxie par HBPM.",
+          "correctionGenerale": "• Surveillance de la tension artérielle, avec poursuite du traitement jusqu’à normalisation\n• Surveillance du bilan vasculo-rénal jusqu’à amélioration\n• Surveillance de la cicatrice de césarienne\n• Surveillance de la montée laiteuse et de la mise en place de l’allaitement, si souhait maternel\n• <b>Prévention thromboembolique</b> : bas de contention, thromboprophylaxie par HBPM"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nLes suites, où Madame K. et sa fille sont simples. Vous la revoyez en visite postnatale à 6 semaines de son accouchement. L’anatomopathologie placentaire retrouve des lésions de malperfusion vasculaire d’origine maternelle.\n\nQuels sont les éléments cliniques et biologiques importants à contrôler à distance d’une pré-éclampsie ? Quel examen biologique allez-vous prescrire ?",
+          "images": [],
+          "reponseAttendue": "La normalisation de la tension artérielle et la normalisation du bilan vasculo-rénal : bilan hépatique (TGO, TGP), bilan rénal (créatinine, urée, ionogramme), protéinurie sur créatininurie, NFS-plaquettes.",
+          "correctionGenerale": "• Normalisation de la tension artérielle\n• Normalisation du bilan vasculo-rénal\n• Bilan hépatique TGO, TGP ; bilan rénal : créatinine, urée, ionogramme ; protéinurie sur créatininurie ; NFS-plaquettes"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuelle prise en charge allez-vous proposer à Madame K. pour une prochaine grossesse, afin de limiter le risque de récidive ?",
+          "images": [],
+          "reponseAttendue": "L’aspirine 100 à 160 mg le soir, dès le début de la grossesse et jusqu’à 36 SA ; des mesures hygiéno-diététiques et une activité physique ; un sevrage tabagique ; une perte de poids ; et une consultation préconceptionnelle.",
+          "correctionGenerale": "• <b>Aspirine 100 à 160 mg le soir, dès le début de la grossesse et jusqu’à 36 SA</b>\n• Mesures hygiéno-diététiques, activité physique\n• Sevrage tabagique\n• Perte de poids\n• Consultation préconceptionnelle"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nQuels conseils donneriez-vous à Mme K. sur les signes à surveiller en cas de pré-éclampsie pour une future grossesse ?",
+          "images": [],
+          "reponseAttendue": "Les signes fonctionnels d’hypertension artérielle : céphalées, barre épigastrique, phosphènes, myodésopsies, ainsi qu’une prise de poids importante et des œdèmes.",
+          "correctionGenerale": "<b>Signes fonctionnels d’hypertension artérielle</b> : céphalées, barre épigastrique, phosphènes, myodésopsies ; prise de poids importante, œdèmes."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2024 - EVCP - Cas 2",
+      "annee": 2024,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/Annales 2024.pdf",
+      "orderIndex": 37,
+      "vignette": "Madame G., âgée de 38 ans, consulte pour un début de grossesse à 7 semaines (test urinaire positif). Elle n’a pas d’antécédent notable personnel ni familial (pas de diabète dans la famille). Il s’agit de sa première grossesse. Elle mesure 163 cm et pèse 91 kilos. Elle ne fume pas.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b>\n\nQuels sont les facteurs de risque indiquant le dépistage du diabète gestationnel en cours de grossesse, en général ?",
+          "images": [],
+          "reponseAttendue": "Un âge supérieur à 35 ans, un IMC supérieur à 25, un antécédent personnel de diabète gestationnel, un antécédent de macrosomie, un antécédent familial au 1ᵉʳ degré de diabète, et une macrosomie fœtale.",
+          "correctionGenerale": "• Âge > 35 ans\n• IMC > 25\n• Antécédent personnel de diabète gestationnel\n• Antécédent de macrosomie\n• Antécédent familial au 1ᵉʳ degré de diabète\n• Macrosomie fœtale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b>\n\nQu’allez-vous prévoir pour diagnostiquer un diabète gestationnel chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Une glycémie à jeun au premier trimestre après 8 SA, puis une HGPO (hyperglycémie provoquée par voie orale) entre 24 et 28 SA si la glycémie à jeun du premier trimestre est < 0,92 g/L : glycémie à jeun, 75 g de sucre per os, puis glycémies à 1 h et 2 h ; normes 0,92 / 1,80 / 1,53 g/L.",
+          "correctionGenerale": "• Glycémie à jeun au premier trimestre, après 8 SA\n• <b>HGPO (hyperglycémie provoquée par voie orale) entre 24 et 28 SA</b> si la glycémie à jeun du premier trimestre est < 0,92 g/L\n  – Glycémie à jeun\n  – 75 g de sucre per os, puis glycémie à 1 h et à 2 h\n  – Normes 0,92 / 1,80 / 1,53 g/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\nLa glycémie à jeun de Mme G. au premier trimestre est à 0,88 g/L. L’HGPO montre les résultats suivants : H0 0,90 g/L, H1 1,83 g/L, H2 1,62 g/L.\n\nQuelle est votre interprétation des résultats ?",
+          "images": [],
+          "reponseAttendue": "Le diagnostic d’un diabète gestationnel, sur les temps H1 et H2.",
+          "correctionGenerale": "<b>Diagnostic d’un diabète gestationnel sur les temps H1 et H2.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b>\n\nQuelle est votre prise en charge du diabète gestationnel chez Mme G. ?",
+          "images": [],
+          "reponseAttendue": "Des règles hygiéno-diététiques : limiter les sucres simples, surtout en prise isolée ; fractionner l’alimentation en au moins 3 repas par jour ± 2 à 3 collations ; consommer régulièrement des féculents et/ou du pain à chaque repas ; manger des légumes à chaque repas ; limiter les aliments riches en graisse ; activité physique (marche régulière, natation). Une surveillance glycémique 4 à 6 fois par jour (au moins une fois à jeun et deux heures après les repas), avec un objectif < 0,95 g/L à jeun et < 1,20 g/L à 2 h. Une insulinothérapie si l’objectif n’est pas atteint.",
+          "correctionGenerale": "<b>Règles hygiéno-diététiques</b>\n• Limiter les sucres simples, surtout en prise isolée\n• Alimentation à fractionner : au moins 3 repas par jour ± 2 à 3 collations par jour\n• Consommer régulièrement des féculents et/ou du pain à chaque repas\n• Manger des légumes à chaque repas\n• Limiter les aliments riches en graisse\n• Activité physique (marche régulière, natation)\n\n<b>Surveillance glycémique</b>\n• 4 à 6 fois par jour (au moins une fois à jeun et deux heures après les repas)\n• Objectif : < 0,95 g/L à jeun, < 1,20 g/L à 2 h\n\n<b>Insulinothérapie</b> si objectif non atteint"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b>\n\nMadame G. se présente pour un travail spontané à 39 semaines + 1 jour. Elle accouche par voie basse spontanée à 15 h 34 d’un petit garçon de 4150 g.\n\nQuelle est la prévention d’une hémorragie du post-partum ? Détaillez les modalités exactes d’administration.",
+          "images": [],
+          "reponseAttendue": "L’administration préventive d’un utérotonique : ocytocine 5 ou 10 UI par voie IV dans les 15 min suivant l’accouchement.",
+          "correctionGenerale": "<b>Administration préventive d’utérotonique : ocytocine 5 ou 10 UI par voie IV dans les 15 min suivant l’accouchement.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b>\n\nÀ 15 h 40, les pertes sanguines sont à 800 mL alors qu’elle ne s’est pas délivrée.\n\nQuel est votre diagnostic ? Pourquoi ?",
+          "images": [],
+          "reponseAttendue": "Une hémorragie du post-partum, car les pertes sont supérieures à 500 mL, sur une probable atonie utérine du fait de la non-délivrance.",
+          "correctionGenerale": "<b>Hémorragie du post-partum</b>, car supérieure à 500 mL, sur probable <b>atonie utérine</b> du fait de la non-délivrance."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b>\n\nQuelle est votre prise en charge obstétricale ?",
+          "images": [],
+          "reponseAttendue": "Appel de l’anesthésiste, révision utérine avec délivrance artificielle, massage utérin, sondage urinaire, révision sous valve ± suture périnéale.",
+          "correctionGenerale": "• Appel de l’anesthésiste\n• <b>Révision utérine avec délivrance artificielle</b>\n• Massage utérin\n• Sondage urinaire\n• Révision sous valve ± suture périnéale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 8</b>\n\nQuelle est la prise en charge médicale ?",
+          "images": [],
+          "reponseAttendue": "Prise de constantes rapprochée, ocytocine 5 unités en IVD après révision (jusqu’à 40 UI au maximum), antibioprophylaxie par C3G IV, oxygénothérapie et réchauffement, remplissage vasculaire par cristalloïdes, Hemocue®, vérification du groupage et des RAI, check-list HPP, quantification des saignements avec sac de recueil et pesée des compresses.",
+          "correctionGenerale": "• Prise de constantes rapprochée\n• <b>Ocytocine 5 unités en IVD</b> (après révision), jusqu’à 40 UI maximum\n• Antibioprophylaxie : C3G IV\n• O₂, réchauffement, oxygénothérapie\n• Remplissage vasculaire : cristalloïdes\n• Hemocue®\n• Vérification du groupage et des RAI\n• Check-list HPP\n• Quantification des saignements : sac de recueil et pesée des compresses"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 9</b>\n\nLes saignements persistent et sont évalués à 1200 mL. Quelle est votre prise en charge obstétricale ?",
+          "images": [],
+          "reponseAttendue": "Sondage urinaire à demeure ; sulprostone (Nalador®) 500 µg sur 30 min, avec une 2ᵉ ampoule sur 4 h si besoin ; acide tranexamique (Exacyl®) 500 mg ; ballon de tamponnement intra-utérin ; en cas de persistance des saignements, embolisation si la patiente est stable hémodynamiquement, sinon reprise par voie haute. En parallèle, poursuite de la réanimation médicale : pose d’une deuxième voie veineuse, bilan NFS-plaquettes et hémostase, commande de CGR, PFC et fibrinogène.",
+          "correctionGenerale": "• Sondage urinaire à demeure\n• <b>Sulprostone (Nalador®) 500 µg (1 ampoule) sur 30 min</b> (2ᵉ ampoule sur 4 h si besoin)\n• Exacyl® 500 mg (1 ampoule)\n• <b>Ballon de tamponnement intra-utérin</b>\n• Si persistance des saignements : embolisation si patiente stable hémodynamiquement ; sinon, reprise par voie haute\n\n<b>Poursuite de la réanimation médicale en parallèle</b>\n• Pose d’une deuxième voie veineuse\n• Bilan : NFS-plaquettes, hémostase\n• Commande de CGR, PFC, fibrinogène"
+        }
+      ]
+    }
+  ]
+}

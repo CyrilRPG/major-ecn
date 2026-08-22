@@ -1,0 +1,470 @@
+{
+  "sources": {
+    "ANNALES PSYCHIATRIE/EVCF.2013-correction.pdf": {
+      "atelier": "annales-psychiatrie/evcf-2013-correction",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Corrigé reprenant les intitulés officiels des 10 questions de l’EVCF 2013 de psychiatrie. Le sujet officiel EVCF 2013 n’est pas présent dans le dépôt, mais le corrigé reproduit les questions."
+    },
+    "ANNALES PSYCHIATRIE/EVCP 2009 (modifié) grille.pdf": {
+      "atelier": "annales-psychiatrie/evcp-2009-modifie-grille",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Grille de correction (mots-clés et barème) intitulée « CORRECTION EVCP MG ». Le sujet officiel EVCP 2009 n’est présent dans le dépôt pour aucun code de spécialité : ni l’énoncé du cas ni les intitulés des questions n’ont pu être restitués, et le rattachement à l’épreuve de psychiatrie plutôt qu’à celle de médecine générale n’a pas pu être vérifié. Le fichier est classé dans « ANNALES PSYCHIATRIE » et son contenu est strictement psychiatrique."
+    },
+    "ANNALES PSYCHIATRIE/EVCP 2015-grille.pdf": {
+      "atelier": "annales-psychiatrie/evcp-2015-grille",
+      "sujetOfficiel": "Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.74.DOC",
+      "figuresIgnorees": {
+        "img-001-000.png": "aplat de fond de la mise en page du document, sans contenu"
+      },
+      "remarque": "Grille de correction (mots-clés et barème) portant la mention « Réf. CNG : EVCP 2015 CAS 3 » : elle ne corrige que la question n° 3 du sujet officiel (Thérèse, 68 ans), dont les six sous-questions ont été restituées depuis Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.74.DOC. Les questions 1 et 2 du sujet officiel ne sont pas corrigées et ne sont donc pas intégrées."
+    },
+    "ANNALES PSYCHIATRIE/Grille EVCP 2011.pdf": {
+      "atelier": "annales-psychiatrie/grille-evcp-2011",
+      "sujetOfficiel": "Annales/Sujets/evcp_2011/EVCP.74.DOC",
+      "figuresIgnorees": {},
+      "remarque": "Grille de correction (mots-clés et barème). Les énoncés ont été restitués intégralement depuis le sujet officiel."
+    },
+    "ANNALES PSYCHIATRIE/Grille EVCP 2013 grille.pdf": {
+      "atelier": "annales-psychiatrie/grille-evcp-2013-grille",
+      "sujetOfficiel": "Annales/Sujets/evcp_2013/EVCP.74.DOC",
+      "figuresIgnorees": {},
+      "remarque": "Grille de correction (mots-clés et barème) portant sur le sujet « adulte » de l’épreuve (questions 1 à 8). Les énoncés ont été restitués depuis le sujet officiel. Le sujet « enfant » (questions 9 à 13) n’est pas corrigé par cette grille et n’est donc pas intégré."
+    },
+    "ANNALES PSYCHIATRIE/Grille EVCP 2014.pdf": {
+      "atelier": "annales-psychiatrie/grille-evcp-2014",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Grille de correction (mots-clés et barème). Le sujet officiel EVCP 2014 n’est pas présent dans le dépôt : ni l’énoncé du cas ni les intitulés des questions n’ont pu être restitués ; chaque question est identifiée par son numéro et par le thème que sa grille permet d’identifier."
+    },
+    "ANNALES PSYCHIATRIE/Grille EVCP 2018.pdf": {
+      "atelier": "annales-psychiatrie/grille-evcp-2018",
+      "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf",
+      "figuresIgnorees": {},
+      "remarque": "Grille de correction (mots-clés et barème) portant sur le sujet n° 2 de l’épreuve (Monsieur G., 68 ans). Les énoncés ont été restitués depuis la compilation « toutes spécialités » Annales/Sujets/2018_EVCP.pdf, section PSYCHIATRIE, code 74. Le sujet n° 1 (Marine B., 16 ans, anorexie mentale) n’est pas corrigé par cette grille et n’est donc pas intégré."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Psychiatrie - 2009 - EVCP",
+      "annee": 2009,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/EVCP 2009 (modifié) grille.pdf",
+      "orderIndex": 1,
+      "vignette": "<i>Le sujet officiel EVCP 2009 n’est pas présent dans le dépôt : ce document est une grille de correction, qui ne donne que les mots-clés attendus et leur barème, sans l’énoncé du cas ni les intitulés des questions. D’après les mots-clés, il s’agit d’une décompensation délirante révélant une schizophrénie, secondairement résistante et relevant de la clozapine.</i>\n\n<i>La grille est intitulée « CORRECTION EVCP MG » ; le rattachement à l’épreuve de psychiatrie plutôt qu’à celle de médecine générale n’a pas pu être vérifié, faute de sujet officiel dans le dépôt.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b> <i>(25 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’analyse sémiologique du tableau clinique.</i>",
+          "images": [],
+          "reponseAttendue": "Présentation étrange, émoussement affectif, alogie, propos délirant, thème de mysticisme, mécanisme d’hallucination intrapsychique, automatisme mental, délire non systématisé, participation affective faible, rationalisme morbide, antécédent d’acte hétéro-agressif, pas d’idée suicidaire, isolement social, anosognosie.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 25 points)</b>\n• Présentation étrange <i>(1)</i>\n• Émoussement affectif <i>(2)</i>\n• Alogie <i>(1)</i>\n• Propos délirant <i>(3)</i>\n• Thème de mysticisme <i>(2)</i>\n• Mécanisme : hallucination intrapsychique <i>(2)</i>\n• Automatisme mental <i>(3)</i>\n• Délire non systématisé <i>(1)</i>\n• Participation affective faible <i>(1)</i>\n• Rationalisme morbide <i>(2)</i>\n• Antécédent d’acte hétéro-agressif <i>(2)</i>\n• Pas d’idée suicidaire <i>(1)</i>\n• Isolement social <i>(2)</i>\n• Anosognosie <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les autres signes cliniques à rechercher.</i>",
+          "images": [],
+          "reponseAttendue": "Tristesse de l’humeur, trouble du sommeil, trouble de l’appétit, idée actuelle hétéro-agressive (PMZ), hallucination acoustico-verbale.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• Tristesse de l’humeur <i>(3)</i>\n• Trouble du sommeil <i>(3)</i>\n• Trouble de l’appétit <i>(3)</i>\n• <b>Idée actuelle hétéro-agressive</b> <i>(3, PMZ)</i>\n• Hallucination acoustico-verbale <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le diagnostic et ses arguments.</i>",
+          "images": [],
+          "reponseAttendue": "Décompensation délirante d’une schizophrénie : désorganisation intellectuelle et comportementale, idées délirantes, hallucinations, phase aiguë de plus de 1 mois, symptômes négatifs, durée totale supérieure à 6 mois.",
+          "correctionGenerale": "<b>Mots-clés attendus</b>\n• Décompensation délirante <i>(2)</i>\n• <b>Schizophrénie</b> <i>(5)</i>\n• Désorganisation intellectuelle et comportementale <i>(1)</i>\n• Idées délirantes <i>(1)</i>\n• Hallucinations <i>(1)</i>\n• Phase aiguë de plus de 1 mois <i>(2)</i>\n• Symptômes négatifs <i>(1)</i>\n• Durée totale > 6 mois <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b> <i>(25 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur la prise en charge initiale.</i>",
+          "images": [],
+          "reponseAttendue": "Hospitalisation, libre si possible, sinon sous contrainte en SPDRE devant le trouble grave à l’ordre public ; prévention du risque de fugue ; élimination d’une cause secondaire par IRM cérébrale et recherche de toxiques urinaires ; bilan pré-thérapeutique avec ECG ; chimiothérapie par antipsychotique atypique (citer une molécule) ; benzodiazépine si agitation.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 25 points)</b>\n• Hospitalisation <i>(2)</i>\n• Libre si possible <i>(1)</i>\n• Sinon sous contrainte : <b>SPDRE</b> <i>(1)</i>\n• Trouble grave à l’ordre public <i>(1)</i>\n• Prévention du risque de fugue <i>(1)</i>\n• Élimination d’une cause secondaire <i>(1)</i>\n• IRM cérébrale <i>(2)</i>\n• Toxiques urinaires <i>(2)</i>\n• <b>Bilan pré-thérapeutique</b> <i>(2, PMZ)</i>\n• ECG <i>(2)</i>\n• <b>Chimiothérapie</b> <i>(2, PMZ)</i>\n• Antipsychotique atypique <i>(1)</i>\n• Exemple de molécule <i>(5)</i>\n• Benzodiazépine si agitation <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b> <i>(20 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’instauration et la surveillance d’un traitement par clozapine.</i>",
+          "images": [],
+          "reponseAttendue": "Hospitalisation, instauration de la clozapine avec titration progressive, carnet de clozapine, NFS hebdomadaire pendant 18 semaines puis mensuelle, surveillance du risque d’agranulocytose et de myocardite.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 20 points)</b>\n• Hospitalisation <i>(2)</i>\n• <b>Instauration de clozapine</b> <i>(5)</i>\n• Titration progressive <i>(4)</i>\n• <b>Carnet de clozapine</b> <i>(2, PMZ)</i>\n• NFS hebdomadaire pendant 18 semaines <i>(2)</i>\n• Puis 1 NFS mensuelle <i>(1)</i>\n• Surveillance de l’agranulocytose <i>(2)</i>\n• Surveillance de la myocardite <i>(2)</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2011 - EVCP",
+      "annee": 2011,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/Grille EVCP 2011.pdf",
+      "orderIndex": 2,
+      "vignette": "Mme D., âgée de 47 ans, est hospitalisée au décours d’une tentative de suicide grave par pendaison. Elle est quasi mutique et l’interrogatoire de la famille vous apprend qu’elle aurait déjà eu un épisode de ce type après son premier accouchement ; elle avait alors 23 ans. Elle est mariée depuis l’âge de 21 ans et mère de deux enfants en bonne santé. Elle a maigri de 10 kilos et ne dort quasiment plus depuis une semaine. Son mari l’a retrouvée à plusieurs reprises prostrée dans la cuisine en se levant. Elle évoque une faute qu’elle aurait pu commettre dans le passé mais est peu loquace sur ce sujet. Elle a par ailleurs subi une thyroïdectomie partielle pour un nodule non cancéreux il y a 3 ans.\n\nL’interrogatoire est difficile car la patiente est très anxieuse et assez méfiante. D’après sa famille, elle restait couchée la plus grande partie de la journée depuis maintenant 15 jours, et tout aurait débuté assez brutalement après un court épisode d’euphorie au cours duquel elle aurait dépensé beaucoup d’argent et contracté des dettes auprès de différents magasins de luxe.\n\n<i>Énoncé officiel restitué depuis Annales/Sujets/evcp_2011/EVCP.74.DOC. Le corrigé est une grille de correction : il donne les mots-clés attendus et leur barème.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b> <i>(12 points)</i>\n\nQuel diagnostic retenez-vous pour l’épisode ?",
+          "images": [],
+          "reponseAttendue": "Un épisode dépressif caractérisé, d’intensité sévère, avec caractéristiques mélancoliques et psychotiques, compliqué d’une tentative de suicide, survenant en post-manie.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 12 points)</b>\n• Épisode dépressif caractérisé <i>(3)</i>\n• Intensité sévère <i>(1)</i>\n• Caractéristique mélancolique <i>(2)</i>\n• Caractéristique psychotique <i>(2)</i>\n• <b>Compliqué d’une TS / suicidant</b> <i>(3, PMZ)</i>\n• Post-manie <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b> <i>(14 points)</i>\n\nQuel diagnostic de trouble ou de pathologie retenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un trouble bipolaire de type 1, avec épisode maniaque, épisodes dépressifs, et un épisode survenu dans le post-partum.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 14 points)</b>\n• Trouble bipolaire <i>(3)</i>\n• Type 1 <i>(2)</i>\n• Épisode maniaque <i>(5)</i>\n• Épisodes dépressifs <i>(2)</i>\n• Épisode dans le post-partum <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b> <i>(12 points)</i>\n\nFaut-il hospitaliser la patiente ?",
+          "images": [],
+          "reponseAttendue": "Oui : urgence et haut risque suicidaire, nécessité de soins et de surveillance, épisode sévère avec problème nutritionnel, bilan des complications de la tentative de suicide.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 12 points)</b>\n• Oui <i>(4)</i>\n• <b>Urgence / haut risque suicidaire</b> <i>(2, PMZ)</i>\n• Nécessité de soins et de surveillance <i>(2)</i>\n• Épisode sévère / nutrition <i>(2)</i>\n• Bilan des complications de la TS <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b> <i>(10 points)</i>\n\nQuelle mesure administrative faut-il prendre pour cette patiente en urgence ?",
+          "images": [],
+          "reponseAttendue": "Une sauvegarde de justice, devant le préjudice financier (dettes, dilapidation du capital).",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• <b>Sauvegarde de justice</b> <i>(5)</i>\n• Préjudice financier / dettes / dilapidation du capital <i>(5)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b> <i>(32 points)</i>\n\nAu vu de l’histoire clinique, quel bilan biologique réalisez-vous ?",
+          "images": [],
+          "reponseAttendue": "NFS, ionogramme avec créatinine, bilan hépatique, hémostase (TP, TCA), TSH, exploration d’une anomalie lipidique, glycémie à jeun, calcémie, albumine, pré-albumine, protéinurie des 24 h, bêta-hCG, sérologies VIH, VHC, VHB, TPHA-VDRL.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 32 points)</b>\n• NFS <i>(1)</i>\n• Ionogramme avec créatinine <i>(1)</i>\n• Bilan hépatique <i>(1)</i>\n• Hémostase : TP, TCA <i>(1)</i>\n• <b>TSH</b> <i>(4, PMZ)</i>\n• EAL <i>(1)</i>\n• Glycémie à jeun <i>(1)</i>\n• <b>Calcémie</b> <i>(4, PMZ)</i>\n• <b>Albumine</b> <i>(4, PMZ)</i>\n• Pré-albumine <i>(2)</i>\n• Protéinurie des 24 h <i>(4)</i>\n• <b>Bêta-hCG</b> <i>(4, PMZ)</i>\n• VIH <i>(1)</i> • VHC <i>(1)</i> • VHB <i>(1)</i> • TPHA-VDRL <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b> <i>(10 points)</i>\n\nAprès résolution de l’épisode aigu, quel traitement pharmacologique envisagez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un thymorégulateur : sels de lithium en 1ʳᵉ intention en l’absence de contre-indication, pour la prévention des récidives d’épisode.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Thymorégulateur <i>(2)</i>\n• <b>Sels de lithium</b> <i>(5)</i>\n• 1ʳᵉ intention <i>(1)</i>\n• En l’absence de contre-indication <i>(1)</i>\n• Prévention des récidives d’épisode <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b> <i>(10 points)</i>\n\nAprès résolution de l’épisode aigu, quel autre traitement non pharmacologique envisagez-vous ?",
+          "images": [],
+          "reponseAttendue": "La psychoéducation.",
+          "correctionGenerale": "<b>Psychoéducation</b> <i>(10 points)</i>."
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2013 - EVCF",
+      "annee": 2013,
+      "type": "EVCF",
+      "source": "ANNALES PSYCHIATRIE/EVCF.2013-correction.pdf",
+      "orderIndex": 3,
+      "vignette": "Épreuve de vérification des connaissances fondamentales 2013 de psychiatrie : 10 questions isolées.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nCitez les 3 délires chroniques non schizophréniques.",
+          "images": [],
+          "reponseAttendue": "La psychose hallucinatoire chronique, le délire paranoïaque, la paraphrénie.",
+          "correctionGenerale": "• Psychose hallucinatoire chronique\n• Délire paranoïaque\n• Paraphrénie"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les 5 mécanismes des délires ?",
+          "images": [],
+          "reponseAttendue": "Intuitif, imaginatif, interprétatif, hallucination acoustico-verbale (syndrome d’influence), hallucination intrapsychique (automatisme mental).",
+          "correctionGenerale": "• Intuitif\n• Imaginatif\n• Interprétatif\n• Hallucination acoustico-verbale / syndrome d’influence\n• Hallucination intrapsychique / automatisme mental"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les éléments cliniques caractérisant le trouble schizophrénique ?",
+          "images": [],
+          "reponseAttendue": "Désorganisation intellectuelle, idées délirantes, hallucinations, symptômes négatifs, comportement désorganisé ou catatonie, avec une évolution supérieure à 6 mois.",
+          "correctionGenerale": "• Désorganisation intellectuelle\n• Idées délirantes\n• Hallucinations\n• Symptômes négatifs\n• Comportement désorganisé ou catatonie\n• <b>Évolution > 6 mois</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nCitez 3 antipsychotiques atypiques, de dernière génération.",
+          "images": [],
+          "reponseAttendue": "Rispéridone, olanzapine, quétiapine, aripiprazole, lurasidone, clozapine.",
+          "correctionGenerale": "• Rispéridone\n• Olanzapine\n• Quétiapine\n• Aripiprazole\n• Lurasidone\n• Clozapine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nCitez les 3 principales familles d’antidépresseurs.",
+          "images": [],
+          "reponseAttendue": "Les IMAO, les imipraminiques, les inhibiteurs sélectifs de la recapture (de la sérotonine).",
+          "correctionGenerale": "• IMAO\n• Imipraminiques\n• Inhibiteurs sélectifs de la recapture"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nDéfinition clinique de l’anhédonie.",
+          "images": [],
+          "reponseAttendue": "La perte de la sensation de plaisir lors d’un moment admis comme agréable.",
+          "correctionGenerale": "<b>Perte de la sensation de plaisir lors d’un moment admis comme agréable.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nDécrivez les principaux signes cliniques de l’attaque de panique.",
+          "images": [],
+          "reponseAttendue": "Des signes psychiques, physiques et comportementaux.",
+          "correctionGenerale": "• Psychiques\n• Physiques\n• Comportementaux"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nPTSD (état de stress post-traumatique) : éléments en faveur du diagnostic.",
+          "images": [],
+          "reponseAttendue": "Exposition à un facteur traumatique, évolution supérieure à 1 mois, flash-backs, reviviscences, symptomatologie anxio-dépressive au premier plan, conduites d’évitement.",
+          "correctionGenerale": "• Exposition à un facteur traumatique\n• <b>Évolution > 1 mois</b>\n• Flash-backs\n• Reviviscences\n• Symptomatologie anxio-dépressive au premier plan\n• Conduites d’évitement"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nDéfinition du « craving ».",
+          "images": [],
+          "reponseAttendue": "L’envie impérieuse et/ou obsédante de consommer une substance.",
+          "correctionGenerale": "<b>Envie impérieuse et/ou obsédante de consommer une substance.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nCitez les 2 mesures thérapeutiques essentielles en urgence d’un sevrage alcoolique.",
+          "images": [],
+          "reponseAttendue": "L’hyperhydratation et les benzodiazépines.",
+          "correctionGenerale": "• Hyperhydratation\n• Benzodiazépines"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2013 - EVCP",
+      "annee": 2013,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/Grille EVCP 2013 grille.pdf",
+      "orderIndex": 4,
+      "vignette": "<b>Sujet : adulte</b>\n\nMonsieur X, 23 ans, est amené par les forces de police aux urgences après avoir tenté de dérober une statuette dans la gare TGV en tenant des propos incohérents. Il est semi-mutique, opposant, expliquant qu’il a une mission à accomplir pour sauver la Terre en réparant les Tables de la Loi avec la statuette. « Je les entends », dit-il. « Ils me suivent, ils me parlent dans la tête. Ils veulent que je sauve la Terre. Ils m’envoient des signes. Je sais bien qu’ils parlent entre eux à mon sujet ».\n\nL’entourage contacté nous déclare que Monsieur X n’a aucun antécédent personnel particulier. Gardé aux urgences en observation quelques heures, on constate des moments d’exaltation, avec euphorie et agitation, et d’autres moments où il s’effondre en larmes, en proie à de fortes angoisses et en répétant les propos tenus à l’arrivée.\n\n<i>Énoncé officiel restitué depuis Annales/Sujets/evcp_2013/EVCP.74.DOC. Le corrigé est une grille de correction : il donne les mots-clés attendus et leur barème.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b> <i>(20 points)</i>\n\nQuels sont les 6 éléments sémiologiques essentiels que vous retenez en dehors du délire ? (0 point à la question si plus de 6 items cités)",
+          "images": [],
+          "reponseAttendue": "Alogie, trouble du comportement, apparition brutale, labilité émotionnelle, angoisse, accélération motrice.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 20 points)</b>\n• Alogie <i>(3)</i>\n• Trouble du comportement <i>(4)</i>\n• Apparition brutale <i>(4)</i>\n• Labilité émotionnelle <i>(3)</i>\n• Angoisse <i>(3)</i>\n• Accélération motrice <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b> <i>(10 points)</i>\n\nQuels thèmes délirants retrouvez-vous dans l’observation ?",
+          "images": [],
+          "reponseAttendue": "Mégalomaniaque, mystique, de référence, de persécution, d’influence.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Mégalomaniaque <i>(2)</i>\n• Mystique <i>(2)</i>\n• Référence <i>(2)</i>\n• Persécution <i>(2)</i>\n• Influence <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b> <i>(10 points)</i>\n\nQuels sont les mécanismes de ce délire ?",
+          "images": [],
+          "reponseAttendue": "Hallucination intrapsychique avec automatisme mental, mécanisme imaginatif, mécanisme interprétatif.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Hallucination intrapsychique / automatisme mental <i>(4)</i>\n• Imaginatif <i>(3)</i>\n• Interprétatif <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b> <i>(11 points)</i>\n\nQuel diagnostic retenez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Un trouble psychotique bref : idées délirantes, hallucinations, désorganisation, rupture avec l’état antérieur, avec caractéristique anxieuse et sans idée suicidaire.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 11 points)</b>\n• <b>Trouble psychotique bref</b> <i>(3)</i>\n• Idées délirantes <i>(1)</i>\n• Hallucinations <i>(1)</i>\n• Désorganisation <i>(1)</i>\n• Rupture avec l’état antérieur <i>(1)</i>\n• Caractéristique anxieuse <i>(1)</i>\n• Sans idée suicidaire <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b> <i>(9 points)</i>\n\nQuels sont les 3 diagnostics différentiels à envisager en priorité ? (0 point à la question si plus de 3 items cités)",
+          "images": [],
+          "reponseAttendue": "Un trouble psychotique secondaire à une affection générale, un trouble secondaire à une substance, un trouble thymique — épisode maniaque avec caractéristiques psychotiques.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 9 points)</b>\n• <b>Trouble psychotique secondaire à une affection générale</b> <i>(3, PMZ)</i>\n• <b>Trouble secondaire à une substance</b> <i>(3, PMZ)</i>\n• Trouble thymique, épisode maniaque avec caractéristique psychotique <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b> <i>(10 points)</i>\n\nLes forces de police envisagent d’entendre Monsieur X et sollicitent le praticien hospitalier de garde en réquisition, en posant trois questions :\n• La personne présente-t-elle des troubles mentaux ?\n• Ces troubles mentaux éventuels sont-ils susceptibles d’abolir son discernement au sens de l’article 122-1, alinéa 1 du Code pénal ?\n• L’intéressé relève-t-il de soins en psychiatrie, et selon quelles modalités ?\n\nRépondez aux 3 questions de la réquisition.",
+          "images": [],
+          "reponseAttendue": "Oui, oui, oui : le patient relève de soins en unité spécialisée fermée, sur le secteur du patient, en soins à la demande d’un représentant de l’État, avec un seul certificat médical, non établi par un médecin de l’établissement d’accueil, et un arrêté préfectoral.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Oui <i>(1)</i>\n• Oui <i>(1)</i>\n• Oui <i>(2)</i>\n• Unité spécialisée fermée <i>(1)</i>\n• Secteur du patient <i>(2)</i>\n• <b>Soins à la demande d’un représentant de l’État</b> <i>(1)</i>\n• 1 certificat médical, pas d’un médecin de l’établissement d’accueil <i>(1)</i>\n• Arrêté préfectoral <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b> <i>(20 points)</i>\n\nQuel traitement médicamenteux proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un traitement antiproductif par antipsychotique atypique (citer une molécule), après bilan pré-thérapeutique ; une benzodiazépine (citer une molécule) si angoisse ou agitation ; un apparenté aux benzodiazépines si insomnie ; une surveillance de l’efficacité et de la tolérance.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 20 points)</b>\n• Antiproductif <i>(3)</i>\n• <b>Antipsychotique atypique</b> <i>(5)</i>\n• Exemple de molécule <i>(2)</i>\n• Après bilan pré-thérapeutique <i>(1)</i>\n• Benzodiazépine <i>(3)</i>\n• Exemple de molécule <i>(1)</i>\n• Si angoisse ou agitation <i>(1)</i>\n• Apparenté aux benzodiazépines si insomnie <i>(1)</i>\n• Surveillance <i>(1)</i>\n• Efficacité et tolérance <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b> <i>(10 points)</i>\n\nQuelles sont les évolutions possibles de cet épisode ?",
+          "images": [],
+          "reponseAttendue": "Résolution complète, récidive, chronicisation, schizophrénie, bipolarité, trouble schizophréniforme.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Résolution complète <i>(2)</i>\n• Récidive <i>(2)</i>\n• Chronicisation <i>(1)</i>\n• Schizophrénie <i>(1)</i>\n• Bipolarité <i>(1)</i>\n• Trouble schizophréniforme <i>(1)</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2014 - EVCP",
+      "annee": 2014,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/Grille EVCP 2014.pdf",
+      "orderIndex": 5,
+      "vignette": "<i>Le sujet officiel EVCP 2014 n’est pas présent dans le dépôt : ce document est une grille de correction, qui ne donne que les mots-clés attendus et leur barème, sans l’énoncé du cas ni les intitulés des questions. D’après les mots-clés, il s’agit d’un épisode dépressif caractérisé mélancolique et psychotique compliqué d’une tentative de suicide, relevant d’une électroconvulsivothérapie.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 1</b> <i>(10 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le diagnostic de l’épisode.</i>",
+          "images": [],
+          "reponseAttendue": "Un épisode dépressif caractérisé, avec symptômes psychotiques, à caractéristiques mélancoliques, avec idées suicidaires.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Épisode dépressif caractérisé <i>(4)</i>\n• Symptômes psychotiques <i>(2)</i>\n• Caractéristiques mélancoliques <i>(2)</i>\n• Avec idées suicidaires <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’analyse sémiologique du tableau.</i>",
+          "images": [],
+          "reponseAttendue": "Anhédonie, asthénie, perte de poids, insomnie, humeur aréactive, délire polymorphe, mécanisme intuitif, thème de persécution, mécanismes multiples, mécanisme hallucinatoire avec hallucinations acoustico-verbales, délire non systématisé, anhédonie généralisée ou athymhormie, culpabilité, perte de poids importante.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points, 1 point par item)</b>\n• Anhédonie\n• Asthénie\n• Perte de poids\n• Insomnie\n• Humeur aréactive\n• Délire polymorphe\n• Intuitif\n• Persécution\n• Mécanismes multiples\n• Hallucinatoire / HAV\n• Non systématisé\n• Anhédonie généralisée / athymhormie\n• Culpabilité\n• Perte de poids importante"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3</b> <i>(12 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur la complication à redouter.</i>",
+          "images": [],
+          "reponseAttendue": "La tentative de suicide, du fait d’un épisode dépressif caractérisé sévère, mélancolique et psychotique.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 12 points)</b>\n• <b>Tentative de suicide</b> <i>(6)</i>\n• Car EDC sévère <i>(2)</i>\n• Mélancolique <i>(2)</i>\n• Psychotique <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 4</b> <i>(18 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les diagnostics différentiels et les évolutions possibles.</i>",
+          "images": [],
+          "reponseAttendue": "Pathologie neurologique, pathologie endocrinienne, épisode dépressif caractérisé, manie, épisode psychotique bref, tentative de suicide ; évolutions vers un EDC, une schizophrénie, un trouble bipolaire, une tentative de suicide ou un suicide.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 18 points)</b>\n• Pathologie neurologique <i>(1)</i>\n• Pathologie endocrinienne <i>(1)</i>\n• EDC <i>(2)</i>\n• Manie <i>(2)</i>\n• Épisode psychotique bref <i>(1)</i>\n• <b>Tentative de suicide</b> <i>(3)</i>\n• EDC <i>(1)</i>\n• Schizophrénie <i>(1)</i>\n• Trouble bipolaire <i>(1)</i>\n• TS <i>(2)</i>\n• Suicide <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 5</b> <i>(8 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les modalités d’hospitalisation.</i>",
+          "images": [],
+          "reponseAttendue": "Une hospitalisation en urgence, sous contrainte en secteur fermé, en soins à la demande d’un tiers, avec traitement sédatif.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 8 points)</b>\n• Hospitalisation en urgence <i>(2)</i>\n• Sous contrainte / secteur fermé <i>(2)</i>\n• <b>SDT</b> <i>(2)</i>\n• Traitement sédatif <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 6</b> <i>(22 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le traitement médicamenteux.</i>",
+          "images": [],
+          "reponseAttendue": "Un antidépresseur de type IRSNa ou tricyclique (citer une molécule), un antipsychotique atypique (citer une molécule), un traitement sédatif et un traitement hypnotique.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 22 points)</b>\n• <b>Antidépresseur</b> <i>(5)</i>\n• IRSNa ou tricyclique <i>(3)</i>\n• Exemple de molécule <i>(2)</i>\n• <b>Antipsychotique atypique</b> <i>(5)</i>\n• Exemple de molécule <i>(2)</i>\n• Traitement sédatif <i>(2)</i>\n• Traitement hypnotique <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 7</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’indication d’une électroconvulsivothérapie.</i>",
+          "images": [],
+          "reponseAttendue": "L’électroconvulsivothérapie, après bilan pré-thérapeutique, en raison du pronostic vital engagé et de l’échec des traitements médicamenteux.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• <b>ECT</b> <i>(8)</i>\n• Après bilan pré-thérapeutique <i>(3)</i>\n• Pronostic vital engagé <i>(2)</i>\n• Échec des traitements médicamenteux <i>(2)</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2015 - EVCP",
+      "annee": 2015,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/EVCP 2015-grille.pdf",
+      "orderIndex": 6,
+      "vignette": "Thérèse, 68 ans, est adressée au Centre Médico-Psychologique par son médecin traitant parce que, depuis 2 mois, elle reste au lit toute la journée. Elle qui était habituellement très active ne s’intéresse plus à rien. Elle a perdu plusieurs kilos, dort très mal (se réveille à 3 heures du matin sans pouvoir se rendormir) et dit « qu’elle n’est plus bonne à rien ! ». Alors qu’elle aime ses 2 filles et ses 3 petits-enfants, elle dit ne plus être capable de les garder le mercredi et redoute leur visite. Elle est chroniquement constipée mais cela ne l’inquiète plus parce qu’elle pense « ne plus avoir d’intestin ».\n\n<i>Énoncé officiel restitué depuis Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.74.DOC, question n° 3 de l’épreuve. Le corrigé est une grille de correction : il donne les mots-clés attendus et leur barème.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-1</b> <i>(20 points)</i>\n\nQuels sont les diagnostics que vous évoquez devant ce tableau clinique ? Sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Un épisode dépressif caractérisé, un trouble de l’humeur, un trouble psychotique, une cause organique ou secondaire (cancer, dysthyroïdie, prise de toxiques), ou l’entrée dans un processus démentiel.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 20 points)</b>\n• Épisode dépressif caractérisé <i>(3)</i>\n• Trouble de l’humeur <i>(2)</i>\n• Trouble psychotique <i>(2)</i>\n• Organique / secondaire <i>(3)</i>\n• Cancer <i>(2)</i>\n• Dysthyroïdie <i>(3)</i>\n• Prise de toxiques <i>(2)</i>\n• Entrée dans un processus démentiel <i>(3)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-2</b> <i>(15 points)</i>\n\nQuels autres symptômes recherchez-vous pour étayer votre (ou vos) diagnostic(s) ?",
+          "images": [],
+          "reponseAttendue": "Des idées suicidaires, une idée d’immortalité, une culpabilité, une incurabilité, un déni d’organe, des hallucinations.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• <b>Idées suicidaires</b> <i>(5, PMZ)</i>\n• Immortalité <i>(2)</i>\n• Culpabilité <i>(2)</i>\n• Incurabilité <i>(2)</i>\n• Déni d’organe <i>(2)</i>\n• Hallucination <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-3</b> <i>(10 points)</i>\n\nLe mari, interrogé sur les antécédents pathologiques, rapporte qu’elle a toujours été en bonne santé, mais que l’année dernière son médecin généraliste avait dû lui donner des calmants car elle était très énervée et irritable, ne dormait plus du tout, s’habillait de manière excentrique et dépensait beaucoup d’argent par rapport à leur petite retraite.\n\nQuel diagnostic évoquez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un trouble bipolaire de type 2 : épisode dépressif caractérisé avec antécédent d’hypomanie.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• <b>Trouble bipolaire</b> <i>(4)</i>\n• Type 2 <i>(2)</i>\n• EDC <i>(2)</i>\n• Antécédent d’hypomanie <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-4</b> <i>(15 points)</i>\n\nCette patiente refuse d’être hospitalisée car elle pense que cela ne servirait à rien. Que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Recueillir le consentement ; à défaut, hospitalisation sous contrainte en soins à la demande d’un tiers, la patiente étant atteinte de troubles mentaux, nécessitant des soins, et incapable de donner son consentement.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• Consentement <i>(3)</i>\n• Sous contrainte <i>(3)</i>\n• <b>SDT</b> <i>(3)</i>\n• Atteinte de troubles mentaux <i>(2)</i>\n• Nécessité de soins <i>(2)</i>\n• Incapable de donner son consentement <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-5</b> <i>(10 points)</i>\n\nQuelles explorations paracliniques recommandez-vous ?",
+          "images": [],
+          "reponseAttendue": "TSH, ionogramme, calcémie, IRM cérébrale, sérologies VHB et VHC, TPHA-VDRL, VIH, albumine, exploration d’une anomalie lipidique, ECG.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points, 1 point par item)</b>\n• TSH\n• Ionogramme\n• Calcémie\n• IRM cérébrale\n• Sérologies VHB, VHC\n• TPHA-VDRL\n• VIH\n• Albumine\n• EAL\n• ECG"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question 3-6</b> <i>(30 points)</i>\n\nQuels sont les grands principes de la prise en charge thérapeutique pour cette patiente, à court et à moyen terme ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation avec prévention de la fugue (pyjama) et prévention du risque suicidaire (inventaire) ; chimiothérapie par thymorégulateur, antipsychotique atypique, sédatif ou hypnotique ; psychothérapie de type TCC ; MDPH et ALD 30, allocation personnalisée d’autonomie ; suivi en CMP et psychoéducation.",
+          "correctionGenerale": "<b>Mots-clés attendus (barème sur 30 points)</b>\n• Hospitalisation <i>(4)</i>\n• Prévention de la fugue / pyjama <i>(2)</i>\n• <b>Prévention du risque suicidaire / inventaire</b> <i>(3, PMZ)</i>\n• Chimiothérapie <i>(2)</i>\n• Thymorégulateur <i>(3)</i>\n• Antipsychotique atypique <i>(2)</i>\n• Sédatif / hypnotique <i>(1)</i>\n• Psychothérapie <i>(2)</i>\n• TCC <i>(2)</i>\n• MDPH / ALD 30 <i>(2)</i>\n• Allocation personne âgée <i>(2)</i>\n• CMP <i>(2)</i>\n• Psychoéducation <i>(3)</i>\n\n<i>Correction proposée par Boichot Flavien.</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Psychiatrie - 2018 - EVCP - Sujet 2",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES PSYCHIATRIE/Grille EVCP 2018.pdf",
+      "orderIndex": 7,
+      "vignette": "Monsieur G., 68 ans, dirigeant d’une PME, marié, 3 enfants, consulte en raison d’une fatigue importante « liée au travail », apparue progressivement dans les suites d’un plan social qu’il a dû organiser. Son épouse est inquiète : elle note que son mari ne « dort plus bien du tout », se réveillant très tôt le matin, avec « un moral vraiment bas ». Le patient reconnaît également que son appétit est réduit, qu’il a perdu 3 kilos le dernier mois. Il insiste sur sa grande fatigue, ainsi que sur un manque d’entrain et de plaisir à poursuivre ses loisirs, notamment le tennis hebdomadaire qu’il a abandonné depuis plusieurs semaines. De plus, il nous fait part d’une grande difficulté à se concentrer et d’oublis répétés, ce qui l’inquiète beaucoup. Il est en arrêt de travail depuis quinze jours.\n\n<i>Énoncé officiel restitué depuis Annales/Sujets/2018_EVCP.pdf, section PSYCHIATRIE (code 74). Le corrigé est une liste de pointage : il donne les réponses attendues et leur barème.</i>",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b> <i>(11 points)</i>\n\nQuel est le premier diagnostic à évoquer ?",
+          "images": [],
+          "reponseAttendue": "Un épisode dépressif caractérisé, d’intensité sévère, sans symptôme psychotique et sans idée suicidaire.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 11 points)</b>\n• <b>Épisode dépressif caractérisé</b> <i>(5)</i>\n• Intensité sévère <i>(3)</i>\n• Sans symptôme psychotique <i>(2)</i>\n• Sans idée suicidaire <i>(1)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b> <i>(20 points)</i>\n\nSur quels éléments cliniques retrouvés dans le texte fondez-vous cette hypothèse diagnostique (symptômes CIM-10 ou équivalent) ?",
+          "images": [],
+          "reponseAttendue": "Asthénie, réveils précoces, tristesse, hypoxie (anergie), amaigrissement, aboulie, anhédonie, troubles cognitifs, troubles de la concentration, anxiété.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 20 points, 2 points par item)</b>\n• Asthénie\n• Réveils précoces\n• Tristesse\n• Anergie\n• Amaigrissement\n• Aboulie\n• Anhédonie\n• Troubles cognitifs\n• Troubles de la concentration\n• Anxiété"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b> <i>(9 points)</i>\n\nQuel(s) antécédent(s) psychiatrique(s) personnel(s) de troubles de l’humeur recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "Un épisode dépressif, un épisode hypomaniaque, un épisode maniaque.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 9 points, 3 points par item)</b>\n• Épisode dépressif\n• Épisode hypomaniaque\n• Épisode maniaque"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b> <i>(10 points)</i>\n\nLe patient se plaint de troubles de concentration et d’oublis répétés : quel autre diagnostic différentiel évoquez-vous en premier lieu ? Quel instrument clinique de dépistage utiliserez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une pathologie neurodégénérative de type maladie d’Alzheimer ; instrument de dépistage : le Mini Mental State.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 10 points)</b>\n• Pathologie neurodégénérative type maladie d’Alzheimer <i>(5)</i>\n• <b>Mini Mental State</b> <i>(5)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b> <i>(10 points)</i>\n\nCitez 5 étiologies somatiques susceptibles de produire un tableau clinique identique à celui présenté par le patient.",
+          "images": [],
+          "reponseAttendue": "Entrée dans un processus démentiel, pathologie endocrinienne (dysthyroïdie, hypercorticisme), néoplasie, syndrome d’apnées obstructives du sommeil, toxiques (alcool).",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 10 points, 2 points par item)</b>\n• Entrée dans un processus démentiel\n• Pathologie endocrinienne : dysthyroïdie, hypercorticisme\n• Néoplasie\n• Syndrome d’apnées obstructives du sommeil\n• Toxiques : alcool"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b> <i>(10 points)</i>\n\nQuel est le risque évolutif majeur à court terme de cette situation clinique ? Concernant ce risque, pouvez-vous citer un facteur augmentant ce risque et un facteur le réduisant, parmi les caractéristiques démographiques et sociales de ce patient ?",
+          "images": [],
+          "reponseAttendue": "Le risque suicidaire, du fait d’un épisode dépressif caractérisé sévère ; facteur favorisant : le travail et le plan social ; facteur protecteur : son épouse.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 10 points)</b>\n• <b>Risque suicidaire</b> <i>(4)</i>\n• Car EDC sévère <i>(1)</i>\n• Facteur favorisant : travail, plan social <i>(2)</i>\n• Facteur protecteur : épouse <i>(2)</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b> <i>(30 points)</i>\n\nQuels sont les points clés de la prise en charge de ce patient, dans l’hypothèse du diagnostic principal évoqué à la question 1 ?",
+          "images": [],
+          "reponseAttendue": "Hospitalisation ; bilan paraclinique pour éliminer une cause secondaire, avec IRM cérébrale ; antidépresseur de type IRS ou IRSNa (citer une molécule) ; anxiolyse et hypnotique ; TCC ; suivi en CMP.",
+          "correctionGenerale": "<b>Réponses attendues (barème sur 30 points)</b>\n• Hospitalisation <i>(4)</i>\n• <b>Bilan paraclinique pour éliminer une cause secondaire</b> <i>(5)</i>\n• IRM cérébrale <i>(1)</i>\n• <b>Antidépresseurs IRS ou IRSNa</b> <i>(5)</i>\n• Exemple de molécule <i>(3)</i>\n• Anxiolyse / hypnotique <i>(2)</i>\n• TCC <i>(4)</i>\n• CMP <i>(5)</i>"
+        }
+      ]
+    }
+  ]
+}

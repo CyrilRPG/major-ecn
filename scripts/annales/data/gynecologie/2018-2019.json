@@ -1,0 +1,362 @@
+{
+  "sources": {
+    "ANNALES GYNECOLOGIE/annale 2018.pdf": {
+      "atelier": "annales-gynecologie/annale-2018",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {},
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2018 : deux cas de connaissances fondamentales et deux sujets de connaissances pratiques."
+    },
+    "ANNALES GYNECOLOGIE/annales 2019 GYNECO.pdf": {
+      "atelier": "annales-gynecologie/annales-2019-gyneco",
+      "sujetOfficiel": null,
+      "figuresIgnorees": {
+        "img-026-110.png": "aplat blanc de la mise en page de la diapositive, sans contenu",
+        "img-034-143.png": "logo du CNGOF figurant en pied de diapositive, sans contenu médical"
+      },
+      "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2019 : deux sujets pratiques, un cas d’hémorragie du post-partum, puis deux séries de questions isolées."
+    }
+  },
+  "series": [
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2018 - EVCF - Cas 1",
+      "annee": 2018,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/annale 2018.pdf",
+      "orderIndex": 10,
+      "vignette": "Mademoiselle M., âgée de 30 ans, primigeste, consulte à 31 semaines d’aménorrhée pour la visite du 7ᵉ mois. Jusqu’à présent la grossesse s’est déroulée normalement. Les mouvements actifs du fœtus sont bien perçus et la patiente n’a pas de contraction utérine.\n\nElle se plaint de céphalées apparues il y a environ 3 jours, sans fièvre ni vomissement associé. Ces céphalées résistent aux antalgiques habituels et la patiente n’est pas connue comme étant migraineuse.\n\nÀ l’examen, vous observez des œdèmes importants diffus prédominant au niveau des membres inférieurs et de la face. La patiente a pris 7 kilos depuis la dernière consultation du 6ᵉ mois. La tension artérielle, mesurée au repos et après contrôle, est à 160/110 mmHg.\n\nAu toucher vaginal, le col est long, fermé, la présentation est haute. La hauteur utérine est mesurée à 24 cm. Les bruits du cœur fœtaux sont bien perçus. À la bandelette urinaire on observe une protéinurie à 3 croix, sans signe d’infection urinaire associée.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nVous diagnostiquez une pré-éclampsie. Quelle est la définition de cette pathologie ?",
+          "images": [],
+          "reponseAttendue": "Une hypertension artérielle gravidique, systolique ≥ 140 mmHg et/ou diastolique ≥ 90 mmHg, associée à une protéinurie ≥ 0,3 g/24 h ou 0,3 g/g, survenant après 20 SA.",
+          "correctionGenerale": "• Hypertension artérielle gravidique systolique ≥ 140 mmHg et/ou diastolique ≥ 90 mmHg\n• + protéinurie ≥ 0,3 g/24 h ou 0,3 g/g\n• > 20 SA"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les critères de gravité présents chez cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Les céphalées persistantes.",
+          "correctionGenerale": "<b>Céphalées persistantes.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nVous recherchez d’autres signes maternels cliniques de gravité. Citez cinq de ces critères.",
+          "images": ["annales-gynecologie/annale-2018/figures/recadre/img-005-020.png"],
+          "reponseAttendue": "Une détresse respiratoire, un œdème aigu du poumon, une barre épigastrique, un déficit neurologique, des troubles de la conscience, des réflexes ostéo-tendineux vifs, diffusés et polycinétiques.",
+          "correctionGenerale": "• Détresse respiratoire\n• OAP\n• Barre épigastrique\n• Déficit neurologique\n• Troubles de la conscience\n• ROT vifs, diffusés, polycinétiques\n\n<i>Cf. RPC 2020, reproduites ci-dessus : PAS ≥ 180 mmHg et/ou PAD ≥ 120 mmHg ; douleur épigastrique et/ou de l’hypochondre droit « en barre » ; céphalées intenses et rebelles ; troubles visuels ou auditifs ; déficit neurologique ; troubles de la conscience ; ROT vifs et polycinétiques ; crise d’éclampsie ; détresse respiratoire ; œdème aigu du poumon ; HELLP syndrome ; insuffisance rénale aiguë.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuel bilan biologique demandez-vous pour cette patiente ?",
+          "images": [],
+          "reponseAttendue": "Un bilan vasculo-rénal : NFS-plaquettes, bilan hépatique (TGO, TGP soit ASAT, ALAT), ionogramme et créatinine, LDH, haptoglobine, schizocytes, protéinurie sur créatininurie, bilan de coagulation (fibrinogène, TP, TCA), groupe sanguin si pas de carte et RAI.",
+          "correctionGenerale": "<b>Bilan vasculo-rénal</b>\n• NFS-plaquettes\n• Bilan hépatique : TGO, TGP (ALAT, ASAT)\n• Ionogramme, créatinine\n• LDH, haptoglobine, schizocytes\n• Protéinurie/créatininurie\n• Bilan de coagulation : fibrinogène, TP, TCA\n• Groupe sanguin si pas de carte, RAI"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nCitez 4 signes biologiques de gravité de la pré-éclampsie.",
+          "images": [],
+          "reponseAttendue": "Le HELLP syndrome (hémolyse, cytolyse hépatique, thrombopénie) et l’insuffisance rénale aiguë avec créatininémie supérieure à 96 µmol/L.",
+          "correctionGenerale": "<b>HELLP syndrome</b>\n• Hémolyse\n• Cytolyse hépatique\n• Thrombopénie\n\n<b>Insuffisance rénale aiguë</b> : créatininémie > 96 µmol/L"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nVous faites une échographie fœtale en urgence : que recherchez-vous ?",
+          "images": [],
+          "reponseAttendue": "La présentation, en vue d’un possible accouchement ; la quantité de liquide, à la recherche d’un oligoamnios ; la position du placenta et un hématome rétroplacentaire ; l’estimation du poids fœtal, à la recherche d’un probable RCIU d’origine vasculaire (hauteur utérine à 24 cm) ; la mesure des dopplers fœtaux : ombilical (recherche d’une résistance voire d’une diastole nulle), cérébral moyen (inversion cérébro-placentaire) et éventuellement Arantius (onde A négative) si les autres dopplers sont pathologiques.",
+          "correctionGenerale": "• <b>Présentation</b> : en vue d’un possible accouchement\n• <b>Quantité de liquide</b> : recherche d’un oligoamnios\n• <b>Position du placenta</b>, hématome rétroplacentaire\n• <b>Estimation du poids fœtal</b> : recherche d’un probable RCIU d’origine vasculaire (HU 24 cm)\n• <b>Mesure des dopplers fœtaux</b> : DO (recherche de résistance voire de diastole nulle), ACM (inversion cérébro-placentaire), ± Arantius (onde A négative) si les autres dopplers sont pathologiques"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nLe HELLP syndrome est constitué de l’association de trois phénomènes biologiques. Citez ces trois phénomènes et indiquez leur traduction biologique.",
+          "images": [],
+          "reponseAttendue": "L’hémolyse (anémie avec LDH augmentées, haptoglobine effondrée, présence de schizocytes), la cytolyse hépatique (augmentation des TGO et TGP, soit ASAT et ALAT) et la thrombopénie.",
+          "correctionGenerale": "<b>HELLP syndrome</b>\n• <b>Hémolyse</b> : anémie avec LDH augmentées, haptoglobine effondrée, présence de schizocytes\n• <b>Cytolyse hépatique</b> : augmentation des TGO, TGP (ASAT, ALAT)\n• <b>Thrombopénie</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nUne heure après son arrivée, la patiente appelle pour un saignement vaginal rouge vif associé à une douleur abdomino-pelvienne intense. L’utérus est dur et ne se relâche pas. La TA est à 180/120 mmHg malgré le traitement.\n\nL’enregistrement cardiotocographique présente deux anomalies : lesquelles ?",
+          "images": ["annales-gynecologie/annale-2018/figures/img-010-041.jpg"],
+          "reponseAttendue": "Un ralentissement prolongé et une hypertonie, avec diminution de la variabilité et perte des accélérations : un profil d’hypoxie aiguë.",
+          "correctionGenerale": "• Ralentissement prolongé\n• Hypertonie\n• Diminution de la variabilité, perte des accélérations\n\n→ <b>Profil d’hypoxie aiguë</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nQuel est le diagnostic le plus probable dans ce contexte ? Argumentez.",
+          "images": [],
+          "reponseAttendue": "Un hématome rétroplacentaire dans un contexte de pré-éclampsie sévère (HELLP syndrome) et précoce (< 32 SA) : présence de métrorragies, contractilité et douleur utérines, ralentissement prolongé et hypertonie réalisant un profil d’hypoxie aiguë.",
+          "correctionGenerale": "<b>Hématome rétroplacentaire</b> dans un contexte de pré-éclampsie sévère (HELLP syndrome) et précoce (< 32 SA)\n• Présence de métrorragies\n• Contractilité utérine et douleur utérine\n• Ralentissement prolongé, hypertonie : profil d’hypoxie aiguë"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelle prise en charge obstétricale proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une césarienne en urgence, code rouge, sous anesthésie générale, avec appel de l’ensemble de l’équipe (obstétricien, anesthésiste et pédiatre) ; sulfate de magnésium dans le contexte de HELLP syndrome à visée maternelle, sans le temps de la dose de charge à visée fœtale ; poursuite du traitement antihypertenseur ; surveillance maternelle rapprochée en post-partum.",
+          "correctionGenerale": "• <b>Césarienne en urgence, code rouge</b>\n• Sous anesthésie générale\n• Appel de l’ensemble de l’équipe : obstétricien, anesthésiste et pédiatre\n• <b>Sulfate de magnésium</b> dans le contexte de HELLP syndrome, à visée maternelle (pas le temps de la dose de charge à visée fœtale)\n• Poursuite du traitement antihypertenseur\n• Surveillance maternelle rapprochée en post-partum"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2018 - EVCF - Cas 2",
+      "annee": 2018,
+      "type": "EVCF",
+      "source": "ANNALES GYNECOLOGIE/annale 2018.pdf",
+      "orderIndex": 11,
+      "vignette": "Mme E., 60 ans, se présente à votre consultation parce qu’elle a senti une « boule » dans le sein.\n\nDans ses antécédents, on retrouve une ménarche à 9 ans, une ménopause depuis l’âge de 52 ans, un accouchement normal par voie basse en 1987 d’un enfant de 3500 g qu’elle n’a pas allaité. Mme E. est sous traitement hormonal substitutif depuis 6 ans. Elle vous ramène l’examen ci-après, prescrit par son médecin traitant qui a anticipé la mammographie de dépistage. Plusieurs membres de sa famille ont été soignés pour des cancers du sein.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nDécrivez le cliché. Que vous manque-t-il pour une description précise de l’image ?",
+          "images": ["annales-gynecologie/annale-2018/figures/img-013-054.jpg"],
+          "reponseAttendue": "Une mammographie, cliché de face, montrant une opacité spiculée dans un sein de forte densité. Il manque le cliché oblique et le sein controlatéral.",
+          "correctionGenerale": "• Mammographie : cliché de face\n• <b>Opacité spiculée</b>\n• Forte densité du sein\n\n<b>Il manque</b> : le cliché oblique et le sein controlatéral."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLe compte rendu du radiologue conclut en décrivant un aspect ACR 4. Que faites-vous en cas d’ACR 4 ?",
+          "images": [],
+          "reponseAttendue": "Une microbiopsie, éventuellement sous guidage échographique.",
+          "correctionGenerale": "<b>Microbiopsie</b> ± guidage échographique."
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nQuels aspects cliniques pourraient évoquer un cancer inflammatoire du sein ?",
+          "images": [],
+          "reponseAttendue": "Un aspect de peau inflammatoire, rouge, en peau d’orange, un aspect de mastite carcinomateuse, une douleur.",
+          "correctionGenerale": "• Aspect de la peau inflammatoire, rouge, aspect de peau d’orange\n• Aspect de mastite carcinomateuse\n• Douleur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nVous demandez au radiologue une échographie mammaire et axillaire. L’image est visible en échographie. Une adénopathie axillaire est visualisée en échographie.\n\nComment confirmez-vous votre diagnostic ?",
+          "images": [],
+          "reponseAttendue": "Par une cytoponction ganglionnaire.",
+          "correctionGenerale": "<b>Cytoponction ganglionnaire.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVotre diagnostic de cancer du sein est confirmé. Quels sont les deux types histologiques de cancer du sein les plus fréquents ?",
+          "images": [],
+          "reponseAttendue": "Le carcinome canalaire et le carcinome lobulaire.",
+          "correctionGenerale": "• Canalaire\n• Lobulaire"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nIl s’agit d’un cancer infiltrant de 1 cm sans envahissement ganglionnaire. Quel bilan d’extension demandez-vous ?",
+          "images": [],
+          "reponseAttendue": "Pas de bilan d’extension.",
+          "correctionGenerale": "<b>Pas de bilan d’extension.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nCitez 5 facteurs histo-pronostiques que vous recherchez sur le compte rendu d’une biopsie.",
+          "images": [],
+          "reponseAttendue": "Les récepteurs hormonaux (œstrogène, progestérone), HER2, le grade de la tumeur, les emboles vasculaires, le Ki-67, le type histologique.",
+          "correctionGenerale": "• Récepteurs hormonaux : œstrogène, progestérone\n• HER2\n• Grade de la tumeur\n• Emboles vasculaires\n• Ki-67\n• Type histologique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nAprès avoir discuté du dossier en RCP, il est proposé une tumorectomie large avec prélèvement du ganglion sentinelle. Vous expliquez à votre patiente ces propositions, qui sont retenues. Sur la pièce opératoire il est indiqué la présence d’une tumeur canalaire invasive de 1 cm de diamètre, entourée d’une lésion de carcinome canalaire in situ. La marge de sécurité est de 8 mm pour le cancer invasif et la tranche de section est au contact de la lésion pour la composante in situ.\n\nQue proposez-vous à la patiente ?",
+          "images": [],
+          "reponseAttendue": "Une reprise chirurgicale pour élargissement du côté de la composante in situ.",
+          "correctionGenerale": "<b>Reprise chirurgicale pour élargissement du côté de la composante in situ.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nAu cours de l’hospitalisation, une cousine éloignée de la patiente vous téléphone afin d’avoir de ses nouvelles. Elle voudrait savoir « ce qu’il en est ». Que lui répondez-vous et que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Pas de nouvelles par téléphone : la seule personne qui peut avoir des nouvelles en direct est la personne de confiance. Je lui conseille d’appeler directement sa cousine.",
+          "correctionGenerale": "• <b>Pas de nouvelles par téléphone</b>\n• La seule personne qui peut avoir des nouvelles en direct est la <b>personne de confiance</b>\n• Je lui conseille d’appeler directement sa cousine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nAu vu de l’incidence élevée des cancers dans la famille de la patiente, vous demandez l’avis d’un généticien. La recherche génétique objective une mutation BRCA1 chez la patiente.\n\nAprès avoir traité le cancer du sein de votre patiente, comment organisez-vous la surveillance et la prévention du cancer du sein et de l’ovaire ?",
+          "images": [],
+          "reponseAttendue": "Consultation d’oncogénétique pour elle et sa famille ; proposition de chirurgie prophylactique (mastectomie bilatérale et annexectomie bilatérale) ; en cas de refus de la chirurgie prophylactique : examen clinique sénologique tous les 6 mois, examen gynécologique annuel, mammographie et échographie bilatérales avec exploration des aires axillaires une fois par an, IRM mammaire une fois par an.",
+          "correctionGenerale": "• <b>Consultation d’oncogénétique</b> pour elle et sa famille\n• Proposition de <b>chirurgie prophylactique</b> : mastectomie bilatérale et annexectomie bilatérale\n• <b>Si refus de la chirurgie prophylactique</b>\n  – Examen clinique sénologique 1 fois tous les 6 mois\n  – Examen gynécologique annuel\n  – Mammographie et échographie bilatérales et des aires axillaires 1 fois par an\n  – IRM mammaire 1 fois par an"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nLa fille de la patiente, qui a 30 ans, est également porteuse de la mutation. Elle n’a jamais souffert de cancer du sein. Autorisez-vous une contraception œstroprogestative ?",
+          "images": [],
+          "reponseAttendue": "Oui.",
+          "correctionGenerale": "<b>OUI.</b>\n\n<i>Source : INCa, plaquette « Femmes porteuses d’une mutation de BRCA1 ou BRCA2 ».</i>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2018 - EVCP - Sujet 1",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/annale 2018.pdf",
+      "orderIndex": 12,
+      "vignette": "Madame G., âgée de 34 ans, n’a pas d’antécédent notable hormis une appendicectomie par cœlioscopie à l’âge de 18 ans. Elle pèse 60 kg pour 1,75 m. Son groupe sanguin est A rhésus positif. Elle se présente pour son échographie du 1ᵉʳ trimestre à 13 SA + 4 jours.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nL’échographie montre qu’il s’agit d’une grossesse gémellaire. Précisez la chorionicité par rapport au cliché suivant. Quel est le signe échographique ici présent, évocateur de ce type de placentation ?",
+          "images": ["annales-gynecologie/annale-2018/figures/img-026-107.jpg"],
+          "reponseAttendue": "Une grossesse gémellaire bichoriale biamniotique, avec le signe du lambda.",
+          "correctionGenerale": "• <b>Grossesse gémellaire bichoriale biamniotique</b>\n• <b>Signe du lambda</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nPrécisez le rythme de la surveillance clinique avec le gynécologue-obstétricien ainsi que le rythme des échographies obstétricales pour ce type de grossesse gémellaire.",
+          "images": [],
+          "reponseAttendue": "Un suivi clinique et échographique une fois par mois.",
+          "correctionGenerale": "<b>Suivi clinique et échographique une fois par mois.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nMadame G. se présente aux urgences gynécologiques d’une maternité de type 1 à 29 SA + 6 jours pour des contractions utérines douloureuses depuis 2 heures. Elle ne rapporte pas de perte de liquide amniotique ou de saignement. Les mouvements actifs fœtaux sont bien perçus.\n\nDécrivez votre examen clinique aux urgences obstétricales.",
+          "images": [],
+          "reponseAttendue": "Prise des constantes, palpation abdominale (hauteur utérine, recherche de contractions utérines, présentation de J1), toucher vaginal, examen au spéculum (liquide amniotique ? métrorragies ? ± test de rupture), écoute des bruits du cœur fœtaux.",
+          "correctionGenerale": "• Prise des constantes\n• Palpation abdominale : HU, recherche de contractions utérines, présentation de J1\n• TV\n• Spéculum : liquide amniotique ? métrorragies ? ± test de rupture\n• BCF"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nQuels examens paracliniques demandez-vous d’emblée ?",
+          "images": [],
+          "reponseAttendue": "Un ERCF ; une biologie (NFS, CRP, prélèvement vaginal, ECBU) ; une échographie (présentation des jumeaux, quantité de liquide, placentas, estimation des poids fœtaux, mesure du col par voie endovaginale).",
+          "correctionGenerale": "• <b>ERCF</b>\n• <b>Biologie</b> : NFS, CRP, PV, ECBU\n• <b>Échographie</b> : présentation des jumeaux, quantité de liquide, placentas, EPF, mesure du col par voie endovaginale"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nVous évoquez le diagnostic de menace d’accouchement prématuré. Quelle est votre prise en charge ?",
+          "images": [],
+          "reponseAttendue": "Corticothérapie anténatale par 12 mg de bétaméthasone IM (Célestène®), 2ᵉ dose à 24 h d’intervalle ; tocolyse par atosiban IV (Tractocile®), dose de charge puis entretien sur 48 h ; sulfate de magnésium si accouchement imminent ; transfert en maternité de niveau 3 pour hospitalisation si la patiente est stable (pas de mise en travail) ; consultation d’anesthésie ; information du pédiatre.",
+          "correctionGenerale": "• <b>Corticothérapie anténatale</b> : 12 mg de bétaméthasone IM (Célestène®), 2ᵉ dose à 24 h d’intervalle\n• <b>Tocolyse</b> : atosiban IV (Tractocile®) — dose de charge puis entretien sur 48 h\n• <b>Sulfate de magnésium</b> si accouchement imminent\n• Transfert en maternité de niveau 3 pour hospitalisation si stable (pas de mise en travail)\n• Consultation d’anesthésie\n• Information du pédiatre"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nL’évolution est favorable. À quel âge gestationnel faut-il programmer l’accouchement dans ce type de grossesse gémellaire ?",
+          "images": [],
+          "reponseAttendue": "Entre 37 et 39 SA.",
+          "correctionGenerale": "<b>Accouchement à programmer entre 37 et 39 SA.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nQuelle voie d’accouchement proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "La voie basse en première intention.",
+          "correctionGenerale": "<b>Voie basse en première intention.</b>\n\n<i>Source : « Delivery of twins : lessons learned from the national observational prospective comparative study JUMODA », Gynécologie Obstétrique Fertilité & Sénologie, 2023.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nSi une césarienne était programmée, quelles mesures thérapeutiques prophylactiques per-opératoires prenez-vous ?",
+          "images": [],
+          "reponseAttendue": "Bas de contention, patiente à jeun, cimétidine (Tagamet®), antibioprophylaxie par céfazoline 2 g 30 min avant l’incision, décubitus dorsal avec roulis à gauche pour limiter l’hypotension, désinfection cutanée, sondage urinaire, quantification des pertes sanguines, ocytocine 5 UI IVD après la naissance, antiémétique IV.",
+          "correctionGenerale": "• Bas de contention\n• À jeun\n• Cimétidine (Tagamet®)\n• <b>Antibioprophylaxie par céfazoline 2 g 30 min avant l’incision</b> (SFAR 2024)\n• Décubitus dorsal avec roulis à gauche pour limiter l’hypotension\n• Désinfection cutanée\n• Sondage urinaire\n• Quantification des pertes sanguines\n• Ocytocine 5 UI IVD après la naissance\n• Antiémétique IV\n\n<i>Cf. RPC 2022, technique de césarienne.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nDécrivez les conditions générales de l’accouchement si la voie basse est retenue.",
+          "images": [],
+          "reponseAttendue": "Péridurale en place et fonctionnelle ; obstétricien, anesthésiste, pédiatre et sage-femme présents ; le plus souvent poussée en salle de césarienne ; ERCF en continu.",
+          "correctionGenerale": "• Péridurale en place et fonctionnelle\n• Obstétricien, anesthésiste, pédiatre et sage-femme présents\n• Le plus souvent poussée en salle de césarienne\n• ERCF en continu"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nAprès l’accouchement du premier jumeau, que faites-vous ?",
+          "images": [],
+          "reponseAttendue": "Clampage tardif de J1 ; le but est d’effectuer l’accouchement dans les 15 min suivant J1 pour diminuer les risques néonataux de J2 ; vérifier le RCF de J2 ; vérifier la présentation de J2 ; si une version par manœuvre interne est envisagée, réinjecter dans la péridurale pour l’analgésie et arrêter l’ocytocine.",
+          "correctionGenerale": "• Clampage tardif de J1\n• Le but est d’effectuer l’accouchement dans les 15 min suivant J1, pour diminuer les risques néonataux de J2\n• Vérifier le RCF de J2\n• Vérifier la présentation de J2\n• <b>Si VMI envisagée</b> : réinjection dans la péridurale pour analgésie ; arrêt de l’ocytocine"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nLe second fœtus est en présentation du siège. Les membranes ne sont pas rompues. Que faites-vous pour l’accouchement du deuxième jumeau ?",
+          "images": [],
+          "reponseAttendue": "Une grande extraction du siège à membranes intactes.",
+          "correctionGenerale": "<b>Grande extraction du siège à membranes intactes.</b>"
+        }
+      ]
+    },
+    {
+      "label": "Annales - Gynécologie-obstétrique - 2018 - EVCP - Sujet 2",
+      "annee": 2018,
+      "type": "EVCP",
+      "source": "ANNALES GYNECOLOGIE/annale 2018.pdf",
+      "orderIndex": 13,
+      "vignette": "Une patiente de 51 ans consulte pour des métrorragies évoluant depuis quelques semaines. Elle vous parle de sa mère, décédée d’un cancer du sein, et d’une sœur chez qui a été diagnostiqué un cancer du sein à 45 ans, mais elle ne déclare aucun antécédent personnel particulier hormis une consommation régulière de tabac. Elle est ménopausée depuis 3 ans. Elle a 4 enfants de 3 pères différents, elle a eu son premier fils à 17 ans et n’a pas vu de gynécologue depuis la naissance de sa dernière fille. Elle s’est fait prescrire par son médecin traitant une mammographie, qu’elle n’a toujours pas réalisée.",
+      "questions": [
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 1</b>\n\nL’interrogatoire vous indique des saignements faibles mais récidivants depuis plusieurs mois, survenant souvent après un rapport sexuel. Quelle est votre hypothèse diagnostique privilégiée ?",
+          "images": [],
+          "reponseAttendue": "Une tumeur du col utérin : tabac, métrorragies post-coïtales, absence de dépistage, facteurs de risque d’HPV (partenaires multiples et rapports précoces).",
+          "correctionGenerale": "<b>Tumeur du col utérin</b>\n• Tabac\n• Métrorragies post-rapport\n• Pas de dépistage\n• Facteurs de risque d’HPV : partenaires multiples et rapports précoces"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 2</b>\n\nLa patiente apporte un vieux dossier dans lequel vous retrouvez les résultats d’un frottis cervical indiquant un frottis HSIL (<i>high grade squamous lesion</i>) effectué il y a dix ans.\n\nL’absence de frottis depuis plus de dix ans vous paraît anormale. Quelle(s) est (sont) la (les) recommandation(s) actuelle(s) en France en matière de dépistage du cancer du col ?",
+          "images": [],
+          "reponseAttendue": "Un dépistage organisé pour toutes les femmes asymptomatiques âgées de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis, s’ils sont normaux, tous les 3 ans ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif réalisation d’un FCV.",
+          "correctionGenerale": "• Dépistage organisé pour toutes les femmes asymptomatiques âgées de <b>25 à 65 ans</b>\n• <b>25 à 30 ans</b> : 2 FCV à 1 an d’intervalle ; si normal, tous les 3 ans\n• <b>30 à 65 ans</b> : test HPV — si négatif tous les 5 ans, si positif → FCV"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 3</b>\n\nSi vous aviez été le destinataire des résultats de ce frottis, qu’auriez-vous fait ? Argumentez.",
+          "images": [],
+          "reponseAttendue": "La réalisation d’une colposcopie pour biopsie ciblée, afin de confirmer la lésion de haut grade et d’éliminer une lésion infiltrante, car une lésion de haut grade comporte un fort risque de transformation en carcinome épidermoïde.",
+          "correctionGenerale": "<b>Réalisation d’une colposcopie pour biopsie ciblée</b>\n• Confirmer la lésion de haut grade\n• Éliminer une lésion infiltrante\n• Lésion de haut grade avec fort risque de transformation en carcinome épidermoïde"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 4</b>\n\nParmi les documents que vous remet la patiente, il apparaît qu’elle avait bénéficié d’une biopsie cervicale. Le compte rendu de l’examen histologique indique qu’il s’agissait d’une dysplasie de haut grade (CIN3).\n\nQuel(s) aurait (auraient) dû être le(s) traitement(s) de cette dysplasie sévère (CIN3) ?",
+          "images": [],
+          "reponseAttendue": "Une conisation à l’anse bipolaire, avec surveillance rapprochée post-traitement par test HPV à 6 mois.",
+          "correctionGenerale": "• <b>Conisation à l’anse bipolaire</b>\n• Surveillance rapprochée post-traitement avec test HPV à 6 mois"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 5</b>\n\nAprès votre interrogatoire minutieux, vous examinez la patiente. Le toucher vaginal perçoit un bourgeonnement du col. Vous avez fait une photographie de ce col (figure). L’examen au spéculum confirme ce bourgeonnement.\n\nQue proposez-vous de faire à la patiente ?",
+          "images": ["annales-gynecologie/annale-2018/figures/img-043-176.jpg"],
+          "reponseAttendue": "Une biopsie, avec envoi en anatomopathologie.",
+          "correctionGenerale": "<b>Biopsie et envoi en anatomopathologie.</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 6</b>\n\nPouvez-vous préciser les deux types histologiques les plus fréquents de cancer du col utérin et leur proportion respective ?",
+          "images": [],
+          "reponseAttendue": "Le carcinome épidermoïde (85 %) et l’adénocarcinome (15 %).",
+          "correctionGenerale": "• Carcinome épidermoïde : <b>85 %</b>\n• Adénocarcinome : <b>15 %</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 7</b>\n\nLa présence du virus HPV (papillomavirus) est indispensable mais non suffisante pour induire un cancer du col. Citez 5 cofacteurs de risque de cancer du col de l’utérus.",
+          "images": [],
+          "reponseAttendue": "Le tabac, les rapports multiples et précoces, un antécédent d’IST, la co-infection par HSV, un déficit immunitaire (VIH, traitement immunosuppresseur).",
+          "correctionGenerale": "• Tabac\n• Rapports multiples et précoces\n• Antécédent d’IST\n• Co-infection HSV\n• Déficit immunitaire : VIH, traitement immunosuppresseur"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 8</b>\n\nQuel est l’examen complémentaire prescrit en première intention afin d’apprécier l’extension loco-régionale de la maladie ? Quelles informations en attendez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une IRM pelvienne et abdominale avec injection de gadolinium, précisant la taille tumorale, l’extension locale (paramètres, vagin) et ganglionnaire (pelvienne et para-aortique), permettant la stadification de la tumeur et donc l’adaptation de la prise en charge.",
+          "correctionGenerale": "• <b>IRM pelvienne et abdominale avec injection de gadolinium</b>\n• Taille tumorale, extension locale (paramètres, vagin), extension ganglionnaire (pelvienne et para-aortique)\n• <b>Stadification de la tumeur</b> → adaptation de la prise en charge"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 9</b>\n\nLa tumeur mesure 5 cm sans atteinte paramétriale ou vaginale. Le bilan d’extension ne montre pas de métastases à distance. Quel est le stade FIGO ?",
+          "images": ["annales-gynecologie/annale-2018/figures/recadre/img-047-193.png"],
+          "reponseAttendue": "Un stade IB3.",
+          "correctionGenerale": "<b>Stade IB3.</b>\n\n<i>La figure reproduit la classification FIGO 2018 des cancers du col utérin.</i>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 10</b>\n\nQuelle prise en charge thérapeutique proposez-vous ?",
+          "images": [],
+          "reponseAttendue": "Une radio-chimiothérapie associée à une curiethérapie, avec consultation d’annonce, plan personnalisé de soins remis à la patiente, ALD 100 % par le médecin généraliste, validation du plan personnalisé de soins en RCP, soins de support et aide au sevrage tabagique.",
+          "correctionGenerale": "• <b>Radio-chimiothérapie et curiethérapie</b>\n• Consultation d’annonce\n• Plan personnalisé de soins remis à la patiente lors de la consultation\n• ALD 100 % par le médecin généraliste\n• Validation du plan personnalisé de soins en réunion de concertation pluridisciplinaire\n• Soins de support\n• Aide au sevrage tabagique"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nSa fille de 40 ans vient vous voir, inquiète, car elle a peur pour sa fille de 13 ans. Elle vous interroge sur la possibilité de prévention du cancer du col utérin. Que lui dites-vous ?",
+          "images": [],
+          "reponseAttendue": "La possibilité d’une vaccination anti-HPV, puis un dépistage par FCV à partir de 25 ans.",
+          "correctionGenerale": "• Possibilité de <b>vaccination anti-HPV</b>\n• Puis dépistage par FCV à partir de 25 ans"
+        }
+      ]
+    }
+  ]
+}
