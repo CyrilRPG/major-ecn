@@ -2,7 +2,7 @@
   "collegeId": "col-orthopedie",
   "nom": "Orthopédie",
   "coursTitre": "Révisions - Orthopédie",
-  "coursOrderIndex": 134,
+  "coursOrderIndex": 0,
   "sources": {
     "ANNALES ORTHOPEDIE/EVCF.53 2012 correction.pdf": {
       "atelier": "annales-orthopedie/evcf-53-2012-correction",
