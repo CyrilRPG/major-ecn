@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowRight, ClipboardCheck, ClipboardList, GraduationCap, Lightbulb, Lock, Pencil, PenLine, ScrollText, Star, Trophy, Sparkles } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, Lightbulb, Lock, Pencil, ScrollText } from 'lucide-react';
 import { requireUser, profPageReadGuard, canEditCoursContent, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -12,10 +12,12 @@ import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-b
 import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
-import { estSerieAnnale } from '@/lib/data/annales';
+import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
+import { SerieCard } from '@/components/qcm/serie-card';
 
 type SerieListRow = SerieAccessRow & {
   order_index: number;
+  annee?: number | null;
   qcm_questions?: { id: string; format: string }[] | null;
 };
 
@@ -57,7 +59,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   // à l'ouverture.
   const { data: rawSeries, error: seriesError } = await createAdminClient()
     .from('qcm_series')
-    .select(`${SERIE_ACCESS_COLUMNS}, order_index, qcm_questions(id, format)` as 'id, label, order_index, type')
+    .select(`${SERIE_ACCESS_COLUMNS}, order_index, annee, qcm_questions(id, format)` as 'id, label, order_index, type')
     .eq('cours_id', coursId)
     .in('type', seriesTypes)
     .order('order_index');
@@ -94,6 +96,19 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
       return ta !== tb ? ta - tb : a.order_index - b.order_index;
     });
 
+  // Les annales ne se listent pas série par série : une session EVC compte
+  // jusqu'à onze dossiers, et dix-sept sessions cohabitent sur un même item.
+  // On passe donc par l'ANNÉE — l'élève choisit une année, puis l'annale.
+  const annales = series.filter((s) => estSerieAnnale(s.label));
+  const autres = series.filter((s) => !estSerieAnnale(s.label));
+  const parAnnee = new Map<number, SerieListRow[]>();
+  for (const s of annales) {
+    const an = anneeDeSerieAnnale(s);
+    if (an === null) { autres.push(s); continue; }   // année illisible : on la garde en liste
+    parAnnee.set(an, [...(parAnnee.get(an) ?? []), s]);
+  }
+  const annees = [...parAnnee.entries()].sort(([a], [b]) => b - a);   // plus récente d'abord
+
   const { data: sessions } = await supabase
     .from('qcm_sessions')
     .select('id, serie_id, score_correct, score_total, finished_at')
@@ -106,29 +121,12 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     if (!lastBySerie.has(s.serie_id))
       lastBySerie.set(s.serie_id, { score_correct: s.score_correct, score_total: s.score_total });
   }
+  /** Annales de l'année déjà faites, pour la pastille de progression. */
+  const faitesParAnnee = new Map<number, number>();
+  for (const [an, l] of parAnnee) faitesParAnnee.set(an, l.filter((s) => lastBySerie.has(s.id)).length);
 
-  // Voie externe : QROC (« QROC — Série N ») et DP-QROC (« DP QROC N · … »)
-  // partagent une identité visuelle « teal » distincte des QCM/DP (voie interne).
-  const isDpQroc = (label: string) => /^dp\s*qroc/i.test(label);
-  // Les 2 nouveaux DP QROC premium (générés item par item) portent une étoile :
-  // ce sont « DP QROC 1 » / « DP QROC 2 » (les anciens sont décalés en ≥ 3).
-  const isStarredDpQroc = (label: string) => /^dp\s*qroc\s*[12]\b/i.test(label);
-  const isQroc = (label: string) => /^qroc/i.test(label);
-  // « DP 1 » (DP QCM) → traitement rouge + icône DP.
-  const isDp = (label: string) => /^dp\b/i.test(label);
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
-  // « Annales - <Collège> - <Année> - <Type> » : annales EVC officielles corrigées par
-  // Major ECN. Catégorie à part entière (ambre), distincte des banques maison.
-  const isAnnale = (label: string) => /^annales?\b/i.test(label);
-  const isSeance = (s: { type?: string | null }) => s.type === 'seance';
-
-  // Couleur du score : rouge < 50 %, orange < 80 %, vert ≥ 80 %.
-  const scoreTheme = (correct: number, total: number) => {
-    const r = total > 0 ? correct / total : 0;
-    if (r < 0.5) return { bg: '#FDE7E9', fg: '#C0001F' };
-    if (r < 0.8) return { bg: '#FEF3E2', fg: '#B26A00' };
-    return { bg: '#E7F6EC', fg: '#16793C' };
-  };
+  const isDp = (label: string) => /^dp\b/i.test(label);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-5 lg:px-8">
@@ -166,7 +164,7 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
         </p>
       </div>
 
-      {!series || series.length === 0 ? (
+      {series.length === 0 ? (
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
           <EmptyState
             icon={ClipboardCheck}
@@ -175,99 +173,89 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           />
         </div>
       ) : (
-        <ul className="space-y-2.5">
-          {series.map((s, idx) => {
-            const lr = lastBySerie.get(s.id);
-            const qCount = s.qcm_questions?.length ?? 0;
-            const dp = isDp(s.label);
-            const entr = isEntrainement(s.label);
-            // Série SANS question = verrouillée (Découverte) → cadenas + popup tarifs.
-            if (qCount === 0) {
-              return (
-                <li key={s.id}>
-                  <LockedSerieButton
-                    label={s.label}
-                    idx={idx}
-                    kind={entr ? 'entrainement' : dp ? 'dp' : 'qcm'}
-                  />
-                </li>
-              );
-            }
-            const seance = isSeance(s);
-            const dpQroc = isDpQroc(s.label);
-            const qroc = isQroc(s.label);
-            const annale = isAnnale(s.label);
-            // Ambre=Annale EVC, violet=Séance, vert=Entraînement,
-            // teal=QROC/DP-QROC (voie externe), rouge=DP, bleu=QCM standard (voie interne).
-            const theme = annale
-              ? { bar: '#B45309', bg: '#FEF3C7', fg: '#92400E', Icon: ScrollText,    kindLabel: 'Annale' }
-              : seance
-              ? { bar: '#7C3AED', bg: '#F3EAFF', fg: '#5B21B6', Icon: Sparkles,      kindLabel: 'Séance du prof' }
-              : entr
-              ? { bar: '#16A34A', bg: '#E7F6EC', fg: '#16793C', Icon: Trophy,         kindLabel: 'Entraînement' }
-              : dpQroc
-              ? { bar: '#0D9488', bg: '#CCFBF1', fg: '#0F766E', Icon: ClipboardList,  kindLabel: 'DP QROC' }
-              : qroc
-              ? { bar: '#0D9488', bg: '#CCFBF1', fg: '#0F766E', Icon: PenLine,        kindLabel: 'QROC' }
-              : dp
-              ? { bar: '#E4002B', bg: '#FDE7E9', fg: '#C0001F', Icon: ClipboardList,  kindLabel: 'DP' }
-              : { bar: '#2563EB', bg: '#E5F1FF', fg: '#1E4D8B', Icon: GraduationCap,  kindLabel: 'QCM' };
-            const scoreT = lr ? scoreTheme(lr.score_correct, lr.score_total) : null;
-            return (
-              <li key={s.id}>
-                <Link
-                  href={`/cours/${coursId}/qcm/${s.id}`}
-                  className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3.5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
-                >
-                  {/* Barre verticale colorée à gauche selon le type. */}
-                  <span
-                    aria-hidden
-                    className="absolute inset-y-0 left-0 w-1.5"
-                    style={{ background: theme.bar }}
-                  />
-                  <span
-                    className="ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-                    style={{ background: theme.bg, color: theme.fg }}
-                  >
-                    <theme.Icon className="h-5 w-5" />
-                  </span>
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold"
-                    style={{ background: theme.bg, color: theme.fg }}
-                  >
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="flex items-center gap-1.5 truncate text-[15px] font-semibold text-(--color-ink)">
-                      {/* Étoile distinctive sur les nouveaux DP QROC (voie externe). */}
-                      {isStarredDpQroc(s.label) && <Star className="h-4 w-4 shrink-0 fill-[#F5B301] text-[#F5B301]" aria-label="Nouveau dossier QROC" />}
-                      <span className="truncate">{s.label}</span>
-                    </p>
-                    <p className="text-xs text-(--color-ink-muted)">
-                      {qCount} questions · environ {Math.max(1, qCount)} min
-                    </p>
-                  </div>
-                  {scoreT ? (
-                    <span
-                      className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums"
-                      style={{ background: scoreT.bg, color: scoreT.fg }}
-                    >
-                      {lr!.score_correct} / {lr!.score_total}
-                    </span>
-                  ) : (
-                    <span
-                      className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
-                      style={{ background: theme.bg, color: theme.fg }}
-                    >
-                      {theme.kindLabel}
-                    </span>
-                  )}
-                  <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          {autres.length > 0 && (
+            <ul className="space-y-2.5">
+              {autres.map((s, idx) => {
+                const qCount = s.qcm_questions?.length ?? 0;
+                // Série SANS question = verrouillée (Découverte) → cadenas + popup tarifs.
+                if (qCount === 0) {
+                  return (
+                    <li key={s.id}>
+                      <LockedSerieButton
+                        label={s.label}
+                        idx={idx}
+                        kind={isEntrainement(s.label) ? 'entrainement' : isDp(s.label) ? 'dp' : 'qcm'}
+                      />
+                    </li>
+                  );
+                }
+                return (
+                  <li key={s.id}>
+                    <SerieCard
+                      href={`/cours/${coursId}/qcm/${s.id}`}
+                      label={s.label}
+                      type={s.type}
+                      qCount={qCount}
+                      rang={idx + 1}
+                      dernierScore={lastBySerie.get(s.id) ?? null}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* Annales EVC : on choisit d'abord l'ANNÉE. Une session compte
+              jusqu'à onze dossiers et un item en porte jusqu'à dix-sept : les
+              lister à plat noyait la page. */}
+          {annees.length > 0 && (
+            <section className={autres.length > 0 ? 'mt-7' : undefined}>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#FEF3C7] text-[#92400E]">
+                  <ScrollText className="h-4 w-4" />
+                </span>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-(--color-ink)">
+                  Annales EVC
+                </h2>
+                <span className="text-xs text-(--color-ink-muted)">
+                  {annales.length} annale{annales.length > 1 ? 's' : ''} sur {annees.length} session{annees.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              <ul className="grid gap-2.5 sm:grid-cols-2">
+                {annees.map(([an, lot]) => {
+                  const questions = lot.reduce((n, s) => n + (s.qcm_questions?.length ?? 0), 0);
+                  const faites = faitesParAnnee.get(an) ?? 0;
+                  return (
+                    <li key={an}>
+                      <Link
+                        href={`/cours/${coursId}/qcm/annales/${an}`}
+                        className="group relative flex items-center gap-3.5 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3.5 shadow-(--shadow-soft) transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) focus-ring"
+                      >
+                        <span aria-hidden className="absolute inset-y-0 left-0 w-1.5 bg-[#B45309]" />
+                        <span className="ml-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FEF3C7] font-mono text-sm font-bold text-[#92400E]">
+                          {String(an).slice(-2)}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[15px] font-semibold tabular-nums text-(--color-ink)">Session {an}</p>
+                          <p className="text-xs text-(--color-ink-muted)">
+                            {lot.length} annale{lot.length > 1 ? 's' : ''} · {questions} questions
+                          </p>
+                        </div>
+                        {faites > 0 && (
+                          <span className="shrink-0 rounded-full bg-[#E7F6EC] px-2.5 py-1 text-xs font-semibold tabular-nums text-[#16793C]">
+                            {faites}/{lot.length}
+                          </span>
+                        )}
+                        <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
+        </>
       )}
 
       {/* Entraînements verrouillés (MG uniquement) — template vert trophée + cadenas.

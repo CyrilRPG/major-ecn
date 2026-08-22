@@ -41,12 +41,13 @@ for (const s of data.series) {
   if (!s.questions?.length) ko(ou, 'série sans question');
   if (s.vignette !== undefined && s.vignette !== null && vide(s.vignette)) ko(ou, 'vignette présente mais vide');
 
-  const formats = new Set(s.questions.map((q) => q.format));
-  if (formats.size > 1) {
-    // Le `kind` de la série — donc la voie qui y a accès — est déduit des
-    // formats : mélanger QCM et QROC rendrait la série QROC pour tout le monde.
-    ko(ou, 'formats mélangés (' + [...formats].join(', ') + ') : une série = un seul format');
-  }
+  // Les formats PEUVENT être mélangés : une épreuve = une série, dans l'ordre du
+  // sujet officiel. L'EVCP 2019 de Médecine générale alterne ainsi, au sein du
+  // même sujet, des QCM (questions 1 à 3), des questions rédactionnelles (4 et
+  // 5) puis de nouveau des QCM (6 à 10) ; les séparer par format cassait à la
+  // fois l'ordre et l'unité du sujet. Le `kind` déduit des formats ne trie plus
+  // rien pour les annales : `qcm_series_voie_restrict` les exempte
+  // (20260823100000_annales_toutes_voies.sql).
 
   s.questions.forEach((q, i) => {
     const oq = ou + ' / Q' + (i + 1);

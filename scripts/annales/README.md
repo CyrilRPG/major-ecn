@@ -9,8 +9,15 @@ ambre **Annales**.
 
 - **Seuls les sujets disposant d'un corrigé** sont intégrés.
 - **Fidélité stricte** : on ne crée que les séries réellement présentes dans le
-  sujet. Une épreuve 100 % QROC donne une seule série QROC ; aucun QCM n'est
-  dérivé, aucun contenu n'est inventé.
+  sujet. Aucun QCM n'est dérivé, aucun contenu n'est inventé.
+- **Une épreuve = UNE série**, dans l'ordre du sujet officiel, quitte à mêler
+  QCM et questions rédactionnelles : l'EVCP 2019 de Médecine générale alterne,
+  au sein d'un même sujet, QCM 1-3, rédactionnelles 4-5 puis QCM 6-10. Les
+  séries ne portent donc jamais de suffixe de format ni de voie.
+- **Aucune restriction de voie** : une annale est le sujet officiel d'une
+  session, elle n'appartient ni à la voie interne ni à la voie externe
+  (`qcm_series_voie_restrict` les exempte, cf.
+  `supabase/migrations/20260823100000_annales_toutes_voies.sql`).
 - **Aucune image omise**, des deux côtés :
   - `audit.mjs` échoue si une figure extraite d'un **corrigé** n'est ni citée par
     une question, ni déclarée ignorée avec un motif (`figuresIgnorees`) ;
@@ -19,10 +26,9 @@ ambre **Annales**.
     sans que le tracé soit reproduit). Ce qu'il signale s'arbitre à l'œil, puis
     se solde soit par un rattachement, soit par un motif dans
     `sujetFiguresCouvertes`.
-- **Pas de `allowed_voies`** sur les séries : la voie est déjà tranchée par
-  `qcm_series.kind` (QCM → voie interne, QROC → voie externe, cf.
-  `src/lib/data/qcm-access-rules.ts`). Renseigner la colonne masquerait la série
-  aux élèves dont la voie n'est pas renseignée.
+- **Pas de `allowed_voies`** sur les séries : renseigner la colonne masquerait
+  la série aux élèves dont la voie n'est pas renseignée, alors même que les
+  annales sont ouvertes aux deux voies.
 
 ## Convention de libellé
 
@@ -30,11 +36,16 @@ ambre **Annales**.
 suffixes nécessaires :
 
 - `Annales - Orthopédie - 2019 - EVCF`
-- `Annales - Anesthésie-Réanimation - 2025 - EVCF - QCM` / `… - QROC`
 - `Annales - Cardiologie - 2024 - EVCP - Sujet 3`
 
-Le préfixe `Annales` est ce qui déclenche la catégorie ambre et le bandeau
-« Annale » côté élève.
+Le suffixe nomme un DOSSIER du sujet (« Sujet 3 », « Cas clinique 2 »,
+« Session de novembre »), jamais un format ni une voie : les QCM et les
+questions rédactionnelles d'une même épreuve cohabitent dans la même série.
+
+Le préfixe `Annales` est ce qui déclenche la catégorie ambre, le bandeau
+« Annale » côté élève et l'exemption de voie. L'`annee` de la série (à défaut,
+l'année lue dans le libellé) est ce qui regroupe les annales par session dans
+l'onglet DP · QI : l'élève choisit d'abord une année, puis l'épreuve.
 
 ## Le piège Médecine générale
 
@@ -96,8 +107,9 @@ efface les `qcm_attempts` des élèves. Pour une retouche ciblée, deux scripts
 mettent à jour la seule colonne concernée, sans rien détruire :
 
 ```bash
-node scripts/annales/sync-vignettes.mjs [--ecrire]    # qcm_series.vignette
-node scripts/annales/sync-images.mjs    [--ecrire]    # images des questions et propositions
+node scripts/annales/sync-vignettes.mjs   [--ecrire]  # qcm_series.vignette
+node scripts/annales/sync-images.mjs      [--ecrire]  # images des questions et propositions
+node scripts/annales/fusionner-series.mjs [--ecrire]  # fusion/renommage de séries
 ```
 
 ## Format d'un fichier `data/<college>.json`

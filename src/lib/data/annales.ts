@@ -19,6 +19,19 @@ export function estSerieAnnale(label: string | null | undefined): boolean {
   return /^annales?\b/i.test((label ?? '').trim());
 }
 
+/**
+ * Année de session d'une série d'annales.
+ *
+ * `qcm_series.annee` fait foi ; le libellé sert de repli, car la convention
+ * « Annales - <Collège> - <Année> - EVC[FP] » la porte toujours et une série
+ * importée à la main peut avoir laissé la colonne vide.
+ */
+export function anneeDeSerieAnnale(serie: { annee?: number | null; label?: string | null }): number | null {
+  if (typeof serie.annee === 'number') return serie.annee;
+  const m = (serie.label ?? '').match(/\b((?:19|20)\d{2})\b/);
+  return m ? Number(m[1]) : null;
+}
+
 /** Un item dédié aux annales : aucun autre contenu que des séries d'annales. */
 export function estItemAnnales(item: {
   series: { label?: string | null }[] | null | undefined;

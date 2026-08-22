@@ -245,12 +245,12 @@
       "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2019.</b>\n\nTous les sujets doivent être traités. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
-      "label": "Annales - Médecine générale - 2019 - EVCP - QROC",
+      "label": "Annales - Médecine générale - 2019 - EVCP",
       "annee": 2019,
       "type": "EVCP",
       "source": "ANNALES MG/EVCP annales 2019 PAE correction.pdf",
       "orderIndex": 131,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2019 — questions rédactionnelles.</b>\n\nL’ensemble des sujets est à traiter. Les questions à choix multiples de cette même épreuve font l’objet d’une série distincte.",
+      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2019.</b>\n\nL’ensemble des sujets est à traiter.",
       "questions": [
         {
           "format": "qroc",
@@ -288,137 +288,8 @@
           "correctionGenerale": "• <b>Hypokaliémie</b>\n• Elle expose au <b>risque de trouble du rythme cardiaque</b>, en particulier supraventriculaire de type fibrillation atriale\n• Il faut donc systématiquement réaliser un <b>ECG</b> à la recherche de signes d’hypokaliémie"
         },
         {
-          "format": "qroc",
-          "enonce": "<b>Sujet 2 — Question 4</b>\n\nVous recevez aux urgences un homme de 77 ans pour une douleur du membre inférieur droit fébrile, traitée depuis 3 jours par amoxicilline (Clamoxyl®) 500 mg 3 fois par jour par son médecin traitant, sans amélioration selon sa fille qui l’accompagne. Sa jambe est très œdématiée et érythémateuse, et vous notez un intertrigo entre le 2<sup>e</sup> et le 3<sup>e</sup> orteil.\n\nM. X. vit seul à domicile sans aide, en dehors du passage quotidien de ses enfants, malgré des troubles de la mémoire de plus en plus gênants. Sa fille souhaiterait le passage d’une infirmière mais M. X. refuse, estimant ne pas en avoir besoin. Il sort de moins en moins dans le quartier pour faire ses courses, du fait de difficultés à la marche depuis sa fracture du col du fémur.\n\nÀ l’examen clinique, en dehors de l’érythème de la jambe droite, il est fébrile à 38,6 °C ; il mesure 172 cm pour 91 kg.\n\nIl présente une diarrhée 48 h après son admission. Quelle étiologie faut-il évoquer en priorité ?",
-          "images": [],
-          "reponseAttendue": "Une colite à Clostridium difficile : une diarrhée survenant chez un patient sous antibiothérapie, quelle qu’en soit la cause, doit la faire suspecter.",
-          "correctionGenerale": "• Une diarrhée survenant chez un patient sous antibiothérapie, quelle que soit la cause, doit faire suspecter une <b>colite à Clostridium difficile</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 2 — Question 5</b>\n\nQuel examen complémentaire non invasif doit être effectué pour confirmer cette étiologie ?",
-          "images": [],
-          "reponseAttendue": "Une coproculture avec recherche des toxines A et B de Clostridium difficile. Une rectosigmoïdoscopie pourrait également confirmer le diagnostic, mais il s’agit d’un examen invasif.",
-          "correctionGenerale": "• Pour la rechercher, il faut réaliser une <b>coproculture avec recherche des toxines A et B de Clostridium difficile</b>\n• Une rectosigmoïdoscopie pourrait également confirmer le diagnostic, mais il s’agit d’un <b>examen invasif</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 3 — Question 1</b>\n\nUne femme de 82 ans, comptable à la retraite, est admise aux urgences pour une chute à domicile. Il existe un traumatisme crânien avec plaie du cuir chevelu et un traumatisme facial. Son mari rapporte qu’il a retrouvé son épouse face contre terre ; elle était consciente mais n’arrivait pas à se relever seule, et serait restée plus d’une heure à terre.\n\nLe mari dit aussi que son épouse était très active jusqu’à récemment, mais que depuis 6 mois environ elle est fatiguée, n’a plus d’appétit et a maigri de plusieurs kilos sur 5 mois (poids de forme 60 kg, poids actuel 53 kg). Depuis quelques jours, elle a des difficultés à monter les marches qui mènent à sa maison. Elle ne sort presque plus.\n\nAntécédents : hypertension artérielle depuis plus de 10 ans, syndrome anxio-dépressif, diabète de type 2 depuis 5 ans (dernière HbA1c à 5,8 %), insuffisance cardiaque à fraction d’éjection conservée sans suivi cardiologique récent, surdité appareillée.\n\nTraitement à domicile : périndopril 5 mg (2/jour), furosémide 40 mg (1/jour), escitalopram 10 mg/jour, gliclazide LM 60 mg/jour, zopiclone 3,75 mg le soir, paracétamol 1 g 3 fois/jour.\n\nHabitus : consommation régulière de boissons alcoolisées (1 à 2 verres de vin à table et un apéritif le soir).\n\nÀ l’examen physique, la patiente est désorientée dans le temps et l’espace ; le discours n’est pas adapté. Elle ne se souvient pas de sa chute. Température 37,2 °C. TA 110/60 mmHg couchée, avec pli cutané. Examen neurologique sans signe de focalisation. Elle s’est endormie une fois durant l’examen.\n\nBiologie : leucocytes 6 G/L, CRP 3 mg/L, hémoglobine 11,5 g/dL, créatinine 100 µmol/L, natrémie 123 mEq/L, kaliémie 4,0 mEq/L. Scanner cérébral : pas d’hémorragie, pas de lésion traumatique ni ischémique récente, atrophie cortico-sous-corticale diffuse. ECG et radiographie de thorax sans anomalie significative.\n\nQuels sont les cinq principaux facteurs de risque de chute que vous retrouvez dans l’observation de la patiente (en dehors de l’âge) ? Ne donnez que 5 réponses.",
-          "images": [],
-          "reponseAttendue": "Cinq parmi : le sexe féminin, la dénutrition (sarcopénie), la polymédication (plus de 4 médicaments), l’alcoolisme chronique, le traitement psychotrope, le trouble neurosensoriel.",
-          "correctionGenerale": "<b>5 parmi les propositions suivantes</b>\n• Sexe féminin\n• Dénutrition (sarcopénie)\n• Polymédication (> 4 médicaments)\n• Alcoolisme chronique\n• Traitement psychotrope\n• Trouble neurosensoriel"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 3 — Question 2</b>\n\nQuel syndrome neurologique présente la patiente ? Sur quels arguments ? Ne pas recopier les éléments de l’observation.",
-          "images": [],
-          "reponseAttendue": "Un syndrome confusionnel, sur les éléments suivants : désorientation temporo-spatiale, rupture avec l’état antérieur et survenue rapide, discours inadapté, somnolence.",
-          "correctionGenerale": "<b>Syndrome confusionnel</b>, sur les éléments suivants :\n• Désorientation temporo-spatiale\n• Rupture avec l’état antérieur / survenue rapide\n• Discours inadapté\n• Somnolence"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 3 — Question 3</b>\n\nElle est hospitalisée en médecine polyvalente. Quels arguments avez-vous, ou allez-vous rechercher, pour poser le diagnostic de dénutrition ?",
-          "images": [],
-          "reponseAttendue": "L’IMC actuel (< 21 chez la personne âgée), la perte de poids sur les derniers mois, le dosage de l’albumine et de la préalbumine, et le MNA test.",
-          "correctionGenerale": "<b>Pour évoquer le diagnostic de dénutrition</b>\n• <b>IMC actuel</b> : < 21 chez les personnes âgées\n• <b>Perte de poids</b> sur les derniers mois\n• <b>Dosage d’albumine et de préalbumine</b>\n• <b>MNA test</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 3 — Question 4</b>\n\nLa patiente récupère son état neurologique antérieur. Quelles consignes de soins (hors médicaments) donnez-vous à l’équipe paramédicale pour prévenir la dépendance iatrogène, c’est-à-dire induite par l’hospitalisation ? Ne donnez que 5 réponses.",
-          "images": [],
-          "reponseAttendue": "La mise au fauteuil et la mobilisation ; éviter le port de couches ou de protections ; faire manger la patiente seule ; favoriser l’hydratation ; assurer les soins de nursing.",
-          "correctionGenerale": "• <b>Mise au fauteuil et mobilisation</b> +++\n• <b>Éviter le port de couches / protections</b>\n• <b>La patiente doit manger seule</b>\n• <b>Favoriser l’hydratation</b>\n• <b>Soins de nursing</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 3 — Question 5</b>\n\nAu cours de l’hospitalisation, vous découvrez une fracture-tassement vertébrale lombaire ancienne. Le bilan est en faveur d’une ostéoporose primaire (ostéoporose d’involution), confirmée à la densitométrie osseuse.\n\nQuel bilan devez-vous réaliser avant d’initier un traitement par bisphosphonates ?",
-          "images": [],
-          "reponseAttendue": "Un bilan biologique avec créatinine et calcémie, et un bilan dentaire pour éviter l’ostéonécrose de la mâchoire en cas de foyer dentaire, lequel doit être traité au préalable.",
-          "correctionGenerale": "<b>Éléments nécessaires avant d’initier un traitement par bisphosphonates</b>\n• <b>Biologique</b> : créatinine et calcémie\n• <b>Bilan dentaire</b>, pour éviter l’ostéonécrose de la mâchoire en cas de foyer dentaire — qui doit être traité avant"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 1</b>\n\nHomme de 67 ans, retraité, fumeur (50 paquets-années), sous irbésartan depuis 10 ans pour hypertension artérielle, sans suivi pneumologique. Il se présente aux urgences pour une dyspnée fébrile d’apparition brutale la veille au soir, avec douleur basithoracique droite.\n\nL’examen clinique retrouve une hyperthermie à 39,5 °C, une pression artérielle à 170/100 mmHg, une fréquence cardiaque à 105/min, une fréquence respiratoire à 26/min. Pas de sueurs, pas de cyanose, pas de confusion. La saturation en oxygène en air ambiant est à 86 %. L’auscultation retrouve un foyer de crépitants de la base droite, une toux productive avec des crachats verdâtres. L’électrocardiogramme montre un rythme sinusal sans anomalie de la repolarisation.\n\nAvant toute imagerie, quelle est votre hypothèse diagnostique principale ?",
-          "images": [],
-          "reponseAttendue": "Une pneumonie aiguë communautaire avec critères de gravité (dyspnée fébrile avec foyer de crépitants).",
-          "correctionGenerale": "• On évoque en priorité le diagnostic de <b>pneumonie aiguë communautaire avec critères de gravité</b> (dyspnée fébrile avec foyer de crépitants)"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Questions 2 et 3</b>\n\nQuel est le germe le plus probable dans ce cas clinique ? Sur quels arguments ?",
-          "images": [],
-          "reponseAttendue": "Le pneumocoque. On évoque une pneumonie aiguë communautaire devant toute dyspnée fébrile avec douleur thoracique, toux et expectorations purulentes ; la présence d’un foyer de crépitants est en faveur de ce diagnostic. On évoque en priorité le pneumocoque du fait de l’argument de fréquence, de la survenue brutale de la symptomatologie, de la douleur thoracique assez évocatrice, du foyer de crépitants bien limité (probable pneumonie franche lobaire aiguë) ; les expectorations dans les infections à pneumocoque sont plutôt rosées.",
-          "correctionGenerale": "• Germe le plus probable : <b>pneumocoque</b>\n\n<b>Arguments</b>\n• On évoque une PAC devant toute dyspnée fébrile avec douleur thoracique, toux et expectorations purulentes ; la présence d’un foyer de crépitants est en faveur de ce diagnostic\n• On évoque en priorité le pneumocoque sur les arguments suivants :\n  – Argument de fréquence\n  – Survenue brutale de la symptomatologie\n  – Douleur thoracique assez évocatrice d’un pneumocoque\n  – Foyer de crépitants bien limité (probable pneumonie franche lobaire aiguë)\n  – Les expectorations dans les infections à pneumocoque sont plutôt rosées"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 4</b>\n\nQuels examens demandez-vous en première intention ?",
-          "images": [],
-          "reponseAttendue": "Il s’agit d’une PAC avec critères de gravité (désaturation) justifiant une hospitalisation. On demande : une radiographie thoracique de face et de profil pour confirmer le diagnostic ; un bilan biologique (NFS-plaquettes, ionogramme sanguin, créatinine, CRP ou PCT, hémocultures) ; un ECBC ; et les antigénuries légionelle et pneumocoque.",
-          "correctionGenerale": "• Il s’agit d’une PAC avec des critères de gravité (désaturation) qui va justifier une hospitalisation\n\n<b>Examens à demander</b>\n• <b>Radiographie thoracique face + profil</b> : confirmation du diagnostic\n• <b>Bilan biologique</b> : NFS-plaquettes ; ionogramme sanguin, créatinine ; CRP (ou PCT) ; hémocultures\n• <b>ECBC</b>\n• <b>Antigénuries légionelle et pneumocoque</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 5</b>\n\nSur quels critères décidez-vous d’hospitaliser le patient ?",
-          "images": [],
-          "reponseAttendue": "On utilise le score CRB65. Ici, les critères en faveur sont l’âge > 65 ans et la désaturation (SaO₂ < 92 %) — cette dernière ne faisant pas partie du CRB65 mais devant être prise en compte.",
-          "correctionGenerale": "• On utilise le score <b>CRB65</b> pour décider d’une hospitalisation\n• Ici, les critères en faveur sont :\n  – <b>Âge > 65 ans</b>\n  – <b>Désaturation (SaO₂ < 92 %)</b> : ne fait pas partie du CRB65, mais doit être prise en compte"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 6</b>\n\nQuel traitement antibiotique prescrivez-vous en première intention ? Précisez la voie d’administration, le rythme d’administration et la posologie.",
-          "images": [],
-          "reponseAttendue": "En première intention, amoxicilline 1 g × 3/jour, par voie intraveineuse ou orale, pour une durée de 7 jours.",
-          "correctionGenerale": "• En 1<sup>re</sup> intention : <b>amoxicilline 1 g × 3/jour</b>, par voie IV ou par voie orale, pour une durée de <b>7 jours</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 7</b>\n\nQuelles sont les autres mesures thérapeutiques à instaurer en première intention ?",
-          "images": [],
-          "reponseAttendue": "L’hospitalisation avec oxygénothérapie adaptée pour corriger la désaturation, l’hydratation, un traitement antipyrétique et antalgique, une kinésithérapie respiratoire si besoin, la prévention des complications thromboemboliques, et la surveillance clinique et biologique.",
-          "correctionGenerale": "• <b>Hospitalisation</b>, avec oxygénothérapie adaptée pour corriger la désaturation\n• <b>Hydratation</b>\n• <b>Traitement antipyrétique et antalgique</b>\n• <b>Kinésithérapie respiratoire</b> si besoin\n• <b>Prévention des complications thromboemboliques</b>\n• <b>Surveillance clinique et biologique</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 8</b>\n\nÀ 72 h d’antibiothérapie bien conduite, votre patient reste fébrile, présente un syndrome confusionnel avec hyponatrémie et atteinte hépatique.\n\nQuel diagnostic devez-vous évoquer ?",
-          "images": [],
-          "reponseAttendue": "Une légionellose : une pneumonie ne s’améliorant pas sous amoxicilline et associée à un syndrome confusionnel, une hyponatrémie (SIADH) et une cytolyse doit la faire évoquer.",
-          "correctionGenerale": "• Une pneumonie ne s’améliorant pas sous amoxicilline et associée à un syndrome confusionnel, une hyponatrémie (SIADH) et une cytolyse doit faire évoquer une <b>légionellose</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 9</b>\n\nQuelle classe d’antibiotiques proposez-vous alors ?",
-          "images": [],
-          "reponseAttendue": "Les macrolides en première intention, les fluoroquinolones, et la rifampicine en association avec l’un des deux précédents en cas de forme grave.",
-          "correctionGenerale": "<b>Traitements efficaces contre la légionellose</b>\n• <b>Macrolides</b> (en 1<sup>re</sup> intention)\n• <b>Fluoroquinolones</b>\n• <b>Rifampicine</b>, en association avec l’un des deux ci-dessus en cas de forme grave"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 10</b>\n\nL’évolution du patient est favorable, il regagne son domicile. Quelles mesures de surveillance et de prévention préconisez-vous au patient ?",
-          "images": [],
-          "reponseAttendue": "Une surveillance clinique (disparition de la fièvre et de l’ensemble de la symptomatologie), une surveillance biologique, une surveillance radiologique (le patient étant fumeur, donc à risque de cancer sous-jacent) ; comme mesures de prévention : la vaccination antigrippale annuelle et la vaccination antipneumococcique (aucune prévention n’est possible pour la légionellose) ; et l’arrêt du tabac.",
-          "correctionGenerale": "<b>Surveillance clinique</b>\n• Disparition de la fièvre +++\n• Disparition de l’ensemble de la symptomatologie\n\n• <b>Surveillance biologique</b>\n• <b>Surveillance radiologique</b> — le patient étant fumeur, donc à risque de cancer sous-jacent\n\n<b>Mesures de prévention</b>\n• Vaccination antigrippale annuelle, vaccination antipneumococcique (aucune prévention possible pour la légionellose)\n• <b>Arrêt du tabac</b>"
-        },
-        {
-          "format": "qroc",
-          "enonce": "<b>Sujet 4 — Question 11</b>\n\nTrois mois plus tard, le patient revient aux urgences pour une hémoptysie et une perte de poids de 5 kilos.\n\nDans le contexte, quelle hypothèse principale doit-elle être évoquée ?",
-          "images": [],
-          "reponseAttendue": "Un cancer du poumon : le patient est fumeur, il vient de faire une infection pulmonaire (plus fréquente en cas de cancer) et il présente un amaigrissement et une hémoptysie ; la tuberculose est moins probable que le cancer.",
-          "correctionGenerale": "• On évoque ici en priorité un <b>cancer du poumon</b>, car le patient est fumeur, il vient de faire une infection pulmonaire (plus fréquente en cas de cancer) et il présente un amaigrissement et une hémoptysie\n• La tuberculose est moins probable que le cancer"
-        }
-      ]
-    },
-    {
-      "label": "Annales - Médecine générale - 2019 - EVCP - QCM",
-      "annee": 2019,
-      "type": "EVCP",
-      "source": "ANNALES MG/EVCP annales 2019 PAE correction.pdf",
-      "orderIndex": 132,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2019 — questions à choix multiples du sujet 2.</b>\n\nVous recevez aux urgences un homme de 77 ans pour une douleur du membre inférieur droit fébrile, traitée depuis 3 jours par amoxicilline (Clamoxyl®) 500 mg 3 fois par jour par son médecin traitant, sans amélioration selon sa fille qui l’accompagne. Sa jambe est très œdématiée et érythémateuse, et vous notez un intertrigo entre le 2<sup>e</sup> et le 3<sup>e</sup> orteil.\n\nM. X. vit seul à domicile sans aide, en dehors du passage quotidien de ses enfants, malgré des troubles de la mémoire de plus en plus gênants. Sa fille souhaiterait le passage d’une infirmière mais M. X. refuse, estimant ne pas en avoir besoin. Il sort de moins en moins dans le quartier pour faire ses courses, du fait de difficultés à la marche depuis sa fracture du col du fémur.\n\nÀ l’examen clinique, en dehors de l’érythème de la jambe droite, il est fébrile à 38,6 °C ; il mesure 172 cm pour 91 kg.\n\nSon traitement comprend par ailleurs :\n• hydrochlorothiazide et énalapril (Co-Renitec®) 20 mg/12,5 mg, pour une hypertension artérielle ancienne\n• warfarine (Coumadine®), pour une phlébite poplitée gauche compliquée d’une embolie pulmonaire en post-opératoire de sa fracture du col du fémur 2 mois auparavant\n• fraction flavonoïque purifiée (Daflon®), pour une insuffisance veineuse\n• zopiclone (Imovane®) et clorazépate dipotassique (Tranxène®) 20 mg, depuis le décès de sa femme il y a 2 ans\n• hydroxyzine (Atarax®) 25 mg, pour se détendre\n• ésoméprazole (Inexium®) 20 mg\n• ibuprofène (Nurofen®) 200 mg et chondroïtine sulfate sodique (Structum®), pour les douleurs des genoux liées à une gonarthrose",
-      "questions": [
-        {
           "format": "qcm",
-          "enonce": "<b>Sujet 2 — Question 1</b>\n\nParmi les propositions suivantes, quel(s) facteur(s) de risque indépendant(s) d’érysipèle retrouvez-vous chez votre patient ?",
+          "enonce": "<b>Sujet 2 — Question 1</b>\n\nVous recevez aux urgences un homme de 77 ans pour une douleur du membre inférieur droit fébrile, traitée depuis 3 jours par amoxicilline (Clamoxyl®) 500 mg 3 fois par jour par son médecin traitant, sans amélioration selon sa fille qui l’accompagne. Sa jambe est très œdématiée et érythémateuse, et vous notez un intertrigo entre le 2<sup>e</sup> et le 3<sup>e</sup> orteil.\n\nM. X. vit seul à domicile sans aide, en dehors du passage quotidien de ses enfants, malgré des troubles de la mémoire de plus en plus gênants. Sa fille souhaiterait le passage d’une infirmière mais M. X. refuse, estimant ne pas en avoir besoin. Il sort de moins en moins dans le quartier pour faire ses courses, du fait de difficultés à la marche depuis sa fracture du col du fémur.\n\nÀ l’examen clinique, en dehors de l’érythème de la jambe droite, il est fébrile à 38,6 °C ; il mesure 172 cm pour 91 kg.\n\nSon traitement comprend par ailleurs :\n• hydrochlorothiazide et énalapril (Co-Renitec®) 20 mg/12,5 mg, pour une hypertension artérielle ancienne\n• warfarine (Coumadine®), pour une phlébite poplitée gauche compliquée d’une embolie pulmonaire en post-opératoire de sa fracture du col du fémur 2 mois auparavant\n• fraction flavonoïque purifiée (Daflon®), pour une insuffisance veineuse\n• zopiclone (Imovane®) et clorazépate dipotassique (Tranxène®) 20 mg, depuis le décès de sa femme il y a 2 ans\n• hydroxyzine (Atarax®) 25 mg, pour se détendre\n• ésoméprazole (Inexium®) 20 mg\n• ibuprofène (Nurofen®) 200 mg et chondroïtine sulfate sodique (Structum®), pour les douleurs des genoux liées à une gonarthrose\n\nParmi les propositions suivantes, quel(s) facteur(s) de risque indépendant(s) d’érysipèle retrouvez-vous chez votre patient ?",
           "images": [],
           "correctionGenerale": "Réponses : <b>C et D</b>. La prise d’AINS n’est pas un facteur de risque d’érysipèle — seulement un facteur de risque de développer une forme grave.",
           "items": [
@@ -529,6 +400,20 @@
               "justification": "Les dermocorticoïdes n’ont aucune place dans le traitement de l’érysipèle."
             }
           ]
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 4</b>\n\nVous recevez aux urgences un homme de 77 ans pour une douleur du membre inférieur droit fébrile, traitée depuis 3 jours par amoxicilline (Clamoxyl®) 500 mg 3 fois par jour par son médecin traitant, sans amélioration selon sa fille qui l’accompagne. Sa jambe est très œdématiée et érythémateuse, et vous notez un intertrigo entre le 2<sup>e</sup> et le 3<sup>e</sup> orteil.\n\nM. X. vit seul à domicile sans aide, en dehors du passage quotidien de ses enfants, malgré des troubles de la mémoire de plus en plus gênants. Sa fille souhaiterait le passage d’une infirmière mais M. X. refuse, estimant ne pas en avoir besoin. Il sort de moins en moins dans le quartier pour faire ses courses, du fait de difficultés à la marche depuis sa fracture du col du fémur.\n\nÀ l’examen clinique, en dehors de l’érythème de la jambe droite, il est fébrile à 38,6 °C ; il mesure 172 cm pour 91 kg.\n\nIl présente une diarrhée 48 h après son admission. Quelle étiologie faut-il évoquer en priorité ?",
+          "images": [],
+          "reponseAttendue": "Une colite à Clostridium difficile : une diarrhée survenant chez un patient sous antibiothérapie, quelle qu’en soit la cause, doit la faire suspecter.",
+          "correctionGenerale": "• Une diarrhée survenant chez un patient sous antibiothérapie, quelle que soit la cause, doit faire suspecter une <b>colite à Clostridium difficile</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 2 — Question 5</b>\n\nQuel examen complémentaire non invasif doit être effectué pour confirmer cette étiologie ?",
+          "images": [],
+          "reponseAttendue": "Une coproculture avec recherche des toxines A et B de Clostridium difficile. Une rectosigmoïdoscopie pourrait également confirmer le diagnostic, mais il s’agit d’un examen invasif.",
+          "correctionGenerale": "• Pour la rechercher, il faut réaliser une <b>coproculture avec recherche des toxines A et B de Clostridium difficile</b>\n• Une rectosigmoïdoscopie pourrait également confirmer le diagnostic, mais il s’agit d’un <b>examen invasif</b>"
         },
         {
           "format": "qcm",
@@ -721,6 +606,111 @@
               "justification": "Le patient peut refuser la substitution, mais il perd alors le bénéfice du tiers payant."
             }
           ]
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 1</b>\n\nUne femme de 82 ans, comptable à la retraite, est admise aux urgences pour une chute à domicile. Il existe un traumatisme crânien avec plaie du cuir chevelu et un traumatisme facial. Son mari rapporte qu’il a retrouvé son épouse face contre terre ; elle était consciente mais n’arrivait pas à se relever seule, et serait restée plus d’une heure à terre.\n\nLe mari dit aussi que son épouse était très active jusqu’à récemment, mais que depuis 6 mois environ elle est fatiguée, n’a plus d’appétit et a maigri de plusieurs kilos sur 5 mois (poids de forme 60 kg, poids actuel 53 kg). Depuis quelques jours, elle a des difficultés à monter les marches qui mènent à sa maison. Elle ne sort presque plus.\n\nAntécédents : hypertension artérielle depuis plus de 10 ans, syndrome anxio-dépressif, diabète de type 2 depuis 5 ans (dernière HbA1c à 5,8 %), insuffisance cardiaque à fraction d’éjection conservée sans suivi cardiologique récent, surdité appareillée.\n\nTraitement à domicile : périndopril 5 mg (2/jour), furosémide 40 mg (1/jour), escitalopram 10 mg/jour, gliclazide LM 60 mg/jour, zopiclone 3,75 mg le soir, paracétamol 1 g 3 fois/jour.\n\nHabitus : consommation régulière de boissons alcoolisées (1 à 2 verres de vin à table et un apéritif le soir).\n\nÀ l’examen physique, la patiente est désorientée dans le temps et l’espace ; le discours n’est pas adapté. Elle ne se souvient pas de sa chute. Température 37,2 °C. TA 110/60 mmHg couchée, avec pli cutané. Examen neurologique sans signe de focalisation. Elle s’est endormie une fois durant l’examen.\n\nBiologie : leucocytes 6 G/L, CRP 3 mg/L, hémoglobine 11,5 g/dL, créatinine 100 µmol/L, natrémie 123 mEq/L, kaliémie 4,0 mEq/L. Scanner cérébral : pas d’hémorragie, pas de lésion traumatique ni ischémique récente, atrophie cortico-sous-corticale diffuse. ECG et radiographie de thorax sans anomalie significative.\n\nQuels sont les cinq principaux facteurs de risque de chute que vous retrouvez dans l’observation de la patiente (en dehors de l’âge) ? Ne donnez que 5 réponses.",
+          "images": [],
+          "reponseAttendue": "Cinq parmi : le sexe féminin, la dénutrition (sarcopénie), la polymédication (plus de 4 médicaments), l’alcoolisme chronique, le traitement psychotrope, le trouble neurosensoriel.",
+          "correctionGenerale": "<b>5 parmi les propositions suivantes</b>\n• Sexe féminin\n• Dénutrition (sarcopénie)\n• Polymédication (> 4 médicaments)\n• Alcoolisme chronique\n• Traitement psychotrope\n• Trouble neurosensoriel"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 2</b>\n\nQuel syndrome neurologique présente la patiente ? Sur quels arguments ? Ne pas recopier les éléments de l’observation.",
+          "images": [],
+          "reponseAttendue": "Un syndrome confusionnel, sur les éléments suivants : désorientation temporo-spatiale, rupture avec l’état antérieur et survenue rapide, discours inadapté, somnolence.",
+          "correctionGenerale": "<b>Syndrome confusionnel</b>, sur les éléments suivants :\n• Désorientation temporo-spatiale\n• Rupture avec l’état antérieur / survenue rapide\n• Discours inadapté\n• Somnolence"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 3</b>\n\nElle est hospitalisée en médecine polyvalente. Quels arguments avez-vous, ou allez-vous rechercher, pour poser le diagnostic de dénutrition ?",
+          "images": [],
+          "reponseAttendue": "L’IMC actuel (< 21 chez la personne âgée), la perte de poids sur les derniers mois, le dosage de l’albumine et de la préalbumine, et le MNA test.",
+          "correctionGenerale": "<b>Pour évoquer le diagnostic de dénutrition</b>\n• <b>IMC actuel</b> : < 21 chez les personnes âgées\n• <b>Perte de poids</b> sur les derniers mois\n• <b>Dosage d’albumine et de préalbumine</b>\n• <b>MNA test</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 4</b>\n\nLa patiente récupère son état neurologique antérieur. Quelles consignes de soins (hors médicaments) donnez-vous à l’équipe paramédicale pour prévenir la dépendance iatrogène, c’est-à-dire induite par l’hospitalisation ? Ne donnez que 5 réponses.",
+          "images": [],
+          "reponseAttendue": "La mise au fauteuil et la mobilisation ; éviter le port de couches ou de protections ; faire manger la patiente seule ; favoriser l’hydratation ; assurer les soins de nursing.",
+          "correctionGenerale": "• <b>Mise au fauteuil et mobilisation</b> +++\n• <b>Éviter le port de couches / protections</b>\n• <b>La patiente doit manger seule</b>\n• <b>Favoriser l’hydratation</b>\n• <b>Soins de nursing</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 3 — Question 5</b>\n\nAu cours de l’hospitalisation, vous découvrez une fracture-tassement vertébrale lombaire ancienne. Le bilan est en faveur d’une ostéoporose primaire (ostéoporose d’involution), confirmée à la densitométrie osseuse.\n\nQuel bilan devez-vous réaliser avant d’initier un traitement par bisphosphonates ?",
+          "images": [],
+          "reponseAttendue": "Un bilan biologique avec créatinine et calcémie, et un bilan dentaire pour éviter l’ostéonécrose de la mâchoire en cas de foyer dentaire, lequel doit être traité au préalable.",
+          "correctionGenerale": "<b>Éléments nécessaires avant d’initier un traitement par bisphosphonates</b>\n• <b>Biologique</b> : créatinine et calcémie\n• <b>Bilan dentaire</b>, pour éviter l’ostéonécrose de la mâchoire en cas de foyer dentaire — qui doit être traité avant"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 1</b>\n\nHomme de 67 ans, retraité, fumeur (50 paquets-années), sous irbésartan depuis 10 ans pour hypertension artérielle, sans suivi pneumologique. Il se présente aux urgences pour une dyspnée fébrile d’apparition brutale la veille au soir, avec douleur basithoracique droite.\n\nL’examen clinique retrouve une hyperthermie à 39,5 °C, une pression artérielle à 170/100 mmHg, une fréquence cardiaque à 105/min, une fréquence respiratoire à 26/min. Pas de sueurs, pas de cyanose, pas de confusion. La saturation en oxygène en air ambiant est à 86 %. L’auscultation retrouve un foyer de crépitants de la base droite, une toux productive avec des crachats verdâtres. L’électrocardiogramme montre un rythme sinusal sans anomalie de la repolarisation.\n\nAvant toute imagerie, quelle est votre hypothèse diagnostique principale ?",
+          "images": [],
+          "reponseAttendue": "Une pneumonie aiguë communautaire avec critères de gravité (dyspnée fébrile avec foyer de crépitants).",
+          "correctionGenerale": "• On évoque en priorité le diagnostic de <b>pneumonie aiguë communautaire avec critères de gravité</b> (dyspnée fébrile avec foyer de crépitants)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Questions 2 et 3</b>\n\nQuel est le germe le plus probable dans ce cas clinique ? Sur quels arguments ?",
+          "images": [],
+          "reponseAttendue": "Le pneumocoque. On évoque une pneumonie aiguë communautaire devant toute dyspnée fébrile avec douleur thoracique, toux et expectorations purulentes ; la présence d’un foyer de crépitants est en faveur de ce diagnostic. On évoque en priorité le pneumocoque du fait de l’argument de fréquence, de la survenue brutale de la symptomatologie, de la douleur thoracique assez évocatrice, du foyer de crépitants bien limité (probable pneumonie franche lobaire aiguë) ; les expectorations dans les infections à pneumocoque sont plutôt rosées.",
+          "correctionGenerale": "• Germe le plus probable : <b>pneumocoque</b>\n\n<b>Arguments</b>\n• On évoque une PAC devant toute dyspnée fébrile avec douleur thoracique, toux et expectorations purulentes ; la présence d’un foyer de crépitants est en faveur de ce diagnostic\n• On évoque en priorité le pneumocoque sur les arguments suivants :\n  – Argument de fréquence\n  – Survenue brutale de la symptomatologie\n  – Douleur thoracique assez évocatrice d’un pneumocoque\n  – Foyer de crépitants bien limité (probable pneumonie franche lobaire aiguë)\n  – Les expectorations dans les infections à pneumocoque sont plutôt rosées"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 4</b>\n\nQuels examens demandez-vous en première intention ?",
+          "images": [],
+          "reponseAttendue": "Il s’agit d’une PAC avec critères de gravité (désaturation) justifiant une hospitalisation. On demande : une radiographie thoracique de face et de profil pour confirmer le diagnostic ; un bilan biologique (NFS-plaquettes, ionogramme sanguin, créatinine, CRP ou PCT, hémocultures) ; un ECBC ; et les antigénuries légionelle et pneumocoque.",
+          "correctionGenerale": "• Il s’agit d’une PAC avec des critères de gravité (désaturation) qui va justifier une hospitalisation\n\n<b>Examens à demander</b>\n• <b>Radiographie thoracique face + profil</b> : confirmation du diagnostic\n• <b>Bilan biologique</b> : NFS-plaquettes ; ionogramme sanguin, créatinine ; CRP (ou PCT) ; hémocultures\n• <b>ECBC</b>\n• <b>Antigénuries légionelle et pneumocoque</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 5</b>\n\nSur quels critères décidez-vous d’hospitaliser le patient ?",
+          "images": [],
+          "reponseAttendue": "On utilise le score CRB65. Ici, les critères en faveur sont l’âge > 65 ans et la désaturation (SaO₂ < 92 %) — cette dernière ne faisant pas partie du CRB65 mais devant être prise en compte.",
+          "correctionGenerale": "• On utilise le score <b>CRB65</b> pour décider d’une hospitalisation\n• Ici, les critères en faveur sont :\n  – <b>Âge > 65 ans</b>\n  – <b>Désaturation (SaO₂ < 92 %)</b> : ne fait pas partie du CRB65, mais doit être prise en compte"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 6</b>\n\nQuel traitement antibiotique prescrivez-vous en première intention ? Précisez la voie d’administration, le rythme d’administration et la posologie.",
+          "images": [],
+          "reponseAttendue": "En première intention, amoxicilline 1 g × 3/jour, par voie intraveineuse ou orale, pour une durée de 7 jours.",
+          "correctionGenerale": "• En 1<sup>re</sup> intention : <b>amoxicilline 1 g × 3/jour</b>, par voie IV ou par voie orale, pour une durée de <b>7 jours</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 7</b>\n\nQuelles sont les autres mesures thérapeutiques à instaurer en première intention ?",
+          "images": [],
+          "reponseAttendue": "L’hospitalisation avec oxygénothérapie adaptée pour corriger la désaturation, l’hydratation, un traitement antipyrétique et antalgique, une kinésithérapie respiratoire si besoin, la prévention des complications thromboemboliques, et la surveillance clinique et biologique.",
+          "correctionGenerale": "• <b>Hospitalisation</b>, avec oxygénothérapie adaptée pour corriger la désaturation\n• <b>Hydratation</b>\n• <b>Traitement antipyrétique et antalgique</b>\n• <b>Kinésithérapie respiratoire</b> si besoin\n• <b>Prévention des complications thromboemboliques</b>\n• <b>Surveillance clinique et biologique</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 8</b>\n\nÀ 72 h d’antibiothérapie bien conduite, votre patient reste fébrile, présente un syndrome confusionnel avec hyponatrémie et atteinte hépatique.\n\nQuel diagnostic devez-vous évoquer ?",
+          "images": [],
+          "reponseAttendue": "Une légionellose : une pneumonie ne s’améliorant pas sous amoxicilline et associée à un syndrome confusionnel, une hyponatrémie (SIADH) et une cytolyse doit la faire évoquer.",
+          "correctionGenerale": "• Une pneumonie ne s’améliorant pas sous amoxicilline et associée à un syndrome confusionnel, une hyponatrémie (SIADH) et une cytolyse doit faire évoquer une <b>légionellose</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 9</b>\n\nQuelle classe d’antibiotiques proposez-vous alors ?",
+          "images": [],
+          "reponseAttendue": "Les macrolides en première intention, les fluoroquinolones, et la rifampicine en association avec l’un des deux précédents en cas de forme grave.",
+          "correctionGenerale": "<b>Traitements efficaces contre la légionellose</b>\n• <b>Macrolides</b> (en 1<sup>re</sup> intention)\n• <b>Fluoroquinolones</b>\n• <b>Rifampicine</b>, en association avec l’un des deux ci-dessus en cas de forme grave"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 10</b>\n\nL’évolution du patient est favorable, il regagne son domicile. Quelles mesures de surveillance et de prévention préconisez-vous au patient ?",
+          "images": [],
+          "reponseAttendue": "Une surveillance clinique (disparition de la fièvre et de l’ensemble de la symptomatologie), une surveillance biologique, une surveillance radiologique (le patient étant fumeur, donc à risque de cancer sous-jacent) ; comme mesures de prévention : la vaccination antigrippale annuelle et la vaccination antipneumococcique (aucune prévention n’est possible pour la légionellose) ; et l’arrêt du tabac.",
+          "correctionGenerale": "<b>Surveillance clinique</b>\n• Disparition de la fièvre +++\n• Disparition de l’ensemble de la symptomatologie\n\n• <b>Surveillance biologique</b>\n• <b>Surveillance radiologique</b> — le patient étant fumeur, donc à risque de cancer sous-jacent\n\n<b>Mesures de prévention</b>\n• Vaccination antigrippale annuelle, vaccination antipneumococcique (aucune prévention possible pour la légionellose)\n• <b>Arrêt du tabac</b>"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Sujet 4 — Question 11</b>\n\nTrois mois plus tard, le patient revient aux urgences pour une hémoptysie et une perte de poids de 5 kilos.\n\nDans le contexte, quelle hypothèse principale doit-elle être évoquée ?",
+          "images": [],
+          "reponseAttendue": "Un cancer du poumon : le patient est fumeur, il vient de faire une infection pulmonaire (plus fréquente en cas de cancer) et il présente un amaigrissement et une hémoptysie ; la tuberculose est moins probable que le cancer.",
+          "correctionGenerale": "• On évoque ici en priorité un <b>cancer du poumon</b>, car le patient est fumeur, il vient de faire une infection pulmonaire (plus fréquente en cas de cancer) et il présente un amaigrissement et une hémoptysie\n• La tuberculose est moins probable que le cancer"
         }
       ]
     }

@@ -94,6 +94,8 @@ const isEntrainementLabel = (label: string) => /entra[iî]nement/i.test(label);
 // Le SQL teste `label !~* '^dp'` : on garde exactement le même critère.
 const isDpLabel = (label: string) => /^dp/i.test(label);
 const isGeriatrieLabel = (label: string) => /g[eé]riatrie/i.test(label);
+// Miroir de `label ~* '^annales?\y'` dans `qcm_series_voie_restrict`.
+const isAnnaleLabel = (label: string) => /^annales?\b/i.test(label);
 
 /**
  * `true` si l'élève a le droit d'ouvrir cette série.
@@ -151,14 +153,14 @@ export function canStudentReadSerie(
   if (allowedOffers?.length && !allowedOffers.some((o) => ctx.offers.has(o))) return false;
 
   // qcm_series_voie_restrict : la voie de concours ne trie les séries QUE sur les
-  // items de Médecine générale (`not mg_series` dans la policy SQL), et la voie
-  // externe garde accès à tout sur un item « Révisions… » (`is_revisions`).
+  // items de Médecine générale (`not mg_series` dans la policy SQL), jamais les
+  // ANNALES EVC — le sujet officiel d'une session n'appartient à aucune voie —
+  // et la voie externe garde accès à tout sur un item « Révisions… »
+  // (`is_revisions`).
   //
-  // Ces deux gardes manquaient ici. Sans elles, la règle s'appliquait aussi aux
-  // collèges de spécialité, où elle n'a aucun sens : les annales EVC y sont
-  // presque toutes des QROC, si bien que TOUS les élèves « interne » d'une
-  // spécialité (Gériatrie, Psychiatrie, Médecine interne…) n'en voyaient aucune.
-  if (serie.type === 'qcm' && !entrainement && ctx.voie && serie.mg_series === true) {
+  // Sans l'exemption des annales, les 282 séries « Annales - … » de `kind`
+  // 'qroc' disparaissaient pour tout élève de voie interne.
+  if (serie.type === 'qcm' && !entrainement && !isAnnaleLabel(label) && ctx.voie && serie.mg_series === true) {
     const kind = serie.kind ?? 'qcm';
     if (ctx.voie === 'interne' && kind === 'qroc') return false;
     if (ctx.voie === 'externe' && kind !== 'qroc' && serie.is_revisions !== true) return false;

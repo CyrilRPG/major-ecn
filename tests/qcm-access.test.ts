@@ -160,15 +160,21 @@ test('les annales d’une spécialité restent visibles quelle que soit la voie'
   }
 });
 
-test('les annales de Médecine générale suivent la voie via leur kind', () => {
+test('les annales de Médecine générale échappent aussi à la voie', () => {
   // L'item MG s'appelle « Annales - Médecine générale » : `is_revisions` est
-  // faux, l'exception « Révisions » ne joue pas et la voie tranche.
+  // faux, donc SEULE l'exemption « annales » les sauve. Un sujet officiel
+  // n'appartient à aucune voie : les deux le voient, quel que soit le `kind`.
   const qroc = { id: '1', label: 'Annales - Médecine générale - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: true, is_revisions: false };
-  const qcm = { id: '2', label: 'Annales - Médecine générale - 2019 - EVCF - QCM', type: 'qcm', kind: 'qcm', mg_series: true, is_revisions: false };
-  assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'externe' })), true);
-  assert.equal(canStudentReadSerie(qroc, ctx({ voie: 'interne' })), false);
-  assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'interne' })), true);
-  assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'externe' })), false);
+  // Série à formats mixtes : le trigger la classe 'qroc', sans que cela ne
+  // masque quoi que ce soit (EVCP 2019 MG, QCM et rédactionnelles mélangés).
+  const mixte = { id: '2', label: 'Annales - Médecine générale - 2019 - EVCP', type: 'qcm', kind: 'qroc', mg_series: true, is_revisions: false };
+  for (const voie of ['interne', 'externe', null] as const) {
+    assert.equal(canStudentReadSerie(qroc, ctx({ voie })), true);
+    assert.equal(canStudentReadSerie(mixte, ctx({ voie })), true);
+  }
+  // La règle voie ↔ kind reste entière sur les banques maison de MG.
+  const banqueMg = { id: '3', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: true, is_revisions: false };
+  assert.equal(canStudentReadSerie(banqueMg, ctx({ voie: 'interne' })), false);
 });
 
 test('la voie ne trie les séries QUE sur les items de Médecine générale', () => {

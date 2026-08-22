@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
+import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
 
 export default async function QcmRunPage({
   params,
@@ -37,13 +38,13 @@ export default async function QcmRunPage({
   const { data: serie, error: serieError } = await admin
     .from('qcm_series')
     // cast pour exposer la colonne vignette (ajoutée par migration)
-    .select(`${SERIE_ACCESS_COLUMNS}, cours_id, vignette` as 'id, label, type, cours_id')
+    .select(`${SERIE_ACCESS_COLUMNS}, cours_id, vignette, annee` as 'id, label, type, cours_id')
     .eq('id', serieId)
     .eq('cours_id', coursId)
     .maybeSingle();
   if (serieError) throw serieError;
   if (!serie) notFound();
-  const serieRow = serie as unknown as SerieAccessRow & { vignette?: string | null };
+  const serieRow = serie as unknown as SerieAccessRow & { vignette?: string | null; annee?: number | null };
   const vignette = serieRow.vignette ?? null;
 
   const { data: questions, error: questionsError } = await admin
@@ -104,11 +105,16 @@ export default async function QcmRunPage({
   if (!session) notFound();
 
   const isSeance = serie.type === 'seance';
-  const backHref = `/cours/${coursId}/qcm`;
   // Les annales EVC corrigées vivent dans l'onglet DP · QI (type 'qcm', libellé
   // « Annales - <Collège> - <Année> - <Type> ») : le bandeau doit néanmoins les
   // annoncer comme des annales, pas comme une série maison.
-  const bandeauAnnale = serie.type === 'annale' || /^annales?\b/i.test(serie.label ?? '');
+  const bandeauAnnale = serie.type === 'annale' || estSerieAnnale(serie.label);
+  // Retour à l'écran d'où l'on vient : la liste de la session pour une annale,
+  // l'onglet DP · QI pour tout le reste.
+  const anneeAnnale = bandeauAnnale ? anneeDeSerieAnnale(serieRow) : null;
+  const backHref = anneeAnnale !== null
+    ? `/cours/${coursId}/qcm/annales/${anneeAnnale}`
+    : `/cours/${coursId}/qcm`;
 
   return (
     <QcmSession
