@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/ANNALES 2020.pdf",
       "orderIndex": 19,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 de gynécologie-obstétrique : 21 questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -152,7 +152,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 20</b>\n\nDécrivez cette image ovarienne (figure). Quels critères essentiels vous manquent pour définir la prise en charge ?",
-          "images": ["annales-gynecologie/annales-2020/figures/img-021-084.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2020/figures/img-021-084.jpg"
+          ],
           "reponseAttendue": "Une échographie pelvienne par voie endovaginale, en coupe sagittale de l’utérus avec l’ovaire en arrière, Douglas sec, montrant un kyste ovarien d’allure fonctionnelle car liquidien pur, sans végétation ni cloison. Il manque le doppler et la taille du kyste.",
           "correctionGenerale": "• Échographie pelvienne par voie endovaginale\n• Coupe sagittale de l’utérus avec ovaire en arrière\n• Douglas sec\n• <b>Kyste ovarien d’allure fonctionnelle</b> car liquidien pur, sans végétation, sans cloison\n\n<b>Il manque</b> : le doppler et la taille de ce kyste."
         },
@@ -163,7 +165,8 @@
           "reponseAttendue": "Après validation en RCP, dans un centre expert, chirurgie si une résection R0 est possible : laparotomie médiane sous anesthésie générale, péritonectomie étendue, hystérectomie élargie et annexectomie bilatérale, curage pelvien et lombo-aortique, et résection de toutes les lésions de carcinose.",
           "correctionGenerale": "• Après validation en RCP\n• Dans un centre expert\n• Chirurgie si résection R0 possible\n• Laparotomie médiane sous anesthésie générale\n• Péritonectomie étendue, hystérectomie élargie et annexectomie bilatérale, curage pelvien et lombo-aortique + résection de toutes les lésions de carcinose"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2020 de gynécologie-obstétrique : 21 questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2020 - EVCP - Cas 1",
@@ -176,7 +179,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nL’échographie montre qu’il s’agit d’une grossesse gémellaire. Décrivez les éléments échographiques permettant de préciser la chorionicité sur le cliché ci-dessous.",
-          "images": ["annales-gynecologie/annales-2020/figures/img-024-097.png"],
+          "images": [
+            "annales-gynecologie/annales-2020/figures/img-024-097.png"
+          ],
           "reponseAttendue": "Deux membranes amniotiques avec un seul placenta, et le signe du T : il s’agit d’une grossesse monochoriale biamniotique.",
           "correctionGenerale": "• Deux membranes amniotiques avec un placenta\n• <b>Signe du T</b>\n• <b>Diagnostic de grossesse monochoriale biamniotique</b>"
         },
@@ -326,7 +331,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nDécrivez cette imagerie : voie utilisée, coupe, pathologie retrouvée.",
-          "images": ["annales-gynecologie/annales-2020/figures/img-045-182.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2020/figures/img-045-182.jpg"
+          ],
           "reponseAttendue": "Une échographie pelvienne endovaginale, en coupe sagittale de l’utérus, montrant une lésion intra-cavitaire pouvant faire évoquer un polype ou un fibrome de type 0. Il manque le doppler pour conclure.",
           "correctionGenerale": "• Échographie pelvienne endovaginale\n• Coupe sagittale de l’utérus\n• <b>Lésion intra-cavitaire</b> pouvant faire évoquer un polype ou un fibrome de type 0\n• <b>Il manque le doppler</b> pour conclure"
         },

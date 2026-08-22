@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES MG/PAE 2012.pdf",
       "orderIndex": 112,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2012.</b>\n\nChaque question rappelle l’énoncé de la partie à laquelle elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -163,7 +163,8 @@
           "reponseAttendue": "La douleur abdominale, la défense abdominale, la contracture, la douleur du cul-de-sac de Douglas au toucher rectal, les signes de Rovsing et de Blumberg, et l’iléus fonctionnel.",
           "correctionGenerale": "• <b>Douleur abdominale</b>\n• <b>Défense abdominale</b>\n• <b>Contracture</b>\n• <b>Douleur du cul-de-sac de Douglas au toucher rectal</b>\n• <b>Signes de Rovsing et de Blumberg</b>\n• <b>Iléus fonctionnel</b>"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2012.</b>\n\nChaque question rappelle l’énoncé de la partie à laquelle elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2012 - EVCP",

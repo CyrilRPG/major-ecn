@@ -27,7 +27,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Proposition de correction des annales 2024.pdf",
       "orderIndex": 18,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 de gériatrie — questions isolées.\n\n<i>La numérotation reprise ci-dessous est celle du diaporama de correction ; elle comporte quelques doublons dans le document d’origine (une question « 6 » et une question « 16 » répétées), corrigés ici par une numérotation continue.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -39,7 +39,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 2</b>\n\nLa recherche du consentement est parfois difficile lorsqu’un patient, atteint d’altération cognitive sévère, est dans l’incapacité de comprendre ou d’exprimer son positionnement. La loi prévoit des alternatives à la recherche directe du consentement auprès du patient.\n\nCitez 3 éléments à rechercher afin d’explorer ce positionnement.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-007-026.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-007-026.jpg"
+          ],
           "reponseAttendue": "Les directives anticipées, la personne de confiance, l’attitude non verbale.",
           "correctionGenerale": "• Directives anticipées\n• Personne de confiance\n• Attitude non verbale\n\n<i>Diapositive de rappel (ci-dessus) : chez les patients ayant une maladie d’Alzheimer, il existe une altération des capacités de discernement en vue d’un consentement éclairé, dès le stade léger. Il est souhaitable de préférer les choix accompagnés en incluant l’entourage sans exclure le patient. Les traitements qui résultent d’une « obstination déraisonnable » peuvent être suspendus ou ne pas être entrepris : à la demande du patient s’il est capable d’exprimer sa volonté ; conformément aux directives anticipées ; ou selon une procédure collégiale si la personne est hors d’état de manifester sa volonté.</i>"
         },
@@ -53,7 +55,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nOui ou non : dans certaines conditions, la question se pose d’introduire ou de maintenir une nutrition ou une hydratation artificielle chez un patient âgé présentant des troubles de la déglutition. Si ce patient est dans l’incapacité de comprendre ou d’exprimer son consentement, c’est la famille qui décide.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-011-045.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-011-045.jpg"
+          ],
           "reponseAttendue": "NON : c’est le médecin qui décide, au terme d’une procédure collégiale.",
           "correctionGenerale": "<b>NON — c’est le médecin.</b>\n\n<i>Le médecin en charge du patient, la personne de confiance du patient (ou à défaut la famille ou l’un des proches) peuvent engager cette procédure collégiale. Il s’agit d’une concertation entre le ou les médecins qui suivent le patient et les membres présents de l’équipe de soins, et au moins un autre médecin appelé en qualité de consultant sans lien hiérarchique avec le médecin en charge du patient.</i>"
         },
@@ -71,7 +75,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 6</b>\n\nCitez les principes pour le relais d’un dispositif délivrant du fentanyl transdermique vers un pousse-seringue électrique de chlorhydrate de morphine IV (calcul de dose et mise en œuvre du traitement).",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-016-071.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-016-071.jpg"
+          ],
           "reponseAttendue": "Arrêt du patch de fentanyl ; 25 µg de fentanyl équivalent à 60 mg de morphine per os, soit 20 mg de morphine IV ; reprise de la morphine IV à dose équivalente 18 heures après l’arrêt du patch ; interdoses de 1/6 à 1/10 de la dose sur 24 heures dès le début du relais.",
           "correctionGenerale": "• Arrêt du patch de fentanyl\n• 25 µg de fentanyl → 60 mg de morphine PO → <b>20 mg de morphine IV</b>\n• Reprise de la morphine IV à dose équivalente <b>18 h après l’arrêt</b>\n• Interdose = 1/6 à 1/10 de la dose sur 24 h, dès le début du relais\n\n<b>Morphine chez le sujet âgé</b>\n• Équivalences : 60 mg PO = 30 mg SC = 20 mg IV = 25 µg de fentanyl\n• Interdose : 1/6 à 1/10 de la dose sur 24 h\n• Commencer à petite dose (ex. Actiskénan® 1 mg, 2,5 mg ou 5 mg) : <b>titrer avant d’introduire une dose de fond</b>\n• Paracétamol (synergie) et laxatif en systématique (PMZ)\n\n<i>La figure reproduit l’encadré « Spécificités d’utilisation du patch chez la personne âgée » : le délai d’élimination du fentanyl après retrait du patch est plus long chez la personne âgée, d’où un relais avec un autre morphinique 18 à 20 heures plus tard ; la fonction rénale est altérée physiologiquement par le vieillissement, ce dont il faut tenir compte lors de la prescription des morphiniques ; le risque de constipation est plus marqué et doit être systématiquement prévenu ; en cas de troubles cognitifs, choisir une zone d’application du patch non accessible au patient.</i>"
         },
@@ -96,7 +102,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 9</b>\n\nDéfinissez la dépendance iatrogène liée à l’hospitalisation.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-023-106.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-023-106.jpg"
+          ],
           "reponseAttendue": "La perte fonctionnelle aux activités basales de la vie quotidienne, en lien avec les soins et l’environnement hospitaliers, entre l’entrée et la sortie d’hospitalisation.",
           "correctionGenerale": "<b>Perte fonctionnelle aux activités de base de la vie quotidienne, en lien avec les soins et l’environnement hospitaliers, entre l’entrée et la sortie d’hospitalisation.</b>\n\n<i>Elle intègre : la pathologie ayant justifié l’hospitalisation ; l’état de base du patient à l’entrée (fonctionnel, cognitif, thymique, nutritionnel, fragilité, sédentarité, comorbidités et traitements) ; et les processus de soins et l’environnement hospitalier qui ne répondent pas aux besoins spécifiques de la personne âgée — c’est la dépendance iatrogène liée à l’hospitalisation.</i>"
         },
@@ -113,14 +121,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 11</b>\n\nCitez 5 complications de la contention physique passive.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-027-133.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-027-133.jpg"
+          ],
           "reponseAttendue": "Confusion, escarre, globe vésical, fécalome, sarcopénie — soit les complications du syndrome d’immobilisation.",
           "correctionGenerale": "• Confusion\n• Escarre\n• Globe vésical\n• Fécalome\n• Sarcopénie\n\n= <b>complications du syndrome d’immobilisation</b>.\n\n<i>Complications d’un alitement prolongé (figure) : précocement, en quelques heures ou quelques jours — syndrome de désadaptation psychomotrice, thrombose veineuse et embolie pulmonaire, troubles de la déglutition et encombrement bronchique, plaie dont escarre, rhabdomyolyse avec ses conséquences, confusion, déshydratation ; plus tardivement, après quelques jours ou semaines — dysautonomie avec hypotension orthostatique, infection pulmonaire ou urinaire, dénutrition, globe, fécalome, attitudes vicieuses, rétractions tendineuses, dépression et déclin fonctionnel, ostéoporose.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 12</b>\n\nDonnez la définition d’un trouble neurocognitif (TNC) majeur.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-029-142.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-029-142.jpg"
+          ],
           "reponseAttendue": "Un déclin cognitif significatif dans un ou plusieurs domaines cognitifs, avec retentissement sur l’autonomie (IADL), non mieux expliqué par un syndrome confusionnel ou une pathologie psychiatrique.",
           "correctionGenerale": "• Déclin cognitif <b>significatif</b> d’un ou plusieurs domaines cognitifs\n• <b>Avec retentissement sur l’autonomie</b> (IADL)\n• Pas mieux expliqué par un syndrome confusionnel ou une pathologie psychiatrique\n\n<i>Critères DSM-5 (figure) — A. Présence d’un déclin cognitif significatif à partir d’un niveau antérieur de performance dans un ou plusieurs domaines de la cognition (attention complexe, fonctions exécutives, apprentissage et mémoire, langage, cognition perceptivo-motrice ou sociale), fondé sur la perception par le patient, un informant fiable ou le clinicien, et sur l’existence d’une diminution importante des performances cognitives documentée par des examens neuropsychologiques standardisés. B. Le déclin cognitif retentit sur l’autonomie dans les activités quotidiennes. C. Les déficits ne surviennent pas uniquement dans le contexte d’un delirium. D. Les déficits ne sont pas mieux expliqués par une autre affection mentale.</i>"
         },
@@ -134,14 +146,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 14</b>\n\nCitez 5 facteurs de risque modifiables de développer un trouble neurocognitif majeur.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-032-157.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-032-157.jpg"
+          ],
           "reponseAttendue": "HTA, diabète, obésité, hypercholestérolémie, sédentarité.",
           "correctionGenerale": "• HTA\n• Diabète\n• Obésité\n• Hypercholestérolémie\n• Sédentarité\n\n<i>Le HCSP rappelle qu’au-delà des facteurs de risque connus et non modifiables de la maladie, comme l’âge et le genre, certains facteurs modifiables tels que l’hypertension artérielle, le diabète, l’obésité, l’athérosclérose et l’hypercholestérolémie déclarés entre 45 et 55 ans semblent majorer le risque de démence et doivent être recherchés et traités. À l’opposé, un niveau d’éducation élevé, une alimentation de type méditerranéen, la pratique régulière d’une activité physique ou des activités sociales semblent être des facteurs protecteurs.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 15</b>\n\nQuelle est la définition d’un TNC léger (trouble cognitif léger, MCI — <i>mild cognitive impairment</i>) ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-034-168.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-034-168.jpg"
+          ],
           "reponseAttendue": "Un déclin cognitif léger dans un ou plusieurs domaines cognitifs, sans retentissement sur l’autonomie (IADL), non mieux expliqué par un syndrome confusionnel ou une pathologie psychiatrique.",
           "correctionGenerale": "• Déclin cognitif <b>léger</b> d’un ou plusieurs domaines cognitifs\n• <b>Sans retentissement sur l’autonomie</b> (IADL)\n• Pas mieux expliqué par un syndrome confusionnel ou une pathologie psychiatrique\n\n<i>Critères DSM-5 du trouble neurocognitif léger (figure) : les déficits cognitifs n’interfèrent pas avec l’autonomie dans la vie quotidienne — les IADL comme payer ses factures ou gérer ses médicaments sont préservés, mais nécessitent un plus grand effort, des stratégies compensatrices ou un ajustement.</i>"
         },
@@ -158,7 +174,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 17</b>\n\nQuels sont les 4 critères centraux (cardinaux) de la maladie à corps de Lewy ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-039-197.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-039-197.jpg"
+          ],
           "reponseAttendue": "Hallucinations visuelles, syndrome parkinsonien, fluctuations, troubles du comportement en sommeil paradoxal.",
           "correctionGenerale": "• Hallucinations visuelles\n• Syndrome parkinsonien\n• Fluctuations\n• Troubles du comportement en sommeil paradoxal\n\n<i>Tableau 9.1 — Critères diagnostiques révisés de maladie à corps de Lewy (figure) : trouble cognitif portant sur l’attention, les fonctions exécutives et visuo-spatiales, ± amnésie ; signes cliniques suggestifs (hypersensibilité aux neuroleptiques, syndrome dysautonomique, hypersomnie, apathie, autres hallucinations, délire, hyposmie, anxiété, dépression) ; biomarqueurs caractéristiques (hypofixation striatale au DAT-Scan®, anomalies polysomnographiques, anomalie de fixation du <sup>123</sup>iodine-MIBG en scintigraphie myocardique) et suggestifs (préservation relative du lobe temporal médian à l’IRM, hypoperfusion postérieure en PET/SPECT, ondes lentes postérieures en EEG).</i>"
         },
@@ -175,21 +193,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 19</b>\n\nDonnez 3 critères phénotypiques du diagnostic de dénutrition.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-043-220.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-043-220.jpg"
+          ],
           "reponseAttendue": "Perte de poids ≥ 5 % en 1 mois ou ≥ 10 % en 6 mois ; IMC < 22 kg/m² ; sarcopénie confirmée.",
           "correctionGenerale": "• Perte de poids ≥ 5 % en 1 mois ou ≥ 10 % en 6 mois\n• IMC < 22 kg/m²\n• Sarcopénie confirmée\n\n<i>Diagnostic de la dénutrition de l’adulte de 70 ans et plus (figure) : le diagnostic repose sur la présence d’au moins 1 critère phénotypique ET 1 critère étiologique. Critères phénotypiques : perte de poids ≥ 5 % en 1 mois ou ≥ 10 % en 6 mois ou ≥ 10 % par rapport au poids habituel avant le début de la maladie ; IMC < 22 kg/m² ; sarcopénie confirmée par une réduction quantifiée de la force et de la masse musculaires. Critères étiologiques : réduction de la prise alimentaire ≥ 50 % pendant plus d’une semaine, ou toute réduction des apports pendant plus de 2 semaines ; absorption réduite (malabsorption/maldigestion) ; situation d’agression, avec ou sans syndrome inflammatoire.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 20</b>\n\nDonnez les 2 critères définissant la sarcopénie.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-045-229.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-045-229.jpg"
+          ],
           "reponseAttendue": "Une réduction de la force musculaire ET une réduction de la masse musculaire.",
           "correctionGenerale": "• Réduction de la <b>force</b> musculaire\n<b>ET</b>\n• Réduction de la <b>masse</b> musculaire\n\n<i>Consensus européen EWGSOP 2019 (figure) : réduction de la force musculaire — 5 levers de chaise en plus de 15 secondes, force de préhension au dynamomètre &lt; 16 kg chez la femme et &lt; 27 kg chez l’homme ; ET réduction de la masse musculaire — masse musculaire appendiculaire &lt; 15 kg chez la femme et &lt; 20 kg chez l’homme, ou index de masse musculaire appendiculaire &lt; 5,5 kg/m² chez la femme et &lt; 7 kg/m² chez l’homme.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 21</b>\n\nCitez les 5 éléments de surveillance de l’état nutritionnel.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-047-242.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-047-242.jpg"
+          ],
           "reponseAttendue": "Le poids, l’IMC, la force musculaire, l’appétit, la consommation alimentaire.",
           "correctionGenerale": "• Poids\n• IMC\n• Force musculaire\n• Appétit\n• Consommation alimentaire\n\n<i>Quel que soit leur statut nutritionnel, la surveillance repose sur la mesure du poids, le calcul de l’IMC, l’évaluation de l’appétit, l’évaluation de la consommation alimentaire et la force musculaire. La mesure du poids doit toujours être faite sur le même dispositif de pesée. L’appétit et la consommation alimentaire sont estimés par une échelle visuelle analogique ou verbale, par une échelle semi-quantitative (portions) ou, au mieux, calculés par un diététicien. Il est recommandé de surveiller la force musculaire par mesure de la force de préhension ou test du lever de chaise, ainsi que l’état bucco-dentaire, les capacités de mastication et de déglutition.</i>"
         },
@@ -206,11 +230,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 23</b>\n\nQuels sont les critères diagnostiques d’une hypotension orthostatique ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-051-269.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-051-269.jpg"
+          ],
           "reponseAttendue": "Une baisse de la pression artérielle systolique ≥ 20 mmHg et/ou de la pression artérielle diastolique ≥ 10 mmHg à l’orthostatisme, et/ou une pression artérielle systolique < 90 mmHg à l’orthostatisme quelle que soit la valeur de départ, dans les 5 minutes suivant la verticalisation.",
           "correctionGenerale": "• PAS debout < 90 mmHg\n• Baisse de la PAS ≥ 20 mmHg\n• Et/ou baisse de la PAD ≥ 10 mmHg\n\n<i>Définition (figure) : après plusieurs minutes de repos en conditions calmes, diminution à l’orthostatisme d’au moins 20 mmHg de la pression artérielle systolique et/ou d’au moins 10 mmHg de la pression artérielle diastolique, et/ou pression artérielle systolique &lt; 90 mmHg à l’orthostatisme quelle que soit la valeur de départ, dans les 5 minutes après la verticalisation. Cette recherche est peu sensible et doit être répétée, en particulier le matin. NB : la présence de symptômes évocateurs (lipothymies fréquentes à l’orthostatisme) malgré une recherche négative peut suffire à retenir le diagnostic. Pathologie très fréquente et grave : elle représente un risque vital immédiat.</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2024 de gériatrie — questions isolées.\n\n<i>La numérotation reprise ci-dessous est celle du diaporama de correction ; elle comporte quelques doublons dans le document d’origine (une question « 6 » et une question « 16 » répétées), corrigés ici par une numérotation continue.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2024 - EVCP - Sujet 1",
@@ -234,21 +261,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nCommentez la prescription d’ésoméprazole.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-062-319.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-062-319.jpg"
+          ],
           "reponseAttendue": "Elle n’est pas indiquée ici.",
           "correctionGenerale": "<b>Non indiqué ici.</b>\n\n<i>Tableau des indications des IPP (figure) — indications AMM : traitement de l’ulcère gastrique et duodénal, éradication d’</i>Helicobacter pylori<i>, traitement symptomatique du RGO sans œsophagite, traitement de l’œsophagite érosive par reflux, prévention en cas d’antécédent d’hémorragie digestive ou de co-prescription avec AINS chez le sujet à risque, syndrome de Zollinger-Ellison. Indications hors AMM mais pertinentes : prévention de l’ulcère de stress chez les sujets à risque, prévention des lésions gastro-duodénales sous corticoïdes chez les sujets à risque, traitement des manifestations atypiques du RGO. Non-indications : dyspepsie fonctionnelle, prévention des lésions gastro-duodénales sous corticoïdes chez les sujets non à risque, prévention chez les patients non à risque, hypertension portale, test thérapeutique en cas de douleurs abdominales aiguës.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nL’interne du service vous présente le bilan biologique : natrémie 148 mmol/L (133-143), kaliémie 4,5 mmol/L (3,4-4,6), chlorémie 102 mmol/L (98-107), glycémie 15,7 mmol/L (4,30-6,40), créatinine 108 µmol/L (45-84), urémie 10,9 mmol/L (2,5-6,4), protidémie 71 g/L (67-85), CRP 75 mg/L (< 3,2), globules rouges 4,4 T/L (4,2-5,1), hémoglobine 125 g/L (120-160), hématocrite 46 % (37-48), VGM 92 µ³ (85-95), globules blancs 14,2 T/L (4-10), plaquettes 480 T/L (150-440).\n\nFace à l’élévation de la créatininémie, que recherchez-vous pour caractériser cette anomalie ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-063-326.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-063-326.jpg"
+          ],
           "reponseAttendue": "Une antériorité, c’est-à-dire une créatininémie de base.",
           "correctionGenerale": "<b>Une antériorité (créatininémie de base).</b>\n\n<b>Comment différencier une insuffisance rénale chronique d’une insuffisance rénale aiguë ?</b> En faveur de l’IRC :\n• Maladie rénale connue\n• Créatinine antérieure\n• Baisse de la taille des reins (< 10 cm)\n• Anémie\n• Hypocalcémie"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nComment interprétez-vous l’hypernatrémie ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-067-343.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-067-343.jpg"
+          ],
           "reponseAttendue": "Elle traduit une déshydratation intracellulaire.",
           "correctionGenerale": "<b>Déshydratation intracellulaire.</b>\n\n<i>Diagnostic positif (figure) — signes biologiques : le diagnostic d’un trouble de l’hydratation intracellulaire est biologique ; osmolalité plasmatique élevée (Posm > 300 mOsm/kg d’eau) ; hypernatrémie [Na⁺] > 145 mmol/L. Signes cliniques associés : soif parfois intense ; troubles neurologiques (signes de gravité), corrélés au degré de l’hypernatrémie et à sa rapidité d’installation — somnolence, asthénie, troubles du comportement à type d’irritabilité, fièvre d’origine centrale, crise convulsive, coma, hémorragies cérébro-méningées, hématomes sous-duraux, thromboses veineuses cérébrales ; sécheresse des muqueuses, en particulier à la face interne des joues ; syndrome polyuro-polydipsique en cas de cause rénale ; perte de poids.</i>"
         },
@@ -262,7 +295,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nLa fréquence respiratoire est à 26/min, la saturation à 86 % en air ambiant. La patiente tousse et a des crépitants en base droite pulmonaire.\n\nQuels examens complémentaires prescrivez-vous ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-071-364.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-071-364.jpg"
+          ],
           "reponseAttendue": "Radiographie pulmonaire, PCR grippe/covid/VRS, ECBC, antigénurie légionelle ± pneumocoque, hémocultures.",
           "correctionGenerale": "• Radiographie pulmonaire\n• PCR grippe, covid, VRS\n• ECBC\n• Antigénurie légionelle ± pneumocoque\n• Hémocultures\n\n<b>Pneumopathie et examens complémentaires chez la personne âgée</b>\n<i>Quelle imagerie à visée diagnostique ?</i> Radiographie de thorax ou échographie pleuro-pulmonaire ; scanner en cas de doute diagnostique.\n<i>Quand faire des examens microbiologiques ?</i> ECBC si sécrétions muco-purulentes ; antigénurie légionelle si signes fonctionnels évocateurs ; PCR virale si contexte épidémique ; PCR germe atypique si signes évocateurs.\n\n<i>La figure détaille les examens microbiologiques recommandés selon le lieu de prise en charge (ambulatoire, secteur conventionnel, soins intensifs/réanimation, patient immunodéprimé).</i>"
         },
@@ -290,14 +325,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\nQuels facteurs précipitants identifiez-vous dans ce cas clinique ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-081-422.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-081-422.jpg"
+          ],
           "reponseAttendue": "L’hospitalisation, la pneumopathie, la contention, le traitement par Haldol®.",
           "correctionGenerale": "• Hospitalisation\n• Pneumopathie\n• Contention\n• Traitement par <b>Haldol®</b>\n\n<b>Facteurs précipitants du syndrome confusionnel</b> (figure) — toute situation aiguë quelle qu’elle soit, iatrogène ou pathologique :\n• <b>Iatrogène médicamenteuse</b> : recueil des traitements, en particulier modifications récentes (ajout, arrêt — sevrage en benzodiazépines ou hypnotiques +++ — ou changement de posologie) ; recherche de traitements anticholinergiques\n• <b>Infectieuses (+++)</b>, de toute origine — tout syndrome confusionnel fébrile sans foyer infectieux retrouvé doit faire envisager une ponction lombaire en urgence\n• <b>Toxiques</b> : alcool, monoxyde de carbone\n• <b>Douleur</b>, quelle qu’en soit la cause (fracture, globe vésical…)\n• <b>Cardiovasculaire</b> : syndrome coronarien, embolie pulmonaire\n• <b>Neurologique</b> : AVC, hématome sous-dural, épilepsie\n• <b>Métabolique et endocrinienne</b> : hypoglycémie (+++), déshydratation, hyponatrémie, hypernatrémie, hypercalcémie, hypoxie\n• <b>Psychiatrique</b> : dépression, stress, deuil\n• <b>Autres</b> : chirurgie, anesthésie générale, réanimation, subocclusion, fièvre, contention, privation sensorielle, changement de repères"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nVous recherchez 2 autres facteurs précipitants, très fréquents en gériatrie. Lesquels ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-083-435.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-083-435.jpg"
+          ],
           "reponseAttendue": "La rétention aiguë d’urine et le fécalome.",
           "correctionGenerale": "• <b>Rétention aiguë d’urine</b>\n• <b>Fécalome</b>\n\n<i>1<sup>er</sup> réflexe ! Face à un tableau confusionnel aigu chez la personne âgée, en plus de l’examen clinique habituel, il est recommandé de rechercher tous les facteurs déclenchants de la confusion et, plus spécifiquement chez la personne âgée, d’éliminer en premier lieu un globe vésical, un fécalome ou une cause de douleur même non verbalisée dans ce contexte.</i>"
         },
@@ -316,7 +355,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 12</b>\n\nMadame est sortie de l’hôpital, tous les psychotropes ont été arrêtés, et vous la recevez en consultation 6 mois plus tard. Vous notez une akinésie, elle marche à petits pas et sa fille rapporte 3 chutes le mois dernier. Sa fille dit qu’elle l’a appelée car elle voyait des chats dans sa cuisine alors qu’elle n’a pas d’animaux. Elle se plaint de faire des cauchemars et d’être tombée de son lit.\n\nQuelle est votre hypothèse diagnostique ? Justifiez.",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-088-466.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-088-466.jpg"
+          ],
           "reponseAttendue": "Une maladie à corps de Lewy : trouble neurocognitif, hallucinations, syndrome parkinsonien, trouble du sommeil ; les chutes s’expliquant par le syndrome parkinsonien et/ou une hypotension orthostatique.",
           "correctionGenerale": "<b>Maladie à corps de Lewy</b>\n• TNC\n• Hallucinations\n• Syndrome parkinsonien\n• Trouble du sommeil\n• Chutes sur syndrome parkinsonien ? Hypotension orthostatique ?"
         }
@@ -380,7 +421,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nQuelques jours plus tard, l’infirmière vous sollicite pour appeler l’équipe mobile de soins palliatifs (EMSP) afin de redéfinir une prise en charge.\n\nQuels sont les arguments pour faire appel à l’EMSP chez cette patiente ?",
-          "images": ["annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-109-576.jpg"],
+          "images": [
+            "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-109-576.jpg"
+          ],
           "reponseAttendue": "Une maladie en phase terminale (TNC avec de nombreux syndromes gériatriques), un pronostic sombre à court terme, une qualité de vie altérée avec des symptômes d’inconfort.",
           "correctionGenerale": "• Maladie en phase terminale (TNC avec de nombreux syndromes gériatriques)\n• Pronostic sombre à court terme\n• Qualité de vie altérée avec des symptômes d’inconfort\n\n<b>Outil du Dr Sebag-Lanoë</b>, pour limiter l’obstination et aider à la décision :\n• Quelle est la maladie principale de ce patient ?\n• Quel est son degré d’évolution ?\n• Quelle est la nature de l’épisode actuel surajouté ?\n• Est-il facilement curable ou non ? Y a-t-il eu répétition récente d’épisodes aigus rapprochés ou une multiplicité d’atteintes diverses ?\n• Que dit le malade s’il peut le faire ?\n• Qu’exprime-t-il à travers son comportement corporel et sa coopération aux soins ?\n• Quelle est la qualité de son confort actuel ?\n• Qu’en pense la famille (tenir compte de…) ?\n• Qu’en pensent les soignants qui le côtoient le plus souvent ?\n\n<i>D’après Sebag-Lanoë R. Soigner le grand âge. Paris : Desclée de Brouwer ; 1992.</i>"
         }

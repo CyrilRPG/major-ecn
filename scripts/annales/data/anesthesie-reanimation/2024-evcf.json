@@ -13,7 +13,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2024 - Correction .pdf",
       "orderIndex": 33,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 en anesthésie-réanimation : 21 questions à réponse ouverte et courte, sans vignette clinique commune. Chaque réponse du corrigé est accompagnée de sa référence bibliographique.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -166,7 +166,8 @@
           "reponseAttendue": "Fer IV, EPO, acide tranexamique, autotransfusion (récupérateur de sang), hypotension contrôlée, techniques chirurgicales atraumatiques (abord mini-invasif).",
           "correctionGenerale": "• Fer IV\n• EPO\n• Acide tranexamique\n• Autotransfusion (récupérateur de sang)\n• Hypotension contrôlée\n• Techniques chirurgicales atraumatiques (abord mini-invasif)\n\n<i>Référence : SFAR – Stratégie d’épargne sanguine, 2017.</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2024 en anesthésie-réanimation : 21 questions à réponse ouverte et courte, sans vignette clinique commune. Chaque réponse du corrigé est accompagnée de sa référence bibliographique."
     }
   ]
 }

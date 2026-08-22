@@ -21,7 +21,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/Annale 2021.pdf",
       "orderIndex": 27,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -216,7 +216,8 @@
           "reponseAttendue": "Il s’agit d’une hypocalcémie (normes 1 à 1,40 mmol/L). Causes : consommation des facteurs de la coagulation, hémorragie, chélateurs du calcium contenus dans les CGR. Conséquences : entretien de la triade létale du choc hémorragique, coagulopathie, persistance du saignement.",
           "correctionGenerale": "<b>Hypocalcémie</b> (normes : 1 à 1,40 mmol/L)\n\n<b>Causes</b>\n• Consommation des facteurs de la coagulation\n• Hémorragie\n• Chélateurs du calcium contenus dans les CGR\n\n<b>Conséquences</b>\n• Entretien de la triade létale du choc hémorragique\n• Coagulopathie\n• Persistance du saignement"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune."
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2021 - EVCP - Sujet 1",

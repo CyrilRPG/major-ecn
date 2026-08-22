@@ -92,7 +92,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nLa patiente s’inquiète du risque de trisomie 21 en raison de son âge. Quelles informations lui donnez-vous ?",
-          "images": ["annales-gynecologie/annales-2019-gyneco/figures/img-014-056.png"],
+          "images": [
+            "annales-gynecologie/annales-2019-gyneco/figures/img-014-056.png"
+          ],
           "reponseAttendue": "Le risque combiné est proposé à toutes les femmes ; il est calculé à partir de l’âge maternel, de la clarté nucale et des marqueurs sériques du premier trimestre. Le risque de trisomie 21 augmente avec l’âge.",
           "correctionGenerale": "• Risque combiné proposé à toutes les femmes, calculé à partir de l’âge maternel, de la clarté nucale et des marqueurs sériques au premier trimestre\n• <b>Augmentation du risque de trisomie 21 avec l’âge</b>\n\n<i>La figure représente le risque de trisomie 21 en fonction de l’âge maternel : quasi nul jusqu’à 30 ans, il augmente ensuite de façon exponentielle pour dépasser 3 % au-delà de 45 ans.</i>\n\n<i>Source : CNGOF.</i>"
         },
@@ -106,7 +108,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nLa grossesse évolue favorablement jusqu’à 30 SA. Elle consulte aux urgences d’une maternité de niveau I pour des métrorragies et des douleurs abdominales.\n\nQuels éléments diagnostiques allez-vous rechercher ?",
-          "images": ["annales-gynecologie/annales-2019-gyneco/figures/img-018-073.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2019-gyneco/figures/img-018-073.jpg"
+          ],
           "reponseAttendue": "À l’examen clinique : interrogatoire (suivi de grossesse, échographies, traitement en particulier antihypertenseur) et examen physique (constantes avec recherche d’HTA, hauteur utérine, contractions utérines, spéculum pour l’origine et l’abondance du saignement, toucher vaginal pour la dilatation du col si pas de placenta prævia, signes fonctionnels d’HTA, ROT). Un RCF à la recherche de troubles du rythme cardiaque fœtal et de contractions utérines. Une biologie : NFS-plaquettes, groupe, RAI, bilan d’hémostase (TP, TCA, fibrinogène), bilan vasculo-rénal (TGO, TGP, ionogramme, créatinine, LDH, schizocytes, haptoglobine) avec protéinurie sur créatininurie à la recherche d’une pré-éclampsie. Une échographie : localisation placentaire (placenta prævia), recherche d’un hématome, présentation et vitalité fœtales, estimation du poids fœtal (recherche de RCIU), quantité de liquide (oligoamnios), dopplers ombilical et cérébral moyen, échographie du col si contractions ou placenta prævia, recherche de vaisseaux prævia.",
           "correctionGenerale": "<b>Examen clinique</b>\n• <i>Interrogatoire</i> : suivi de grossesse, échographies, traitement (en particulier antihypertenseur)\n• <i>Examen physique</i> : constantes (HTA), HU (RCIU, oligoamnios), contractions utérines, spéculum pour l’origine et l’abondance du saignement, TV pour la dilatation du col (si pas de placenta prævia), signes fonctionnels d’HTA, ROT\n\n<b>RCF</b> : trouble du rythme cardiaque fœtal associé, contractions utérines\n\n<b>Biologie</b> : NFS-plaquettes, groupe, RAI, bilan d’hémostase (TP, TCA, fibrinogène), bilan vasculo-rénal (TGO, TGP, ionogramme, créatinine, LDH, schizocytes, haptoglobine) avec protéinurie sur créatininurie (recherche d’une pré-éclampsie)\n\n<b>Échographie</b> : localisation placentaire (placenta prævia), recherche d’un hématome, présentation et vitalité fœtales, EPF (recherche de RCIU), quantité de liquide (oligoamnios), DO et ACM (trouble doppler associé à un RCIU vasculaire, anémie fœtale), échographie du col si contractions ou placenta prævia, vaisseaux prævia\n\n<i>La figure reproduit l’enregistrement du rythme cardiaque fœtal à l’admission.</i>"
         },
@@ -160,7 +164,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/annales 2019 GYNECO.pdf",
       "orderIndex": 17,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de gynécologie-obstétrique : première série de questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -172,7 +176,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuelles sont les principales contre-indications à la contraception œstroprogestative ?",
-          "images": ["annales-gynecologie/annales-2019-gyneco/figures/img-026-109.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2019-gyneco/figures/img-026-109.jpg"
+          ],
           "reponseAttendue": "Facteurs de risque artériels : antécédents familiaux au 1ᵉʳ degré d’IDM ou d’AVC avant 55 ans chez l’homme ou 65 ans chez la femme, hypertension artérielle, dyslipidémie non contrôlée, diabète insulino-dépendant si le diabète évolue depuis plus de 20 ans ou s’il existe des complications vasculaires, migraine avec aura. Facteurs de risque veineux : thrombophilie biologique connue, antécédents familiaux au 1ᵉʳ degré de MVTE avant 50 ans. Sont possibles en l’absence d’autre facteur de risque : âge > 35 ans, surpoids et obésité, tabac > 15 cigarettes/jour, dyslipidémie contrôlée, diabète de type II (en seconde intention), migraine simple.",
           "correctionGenerale": "<i>La réponse est donnée par le tableau ci-dessus.</i>\n\n<b>Facteurs de risque artériel — utilisation d’une COP</b>\n• Âge > 35 ans : possible si pas d’autre FDRV\n• Surpoids, obésité : possible si pas d’autre FDRV\n• Tabac > 15 cigarettes/jour : possible si pas d’autre FDRV\n• Antécédents familiaux au 1ᵉʳ degré d’IDM ou d’AVC avant 55 ans (homme) ou 65 ans (femme) : <b>contre-indication</b>\n• Hypertension artérielle : <b>contre-indication</b>\n• Dyslipidémie : non contrôlée → contre-indication ; contrôlée → possible si pas d’autre FDRV ; contre-indication relative si la dyslipidémie est survenue avec la COP\n• Diabète insulino-dépendant : <b>contre-indication si délai du diabète > 20 ans ou si complications vasculaires</b>\n• Diabète de type II : possible si pas d’autre FDRV, mais en seconde intention (1ᵉʳ choix : contraception microprogestative ou DIU au cuivre)\n• Migraine avec aura : <b>contre-indication</b>\n• Migraine simple : possible si pas d’autre FDRV\n\n<b>Facteurs de risque veineux — utilisation d’une COP</b>\n• Âge > 35 ans : possible si pas d’autre FDRV\n• Surpoids, obésité : possible si pas d’autre FDRV\n• Thrombophilie biologique connue : <b>contre-indication</b>\n• Antécédents familiaux au 1ᵉʳ degré de MVTE avant 50 ans : <b>contre-indication</b>"
         },
@@ -211,7 +217,8 @@
           "reponseAttendue": "Un terme inférieur à 16 SA (14 semaines de grossesse), la signature du consentement, l’attestation de consultation avec remise du dossier-guide, le droit à l’anonymat, la clause de conscience du médecin, une prise en charge à 100 %, et, si l’acte est effectué en libéral, une convention avec un centre hospitalier.",
           "correctionGenerale": "• < 16 SA ou 14 SG\n• Signature du consentement\n• Attestation de consultation, remise du dossier-guide\n• Droit à l’anonymat\n• Clause de conscience\n• Prise en charge à 100 %\n• Si effectué en libéral : convention avec un centre hospitalier"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 de gynécologie-obstétrique : première série de questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2019 - EVCF - Série 2",
@@ -219,7 +226,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/annales 2019 GYNECO.pdf",
       "orderIndex": 18,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de gynécologie-obstétrique : seconde série de questions isolées, à dominante obstétricale.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -249,7 +256,8 @@
           "reponseAttendue": "Diagnostic : écoulement de liquide, test de rupture. Prise en charge initiale : examen clinique à la recherche de signes d’infection intra-utérine (contractions utérines, douleur à la mobilisation utérine, fièvre, couleur du liquide, toucher vaginal) ; bilan initial (ERCF, NFS, CRP, groupe, rhésus, RAI, prélèvement vaginal, ECBU, échographie fœtale avec présentation, quantité de liquide, position du placenta, estimation du poids fœtal, mesure du col) ; traitement par antibiothérapie probabiliste IV (amoxicilline ou C3G) en attendant les résultats bactériologiques, corticothérapie anténatale par 12 mg de bétaméthasone IM avec 2ᵉ dose à 24 h d’intervalle, hospitalisation en maternité de niveau 3, consultation d’anesthésie, information du pédiatre, et information de la patiente sur le risque d’accouchement prématuré et d’infection intra-utérine.",
           "correctionGenerale": "<b>Diagnostic</b> : écoulement de liquide, test de rupture\n\n<b>Prise en charge initiale</b>\n• <i>Clinique</i> : recherche de signes d’infection intra-utérine — contractions utérines, douleur à la mobilisation utérine, fièvre, couleur du liquide, TV\n• <i>Bilan initial</i> : ERCF ; NFS, CRP ; groupe, rhésus, RAI ; PV, ECBU ; échographie fœtale (présentation, quantité de liquide, position du placenta, EPF, mesure du col)\n• <i>Traitement</i>\n  – <b>Antibiothérapie probabiliste par amoxicilline IV ou C3G IV</b> en attendant les résultats bactériologiques\n  – <b>Corticothérapie anténatale</b> : 12 mg de bétaméthasone IM (Célestène®), 2ᵉ dose à 24 h d’intervalle\n  – Hospitalisation en maternité de niveau 3, consultation d’anesthésie, information du pédiatre\n  – Information sur le risque d’accouchement prématuré et d’infection intra-utérine"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 de gynécologie-obstétrique : seconde série de questions isolées, à dominante obstétricale."
     }
   ]
 }

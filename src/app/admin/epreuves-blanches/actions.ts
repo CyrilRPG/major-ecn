@@ -711,20 +711,38 @@ const PickerSchema = z.object({
   coursId: z.string().optional().nullable(),
   serieId: z.string().optional().nullable(),
   types: z.array(z.enum(['qcm', 'qroc', 'dp_qcm', 'dp_qroc'])).optional(),
+  /** Recherche plein texte sur l'énoncé, appliquée EN BASE (cf. LIMITE_PIOCHE). */
+  search: z.string().trim().max(120).optional().nullable(),
 });
-export async function listContentQuestions(input: unknown): Promise<{ ok: true; questions: PickerQuestion[] } | Err> {
+
+/**
+ * Plafond de la pioche. Huit spécialités dépassent aujourd'hui 2 000 questions
+ * (Anesthésie-Réanimation et Orthopédie en comptent plus de 6 000) : sans
+ * filtre, la requête en renvoyait 2 000 dans un ordre non garanti et le reste
+ * — dont les annales EVC, ajoutées en dernier — restait invisible, y compris
+ * pour la recherche, qui ne filtrait que la page déjà chargée.
+ * On borne donc toujours, mais on filtre en base et on le DIT à l'appelant.
+ */
+const LIMITE_PIOCHE = 2000;
+
+export async function listContentQuestions(
+  input: unknown,
+): Promise<{ ok: true; questions: PickerQuestion[]; tronque: boolean } | Err> {
   const { admin } = await ensureAdmin();
   const parsed = PickerSchema.safeParse(input);
   if (!parsed.success || !parsed.data.matiereId) return { ok: false, error: 'Spécialité requise' };
-  const { matiereId, coursId, serieId, types } = parsed.data;
+  const { matiereId, coursId, serieId, types, search } = parsed.data;
   const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
   let query = a
     .from('qcm_questions')
-    .select('id, enonce, format, qcm_series!inner(id, label, vignette, cours!inner(id, titre, matiere_id))')
+    .select('id, enonce, format, order_index, qcm_series!inner(id, label, vignette, cours!inner(id, titre, matiere_id))')
     .eq('qcm_series.cours.matiere_id', matiereId);
   if (coursId) query = query.eq('qcm_series.cours.id', coursId);
   if (serieId) query = query.eq('qcm_series.id', serieId);
-  const { data, error } = await query.limit(2000);
+  if (search) query = query.ilike('enonce', '%' + search.replace(/[%_]/g, (c: string) => '\\' + c) + '%');
+  // Ordre déterministe : sans lui, deux appels identiques ne tronquent pas au
+  // même endroit et la liste « saute » d'un rafraîchissement à l'autre.
+  const { data, error } = await query.order('serie_id').order('order_index').limit(LIMITE_PIOCHE);
   if (error) return { ok: false, error: error.message };
   const typeSet = types && types.length > 0 ? new Set(types) : null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -742,7 +760,7 @@ export async function listContentQuestions(input: unknown): Promise<{ ok: true; 
       };
     })
     .filter((q) => !typeSet || typeSet.has(q.type));
-  return { ok: true, questions };
+  return { ok: true, questions, tronque: (data ?? []).length >= LIMITE_PIOCHE };
 }
 
 /* ─── Snapshot depuis le contenu existant (copie figée) ─── */

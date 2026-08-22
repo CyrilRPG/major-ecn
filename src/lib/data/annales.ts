@@ -34,3 +34,53 @@ export function estItemAnnales(item: {
   if ((item.flashcards ?? []).length > 0) return false;
   return true;
 }
+
+type ClientLecture = {
+  from: (t: string) => {
+    select: (s: string) => {
+      in: (col: string, v: string[]) => Promise<{ data: unknown[] | null }>;
+    };
+  };
+};
+
+/**
+ * Items d'annales des spécialités indiquées, par `matiere_id`.
+ *
+ * Ces items ne s'« étudient » pas : ils n'ont ni fiche, ni vidéo, ni flashcard,
+ * et l'élève n'y passe pas pour apprendre mais pour s'entraîner. Deux endroits
+ * en ont besoin :
+ *
+ *  - les RÉVISIONS TRANSVERSALES, qui ne piochent que dans les items déjà
+ *    étudiés : sans cela, les annales n'entreraient dans le vivier qu'après y
+ *    avoir répondu au moins une fois, alors qu'elles sont la ressource de
+ *    révision la plus utile de la spécialité ;
+ *  - la détection « spécialité terminée », qui compare le nombre d'items
+ *    étudiés au nombre total d'items : y compter un item d'annales rendrait
+ *    inachevables des spécialités qui l'étaient avant leur publication.
+ */
+export async function coursAnnalesParMatiere(
+  supabase: unknown,
+  matiereIds: string[],
+): Promise<Map<string, string[]>> {
+  const out = new Map<string, string[]>();
+  if (matiereIds.length === 0) return out;
+  const { data } = await (supabase as ClientLecture)
+    .from('cours')
+    .select('id, matiere_id, qcm_series(label), fiches(storage_path), videos(id), flashcards(id)')
+    .in('matiere_id', matiereIds);
+  type Row = {
+    id: string; matiere_id: string;
+    qcm_series: { label: string | null }[] | null;
+    fiches: { storage_path: string | null }[] | null;
+    videos: unknown[] | null;
+    flashcards: unknown[] | null;
+  };
+  for (const c of ((data ?? []) as Row[])) {
+    const estAnnales = estItemAnnales({
+      series: c.qcm_series, fiches: c.fiches, videos: c.videos, flashcards: c.flashcards,
+    });
+    if (!estAnnales) continue;
+    out.set(c.matiere_id, [...(out.get(c.matiere_id) ?? []), c.id]);
+  }
+  return out;
+}

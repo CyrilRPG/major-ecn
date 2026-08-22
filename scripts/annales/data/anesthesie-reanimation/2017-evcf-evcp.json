@@ -17,7 +17,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF EVCP 2017.pdf",
       "orderIndex": 16,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2017 en anesthésie-réanimation. Elle comporte deux sujets : un <b>sujet Anesthésie</b> (questions 1 à 11) et un <b>sujet Réanimation</b> (questions 1 à 14), tous deux à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -264,7 +264,8 @@
           "reponseAttendue": "Appel à l’aide, interruption de l’administration du produit suspecté, arrêt de l’intervention, faire venir le chariot d’urgence. Puis oxygène pur et contrôle des voies aériennes ; adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) en titration de 0,1 à 0,2 mg toutes les 1 à 2 minutes puis bolus augmentés de 1 à 5 mg, adrénaline IVSE à débuter à 0,2 mg/h ; remplissage vasculaire rapide par cristalloïdes 30 mL/kg puis amidons 30 mL/kg ; en cas d’inefficacité, noradrénaline IVSE, glucagon 1 à 2 mg IVD toutes les 5 minutes chez les patients sous bêta-bloquants, options bleu de méthylène ou sugammadex ; en cas de bronchospasme, adrénaline avant salbutamol ; prélèvements précoces impératifs ; hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures.",
           "correctionGenerale": "<b>APPEL À L’AIDE (PMZ)</b>\n<b>INTERROMPRE l’administration du produit suspecté (PMZ)</b>\n<b>Arrêt de l’intervention (PMZ)</b>\n<b>FAIRE VENIR le chariot d’urgence (PMZ)</b>\n\n• <b>OXYGÈNE PUR et CONTRÔLE DES VOIES AÉRIENNES</b>\n• <b>ADRÉNALINE IVD</b> (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) : titration de 0,1 à 0,2 mg toutes les 1 à 2 min, puis augmenter les bolus de 1 à 5 mg ; adrénaline IVSE à débuter à 0,2 mg/h\n• <b>REMPLISSAGE VASCULAIRE RAPIDE</b> : cristalloïdes (30 mL/kg) puis amidons (30 mL/kg)\n• <b>EN CAS D’INEFFICACITÉ DE L’ADRÉNALINE</b> : noradrénaline IVSE ; glucagon 1 à 2 mg IVD toutes les 5 min (patients traités par bêta-bloquants) ; option bleu de méthylène 1 à 3 mg/kg IVL ; option sugammadex 16 mg/kg si curares stéroïdiens impliqués\n• <b>BRONCHOSPASME</b> : en cas d’hypotension artérielle, ADRÉNALINE avant SALBUTAMOL — salbutamol spray dans la sonde d’intubation ; salbutamol IVD 0,1 à 0,2 mg ; salbutamol IVSE 0,3 à 1,5 mg/h\n• <b>Faire impérativement les premiers prélèvements ++</b>\n• <b>Hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures</b>\n\n<i>L’aide cognitive SFAR reproduite détaille en outre les critères de confirmation et les diagnostics à éliminer, la titration selon le grade (grade II : 20 µg puis 50 µg toutes les 2 min ; grade III : 100 à 200 µg toutes les 1 à 2 min ; grade IV : bolus de 1 mg), la conduite chez la femme enceinte, la surveillance intensive au moins 6 h après disparition des signes et les dosages biologiques (histamine, tryptase, IgE anti-ammoniums quaternaires).</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2017 en anesthésie-réanimation. Elle comporte deux sujets : un <b>sujet Anesthésie</b> (questions 1 à 11) et un <b>sujet Réanimation</b> (questions 1 à 14), tous deux à réponse ouverte et courte, sans vignette clinique commune."
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2017 - EVCP",

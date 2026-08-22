@@ -26,7 +26,7 @@
       "type": "EVCF",
       "source": "ANNALES CARDIOLOGIE/PWP EVC third session  2.pdf",
       "orderIndex": 5,
-      "vignette": "<b>Questions rédactionnelles.</b>\n\nLes trois questions rédactionnelles de la session, auxquelles s’ajoute une question d’analyse de tracé posée en séance entre les questions 1 et 2.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -60,7 +60,8 @@
           "reponseAttendue": "Après un infarctus du myocarde : l’implantation d’un pacemaker permanent est indiquée selon les mêmes recommandations qu’en population générale lorsque le BAV ne se résout pas après un délai d’attente d’au moins 5 jours ; chez des patients sélectionnés présentant un BAV dans le contexte d’un infarctus antérieur avec insuffisance cardiaque aiguë, une implantation précoce d’un dispositif de resynchronisation (CRT-D ou CRT-P) peut être considérée. La stimulation n’est pas recommandée si le BAV se résout après revascularisation ou spontanément. Après chirurgie cardiaque : devant un BAV de haut degré ou complet, une période d’observation clinique d’au moins 5 jours est indiquée pour vérifier si le trouble est transitoire — cette période peut être raccourcie en cas de BAV complet avec rythme d’échappement lent ou absent, lorsque la résolution est improbable ; en cas de dysfonction sinusale après chirurgie cardiaque ou transplantation cardiaque, une période d’observation pouvant aller jusqu’à 6 semaines doit être considérée avant l’implantation d’un pacemaker permanent.",
           "correctionGenerale": "<i>Recommandations ESC 2021 projetées en réponse, traduites ici.</i>\n\n<b>Stimulation après infarctus du myocarde</b>\n• Implantation d’un pacemaker permanent <b>indiquée selon les mêmes recommandations qu’en population générale</b> lorsque le BAV ne se résout pas dans un délai d’attente d’au moins <b>5 jours</b> après l’infarctus (I C)\n• Chez des patients sélectionnés présentant un BAV dans le contexte d’un infarctus antérieur avec insuffisance cardiaque aiguë, une implantation précoce d’un dispositif de resynchronisation (CRT-D / CRT-P) <b>peut être considérée</b> (IIb C)\n• La stimulation <b>n’est pas recommandée</b> si le BAV se résout après revascularisation ou spontanément (III B)\n\n<b>Stimulation après chirurgie cardiaque</b>\n• <b>BAV de haut degré ou complet</b> après chirurgie cardiaque : une période d’observation clinique d’au moins <b>5 jours</b> est indiquée pour évaluer si le trouble du rythme est transitoire et se résout ; en cas de BAV complet avec rythme d’échappement lent ou absent, lorsque la résolution est improbable, cette période peut être raccourcie (I C)\n• <b>Dysfonction sinusale</b> après chirurgie cardiaque ou transplantation cardiaque : avant l’implantation d’un pacemaker permanent, une période d’observation pouvant aller jusqu’à <b>6 semaines</b> doit être considérée (IIa C)"
         }
-      ]
+      ],
+      "note": "<b>Questions rédactionnelles.</b>\n\nLes trois questions rédactionnelles de la session, auxquelles s’ajoute une question d’analyse de tracé posée en séance entre les questions 1 et 2."
     }
   ]
 }

@@ -132,7 +132,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
       "orderIndex": 13,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2017 de pédiatrie, sujet n° 1, partie 3 : questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -183,7 +183,8 @@
           "reponseAttendue": "Des valves de l’urètre postérieur.",
           "correctionGenerale": "<b>Valves de l’urètre postérieur.</b>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2017 de pédiatrie, sujet n° 1, partie 3 : questions isolées."
     },
     {
       "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 2",
@@ -445,7 +446,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
       "orderIndex": 17,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de pédiatrie : questions isolées.\n\n<i>Le corrigé ne traite pas les questions n° 10 et n° 13 de l’épreuve : la numérotation ci-dessous reprend celle du corrigé et comporte donc des sauts.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -538,7 +539,8 @@
           "reponseAttendue": "Diphtérie, tétanos, poliomyélite, coqueluche, Haemophilus influenzae type B, hépatite B, rougeole, oreillons, rubéole, méningocoque C, pneumocoque.",
           "correctionGenerale": "• Diphtérie\n• Tétanos\n• Poliomyélite\n• Coqueluche\n• <i>Haemophilus influenzae</i> type B\n• Hépatite B\n• Rougeole — Oreillons — Rubéole\n• Méningocoque C\n• Pneumocoque"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 de pédiatrie : questions isolées.\n\n<i>Le corrigé ne traite pas les questions n° 10 et n° 13 de l’épreuve : la numérotation ci-dessous reprend celle du corrigé et comporte donc des sauts.</i>"
     },
     {
       "label": "Annales - Pédiatrie - 2019 - EVCP - Sujet 1",

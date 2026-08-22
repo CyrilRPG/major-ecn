@@ -13,7 +13,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2014 correction AM.pdf",
       "orderIndex": 11,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2014 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -202,7 +202,8 @@
           "reponseAttendue": "Augmentation brutale de la pression intrathoracique, baisse de la précharge et augmentation de la postcharge, d’où une baisse du débit cardiaque.",
           "correctionGenerale": "• Augmentation brutale de la pression intrathoracique\n• Baisse de la précharge, augmentation de la postcharge\n• Baisse du débit cardiaque"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2014 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune."
     }
   ]
 }

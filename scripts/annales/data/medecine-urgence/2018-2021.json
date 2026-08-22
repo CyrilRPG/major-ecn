@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 1,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2018 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées. Chaque question est donc identifiée par son numéro et par le thème que sa réponse permet d’identifier.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -107,7 +107,8 @@
           "reponseAttendue": "Luxation scapulo-humérale antérieure. Suspicion clinique devant le mécanisme du traumatisme, l’attitude du traumatisé du membre supérieur, le signe de l’épaulette, le coup de hache latéral, le comblement du sillon delto-pectoral et le signe de Berger. Complications : fracture, rupture de la coiffe des rotateurs, atteinte du nerf circonflexe, atteinte de l’artère axillaire, irréductibilité, récidive ou instabilité, algoneurodystrophie, raideur. Bilan avant réduction : radiographie d’épaule de face et scapula de profil.",
           "correctionGenerale": "<b>Luxation scapulo-humérale antérieure</b>\n\n<b>Suspicion clinique si</b> : mécanisme du traumatisme, attitude du traumatisé du membre supérieur, signe de l’épaulette, coup de hache latéral, comblement du sillon delto-pectoral, signe de Berger.\n\n<b>Complications</b> : fracture, rupture de la coiffe des rotateurs, atteinte du nerf circonflexe, atteinte de l’artère axillaire, irréductibilité de la luxation, récidive ou instabilité, algoneurodystrophie, raideur.\n\n<b>Bilan avant réduction</b> : radiographie d’épaule de face et scapula de profil."
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2018 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées. Chaque question est donc identifiée par son numéro et par le thème que sa réponse permet d’identifier.</i>"
     },
     {
       "label": "Annales - Médecine d’urgence - 2018 - EVCP - Sujet 1",
@@ -289,7 +290,7 @@
       "type": "EVCF",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 4,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Énoncés officiels restitués depuis le sujet EVCF 2019, code 77 (Annales/Sujets/EVCF 2019/evcf.77.doc).</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -361,7 +362,8 @@
           "reponseAttendue": "Interrogatoire : antécédents, prise de traitement (contraception œstroprogestative), habitus (toxiques), exposition au CO, grossesse ou post-partum, traumatisme, caractéristiques de la douleur. Examen : constantes, poussée hypertensive, fièvre, Glasgow, syndrome méningé, déficit neurologique, anomalie pupillaire, artères temporales, sinus, fond d’œil si possible, nausées et vomissements. Examens : scanner cérébral sans injection — voire angioscanner à la recherche d’une thrombophlébite cérébrale — ou IRM cérébrale si disponible ; ponction lombaire (hémorragie méningée ? méningite ?).",
           "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents, prise de traitement (contraception œstroprogestative), habitus (toxiques)\n• Exposition au CO, grossesse / post-partum, traumatisme\n• Caractéristiques de la douleur\n\n<b>Examen clinique</b>\n• Constantes, poussée hypertensive, fièvre, Glasgow, syndrome méningé, déficit neurologique, anomalie pupillaire, artères temporales, sinus, fond d’œil si possible, nausées/vomissements\n\n<b>Examens complémentaires</b>\n• Scanner cérébral sans injection (voire angioscanner à la recherche d’une thrombophlébite cérébrale), ou IRM cérébrale si disponible\n• Ponction lombaire (hémorragie méningée ? méningite ?)\n\n<i>Source : CEN, céphalée aiguë.</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Énoncés officiels restitués depuis le sujet EVCF 2019, code 77 (Annales/Sujets/EVCF 2019/evcf.77.doc).</i>"
     },
     {
       "label": "Annales - Médecine d’urgence - 2019 - EVCP - Cas 1",
@@ -529,7 +531,7 @@
       "type": "EVCF",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 7,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -601,7 +603,8 @@
           "reponseAttendue": "Signes en faveur d’un processus expansif intracrânien : déficit moteur, déficit sensitif, hémianopsie latérale homonyme, syndrome cérébelleux. Signes d’engagement cérébral : troubles de la vigilance associés à des anomalies pupillaires, une dysautonomie, des crises toniques postérieures, une aréactivité aux stimulations, une décortication ou une décérébration. Crises convulsives persistantes.",
           "correctionGenerale": "• <b>Signes en faveur d’un processus expansif intracrânien</b> : déficit moteur, déficit sensitif, HLH, syndrome cérébelleux\n• <b>Signes d’engagement cérébral</b> : troubles de la vigilance + anomalies pupillaires, ou dysautonomie, ou crises toniques postérieures, ou aréactivité aux stimulations, ou décortication, ou décérébration\n• <b>Crises convulsives persistantes</b>\n\n<i>Source : ECN Pilly 2020, item 148.</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2020 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>"
     },
     {
       "label": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 1",
@@ -748,7 +751,7 @@
       "type": "EVCF",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 10,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -781,7 +784,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par le tableau reproduit ci-dessous, l’index de Cushman, score de gravité du syndrome de sevrage alcoolique.</i>",
-          "images": ["annales-urgence/correction-annales-urgences-2018-a-2021/figures/img-015-030.jpg"],
+          "images": [
+            "annales-urgence/correction-annales-urgences-2018-a-2021/figures/img-015-030.jpg"
+          ],
           "reponseAttendue": "L’index de Cushman, score de gravité du syndrome de sevrage alcoolique, coté de 0 à 3 sur sept items : fréquence cardiaque, pression artérielle systolique (selon l’âge), fréquence respiratoire, tremblements, sueurs, agitation et troubles sensoriels. Un score < 7 correspond à un état clinique contrôlé, un score de 7 à 14 à un sevrage modéré, un score > 14 à un sevrage sévère.",
           "correctionGenerale": "<b>Index de Cushman</b> — index de gravité du syndrome de sevrage alcoolique. Chaque item est coté de 0 à 3 :\n• <b>Fréquence cardiaque</b> : ≤ 80 / 81-100 / 101-120 / > 120\n• <b>Pression artérielle systolique</b> — 18-30 ans : ≤ 125 / 126-135 / 136-145 / > 145 ; 31-50 ans : ≤ 135 / 136-145 / 146-155 / > 155 ; > 50 ans : ≤ 145 / 146-155 / 156-165 / > 165\n• <b>Fréquence respiratoire</b> : ≤ 16 / 17-25 / 26-35 / > 35\n• <b>Tremblements</b> : 0 / main en extension / tout le membre supérieur / généralisés\n• <b>Sueurs</b> : 0 / paumes / paumes et front / généralisées\n• <b>Agitation</b> : 0 / discrète / généralisée contrôlable / généralisée incontrôlable\n• <b>Troubles sensoriels</b> : 0 / gêné par le bruit et la lumière / hallucinations critiquées / hallucinations non critiquées\n\n<b>Interprétation</b>\n• Score < 7 : état clinique contrôlé\n• Score de 7 à 14 : sevrage modéré\n• Score > 14 : sevrage sévère"
         },
@@ -841,7 +846,8 @@
           "reponseAttendue": "Pansements compressifs si l’hémorragie est extériorisée ; suture ou agrafage de toute plaie du scalp hémorragique ; mise en place d’un garrot ; administration d’acide tranexamique (Exacyl®) et remplissage vasculaire pour contrebalancer le saignement.",
           "correctionGenerale": "• Pansements compressifs si hémorragie extériorisée\n• Suture ou agrafe de toute plaie du scalp hémorragique\n• Mise en place d’un garrot\n• Administration d’Exacyl® + remplissage vasculaire pour contrebalancer le saignement"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>"
     },
     {
       "label": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 1",

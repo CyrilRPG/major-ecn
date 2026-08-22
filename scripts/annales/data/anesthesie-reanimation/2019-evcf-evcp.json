@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF EVCP 2019 AREA.pdf",
       "orderIndex": 20,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2019 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.\n\n<b>Classement des questions proposé par le corrigé</b>\n• <b>Questions incontournables</b> : vous ne pouvez pas ne pas les connaître ; si vous perdez des points là, vous ne les regagnerez nulle part.\n• <b>Questions de cours</b> : basées sur les recommandations +/− récentes ; plus vous en connaissez, plus vous gagnez de points.\n• <b>Questions « bonus »</b> : questions difficiles, spécifiques ; si vous répondez juste et méthodiquement, ce sont les points qui font la différence.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -179,7 +179,8 @@
           "reponseAttendue": "Ventilation protectrice, curarisation, manœuvres de recrutement et décubitus ventral, moyens de suppléance (épuration extracorporelle du CO₂, ECMO). Paramètres de la ventilation protectrice : Vt bas 6-8 mL/kg (voire 4 à 8) de poids idéal théorique, PEP croissante et personnalisée, élevée (≥ 8 cmH₂O), Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O, FR selon la capnie avec hypercapnie permissive (PaCO₂ 45-55 mmHg, pH > 7,30), FiO₂ selon l’hypoxémie (PaO₂ 65-85 mmHg).",
           "correctionGenerale": "• <b>Ventilation protectrice</b>\n• <b>Curarisation</b>\n• <b>Manœuvres de recrutement / décubitus ventral</b>\n• <b>Moyens de suppléance</b> : épuration extracorporelle du CO₂, ECMO\n\n<b>Ventilation protectrice — paramètres</b>\n• Vt bas : 6-8 mL/kg (voire 4 à 8) de poids idéal théorique\n• PEP croissante, personnalisée : PEP élevée ++ (PEP ≥ 8 cmH₂O)\n• Pplateau < 30 cmH₂O et pression motrice ≤ 15 cmH₂O\n• FR selon la capnie (PaCO₂) ; hypercapnie permissive (PaCO₂ 45-55, pH > 7,30)\n• FiO₂ selon l’hypoxémie (PaO₂ 65-85)"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.\n\n<b>Classement des questions proposé par le corrigé</b>\n• <b>Questions incontournables</b> : vous ne pouvez pas ne pas les connaître ; si vous perdez des points là, vous ne les regagnerez nulle part.\n• <b>Questions de cours</b> : basées sur les recommandations +/− récentes ; plus vous en connaissez, plus vous gagnez de points.\n• <b>Questions « bonus »</b> : questions difficiles, spécifiques ; si vous répondez juste et méthodiquement, ce sont les points qui font la différence."
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2019 - EVCP - Sujet 1",

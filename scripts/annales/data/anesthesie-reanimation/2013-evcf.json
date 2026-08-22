@@ -182,7 +182,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2013 correction.pdf",
       "orderIndex": 9,
-      "vignette": "Second corrigé du même sujet EVCF 2013 d’anesthésie-réanimation, proposé par un autre correcteur : les 21 questions sont identiques, les réponses proposées diffèrent et se complètent.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -331,7 +331,8 @@
           "reponseAttendue": "Dexaméthasone 4 mg IVD en début d’intervention, dropéridol 0,0625 mg IVL avant le réveil, sétrons en postopératoire (Zophren 4 mg × 3/j IVL), analgésie efficace épargnant les morphiniques (ALR), et hypnose.",
           "correctionGenerale": "• Dexaméthasone 4 mg IVD en début d’intervention\n• Droleptan 0,0625 mg IVL avant le réveil\n• Sétrons en postopératoire : Zophren 4 mg × 3/j IVL\n• Analgésie efficace avec diminution de la consommation de morphiniques — par exemple ALR\n• Hypnose"
         }
-      ]
+      ],
+      "note": "Second corrigé du même sujet EVCF 2013 d’anesthésie-réanimation, proposé par un autre correcteur : les 21 questions sont identiques, les réponses proposées diffèrent et se complètent."
     }
   ]
 }

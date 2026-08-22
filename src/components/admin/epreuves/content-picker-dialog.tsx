@@ -29,13 +29,18 @@ export function ContentPickerDialog({ examId, colleges, onClose }: { examId: str
   const [questions, setQuestions] = useState<PickerQuestion[]>([]);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  // Vrai quand la base a renvoyé autant de lignes que le plafond : la liste
+  // affichée n'est alors qu'une partie de la banque, il faut affiner.
+  const [tronque, setTronque] = useState(false);
 
-  const reloadQuestions = (m: string, c: string, s: string, t: Set<ContentType>) => {
-    if (!m) { setQuestions([]); return; }
+  const reloadQuestions = (m: string, c: string, s: string, t: Set<ContentType>, q = search) => {
+    if (!m) { setQuestions([]); setTronque(false); return; }
     setLoading(true);
-    listContentQuestions({ matiereId: m, coursId: c || null, serieId: s || null, types: Array.from(t) }).then((res) => {
+    // La recherche est envoyée à la base : filtrer seulement la page déjà
+    // chargée masquerait tout ce qui se trouve au-delà du plafond.
+    listContentQuestions({ matiereId: m, coursId: c || null, serieId: s || null, types: Array.from(t), search: q || null }).then((res) => {
       setLoading(false);
-      if (res.ok) setQuestions(res.questions); else setError(res.error);
+      if (res.ok) { setQuestions(res.questions); setTronque(res.tronque); } else setError(res.error);
     });
   };
 
@@ -53,7 +58,7 @@ export function ContentPickerDialog({ examId, colleges, onClose }: { examId: str
   };
 
   const toggle = (id: string) => setSelected((p) => { const n = new Set(p); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const filtered = questions.filter((q) => !search || (q.enonce + q.cours_titre + q.serie_label).toLowerCase().includes(search.toLowerCase()));
+  const filtered = questions;
   const seriesOfCours = tree?.cours.find((c) => c.id === coursId)?.series ?? [];
 
   const importSel = () => {
@@ -103,8 +108,24 @@ export function ContentPickerDialog({ examId, colleges, onClose }: { examId: str
               <input type="checkbox" checked={types.has(t)} onChange={() => toggleType(t)} /> {TYPE_LABEL[t]}
             </label>
           ))}
-          <input value={search} onChange={(e) => setSearch(e.target.value)} className={inputCls + ' ml-auto max-w-[180px]'} placeholder="Filtrer…" disabled={!questions.length} />
+          <input
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') reloadQuestions(matiere, coursId, serieId, types, search); }}
+            onBlur={() => reloadQuestions(matiere, coursId, serieId, types, search)}
+            className={inputCls + ' ml-auto max-w-[220px]'}
+            placeholder="Rechercher dans les énoncés…"
+            disabled={!matiere}
+          />
         </div>
+
+        {tronque && (
+          <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            Cette spécialité contient plus de questions que la liste ne peut en afficher.
+            Affinez par item, par série ou par recherche pour atteindre le reste de la banque
+            — les annales EVC, ajoutées en dernier, en font partie.
+          </p>
+        )}
 
         <div className="mt-3 min-h-[180px]">
           {loading ? (

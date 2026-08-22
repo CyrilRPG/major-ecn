@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 1,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une hyponatrémie avec hyperkaliémie évoquant d’abord une insuffisance surrénalienne aiguë, puis un SIADH sur pneumopathie aiguë communautaire.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -72,7 +72,8 @@
           "reponseAttendue": "Arrêt des traitements favorisants (citalopram, hydrochlorothiazide, IPP), restriction hydrique, apport prudent de NaCl (gélules ou perfusion), correction lente et progressive de la natrémie.",
           "correctionGenerale": "• Arrêt des traitements favorisants (citalopram, hydrochlorothiazide, IPP)\n• Restriction hydrique\n• Apport prudent de NaCl (gélules ou perfusion)\n• <b>Correction lente et progressive de la natrémie</b>"
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une hyponatrémie avec hyperkaliémie évoquant d’abord une insuffisance surrénalienne aiguë, puis un SIADH sur pneumopathie aiguë communautaire.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 2",
@@ -80,7 +81,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 2,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une anémie microcytaire avec thrombocytose révélant un cancer colorectal chez une personne âgée.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -124,7 +125,8 @@
           "reponseAttendue": "Un cancer colorectal, avec une inflammation due à la néoplasie et une carence martiale sur pertes de sang occultes dues à la néoplasie, dans un contexte d’altération de l’état général chez une personne âgée.",
           "correctionGenerale": "<b>Cancer colorectal</b> : inflammation due à la néoplasie, carence martiale sur pertes de sang occultes dues à la néoplasie, dans un contexte d’AEG chez une personne âgée."
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une anémie microcytaire avec thrombocytose révélant un cancer colorectal chez une personne âgée.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 3",
@@ -132,7 +134,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 3,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur un syndrome confusionnel chez une personne âgée sous tramadol et fluoxétine.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -183,7 +185,8 @@
           "reponseAttendue": "Oui : un dépistage de troubles neurocognitifs doit être effectué à distance de l’épisode confusionnel.",
           "correctionGenerale": "<b>Oui</b>, dépistage de troubles neurocognitifs à effectuer <b>à distance</b> d’un épisode confusionnel."
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur un syndrome confusionnel chez une personne âgée sous tramadol et fluoxétine.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 4",
@@ -191,12 +194,14 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 4,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’anticoagulation d’une fibrillation atriale chez une femme de plus de 75 ans et sur la fin de vie.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par le tableau reproduit ci-dessous, le score CHA₂DS₂-VASc.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-019-049.jpg"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-019-049.jpg"
+          ],
           "reponseAttendue": "Le score CHA₂DS₂-VASc, score de risque thrombo-embolique de la fibrillation atriale.",
           "correctionGenerale": "<b>Fibrillation atriale — score CHA₂DS₂-VASc</b>\n• <b>C</b> Insuffisance cardiaque / dysfonction VG — 1 point\n• <b>H</b> Hypertension artérielle — 1 point\n• <b>A₂</b> Âge ≥ 75 ans — 2 points\n• <b>D</b> Diabète — 1 point\n• <b>S₂</b> AVC / AIT / événement embolique — 2 points\n• <b>V</b> Pathologie vasculaire (coronaropathie, infarctus, artériopathie périphérique ou plaque aortique) — 1 point\n• <b>A</b> Âge 65-74 ans — 1 point\n• <b>Sc</b> <i>Sex category</i> (féminin) — 1 point\n\n<i>Source : Lip GY et al., Chest 2010 ; diapositive SFMU.</i>"
         },
@@ -242,7 +247,8 @@
           "reponseAttendue": "La personne de confiance.",
           "correctionGenerale": "<b>Personne de confiance.</b>"
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’anticoagulation d’une fibrillation atriale chez une femme de plus de 75 ans et sur la fin de vie.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCP - Sujet 1",
@@ -498,7 +504,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuels symptômes caractérisent un syndrome post-chute ?",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-012-034.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-012-034.png"
+          ],
           "reponseAttendue": "Trouble de la statique en position assise, rétropulsion, impossibilité de se maintenir en orthostatisme, hypertonie oppositionnelle, marche à petits pas, élargissement du polygone de sustentation, fléchissement des genoux, absence de déroulement du pied ; et sur le plan psycho-comportemental, peur de la chute, anxiété, syndrome dépressif, perte d’autonomie et grabatisation.",
           "correctionGenerale": "<b>Signes moteurs et posturaux</b>\n• Trouble de la statique en position assise\n• Rétropulsion\n• Impossibilité de se maintenir en orthostatisme\n• Hypertonie oppositionnelle\n• Marche à petits pas\n• Élargissement du polygone de sustentation\n• Fléchissement des genoux\n• Pas de déroulement du pied\n\n<b>Signes psycho-comportementaux</b>\n• Peur de la chute, anxiété, syndrome dépressif\n• Perte d’autonomie, grabatisation"
         },
@@ -679,7 +687,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par la diapositive reproduite ci-dessous, consacrée au traitement médicamenteux de l’agitation du patient âgé confus.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-011-031.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-011-031.png"
+          ],
           "reponseAttendue": "Une benzodiazépine à courte durée de vie (type alprazolam ou lorazépam) en cas de signes d’agitation avec anxiété ; un neuroleptique (type rispéridone ou olanzapine) en cas de signes d’agitation avec délire ou hallucination ; en monothérapie, à la dose la plus faible possible, en cure courte, en préférant les formes buvables.",
           "correctionGenerale": "• <b>BZD à courte durée de vie</b> type alprazolam ou lorazépam, si signes d’agitation <b>avec anxiété</b>\n• <b>Neuroleptique</b> type rispéridone ou olanzapine, si signes d’agitation <b>avec délire ou hallucination</b>\n• <b>Monothérapie</b>\n• Dose la plus faible possible\n• En cure courte\n• Préférer les formes buvables"
         },
@@ -698,7 +708,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 12,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’ostéoporose cortico-induite chez une femme ménopausée suivie pour maladie de Horton, avec fracture de l’extrémité inférieure du radius.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -710,14 +720,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les facteurs de risque de fracture présents et à rechercher.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-023.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-023.png"
+          ],
           "reponseAttendue": "Présents : âge > 60 ans, corticothérapie systémique > 7,5 mg/j pendant plus de 3 mois pour une maladie de Horton. À rechercher : les autres facteurs de risque de fracture en dehors d’une DMO basse.",
           "correctionGenerale": "<b>Présents</b>\n• Âge > 60 ans\n• Corticothérapie systémique > 7,5 mg/j pendant > 3 mois sur maladie de Horton\n\n<b>À rechercher — facteurs de risque de fracture (en dehors d’une DMO basse)</b>\n<i>Chez l’ensemble des patients</i> : fracture de fragilité, vertébrale ou périphérique, de découverte clinique ou radiologique (il faut rechercher une cause tumorale, une ostéoporose secondaire, etc.) ; corticothérapie systémique en cours (≥ 3 mois consécutifs, à une posologie ≥ 7,5 mg/j d’équivalent prednisone) ; autre traitement ou affection responsable d’ostéoporose (hypogonadisme prolongé, hyperthyroïdie évolutive non traitée, hypercorticisme, hyperparathyroïdie primitive) ; âge > 60 ans ; tabagisme ; immobilisation prolongée.\n<i>De plus, chez la femme ménopausée</i> : corticothérapie systémique passée (≥ 3 mois consécutifs, à une posologie ≥ 7,5 mg/j d’équivalent prednisone) ; IMC < 19 ; ménopause avant 40 ans ; fracture de fragilité du col fémoral chez un parent du premier degré.\n<i>Enfin, certains facteurs n’accroissent pas le risque d’ostéoporose mais le risque de chute</i> : alcoolisme ; baisse de l’acuité visuelle ; troubles neuromusculaires et/ou orthopédiques."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par la diapositive reproduite ci-dessous, consacrée au bilan de l’ostéoporose.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-024.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-024.png"
+          ],
           "reponseAttendue": "Calcul du score FRAX et recherche des facteurs de risque d’ostéoporose ; calcium et phosphore sanguins et urinaires ; 25-OH-vitamine D et PTH ; NFS-plaquettes et TSH ; électrophorèse des protéines sériques avec immunofixation.",
           "correctionGenerale": "• Calcul du <b>score FRAX</b> + recherche des FDR d’ostéoporose\n• Calcium, phosphore sanguins et urinaires\n• 25-OH-vitamine D, PTH\n• NFS, plaquettes, TSH\n• EPPS + immunofixation\n\n<i>Cf. recommandations HAS 2019.</i>"
         },
@@ -742,7 +756,8 @@
           "reponseAttendue": "Oui : instauration d’un traitement par bisphosphonates avec supplémentation vitamino-calcique, après consultation dentaire, à jeun le matin en position demi-assise avec un grand verre d’eau (risque d’œsophagite et d’ostéonécrose de la mâchoire) ; discuter l’introduction de tériparatide devant les probables fractures vertébrales.",
           "correctionGenerale": "• <b>Oui</b> : instauration d’un traitement par <b>bisphosphonates</b> + supplémentation vitamino-calcique\n• Après consultation dentaire, à jeun le matin, en position demi-assise, avec un grand verre d’eau\n• Risque d’œsophagite et d’ostéonécrose de la mâchoire\n• Discuter l’introduction de <b>tériparatide</b> car probables fractures vertébrales"
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’ostéoporose cortico-induite chez une femme ménopausée suivie pour maladie de Horton, avec fracture de l’extrémité inférieure du radius.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2020 - EVCF - Sujet 2",
@@ -750,7 +765,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 13,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une coxarthrose chez une personne âgée.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -815,7 +830,8 @@
           "reponseAttendue": "L’infiltration de corticoïdes et la pose d’une prothèse totale de hanche.",
           "correctionGenerale": "• Infiltration de corticoïdes\n• Pose d’une <b>PTH</b>"
         }
-      ]
+      ],
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une coxarthrose chez une personne âgée.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2020 - EVCP - Sujet 1",
@@ -906,7 +922,7 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 16,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de gériatrie : 23 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -925,7 +941,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par la diapositive reproduite ci-dessous, les critères DSM-5 du syndrome confusionnel.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-003-010.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-003-010.png"
+          ],
           "reponseAttendue": "Les critères DSM-5 de la confusion : diminution de la capacité à maintenir son attention ; désorganisation de la pensée ; au moins 2 manifestations parmi obnubilation, anomalies de la perception, perturbation du rythme veille/sommeil, perturbation de l’activité psychomotrice, désorientation, non-reconnaissance de l’entourage, troubles mnésiques ; évolution sur quelques heures à quelques jours avec fluctuations sur la journée ; étiologie organique retrouvée, sinon absence de trouble psychiatrique.",
           "correctionGenerale": "<b>Confusion selon le DSM-5</b>\n• <b>A</b> — Diminution de la capacité à maintenir son attention sur les stimuli externes et à s’intéresser de manière appropriée à de nouvelles stimulations externes\n• <b>B</b> — Désorganisation de la pensée = propos décousus, inappropriés ou incohérents\n• <b>C</b> — Au moins 2 manifestations parmi : obnubilation, anomalies de la perception (hallucinations, etc.), perturbation du rythme veille/sommeil, perturbation de l’activité psychomotrice, désorientation, non-reconnaissance de l’entourage, troubles mnésiques\n• <b>D</b> — Évolution sur quelques heures à quelques jours + fluctuations sur la journée\n• <b>E</b> — Étiologie organique retrouvée, sinon absence de trouble psychiatrique"
         },
@@ -995,7 +1013,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 13</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur l’échelle d’évaluation des troubles du comportement dans la démence.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-004-013.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-004-013.png"
+          ],
           "reponseAttendue": "L’échelle NPI (inventaire neuropsychiatrique), qui cote pour chacun de ses 12 items la gravité de 1 à 3 et le retentissement de 0 à 5.",
           "correctionGenerale": "<b>Échelle NPI</b> — items cotés en gravité (1 à 3) et retentissement (0 à 5) :\n• Idées délirantes\n• Hallucinations\n• Agitation / agressivité\n• Dépression / dysphorie\n• Anxiété\n• Exaltation de l’humeur\n• Apathie / indifférence\n• Désinhibition\n• Irritabilité / instabilité\n• Comportement moteur\n• Sommeil\n• Troubles de l’appétit\n\n<b>Score total</b> : /36 en gravité et /60 en retentissement.\n\n<i>N’en citer que 5 !</i>"
         },
@@ -1058,7 +1078,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 22</b>\n\n<i>Intitulé officiel non disponible. Le corrigé ne comporte pas de réponse rédigée pour cette question : il y répond par la diapositive reproduite ci-dessous, les critères de Fried.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-005-016.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-005-016.png"
+          ],
           "reponseAttendue": "Les critères de Fried, définissant la fragilité : perte de poids ≥ 5 % par an, fatigue subjective, faible activité physique, vitesse de marche diminuée, faible force de préhension. Trois critères ou plus = fragile ; 1 ou 2 = pré-fragile ; 0 = non fragile.",
           "correctionGenerale": "<b>Critères de Fried</b>\n1. <b>Perte de poids</b> ≥ 5 % par an\n2. <b>Fatigue subjective</b> — épuisé ou fatigué en permanence ou fréquemment ?\n3. <b>Activité physique</b> — aucune activité physique ou moins de 1 à 2 marches par semaine\n4. <b>Vitesse de marche</b> — difficulté à marcher 100 mètres\n5. <b>Force</b> — <i>grip strength</i>\n\n<b>Interprétation</b> : 3 ou plus = fragile ; 1 ou 2 = pré-fragile ; 0 = non fragile."
         },
@@ -1069,7 +1091,8 @@
           "reponseAttendue": "Évaluer la fonction rénale et la fonction hépatique, et doser l’hémoglobine.",
           "correctionGenerale": "• Évaluer la fonction rénale et la fonction hépatique\n• Doser l’hémoglobine\n\n<i>Source : HAS, les anticoagulants oraux.</i>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de gériatrie : 23 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>"
     },
     {
       "label": "Annales - Gériatrie - 2021 - EVCP",
@@ -1089,7 +1112,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur les échelles d’évaluation de l’autonomie.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-002.jpg"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-002.jpg"
+          ],
           "reponseAttendue": "Les échelles ADL et IADL.",
           "correctionGenerale": "<b>ADL</b> (activités de base de la vie quotidienne) : se laver • s’habiller • se rendre aux toilettes • se déplacer • s’alimenter • être continent. → aides techniques, accessibilité.\n\n<b>IADL</b> (activités instrumentales de la vie quotidienne)\n• <i>Entretien quotidien</i> : propreté • alimentation • habillage → aide humaine\n• <i>Activités courantes</i> : téléphone • courses • préparation des aliments • soins personnels • déplacements • bains • entretien ménager • blanchisserie • moyens de transport • traitement • budget"
         },
@@ -1103,7 +1128,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\n<i>Intitulé officiel non disponible. D’après la réponse, la question porte sur le bilan biologique du bilan étiologique d’un trouble neurocognitif.</i>",
-          "images": ["annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-003.png"],
+          "images": [
+            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-003.png"
+          ],
           "reponseAttendue": "En 1ʳᵉ intention : NFS-plaquettes, ionogramme sanguin, urée, créatinine avec calcul de la clairance, calcémie, glycémie, TSH, albuminémie. En 2ᵉ intention : vitamines B9 et B12, bilan hépatique, sérologies VIH, syphilis et Lyme.",
           "correctionGenerale": "<b>En 1ʳᵉ intention</b>\n• NFS plaquettes\n• Ionogramme sanguin\n• Urée, créatinine, calcul de la clairance\n• Calcémie\n• Glycémie\n• TSH\n• Albuminémie\n\n<b>En 2ᵉ intention</b> : vitamines B9 et B12, bilan hépatique, sérologies VIH, syphilis et Lyme."
         },

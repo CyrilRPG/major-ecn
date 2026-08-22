@@ -17,7 +17,7 @@
       "type": "EVCF",
       "source": "ANNALES MG/PAE 2016 (1).pdf",
       "orderIndex": 118,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2016.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -271,7 +271,8 @@
           "reponseAttendue": "La proposition fausse est C : la neutropénie ne fait pas partie des effets indésirables des anticholinestérasiques. Les vomissements, la confusion, la bradycardie et les chutes en sont des effets reconnus.",
           "correctionGenerale": "• La proposition fausse est la <b>C : neutropénie</b>\n• Les vomissements, la confusion, la bradycardie et les chutes sont, eux, des effets indésirables reconnus des anticholinestérasiques"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2016.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2016 - EVCP",

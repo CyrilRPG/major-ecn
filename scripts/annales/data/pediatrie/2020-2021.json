@@ -14,12 +14,14 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
       "orderIndex": 20,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 de pédiatrie : 25 questions, certaines introduites par une courte situation clinique.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Question 1</b>\n\nMme B, 26 ans, est enceinte de son premier enfant. La grossesse a été bien suivie ; les sérologies sont les suivantes : toxoplasmose et rubéole négatives, Ag HBs positif, Ag HBe négatif, Anti-HBc IgM (−), Anti-HBc IgG (+), Anti-HBe (+), Anti-HBs (−) et VIH (−). Accouchement par voie basse à 38 SA. Elle a donné naissance à une petite fille pesant 3200 g ; le score d’Apgar était à 10, 10 et 10 à 1, 5 et 10 min.\n\nComment devez-vous organiser la prophylaxie anti-hépatite B ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-043-097.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-043-097.jpg"
+          ],
           "reponseAttendue": "Pour les nouveau-nés de mère porteuse de l’antigène HBs, la vaccination doit être pratiquée impérativement à la naissance, selon un schéma en trois injections (une dose à la naissance, puis à 1 et 6 mois) avec le vaccin HBVAXPRO 5 µg ou le vaccin ENGERIX B 10 µg ; la première dose est associée à l’administration d’immunoglobulines anti-HBs. Un schéma à quatre doses (une dose à la naissance, puis à 1, 2 et 6 mois) est recommandé pour les prématurés de moins de 32 semaines et/ou de poids de naissance inférieur à 2 kg. Un contrôle sérologique à la recherche de l’antigène HBs et un titrage des anticorps anti-HBs sont préconisés à partir de l’âge de 9 mois, si possible un à quatre mois après la dernière dose vaccinale, pour s’assurer de la protection à long terme.",
           "correctionGenerale": "<b>Pour les nouveau-nés de mère porteuse de l’antigène HBs</b>, la vaccination doit être pratiquée impérativement à la naissance, selon un schéma en trois injections (une dose à la naissance, puis à 1 et 6 mois) avec le vaccin HBVAXPRO® 5 µg ou le vaccin ENGERIX B® 10 µg ; la première dose est associée à l’administration d’immunoglobulines anti-HBs.\n\n<b>Un schéma à quatre doses</b> (une dose à la naissance, puis à 1, 2 et 6 mois) est recommandé pour les prématurés de moins de 32 semaines et/ou de poids de naissance inférieur à 2 kg.\n\n<b>Un contrôle sérologique</b> à la recherche de l’antigène HBs et un titrage des anticorps anti-HBs sont préconisés à partir de l’âge de 9 mois (si possible un à quatre mois après la dernière dose vaccinale) pour s’assurer de la protection à long terme."
         },
@@ -159,7 +161,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 21</b>\n\nGarçon de 8 ans, sans antécédents. Au réveil, constatation d’un gonflement douloureux de l’œil gauche avec impossibilité de l’ouvrir. Il consulte aux urgences : poids 30 kg, Glasgow 15, T 39 °C, grognon. Examen complet normal (figure).\n\nQuel est votre diagnostic ? Justifiez. Citez les 3 examens biologiques complémentaires demandés. Citez le traitement, le lieu où il se déroule et la durée.",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-048-108.png"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-048-108.png"
+          ],
           "reponseAttendue": "Une ethmoïdite aiguë gauche : œdème palpébral unilatéral avec comblement de l’angle interne de l’œil, fièvre, douleur. Examens : NFS, CRP, hémocultures. Traitement hospitalier : antibiothérapie IV par Augmentin® ± gentamicine, 8 à 10 jours.",
           "correctionGenerale": "<b>Ethmoïdite aiguë gauche</b>\n• Œdème palpébral unilatéral (angle interne de l’œil comblé)\n• Fébrile\n• Douloureux\n\n<b>Examens</b> : NFS, CRP, hémocultures\n\n<b>Traitement</b> : hospitalier, antibiothérapie IV par <b>AUGMENTIN® ± GENTAMICINE, 8 à 10 jours</b>."
         },
@@ -183,7 +187,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 24</b>\n\nVous recevez aux urgences un enfant de 2 ans pour une fièvre élevée qui évolue depuis le matin avec des frissons. Il a été placé en salle de déchoquage avec un monitoring. À l’examen, le score de Glasgow est à 14, T 39,5 °C, FC 180/min, temps de recoloration cutanée 4 s ; les extrémités sont froides, les pouls mal perçus. Pendant l’examen, vous voyez apparaître une éruption (figure) qui ne s’efface pas à la vitropression.\n\nCitez 4 mesures à prendre immédiatement pour cet enfant.",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-050-115.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-050-115.jpg"
+          ],
           "reponseAttendue": "Urgence thérapeutique : injection IM ou IV de C3G (ceftriaxone 50 à 100 mg/kg ou céfotaxime 50 mg/kg), au mieux après une hémoculture ; pose de 2 VVP voire d’une voie intra-osseuse ; remplissage vasculaire (NaCl 0,9 % 20 mL/kg en 5-10 minutes) ; transfert médicalisé en réanimation.",
           "correctionGenerale": "<b>URGENCE THÉRAPEUTIQUE</b>\n• Injection IM/IV de <b>C3G</b> (CEFTRIAXONE 50 à 100 mg/kg ou CÉFOTAXIME 50 mg/kg), au mieux après une hémoculture\n• Pose de 2 VVP, voire d’une voie intra-osseuse\n• Remplissage vasculaire (NaCl 0,9 % 20 mL/kg en 5-10 minutes)\n• Transfert médicalisé en réanimation"
         },
@@ -194,7 +200,8 @@
           "reponseAttendue": "Un syndrome du bébé secoué, avec hémorragie intracrânienne très probable (hématome sous-dural). Examens : TDM cérébrale sans injection en urgence, fond d’œil, radiographies du squelette.",
           "correctionGenerale": "<b>Syndrome du bébé secoué</b> avec hémorragie intracrânienne très probable (hématome sous-dural)\n• <b>TDM cérébrale sans injection en urgence</b>\n• Fond d’œil\n• Radiographies du squelette"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2020 de pédiatrie : 25 questions, certaines introduites par une courte situation clinique."
     },
     {
       "label": "Annales - Pédiatrie - 2020 - EVCP - Sujet 1",
@@ -266,7 +273,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nÀ 2 heures de vie, l’enfant a une fréquence ventilatoire à 55/min et présente un creusement sternal inspiratoire important. La SpO₂ est à 92 % sous lunettes d’oxygène. Le transfert vers une maternité de niveau III est organisé et le médecin du SMUR intube et ventile le nouveau-né. À l’arrivée en réanimation, la FiO₂ est de 60 % pour une SpO₂ de 88 %. Un cathéter veineux ombilical double-voie est mis en place. À 6 heures de vie, la FiO₂ est de 70 % pour une SpO₂ de 89 %, FC 135/min, PA 55/32 mmHg, temps de recoloration cutanée < 3 s. Les résultats des examens montrent : pH 7,26, PaCO₂ 65 mmHg, lactate 350 mg/L (N < 70 mg/L). La NFS et la CRP sont normales. L’examen direct du liquide gastrique est négatif. Une bi-antibiothérapie (Clamoxyl® + gentamicine) a été débutée. Voici la radiographie de thorax (figure).\n\nDécrivez les anomalies pulmonaires observées sur la radiographie de thorax de face.",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-054-124.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-054-124.jpg"
+          ],
           "reponseAttendue": "Des opacités alvéolaires grossières, asymétriques (prédominant à droite), avec des troubles de la ventilation.",
           "correctionGenerale": "• Opacités alvéolaires grossières\n• Asymétriques (prédominent à droite)\n• Troubles de la ventilation"
         },
@@ -459,7 +468,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuel traitement probabiliste proposez-vous pour la toux à la fin de la consultation, en précisant son mode d’administration ? Justifiez.",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-060-141.png"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-060-141.png"
+          ],
           "reponseAttendue": "Un traitement d’épreuve par corticoïdes inhalés, devant une toux chronique (> 8 semaines), sans signe d’alerte, sans élément d’orientation, donc une toux non spécifique, après échec de l’antibiothérapie.",
           "correctionGenerale": "• <b>Traitement d’épreuve par corticoïdes inhalés</b>\n• Présence d’une toux chronique (> 8 semaines)\n• Pas de signes d’alerte\n• Pas d’éléments d’orientation\n• Toux non spécifique\n• Échec de l’antibiothérapie\n\n<i>La figure reproduit l’algorithme de prise en charge d’une toux traînante chez un enfant, selon la durée (3-8 semaines ou > 8 semaines), la présence de signes de toux spécifique et de signes d’alerte.</i>"
         }
@@ -528,7 +539,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuel(s) examen(s) demandez-vous en première intention pour confirmer le diagnostic ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-063-148.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-063-148.jpg"
+          ],
           "reponseAttendue": "Un prick-test et/ou le dosage des IgE spécifiques des protéines du lait de vache.",
           "correctionGenerale": "<b>Prick-test et/ou IgE spécifiques PLV.</b>\n\n<i>La figure reproduit l’arbre décisionnel de l’allergie aux protéines du lait de vache selon l’histoire clinique évocatrice, distinguant les manifestations immédiates (prick-test et/ou IgE spécifiques PLV) des manifestations retardées (prick-test et/ou IgE spécifiques PLV, patch-test), puis la conduite selon la positivité, le régime d’éviction et la réintroduction.</i>"
         },
@@ -644,7 +657,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
       "orderIndex": 31,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de pédiatrie : 30 questions, certaines introduites par une courte situation clinique.\n\n<i>Les chiffres entre parenthèses dans la correction correspondent au barème de points indiqué dans le corrigé d’origine.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -796,14 +809,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 22</b>\n\nVous voyez un enfant de huit ans accompagné de sa mère, qui vient consulter pour son surpoids. Son surpoids est apparu dès la petite enfance. C’est le dernier d’une fratrie de quatre enfants. Il a marché à 18 mois, son développement n’a posé aucun problème. La mère est en situation d’obésité depuis sa 3ᵉ grossesse. La grand-mère maternelle présente un diabète de type II. Le père est actuellement au chômage. Il est en CE1 et aime l’école. Il ne fait pas de sport en club et a régulièrement été dispensé de sport par le médecin pour de multiples raisons (entorse, infection…). À la naissance, il pesait 2,2 kg et mesurait 46 cm au terme de 40 semaines. Vous consultez la courbe de croissance, la courbe de poids et d’IMC à partir des données renseignées du carnet de santé (figure).\n\nComment analysez-vous la courbe de corpulence ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-022-052.png"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-022-052.png"
+          ],
           "reponseAttendue": "Un rebond d’adiposité précoce (avant 6 ans) ; corpulence normale jusqu’à 2 ans puis ascension continue.",
           "correctionGenerale": "• Rebond d’adiposité précoce (< 6 ans) (1)\n• Normale jusqu’à 2 ans puis ascension continue (1)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 23</b>\n\nComment analysez-vous la courbe de croissance ? (figure)",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-023-055.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-023-055.jpg"
+          ],
           "reponseAttendue": "Une croissance staturale régulière jusqu’à 2 ans, puis une accélération de la vitesse de croissance en regard d’une prise pondérale dès 2 ans, plus marquée après 4 ans.",
           "correctionGenerale": "Croissance staturale régulière jusqu’à 2 ans, puis accélération de la vitesse de croissance en regard d’une prise pondérale dès 2 ans et plus marquée après 4 ans (2)."
         },
@@ -856,7 +873,8 @@
           "reponseAttendue": "Tenue de la tête, soulève tête et épaules, poursuite oculaire, réponse vocale à la sollicitation et vocalises, sourire réponse, serre le doigt.",
           "correctionGenerale": "• Tenue de la tête (1)\n• Soulève tête et épaules (1)\n• Poursuite oculaire (1)\n• Réponse vocale à la sollicitation, vocalise (1)\n• Sourire réponse, serre le doigt (1)"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de pédiatrie : 30 questions, certaines introduites par une courte situation clinique.\n\n<i>Les chiffres entre parenthèses dans la correction correspondent au barème de points indiqué dans le corrigé d’origine.</i>"
     },
     {
       "label": "Annales - Pédiatrie - 2021 - EVCP - Sujet 1",
@@ -1119,7 +1137,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 3</b>\n\nInterprétez la radiographie de thorax (figure).",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-038-086.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-038-086.jpg"
+          ],
           "reponseAttendue": "Une cardiomégalie, sans anomalie parenchymateuse, avec des culs-de-sac pleuraux libres et pas d’anomalie du cadre osseux.",
           "correctionGenerale": "• <b>Cardiomégalie</b> (1)\n• Pas d’anomalie parenchymateuse (1)\n• Culs-de-sac pleuraux libres (1)\n• Pas d’anomalie du cadre osseux"
         },

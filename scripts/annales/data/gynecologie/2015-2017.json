@@ -41,7 +41,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 1</b>\n\nCitez les différents types de myomes en contact avec la cavité utérine selon la classification de la FIGO.",
-          "images": ["annales-gynecologie/annales-2015/figures/img-003-012.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2015/figures/img-003-012.jpg"
+          ],
           "reponseAttendue": "Les myomes de type 0 (pédiculé, endocavitaire), de type 1 (sous-muqueux, moins de 50 % intramural), de type 2 (sous-muqueux, au moins 50 % intramural) et de type 3 (en contact avec l’endomètre, 100 % intramural).",
           "correctionGenerale": "<b>Système de sous-classification des léiomyomes (FIGO)</b>\n• <b>S — Sous-muqueux</b>\n  – <b>0</b> : pédiculé, endocavitaire\n  – <b>1</b> : < 50 % intramural\n  – <b>2</b> : ≥ 50 % intramural\n• <b>A — Autres</b>\n  – <b>3</b> : est en contact avec l’endomètre, 100 % intramural\n  – <b>4</b> : intramural\n  – <b>5</b> : sous-séreux, ≥ 50 % intramural\n  – <b>6</b> : sous-séreux, < 50 % intramural\n  – <b>7</b> : sous-séreux, pédiculé\n  – <b>8</b> : autre (à préciser, par exemple cervical, parasitaire)\n• <b>Léiomyomes hybrides</b> (affectent tant l’endomètre que la séreuse) : deux nombres liés par un trait d’union — le premier désigne la relation avec l’endomètre, le second la relation avec la séreuse. Exemple <b>2-5</b> : simultanément sous-muqueux et sous-séreux, moins de la moitié du diamètre se trouvant à la fois dans la cavité endométriale et dans la cavité péritonéale.\n\n→ Les types en contact avec la cavité utérine sont donc les types <b>0, 1, 2 et 3</b>."
         },
@@ -147,7 +149,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/Annales 2015.pdf",
       "orderIndex": 3,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2015 de gynécologie-obstétrique : 10 questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -219,7 +221,8 @@
           "reponseAttendue": "Au 1ᵉʳ trimestre (entre 11 et 13+6 SA), calcul du risque combiné de trisomie 21 à partir des données maternelles (âge), échographiques (clarté nucale, LCC) et biologiques (bêta-hCG, PAPP-A). Si le risque est inférieur à 1/1000 : faible risque, surveillance standard. Entre 1/50 et 1/1000 : risque intermédiaire, DPNI par dosage de l’ADN libre circulant ; s’il est positif, un prélèvement invasif de confirmation s’impose. Le DPNI est proposé d’emblée en cas de grossesse gémellaire ou d’antécédent de T21. Si le risque est supérieur à 1/50 : prélèvement invasif pour caryotype fœtal — biopsie de trophoblaste avant 14 SA, amniocentèse après 14-16 SA.",
           "correctionGenerale": "<b>Au 1ᵉʳ trimestre (entre 11 et 13+6 SA) : calcul du risque combiné de trisomie 21</b>\n• Données maternelles : âge\n• Données échographiques : clarté nucale, LCC\n• Données biologiques : bêta-hCG, PAPP-A\n\n<b>Interprétation</b>\n• < 1/1000 : faible risque → surveillance standard\n• Entre 1/50 et 1/1000 : risque intermédiaire → <b>DPNI</b> (dosage de l’ADN libre circulant T21). Si positif, prélèvement invasif de confirmation. <i>NB : DPNI direct en cas de grossesse gémellaire ou d’antécédent de T21 (risque de récurrence).</i>\n• > 1/50 : <b>prélèvements invasifs</b> pour caryotype fœtal — biopsie de trophoblaste (< 14 SA), amniocentèse (> 14-16 SA)"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2015 de gynécologie-obstétrique : 10 questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2016 - EVCP - Cas 1",
@@ -354,7 +357,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nCitez, sans commentaire, l’ensemble des éléments cliniques et paracliniques qui devraient faire porter le diagnostic de pré-éclampsie sévère chez ce type de patiente.",
-          "images": ["annales-gynecologie/annales-2016/figures/recadre/img-022-090.png"],
+          "images": [
+            "annales-gynecologie/annales-2016/figures/recadre/img-022-090.png"
+          ],
           "reponseAttendue": "Une HTA sévère (PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg) ou non contrôlée, une protéinurie > 3 g/24 h, une créatininémie ≥ 90 µmol/L, une oligurie ≤ 500 mL/24 h ou ≤ 25 mL/h, une thrombopénie < 100 000/mm³, une cytolyse hépatique avec ASAT/ALAT > 2N, une douleur abdominale épigastrique et/ou de l’hypochondre droit « en barre » persistante ou intense, une douleur thoracique, une dyspnée, un œdème aigu du poumon, des signes neurologiques (céphalées sévères ne répondant pas au traitement, troubles visuels ou auditifs persistants, réflexes ostéo-tendineux vifs, diffusés et polycinétiques), un déficit neurologique, des troubles de la conscience, une crise d’éclampsie, un HELLP syndrome, une insuffisance rénale aiguë.",
           "correctionGenerale": "<i>La réponse est donnée par la reproduction du texte des recommandations (figure ci-dessus).</i>\n\n<b>Signes de gravité</b>\n• PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg\n• Douleur épigastrique et/ou de l’hypochondre droit « en barre »\n• Céphalées intenses et rebelles\n• Troubles visuels ou auditifs\n• Déficit neurologique\n• Troubles de la conscience\n• ROT vifs, diffusés, polycinétiques\n• Crise d’éclampsie\n• Détresse respiratoire, œdème aigu du poumon\n• HELLP syndrome\n• Insuffisance rénale aiguë\n\n<b>En cas de crise d’éclampsie, la perfusion de sulfate de magnésium est indiquée d’emblée.</b>\n\n<b>HELLP syndrome</b> : hémolyse (LDH > 600 UI/L) + ASAT/ALAT > 2N + plaquettes < 100 000/mm³\n\n<b>Insuffisance rénale aiguë</b> : doublement des valeurs de créatininémie ou élévation > 1,1 mg/dL (> 96 µmol/L)"
         },
@@ -368,7 +373,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\nL’enregistrement du RCF réalisé le jour de l’hospitalisation figure ci-dessous. Décrivez ce tracé.",
-          "images": ["annales-gynecologie/annales-2016/figures/img-024-099.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2016/figures/img-024-099.jpg"
+          ],
           "reponseAttendue": "Un rythme de base à 140 bpm, variable, réactif, avec une perte de signal (pouls maternel) ou un ralentissement ; la tocométrie est ininterprétable et le pouls maternel manque.",
           "correctionGenerale": "• Rythme de base 140 bpm\n• Variable\n• Réactif\n• Perte de signal (pouls maternel) ou ralentissement\n• Tocométrie ininterprétable\n• Manque du pouls maternel"
         },

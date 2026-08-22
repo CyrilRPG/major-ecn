@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF _ EVCP 2015.pdf",
       "orderIndex": 13,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2015 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -237,7 +237,8 @@
           "reponseAttendue": "La succinylcholine et le rocuronium.",
           "correctionGenerale": "• Succinylcholine\n• Rocuronium"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2015 en anesthésie-réanimation : 25 questions à réponse ouverte et courte, sans vignette clinique commune."
     }
   ]
 }

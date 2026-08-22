@@ -156,7 +156,7 @@
       "type": "EVCF",
       "source": "ANNALES PSYCHIATRIE/EVCF.2013-correction.pdf",
       "orderIndex": 3,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2013 de psychiatrie : 10 questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -228,7 +228,8 @@
           "reponseAttendue": "L’hyperhydratation et les benzodiazépines.",
           "correctionGenerale": "• Hyperhydratation\n• Benzodiazépines"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2013 de psychiatrie : 10 questions isolées."
     },
     {
       "label": "Annales - Psychiatrie - 2013 - EVCP",

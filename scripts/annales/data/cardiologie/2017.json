@@ -47,7 +47,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nL’ECG réalisé à l’admission est reproduit ci-dessous.\n\nQuel est votre diagnostic clinique précis ?",
-          "images": ["annales-cardiologie/seance-16-10-correction-cardiologie/figures/img-004-016.jpg"],
+          "images": [
+            "annales-cardiologie/seance-16-10-correction-cardiologie/figures/img-004-016.jpg"
+          ],
           "reponseAttendue": "Un syndrome coronarien aigu sans sus-décalage du segment ST (SCA non ST+) chez une patiente de 62 ans ayant au moins trois facteurs de risque cardio-vasculaire : douleur thoracique typique (constrictive, rétrosternale, d’apparition et de régression spontanées, de durée > 20 minutes, se répétant à plusieurs reprises sur un laps de temps court) ; ECG montrant une ischémie sous-épicardique avec ondes T négatives dans le territoire septo-latéral (V4-V5-V6-D1-aVL) et biphasiques dans le territoire antéro-septal (V2-V3), sans sus-décalage du segment ST ; terrain (âge > 60 ans, hypertension artérielle, tabagisme actif) ; pas d’argument pour un diagnostic différentiel.",
           "correctionGenerale": "<b>Syndrome coronarien aigu sans sus-décalage du segment ST (SCA non ST+) chez une patiente de 62 ans ayant au moins trois facteurs de risque cardio-vasculaire</b>\n\n• <b>Douleur thoracique typique</b> : constrictive, rétrosternale, d’apparition et de régression spontanées, de durée > 20 minutes, se répétant à plusieurs reprises sur un laps de temps court\n• <b>Électrocardiogramme</b> : ischémie sous-épicardique avec ondes T négatives dans le territoire septo-latéral (V4-V5-V6-D1-aVL) et biphasiques dans le territoire antéro-septal (V2-V3). Pas de sus-décalage du segment ST\n• <b>Terrain</b> avec facteurs de risque cardio-vasculaire : âge > 60 ans, hypertension artérielle (HTA), tabagisme actif\n• Pas d’argument pour un diagnostic différentiel"
         },
@@ -75,7 +77,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nL’infirmière vous amène l’ECG au moment où la patiente perd connaissance (ci-dessous).\n\nQuel est votre diagnostic et que faites-vous ?",
-          "images": ["annales-cardiologie/seance-16-10-correction-cardiologie/figures/recadre/img-023-097.png"],
+          "images": [
+            "annales-cardiologie/seance-16-10-correction-cardiologie/figures/recadre/img-023-097.png"
+          ],
           "reponseAttendue": "Un arrêt cardio-circulatoire sur fibrillation ventriculaire d’origine ischémique chez une patiente de 62 ans, compliquant un SCA non ST+ à haut risque, désormais à très haut risque : perte de connaissance, ECG montrant une activité ventriculaire rapide et désorganisée, argument de gravité. Prise en charge : urgence absolue ; choc électrique externe à énergie maximale (360 J) ; réanimation cardio-pulmonaire en l’absence de récupération d’une activité ventriculaire organisée après le choc (massage cardiaque externe, ventilation au ballon puis intubation orotrachéale, adrénaline IV 1 mg toutes les 1-2 minutes) ; après récupération d’une activité cardiaque organisée, coronarographie en urgence pour angioplastie de l’artère coupable, avec dose de charge en P2Y12 (ticagrélor 180 mg, prasugrel 60 mg ou clopidogrel 300-600 mg).",
           "correctionGenerale": "<b>Arrêt cardio-circulatoire sur fibrillation ventriculaire (FV) d’origine ischémique, chez une patiente de 62 ans, compliquant un SCA non ST+ à haut risque, désormais à très haut risque</b>\n• Perte de connaissance\n• ECG : activité ventriculaire rapide et désorganisée, compatible avec une fibrillation ventriculaire\n• Par argument de gravité\n\n<b>Prise en charge</b>\n• <b>Urgence absolue</b>\n• <b>Choc électrique externe à énergie maximale, 360 joules</b>\n• Réanimation cardio-pulmonaire en l’absence de récupération d’une activité ventriculaire organisée après le choc électrique externe : massage cardiaque externe et ventilation au ballon, puis intubation orotrachéale, et adrénaline IV 1 mg toutes les 1 à 2 minutes\n• Après récupération d’une activité cardiaque organisée : <b>coronarographie en urgence</b> pour angioplastie de l’artère coronaire coupable du SCA non ST+\n• Dose de charge en P2Y12 : ticagrélor 180 mg, ou prasugrel 60 mg, ou clopidogrel 300-600 mg"
         },
@@ -149,7 +153,7 @@
       "type": "EVCF",
       "source": "ANNALES CARDIOLOGIE/Séance 16-10 correction cardiologie.pdf",
       "orderIndex": 72,
-      "vignette": "<b>Sujet n° 1 : la cardiomyopathie hypertrophique primitive sarcomérique</b>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -193,7 +197,8 @@
           "reponseAttendue": "Contre-indication du sport de compétition et limitation des activités physiques intensives de loisir ; prévention de la déshydratation et limitation de la consommation d’alcool ; contrôle du poids ; prévention de l’endocardite infectieuse pour les formes obstructives ; éducation thérapeutique ; conseil pré-conceptionnel pour les femmes en âge de procréer ; conseil pour l’orientation professionnelle.",
           "correctionGenerale": "<b>Hygiène de vie</b>\n• <b>Contre-indication du sport de compétition</b>, limitation des activités physiques intensives de loisir\n• Prévention de la déshydratation, limitation de la consommation d’alcool\n• Contrôle du poids\n• Prévention de l’endocardite infectieuse pour les formes obstructives\n• Éducation thérapeutique\n• Conseil pré-conceptionnel pour les femmes en âge de procréer\n• Conseil pour l’orientation professionnelle\n\n<i>Rappel des recommandations ESC projetées en séance</i> : la participation à un sport de haute intensité ou de compétition peut être envisagée (classe IIb) chez les personnes sans marqueur de risque accru, après évaluation spécialisée ; elle n’est <b>pas recommandée</b> (classe III) chez celles qui présentent un quelconque marqueur de risque accru — symptômes cardiaques ou antécédent d’arrêt cardiaque ou de syncope inexpliquée, score ESC de risque modéré (≥ 4 % à 5 ans), gradient de chambre de chasse au repos > 30 mmHg, réponse tensionnelle anormale à l’effort, arythmies induites par l’effort. Un suivi annuel est recommandé chez les personnes qui pratiquent une activité physique régulière, semestriel chez l’adolescent et l’adulte jeune plus vulnérables à la mort subite liée à l’effort."
         }
-      ]
+      ],
+      "note": "<b>Sujet n° 1 : la cardiomyopathie hypertrophique primitive sarcomérique</b>"
     },
     {
       "label": "Annales - Cardiologie - 2017 - EVCF - Sujet 2",
@@ -201,7 +206,7 @@
       "type": "EVCF",
       "source": "ANNALES CARDIOLOGIE/Séance 16-10 correction cardiologie.pdf",
       "orderIndex": 73,
-      "vignette": "<b>Sujet n° 2 : le rétrécissement aortique de l’adulte</b>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -238,7 +243,8 @@
           "reponseAttendue": "Complications de la voie d’abord (pseudo-anévrisme, fistule artério-veineuse, hématome ou hémorragie au point de ponction, infection, dissection ou perforation vasculaire, hémorragie rétro-péritonéale en cas de voie fémorale) ; complications neurologiques (AVC, AIT) ; complications rythmiques (troubles du rythme supra-ventriculaire — flutter, fibrillation atriale ; troubles du rythme ventriculaire — tachycardie ventriculaire ; troubles conductifs de type BAV 1, 2 ou 3, permanents ou paroxystiques ; troubles conductifs intra-ventriculaires — bloc de branche droit ou gauche, complet ou incomplet) ; complications valvulaires (migration de prothèse, fuite para- ou intra-prothétique, mismatch prothèse/patient, endocardite infectieuse, thrombose de prothèse, rupture de l’anneau aortique) ; complications liées aux antiagrégants plaquettaires (hémorragie, thrombopénie) ; complications liées à l’injection d’iode (insuffisance rénale aiguë, allergie) ; surcharge avec décompensation cardiaque et œdème aigu pulmonaire.",
           "correctionGenerale": "<b>Complications de la voie d’abord</b>\n• Pseudo-anévrisme\n• Fistule artério-veineuse\n• Hématome au point de ponction\n• Hémorragie au niveau du point de ponction\n• Infection de la voie d’abord\n• Dissection vasculaire\n• Perforation vasculaire\n• Hémorragie rétro-péritonéale en cas de voie d’abord fémorale\n\n<b>Complications neurologiques</b>\n• Accident vasculaire cérébral\n• Accident ischémique transitoire\n\n<b>Complications rythmiques</b>\n• Trouble du rythme supra-ventriculaire : flutter, fibrillation atriale\n• Trouble du rythme ventriculaire : tachycardie ventriculaire\n• Trouble conductif de type bloc auriculo-ventriculaire (BAV) 1, 2 ou 3, permanent ou paroxystique\n• Trouble conductif intra-ventriculaire : bloc de branche droit ou gauche, complet ou incomplet\n\n<b>Complications valvulaires</b>\n• Migration de prothèse\n• Fuite para-prothétique et/ou intra-prothétique\n• Mismatch prothèse/patient\n• Endocardite infectieuse\n• Thrombose de la prothèse\n• Rupture de l’anneau aortique\n\n<b>Autres</b>\n• Complications liées aux antiagrégants plaquettaires : hémorragie, thrombopénie\n• Complications liées à l’injection d’iode : insuffisance rénale aiguë, allergie\n• Surcharge : décompensation cardiaque, œdème aigu pulmonaire"
         }
-      ]
+      ],
+      "note": "<b>Sujet n° 2 : le rétrécissement aortique de l’adulte</b>"
     }
   ]
 }

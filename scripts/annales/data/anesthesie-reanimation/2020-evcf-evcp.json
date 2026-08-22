@@ -17,7 +17,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/Annale 2020 copie.pdf",
       "orderIndex": 23,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2020 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -188,7 +188,8 @@
           "reponseAttendue": "Acidose lactique (hypoxie tissulaire ou choc, biguanides, insuffisance hépatocellulaire), acidocétoses (diabète, alcool, jeûne), intoxications (aspirine, éthylène glycol, méthanol) et insuffisance rénale.",
           "correctionGenerale": "<b>Tableau 4 : acidoses métaboliques avec trou anionique plasmatique augmenté</b>\n• <b>Acidose lactique</b> — causes : hypoxie tissulaire (choc), biguanides, insuffisance hépatocellulaire ; anion indosé : lactate\n• <b>Acidocétoses</b> — causes : diabète, alcool, jeûne ; anion indosé : β-hydroxybutyrate\n• <b>Intoxications</b> — aspirine (salicylates), éthylène glycol/antigel (glyoxalate, oxalate), méthanol (formate)\n• <b>Insuffisance rénale</b> — sulfates, phosphates, hippurate ; <i>en cas d’insuffisance rénale, le trou anionique plasmatique n’est que discrètement augmenté, car il y a également un défaut d’excrétion d’acide par le rein</i>\n\n<b>Tableau 3 : principales causes d’acidose métabolique selon le mécanisme</b>\n• <b>Accumulation aiguë d’acide</b> — trou anionique augmenté : acidose lactique, acidocétose, intoxication acide exogène (salicylate, éthylène glycol, méthanol) ; trou anionique normal : intoxication aux acides chlorés (chlorure d’ammonium, HCl)\n• <b>Perte de bicarbonate</b> — trou anionique normal : diarrhées, anastomoses urétéro-intestinales, acidose tubulaire proximale (type 2)\n• <b>Excrétion rénale d’acide diminuée</b> — trou anionique augmenté : insuffisance rénale ; trou anionique normal : acidose tubulaire distale hyperkaliémique (type 4) par défaut de production de NH₄⁺ (hypoaldostéronisme), acidose tubulaire distale (type 1) par défaut de sécrétion distale d’H⁺"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2020 en anesthésie-réanimation : 20 questions à réponse ouverte et courte, sans vignette clinique commune."
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2020 - EVCP - Cas clinique 1",

@@ -17,7 +17,7 @@
       "type": "EVCF",
       "source": "ANNALES MG/PAE MG 2017.pdf",
       "orderIndex": 120,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2017.</b>\n\nL’ensemble des sujets est à traiter. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -194,7 +194,8 @@
           "reponseAttendue": "Dans le SCA ST− : un sous-décalage du segment ST horizontal ou descendant > 1 mm dans deux dérivations contiguës ; plus rarement un sus-décalage du segment ST horizontal ou convexe vers le haut régressant après administration de trinitrine ; une inversion transitoire de l’onde T lorsque la négativation ou la positivation d’une onde T préalablement négative dépasse 1 mm. Dans le SCA ST+ : des ondes T pointues, symétriques et amples ; un sus-décalage du segment ST (onde de Pardee) présent dès les premières minutes, débutant au point J et englobant l’onde T, convexe vers le haut, siégeant en regard du territoire ischémique, > 1 mm en dérivations frontales et > 2 mm en dérivations précordiales, retrouvé sur au moins 2 dérivations contiguës ; un sous-décalage en miroir ; un bloc de branche gauche récent ; et une onde Q de nécrose apparaissant à la 6e-12e heure, de topographie identique au décalage qui l’a précédée, signe direct de nécrose constituée lorsqu’elle dépasse 0,04 s et 1 mm.",
           "correctionGenerale": "<b>SCA ST−</b>\n• Caractéristique : sous-décalage du segment ST horizontal ou descendant > 1 mm dans deux dérivations contiguës\n• Plus rarement : sus-décalage du segment ST horizontal ou convexe vers le haut, qui régresse après administration de trinitrine (diagnostic différentiel avec le SCA ST+)\n• Inversion transitoire de l’onde T, de valeur diagnostique lorsque :\n  – Négativation de l’onde T avec variation > 1 mm\n  – Positivation d’une onde T préalablement négative avec variation > 1 mm\n\n<b>SCA ST+</b>\n• Ondes T pointues, symétriques, amples\n• <b>Sus-décalage du segment ST (onde de Pardee)</b> :\n  – Présent dès les premières minutes\n  – Débute au point J et englobe l’onde T\n  – Convexe vers le haut\n  – Siège en regard du territoire ischémique\n  – > 1 mm en dérivations frontales (DI-aVL, DII-DIII-aVF) et > 2 mm en dérivations précordiales (V1-V6)\n  – Retrouvé sur au moins 2 dérivations contiguës\n• Sous-décalage en miroir (dérivations opposées à celles du sus-décalage)\n• BBG récent : a valeur de sus-décalage lorsqu’il est associé à une symptomatologie typique\n• <b>Onde Q de nécrose</b> : apparaît à la 6<sup>e</sup>-12<sup>e</sup> heure ; topographie identique à celle du décalage qui l’a précédée ; signe direct de nécrose constituée lorsqu’elle dépasse 0,04 s et 1 mm"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2017.</b>\n\nL’ensemble des sujets est à traiter. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2017 - EVCP",

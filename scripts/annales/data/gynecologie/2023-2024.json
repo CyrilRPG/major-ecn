@@ -28,7 +28,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/Annales 2023.pdf",
       "orderIndex": 28,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie-obstétrique : questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -54,7 +54,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nMme P., 38 ans, se présente pour métrorragies et un test urinaire de grossesse positif. L’examen du col est normal cliniquement et vous réalisez le cliché d’échographie endovaginale suivant.\n\nQuelle est votre suspicion diagnostique principale ? Quels éléments paracliniques supplémentaires peuvent renforcer votre hypothèse et comment la confirmer ?",
-          "images": ["annales-gynecologie/annales-2023/figures/img-005-020.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2023/figures/img-005-020.jpg"
+          ],
           "reponseAttendue": "Une môle hydatiforme (grossesse molaire) : le taux de bêta-hCG est très élevé, parfois avec une hyperthyroïdie associée ; l’échographie recherche des kystes ovariens. Confirmation par une aspiration endocavitaire avec examen anatomopathologique en urgence, à la recherche d’une môle.",
           "correctionGenerale": "• <b>Môle hydatiforme / grossesse molaire</b>\n• Taux de bêta-hCG très élevé, parfois hyperthyroïdie associée\n• Échographie : recherche de kystes ovariens\n• <b>Aspiration endocavitaire avec anatomopathologie en urgence</b> : recherche de môle"
         },
@@ -96,7 +98,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 10</b>\n\nQuels éléments anatomiques (du fœtus et des annexes) identifiez-vous sur ce cliché d’échographie chez une femme à 11 SA ? Quel est le diagnostic probable ?",
-          "images": ["annales-gynecologie/annales-2023/figures/img-012-049.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2023/figures/img-012-049.jpg"
+          ],
           "reponseAttendue": "Deux chorions et deux amnios, avec le signe du lambda : il s’agit d’une grossesse gémellaire bichoriale biamniotique.",
           "correctionGenerale": "• 2 chorions et 2 amnios\n• <b>Signe du LAMBDA</b>\n• <b>Grossesse gémellaire bichoriale biamniotique</b>"
         },
@@ -124,7 +128,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 14</b>\n\nÀ propos de l’anatomie féminine au niveau pelvien :\n\nA. Précisez la position habituelle de l’uretère au croisement des vaisseaux iliaques, à droite et à gauche.\nB. Précisez la position de l’uretère sous-ligamentaire et pré-ligamentaire par rapport à l’artère utérine.\nC. Quelle est la première branche de division du tronc antérieur de l’artère iliaque interne à destination viscérale ?",
-          "images": ["annales-gynecologie/annales-2023/figures/img-016-066.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2023/figures/img-016-066.jpg"
+          ],
           "reponseAttendue": "A. À gauche, l’uretère croise l’artère iliaque commune ; à droite, l’artère iliaque externe. B. L’uretère pelvien croise l’artère utérine en passant en dehors et en arrière de celle-ci. C. L’artère ombilicale.",
           "correctionGenerale": "• <b>A.</b> À gauche, l’uretère croise l’<b>artère iliaque commune</b> ; à droite, l’<b>artère iliaque externe</b>\n• <b>B.</b> L’uretère pelvien croise l’artère utérine en passant <b>en dehors et en arrière</b> de celle-ci\n• <b>C.</b> L’<b>artère ombilicale</b>"
         },
@@ -163,7 +169,8 @@
           "reponseAttendue": "Un dépistage de masse organisé : 2 clichés (face et oblique externe), tous les 2 ans, avec double lecture radiologique, dans la population de 50 à 74 ans, pris en charge à 100 %.",
           "correctionGenerale": "• Dépistage de masse organisé\n• 2 clichés (face + oblique externe)\n• Tous les 2 ans\n• Double lecture radiologique\n• Population : 50 à 74 ans\n• Pris en charge à 100 %"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie-obstétrique : questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2023 - EVCP - Cas 1",
@@ -190,7 +197,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 3</b>\n\nVous revoyez Mme A. à 12 SA. Elle a débuté le traitement préventif prescrit et elle a effectué une échographie hier, à 11 SA + 6 jours, dont voici un cliché. La patiente souhaite un dépistage de la trisomie 21.\n\nQuel examen est recommandé en première intention dans le cas de Mme A. et quel en est le principe ?",
-          "images": ["annales-gynecologie/annales-2023/figures/img-026-107.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2023/figures/img-026-107.jpg"
+          ],
           "reponseAttendue": "Le dépistage du risque combiné de trisomie 21, comprenant le dosage des marqueurs PAPP-A et bêta-hCG, l’âge maternel, et la mesure de la clarté nucale (avec une LCC dans les normes, entre 45 et 84 mm, correspondant à 11 à 13+6 SA). Le résultat rend un risque d’avoir un enfant atteint de trisomie 21.",
           "correctionGenerale": "<b>Dépistage du risque combiné de trisomie 21, comprenant</b>\n• Dosage des marqueurs PAPP-A et bêta-hCG\n• L’âge maternel\n• La mesure de la clarté nucale (LCC dans les normes : 11 à 13+6 SA, entre 45 et 84 mm)\n\n→ Le résultat rend un <b>risque d’avoir un enfant atteint de trisomie 21</b>"
         },
@@ -381,7 +390,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\nQuelle prise en charge proposez-vous ?",
-          "images": ["annales-gynecologie/annales-gyneco-med-2023/figures/img-015-060.png"],
+          "images": [
+            "annales-gynecologie/annales-gyneco-med-2023/figures/img-015-060.png"
+          ],
           "reponseAttendue": "Le premier diagnostic retenu est celui d’un hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire : prise en charge psychologique, prise en charge nutritionniste et endocrinologique.",
           "correctionGenerale": "• Le premier diagnostic retenu est celui d’un <b>hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire</b>\n• Prise en charge psychologique\n• Prise en charge nutritionniste et endocrinologique\n\n<i>La figure reproduit l’arbre décisionnel de l’aménorrhée secondaire : élimination des diagnostics de grossesse et de ménopause, dosages FSH, LH, TSH, prolactine, estradiol, testostérone et test aux progestatifs ; puis, selon les résultats, FSH élevée + estradiol bas (caryotype : 45X0 ou mosaïques, 46XX, insuffisance ovarienne prématurée → substitution estro-progestative), hyperprolactinémie (IRM hypophysaire, agoniste dopaminergique ± chirurgie), testostérone très élevée (cortisol libre urinaire, test au Synacthène® sur la 17-OH-progestérone, échographie ± IRM pelvienne, scanner surrénalien → bloc en 21-hydroxylase à révélation tardive ou tumeur virilisante), FSH basse + LH basse + estradiol bas (insuffisance gonadotrope : recherche de TCA ou d’exercice intense, autre déficit hypophysaire → IRM hypophysaire), FSH normale + estradiol normal + hirsutisme + testostérone élevée (échographie ovarienne, 17-OH-progestérone → SOPK ou bloc en 21-hydroxylase).</i>"
         }
@@ -419,7 +430,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nLa patiente est opérée et l’anatomopathologie confirme une lésion de haut grade in sano. Comment doit se dérouler le suivi ?",
-          "images": ["annales-gynecologie/annales-gyneco-med-2023/figures/img-020-082.jpg"],
+          "images": [
+            "annales-gynecologie/annales-gyneco-med-2023/figures/img-020-082.jpg"
+          ],
           "reponseAttendue": "Un test HPV à 6 mois : s’il est positif, colposcopie ; s’il est négatif, test HPV à 3 ans.",
           "correctionGenerale": "• <b>Test HPV à 6 mois</b>\n  – Colposcopie si positif\n  – Si négatif : test HPV à 3 ans\n\n<i>La figure reproduit l’algorithme de suivi d’une lésion histologique malpighienne intra-épithéliale de haut grade traitée : test HPV haut risque à 6 mois (M6) ; si HPV négatif, test HPV à 1 an (M18) puis à 3 ans (M42) et à 3 ans (M78), puis surveillance prolongée sans limite d’âge ; si HPV positif, colposcopie avec examen de la vulve et du vagin et biopsie si nécessaire. Il n’y a pas d’indication de reprise chirurgicale quel que soit le statut des marges, et le suivi est similaire pour tous les traitements (destruction, résection, hystérectomie).</i>"
         },
@@ -445,7 +458,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf",
       "orderIndex": 34,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie médicale : questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -517,7 +530,8 @@
           "reponseAttendue": "En premier lieu les symptômes (saignements, douleurs, pesanteur pelvienne, retentissement urinaire ou digestif), puis le désir de grossesse et l’évolutivité des fibromes.",
           "correctionGenerale": "• Le premier élément à prendre en compte est <b>les symptômes</b> : saignements, douleurs, pesanteur pelvienne, retentissement urinaire ou digestif\n• <b>Désir de grossesse</b>\n• <b>Évolutivité des fibromes</b>"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2023 de gynécologie médicale : questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2024 - EVCF",
@@ -525,7 +539,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/Annales 2024.pdf",
       "orderIndex": 35,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 de gynécologie-obstétrique : questions isolées, regroupées par thèmes.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -579,11 +593,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 8 — Pathologies bénignes de l’endomètre</b>\n\n1. Décrivez la classification FIGO 2011 des myomes.\n2. Quel bilan diagnostique en cas de ménométrorragies ?\n3. Quels sont les grands principes du traitement médical ?",
-          "images": ["annales-gynecologie/annales-2024/figures/img-012-048.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2024/figures/img-012-048.jpg"
+          ],
           "reponseAttendue": "1. Les myomes sous-muqueux : type 0 (pédiculé, endocavitaire), type 1 (< 50 % intramural), type 2 (≥ 50 % intramural) ; les autres : type 3 (en contact avec l’endomètre, 100 % intramural), type 4 (intramural), type 5 (sous-séreux, ≥ 50 % intramural), type 6 (sous-séreux, < 50 % intramural), type 7 (sous-séreux, pédiculé), type 8 (autre, par exemple cervical ou parasitaire) ; les léiomyomes hybrides sont désignés par deux nombres liés par un trait d’union (par exemple 2-5). 2. Une échographie pelvienne par voie abdominale et endovaginale. 3. Prise en charge symptomatique : traitement de la carence martiale si nécessaire, acide tranexamique en cas de saignement très abondant. Prise en charge étiologique : mise en place d’une contraception ou changement de celle-ci, par exemple par un dispositif intra-utérin au lévonorgestrel.",
           "correctionGenerale": "<b>1. Classification FIGO des léiomyomes</b>\n• <b>S — Sous-muqueux</b> : 0 (pédiculé, endocavitaire) ; 1 (< 50 % intramural) ; 2 (≥ 50 % intramural)\n• <b>A — Autres</b> : 3 (en contact avec l’endomètre, 100 % intramural) ; 4 (intramural) ; 5 (sous-séreux, ≥ 50 % intramural) ; 6 (sous-séreux, < 50 % intramural) ; 7 (sous-séreux, pédiculé) ; 8 (autre, à préciser — cervical, parasitaire)\n• <b>Léiomyomes hybrides</b> (affectent tant l’endomètre que la séreuse) : deux nombres liés par un trait d’union, le premier désignant la relation avec l’endomètre, le second la relation avec la séreuse. Exemple 2-5 : simultanément sous-muqueux et sous-séreux, moins de la moitié du diamètre se trouvant à la fois dans la cavité endométriale et dans la cavité péritonéale\n\n<b>2. Bilan diagnostique en cas de ménométrorragies</b>\n• Échographie pelvienne par voie abdominale et endovaginale\n\n<b>3. Grands principes du traitement médical</b>\n• <i>Prise en charge symptomatique</i> : traitement de la carence martiale si nécessaire ; en cas de saignement très abondant, acide tranexamique\n• <i>Prise en charge étiologique</i> : mise en place d’une contraception ou changement de celle-ci, par exemple dispositif intra-utérin au lévonorgestrel"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2024 de gynécologie-obstétrique : questions isolées, regroupées par thèmes."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2024 - EVCP - Cas 1",

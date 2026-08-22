@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf",
       "orderIndex": 40,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2024 de pédiatrie : 20 questions, certaines introduites par une courte situation clinique.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -110,7 +110,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 14</b>\n\nClément, 12 ans, présente une perte de 5 kg en 6 mois associée à une asthénie. Depuis 3 mois, il se plaint d’une douleur thoracique fluctuante majorée en décubitus antérieur. Sa mère décrit des pics de fièvre à 38,5 °C pluri-hebdomadaires. Une IRM a été réalisée (figure).\n\nQuels sont les 2 diagnostics à évoquer ?",
-          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-017-068.jpg"],
+          "images": [
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-017-068.jpg"
+          ],
           "reponseAttendue": "Une tuberculose maladie (adénopathies médiastinales, altération de l’état général, fièvre) et une tumeur médiastinale de type lymphome (perte de poids, asthénie, sueurs fébriles, douleur thoracique et masse médiastinale à l’IRM).",
           "correctionGenerale": "• <b>Tuberculose maladie</b> : adénopathies médiastinales, altération de l’état général, fièvre\n• <b>Tumeur médiastinale (lymphome)</b> : perte de poids, asthénie, fièvre (sueurs fébriles), douleur thoracique et signes à l’IRM compatibles avec une masse médiastinale"
         },
@@ -156,7 +158,8 @@
           "reponseAttendue": "Fièvre ≥ 5 jours obligatoire, associée à 4 des 5 signes suivants : conjonctivite bilatérale non exsudative ; modification des lèvres et de la cavité buccale (lèvres rouges, fissurées, langue framboisée) ; érythème et œdème des mains et des pieds puis desquamation péri-unguéale en phase subaiguë ; éruption polymorphe ; adénopathie cervicale généralement > 1,5 cm. Traitement : immunoglobulines IV 2 g/kg en dose unique (idéalement dans les 10 premiers jours), aspirine à dose anti-inflammatoire en phase aiguë puis à dose antiagrégante (3-5 mg/kg/j) en phase subaiguë, échocardiographie initiale et de suivi, surveillance et prise en charge des complications.",
           "correctionGenerale": "<b>Critères cliniques majeurs</b> (fièvre ≥ 5 jours obligatoire + 4 des 5 signes)\n1. Conjonctivite bilatérale non exsudative\n2. Modification des lèvres et de la cavité buccale (lèvres rouges, fissurées, langue « fraise »)\n3. Érythème et œdème des mains et des pieds, puis desquamation péri-unguéale en phase subaiguë\n4. Éruption polymorphe (maculopapuleuse, etc.)\n5. Adénopathie cervicale (généralement > 1,5 cm)\n\n<b>Mesures thérapeutiques</b>\n• Immunoglobulines intraveineuses 2 g/kg en dose unique (idéalement dans les 10 premiers jours de la maladie)\n• Aspirine : dose anti-inflammatoire initiale pendant la phase aiguë, puis dose antiagrégante (3-5 mg/kg/j) en phase subaiguë\n• Échocardiographie initiale et de suivi (rechercher dilatation / anévrismes coronaires) ; prise en charge cardiologique si atteinte coronarienne\n• Surveillance et prise en charge des complications"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2024 de pédiatrie : 20 questions, certaines introduites par une courte situation clinique."
     },
     {
       "label": "Annales - Pédiatrie - 2024 - EVCP - Cas pratique 1",
@@ -415,7 +418,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\n<i>Première observation.</i> Vous faites une radiographie de thorax que voici (figure).\n\nQuel est le diagnostic le plus probable ?",
-          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-054-219.jpg"],
+          "images": [
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-054-219.jpg"
+          ],
           "reponseAttendue": "Un tableau typique d’insuffisance cardiaque congestive du nourrisson, secondaire à une communication interventriculaire large. Arguments : souffle intense en rayon de roue, polypnée, tachycardie, hépatomégalie, mauvaise prise pondérale, cardiomégalie. L’âge de 4 semaines correspond au moment de la baisse des résistances vasculaires pulmonaires, à l’origine d’un shunt gauche-droite important et d’une insuffisance cardiaque congestive.",
           "correctionGenerale": "• Tableau typique d’<b>insuffisance cardiaque congestive du nourrisson</b>, secondaire à une <b>communication interventriculaire (CIV) large</b>\n• <b>Arguments</b> : souffle intense en rayon de roue, polypnée, tachycardie, hépatomégalie, mauvaise prise pondérale, cardiomégalie\n• L’âge (4 semaines) correspond au moment de la baisse des résistances vasculaires pulmonaires → shunt gauche-droite important → insuffisance cardiaque congestive"
         },
@@ -429,7 +434,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\n<i>Deuxième observation.</i> Voici l’ECG fait pendant que les infirmières mettent la sonde gastrique (figure).\n\nDécrivez : le type de tachycardie ; le mécanisme de réduction de cette tachycardie constaté sur l’ECG ; le mécanisme physiopathologique de la tachycardie.",
-          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-057-230.jpg"],
+          "images": [
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-057-230.jpg"
+          ],
           "reponseAttendue": "Une tachycardie régulière à QRS fins à 210/min, compatible avec une tachycardie supraventriculaire. La réduction est obtenue par manœuvres vagales (stimulation du nerf vague par la sonde gastrique, réflexe oculocardiaque ou nausées) ; elle peut aussi céder sous adénosine IV. Le mécanisme physiopathologique est une tachycardie par réentrée intra-nodale, ou plus souvent une réentrée par voie accessoire (syndrome de Wolff-Parkinson-White) : le circuit de réentrée permet une activation rapide, régulière, à QRS fins.",
           "correctionGenerale": "<b>Type de tachycardie</b>\n• Tachycardie régulière à QRS fins à 210/min → compatible avec une <b>tachycardie supraventriculaire (TSV)</b>\n\n<b>Mécanisme de réduction constaté sur l’ECG</b>\n• Réduction par manœuvres vagales (stimulation du nerf vague par la sonde gastrique = réflexe oculocardiaque / nausées)\n• Peut aussi céder sous adénosine IV (si administrée)\n\n<b>Mécanisme physiopathologique</b>\n• Tachycardie par réentrée intra-nodale, ou plus souvent réentrée par voie accessoire (syndrome de Wolff-Parkinson-White)\n• Le circuit de réentrée permet une activation rapide, régulière, à QRS fins — très fréquente"
         }
@@ -550,7 +557,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuelles sont les complications selon la classification de Chandler ?",
-          "images": ["annales-pediatrie/correction-evc-2024-pediatrie/figures/img-071-289.jpg"],
+          "images": [
+            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-071-289.jpg"
+          ],
           "reponseAttendue": "Cellulite préseptale (groupe I), cellulite orbitaire (groupe II), abcès sous-périosté (groupe III), abcès orbitaire (groupe IV), thrombose du sinus caverneux (groupe V).",
           "correctionGenerale": "<b>Classification de Chandler</b>\n• <b>Groupe I</b> : cellulite préseptale\n• <b>Groupe II</b> : cellulite orbitaire\n• <b>Groupe III</b> : abcès sous-périosté\n• <b>Groupe IV</b> : abcès orbitaire\n• <b>Groupe V</b> : thrombose du sinus caverneux"
         },

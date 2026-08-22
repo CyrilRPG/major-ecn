@@ -422,7 +422,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_6_7_PAE_Formation_pneumo.pdf",
       "orderIndex": 223,
-      "vignette": "<b>Questions isolées.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : les questions 1 et 2 sont corrigées à la fin de la conférence n° 6-7, les questions 3 à 9 dans la conférence n° 8.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -495,7 +495,8 @@
           "reponseAttendue": "Les séquelles : séquelle caverneuse ; aspergillose pulmonaire chronique ou aspergillome ; bronchectasies ; réinfection tuberculeuse ou infection à mycobactérie non tuberculeuse. Et la transformation en carcinome broncho-pulmonaire, notamment épidermoïde.",
           "correctionGenerale": "<b>Séquelles</b>\n• Séquelle <b>caverneuse</b>\n• <b>Aspergillose pulmonaire chronique / aspergillome</b>\n• <b>Bronchectasies</b>\n• <b>Réinfection tuberculeuse</b> ou infection à <b>mycobactérie non tuberculeuse</b>\n\n<b>Et</b>\n• <b>Transformation en carcinome broncho-pulmonaire</b> (épidermoïde notamment)"
         }
-      ]
+      ],
+      "note": "<b>Questions isolées.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : les questions 1 et 2 sont corrigées à la fin de la conférence n° 6-7, les questions 3 à 9 dans la conférence n° 8."
     }
   ]
 }

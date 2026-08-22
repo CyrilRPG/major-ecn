@@ -368,7 +368,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/7 EVC 2016 et 2015 corrigé.pdf",
       "orderIndex": 7,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2016 de pédiatrie, sujet n° 1 : questions sur le diabète de type 1 de l’enfant.\n\n<i>Le sujet officiel ne comporte pas de vignette clinique pour ce sujet : il est constitué de questions posées directement.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -405,7 +405,8 @@
           "reponseAttendue": "Il s’agit d’une maladie chronique, à vie ; éducation thérapeutique du patient et de sa famille ; prise en charge multidisciplinaire par une équipe spécialisée en diabétologie pédiatrique ; suivi régulier en consultation.",
           "correctionGenerale": "• Maladie chronique, à vie\n• Éducation thérapeutique du patient et de sa famille\n• Prise en charge multidisciplinaire par une équipe spécialisée en diabétologie pédiatrique\n• Suivi régulier en consultation"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2016 de pédiatrie, sujet n° 1 : questions sur le diabète de type 1 de l’enfant.\n\n<i>Le sujet officiel ne comporte pas de vignette clinique pour ce sujet : il est constitué de questions posées directement.</i>"
     },
     {
       "label": "Annales - Pédiatrie - 2016 - EVCF - Sujet 2",

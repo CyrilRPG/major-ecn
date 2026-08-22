@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { coursAnnalesParMatiere } from '@/lib/data/annales';
 import { canAccessCollege, type parseScope } from '@/lib/auth/permissions';
 import {
   SEUIL_REEVALUATION, requiredReevaluationKind,
@@ -203,12 +204,17 @@ export async function getStudiedSpecialties(
   if (byMatiere.size === 0) return [];
 
   // Nombre total de cours par spécialité étudiée (détection « terminée »).
-  const { data: coursRaw } = await supabase
-    .from('cours')
-    .select('id, matiere_id')
-    .in('matiere_id', [...byMatiere.keys()]);
+  // Les items d'annales en sont exclus : ils ne s'étudient pas (ni fiche, ni
+  // vidéo, ni flashcard), et les compter rendrait « inachevées » des
+  // spécialités qui étaient terminées avant la publication des annales.
+  const [{ data: coursRaw }, annalesParMatiere] = await Promise.all([
+    supabase.from('cours').select('id, matiere_id').in('matiere_id', [...byMatiere.keys()]),
+    coursAnnalesParMatiere(supabase, [...byMatiere.keys()]),
+  ]);
+  const idsAnnales = new Set([...annalesParMatiere.values()].flat());
   const coursTotalByMatiere = new Map<string, number>();
   for (const c of (coursRaw ?? []) as { id: string; matiere_id: string }[]) {
+    if (idsAnnales.has(c.id)) continue;
     coursTotalByMatiere.set(c.matiere_id, (coursTotalByMatiere.get(c.matiere_id) ?? 0) + 1);
   }
 
@@ -238,7 +244,10 @@ export async function getStudiedSpecialties(
       attempts30d: acc.attempts30d,
       totalAttempts: acc.totalAttempts,
       correctRatio: acc.totalAttempts > 0 ? acc.correctAttempts / acc.totalAttempts : 0,
-      studiedCoursIds: [...acc.studiedCours],
+      // Les annales de la spécialité rejoignent le vivier de révision dès que
+      // la spécialité est étudiée : ce sont des questions de révision, pas un
+      // item à parcourir d'abord.
+      studiedCoursIds: [...new Set([...acc.studiedCours, ...(annalesParMatiere.get(matiereId) ?? [])])],
     });
   }
 

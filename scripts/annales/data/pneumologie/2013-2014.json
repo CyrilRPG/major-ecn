@@ -200,7 +200,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_2_PAE_Formation_pneumo_30042025.pdf",
       "orderIndex": 214,
-      "vignette": "<b>Épanchement pleural.</b>\n\nLe corrigé développe les questions 1, 2, 4 et 5 de cette session : la diapositive numérotée « EVCF 3 » dans le diaporama porte en réalité la réponse à la question 2 (description de la radiographie), et la question 3 n’y est pas développée.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -233,7 +233,8 @@
           "reponseAttendue": "1. Pleurésie maligne : métastatique (cancer broncho-pulmonaire, sein, côlon), mésothéliome, lymphome. 2. Épanchement parapneumonique. 3. Tuberculose. 4. Embolie pulmonaire. 5. Pancréatite ou foyer sous-phrénique.",
           "correctionGenerale": "1. <b>Pleurésie maligne</b> : métastatique (CBP, sein, côlon) / mésothéliome / lymphome\n2. <b>Épanchement parapneumonique</b>\n3. <b>Tuberculose</b>\n4. <b>Embolie pulmonaire</b>\n5. <b>Pancréatite / foyer sous-phrénique</b>\n\n<i>Classification des épanchements par cellularité, projetée en séance.</i>\n<b>Exsudats</b>\n• <i>Cellules tumorales</i> : pleurésie métastatique (broncho-pulmonaire, sein, côlon), mésothéliome, hémopathies malignes\n• <i>Lymphocytes</i> : tuberculose / sarcoïdose, cancer / lymphome, chylothorax, pleurésie des collagénoses (PR, lupus)\n• <i>PNN</i> : épanchement parapneumonique, embolie pulmonaire, pancréatite / foyer sous-phrénique, atteinte œsophagienne (gauche ++)\n• <i>PNE</i> : embolie pulmonaire (80 % des cas), hémothorax, pneumothorax, pleurésie asbestosique bénigne, parasitose, pleurésie médicamenteuse et cancer\n<b>Transsudats</b>\n• <i>Bilatéraux</i> : insuffisance cardiaque, syndrome néphrotique, dialyse péritonéale\n• <i>Unilatéraux</i> : cirrhose, atélectasie, embolie pulmonaire (20 % des cas)"
         }
-      ]
+      ],
+      "note": "<b>Épanchement pleural.</b>\n\nLe corrigé développe les questions 1, 2, 4 et 5 de cette session : la diapositive numérotée « EVCF 3 » dans le diaporama porte en réalité la réponse à la question 2 (description de la radiographie), et la question 3 n’y est pas développée."
     },
     {
       "label": "Annales - Pneumologie - 2014 - EVCP",

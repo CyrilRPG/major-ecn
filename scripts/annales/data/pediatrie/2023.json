@@ -7,7 +7,7 @@
       "type": "EVCF",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
       "orderIndex": 38,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de pédiatrie : 25 questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -43,7 +43,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuels éléments retrouvez-vous à l’otoscopie ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-003-008.png"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-003-008.png"
+          ],
           "reponseAttendue": "Un tympan opaque, un bombement du tympan, la disparition du triangle lumineux : en faveur d’une otite moyenne aiguë purulente.",
           "correctionGenerale": "• Tympan opaque\n• Bombement du tympan\n• Disparition du triangle lumineux\n\n→ En faveur d’une <b>OMA purulente</b>"
         },
@@ -127,7 +129,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 17</b>\n\nVous voyez le petit Lulu, 14 mois, qui tousse depuis 10 jours. Une radiographie a été faite (figure).\n\nQuel diagnostic évoquez-vous ? Quel est l’élément clinique à rechercher à l’interrogatoire ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-007-017.png"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-007-017.png"
+          ],
           "reponseAttendue": "Une inhalation de corps étranger ; il faut rechercher un syndrome de pénétration.",
           "correctionGenerale": "• <b>Inhalation de corps étranger</b>\n• Recherche d’un <b>syndrome de pénétration</b>"
         },
@@ -187,7 +191,8 @@
           "reponseAttendue": "Motricité globale : assis sans appui, debout avec appui. Motricité fine : attrape et manipule les objets, passe d’une main à l’autre, pince pouce-index. Langage : répète une syllabe. Sensoriel : réagit à son prénom, peur de l’étranger, joue à « coucou le voilà ».",
           "correctionGenerale": "• <b>Motricité globale</b> : assis sans appui, debout avec appui\n• <b>Motricité fine</b> : attrape et manipule les objets, passe d’une main à l’autre, pince pouce-index\n• <b>Langage</b> : répète une syllabe\n• <b>Sensoriel</b> : réagit à son prénom, peur de l’étranger, joue à « coucou le voilà »"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2023 de pédiatrie : 25 questions isolées."
     },
     {
       "label": "Annales - Pédiatrie - 2023 - EVCP",
@@ -238,7 +243,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nVous recevez aux urgences un garçon de 2 ans, fébrile depuis 3 jours. À l’examen, il a 39 °C, il est irritable, il a une éruption maculeuse généralisée. Il présente une rougeur oculaire, un catarrhe nasal et des adénopathies cervicales.\n\nVous suspectez une maladie de Kawasaki. Quels sont les critères majeurs de la maladie de Kawasaki ? Quel examen complémentaire est indispensable à ce stade ? Quel est le traitement de référence de première intention (posologie, mode d’administration) ? Quelle est la principale complication redoutée ? Quelle est la durée minimale de surveillance de cette complication ?\n\nAprès réexamen attentif, vous observez cet aspect de la muqueuse buccale (figure) : quel est ce signe ? Quel diagnostic différentiel de la maladie de Kawasaki évoquez-vous ? Quel examen pratiquez-vous pour le confirmer ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-013-032.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-013-032.jpg"
+          ],
           "reponseAttendue": "Critères majeurs : fièvre depuis au moins 5 jours, conjonctivite, exanthème, énanthème, adénopathie cervicale, modification des extrémités. Examen indispensable : échographie cardiaque. Traitement : immunoglobulines IV 2 g/kg en perfusion lente + aspirine à dose anti-inflammatoire 30-50 mg/kg/j en 4 prises. Complication redoutée : anévrisme coronarien, à surveiller au minimum pendant 2 mois. Le signe observé est le signe de Koplik, évoquant une rougeole, confirmée par la sérologie rougeole (IgM).",
           "correctionGenerale": "<b>Critères majeurs de la maladie de Kawasaki</b>\n• Fièvre depuis au moins 5 jours\n• Conjonctivite\n• Exanthème\n• Énanthème\n• Adénopathie cervicale\n• Modification des extrémités\n\n<b>Examen indispensable</b> : <b>échographie cardiaque</b>\n\n<b>Traitement de référence</b> : <b>immunoglobulines IV 2 g/kg en perfusion lente + aspirine à dose anti-inflammatoire 30-50 mg/kg/j en 4 prises</b>\n\n<b>Complication redoutée</b> : <b>anévrisme coronarien</b> — surveillance au minimum pendant 2 mois.\n\n<b>Signe observé</b> : <b>signe de Koplik</b> → <b>rougeole</b>, confirmée par la <b>sérologie rougeole (IgM)</b>."
         },
@@ -252,7 +259,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 8</b>\n\nEnfant de 10 ans vu pour un ralentissement de sa croissance. Sa courbe de croissance est la suivante (figure).\n\nQuel est le premier diagnostic à évoquer ? Quels examens de première ligne envisagez-vous ?",
-          "images": ["annales-pediatrie/annales-2017-2023-corrigees/figures/img-014-035.jpg"],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-014-035.jpg"
+          ],
           "reponseAttendue": "Un craniopharyngiome. Examens : IRM cérébrale avec coupes centrées sur l’hypophyse, IGF-1, test de stimulation de la GH.",
           "correctionGenerale": "• <b>Craniopharyngiome</b>\n• IRM cérébrale avec coupes centrées sur l’hypophyse\n• IGF-1, test de stimulation de la GH"
         },

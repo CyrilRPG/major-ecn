@@ -222,7 +222,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_1_PAE_Formation_pneumo_23042025 copie.pdf",
       "orderIndex": 212,
-      "vignette": "<b>Adénomégalies intrathoraciques.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : les questions 1 à 4 sont corrigées dans la conférence n° 1 (séance du 25/04/2025), les questions 5 et 6 au début de la conférence n° 2 (séance du 30/04/2025). Le corrigé s’arrête après la question 6.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -266,7 +266,8 @@
           "reponseAttendue": "On peut se passer d’une confirmation histologique en cas de syndrome de Löfgren, de syndrome de Heerfordt, de lupus pernio, ou lorsque la sarcoïdose a déjà été confirmée histologiquement et qu’il n’existe aucune atypie ; en cas de lésions hilo-médiastinales isolées, l’indication de la biopsie est laissée à l’appréciation du médecin. Dans les autres situations, on hiérarchise les prélèvements du plus superficiel au plus invasif : 1. biopsies cutanées s’il existe une atteinte cutanée ; 2. biopsie des glandes salivaires accessoires ; 3. biopsie des éperons bronchiques ou de toute autre atteinte accessible ; 4. biopsies ganglionnaires.",
           "correctionGenerale": "<b>Situations dispensant d’une confirmation histologique</b>\n• Sarcoïdose <b>déjà confirmée histologiquement</b> et en l’absence d’atypie\n• <b>Syndrome de Löfgren</b> : pas besoin de confirmation diagnostique\n• <b>Syndrome de Heerfordt</b>\n• <b>Lupus pernio</b>\n• Lésions <b>hilo-médiastinales isolées</b> : à l’appréciation du médecin de biopsier ou non\n\n<b>Hiérarchie des prélèvements dans les autres situations</b>\n1. <b>Biopsies cutanées</b> si atteinte cutanée\n2. <b>Biopsie des glandes salivaires accessoires</b>\n3. <b>Biopsie des éperons bronchiques</b> ou de toute autre atteinte accessible\n4. <b>Biopsies ganglionnaires</b>\n\n<i>Précisions projetées en séance. Priorité aux biopsies superficielles, à discuter dans cet ordre : 1. biopsie cutanée — faible rentabilité chez l’asymptomatique, ne jamais biopsier un érythème noueux, biopsier les sarcoïdes à petits ou gros nodules ; 2. biopsie des glandes salivaires ; 3. biopsie d’adénopathies périphériques (le plus souvent cervicale, sus-claviculaire, axillaire) ou de nodules conjonctivaux. Endoscopie et histologie pneumologiques : en 1re intention, biopsie des éperons bronchiques proximaux ; en 2e intention, ponction de ganglions médiastinaux ou médiastinoscopie (sensibilité proche de 100 %). LBA : hypercellularité &gt; 200 000/mL, alvéolite lymphocytaire avec CD4/CD8 &gt; 3,5. Biopsie : granulome épithélioïde et gigantocellulaire sans nécrose caséeuse centrale (granulome tuberculoïde). Bilan de 1re intention : biopsies et cultures spécifiques ; RT + EFR + ECG ; hémogramme, urée et créatininémie, PAL, ASAT/ALAT ; bilan phosphocalcique et calciurie ++ ; examen ophtalmologique (lampe à fente, tonométrie, fond d’œil) ; sérologie VIH ; test tuberculinique ; ECA sérique, utile au monitorage tous les 3-6 mois s’il est élevé initialement. Les trois syndromes : Löfgren (fièvre, adénopathies hilaires, arthrite de cheville, érythème noueux, ± anergie tuberculinique), Heerfordt (parotidite, paralysie faciale périphérique, uvéite antérieure bilatérale), Mikulicz (hypertrophie des glandes lacrymales, parotidite).</i>"
         }
-      ]
+      ],
+      "note": "<b>Adénomégalies intrathoraciques.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : les questions 1 à 4 sont corrigées dans la conférence n° 1 (séance du 25/04/2025), les questions 5 et 6 au début de la conférence n° 2 (séance du 30/04/2025). Le corrigé s’arrête après la question 6."
     }
   ]
 }

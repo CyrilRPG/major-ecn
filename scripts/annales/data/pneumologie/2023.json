@@ -131,7 +131,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/Conférence_n10_sent.pdf",
       "orderIndex": 229,
-      "vignette": "<b>Questions isolées — 25 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Le conférencier signale que le scanner thoracique appelé par la question 6 n’était pas disponible dans les énoncés qu’il a pu récupérer.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -312,7 +312,8 @@
           "reponseAttendue": "Un cancer sur cinq, soit 20 %.",
           "correctionGenerale": "• <b>1 cancer sur 5</b>\n• Donc <b>20 %</b>"
         }
-      ]
+      ],
+      "note": "<b>Questions isolées — 25 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Le conférencier signale que le scanner thoracique appelé par la question 6 n’était pas disponible dans les énoncés qu’il a pu récupérer."
     }
   ]
 }

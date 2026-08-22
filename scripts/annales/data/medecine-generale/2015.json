@@ -19,12 +19,14 @@
       "type": "EVCF",
       "source": "ANNALES MG/PAE 2015.pdf",
       "orderIndex": 116,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2015.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
           "enonce": "<b>Sujet 1 — Question 1</b>\n\nVous voyez en consultation de médecine générale de ville Madame L., âgée de 79 ans, qui se plaint depuis 2 mois d’une asthénie persistante, inhabituelle. À cette asthénie s’associent des céphalées surtout matinales. Ces symptômes sont apparus dans les suites du décès de son fils, mort accidentellement.\n\nOn retrouve dans ses antécédents une hépatite B guérie post-transfusionnelle en 1963, un ulcère gastroduodénal révélé par une hématémèse en 1992, une thyroïdite auto-immune diagnostiquée il y a 20 ans nécessitant un traitement par Levothyrox® 75 µg, et une cholécystectomie il y a 3 ans. Il n’y a pas de notion d’allergie médicamenteuse ou alimentaire. Cette patiente a eu 3 enfants, n’a pas eu de traitement hormonal substitutif et était jusqu’ici en pleine forme. Elle est traitée par captopril pour une HTA.\n\nL’examen clinique semble sans particularité ; pression artérielle 160/97 mmHg, poids 72 kg pour 1 m 68.\n\nCette patiente vous présente un premier bilan biologique réalisé par son médecin traitant, révélant : hémoglobine 10,2 g/dL, VGM 68 µm³, globules blancs 6 800/mm³, plaquettes 460 000/mm³, VS 38 mm à la 1<sup>re</sup> heure, CRP 25 mg/L, fibrinogène 5,3 g/L, électrophorèse des protéines montrant un composant monoclonal dont vous avez le tracé ci-dessous. Transaminases normales, phosphatases alcalines à 1,5 fois la normale avec des γGT à 3 fois la normale, bilirubine totale 10 mg/L, créatininémie 16 mg/L, calcémie 95 mg/L, glycémie 1,80 g/L.\n\nLes céphalées étant rebelles au paracétamol, Mme L. prend tous les jours depuis 3 semaines 150 mg de diclofénac qu’elle a trouvé chez sa voisine qui souffre d’arthrose.\n\nQuelles sont les 4 manifestations cliniques ou biologiques de l’observation qui peuvent être liées à la consommation des AINS ?",
-          "images": ["sujets/EVCF-71-2015/EVCF.71.2015_html_baadf35d.jpg"],
+          "images": [
+            "sujets/EVCF-71-2015/EVCF.71.2015_html_baadf35d.jpg"
+          ],
           "reponseAttendue": "Les céphalées, l’ulcère gastro-duodénal (avec l’anémie microcytaire par saignement digestif), l’HTA par résistance au traitement antihypertenseur, et l’insuffisance rénale.",
           "correctionGenerale": "• <b>Céphalées</b>\n• <b>Ulcère gastro-duodénal</b> (et l’anémie microcytaire qui en découle)\n• <b>HTA par résistance au traitement antihypertenseur</b>\n• <b>Insuffisance rénale</b>"
         },
@@ -301,7 +303,8 @@
           "reponseAttendue": "Le débit expiratoire de pointe (DEP), débit maximal instantané mesuré lors d’une expiration forcée. La crise d’asthme est sévère si le DEP est < 50 % : le patient doit alors s’alarmer. À noter qu’en dessous de 80 %, l’asthme est déjà considéré comme non contrôlé.",
           "correctionGenerale": "• <b>Débit expiratoire de pointe (DEP)</b> : débit maximal instantané mesuré lors d’une expiration forcée\n• <b>Crise d’asthme sévère si DEP < 50 %</b> : le patient doit donc s’alarmer\n\n<i>NB : cependant, à partir d’une valeur < 80 %, un asthme est dit non contrôlé.</i>"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2015.</b>\n\nChaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2015 - EVCP",

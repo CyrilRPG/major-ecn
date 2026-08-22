@@ -22,7 +22,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/Annales 2021.pdf",
       "orderIndex": 22,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de gynécologie-obstétrique : questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -53,14 +53,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nLa grossesse peut-elle être l’occasion d’un dépistage du cancer du col ?",
-          "images": ["annales-gynecologie/annales-2021/figures/img-011-048.png"],
+          "images": [
+            "annales-gynecologie/annales-2021/figures/img-011-048.png"
+          ],
           "reponseAttendue": "Oui, au premier trimestre : examen clinique, test HPV ou FCV en fonction de l’âge ; sinon en post-partum. Si le FCV est ASC-US ou LSIL, frottis en post-partum. S’il est ASC-H, AGC ou HSIL, colposcopie, dans le but d’éliminer un cancer invasif, car il n’y a pas de traitement des lésions intra-épithéliales pendant la grossesse ; à refaire à 3 mois s’il existe des lésions histologiques.",
           "correctionGenerale": "• <b>Oui, au premier trimestre</b> : examen clinique, test HPV ou FCV en fonction de l’âge\n• Sinon en post-partum\n• Si FCV ASC-US ou LSIL → frottis en post-partum\n• Si FCV ASC-H, AGC ou HSIL → <b>colposcopie</b> : le but est d’éliminer un cancer invasif, car il n’y a pas de traitement des lésions intra-épithéliales pendant la grossesse\n• À refaire à 3 mois s’il existe des lésions histologiques\n\n<i>La figure reproduit l’algorithme « Cytologie ASC-H, AGC ou HSIL en cours de grossesse » : colposcopie, puis selon qu’elle est satisfaisante et normale ou anormale, biopsie ; en l’absence de suspicion d’invasion, colposcopie 3 mois plus tard, puis cytologie et colposcopie dans les 2 à 3 mois après l’accouchement ; en cas de suspicion d’invasion ou de carcinome invasif, RCP ou avis d’expert.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\nModalités de dépistage combiné de la trisomie 21.",
-          "images": ["annales-gynecologie/annales-2021/figures/img-013-057.jpg"],
+          "images": [
+            "annales-gynecologie/annales-2021/figures/img-013-057.jpg"
+          ],
           "reponseAttendue": "Un dépistage non obligatoire, reposant au 1ᵉʳ trimestre (entre 11 et 13+6 SA) sur le calcul du risque combiné à partir de l’âge maternel, de la clarté nucale et de la LCC, et des marqueurs biologiques (bêta-hCG, PAPP-A) ; au 2ᵉ trimestre (> 14 SA), sur le calcul séquentiel du risque à partir de l’hCG total et de l’alpha-fœtoprotéine ; et sur les signes échographiques, tout au long de la grossesse. Si le risque est compris entre 1/51 et 1/1000 : dépistage par ADN circulant T21 (DPNI). Si le risque est ≥ 1/50 : caryotype fœtal d’emblée (biopsie de trophoblaste avant 14 SA, amniocentèse après 14 SA). Cas particuliers avec DPNI d’emblée : grossesses gémellaires, antécédent de T21, translocation robertsonienne dans le couple.",
           "correctionGenerale": "<b>Dépistage anténatal de la trisomie 21 — non obligatoire</b>\n• <b>Au 1ᵉʳ trimestre (entre 11 et 13+6 SA)</b> : calcul du risque combiné — données maternelles (âge), échographiques (clarté nucale, LCC), biologiques (bêta-hCG, PAPP-A)\n• <b>Au 2ᵉ trimestre (> 14 SA)</b> : calcul séquentiel du risque — hCG total, alpha-fœtoprotéine\n• Signes échographiques, tout au long de la grossesse\n\n<b>Interprétation</b> (recommandations HAS 2017)\n• Risque entre 1/51 et 1/1000 : examen de dépistage par <b>ADN circulant T21 (DPNI)</b>\n• Risque ≥ 1/50 : réalisation d’un <b>caryotype fœtal d’emblée</b> — biopsie de trophoblaste (< 14 SA) ou amniocentèse (> 14 SA)\n\n<b>Cas particuliers : DPNI d’emblée</b>\n• Grossesses gémellaires\n• Antécédent de T21\n• Translocation robertsonienne dans le couple\n\n<i>La figure reproduit une échographie du 1ᵉʳ trimestre avec mesure de la longueur cranio-caudale (56,81 mm, soit 12 semaines et 0 jour).</i>"
         },
@@ -95,7 +99,8 @@
           "reponseAttendue": "Appel de l’anesthésiste et du gynécologue-obstétricien, révision utérine, massage utérin, sondage urinaire, révision sous valve ± suture périnéale ; prise de constantes rapprochée, ocytocine 5 unités en IVD après révision jusqu’à 30 UI au maximum, antibioprophylaxie, oxygène et réchauffement, remplissage vasculaire par cristalloïdes, Hemocue®, vérification de la carte de groupe et des RAI, check-list HPP, quantification des saignements. En cas de persistance : sondage urinaire à demeure, sulprostone (Nalador®) 500 µg sur 30 min, acide tranexamique (Exacyl®) 500 mg, deuxième voie veineuse, bilan NFS-plaquettes et hémostase, commande de CGR, PFC et fibrinogène. Si l’hémorragie persiste : ballon de tamponnement intra-utérin après 10 min de Nalador®, embolisation si la patiente est stable hémodynamiquement, sinon reprise par voie haute avec points de capitonnage, triple ligature, hystérectomie d’hémostase.",
           "correctionGenerale": "<b>Prise en charge initiale</b>\n• Appel de l’anesthésiste et du gynécologue-obstétricien\n• Révision utérine\n• Massage utérin\n• Sondage urinaire\n• Révision sous valve ± suture périnéale\n• Prise de constantes rapprochée\n• <b>Ocytocine 5 unités en IVD</b> (après révision), jusqu’à 30 UI maximum\n• Antibioprophylaxie\n• O₂, réchauffement\n• Remplissage vasculaire : cristalloïdes\n• Hemocue®\n• Vérifier la carte de groupe, les RAI\n• Check-list HPP\n• Quantification des saignements : sac de recueil et pesée des compresses\n\n<b>Si persistance</b>\n• Sondage urinaire à demeure\n• <b>Sulprostone (Nalador®) 500 µg (1 ampoule) sur 30 min</b>\n• Exacyl® 500 mg (1 ampoule)\n• Poursuite de la réanimation médicale : deuxième voie veineuse ; bilan NFS-plaquettes, hémostase ; commande de CGR, PFC, fibrinogène\n\n<b>Si l’hémorragie persiste</b>\n• Ballon de tamponnement intra-utérin : après 10 min de Nalador® si persistance\n• Embolisation si la patiente est stable hémodynamiquement\n• Si hémorragie toujours active : reprise par voie haute — points de capitonnage, triple ligature, hystérectomie d’hémostase"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de gynécologie-obstétrique : questions isolées."
     },
     {
       "label": "Annales - Gynécologie-obstétrique - 2021 - EVCP - Cas 1",
@@ -292,7 +297,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 6</b>\n\nQuelle est la conduite thérapeutique que vous envisagez ? Décrivez-en les modalités pratiques, sachant qu’elle souhaite ne plus avoir ses règles.",
-          "images": ["annales-gynecologie/annales-gyneco-medicale-2021/figures/img-016-064.png"],
+          "images": [
+            "annales-gynecologie/annales-gyneco-medicale-2021/figures/img-016-064.png"
+          ],
           "reponseAttendue": "La mise en place d’un traitement hormonal substitutif jusqu’à au moins 50 ans : estradiol percutané (patch ou gel), en débutant par 25 µg/j puis en adaptant selon les symptômes, et progestérone naturelle 100 mg/j, à prendre en continu si elle ne veut pas avoir de règles.",
           "correctionGenerale": "• <b>Mise en place d’un traitement hormonal substitutif jusqu’à au moins 50 ans</b>\n• <b>Estradiol percutané</b> : patch ou gel — débuter par 25 µg/j puis adapter en fonction des symptômes\n• <b>Progestérone naturelle</b> : 100 mg/j\n• <b>À prendre en continu</b> si elle ne veut pas avoir de règles\n\n<i>La figure compare les schémas d’administration : « avec règles » — estrogène en discontinu ou en continu, avec progestatif 14 jours (commencer l’estrogène le 1ᵉʳ jour de chaque mois et le progestatif le 15ᵉ jour, arrêter le traitement le 28ᵉ jour) ; « sans règles » — estrogène pendant 25 jours et progestatif pendant le même temps, commencer simultanément le 1ᵉʳ jour de chaque mois et arrêter le 25ᵉ jour (traitement interrompu 5 à 6 jours chaque mois), avec possibilité d’administrer les 2 hormones sans interruption.</i>"
         },
@@ -318,7 +325,7 @@
       "type": "EVCF",
       "source": "ANNALES GYNECOLOGIE/Annales gynéco médicale 2021.pdf",
       "orderIndex": 27,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2021 de gynécologie médicale : questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -376,7 +383,8 @@
           "reponseAttendue": "Étiologies : pathologie endo-utérine (hyperplasie endométriale, cancer de l’endomètre, polype, léiomyome sous-muqueux, adénomyose — rare), surdosage en THS avec hyperplasie de l’endomètre sous THS, coagulopathie, iatrogénie (anticoagulants). Conduite à tenir : échographie pelvienne abdominale et endovaginale avec mesure de l’épaisseur endométriale (hypertrophie endométriale, lésion intra-cavitaire — polype, fibrome) et prise de doppler endométrial ; biopsie de l’endomètre (pipelle de Cornier ou hystéroscopie) ; diminution des doses de THS.",
           "correctionGenerale": "<b>Étiologies</b>\n• <b>Pathologie endo-utérine</b> : hyperplasie endométriale, cancer de l’endomètre ; polype ; léiomyome sous-muqueux ; adénomyose (rare)\n• Surdosage en THS : hyperplasie de l’endomètre sous THS\n• Coagulopathie\n• Iatrogénie : anticoagulants\n\n<b>Conduite à tenir diagnostique</b>\n• <b>Échographie pelvienne abdominale et endovaginale</b> : mesure de l’épaisseur endométriale ; hypertrophie endométriale, lésion intra-cavitaire (polype, fibrome) ; prise de doppler endométrial\n• <b>Biopsie de l’endomètre</b> : pipelle de Cornier ou hystéroscopie\n• Diminution des doses de THS"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de gynécologie médicale : questions isolées."
     }
   ]
 }

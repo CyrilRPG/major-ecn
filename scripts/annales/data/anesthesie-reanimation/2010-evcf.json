@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/EVCF 2010 correction.pdf",
       "orderIndex": 3,
-      "vignette": "Corrigé de l’épreuve de vérification des connaissances fondamentales 2010 en anesthésie-réanimation (Florent Sigwalt).\n\nLe dossier porte sur un patient de réanimation en choc septique, ventilé, chez qui sont explorés le monitorage hémodynamique, les gaz du sang et la mécanique ventilatoire.\n\n<i>Le corrigé ne reprend pas les intitulés officiels des questions : seules les réponses, numérotées de 1 à 27, y figurent. Le sujet officiel 2010 n’est disponible que sous forme de PDF scanné, sans couche texte.</i>",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -210,7 +210,8 @@
           "reponseAttendue": "Par un bas débit cardiaque persistant (transport altéré) et une défaillance cardiaque persistante, éventuellement un cœur pulmonaire aigu sur embolie gazeuse.",
           "correctionGenerale": "• Bas débit cardiaque persistant (transport altéré)\n• Défaillance cardiaque persistante ; cœur pulmonaire aigu sur embolie gazeuse ?"
         }
-      ]
+      ],
+      "note": "Corrigé de l’épreuve de vérification des connaissances fondamentales 2010 en anesthésie-réanimation (Florent Sigwalt).\n\nLe dossier porte sur un patient de réanimation en choc septique, ventilé, chez qui sont explorés le monitorage hémodynamique, les gaz du sang et la mécanique ventilatoire.\n\n<i>Le corrigé ne reprend pas les intitulés officiels des questions : seules les réponses, numérotées de 1 à 27, y figurent. Le sujet officiel 2010 n’est disponible que sous forme de PDF scanné, sans couche texte.</i>"
     }
   ]
 }

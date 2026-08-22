@@ -22,7 +22,7 @@
       "type": "EVCF",
       "source": "ANNALES MG/ECVF annales 2019 PAE correction copie.pdf",
       "orderIndex": 130,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2019.</b>\n\nTous les sujets doivent être traités. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -241,7 +241,8 @@
           "reponseAttendue": "Une souffrance insupportable réfractaire au traitement, une maladie incurable et un pronostic vital engagé à court terme.",
           "correctionGenerale": "<b>Pour pouvoir introduire une sédation profonde et continue jusqu’au décès, il faut remplir les 3 conditions suivantes</b>\n• <b>Souffrance insupportable réfractaire au traitement</b>\n• <b>Maladie incurable</b>\n• <b>Pronostic vital engagé à court terme</b>"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2019.</b>\n\nTous les sujets doivent être traités. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2019 - EVCP - QROC",
@@ -421,11 +422,36 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>C et D</b>. La prise d’AINS n’est pas un facteur de risque d’érysipèle — seulement un facteur de risque de développer une forme grave.",
           "items": [
-            { "lettre": "A", "enonce": "Hypertension artérielle", "isCorrect": false, "justification": "L’hypertension artérielle n’est pas un facteur de risque indépendant d’érysipèle." },
-            { "lettre": "B", "enonce": "Âge", "isCorrect": false, "justification": "L’âge n’est pas retenu comme facteur de risque indépendant d’érysipèle." },
-            { "lettre": "C", "enonce": "Insuffisance veineuse", "isCorrect": true, "justification": "L’insuffisance veineuse, source d’œdème chronique, est un facteur de risque indépendant reconnu d’érysipèle." },
-            { "lettre": "D", "enonce": "Intertrigo inter-orteil", "isCorrect": true, "justification": "L’intertrigo inter-orteil constitue la porte d’entrée la plus fréquente et un facteur de risque indépendant majeur." },
-            { "lettre": "E", "enonce": "Prise régulière d’AINS (ibuprofène)", "isCorrect": false, "justification": "La prise d’AINS n’est pas un facteur de risque d’érysipèle, mais seulement de développer une forme grave." }
+            {
+              "lettre": "A",
+              "enonce": "Hypertension artérielle",
+              "isCorrect": false,
+              "justification": "L’hypertension artérielle n’est pas un facteur de risque indépendant d’érysipèle."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Âge",
+              "isCorrect": false,
+              "justification": "L’âge n’est pas retenu comme facteur de risque indépendant d’érysipèle."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Insuffisance veineuse",
+              "isCorrect": true,
+              "justification": "L’insuffisance veineuse, source d’œdème chronique, est un facteur de risque indépendant reconnu d’érysipèle."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Intertrigo inter-orteil",
+              "isCorrect": true,
+              "justification": "L’intertrigo inter-orteil constitue la porte d’entrée la plus fréquente et un facteur de risque indépendant majeur."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Prise régulière d’AINS (ibuprofène)",
+              "isCorrect": false,
+              "justification": "La prise d’AINS n’est pas un facteur de risque d’érysipèle, mais seulement de développer une forme grave."
+            }
           ]
         },
         {
@@ -434,11 +460,36 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>A, D et E</b>. Il faut toujours évoquer une mauvaise observance thérapeutique en cas d’évolution défavorable. La posologie d’amoxicilline est ici insuffisante : au moins 1 g × 3/j sont nécessaires, probablement plus chez ce patient.",
           "items": [
-            { "lettre": "A", "enonce": "La prise d’ibuprofène", "isCorrect": true, "justification": "Les AINS favorisent l’évolution vers une forme grave d’érysipèle (dermo-hypodermite nécrosante)." },
-            { "lettre": "B", "enonce": "La prise de warfarine", "isCorrect": false, "justification": "La warfarine n’influe pas sur l’évolution de l’infection cutanée." },
-            { "lettre": "C", "enonce": "La prise d’ésoméprazole", "isCorrect": false, "justification": "L’ésoméprazole n’intervient pas dans l’évolution de l’érysipèle." },
-            { "lettre": "D", "enonce": "La mauvaise observance thérapeutique", "isCorrect": true, "justification": "Il faut toujours évoquer une mauvaise observance en cas d’évolution défavorable, a fortiori chez un patient présentant des troubles de la mémoire et vivant seul." },
-            { "lettre": "E", "enonce": "La posologie de l’amoxicilline inadaptée", "isCorrect": true, "justification": "La posologie prescrite (500 mg × 3/j) est insuffisante : il faut au moins 1 g × 3/j, probablement plus chez ce patient de 91 kg." }
+            {
+              "lettre": "A",
+              "enonce": "La prise d’ibuprofène",
+              "isCorrect": true,
+              "justification": "Les AINS favorisent l’évolution vers une forme grave d’érysipèle (dermo-hypodermite nécrosante)."
+            },
+            {
+              "lettre": "B",
+              "enonce": "La prise de warfarine",
+              "isCorrect": false,
+              "justification": "La warfarine n’influe pas sur l’évolution de l’infection cutanée."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La prise d’ésoméprazole",
+              "isCorrect": false,
+              "justification": "L’ésoméprazole n’intervient pas dans l’évolution de l’érysipèle."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La mauvaise observance thérapeutique",
+              "isCorrect": true,
+              "justification": "Il faut toujours évoquer une mauvaise observance en cas d’évolution défavorable, a fortiori chez un patient présentant des troubles de la mémoire et vivant seul."
+            },
+            {
+              "lettre": "E",
+              "enonce": "La posologie de l’amoxicilline inadaptée",
+              "isCorrect": true,
+              "justification": "La posologie prescrite (500 mg × 3/j) est insuffisante : il faut au moins 1 g × 3/j, probablement plus chez ce patient de 91 kg."
+            }
           ]
         },
         {
@@ -447,11 +498,36 @@
           "images": [],
           "correctionGenerale": "Réponse : <b>C</b>.",
           "items": [
-            { "lettre": "A", "enonce": "Anti-agrégation plaquettaire", "isCorrect": false, "justification": "Aucune indication à une antiagrégation plaquettaire dans cette situation, d’autant que le patient est déjà sous warfarine." },
-            { "lettre": "B", "enonce": "Poursuite des AINS à visée antalgique", "isCorrect": false, "justification": "Les AINS sont au contraire à arrêter : ils favorisent l’évolution vers une forme grave." },
-            { "lettre": "C", "enonce": "Bas de contention dès l’amélioration des douleurs", "isCorrect": true, "justification": "La contention veineuse est recommandée dès que les douleurs le permettent, pour lutter contre l’œdème et prévenir les récidives." },
-            { "lettre": "D", "enonce": "Décubitus strict jusqu’à régression des signes cliniques", "isCorrect": false, "justification": "Le décubitus strict est délétère chez un sujet âgé : il favorise la dépendance iatrogène et les complications thromboemboliques." },
-            { "lettre": "E", "enonce": "Bétaméthasone (Diprosone®) en application locale", "isCorrect": false, "justification": "Les dermocorticoïdes n’ont aucune place dans le traitement de l’érysipèle." }
+            {
+              "lettre": "A",
+              "enonce": "Anti-agrégation plaquettaire",
+              "isCorrect": false,
+              "justification": "Aucune indication à une antiagrégation plaquettaire dans cette situation, d’autant que le patient est déjà sous warfarine."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Poursuite des AINS à visée antalgique",
+              "isCorrect": false,
+              "justification": "Les AINS sont au contraire à arrêter : ils favorisent l’évolution vers une forme grave."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Bas de contention dès l’amélioration des douleurs",
+              "isCorrect": true,
+              "justification": "La contention veineuse est recommandée dès que les douleurs le permettent, pour lutter contre l’œdème et prévenir les récidives."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Décubitus strict jusqu’à régression des signes cliniques",
+              "isCorrect": false,
+              "justification": "Le décubitus strict est délétère chez un sujet âgé : il favorise la dépendance iatrogène et les complications thromboemboliques."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Bétaméthasone (Diprosone®) en application locale",
+              "isCorrect": false,
+              "justification": "Les dermocorticoïdes n’ont aucune place dans le traitement de l’érysipèle."
+            }
           ]
         },
         {
@@ -460,11 +536,36 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>B, C, D et E</b>. Pas d’indication au Daflon® en première intention ni au long cours (privilégier les bas de contention). Pas de benzodiazépines ni de somnifères au long cours. Pas d’AINS au long cours.",
           "items": [
-            { "lettre": "A", "enonce": "Énalapril", "isCorrect": false, "justification": "L’énalapril est un traitement approprié de l’hypertension artérielle ancienne de ce patient." },
-            { "lettre": "B", "enonce": "Fraction flavonoïque purifiée", "isCorrect": true, "justification": "Pas d’indication au Daflon® en première intention ni au long cours : il faut privilégier les bas de contention." },
-            { "lettre": "C", "enonce": "Zopiclone", "isCorrect": true, "justification": "Pas de somnifère au long cours, a fortiori chez un sujet âgé chuteur : la durée maximale de prescription est de 14 jours." },
-            { "lettre": "D", "enonce": "Clorazépate dipotassique", "isCorrect": true, "justification": "Pas de benzodiazépine au long cours ; le clorazépate est de surcroît une benzodiazépine à demi-vie longue, à éviter chez le sujet âgé." },
-            { "lettre": "E", "enonce": "Ibuprofène", "isCorrect": true, "justification": "Pas d’AINS au long cours, en particulier chez un sujet âgé sous IEC, diurétique et anticoagulant." }
+            {
+              "lettre": "A",
+              "enonce": "Énalapril",
+              "isCorrect": false,
+              "justification": "L’énalapril est un traitement approprié de l’hypertension artérielle ancienne de ce patient."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Fraction flavonoïque purifiée",
+              "isCorrect": true,
+              "justification": "Pas d’indication au Daflon® en première intention ni au long cours : il faut privilégier les bas de contention."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Zopiclone",
+              "isCorrect": true,
+              "justification": "Pas de somnifère au long cours, a fortiori chez un sujet âgé chuteur : la durée maximale de prescription est de 14 jours."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Clorazépate dipotassique",
+              "isCorrect": true,
+              "justification": "Pas de benzodiazépine au long cours ; le clorazépate est de surcroît une benzodiazépine à demi-vie longue, à éviter chez le sujet âgé."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Ibuprofène",
+              "isCorrect": true,
+              "justification": "Pas d’AINS au long cours, en particulier chez un sujet âgé sous IEC, diurétique et anticoagulant."
+            }
           ]
         },
         {
@@ -473,24 +574,76 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>A, B, C, D et E</b>.",
           "items": [
-            { "lettre": "A", "enonce": "Risque hémorragique", "isCorrect": true, "justification": "L’AINS est antiagrégant et gastro-toxique ; associé à la warfarine, il majore nettement le risque hémorragique." },
-            { "lettre": "B", "enonce": "Risque d’ulcère gastro-duodénal", "isCorrect": true, "justification": "La toxicité gastro-duodénale des AINS est classique, majorée par l’âge." },
-            { "lettre": "C", "enonce": "Risque d’insuffisance rénale chronique", "isCorrect": true, "justification": "La prise prolongée d’AINS peut conduire à une néphropathie interstitielle chronique." },
-            { "lettre": "D", "enonce": "Risque d’insuffisance rénale aiguë", "isCorrect": true, "justification": "L’association AINS + IEC + diurétique constitue la « triple whammy », à haut risque d’insuffisance rénale aiguë fonctionnelle." },
-            { "lettre": "E", "enonce": "Risque d’HTA", "isCorrect": true, "justification": "Les AINS entraînent une rétention hydrosodée et diminuent l’efficacité des antihypertenseurs." }
+            {
+              "lettre": "A",
+              "enonce": "Risque hémorragique",
+              "isCorrect": true,
+              "justification": "L’AINS est antiagrégant et gastro-toxique ; associé à la warfarine, il majore nettement le risque hémorragique."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Risque d’ulcère gastro-duodénal",
+              "isCorrect": true,
+              "justification": "La toxicité gastro-duodénale des AINS est classique, majorée par l’âge."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Risque d’insuffisance rénale chronique",
+              "isCorrect": true,
+              "justification": "La prise prolongée d’AINS peut conduire à une néphropathie interstitielle chronique."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Risque d’insuffisance rénale aiguë",
+              "isCorrect": true,
+              "justification": "L’association AINS + IEC + diurétique constitue la « triple whammy », à haut risque d’insuffisance rénale aiguë fonctionnelle."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Risque d’HTA",
+              "isCorrect": true,
+              "justification": "Les AINS entraînent une rétention hydrosodée et diminuent l’efficacité des antihypertenseurs."
+            }
           ]
         },
         {
           "format": "qcm",
           "enonce": "<b>Sujet 2 — Question 8</b>\n\nVoici l’ordonnance actuelle de votre patient (ci-dessous). Parmi les propositions suivantes, laquelle ou lesquelles est (sont) exacte(s) ?",
-          "images": ["annales-mg/evcp-annales-2019-pae-correction/figures/img-007-014.png"],
+          "images": [
+            "annales-mg/evcp-annales-2019-pae-correction/figures/img-007-014.png"
+          ],
           "correctionGenerale": "Réponses : <b>A, C et D</b>. Le zopiclone ne peut pas être délivré pour 3 mois (14 jours maximum). Il ne s’agit pas d’une ordonnance sécurisée : la prescription de morphiniques n’y est donc pas possible.",
           "items": [
-            { "lettre": "A", "enonce": "Il s’agit d’une ordonnance bizone", "isCorrect": true, "justification": "L’ordonnance comporte bien deux zones : « prescriptions relatives au traitement de l’affection de longue durée reconnue » et « prescriptions sans rapport avec l’affection de longue durée »." },
-            { "lettre": "B", "enonce": "Tous les médicaments peuvent être délivrés au patient pour 3 mois", "isCorrect": false, "justification": "Le zopiclone ne peut pas être délivré pour 3 mois : sa durée maximale de prescription est de 14 jours." },
-            { "lettre": "C", "enonce": "L’absence de la date de réalisation de l’ordonnance empêche la délivrance du traitement", "isCorrect": true, "justification": "La date est une mention obligatoire : sans elle, le pharmacien ne peut pas délivrer le traitement." },
-            { "lettre": "D", "enonce": "Les médicaments prescrits dans le cadre du haut doivent être les médicaments d’affections exonérantes du ticket modérateur", "isCorrect": true, "justification": "C’est le principe même de l’ordonnance bizone : la partie haute est réservée aux traitements de l’ALD, pris en charge à 100 %." },
-            { "lettre": "E", "enonce": "Ce type d’ordonnance permet la prescription d’opioïdes", "isCorrect": false, "justification": "Il ne s’agit pas d’une ordonnance sécurisée : la prescription de stupéfiants et d’opioïdes forts n’y est pas possible." }
+            {
+              "lettre": "A",
+              "enonce": "Il s’agit d’une ordonnance bizone",
+              "isCorrect": true,
+              "justification": "L’ordonnance comporte bien deux zones : « prescriptions relatives au traitement de l’affection de longue durée reconnue » et « prescriptions sans rapport avec l’affection de longue durée »."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Tous les médicaments peuvent être délivrés au patient pour 3 mois",
+              "isCorrect": false,
+              "justification": "Le zopiclone ne peut pas être délivré pour 3 mois : sa durée maximale de prescription est de 14 jours."
+            },
+            {
+              "lettre": "C",
+              "enonce": "L’absence de la date de réalisation de l’ordonnance empêche la délivrance du traitement",
+              "isCorrect": true,
+              "justification": "La date est une mention obligatoire : sans elle, le pharmacien ne peut pas délivrer le traitement."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Les médicaments prescrits dans le cadre du haut doivent être les médicaments d’affections exonérantes du ticket modérateur",
+              "isCorrect": true,
+              "justification": "C’est le principe même de l’ordonnance bizone : la partie haute est réservée aux traitements de l’ALD, pris en charge à 100 %."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Ce type d’ordonnance permet la prescription d’opioïdes",
+              "isCorrect": false,
+              "justification": "Il ne s’agit pas d’une ordonnance sécurisée : la prescription de stupéfiants et d’opioïdes forts n’y est pas possible."
+            }
           ]
         },
         {
@@ -499,11 +652,36 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>A et B</b>. Le zopiclone est considéré comme un stupéfiant (contrairement au zolpidem) et doit être prescrit sur une ordonnance sécurisée, pour une durée de 14 jours maximum.",
           "items": [
-            { "lettre": "A", "enonce": "Le zopiclone est un stupéfiant", "isCorrect": true, "justification": "Le zopiclone relève de la réglementation des stupéfiants, contrairement au zolpidem." },
-            { "lettre": "B", "enonce": "Le zopiclone doit être prescrit sur une ordonnance sécurisée", "isCorrect": true, "justification": "Sa classification impose une prescription sur ordonnance sécurisée." },
-            { "lettre": "C", "enonce": "La durée de prescription de zopiclone ne peut dépasser 4 semaines", "isCorrect": false, "justification": "La durée maximale de prescription du zopiclone est de 14 jours, et non de 4 semaines." },
-            { "lettre": "D", "enonce": "La prescription initiale du zopiclone est réservée aux neurologues et aux psychiatres", "isCorrect": false, "justification": "Il n’existe aucune restriction de prescription initiale à ces spécialités." },
-            { "lettre": "E", "enonce": "Il faut surveiller le taux de plaquettes tous les mois", "isCorrect": false, "justification": "Aucune surveillance plaquettaire mensuelle n’est requise sous zopiclone." }
+            {
+              "lettre": "A",
+              "enonce": "Le zopiclone est un stupéfiant",
+              "isCorrect": true,
+              "justification": "Le zopiclone relève de la réglementation des stupéfiants, contrairement au zolpidem."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le zopiclone doit être prescrit sur une ordonnance sécurisée",
+              "isCorrect": true,
+              "justification": "Sa classification impose une prescription sur ordonnance sécurisée."
+            },
+            {
+              "lettre": "C",
+              "enonce": "La durée de prescription de zopiclone ne peut dépasser 4 semaines",
+              "isCorrect": false,
+              "justification": "La durée maximale de prescription du zopiclone est de 14 jours, et non de 4 semaines."
+            },
+            {
+              "lettre": "D",
+              "enonce": "La prescription initiale du zopiclone est réservée aux neurologues et aux psychiatres",
+              "isCorrect": false,
+              "justification": "Il n’existe aucune restriction de prescription initiale à ces spécialités."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Il faut surveiller le taux de plaquettes tous les mois",
+              "isCorrect": false,
+              "justification": "Aucune surveillance plaquettaire mensuelle n’est requise sous zopiclone."
+            }
           ]
         },
         {
@@ -512,11 +690,36 @@
           "images": [],
           "correctionGenerale": "Réponses : <b>B, C, D et E</b>. Tous les médicaments doivent être prescrits en DCI, et pas seulement les génériques.",
           "items": [
-            { "lettre": "A", "enonce": "Ce sont les seuls médicaments qui doivent être prescrits en DCI (dénomination commune internationale)", "isCorrect": false, "justification": "Tous les médicaments doivent être prescrits en DCI, et pas seulement les génériques." },
-            { "lettre": "B", "enonce": "Le tiers payant s’applique en cas de dispensation de génériques", "isCorrect": true, "justification": "Le dispositif « tiers payant contre génériques » s’applique en cas d’acceptation du générique." },
-            { "lettre": "C", "enonce": "Les pharmaciens peuvent les substituer aux princeps", "isCorrect": true, "justification": "Le droit de substitution du pharmacien est prévu par la loi, au sein d’un même groupe générique." },
-            { "lettre": "D", "enonce": "Le prescripteur peut s’opposer à la substitution d’un princeps par un générique par le pharmacien", "isCorrect": true, "justification": "Le prescripteur peut s’y opposer par la mention « non substituable », désormais justifiée." },
-            { "lettre": "E", "enonce": "Le patient peut s’opposer à la substitution d’un princeps par un générique par le pharmacien", "isCorrect": true, "justification": "Le patient peut refuser la substitution, mais il perd alors le bénéfice du tiers payant." }
+            {
+              "lettre": "A",
+              "enonce": "Ce sont les seuls médicaments qui doivent être prescrits en DCI (dénomination commune internationale)",
+              "isCorrect": false,
+              "justification": "Tous les médicaments doivent être prescrits en DCI, et pas seulement les génériques."
+            },
+            {
+              "lettre": "B",
+              "enonce": "Le tiers payant s’applique en cas de dispensation de génériques",
+              "isCorrect": true,
+              "justification": "Le dispositif « tiers payant contre génériques » s’applique en cas d’acceptation du générique."
+            },
+            {
+              "lettre": "C",
+              "enonce": "Les pharmaciens peuvent les substituer aux princeps",
+              "isCorrect": true,
+              "justification": "Le droit de substitution du pharmacien est prévu par la loi, au sein d’un même groupe générique."
+            },
+            {
+              "lettre": "D",
+              "enonce": "Le prescripteur peut s’opposer à la substitution d’un princeps par un générique par le pharmacien",
+              "isCorrect": true,
+              "justification": "Le prescripteur peut s’y opposer par la mention « non substituable », désormais justifiée."
+            },
+            {
+              "lettre": "E",
+              "enonce": "Le patient peut s’opposer à la substitution d’un princeps par un générique par le pharmacien",
+              "isCorrect": true,
+              "justification": "Le patient peut refuser la substitution, mais il perd alors le bénéfice du tiers payant."
+            }
           ]
         }
       ]

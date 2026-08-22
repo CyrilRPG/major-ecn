@@ -16,7 +16,7 @@
       "type": "EVCF",
       "source": "ANNALES MG/PAE 2011.pdf",
       "orderIndex": 110,
-      "vignette": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2011.</b>\n\nVous devez traiter tous les sujets. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -144,7 +144,8 @@
           "reponseAttendue": "Une spécificité de 80 % signifie que, sur 100 personnes non malades, le test en identifie 80 comme non malades : 20 personnes non malades sur 100 sont donc classées à tort comme positives — ce sont des faux positifs.",
           "correctionGenerale": "• Une spécificité à 80 % signifie que, sur 100 personnes non malades, le test en identifie 80 comme non malades\n• Les 20 autres personnes non malades sont classées à tort comme positives : ce sont des <b>faux positifs</b>"
         }
-      ]
+      ],
+      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2011.</b>\n\nVous devez traiter tous les sujets. Chaque question rappelle l’énoncé du sujet auquel elle se rapporte."
     },
     {
       "label": "Annales - Médecine générale - 2011 - EVCP",

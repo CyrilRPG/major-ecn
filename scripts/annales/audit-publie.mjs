@@ -90,7 +90,9 @@ for (const [label, { college, serie }] of attendu) {
       }
       // « < » de comparaison : c'est du texte, mais il a longtemps cassé le
       // rendu (cf. tests/rich-text.test.ts). On le signale pour surveillance.
-      for (const _ of s.matchAll(/<\s+[a-zA-Z]/g)) ko('MINEUR', ou, '« < » de comparaison suivi d’une lettre dans la ' + nom);
+      for (let n = (s.match(/<\s+[a-zA-Z]/g) ?? []).length; n > 0; n--) {
+        ko('MINEUR', ou, '« < » de comparaison suivi d’une lettre dans la ' + nom);
+      }
       const o = (s.match(/<(b|strong|i|em|u|sub|sup|span)\b/gi) ?? []).length;
       const f = (s.match(/<\/(b|strong|i|em|u|sub|sup|span)\s*>/gi) ?? []).length;
       if (o !== f) ko('MAJEUR', ou, 'balises non équilibrées dans la ' + nom + ' (' + o + ' ouvertes / ' + f + ' fermées)');

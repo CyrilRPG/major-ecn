@@ -207,7 +207,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
       "orderIndex": 230,
-      "vignette": "<b>Questions isolées.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : la question 1 est corrigée à la fin de la conférence n° 10, les questions 2 à 10 au début de la conférence n° 11-12.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -283,7 +283,8 @@
           "reponseAttendue": "Une cause inflammatoire, les nodules rhumatoïdes, et une cause infectieuse, la tuberculose ou une pneumonie ; le conférencier ajoute la fibrose (FPI), où l’hyperfixation est un facteur de mauvais pronostic.",
           "correctionGenerale": "• <b>Inflammatoire</b> : nodules rhumatoïdes\n• <b>Infectieux</b> : tuberculose / pneumonie\n• ± <b>Fibrose</b> : FPI, où l’hyperfixation est un facteur de mauvais pronostic"
         }
-      ]
+      ],
+      "note": "<b>Questions isolées.</b>\n\nLa correction de cette session est répartie sur deux diaporamas : la question 1 est corrigée à la fin de la conférence n° 10, les questions 2 à 10 au début de la conférence n° 11-12."
     },
     {
       "label": "Annales - Pneumologie - 2020 - EVCP",
@@ -373,7 +374,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
       "orderIndex": 232,
-      "vignette": "<b>Questions isolées — 20 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -525,7 +526,8 @@
           "reponseAttendue": "Les bêta-2-mimétiques de longue durée d’action et les anticholinergiques inhalés ; la corticothérapie inhalée ; les associations thérapeutiques bi- ou trithérapies inhalées ; et les macrolides au long cours, par voie orale.",
           "correctionGenerale": "• <b>β2-mimétiques inhalés</b> de longue durée d’action\n• <b>Anticholinergiques inhalés</b>\n• <b>Corticothérapie inhalée</b>\n• <b>Associations thérapeutiques bi- ou trithérapies inhalées</b>\n• <b>Macrolides au long cours per os</b>"
         }
-      ]
+      ],
+      "note": "<b>Questions isolées — 20 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici."
     },
     {
       "label": "Annales - Pneumologie - 2021 - EVCP",
@@ -941,7 +943,7 @@
       "type": "EVCF",
       "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
       "orderIndex": 238,
-      "vignette": "<b>Questions isolées — 23 questions.</b>\n\nLes énoncés des questions 1 à 19 sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Les énoncés des questions 20 à 23 ne sont pas reproduits : ils sont restitués d’après les intitulés portés par les diapositives de correction, et leur numérotation exacte reste incertaine pour les questions 20 et 21.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -1104,7 +1106,8 @@
           "reponseAttendue": "Les infections, par exemple les mycobactérioses ou la tularémie ; les corps étrangers, comme dans la bérylliose et la silicose ; les néoplasies, en particulier les lymphomes et les réactions granulomateuses d’un cancer broncho-pulmonaire ; les vascularites ; la maladie de Crohn ; le déficit immunitaire commun variable ; et les traitements par anti-TNFα et immunothérapie.",
           "correctionGenerale": "• <b>Infections</b> : mycobactérioses par exemple, tularémie…\n• <b>Corps étrangers</b> : bérylliose, silicose\n• <b>Néoplasies</b> : lymphomes, réaction granulomateuse d’un CBP\n• <b>Vascularites</b>\n• <b>Maladie de Crohn</b>\n• <b>DICV</b>\n• <b>Anti-TNFα et immunothérapie</b>"
         }
-      ]
+      ],
+      "note": "<b>Questions isolées — 23 questions.</b>\n\nLes énoncés des questions 1 à 19 sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Les énoncés des questions 20 à 23 ne sont pas reproduits : ils sont restitués d’après les intitulés portés par les diapositives de correction, et leur numérotation exacte reste incertaine pour les questions 20 et 21."
     }
   ]
 }

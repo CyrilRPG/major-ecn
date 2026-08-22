@@ -35,7 +35,7 @@
       "type": "EVCF",
       "source": "ANNALES PSYCHIATRIE/correction connaissance 2023.pdf",
       "orderIndex": 8,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 de psychiatrie : 25 questions isolées.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -75,7 +75,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nDécrivez les deux types de conduite à tenir en urgence en cas de suspicion de trauma par abus sexuel intrafamilial.",
-          "images": ["annales-psychiatrie/correction-connaissance-2023/figures/img-003-021.jpg"],
+          "images": [
+            "annales-psychiatrie/correction-connaissance-2023/figures/img-003-021.jpg"
+          ],
           "reponseAttendue": "Mesures de protection immédiate : signalement judiciaire à destination du procureur (article 40 du CPP) ; si danger immédiat, extraction du milieu avec hospitalisation en UAPED (unité d’accueil des enfants en danger). En situation moins urgente : transmission à la CRIP (cellule de recueil des informations préoccupantes, article 375 du Code civil). Chez l’adulte : rédaction d’un certificat circonstancié et proposition d’aller déposer plainte, avec prise en charge dans des maisons d’accueil.",
           "correctionGenerale": "<b>Mesures de protection immédiate</b>\n1. Signalement judiciaire à destination du procureur (art. 40 CPP)\n2. Si danger immédiat : extraction du milieu avec hospitalisation en <b>UAPED</b> (unité d’accueil des enfants en danger)\n\n• Face à une situation de maltraitance, le médecin doit être le protecteur de l’enfant\n• Situation moins urgente : transmission à la <b>CRIP</b> — cellule de recueil (art. 375 du Code civil)\n• La suspicion d’une situation de danger chez un enfant doit conduire à l’évaluation de l’ensemble des enfants vivant dans les mêmes conditions\n\n<b>Chez l’adulte</b>\n1. Rédaction d’un certificat circonstancié\n2. Proposer d’aller déposer plainte / prise en charge dans des maisons d’accueil\n\n<i>La figure (fig. 10.4) reproduit l’orientation initiale en cas de situation de danger diagnostiquée : devant une situation de maltraitance grave, un refus de soins urgents, une nécessité de protection urgente ou de constat médico-légal urgent (notamment infraction à caractère sexuel datant de moins de 5 jours), l’orientation est hospitalière avec signalement judiciaire ; sinon, ne pas rester seul face à la situation et prendre l’avis du médecin référent Protection de l’enfance du conseil départemental ou du service hospitalier référent.</i>"
         },
@@ -212,7 +214,8 @@
           "reponseAttendue": "Sauvegarde de justice, curatelle simple, curatelle renforcée, tutelle, mandat de protection future, habilitation familiale.",
           "correctionGenerale": "1. Sauvegarde de justice\n2. Curatelle simple\n3. Curatelle renforcée\n4. Tutelle\n5. Mandat de protection future\n6. Habilitation familiale"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2023 de psychiatrie : 25 questions isolées."
     },
     {
       "label": "Annales - Psychiatrie - 2024 - EVCP - Sujet 2",

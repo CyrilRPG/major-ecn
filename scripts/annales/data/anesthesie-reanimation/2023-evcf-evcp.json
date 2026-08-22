@@ -14,7 +14,7 @@
       "type": "EVCF",
       "source": "ANNALES AREA/Annale 2023 copie.pdf",
       "orderIndex": 30,
-      "vignette": "Épreuve de vérification des connaissances fondamentales 2023 en anesthésie-réanimation. Elle comporte deux parties : <b>pharmacologie</b> et <b>physiologie</b>, toutes deux à réponse ouverte et courte, sans vignette clinique commune.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",
@@ -169,7 +169,8 @@
           "reponseAttendue": "L’oxygénothérapie (qui réduit l’hypoxie alvéolaire et donc le stimulus), le décubitus ventral, les antagonistes des récepteurs de l’endothéline, les inhibiteurs de la PDE5, les agonistes des récepteurs des prostaglandines, la nitroglycérine et les autres nitrates, les inhibiteurs calciques, ainsi que les analgésiques et sédatifs (influence indirecte).",
           "correctionGenerale": "• <b>Oxygénothérapie</b> : réduit l’hypoxie alvéolaire, diminuant ainsi le stimulus pour la vasoconstriction\n• <b>Décubitus ventral</b>\n• <b>Antagonistes des récepteurs de l’endothéline</b> : bloquent l’action de l’endothéline-1, vasoconstricteur puissant\n• <b>Inhibiteurs de la PDE5</b> : augmentent les niveaux de GMP cyclique, favorisant la vasodilatation et diminuant la vasoconstriction pulmonaire\n• <b>Agonistes des récepteurs des prostaglandines</b> : imitent la prostacycline, induisant une vasodilatation\n• <b>Nitroglycérine et autres nitrates</b> : favorisent la vasodilatation via l’augmentation du GMP cyclique\n• <b>Inhibiteurs calciques</b>\n• <b>Analgésiques et sédatifs</b> : peuvent influencer indirectement la réponse vasoconstrictrice"
         }
-      ]
+      ],
+      "note": "Épreuve de vérification des connaissances fondamentales 2023 en anesthésie-réanimation. Elle comporte deux parties : <b>pharmacologie</b> et <b>physiologie</b>, toutes deux à réponse ouverte et courte, sans vignette clinique commune."
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2023 - EVCP - Sujet 1",
