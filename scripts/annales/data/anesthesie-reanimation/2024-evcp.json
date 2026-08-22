@@ -14,7 +14,7 @@
       "type": "EVCP",
       "source": "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf",
       "orderIndex": 34,
-      "vignette": "<i>Le corrigé ne reproduit pas l’énoncé officiel du cas. Les éléments cliniques qu’il mentionne sont les suivants :</i>\n\nPatient admis dans un état comateux, dans un contexte de fibrillation auriculaire sous anticoagulation orale, avec un déficit neurologique brutal. Le scanner cérébral en coupe axiale montre une hypodensité au sein d’une artère cérébrale — le tronc basilaire —, le scanner injecté passant par le tronc cérébral et les citernes de la base du crâne.\n\nLes gaz du sang retrouvent : pH 7,34 ; HCO₃⁻ 12 mmol/L ; PaCO₂ 22 mmHg.\n\nL’évolution est ensuite marquée par une hypotension réfractaire, une fièvre et des marbrures.",
+      "vignette": "Patient admis dans un état comateux, dans un contexte de fibrillation auriculaire sous anticoagulation orale, avec un déficit neurologique brutal. Le scanner cérébral en coupe axiale montre une hypodensité au sein d’une artère cérébrale — le tronc basilaire —, le scanner injecté passant par le tronc cérébral et les citernes de la base du crâne.\n\nLes gaz du sang retrouvent : pH 7,34 ; HCO₃⁻ 12 mmol/L ; PaCO₂ 22 mmHg.\n\nL’évolution est ensuite marquée par une hypotension réfractaire, une fièvre et des marbrures.",
       "questions": [
         {
           "format": "qroc",
@@ -84,7 +84,7 @@
       "type": "EVCP",
       "source": "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf",
       "orderIndex": 35,
-      "vignette": "<i>Le corrigé ne reproduit pas l’énoncé officiel du cas. Les éléments cliniques qu’il mentionne sont les suivants :</i>\n\nPatiente enceinte présentant de la fièvre, des lombalgies, une hyperleucocytose et une dilatation pyélocalicielle gauche à l’imagerie.\n\nElle présente par ailleurs un déficit en facteur XI et un antécédent de syndrome de Guillain-Barré.\n\nL’évolution impose une césarienne en « code rouge », au cours de laquelle survient une intubation impossible malgré plusieurs techniques.",
+      "vignette": "Patiente enceinte présentant de la fièvre, des lombalgies, une hyperleucocytose et une dilatation pyélocalicielle gauche à l’imagerie.\n\nElle présente par ailleurs un déficit en facteur XI et un antécédent de syndrome de Guillain-Barré.\n\nL’évolution impose une césarienne en « code rouge », au cours de laquelle survient une intubation impossible malgré plusieurs techniques.",
       "questions": [
         {
           "format": "qroc",

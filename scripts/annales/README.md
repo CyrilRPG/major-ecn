@@ -11,8 +11,14 @@ ambre **Annales**.
 - **Fidélité stricte** : on ne crée que les séries réellement présentes dans le
   sujet. Une épreuve 100 % QROC donne une seule série QROC ; aucun QCM n'est
   dérivé, aucun contenu n'est inventé.
-- **Aucune image omise** : `audit.mjs` échoue si une figure extraite d'un corrigé
-  n'est ni citée par une question, ni déclarée ignorée avec un motif.
+- **Aucune image omise**, des deux côtés :
+  - `audit.mjs` échoue si une figure extraite d'un **corrigé** n'est ni citée par
+    une question, ni déclarée ignorée avec un motif (`figuresIgnorees`) ;
+  - `audit-sujets.mjs` fait de même pour les **sujets officiels**, dont le corrigé
+    ne reprend pas toujours l'iconographie (« interprétez le tracé ECG suivant »
+    sans que le tracé soit reproduit). Ce qu'il signale s'arbitre à l'œil, puis
+    se solde soit par un rattachement, soit par un motif dans
+    `sujetFiguresCouvertes`.
 - **Pas de `allowed_voies`** sur les séries : la voie est déjà tranchée par
   `qcm_series.kind` (QCM → voie interne, QROC → voie externe, cf.
   `src/lib/data/qcm-access-rules.ts`). Renseigner la colonne masquerait la série
@@ -76,6 +82,24 @@ node scripts/annales/publier.mjs --data scripts/annales/data/orthopedie.json
 node scripts/annales/audit.mjs --data scripts/annales/data/orthopedie.json --db
 ```
 
+```bash
+# 6. Contrôles transverses (tout le corpus)
+node scripts/annales/audit-sujets.mjs --extraire      # images des sujets officiels
+node scripts/annales/audit-sujets.mjs --planches      # copies des orphelines à relire
+node scripts/annales/audit-publie.mjs                 # base + téléchargement des images
+```
+
+### Retoucher du contenu déjà publié
+
+`publier.mjs --force` **supprime puis recrée** les questions : par cascade, il
+efface les `qcm_attempts` des élèves. Pour une retouche ciblée, deux scripts
+mettent à jour la seule colonne concernée, sans rien détruire :
+
+```bash
+node scripts/annales/sync-vignettes.mjs [--ecrire]    # qcm_series.vignette
+node scripts/annales/sync-images.mjs    [--ecrire]    # images des questions et propositions
+```
+
 ## Format d'un fichier `data/<college>.json`
 
 ```jsonc
@@ -88,7 +112,11 @@ node scripts/annales/audit.mjs --data scripts/annales/data/orthopedie.json --db
     "ANNALES ORTHOPEDIE/EVCF.53 2012 correction.pdf": {
       "atelier": "annales-orthopedie/evcf-53-2012-correction",
       "sujetOfficiel": "Annales/Sujets/evcf_2012/EVCF.53.DOC",
-      "figuresIgnorees": { "img-004-011.png": "logo du collège, sans contenu" }
+      "figuresIgnorees": { "img-004-011.png": "logo du collège, sans contenu" },
+      // Figures du SUJET officiel déjà couvertes par une figure du corrigé
+      // (même planche recadrée, agrandie ou en miroir) : verdict d'arbitrage
+      // visuel, lu par `audit-sujets.mjs`.
+      "sujetFiguresCouvertes": { "source_html_1a2b.png": "même radiographie que img-003-012" }
     }
   },
   "series": [{

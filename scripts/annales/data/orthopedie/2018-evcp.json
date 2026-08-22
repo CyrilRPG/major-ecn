@@ -3,7 +3,9 @@
     "ANNALES ORTHOPEDIE/EVCP 2018 correction.pdf": {
       "atelier": "annales-orthopedie/evcp-2018-correction",
       "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-002-008.png": "Capture de la diapositive reproduisant le sujet officiel : les deux radiographies du poignet n’y font que quelques dizaines de pixels et la barre des tâches du poste du conférencier y figure. Elles sont publiées depuis le sujet officiel (2018_EVCP.pdf, p. 137), en pleine résolution."
+      }
     }
   },
   "series": [
@@ -18,7 +20,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nDonnez votre diagnostic.",
-          "images": ["annales-orthopedie/evcp-2018-correction/figures/recadre/img-002-008.png"],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/sujet/evcp-2018-dossier1-radiographies-poignet.png"
+          ],
           "reponseAttendue": "Fracture-luxation trans-scapho-rétro-lunaire du carpe côté droit, type 2 de la classification de Witvoët et Allieu.",
           "correctionGenerale": "• Fracture-luxation trans-scapho-rétro-lunaire du carpe, côté droit\n• Type 2 de la classification de Witvoët et Allieu"
         },
@@ -66,7 +70,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nDécrivez avec précision les radiographies.",
-          "images": ["annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"
+          ],
           "reponseAttendue": "Radiographies de la cheville droite de face et de profil : fracture-luxation tri-malléolaire, interligamentaire dans la classification de Duparc et Alnot — trait fibulaire oblique, arrachement horizontal de la malléole médiale, pas d’atteinte de la syndesmose, luxation postéro-latérale du talus et fracture de la malléole postérieure type Volkmann.",
           "correctionGenerale": "• Radiographie de la cheville droite de face et de profil\n• Fracture-luxation tri-malléolaire\n• Fracture interligamentaire de la classification de Duparc et Alnot :\n  – Trait fibulaire oblique\n  – Arrachement horizontal de la malléole médiale\n  – Pas d’atteinte de la syndesmose (pas de diastasis tibio-fibulaire distal)\n  – Luxation postéro-latérale du talus\n  – Fracture de la malléole postérieure, type Volkmann"
         },

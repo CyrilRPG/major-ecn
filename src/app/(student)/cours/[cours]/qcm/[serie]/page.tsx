@@ -103,14 +103,12 @@ export default async function QcmRunPage({
     .single();
   if (!session) notFound();
 
-  const isAnnale = serie.type === 'annale';
   const isSeance = serie.type === 'seance';
-  const backHref = isAnnale ? `/cours/${coursId}/annales` : `/cours/${coursId}/qcm`;
+  const backHref = `/cours/${coursId}/qcm`;
   // Les annales EVC corrigées vivent dans l'onglet DP · QI (type 'qcm', libellé
   // « Annales - <Collège> - <Année> - <Type> ») : le bandeau doit néanmoins les
-  // annoncer comme des annales, pas comme une série maison. `type` reste 'qcm',
-  // donc le retour pointe bien vers DP · QI.
-  const bandeauAnnale = isAnnale || /^annales?\b/i.test(serie.label ?? '');
+  // annoncer comme des annales, pas comme une série maison.
+  const bandeauAnnale = serie.type === 'annale' || /^annales?\b/i.test(serie.label ?? '');
 
   return (
     <QcmSession

@@ -3,7 +3,13 @@
     "ANNALES ORTHOPEDIE/EVCP2019correction.pdf": {
       "atelier": "annales-orthopedie/evcp2019correction",
       "sujetOfficiel": "Annales/Sujets/2019_EVCP.pdf",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-029-138.png": "Capture de la diapositive reproduisant le sujet officiel : la photographie de la cicatrice et les radiographies de prothèse n’y sont que des vignettes, avec la barre des tâches du poste du conférencier. Elles sont publiées depuis le sujet officiel (2019_EVCP.pdf, p. 151), en pleine résolution.",
+        "img-029-139.png": "Capture de la diapositive reproduisant le sujet officiel : la photographie de la cicatrice et les radiographies de prothèse n’y sont que des vignettes, avec la barre des tâches du poste du conférencier. Elles sont publiées depuis le sujet officiel (2019_EVCP.pdf, p. 151), en pleine résolution."
+      },
+      "sujetFiguresCouvertes": {
+        "img-150-117.png": "Même radiographie d’épaule que la figure publiée en Dossier 1, question 7 (img-024-115), projetée en miroir par le corrigé."
+      }
     }
   },
   "series": [
@@ -43,21 +49,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuel traitement proposez-vous dans le cas de Monsieur X ? Discutez votre choix thérapeutique.",
-          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-014-066.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-014-066.png"
+          ],
           "reponseAttendue": "Un traitement chirurgical (sujet jeune, actif, travailleur manuel, membre dominant, sans comorbidité ; fracture déplacée avec atteinte du tubercule majeur), par ostéosynthèse plutôt qu’arthroplastie (bon capital osseux, risque de nécrose faible), et par plaque plutôt que clou afin de préserver la coiffe des rotateurs.",
           "correctionGenerale": "<b>Traitement chirurgical</b> (vs traitement orthopédique)\n• Sujet jeune, actif, travailleur manuel, membre dominant, absence de comorbidités\n• Fracture déplacée avec atteinte du tubercule majeur\n\n<b>Ostéosynthèse</b> (vs arthroplastie)\n• Sujet jeune, bon capital osseux, espérance de vie\n• Risque de nécrose faible\n\n<b>Plaque</b> (vs clou)\n• Préservation de la coiffe des rotateurs"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nVous avez perdu de vue Monsieur X. Il revient 6 ans plus tard, après avoir chuté sur crise comitiale. Il se plaint cette fois-ci de l’épaule gauche. Vous disposez de la radiographie suivante. Quel signe clinique recherchez-vous en faveur du diagnostic que vous retenez ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-015-071.jpg"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-015-071.jpg"
+          ],
           "reponseAttendue": "La perte de la rotation externe passive.",
           "correctionGenerale": "Perte de la rotation externe (passive)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nQuelle est votre attitude thérapeutique pour Monsieur X ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-018-085.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-018-085.png"
+          ],
           "reponseAttendue": "Réduction par manœuvre externe sous anesthésie générale, puis immobilisation par attelle en rotation neutre.",
           "correctionGenerale": "• Réduction par manœuvre externe sous anesthésie générale\n• Immobilisation par attelle en rotation neutre"
         },
@@ -97,8 +109,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nQuelle est votre hypothèse diagnostique principale ?",
           "images": [
-            "annales-orthopedie/evcp2019correction/figures/recadre/img-029-138.png",
-            "annales-orthopedie/evcp2019correction/figures/recadre/img-029-139.png"
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg"
           ],
           "reponseAttendue": "Une infection du site opératoire précoce sur prothèse totale de genou droit.",
           "correctionGenerale": "Infection du site opératoire (ISO) précoce sur prothèse totale de genou droit."
@@ -106,7 +118,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel geste pouvez-vous proposer pour confirmer votre diagnostic ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-033-156.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-033-156.png"
+          ],
           "reponseAttendue": "Une ponction du liquide articulaire pour analyse bactériologique et cytologique.",
           "correctionGenerale": "Ponction du liquide articulaire pour analyse bactériologique et cytologique."
         },
@@ -240,21 +254,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nQuels sont les éléments de l’examen clinique qui vous orienteraient vers une origine radiculaire de la douleur ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-080-364.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-080-364.png"
+          ],
           "reponseAttendue": "Des lombalgies, un trajet radiculaire suivant les dermatomes, une abolition des réflexes ostéotendineux, un signe de Lasègue ou de Léri positif, et des troubles génito-sphinctériens évoquant un syndrome de la queue de cheval.",
           "correctionGenerale": "• Lombalgies\n• Trajet radiculaire (dermatomes)\n• Abolition des réflexes ostéotendineux\n• Signe de Lasègue ou signe de Léri positif\n• Troubles génito-sphinctériens (syndrome de la queue de cheval)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie ci-jointe.",
-          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-081-369.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-081-369.png"
+          ],
           "reponseAttendue": "Radiographie du bassin de face : lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire, avec amincissement des corticales osseuses et sans signe radiologique d’envahissement des parties molles — il existe un risque fracturaire.",
           "correctionGenerale": "• Radiographie du bassin de face\n• Lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire\n• Amincissement des corticales osseuses\n• Pas de signes radiologiques d’envahissement des parties molles\n• Risque fracturaire"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nVoici sa radiographie 3 semaines plus tard. Quel est le diagnostic ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-083-379.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-083-379.png"
+          ],
           "reponseAttendue": "Une fracture pathologique de l’extrémité supérieure du fémur gauche, sous-trochantérienne.",
           "correctionGenerale": "Fracture <b>pathologique</b> de l’extrémité supérieure du fémur gauche, sous-trochantérienne."
         },
@@ -285,21 +305,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nDécrire la classification de Vancouver.",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-094-425.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-094-425.png"
+          ],
           "reponseAttendue": "Classification des fractures fémorales péri-prothétiques sur PTH : type A trait passant par les trochanters (AG grand trochanter, AL petit trochanter) ; type B trait passant par la tige fémorale (B1 scellée, B2 descellée, B3 descellée avec faible capital osseux) ; type C trait à distance de la tige (> 1 cm) ; type D trait interprothétique entre PTH et PTG.",
           "correctionGenerale": "Classification des fractures fémorales péri-prothétiques sur PTH.\n• <b>Type A</b> : trait de fracture qui passe par les trochanters — AG : grand trochanter ; AL : petit trochanter\n• <b>Type B</b> : trait de fracture qui passe par la tige fémorale — B1 : prothèse scellée ; B2 : prothèse descellée ; B3 : prothèse descellée avec faible capital osseux\n• <b>Type C</b> : trait de fracture qui passe à distance de la tige (> 1 cm)\n• <b>Type D</b> : trait de fracture entre PTH et PTG (interprothétique)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie ci-jointe et indiquez le type fracturaire selon Vancouver.",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-095-431.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-095-431.png"
+          ],
           "reponseAttendue": "Fracture sur prothèse totale de hanche droite cimentée, de type Vancouver B2.",
           "correctionGenerale": "Fracture sur prothèse totale de hanche droite cimentée, <b>type Vancouver B2</b>."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuelle prise en charge chirurgicale proposez-vous ? Précisez votre argumentaire.",
-          "images": ["annales-orthopedie/evcp2019correction/figures/recadre/img-099-445.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/recadre/img-099-445.png"
+          ],
           "reponseAttendue": "La prothèse étant descellée chez un sujet jeune en bon état général sans contre-indication anesthésique : changement prothétique avec une tige longue pour appui diaphysaire (vissée ou cimentée), associée à une ostéosynthèse (cerclage, plaque), en évitant les montages trop rigides responsables d’un pic de contrainte en bout de plaque.",
           "correctionGenerale": "• Prothèse descellée\n• Sujet jeune, en bon état général, pas de contre-indication anesthésique\n• Changement prothétique, prothèse avec tige longue pour appui diaphysaire (vissée ou cimentée)\n• Associée à une ostéosynthèse (cerclage, plaque)\n• Attention aux montages trop rigides (pic de contrainte en bout de plaque)"
         },
@@ -334,7 +360,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuelles sont les complications précoces d’une telle fracture ?",
-          "images": ["annales-orthopedie/evcp2019correction/figures/img-108-463.png"],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-108-463.png"
+          ],
           "reponseAttendue": "Complications vasculaires (artère brachiale : absence de pouls radial, doigts blancs), complications nerveuses (nerf interosseux antérieur ++, nerf médian, nerf ulnaire, nerf radial) et syndrome des loges.",
           "correctionGenerale": "• Complications vasculaires (artère brachiale) : absence de pouls radial, doigts blancs\n• Complications nerveuses (nerf interosseux antérieur ++, nerf médian, nerf ulnaire, nerf radial)\n• Syndrome des loges"
         },

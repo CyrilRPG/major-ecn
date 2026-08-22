@@ -32,7 +32,10 @@
         "img-142-595.jpg": "planche de recommandations ESC (algorithme « Management of severe aortic stenosis ») projetée en rappel après la correction, hors iconographie de l’annale",
         "img-143-600.jpg": "planche de recommandations ESC (choix de l’intervention dans le rétrécissement aortique symptomatique) projetée en rappel après la correction ; son contenu est retranscrit dans la correction de la question"
       },
-      "remarque": "Diaporama « Séance du 16/10 » : corrections de l’EVCP 2017 (sujets n° 1 et n° 2) et de l’EVCF 2017 (sujets n° 1 et n° 2). Les énoncés et la numérotation officielle ont été restitués à partir des sujets du dépôt (EVCP.07.DOC et EVCF.07.DOC de 2017). Deux cas intercalés — « Sujet pratique n° 1 » (nouveau-né, tétralogie de Fallot) et « Sujet pratique n° 2 » (adolescent de 13 ans, communication inter-atriale) — ne portent pas d’année et ne figurent pas dans les sujets officiels 2017 : ils ne sont pas intégrés."
+      "remarque": "Diaporama « Séance du 16/10 » : corrections de l’EVCP 2017 (sujets n° 1 et n° 2) et de l’EVCF 2017 (sujets n° 1 et n° 2). Les énoncés et la numérotation officielle ont été restitués à partir des sujets du dépôt (EVCP.07.DOC et EVCF.07.DOC de 2017). Deux cas intercalés — « Sujet pratique n° 1 » (nouveau-né, tétralogie de Fallot) et « Sujet pratique n° 2 » (adolescent de 13 ans, communication inter-atriale) — ne portent pas d’année et ne figurent pas dans les sujets officiels 2017 : ils ne sont pas intégrés.",
+      "sujetFiguresCouvertes": {
+        "source_html_d44d788f.jpg": "Même tracé que la figure publiée en Sujet 1, question 5 : le corrigé en projette une version nettement plus lisible (img-023-097). La version du sujet officiel n’apporte rien de plus."
+      }
     }
   },
   "series": [

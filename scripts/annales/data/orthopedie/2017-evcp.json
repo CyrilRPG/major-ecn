@@ -3,7 +3,11 @@
     "ANNALES ORTHOPEDIE/EVCP2017.pdf": {
       "atelier": "annales-orthopedie/evcp2017",
       "sujetOfficiel": "Annales/Sujets/EVCP__2017 - 30 à 76/EVCP__2017 - 30 à 76/EVCP.53.DOC",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {},
+      "sujetFiguresCouvertes": {
+        "source_html_110c334d.png": "Mêmes radiographies du genou que la figure publiée en Dossier 1, question 1 (img-003-012, profil) : le corrigé en projette un agrandissement recadré. La version du sujet officiel porte en outre l’en-tête DICOM avec le nom du patient.",
+        "source_html_911034b8.png": "Mêmes radiographies du genou que la figure publiée en Dossier 1, question 1 (img-003-014, face) : le corrigé en projette un agrandissement recadré. La version du sujet officiel porte en outre l’en-tête DICOM avec le nom du patient."
+      }
     }
   },
   "series": [
@@ -80,7 +84,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nComment examinez-vous cette patiente ? Décrivez votre examen.",
-          "images": ["annales-orthopedie/evcp2017/figures/img-019-080.png"],
+          "images": [
+            "annales-orthopedie/evcp2017/figures/img-019-080.png"
+          ],
           "reponseAttendue": "Mesure des amplitudes articulaires (EEA, RE1, RE2, RI), recherche d’un conflit sous-acromial (Hawkins, Neer, Yocum), recherche d’une arthrose acromio-claviculaire (cross arm test) et examen complet de la coiffe.",
           "correctionGenerale": "• Amplitudes articulaires : EEA, RE1, RE2, RI\n• Recherche de conflit sous-acromial : Hawkins, Neer, Yocum\n• Recherche d’arthrose acromio-claviculaire : cross arm test\n• Examen de la coiffe (cf. question n°2)"
         },
@@ -104,7 +110,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDécrivez la radiographie. Quel est votre diagnostic ? Développez.",
-          "images": ["annales-orthopedie/evcp2017/figures/img-033-109.png"],
+          "images": [
+            "annales-orthopedie/evcp2017/figures/img-033-109.png"
+          ],
           "reponseAttendue": "Radiographie de l’épaule droite de face : omarthrose droite excentrée de stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, sans collapsus de la tête), avec pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral et ostéophytes.",
           "correctionGenerale": "• Radiographie de l’épaule droite de face\n• Omarthrose droite excentrée, stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, pas de collapsus de la tête)\n• Pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral, ostéophytes"
         },

@@ -1,12 +1,10 @@
 import { notFound, redirect } from 'next/navigation';
-import { CheckCircle2, ClipboardCheck, History, RefreshCcw, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ClipboardCheck, RefreshCcw, ShieldCheck } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
 import { iconFromKey } from '@/lib/icons';
 import {
-  ANNALES_EVC_COLLEGE_ID,
-  canAccessAnnalesEvc,
   canAccessCollege,
   canAccessCours,
   parseScope,
@@ -229,21 +227,10 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     });
   }
 
-  // Annales EVC : uniquement sous Médecine générale (et pour les élèves qui y ont accès).
-  const rows: IndexRow[] = [
-    ...(matiere === ANNALES_EVC_COLLEGE_ID && canAccessAnnalesEvc(scope)
-      ? [{
-          id: '__annales__',
-          href: `/matieres/${matiere}/annales`,
-          title: 'Annales EVC',
-          subtitle: 'Tous les sujets officiels, accessibles par année.',
-          leading: <RowIcon Icon={History} color="#6B1A2A" />,
-          badge: 'Officiel',
-        } satisfies IndexRow]
-      : []),
-    ...actionRows,
-    ...coursRows,
-  ];
+  // Les annales EVC ne sont plus un onglet PDF séparé : elles sont publiées
+  // corrigées, question par question, dans l'onglet DP · QI des items
+  // « Annales - <Collège> » / « Révisions - <Collège> ».
+  const rows: IndexRow[] = [...actionRows, ...coursRows];
 
   // ── Date d'épreuve de cette spécialité ──────────────────────────────────
   // On réutilise les annonces « countdown » ciblées sur ce collège (target_scope

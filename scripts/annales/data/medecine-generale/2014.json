@@ -255,7 +255,7 @@
           "correctionGenerale": "• <b>Traitement chirurgical en urgence</b>"
         }
       ],
-      "note": "<b>Épreuve de vérification des connaissances fondamentales — Médecine générale, 2014.</b>\n\nLe sujet officiel n’étant pas disponible dans le dépôt, les énoncés ci-dessous sont reconstitués à partir du corrigé et sont donc plus succincts que les énoncés originaux."
+      "note": null
     },
     {
       "label": "Annales - Médecine générale - 2014 - EVCP",
@@ -263,7 +263,7 @@
       "type": "EVCP",
       "source": "ANNALES MG/PAE 2014.pdf",
       "orderIndex": 115,
-      "vignette": "<b>Épreuve de vérification des connaissances pratiques — Médecine générale, 2014.</b>\n\nLe sujet officiel n’étant pas disponible dans le dépôt, les énoncés ci-dessous sont reconstitués à partir du corrigé et sont donc plus succincts que les énoncés originaux.",
+      "vignette": null,
       "questions": [
         {
           "format": "qroc",

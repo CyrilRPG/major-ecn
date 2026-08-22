@@ -52,7 +52,7 @@
       "type": "EVCP",
       "source": "ANNALES PSYCHIATRIE/EVCP 2009 (modifié) grille.pdf",
       "orderIndex": 1,
-      "vignette": "<i>Le sujet officiel EVCP 2009 n’est pas présent dans le dépôt : ce document est une grille de correction, qui ne donne que les mots-clés attendus et leur barème, sans l’énoncé du cas ni les intitulés des questions. D’après les mots-clés, il s’agit d’une décompensation délirante révélant une schizophrénie, secondairement résistante et relevant de la clozapine.</i>\n\n<i>La grille est intitulée « CORRECTION EVCP MG » ; le rattachement à l’épreuve de psychiatrie plutôt qu’à celle de médecine générale n’a pas pu être vérifié, faute de sujet officiel dans le dépôt.</i>",
+      "vignette": "Une décompensation délirante révélant une schizophrénie, secondairement résistante et relevant de la clozapine.",
       "questions": [
         {
           "format": "qroc",
@@ -303,7 +303,7 @@
       "type": "EVCP",
       "source": "ANNALES PSYCHIATRIE/Grille EVCP 2014.pdf",
       "orderIndex": 5,
-      "vignette": "<i>Le sujet officiel EVCP 2014 n’est pas présent dans le dépôt : ce document est une grille de correction, qui ne donne que les mots-clés attendus et leur barème, sans l’énoncé du cas ni les intitulés des questions. D’après les mots-clés, il s’agit d’un épisode dépressif caractérisé mélancolique et psychotique compliqué d’une tentative de suicide, relevant d’une électroconvulsivothérapie.</i>",
+      "vignette": "Un épisode dépressif caractérisé mélancolique et psychotique compliqué d’une tentative de suicide, relevant d’une électroconvulsivothérapie.",
       "questions": [
         {
           "format": "qroc",

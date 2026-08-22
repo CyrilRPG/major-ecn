@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ArrowRight, CalendarDays, ChevronRight, FileText, Home, Lock, MessagesSquare,
-  MousePointerClick, NotebookPen, PencilRuler, RefreshCcw, Sparkles, Star, Target, Trophy, X,
+  ArrowRight, CalendarDays, ChevronRight, Home, Lock,
+  MousePointerClick, NotebookPen, PencilRuler, RefreshCcw, Star, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
@@ -119,19 +119,11 @@ export function Navigator({
   const pathname = usePathname();
   const activeCoursId = pathname.startsWith('/cours/') ? pathname.split('/')[2] : null;
   const activeCollegeId = pathname.startsWith('/matieres/') ? pathname.split('/')[2] : null;
-  // Détection de /matieres/<col>/annales — pour surligner « Annales EVC »
-  // dans le sous-menu du bon collège.
-  const activeAnnaleCollege =
-    pathname.startsWith('/matieres/') && pathname.split('/')[3] === 'annales'
-      ? pathname.split('/')[2]
-      : null;
-
   const expanded = useMemo(() => {
     const set = new Set<string>();
     for (const col of tree) {
       if (
         col.id === activeCollegeId ||
-        col.id === activeAnnaleCollege ||
         col.cours.some((c) => c.id === activeCoursId)
       ) {
         set.add(col.id);
@@ -144,7 +136,7 @@ export function Navigator({
       }
     }
     return set;
-  }, [tree, activeCollegeId, activeCoursId, activeAnnaleCollege]);
+  }, [tree, activeCollegeId, activeCoursId]);
 
   const [open, setOpen] = useState<Set<string>>(expanded);
   const isOpen = (id: string) => open.has(id) || expanded.has(id);
@@ -363,53 +355,6 @@ export function Navigator({
 
             {o && (
               <>
-                {/* Annales EVC : réservées à la Médecine générale (pour le moment).
-                    En Découverte sous MG → cadenas + popup. */}
-                {col.id === 'col-medecine-generale' && (isDecouverte ? (
-                  <button
-                    type="button"
-                    onClick={() => setLockedOpen(true)}
-                    className="flex w-full items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 text-left text-white/55 transition-colors hover:bg-white/10 hover:text-white/80"
-                  >
-                    <FileText className="h-3.5 w-3.5 shrink-0 text-white/45" />
-                    <span className="flex-1 truncate">Annales EVC</span>
-                    <span
-                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                      style={{ background: 'rgba(192,17,46,0.20)', color: '#FCA5A5' }}
-                    >
-                      <Lock className="h-2.5 w-2.5" />
-                    </span>
-                  </button>
-                ) : (
-                  <Link
-                    href={`/matieres/${col.id}/annales`}
-                    className={cn(
-                      'flex items-center gap-2 rounded-lg py-2 pl-10 pr-2.5 transition-colors',
-                      col.id === activeAnnaleCollege
-                        ? `${ACTIVE_GRADIENT} font-medium`
-                        : 'text-white/75 hover:bg-white/10 hover:text-white',
-                    )}
-                  >
-                    <FileText
-                      className={cn(
-                        'h-3.5 w-3.5 shrink-0',
-                        col.id === activeAnnaleCollege ? 'text-white' : 'text-white/55',
-                      )}
-                    />
-                    <span className="flex-1 truncate">Annales EVC</span>
-                    <span
-                      className={cn(
-                        'rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider',
-                        col.id === activeAnnaleCollege
-                          ? 'bg-white/15 text-white'
-                          : 'bg-white/10 text-white/60',
-                      )}
-                    >
-                      Officiel
-                    </span>
-                  </Link>
-                ))}
-
                 {col.cours.map((c) => (
                   <Link
                     key={c.id}

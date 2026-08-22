@@ -11,7 +11,6 @@ function contextLabel(pathname: string): string {
     if (pathname.endsWith('/video')) return 'Cours · Vidéo';
     if (pathname.endsWith('/fiche')) return 'Cours · Fiche';
     if (pathname.includes('/qcm')) return 'Cours · Dossiers progressifs';
-    if (pathname.includes('/annales')) return 'Cours · Annales';
     if (pathname.includes('/flashcards')) return 'Cours · Flashcards';
     if (pathname.includes('/resultats')) return 'Cours · Résultats';
     return 'Cours';

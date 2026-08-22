@@ -149,7 +149,10 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuelle est votre interprétation du tracé ECG ?",
-          "images": [],
+          "images": [
+            "annales-urgence/correction-annales-urgences-2018-a-2021/sujet/evcp-2018-sujet1-q5-ecg-a.jpg",
+            "annales-urgence/correction-annales-urgences-2018-a-2021/sujet/evcp-2018-sujet1-q5-ecg-b.jpg"
+          ],
           "reponseAttendue": "Rythme régulier et sinusal, FC 67 bpm, axe limite gauche ; sus-décalage en V1-V2-V3-V4 avec ondes de Pardee ; pas de trouble du rythme. Donc un SCA ST+ septo-apical, sans miroir.",
           "correctionGenerale": "• Rythme régulier et sinusal, FC 67 bpm, axe limite gauche\n• Sus-décalage en V1-V2-V3-V4 avec ondes de Pardee\n• Pas de trouble du rythme\n\n→ <b>SCA ST+ septo-apical sans miroir</b>"
         },
@@ -376,7 +379,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nQuels signes en faveur du diagnostic sont présents sur cet ECG ? Quels autres signes avez-vous recherchés ?",
-          "images": [],
+          "images": [
+            "annales-urgence/correction-annales-urgences-2018-a-2021/sujet/evcp-2019-cas1-q1-ecg.jpg"
+          ],
           "reponseAttendue": "S1Q3, axe droit, ondes T négatives en inférieur, tachycardie sinusale. À rechercher également : une fibrillation atriale.",
           "correctionGenerale": "• S1Q3\n• Axe droit\n• Ondes T négatives en inférieur\n• Tachycardie sinusale\n\n<b>À rechercher</b> : fibrillation atriale.\n\n<i>Sources : CEP-SPLF, embolie pulmonaire (item 224, MTEV 2018) ; synthèse DES pneumologie, recommandations MTEV.</i>"
         },
@@ -477,7 +482,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nVoici l’image que vous obtenez à l’échographie d’urgence. Quelle information apporte-t-elle ?",
-          "images": [],
+          "images": [
+            "annales-urgence/correction-annales-urgences-2018-a-2021/sujet/evcp-2019-cas2-q4-echographie.png"
+          ],
           "reponseAttendue": "Un hématome sous-capsulaire du foie à l’échographie abdominale.",
           "correctionGenerale": "<b>Hématome sous-capsulaire du foie</b> sur l’échographie abdominale."
         },
@@ -612,7 +619,7 @@
       "type": "EVCP",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 8,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit de la prise en charge, par régulation puis par le SMUR, d’un homme présentant une douleur thoracique révélant un SCA ST+ inférieur, avec une contre-indication à l’angioplastie par le délai et un recours à la fibrinolyse.</i>",
+      "vignette": "La prise en charge, par régulation puis par le SMUR, d’un homme présentant une douleur thoracique révélant un SCA ST+ inférieur, avec une contre-indication à l’angioplastie par le délai et un recours à la fibrinolyse.",
       "questions": [
         {
           "format": "qroc",
@@ -692,7 +699,7 @@
       "type": "EVCP",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 9,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’une femme jeune consultant pour une douleur de la fosse iliaque droite, chez qui est finalement retenue une grossesse extra-utérine droite rompue avec hémopéritoine.</i>",
+      "vignette": "Une femme jeune consultant pour une douleur de la fosse iliaque droite, chez qui est finalement retenue une grossesse extra-utérine droite rompue avec hémopéritoine.",
       "questions": [
         {
           "format": "qroc",
@@ -855,7 +862,7 @@
       "type": "EVCP",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 11,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’un patient âgé, dément, vivant en EHPAD et traité par apixaban, admis pour un syndrome occlusif fébrile avec confusion, marbrures, hypotension et défense diffuse.</i>",
+      "vignette": "Un patient âgé, dément, vivant en EHPAD et traité par apixaban, admis pour un syndrome occlusif fébrile avec confusion, marbrures, hypotension et défense diffuse.",
       "questions": [
         {
           "format": "qroc",
@@ -921,7 +928,7 @@
       "type": "EVCP",
       "source": "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf",
       "orderIndex": 12,
-      "vignette": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé du cas ni les intitulés des questions. D’après les réponses, il s’agit d’une patiente asthmatique, tabagique, appelant pour une dyspnée aiguë sifflante fébrile, évoluant vers un asthme aigu grave.</i>",
+      "vignette": "Une patiente asthmatique, tabagique, appelant pour une dyspnée aiguë sifflante fébrile, évoluant vers un asthme aigu grave.",
       "questions": [
         {
           "format": "qroc",
