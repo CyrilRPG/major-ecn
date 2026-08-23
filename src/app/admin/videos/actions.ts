@@ -1,4 +1,5 @@
 'use server';
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 
 import { revalidatePath } from 'next/cache';
 import {
@@ -264,7 +265,7 @@ export async function listStudentsAction(): Promise<{ students: StudentLite[] } 
   const { data, error } = await (admin as any)
     .from('profiles')
     .select('id, first_name, last_name, email, promotion')
-    .eq('role', 'student')
+    .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
     .order('last_name', { ascending: true, nullsFirst: false })
     .order('first_name', { ascending: true, nullsFirst: false });
   if (error) return { error: error.message };

@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (admin as any)
       .from('campaign_recipients')
-      .upsert(slice, { onConflict: 'email', ignoreDuplicates: true });
+      .upsert(slice, { onConflict: 'faculte_id,email', ignoreDuplicates: true });
 
     if (!error) enrolled += slice.length;
     else console.error('[enroll-all] chunk error:', error.message);

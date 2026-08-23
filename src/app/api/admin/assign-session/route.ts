@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
     .from('profiles')
     .update({ evc_session_id }, { count: 'exact' })
     .in('id', student_ids)
-    .eq('role', 'student');
+    .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ ok: true, updated: count ?? 0 });

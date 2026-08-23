@@ -54,7 +54,7 @@ export default async function AdminContenuPage() {
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any).rpc('admin_content_counts'),
+    (supabase as any).rpc('admin_content_counts', { p_faculte_id: EDN_FACULTE_ID }),
   ]);
 
   // Compteurs agrégés — tolérant : si la RPC échoue, la grille s'affiche quand

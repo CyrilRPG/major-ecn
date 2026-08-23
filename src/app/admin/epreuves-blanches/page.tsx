@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { PencilRuler, Plus } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
@@ -41,7 +42,7 @@ export default async function AdminEpreuvesPage() {
     .is('cours_id', null)
     .is('specialite_id', null)
     .order('created_at', { ascending: false });
-  const { data: colsRaw } = await a.from('matieres').select('id, nom');
+  const { data: colsRaw } = await a.from('matieres').select('id, nom, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID);
   const collegeName = new Map<string, string>(((colsRaw ?? []) as { id: string; nom: string }[]).map((c) => [c.id, c.nom]));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

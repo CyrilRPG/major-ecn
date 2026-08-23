@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Users } from 'lucide-react';
@@ -25,7 +26,7 @@ export default async function ExamResultsPage({ params }: { params: Promise<{ id
       .eq('exam_id', id)
       .in('status', ['submitted', 'graded', 'absent'])
       .order('percentage', { ascending: false, nullsFirst: false }),
-    a.from('matieres').select('id, nom'),
+    a.from('matieres').select('id, nom, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID),
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

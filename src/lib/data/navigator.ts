@@ -4,7 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/lib/auth/get-profile';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 
-export const EDN_FACULTE_ID = 'major-ecn';
+export { EDN_FACULTE_ID } from '@/lib/data/faculte';
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 
 export type NavCours = {
   id: string;

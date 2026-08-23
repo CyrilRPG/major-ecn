@@ -22,7 +22,7 @@ export default async function ElevesPage() {
   // la boucle repartait à chaque clic — d'où l'impression que rien ne répond.
   // Une requête SQL suffit : `auth.users` est dans la même base.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activiteAuth = (supabase as any).rpc('admin_activite_auth');
+  const activiteAuth = (supabase as any).rpc('admin_activite_auth', { p_faculte_id: EDN_FACULTE_ID });
 
   // Les formules ne dépendent d'aucune des autres lectures : elles rejoignent
   // la même vague au lieu d'ajouter un troisième aller-retour derrière.
@@ -42,7 +42,7 @@ export default async function ElevesPage() {
     supabase
       .from('profiles')
       .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
-      .eq('role', 'student')
+      .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
       // Tri décroissant par date d'inscription (les plus récents en premier).
       .order('created_at', { ascending: false, nullsFirst: false }),
     supabase

@@ -67,7 +67,7 @@ export default async function ProfessorsPage() {
   const [{ data: profs }, { data: fac }] = await Promise.all([
     admin.from('profiles')
       .select('id, first_name, last_name, email, phone, address, pseudo, cv_url, certificat_scolarite_url, carte_pro_url, permission_scope, created_at, is_active, can_download')
-      .eq('role', 'professor')
+      .eq('role', 'professor').eq('faculte_id', EDN_FACULTE_ID)
       .order('last_name'),
     admin.from('facultes')
       .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')

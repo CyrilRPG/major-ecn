@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { BILLING_EUR, GEN_FEATURE, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
@@ -14,7 +15,7 @@ export default async function AdminFacturationPage() {
   const a = admin as any;
 
   const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, odontoRes] = await Promise.all([
-    a.rpc('admin_facturation_lines'),
+    a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
     a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived').is('cours_id', null),

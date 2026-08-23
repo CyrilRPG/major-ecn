@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { Mail, Filter, Send, Users, BookDown, GraduationCap } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -61,7 +62,7 @@ export default async function AdminEmailsPage({
   const supabase = await createClient();
   const { data: colleges } = await supabase
     .from('matieres')
-    .select('id, nom')
+    .select('id, nom, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID)
     .order('nom');
   const collegeOptions = colleges ?? [];
 
@@ -69,7 +70,7 @@ export default async function AdminEmailsPage({
     const { data: students } = await supabase
       .from('profiles')
       .select('id, first_name, last_name, email, promotion, permission_scope')
-      .eq('role', 'student')
+      .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
       .order('last_name', { ascending: true });
 
     const filtered = (students ?? []).filter((s) => {

@@ -17,7 +17,7 @@ export async function enrollInCampaign(
         first_name: firstName.trim(),
         source,
       },
-      { onConflict: 'email', ignoreDuplicates: true },
+      { onConflict: 'faculte_id,email', ignoreDuplicates: true },
     );
   } catch (e) {
     console.error('[campaign-enroll]', email, e instanceof Error ? e.message : e);

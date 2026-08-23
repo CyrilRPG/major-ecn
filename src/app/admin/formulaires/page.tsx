@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { ClipboardList, Lock, MessageSquareWarning } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
@@ -28,7 +29,7 @@ export default async function FormulairesAdminPage() {
   const admin = createAdminClient();
   const [{ data: forms }, { data: colleges }, { data: responses }] = await Promise.all([
     admin.from('satisfaction_forms').select('*').order('created_at', { ascending: false }),
-    admin.from('matieres').select('id, nom').order('nom'),
+    admin.from('matieres').select('id, nom, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID).order('nom'),
     admin.from('satisfaction_responses').select('form_id, skipped'),
   ]);
 

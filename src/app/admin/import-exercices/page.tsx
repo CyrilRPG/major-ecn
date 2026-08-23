@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -11,7 +12,7 @@ export default async function AdminExerciseImportPage() {
   const admin = createAdminClient();
   const a = admin as unknown as { from: (table: string) => any };
   const [{ data: matieres }, { data: imports }] = await Promise.all([
-    a.from('matieres').select('id, nom, parent_matiere_id, order_index, cours(id, titre, order_index)').order('order_index'),
+    a.from('matieres').select('id, nom, parent_matiere_id, order_index, cours(id, titre, order_index), semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID).order('order_index'),
     a.from('exercise_imports').select('id, title, voie, format, source_mode, college_id, allowed_offers, status, estimated_price_cents, billed_price_cents, result, warnings, error_message, created_at, published_serie_id, cours(titre)').order('created_at', { ascending: false }).limit(30),
   ]);
   const colleges: ImportCollege[] = ((matieres ?? []) as any[])

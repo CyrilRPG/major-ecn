@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
@@ -79,11 +80,11 @@ export default async function CrmPage() {
     fetchAllRows<StudentRow>((from, to) =>
       adm.from('profiles')
         .select('id, first_name, last_name, email, phone, promotion, created_at, is_active, permission_scope')
-        .eq('role', 'student')
+        .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
         .order('last_name').order('id')
         .range(from, to)),
     fetchAllRows<ActivityRow>((from, to) =>
-      adm.rpc('admin_crm_activity').order('user_id').range(from, to)),
+      adm.rpc('admin_crm_activity', { p_faculte_id: EDN_FACULTE_ID }).order('user_id').range(from, to)),
     fetchAllRows<Note>((from, to) =>
       adm.from('pedagogical_notes')
         .select('id, user_id, contact_type, motif, observations, difficultes, actions_recommandees, relance_date, created_at')
@@ -97,7 +98,7 @@ export default async function CrmPage() {
         .order('created_at', { ascending: false }).order('user_id')
         .range(from, to)),
     adm.from('matieres')
-      .select('id, nom, parent_matiere_id, order_index')
+      .select('id, nom, parent_matiere_id, order_index, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID)
       .is('parent_matiere_id', null)
       .order('order_index'),
   ]);

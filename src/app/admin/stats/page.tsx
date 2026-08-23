@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { Activity, AlertTriangle, ClipboardCheck, Target, Users } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -33,13 +34,13 @@ export default async function AdminStatsPage() {
     { data: profiles },
     { data: trackedTimeThisWeek },
   ] = await Promise.all([
-    supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
+    supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
     supabase.from('qcm_sessions').select('id', { count: 'exact', head: true }).gte('started_at', sevenDaysAgo),
     supabase
       .from('qcm_attempts')
       .select('id, user_id, is_correct, attempted_at, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, cours!inner(id, titre, matieres!inner(id, nom))))'),
     supabase.from('qcm_sessions').select('id, user_id, started_at').gte('started_at', thirtyDaysAgo.toISOString()),
-    supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope, email').eq('role', 'student'),
+    supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope, email').eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
     // Source canonique du compteur affiché aux élèves. L'ancien calcul ne
     // regardait que le temps renseigné sur les QCM (+ un forfait flashcard),
     // ce qui affichait 0 min malgré des heures de fiches et vidéos enregistrées.

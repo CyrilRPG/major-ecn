@@ -1,6 +1,7 @@
 import 'server-only';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
+import { cloisonnerParFaculte } from './faculte-scope';
 
 /**
  * Client Supabase ANONYME et SANS COOKIES, pour le contenu public.
@@ -21,9 +22,11 @@ import type { Database } from '@/types/database';
  * brouillon reste donc invisible même si l'appelant se trompe de filtre.
  */
 export function createPublicClient() {
-  return createSupabaseClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } },
+  return cloisonnerParFaculte(
+    createSupabaseClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } },
+    ),
   );
 }

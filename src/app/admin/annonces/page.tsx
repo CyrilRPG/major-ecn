@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { Eye, EyeOff, Megaphone, MoveDown, MoveUp, PencilLine } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -31,7 +32,7 @@ export default async function AdminAnnoncesPage() {
   const rows = ((data ?? []) as unknown as Row[]) ?? [];
 
   // Liste des collèges (pour le sélecteur d'audience par collège dans le formulaire).
-  const { data: collegesRaw } = await admin.from('matieres').select('id, nom').order('nom');
+  const { data: collegesRaw } = await admin.from('matieres').select('id, nom, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID).order('nom');
   const colleges = (collegesRaw ?? []) as { id: string; nom: string }[];
 
   return (

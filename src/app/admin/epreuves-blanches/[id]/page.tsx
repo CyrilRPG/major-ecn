@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Users } from 'lucide-react';
@@ -21,10 +22,10 @@ export default async function EditExamPage({ params }: { params: Promise<{ id: s
   if (!exam) notFound();
 
   const { data: qs } = await a.from('mock_exam_questions').select('*').eq('exam_id', id).order('order_index');
-  const { data: colsRaw } = await a.from('matieres').select('id, nom, parent_matiere_id').order('nom');
+  const { data: colsRaw } = await a.from('matieres').select('id, nom, parent_matiere_id, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID).order('nom');
   const { data: studsRaw } = await a
     .from('profiles').select('id, first_name, last_name, email')
-    .eq('role', 'student').order('last_name');
+    .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID).order('last_name');
 
   const colleges: CollegeOption[] = ((colsRaw ?? []) as { id: string; nom: string; parent_matiere_id: string | null }[])
     .map((c) => ({ id: c.id, nom: c.nom, parentId: c.parent_matiere_id }));

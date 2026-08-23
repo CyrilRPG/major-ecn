@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, Lock, PlayCircle } from 'lucide-react';
@@ -138,7 +139,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
   }
 
   // Collèges pour l'onglet Interrogations (champ « spécialité » d'une question).
-  const { data: interroColsRaw } = await supabase.from('matieres').select('id, nom, parent_matiere_id').order('nom');
+  const { data: interroColsRaw } = await supabase.from('matieres').select('id, nom, parent_matiere_id, semestres!inner(faculte_id)').eq('semestres.faculte_id', EDN_FACULTE_ID).order('nom');
   const interroColleges = ((interroColsRaw ?? []) as unknown as { id: string; nom: string; parent_matiere_id: string | null }[])
     .map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 

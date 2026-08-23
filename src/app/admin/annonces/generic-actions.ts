@@ -33,7 +33,7 @@ export async function saveGenericSection(
             data: entry.data,
             updated_at: new Date().toISOString(),
           },
-          { onConflict: 'section_key,college_id' },
+          { onConflict: 'faculte_id,section_key,college_id' },
         );
     } else {
       await (admin as any)

@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { sendEmail } from '@/lib/email/send';
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
     .from('profiles')
     .select('email')
     .in('id', ids)
-    .eq('role', 'student');
+    .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID);
   const recipients = ((students ?? []) as { email: string | null }[])
     .map((s) => s.email)
     .filter((e): e is string => !!e);

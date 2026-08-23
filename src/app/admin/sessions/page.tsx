@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { SessionsManager } from '@/components/admin/sessions/sessions-manager';
@@ -16,7 +17,7 @@ export default async function SessionsPage() {
     supabase
       .from('profiles')
       .select('evc_session_id')
-      .eq('role', 'student'),
+      .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
   ]);
 
   // Nombre d'élèves rattachés par session.

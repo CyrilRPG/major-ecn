@@ -1,3 +1,4 @@
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
@@ -50,7 +51,7 @@ export async function GET(req: Request) {
      déclenchait de fausses alertes « X jours sans activité ». */
   type SnapshotRow = { user_id: string; last_activity: string | null; has_completed_transversal: boolean };
   const snapshot = await fetchAllRows<SnapshotRow>((from, to) =>
-    a.rpc('admin_activity_snapshot').order('user_id').range(from, to));
+    a.rpc('admin_activity_snapshot', { p_faculte_id: EDN_FACULTE_ID }).order('user_id').range(from, to));
   const usersWithSessions = snapshot.filter((r) => r.has_completed_transversal).map((r) => r.user_id);
   for (const uid of usersWithSessions) {
     try {
