@@ -138,13 +138,22 @@ export function Navigator({
     return set;
   }, [tree, activeCollegeId, activeCoursId]);
 
-  const [open, setOpen] = useState<Set<string>>(expanded);
-  const isOpen = (id: string) => open.has(id) || expanded.has(id);
+  /**
+   * Choix explicites de l'utilisateur : `true` = déplié, `false` = replié.
+   *
+   * `expanded` ne donne plus que l'état PAR DÉFAUT — le collège de l'item
+   * ouvert se déplie tout seul. Auparavant il forçait l'ouverture (`open.has(id)
+   * || expanded.has(id)`) : tant qu'on lisait un item de cardiologie, son
+   * collège restait dépliable mais impossible à replier, le clic sur le chevron
+   * n'ayant aucun effet visible. Un choix explicite prime désormais sur le
+   * défaut, et une entrée absente laisse l'ouverture automatique opérer.
+   */
+  const [choix, setChoix] = useState<Map<string, boolean>>(new Map());
+  const isOpen = (id: string) => choix.get(id) ?? expanded.has(id);
   const toggle = (id: string) =>
-    setOpen((prev) => {
-      const n = new Set(prev);
-      if (n.has(id) || expanded.has(id)) n.delete(id);
-      else n.add(id);
+    setChoix((prev) => {
+      const n = new Map(prev);
+      n.set(id, !(prev.get(id) ?? expanded.has(id)));
       return n;
     });
 
