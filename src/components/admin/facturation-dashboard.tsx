@@ -53,6 +53,8 @@ const MANUAL_QCM_LINES = [
   { label: 'QROC Voies externes', montant: 300 },
   // DP QROC voie externe — 2 nouveaux dossiers de 7 questions par item (874 séries).
   { label: 'QROC Voies externes — DP QROC', montant: 67 },
+  // 960 DP Gériatrie (8 QCM + 8 QROC × 60 cours MG bonus).
+  { label: 'DP Gériatrie MG', montant: 300 },
 ];
 const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 
