@@ -20,6 +20,21 @@ const ALLOWED_TAGS = new Set([
   'b', 'strong', 'i', 'em', 'u', 'sub', 'sup', 'br', 'span', 'img',
 ]);
 
+/**
+ * Balises de bloc : non conservées (elles ne sont pas dans la liste blanche),
+ * mais leur frontière EST un retour à la ligne.
+ *
+ * INCIDENT : un contenteditable produit `<div>` (ou `<p>`) à chaque appui sur
+ * Entrée. Comme ces balises étaient simplement supprimées, tous les paragraphes
+ * d'un corrigé rédigé par un professeur se retrouvaient collés en un seul bloc
+ * à l'enregistrement — alors que l'éditeur, lui, continuait d'afficher la mise
+ * en page. Les convertir en `<br>` préserve la frappe.
+ */
+const BLOCK_TAGS = new Set([
+  'div', 'p', 'li', 'ul', 'ol', 'tr', 'table', 'blockquote', 'pre', 'section',
+  'article', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+]);
+
 /** Valide une couleur CSS : #hex, rgb()/rgba() ou nom de couleur simple. */
 function safeColor(value: string): string | null {
   const s = value.trim();
@@ -75,7 +90,13 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
     const closing = tm[1] === '/';
     const name = tm[2].toLowerCase();
     const inner = tm[3] || '';
-    if (!ALLOWED_TAGS.has(name)) continue; // balise interdite → on garde le texte autour
+    if (!ALLOWED_TAGS.has(name)) {
+      // Balise interdite → on garde le texte autour. Si c'est un bloc, on
+      // matérialise le saut de ligne qu'il représentait (à l'ouverture
+      // seulement, sinon chaque paragraphe compterait double).
+      if (!closing && BLOCK_TAGS.has(name)) out.push(name === 'li' ? '<br>• ' : '<br>');
+      continue;
+    }
 
     if (closing) {
       if (name === 'img' || name === 'br') continue;
@@ -101,9 +122,12 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
       // couleur + gras/italique/souligné — utile quand le navigateur produit
       // des <span style> plutôt que des balises <b>/<i>/<u> (styleWithCSS).
       const decls: string[] = [];
-      const cm = style.match(/color\s*:\s*([^;]+)/i);
+      const cm = style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i);
       const col = cm ? safeColor(cm[1]) : null;
       if (col) decls.push(`color:${col}`);
+      const bg = style.match(/background(?:-color)?\s*:\s*([^;]+)/i);
+      const bgc = bg ? safeColor(bg[1]) : null;
+      if (bgc) decls.push(`background-color:${bgc}`);
       const fw = style.match(/font-weight\s*:\s*([^;]+)/i);
       if (fw && /^(bold(er)?|[5-9]00)$/i.test(fw[1].trim())) decls.push('font-weight:bold');
       const fs = style.match(/font-style\s*:\s*([^;]+)/i);
@@ -119,7 +143,12 @@ export function sanitizeFlashcardHtml(input: string, maxLen = 6000): string {
   }
 
   if (last < html.length) out.push(escapeText(html.slice(last)));
-  return out.join('').slice(0, maxLen);
+  return out
+    .join('')
+    .replace(/(?:<br>\s*){3,}/g, '<br><br>')
+    .replace(/^(?:<br>\s*)+/, '')
+    .replace(/(?:<br>\s*)+$/, '')
+    .slice(0, maxLen);
 }
 
 /**

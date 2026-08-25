@@ -1,5 +1,5 @@
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
-import { Mail, Filter, Send, Users, BookDown, GraduationCap } from 'lucide-react';
+import { Mail, Filter, Send, Users, BookDown, GraduationCap, BarChart3, Compass } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -27,8 +27,38 @@ type SearchParams = {
   voie?: string;
 };
 
-/** Destinataire normalisé, commun aux deux audiences (élèves / leads). */
+/**
+ * Audiences ciblables :
+ *  - students   : élèves inscrits (table `profiles`)
+ *  - decouverte : élèves inscrits limités à l'Espace Découverte
+ *  - leads      : leads du guide méthodologique (`guide_leads`)
+ *  - diagnostic : leads du Profil EVC (`diagnostic_leads`)
+ */
+type Audience = 'students' | 'decouverte' | 'leads' | 'diagnostic';
+const AUDIENCES: Audience[] = ['students', 'decouverte', 'leads', 'diagnostic'];
+
+const AUDIENCE_TABS: { key: Audience; label: string; Icon: typeof Mail }[] = [
+  { key: 'students', label: 'Élèves inscrits', Icon: GraduationCap },
+  { key: 'decouverte', label: 'Espace Découverte', Icon: Compass },
+  { key: 'leads', label: 'Leads Méthodologie', Icon: BookDown },
+  { key: 'diagnostic', label: 'Leads Diagnostic', Icon: BarChart3 },
+];
+
+/** Destinataire normalisé, commun à toutes les audiences. */
 type Recipient = { id: string; name: string; email: string; tags: string[] };
+
+/** Ligne brute d'une table de leads (guide_leads / diagnostic_leads). */
+type LeadRow = {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  specialty: string | null;
+  voie: string | null;
+  /** Lead « désactivé » depuis /admin/leads → jamais recontacté. */
+  active: boolean | null;
+  profile_label?: string | null;
+};
 
 export const metadata = { title: 'Envoi d’emails' };
 
@@ -40,8 +70,11 @@ export default async function AdminEmailsPage({
   await requireAdmin();
   const sp = await searchParams;
 
-  // Audience ciblée : élèves inscrits (défaut) ou leads du guide méthodologie.
-  const audience: 'students' | 'leads' = sp.audience === 'leads' ? 'leads' : 'students';
+  // Audience ciblée : élèves inscrits par défaut.
+  const audience: Audience = (AUDIENCES as string[]).includes(sp.audience ?? '')
+    ? (sp.audience as Audience)
+    : 'students';
+  const isLeadAudience = audience === 'leads' || audience === 'diagnostic';
 
   let recipients: Recipient[] = [];
   let filterApplied = false;
@@ -66,7 +99,7 @@ export default async function AdminEmailsPage({
     .order('nom');
   const collegeOptions = colleges ?? [];
 
-  if (audience === 'students') {
+  if (!isLeadAudience) {
     const { data: students } = await supabase
       .from('profiles')
       .select('id, first_name, last_name, email, promotion, permission_scope')
@@ -78,6 +111,8 @@ export default async function AdminEmailsPage({
       if (promoF !== 'all' && s.promotion !== promoF) return false;
 
       const scope = parseScope(s.permission_scope);
+      // L'audience « Espace Découverte » est par définition la formule decouverte.
+      if (audience === 'decouverte' && scope.offer !== 'decouverte') return false;
       if (offerF !== 'all' && scope.offer !== offerF) return false;
 
       if (collegeF === 'all-access' && scope.type !== 'all') return false;
@@ -98,24 +133,26 @@ export default async function AdminEmailsPage({
     });
     filterApplied = promoF !== 'all' || offerF !== 'all' || !!collegeF;
   } else {
-    // Leads du guide méthodologie (table protégée par RLS → client service-role).
+    // Leads (tables protégées par RLS → client service-role). Les colonnes
+    // `active` / `profile_label` ne figurent pas dans les types générés.
     const admin = createAdminClient();
-    const { data: leadsData } = await admin
-      .from('guide_leads')
-      .select('id, first_name, last_name, email, specialty, voie, created_at')
+    const table = audience === 'diagnostic' ? 'diagnostic_leads' : 'guide_leads';
+    const columns = audience === 'diagnostic'
+      ? 'id, first_name, last_name, email, specialty, voie, active, profile_label, created_at'
+      : 'id, first_name, last_name, email, specialty, voie, active, created_at';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: leadsData } = await (admin as any)
+      .from(table)
+      .select(columns)
       .order('created_at', { ascending: false });
 
-    const leads = (leadsData ?? []) as unknown as Array<{
-      id: string;
-      first_name: string;
-      last_name: string;
-      email: string;
-      specialty: string | null;
-      voie: string | null;
-    }>;
+    const leads = (leadsData ?? []) as LeadRow[];
 
     const filtered = leads.filter((l) => {
       if (!l.email) return false;
+      // Un lead désactivé depuis /admin/leads a été traité ou blacklisté :
+      // il ne doit jamais ressortir dans une liste d'envoi.
+      if (l.active === false) return false;
       if (specialtyF !== 'all' && (l.specialty ?? '') !== specialtyF) return false;
       if (voieF !== 'all' && (l.voie ?? '') !== voieF) return false;
       return true;
@@ -124,15 +161,20 @@ export default async function AdminEmailsPage({
     // Déduplication par email (une même personne peut télécharger plusieurs fois).
     const seen = new Set<string>();
     for (const l of filtered) {
-      const key = l.email.trim().toLowerCase();
+      const email = l.email!.trim();
+      const key = email.toLowerCase();
       if (seen.has(key)) continue;
       seen.add(key);
       const voieLabel = l.voie === 'interne' ? 'Interne' : l.voie === 'externe' ? 'Externe' : null;
       recipients.push({
         id: l.id,
         name: `${l.first_name ?? ''} ${l.last_name ?? ''}`.trim() || '—',
-        email: l.email,
-        tags: [l.specialty || 'Spécialité —', ...(voieLabel ? [voieLabel] : [])],
+        email,
+        tags: [
+          l.specialty || 'Spécialité —',
+          ...(voieLabel ? [voieLabel] : []),
+          ...(l.profile_label ? [l.profile_label] : []),
+        ],
       });
     }
     filterApplied = specialtyF !== 'all' || voieF !== 'all';
@@ -158,20 +200,23 @@ export default async function AdminEmailsPage({
           </h1>
           <p className="mt-0.5 text-sm text-(--color-ink-soft)">
             Choisissez une audience, filtrez, puis copiez la liste d’emails pour la coller dans Gmail.
+            {isLeadAudience && ' Les leads désactivés depuis « Leads » sont exclus.'}
           </p>
         </div>
       </header>
 
       {/* AUDIENCE — segmented control (liens, donc partageables) */}
       <div className="mb-5 flex flex-wrap gap-2">
-        <a href="/admin/emails?audience=students" className={`${tabBase} ${audience === 'students' ? tabActive : tabIdle}`}>
-          <GraduationCap className="h-4 w-4" />
-          Élèves inscrits
-        </a>
-        <a href="/admin/emails?audience=leads" className={`${tabBase} ${audience === 'leads' ? tabActive : tabIdle}`}>
-          <BookDown className="h-4 w-4" />
-          Leads Méthodologie
-        </a>
+        {AUDIENCE_TABS.map((t) => (
+          <a
+            key={t.key}
+            href={`/admin/emails?audience=${t.key}`}
+            className={`${tabBase} ${audience === t.key ? tabActive : tabIdle}`}
+          >
+            <t.Icon className="h-4 w-4" />
+            {t.label}
+          </a>
+        ))}
       </div>
 
       {/* FILTRES — formulaire GET (URL = sélection, partageable / rafraîchissable) */}
@@ -185,7 +230,7 @@ export default async function AdminEmailsPage({
           Filtres
         </div>
 
-        {audience === 'students' ? (
+        {!isLeadAudience ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Field label="Promotion">
               <select name="promo" defaultValue={promoF} className={selectClass}>
@@ -196,17 +241,19 @@ export default async function AdminEmailsPage({
               </select>
             </Field>
 
-            <Field label="Formule souscrite">
-              <select name="offer" defaultValue={offerF} className={selectClass}>
-                <option value="all">Toutes les formules</option>
-                {OFFER_OPTIONS.map((o) => (
-                  <option key={o} value={o}>{offerLabel(o)}</option>
-                ))}
-              </select>
-              <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-                Choisissez « Espace Découverte » pour ne cibler que les élèves en découverte.
-              </p>
-            </Field>
+            {audience === 'students' && (
+              <Field label="Formule souscrite">
+                <select name="offer" defaultValue={offerF} className={selectClass}>
+                  <option value="all">Toutes les formules</option>
+                  {OFFER_OPTIONS.map((o) => (
+                    <option key={o} value={o}>{offerLabel(o)}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+                  Choisissez « Espace Découverte » pour ne cibler que les élèves en découverte.
+                </p>
+              </Field>
+            )}
 
             <Field label="Collège ciblé">
               <select name="college" defaultValue={collegeF} className={selectClass}>
@@ -234,7 +281,9 @@ export default async function AdminEmailsPage({
                 ))}
               </select>
               <p className="mt-1 text-[11px] text-(--color-ink-muted)">
-                Spécialité renseignée lors du téléchargement du guide méthodologique.
+                {audience === 'diagnostic'
+                  ? 'Spécialité renseignée lors du diagnostic Profil EVC.'
+                  : 'Spécialité renseignée lors du téléchargement du guide méthodologique.'}
               </p>
             </Field>
 
@@ -275,7 +324,7 @@ export default async function AdminEmailsPage({
             <Users className="h-4 w-4 text-(--color-primary)" />
             <span className="font-semibold text-(--color-ink)">{emails.length}</span>
             <span className="text-(--color-ink-soft)">
-              {audience === 'leads' ? 'lead' : 'email'}{emails.length > 1 ? 's' : ''}
+              {isLeadAudience ? 'lead' : 'email'}{emails.length > 1 ? 's' : ''}
               {' '}correspond{emails.length > 1 ? 'ent' : ''} au filtre
             </span>
           </div>
@@ -290,8 +339,8 @@ export default async function AdminEmailsPage({
 
         {emails.length === 0 ? (
           <div className="px-5 py-12 text-center text-sm text-(--color-ink-soft) sm:px-6">
-            {audience === 'leads'
-              ? 'Aucun lead méthodologie ne correspond à ces filtres.'
+            {isLeadAudience
+              ? `Aucun lead ${audience === 'diagnostic' ? 'diagnostic' : 'méthodologie'} actif ne correspond à ces filtres.`
               : 'Aucun élève ne correspond à ces filtres.'}
           </div>
         ) : (

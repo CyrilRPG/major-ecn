@@ -26,6 +26,16 @@ export type NavCollege = {
   children?: NavCollege[];
 };
 
+/**
+ * « Révisions - Gériatrie » doit être le tout premier item du collège Gériatrie.
+ * Comparaison insensible aux accents et à la casse : le titre est saisi en base
+ * et a déjà varié (« Révisions – Gériatrie », « Revisions - geriatrie »).
+ */
+function isRevisionsGeriatrie(titre: string): boolean {
+  const t = titre.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+  return t.includes('revision') && t.includes('geriatrie');
+}
+
 type Row = {
   semestres:
     | {
@@ -185,45 +195,23 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     })
     .filter((m) => m.cours.length > 0 || (m.children && m.children.length > 0));
 
-  // Élèves gériatrie : masquer « Médecine Générale » et rattacher ses
-  // sous-collèges (bonus MG) sous le collège Gériatrie. Les cours directs
-  // de Gériatrie deviennent un sous-collège « Gériatrie » affiché en premier.
+  // Élèves gériatrie : les cours propres à Gériatrie restent des items DIRECTS
+  // du collège (aucun sous-collège « Gériatrie » intermédiaire), « Révisions -
+  // Gériatrie » en tête. Seuls les sous-collèges de spécialité du bonus MG sont
+  // rattachés ; ni le collège « Médecine générale » ni ses annales propres ne
+  // sont repris.
   if (isGeriatrie) {
-    const gerIdx = tree.findIndex((c) => c.id === 'col-geriatrie');
-    const mgIdx = tree.findIndex((c) => c.id === 'col-medecine-generale');
-    if (gerIdx !== -1 && mgIdx !== -1) {
-      const ger = tree[gerIdx];
-      const mg = tree[mgIdx];
+    const ger = tree.find((c) => c.id === 'col-geriatrie');
+    if (ger) {
+      ger.cours = [...ger.cours].sort(
+        (a, b) => Number(isRevisionsGeriatrie(b.titre)) - Number(isRevisionsGeriatrie(a.titre)),
+      );
 
-      const gerSub: NavCollege = {
-        id: 'col-geriatrie-main',
-        nom: 'Gériatrie',
-        iconKey: ger.iconKey,
-        colorHex: ger.colorHex,
-        cours: ger.cours,
-      };
-
-      const mgChildren = (mg.children ?? []).map((ch) => ({ ...ch }));
-
-      // Médecine générale porte aussi des cours DIRECTS (les annales EVC de MG).
-      // Sans ce sous-collège, ils disparaîtraient pour les élèves gériatrie,
-      // puisque seuls `mg.children` étaient réattachés.
-      const mgSub: NavCollege = {
-        id: 'col-medecine-generale-main',
-        nom: mg.nom,
-        iconKey: mg.iconKey,
-        colorHex: mg.colorHex,
-        cours: mg.cours,
-      };
-
-      ger.cours = [];
-      ger.children = [
-        ...(gerSub.cours.length > 0 ? [gerSub] : []),
-        ...(mgSub.cours.length > 0 ? [mgSub] : []),
-        ...mgChildren,
-      ];
-
-      tree = tree.filter((c) => c.id !== 'col-medecine-generale');
+      const mg = tree.find((c) => c.id === 'col-medecine-generale');
+      if (mg) {
+        ger.children = (mg.children ?? []).map((ch) => ({ ...ch }));
+        tree = tree.filter((c) => c.id !== 'col-medecine-generale');
+      }
     }
   }
 
