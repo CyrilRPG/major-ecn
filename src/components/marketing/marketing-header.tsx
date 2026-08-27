@@ -109,111 +109,116 @@ export function MarketingHeader() {
   }, []);
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300',
-        scrolled
-          ? 'border-b border-(--color-border) bg-white/85 backdrop-blur-xl'
-          : 'border-b border-transparent bg-white/80 backdrop-blur-sm',
-      )}
-    >
-      <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
-        <Link href="/" aria-label="Major ECN — Accueil" className="-ml-1 inline-flex shrink-0 items-center focus-ring">
-          <BrandLogo className="h-14 w-auto sm:h-16 lg:h-20" />
-        </Link>
-
-        <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
-          <NavItems />
-        </nav>
-
-        <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
-          <NavItems tight />
-        </nav>
-
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          <Link
-            href="/login"
-            className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) transition-colors hover:text-(--color-ink) sm:inline-flex"
-          >
-            <LogIn className="h-4 w-4" />
-            Se connecter
+    <>
+      {/* Réserve la hauteur du header, sorti du flux (position: fixed).
+          Hauteur de la barre (h-20 / lg:h-24) + 1px de border-b. */}
+      <div aria-hidden className="h-[calc(5rem+1px)] shrink-0 lg:h-[calc(6rem+1px)]" />
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300',
+          scrolled
+            ? 'border-b border-(--color-border) bg-white/85 backdrop-blur-xl'
+            : 'border-b border-transparent bg-white/80 backdrop-blur-sm',
+        )}
+      >
+        <div className="mx-auto flex h-20 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:h-24 lg:gap-4 lg:px-8">
+          <Link href="/" aria-label="Major ECN — Accueil" className="-ml-1 inline-flex shrink-0 items-center focus-ring">
+            <BrandLogo className="h-14 w-auto sm:h-16 lg:h-20" />
           </Link>
-          <Link
-            href="/inscription"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
-          >
-            <span className="hidden sm:inline">Découvrir la plateforme</span>
-            <span className="sm:hidden">Découvrir</span>
-          </Link>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Menu"
-            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-lg text-(--color-ink) hover:bg-(--color-surface-sunken) lg:hidden"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+
+          <nav className="ml-2 hidden items-center gap-0.5 xl:flex">
+            <NavItems />
+          </nav>
+
+          <nav className="ml-2 hidden items-center gap-0.5 lg:flex xl:hidden">
+            <NavItems tight />
+          </nav>
+
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+            <Link
+              href="/login"
+              className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) transition-colors hover:text-(--color-ink) sm:inline-flex"
+            >
+              <LogIn className="h-4 w-4" />
+              Se connecter
+            </Link>
+            <Link
+              href="/inscription"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-3.5 py-2.5 text-xs font-bold text-white shadow-sm transition-transform hover:scale-[1.03] sm:px-4 sm:text-sm"
+            >
+              <span className="hidden sm:inline">Découvrir la plateforme</span>
+              <span className="sm:hidden">Découvrir</span>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Menu"
+              className="-mr-2 flex h-10 w-10 items-center justify-center rounded-lg text-(--color-ink) hover:bg-(--color-surface-sunken) lg:hidden"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {open && (
-        <nav className="border-t border-(--color-border) bg-white px-4 py-3 lg:hidden">
-          {NAV.map((n) => {
-            if ('children' in n) {
+        {open && (
+          <nav className="max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain border-t border-(--color-border) bg-white px-4 py-3 lg:hidden">
+            {NAV.map((n) => {
+              if ('children' in n) {
+                return (
+                  <div key={n.label}>
+                    <button
+                      type="button"
+                      onClick={() => setMethodeOpen((v) => !v)}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                    >
+                      {n.label}
+                      <ChevronDown className={cn('h-4 w-4 transition-transform', methodeOpen && 'rotate-180')} />
+                    </button>
+                    {methodeOpen && (
+                      <div className="ml-4 space-y-0.5">
+                        {n.children.map((c) => (
+                          <Link
+                            key={c.href}
+                            href={c.href}
+                            onClick={() => setOpen(false)}
+                            className="block rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                          >
+                            {c.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               return (
-                <div key={n.label}>
-                  <button
-                    type="button"
-                    onClick={() => setMethodeOpen((v) => !v)}
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-                  >
-                    {n.label}
-                    <ChevronDown className={cn('h-4 w-4 transition-transform', methodeOpen && 'rotate-180')} />
-                  </button>
-                  {methodeOpen && (
-                    <div className="ml-4 space-y-0.5">
-                      {n.children.map((c) => (
-                        <Link
-                          key={c.href}
-                          href={c.href}
-                          onClick={() => setOpen(false)}
-                          className="block rounded-lg px-3 py-2 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-                        >
-                          {c.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <Link
+                  key={n.href}
+                  href={n.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                >
+                  {n.label}
+                </Link>
               );
-            }
-            return (
-              <Link
-                key={n.href}
-                href={n.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
-              >
-                {n.label}
-              </Link>
-            );
-          })}
-          <Link
-            href="/inscription"
-            onClick={() => setOpen(false)}
-            className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-primary)"
-          >
-            Découvrir la plateforme
-          </Link>
-          <Link
-            href="/login"
-            onClick={() => setOpen(false)}
-            className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink)"
-          >
-            Se connecter
-          </Link>
-        </nav>
-      )}
-    </header>
+            })}
+            <Link
+              href="/inscription"
+              onClick={() => setOpen(false)}
+              className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-primary)"
+            >
+              Découvrir la plateforme
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="mt-1 block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink)"
+            >
+              Se connecter
+            </Link>
+          </nav>
+        )}
+      </header>
+    </>
   );
 }
