@@ -463,6 +463,12 @@ type PurchaseConfirmationArgs = {
   installments: number;
   /** URL de setup-password (compte créé via admin SDK). */
   setupUrl: string;
+  /** Spécialité achetée (libellé du collège débloqué). Le récapitulatif doit
+   *  décrire CE périmètre : annoncer une autre spécialité était un contresens
+   *  pour tout achat hors Médecine générale. */
+  specialty?: string | null;
+  /** Spécialité vendue avant la mise en ligne de ses contenus. */
+  contentPending?: boolean;
 };
 
 export function purchaseConfirmationEmail({
@@ -471,12 +477,27 @@ export function purchaseConfirmationEmail({
   amountEuros,
   installments,
   setupUrl,
+  specialty,
+  contentPending,
 }: PurchaseConfirmationArgs) {
   const subject = `✅ Confirmation d'inscription — ${formuleName} | Major ECN`;
   const installmentsText =
     installments > 1
       ? ` (en ${installments} mensualités de ${(amountEuros / installments).toFixed(2)} €)`
       : '';
+  // Une seule voie de concours est ouverte (celle choisie à l'inscription) :
+  // on ne mentionne donc aucune voie ici.
+  const specialtyLabel = (specialty ?? '').trim();
+  const accessLine = specialtyLabel
+    ? (contentPending
+        ? `Accès à <strong>${escapeHtml(specialtyLabel)}</strong> dès la mise en ligne des contenus.`
+        : `Accès complet aux contenus de <strong>${escapeHtml(specialtyLabel)}</strong>.`)
+    : `Accès complet aux contenus de la spécialité choisie lors de votre inscription.`;
+  const accessLineText = specialtyLabel
+    ? (contentPending
+        ? `Accès à ${specialtyLabel} dès la mise en ligne des contenus.`
+        : `Accès complet aux contenus de ${specialtyLabel}.`)
+    : `Accès complet aux contenus de la spécialité choisie lors de votre inscription.`;
   const intro = `Votre paiement pour la <strong>${escapeHtml(formuleName)}</strong> a bien été enregistré (montant : <strong>${amountEuros.toFixed(2)} €</strong>${escapeHtml(installmentsText)}).<br /><br />Votre compte étudiant a été créé automatiquement. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder immédiatement à la plateforme.`;
   const bodyHtml = `
     <p style="margin:0 0 8px;font-size:13px;color:#9AA1AE;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">
@@ -499,7 +520,7 @@ export function purchaseConfirmationEmail({
             Montant total : <strong style="color:#C0112E;">${amountEuros.toFixed(2)} €</strong>${escapeHtml(installmentsText)}
           </p>
           <p style="margin:4px 0 0;font-size:12px;color:#7A7A7A;">
-            Accès complet à la <strong>Médecine Générale (Voie interne + Voie externe)</strong>.
+            ${accessLine}
           </p>
         </td>
       </tr>
@@ -555,7 +576,7 @@ export function purchaseConfirmationEmail({
     `Votre paiement pour la ${formuleName} a bien été enregistré.`,
     `Montant total : ${amountEuros.toFixed(2)} €${installmentsText}.`,
     ``,
-    `Accès complet à la Médecine Générale (Voie interne + Voie externe).`,
+    accessLineText,
     ``,
     `Activez votre compte : ${setupUrl}`,
     ``,

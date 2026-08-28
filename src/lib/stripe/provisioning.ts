@@ -484,6 +484,8 @@ export async function provisionStudentAccount(
       amountEuros: amountEurosTotal,
       installments: input.installments ?? 1,
       setupUrl,
+      specialty: approfondiTier?.specialtyName ?? input.specialty ?? null,
+      contentPending,
     });
     // Les PDFs sont hébergés côté public/legal — Resend les téléchargera
     // côté serveur via `path` et les attachera au mail.

@@ -316,36 +316,42 @@ export function QcmQuestionEditor({
           </div>
           )}
 
-          {/* Corrigé général */}
-          <div className="space-y-1.5">
-            <Label>Corrigé général (optionnel)</Label>
-            <FlashcardRichField
-              coursId={coursId}
-              value={draft.correction_generale}
-              onChange={(html) => setDraft((d) => ({ ...d, correction_generale: html }))}
-              placeholder="Explication globale, points clés, rappels physiopathologiques… Insérez un schéma avec le bouton image."
-              minHeight={110}
-            />
-            <p className="text-[11px] text-(--color-ink-muted)">
-              {isQroc
-                ? 'Affiché après la réponse au moment du corrigé. Utilisez le bouton image de la barre d’outils pour insérer un schéma (arbre décisionnel, ECG, illustration…).'
-                : 'Apparaît sous l’ensemble des items au moment du corrigé, en plus des justifications par item. Le bouton image permet d’insérer un schéma.'}
+          {/* Corrigé — deux sections indépendantes, toutes deux en texte riche */}
+          <div className="space-y-4 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
+              Corrigé affiché à l’étudiant
             </p>
-          </div>
 
-          {/* Commentaire de l'enseignant */}
-          <div className="space-y-1.5">
-            <Label>Commentaire de l’enseignant (optionnel)</Label>
-            <FlashcardRichField
-              coursId={coursId}
-              value={draft.commentaire_enseignant}
-              onChange={(html) => setDraft((d) => ({ ...d, commentaire_enseignant: html }))}
-              placeholder="Rappel, remise en contexte, notion à réexpliquer, schéma… Mise en forme et images disponibles."
-              minHeight={110}
-            />
-            <p className="text-[11px] text-(--color-ink-muted)">
-              Rubrique distincte du corrigé, affichée à l’étudiant sous la correction. À utiliser pour un rappel de cours, une notion réexpliquée ou un schéma complémentaire.
-            </p>
+            <div className="space-y-1.5">
+              <Label>1 · Corrigé général (optionnel)</Label>
+              <FlashcardRichField
+                coursId={coursId}
+                value={draft.correction_generale}
+                onChange={(html) => setDraft((d) => ({ ...d, correction_generale: html }))}
+                placeholder="Explication globale, points clés, rappels physiopathologiques… Insérez un schéma avec le bouton image."
+                minHeight={160}
+              />
+              <p className="text-[11px] text-(--color-ink-muted)">
+                {isQroc
+                  ? 'Affiché après la réponse au moment du corrigé. Utilisez le bouton image de la barre d’outils pour insérer un schéma (arbre décisionnel, ECG, illustration…).'
+                  : 'Apparaît sous l’ensemble des items au moment du corrigé, en plus des justifications par item. Le bouton image permet d’insérer un schéma.'}
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>2 · Commentaire de l’enseignant (optionnel)</Label>
+              <FlashcardRichField
+                coursId={coursId}
+                value={draft.commentaire_enseignant}
+                onChange={(html) => setDraft((d) => ({ ...d, commentaire_enseignant: html }))}
+                placeholder="Rappel, remise en contexte, notion à réexpliquer, schéma… Mise en forme et images disponibles."
+                minHeight={160}
+              />
+              <p className="text-[11px] text-(--color-ink-muted)">
+                Rubrique distincte du corrigé, affichée à l’étudiant sous la correction. Mêmes outils de mise en forme
+                que le corrigé général (gras, italique, surlignage, couleur, image).
+              </p>
+            </div>
           </div>
 
           {/* Position (en création à côté d'une question existante) */}

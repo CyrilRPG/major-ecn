@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -16,6 +17,7 @@ import {
 } from './premium-ui';
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
   essentielle: 'essentielle',
@@ -522,6 +524,13 @@ type PaymentCfg = {
 };
 
 function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
+
+  // Spécialité réellement sélectionnée dans le formulaire de paiement. Le
+  // récapitulatif « Ce qui est inclus » doit décrire CETTE spécialité : afficher
+  // un libellé figé (« Médecine Générale ») promettait un périmètre qui n'était
+  // pas celui acheté. Valeur initiale = celle pré-sélectionnée par le
+  // formulaire, pour éviter tout décalage au premier rendu.
+  const [checkoutSpecialty, setCheckoutSpecialty] = useState<string>(ENROLLABLE_SPECIALTY_NAMES[0]);
   const isApprofondi = variant === 'approfondi';
 
   // Palette par variant
@@ -614,7 +623,12 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
                       'Paiement en ligne 1, 3 ou 4 fois sans frais',
                     ]
                   : [
-                      'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
+                      // Périmètre réellement acheté : la spécialité choisie dans
+                      // le formulaire ci-contre (une seule voie de concours, celle
+                      // sélectionnée à l'inscription).
+                      isContentPendingSpecialty(checkoutSpecialty)
+                        ? `Accès à ${checkoutSpecialty} dès la mise en ligne des contenus`
+                        : `Accès complet aux contenus de ${checkoutSpecialty}`,
                       'QCM, fiches, flashcards, méthodologie EVC',
                       'Annales corrigées des sessions précédentes',
                       'Email de confirmation + activation immédiate',
@@ -686,6 +700,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
                   formuleId={VARIANT_TO_FORMULE_ID[variant]}
                   label={`Payer ${c.price} € et créer mon compte`}
                   color={ctaColor}
+                  onSpecialtyChange={setCheckoutSpecialty}
                 />
               )}
             </div>

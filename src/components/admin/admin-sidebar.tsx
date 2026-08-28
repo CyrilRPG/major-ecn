@@ -21,7 +21,6 @@ const GROUPS: Group[] = [
       { href: '/admin/eleves', label: 'Élèves', Icon: Users },
       { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
       { href: '/admin/leads', label: 'Leads', Icon: Users, adminOnly: true },
-      { href: '/admin/leads-methodologie', label: 'Leads méthodo', Icon: Users, adminOnly: true },
     ],
   },
   {

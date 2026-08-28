@@ -28,8 +28,13 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 type ProvisioningStatus =
-  | { ok: true; email: string; isNew: boolean; emailSent: boolean; emailVia: 'resend' | 'supabase' | null }
-  | { ok: false; reason: string };
+  | {
+      ok: true; email: string; isNew: boolean; emailSent: boolean;
+      emailVia: 'resend' | 'supabase' | null;
+      /** Spécialité achetée (métadonnées Stripe) — sert au récapitulatif. */
+      specialty: string; contentPending: boolean;
+    }
+  | { ok: false; reason: string; specialty?: string; contentPending?: boolean };
 
 async function provisionFromSession(sessionId: string): Promise<ProvisioningStatus> {
   // Logger structuré : visible dans les Logs Vercel pour identifier d'où
@@ -76,9 +81,13 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
   const formuleId = meta.formule as FormuleId | undefined;
   const installments = Number(meta.installments ?? '1') || 1;
   const cancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;
+  // Spécialité réellement payée : elle est reprise telle quelle dans le
+  // récapitulatif, y compris quand le provisioning échoue.
+  const specialty = (meta.specialty ?? '').trim();
+  const contentPending = meta.content_pending === '1';
 
-  if (!email) return { ok: false, reason: 'Email manquant sur la session.' };
-  if (!formuleId) return { ok: false, reason: 'Formule manquante sur la session.' };
+  if (!email) return { ok: false, reason: 'Email manquant sur la session.', specialty, contentPending };
+  if (!formuleId) return { ok: false, reason: 'Formule manquante sur la session.', specialty, contentPending };
 
   // Pour les paiements 3x/4x : borne le plan à exactement N prélèvements via un
   // SubscriptionSchedule (filet de sécurité si le webhook a planté). Idempotent.
@@ -102,7 +111,7 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
     formuleId,
     installments,
     amountTotalCents: session.amount_total ?? 0,
-    specialty: meta.specialty ?? 'Médecine générale',
+    specialty: specialty || 'Médecine générale',
     collegeId: meta.college_id || undefined,
     voie: meta.voie ?? '',
     approfondiVariant: meta.approfondi_variant ?? '',
@@ -114,7 +123,7 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
 
   if (!result.ok) {
     log('provisioning-error', { error: result.error });
-    return { ok: false, reason: result.error };
+    return { ok: false, reason: result.error, specialty, contentPending };
   }
   log('provisioning-success', {
     userId: result.userId,
@@ -129,6 +138,8 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
     isNew: result.isNew,
     emailSent: result.emailSent,
     emailVia: result.emailVia,
+    specialty,
+    contentPending,
   };
 }
 
@@ -145,6 +156,14 @@ export default async function MerciPage({
   const emailFailed = status?.ok === true && !status.emailSent;
   const provisioningError = status?.ok === false;
   const recipientEmail = status?.ok === true ? status.email : null;
+  // Le récapitulatif doit décrire la spécialité achetée, pas un libellé figé.
+  const specialty = status?.specialty?.trim() || null;
+  const contentPending = status?.contentPending === true;
+  const accessLine = specialty
+    ? (contentPending
+        ? `Accès à ${specialty} dès la mise en ligne des contenus`
+        : `Accès complet aux contenus de ${specialty}`)
+    : 'Accès complet aux contenus de la spécialité choisie';
 
   return (
     <section className="bg-[#F8FAFC] py-16 sm:py-24" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -222,7 +241,7 @@ export default async function MerciPage({
           {/* 3 bullets */}
           <ul className="mt-6 space-y-3">
             {[
-              'Accès complet à la Médecine Générale (Voie interne + Voie externe)',
+              accessLine,
               'QCM, fiches, flashcards et méthodologie EVC',
               'Suivi personnalisé de votre progression',
             ].map((t) => (
