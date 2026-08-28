@@ -16,7 +16,7 @@ import { sendEmail, siteUrl } from '@/lib/email/send';
 import { purchaseConfirmationEmail, resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 
-type ScopeWithFormule = { paid_formule?: string; paid_offer?: string };
+type ScopeWithFormule = { paid_formule?: string; paid_offer?: string; paid_specialty?: string };
 
 /** Quota d'envoi journalier atteint côté Resend (ou limite de débit). */
 function quotaAtteint(err: string | null): boolean {
@@ -96,6 +96,7 @@ export async function POST(req: Request) {
         amountEuros: formule.amountCents / 100,
         installments: 1,
         setupUrl,
+        specialty: scope.paid_specialty ?? null,
       });
       const r = await sendEmail({ to: prof.email, subject: tmpl.subject, html: tmpl.html, text: tmpl.text });
       if (r.ok) { emailVia = 'resend'; }

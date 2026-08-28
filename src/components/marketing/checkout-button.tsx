@@ -9,7 +9,7 @@
  *
  * Appelle /api/stripe/checkout puis redirige vers Stripe Checkout.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle, ArrowRight, Calendar, Check, CheckCircle2,
@@ -46,6 +46,10 @@ type Props = {
   /** Offre Approfondi choisie (ex. 'mg-plus'). Quand fournie, la spécialité et le
    *  prix viennent de l'offre → on masque le sélecteur de spécialité interne. */
   approfondiVariant?: string;
+  /** Notifie le parent de la spécialité sélectionnée (au montage puis à chaque
+   *  changement), pour que le récapitulatif affiché à côté du formulaire décrive
+   *  la spécialité réellement achetée et non un libellé figé. */
+  onSpecialtyChange?: (specialty: string) => void;
 };
 
 // Spécialités inscriptibles = collèges présents sur la plateforme pédagogique.
@@ -62,6 +66,7 @@ export function CheckoutButton({
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
   approfondiVariant,
+  onSpecialtyChange,
 }: Props) {
   // Parcours Approfondi : la spécialité est portée par l'offre choisie en amont
   // (catalogue Approfondi) → on masque le sélecteur de spécialité interne.
@@ -88,6 +93,18 @@ export function CheckoutButton({
   const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Remonte la spécialité sélectionnée au parent (récapitulatif « Ce qui est
+  // inclus »). Passage par une ref : le parent peut passer une lambda inline
+  // sans que l'effet se redéclenche à chaque rendu.
+  const notifySpecialty = useRef(onSpecialtyChange);
+  useEffect(() => {
+    notifySpecialty.current = onSpecialtyChange;
+  });
+  useEffect(() => {
+    if (isApprofondiFlow) return;
+    notifySpecialty.current?.(specialty);
+  }, [specialty, isApprofondiFlow]);
 
   // ── Mise à niveau Découverte → payant via connexion ──────────────
   // Si l'étudiant est connecté (ou se connecte), on pré-remplit et verrouille

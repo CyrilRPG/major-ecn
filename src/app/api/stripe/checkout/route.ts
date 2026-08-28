@@ -181,6 +181,16 @@ export async function POST(req: Request) {
       : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
   const specialtyName = approfondiTier ? approfondiTier.specialtyName : (body.specialty ?? '');
 
+  // Rappel du périmètre acheté sur la page Stripe : l'étudiant doit y relire la
+  // spécialité qu'il vient de choisir (une seule voie de concours, celle
+  // sélectionnée dans le formulaire).
+  const specialtyNotice = specialtyName
+    ? `Votre inscription donne accès aux contenus de ${specialtyName}.`
+    : '';
+  const submitMessage = [specialtyNotice, contentPending ? CONTENT_PENDING_NOTICE : '']
+    .filter(Boolean)
+    .join(' ');
+
   try {
     const commonMetadata = {
       formule: formule.id,
@@ -271,7 +281,7 @@ export async function POST(req: Request) {
           submit: {
             message:
               `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`
-              + (contentPending ? ` ${CONTENT_PENDING_NOTICE}` : ''),
+              + (submitMessage ? ` ${submitMessage}` : ''),
           },
         },
       });
@@ -303,10 +313,11 @@ export async function POST(req: Request) {
         metadata: commonMetadata,
         description: `Major ECN — ${productName} (paiement comptant)`,
       },
-      // Contenus pas encore en ligne : l'avertissement doit aussi figurer sur
-      // la page de paiement Stripe, pas seulement dans le tunnel du site.
-      ...(contentPending
-        ? { custom_text: { submit: { message: CONTENT_PENDING_NOTICE } } }
+      // Périmètre acheté (et, le cas échéant, avertissement « contenus en cours
+      // de mise en ligne ») rappelés sur la page de paiement Stripe, pas
+      // seulement dans le tunnel du site.
+      ...(submitMessage
+        ? { custom_text: { submit: { message: submitMessage } } }
         : {}),
     });
 
