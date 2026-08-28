@@ -47,12 +47,15 @@ export const BILLING_EUR = {
   interrogation_generation: 0.3,
   /** Génération IA d'une épreuve blanche (multi-items). */
   exam_generation: 1.3,
+  /** Import d'un article de blog par IA (mise en page + SEO), par article généré. */
+  article: 2.5,
 } as const;
 
-/** Discriminant `ai_generations.feature` des générations d'épreuves facturées. */
+/** Discriminant `ai_generations.feature` des générations facturées au forfait. */
 export const GEN_FEATURE = {
   interrogation: 'interrogation_generation',
   epreuve: 'exam_generation',
+  article: 'blog_article_generation',
 } as const;
 
 /**

@@ -1,6 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { getPublishedArticles } from '@/lib/data/blog-articles';
+import { getDbPublishedArticles } from '@/lib/data/blog-db';
 import { FEATURED_TESTIMONIES } from '@/lib/data/featured-testimonies';
+
+// Le plan de site inclut les articles créés depuis /admin/blog : sans cette
+// régénération périodique, un article publié depuis l'administration (ou importé
+// par IA) n'aurait jamais été soumis à l'indexation.
+export const revalidate = 600;
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
 
@@ -29,7 +35,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: '/confidentialite', priority: 0.3, changeFrequency: 'yearly' },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
@@ -39,9 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }));
 
-  const blogEntries: MetadataRoute.Sitemap = getPublishedArticles().map((a) => ({
+  // Articles statiques + articles publiés depuis l'administration (CMS / import IA).
+  const staticSlugs = new Set(getPublishedArticles().map((a) => a.slug));
+  const dbArticles = (await getDbPublishedArticles()).filter((a) => !staticSlugs.has(a.slug));
+  const blogEntries: MetadataRoute.Sitemap = [...getPublishedArticles(), ...dbArticles].map((a) => ({
     url: `${SITE_URL}/blog/${a.slug}`,
-    lastModified: now,
+    lastModified: a.publishedAt ? new Date(a.publishedAt) : now,
     changeFrequency: 'monthly',
     priority: 0.6,
   }));

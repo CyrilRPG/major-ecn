@@ -77,7 +77,11 @@ export function articleSchema(a: {
     '@type': 'Article',
     headline: a.title,
     description: a.description,
-    image: a.image ? `${SITE_URL}${a.image}` : `${SITE_URL}/major-ecn-logo.png`,
+    // Les articles créés depuis l'administration portent une URL absolue
+    // (bucket Supabase) : la préfixer produirait une image introuvable.
+    image: a.image
+      ? a.image.startsWith('http') ? a.image : `${SITE_URL}${a.image}`
+      : `${SITE_URL}/major-ecn-logo.png`,
     mainEntityOfPage: `${SITE_URL}/blog/${a.slug}`,
     author: { '@type': 'Organization', name: 'Major ECN' },
     publisher: {

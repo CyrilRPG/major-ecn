@@ -27,6 +27,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const a = getArticleBySlug(slug) ?? (await getDbArticleBySlug(slug))?.meta ?? null;
   if (!a) return { title: 'Article introuvable — Major ECN' };
+  // Image de partage : bannière de l'article, à défaut l'illustration de sa
+  // catégorie. Les articles créés en base portent une URL absolue (Supabase),
+  // les articles statiques un chemin du site.
+  const raw = a.image ?? BLOG_CATEGORY_IMAGE[a.category];
+  const image = raw.startsWith('http') ? raw : `${SITE_URL}${raw}`;
   return {
     title: `${a.title} — Blog Major ECN`,
     description: a.excerpt,
@@ -36,9 +41,21 @@ export async function generateMetadata({
       description: a.excerpt,
       type: 'article',
       url: `/blog/${slug}`,
+      siteName: 'Major ECN',
+      locale: 'fr_FR',
+      images: [{ url: image, alt: a.title }],
+      ...(a.publishedAt ? { publishedTime: a.publishedAt } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: a.title,
+      description: a.excerpt,
+      images: [image],
     },
   };
 }
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
 
 // Revalidation courte : un article programmé (published_at futur) passe en ligne
 // automatiquement dans les ~5 min suivant sa date, sans redéploiement.

@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { Newspaper, Plus, PencilLine, ExternalLink } from 'lucide-react';
+import { Newspaper, Plus, PencilLine, ExternalLink, Sparkles, ArrowRight } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { BLOG_CATEGORIES, type BlogCategory } from '@/lib/data/blog-articles';
+import { BILLING_EUR } from '@/lib/ai/cost';
 import { DeletePostButton } from './list-actions';
 
 export const dynamic = 'force-dynamic';
@@ -46,6 +47,35 @@ export default async function AdminBlogPage() {
           <Plus className="h-4 w-4" /> Nouvel article
         </Link>
       </header>
+
+      {/* Import par IA — mis en avant : c'est la voie rapide vers un article
+          mis en page et optimisé pour le référencement. */}
+      <Link
+        href="/admin/blog/ia"
+        className="group mb-6 flex items-center gap-4 overflow-hidden rounded-2xl border border-[#DDD6FE] bg-[linear-gradient(120deg,#FAF5FF_0%,#FFF1F3_100%)] p-5 transition-shadow hover:shadow-(--shadow-soft)"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#7C3AED,#C0001F)] text-white">
+          <Sparkles className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-(--color-ink)">
+            Importer un article par IA
+            <span className="rounded-full bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#6D28D9]">
+              Nouveau
+            </span>
+          </p>
+          <p className="mt-0.5 text-xs leading-relaxed text-(--color-ink-muted)">
+            Déposez une bannière et votre texte : l’IA repense la mise en page (titres, encadrés
+            colorés, tableaux, images), pose les liens internes et optimise l’article pour le SEO.
+            Aperçu avant publication ·{' '}
+            <strong className="font-bold text-(--color-ink)">
+              {BILLING_EUR.article.toFixed(2).replace('.', ',')} € par article généré
+            </strong>{' '}
+            (facturation IA).
+          </p>
+        </div>
+        <ArrowRight className="h-5 w-5 shrink-0 text-[#7C3AED] transition-transform group-hover:translate-x-0.5" />
+      </Link>
 
       {rows.length === 0 ? (
         <p className="rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-4 py-12 text-center text-sm text-(--color-ink-muted)">

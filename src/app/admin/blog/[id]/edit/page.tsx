@@ -26,9 +26,17 @@ type Row = {
   published_at: string | null;
 };
 
-export default async function EditBlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditBlogPostPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  /** `?apercu=1` — arrivée depuis l'import IA : l'aperçu s'ouvre d'emblée. */
+  searchParams: Promise<{ apercu?: string }>;
+}) {
   await requireAdmin();
   const { id } = await params;
+  const { apercu } = await searchParams;
   const supabase = await createClient();
   const { data } = await supabase.from('blog_posts').select('*').eq('id', id).maybeSingle();
   if (!data) notFound();
@@ -64,7 +72,7 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
           Éditer : {row.title || '(sans titre)'}
         </h1>
       </header>
-      <BlogEditor initial={initial} allArticles={allArticles} />
+      <BlogEditor initial={initial} allArticles={allArticles} openPreview={apercu === '1'} />
     </main>
   );
 }

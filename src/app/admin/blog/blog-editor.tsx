@@ -82,9 +82,12 @@ const labelCls = 'mb-1 block text-xs font-semibold text-(--color-ink-muted)';
 export function BlogEditor({
   initial,
   allArticles,
+  openPreview = false,
 }: {
   initial?: BlogPostInput & { id: string };
   allArticles: { slug: string; title: string }[];
+  /** Ouvre l'aperçu dès l'arrivée (retour d'un import IA : on relit puis on publie). */
+  openPreview?: boolean;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -107,7 +110,8 @@ export function BlogEditor({
     (initial?.blocks ?? []).filter((b) => b.t !== 'hero').map((b) => ({ id: uid(), block: b })),
   );
 
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState(openPreview);
+  const [status, setStatus] = useState<'draft' | 'published'>(initial?.status ?? 'draft');
 
   const effectiveSlug = slugTouched ? slug : localSlugify(title);
 
@@ -156,7 +160,7 @@ export function BlogEditor({
     setItems((prev) => [...prev, { id: uid(), block: newBlock(t) }]);
   }
 
-  function submit(status: 'draft' | 'published') {
+  function submit(nextStatus: 'draft' | 'published') {
     setError(null);
     setSavedSlug(null);
     const input: BlogPostInput = {
@@ -167,7 +171,7 @@ export function BlogEditor({
       category,
       readingMinutes,
       heroImage,
-      status,
+      status: nextStatus,
       featured,
       publishedAt,
       blocks: items.map((it) => it.block),
@@ -179,6 +183,7 @@ export function BlogEditor({
         return;
       }
       setPostId(res.id);
+      setStatus(nextStatus);
       setSavedSlug(res.slug);
       setSlug(res.slug);
       setSlugTouched(true);
@@ -189,7 +194,19 @@ export function BlogEditor({
   return (
     <>
       {preview && (
-        <PreviewOverlay meta={previewMeta} blocks={previewBlocks} onClose={() => setPreview(false)} />
+        <PreviewOverlay
+          meta={previewMeta}
+          blocks={previewBlocks}
+          published={status === 'published'}
+          pending={pending}
+          onPublish={() => {
+            // On referme l'aperçu : le résultat (lien vers l'article ou erreur)
+            // s'affiche dans le panneau « Publication ».
+            submit('published');
+            setPreview(false);
+          }}
+          onClose={() => setPreview(false)}
+        />
       )}
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Colonne principale : contenu */}
@@ -370,28 +387,50 @@ export function BlogEditor({
 function PreviewOverlay({
   meta,
   blocks,
+  published,
+  pending,
+  onPublish,
   onClose,
 }: {
   meta: BlogArticleMeta;
   blocks: Block[];
+  published: boolean;
+  pending: boolean;
+  onPublish: () => void;
   onClose: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white">
-      <div className="flex items-center justify-between border-b border-(--color-border) bg-white px-4 py-2.5">
+      <div className="flex items-center justify-between gap-3 border-b border-(--color-border) bg-white px-4 py-2.5">
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
           <Eye className="h-4 w-4 text-[#E4002B]" /> Aperçu de l’article
-          <span className="rounded-full bg-[#FEF3C7] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#92400E]">
-            Non enregistré
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+              published ? 'bg-[#E7F6EC] text-[#16793C]' : 'bg-[#FEF3C7] text-[#92400E]'
+            }`}
+          >
+            {published ? 'Publié' : 'Brouillon'}
           </span>
         </span>
-        <button
-          type="button"
-          onClick={onClose}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-1.5 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft)"
-        >
-          <X className="h-4 w-4" /> Fermer l’aperçu
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Publication directe depuis l'aperçu : on relit, on publie. */}
+          <button
+            type="button"
+            disabled={pending}
+            onClick={onPublish}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#C0001F] px-3 py-1.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+          >
+            {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
+            Publier
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-1.5 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft)"
+          >
+            <X className="h-4 w-4" /> Fermer l’aperçu
+          </button>
+        </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         <ArticleRich article={meta} blocks={blocks} />

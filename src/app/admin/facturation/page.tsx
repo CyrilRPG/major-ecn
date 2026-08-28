@@ -2,7 +2,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { BILLING_EUR, GEN_FEATURE, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
-import { FacturationDashboard, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
+import { FacturationDashboard, type ArticleBillingLine, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, odontoRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes] = await Promise.all([
     a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
@@ -24,6 +24,8 @@ export default async function AdminFacturationPage() {
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
     a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').in('status', ['ready', 'published', 'cancelled']).not('billed_price_cents', 'is', null),
+    // Articles de blog importés par IA : forfait 2,50 € par génération réussie.
+    a.from('ai_generations').select('id, cours_titre, items_count, created_at').eq('feature', GEN_FEATURE.article).eq('status', 'success').order('created_at', { ascending: false }),
     // Collège Odontologie et ses sous-collèges : la RPC renvoie le nom du
     // sous-collège, la facture les regroupe sous le collège parent.
     a.from('matieres').select('id, nom').or(`id.eq.${ODONTOLOGIE_COLLEGE_ID},parent_matiere_id.eq.${ODONTOLOGIE_COLLEGE_ID}`),
@@ -67,6 +69,9 @@ export default async function AdminFacturationPage() {
   const exerciseImports: ExerciseImportBillingLine[] = ((importsRes.data ?? []) as Array<{ id: string; title: string; billed_price_cents: number; result: { questions?: unknown[] } | null; created_at: string }>)
     .map((row) => ({ id: row.id, title: row.title, cents: row.billed_price_cents, questions: row.result?.questions?.length ?? 0, createdAt: row.created_at }));
 
+  const articles: ArticleBillingLine[] = ((articlesRes.data ?? []) as Array<{ id: string; cours_titre: string | null; items_count: number | null; created_at: string }>)
+    .map((row) => ({ id: row.id, title: row.cours_titre ?? 'Article sans titre', blocks: row.items_count ?? 0, createdAt: row.created_at }));
+
   return (
     <FacturationDashboard
       lines={lines}
@@ -74,6 +79,7 @@ export default async function AdminFacturationPage() {
       epreuves={{ exams: examsCount, qroc: qrocCount }}
       generations={generations}
       exerciseImports={exerciseImports}
+      articles={articles}
       tarifs={{
         fiche: BILLING_EUR.fiche,
         qcm: BILLING_EUR.qcm_per_course,
