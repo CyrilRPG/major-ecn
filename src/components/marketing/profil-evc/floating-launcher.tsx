@@ -49,7 +49,9 @@ export function FloatingLauncher() {
         />
       )}
 
-      <div className="fixed bottom-5 right-5 z-[9990] flex flex-col items-end gap-2.5 sm:bottom-6 sm:right-6">
+      {/* Desktop uniquement : sur mobile le bouton « Offerts » est dans le
+          header et le bas d'écran est réservé au CTA sticky d'inscription. */}
+      <div className="fixed bottom-5 right-5 z-[9990] hidden flex-col items-end gap-2.5 sm:bottom-6 sm:right-6 lg:flex">
         {/* Options déployées */}
         <div className="flex flex-col items-end gap-2.5">
           <OptionPill

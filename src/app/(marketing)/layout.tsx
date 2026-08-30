@@ -1,5 +1,6 @@
 import { MarketingHeader } from '@/components/marketing/marketing-header';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
+import { StickyCtaBar } from '@/components/marketing/sticky-cta';
 import { GuidePopup } from '@/components/marketing/guide-popup';
 import { FloatingLauncher } from '@/components/marketing/profil-evc/floating-launcher';
 import { ProfilPopup } from '@/components/marketing/profil-evc/profil-popup';
@@ -12,7 +13,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <MarketingHeader />
       <main className="flex-1">{children}</main>
       <MarketingFooter />
-      {/* Lanceur flottant unique (speed-dial) : déploie Guide + Profil EVC. */}
+      {/* CTA sticky mobile — libellé dynamique selon la page et la zone
+          parcourue (cahier des charges CTA sticky). */}
+      <StickyCtaBar />
+      {/* Lanceur flottant unique (speed-dial) : déploie Guide + Profil EVC.
+          Desktop uniquement — sur mobile, « Offerts » vit dans le header pour
+          ne jamais chevaucher le CTA sticky. */}
       <FloatingLauncher />
       {/* Popup du guide méthodologie — monté pour écouter l'événement
           open-guide-popup (boutons « Télécharger »). Auto-affichage désactivé. */}

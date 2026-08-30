@@ -1,61 +1,51 @@
-import { ManusHero } from '@/components/marketing/manus-hero';
-import { ExperienceSection, FAQSection } from '@/components/marketing/manus-sections';
+import { HomeHero } from '@/components/marketing/home/home-hero';
 import {
-  BeyondPlatformSection, EspaceDecouverteSection, FinalDiscoverCtaSection,
-  PedagogicalTeamSection, SpecialtiesSection, TestimonialsTextSection,
-  TestimonialsVideoSection, ToolsForProgressSection, ToolsGridSection, ToutRegroupeSection,
-} from '@/components/marketing/extra-sections';
+  DeuxVoiesSection, EnseignantsSection, PlateformeSection, SuiviSection,
+} from '@/components/marketing/home/home-method-sections';
+import { TemoignagesSection } from '@/components/marketing/home/home-social-sections';
+import { FormulesSection } from '@/components/marketing/home/home-formules-section';
+import { HomeFaqSection } from '@/components/marketing/home/home-faq-section';
+import { JsonLd, faqSchema } from '@/components/seo/json-ld';
+import { faqEvcPlainQAs } from '@/lib/data/faq-evc-pae';
 
 export const metadata = {
   alternates: { canonical: '/' },
   title: 'Major ECN — Préparation EVC (PAE) pour médecins étrangers',
   description:
-    'Plateforme de préparation aux Épreuves de Vérification des Connaissances (EVC) pour médecins étrangers dans le cadre de la Procédure d’Autorisation d’Exercice (PAE). toutes les spécialités, 9 000+ médecins accompagnés, 15 ans d’expérience.',
+    'Préparation complète aux Épreuves de Vérification des Connaissances (EVC) dans le cadre de la PAE : voie interne (QCM), voie externe (QROC), méthodologie, enseignants médecins spécialistes, suivi de progression. Toutes les spécialités, 9 000+ médecins accompagnés, 15 ans d’expérience.',
 };
 
 export default async function HomePage() {
   return (
     <>
-      {/* 1) HERO */}
-      <ManusHero />
+      <JsonLd data={faqSchema(faqEvcPlainQAs())} />
 
-      {/* 2) Bien plus qu'une plateforme de cours */}
-      <BeyondPlatformSection />
+      {/* 1) HERO — Vous travaillez. Nous vous guidons. */}
+      <HomeHero />
 
-      {/* 3) Plateforme intelligente et adaptative */}
-      <ToolsForProgressSection />
+      {/* 2) Deux voies. Une méthode adaptée à votre épreuve. */}
+      <DeuxVoiesSection />
 
-      {/* 3 bis) Tous les outils pour structurer votre progression aux EVC
-          (réintégrée à sa place d'origine, juste après « Plateforme
-          intelligente et adaptative »). */}
-      <ToolsGridSection />
+      {/* 3) Vous travaillez. Nous vérifions que vous progressez. */}
+      <SuiviSection />
 
-      {/* 4) Témoignages vidéo */}
-      <TestimonialsVideoSection />
+      {/* 4) Tout votre travail. Au même endroit. */}
+      <PlateformeSection />
 
-      {/* 5) Préparation adaptée à votre spécialité */}
-      <SpecialtiesSection />
+      {/* 5) Nos enseignants : bien plus que des formateurs */}
+      <EnseignantsSection />
 
-      {/* 6) Équipe pédagogique */}
-      <PedagogicalTeamSection />
+      {/* 6) Témoignages vidéo — 15 ans d'expérience aux EVC */}
+      <TemoignagesSection />
 
-      {/* 7) Tout est regroupé au même endroit */}
-      <ToutRegroupeSection />
+      {/* 7) Trois formules, un même objectif : votre réussite */}
+      <FormulesSection />
 
-      {/* 8) À l'intérieur de Major ECN (captures de la plateforme) */}
-      <ExperienceSection />
+      {/* 8) FAQ — Toutes les réponses à vos questions */}
+      <HomeFaqSection />
 
-      {/* 9) Témoignages écrits */}
-      <TestimonialsTextSection />
-
-      {/* 10) Espace découverte gratuit */}
-      <EspaceDecouverteSection />
-
-      {/* 11) FAQ */}
-      <FAQSection />
-
-      {/* 12) Dernier CTA — Découvrir gratuitement la plateforme */}
-      <FinalDiscoverCtaSection />
+      {/* Le CTA sticky mobile est monté globalement dans le layout marketing
+          (StickyCtaBar) — libellé dynamique selon la zone parcourue. */}
     </>
   );
 }
