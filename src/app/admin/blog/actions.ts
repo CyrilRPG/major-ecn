@@ -106,29 +106,9 @@ export async function deletePost(id: string): Promise<{ ok: boolean; error?: str
   return { ok: true };
 }
 
-/** Upload une image dans le bucket public `blog-images` et renvoie son URL publique. */
-export async function uploadBlogImage(
-  formData: FormData,
-): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
-  await requireAdmin();
-  const supabase = await createClient();
-  const file = formData.get('file');
-  if (!(file instanceof File) || file.size === 0) {
-    return { ok: false, error: 'Aucun fichier reçu.' };
-  }
-  if (file.size > 8 * 1024 * 1024) {
-    return { ok: false, error: 'Image trop lourde (max 8 Mo).' };
-  }
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-  const year = new Date().getFullYear();
-  const path = `${year}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage
-    .from('blog-images')
-    .upload(path, file, { contentType: file.type || 'image/jpeg', upsert: false });
-  if (error) return { ok: false, error: error.message };
-  const { data } = supabase.storage.from('blog-images').getPublicUrl(path);
-  return { ok: true, url: data.publicUrl };
-}
+// Le téléversement des images du blog se fait désormais depuis le navigateur
+// (`upload-image-browser.ts`) : la server action qui les recevait butait sur le
+// plafond de 4,5 Mo imposé aux corps de requête des fonctions serverless.
 
 function revalidateBlog(slug?: string) {
   // `revalidatePath` ne suffit plus : les articles sont désormais lus à travers

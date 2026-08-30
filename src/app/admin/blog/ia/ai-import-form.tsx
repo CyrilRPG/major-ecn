@@ -6,11 +6,16 @@ import Link from 'next/link';
 import {
   AlertTriangle, Eye, ImagePlus, Images, Loader2, PencilLine, Search, Sparkles, Trash2, Wand2,
 } from 'lucide-react';
+import { uploadBlogImageFromBrowser } from '../upload-image-browser';
+import { useImageDrop, useWindowDropGuard } from '../use-image-drop';
 import { importArticleWithAi, type ImportResult } from './actions';
 
 type Success = Extract<ImportResult, { ok: true }>;
+/** Image déjà déposée dans le bucket : le formulaire ne manipule que des URLs. */
+type Uploaded = { url: string; name: string };
 
 const MAX_EXTRA_IMAGES = 8;
+const MIN_TEXT_CHARS = 200;
 
 const labelCls = 'mb-1 block text-sm font-semibold text-(--color-ink)';
 const hintCls = 'mb-2 text-xs text-(--color-ink-muted)';
@@ -23,55 +28,95 @@ export function AiImportForm() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<Success | null>(null);
 
-  const [banner, setBanner] = useState<File | null>(null);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
-  // On garde l'URL de prévisualisation avec le fichier : la recréer à chaque
-  // rendu fuirait un objet URL par image et par frappe au clavier.
-  const [images, setImages] = useState<{ file: File; url: string }[]>([]);
+  // Les images partent vers Supabase Storage dès le dépôt : on ne garde ici que
+  // leur URL publique, ce qui évite de faire transiter des fichiers lourds par
+  // la server action (plafond de 4,5 Mo côté plateforme).
+  const [banner, setBanner] = useState<Uploaded | null>(null);
+  const [bannerBusy, setBannerBusy] = useState(false);
+  const [images, setImages] = useState<Uploaded[]>([]);
+  const [imagesBusy, setImagesBusy] = useState(0);
   const [text, setText] = useState('');
   const [seoBrief, setSeoBrief] = useState('');
 
   const bannerRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
 
-  function pickBanner(file: File | undefined) {
-    if (!file) return;
-    setBanner(file);
-    setBannerUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return URL.createObjectURL(file);
-    });
+  useWindowDropGuard();
+
+  async function pickBanner(file: File | undefined) {
+    if (!file || pending) return;
+    setBannerBusy(true);
+    setError(null);
+    const res = await uploadBlogImageFromBrowser(file);
+    setBannerBusy(false);
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
+    setBanner({ url: res.url, name: res.name });
   }
 
-  function addImages(files: FileList | null) {
-    if (!files) return;
-    const added = Array.from(files).map((file) => ({ file, url: URL.createObjectURL(file) }));
-    setImages((prev) => [...prev, ...added].slice(0, MAX_EXTRA_IMAGES));
+  async function addImages(files: File[]) {
+    if (pending) return;
+    const free = MAX_EXTRA_IMAGES - images.length - imagesBusy;
+    const batch = files.slice(0, Math.max(0, free));
+    if (!batch.length) return;
+    setError(null);
+    setImagesBusy((n) => n + batch.length);
+    for (const file of batch) {
+      const res = await uploadBlogImageFromBrowser(file);
+      setImagesBusy((n) => Math.max(0, n - 1));
+      if (!res.ok) setError(res.error);
+      else setImages((prev) => [...prev, { url: res.url, name: res.name }]);
+    }
   }
+
+  const bannerDrop = useImageDrop((files) => void pickBanner(files[0]));
+  const imagesDrop = useImageDrop((files) => void addImages(files));
 
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  const canSubmit = Boolean(banner) && text.trim().length >= 200 && !pending;
+  const uploading = bannerBusy || imagesBusy > 0;
 
   function submit() {
+    // Le bouton reste cliquable : mieux vaut dire ce qui manque que de laisser
+    // l'administrateur devant un bouton grisé sans explication.
+    if (uploading) {
+      setError('Envoi des images en cours : patientez quelques secondes.');
+      return;
+    }
     if (!banner) {
       setError('L’image de bannière est obligatoire.');
       return;
     }
+    if (text.trim().length < MIN_TEXT_CHARS) {
+      setError(`Collez le texte de l’article (au moins ${MIN_TEXT_CHARS} caractères).`);
+      return;
+    }
     setError(null);
+
     const fd = new FormData();
-    fd.append('banner', banner);
+    fd.append('bannerUrl', banner.url);
     fd.append('text', text);
     fd.append('seoBrief', seoBrief);
-    for (const img of images) fd.append('images', img.file);
+    fd.append('images', JSON.stringify(images));
 
     start(async () => {
-      const res = await importArticleWithAi(fd);
-      if (!res.ok) {
-        setError(res.error);
-        return;
+      try {
+        const res = await importArticleWithAi(fd);
+        if (!res.ok) {
+          setError(res.error);
+          return;
+        }
+        setDone(res);
+        router.refresh();
+      } catch (e) {
+        // Sans ce filet, une coupure réseau ou un dépassement du temps imparti
+        // à la fonction laissait le formulaire muet : « rien ne se passe ».
+        setError(
+          `La mise en page n’a pas abouti : ${(e as Error)?.message || 'connexion interrompue'}. ` +
+            'Aucun article n’a été créé, vous pouvez relancer l’import.',
+        );
       }
-      setDone(res);
-      router.refresh();
     });
   }
 
@@ -140,10 +185,10 @@ export function AiImportForm() {
           onClick={() => {
             setDone(null);
             setBanner(null);
-            setBannerUrl(null);
             setImages([]);
             setText('');
             setSeoBrief('');
+            setError(null);
           }}
           className="text-sm font-semibold text-[#7C3AED] hover:underline"
         >
@@ -161,37 +206,55 @@ export function AiImportForm() {
           1. Image de bannière <span className="text-[#C0001F]">*</span>
         </label>
         <p className={hintCls}>
-          Affichée en tête d’article et utilisée comme vignette dans la liste du blog et les partages.
+          Glissez-déposez l’image ici, ou cliquez pour la choisir. Elle s’affiche en tête d’article et
+          sert de vignette dans la liste du blog et les partages.
         </p>
-        {bannerUrl ? (
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-(--color-border)">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={bannerUrl} alt="" className="h-full w-full object-cover" />
+        <div
+          {...bannerDrop.dropProps}
+          className={`relative aspect-[16/9] w-full overflow-hidden rounded-xl border ${
+            bannerDrop.over ? 'border-[#7C3AED] ring-2 ring-[#7C3AED]/30' : 'border-(--color-border)'
+          }`}
+        >
+          {banner ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={banner.url} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => bannerRef.current?.click()}
+                className="absolute bottom-2 right-2 rounded-lg bg-black/65 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-black/80"
+              >
+                Changer
+              </button>
+            </>
+          ) : (
             <button
               type="button"
               onClick={() => bannerRef.current?.click()}
-              className="absolute bottom-2 right-2 rounded-lg bg-black/65 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-black/80"
+              disabled={bannerBusy}
+              className={`flex h-full w-full flex-col items-center justify-center gap-1.5 border-dashed bg-(--color-surface-soft) text-(--color-ink-muted) hover:text-[#7C3AED] ${
+                bannerDrop.over ? 'text-[#7C3AED]' : ''
+              }`}
             >
-              Changer
+              {bannerBusy ? <Loader2 className="h-6 w-6 animate-spin" /> : <ImagePlus className="h-6 w-6" />}
+              <span className="text-xs font-medium">
+                {bannerBusy ? 'Envoi de l’image…' : 'Déposez l’image de bannière ou cliquez ici'}
+              </span>
             </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => bannerRef.current?.click()}
-            className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-muted) hover:border-[#7C3AED] hover:text-[#7C3AED]"
-          >
-            <ImagePlus className="h-6 w-6" />
-            <span className="text-xs font-medium">Déposer l’image de bannière</span>
-          </button>
-        )}
+          )}
+          {bannerDrop.over && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#7C3AED]/10 text-xs font-bold text-[#6D28D9]">
+              Déposez pour {banner ? 'remplacer' : 'ajouter'} la bannière
+            </div>
+          )}
+        </div>
         <input
           ref={bannerRef}
           type="file"
           accept="image/*"
           className="hidden"
           onChange={(e) => {
-            pickBanner(e.target.files?.[0]);
+            void pickBanner(e.target.files?.[0]);
             e.target.value = '';
           }}
         />
@@ -215,7 +278,7 @@ export function AiImportForm() {
         />
         <p className="mt-1 text-right text-xs text-(--color-ink-muted)">
           {words} mot{words > 1 ? 's' : ''} · {text.trim().length} caractères
-          {text.trim().length > 0 && text.trim().length < 200 && ' — 200 caractères minimum'}
+          {text.trim().length > 0 && text.trim().length < MIN_TEXT_CHARS && ' — 200 caractères minimum'}
         </p>
       </section>
 
@@ -223,40 +286,60 @@ export function AiImportForm() {
       <section className="rounded-2xl border border-(--color-border) bg-white p-5">
         <label className={labelCls}>3. Images supplémentaires (facultatif)</label>
         <p className={hintCls}>
-          L’IA les place où elles font sens dans l’article, avec un texte alternatif et une légende,
-          en pleine largeur ou en habillage de texte. Jusqu’à {MAX_EXTRA_IMAGES} images.
+          Glissez-déposez-les toutes en une fois : l’IA les place où elles font sens dans l’article,
+          avec un texte alternatif et une légende, en pleine largeur ou en habillage de texte.
+          Jusqu’à {MAX_EXTRA_IMAGES} images.
         </p>
-        {images.length > 0 && (
-          <ul className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {images.map((im, i) => (
-              <li key={im.url} className="relative overflow-hidden rounded-lg border border-(--color-border)">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={im.url} alt="" className="aspect-[4/3] w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setImages((prev) => {
-                      URL.revokeObjectURL(im.url);
-                      return prev.filter((_, k) => k !== i);
-                    })
-                  }
-                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-                  title="Retirer"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        <button
-          type="button"
-          onClick={() => imagesRef.current?.click()}
-          disabled={images.length >= MAX_EXTRA_IMAGES}
-          className="inline-flex items-center gap-2 rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm font-semibold text-(--color-ink) hover:border-[#7C3AED] hover:text-[#7C3AED] disabled:opacity-50"
+        <div
+          {...imagesDrop.dropProps}
+          className={`rounded-xl border border-dashed p-3 ${
+            imagesDrop.over
+              ? 'border-[#7C3AED] bg-[#F3E8FF]/60'
+              : 'border-(--color-border) bg-(--color-surface-soft)'
+          }`}
         >
-          <Images className="h-4 w-4" /> Ajouter des images
-        </button>
+          {(images.length > 0 || imagesBusy > 0) && (
+            <ul className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {images.map((im, i) => (
+                <li key={im.url} className="relative overflow-hidden rounded-lg border border-(--color-border) bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={im.url} alt="" className="aspect-[4/3] w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setImages((prev) => prev.filter((_, k) => k !== i))}
+                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                    title="Retirer"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </li>
+              ))}
+              {Array.from({ length: imagesBusy }, (_, i) => (
+                <li
+                  key={`busy-${i}`}
+                  className="flex aspect-[4/3] items-center justify-center rounded-lg border border-(--color-border) bg-white text-(--color-ink-muted)"
+                >
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => imagesRef.current?.click()}
+              disabled={images.length + imagesBusy >= MAX_EXTRA_IMAGES}
+              className="inline-flex items-center gap-2 rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm font-semibold text-(--color-ink) hover:border-[#7C3AED] hover:text-[#7C3AED] disabled:opacity-50"
+            >
+              <Images className="h-4 w-4" /> Ajouter des images
+            </button>
+            <span className="text-xs text-(--color-ink-muted)">
+              {imagesDrop.over
+                ? 'Déposez pour ajouter'
+                : `…ou déposez-les dans ce cadre (${images.length}/${MAX_EXTRA_IMAGES})`}
+            </span>
+          </div>
+        </div>
         <input
           ref={imagesRef}
           type="file"
@@ -264,7 +347,7 @@ export function AiImportForm() {
           multiple
           className="hidden"
           onChange={(e) => {
-            addImages(e.target.files);
+            void addImages(Array.from(e.target.files ?? []));
             e.target.value = '';
           }}
         />
@@ -293,7 +376,7 @@ export function AiImportForm() {
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          disabled={!canSubmit}
+          disabled={pending}
           onClick={submit}
           className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#7C3AED,#C0001F)] px-5 py-3 text-sm font-bold text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
         >

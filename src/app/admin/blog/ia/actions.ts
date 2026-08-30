@@ -13,6 +13,7 @@ import {
   normalizeBlocks, normalizeDraftMeta, slugifyArticle, type AiImage, type BlogAiSeo,
 } from '@/lib/ai/blog-article';
 import { getArticlePicker } from '@/lib/data/blog-db';
+import { isBlogImageUrl } from '@/lib/data/blog-image-url';
 import type { Block } from '@/lib/data/blog-content/types';
 import type { Json } from '@/types/database';
 
@@ -22,11 +23,17 @@ import type { Json } from '@/types/database';
  * BROUILLON. L'aperçu puis la publication se font ensuite dans l'éditeur
  * habituel (/admin/blog/[id]/edit), avec le même rendu que la page publique.
  *
+ * Les images sont téléversées par le NAVIGATEUR (upload-image-browser.ts) : on
+ * ne reçoit ici que leurs URLs, vérifiées comme appartenant au bucket
+ * `blog-images`. Les faire transiter par cette action les faisait buter sur le
+ * plafond de 4,5 Mo imposé aux corps de requête des fonctions serverless, qui
+ * rejetait l'import sans message dès que la bannière était une photo un peu
+ * lourde.
+ *
  * Chaque génération réussie est facturée au forfait (voir BILLING_EUR.article)
  * et tracée dans `ai_generations`, catégorie « Articles » de la facturation IA.
  */
 
-const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const MAX_EXTRA_IMAGES = 8;
 const MIN_TEXT_CHARS = 200;
 const MAX_TEXT_CHARS = 60_000;
@@ -35,22 +42,28 @@ export type ImportResult =
   | { ok: true; id: string; slug: string; title: string; warnings: string[]; seo: BlogAiSeo; costUsd: number }
   | { ok: false; error: string };
 
-/** Téléverse une image dans le bucket public `blog-images`. */
-async function uploadImage(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  file: File,
-): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
-  if (file.size > MAX_IMAGE_BYTES) return { ok: false, error: `« ${file.name} » dépasse 8 Mo.` };
-  if (file.type && !file.type.startsWith('image/')) {
-    return { ok: false, error: `« ${file.name} » n’est pas une image.` };
+/**
+ * Images d'illustration envoyées par le formulaire : `[{ url, name }]` en JSON.
+ * Toute URL étrangère au bucket `blog-images` est écartée — le modèle ne doit
+ * pouvoir citer que des fichiers réellement déposés pour cet article.
+ */
+function parseExtraImages(raw: unknown): AiImage[] {
+  if (typeof raw !== 'string' || !raw.trim()) return [];
+  let list: unknown;
+  try {
+    list = JSON.parse(raw);
+  } catch {
+    return [];
   }
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-  const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage
-    .from('blog-images')
-    .upload(path, file, { contentType: file.type || 'image/jpeg', upsert: false });
-  if (error) return { ok: false, error: `Envoi de « ${file.name} » impossible : ${error.message}` };
-  return { ok: true, url: supabase.storage.from('blog-images').getPublicUrl(path).data.publicUrl };
+  if (!Array.isArray(list)) return [];
+  const out: AiImage[] = [];
+  for (const entry of list) {
+    const { url, name } = (entry ?? {}) as { url?: unknown; name?: unknown };
+    if (!isBlogImageUrl(url)) continue;
+    out.push({ url, name: (typeof name === 'string' ? name : 'image').slice(0, 120) });
+    if (out.length >= MAX_EXTRA_IMAGES) break;
+  }
+  return out;
 }
 
 /** Ajoute un suffixe numérique tant que le slug est déjà pris. */
@@ -78,11 +91,11 @@ export async function importArticleWithAi(formData: FormData): Promise<ImportRes
 
   const rawText = String(formData.get('text') ?? '').trim();
   const seoBrief = String(formData.get('seoBrief') ?? '').trim();
-  const banner = formData.get('banner');
-  const extras = formData.getAll('images').filter((f): f is File => f instanceof File && f.size > 0);
+  const bannerUrl = formData.get('bannerUrl');
 
-  if (!(banner instanceof File) || banner.size === 0) {
-    return { ok: false, error: 'L’image de bannière est obligatoire.' };
+  // 1. Images : déjà dans le bucket, envoyées par le navigateur.
+  if (!isBlogImageUrl(bannerUrl)) {
+    return { ok: false, error: 'L’image de bannière est obligatoire (son envoi doit être terminé).' };
   }
   if (rawText.length < MIN_TEXT_CHARS) {
     return { ok: false, error: `Le texte de l’article est obligatoire (au moins ${MIN_TEXT_CHARS} caractères).` };
@@ -90,21 +103,9 @@ export async function importArticleWithAi(formData: FormData): Promise<ImportRes
   if (rawText.length > MAX_TEXT_CHARS) {
     return { ok: false, error: 'Le texte dépasse 60 000 caractères : découpez-le en plusieurs articles.' };
   }
-  if (extras.length > MAX_EXTRA_IMAGES) {
-    return { ok: false, error: `Maximum ${MAX_EXTRA_IMAGES} images supplémentaires.` };
-  }
+  const extraImages = parseExtraImages(formData.get('images'));
 
   const supabase = await createClient();
-
-  // 1. Images → bucket public (l'IA ne manipule que des URLs finales).
-  const heroUpload = await uploadImage(supabase, banner);
-  if (!heroUpload.ok) return { ok: false, error: heroUpload.error };
-  const extraImages: AiImage[] = [];
-  for (const file of extras) {
-    const up = await uploadImage(supabase, file);
-    if (!up.ok) return { ok: false, error: up.error };
-    extraImages.push({ url: up.url, name: file.name });
-  }
 
   // 2. Maillage interne : pages vitrine + articles réellement publiés.
   const articles = await getArticlePicker();
@@ -180,7 +181,7 @@ export async function importArticleWithAi(formData: FormData): Promise<ImportRes
   // 5. Enregistrement en brouillon — la bannière est le bloc « hero », comme
   //    dans l'éditeur manuel (savePost).
   const slug = await uniqueSlug(supabase, slugifyArticle(meta.slug || meta.title));
-  const content: Block[] = [{ t: 'hero', src: heroUpload.url, alt: meta.title }, ...blocks];
+  const content: Block[] = [{ t: 'hero', src: bannerUrl, alt: meta.title }, ...blocks];
   const { data, error } = await supabase
     .from('blog_posts')
     .insert({
@@ -189,7 +190,7 @@ export async function importArticleWithAi(formData: FormData): Promise<ImportRes
       excerpt: meta.excerpt,
       category: meta.category,
       reading_minutes: meta.readingMinutes,
-      hero_image: heroUpload.url,
+      hero_image: bannerUrl,
       content: content as unknown as Json,
       status: 'draft',
       featured: false,
@@ -215,14 +216,19 @@ export async function importArticleWithAi(formData: FormData): Promise<ImportRes
     price_eur: BILLING_EUR.article,
     status: 'success',
   });
-  await logAudit({
-    actor: profile,
-    action: 'create',
-    entity: 'blog_post',
-    entityId: data.id,
-    description: `Article de blog « ${meta.title} » importé par IA (${blocks.length} blocs, brouillon)`,
-  });
-
-  revalidatePath('/admin/blog');
+  // Journal et cache : l'article existe déjà en base, un incident ici ne doit
+  // pas transformer un import réussi en échec côté administrateur.
+  try {
+    await logAudit({
+      actor: profile,
+      action: 'create',
+      entity: 'blog_post',
+      entityId: data.id,
+      description: `Article de blog « ${meta.title} » importé par IA (${blocks.length} blocs, brouillon)`,
+    });
+    revalidatePath('/admin/blog');
+  } catch (err) {
+    console.error('[blog-ia] journalisation/revalidation :', err);
+  }
   return { ok: true, id: data.id, slug, title: meta.title, warnings, seo: meta.seo, costUsd };
 }

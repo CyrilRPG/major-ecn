@@ -2,7 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { ImagePlus, Loader2, X } from 'lucide-react';
-import { uploadBlogImage } from './actions';
+import { uploadBlogImageFromBrowser } from './upload-image-browser';
+import { useImageDrop } from './use-image-drop';
 
 export function ImageUploader({
   value,
@@ -22,45 +23,56 @@ export function ImageUploader({
   async function handleFile(file: File) {
     setBusy(true);
     setError(null);
-    try {
-      const fd = new FormData();
-      fd.append('file', file);
-      const res = await uploadBlogImage(fd);
-      if (res.ok) onChange(res.url);
-      else setError(res.error);
-    } catch {
-      setError('Échec de l’envoi.');
-    } finally {
-      setBusy(false);
-    }
+    // Le fichier part directement vers Supabase Storage : passer par une server
+    // action le faisait buter sur le plafond de 4,5 Mo des corps de requête.
+    const res = await uploadBlogImageFromBrowser(file);
+    setBusy(false);
+    if (res.ok) onChange(res.url);
+    else setError(res.error);
   }
+
+  const drop = useImageDrop((files) => void handleFile(files[0]));
 
   return (
     <div>
-      {value ? (
-        <div className={`relative w-full overflow-hidden rounded-lg border border-(--color-border) ${aspClass}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="" className="h-full w-full object-cover" />
+      <div
+        {...drop.dropProps}
+        className={`relative w-full overflow-hidden rounded-lg border ${aspClass} ${
+          drop.over ? 'border-[#E4002B] ring-2 ring-[#E4002B]/25' : 'border-(--color-border)'
+        }`}
+      >
+        {value ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={value} alt="" className="h-full w-full object-cover" />
+            <button
+              type="button"
+              onClick={() => onChange(null)}
+              className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+              title="Retirer l’image"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </>
+        ) : (
           <button
             type="button"
-            onClick={() => onChange(null)}
-            className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-            title="Retirer l’image"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            className="flex h-full w-full flex-col items-center justify-center gap-1.5 border-dashed bg-(--color-surface-soft) text-(--color-ink-muted) hover:text-[#E4002B]"
           >
-            <X className="h-4 w-4" />
+            {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
+            <span className="text-xs font-medium">
+              {busy ? 'Envoi…' : `Déposer ${label.toLowerCase()} ou cliquer`}
+            </span>
           </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={busy}
-          className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-(--color-border) bg-(--color-surface-soft) text-(--color-ink-muted) hover:border-[#E4002B] hover:text-[#E4002B] ${aspClass}`}
-        >
-          {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
-          <span className="text-xs font-medium">{busy ? 'Envoi…' : `Ajouter ${label.toLowerCase()}`}</span>
-        </button>
-      )}
+        )}
+        {drop.over && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#E4002B]/10 text-xs font-bold text-[#C0001F]">
+            Déposez l’image
+          </div>
+        )}
+      </div>
       <div className="mt-1.5 flex items-center gap-2">
         <input
           ref={inputRef}
@@ -69,7 +81,7 @@ export function ImageUploader({
           className="hidden"
           onChange={(e) => {
             const f = e.target.files?.[0];
-            if (f) handleFile(f);
+            if (f) void handleFile(f);
             e.target.value = '';
           }}
         />
