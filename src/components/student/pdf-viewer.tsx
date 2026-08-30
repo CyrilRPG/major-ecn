@@ -10,14 +10,22 @@ import { getVerifiedUser } from '@/lib/auth/verified-user';
 // Rendu en <canvas> (react-pdf), chargé uniquement côté client : pas de
 // visionneuse PDF native → aucun bouton de téléchargement / impression,
 // pas de lien direct vers le fichier, et pas de texte sélectionnable.
-const PdfCanvas = dynamic(() => import('./pdf-canvas'), {
+//
+// Si le module ne peut pas se charger (fichier JS périmé après un déploiement,
+// navigateur incapable d'évaluer pdf.js…), on retombe sur la visionneuse
+// native (iframe) au lieu de faire planter TOUTE la page — c'était l'erreur
+// « this page couldn't load » rencontrée par des élèves sur les fiches.
+const PdfCanvas = dynamic(
+  () => import('./pdf-canvas').catch(() => import('./pdf-fallback-frame')),
+  {
   ssr: false,
   loading: () => (
     <div className="flex h-full min-h-[40vh] items-center justify-center bg-slate-100 text-sm text-(--color-ink-soft)">
       Chargement de la fiche…
     </div>
   ),
-});
+  },
+);
 
 const ZOOM_MIN = 0.6;
 const ZOOM_MAX = 2.4;

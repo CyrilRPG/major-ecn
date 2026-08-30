@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Newspaper, Plus, PencilLine, ExternalLink, Sparkles, ArrowRight } from 'lucide-react';
+import { Newspaper, Plus, PencilLine, ExternalLink, Sparkles, ArrowRight, ListOrdered } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { BLOG_CATEGORIES, type BlogCategory } from '@/lib/data/blog-articles';
@@ -40,12 +40,20 @@ export default async function AdminBlogPage() {
             Créez et publiez des articles avec titres, images, encadrés et mise en page premium.
           </p>
         </div>
-        <Link
-          href="/admin/blog/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-[#C0001F] px-3.5 py-2 text-sm font-bold text-white hover:brightness-110"
-        >
-          <Plus className="h-4 w-4" /> Nouvel article
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/blog/ordre"
+            className="inline-flex items-center gap-2 rounded-lg border border-(--color-border) bg-white px-3.5 py-2 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft)"
+          >
+            <ListOrdered className="h-4 w-4" /> Modifier l’ordre des articles
+          </Link>
+          <Link
+            href="/admin/blog/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#C0001F] px-3.5 py-2 text-sm font-bold text-white hover:brightness-110"
+          >
+            <Plus className="h-4 w-4" /> Nouvel article
+          </Link>
+        </div>
       </header>
 
       {/* Import par IA — mis en avant : c'est la voie rapide vers un article

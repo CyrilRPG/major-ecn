@@ -8,7 +8,9 @@ import {
 } from 'lucide-react';
 import { uploadBlogImageFromBrowser } from '../upload-image-browser';
 import { useImageDrop, useWindowDropGuard } from '../use-image-drop';
-import { importArticleWithAi, type ImportResult } from './actions';
+import {
+  confirmDuplicateImport, discardDuplicateImport, importArticleWithAi, type ImportResult,
+} from './actions';
 
 type Success = Extract<ImportResult, { ok: true }>;
 /** Image déjà déposée dans le bucket : le formulaire ne manipule que des URLs. */
@@ -120,6 +122,76 @@ export function AiImportForm() {
     });
   }
 
+  function resetForm() {
+    setDone(null);
+    setBanner(null);
+    setImages([]);
+    setText('');
+    setSeoBrief('');
+    setError(null);
+  }
+
+  // Doublon détecté : le brouillon existe mais n'est PAS encore facturé.
+  // L'administrateur tranche : garder (et facturer) ou supprimer (gratuit).
+  if (done?.duplicateOf) {
+    const dup = done.duplicateOf;
+    return (
+      <div className="space-y-4">
+        <section className="rounded-2xl border border-[#FCA5A5] bg-[#FEF2F2] p-5">
+          <p className="inline-flex items-center gap-2 text-sm font-bold text-[#991B1B]">
+            <AlertTriangle className="h-4 w-4" /> Êtes-vous sûr ? Un article similaire a déjà été publié
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-[#7F1D1D]">
+            L’article « <strong>{dup.title}</strong> » (/blog/{dup.slug}) porte un titre
+            équivalent à celui que l’IA vient de générer («&nbsp;{done.title}&nbsp;»).
+            Le nouveau brouillon a été créé mais <strong>n’est pas encore facturé</strong> :
+            choisissez ce que vous voulez en faire.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() =>
+                start(async () => {
+                  const res = await confirmDuplicateImport(done.id);
+                  if (!res.ok) {
+                    setError(res.error ?? 'Confirmation impossible.');
+                    return;
+                  }
+                  setError(null);
+                  setDone({ ...done, duplicateOf: undefined });
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-lg bg-[#C0001F] px-3.5 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+            >
+              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              Garder l’article (facturé 2,50&nbsp;€)
+            </button>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() =>
+                start(async () => {
+                  const res = await discardDuplicateImport(done.id);
+                  if (!res.ok) {
+                    setError(res.error ?? 'Suppression impossible.');
+                    return;
+                  }
+                  resetForm();
+                  router.refresh();
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-lg border border-[#FCA5A5] bg-white px-3.5 py-2 text-sm font-semibold text-[#991B1B] hover:bg-[#FEE2E2] disabled:opacity-60"
+            >
+              <Trash2 className="h-4 w-4" /> Supprimer le doublon (rien n’est facturé)
+            </button>
+          </div>
+          {error && <p className="mt-3 text-sm font-medium text-[#C0001F]">{error}</p>}
+        </section>
+      </div>
+    );
+  }
+
   if (done) {
     return (
       <div className="space-y-4">
@@ -182,14 +254,7 @@ export function AiImportForm() {
 
         <button
           type="button"
-          onClick={() => {
-            setDone(null);
-            setBanner(null);
-            setImages([]);
-            setText('');
-            setSeoBrief('');
-            setError(null);
-          }}
+          onClick={resetForm}
           className="text-sm font-semibold text-[#7C3AED] hover:underline"
         >
           Importer un autre article

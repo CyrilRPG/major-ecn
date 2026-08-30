@@ -147,6 +147,76 @@ SEO RÉDACTIONNEL
 - readingMinutes = nombre de mots ÷ 200, arrondi, entre 3 et 25.`;
 }
 
+/* ─────────────────── Révision d'un article existant ─────────────────── */
+
+/**
+ * Consigne système de la RETOUCHE : l'administrateur a relu l'article (souvent
+ * issu d'un import IA) et dicte des corrections ; le modèle renvoie l'article
+ * complet corrigé, dans le même vocabulaire de blocs — jamais une réécriture
+ * intégrale non demandée.
+ */
+export function buildBlogRevisionSystemPrompt(): string {
+  return `Tu es le secrétaire de rédaction du blog de Major ECN (préparation aux EVC pour médecins à diplôme étranger). Tu reçois un article de blog EXISTANT (au format JSON par blocs) et les remarques de l'administrateur qui l'a relu. Tu appliques ces remarques — corrections de fond, de forme ou de mise en page — et tu renvoies l'article complet corrigé.
+
+RÈGLES IMPÉRATIVES
+- Tu APPLIQUES les remarques, tu ne réécris pas l'article : tout bloc non concerné par une remarque est recopié À L'IDENTIQUE (même texte, même ordre), sauf faute de français manifeste.
+- Tu n'inventes JAMAIS un fait, un chiffre, une date ou un nom. Si une remarque exige une information que tu n'as pas, dis-le dans "changes" au lieu d'inventer.
+- Les images : tu ne peux utiliser QUE les URLs "src" déjà présentes dans l'article (tu peux les déplacer, changer leur légende, leur layout, ou les retirer si demandé). N'invente jamais d'URL.
+- Les liens : uniquement les chemins internes du site, les slugs /blog/… fournis et les sources officielles déjà présentes. Tout autre lien sera supprimé.
+- Vocabulaire de blocs INCHANGÉ (aucun autre type n'existe) :
+  {"t":"h2","text":"…"} {"t":"h3","text":"…"} {"t":"p","html":"… (strong, em, a href, br)"}
+  {"t":"ul","items":["…"]} {"t":"ol","items":["…"]} {"t":"table","headers":[…],"rows":[[…]]}
+  {"t":"callout","tone":"tip|key|warning|source","html":"…"} {"t":"quote","author":"…","role":"…","text":"…"}
+  {"t":"note","text":"…"} {"t":"img","src":"URL EXACTE","alt":"…","caption":"…","layout":"full|left|right"}
+  {"t":"gallery","images":[{"src":"URL","alt":"…","caption":"…"}]} {"t":"related","items":[{"label":"…","href":"/blog/slug"}]}
+- Ne crée AUCUN bloc "hero" : la bannière est gérée par le site.
+- Français soigné, accents corrects, apostrophes typographiques (’), vouvoiement.
+
+FORMAT DE SORTIE — JSON STRICT, RIEN D'AUTRE :
+{
+  "title": "titre éventuellement corrigé (sinon recopié tel quel)",
+  "excerpt": "chapô éventuellement corrigé (sinon recopié tel quel)",
+  "readingMinutes": 9,
+  "blocks": [ …article complet corrigé… ],
+  "changes": "2 à 5 phrases en français : ce qui a été modifié, et ce qui n'a pas pu l'être (et pourquoi)."
+}`;
+}
+
+/** Message utilisateur de la retouche : article actuel + remarques. */
+export function buildBlogRevisionUserPrompt(input: {
+  article: {
+    title: string;
+    excerpt: string;
+    readingMinutes: number;
+    blocks: Block[];
+  };
+  remarks: string;
+  articles: { slug: string; title: string }[];
+}): string {
+  const internes = SITE_LINKS.map((l) => `- ${l.href} — ${l.label}`).join('\n');
+  const blogInternes = input.articles.length
+    ? input.articles.map((a) => `- /blog/${a.slug} — ${a.title}`).join('\n')
+    : '(aucun autre article publié)';
+
+  return `ARTICLE ACTUEL (JSON)
+────────────────────────────────
+${JSON.stringify(input.article, null, 1)}
+
+LIENS INTERNES AUTORISÉS
+────────────────────────────────
+${internes}
+
+ARTICLES DU BLOG PUBLIÉS
+────────────────────────────────
+${blogInternes}
+
+REMARQUES DE L'ADMINISTRATEUR À APPLIQUER
+────────────────────────────────
+${input.remarks.trim()}
+
+Renvoie maintenant l'objet JSON complet de l'article corrigé.`;
+}
+
 /** Message utilisateur : texte source, images déposées, maillage disponible, consignes. */
 export function buildBlogArticleUserPrompt(input: {
   rawText: string;
@@ -297,7 +367,13 @@ export function makeHrefFilter(publishedSlugs: string[]): (href: string) => bool
  */
 export function normalizeBlocks(
   raw: unknown,
-  opts: { allowedImages: Set<string>; isHrefAllowed: (href: string) => boolean },
+  opts: {
+    allowedImages: Set<string>;
+    isHrefAllowed: (href: string) => boolean;
+    /** Import : une image déposée mais non placée est ajoutée en fin d'article.
+     *  Retouche : NON (l'administrateur a pu demander sa suppression). */
+    reAddForgottenImages?: boolean;
+  },
 ): { blocks: Block[]; warnings: string[] } {
   const warnings: string[] = [];
   const usedImages = new Set<string>();
@@ -404,7 +480,9 @@ export function normalizeBlocks(
 
   // Les images déposées mais oubliées par l'IA sont ajoutées en fin d'article
   // plutôt que perdues : l'administrateur les repositionne dans l'éditeur.
-  const forgotten = [...opts.allowedImages].filter((u) => !usedImages.has(u));
+  const forgotten = (opts.reAddForgottenImages ?? true)
+    ? [...opts.allowedImages].filter((u) => !usedImages.has(u))
+    : [];
   for (const src of forgotten) {
     blocks.push({ t: 'img', src, alt: 'Illustration de l’article', layout: 'full' });
     warnings.push('Une image déposée n’a pas été placée par l’IA : elle a été ajoutée en fin d’article.');

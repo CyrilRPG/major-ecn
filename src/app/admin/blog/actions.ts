@@ -4,6 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { BLOG_CACHE_TAG } from '@/lib/data/blog-db';
+import { findDuplicateArticle } from '@/lib/data/blog-duplicates';
 import type { Block } from '@/lib/data/blog-content/types';
 import type { BlogCategory } from '@/lib/data/blog-articles';
 import type { Json } from '@/types/database';
@@ -41,9 +42,15 @@ export type BlogPostInput = {
   featured: boolean;
   publishedAt: string | null; // 'YYYY-MM-DD'
   blocks: Block[];
+  /** L'administrateur a confirmé l'enregistrement malgré un titre déjà pris. */
+  confirmDuplicate?: boolean;
 };
 
-type SaveResult = { ok: true; id: string; slug: string } | { ok: false; error: string };
+type SaveResult =
+  | { ok: true; id: string; slug: string }
+  | { ok: false; error: string }
+  /** Un article au titre très proche existe déjà : demander confirmation. */
+  | { ok: false; error: string; duplicateOf: { title: string; slug: string } };
 
 /** Crée ou met à jour un article de blog. */
 export async function savePost(input: BlogPostInput): Promise<SaveResult> {
@@ -54,6 +61,20 @@ export async function savePost(input: BlogPostInput): Promise<SaveResult> {
   if (!title) return { ok: false, error: 'Le titre est obligatoire.' };
   const slug = slugifySync(input.slug?.trim() || title);
   if (!slug) return { ok: false, error: 'Le slug est invalide.' };
+
+  // Garde anti-doublon : deux articles importés/saisis deux fois sous le même
+  // titre ont déjà été publiés (puis supprimés… mais facturés). On demande
+  // désormais une confirmation explicite avant d'enregistrer un homonyme.
+  if (!input.confirmDuplicate) {
+    const dup = await findDuplicateArticle(supabase, title, input.id ?? null);
+    if (dup) {
+      return {
+        ok: false,
+        error: `Un article au titre très proche existe déjà : « ${dup.title} » (/blog/${dup.slug}).`,
+        duplicateOf: dup,
+      };
+    }
+  }
 
   // Le hero est géré à part : on le (re)place en tête du contenu pour le rendu.
   const body = input.blocks.filter((b) => b.t !== 'hero');

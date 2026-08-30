@@ -6,12 +6,13 @@ import Link from 'next/link';
 import {
   ArrowUp, ArrowDown, Copy, Trash2, Plus, Save, Rocket, Loader2, ExternalLink,
   Type, Heading2, Heading3, List, ListOrdered, Image as ImageIcon, Images,
-  Table2, StickyNote, Quote, Megaphone, Link2, Eye, X,
+  Table2, StickyNote, Quote, Megaphone, Link2, Eye, X, Wand2, AlertTriangle,
 } from 'lucide-react';
 import type { Block, ImageLayout } from '@/lib/data/blog-content/types';
 import { BLOG_CATEGORIES, type BlogCategory, type BlogArticleMeta } from '@/lib/data/blog-articles';
 import { ArticleRich } from '@/components/marketing/blog/articles/article-rich';
 import { savePost, type BlogPostInput } from './actions';
+import { reviseArticleWithAi } from './ia/actions';
 import { RichText } from './rich-text';
 import { ImageUploader } from './image-uploader';
 
@@ -113,6 +114,51 @@ export function BlogEditor({
   const [preview, setPreview] = useState(openPreview);
   const [status, setStatus] = useState<'draft' | 'published'>(initial?.status ?? 'draft');
 
+  // Retouche par IA : remarques libres de l'administrateur, appliquées à
+  // l'état COURANT de l'éditeur (modifications non enregistrées comprises).
+  const [aiRemarks, setAiRemarks] = useState('');
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiChanges, setAiChanges] = useState<string | null>(null);
+  const [aiWarnings, setAiWarnings] = useState<string[]>([]);
+
+  async function runAiRevision() {
+    if (aiBusy) return;
+    if (aiRemarks.trim().length < 5) {
+      setAiError('Écrivez d’abord vos remarques (ce qu’il faut corriger ou changer).');
+      return;
+    }
+    setAiBusy(true);
+    setAiError(null);
+    setAiChanges(null);
+    setAiWarnings([]);
+    try {
+      const res = await reviseArticleWithAi({
+        id: postId,
+        title,
+        excerpt,
+        readingMinutes,
+        blocks: items.map((it) => it.block),
+        remarks: aiRemarks,
+      });
+      if (!res.ok) {
+        setAiError(res.error);
+        return;
+      }
+      setTitle(res.title);
+      setExcerpt(res.excerpt);
+      setReadingMinutes(res.readingMinutes);
+      setItems(res.blocks.map((b) => ({ id: uid(), block: b })));
+      setAiChanges(res.changes || 'Remarques appliquées.');
+      setAiWarnings(res.warnings);
+      setAiRemarks('');
+    } catch (e) {
+      setAiError(`Retouche interrompue : ${(e as Error)?.message || 'connexion perdue'}. Rien n’a été modifié.`);
+    } finally {
+      setAiBusy(false);
+    }
+  }
+
   const effectiveSlug = slugTouched ? slug : localSlugify(title);
 
   // Données de prévisualisation : rendu identique à la page publiée (ArticleRich).
@@ -177,7 +223,20 @@ export function BlogEditor({
       blocks: items.map((it) => it.block),
     };
     start(async () => {
-      const res = await savePost(input);
+      let res = await savePost(input);
+      // Titre déjà pris : on demande une confirmation explicite avant de
+      // créer un doublon (deux articles homonymes ont déjà été publiés puis
+      // supprimés par erreur).
+      if (!res.ok && 'duplicateOf' in res) {
+        const ok = window.confirm(
+          `Êtes-vous sûr ? Un article similaire a déjà été publié :\n\n« ${res.duplicateOf.title} »\n(/blog/${res.duplicateOf.slug})\n\nEnregistrer quand même celui-ci ?`,
+        );
+        if (!ok) {
+          setError('Enregistrement annulé : un article similaire existe déjà.');
+          return;
+        }
+        res = await savePost({ ...input, confirmDuplicate: true });
+      }
       if (!res.ok) {
         setError(res.error);
         return;
@@ -313,6 +372,58 @@ export function BlogEditor({
               <Save className="h-4 w-4" /> Enregistrer le brouillon
             </button>
           </div>
+        </section>
+
+        {/* Retouche par IA : l'administrateur dicte ses corrections, l'IA
+            modifie le contenu / la mise en page, l'aperçu permet de vérifier
+            avant d'enregistrer. Gratuit (l'article a déjà été facturé). */}
+        <section className="rounded-xl border border-[#DDD6FE] bg-[linear-gradient(135deg,#FAF5FF_0%,#FFFFFF_60%)] p-4">
+          <h3 className="mb-1 inline-flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
+            <Wand2 className="h-4 w-4 text-[#7C3AED]" /> Retouche par IA
+          </h3>
+          <p className="mb-2 text-xs leading-relaxed text-(--color-ink-muted)">
+            Décrivez ce qui ne va pas (erreur, formulation, mise en page…) : l’IA
+            corrige l’article, puis vérifiez le résultat dans l’aperçu avant
+            d’enregistrer. Gratuit.
+          </p>
+          <textarea
+            value={aiRemarks}
+            onChange={(e) => setAiRemarks(e.target.value)}
+            rows={4}
+            disabled={aiBusy}
+            placeholder={'Ex. Le tableau des dates contient une erreur : l’EVC de pédiatrie est le 12 mars, pas le 10. Raccourcis l’introduction et transforme la liste des documents en tableau.'}
+            className={inputCls}
+          />
+          {aiError && (
+            <p className="mt-2 rounded-md bg-[#FDE7E9] px-2.5 py-2 text-xs text-[#C0001F]">{aiError}</p>
+          )}
+          {aiChanges && (
+            <div className="mt-2 rounded-md bg-[#F3E8FF] px-2.5 py-2 text-xs text-[#5B21B6]">
+              <p className="font-semibold">Modifications appliquées :</p>
+              <p className="mt-0.5">{aiChanges}</p>
+              <p className="mt-1 font-semibold">
+                Vérifiez dans l’aperçu, puis enregistrez pour conserver.
+              </p>
+            </div>
+          )}
+          {aiWarnings.length > 0 && (
+            <ul className="mt-2 space-y-1 rounded-md bg-[#FFFBEB] px-2.5 py-2 text-xs text-[#92400E]">
+              {aiWarnings.map((w, i) => (
+                <li key={i} className="flex gap-1.5">
+                  <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {w}
+                </li>
+              ))}
+            </ul>
+          )}
+          <button
+            type="button"
+            disabled={aiBusy}
+            onClick={() => void runAiRevision()}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[linear-gradient(135deg,#7C3AED,#C0001F)] px-3 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+          >
+            {aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+            {aiBusy ? 'Retouche en cours (1 à 2 min)…' : 'Appliquer mes remarques'}
+          </button>
         </section>
 
         <section className="rounded-xl border border-(--color-border) bg-white p-4">
