@@ -4,11 +4,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, Award, GraduationCap, Play, ShieldCheck, Star, Users, UsersRound,
+  ArrowRight, Award, GraduationCap, Play, ShieldCheck, Users, UsersRound,
 } from 'lucide-react';
 import {
   INK_SOFT, JAKARTA, MANROPE, NAVY, PINK_BG, RED, RED_DEEP, RED_GRADIENT,
 } from './home-ui';
+
+/** Dégradé de l'accroche : bordeaux profond → rouge Major → orange chaud.
+    Il reprend le filet rouge, les pastilles roses des étapes et le CTA
+    principal, et se termine sur l'orange du logo de l'espace élève. */
+const HERO_GRADIENT = 'linear-gradient(102deg, #6B0F1E 0%, #A5122A 30%, #C0112E 58%, #E8552F 100%)';
 
 /* ============================================================
    BLOC 1 — HERO « Votre objectif : préparer les EVC. »
@@ -44,28 +49,26 @@ export function HomeHero() {
       <div aria-hidden className="pointer-events-none absolute -right-40 top-40 -z-10 h-[600px] w-[600px] rounded-full bg-[#2563EB]/6 blur-3xl" />
 
       <div className="mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[0.98fr_1.02fr] lg:gap-8">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] lg:gap-8">
           {/* ============ GAUCHE ============ */}
           <motion.div
             initial={{ opacity: 0, x: -36 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: 'easeOut' }}
           >
-            {/* Eyebrow — étoile cerclée */}
-            <p className="flex items-center gap-3 text-[12px] font-black tracking-tight sm:text-[13.5px]">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border" style={{ borderColor: 'rgba(20,37,78,0.18)' }}>
-                <Star className="h-4 w-4" style={{ color: NAVY }} />
-              </span>
-              <span style={{ color: NAVY }}>
-                Depuis <span style={{ color: RED }}>15 ans</span>, nous préparons les candidats aux EVC
-              </span>
+            {/* Eyebrow — sans pictogramme */}
+            <p className="text-[12px] font-black tracking-tight sm:text-[13.5px]" style={{ color: NAVY }}>
+              Depuis <span style={{ color: RED }}>15 ans</span>, nous préparons les candidats aux EVC
             </p>
 
             {/* Accroche en deux temps, séparés par un filet rouge */}
             <h1 className="mt-5 text-[2rem] font-black leading-[1.06] tracking-tight sm:text-[2.6rem] lg:text-[2.95rem]" style={{ letterSpacing: '-0.02em' }}>
               <span className="block" style={{ color: NAVY }}>Votre objectif&nbsp;:</span>
               <span className="block" style={{ color: NAVY }}>
-                Préparer <span style={{ color: RED_DEEP }}>les EVC.</span>
+                Préparer{' '}
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>
+                  les EVC.
+                </span>
               </span>
             </h1>
 
@@ -73,7 +76,9 @@ export function HomeHero() {
 
             <p className="mt-4 text-[2rem] font-black leading-[1.06] tracking-tight sm:text-[2.6rem] lg:text-[2.95rem]" style={{ letterSpacing: '-0.02em' }}>
               <span className="block" style={{ color: NAVY }}>Notre mission&nbsp;:</span>
-              <span className="block" style={{ color: RED_DEEP }}>Vous les faire réussir.</span>
+              <span className="block bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>
+                Vous les faire réussir.
+              </span>
             </p>
 
             <p className="mt-6 max-w-xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>

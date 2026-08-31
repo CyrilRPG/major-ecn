@@ -7,7 +7,7 @@ import {
   ArrowRight, BookOpen, Bell, CalendarDays, Check, ChevronDown, ChevronRight,
   ClipboardList, FileText, Home, Infinity as InfinityIcon, Layers3,
   Lock, Mail, MessageCircleQuestion, PanelLeft, Play, RefreshCcw, Search,
-  Shield, ShieldCheck, Sparkles, Star, Target, TrendingUp, Trophy, Users, X, Zap,
+  Shield, ShieldCheck, Target, TrendingUp, Trophy, Users, X, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
 
@@ -38,6 +38,8 @@ const FONT = "'Plus Jakarta Sans', sans-serif";
 const FONT_BODY = "'Manrope', sans-serif";
 
 const GRAD_RED_ORANGE = 'linear-gradient(95deg, #8B0E22 0%, #C0112E 45%, #E8742C 100%)';
+/** Dégradé de la colonne latérale, identique à celui de l'espace élève. */
+const SIDEBAR_BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
 const gradientText = (grad: string) => ({
   backgroundImage: grad,
@@ -48,14 +50,13 @@ const gradientText = (grad: string) => ({
 });
 
 /** Pastille d'introduction de section, contour doré des maquettes. */
-function Eyebrow({ children, icon = <Sparkles className="h-3.5 w-3.5" /> }: { children: React.ReactNode; icon?: React.ReactNode }) {
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="inline-flex items-center gap-2.5 rounded-full border bg-white px-5 py-2 text-[11.5px] font-black tracking-[0.14em] sm:text-[12px]"
+      className="inline-flex max-w-full items-center rounded-full border bg-white px-4 py-2 text-[10.5px] font-black uppercase tracking-[0.12em] sm:px-5 sm:text-[12px] sm:tracking-[0.14em]"
       style={{ borderColor: 'rgba(197,138,42,0.4)', color: GOLD }}
     >
-      {icon}
-      <span className="uppercase">{children}</span>
+      {children}
     </span>
   );
 }
@@ -154,53 +155,63 @@ function DonutChart({ data }: { data: { color: string; part: number }[] }) {
 function PlateformeHero() {
   return (
     <section className="relative overflow-hidden" style={{ fontFamily: FONT, background: '#F7F8FB' }}>
-      <div className="grid lg:grid-cols-[264px_1fr]">
-        {/* ---------- Colonne latérale de l'espace élève ---------- */}
-        <aside className="hidden flex-col px-5 py-7 lg:flex" style={{ background: `linear-gradient(180deg, ${NAVY_DEEP} 0%, #10224E 100%)` }}>
-          <Image src="/major-ecn-logo.png" alt="Major ECN" width={132} height={44} className="h-11 w-auto self-center brightness-0 invert" />
+      <div className="grid grid-cols-1 lg:grid-cols-[264px_minmax(0,1fr)]">
+        {/* ---------- Colonne latérale de l'espace élève ----------
+            Reprise à l'identique du menu réel de la plateforme
+            (components/shell/app-shell + navigator) : même dégradé de fond,
+            même bandeau de logo de 80 px, mêmes tailles et graisses. */}
+        <aside className="hidden flex-col text-white lg:flex" style={{ background: SIDEBAR_BG }}>
+          <div className="flex h-20 items-center justify-center border-b border-white/10 px-4">
+            <Image src="/major-ecn-logo.png" alt="Major ECN" width={1024} height={1024} className="h-16 w-auto object-contain [filter:brightness(0)_invert(1)]" />
+          </div>
 
-          <nav className="mt-8 space-y-1.5">
+          <nav className="space-y-0.5 px-2 pb-8 pt-3 text-[15px]">
             {SIDEBAR_NAV.map((n) => (
               <span
                 key={n.label}
-                className={'flex items-center gap-3 rounded-xl px-4 py-3 text-[13.5px] font-bold ' + (n.active ? 'text-white shadow-lg' : 'text-white/75')}
-                style={n.active ? { background: 'linear-gradient(90deg, #E11D2E 0%, #F2622B 100%)' } : undefined}
+                className={
+                  'mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium '
+                  + (n.active ? 'text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]' : 'text-white/85')
+                }
+                style={n.active ? { background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' } : undefined}
               >
-                <n.Icon className="h-4.5 w-4.5 shrink-0" strokeWidth={2} />
+                <n.Icon className="h-[18px] w-[18px] shrink-0" />
                 {n.label}
               </span>
             ))}
-          </nav>
 
-          <p className="mt-8 px-4 text-[10.5px] font-black tracking-[0.14em] text-white/45">COLLÈGES EVC</p>
-          <ul className="mt-3 space-y-0.5">
+            <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
+              Collèges EVC
+            </p>
+
             {SIDEBAR_COLLEGES.map((c) => (
-              <li key={c.label} className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white/80">
-                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/40" />
-                <BookOpen className="h-4 w-4 shrink-0 text-white/60" />
-                <span className="flex-1 truncate">{c.label}</span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-white/10 text-[10.5px] font-black">{c.n}</span>
-              </li>
+              <span key={c.label} className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/85">
+                <ChevronRight className="h-4 w-4 shrink-0 text-white/45" />
+                <BookOpen className="h-[18px] w-[18px] shrink-0 text-white" />
+                <span className="min-w-0 flex-1 truncate leading-snug">{c.label}</span>
+                <span className="shrink-0 rounded-full bg-white/10 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white/70">{c.n}</span>
+              </span>
             ))}
-          </ul>
-          <p className="mt-4 flex items-center gap-2 px-4 text-[12.5px] font-semibold text-white/60">
-            Voir tous les collèges <ArrowRight className="h-3.5 w-3.5" />
-          </p>
+
+            <span className="flex items-center gap-2 px-2.5 pt-3 text-[13.5px] font-medium text-white/70">
+              Voir tous les collèges <ArrowRight className="h-4 w-4" />
+            </span>
+          </nav>
         </aside>
 
         {/* ---------- Zone principale ---------- */}
         <div className="px-4 pb-14 pt-6 sm:px-6 lg:px-8 lg:pb-16">
           {/* Barre supérieure */}
-          <div className="flex flex-wrap items-center gap-3 border-b pb-5" style={{ borderColor: BORDER }}>
+          <div className="flex items-center gap-3 border-b pb-5" style={{ borderColor: BORDER }}>
             <PanelLeft className="h-5 w-5 shrink-0" style={{ color: INK_MUTED }} />
             <span className="text-[15px] font-bold" style={{ color: NAVY }}>Accueil</span>
             <span className="ml-auto hidden items-center gap-2 rounded-full px-4 py-2 text-[12.5px] sm:inline-flex" style={{ background: '#EFF1F6', color: INK_MUTED, fontFamily: FONT_BODY }}>
               <Search className="h-4 w-4" /> Rechercher <span className="font-bold">⌘K</span>
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-[12.5px] font-bold" style={{ borderColor: 'rgba(192,17,46,0.35)', color: RED }}>
+            <span className="ml-auto hidden items-center gap-2 rounded-full border bg-white px-4 py-2 text-[12.5px] font-bold sm:inline-flex" style={{ borderColor: 'rgba(192,17,46,0.35)', color: RED }}>
               <Bell className="h-4 w-4" /> Conseils de préparation
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-full text-[11.5px] font-black text-white" style={{ background: RED }}>AC</span>
+            <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11.5px] font-black text-white sm:ml-0" style={{ background: RED }}>AC</span>
           </div>
 
           <Reveal>
@@ -213,7 +224,7 @@ function PlateformeHero() {
           </Reveal>
 
           {/* 4 indicateurs */}
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {HERO_KPIS.map((k, i) => (
               <Reveal key={k.label} delay={i * 0.05}>
                 <div className="h-full overflow-hidden rounded-2xl border bg-white shadow-[0_18px_40px_-32px_rgba(15,31,77,0.5)]" style={{ borderColor: BORDER }}>
@@ -243,13 +254,13 @@ function PlateformeHero() {
 
           {/* Accroche + visuel */}
           <Reveal delay={0.08}>
-            <div className="mt-5 grid items-center gap-8 rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-50px_rgba(15,31,77,0.6)] lg:grid-cols-[0.92fr_1.08fr] lg:p-8" style={{ borderColor: BORDER }}>
+            <div className="mt-5 grid grid-cols-1 items-center gap-8 rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-50px_rgba(15,31,77,0.6)] lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:p-8" style={{ borderColor: BORDER }}>
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-black tracking-[0.08em]" style={{ background: '#FDEDEF', color: RED }}>
                   <ShieldCheck className="h-4 w-4" />
                   <span className="uppercase">Plateforme dédiée aux EVC (PAE)</span>
                 </span>
-                <h1 className="mt-5 text-[2.1rem] font-black leading-[1.08] tracking-tight sm:text-[2.75rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                <h1 className="mt-5 text-[1.8rem] font-black leading-[1.1] tracking-tight min-[420px]:text-[2.1rem] sm:text-[2.75rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
                   Préparez les EVC avec une <span style={{ color: RED }}>méthode éprouvée.</span>
                 </h1>
                 <p className="mt-5 max-w-xl text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -294,12 +305,7 @@ function PlateformeHero() {
                   EN DIRECT
                 </span>
                 <div className="flex flex-wrap items-center justify-between gap-2 border-t bg-white px-4 py-3" style={{ borderColor: BORDER }}>
-                  <p className="flex items-center gap-2 text-[12.5px] font-black" style={{ color: NAVY }}>
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md text-white" style={{ background: RED }}>
-                      <Sparkles className="h-3 w-3" />
-                    </span>
-                    Plateforme Major ECN
-                  </p>
+                  <p className="text-[12.5px] font-black" style={{ color: NAVY }}>Plateforme Major ECN</p>
                   <p className="text-[12.5px] font-bold" style={{ color: NAVY, fontFamily: FONT_BODY }}>
                     La prépa de référence des EVC (PAE)
                   </p>
@@ -309,7 +315,7 @@ function PlateformeHero() {
           </Reveal>
 
           {/* Trois graphiques + chiffres clés */}
-          <div className="mt-5 grid gap-4 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-4">
             <Reveal className="lg:col-span-1">
               <div className="h-full rounded-2xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <p className="text-[11px] font-black uppercase tracking-[0.08em]" style={{ color: NAVY }}>Évolution de la performance</p>
@@ -413,8 +419,8 @@ function BrandCredentialsSection() {
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FBFBFD' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <Eyebrow icon={<Star className="h-3.5 w-3.5" fill="currentColor" />}>15 ans d’expertise au service des EVC</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+          <Eyebrow>15 ans d’expertise au service des EVC</Eyebrow>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
             Une plateforme bâtie pour celles et ceux qui n&rsquo;ont{' '}
             <span style={{ color: RED_DEEP }}>pas le droit</span> à <span style={{ color: ORANGE }}>l&rsquo;erreur.</span>
           </h2>
@@ -427,7 +433,7 @@ function BrandCredentialsSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {MARQUEURS.map((m, i) => (
             <Reveal key={m.rest} delay={i * 0.07}>
               <div className="flex h-full items-center gap-5 rounded-3xl border bg-white px-7 py-8" style={{ borderColor: BORDER }}>
@@ -444,7 +450,7 @@ function BrandCredentialsSection() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {PRINCIPES.map((p, i) => (
             <Reveal key={p.n} delay={i * 0.07}>
               <div className="h-full rounded-3xl border bg-white p-7" style={{ borderColor: BORDER }}>
@@ -672,7 +678,7 @@ function HowDailySection() {
       <div className="mx-auto max-w-[92rem] px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow>Une journée d’étude avec Major ECN</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
             À chaque connexion, je sais <span style={{ color: RED }}>quoi travailler.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -682,7 +688,7 @@ function HowDailySection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="mt-12 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {JOURNEE.map((s, i) => {
             const Mock = JOURNEE_MOCKS[i];
             return (
@@ -694,7 +700,7 @@ function HowDailySection() {
                   <p className="flex-1 whitespace-pre-line text-[13px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{s.title}</p>
                   {i < JOURNEE.length - 1 && <ChevronRight aria-hidden className="hidden h-4 w-4 shrink-0 xl:block" style={{ color: INK_MUTED }} />}
                 </div>
-                <div className="mt-4 h-[400px]"><Mock /></div>
+                <div className="mt-4 h-[340px] sm:h-[380px] xl:h-[400px]"><Mock /></div>
                 <p className="mt-4 text-center text-[12.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{s.caption}</p>
               </Reveal>
             );
@@ -745,7 +751,7 @@ function CorrectorExampleSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow>Des corrections qui font progresser</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
             Ne vous contentez pas de savoir si vous avez faux.
             <br />
             <span style={{ color: RED }}>Comprenez pourquoi.</span>
@@ -757,7 +763,7 @@ function CorrectorExampleSection() {
         </Reveal>
 
         <Reveal delay={0.1} className="mt-12">
-          <div className="grid overflow-hidden rounded-3xl border bg-white lg:grid-cols-2" style={{ borderColor: BORDER }}>
+          <div className="grid grid-cols-1 overflow-hidden rounded-3xl border bg-white lg:grid-cols-2" style={{ borderColor: BORDER }}>
             {/* Question */}
             <div className="border-b p-7 lg:border-b-0 lg:border-r lg:p-9" style={{ borderColor: BORDER }}>
               <p className="text-[13px] font-black tracking-tight" style={{ color: RED }}>CARDIOLOGIE – ITEM 234</p>
@@ -879,7 +885,7 @@ function TransversalRevisionSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow>Révisions transversales</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.08] tracking-tight sm:text-[2.8rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.8rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
             Les notions essentielles reviennent au bon moment.
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -889,7 +895,7 @@ function TransversalRevisionSection() {
         </Reveal>
 
         <Reveal delay={0.1} className="mt-12">
-          <div className="grid gap-8 rounded-3xl border bg-white p-7 lg:grid-cols-[0.85fr_1.15fr] lg:p-9" style={{ borderColor: BORDER }}>
+          <div className="grid grid-cols-1 gap-8 rounded-3xl border bg-white p-5 sm:p-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:p-9" style={{ borderColor: BORDER }}>
             <div>
               <p className="text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                 Notre système de révision transversale connecte toutes les spécialités
@@ -927,7 +933,7 @@ function TransversalRevisionSection() {
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-[12.5px] font-bold" style={{ color: s.color }}>{s.n} questions</p>
-                      <p className="mt-1.5 flex justify-end gap-1">
+                      <p className="mt-1.5 hidden justify-end gap-1 sm:flex">
                         {Array.from({ length: 9 }).map((_, i) => (
                           <span key={i} className="h-1.5 w-1.5 rounded-full" style={{ background: i < s.filled ? s.color : '#DDE2EA' }} />
                         ))}
@@ -938,7 +944,7 @@ function TransversalRevisionSection() {
                 ))}
               </ul>
 
-              <div className="mt-4 grid gap-4 rounded-2xl bg-white px-5 py-4 sm:grid-cols-3" style={{ border: `1px solid ${BORDER}` }}>
+              <div className="mt-4 grid grid-cols-1 gap-4 rounded-2xl bg-white px-5 py-4 sm:grid-cols-3" style={{ border: `1px solid ${BORDER}` }}>
                 {[
                   { t: 'DÉJÀ TRAVAILLÉ', d: 'La notion a été vue précédemment', c: RED_DEEP },
                   { t: 'RÉACTIVÉ', d: 'Elle revient au bon moment dans vos QCM', c: NAVY },
@@ -977,8 +983,8 @@ function RecordedCoursesSection() {
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FBFBFD' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <Eyebrow icon={<Play className="h-3.5 w-3.5" fill="currentColor" />}>En live et en replay</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
+          <Eyebrow>En live et en replay</Eyebrow>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
             Des cours enseignés par des PH spécialistes en exercice
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -988,7 +994,7 @@ function RecordedCoursesSection() {
         </Reveal>
 
         <Reveal delay={0.1} className="mt-12">
-          <div className="grid gap-8 rounded-3xl border bg-white p-7 lg:grid-cols-[1.35fr_0.65fr] lg:p-9" style={{ borderColor: BORDER }}>
+          <div className="grid grid-cols-1 gap-8 rounded-3xl border bg-white p-5 sm:p-7 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)] lg:p-9" style={{ borderColor: BORDER }}>
             <div>
               <p className="text-[14.5px] leading-relaxed" style={{ color: NAVY, fontFamily: FONT_BODY }}>
                 Des cours clairs et structurés pour comprendre, approfondir
@@ -1046,7 +1052,7 @@ function TeamSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow>Une équipe à vos côtés</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
             Vous n&rsquo;êtes jamais seul face à votre préparation.
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -1056,7 +1062,7 @@ function TeamSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <Reveal>
             <ul className="h-full rounded-3xl border bg-white px-7 py-6" style={{ borderColor: BORDER }}>
               {EQUIPE_POINTS.map((p) => (
@@ -1073,7 +1079,7 @@ function TeamSection() {
 
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col items-center justify-center rounded-3xl px-7 py-10 text-center" style={{ background: '#FDF6F7', border: '1px solid rgba(192,17,46,0.12)' }}>
-              <p className="text-[5.5rem] font-black leading-none tracking-tight sm:text-[7rem]" style={gradientText(GRAD_RED_ORANGE)}>+35</p>
+              <p className="text-[4.2rem] font-black leading-none tracking-tight min-[420px]:text-[5.5rem] sm:text-[7rem]" style={gradientText(GRAD_RED_ORANGE)}>+35</p>
               <p className="mt-3 text-[19px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>
                 enseignants et spécialistes
                 <br />
@@ -1134,7 +1140,7 @@ function PlatformToolsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow>Une boîte à outils complète</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ letterSpacing: '-0.02em', ...gradientText(GRAD_RED_ORANGE) }}>
             Tous les outils de préparation aux EVC, réunis
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -1143,7 +1149,7 @@ function PlatformToolsSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {OUTILS.map((o, i) => (
             <Reveal key={o.n} delay={(i % 4) * 0.05}>
               <div className="relative h-full overflow-hidden rounded-3xl border bg-white p-6 transition-transform duration-300 hover:-translate-y-1" style={{ borderColor: BORDER }}>
@@ -1182,19 +1188,18 @@ function PlateformeCta() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div
-            className="relative grid gap-10 overflow-hidden rounded-[2rem] px-7 py-10 sm:px-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14"
+            className="relative grid grid-cols-1 gap-10 overflow-hidden rounded-[1.5rem] px-5 py-8 sm:rounded-[2rem] sm:px-12 sm:py-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14"
             style={{ background: 'radial-gradient(120% 140% at 78% 45%, #6B0A18 0%, #3A0710 45%, #12040A 100%)' }}
           >
             <div>
               <span
-                className="inline-flex items-center gap-2.5 rounded-full border px-5 py-2 text-[11.5px] font-black tracking-[0.14em]"
+                className="inline-flex max-w-full items-center rounded-full border px-4 py-2 text-[10.5px] font-black uppercase tracking-[0.12em] sm:px-5 sm:text-[11.5px] sm:tracking-[0.14em]"
                 style={{ borderColor: 'rgba(240,193,90,0.55)', color: '#F0C15A' }}
               >
-                <Star className="h-3.5 w-3.5" fill="currentColor" />
-                <span className="uppercase">Espace découverte · Accès gratuit</span>
+                Espace découverte · Accès gratuit
               </span>
 
-              <h2 className="mt-7 text-[2.1rem] font-black leading-[1.08] tracking-tight text-white sm:text-[3rem]" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="mt-7 text-[1.8rem] font-black leading-[1.1] tracking-tight text-white min-[420px]:text-[2.1rem] sm:text-[3rem]" style={{ letterSpacing: '-0.02em' }}>
                 Plus de 9 000 médecins
                 <br />
                 <span style={{ color: '#F0C15A' }}>accompagnés depuis 2011.</span>
@@ -1208,7 +1213,7 @@ function PlateformeCta() {
                 <span className="font-bold" style={{ color: '#F0C15A' }}>Épreuves de Vérification des Connaissances (EVC).</span>
               </p>
 
-              <div className="mt-8 grid gap-6 rounded-2xl border px-6 py-6 sm:grid-cols-3" style={{ borderColor: 'rgba(240,193,90,0.28)', background: 'rgba(255,255,255,0.03)' }}>
+              <div className="mt-8 grid grid-cols-1 gap-6 rounded-2xl border px-5 py-5 sm:grid-cols-3 sm:px-6 sm:py-6" style={{ borderColor: 'rgba(240,193,90,0.28)', background: 'rgba(255,255,255,0.03)' }}>
                 {DECOUVERTE_ATOUTS.map((a) => (
                   <div key={a.title} className="flex items-start gap-3">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border" style={{ borderColor: 'rgba(240,193,90,0.5)', color: '#F0C15A' }}>
@@ -1226,7 +1231,7 @@ function PlateformeCta() {
             <div className="flex flex-col justify-center gap-5">
               <Link
                 href="/espace-decouverte"
-                className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-8 py-5 text-[15px] font-black tracking-tight shadow-xl transition-transform hover:scale-[1.02]"
+                className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-center text-[14px] font-black tracking-tight shadow-xl transition-transform hover:scale-[1.02] sm:px-8 sm:py-5 sm:text-[15px]"
                 style={{ color: RED }}
               >
                 Découvrir gratuitement la plateforme
@@ -1234,7 +1239,7 @@ function PlateformeCta() {
               </Link>
               <Link
                 href="/tarifs"
-                className="group inline-flex items-center justify-center gap-3 rounded-full border-2 px-8 py-5 text-[15px] font-black tracking-tight transition-colors hover:bg-white/5"
+                className="group inline-flex items-center justify-center gap-3 rounded-full border-2 px-6 py-4 text-center text-[14px] font-black tracking-tight transition-colors hover:bg-white/5 sm:px-8 sm:py-5 sm:text-[15px]"
                 style={{ borderColor: '#F0C15A', color: '#F0C15A' }}
               >
                 Voir les formules de préparation
@@ -1256,38 +1261,93 @@ function PlateformeCta() {
    BLOC 10 — Foire aux questions
    ============================================================ */
 
-const PLATEFORME_FAQ = [
+/** FAQ officielle de la plateforme Major ECN. `a` = paragraphes ; `strong`
+    met une ligne en exergue au milieu de la réponse. */
+const PLATEFORME_FAQ: { q: string; a: string[]; strong?: string }[] = [
   {
-    q: 'Qu’est-ce que Major ECN ?',
-    a: 'Major ECN est une plateforme de préparation aux Épreuves de Vérification des Connaissances (EVC), dans le cadre de la Procédure d’Autorisation d’Exercice (PAE). Elle réunit cours, fiches, QCM, QROC, cas cliniques, flashcards, annales corrigées, épreuves blanches et suivi de progression dans un seul espace.',
+    q: 'Qu’est-ce qui distingue Major ECN d’une simple banque de QCM ?',
+    a: [
+      'Major ECN ne se limite pas à mettre des questions et des cours à votre disposition. La plateforme a été pensée comme un véritable environnement de préparation aux EVC, dans lequel chaque outil participe à votre progression.',
+      'Vous y retrouvez notamment des contenus de révision, des QCM ou QROC selon la voie préparée, des cas cliniques, des corrections détaillées, des flashcards, des épreuves blanches, des révisions transversales et des outils de suivi.',
+      'L’objectif est simple : vous aider à savoir quoi travailler, vous entraîner efficacement, identifier vos difficultés et consolider progressivement vos acquis jusqu’aux épreuves.',
+    ],
   },
   {
-    q: 'À qui s’adresse la plateforme ?',
-    a: 'Aux médecins à diplôme étranger qui préparent les EVC, en voie interne (QCM) comme en voie externe (QROC), quelle que soit leur spécialité. Les contenus et la méthodologie sont adaptés au format de l’épreuve que vous allez réellement passer.',
+    q: 'Comment Major ECN m’aide-t-il à savoir quoi travailler chaque jour ?',
+    a: [
+      'Le programme des EVC est vaste et il peut être difficile de savoir où concentrer ses efforts.',
+      'Avec Major ECN, votre tableau de bord vous permet de visualiser votre progression, votre activité, les entraînements réalisés et les notions qui restent à renforcer. Vous retrouvez également votre travail et vos révisions du jour.',
+      'À chaque connexion, vous disposez ainsi d’une vision claire de votre préparation et des prochaines étapes de votre travail.',
+      'Vous passez moins de temps à vous demander « Que dois-je réviser aujourd’hui ? » et davantage de temps à réellement progresser.',
+    ],
   },
   {
-    q: 'Comment fonctionne l’abonnement ?',
-    a: 'Vous choisissez une formule de préparation — Essentielle, Intensive ou Approfondie — selon le niveau d’accompagnement souhaité. L’accès à la plateforme est ouvert pendant toute votre période de préparation, et le paiement est possible en plusieurs fois sans frais.',
+    q: 'Pourquoi les corrections Major ECN sont-elles importantes pour progresser ?',
+    a: [
+      'Chez Major ECN, une erreur ne doit pas simplement se terminer par l’affichage de la bonne réponse.',
+      'Les corrections sont conçues pour vous permettre de comprendre pourquoi une réponse est juste ou fausse, identifier la notion essentielle à retenir et repérer les pièges à éviter.',
+      'Les questions et notions qui vous posent difficulté peuvent ensuite être retravaillées au cours de votre préparation.',
+      'Cette approche transforme progressivement vos erreurs en points de progression, plutôt qu’en simples mauvaises réponses.',
+    ],
   },
   {
-    q: 'Puis-je utiliser Major ECN sur Android, iPhone ou iPad ?',
-    a: 'Oui, Major ECN est accessible sur tous vos appareils. La plateforme est optimisée pour fonctionner sur ordinateur, smartphone et tablette, que ce soit sur iOS (iPhone, iPad) ou Android. Vous pouvez ainsi réviser à tout moment, où que vous soyez.',
+    q: 'Comment Major ECN m’aide-t-il à ne pas oublier ce que j’ai déjà appris ?',
+    a: [
+      'Réussir les EVC ne consiste pas seulement à terminer un programme : il faut être capable de mobiliser plusieurs mois plus tard ce que l’on a déjà étudié.',
+      'Les révisions transversales Major ECN permettent de réactiver régulièrement des connaissances déjà travaillées et de faire revenir des notions issues de différentes spécialités au cours de votre préparation.',
+      'La logique est simple :',
+    ],
+    strong: 'Déjà travaillé → Réactivé → Consolidé.',
   },
   {
-    q: 'Puis-je changer ou interrompre mon abonnement à tout moment ?',
-    a: 'Vous pouvez faire évoluer votre formule vers un niveau d’accompagnement supérieur pendant votre préparation. Pour toute question sur votre inscription, notre équipe vous répond depuis votre espace personnel.',
+    q: 'Major ECN est-il adapté à la voie interne comme à la voie externe des EVC ?',
+    a: [
+      'Oui. Major ECN tient compte de la voie que vous préparez et du format des épreuves correspondant à votre situation, notamment avec des entraînements en QCM ou en QROC selon les modalités concernées.',
+      'Les cas cliniques, entraînements et ressources permettent également de travailler votre raisonnement et votre capacité à mobiliser rapidement les connaissances indispensables.',
+      'L’objectif n’est donc pas uniquement de connaître son cours : Major ECN vous entraîne également à utiliser vos connaissances dans les conditions des EVC.',
+    ],
   },
   {
-    q: 'Mes données sont-elles sécurisées ?',
-    a: 'Oui. Vos données sont hébergées de manière sécurisée, les paiements sont traités par un prestataire certifié, et Major ECN est conforme au RGPD. Vos données ne sont jamais revendues.',
+    q: 'Major ECN est-il uniquement une plateforme numérique ?',
+    a: [
+      'Non. C’est justement l’une des différences importantes de Major ECN.',
+      'Derrière la plateforme se trouve une équipe de praticiens hospitaliers, CCA, médecins spécialistes et correcteurs, mobilisés autour de la préparation aux EVC.',
+      'Selon la formule choisie, votre préparation peut également comprendre des cours en direct, des séances de méthodologie et leurs replays.',
+      'Major ECN associe ainsi la souplesse d’une plateforme disponible pour vos révisions et l’expertise humaine indispensable pour comprendre, approfondir et progresser.',
+    ],
   },
   {
-    q: 'Comment sont élaborés les contenus et les corrections ?',
-    a: 'Les contenus sont conçus et relus avec des praticiens hospitaliers, des chefs de clinique-assistants et des médecins spécialistes de leur discipline. Les corrections détaillent la réponse attendue, le raisonnement, les points à retenir et les pièges classiques des EVC.',
+    q: 'Puis-je être accompagné si je rencontre une difficulté pendant ma préparation ?',
+    a: [
+      'Oui. Major ECN a été conçu pour associer autonomie et accompagnement humain.',
+      'Vous pouvez avancer à votre rythme sur la plateforme tout en bénéficiant de l’équipe Major ECN lorsque vous avez besoin de clarifier une notion, poser une question ou mieux orienter votre travail.',
+      'La méthodologie fait également partie de cet accompagnement : savoir quelles connaissances sont prioritaires, jusqu’où approfondir et comment aborder les différents types d’épreuves peut faire une différence importante dans une préparation aussi exigeante.',
+      'Vous disposez donc d’outils pour travailler seul, sans être laissé seul face à votre préparation.',
+    ],
   },
   {
-    q: 'Comment contacter le support ?',
-    a: 'Depuis votre espace personnel, via le formulaire de contact du site ou par email. Notre équipe pédagogique répond rapidement, sous 24 h ouvrées.',
+    q: 'Pourquoi faire confiance à Major ECN pour préparer les EVC ?',
+    a: [
+      'Major ECN accompagne des médecins dans leur préparation depuis 2011. Au fil des années, plus de 9 000 médecins ont été accompagnés et une équipe de plus de 35 enseignants et spécialistes participe aujourd’hui à cet environnement de préparation.',
+      'Cette expérience a permis de développer une méthode spécifiquement tournée vers les EVC, associant expertise médicale, entraînement, mémorisation, méthodologie, suivi de progression et accompagnement humain.',
+      'Major ECN ne cherche donc pas simplement à vous donner davantage de contenu : l’objectif est de vous aider à transformer ce contenu en connaissances maîtrisées et mobilisables le jour des épreuves.',
+    ],
+  },
+  {
+    q: 'Puis-je utiliser Major ECN sur Android, iPhone et iPad ?',
+    a: [
+      'Oui. Major ECN est accessible sur ordinateur et dispose également d’applications pour Android et pour les appareils Apple (iPhone et iPad).',
+      'Vous pouvez ainsi retrouver votre environnement de préparation plus facilement lorsque vous êtes en déplacement et profiter de différents moments de la journée pour poursuivre vos révisions.',
+      'QCM ou QROC selon votre préparation, flashcards et autres ressources disponibles sur la plateforme peuvent ainsi vous accompagner au-delà de votre ordinateur.',
+    ],
+  },
+  {
+    q: 'Puis-je découvrir Major ECN avant de choisir ma formule ?',
+    a: [
+      'Oui. Major ECN met à votre disposition un espace découverte gratuit afin de vous permettre de vous familiariser avec l’environnement et de découvrir une partie de la plateforme avant de choisir votre préparation.',
+      'Vous pouvez ainsi vous faire votre propre idée de l’expérience Major ECN avant de vous engager.',
+      'L’accès à l’espace découverte est gratuit, sans engagement et aucune carte bancaire n’est requise.',
+    ],
   },
 ];
 
@@ -1298,21 +1358,23 @@ const FAQ_ATOUTS = [
 ];
 
 function PlateformeFaqSection() {
-  const [open, setOpen] = useState<number | null>(3);
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FBFBFD' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <Eyebrow icon={<MessageCircleQuestion className="h-3.5 w-3.5" />}>Foire aux questions</Eyebrow>
-          <h2 className="mt-6 text-[2rem] font-black leading-[1.1] tracking-tight sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+          <Eyebrow>Foire aux questions</Eyebrow>
+          <h2 className="mt-6 text-[1.7rem] font-black leading-[1.12] tracking-tight min-[420px]:text-[2rem] sm:text-[2.7rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
             Vos questions, <span style={gradientText(GRAD_RED_ORANGE)}>nos réponses.</span>
           </h2>
-          <p className="mt-5 text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-            Tout ce que vous voulez savoir sur Major ECN.
+          <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+            Découvrez comment Major ECN associe expertise médicale, technologie, entraînement
+            et accompagnement humain pour structurer votre préparation et vous aider à
+            progresser jusqu&rsquo;aux EVC.
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
           <Reveal>
             <div className="h-full rounded-3xl border bg-white p-7" style={{ borderColor: BORDER }}>
               <p className="flex gap-4">
@@ -1365,13 +1427,19 @@ function PlateformeFaqSection() {
                         aria-expanded={isOpen}
                         className="flex w-full items-center gap-4 px-5 py-4 text-left"
                       >
-                        <span className="flex-1 text-[14.5px] font-black tracking-tight" style={{ color: isOpen ? RED : NAVY }}>{f.q}</span>
+                        <span className="shrink-0 text-[13px] font-black tabular-nums" style={{ color: isOpen ? RED : INK_MUTED }}>{i + 1}</span>
+                        <span className="flex-1 text-[14px] font-black leading-snug tracking-tight sm:text-[14.5px]" style={{ color: isOpen ? RED : NAVY }}>{f.q}</span>
                         <span className="shrink-0 text-[20px] font-black leading-none" style={{ color: RED }}>{isOpen ? '−' : '+'}</span>
                       </button>
                       {isOpen && (
-                        <p className="px-5 pb-5 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                          {f.a}
-                        </p>
+                        <div className="space-y-3 px-5 pb-5">
+                          {f.a.map((p) => (
+                            <p key={p} className="text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{p}</p>
+                          ))}
+                          {f.strong && (
+                            <p className="text-[14px] font-black leading-relaxed" style={{ color: RED_DEEP }}>{f.strong}</p>
+                          )}
+                        </div>
                       )}
                     </li>
                   );

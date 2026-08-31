@@ -164,7 +164,7 @@ export function TemoignagesSection() {
           </span>
         </Reveal>
 
-        <div className="mt-9 grid items-start gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+        <div className="mt-9 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12">
           {/* Gauche — titre + stats */}
           <div>
             <Reveal>

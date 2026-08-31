@@ -104,7 +104,7 @@ export function HomeFaqSection() {
           </p>
         </Reveal>
 
-        <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1.55fr_1fr] lg:gap-10">
+        <div className="mt-10 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-10">
           {/* ============ Colonne FAQ ============ */}
           <Reveal>
             <div className="overflow-hidden rounded-3xl border bg-white shadow-[0_30px_80px_-40px_rgba(15,27,61,0.3)]" style={{ borderColor: BORDER }}>

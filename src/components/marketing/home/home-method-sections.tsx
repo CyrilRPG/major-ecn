@@ -104,7 +104,7 @@ export function DeuxVoiesSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           <Reveal>
             <VoieCard
               color={V_GREEN}
@@ -261,7 +261,7 @@ export function SuiviSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
           {/* ---------- 1. NOUS VOUS ENSEIGNONS ---------- */}
           <Reveal className="h-full">
             <article className="flex h-full flex-col rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-45px_rgba(139,14,34,0.4)]" style={{ borderColor: 'rgba(192,17,46,0.16)' }}>
@@ -496,7 +496,7 @@ export function PlateformeSection() {
         </Reveal>
 
         {/* Grille : cartes gauche — visuel central — cartes droite */}
-        <div className="mt-12 grid items-center gap-6 xl:grid-cols-[0.62fr_1.35fr_0.62fr]">
+        <div className="mt-12 grid grid-cols-1 items-center gap-6 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1.35fr)_minmax(0,0.62fr)]">
           <div className="order-2 grid gap-4 sm:grid-cols-3 xl:order-1 xl:grid-cols-1 xl:gap-5">
             {PLATEFORME_LEFT.map((c, i) => (
               <Reveal key={c.title} delay={i * 0.08}>
@@ -635,7 +635,7 @@ export function EnseignantsSection() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid items-start gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+        <div className="mt-12 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12">
           {/* Gauche — intro + vidéo + profils */}
           <div>
             <Reveal>

@@ -117,7 +117,7 @@ export function FormulesSection() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2 xl:grid-cols-[1fr_1fr_1.14fr_0.72fr]">
+        <div className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.14fr)_minmax(0,0.72fr)]">
           {/* ---------- 1. ESSENTIELLE (vert) ---------- */}
           <Reveal className="h-full">
             <article
