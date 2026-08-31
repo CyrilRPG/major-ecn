@@ -55,6 +55,9 @@ const nextConfig: NextConfig = {
       // Anciens articles, vers leur équivalent actuel
       { source: "/evc-pae-liste-complete-des-documents-a-fournir-et-les-regles-a-connaitre-pour-une-candidature-reussie", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
       { source: "/evc-pae-comment-se-presenterw", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
+      // Cette adresse n'est pas dans l'export mais ressort encore dans les
+      // résultats de recherche, et renvoyait un 404.
+      { source: "/comment-se-presenter-aux-epreuves-de-verification-des-connaissances", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
       { source: "/structures-daccueil-pour-les-laureats-pae-chu-cliniques-ou-secteur-prive", destination: "/blog/structures-accueil-laureats-pae", permanent: true },
       { source: "/quelle-remuneration-pour-un-medecin-etranger-en-pratiquant-en-france", destination: "/blog/remuneration-medecin-etranger-france", permanent: true },
       { source: "/impact-evc-acces-soins-integration-professionnels", destination: "/blog/impact-evc-acces-soins", permanent: true },

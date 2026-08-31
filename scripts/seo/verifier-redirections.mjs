@@ -47,6 +47,7 @@ const ANCIENNES_URL = [
   '/decryptage-des-principaux-defis-des-epreuves-de-verification-des-connaissances-evc/',
   '/evc-pae-documents-candidature/',
   '/nos-conseils/',
+  '/comment-se-presenter-aux-epreuves-de-verification-des-connaissances/',
 ];
 
 /**
