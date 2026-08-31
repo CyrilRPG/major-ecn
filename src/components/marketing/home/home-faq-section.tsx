@@ -329,8 +329,10 @@ export function HomeFaqSection() {
                   ))}
                 </div>
 
+                {/* Étape 1 du parcours annoncé juste au-dessus : on entre par
+                    le choix de la spécialité, pas par le formulaire d'inscription. */}
                 <Link
-                  href="/inscription"
+                  href="/specialites"
                   className="group mt-6 flex w-full items-center justify-center gap-2.5 rounded-2xl bg-white px-5 py-4 text-[13.5px] font-black tracking-tight shadow-lg transition-transform hover:scale-[1.02]"
                   style={{ color: RED }}
                 >

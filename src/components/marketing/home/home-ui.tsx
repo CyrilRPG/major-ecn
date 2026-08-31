@@ -82,36 +82,42 @@ export function Reveal({
   );
 }
 
-/** Titre de section 2 lignes : navy + accent dégradé rouge. */
+/** Titre de section : casse normale, première partie navy, seconde partie
+    en dégradé (une famille de couleur par section), filet rouge optionnel. */
 export function SectionTitle({
   line1,
   line2,
   gradient = GRAD_RED,
+  rule = false,
   as: Tag = 'h2',
 }: {
   line1: ReactNode;
   line2?: ReactNode;
   /** Dégradé appliqué à la seconde partie du titre (DA Major ECN). */
   gradient?: string;
+  /** Filet rouge centré sous le titre (maquettes des blocs 2, 3, 5). */
+  rule?: boolean;
   as?: 'h1' | 'h2';
 }) {
   return (
-    <Tag
-      className="text-[1.7rem] font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-[2.7rem]"
-      style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
-    >
-      <span style={{ color: NAVY }}>{line1}</span>
-      {line2 && (
-        <>
-          {' '}
-          <span
-            className="bg-clip-text text-transparent"
-            style={{ backgroundImage: gradient }}
-          >
-            {line2}
-          </span>
-        </>
+    <>
+      <Tag
+        className="text-[1.7rem] font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-[2.7rem]"
+        style={{ fontFamily: JAKARTA, letterSpacing: '-0.02em' }}
+      >
+        <span style={{ color: NAVY }}>{line1}</span>
+        {line2 && (
+          <>
+            {' '}
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: gradient }}>
+              {line2}
+            </span>
+          </>
+        )}
+      </Tag>
+      {rule && (
+        <span aria-hidden className="mx-auto mt-3 block h-1 w-14 rounded-full" style={{ background: RED }} />
       )}
-    </Tag>
+    </>
   );
 }

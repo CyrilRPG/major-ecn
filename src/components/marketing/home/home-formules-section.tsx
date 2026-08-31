@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import {
-  ArrowRight, CheckCircle2, ClipboardCheck, GraduationCap, Headphones, Info,
-  Laptop, LockKeyhole, MessagesSquare, Monitor, PenLine, Phone, Play, Radio,
-  ShieldCheck, Sparkles, Star, Target, Trophy, Users,
+  ArrowRight, CheckCircle2, ClipboardCheck, GraduationCap, LockKeyhole,
+  Monitor, PenLine, Phone, Star, Users,
 } from 'lucide-react';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import {
@@ -43,13 +42,15 @@ const ESSENTIELLE_DEUX_VOIES = [
 ];
 
 const INTENSIVE_ITEMS = [
-  { t: 'Séances en direct avec nos médecins spécialistes', Icon: Radio },
-  { t: 'Replays accessibles pendant toute la préparation', Icon: Play },
-  { t: 'Révisions ciblées sur les notions essentielles', Icon: Target },
-  { t: 'Entraînements QCM ou QROC', Icon: ClipboardCheck },
-  { t: 'Corrections détaillées et méthodologie', Icon: PenLine },
-  { t: 'Concours blancs', Icon: Trophy },
-  { t: 'Échanges avec les enseignants', Icon: MessagesSquare },
+  '18 h de cours en direct (lives interactifs)',
+  'Lives interactifs avec vos enseignants',
+  'Replays disponibles pendant toute la préparation',
+  'QCM supplémentaires expliqués',
+  'QROC expliqués',
+  'Corrections approfondies',
+  'Épreuves blanches inspirées des EVC',
+  'Coaching : parcours du Major (médecine générale)',
+  'Suivi de progression',
 ];
 
 const APPROFONDIE_ITEMS = [
@@ -64,11 +65,11 @@ const APPROFONDIE_ITEMS = [
 ];
 
 const TOUTES_FORMULES = [
-  { Icon: Laptop, strong: 'Plateforme complète', rest: 'Accessible pendant toute la période de préparation' },
-  { Icon: Target, strong: 'Méthode adaptée', rest: 'À la voie interne (QCM) ou externe (QROC)' },
-  { Icon: Users, strong: 'Encadrement par des médecins spécialistes', rest: 'qui connaissent les EVC et vos spécialités' },
-  { Icon: ShieldCheck, strong: 'Paiement 100 % sécurisé', rest: 'en plusieurs fois sans frais' },
-  { Icon: Headphones, strong: 'Accompagnement', rest: 'selon les modalités de la formule choisie' },
+  { strong: 'Plateforme complète', rest: 'Accessible pendant toute la période de préparation' },
+  { strong: 'Méthode adaptée', rest: 'À la voie interne (QCM) ou externe (QROC)' },
+  { strong: 'Encadrement par des médecins spécialistes', rest: 'qui connaissent les EVC et vos spécialités' },
+  { strong: 'Paiement 100 % sécurisé', rest: 'en plusieurs fois sans frais' },
+  { strong: 'Accompagnement selon les modalités', rest: 'de la formule choisie' },
 ];
 
 /** Chip numéroté et dégradé du haut de chaque carte. */
@@ -130,7 +131,7 @@ export function FormulesSection() {
                   <div>
                     <p className="text-xl font-black tracking-tight" style={{ color: GREEN }}>Essentielle</p>
                     <p className="mt-1 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                      Pour travailler principalement en autonomie avec une préparation complète et structurée.
+                      Je prépare les EVC principalement en autonomie.
                     </p>
                   </div>
                 </div>
@@ -143,9 +144,9 @@ export function FormulesSection() {
                 <div className="mt-4 flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: GREEN_SOFT }}>
                   <Monitor className="mt-0.5 h-5 w-5 shrink-0" style={{ color: GREEN }} />
                   <p className="text-[12px] leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                    <span className="font-black" style={{ fontFamily: JAKARTA, color: GREEN_DEEP }}>Une plateforme complète</span>
+                    <span className="font-black" style={{ fontFamily: JAKARTA, color: GREEN_DEEP }}>La base complète</span>
                     <br />
-                    Accédez à tous les outils et contenus pour préparer efficacement les EVC.
+                    de la préparation Major ECN.
                   </p>
                 </div>
 
@@ -210,7 +211,7 @@ export function FormulesSection() {
                   <div>
                     <p className="text-xl font-black tracking-tight" style={{ color: RED }}>Intensive</p>
                     <p className="mt-1 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                      Pour intensifier vos révisions avec 18&nbsp;h de cours et l&rsquo;accompagnement de nos enseignants.
+                      Je bénéficie de toute l&rsquo;Essentielle + 18&nbsp;h d&rsquo;enseignement.
                     </p>
                   </div>
                 </div>
@@ -221,24 +222,21 @@ export function FormulesSection() {
                 </p>
 
                 <div className="mt-4 flex items-start gap-3 rounded-2xl px-4 py-4 text-white shadow-md" style={{ background: 'linear-gradient(120deg, #6B0A1C 0%, #8B0E22 45%, #C0112E 100%)' }}>
-                  <span className="relative mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
-                    <Radio className="h-5 w-5" style={{ color: '#FFD2DA' }} />
-                  </span>
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" style={{ color: '#FFD2DA' }} />
                   <p className="text-[12px] leading-snug" style={{ fontFamily: MANROPE }}>
-                    <span className="font-black" style={{ fontFamily: JAKARTA }}>18 h de cours en direct + replays</span>
+                    <span className="font-black" style={{ fontFamily: JAKARTA }}>Tout le contenu de la formule Essentielle</span>
                     <br />
-                    <span className="text-white/85">Un véritable programme de révision avec nos médecins spécialistes.</span>
+                    <span className="text-white/85">+ 18 h de cours en direct, lives interactifs et replays</span>
                   </p>
                 </div>
 
-                <ul className="mt-5 flex-1 space-y-3">
+                <ul className="mt-5 flex-1 space-y-2.5">
                   {INTENSIVE_ITEMS.map((it) => (
-                    <li key={it.t} className="flex items-center gap-3 border-b pb-3 last:border-b-0 last:pb-0" style={{ borderColor: RED_SOFT }}>
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white" style={{ background: RED }}>
-                        <CheckCircle2 className="h-4 w-4" />
+                    <li key={it} className="flex items-start gap-3" style={{ borderColor: RED_SOFT }}>
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white" style={{ background: RED }}>
+                        <CheckCircle2 className="h-3.5 w-3.5" />
                       </span>
-                      <span className="flex-1 text-[12.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>{it.t}</span>
-                      <it.Icon className="h-4.5 w-4.5 shrink-0 opacity-70" style={{ color: RED }} />
+                      <span className="flex-1 text-[12.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>{it}</span>
                     </li>
                   ))}
                 </ul>
@@ -266,7 +264,7 @@ export function FormulesSection() {
                 style={{ background: 'linear-gradient(100deg, #4C1D95 0%, #7C3AED 60%, #A855F7 100%)' }}
               >
                 <Star className="h-3.5 w-3.5" fill="currentColor" />
-                Notre niveau de préparation le plus complet et le plus exigeant
+                Recommandée
               </p>
               <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #FBFAFF 0%, #FFFFFF 30%)' }}>
                 <div className="flex items-start gap-3.5">
@@ -274,7 +272,7 @@ export function FormulesSection() {
                   <div>
                     <p className="text-xl font-black tracking-tight" style={{ color: PURPLE_DEEP }}>Approfondie</p>
                     <p className="mt-1 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                      Pour bénéficier de notre accompagnement pédagogique le plus complet, construit selon votre spécialité.
+                      Je bénéficie de tout l&rsquo;Intensive + notre accompagnement le plus complet.
                     </p>
                   </div>
                 </div>
@@ -288,27 +286,21 @@ export function FormulesSection() {
                 </p>
 
                 <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(124,58,237,0.2)' }}>
-                  <p className="text-center text-[11.5px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>
-                    Un programme <span style={{ color: PURPLE }}>d&rsquo;enseignement approfondi</span>,
-                    construit selon votre spécialité
+                  <p className="flex items-start gap-2.5 text-[12px] font-black leading-snug tracking-tight" style={{ color: PURPLE_DEEP }}>
+                    <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0" style={{ color: PURPLE }} />
+                    Tout le contenu des formules Essentielle + Intensive
                   </p>
-                  <div className="mt-3 flex items-center justify-center gap-2">
+                  <ul className="mt-3 space-y-2 pl-7">
                     {[
-                      { Icon: Radio, label: 'Cours live' },
-                      { Icon: Play, label: 'Replays' },
-                      { Icon: Headphones, label: 'Accompagnement renforcé' },
-                    ].map((x, i) => (
-                      <span key={x.label} className="flex items-center gap-2">
-                        {i > 0 && <span className="text-sm font-black" style={{ color: PURPLE }}>+</span>}
-                        <span className="flex flex-col items-center gap-1">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-xl border bg-white shadow-sm" style={{ borderColor: 'rgba(124,58,237,0.3)', color: PURPLE }}>
-                            <x.Icon className="h-4.5 w-4.5" />
-                          </span>
-                          <span className="text-[8.5px] font-black tracking-tight" style={{ color: PURPLE_DEEP }}>{x.label}</span>
-                        </span>
-                      </span>
+                      '36 à 100 h d’enseignement selon la spécialité',
+                      'accompagnement pédagogique renforcé',
+                    ].map((x) => (
+                      <li key={x} className="flex items-start gap-2 text-[12px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
+                        <span className="text-[13px] font-black leading-none" style={{ color: PURPLE }}>+</span>
+                        {x}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
 
                 <ul className="mt-5 flex-1 space-y-2.5">
@@ -318,13 +310,6 @@ export function FormulesSection() {
                     </li>
                   ))}
                 </ul>
-
-                <div className="mt-4 flex items-start gap-2.5 rounded-2xl border px-4 py-3" style={{ borderColor: 'rgba(124,58,237,0.22)', background: '#FBFAFF' }}>
-                  <Info className="mt-0.5 h-4 w-4 shrink-0" style={{ color: PURPLE }} />
-                  <p className="text-[11.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                    Volume d&rsquo;enseignement adapté à la spécialité et au programme&nbsp;: de 36&nbsp;h à près de 100&nbsp;h pour certaines préparations.
-                  </p>
-                </div>
 
                 <Link
                   href="/formules/programme-approfondi"
@@ -341,16 +326,12 @@ export function FormulesSection() {
           {/* ---------- Colonne « Dans toutes les formules » ---------- */}
           <Reveal delay={0.2} className="h-full">
             <aside className="flex h-full flex-col rounded-3xl border bg-white/80 p-5 backdrop-blur-sm sm:p-6" style={{ borderColor: BORDER }}>
-              <p className="flex items-center justify-center gap-2 text-center text-[13px] font-black tracking-tight" style={{ color: NAVY }}>
-                <Sparkles className="h-4 w-4" style={{ color: RED }} />
+              <p className="text-[13px] font-black tracking-tight" style={{ color: RED }}>
                 Dans toutes les formules
               </p>
-              <ul className="mt-5 flex-1 space-y-5">
+              <ul className="mt-5 flex-1 divide-y" style={{ borderColor: BORDER }}>
                 {TOUTES_FORMULES.map((f) => (
-                  <li key={f.strong} className="flex items-start gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: '#FCEAEC', color: RED }}>
-                      <f.Icon className="h-4.5 w-4.5" strokeWidth={1.9} />
-                    </span>
+                  <li key={f.strong} className="py-3.5 first:pt-0 last:pb-0" style={{ borderColor: BORDER }}>
                     <p className="text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                       <span className="block text-[12.5px] font-extrabold" style={{ color: NAVY }}>{f.strong}</span>
                       {f.rest}
@@ -358,9 +339,8 @@ export function FormulesSection() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 rounded-2xl px-4 py-4" style={{ background: '#FDF1F3', border: '1px solid rgba(192,17,46,0.12)' }}>
-                <Trophy className="h-5 w-5" style={{ color: RED }} />
-                <p className="mt-2 text-[12px] leading-relaxed" style={{ color: NAVY, fontFamily: MANROPE }}>
+              <div className="mt-5 rounded-2xl px-4 py-4" style={{ background: '#FDF1F3' }}>
+                <p className="text-[12px] leading-relaxed" style={{ color: NAVY, fontFamily: MANROPE }}>
                   Une préparation exigeante, des ressources ciblées et un accompagnement humain pour vous permettre de mettre{' '}
                   <span className="font-extrabold" style={{ color: RED }}>toutes les chances de votre côté.</span>
                 </p>

@@ -3,18 +3,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight, Award, Clapperboard, Play, Star } from 'lucide-react';
 import {
-  Activity, ArrowRight, Award, BookOpen, Brain, Clapperboard, GraduationCap,
-  Headphones, Heart, HeartHandshake, LockKeyhole, Monitor, Play, Star,
-  Stethoscope, Trophy, Users,
-} from 'lucide-react';
-import {
-  BORDER, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
-  GRAD_ORANGE, RED_GRADIENT, Reveal,
+  BORDER, GRAD_ORANGE, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
+  RED_GRADIENT, Reveal,
 } from './home-ui';
 
 /* ============================================================
-   BLOC 6 — TÉMOIGNAGES VIDÉO
+   BLOC 2 — TÉMOIGNAGES VIDÉO
    « 15 ans d'expérience aux EVC, des lauréats, des parcours qui se
    poursuivent, des réussites qui font la différence. »
    Vidéos réelles (/temoignages/*.mp4), chargées uniquement au clic.
@@ -31,7 +27,6 @@ type Temoin = {
   poster: string;
   initials: string;
   grad: string;
-  SpecIcon: React.ComponentType<{ className?: string }>;
   highlight?: boolean;
 };
 
@@ -41,35 +36,35 @@ const TEMOINS: Temoin[] = [
     laureat: 'Lauréat EVC',
     quote: "“Les entraînements, les corrections détaillées et les fiches m'ont permis d'être prêt le jour J.”",
     video: '/temoignages/T1 FINAL V2.mp4', poster: '/temoignages/posters/t1.jpg', initials: 'SK',
-    grad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)', SpecIcon: Activity,
+    grad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Karim Khiaredine', spec: 'Anesthésie-Réanimation',
     laureat: 'Lauréat EVC 2025',
     quote: "“Une préparation complète, des enseignants disponibles et un vrai accompagnement jusqu'au jour J.”",
     video: '/temoignages/T2 FINAL V2.mp4', poster: '/temoignages/posters/t2.jpg', initials: 'KK',
-    grad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)', SpecIcon: Heart,
+    grad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Ahmed Sifaoui', spec: 'Gériatrie', voie: 'Voie externe',
     laureat: 'Lauréat EVC 2025',
     quote: "“Major ECN m'a apporté la méthode, la rigueur et la confiance nécessaires pour réussir les EVC.”",
     video: '/temoignages/T4 Final V2.mp4', poster: '/temoignages/posters/t4.jpg', initials: 'AS',
-    grad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)', SpecIcon: Users, highlight: true,
+    grad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)', highlight: true,
   },
   {
     badge: 'Lauréate EVC 2024', name: 'Dr Athéna Haroun', spec: 'Chirurgie viscérale et digestive',
     laureat: 'Lauréate EVC 2024',
     quote: '“Des explications claires, des supports ciblés et une préparation qui fait vraiment la différence.”',
     video: '/temoignages/T5 FINAL V2.mp4', poster: '/temoignages/posters/t5.jpg', initials: 'AH',
-    grad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)', SpecIcon: Stethoscope,
+    grad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Ely Cheikh SY', spec: 'Endocrinologie & métabolisme',
     laureat: 'Lauréat EVC 2025',
     quote: "“Major ECN m'a aidé à structurer mes révisions et à atteindre mon objectif.”",
     video: '/temoignages/T3 FINAL V2.mp4', poster: '/temoignages/posters/t3.jpg', initials: 'ES',
-    grad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)', SpecIcon: Brain,
+    grad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
   },
 ];
 
@@ -128,16 +123,11 @@ function TemoinCard({ t }: { t: Temoin }) {
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <div className="flex items-start gap-2.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border" style={{ borderColor: 'rgba(192,17,46,0.25)', color: RED }}>
-            <t.SpecIcon className="h-4 w-4" />
-          </span>
-          <div>
-            <p className="text-[14px] font-black leading-tight" style={{ color: NAVY }}>{t.name}</p>
-            <p className="mt-0.5 text-[12px] font-bold leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>{t.spec}</p>
-            {t.voie && <p className="text-[12px] font-extrabold" style={{ color: RED }}>{t.voie}</p>}
-            <p className="text-[12px] font-extrabold" style={{ color: RED_DEEP }}>{t.laureat}</p>
-          </div>
+        <div>
+          <p className="text-[14.5px] font-black leading-tight" style={{ color: NAVY }}>{t.name}</p>
+          <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>{t.spec}</p>
+          {t.voie && <p className="text-[12.5px] font-extrabold" style={{ color: RED }}>{t.voie}</p>}
+          <p className="text-[12.5px] font-extrabold" style={{ color: RED_DEEP }}>{t.laureat}</p>
         </div>
         <p className="mt-2 flex gap-0.5" aria-label="5 étoiles sur 5">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -153,15 +143,9 @@ function TemoinCard({ t }: { t: Temoin }) {
 }
 
 const TEMOIGNAGES_STATS = [
-  { Icon: Trophy, strong: '15 ans', rest: "d'expérience aux EVC" },
-  { Icon: Users, strong: '+9 000', rest: 'médecins accompagnés' },
-  { Icon: Star, strong: 'De brillants résultats', rest: 'dans les différentes spécialités des EVC' },
-];
-
-const FARAH_BADGES = [
-  { Icon: BookOpen, t: 'Des supports complets et actualisés' },
-  { Icon: Users, t: 'Des enseignants médecins experts' },
-  { Icon: Activity, t: 'Une expertise qui vous suit au quotidien' },
+  { strong: '15 ans', rest: "d'expérience aux EVC" },
+  { strong: '+9 000', rest: 'médecins accompagnés' },
+  { strong: 'De brillants résultats', rest: 'dans les différentes spécialités des EVC' },
 ];
 
 export function TemoignagesSection() {
@@ -199,10 +183,9 @@ export function TemoignagesSection() {
             <Reveal delay={0.08}>
               <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:divide-x sm:divide-[#EDECE8]">
                 {TEMOIGNAGES_STATS.map((s) => (
-                  <div key={s.strong} className="flex items-start gap-3 sm:px-4 first:sm:pl-0 last:sm:pr-0">
-                    <s.Icon className="mt-0.5 h-7 w-7 shrink-0" strokeWidth={1.8} style={{ color: RED }} />
+                  <div key={s.strong} className="sm:px-4 first:sm:pl-0 last:sm:pr-0">
                     <p className="text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                      <span className="block text-[15px] font-black" style={{ color: RED_DEEP }}>{s.strong}</span>
+                      <span className="block text-[18px] font-black" style={{ color: RED_DEEP }}>{s.strong}</span>
                       {s.rest}
                     </p>
                   </div>
@@ -212,10 +195,11 @@ export function TemoignagesSection() {
 
             <Reveal delay={0.12}>
               <p className="mt-7 flex items-center gap-3 text-[14.5px] font-extrabold" style={{ color: RED_DEEP }}>
-                <span aria-hidden className="h-px w-8" style={{ background: 'rgba(192,17,46,0.4)' }} />
-                <Award className="h-5 w-5 shrink-0" />
-                Une histoire de réussite qui se poursuit année après année.
                 <span aria-hidden className="hidden h-px w-8 sm:block" style={{ background: 'rgba(192,17,46,0.4)' }} />
+                <Award className="h-5 w-5 shrink-0" />
+                <span style={{ color: NAVY }}>Une histoire de réussite qui se poursuit année après année.</span>
+                <Award className="h-5 w-5 shrink-0 -scale-x-100" />
+                <span aria-hidden className="hidden h-px flex-1 sm:block" style={{ background: 'rgba(192,17,46,0.4)' }} />
               </p>
             </Reveal>
           </div>
@@ -225,13 +209,10 @@ export function TemoignagesSection() {
             <div className="overflow-hidden rounded-3xl border shadow-[0_30px_80px_-40px_rgba(139,14,34,0.45)]" style={{ borderColor: 'rgba(192,17,46,0.16)', background: '#FDF6F7' }}>
               <div className="grid sm:grid-cols-[1.25fr_0.9fr]">
                 <div className="p-6 sm:p-7">
-                  <p className="flex items-start gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-md" style={{ background: RED_GRADIENT }}>
-                      <HeartHandshake className="h-5 w-5" />
-                    </span>
-                    <span className="text-[15px] font-black leading-tight tracking-tight" style={{ color: RED_DEEP }}>
-                      Une préparation utile bien au-delà des EVC
-                    </span>
+                  <p className="text-[15.5px] font-black leading-tight tracking-tight" style={{ color: RED_DEEP }}>
+                    Une préparation utile
+                    <br />
+                    bien au-delà des EVC
                   </p>
                   <blockquote className="mt-4 text-[14.5px] font-semibold leading-relaxed" style={{ color: NAVY, fontFamily: MANROPE }}>
                     &ldquo;Les supports et explications Major ECN me servent encore aujourd&rsquo;hui dans ma pratique hospitalière.&rdquo;
@@ -250,14 +231,6 @@ export function TemoignagesSection() {
                     className="object-cover"
                   />
                 </div>
-              </div>
-              <div className="grid grid-cols-1 divide-y border-t sm:grid-cols-3 sm:divide-x sm:divide-y-0" style={{ borderColor: 'rgba(192,17,46,0.12)' }}>
-                {FARAH_BADGES.map((b) => (
-                  <div key={b.t} className="flex items-center gap-2.5 px-4 py-3.5" style={{ borderColor: 'rgba(192,17,46,0.12)' }}>
-                    <b.Icon className="h-5 w-5 shrink-0" style={{ color: RED }} />
-                    <p className="text-[11.5px] font-bold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>{b.t}</p>
-                  </div>
-                ))}
               </div>
             </div>
           </Reveal>
@@ -287,7 +260,6 @@ export function TemoignagesSection() {
             className="group inline-flex items-center gap-3 rounded-xl px-7 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_16px_40px_-14px_rgba(192,17,46,0.65)] transition-transform hover:scale-[1.02]"
             style={{ background: RED_GRADIENT }}
           >
-            <GraduationCap className="h-5 w-5" />
             S&rsquo;inscrire maintenant
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
@@ -295,18 +267,17 @@ export function TemoignagesSection() {
 
         {/* Réassurance */}
         <Reveal delay={0.15} className="mt-10">
-          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-y-4 rounded-3xl border bg-white px-6 py-5 sm:grid-cols-3 sm:divide-x sm:divide-[#EDECE8]" style={{ borderColor: BORDER }}>
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-y-4 rounded-3xl px-6 py-5 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[#EDECE8]" style={{ background: '#FBFAFB' }}>
             {[
-              { Icon: LockKeyhole, strong: 'Inscription sécurisée', rest: 'et paiement en ligne' },
-              { Icon: Monitor, strong: 'Accès immédiat', rest: 'à la plateforme' },
-              { Icon: Headphones, strong: 'Accompagnement', rest: 'humain et réactif' },
+              { strong: 'Inscription sécurisée', rest: 'et paiement en ligne' },
+              { strong: 'Accès immédiat', rest: 'à la plateforme' },
+              { strong: 'Accompagnement', rest: 'humain et réactif' },
+              { strong: 'Accessible pendant toute', rest: 'la préparation' },
             ].map((r) => (
-              <div key={r.strong} className="flex items-center justify-center gap-3 sm:px-5">
-                <r.Icon className="h-6 w-6 shrink-0" strokeWidth={1.8} style={{ color: NAVY }} />
-                <p className="text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                  <span className="font-extrabold" style={{ color: NAVY }}>{r.strong}</span> {r.rest}
-                </p>
-              </div>
+              <p key={r.strong} className="text-center text-[13px] leading-snug lg:px-5" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+                <span className="block font-extrabold" style={{ color: NAVY }}>{r.strong}</span>
+                {r.rest}
+              </p>
             ))}
           </div>
         </Reveal>
