@@ -55,7 +55,15 @@ const ANCIENNES_URL = [
  * l'ancien thème doit répondre « cette page n'existe pas », pas rediriger vers
  * une page sans rapport (Google traite cela comme une erreur douce).
  */
-const ATTENDUES_EN_404 = ['/20', '/wp-content/themes/histudy/'];
+const ATTENDUES_EN_404 = ['/20'];
+
+/**
+ * Chemins d'attaque WordPress : le pare-feu de Vercel répond 403 avant même
+ * que l'application soit sollicitée. On ne peut donc pas y servir un 404
+ * depuis le code, et ce n'est pas souhaitable : la protection fait son
+ * travail. Google les retire de l'index dans les deux cas.
+ */
+const ATTENDUES_EN_403 = ['/wp-content/themes/histudy/'];
 
 async function suivre(chemin) {
   let url = BASE + chemin;
@@ -92,6 +100,14 @@ console.log('\n=== Laissées en 404 (comportement voulu) ===');
 for (const chemin of ATTENDUES_EN_404) {
   const r = await suivre(chemin);
   const ok = r.statut === 404;
+  if (!ok) ko++;
+  console.log((ok ? 'OK  ' : 'KO  ') + chemin.padEnd(70).slice(0, 70) + ' -> ' + r.statut);
+}
+
+console.log('\n=== Bloquées par le pare-feu (403 ou 404 attendu) ===');
+for (const chemin of ATTENDUES_EN_403) {
+  const r = await suivre(chemin);
+  const ok = r.statut === 403 || r.statut === 404;
   if (!ok) ko++;
   console.log((ok ? 'OK  ' : 'KO  ') + chemin.padEnd(70).slice(0, 70) + ' -> ' + r.statut);
 }
