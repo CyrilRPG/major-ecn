@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
   // Search Console (rapport « Pages » → indexées + 404).
   async redirects() {
     return [
+      // `/formules` n'a pas de page d'index (seulement /formules/<offre>) et
+      // renvoyait un 404, alors que la page était liée depuis /contact et
+      // explorée par Google. Les trois offres sont présentées sur /tarifs.
+      { source: "/formules", destination: "/tarifs", permanent: true },
       // Lien cassé signalé : ancienne URL de l'article « documents de candidature ».
       { source: "/evc-pae-documents-candidature", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
       { source: "/evc-pae-liste-documents", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },

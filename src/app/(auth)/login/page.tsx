@@ -4,7 +4,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { MarketingHeader } from '@/components/marketing/marketing-header';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
 
-export const metadata = { title: 'Se connecter' };
+export const metadata = {
+  title: 'Se connecter',
+  // Page de service : explorable (le robot doit pouvoir lire cette directive)
+  // mais jamais indexée.
+  robots: { index: false, follow: true },
+};
 
 export default function LoginPage() {
   return (

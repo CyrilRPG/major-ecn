@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Info, Mail } from 'lucide-react';
 export const metadata = {
   title: 'Paiement annulé — Major ECN',
   description: 'Votre paiement a été annulé. Aucun débit n\'a été effectué.',
+  robots: { index: false, follow: true },
 };
 
 export default function AnnulePage() {

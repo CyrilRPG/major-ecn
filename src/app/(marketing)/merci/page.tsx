@@ -23,6 +23,7 @@ import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 export const metadata = {
   title: 'Merci pour votre inscription — Major ECN',
   description: 'Votre paiement a été enregistré. Activez votre compte étudiant pour commencer.',
+  robots: { index: false, follow: true },
 };
 
 export const dynamic = 'force-dynamic';

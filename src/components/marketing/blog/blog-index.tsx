@@ -93,8 +93,8 @@ export async function BlogIndex({
               s&rsquo;inscrire au CNG, se préparer, choisir sa spécialité, puis exercer en France.
             </span>
           </span>
-          <span className="inline-flex items-center gap-2 rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-extrabold text-white shadow-sm transition-transform group-hover:scale-[1.02]">
-            Ouvrir le guide EVC <ArrowRight className="h-4 w-4" />
+          <span className="inline-flex items-center rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-extrabold text-white shadow-sm transition-transform group-hover:scale-[1.02]">
+            Ouvrir le guide EVC
           </span>
         </Link>
 

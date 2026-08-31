@@ -60,7 +60,13 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/facultes') ||
     path.startsWith('/matieres') ||
     path.startsWith('/revisions-transversales') ||
-    path.startsWith('/profil') ||
+    // `/profil` EXACTEMENT (+ ses sous-routes) : `startsWith('/profil')`
+    // capturait aussi `/profil-evc`, page vitrine publique mise en avant dans
+    // le menu, le lanceur et le popup. Les visiteurs non connectés — Googlebot
+    // compris — étaient redirigés vers /login : diagnostic gratuit inaccessible
+    // et page classée « Page avec redirection » dans la Search Console.
+    path === '/profil' ||
+    path.startsWith('/profil/') ||
     path.startsWith('/epreuves-blanches') ||
     path.startsWith('/formulaires') ||
     path.startsWith('/forum') ||

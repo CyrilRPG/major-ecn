@@ -268,7 +268,7 @@ export function MarketingFooter() {
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:px-8">
           <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-6">
             <p className="text-sm font-medium" style={{ color: INK }}>
-              &copy; {new Date().getFullYear()} Major ECN &mdash; Pr&eacute;paration EVC (PAE)
+              &copy; {new Date().getFullYear()} Major ECN &middot; Pr&eacute;paration EVC (PAE)
             </p>
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]" style={{ color: INK_SOFT }}>
               <li><Link href="/mentions-legales" className="hover:underline">Mentions l&eacute;gales</Link></li>

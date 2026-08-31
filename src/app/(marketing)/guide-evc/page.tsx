@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     url: GUIDE_EVC_PATH,
     siteName: 'Major ECN',
     locale: 'fr_FR',
-    images: [{ url: '/blog/couloir-hopital.jpg', alt: 'Guide complet des EVC — Major ECN' }],
+    images: [{ url: '/blog/couloir-hopital.jpg', alt: 'Guide complet des EVC pour médecins à diplôme étranger' }],
   },
   twitter: {
     card: 'summary_large_image',

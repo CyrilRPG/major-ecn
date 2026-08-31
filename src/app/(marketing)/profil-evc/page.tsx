@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ProfilDiagnostic } from '@/components/marketing/profil-evc/profil-diagnostic';
 
 export const metadata: Metadata = {
-  title: 'Profil EVC gratuit — Diagnostic personnalisé de votre préparation | Major ECN',
+  title: 'Profil EVC : diagnostic gratuit de votre préparation',
   description:
     'Évaluez gratuitement votre préparation aux EVC en moins de 3 minutes. Obtenez votre profil personnalisé, vos points forts, vos axes de progression et des recommandations concrètes.',
   alternates: { canonical: '/profil-evc' },

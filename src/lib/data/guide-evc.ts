@@ -53,7 +53,7 @@ export const GUIDE_SECTIONS: GuideSectionDef[] = [
     navHint: 'Ce que sont les épreuves, à qui elles s’adressent',
     intro: [
       "Les Épreuves de Vérification des Connaissances (EVC) sont le passage obligé de la procédure d'autorisation d'exercice (PAE) pour les médecins titulaires d'un diplôme obtenu hors Union européenne. Elles ne mesurent pas votre expérience clinique : elles vérifient que vos connaissances correspondent au référentiel français, spécialité par spécialité.",
-      "Deux voies coexistent, avec des épreuves et des publics différents — la voie interne, réservée aux praticiens déjà en poste et évaluée par questions à choix multiples, et la voie externe, ouverte plus largement et évaluée par une épreuve rédactionnelle. Les confondre, ou confondre les EVC avec les EDN destinées aux étudiants français, conduit à préparer le mauvais concours.",
+      "Deux voies coexistent, avec des épreuves et des publics différents. La voie interne est réservée aux praticiens déjà en poste et évaluée par questions à choix multiples ; la voie externe est ouverte plus largement et évaluée par une épreuve rédactionnelle. Les confondre, ou confondre les EVC avec les EDN destinées aux étudiants français, conduit à préparer le mauvais concours.",
       "Les articles ci-dessous posent les bases : ce que sont réellement ces épreuves, à qui elles s'adressent, ce qu'elles évaluent, et pourquoi elles pèsent autant sur l'accès aux soins en France.",
     ],
   },
@@ -64,7 +64,7 @@ export const GUIDE_SECTIONS: GuideSectionDef[] = [
     navHint: 'Calendrier CNG, éligibilité, pièces du dossier',
     intro: [
       "L'inscription se fait auprès du Centre national de gestion (CNG), dans une fenêtre de dépôt courte et sans tolérance : un dossier incomplet à la date de clôture est un dossier écarté, quelle que soit la qualité du candidat.",
-      "Trois points concentrent l'essentiel des refus : l'éligibilité (liste A ou liste B, nombre de tentatives déjà consommées), les pièces justificatives — diplômes, traductions, attestations d'exercice, niveau de langue — et le choix de la voie et de la spécialité, qui vous engage pour toute la session.",
+      "Trois points concentrent l'essentiel des refus : l'éligibilité (liste A ou liste B, nombre de tentatives déjà consommées), les pièces justificatives (diplômes, traductions, attestations d'exercice, niveau de langue) et le choix de la voie et de la spécialité, qui vous engage pour toute la session.",
       "Ces articles détaillent le calendrier, la procédure pas à pas et la liste complète des documents à réunir, avec les règles qui décident de la recevabilité de votre candidature.",
     ],
   },
@@ -75,7 +75,7 @@ export const GUIDE_SECTIONS: GuideSectionDef[] = [
     navHint: 'Méthode, QCM, QROC, organisation des révisions',
     intro: [
       "C'est ici que se joue le résultat. La difficulté des EVC n'est pas le niveau des questions prises une à une, mais le volume du programme, la logique de notation propre à chaque voie et le temps disponible quand on prépare le concours tout en travaillant.",
-      "Une préparation efficace repose sur quatre appuis : un rétroplanning tenable jusqu'au jour de l'épreuve, un entraînement régulier sur des QCM et des QROC calibrés au niveau réel du concours, la maîtrise des attendus de la correction — mots-clés, structure de réponse, urgences vitales — et l'analyse des erreurs qui coûtent le plus de points.",
+      "Une préparation efficace repose sur quatre appuis : un rétroplanning tenable jusqu'au jour de l'épreuve, un entraînement régulier sur des QCM et des QROC calibrés au niveau réel du concours, la maîtrise des attendus de la correction (mots-clés, structure de réponse, urgences vitales) et l'analyse des erreurs qui coûtent le plus de points.",
       "Vous trouverez dans cette section la méthodologie de la voie interne et de la voie externe, l'organisation des révisions, la gestion du stress sur la durée et les retours d'expérience de candidats lauréats.",
     ],
     pageLinks: [
@@ -115,8 +115,8 @@ export const GUIDE_SECTIONS: GuideSectionDef[] = [
     navLabel: "Le jour de l'épreuve",
     navHint: 'Règlement, déroulement, réflexes qui sauvent des points',
     intro: [
-      "Le jour du concours, la connaissance n'est plus la variable d'ajustement : la gestion du temps, la lecture des énoncés et la présentation de la copie le sont. Des candidats parfaitement préparés perdent des points sur des mécanismes purement techniques — consigne survolée, question laissée blanche, réponse juste mais illisible pour le correcteur.",
-      "Les épreuves se déroulent dans des centres désignés par le CNG, sur une durée fixe et sans matériel personnel. Anticiper la logistique — convocation, pièce d'identité, trajet, horaires — libère l'attention pour ce qui compte réellement pendant les heures d'épreuve.",
+      "Le jour du concours, la connaissance n'est plus la variable d'ajustement : la gestion du temps, la lecture des énoncés et la présentation de la copie le sont. Des candidats parfaitement préparés perdent des points sur des mécanismes purement techniques : consigne survolée, question laissée blanche, réponse juste mais illisible pour le correcteur.",
+      "Les épreuves se déroulent dans des centres désignés par le CNG, sur une durée fixe et sans matériel personnel. Anticiper la logistique (convocation, pièce d'identité, trajet, horaires) libère l'attention pour ce qui compte réellement pendant les heures d'épreuve.",
       "Cette section rassemble ce qui se joue pendant l'épreuve elle-même, et les réflexes qui protègent votre note.",
     ],
   },
@@ -127,7 +127,7 @@ export const GUIDE_SECTIONS: GuideSectionDef[] = [
     navHint: 'Affectation, parcours de consolidation, structures',
     intro: [
       "Réussir les épreuves n'ouvre pas immédiatement le plein exercice : les lauréats suivent un parcours de consolidation des compétences dans une structure d'accueil, avant l'autorisation d'exercice définitive et l'inscription à l'Ordre des médecins.",
-      "Le type de structure — centre hospitalier universitaire, hôpital général, établissement privé — change la nature de vos fonctions, votre encadrement et la suite de votre carrière. Ce choix se prépare avant les résultats, pas après.",
+      "Le type de structure, centre hospitalier universitaire, hôpital général ou établissement privé, change la nature de vos fonctions, votre encadrement et la suite de votre carrière. Ce choix se prépare avant les résultats, pas après.",
       "Les articles ci-dessous décrivent ce qui attend un lauréat une fois le concours passé.",
     ],
   },

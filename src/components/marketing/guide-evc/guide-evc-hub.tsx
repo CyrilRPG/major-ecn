@@ -1,18 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  ArrowRight, ArrowUpRight, Award, Building2, CalendarClock, ChevronDown,
-  ClipboardCheck, Clock, Compass, Euro, FileText, Globe2, GraduationCap,
-  Lightbulb, ListChecks, Sparkles, Stethoscope, Target, Users,
-} from 'lucide-react';
-import { BLOG_CATEGORIES, type BlogArticleMeta, type BlogCategory } from '@/lib/data/blog-articles';
-import {
-  GUIDE_EVC_FAQ, type GuideSection, type GuideSectionId,
-} from '@/lib/data/guide-evc';
+import { BLOG_CATEGORIES, type BlogArticleMeta } from '@/lib/data/blog-articles';
+import { GUIDE_EVC_FAQ, type GuideSection, type GuideSectionId } from '@/lib/data/guide-evc';
 import { getGuideEvcSections } from '@/lib/data/guide-evc-sections';
-import { PrepCtaCard } from '@/components/marketing/blog/article-shell';
 import { MeshGradient, NoiseTexture, SpotlightCard, AnimatedCounter } from '@/components/marketing/premium-ui';
-import { Reveal } from '@/components/marketing/reveal';
 
 /* ── Palette de la charte ─────────────────────────────────────────────── */
 const FONT = "'Plus Jakarta Sans', sans-serif";
@@ -23,48 +14,34 @@ const INK_SOFT = '#52607A';
 const MUTED = '#9AA1AE';
 const BORDER = '#ECEEF1';
 
-const CATEGORY_ICON: Record<BlogCategory, React.ElementType> = {
-  'epreuves-evc': ClipboardCheck,
-  'candidature-dossier': FileText,
-  'exercice-medical': Building2,
-  'carriere-remuneration': Euro,
-  'medecins-etrangers': Globe2,
-  'conseils-methodologie': Lightbulb,
-  'specialites': Stethoscope,
-};
-
-/** Icône et teinte propres à chaque étape du parcours. */
-const SECTION_THEME: Record<GuideSectionId, { Icon: React.ElementType; accent: string; soft: string }> = {
-  'comprendre':        { Icon: Compass,       accent: '#C0112E', soft: '#FDE7E9' },
-  's-inscrire':        { Icon: ListChecks,    accent: '#1E4D8B', soft: '#E5F1FF' },
-  'se-preparer':       { Icon: Target,        accent: '#B26A00', soft: '#FEF3E2' },
-  'par-specialite':    { Icon: Stethoscope,   accent: '#3730A3', soft: '#EEF2FF' },
-  'jour-de-l-epreuve': { Icon: CalendarClock, accent: '#6D28D9', soft: '#EDE9FE' },
-  'apres-les-evc':     { Icon: Building2,     accent: '#16793C', soft: '#E7F6EC' },
-  'carriere':          { Icon: Euro,          accent: '#0F766E', soft: '#CCFBF1' },
+/** Teinte propre à chaque étape du parcours (aucun pictogramme : la couleur et
+ *  le numéro suffisent à distinguer les sections). */
+const SECTION_ACCENT: Record<GuideSectionId, { accent: string; soft: string }> = {
+  'comprendre':        { accent: '#C0112E', soft: '#FDE7E9' },
+  's-inscrire':        { accent: '#1E4D8B', soft: '#E5F1FF' },
+  'se-preparer':       { accent: '#B26A00', soft: '#FEF3E2' },
+  'par-specialite':    { accent: '#3730A3', soft: '#EEF2FF' },
+  'jour-de-l-epreuve': { accent: '#6D28D9', soft: '#EDE9FE' },
+  'apres-les-evc':     { accent: '#16793C', soft: '#E7F6EC' },
+  'carriere':          { accent: '#0F766E', soft: '#CCFBF1' },
 };
 
 /* ── Carte d'article ──────────────────────────────────────────────────── */
 function ArticleCard({ article }: { article: BlogArticleMeta }) {
   const c = BLOG_CATEGORIES[article.category] ?? BLOG_CATEGORIES['epreuves-evc'];
-  const Icon = CATEGORY_ICON[article.category] ?? ClipboardCheck;
   return (
     <li className="h-full">
       <SpotlightCard
-        spotlightColor={`${c.fg}14`}
+        spotlightColor={`${c.fg}12`}
         className="h-full rounded-2xl border bg-white shadow-[0_6px_20px_-14px_rgba(15,31,77,0.28)] transition-all duration-300 hover:-translate-y-1 hover:border-[#DDE1E7] hover:shadow-[0_20px_40px_-20px_rgba(15,31,77,0.35)]"
         style={{ borderColor: BORDER }}
       >
         <Link href={`/blog/${article.slug}`} className="flex h-full flex-col gap-3 p-5">
-          <span className="flex items-center justify-between gap-3">
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-extrabold uppercase tracking-[0.16em]"
-              style={{ background: c.bg, color: c.fg }}
-            >
-              <Icon className="h-3 w-3" />
-              {c.label}
-            </span>
-            <ArrowUpRight className="h-4 w-4 shrink-0 text-[#C9CFDA] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#C0112E]" />
+          <span
+            className="self-start rounded-full px-2.5 py-1 text-[9.5px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ background: c.bg, color: c.fg }}
+          >
+            {c.label}
           </span>
 
           <span className="block text-[15px] font-extrabold leading-snug tracking-tight" style={{ color: INK }}>
@@ -73,8 +50,14 @@ function ArticleCard({ article }: { article: BlogArticleMeta }) {
           <span className="block flex-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
             {article.excerpt}
           </span>
-          <span className="mt-auto flex items-center gap-1.5 border-t pt-2.5 text-[11px]" style={{ borderColor: BORDER, color: MUTED }}>
-            <Clock className="h-3 w-3" /> {article.readingMinutes} min de lecture
+          <span
+            className="mt-auto flex items-center justify-between border-t pt-2.5 text-[11px] font-semibold"
+            style={{ borderColor: BORDER, color: MUTED }}
+          >
+            <span>{article.readingMinutes} min de lecture</span>
+            <span className="font-extrabold uppercase tracking-[0.14em]" style={{ color: RED }}>
+              Lire
+            </span>
           </span>
         </Link>
       </SpotlightCard>
@@ -84,32 +67,23 @@ function ArticleCard({ article }: { article: BlogArticleMeta }) {
 
 /* ── Une section du guide ─────────────────────────────────────────────── */
 function GuideSectionBlock({ section, index }: { section: GuideSection; index: number }) {
-  const theme = SECTION_THEME[section.id];
-  const { Icon } = theme;
+  const theme = SECTION_ACCENT[section.id];
   const n = String(index + 1).padStart(2, '0');
 
   return (
     <section id={section.id} className="scroll-mt-28">
-      <Reveal>
-        {/* En-tête de section : pastille numérotée + titre + filet dégradé */}
-        <header className="relative">
+        <header>
           <div className="flex items-start gap-4">
             <span
-              className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-[0_10px_24px_-14px_rgba(15,31,77,0.5)]"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[16px] font-black"
               style={{ background: theme.soft, color: theme.accent }}
               aria-hidden
             >
-              <Icon className="h-5.5 w-5.5" />
-              <span
-                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[9.5px] font-black text-white"
-                style={{ background: theme.accent }}
-              >
-                {n}
-              </span>
+              {n}
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[10.5px] font-extrabold uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
-                Étape {n}
+                Étape {n} sur 07
               </p>
               <h2 className="mt-1 text-[23px] font-black leading-tight tracking-tight sm:text-[27px]" style={{ color: INK }}>
                 {section.title}
@@ -122,7 +96,6 @@ function GuideSectionBlock({ section, index }: { section: GuideSection; index: n
           />
         </header>
 
-        {/* Texte rédigé de la section */}
         <div className="mt-5 grid gap-x-10 gap-y-3 lg:grid-cols-2">
           {section.intro.map((p, i) => (
             <p
@@ -135,10 +108,9 @@ function GuideSectionBlock({ section, index }: { section: GuideSection; index: n
           ))}
         </div>
 
-        {/* Articles de la section */}
         {section.articles.length > 0 && (
           <>
-            <p className="mt-7 flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: MUTED }}>
+            <p className="mt-7 flex items-center gap-3 text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: MUTED }}>
               <span className="h-px w-6" style={{ background: BORDER }} />
               {section.articles.length} article{section.articles.length > 1 ? 's' : ''} sur ce thème
             </p>
@@ -150,32 +122,27 @@ function GuideSectionBlock({ section, index }: { section: GuideSection; index: n
           </>
         )}
 
-        {/* Ressources Major ECN rattachées à l'étape */}
         {section.pageLinks && section.pageLinks.length > 0 && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {section.pageLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="group flex items-start gap-3 rounded-2xl border border-[#FACBD0] bg-[linear-gradient(150deg,#FFF7F8_0%,#FFECEF_100%)] p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-20px_rgba(192,17,46,0.55)]"
+                className="group rounded-2xl border border-[#FACBD0] bg-[linear-gradient(150deg,#FFF7F8_0%,#FFECEF_100%)] p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-20px_rgba(192,17,46,0.55)]"
               >
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#C0112E] text-white" aria-hidden>
-                  <Sparkles className="h-4 w-4" />
+                <span className="block text-[9.5px] font-extrabold uppercase tracking-[0.18em]" style={{ color: RED }}>
+                  Ressource Major ECN
                 </span>
-                <span>
-                  <span className="flex items-center gap-1.5 text-[14px] font-extrabold" style={{ color: '#8B0E22' }}>
-                    {l.label}
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                  <span className="mt-1 block text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-                    {l.description}
-                  </span>
+                <span className="mt-1.5 block text-[14px] font-extrabold group-hover:underline" style={{ color: '#8B0E22' }}>
+                  {l.label}
+                </span>
+                <span className="mt-1 block text-[12.5px] leading-relaxed" style={{ color: INK_SOFT }}>
+                  {l.description}
                 </span>
               </Link>
             ))}
           </div>
         )}
-      </Reveal>
     </section>
   );
 }
@@ -187,7 +154,7 @@ export async function GuideEvcHub() {
 
   return (
     <div style={{ fontFamily: FONT }}>
-      {/* ═════════════ Bloc 1 — Hero ═════════════ */}
+      {/* ═════════════ Bloc 1 — Introduction ═════════════ */}
       <header
         className="relative isolate overflow-hidden"
         style={{ background: `linear-gradient(120deg, ${NAVY} 0%, #2A1B45 38%, #5C1827 68%, ${RED} 100%)` }}
@@ -207,9 +174,8 @@ export async function GuideEvcHub() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
           <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-14">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                <Compass className="h-3.5 w-3.5" />
-                Guide de référence · mis à jour en continu
+              <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                Guide de référence, mis à jour en continu
               </span>
 
               <h1 className="mt-5 text-[32px] font-black leading-[1.08] tracking-tight text-white sm:text-[42px] lg:text-[48px]">
@@ -237,17 +203,15 @@ export async function GuideEvcHub() {
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a
                   href="#comprendre"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-extrabold shadow-[0_16px_34px_-16px_rgba(0,0,0,0.6)] transition-transform hover:scale-[1.02]"
+                  className="inline-flex items-center rounded-xl bg-white px-5 py-3 text-[14px] font-extrabold shadow-[0_16px_34px_-16px_rgba(0,0,0,0.6)] transition-transform hover:scale-[1.02]"
                   style={{ color: NAVY }}
                 >
                   Commencer le guide
-                  <ArrowRight className="h-4 w-4" />
                 </a>
                 <Link
                   href="/espace-decouverte"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-[14px] font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                  className="inline-flex items-center rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-[14px] font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
                 >
-                  <Sparkles className="h-4 w-4" />
                   Tester la préparation gratuitement
                 </Link>
               </div>
@@ -255,17 +219,16 @@ export async function GuideEvcHub() {
               {/* Chiffres clés */}
               <dl className="mt-9 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
                 {[
-                  { Icon: FileText, end: articleCount, suffix: '', label: 'articles réunis' },
-                  { Icon: ListChecks, end: sections.length, suffix: '', label: 'étapes du parcours' },
-                  { Icon: Users, end: 9000, suffix: '+', label: 'médecins accompagnés' },
-                  { Icon: Award, end: 2011, suffix: '', label: 'depuis', raw: true },
-                ].map(({ Icon: I, end, suffix, label, raw }) => (
-                  <div key={label} className="flex flex-col gap-1">
-                    <I className="h-4 w-4 text-white/50" aria-hidden />
-                    <dd className="text-[24px] font-black leading-none text-white">
+                  { end: articleCount, suffix: '', label: 'articles réunis' },
+                  { end: sections.length, suffix: '', label: 'étapes du parcours' },
+                  { end: 9000, suffix: '+', label: 'médecins accompagnés' },
+                  { end: 2011, suffix: '', label: 'préparation depuis', raw: true },
+                ].map(({ end, suffix, label, raw }) => (
+                  <div key={label} className="border-l border-white/20 pl-3.5">
+                    <dd className="text-[26px] font-black leading-none text-white">
                       {raw ? end : <AnimatedCounter end={end} suffix={suffix} />}
                     </dd>
-                    <dt className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-white/55">
+                    <dt className="mt-1.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-white/55">
                       {label}
                     </dt>
                   </div>
@@ -278,7 +241,7 @@ export async function GuideEvcHub() {
               <div className="relative overflow-hidden rounded-3xl border border-white/20 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.85)]">
                 <Image
                   src="/blog/couloir-hopital.jpg"
-                  alt="Couloir d’hôpital — exercer la médecine en France après les EVC"
+                  alt="Couloir d’hôpital, exercer la médecine en France après les EVC"
                   width={880}
                   height={660}
                   // Pas de `priority` : le visuel est masqué sous 1024 px, un
@@ -293,12 +256,9 @@ export async function GuideEvcHub() {
                   className="pointer-events-none absolute inset-0"
                   style={{ background: 'linear-gradient(180deg, rgba(15,31,77,0) 45%, rgba(15,31,77,0.55) 100%)' }}
                 />
-                <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-white/12 p-3.5 backdrop-blur-md">
-                  <p className="flex items-center gap-2 text-[12.5px] font-bold text-white">
-                    <GraduationCap className="h-4 w-4" />
-                    Toutes les spécialités du concours, une seule page de référence
-                  </p>
-                </div>
+                <p className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-white/12 p-3.5 text-[12.5px] font-bold text-white backdrop-blur-md">
+                  Toutes les spécialités du concours, une seule page de référence
+                </p>
               </div>
             </div>
           </div>
@@ -312,13 +272,12 @@ export async function GuideEvcHub() {
         />
 
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-          {/* ── Introduction rédigée ── */}
-          <Reveal>
+          {/* ── Suite de l'introduction ── */}
             <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
               <div className="space-y-4 text-[15px] leading-[1.8]" style={{ color: INK_SOFT }}>
                 <p>
                   Ce guide s’adresse aux médecins PADHUE qui préparent ce concours, quelle que soit
-                  leur voie — interne ou externe — et leur spécialité. Il s’adresse aussi à ceux qui
+                  leur voie, interne ou externe, et leur spécialité. Il s’adresse aussi à ceux qui
                   hésitent encore : comprendre le format des épreuves, les conditions d’éligibilité
                   et ce qui attend un lauréat évite de perdre une année, ou une tentative.
                 </p>
@@ -346,18 +305,15 @@ export async function GuideEvcHub() {
                     'Praticiens hésitant encore sur leur spécialité',
                     'Lauréats préparant leur parcours de consolidation',
                   ].map((t) => (
-                    <li key={t} className="flex items-start gap-2.5 text-[13.5px] leading-relaxed" style={{ color: INK }}>
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: RED }} />
+                    <li key={t} className="border-l-2 pl-3 text-[13.5px] leading-relaxed" style={{ borderColor: '#FACBD0', color: INK }}>
                       {t}
                     </li>
                   ))}
                 </ul>
               </aside>
             </div>
-          </Reveal>
 
           {/* ── Bloc 2 — Sommaire ancré ── */}
-          <Reveal>
             <nav aria-label="Sommaire du guide" className="mt-12">
               <div className="flex items-center gap-3">
                 <h2 className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: MUTED }}>
@@ -368,8 +324,7 @@ export async function GuideEvcHub() {
 
               <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {sections.map((s, i) => {
-                  const theme = SECTION_THEME[s.id];
-                  const { Icon } = theme;
+                  const theme = SECTION_ACCENT[s.id];
                   return (
                     <li key={s.id}>
                       <a
@@ -377,17 +332,11 @@ export async function GuideEvcHub() {
                         className="group flex h-full flex-col gap-2 rounded-2xl border bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_-22px_rgba(15,31,77,0.45)]"
                         style={{ borderColor: BORDER }}
                       >
-                        <span className="flex items-center justify-between">
-                          <span
-                            className="flex h-9 w-9 items-center justify-center rounded-xl"
-                            style={{ background: theme.soft, color: theme.accent }}
-                            aria-hidden
-                          >
-                            <Icon className="h-4 w-4" />
-                          </span>
-                          <span className="text-[11px] font-black" style={{ color: '#D5DAE3' }}>
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
+                        <span
+                          className="text-[22px] font-black leading-none"
+                          style={{ color: theme.accent, opacity: 0.85 }}
+                        >
+                          {String(i + 1).padStart(2, '0')}
                         </span>
                         <span className="text-[14px] font-extrabold leading-snug transition-colors group-hover:text-[#C0112E]" style={{ color: INK }}>
                           {s.navLabel}
@@ -395,7 +344,7 @@ export async function GuideEvcHub() {
                         <span className="text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>
                           {s.navHint}
                         </span>
-                        <span className="mt-auto pt-1.5 text-[11px] font-bold" style={{ color: MUTED }}>
+                        <span className="mt-auto border-t pt-2 text-[11px] font-bold" style={{ borderColor: BORDER, color: MUTED }}>
                           {s.articles.length} article{s.articles.length > 1 ? 's' : ''}
                         </span>
                       </a>
@@ -409,8 +358,8 @@ export async function GuideEvcHub() {
                     className="group flex h-full flex-col gap-2 rounded-2xl border border-dashed bg-white/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:bg-white"
                     style={{ borderColor: '#D9DEE7' }}
                   >
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1F4F9]" style={{ color: NAVY }} aria-hidden>
-                      <ChevronDown className="h-4 w-4" />
+                    <span className="text-[22px] font-black leading-none" style={{ color: NAVY, opacity: 0.6 }}>
+                      08
                     </span>
                     <span className="text-[14px] font-extrabold leading-snug transition-colors group-hover:text-[#C0112E]" style={{ color: INK }}>
                       Questions fréquentes
@@ -422,10 +371,9 @@ export async function GuideEvcHub() {
                 </li>
               </ol>
             </nav>
-          </Reveal>
 
           {/* ── Blocs 3 à N — Sections ── */}
-          <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_300px] lg:gap-12">
+          <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_290px] lg:gap-12">
             <div className="min-w-0 space-y-14">
               {sections.map((s, i) => (
                 <GuideSectionBlock key={s.id} section={s} index={i} />
@@ -433,7 +381,6 @@ export async function GuideEvcHub() {
 
               {/* ── Questions fréquentes (schéma FAQPage) ── */}
               <section id="questions-frequentes" className="scroll-mt-28">
-                <Reveal>
                   <header>
                     <p className="text-[10.5px] font-extrabold uppercase tracking-[0.2em]" style={{ color: RED }}>
                       Pour finir
@@ -447,46 +394,47 @@ export async function GuideEvcHub() {
                     </p>
                   </header>
 
-                  <div className="mt-6 divide-y overflow-hidden rounded-3xl border bg-white shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]" style={{ borderColor: BORDER }}>
+                  <div
+                    className="mt-6 divide-y overflow-hidden rounded-3xl border bg-white shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]"
+                    style={{ borderColor: BORDER }}
+                  >
                     {GUIDE_EVC_FAQ.map((item, i) => (
-                      <details key={item.q} className="group" open={i === 0}>
-                        <summary className="flex cursor-pointer list-none items-start gap-3 px-5 py-4 transition-colors hover:bg-[#FAFBFE]">
-                          <span
-                            className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[10.5px] font-black"
-                            style={{ background: '#FDE7E9', color: RED }}
-                            aria-hidden
-                          >
-                            {i + 1}
-                          </span>
-                          <h3 className="flex-1 text-[15px] font-extrabold leading-snug" style={{ color: INK }}>
+                      <div key={item.q} className="grid gap-1.5 px-5 py-4 sm:grid-cols-[auto_1fr] sm:gap-x-4">
+                        <span
+                          className="text-[11px] font-black leading-6 sm:pt-0.5"
+                          style={{ color: RED }}
+                          aria-hidden
+                        >
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <h3 className="text-[15px] font-extrabold leading-snug" style={{ color: INK }}>
                             {item.q}
                           </h3>
-                          <ChevronDown
-                            className="mt-0.5 h-4 w-4 shrink-0 transition-transform duration-300 group-open:rotate-180"
-                            style={{ color: MUTED }}
-                            aria-hidden
-                          />
-                        </summary>
-                        <p className="px-5 pb-5 pl-14 text-[13.5px] leading-[1.8]" style={{ color: INK_SOFT }}>
-                          {item.a}
-                        </p>
-                      </details>
+                          <p className="mt-1.5 text-[13.5px] leading-[1.8]" style={{ color: INK_SOFT }}>
+                            {item.a}
+                          </p>
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </Reveal>
               </section>
             </div>
 
             {/* ── Colonne de droite ── */}
             <aside className="hidden lg:block">
               <div className="sticky top-24 space-y-4">
-                <nav aria-label="Navigation du guide" className="rounded-3xl border bg-white p-4 shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]" style={{ borderColor: BORDER }}>
+                <nav
+                  aria-label="Navigation du guide"
+                  className="rounded-3xl border bg-white p-4 shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]"
+                  style={{ borderColor: BORDER }}
+                >
                   <p className="mb-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: MUTED }}>
                     Les étapes
                   </p>
                   <ol className="space-y-0.5">
                     {sections.map((s, i) => {
-                      const theme = SECTION_THEME[s.id];
+                      const theme = SECTION_ACCENT[s.id];
                       return (
                         <li key={s.id}>
                           <a
@@ -508,15 +456,44 @@ export async function GuideEvcHub() {
                   </ol>
                 </nav>
 
-                <PrepCtaCard />
+                {/* Encart de préparation, sans pictogramme */}
+                <section
+                  className="rounded-3xl border bg-white p-5 shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]"
+                  style={{ borderColor: BORDER }}
+                >
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: RED }}>
+                    Préparation Major ECN
+                  </p>
+                  <p className="mt-2 text-[14.5px] font-extrabold leading-snug" style={{ color: INK }}>
+                    Préparez les EVC dans votre spécialité
+                  </p>
+                  <ul className="mt-3 space-y-1.5">
+                    {[
+                      'Toutes les spécialités couvertes',
+                      'QCM et QROC corrigés',
+                      'Dossiers cliniques et épreuves blanches',
+                      'Révisions transversales',
+                      'Suivi pédagogique',
+                    ].map((b) => (
+                      <li key={b} className="border-l-2 pl-3 text-[12.5px] leading-relaxed" style={{ borderColor: '#FACBD0', color: INK }}>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/plateforme"
+                    className="mt-4 block rounded-xl bg-[#C0112E] px-4 py-2.5 text-center text-[13px] font-extrabold text-white shadow-sm transition-transform hover:scale-[1.01]"
+                  >
+                    Découvrir la plateforme
+                  </Link>
+                </section>
 
                 <Link
                   href="/blog"
-                  className="flex items-center justify-between gap-2 rounded-2xl border bg-white px-4 py-3 text-[12.5px] font-bold transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-22px_rgba(15,31,77,0.5)]"
+                  className="block rounded-2xl border bg-white px-4 py-3 text-[12.5px] font-bold transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-22px_rgba(15,31,77,0.5)]"
                   style={{ borderColor: BORDER, color: INK_SOFT }}
                 >
                   Parcourir tous les articles du blog
-                  <ArrowRight className="h-3.5 w-3.5" style={{ color: RED }} />
                 </Link>
               </div>
             </aside>
@@ -552,45 +529,38 @@ export async function GuideEvcHub() {
             {[
               {
                 href: '/espace-decouverte',
-                Icon: Sparkles,
                 badge: 'Gratuit',
                 title: 'Tester l’espace découverte',
                 text: 'QCM, dossiers cliniques et flashcards au niveau réel du concours, sans engagement.',
               },
               {
                 href: '/specialites',
-                Icon: Stethoscope,
                 title: 'Consulter les spécialités préparées',
                 text: 'Le programme et les supports disponibles pour chaque spécialité des EVC.',
               },
               {
                 href: '/tarifs',
-                Icon: GraduationCap,
                 title: 'Voir les formules et les tarifs',
                 text: 'Les trois formules de préparation, leur contenu et leurs conditions d’inscription.',
               },
-            ].map(({ href, Icon: I, badge, title, text }) => (
+            ].map(({ href, badge, title, text }) => (
               <Link
                 key={href}
                 href={href}
                 className="group flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/35 hover:bg-white/15"
               >
-                <span className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-white" aria-hidden>
-                    <I className="h-4 w-4" />
+                {badge && (
+                  <span
+                    className="self-start rounded-full bg-white px-2.5 py-1 text-[9.5px] font-extrabold uppercase tracking-[0.16em]"
+                    style={{ color: RED }}
+                  >
+                    {badge}
                   </span>
-                  {badge && (
-                    <span className="rounded-full bg-white px-2.5 py-1 text-[9.5px] font-extrabold uppercase tracking-[0.16em]" style={{ color: RED }}>
-                      {badge}
-                    </span>
-                  )}
+                )}
+                <span className="text-[15px] font-extrabold leading-snug text-white group-hover:underline">
+                  {title}
                 </span>
-                <span className="text-[15px] font-extrabold leading-snug text-white">{title}</span>
                 <span className="text-[12.5px] leading-relaxed text-white/70">{text}</span>
-                <span className="mt-1 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/90">
-                  Y accéder
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </span>
               </Link>
             ))}
           </div>
