@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { BLOG_CATEGORIES, type BlogArticleMeta } from '@/lib/data/blog-articles';
 import { GUIDE_EVC_FAQ, type GuideSection, type GuideSectionId } from '@/lib/data/guide-evc';
 import { getGuideEvcSections } from '@/lib/data/guide-evc-sections';
-import { MeshGradient, NoiseTexture, SpotlightCard, AnimatedCounter } from '@/components/marketing/premium-ui';
+import { MeshGradient, NoiseTexture, SpotlightCard } from '@/components/marketing/premium-ui';
 
 /* ── Palette de la charte ─────────────────────────────────────────────── */
 const FONT = "'Plus Jakarta Sans', sans-serif";
@@ -216,18 +216,18 @@ export async function GuideEvcHub() {
                 </Link>
               </div>
 
-              {/* Chiffres clés */}
+              {/* Chiffres clés. Valeurs écrites telles quelles : un compteur
+                  animé part de zéro, et c'est ce zéro que contiennent le HTML
+                  servi et donc la page telle que l'indexe un moteur. */}
               <dl className="mt-9 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
                 {[
-                  { end: articleCount, suffix: '', label: 'articles réunis' },
-                  { end: sections.length, suffix: '', label: 'étapes du parcours' },
-                  { end: 9000, suffix: '+', label: 'médecins accompagnés' },
-                  { end: 2011, suffix: '', label: 'préparation depuis', raw: true },
-                ].map(({ end, suffix, label, raw }) => (
+                  { value: String(articleCount), label: 'articles réunis' },
+                  { value: String(sections.length), label: 'étapes du parcours' },
+                  { value: '9 000+', label: 'médecins accompagnés' },
+                  { value: '2011', label: 'préparation depuis' },
+                ].map(({ value, label }) => (
                   <div key={label} className="border-l border-white/20 pl-3.5">
-                    <dd className="text-[26px] font-black leading-none text-white">
-                      {raw ? end : <AnimatedCounter end={end} suffix={suffix} />}
-                    </dd>
+                    <dd className="text-[26px] font-black leading-none text-white">{value}</dd>
                     <dt className="mt-1.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-white/55">
                       {label}
                     </dt>
