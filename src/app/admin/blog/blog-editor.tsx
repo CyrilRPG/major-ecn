@@ -15,6 +15,7 @@ import { savePost, type BlogPostInput } from './actions';
 import { reviseArticleWithAi } from './ia/actions';
 import { RichText } from './rich-text';
 import { ImageUploader } from './image-uploader';
+import { ImageWidthControl } from './image-width';
 
 let counter = 0;
 const uid = () => `b${++counter}`;
@@ -691,6 +692,19 @@ function ImgEditor({ block, onChange }: { block: Extract<Block, { t: 'img' }>; o
       <select value={block.layout ?? 'full'} onChange={(e) => onChange({ ...block, layout: e.target.value as ImageLayout })} className={inputCls}>
         {LAYOUTS.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
       </select>
+      <ImageWidthControl
+        src={block.src}
+        layout={block.layout ?? 'full'}
+        width={block.width}
+        onChange={(width) => {
+          // Retirer la largeur (plutôt que d'écrire 100) laisse le bloc suivre
+          // la largeur par défaut de sa disposition si celle-ci change ensuite.
+          const next: Extract<Block, { t: 'img' }> = { ...block };
+          if (width === undefined) delete next.width;
+          else next.width = width;
+          onChange(next);
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/auth/require-role';
-import { getStripe, isTestMode } from '@/lib/stripe';
+import { FORMULES, getStripe, isTestMode } from '@/lib/stripe';
 import { sellableCatalogue } from '@/lib/stripe/catalogue';
 import { listPromoCodes, type PromoCodeRow } from '@/lib/stripe/promo-codes';
 import { PromoCodesManager, type OfferOption } from '@/components/admin/promo-codes-manager';
@@ -18,11 +18,19 @@ export default async function AdminCodesPromoPage() {
   await requireAdmin();
 
   // Seules les offres dont le prix Stripe est configuré peuvent être restreintes
-  // (le périmètre d'un coupon s'exprime en produits Stripe).
+  // (le périmètre d'un coupon s'exprime en produits Stripe). Les facettes
+  // (formule / spécialité / niveau) accompagnent chaque offre : ce sont les
+  // seules dimensions qui séparent réellement deux produits Stripe.
   const offers: OfferOption[] = sellableCatalogue().map((e) => ({
     key: e.offer,
     label: e.label,
     amountEuros: e.amountCents / 100,
+    formule: e.formule,
+    formuleLabel: FORMULES[e.formule].name,
+    specialtyKey: e.specialtyKey,
+    specialtyName: e.specialtyName,
+    tier: e.tier,
+    tierLabel: e.tierLabel,
   }));
 
   let codes: PromoCodeRow[] = [];

@@ -16,19 +16,27 @@
  *     son quota, son état actif/inactif).
  * On crée toujours la paire ensemble : un coupon par code, jamais partagé.
  *
- * TROIS LIMITES DE STRIPE À CONNAÎTRE
- * -----------------------------------
+ * DEUX LIMITES DE STRIPE À CONNAÎTRE
+ * ----------------------------------
  * 1. Le montant d'un coupon est IMMUABLE après création. Corriger une remise =
  *    désactiver le code et en créer un autre. L'admin en est averti dans l'UI.
  * 2. Il n'existe pas de « date de début ». On la stocke dans les métadonnées du
  *    code (`starts_at`), on crée le code inactif, et le cron
  *    `/api/cron/promo-codes-activate` l'active le jour venu.
- * 3. Il n'existe pas de quota « une fois par client » sur un code partagé. Le
- *    plus proche est `restrictions.first_time_transaction` : le code ne
- *    fonctionne que pour un candidat qui n'a jamais payé. Pour Major ECN où l'on
- *    achète une formation une fois, cela revient au même — mais le libellé de
- *    l'UI dit exactement ce que la règle fait, pas ce qu'on aimerait qu'elle
- *    fasse.
+ *
+ * CE QU'ON NE PROPOSE PAS, ET POURQUOI
+ * ------------------------------------
+ * - « Une seule fois par candidat ». Le plus proche côté Stripe est
+ *   `restrictions.first_time_transaction`, qui s'évalue sur le CLIENT Stripe
+ *   rattaché à la session. Or notre tunnel n'attache jamais de client existant
+ *   (`checkout` ne passe que `customer_email`) : chaque paiement part d'un
+ *   client neuf, sans historique, donc la restriction est toujours satisfaite.
+ *   La case existait dans l'admin et ne bloquait rien — elle a été retirée
+ *   plutôt que de laisser croire à une limite qui n'était jamais appliquée.
+ * - Un filtre par VOIE (interne / externe). La voie est choisie dans le tunnel
+ *   et voyage en métadonnée de la session ; elle ne change pas le produit
+ *   acheté. Le périmètre d'un coupon s'exprimant en produits, Stripe n'aurait
+ *   aucun moyen de refuser le code à l'autre voie.
  */
 import type Stripe from 'stripe';
 import { resolveProductIds, stripeCatalogue } from './catalogue';
@@ -50,7 +58,6 @@ export type PromoCodeRow = {
   expiresAt: string | null;
   maxRedemptions: number | null;
   timesRedeemed: number;
-  oncePerCandidate: boolean;
   /** Libellés des formations concernées. `null` = toutes les formations. */
   offerLabels: string[] | null;
   createdAt: string;
@@ -66,8 +73,10 @@ export type PromoCodeInput = {
   maxRedemptions: number | null;
   /** Clés d'offres (`stripeCatalogue()`). Vide = toutes les formations. */
   offers: string[];
-  oncePerCandidate: boolean;
   active: boolean;
+  /** L'admin a vu et accepté que le périmètre déborde des offres choisies
+   *  (produits Stripe partagés — cf. `resolveProductIds`). */
+  confirmBroaderScope?: boolean;
 };
 
 const CODE_RE = /^[A-Z0-9][A-Z0-9_-]{2,39}$/;
@@ -153,7 +162,13 @@ export async function createPromoCode(
   stripe: Stripe,
   input: PromoCodeInput,
   createdBy: string,
-): Promise<{ ok: true; code: string } | { ok: false; error: string }> {
+): Promise<
+  | { ok: true; code: string }
+  | { ok: false; error: string }
+  /** Périmètre plus large que demandé : à confirmer, puis rejouer avec
+   *  `confirmBroaderScope`. */
+  | { ok: false; error: string; alsoCovered: string[] }
+> {
   const check = validatePromoInput(input);
   if (!check.ok) return check;
 
@@ -181,6 +196,19 @@ export async function createPromoCode(
           + 'Le code n’a pas été créé — il aurait été valable au-delà des formations choisies.',
       };
     }
+    // Deux offres peuvent partager un même produit Stripe : le coupon les
+    // couvrirait toutes les deux. On le dit AVANT de créer, le périmètre d'un
+    // coupon n'étant pas modifiable ensuite.
+    if (resolved.alsoCovered.length > 0 && !input.confirmBroaderScope) {
+      return {
+        ok: false,
+        error:
+          'Ces offres partagent leur fiche produit Stripe avec d’autres : le code '
+          + `serait aussi valable sur ${resolved.alsoCovered.join(', ')}. `
+          + 'Confirmez pour créer le code malgré tout.',
+        alsoCovered: resolved.alsoCovered,
+      };
+    }
     productIds = resolved.productIds;
   }
 
@@ -206,7 +234,6 @@ export async function createPromoCode(
       active: scheduled ? false : input.active,
       ...(input.expiresAt ? { expires_at: endOfDay(input.expiresAt) } : {}),
       ...(input.maxRedemptions !== null ? { max_redemptions: input.maxRedemptions } : {}),
-      ...(input.oncePerCandidate ? { restrictions: { first_time_transaction: true } } : {}),
       metadata: {
         source: PROMO_SOURCE,
         offers: input.offers.join(','),
@@ -307,7 +334,6 @@ export async function listPromoCodes(stripe: Stripe, limit = 100): Promise<Promo
       expiresAt: p.expires_at ? new Date(p.expires_at * 1000).toISOString() : null,
       maxRedemptions: p.max_redemptions ?? null,
       timesRedeemed: p.times_redeemed,
-      oncePerCandidate: p.restrictions?.first_time_transaction === true,
       offerLabels,
       createdAt: new Date(p.created * 1000).toISOString(),
     };

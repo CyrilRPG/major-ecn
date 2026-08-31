@@ -9,7 +9,23 @@ import {
 } from '@/app/admin/codes-promo/actions';
 import type { PromoCodeRow, PromoCodeStatus } from '@/lib/stripe/promo-codes';
 
-export type OfferOption = { key: string; label: string; amountEuros: number };
+/**
+ * Une offre vendable, décrite par les trois facettes qui séparent réellement
+ * deux produits Stripe : la formule, et — pour le Programme Approfondi — la
+ * spécialité et le niveau. Ce sont les seuls axes sur lesquels un coupon peut
+ * être restreint (`coupon.applies_to.products`).
+ */
+export type OfferOption = {
+  key: string;
+  label: string;
+  amountEuros: number;
+  formule: string;
+  formuleLabel: string;
+  specialtyKey: string | null;
+  specialtyName: string | null;
+  tier: 'base' | 'plus' | null;
+  tierLabel: string | null;
+};
 
 const inputClass =
   'w-full rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm';
@@ -29,6 +45,62 @@ const euros = (n: number) =>
 const day = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
 
+/** Boutons de périmètre : une valeur « Toutes » (null) puis les choix. */
+function FacetButtons({
+  legend,
+  hint,
+  options,
+  value,
+  onChange,
+  allLabel,
+  disabledNote,
+}: {
+  legend: string;
+  hint?: string;
+  options: { value: string; label: string }[];
+  value: string | null;
+  onChange: (v: string | null) => void;
+  allLabel: string;
+  /** Facette sans objet pour la sélection courante : on explique au lieu de
+   *  proposer un bouton qui ne changerait rien. */
+  disabledNote?: string;
+}) {
+  return (
+    <div>
+      <p className="mb-1 text-xs font-semibold text-(--color-ink-soft)">{legend}</p>
+      {disabledNote ? (
+        <p className="rounded-lg border border-dashed border-(--color-border) px-3 py-2 text-[11px] text-(--color-ink-muted)">
+          {disabledNote}
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-1.5">
+          {[{ value: '', label: allLabel }, ...options].map((o) => {
+            const v = o.value === '' ? null : o.value;
+            const on = value === v;
+            return (
+              <button
+                key={o.value || '__all__'}
+                type="button"
+                onClick={() => onChange(v)}
+                className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  on
+                    ? 'border-(--color-primary) bg-(--color-primary) text-white'
+                    : 'border-(--color-border) bg-white text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-ink)'
+                }`}
+              >
+                {o.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {hint && !disabledNote && (
+        <p className="mt-1 text-[11px] text-(--color-ink-muted)">{hint}</p>
+      )}
+    </div>
+  );
+}
+
 export function PromoCodesManager({
   offers,
   codes,
@@ -44,17 +116,83 @@ export function PromoCodesManager({
   const [startsAt, setStartsAt] = useState('');
   const [expiresAt, setExpiresAt] = useState('');
   const [maxRedemptions, setMaxRedemptions] = useState('');
-  const [allOffers, setAllOffers] = useState(true);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [oncePerCandidate, setOncePerCandidate] = useState(false);
   const [active, setActive] = useState(true);
+
+  // Périmètre : trois facettes, `null` = « toutes ». Aucune facette choisie =
+  // code valable sur toutes les formations (aucun `applies_to` côté Stripe).
+  const [formule, setFormule] = useState<string | null>(null);
+  const [specialty, setSpecialty] = useState<string | null>(null);
+  const [tier, setTier] = useState<string | null>(null);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  /** Offres couvertes en plus de celles demandées (produits Stripe partagés) :
+   *  la création attend une confirmation explicite. */
+  const [alsoCovered, setAlsoCovered] = useState<string[] | null>(null);
 
   const amountEuros = Number(amount.replace(',', '.'));
+
+  /* ─────────────── Facettes disponibles ─────────────── */
+
+  const formuleOptions = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const o of offers) if (!seen.has(o.formule)) seen.set(o.formule, o.formuleLabel);
+    return [...seen].map(([value, label]) => ({ value, label }));
+  }, [offers]);
+
+  /** Offres compatibles avec la formule choisie — base des facettes suivantes. */
+  const byFormule = useMemo(
+    () => offers.filter((o) => formule === null || o.formule === formule),
+    [offers, formule],
+  );
+
+  const specialtyOptions = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const o of byFormule) {
+      if (o.specialtyKey && o.specialtyName && !seen.has(o.specialtyKey)) {
+        seen.set(o.specialtyKey, o.specialtyName);
+      }
+    }
+    return [...seen].map(([value, label]) => ({ value, label }));
+  }, [byFormule]);
+
+  const bySpecialty = useMemo(
+    () => byFormule.filter((o) => specialty === null || o.specialtyKey === specialty),
+    [byFormule, specialty],
+  );
+
+  const tierOptions = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const o of bySpecialty) {
+      if (o.tier && o.tierLabel && !seen.has(o.tier)) seen.set(o.tier, o.tierLabel);
+    }
+    return [...seen].map(([value, label]) => ({ value, label }));
+  }, [bySpecialty]);
+
+  /** Offres retenues par le périmètre courant. */
+  const matched = useMemo(
+    () => bySpecialty.filter((o) => tier === null || o.tier === tier),
+    [bySpecialty, tier],
+  );
+
+  const allOffers = formule === null && specialty === null && tier === null;
+
+  /** Change la formule et abandonne les facettes devenues sans objet (une
+   *  spécialité n'existe que sous le Programme Approfondi). */
+  function selectFormule(v: string | null) {
+    setFormule(v);
+    const next = offers.filter((o) => v === null || o.formule === v);
+    if (specialty !== null && !next.some((o) => o.specialtyKey === specialty)) setSpecialty(null);
+    if (tier !== null && !next.some((o) => o.tier === tier)) setTier(null);
+  }
+
+  function selectSpecialty(v: string | null) {
+    setSpecialty(v);
+    const next = byFormule.filter((o) => v === null || o.specialtyKey === v);
+    if (tier !== null && !next.some((o) => o.tier === tier)) setTier(null);
+  }
 
   /**
    * Piège du paiement en plusieurs fois : Stripe applique une remise en euros à
@@ -65,7 +203,7 @@ export function PromoCodesManager({
    */
   const installmentWarning = useMemo(() => {
     if (!Number.isFinite(amountEuros) || amountEuros <= 0) return null;
-    const scope = allOffers ? offers : offers.filter((o) => selected.includes(o.key));
+    const scope = allOffers ? offers : matched;
     if (scope.length === 0) return null;
     // 4× est le plus grand fractionnement proposé, donc la plus petite première
     // mensualité : c'est l'offre la moins chère du périmètre qui contraint.
@@ -78,7 +216,7 @@ export function PromoCodesManager({
       + `en partie seulement, et ${euros(amountEuros - firstInstalment)} € seraient perdus. `
       + `Le code reste correct en paiement comptant.`
     );
-  }, [amountEuros, allOffers, offers, selected]);
+  }, [amountEuros, allOffers, offers, matched]);
 
   function reset() {
     setCode('');
@@ -86,17 +224,18 @@ export function PromoCodesManager({
     setStartsAt('');
     setExpiresAt('');
     setMaxRedemptions('');
-    setAllOffers(true);
-    setSelected([]);
-    setOncePerCandidate(false);
+    setFormule(null);
+    setSpecialty(null);
+    setTier(null);
     setActive(true);
+    setAlsoCovered(null);
   }
 
-  async function submit() {
+  async function submit(confirmBroaderScope = false) {
     setError(null);
     setSuccess(null);
-    if (!allOffers && selected.length === 0) {
-      setError('Choisissez au moins une formation, ou cochez « Toutes les formations ».');
+    if (!allOffers && matched.length === 0) {
+      setError('Aucune formation ne correspond à ce périmètre.');
       return;
     }
     setSaving(true);
@@ -106,13 +245,14 @@ export function PromoCodesManager({
       startsAt,
       expiresAt,
       maxRedemptions: maxRedemptions.trim() ? Number(maxRedemptions) : null,
-      offers: allOffers ? [] : selected,
-      oncePerCandidate,
+      offers: allOffers ? [] : matched.map((o) => o.key),
       active,
+      confirmBroaderScope,
     });
     setSaving(false);
     if (!r.ok) {
       setError(r.error ?? 'Erreur');
+      setAlsoCovered(r.alsoCovered ?? null);
       return;
     }
     setSuccess(`Code « ${r.code} » créé.`);
@@ -193,21 +333,7 @@ export function PromoCodesManager({
             />
           </label>
 
-          <div className="flex flex-col justify-end gap-2 pb-1">
-            <label className="flex items-start gap-2 text-sm text-(--color-ink)">
-              <input
-                type="checkbox"
-                checked={oncePerCandidate}
-                onChange={(e) => setOncePerCandidate(e.target.checked)}
-                className="mt-0.5 h-4 w-4"
-              />
-              <span>
-                Une seule fois par candidat
-                <span className="block text-[11px] text-(--color-ink-muted)">
-                  Réservé à une première commande : refusé si le candidat a déjà payé chez nous.
-                </span>
-              </span>
-            </label>
+          <div className="flex flex-col justify-end pb-1">
             <label className="flex items-center gap-2 text-sm text-(--color-ink)">
               <input
                 type="checkbox"
@@ -220,42 +346,85 @@ export function PromoCodesManager({
           </div>
         </div>
 
-        {/* Périmètre */}
-        <fieldset className="mt-4 rounded-xl border border-(--color-border) p-3">
+        {/* ─────────────── Périmètre ─────────────── */}
+        <fieldset className="mt-4 space-y-3 rounded-xl border border-(--color-border) p-3">
           <legend className="px-1 text-xs font-semibold text-(--color-ink-soft)">
-            Formations concernées
+            Périmètre du code
           </legend>
-          <label className="flex items-center gap-2 text-sm font-semibold text-(--color-ink)">
-            <input
-              type="checkbox"
-              checked={allOffers}
-              onChange={(e) => setAllOffers(e.target.checked)}
-              className="h-4 w-4"
-            />
-            Toutes les formations
-          </label>
-          {!allOffers && (
-            <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-              {offers.map((o) => (
-                <label key={o.key} className="flex items-center gap-2 text-sm text-(--color-ink-soft)">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(o.key)}
-                    onChange={(e) =>
-                      setSelected((prev) =>
-                        e.target.checked ? [...prev, o.key] : prev.filter((k) => k !== o.key),
-                      )
-                    }
-                    className="h-4 w-4"
-                  />
-                  <span>
-                    {o.label}{' '}
-                    <span className="text-(--color-ink-muted)">— {euros(o.amountEuros)} €</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          )}
+
+          <FacetButtons
+            legend="Formule"
+            allLabel="Toutes les formules"
+            options={formuleOptions}
+            value={formule}
+            onChange={selectFormule}
+          />
+
+          <FacetButtons
+            legend="Spécialité"
+            allLabel="Toutes les spécialités"
+            options={specialtyOptions}
+            value={specialty}
+            onChange={selectSpecialty}
+            disabledNote={
+              specialtyOptions.length === 0
+                ? 'Cette formule est vendue au même prix pour toutes les spécialités : '
+                  + 'elle ne forme qu’une seule fiche produit Stripe, sur laquelle la '
+                  + 'spécialité ne peut pas être distinguée.'
+                : undefined
+            }
+          />
+
+          <FacetButtons
+            legend="Niveau"
+            allLabel="Tous les niveaux"
+            options={tierOptions}
+            value={tier}
+            onChange={setTier}
+            disabledNote={
+              tierOptions.length === 0
+                ? 'Aucun niveau à distinguer dans ce périmètre.'
+                : undefined
+            }
+          />
+
+          {/* Offres retenues, avec leur prix : c'est le contrôle final avant
+              création, le périmètre d'un coupon n'étant pas modifiable ensuite. */}
+          <div className="rounded-lg bg-(--color-sand-100) p-2.5">
+            <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-(--color-ink-muted)">
+              {allOffers
+                ? `Toutes les formations (${offers.length})`
+                : `Formations concernées (${matched.length})`}
+            </p>
+            {allOffers ? (
+              <p className="text-xs text-(--color-ink-soft)">
+                Aucune restriction : le code est accepté sur n’importe quelle formation.
+                Choisissez une formule, une spécialité ou un niveau pour le limiter.
+              </p>
+            ) : matched.length === 0 ? (
+              <p className="text-xs font-medium text-(--color-danger)">
+                Aucune formation ne correspond à ce périmètre.
+              </p>
+            ) : (
+              <ul className="space-y-0.5">
+                {matched.map((o) => (
+                  <li key={o.key} className="flex items-baseline justify-between gap-3 text-xs">
+                    <span className="text-(--color-ink)">{o.label}</span>
+                    <span className="shrink-0 font-semibold tabular-nums text-(--color-ink-soft)">
+                      {euros(o.amountEuros)} €
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <p className="text-[11px] leading-snug text-(--color-ink-muted)">
+            Pas de filtre par voie : la voie interne ou externe est choisie dans le
+            tunnel d’achat et ne change pas le produit acheté. Stripe n’aurait donc
+            aucun moyen de refuser le code à l’autre voie — le filtre serait affiché
+            sans jamais être appliqué.
+          </p>
         </fieldset>
 
         {installmentWarning && (
@@ -264,12 +433,26 @@ export function PromoCodesManager({
             <span>{installmentWarning}</span>
           </p>
         )}
-        {error && <p className="mt-2 text-xs font-medium text-(--color-danger)">{error}</p>}
+        {error && (
+          <div className="mt-2">
+            <p className="text-xs font-medium text-(--color-danger)">{error}</p>
+            {alsoCovered && alsoCovered.length > 0 && (
+              <button
+                type="button"
+                onClick={() => void submit(true)}
+                disabled={saving}
+                className="mt-1.5 rounded-lg border border-amber-400 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 disabled:opacity-60"
+              >
+                Créer le code malgré ce périmètre élargi
+              </button>
+            )}
+          </div>
+        )}
         {success && <p className="mt-2 text-xs font-medium text-green-700">{success}</p>}
 
         <button
           type="button"
-          onClick={submit}
+          onClick={() => void submit()}
           disabled={saving}
           className="mt-3 inline-flex items-center gap-2 rounded-lg bg-(--color-primary) px-4 py-2 text-sm font-bold text-white hover:opacity-90 disabled:opacity-60"
         >
@@ -314,11 +497,6 @@ export function PromoCodesManager({
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${style.className}`}>
                     {style.label}
                   </span>
-                  {c.oncePerCandidate && (
-                    <span className="rounded-full bg-(--color-sand-100) px-2 py-0.5 text-[10px] font-bold text-(--color-ink-soft)">
-                      1 par candidat
-                    </span>
-                  )}
                 </div>
                 <p className="mt-1 text-xs text-(--color-ink-soft)">
                   {c.offerLabels === null ? 'Toutes les formations' : c.offerLabels.join(' · ')}

@@ -4,7 +4,7 @@ import { ArticleHeader, ArticleFinalCta, PrepCtaCard, ARTICLE_FONT } from '../ar
 import { NewsletterForm } from '../newsletter-form';
 import { getPublishedArticles, type BlogArticleMeta } from '@/lib/data/blog-articles';
 import { RICH_CONTENT } from '@/lib/data/blog-content';
-import type { Block } from '@/lib/data/blog-content/types';
+import { clampImageWidth, defaultImageWidth, type Block } from '@/lib/data/blog-content/types';
 
 function anchorId(text: string): string {
   return text
@@ -128,14 +128,21 @@ function BlockView({ b, publishedSlugs }: { b: Block; publishedSlugs: Set<string
       );
     case 'img': {
       const layout = b.layout ?? 'full';
+      // Largeur choisie dans l'éditeur, à défaut celle de la disposition. Elle
+      // n'est appliquée qu'à partir de `sm:` : sur mobile la colonne est déjà
+      // étroite, y réduire une image la rendrait illisible.
+      const width = clampImageWidth(b.width ?? defaultImageWidth(layout));
       const figClass =
         layout === 'left'
-          ? 'my-6 sm:float-left sm:mr-6 sm:mb-4 sm:w-[46%] sm:max-w-[46%]'
+          ? 'my-6 sm:float-left sm:mr-6 sm:mb-4 sm:w-(--blog-img-w)'
           : layout === 'right'
-            ? 'my-6 sm:float-right sm:ml-6 sm:mb-4 sm:w-[46%] sm:max-w-[46%]'
-            : 'my-6 clear-both';
+            ? 'my-6 sm:float-right sm:ml-6 sm:mb-4 sm:w-(--blog-img-w)'
+            : 'my-6 clear-both sm:mx-auto sm:w-(--blog-img-w)';
       return (
-        <figure className={figClass}>
+        <figure
+          className={figClass}
+          style={{ '--blog-img-w': `${width}%` } as React.CSSProperties}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={b.src}

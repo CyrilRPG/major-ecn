@@ -1,6 +1,6 @@
 import 'server-only';
 import { BLOG_CATEGORIES, type BlogCategory } from '@/lib/data/blog-articles';
-import type { Block, ImageLayout } from '@/lib/data/blog-content/types';
+import { clampImageWidth, type Block, type ImageLayout } from '@/lib/data/blog-content/types';
 
 /**
  * Import d'article par IA (admin → /admin/blog/ia).
@@ -162,12 +162,13 @@ RÈGLES IMPÉRATIVES
 - Tu APPLIQUES les remarques, tu ne réécris pas l'article : tout bloc non concerné par une remarque est recopié À L'IDENTIQUE (même texte, même ordre), sauf faute de français manifeste.
 - Tu n'inventes JAMAIS un fait, un chiffre, une date ou un nom. Si une remarque exige une information que tu n'as pas, dis-le dans "changes" au lieu d'inventer.
 - Les images : tu ne peux utiliser QUE les URLs "src" déjà présentes dans l'article (tu peux les déplacer, changer leur légende, leur layout, ou les retirer si demandé). N'invente jamais d'URL.
+- La clé "width" d'une image (largeur en % de la colonne, 20 à 100) a été réglée à la main par l'administrateur : RECOPIE-la telle quelle. Ne la modifie que si une remarque demande explicitement d'agrandir ou de réduire cette image, et ne l'ajoute jamais de toi-même sur une image qui n'en a pas.
 - Les liens : uniquement les chemins internes du site, les slugs /blog/… fournis et les sources officielles déjà présentes. Tout autre lien sera supprimé.
 - Vocabulaire de blocs INCHANGÉ (aucun autre type n'existe) :
   {"t":"h2","text":"…"} {"t":"h3","text":"…"} {"t":"p","html":"… (strong, em, a href, br)"}
   {"t":"ul","items":["…"]} {"t":"ol","items":["…"]} {"t":"table","headers":[…],"rows":[[…]]}
   {"t":"callout","tone":"tip|key|warning|source","html":"…"} {"t":"quote","author":"…","role":"…","text":"…"}
-  {"t":"note","text":"…"} {"t":"img","src":"URL EXACTE","alt":"…","caption":"…","layout":"full|left|right"}
+  {"t":"note","text":"…"} {"t":"img","src":"URL EXACTE","alt":"…","caption":"…","layout":"full|left|right","width":50}
   {"t":"gallery","images":[{"src":"URL","alt":"…","caption":"…"}]} {"t":"related","items":[{"label":"…","href":"/blog/slug"}]}
 - Ne crée AUCUN bloc "hero" : la bannière est gérée par le site.
 - Français soigné, accents corrects, apostrophes typographiques (’), vouvoiement.
@@ -449,7 +450,12 @@ export function normalizeBlocks(
         const im = img(b);
         if (im) {
           const layout = LAYOUTS.includes(b.layout as ImageLayout) ? (b.layout as ImageLayout) : 'full';
-          blocks.push({ t: 'img', ...im, layout });
+          // La largeur est réglée à la main dans l'éditeur : lors d'une retouche
+          // IA, le modèle la recopie et on la conserve. Absente ou aberrante →
+          // on ne fixe rien, la disposition impose sa largeur par défaut.
+          const rawWidth = typeof b.width === 'number' ? b.width : Number(b.width);
+          const width = Number.isFinite(rawWidth) && rawWidth > 0 ? clampImageWidth(rawWidth) : null;
+          blocks.push({ t: 'img', ...im, layout, ...(width !== null ? { width } : {}) });
         }
         break;
       }

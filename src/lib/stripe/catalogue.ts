@@ -27,6 +27,23 @@ export type CatalogueEntry = {
   amountCents: number;
   envPriceId: string;
   copy: StripeCopy;
+  /* ── Facettes du périmètre (admin des codes de réduction) ───────────────
+   * Le périmètre d'un coupon Stripe s'exprime en PRODUITS. Ne sont donc des
+   * facettes utilisables que les dimensions qui séparent réellement deux prix
+   * Stripe : la formule et, pour le Programme Approfondi, la spécialité et le
+   * niveau. La voie (interne / externe) n'en est PAS une : elle est choisie
+   * dans le tunnel et voyage en métadonnée de la session, sans changer le
+   * produit acheté — un filtre par voie serait affiché sans jamais être
+   * appliqué par Stripe. */
+  /** Formule à laquelle l'offre appartient. */
+  formule: FormuleId;
+  /** Spécialité du Programme Approfondi. `null` pour les offres qui n'en
+   *  distinguent pas (Essentielle, Intensive, Approfondi générique). */
+  specialtyKey: string | null;
+  specialtyName: string | null;
+  /** Niveau du Programme Approfondi (« Approfondi » / « Approfondi + »). */
+  tier: 'base' | 'plus' | null;
+  tierLabel: string | null;
 };
 
 /** Les 3 formules puis les offres du Programme Approfondi, dans l'ordre
@@ -42,6 +59,11 @@ export function stripeCatalogue(): CatalogueEntry[] {
       amountCents: f.amountCents,
       envPriceId: f.envPriceId,
       copy: { name: f.stripeName, description: f.description },
+      formule: id,
+      specialtyKey: null,
+      specialtyName: null,
+      tier: null,
+      tierLabel: null,
     });
   }
 
@@ -53,6 +75,11 @@ export function stripeCatalogue(): CatalogueEntry[] {
         amountCents: t.amountCents,
         envPriceId: t.envPriceId,
         copy: approfondiStripeCopy({ ...t, specialtyName: s.name }),
+        formule: 'programme-approfondi',
+        specialtyKey: s.key,
+        specialtyName: s.name,
+        tier: t.tier,
+        tierLabel: t.tierLabel,
       });
     }
   }
@@ -81,26 +108,58 @@ export function sellableCatalogue(): (CatalogueEntry & { priceId: string })[] {
 export async function resolveProductIds(
   stripe: Stripe,
   offers: string[],
-): Promise<{ productIds: string[]; missing: string[] }> {
-  const byOffer = new Map(stripeCatalogue().map((e) => [e.offer, e]));
-  const productIds: string[] = [];
-  const missing: string[] = [];
+): Promise<{ productIds: string[]; missing: string[]; alsoCovered: string[] }> {
+  const catalogue = stripeCatalogue();
+  const wanted = new Set(offers);
 
-  for (const offer of offers) {
-    const entry = byOffer.get(offer);
-    const priceId = entry ? process.env[entry.envPriceId] : undefined;
-    if (!entry || !priceId) {
-      missing.push(entry?.label ?? offer);
+  // Produit de CHAQUE offre du catalogue, pas seulement des offres choisies :
+  // deux offres peuvent partager un même produit Stripe (deux prix d'un même
+  // produit). Le coupon couvrirait alors aussi la seconde, sans que l'admin
+  // l'ait demandé — c'est ce que `alsoCovered` remonte.
+  // En parallèle : le catalogue compte une trentaine d'offres, et une série
+  // d'appels séquentiels ferait expirer la server action de création.
+  const resolvedEntries = await Promise.all(
+    catalogue.map(async (entry) => {
+      const priceId = process.env[entry.envPriceId];
+      if (!priceId) return { entry, productId: null };
+      try {
+        const price = await stripe.prices.retrieve(priceId);
+        return {
+          entry,
+          productId: typeof price.product === 'string' ? price.product : price.product.id,
+        };
+      } catch {
+        return { entry, productId: null };
+      }
+    }),
+  );
+
+  const productByOffer = new Map<string, string>();
+  const missing: string[] = [];
+  for (const { entry, productId } of resolvedEntries) {
+    if (productId === null) {
+      if (wanted.has(entry.offer)) missing.push(entry.label);
       continue;
     }
-    try {
-      const price = await stripe.prices.retrieve(priceId);
-      const productId = typeof price.product === 'string' ? price.product : price.product.id;
-      if (!productIds.includes(productId)) productIds.push(productId);
-    } catch {
-      missing.push(entry.label);
-    }
+    productByOffer.set(entry.offer, productId);
   }
 
-  return { productIds, missing };
+  // Une offre demandée absente du catalogue n'a ni prix ni produit.
+  const known = new Set(catalogue.map((e) => e.offer));
+  for (const offer of offers) {
+    if (!known.has(offer)) missing.push(offer);
+  }
+
+  const productIds: string[] = [];
+  for (const offer of offers) {
+    const productId = productByOffer.get(offer);
+    if (productId && !productIds.includes(productId)) productIds.push(productId);
+  }
+
+  const labelByOffer = new Map(catalogue.map((e) => [e.offer, e.label]));
+  const alsoCovered = [...productByOffer.entries()]
+    .filter(([offer, productId]) => !wanted.has(offer) && productIds.includes(productId))
+    .map(([offer]) => labelByOffer.get(offer) ?? offer);
+
+  return { productIds, missing, alsoCovered };
 }

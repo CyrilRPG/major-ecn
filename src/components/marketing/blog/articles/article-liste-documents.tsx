@@ -174,8 +174,6 @@ export function ArticleListeDocuments({ article }: { article: BlogArticleMeta })
               <p className="text-[11px] font-bold text-[#C0001F]">Bon à savoir</p>
               <ul className="mt-1.5 space-y-1 text-[11.5px] text-[#1A2233]">
                 <li className="flex items-start gap-1.5"><Check className="mt-0.5 h-3 w-3 text-[#C0001F]" /> Les tentatives avant 2021 ne sont pas comptabilisées.</li>
-                <li className="flex items-start gap-1.5"><Check className="mt-0.5 h-3 w-3 text-[#C0001F]" /> Chaque inscription = 1 tentative, même en cas d&rsquo;absence.</li>
-                <li className="flex items-start gap-1.5"><Check className="mt-0.5 h-3 w-3 text-[#C0001F]" /> Absence injustifiée = tentative perdue.</li>
               </ul>
             </div>
             <div className="mt-3 inline-flex items-start gap-2 rounded-lg bg-[#FEF3C7] px-3 py-2 text-[11px] text-[#92400E]">

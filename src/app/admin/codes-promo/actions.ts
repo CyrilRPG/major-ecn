@@ -22,11 +22,19 @@ async function requireAdminUser(): Promise<{ id: string; email: string }> {
 
 export async function createPromoCodeAction(
   input: PromoCodeInput,
-): Promise<{ ok: boolean; error?: string; code?: string }> {
+): Promise<{ ok: boolean; error?: string; code?: string; alsoCovered?: string[] }> {
   try {
     const admin = await requireAdminUser();
     const result = await createInStripe(getStripe(), input, admin.email || admin.id);
-    if (!result.ok) return { ok: false, error: result.error };
+    if (!result.ok) {
+      // `alsoCovered` : le périmètre déborderait des offres choisies. L'UI
+      // demande confirmation et rejoue avec `confirmBroaderScope`.
+      return {
+        ok: false,
+        error: result.error,
+        ...('alsoCovered' in result ? { alsoCovered: result.alsoCovered } : {}),
+      };
+    }
     revalidatePath('/admin/codes-promo');
     return { ok: true, code: result.code };
   } catch (e) {
