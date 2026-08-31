@@ -43,6 +43,55 @@ const nextConfig: NextConfig = {
       // une recherche d'avis tombait sur un 404. Next normalise le slash final,
       // donc `.../temoignages-major-ecn-preparation-ecn/` est couvert aussi.
       { source: "/temoignages-major-ecn-preparation-ecn", destination: "/temoignages", permanent: true },
+
+      /* ── Adresses de l'ancien site WordPress ────────────────────────────
+         Les 37 URL du rapport « Introuvable (404) » de la Search Console
+         (export du 31/08/2026). Elles ne sont liées nulle part sur le site
+         actuel mais restent explorées et suivies depuis l'extérieur : chacune
+         part vers la page qui traite le même sujet aujourd'hui.
+         Les règles précises viennent AVANT les règles à motif : Next retient
+         la première correspondance. */
+
+      // Anciens articles, vers leur équivalent actuel
+      { source: "/evc-pae-liste-complete-des-documents-a-fournir-et-les-regles-a-connaitre-pour-une-candidature-reussie", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
+      { source: "/evc-pae-comment-se-presenterw", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
+      { source: "/structures-daccueil-pour-les-laureats-pae-chu-cliniques-ou-secteur-prive", destination: "/blog/structures-accueil-laureats-pae", permanent: true },
+      { source: "/quelle-remuneration-pour-un-medecin-etranger-en-pratiquant-en-france", destination: "/blog/remuneration-medecin-etranger-france", permanent: true },
+      { source: "/impact-evc-acces-soins-integration-professionnels", destination: "/blog/impact-evc-acces-soins", permanent: true },
+      { source: "/limpact-des-epreuves-de-verification-des-connaissances-sur-lacces-aux-soins-et-lintegration-des-professionnels-de-sante-un-regard-a-travers-le-prisme-de-major-ecn", destination: "/blog/impact-evc-acces-soins", permanent: true },
+      { source: "/decryptage-des-principaux-defis-des-epreuves-de-verification-des-connaissances-evc", destination: "/blog/decryptage-defis-evc", permanent: true },
+      { source: "/reforme-ecn-edn-ecos-parcours-medical", destination: "/blog/evc-edn-difference-a-ne-pas-confondre", permanent: true },
+      // Article sur le stagiaire associé : aucun équivalent publié, le guide
+      // couvre le sujet (parcours des médecins à diplôme étranger).
+      { source: "/stagiaire-associe-une-passerelle-meconnue-mais-decisive-pour-les-medecins-etrangers-en-france", destination: "/guide-evc", permanent: true },
+
+      // Anciennes pages vitrine
+      { source: "/nous-contacter", destination: "/contact", permanent: true },
+      { source: "/faq-major-ecn-preparation-ecn", destination: "/faq", permanent: true },
+      { source: "/tarifs-major-ecn-preparation-ecn", destination: "/tarifs", permanent: true },
+      { source: "/qui-sommes-nous-major-ecn", destination: "/methode", permanent: true },
+      { source: "/qui-sommes-nous", destination: "/methode", permanent: true },
+      { source: "/enseignants-major-ecn", destination: "/methode", permanent: true },
+      { source: "/inscription-programme", destination: "/inscription", permanent: true },
+      { source: "/conseils", destination: "/blog", permanent: true },
+      { source: "/reduction-dimpot", destination: "/tarifs", permanent: true },
+      // Anciennes pages « concours » : le guide est désormais la page de
+      // référence sur le sujet.
+      { source: "/concours-evc-pae", destination: "/guide-evc", permanent: true },
+      { source: "/concours-medecins-etrangers", destination: "/guide-evc", permanent: true },
+
+      // Anciennes offres de préparation à l'ECN (D2, D3, D4, dernier tour,
+      // ECOS) : elles n'existent plus, /tarifs présente les formules actuelles.
+      { source: "/formule-d3", destination: "/tarifs", permanent: true },
+      { source: "/formule-d4", destination: "/tarifs", permanent: true },
+      { source: "/d4-special-dernier-tour", destination: "/tarifs", permanent: true },
+      { source: "/formules-major-ecn-preparation-ecn", destination: "/tarifs", permanent: true },
+      { source: "/formules-major-ecn-preparation-ecn/:path*", destination: "/tarifs", permanent: true },
+
+      // Restes de l'ancien thème WordPress : catégories du blog et fragments
+      // de méga-menu, explorés comme des pages à part entière.
+      { source: "/category/:path*", destination: "/blog", permanent: true },
+      { source: "/megamenu/:path*", destination: "/", permanent: true },
     ];
   },
   // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas

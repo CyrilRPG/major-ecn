@@ -101,13 +101,46 @@ node scripts/seo/audit-meta.mjs https://www.major-ecn.fr
 Il liste, pour chaque page publique, le statut, la longueur du titre et de la
 description, le nombre de mots, la directive `robots` et la canonique.
 
+### Les 37 adresses « Introuvable (404) »
+
+Traitées à partir de l'export du 31/08/2026. Ce sont les URL de l'ancien site
+WordPress, liées nulle part sur le site actuel mais toujours explorées et
+suivies depuis l'extérieur. Chacune part désormais vers la page qui traite le
+même sujet (`next.config.ts`) :
+
+| Origine | Destination |
+|---|---|
+| anciens articles (documents à fournir, rémunération, structures d'accueil, impact des EVC, décryptage des défis, réforme ECN) | l'article correspondant du blog |
+| `/concours-evc-pae`, `/concours-medecins-etrangers`, `/stagiaire-associe-…` | `/guide-evc` |
+| `/formules-major-ecn-preparation-ecn/*`, `/formule-d3`, `/formule-d4`, `/d4-special-dernier-tour`, `/reduction-dimpot` | `/tarifs` |
+| `/nous-contacter`, `/faq-major-ecn-preparation-ecn`, `/inscription-programme` | `/contact`, `/faq`, `/inscription` |
+| `/qui-sommes-nous`, `/qui-sommes-nous-major-ecn`, `/enseignants-major-ecn` | `/methode` |
+| `/category/*`, `/conseils` | `/blog` |
+| `/megamenu/*` | `/` |
+
+Deux adresses restent volontairement en 404 : `/20` (adresse parasite) et
+`/wp-content/themes/histudy/*` (fichiers de l'ancien thème). Les rediriger
+vers une page sans rapport produirait une erreur douce, ce que Google traite
+plus mal qu'un 404 franc.
+
+Vérification, qui suit les chaînes de redirection jusqu'à la page finale :
+
+```bash
+node scripts/seo/verifier-redirections.mjs https://www.major-ecn.fr
+```
+
+### Les 21 « Pages avec redirection »
+
+Rien à corriger : l'export ne contient que des redirections voulues, le
+domaine nu et `http` vers `https://www`, la normalisation du slash final, et
+les anciennes adresses déjà traitées ci-dessus. Une seule y était encore en
+impasse (`/decryptage-des-principaux-defis-…`), désormais redirigée.
+
 ## 4. Ce qui reste à faire côté Search Console
 
-1. **Exporter la liste des 37 URL « Introuvable (404) »** puis l'ajouter aux
-   redirections de `next.config.ts` (une ligne par ancienne adresse, vers la
-   page équivalente). C'est la seule correction qui demande la liste réelle :
-   ces adresses ne sont liées nulle part sur le site actuel.
-2. Demander la validation des corrections pour les motifs traités.
-3. Soumettre `https://www.major-ecn.fr/guide-evc` et demander son indexation.
-4. Vérifier le guide dans le test des résultats enrichis (BreadcrumbList et
+1. Demander la validation des corrections pour chaque motif traité.
+2. Soumettre `https://www.major-ecn.fr/guide-evc` et demander son indexation.
+3. Vérifier le guide dans le test des résultats enrichis (BreadcrumbList et
    FAQPage).
+4. Réexporter les rapports dans quelques semaines : le nombre de 404 doit
+   tendre vers les deux adresses laissées volontairement en erreur.
