@@ -21,6 +21,10 @@
     {
       "path": "/api/cron/pedagogical-alerts",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/promo-codes-activate",
+      "schedule": "5 * * * *"
     }
   ]
 }

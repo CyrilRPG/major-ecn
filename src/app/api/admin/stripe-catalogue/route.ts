@@ -23,45 +23,11 @@
  */
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
-import { getStripe, FORMULES, isTestMode, type FormuleId } from '@/lib/stripe';
-import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
-import { approfondiStripeCopy, type StripeCopy } from '@/lib/stripe/copy';
+import { getStripe, isTestMode } from '@/lib/stripe';
+import { stripeCatalogue } from '@/lib/stripe/catalogue';
+import type { StripeCopy } from '@/lib/stripe/copy';
 
 export const dynamic = 'force-dynamic';
-
-/** Une entrée du catalogue = un price_id (lu dans l'env) et le texte attendu
- *  pour le produit qui le porte. */
-type CatalogueEntry = {
-  /** Identifiant lisible de l'offre (ex. « intensive », « appro:mg-plus »). */
-  offer: string;
-  envPriceId: string;
-  copy: StripeCopy;
-};
-
-function catalogue(): CatalogueEntry[] {
-  const entries: CatalogueEntry[] = [];
-
-  for (const id of Object.keys(FORMULES) as FormuleId[]) {
-    const f = FORMULES[id];
-    entries.push({
-      offer: id,
-      envPriceId: f.envPriceId,
-      copy: { name: f.stripeName, description: f.description },
-    });
-  }
-
-  for (const s of APPROFONDI_SPECIALTIES) {
-    for (const t of s.tiers) {
-      entries.push({
-        offer: `appro:${t.id}`,
-        envPriceId: t.envPriceId,
-        copy: approfondiStripeCopy({ ...t, specialtyName: s.name }),
-      });
-    }
-  }
-
-  return entries;
-}
 
 type Row = {
   offer: string;
@@ -97,7 +63,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const entries = catalogue();
+  const entries = stripeCatalogue();
   const rows: Row[] = [];
   // Deux offres qui pointent sur le même produit Stripe se battraient pour la
   // description (la dernière écrite gagnerait). On le signale au lieu d'écrire.

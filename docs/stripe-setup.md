@@ -191,3 +191,51 @@ ne peut pas être juste pour les deux).
 
 À relancer après toute modification de `src/lib/stripe/copy.ts` ou création
 d'une nouvelle offre.
+
+---
+
+## 11. Codes de réduction
+
+Page admin : **Configuration → Codes de réduction** (`/admin/codes-promo`).
+
+Les codes sont créés **dans Stripe**, pas dans Supabase : c'est Stripe Checkout
+qui affiche le champ « Ajouter un code promotionnel » (`allow_promotion_codes`)
+et qui applique la remise. Un code stocké de notre côté ne serait jamais lu. Le
+compteur d'utilisations affiché dans l'admin est donc celui de Stripe.
+
+Stripe modélise chaque code en deux objets, créés ensemble par l'admin : un
+`Coupon` (le montant, le périmètre de formations) et un `PromotionCode` (le code
+tapé, sa date de fin, son quota, son état actif/inactif).
+
+| Réglage de l'admin | Correspondance Stripe |
+|---|---|
+| Code | `promotion_code.code` |
+| Montant en euros | `coupon.amount_off` (EUR, `duration: once`) |
+| Date de fin | `promotion_code.expires_at` (fin de journée incluse) |
+| Nombre maximal d'utilisations | `promotion_code.max_redemptions` |
+| Formations concernées | `coupon.applies_to.products` |
+| Une seule fois par candidat | `restrictions.first_time_transaction` |
+| Actif / inactif | `promotion_code.active` |
+| **Date de début** | *pas de notion Stripe* → métadonnées + cron |
+
+### Les trois limites de Stripe à connaître
+
+1. **Pas de date de début.** Un code daté est créé inactif ; le cron
+   `/api/cron/promo-codes-activate` (toutes les heures) l'ouvre le jour venu, en
+   se fiant aux métadonnées `starts_at` + `auto_activate`. Désactiver un code à
+   la main remet `auto_activate` à `0` : le cron ne le rouvrira pas.
+2. **Le montant est immuable.** Pour corriger une remise : désactiver le code et
+   en créer un autre. Un code ne se supprime pas non plus (Stripe l'interdit, et
+   l'historique des remises accordées doit rester lisible).
+3. **« Une fois par candidat » n'existe pas** sur un code partagé. Le plus proche
+   est `first_time_transaction` : le code est refusé à un candidat qui a déjà
+   payé. Pour Major ECN, où l'on achète une formation une fois, cela revient au
+   même — mais c'est bien cette règle-là qui s'applique.
+
+### Piège du paiement en plusieurs fois
+
+En 3× / 4×, le tunnel passe en `mode: subscription` et une remise en euros
+(`duration: once`) s'impute sur la **première mensualité seulement**. Une remise
+de 300 € sur une Essentielle payée en 4× (première échéance 123,75 €) perdrait
+donc 176,25 €. L'admin affiche l'avertissement avant la création, en calculant
+la première mensualité de l'offre la moins chère du périmètre choisi.
