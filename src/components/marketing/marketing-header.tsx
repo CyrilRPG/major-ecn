@@ -15,11 +15,13 @@ const NAV: NavItem[] = [
     label: 'Méthode',
     children: [
       { href: '/methode', label: 'Notre méthode' },
-      { href: '/guide-evc', label: 'Guide complet des EVC' },
       { href: '/guide-methodologie-evc-2026', label: 'Guide méthodologique gratuit' },
       { href: '/profil-evc', label: 'Profil EVC gratuit' },
     ],
   },
+  // Entrée de premier niveau : la page hub est une porte d'entrée du site,
+  // pas une ressource secondaire du menu « Méthode ».
+  { href: '/guide-evc',   label: 'Guide EVC' },
   { href: '/plateforme',  label: 'Plateforme' },
   { href: '/specialites', label: 'Spécialités' },
   { href: '/temoignages', label: 'Témoignages' },
@@ -48,7 +50,7 @@ function DesktopDropdown({ item, tight }: { item: Extract<NavItem, { children: a
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          'flex items-center gap-1 rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
+          'flex items-center gap-1 whitespace-nowrap rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
           tight ? 'px-2' : 'px-2.5',
         )}
       >
@@ -165,7 +167,10 @@ function NavItems({ tight }: { tight?: boolean }) {
             key={n.href}
             href={n.href}
             className={cn(
-              'rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
+              // whitespace-nowrap : un libellé de deux mots (« Guide EVC »,
+              // « Tarifs et inscriptions ») se repliait sur deux lignes et
+              // déformait la hauteur de la barre.
+              'whitespace-nowrap rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
               tight ? 'px-2' : 'px-2.5',
             )}
           >
