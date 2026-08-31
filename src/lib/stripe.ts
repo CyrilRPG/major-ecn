@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { FORMULE_STRIPE_COPY } from './stripe/copy';
 
 /**
  * Client Stripe côté serveur. Utilise STRIPE_SECRET_KEY (clé test en mode dev).
@@ -60,7 +61,12 @@ export type Formule = {
   amountCents: number; // montant en centimes
   /** Variable d'environnement contenant l'ID du prix Stripe pour ce produit. */
   envPriceId: string;
-  /** Description courte affichée dans le checkout. */
+  /** Nom du produit tel qu'il doit apparaître dans le dashboard Stripe et en
+   *  haut de la page de paiement. Source de vérité : `stripe/copy.ts`. */
+  stripeName: string;
+  /** Description de la fiche produit Stripe, affichée sous le prix sur la page
+   *  de paiement. Ne nomme jamais une spécialité ni une voie de concours : le
+   *  périmètre propre à l'achat est rappelé par `purchaseScopeNotice()`. */
   description: string;
   /** URLs internes de la page formule (pour redirection). */
   pageHref: string;
@@ -73,8 +79,8 @@ export const FORMULES: Record<FormuleId, Formule> = {
     displayName: 'Formule Essentielle',
     amountCents: 49500, // 495,00 €
     envPriceId: 'STRIPE_PRICE_ESSENTIELLE',
-    description:
-      "Accès à la plateforme Major ECN : QCM, flashcards, fiches synthétiques, méthode EVC.",
+    stripeName: FORMULE_STRIPE_COPY.essentielle.name,
+    description: FORMULE_STRIPE_COPY.essentielle.description,
     pageHref: '/formules/essentielle',
   },
   intensive: {
@@ -83,8 +89,8 @@ export const FORMULES: Record<FormuleId, Formule> = {
     displayName: 'Formule Intensive',
     amountCents: 99500, // 995,00 €
     envPriceId: 'STRIPE_PRICE_INTENSIVE',
-    description:
-      "Tout l'Essentielle + cas cliniques approfondis, épreuves blanches inspirées des EVC, suivi personnalisé.",
+    stripeName: FORMULE_STRIPE_COPY.intensive.name,
+    description: FORMULE_STRIPE_COPY.intensive.description,
     pageHref: '/formules/intensive',
   },
   'programme-approfondi': {
@@ -93,8 +99,8 @@ export const FORMULES: Record<FormuleId, Formule> = {
     displayName: 'Programme Approfondi',
     amountCents: 239500, // 2 395,00 €
     envPriceId: 'STRIPE_PRICE_PROGRAMME',
-    description:
-      "Plateforme EVC accès illimité + accompagnement individuel + sessions live et replays.",
+    stripeName: FORMULE_STRIPE_COPY['programme-approfondi'].name,
+    description: FORMULE_STRIPE_COPY['programme-approfondi'].description,
     pageHref: '/formules/programme-approfondi',
   },
 };

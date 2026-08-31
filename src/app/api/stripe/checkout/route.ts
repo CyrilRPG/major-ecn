@@ -29,6 +29,7 @@ import {
   isTestMode,
 } from '@/lib/stripe';
 import { getApprofondiTier, CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
+import { purchaseScopeNotice, voieLabel } from '@/lib/stripe/copy';
 import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
@@ -182,14 +183,27 @@ export async function POST(req: Request) {
   const specialtyName = approfondiTier ? approfondiTier.specialtyName : (body.specialty ?? '');
 
   // Rappel du périmètre acheté sur la page Stripe : l'étudiant doit y relire la
-  // spécialité qu'il vient de choisir (une seule voie de concours, celle
-  // sélectionnée dans le formulaire).
-  const specialtyNotice = specialtyName
-    ? `Votre inscription donne accès aux contenus de ${specialtyName}.`
-    : '';
-  const submitMessage = [specialtyNotice, contentPending ? CONTENT_PENDING_NOTICE : '']
+  // spécialité ET la voie de concours qu'il vient de choisir. La fiche produit
+  // Stripe, elle, est partagée par tous les acheteurs de la formule : elle ne
+  // peut pas nommer un périmètre (cf. `stripe/copy.ts`). Sans ce rappel, un
+  // étudiant inscrit en Médecine interne voyait « Médecine Générale (voie
+  // interne + voie externe) » sur sa page de paiement.
+  const offerLabel = approfondiTier ? `Programme ${approfondiTier.tierLabel}` : formule.name;
+  const scopeNotice = purchaseScopeNotice({
+    offerLabel,
+    specialtyName,
+    voie: body.voie,
+    coverageLabel: approfondiTier?.coverageLabel ?? null,
+  });
+  // Stripe refuse un `custom_text.submit.message` de plus de 1 200 caractères :
+  // on tronque plutôt que de faire échouer la création de session.
+  const submitMessage = [scopeNotice, contentPending ? CONTENT_PENDING_NOTICE : '']
     .filter(Boolean)
-    .join(' ');
+    .join(' ')
+    .slice(0, 1200);
+  // Libellé du périmètre repris dans les descriptions internes (paiement /
+  // abonnement) : c'est ce que l'équipe relit dans le dashboard Stripe.
+  const scopeSuffix = [specialtyName, voieLabel(body.voie)].filter(Boolean).join(', ');
 
   try {
     const commonMetadata = {
@@ -243,7 +257,8 @@ export async function POST(req: Request) {
       // l'utilisateur doit voir "fin de prélèvement le DD MMM YYYY" et le
       // total cumulé pour comprendre que ce n'est PAS un abonnement infini.
       const planDescription =
-        `${productName} — Paiement en ${installments} fois sans frais. ` +
+        `${productName}${scopeSuffix ? ` (${scopeSuffix})` : ''} — ` +
+        `Paiement en ${installments} fois sans frais. ` +
         `${installments} prélèvements de ${monthlyFr} € (total ${totalFr} €). ` +
         `Plan se termine automatiquement le ${endDateFr}. Aucun renouvellement.`;
 
@@ -279,9 +294,10 @@ export async function POST(req: Request) {
         // total, dans la sidebar de la page de paiement).
         custom_text: {
           submit: {
-            message:
+            message: (
               `Paiement ${installments}× sans frais — Plan se termine automatiquement le ${endDateFr} après ${installments} prélèvements de ${monthlyFr} €.`
-              + (submitMessage ? ` ${submitMessage}` : ''),
+              + (submitMessage ? ` ${submitMessage}` : '')
+            ).slice(0, 1200),
           },
         },
       });
@@ -311,7 +327,8 @@ export async function POST(req: Request) {
       metadata: commonMetadata,
       payment_intent_data: {
         metadata: commonMetadata,
-        description: `Major ECN — ${productName} (paiement comptant)`,
+        description:
+          `Major ECN — ${productName}${scopeSuffix ? ` — ${scopeSuffix}` : ''} (paiement comptant)`,
       },
       // Périmètre acheté (et, le cas échéant, avertissement « contenus en cours
       // de mise en ligne ») rappelés sur la page de paiement Stripe, pas

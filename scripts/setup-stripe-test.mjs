@@ -31,25 +31,41 @@ if (!KEY.startsWith('sk_test_')) {
 
 const stripe = new Stripe(KEY, { typescript: false });
 
+/**
+ * Textes d'amorçage des produits.
+ *
+ * Source de vérité : `src/lib/stripe/copy.ts`, appliquée au dashboard par
+ * `/api/admin/stripe-catalogue?apply=1`. Ce script étant du JS pur, il ne peut
+ * pas importer le module TypeScript : on recopie ici la version courante, et la
+ * route admin fait foi en cas de divergence.
+ *
+ * Ces descriptions ne nomment volontairement NI spécialité NI voie de concours :
+ * la fiche produit est partagée par tous les acheteurs de la formule (le prix ne
+ * dépend pas de la spécialité). Les versions précédentes affirmaient « Accès
+ * complet à la Médecine Générale (voie interne + voie externe) » — faux dès
+ * qu'un étudiant s'inscrivait dans une autre spécialité ou une seule voie. Le
+ * périmètre réellement acheté est rappelé sur la page de paiement par
+ * `custom_text.submit.message` (cf. api/stripe/checkout).
+ */
 const FORMULES = [
   {
     name: 'Formule Essentielle - Major ECN',
     description:
-      'Préparation EVC - Formule Essentielle. Accès à la plateforme Major ECN avec QCM, flashcards, fiches synthétiques et méthode EVC. Accès complet à la Médecine Générale (voie interne + voie externe).',
+      "Préparation aux EVC — Formule Essentielle. Accès à la plateforme Major ECN : QCM corrigés, questions rédactionnelles, flashcards, fiches de synthèse et méthode EVC. L'accès porte sur la spécialité et la voie de concours choisies à l'inscription, rappelées ci-dessous.",
     amountCents: 49500,
     envVar: 'STRIPE_PRICE_ESSENTIELLE',
   },
   {
     name: 'Formule Intensive - Major ECN',
     description:
-      "Préparation EVC - Formule Intensive. Tout l'Essentielle + cas cliniques approfondis, épreuves blanches inspirées des EVC et suivi personnalisé. Accès complet à la Médecine Générale (voie interne + voie externe).",
+      "Préparation aux EVC — Formule Intensive. Tout le contenu de la Formule Essentielle, complété par des cas cliniques approfondis, des épreuves blanches inspirées des EVC, les cours vidéo et un suivi personnalisé. L'accès porte sur la spécialité et la voie de concours choisies à l'inscription, rappelées ci-dessous.",
     amountCents: 99500,
     envVar: 'STRIPE_PRICE_INTENSIVE',
   },
   {
     name: 'Programme Approfondi - Major ECN',
     description:
-      'Préparation EVC - Programme Approfondi. Plateforme EVC accès illimité + accompagnement individuel haut niveau + sessions live et replays. Accès complet à la Médecine Générale (voie interne + voie externe).',
+      "Préparation aux EVC — Programme Approfondi. Accès illimité à la plateforme, séances de cours en direct et replays, accompagnement individuel par un enseignant. Le tarif et le périmètre dépendent de la spécialité et du niveau d'offre retenus à l'inscription, rappelés ci-dessous.",
     amountCents: 239500,
     envVar: 'STRIPE_PRICE_PROGRAMME',
   },
@@ -81,6 +97,13 @@ async function ensureProductWithPrice(f) {
   let product = await findExistingProduct(f.name);
   if (product) {
     console.log(`   ✓ Produit existant : ${product.id}`);
+    // Un produit existant garde son ANCIENNE description tant qu'on ne la
+    // réécrit pas — c'est ainsi que la mention erronée « Médecine Générale
+    // (voie interne + voie externe) » a survécu à toutes les relances.
+    if (product.description !== f.description) {
+      product = await stripe.products.update(product.id, { description: f.description });
+      console.log('   ↻ Description mise à jour');
+    }
   } else {
     product = await stripe.products.create({
       name: f.name,

@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
       // Ancien chemin « Nos conseils » indexé par Google — redirige vers le blog.
       { source: "/nos-conseils", destination: "/blog", permanent: true },
       { source: "/nos-conseils/:slug*", destination: "/blog", permanent: true },
+      // Ancienne URL des témoignages (ancien site), toujours indexée par Google :
+      // une recherche d'avis tombait sur un 404. Next normalise le slash final,
+      // donc `.../temoignages-major-ecn-preparation-ecn/` est couvert aussi.
+      { source: "/temoignages-major-ecn-preparation-ecn", destination: "/temoignages", permanent: true },
     ];
   },
   // Chromium (rendu PDF des fiches) : @sparticuz/chromium-min ne contient pas

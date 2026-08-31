@@ -152,3 +152,42 @@ Une fois le webhook configuré et déployé :
 | `SUPABASE_SERVICE_ROLE_KEY` | Pour provisioning | ⏳ Doit déjà être configuré |
 | `RESEND_API_KEY` | Pour les emails | ⏳ Recommandé pour la prod |
 | `NEXT_PUBLIC_SITE_URL` | https://major-ecn.fr | ⏳ Doit déjà être configuré |
+
+---
+
+## 10. Textes affichés sur la page de paiement Stripe
+
+La page Stripe Checkout n'affiche pas le texte du site : elle affiche le **nom et
+la description du produit Stripe**, enregistrés dans le dashboard. Ces
+descriptions avaient été créées une fois pour toutes avec la phrase
+« Accès complet à la Médecine Générale (voie interne + voie externe) ». Un
+étudiant inscrit en Médecine interne polyvalente, voie interne, lisait donc sur
+sa page de paiement qu'il achetait la Médecine générale dans les deux voies.
+
+Deux règles depuis :
+
+1. **La fiche produit ne nomme jamais une spécialité ni une voie de concours.**
+   Elle est partagée par tous les acheteurs de la formule (le prix ne dépend pas
+   de la spécialité). Texte de référence : `src/lib/stripe/copy.ts`.
+2. **Le périmètre réellement acheté** — spécialité, voie, couverture partielle
+   éventuelle — est composé pour chaque achat par `purchaseScopeNotice()` et
+   affiché sur la page de paiement juste au-dessus du bouton
+   (`custom_text.submit.message`).
+
+### Pousser les textes dans le dashboard
+
+Connecté en admin, ouvrir dans le navigateur :
+
+| URL | Effet |
+|---|---|
+| `/api/admin/stripe-catalogue` | **Dry-run** : compare le dashboard au code, n'écrit rien |
+| `/api/admin/stripe-catalogue?apply=1` | Applique `name` + `description` à chaque produit |
+
+La route ne touche jamais aux prix. Elle parcourt les 3 formules **et** les
+offres du Programme Approfondi (une par spécialité × niveau), et signale les
+variables `STRIPE_PRICE_*` absentes, les prix introuvables dans le mode de la
+clé utilisée, et les produits partagés par deux offres (cas où la description
+ne peut pas être juste pour les deux).
+
+À relancer après toute modification de `src/lib/stripe/copy.ts` ou création
+d'une nouvelle offre.
