@@ -15,6 +15,7 @@ const NAV: NavItem[] = [
     label: 'Méthode',
     children: [
       { href: '/methode', label: 'Notre méthode' },
+      { href: '/guide-evc', label: 'Guide complet des EVC' },
       { href: '/guide-methodologie-evc-2026', label: 'Guide méthodologique gratuit' },
       { href: '/profil-evc', label: 'Profil EVC gratuit' },
     ],

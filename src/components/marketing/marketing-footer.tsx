@@ -57,6 +57,7 @@ const COLS: { title: string; links: { label: string; href: string; Icon: React.C
   {
     title: "Ressources",
     links: [
+      { label: "Guide complet des EVC",         href: "/guide-evc",   Icon: BookOpen },
       { label: "Spécialités",         href: "/specialites", Icon: Stethoscope },
       { label: "Témoignages",              href: "/temoignages", Icon: MessageCircle },
       { label: "Foire aux questions",           href: "/faq",         Icon: HelpCircle },

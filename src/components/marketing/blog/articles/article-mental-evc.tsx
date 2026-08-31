@@ -7,6 +7,7 @@ import {
   Timer, Trophy, Users, Zap, type LucideIcon,
 } from 'lucide-react';
 import { ARTICLE_FONT } from '../article-shell';
+import { GuideEvcBreadcrumb } from '../guide-evc-links';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 
@@ -453,6 +454,9 @@ export function ArticleMentalEvc({ article }: { article: BlogArticleMeta }) {
       <ArticleBrandHeader />
 
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8 lg:pb-20">
+
+        {/* Fil d’Ariane — lien de retour vers la page hub /guide-evc. */}
+        <GuideEvcBreadcrumb className="mb-5" title={article.title} category={article.category} />
 
         {/* ============ HERO ============ */}
         <section className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-12">

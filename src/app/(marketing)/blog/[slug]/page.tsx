@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getArticleBySlug, getPublishedArticles, BLOG_CATEGORY_IMAGE } from '@/lib/data/blog-articles';
+import { getArticleBySlug, getPublishedArticles, BLOG_CATEGORY_IMAGE, BLOG_CATEGORIES } from '@/lib/data/blog-articles';
 import { getDbArticleBySlug, getDbPublishedArticles } from '@/lib/data/blog-db';
 import { JsonLd, articleSchema, breadcrumbSchema } from '@/components/seo/json-ld';
 import { ArticleRemuneration } from '@/components/marketing/blog/articles/article-remuneration';
@@ -20,6 +20,9 @@ import { ArticleOrganiserRevisionsEvc } from '@/components/marketing/blog/articl
 import { ArticleGeneric } from '@/components/marketing/blog/articles/article-generic';
 import { ArticleRich } from '@/components/marketing/blog/articles/article-rich';
 import { RICH_CONTENT } from '@/lib/data/blog-content';
+import type { Block } from '@/lib/data/blog-content/types';
+import { ArticleGuideFooter } from '@/components/marketing/blog/guide-evc-links';
+import { GUIDE_EVC_LABEL, GUIDE_EVC_PATH } from '@/lib/data/guide-evc';
 
 export async function generateMetadata({
   params,
@@ -63,6 +66,32 @@ export const revalidate = 300;
 
 export function generateStaticParams() {
   return getPublishedArticles().map((a) => ({ slug: a.slug }));
+}
+
+/** Articles dont le corps se termine déjà par sa propre grille d’articles liés
+ *  (« Vous aimerez aussi ») : l’encart de fin ne répète pas ces liens. */
+const SLUGS_WITH_OWN_RELATED = new Set(['evc-pae-liste-documents-fournir']);
+
+/**
+ * Slugs d'articles cités par le corps d'un article à blocs : liens des blocs
+ * « À lire aussi » et liens posés dans le texte. Sert à ne pas répéter un lien
+ * déjà présent, et à ne pas dépasser les 3 à 5 liens sortants recommandés.
+ */
+function relatedSlugsIn(blocks: Block[] | undefined): string[] {
+  if (!blocks) return [];
+  const found = new Set<string>();
+  for (const b of blocks) {
+    if (b.t === 'related') {
+      for (const it of b.items) {
+        const m = /^\/blog\/([a-z0-9-]+)$/.exec(it.href);
+        if (m) found.add(m[1]);
+      }
+      continue;
+    }
+    const html = b.t === 'p' || b.t === 'callout' ? b.html : '';
+    for (const m of html.matchAll(/href="\/blog\/([a-z0-9-]+)"/g)) found.add(m[1]);
+  }
+  return [...found];
 }
 
 function articleBody(slug: string, article: NonNullable<ReturnType<typeof getArticleBySlug>>) {
@@ -115,6 +144,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <>
         <JsonLd data={jsonLdFor(article, slug)} />
         {articleBody(slug, article)}
+        {/* Retour vers la page hub /guide-evc + maillage « À lire aussi ». */}
+        <ArticleGuideFooter
+          slug={slug}
+          excludeSlugs={relatedSlugsIn(RICH_CONTENT[slug])}
+          showRelated={!SLUGS_WITH_OWN_RELATED.has(slug) && relatedSlugsIn(RICH_CONTENT[slug]).length < 3}
+        />
       </>
     );
   }
@@ -132,11 +167,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         blocks={dbArticle.blocks}
         extraPublishedSlugs={extraPublishedSlugs}
       />
+      <ArticleGuideFooter
+        slug={slug}
+        excludeSlugs={relatedSlugsIn(dbArticle.blocks)}
+        showRelated={relatedSlugsIn(dbArticle.blocks).length < 3}
+      />
     </>
   );
 }
 
 function jsonLdFor(article: NonNullable<ReturnType<typeof getArticleBySlug>>, slug: string) {
+  // Un article créé en base peut porter une catégorie inconnue du référentiel :
+  // on n'insère alors pas de maillon « catégorie » dans le fil d'Ariane.
+  const category = BLOG_CATEGORIES[article.category];
   return [
     articleSchema({
       title: article.title,
@@ -145,9 +188,11 @@ function jsonLdFor(article: NonNullable<ReturnType<typeof getArticleBySlug>>, sl
       image: article.image ?? BLOG_CATEGORY_IMAGE[article.category],
       datePublished: article.publishedAt,
     }),
+    // Le fil d'Ariane affiché passe par la page hub : le schéma le reflète.
     breadcrumbSchema([
       { name: 'Accueil', path: '/' },
-      { name: 'Blog', path: '/blog' },
+      { name: GUIDE_EVC_LABEL, path: GUIDE_EVC_PATH },
+      ...(category ? [{ name: category.label, path: `/blog?cat=${article.category}` }] : []),
       { name: article.title, path: `/blog/${slug}` },
     ]),
   ];

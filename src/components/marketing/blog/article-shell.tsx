@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { ArrowRight, ChevronRight, Clock, Calendar } from 'lucide-react';
 import { BLOG_CATEGORIES, getRelatedArticles, type BlogArticleMeta } from '@/lib/data/blog-articles';
 import { BlogViewCounter } from './blog-view-counter';
+import { GuideEvcBreadcrumb } from './guide-evc-links';
 
 export const ARTICLE_FONT = "'Plus Jakarta Sans', sans-serif";
 
@@ -51,15 +52,14 @@ export function ArticleHeader({
   const c = BLOG_CATEGORIES[article.category];
   return (
     <header className="mb-6">
-      <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[12px] text-[#9AA1AE]">
-        <Link href="/" className="hover:text-[#1A2233]">Accueil</Link>
-        <ChevronRight className="h-3 w-3" />
-        <Link href="/blog" className="hover:text-[#1A2233]">Blog</Link>
-        <ChevronRight className="h-3 w-3" />
-        <Link href={`/blog?cat=${article.category}`} className="hover:text-[#1A2233]">{c.label}</Link>
-        <ChevronRight className="h-3 w-3" />
-        <span className="line-clamp-1 text-[#52607A]">{article.title.slice(0, 80)}…</span>
-      </nav>
+      {/* Fil d'Ariane : Accueil › Guide EVC › catégorie › titre. Le maillon
+          « Guide EVC » est le lien de retour vers la page hub, présent sur
+          chaque article (cahier des charges du hub, règle 2). */}
+      <GuideEvcBreadcrumb
+        className="mb-4"
+        title={article.title}
+        category={article.category}
+      />
 
       <div className="grid items-end gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div>

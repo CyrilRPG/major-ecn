@@ -78,6 +78,26 @@ export async function BlogIndex({
           </p>
         </header>
 
+        {/* Entrée vers la page hub : le blog n'est pas une collection d'articles
+            isolés, tout est réuni et classé par étape du parcours dans /guide-evc. */}
+        <Link
+          href="/guide-evc"
+          className="group mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#FACBD0] bg-[linear-gradient(160deg,#FFF7F8_0%,#FFE9EC_100%)] p-4 sm:p-5"
+        >
+          <span>
+            <span className="block text-[15px] font-extrabold text-[#1A2233]">
+              Guide complet des EVC
+            </span>
+            <span className="mt-1 block max-w-2xl text-[13px] leading-relaxed text-[#52607A]">
+              Tous nos articles réunis et classés par étape du parcours : comprendre les épreuves,
+              s&rsquo;inscrire au CNG, se préparer, choisir sa spécialité, puis exercer en France.
+            </span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-xl bg-[#C0001F] px-4 py-2.5 text-[13px] font-extrabold text-white shadow-sm transition-transform group-hover:scale-[1.02]">
+            Ouvrir le guide EVC <ArrowRight className="h-4 w-4" />
+          </span>
+        </Link>
+
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           {/* ───── Colonne principale ───── */}
           <div className="space-y-8">

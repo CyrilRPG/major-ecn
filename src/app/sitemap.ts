@@ -13,6 +13,9 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr'
 /** Pages vitrine statiques, avec priorité/fréquence indicatives pour le crawl. */
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' },
+  // Page hub « Guide EVC » : page de référence permanente qui maille tout le
+  // blog — priorité élevée, mise à jour à chaque publication d'article.
+  { path: '/guide-evc', priority: 0.95, changeFrequency: 'weekly' },
   { path: '/methode', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/plateforme', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/tarifs', priority: 0.9, changeFrequency: 'monthly' },
