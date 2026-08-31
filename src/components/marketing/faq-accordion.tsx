@@ -139,40 +139,13 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
 
               {isOpen && (
                 <div className="border-t px-3 pb-4 pt-3 sm:px-4" style={{ borderColor: BORDER, background: '#FAFBFD' }}>
-                  <ul className="space-y-2.5">
-                    {matched.map((qa) => {
-                      const qid = `${cat.id}::${qa.q}`;
-                      const isQOpen = openQ === qid;
-                      return (
-                        <li key={qid} className="overflow-hidden rounded-2xl border bg-white"
-                          style={{ borderColor: BORDER }}>
-                          <button
-                            type="button"
-                            onClick={() => setOpenQ((cur) => (cur === qid ? '' : qid))}
-                            aria-expanded={isQOpen}
-                            className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[#FFF8F9]"
-                          >
-                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
-                              style={{ background: isQOpen ? RED : '#FCEAEC' }}>
-                              <ChevronDown className={'h-3 w-3 transition-transform ' + (isQOpen ? 'rotate-180' : '-rotate-90')}
-                                style={{ color: isQOpen ? 'white' : RED }} />
-                            </span>
-                            <span className="flex-1 text-[13.5px] font-extrabold leading-snug"
-                              style={{ color: isQOpen ? RED : NAVY }}>
-                              <Highlighted text={qa.q} needle={needle} />
-                            </span>
-                          </button>
-                          {isQOpen && (
-                            <div className="border-t px-4 py-3" style={{ borderColor: BORDER }}>
-                              <p className="text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
-                                <Highlighted text={qa.a} needle={needle} />
-                              </p>
-                            </div>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <FaqQuestionList
+                    qas={matched}
+                    idPrefix={cat.id}
+                    needle={needle}
+                    openId={openQ}
+                    onToggle={(qid) => setOpenQ((cur) => (cur === qid ? '' : qid))}
+                  />
                 </div>
               )}
             </li>
@@ -180,6 +153,78 @@ export function FaqAccordion({ categories = FAQ_CATEGORIES, showHeader = true }:
         })}
       </ul>
     </div>
+  );
+}
+
+/* ============================================================
+   Liste de questions en accordéon — apparence et comportement communs à
+   toute la FAQ du site : /faq, le bloc de la page d'accueil et le guide EVC.
+
+   La réponse est TOUJOURS présente dans le HTML, simplement masquée quand la
+   question est repliée : un moteur qui n'exécute pas le JavaScript lirait
+   sinon des questions sans réponse, alors que la page publie un schéma
+   FAQPage qui, lui, les annonce.
+   ============================================================ */
+export function FaqQuestionList({
+  qas,
+  idPrefix = 'faq',
+  needle = '',
+  openId,
+  onToggle,
+}: {
+  qas: FaqQA[];
+  /** Préfixe des identifiants, pour que deux listes ne se répondent pas. */
+  idPrefix?: string;
+  /** Terme recherché à surligner (facultatif). */
+  needle?: string;
+  /** Ouverture pilotée par le parent ; à défaut, état interne. */
+  openId?: string;
+  onToggle?: (id: string) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState('');
+  const current = openId ?? internalOpen;
+  const toggle = onToggle ?? ((id: string) => setInternalOpen((cur) => (cur === id ? '' : id)));
+
+  return (
+    <ul className="space-y-2.5">
+      {qas.map((qa) => {
+        const qid = `${idPrefix}::${qa.q}`;
+        const isQOpen = current === qid;
+        return (
+          <li key={qid} className="overflow-hidden rounded-2xl border bg-white" style={{ borderColor: BORDER }}>
+            {/* Le titre enveloppe le bouton (motif d'accordéon recommandé) :
+                les questions deviennent une vraie structure de titres, ce que
+                les moteurs attendent d'une page qui publie un schéma FAQPage. */}
+            <h3>
+              <button
+                type="button"
+                onClick={() => toggle(qid)}
+                aria-expanded={isQOpen}
+                className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[#FFF8F9]"
+              >
+                <span
+                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: isQOpen ? RED : '#FCEAEC' }}
+                >
+                  <ChevronDown
+                    className={'h-3 w-3 transition-transform ' + (isQOpen ? 'rotate-180' : '-rotate-90')}
+                    style={{ color: isQOpen ? 'white' : RED }}
+                  />
+                </span>
+                <span className="flex-1 text-[13.5px] font-extrabold leading-snug" style={{ color: isQOpen ? RED : NAVY }}>
+                  <Highlighted text={qa.q} needle={needle} />
+                </span>
+              </button>
+            </h3>
+            <div className={'border-t px-4 py-3' + (isQOpen ? '' : ' hidden')} style={{ borderColor: BORDER }}>
+              <p className="text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
+                <Highlighted text={qa.a} needle={needle} />
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

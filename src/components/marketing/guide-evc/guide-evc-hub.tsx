@@ -4,6 +4,7 @@ import { BLOG_CATEGORIES, type BlogArticleMeta } from '@/lib/data/blog-articles'
 import { GUIDE_EVC_FAQ, type GuideSection, type GuideSectionId } from '@/lib/data/guide-evc';
 import { getGuideEvcSections } from '@/lib/data/guide-evc-sections';
 import { MeshGradient, NoiseTexture, SpotlightCard } from '@/components/marketing/premium-ui';
+import { FaqQuestionList } from '@/components/marketing/faq-accordion';
 
 /* ── Palette de la charte ─────────────────────────────────────────────── */
 const FONT = "'Plus Jakarta Sans', sans-serif";
@@ -44,10 +45,10 @@ function ArticleCard({ article }: { article: BlogArticleMeta }) {
             {c.label}
           </span>
 
-          <span className="block text-[15px] font-extrabold leading-snug tracking-tight" style={{ color: INK }}>
+          <span className="line-clamp-3 block text-[15px] font-extrabold leading-snug tracking-tight" style={{ color: INK }}>
             {article.title}
           </span>
-          <span className="block flex-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
+          <span className="line-clamp-4 block flex-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT }}>
             {article.excerpt}
           </span>
           <span
@@ -114,7 +115,7 @@ function GuideSectionBlock({ section, index }: { section: GuideSection; index: n
               <span className="h-px w-6" style={{ background: BORDER }} />
               {section.articles.length} article{section.articles.length > 1 ? 's' : ''} sur ce thème
             </p>
-            <ul className="mt-3.5 grid gap-3.5 sm:grid-cols-2">
+            <ul className="mt-3.5 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
               {section.articles.map((a) => (
                 <ArticleCard key={a.slug} article={a} />
               ))}
@@ -373,7 +374,7 @@ export async function GuideEvcHub() {
             </nav>
 
           {/* ── Blocs 3 à N — Sections ── */}
-          <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_290px] lg:gap-12">
+          <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_280px] lg:gap-10">
             <div className="min-w-0 space-y-14">
               {sections.map((s, i) => (
                 <GuideSectionBlock key={s.id} section={s} index={i} />
@@ -394,29 +395,12 @@ export async function GuideEvcHub() {
                     </p>
                   </header>
 
+                  {/* Même accordéon que /faq et que le bloc de la page d'accueil. */}
                   <div
-                    className="mt-6 divide-y overflow-hidden rounded-3xl border bg-white shadow-[0_10px_30px_-22px_rgba(15,31,77,0.45)]"
-                    style={{ borderColor: BORDER }}
+                    className="mt-6 rounded-3xl border p-3 sm:p-4"
+                    style={{ borderColor: '#E5E9F0', background: '#F7F8FB' }}
                   >
-                    {GUIDE_EVC_FAQ.map((item, i) => (
-                      <div key={item.q} className="grid gap-1.5 px-5 py-4 sm:grid-cols-[auto_1fr] sm:gap-x-4">
-                        <span
-                          className="text-[11px] font-black leading-6 sm:pt-0.5"
-                          style={{ color: RED }}
-                          aria-hidden
-                        >
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <div>
-                          <h3 className="text-[15px] font-extrabold leading-snug" style={{ color: INK }}>
-                            {item.q}
-                          </h3>
-                          <p className="mt-1.5 text-[13.5px] leading-[1.8]" style={{ color: INK_SOFT }}>
-                            {item.a}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                    <FaqQuestionList qas={GUIDE_EVC_FAQ} idPrefix="guide-evc" />
                   </div>
               </section>
             </div>
