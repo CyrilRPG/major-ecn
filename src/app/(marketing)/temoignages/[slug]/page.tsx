@@ -31,6 +31,14 @@ export default async function TestimonialPage({ params }: { params: Promise<{ sl
   const t = FEATURED_TESTIMONIES.find((x) => x.slug === slug);
   if (!t) notFound();
 
+  // Trois autres témoignages, choisis à partir de la position du témoignage
+  // courant : la sélection est stable d'un rendu à l'autre et couvre toute la
+  // liste, sans qu'aucune page ne reste sans lien entrant.
+  const index = FEATURED_TESTIMONIES.findIndex((x) => x.slug === slug);
+  const others = [1, 2, 3].map(
+    (offset) => FEATURED_TESTIMONIES[(index + offset) % FEATURED_TESTIMONIES.length],
+  ).filter((o) => o.slug !== slug);
+
   return (
     <main className="bg-white py-12 sm:py-16 lg:py-20" style={{ fontFamily: FONT }}>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -87,13 +95,52 @@ export default async function TestimonialPage({ params }: { params: Promise<{ sl
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center">
+        {/* Maillage entre témoignages : chaque page était un cul-de-sac (aucun
+            lien sortant hors « retour à la liste »), ce qui laisse ces pages
+            sans profondeur pour l'exploration et affaiblit leur indexation. */}
+        {others.length > 0 && (
+          <section className="mt-10 border-t pt-6" style={{ borderColor: '#F3D9DD' }}>
+            <h2 className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: INK_SOFT }}>
+              D&rsquo;autres médecins racontent leur préparation
+            </h2>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+              {others.map((o) => (
+                <li key={o.slug}>
+                  <Link
+                    href={`/temoignages/${o.slug}`}
+                    className="block h-full rounded-2xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-24px_rgba(15,31,77,0.5)]"
+                    style={{ borderColor: '#F3D9DD' }}
+                  >
+                    <span className="block text-[13.5px] font-extrabold" style={{ color: NAVY }}>
+                      {o.name}
+                    </span>
+                    <span className="mt-0.5 block text-[11.5px] font-semibold" style={{ color: RED }}>
+                      {o.spec}
+                    </span>
+                    <span className="mt-1.5 line-clamp-3 block text-[12px] leading-relaxed" style={{ color: INK_SOFT }}>
+                      {o.quote}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/tarifs"
             className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white"
             style={{ background: `linear-gradient(90deg, ${RED_DEEP}, ${RED})` }}
           >
             Découvrir nos préparations
+          </Link>
+          <Link
+            href="/guide-evc"
+            className="inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-bold"
+            style={{ borderColor: '#F3D9DD', color: RED }}
+          >
+            Lire le guide complet des EVC
           </Link>
         </div>
       </div>
