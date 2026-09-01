@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight, ChevronDown, FileSignature, HelpCircle, Info, LockKeyhole,
   MessageCircle, Rocket, Search, Split, Stethoscope,
@@ -192,16 +191,11 @@ export function HomeFaqSection() {
                         )}
                       </button>
 
-                      <AnimatePresence initial={false}>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.28, ease: 'easeOut' }}
-                            className="overflow-hidden"
-                          >
-                            <div className="border-t px-3 pb-4 pt-3 sm:px-4" style={{ borderColor: BORDER, background: '#FAFBFD' }}>
+                      <div
+                        className={'grid transition-[grid-template-rows] duration-300 ease-out ' + (isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}
+                      >
+                        <div className="min-h-0 overflow-hidden">
+                          <div className="border-t px-3 pb-4 pt-3 sm:px-4" style={{ borderColor: BORDER, background: '#FAFBFD' }}>
                               <ul className="space-y-2.5">
                                 {qas.map((qa) => {
                                   const isQOpen = openQ === qa.n;
@@ -227,29 +221,22 @@ export function HomeFaqSection() {
                                           style={{ color: isQOpen ? RED : INK_MUTED }}
                                         />
                                       </button>
-                                      <AnimatePresence initial={false}>
-                                        {isQOpen && (
-                                          <motion.div
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{ height: 'auto', opacity: 1 }}
-                                            exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.25, ease: 'easeOut' }}
-                                            className="overflow-hidden"
-                                          >
-                                            <div className="border-t px-4 py-4 sm:px-5" style={{ borderColor: BORDER }}>
-                                              <AnswerBlocks blocks={qa.a} />
-                                            </div>
-                                          </motion.div>
-                                        )}
-                                      </AnimatePresence>
+                                      <div
+                                        className={'grid transition-[grid-template-rows] duration-300 ease-out ' + (isQOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}
+                                      >
+                                        <div className="min-h-0 overflow-hidden">
+                                          <div className="border-t px-4 py-4 sm:px-5" style={{ borderColor: BORDER }}>
+                                            <AnswerBlocks blocks={qa.a} />
+                                          </div>
+                                        </div>
+                                      </div>
                                     </li>
                                   );
                                 })}
                               </ul>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                          </div>
+                        </div>
+                      </div>
                     </li>
                   );
                 })}

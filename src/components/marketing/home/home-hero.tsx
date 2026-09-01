@@ -61,23 +61,25 @@ export function HomeHero() {
               Depuis <span style={{ color: RED }}>15 ans</span>, nous préparons les candidats aux EVC
             </p>
 
-            {/* Accroche en deux temps, séparés par un filet rouge */}
+            {/* H1 — l'accroche en deux temps conserve le ton, la première
+                ligne porte la requête (« préparation aux EVC 2026 ») et la
+                seconde nomme les deux voies et leurs formats d'épreuve. */}
             <h1 className="mt-5 text-[2rem] font-black leading-[1.06] tracking-tight sm:text-[2.6rem] lg:text-[2.95rem]" style={{ letterSpacing: '-0.02em' }}>
-              <span className="block" style={{ color: NAVY }}>Votre objectif&nbsp;:</span>
+              <span className="block" style={{ color: NAVY }}>Préparation aux</span>
               <span className="block" style={{ color: NAVY }}>
-                Préparer{' '}
-                <span className="bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>
-                  les EVC.
-                </span>
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>EVC 2026</span>
+              </span>
+              <span className="mt-4 block text-[1.15rem] font-black leading-snug sm:text-[1.45rem] lg:text-[1.6rem]" style={{ color: NAVY }}>
+                Voie interne <span style={{ color: RED }}>(QCM)</span> et voie externe <span style={{ color: RED }}>(QROC)</span>
               </span>
             </h1>
 
-            <span aria-hidden className="mt-4 block h-1 w-16 rounded-full" style={{ background: RED }} />
+            <span aria-hidden className="mt-5 block h-1 w-16 rounded-full" style={{ background: RED }} />
 
-            <p className="mt-4 text-[2rem] font-black leading-[1.06] tracking-tight sm:text-[2.6rem] lg:text-[2.95rem]" style={{ letterSpacing: '-0.02em' }}>
-              <span className="block" style={{ color: NAVY }}>Notre mission&nbsp;:</span>
-              <span className="block bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>
-                Vous les faire réussir.
+            <p className="mt-5 text-[1.45rem] font-black leading-[1.12] tracking-tight sm:text-[1.85rem] lg:text-[2.05rem]" style={{ letterSpacing: '-0.02em' }}>
+              <span style={{ color: NAVY }}>Votre objectif&nbsp;: préparer les EVC.</span>{' '}
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: HERO_GRADIENT }}>
+                Notre mission&nbsp;: vous les faire réussir.
               </span>
             </p>
 
