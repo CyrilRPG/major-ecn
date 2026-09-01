@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import {
-  BORDER, Eyebrow, GRAD_ROSE, INK_SOFT, JAKARTA, MANROPE, NAVY, Reveal,
+  BORDER, Eyebrow, INK_SOFT, JAKARTA, MANROPE, NAVY, Reveal,
   SectionTitle,
 } from './home-ui';
 
@@ -15,7 +15,7 @@ import {
    BLOC 7 — TROIS FORMULES, UN MÊME OBJECTIF : VOTRE RÉUSSITE
    Palette alignée sur la page Tarifs :
      Essentielle → vert  (#2E7D32), Intensive → rouge (#C0112E),
-     Approfondie → violet (#7C3AED, formule mise en avant).
+     Approfondie → bleu  (#1E40AF, formule mise en avant).
    ============================================================ */
 const GREEN = '#2E7D32';
 const GREEN_DEEP = '#1B5E20';
@@ -23,9 +23,11 @@ const GREEN_SOFT = '#E8F5E9';
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
 const RED_SOFT = '#FDE8EC';
-const PURPLE = '#7C3AED';
-const PURPLE_DEEP = '#5B21B6';
-const PURPLE_SOFT = '#EDE9FE';
+/* L'Approfondie porte le bleu de sa page /formules/programme-approfondi —
+   le violet introduisait une teinte qui n'existe nulle part ailleurs. */
+const PURPLE = '#1E40AF';
+const PURPLE_DEEP = '#1E3A8A';
+const PURPLE_SOFT = '#DBEAFE';
 
 const GREEN_GRADIENT = `linear-gradient(90deg, ${GREEN_DEEP} 0%, ${GREEN} 100%)`;
 const RED_GRADIENT = `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`;
@@ -95,13 +97,13 @@ export function FormulesSection() {
       }}
     >
       <div aria-hidden className="pointer-events-none absolute -left-44 top-32 -z-10 h-[560px] w-[560px] rounded-full bg-[#2E7D32]/6 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -right-44 bottom-24 -z-10 h-[560px] w-[560px] rounded-full bg-[#7C3AED]/7 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-44 bottom-24 -z-10 h-[560px] w-[560px] rounded-full bg-[#1E40AF]/7 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <Eyebrow icon={<GraduationCap className="h-3.5 w-3.5" />}>Formules de préparation</Eyebrow>
           <div className="mt-5">
-            <SectionTitle line1="Trois formules, un même objectif :" line2="votre réussite" gradient={GRAD_ROSE} />
+            <SectionTitle line1="Trois formules, un même objectif :" line2="votre réussite" />
           </div>
           <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
             Choisissez le niveau d&rsquo;accompagnement qui correspond à vos besoins et à votre emploi du temps.
@@ -111,7 +113,7 @@ export function FormulesSection() {
               <ClipboardCheck className="h-4 w-4" /> Voie interne (QCM)
             </span>
             <span aria-hidden className="text-lg font-black" style={{ color: '#CBD2DE' }}>|</span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(37,99,235,0.3)', color: '#1D4ED8', background: 'white' }}>
+            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(30,64,175,0.3)', color: '#1E40AF', background: 'white' }}>
               <PenLine className="h-4 w-4" /> Voie externe (QROC)
             </span>
           </div>
@@ -161,12 +163,12 @@ export function FormulesSection() {
                       ))}
                     </ul>
                   </div>
-                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(29,78,216,0.25)', background: '#F5F8FE' }}>
-                    <p className="text-[11px] font-black tracking-tight" style={{ color: '#1D4ED8' }}>Voie externe (QROC)</p>
+                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(30,64,175,0.25)', background: '#F5F8FE' }}>
+                    <p className="text-[11px] font-black tracking-tight" style={{ color: '#1E40AF' }}>Voie externe (QROC)</p>
                     <ul className="mt-2 space-y-2">
                       {['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'].map((x) => (
                         <li key={x} className="flex items-start gap-1.5 text-[11.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: '#1D4ED8' }} /> {x}
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: '#1E40AF' }} /> {x}
                         </li>
                       ))}
                     </ul>
@@ -256,17 +258,17 @@ export function FormulesSection() {
           {/* ---------- 3. APPROFONDIE (violet, mise en avant) ---------- */}
           <Reveal delay={0.14} className="h-full">
             <article
-              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(91,33,182,0.55)] transition-transform duration-300 hover:-translate-y-1"
-              style={{ borderColor: 'rgba(124,58,237,0.45)' }}
+              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(10,26,77,0.55)] transition-transform duration-300 hover:-translate-y-1"
+              style={{ borderColor: 'rgba(30,64,175,0.45)' }}
             >
               <p
                 className="flex items-center justify-center gap-2 px-4 py-3 text-center text-[11px] font-black tracking-[0.08em] text-white"
-                style={{ background: 'linear-gradient(100deg, #4C1D95 0%, #7C3AED 60%, #A855F7 100%)' }}
+                style={{ background: PURPLE_GRADIENT }}
               >
                 <Star className="h-3.5 w-3.5" fill="currentColor" />
                 Recommandée
               </p>
-              <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #FBFAFF 0%, #FFFFFF 30%)' }}>
+              <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #F7FAFF 0%, #FFFFFF 30%)' }}>
                 <div className="flex items-start gap-3.5">
                   <FormuleBadge n={3} gradient={PURPLE_GRADIENT} />
                   <div>
@@ -285,7 +287,7 @@ export function FormulesSection() {
                   </span>
                 </p>
 
-                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(124,58,237,0.2)' }}>
+                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(30,64,175,0.2)' }}>
                   <p className="flex items-start gap-2.5 text-[12px] font-black leading-snug tracking-tight" style={{ color: PURPLE_DEEP }}>
                     <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0" style={{ color: PURPLE }} />
                     Tout le contenu des formules Essentielle + Intensive
@@ -313,7 +315,7 @@ export function FormulesSection() {
 
                 <Link
                   href="/formules/programme-approfondi"
-                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_18px_44px_-14px_rgba(91,33,182,0.7)] transition-transform hover:scale-[1.02]"
+                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_18px_44px_-14px_rgba(10,26,77,0.7)] transition-transform hover:scale-[1.02]"
                   style={{ background: PURPLE_GRADIENT }}
                 >
                   Choisir Approfondie

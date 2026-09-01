@@ -34,7 +34,7 @@ const STEPS = [
 const TRUST_BAR = [
   { Icon: Award, big: '15 ans d’expertise', small: 'au service de votre réussite' },
   { Icon: Users, big: '+ de 9 000 médecins accompagnés', small: 'depuis 2011' },
-  { Icon: GraduationCap, big: 'Toutes les spécialités', small: 'EVC couvertes (interne et externe)' },
+  { Icon: GraduationCap, big: 'Les deux voies préparées', small: 'Voie interne (QCM) et voie externe (QROC)' },
   { Icon: ShieldCheck, big: 'Méthode éprouvée', small: 'Mise à jour en continu selon les épreuves officielles' },
   { Icon: UsersRound, big: 'PH, CCA et spécialistes engagés à vos côtés', small: 'jusqu’aux EVC' },
 ];

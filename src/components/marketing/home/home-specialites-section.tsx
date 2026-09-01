@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CALENDRIER_ARTICLE, EPREUVES_2026 } from './evc-calendrier-2026';
+import { CALENDRIER_ARTICLE, EPREUVES_2026, VOIES_ARTICLE } from './evc-calendrier-2026';
 import {
   BORDER, Eyebrow, INK_MUTED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
   RED_GRADIENT, Reveal, SectionTitle,
@@ -21,11 +21,17 @@ export function HomeSpecialitesSection() {
           <div className="mt-5">
             <SectionTitle line1="Combien de postes" line2="dans votre spécialité ?" rule />
           </div>
-          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-            <span className="font-bold" style={{ color: NAVY }}>2 896 postes en voie interne</span> et{' '}
-            <span className="font-bold" style={{ color: NAVY }}>1 003 en voie externe</span>, répartis entre
-            treize spécialités — arrêté du 12 juin 2026. Les épreuves s’étalent du 10 novembre 2026
-            au 15 janvier 2027, chaque spécialité ayant sa propre date.
+          <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+            <span className="font-bold" style={{ color: NAVY }}>1 003 postes en voie externe</span>, répartis
+            entre treize spécialités médicales, et{' '}
+            <span className="font-bold" style={{ color: NAVY }}>2 896 en voie interne</span>, ouverte à plus de
+            quarante spécialités. Chiffres fixés par l’arrêté du 12 juin 2026.
+          </p>
+          <p className="mx-auto mt-3 max-w-3xl text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+            Les treize spécialités ci-dessous sont celles ouvertes{' '}
+            <span className="font-bold" style={{ color: NAVY }}>en voie externe</span> — aucune spécialité
+            chirurgicale n’y figure pour 2026. Chacune indique aussi ses postes de voie interne. Les épreuves
+            s’étalent du 10 novembre 2026 au 15 janvier 2027, chaque spécialité ayant sa propre date.
           </p>
         </Reveal>
 
@@ -50,12 +56,14 @@ export function HomeSpecialitesSection() {
                     <dt className="text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>Voie externe</dt>
                     <dd className="text-[20px] font-black leading-none tabular-nums" style={{ color: RED_DEEP }}>{s.externe}</dd>
                   </div>
-                  {s.interne != null && (
-                    <div className="flex items-baseline justify-between gap-3 border-t pt-2" style={{ borderColor: BORDER }}>
-                      <dt className="text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>Voie interne</dt>
+                  <div className="flex items-baseline justify-between gap-3 border-t pt-2" style={{ borderColor: BORDER }}>
+                    <dt className="text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>Voie interne</dt>
+                    {s.interne != null ? (
                       <dd className="text-[20px] font-black leading-none tabular-nums" style={{ color: NAVY }}>{s.interne}</dd>
-                    </div>
-                  )}
+                    ) : (
+                      <dd className="text-[12.5px] font-bold" style={{ color: INK_MUTED }}>non publié</dd>
+                    )}
+                  </div>
                 </dl>
 
                 <p className="mt-4 flex-1 border-t pt-3 text-[12px] leading-snug" style={{ borderColor: BORDER, color: INK_MUTED, fontFamily: MANROPE }}>
@@ -71,7 +79,17 @@ export function HomeSpecialitesSection() {
           ))}
         </div>
 
-        <Reveal delay={0.15} className="mt-8">
+        <Reveal delay={0.12} className="mt-6">
+          <p className="text-center text-[12.5px] leading-relaxed" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
+            « Non publié » signifie que la ventilation par spécialité de la voie interne n’a pas été rendue
+            publique pour cette discipline&nbsp;: elle reste ouverte, avec des postes.{' '}
+            <Link href={`/blog/${VOIES_ARTICLE}`} className="font-bold underline underline-offset-2" style={{ color: RED }}>
+              Comparer les deux voies
+            </Link>
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.18} className="mt-8">
           <div
             className="flex flex-col gap-5 rounded-3xl px-6 py-7 sm:px-9 lg:flex-row lg:items-center lg:justify-between"
             style={{ background: '#FDF1F3' }}

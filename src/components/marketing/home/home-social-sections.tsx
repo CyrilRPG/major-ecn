@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Award, Clapperboard, Play, Star } from 'lucide-react';
 import {
-  BORDER, GRAD_ORANGE, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
+  BORDER, GRAD_RED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
   RED_GRADIENT, Reveal,
 } from './home-ui';
 
@@ -36,35 +36,35 @@ const TEMOINS: Temoin[] = [
     laureat: 'Lauréat EVC',
     quote: "“Les entraînements, les corrections détaillées et les fiches m'ont permis d'être prêt le jour J.”",
     video: '/temoignages/T1 FINAL V2.mp4', poster: '/temoignages/posters/t1.jpg', initials: 'SK',
-    grad: 'linear-gradient(135deg, #14254E 0%, #6D28D9 50%, #A91D2C 100%)',
+    grad: 'linear-gradient(135deg, #14254E 0%, #4A2A55 50%, #A91D2C 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Karim Khiaredine', spec: 'Anesthésie-Réanimation',
     laureat: 'Lauréat EVC 2025',
     quote: "“Une préparation complète, des enseignants disponibles et un vrai accompagnement jusqu'au jour J.”",
     video: '/temoignages/T2 FINAL V2.mp4', poster: '/temoignages/posters/t2.jpg', initials: 'KK',
-    grad: 'linear-gradient(135deg, #2A1A4A 0%, #6D28D9 55%, #A91D2C 100%)',
+    grad: 'linear-gradient(135deg, #14254E 0%, #3A2A5E 55%, #A91D2C 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Ahmed Sifaoui', spec: 'Gériatrie', voie: 'Voie externe',
     laureat: 'Lauréat EVC 2025',
     quote: "“Major ECN m'a apporté la méthode, la rigueur et la confiance nécessaires pour réussir les EVC.”",
     video: '/temoignages/T4 Final V2.mp4', poster: '/temoignages/posters/t4.jpg', initials: 'AS',
-    grad: 'linear-gradient(135deg, #6B1A2A 0%, #B45309 55%, #E8742C 100%)', highlight: true,
+    grad: 'linear-gradient(135deg, #6B1A2A 0%, #A5122A 55%, #C0112E 100%)', highlight: true,
   },
   {
     badge: 'Lauréate EVC 2024', name: 'Dr Athéna Haroun', spec: 'Chirurgie viscérale et digestive',
     laureat: 'Lauréate EVC 2024',
     quote: '“Des explications claires, des supports ciblés et une préparation qui fait vraiment la différence.”',
     video: '/temoignages/T5 FINAL V2.mp4', poster: '/temoignages/posters/t5.jpg', initials: 'AH',
-    grad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #E8742C 100%)',
+    grad: 'linear-gradient(135deg, #4B0F1B 0%, #A91D2C 55%, #C0112E 100%)',
   },
   {
     badge: 'Lauréat EVC 2025', name: 'Dr Ely Cheikh SY', spec: 'Endocrinologie & métabolisme',
     laureat: 'Lauréat EVC 2025',
     quote: "“Major ECN m'a aidé à structurer mes révisions et à atteindre mon objectif.”",
     video: '/temoignages/T3 FINAL V2.mp4', poster: '/temoignages/posters/t3.jpg', initials: 'ES',
-    grad: 'linear-gradient(135deg, #0F4438 0%, #16793C 55%, #A91D2C 100%)',
+    grad: 'linear-gradient(135deg, #0F1B3D 0%, #14254E 55%, #A91D2C 100%)',
   },
 ];
 
@@ -131,7 +131,7 @@ function TemoinCard({ t }: { t: Temoin }) {
         </div>
         <p className="mt-2 flex gap-0.5" aria-label="5 étoiles sur 5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className="h-3.5 w-3.5" fill="#F59E0B" style={{ color: '#F59E0B' }} />
+            <Star key={i} className="h-3.5 w-3.5" fill={RED} style={{ color: RED }} />
           ))}
         </p>
         <p className="mt-2.5 flex-1 text-[12.5px] leading-relaxed" style={{ color: NAVY, fontFamily: MANROPE }}>
@@ -173,7 +173,7 @@ export function TemoignagesSection() {
                 style={{ letterSpacing: '-0.02em' }}
               >
                 <span style={{ color: NAVY }}>15 ans d&rsquo;expérience aux EVC,</span>{' '}
-                <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRAD_ORANGE }}>
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: GRAD_RED }}>
                   des lauréats, des parcours qui se poursuivent, des réussites qui font la différence.
                 </span>
               </h2>

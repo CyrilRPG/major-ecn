@@ -6,7 +6,7 @@ import {
   TrendingUp, Trophy, Users,
 } from 'lucide-react';
 import {
-  BORDER, Eyebrow, GRAD_BLUE, GRAD_PURPLE, GRAD_TEAL, INK_SOFT,
+  BORDER, Eyebrow, INK_SOFT,
   JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT, Reveal, SectionTitle,
 } from './home-ui';
 
@@ -31,8 +31,10 @@ const VOIE_EXTERNE_ITEMS = [
   'Gestion du temps',
 ];
 
-const V_GREEN = '#15803D';
-const V_BLUE = '#1D4ED8';
+/* Les deux voies se distinguent par le couple de la marque, pas par deux
+   teintes étrangères : navy pour l'interne, bordeaux pour l'externe. */
+const V_INTERNE = NAVY;
+const V_EXTERNE = RED_DEEP;
 
 function VoieCard({
   color, softBg, badgeIcon, title, subtitle, items, objectif,
@@ -107,8 +109,8 @@ export function DeuxVoiesSection() {
         <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           <Reveal>
             <VoieCard
-              color={V_GREEN}
-              softBg="#F0F9F2"
+              color={V_INTERNE}
+              softBg="#F2F4F9"
               badgeIcon={<ClipboardCheck className="h-7 w-7" />}
               title={<>Voie interne — QCM</>}
               subtitle="Préparez-vous au format QCM."
@@ -118,8 +120,8 @@ export function DeuxVoiesSection() {
           </Reveal>
           <Reveal delay={0.12}>
             <VoieCard
-              color={V_BLUE}
-              softBg="#F0F5FE"
+              color={V_EXTERNE}
+              softBg="#FDF1F3"
               badgeIcon={<ScrollText className="h-7 w-7" />}
               title={<>Voie externe — QROC</>}
               subtitle="Apprenez à rédiger la réponse attendue."
@@ -154,10 +156,10 @@ export function DeuxVoiesSection() {
    ============================================================ */
 const SUIVI_RED = '#C0112E';
 const SUIVI_RED_DEEP = '#8B0E22';
-const SUIVI_ORANGE = '#E8742C';
-const SUIVI_ORANGE_DEEP = '#C2540F';
-const SUIVI_BLUE = '#1D4ED8';
-const SUIVI_BLUE_DEEP = '#1E3A8A';
+const SUIVI_ORANGE = '#8B0E22';
+const SUIVI_ORANGE_DEEP = '#6B0F1E';
+const SUIVI_BLUE = '#14254E';
+const SUIVI_BLUE_DEEP = '#0F1B3D';
 
 const ENSEIGNER_POINTS = [
   'Cours en direct avec nos médecins spécialistes',
@@ -174,7 +176,7 @@ const ENSEIGNER_CHECKS = [
 
 const CONSOLIDER_JALONS = [
   { j: 'J+14', label: 'Rappel ciblé', dot: '#C0112E' },
-  { j: 'J+30', label: 'Consolidation', dot: '#E8A317' },
+  { j: 'J+30', label: 'Consolidation', dot: '#14254E' },
   { j: 'J+60', label: 'Ancrage durable', dot: '#16793C' },
 ];
 
@@ -249,7 +251,6 @@ export function SuiviSection() {
             <SectionTitle
               line1="Nous vous enseignons. Nous vous guidons."
               line2="Vous travaillez. Nous mesurons vos progrès."
-              gradient={GRAD_BLUE}
               rule
             />
           </div>
@@ -312,7 +313,7 @@ export function SuiviSection() {
 
           {/* ---------- 2. NOUS CONSOLIDONS VOS CONNAISSANCES ---------- */}
           <Reveal delay={0.08} className="h-full">
-            <article className="flex h-full flex-col rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-45px_rgba(232,116,44,0.4)]" style={{ borderColor: 'rgba(232,116,44,0.22)' }}>
+            <article className="flex h-full flex-col rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-45px_rgba(139,14,34,0.4)]" style={{ borderColor: 'rgba(139,14,34,0.18)' }}>
               <SuiviHead n={2} color={SUIVI_ORANGE} l1="Nous consolidons" l2="vos connaissances" />
 
               <div className="mt-5 rounded-2xl border bg-white p-4" style={{ borderColor: BORDER }}>
@@ -323,7 +324,7 @@ export function SuiviSection() {
                   <span
                     aria-hidden
                     className="absolute left-[12%] right-[12%] top-[7px] h-0.5 rounded-full"
-                    style={{ background: 'linear-gradient(90deg, #C0112E 0%, #E8A317 50%, #16793C 100%)' }}
+                    style={{ background: 'linear-gradient(90deg, #C0112E 0%, #14254E 55%, #16793C 100%)' }}
                   />
                   <div className="relative grid grid-cols-3">
                     {CONSOLIDER_JALONS.map((j) => (
@@ -342,7 +343,7 @@ export function SuiviSection() {
               </div>
 
               <div className="flex-1">
-                <SuiviChecks items={CONSOLIDER_CHECKS} color={SUIVI_ORANGE} bg="#FFF4EA" />
+                <SuiviChecks items={CONSOLIDER_CHECKS} color={SUIVI_ORANGE} bg="#FBF0F2" />
               </div>
               <SuiviFooter background={`linear-gradient(100deg, ${SUIVI_ORANGE_DEEP} 0%, ${SUIVI_ORANGE} 100%)`}>
                 Une méthode éprouvée et structurée
@@ -353,7 +354,7 @@ export function SuiviSection() {
 
           {/* ---------- 3. NOUS MESURONS VOTRE PROGRESSION ---------- */}
           <Reveal delay={0.16} className="h-full">
-            <article className="flex h-full flex-col rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-45px_rgba(29,78,216,0.4)]" style={{ borderColor: 'rgba(29,78,216,0.2)' }}>
+            <article className="flex h-full flex-col rounded-3xl border bg-white p-6 shadow-[0_30px_70px_-45px_rgba(15,31,77,0.4)]" style={{ borderColor: 'rgba(20,37,78,0.18)' }}>
               <SuiviHead n={3} color={SUIVI_BLUE} l1="Nous mesurons" l2="votre progression" />
 
               <div className="mt-5 flex items-start gap-4">
@@ -387,7 +388,7 @@ export function SuiviSection() {
               </div>
 
               <div className="flex-1">
-                <SuiviChecks items={MESURER_CHECKS} color={SUIVI_BLUE} bg="#F0F5FE" />
+                <SuiviChecks items={MESURER_CHECKS} color={SUIVI_BLUE} bg="#F2F4F9" />
               </div>
               <SuiviFooter background={`linear-gradient(100deg, ${SUIVI_BLUE_DEEP} 0%, ${SUIVI_BLUE} 100%)`}>
                 Suivi personnalisé et corrections détaillées
@@ -426,14 +427,14 @@ export function SuiviSection() {
    ============================================================ */
 const PLATEFORME_LEFT = [
   { accent: RED, title: 'Cours & fiches', desc: 'Cours en direct et replays, fiches de cours et fiches éclair, capsules vidéo courtes.' },
-  { accent: '#15803D', title: 'QCM, QROC & cas cliniques', desc: 'Entraînements ciblés et cas cliniques commentés pour vous exercer efficacement.' },
-  { accent: '#7C3AED', title: 'Annales corrigées', desc: 'Annales EVC corrigées et commentées en détail pour comprendre les attendus.' },
+  { accent: NAVY, title: 'QCM, QROC & cas cliniques', desc: 'Entraînements ciblés et cas cliniques commentés pour vous exercer efficacement.' },
+  { accent: RED_DEEP, title: 'Annales corrigées', desc: 'Annales EVC corrigées et commentées en détail pour comprendre les attendus.' },
 ];
 
 const PLATEFORME_RIGHT = [
-  { accent: '#E8742C', title: 'Flashcards', desc: "Mémorisez l'essentiel grâce aux flashcards et révisez partout, à tout moment." },
-  { accent: '#1D4ED8', title: 'Capsules vidéo', desc: 'Capsules courtes et ciblées pour comprendre vite et retenir durablement.' },
-  { accent: '#0E7490', title: 'Interrogations & concours blancs', desc: 'Évaluez votre niveau avec des interrogations programmées et des concours blancs.' },
+  { accent: NAVY, title: 'Flashcards', desc: "Mémorisez l'essentiel grâce aux flashcards et révisez partout, à tout moment." },
+  { accent: RED, title: 'Capsules vidéo', desc: 'Capsules courtes et ciblées pour comprendre vite et retenir durablement.' },
+  { accent: NAVY, title: 'Interrogations & concours blancs', desc: 'Évaluez votre niveau avec des interrogations programmées et des concours blancs.' },
 ];
 
 /** Quatre colonnes détaillées sous le visuel (maquette BLOC 6). */
@@ -445,13 +446,13 @@ const PLATEFORME_DETAILS = [
     noteBg: '#FDF1F3',
   },
   {
-    accent: '#15803D', title: 'Simulations QCM\nà volonté',
+    accent: NAVY, title: 'Simulations QCM\nà volonté',
     items: ['Lancez de nouvelles sessions à la demande', 'QCM sélectionnés dans notre banque', 'Banque régulièrement enrichie', 'Correction immédiate'],
     note: 'Entraînez-vous autant que vous le souhaitez et progressez à chaque session.',
     noteBg: '#EFF8F1',
   },
   {
-    accent: '#7C3AED', title: 'Suivi & progression',
+    accent: RED_DEEP, title: 'Suivi & progression',
     items: ['Tableau de bord détaillé', 'Analyse de vos forces et faiblesses', 'Recommandations personnalisées', 'Repérez vos priorités'],
     note: 'Identifiez vos axes de progression et gagnez en efficacité.',
     noteBg: '#F3F0FE',
@@ -487,7 +488,7 @@ export function PlateformeSection() {
         <Reveal className="mx-auto max-w-3xl text-center">
           <Eyebrow icon={<MonitorSmartphone className="h-3.5 w-3.5" />}>Votre préparation centralisée</Eyebrow>
           <div className="mt-5">
-            <SectionTitle line1="Tout votre travail." line2="Au même endroit." gradient={GRAD_TEAL} />
+            <SectionTitle line1="Tout votre travail." line2="Au même endroit." />
           </div>
           <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
             Une plateforme complète et intuitive pour apprendre, vous entraîner et progresser jusqu&rsquo;aux{' '}
@@ -631,7 +632,7 @@ export function EnseignantsSection() {
         <Reveal className="mx-auto max-w-4xl text-center">
           <Eyebrow icon={<Users className="h-3.5 w-3.5" />}>Nos enseignants</Eyebrow>
           <div className="mt-5">
-            <SectionTitle line1="Nos enseignants :" line2="bien plus que des formateurs" gradient={GRAD_PURPLE} rule />
+            <SectionTitle line1="Nos enseignants :" line2="bien plus que des formateurs" rule />
           </div>
         </Reveal>
 
