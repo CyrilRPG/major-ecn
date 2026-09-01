@@ -56,9 +56,11 @@ export function HomeHero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: 'easeOut' }}
           >
-            {/* Eyebrow — sans pictogramme */}
-            <p className="text-[12px] font-black tracking-tight sm:text-[13.5px]" style={{ color: NAVY }}>
-              Depuis <span style={{ color: RED }}>15 ans</span>, nous préparons les candidats aux EVC
+            {/* Eyebrow — deux preuves chiffrées plutôt qu'une formule */}
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] font-black tracking-tight sm:text-[13.5px]" style={{ color: NAVY }}>
+              <span><span style={{ color: RED }}>15 ans</span> d’expérience</span>
+              <span aria-hidden className="h-1 w-1 rounded-full" style={{ background: RED }} />
+              <span><span style={{ color: RED }}>+ 9 000</span> médecins accompagnés</span>
             </p>
 
             {/* H1 — l'accroche en deux temps conserve le ton, la première

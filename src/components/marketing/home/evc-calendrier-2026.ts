@@ -58,3 +58,20 @@ export const EPREUVES_2026: EpreuveSpecialite[] = [
   { nom: 'Médecine interne polyvalente et immunologie clinique', label: 'mercredi 13 janvier 2027', j: 13, m: 1, a: 2027, externe: 213, interne: 564, slug: 'medecine-interne', note: 'MIPIC — nouvelle spécialité 2026' },
   { nom: 'Médecine générale', label: 'vendredi 15 janvier 2027', j: 15, m: 1, a: 2027, externe: 35, interne: 89, slug: 'medecine-generale', page: true },
 ];
+
+/** Ventilation publiée des postes de la VOIE INTERNE, du plus doté au moins
+    doté. Source : notre article « Voie interne ou voie externe : comment
+    choisir ». La voie interne compte plus de quarante spécialités ; seules
+    celles dont le chiffre a été publié figurent ici. */
+export const POSTES_INTERNE: { nom: string; postes: number; slug: string; page?: boolean }[] = [
+  { nom: 'Médecine interne polyvalente (MIPIC)', postes: 564, slug: 'medecine-interne' },
+  { nom: 'Psychiatrie', postes: 450, slug: 'psychiatrie' },
+  { nom: 'Médecine d’urgence', postes: 270, slug: 'medecine-d-urgence' },
+  { nom: 'Gériatrie', postes: 236, slug: 'geriatrie' },
+  { nom: 'Anesthésie-réanimation', postes: 201, slug: 'anesthesie-reanimation' },
+  { nom: 'Médecine cardiovasculaire', postes: 146, slug: 'cardiologie-et-maladies-vasculaires' },
+  { nom: 'Radiologie et imagerie médicale', postes: 116, slug: 'radiodiagnostic-et-imagerie-medicale' },
+  { nom: 'Pédiatrie', postes: 91, slug: 'pediatrie' },
+  { nom: 'Médecine générale', postes: 89, slug: 'medecine-generale', page: true },
+  { nom: 'Pneumologie', postes: 40, slug: 'pneumologie' },
+];

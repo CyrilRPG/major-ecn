@@ -14,22 +14,22 @@ import {
 /* ============================================================
    BLOC 7 — TROIS FORMULES, UN MÊME OBJECTIF : VOTRE RÉUSSITE
    Palette alignée sur la page Tarifs :
-     Essentielle → vert  (#2E7D32), Intensive → rouge (#C0112E),
-     Approfondie → bleu  (#1E40AF, formule mise en avant).
+     Essentielle → navy (#14254E), Intensive → bordeaux (#8B0E22),
+     Approfondie → rouge Major (#C0112E, formule mise en avant).
    ============================================================ */
-const GREEN = '#2E7D32';
-const GREEN_DEEP = '#1B5E20';
-const GREEN_SOFT = '#E8F5E9';
+const ESS = '#14254E';
+const ESS_DEEP = '#0F1B3D';
+const ESS_SOFT = '#EEF1F7';
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
 const RED_SOFT = '#FDE8EC';
 /* L'Approfondie porte le bleu de sa page /formules/programme-approfondi —
    le violet introduisait une teinte qui n'existe nulle part ailleurs. */
-const PURPLE = '#1E40AF';
-const PURPLE_DEEP = '#1E3A8A';
-const PURPLE_SOFT = '#DBEAFE';
+const PURPLE = '#C0112E';
+const PURPLE_DEEP = '#8B0E22';
+const PURPLE_SOFT = '#FDE8EC';
 
-const GREEN_GRADIENT = `linear-gradient(90deg, ${GREEN_DEEP} 0%, ${GREEN} 100%)`;
+const ESS_GRADIENT = `linear-gradient(90deg, ${ESS_DEEP} 0%, ${ESS} 100%)`;
 const RED_GRADIENT = `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`;
 const PURPLE_GRADIENT = `linear-gradient(90deg, ${PURPLE_DEEP} 0%, ${PURPLE} 100%)`;
 
@@ -96,8 +96,8 @@ export function FormulesSection() {
         background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 35%, #FFF8F9 70%, #FFFFFF 100%)',
       }}
     >
-      <div aria-hidden className="pointer-events-none absolute -left-44 top-32 -z-10 h-[560px] w-[560px] rounded-full bg-[#2E7D32]/6 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -right-44 bottom-24 -z-10 h-[560px] w-[560px] rounded-full bg-[#1E40AF]/7 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -left-44 top-32 -z-10 h-[560px] w-[560px] rounded-full bg-[#14254E]/6 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -right-44 bottom-24 -z-10 h-[560px] w-[560px] rounded-full bg-[#C0112E]/7 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
@@ -113,7 +113,7 @@ export function FormulesSection() {
               <ClipboardCheck className="h-4 w-4" /> Voie interne (QCM)
             </span>
             <span aria-hidden className="text-lg font-black" style={{ color: '#CBD2DE' }}>|</span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(30,64,175,0.3)', color: '#1E40AF', background: 'white' }}>
+            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(192,17,46,0.3)', color: '#C0112E', background: 'white' }}>
               <PenLine className="h-4 w-4" /> Voie externe (QROC)
             </span>
           </div>
@@ -123,15 +123,15 @@ export function FormulesSection() {
           {/* ---------- 1. ESSENTIELLE (vert) ---------- */}
           <Reveal className="h-full">
             <article
-              className="flex h-full flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_30px_70px_-45px_rgba(27,94,32,0.45)] transition-transform duration-300 hover:-translate-y-1"
-              style={{ borderColor: 'rgba(46,125,50,0.22)' }}
+              className="flex h-full flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_30px_70px_-45px_rgba(15,27,61,0.45)] transition-transform duration-300 hover:-translate-y-1"
+              style={{ borderColor: 'rgba(20,37,78,0.22)' }}
             >
-              <span aria-hidden className="block h-1.5 w-full" style={{ background: GREEN_GRADIENT }} />
+              <span aria-hidden className="block h-1.5 w-full" style={{ background: ESS_GRADIENT }} />
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-start gap-3.5">
-                  <FormuleBadge n={1} gradient={GREEN_GRADIENT} />
+                  <FormuleBadge n={1} gradient={ESS_GRADIENT} />
                   <div>
-                    <p className="text-xl font-black tracking-tight" style={{ color: GREEN }}>Essentielle</p>
+                    <p className="text-xl font-black tracking-tight" style={{ color: ESS }}>Essentielle</p>
                     <p className="mt-1 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                       Je prépare les EVC principalement en autonomie.
                     </p>
@@ -139,59 +139,59 @@ export function FormulesSection() {
                 </div>
 
                 <p className="mt-5 flex items-baseline gap-1.5">
-                  <span className="text-[2.6rem] font-black leading-none tracking-tight" style={{ color: GREEN_DEEP }}>495&nbsp;€</span>
+                  <span className="text-[2.6rem] font-black leading-none tracking-tight" style={{ color: ESS_DEEP }}>495&nbsp;€</span>
                   <span className="text-[12px] font-extrabold" style={{ color: INK_SOFT }}>TTC</span>
                 </p>
 
-                <div className="mt-4 flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: GREEN_SOFT }}>
-                  <Monitor className="mt-0.5 h-5 w-5 shrink-0" style={{ color: GREEN }} />
+                <div className="mt-4 flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: ESS_SOFT }}>
+                  <Monitor className="mt-0.5 h-5 w-5 shrink-0" style={{ color: ESS }} />
                   <p className="text-[12px] leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                    <span className="font-black" style={{ fontFamily: JAKARTA, color: GREEN_DEEP }}>La base complète</span>
+                    <span className="font-black" style={{ fontFamily: JAKARTA, color: ESS_DEEP }}>La base complète</span>
                     <br />
                     de la préparation Major ECN.
                   </p>
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(46,125,50,0.25)', background: '#F6FBF7' }}>
-                    <p className="text-[11px] font-black tracking-tight" style={{ color: GREEN }}>Voie interne (QCM)</p>
+                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(20,37,78,0.25)', background: '#F5F7FB' }}>
+                    <p className="text-[11px] font-black tracking-tight" style={{ color: ESS }}>Voie interne (QCM)</p>
                     <ul className="mt-2 space-y-2">
                       {['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'].map((x) => (
                         <li key={x} className="flex items-start gap-1.5 text-[11.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: GREEN }} /> {x}
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: ESS }} /> {x}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(30,64,175,0.25)', background: '#F5F8FE' }}>
-                    <p className="text-[11px] font-black tracking-tight" style={{ color: '#1E40AF' }}>Voie externe (QROC)</p>
+                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#F5F8FE' }}>
+                    <p className="text-[11px] font-black tracking-tight" style={{ color: '#C0112E' }}>Voie externe (QROC)</p>
                     <ul className="mt-2 space-y-2">
                       {['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'].map((x) => (
                         <li key={x} className="flex items-start gap-1.5 text-[11.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: '#1E40AF' }} /> {x}
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: '#C0112E' }} /> {x}
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
 
-                <p className="mt-4 flex items-center gap-3 text-center text-[11.5px] font-black tracking-wide" style={{ color: GREEN_DEEP }}>
-                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(46,125,50,0.25)' }} />
+                <p className="mt-4 flex items-center gap-3 text-center text-[11.5px] font-black tracking-wide" style={{ color: ESS_DEEP }}>
+                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(20,37,78,0.25)' }} />
                   Dans les deux voies
-                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(46,125,50,0.25)' }} />
+                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(20,37,78,0.25)' }} />
                 </p>
                 <ul className="mt-3 grid flex-1 grid-cols-1 gap-y-2">
                   {ESSENTIELLE_DEUX_VOIES.map((x) => (
                     <li key={x} className="flex items-start gap-2 text-[12.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: GREEN }} /> {x}
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: ESS }} /> {x}
                     </li>
                   ))}
                 </ul>
 
                 <Link
                   href="/formules/essentielle"
-                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[13.5px] font-black tracking-tight text-white shadow-[0_14px_36px_-14px_rgba(27,94,32,0.65)] transition-transform hover:scale-[1.02]"
-                  style={{ background: GREEN_GRADIENT }}
+                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[13.5px] font-black tracking-tight text-white shadow-[0_14px_36px_-14px_rgba(15,27,61,0.65)] transition-transform hover:scale-[1.02]"
+                  style={{ background: ESS_GRADIENT }}
                 >
                   Choisir Essentielle
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -258,8 +258,8 @@ export function FormulesSection() {
           {/* ---------- 3. APPROFONDIE (violet, mise en avant) ---------- */}
           <Reveal delay={0.14} className="h-full">
             <article
-              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(10,26,77,0.55)] transition-transform duration-300 hover:-translate-y-1"
-              style={{ borderColor: 'rgba(30,64,175,0.45)' }}
+              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(139,14,34,0.55)] transition-transform duration-300 hover:-translate-y-1"
+              style={{ borderColor: 'rgba(192,17,46,0.45)' }}
             >
               <p
                 className="flex items-center justify-center gap-2 px-4 py-3 text-center text-[11px] font-black tracking-[0.08em] text-white"
@@ -268,7 +268,7 @@ export function FormulesSection() {
                 <Star className="h-3.5 w-3.5" fill="currentColor" />
                 Recommandée
               </p>
-              <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #F7FAFF 0%, #FFFFFF 30%)' }}>
+              <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #FFF7F8 0%, #FFFFFF 30%)' }}>
                 <div className="flex items-start gap-3.5">
                   <FormuleBadge n={3} gradient={PURPLE_GRADIENT} />
                   <div>
@@ -287,7 +287,7 @@ export function FormulesSection() {
                   </span>
                 </p>
 
-                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(30,64,175,0.2)' }}>
+                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(192,17,46,0.2)' }}>
                   <p className="flex items-start gap-2.5 text-[12px] font-black leading-snug tracking-tight" style={{ color: PURPLE_DEEP }}>
                     <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0" style={{ color: PURPLE }} />
                     Tout le contenu des formules Essentielle + Intensive
@@ -315,7 +315,7 @@ export function FormulesSection() {
 
                 <Link
                   href="/formules/programme-approfondi"
-                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_18px_44px_-14px_rgba(10,26,77,0.7)] transition-transform hover:scale-[1.02]"
+                  className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_18px_44px_-14px_rgba(139,14,34,0.7)] transition-transform hover:scale-[1.02]"
                   style={{ background: PURPLE_GRADIENT }}
                 >
                   Choisir Approfondie

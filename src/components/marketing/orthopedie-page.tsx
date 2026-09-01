@@ -17,6 +17,7 @@ const NAVY = '#0F1F4D';
 const NAVY_SOFT = '#3A4A78';
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
+/** Unique accent d'état positif de la charte. */
 const GREEN = '#16793C';
 const INK = '#1F2937';
 const INK_SOFT = '#5B6478';
@@ -553,9 +554,9 @@ function Laureats() {
    BLOC 6 — Trois formules
    ============================================================ */
 
-const ESS = { main: '#2E7D32', deep: '#1B5E20', soft: '#E8F5E9', line: 'rgba(46,125,50,0.22)', grad: 'linear-gradient(90deg, #1B5E20 0%, #2E7D32 100%)', ombre: 'rgba(27,94,32,0.45)' };
-const INT = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.22)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.45)' };
-const APP = { main: '#1E40AF', deep: '#1E3A8A', soft: '#DBEAFE', line: 'rgba(30,64,175,0.28)', grad: 'linear-gradient(90deg, #0A1A4D 0%, #1E40AF 100%)', ombre: 'rgba(10,26,77,0.5)' };
+const ESS = { main: '#14254E', deep: '#0F1B3D', soft: '#EEF1F7', line: 'rgba(20,37,78,0.22)', grad: 'linear-gradient(90deg, #0F1B3D 0%, #14254E 100%)', ombre: 'rgba(15,27,61,0.45)' };
+const INT = { main: '#8B0E22', deep: '#6B0F1E', soft: '#F7E9EC', line: 'rgba(139,14,34,0.22)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #8B0E22 100%)', ombre: 'rgba(107,15,30,0.45)' };
+const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
 
 type Pal = typeof ESS;
 
