@@ -15,9 +15,15 @@ import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 
 const NAVY = '#0F1F4D';
 const NAVY_SOFT = '#3A4A78';
-const BLUE = '#1D4ED8';
 const RED = '#C0112E';
-const RED_DEEP = '#8B0E22';
+
+/* Couleurs propres à chaque formule — identiques à celles des pages
+   /formules/essentielle, /formules/intensive et /formules/programme-approfondi
+   pour que le parcours reste cohérent d'une page à l'autre. */
+const ESS = { main: '#2E7D32', deep: '#1B5E20', soft: '#E8F5E9', line: 'rgba(46,125,50,0.22)', grad: 'linear-gradient(90deg, #1B5E20 0%, #2E7D32 100%)', ombre: 'rgba(27,94,32,0.45)' };
+const INT = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.22)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.45)' };
+const APP = { main: '#1E40AF', deep: '#1E3A8A', soft: '#DBEAFE', line: 'rgba(30,64,175,0.28)', grad: 'linear-gradient(90deg, #0A1A4D 0%, #1E40AF 100%)', ombre: 'rgba(10,26,77,0.5)' };
+const BLUE = APP.main;
 const INK = '#1F2937';
 const INK_SOFT = '#5B6478';
 const INK_MUTED = '#8A93A6';
@@ -31,7 +37,10 @@ const FONT_BODY = "'Manrope', sans-serif";
    BLOC 1 — Choisissez la préparation la plus adaptée
    ============================================================ */
 
+type Palette = { main: string; deep: string; soft: string; line: string; grad: string; ombre: string };
+
 type Formule = {
+  n: number;
   nom: string;
   accroche: string;
   prefixePrix?: string;
@@ -43,12 +52,13 @@ type Formule = {
   cta: string;
   href: string;
   pied: string;
-  accent: string;
+  p: Palette;
   recommandee?: boolean;
 };
 
 const FORMULES: Formule[] = [
   {
+    n: 1,
     nom: 'Essentielle',
     accroche: 'Je prépare les EVC en autonomie',
     prix: '495 €',
@@ -66,9 +76,10 @@ const FORMULES: Formule[] = [
     cta: 'Choisir Essentielle',
     href: '/formules/essentielle',
     pied: 'Idéale si vous maîtrisez déjà le programme et souhaitez préparer les EVC en autonomie.',
-    accent: NAVY,
+    p: ESS,
   },
   {
+    n: 2,
     nom: 'Intensive',
     accroche: 'J’intensifie mes révisions',
     prix: '995 €',
@@ -93,9 +104,10 @@ const FORMULES: Formule[] = [
     cta: 'Choisir Intensive',
     href: '/formules/intensive',
     pied: 'Idéale si vous avez déjà travaillé une grande partie du programme et souhaitez intensifier vos révisions.',
-    accent: BLUE,
+    p: INT,
   },
   {
+    n: 3,
     nom: 'Approfondie',
     accroche: 'Je reprends le programme avec un accompagnement renforcé',
     prefixePrix: 'à partir de',
@@ -123,7 +135,7 @@ const FORMULES: Formule[] = [
     cta: 'Choisir Approfondie',
     href: '/formules/programme-approfondi',
     pied: 'Idéale si vous souhaitez reprendre en profondeur tout le programme avec le meilleur accompagnement.',
-    accent: RED,
+    p: APP,
     recommandee: true,
   },
 ];
@@ -137,59 +149,66 @@ function CarteFormule({ f }: { f: Formule }) {
   const misEnAvant = Boolean(f.recommandee);
   return (
     <article
-      className="relative flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white"
+      className="relative flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white transition-transform duration-300 hover:-translate-y-1"
       style={{
-        border: `1px solid ${misEnAvant ? 'rgba(192,17,46,0.28)' : LINE}`,
+        border: `1px solid ${f.p.line}`,
         boxShadow: misEnAvant
-          ? '0 40px 90px -50px rgba(139,14,34,0.45)'
-          : '0 30px 70px -55px rgba(15,31,77,0.5)',
+          ? `0 44px 100px -55px ${f.p.ombre}`
+          : `0 32px 75px -60px ${f.p.ombre}`,
       }}
     >
+      {/* Filet de tête aux couleurs de la formule, comme sur l'accueil. */}
+      <span aria-hidden className="block h-1.5 w-full" style={{ background: f.p.grad }} />
+
       {misEnAvant && (
         <p
           className="py-2.5 text-center text-[11px] font-black uppercase tracking-[0.22em] text-white"
-          style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
+          style={{ background: f.p.grad }}
         >
           Recommandée
         </p>
       )}
 
-      <div className="flex flex-1 flex-col px-6 pb-7 pt-8 sm:px-8">
-        <p className="text-center text-[1.45rem] font-black uppercase tracking-[0.06em]" style={{ color: NAVY }}>
-          {f.nom}
-        </p>
-        <p className="mx-auto mt-2.5 max-w-[19rem] text-center text-[13.5px] font-bold leading-snug" style={{ color: NAVY_SOFT }}>
-          {f.accroche}
-        </p>
+      <div className="flex flex-1 flex-col px-6 pb-7 pt-7 sm:px-8">
+        <div className="flex items-start gap-4">
+          <span
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[17px] font-black text-white shadow-md"
+            style={{ background: f.p.grad }}
+          >
+            {f.n}
+          </span>
+          <div className="min-w-0">
+            <p className="text-[1.4rem] font-black uppercase leading-none tracking-[0.04em]" style={{ color: f.p.main }}>
+              {f.nom}
+            </p>
+            <p className="mt-2 text-[13.5px] font-bold leading-snug" style={{ color: NAVY_SOFT }}>
+              {f.accroche}
+            </p>
+          </div>
+        </div>
 
-        <div className="mt-7 text-center">
+        <div className="mt-6">
           {f.prefixePrix && (
-            <p className="text-[13px] font-bold" style={{ color: RED }}>{f.prefixePrix}</p>
+            <p className="text-[13px] font-bold" style={{ color: f.p.main }}>{f.prefixePrix}</p>
           )}
           <p
             className="text-[3.1rem] font-black leading-none tabular-nums"
-            style={{ color: f.recommandee ? RED : NAVY, letterSpacing: '-0.03em' }}
+            style={{ color: f.p.deep, letterSpacing: '-0.03em' }}
           >
             {f.prix}
           </p>
-          <p className="mx-auto mt-3 max-w-[21rem] text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+          <p className="mt-3 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
             {f.sousPrix}
           </p>
         </div>
 
         {f.encadre && (
-          <div
-            className="mt-6 rounded-xl px-5 py-4 text-center"
-            style={{
-              background: f.recommandee ? '#FDF2F4' : '#F4F7FE',
-              border: `1px solid ${f.recommandee ? 'rgba(192,17,46,0.14)' : 'rgba(29,78,216,0.14)'}`,
-            }}
-          >
-            <p className="text-[12.5px] font-black leading-snug" style={{ color: f.recommandee ? RED_DEEP : BLUE }}>
+          <div className="mt-6 rounded-xl px-5 py-4" style={{ background: f.p.soft, border: `1px solid ${f.p.line}` }}>
+            <p className="text-[12.5px] font-black leading-snug" style={{ color: f.p.deep }}>
               {f.encadre.fort}
             </p>
             {f.encadre.suite && (
-              <p className="mt-1.5 text-[12px] leading-snug" style={{ color: f.recommandee ? INK : NAVY_SOFT, fontFamily: FONT_BODY }}>
+              <p className="mt-1.5 text-[12px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>
                 {f.encadre.suite}
               </p>
             )}
@@ -199,7 +218,7 @@ function CarteFormule({ f }: { f: Formule }) {
         <ul className="mt-7 space-y-3">
           {f.items.map((it) => (
             <li key={it} className="flex items-start gap-3.5">
-              <Puce color={f.accent} />
+              <Puce color={f.p.main} />
               <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{it}</span>
             </li>
           ))}
@@ -210,7 +229,7 @@ function CarteFormule({ f }: { f: Formule }) {
             const [label, valeur] = v.split(' : ');
             return (
               <p key={v} className="text-[12.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
-                <span className="font-black" style={{ color: NAVY, fontFamily: FONT }}>{label}</span> : {valeur}
+                <span className="font-black" style={{ color: f.p.deep, fontFamily: FONT }}>{label}</span> : {valeur}
               </p>
             );
           })}
@@ -218,17 +237,13 @@ function CarteFormule({ f }: { f: Formule }) {
 
         <Link
           href={f.href}
-          className="mt-7 flex items-center justify-center rounded-xl px-6 py-4 text-[15px] font-black tracking-tight transition-transform duration-300 hover:scale-[1.015]"
-          style={
-            f.accent === NAVY
-              ? { border: `1.5px solid ${NAVY}`, color: NAVY }
-              : { background: f.accent, color: '#FFFFFF', boxShadow: `0 18px 40px -20px ${f.accent}` }
-          }
+          className="mt-7 flex items-center justify-center rounded-xl px-6 py-4 text-[15px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
+          style={{ background: f.p.grad, boxShadow: `0 18px 42px -20px ${f.p.ombre}` }}
         >
           {f.cta}
         </Link>
 
-        <p className="mx-auto mt-5 max-w-[21rem] text-center text-[12.5px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
+        <p className="mt-5 text-center text-[12.5px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
           {f.pied}
         </p>
       </div>
@@ -480,9 +495,9 @@ const COMPARATIF: Groupe[] = [
 ];
 
 const COLONNES = [
-  { nom: 'Essentielle', sous: 'Autonomie', couleur: NAVY, cle: 'e' as const },
-  { nom: 'Intensive', sous: 'Révisions ciblées', couleur: BLUE, cle: 'i' as const },
-  { nom: 'Approfondie', sous: 'Accompagnement renforcé', couleur: RED, cle: 'a' as const },
+  { nom: 'Essentielle', sous: 'Autonomie', couleur: ESS.main, cle: 'e' as const },
+  { nom: 'Intensive', sous: 'Révisions ciblées', couleur: INT.main, cle: 'i' as const },
+  { nom: 'Approfondie', sous: 'Accompagnement renforcé', couleur: APP.main, cle: 'a' as const },
 ];
 
 /** Marque d'inclusion : un disque plein dans la couleur de la colonne,
@@ -564,16 +579,16 @@ function ComparatifSection() {
                   Tarif
                 </th>
                 <td className="px-5 py-7 text-center" style={{ borderTop: `1px solid ${LINE}`, borderLeft: `1px solid ${LINE_SOFT}` }}>
-                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: NAVY }}>495 €</p>
+                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: ESS.deep }}>495 €</p>
                   <p className="mt-1.5 text-[12px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>ou 124 €/mois en 4x sans frais</p>
                 </td>
                 <td className="px-5 py-7 text-center" style={{ borderTop: `1px solid ${LINE}`, borderLeft: `1px solid ${LINE_SOFT}` }}>
-                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: BLUE }}>995 €</p>
+                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: INT.deep }}>995 €</p>
                   <p className="mt-1.5 text-[12px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>ou 249 €/mois en 4x sans frais</p>
                 </td>
                 <td className="px-5 py-7 text-center" style={{ borderTop: `1px solid ${LINE}`, borderLeft: `1px solid ${LINE_SOFT}` }}>
-                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: NAVY }}>
-                    à partir de <span style={{ color: RED }}>{APPROFONDI_MIN_EUROS_FR} €</span>
+                  <p className="text-[1.6rem] font-black tabular-nums" style={{ color: NAVY_SOFT }}>
+                    à partir de <span style={{ color: APP.deep }}>{APPROFONDI_MIN_EUROS_FR} €</span>
                   </p>
                   <p className="mt-1.5 text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                     soit de 36 à 100 h de cours
@@ -819,9 +834,9 @@ function LaureatsSection() {
    ============================================================ */
 
 const BANDEAU_FORMULES = [
-  { nom: 'Essentielle', prefixe: '', prix: '495 €', href: '/formules/essentielle', accent: NAVY },
-  { nom: 'Intensive', prefixe: '', prix: '995 €', href: '/formules/intensive', accent: BLUE },
-  { nom: 'Approfondie', prefixe: 'à partir de', prix: `${APPROFONDI_MIN_EUROS_FR} €`, href: '/formules/programme-approfondi', accent: RED },
+  { nom: 'Essentielle', prefixe: '', prix: '495 €', href: '/formules/essentielle', p: ESS },
+  { nom: 'Intensive', prefixe: '', prix: '995 €', href: '/formules/intensive', p: INT },
+  { nom: 'Approfondie', prefixe: 'à partir de', prix: `${APPROFONDI_MIN_EUROS_FR} €`, href: '/formules/programme-approfondi', p: APP, recommandee: true },
 ];
 
 function BandeauFinal() {
@@ -852,19 +867,26 @@ function BandeauFinal() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {BANDEAU_FORMULES.map((f) => (
-            <div key={f.nom} className="rounded-xl bg-white px-5 py-5 text-center" style={{ border: f.accent === RED ? `1.5px solid ${RED}` : `1px solid ${LINE}` }}>
-              <p className="text-[12px] font-black uppercase tracking-[0.1em]" style={{ color: f.accent }}>{f.nom}</p>
-              {f.prefixe && <p className="mt-1.5 text-[11.5px] font-bold" style={{ color: RED }}>{f.prefixe}</p>}
-              <p className={'font-black tabular-nums ' + (f.prefixe ? 'mt-0.5 text-[1.35rem]' : 'mt-2 text-[1.55rem]')} style={{ color: f.accent === RED ? RED : NAVY }}>
-                {f.prix}
-              </p>
-              <Link
-                href={f.href}
-                className="mt-4 flex items-center justify-center rounded-lg py-2.5 text-[13.5px] font-black tracking-tight transition-colors"
-                style={{ border: `1.5px solid ${f.accent}`, color: f.accent }}
-              >
-                Choisir
-              </Link>
+            <div
+              key={f.nom}
+              className="overflow-hidden rounded-xl bg-white text-center"
+              style={{ border: f.recommandee ? `1.5px solid ${f.p.main}` : `1px solid ${LINE}` }}
+            >
+              <span aria-hidden className="block h-1 w-full" style={{ background: f.p.grad }} />
+              <div className="px-5 pb-5 pt-4">
+                <p className="text-[12px] font-black uppercase tracking-[0.1em]" style={{ color: f.p.main }}>{f.nom}</p>
+                {f.prefixe && <p className="mt-1.5 text-[11.5px] font-bold" style={{ color: f.p.main }}>{f.prefixe}</p>}
+                <p className={'font-black tabular-nums ' + (f.prefixe ? 'mt-0.5 text-[1.35rem]' : 'mt-2 text-[1.55rem]')} style={{ color: f.p.deep }}>
+                  {f.prix}
+                </p>
+                <Link
+                  href={f.href}
+                  className="mt-4 flex items-center justify-center rounded-lg py-2.5 text-[13.5px] font-black tracking-tight text-white transition-transform hover:scale-[1.02]"
+                  style={{ background: f.p.grad }}
+                >
+                  Choisir
+                </Link>
+              </div>
             </div>
           ))}
         </div>
