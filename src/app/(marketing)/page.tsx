@@ -6,28 +6,34 @@ import {
 import { TemoignagesSection } from '@/components/marketing/home/home-social-sections';
 import { HomeSpecialitesSection } from '@/components/marketing/home/home-specialites-section';
 import { HomeRessourcesSection } from '@/components/marketing/home/home-ressources-section';
+import { CALENDRIER_ARTICLE } from '@/components/marketing/home/evc-calendrier-2026';
 import { FormulesSection } from '@/components/marketing/home/home-formules-section';
 import { HomeFaqSection } from '@/components/marketing/home/home-faq-section';
 import { HomeSeoText } from '@/components/marketing/home/home-seo-text';
 import { JsonLd, faqSchema } from '@/components/seo/json-ld';
 import { faqEvcPlainQAs } from '@/lib/data/faq-evc-pae';
+import { getDbPublishedArticles } from '@/lib/data/blog-db';
 
 export const metadata = {
   alternates: { canonical: '/' },
   title: 'Préparation aux EVC 2026 — voie interne (QCM) et voie externe (QROC)',
   description:
-    'Préparation aux Épreuves de Vérification des Connaissances (EVC) 2026 dans le cadre de la PAE : voie interne (QCM) et voie externe (QROC), postes ouverts par spécialité, méthodologie, enseignants médecins spécialistes et suivi de progression. Toutes les spécialités, 9 000+ médecins accompagnés depuis 2011.',
+    'Préparation aux Épreuves de Vérification des Connaissances (EVC) 2026 dans le cadre de la PAE : voie interne (QCM) et voie externe (QROC), postes ouverts et dates d’épreuve par spécialité, méthodologie, enseignants médecins spécialistes et suivi de progression. 9 000+ médecins accompagnés depuis 2011.',
 };
 
 /* Ordre des sections : celui des maquettes templates/homepage/BLOC 1→8,
    complété par le compte à rebours, le référentiel des postes, les
    ressources du blog et le texte de fond en pied de page. */
 export default async function HomePage() {
+  // L'article « dates des épreuves par spécialité » est publié depuis
+  // l'administration : on le charge ici pour le mettre à la une des ressources.
+  const calendrier = (await getDbPublishedArticles()).find((a) => a.slug === CALENDRIER_ARTICLE) ?? null;
+
   return (
     <>
       <JsonLd data={faqSchema(faqEvcPlainQAs())} />
 
-      {/* Bandeau compte à rebours — épreuves du 10 novembre 2026 */}
+      {/* Bandeau compte à rebours — prochaine épreuve de la session */}
       <HomeCountdown />
 
       {/* 1) HERO — Préparation aux EVC 2026 */}
@@ -42,7 +48,7 @@ export default async function HomePage() {
       {/* 4) Deux voies. Une méthode adaptée à votre épreuve. */}
       <DeuxVoiesSection />
 
-      {/* 5) Postes ouverts par spécialité — session 2026 (source CNG) */}
+      {/* 5) Postes ouverts et dates d'épreuve par spécialité */}
       <HomeSpecialitesSection />
 
       {/* 6) Nous vous enseignons. Nous vous guidons. */}
@@ -55,7 +61,7 @@ export default async function HomePage() {
       <FormulesSection />
 
       {/* 9) Ressources — les guides du blog */}
-      <HomeRessourcesSection />
+      <HomeRessourcesSection calendrier={calendrier} />
 
       {/* 10) FAQ — Toutes les réponses à vos questions */}
       <HomeFaqSection />

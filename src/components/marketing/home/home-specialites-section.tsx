@@ -1,69 +1,39 @@
 'use client';
 
 import Link from 'next/link';
+import { CALENDRIER_ARTICLE, EPREUVES_2026 } from './evc-calendrier-2026';
 import {
-  BORDER, Eyebrow, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT,
-  Reveal, SectionTitle,
+  BORDER, Eyebrow, INK_MUTED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
+  RED_GRADIENT, Reveal, SectionTitle,
 } from './home-ui';
 
 /* ============================================================
-   BLOC SPÉCIALITÉS — le référentiel des postes ouverts
-   Source : arrêté du 12 juin 2026 fixant le nombre de postes de
-   la session 2026 (2 896 en voie interne, 1 003 en voie externe
-   répartis entre treize spécialités). Chiffres repris de nos
-   articles « Voie externe » et « Voie interne » du blog.
+   BLOC SPÉCIALITÉS — le référentiel des postes ouverts et des
+   dates d'épreuve, spécialité par spécialité.
    ============================================================ */
-
-/** Spécialités à postes de la session 2026. `interne` n'est renseigné que
-    lorsque le chiffre par spécialité est publié — le total voie interne est
-    connu (2 896) mais sa ventilation ne l'est pas pour toutes. */
-type SpecPostes = {
-  nom: string;
-  externe: number;
-  interne?: number;
-  slug: string;
-  /** Page dédiée en ligne ; sinon on renvoie vers l'annuaire des spécialités. */
-  page?: boolean;
-  note?: string;
-};
-
-const SPECIALITES_POSTES: SpecPostes[] = [
-  { nom: 'Médecine interne polyvalente et immunologie clinique', externe: 213, interne: 564, slug: 'medecine-interne', note: 'MIPIC — nouvelle spécialité 2026' },
-  { nom: 'Psychiatrie', externe: 198, interne: 450, slug: 'psychiatrie', note: 'Nouvelle spécialité 2026' },
-  { nom: 'Gériatrie', externe: 110, slug: 'geriatrie' },
-  { nom: 'Pédiatrie', externe: 75, slug: 'pediatrie' },
-  { nom: 'Médecine d’urgence', externe: 72, slug: 'medecine-d-urgence' },
-  { nom: 'Radiodiagnostic et imagerie médicale', externe: 72, slug: 'radiodiagnostic-et-imagerie-medicale' },
-  { nom: 'Anesthésie-réanimation', externe: 64, slug: 'anesthesie-reanimation' },
-  { nom: 'Médecine et santé au travail', externe: 61, slug: 'medecine-du-travail' },
-  { nom: 'Médecine physique et de réadaptation', externe: 37, slug: 'medecine-physique-et-de-readaptation' },
-  { nom: 'Médecine générale', externe: 35, slug: 'medecine-generale', page: true },
-  { nom: 'Oncologie', externe: 29, slug: 'oncologie' },
-  { nom: 'Médecine cardiovasculaire', externe: 20, slug: 'cardiologie-et-maladies-vasculaires' },
-  { nom: 'Pneumologie', externe: 17, slug: 'pneumologie' },
-];
 
 export function HomeSpecialitesSection() {
   return (
     <section id="specialites" className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA, background: 'linear-gradient(180deg, #FFFFFF 0%, #FBFBFD 100%)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
-          <Eyebrow>Postes ouverts par spécialité — session 2026</Eyebrow>
+          <Eyebrow>Postes ouverts et dates d’épreuve — session 2026</Eyebrow>
           <div className="mt-5">
             <SectionTitle line1="Combien de postes" line2="dans votre spécialité ?" rule />
           </div>
           <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
             <span className="font-bold" style={{ color: NAVY }}>2 896 postes en voie interne</span> et{' '}
             <span className="font-bold" style={{ color: NAVY }}>1 003 en voie externe</span>, répartis entre
-            treize spécialités&nbsp;— chiffres fixés par l’arrêté du 12 juin 2026.
+            treize spécialités — arrêté du 12 juin 2026. Les épreuves s’étalent du 10 novembre 2026
+            au 15 janvier 2027, chaque spécialité ayant sa propre date.
           </p>
         </Reveal>
 
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {SPECIALITES_POSTES.map((s, i) => (
+          {EPREUVES_2026.map((s, i) => (
             <Reveal key={s.slug} delay={Math.min(i, 8) * 0.03}>
               <Link
-                href={s.page ? `/specialites/${s.slug}` : `/specialites#liste`}
+                href={s.page ? `/specialites/${s.slug}` : '/specialites#liste'}
                 className="group flex h-full flex-col rounded-2xl bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
                 style={{ border: `1px solid ${BORDER}`, boxShadow: '0 24px 60px -58px rgba(15,27,61,0.55)' }}
               >
@@ -75,7 +45,7 @@ export function HomeSpecialitesSection() {
                 </p>
                 <span aria-hidden className="mt-3 block h-[2px] w-9 rounded-full" style={{ background: RED }} />
 
-                <dl className="mt-4 flex-1 space-y-2">
+                <dl className="mt-4 space-y-2">
                   <div className="flex items-baseline justify-between gap-3">
                     <dt className="text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>Voie externe</dt>
                     <dd className="text-[20px] font-black leading-none tabular-nums" style={{ color: RED_DEEP }}>{s.externe}</dd>
@@ -88,7 +58,12 @@ export function HomeSpecialitesSection() {
                   )}
                 </dl>
 
-                <p className="mt-5 text-[12.5px] font-black tracking-tight" style={{ color: RED }}>
+                <p className="mt-4 flex-1 border-t pt-3 text-[12px] leading-snug" style={{ borderColor: BORDER, color: INK_MUTED, fontFamily: MANROPE }}>
+                  Épreuve le
+                  <span className="block font-black" style={{ color: NAVY }}>{s.label}</span>
+                </p>
+
+                <p className="mt-4 text-[12.5px] font-black tracking-tight" style={{ color: RED }}>
                   {s.page ? 'Découvrir la préparation' : 'Voir la préparation'} →
                 </p>
               </Link>
@@ -105,16 +80,16 @@ export function HomeSpecialitesSection() {
               <span className="block text-[16px] font-black tracking-tight" style={{ fontFamily: JAKARTA }}>
                 Le nombre de postes ne fait pas tout.
               </span>
-              Le ratio candidats/postes et la nouveauté d’une spécialité comptent autant&nbsp;: nous
-              détaillons la méthode dans notre article dédié.
+              Le ratio candidats/postes et la nouveauté d’une spécialité comptent autant — et votre
+              date d’épreuve détermine le temps qu’il vous reste.
             </p>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <Link
-                href="/blog/evc-ratio-candidats-postes-choix-specialite-2026"
+                href={`/blog/${CALENDRIER_ARTICLE}`}
                 className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-[13.5px] font-black tracking-tight transition-colors hover:bg-white/70"
                 style={{ border: `1.5px solid ${RED}`, color: RED }}
               >
-                Comprendre les ratios
+                Calendrier par spécialité
               </Link>
               <Link
                 href="/specialites"

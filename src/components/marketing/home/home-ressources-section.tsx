@@ -13,25 +13,28 @@ import {
    lien depuis la page d'accueil.
    ============================================================ */
 
-/** Articles mis en avant, dans l'ordre : calendrier, les deux voies,
-    puis choix de spécialité et méthode. */
+/** Guides mis en avant après l'article à la une : les deux voies, le
+    calendrier d'inscription, le choix de spécialité et la méthode. */
 const A_LA_UNE = [
-  'calendrier-inscription-concours-pae-2026-cng',
   'voie-interne-evc-logique-qcm',
   'evc-voie-externe-comprendre',
+  'calendrier-inscription-concours-pae-2026-cng',
   'comment-choisir-specialite-evc',
   'comment-rediger-qroc-evc',
   'evc-ratio-candidats-postes-choix-specialite-2026',
 ];
 
 const parSlug = new Map(BLOG_ARTICLES.map((a) => [a.slug, a]));
-const ARTICLES = A_LA_UNE.map((s) => parSlug.get(s)).filter(Boolean) as BlogArticleMeta[];
+const GUIDES = A_LA_UNE.map((s) => parSlug.get(s)).filter(Boolean) as BlogArticleMeta[];
 
 const dateFr = (iso?: string) =>
   iso ? new Date(`${iso}T12:00:00Z`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : null;
 
-export function HomeRessourcesSection() {
-  const [une, ...suite] = ARTICLES;
+/** `calendrier` : l'article « dates des épreuves par spécialité », publié
+    depuis l'administration et donc chargé côté serveur par la page. */
+export function HomeRessourcesSection({ calendrier }: { calendrier?: BlogArticleMeta | null }) {
+  const une = calendrier ?? GUIDES[0];
+  const suite = (calendrier ? GUIDES : GUIDES.slice(1)).filter((a) => a.slug !== une.slug).slice(0, 4);
   if (!une) return null;
 
   return (
@@ -117,7 +120,7 @@ export function HomeRessourcesSection() {
             Voir tous les articles
           </Link>
           <p className="mt-3 text-[12.5px]" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
-            {BLOG_ARTICLES.length} guides publiés sur les EVC et la procédure d’autorisation d’exercice.
+            Des guides détaillés sur les EVC et la procédure d’autorisation d’exercice.
           </p>
         </Reveal>
       </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CALENDRIER_ARTICLE } from './evc-calendrier-2026';
 import { BORDER, INK_SOFT, JAKARTA, MANROPE, NAVY, RED } from './home-ui';
 
 /* ============================================================
@@ -87,14 +88,23 @@ export function HomeSeoText() {
           <p>
             Les inscriptions se sont tenues du 17 juin au 16 juillet 2026, exclusivement en ligne sur cng.sante.fr, avec
             une règle stricte&nbsp;: une seule candidature, toute double inscription entraînant le rejet définitif des
-            deux dossiers. Les épreuves se déroulent à partir de{' '}
-            <strong style={{ color: NAVY }}>novembre 2026 à l’Espace Jean Monnet de Rungis</strong> (Val-de-Marne), en
-            présentiel uniquement — les candidats venant de l’étranger doivent anticiper visa et hébergement. Les
-            résultats et l’affectation interviennent au premier trimestre 2027. Le{' '}
-            <Link href="/blog/calendrier-inscription-concours-pae-2026-cng" className="font-bold underline underline-offset-2" style={{ color: RED }}>
-              calendrier complet du CNG
+            deux dossiers. Contrairement à une idée répandue, les épreuves ne se tiennent pas toutes en novembre&nbsp;:
+            elles <strong style={{ color: NAVY }}>s’étalent du 10 novembre 2026 au 15 janvier 2027</strong>, à l’Espace
+            Jean Monnet de Rungis (Val-de-Marne), en présentiel uniquement.{' '}
+            <strong style={{ color: NAVY }}>Chaque spécialité a sa propre date</strong>, la même pour les deux voies&nbsp;:
+            la médecine et santé au travail ouvre la session le 10 novembre, la psychiatrie compose le 10 décembre, la
+            gériatrie le 12 janvier, la MIPIC le 13 janvier et la médecine générale la ferme le 15 janvier 2027. Deux
+            mois séparent donc le premier candidat du dernier — autant de temps de préparation en plus ou en moins.
+            Les candidats venant de l’étranger doivent anticiper visa et hébergement&nbsp;; les résultats et
+            l’affectation interviennent au premier trimestre 2027. Le{' '}
+            <Link href={`/blog/${CALENDRIER_ARTICLE}`} className="font-bold underline underline-offset-2" style={{ color: RED }}>
+              calendrier détaillé par spécialité
             </Link>{' '}
-            détaille chaque étape.
+            donne la date de chaque épreuve, et le{' '}
+            <Link href="/blog/calendrier-inscription-concours-pae-2026-cng" className="font-bold underline underline-offset-2" style={{ color: RED }}>
+              calendrier d’inscription du CNG
+            </Link>{' '}
+            détaille les étapes du dossier.
           </p>
 
           <h3 className="pt-3 text-[1.05rem] font-black tracking-tight" style={{ color: NAVY, fontFamily: JAKARTA }}>
