@@ -90,7 +90,7 @@ export function MarketingFooter() {
             des Connaissances (EVC)</strong> dans le cadre de la Proc&eacute;dure d&rsquo;Autorisation d&rsquo;Exercice (PAE).
           </p>
           <p className="mt-3 max-w-md text-sm leading-relaxed" style={{ color: INK_SOFT }}>
-            Au service des m&eacute;decins &eacute;trangers depuis <strong style={{ color: RED }}>plus de 15 ans.</strong>
+            Au service des m&eacute;decins &eacute;trangers <strong style={{ color: RED }}>depuis 2011.</strong>
           </p>
 
           {/* 4 stats compactes (2 col) */}

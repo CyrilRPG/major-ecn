@@ -162,6 +162,84 @@ function Hero() {
 }
 
 /* ============================================================
+   BLOC SESSION — les faits chiffrés de la spécialité, juste sous
+   le hero. La médecine générale est ouverte dans les deux voies
+   pour la session 2026 : les deux sont annoncées.
+   ============================================================ */
+
+const ARTICLE_MG = 'evc-medecine-generale-2026-changement-jury';
+const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
+const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
+
+function BlocSession() {
+  return (
+    <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="grid grid-cols-1 gap-8 rounded-[1.25rem] px-7 py-8 sm:px-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center"
+            style={{ background: PAPER, border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+                Session 2026
+              </p>
+              <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Médecine générale
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                <span className="font-black" style={{ color: NAVY }}>89 postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>35 postes en voie externe.</span>
+                <br />
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>vendredi 15 janvier 2027</span>,
+                Espace Jean-Monnet, Rungis.
+              </p>
+              <p className="mt-3 text-[12.5px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+                Source : arrêté du 12 juin 2026.
+              </p>
+              <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
+                <Link href={`/blog/${ARTICLE_CALENDRIER}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Calendrier complet par spécialité →
+                </Link>
+                <Link href={`/blog/${ARTICLE_RATIO}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Comprendre le ratio candidats/postes →
+                </Link>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>89</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>35</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
+                </p>
+              </div>
+              <div className="sm:col-span-2 rounded-2xl px-6 py-5" style={{ background: '#FDF2F4' }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  Les deux voies sont ouvertes :{' '}
+                  <span className="font-black" style={{ color: NAVY }}>QCM en voie interne, QROC en voie externe.</span>{' '}
+                  <Link href={`/blog/${ARTICLE_MG}`} className="font-black underline underline-offset-4" style={{ color: RED }}>
+                    Ce qu’il faut vraiment réviser →
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
    Introduction éditoriale — le premier écran ne doit pas se
    résumer à une image, des boutons et des chiffres.
    ============================================================ */
@@ -635,13 +713,13 @@ const LAUREATS = [
     lien: '/temoignages/dr-leila-bettaieb',
   },
   {
-    nom: 'Dr Lamia Bennesser Alaoui',
-    initiales: 'LA',
+    nom: 'Dr Lamia Boudebza',
+    initiales: 'LB',
     photo: null,
-    role: 'Lauréate EVC Médecine générale 2025',
-    distinction: 'Réussite avec mention',
-    citation: 'Merci pour votre disponibilité et les échanges tout au long de la formation, qui m’ont beaucoup aidée dans ma préparation.',
-    lien: '/temoignages',
+    role: 'Lauréate EVC Médecine générale 2024',
+    distinction: 'Réussite dès la première tentative',
+    citation: 'Quand je suis arrivée en France, il me restait à peu près 13 mois avant l’examen. La formation m’a aidée à y voir plus clair et à organiser mes révisions étape par étape.',
+    lien: '/temoignages/dr-lamia-boudebza',
   },
 ];
 
@@ -715,7 +793,7 @@ function Temoignages() {
         <Reveal delay={0.15} className="mt-12">
           <div className="rounded-[1.25rem] bg-white px-7 py-8 sm:px-10" style={{ border: `1px solid ${LINE}` }}>
             <h2 className="text-[1.35rem] font-black leading-tight tracking-tight sm:text-[1.6rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
-              Plus de 15 ans d’expérience <span style={{ color: RED_DEEP }}>et des résultats au fil des sessions</span>
+              Depuis 2011, <span style={{ color: RED_DEEP }}>des résultats au fil des sessions</span>
             </h2>
             <div className="mt-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {RESULTATS.map((r) => (
@@ -788,7 +866,13 @@ const RASSURANCE = [
   'Support réactif par email',
 ];
 
-function Formules({ specialite, prixApprofondie }: { specialite?: string; prixApprofondie: string }) {
+function Formules({
+  specialite,
+  paliersApprofondie = [],
+}: {
+  specialite?: string;
+  paliersApprofondie?: { heures: string; prix: string }[];
+}) {
   return (
     <section id="formules" className="scroll-mt-24 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div id="tarifs" className="mx-auto max-w-[88rem] scroll-mt-24 px-4 sm:px-6 lg:px-8">
@@ -907,9 +991,17 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
                 </ul>
 
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-6" style={{ borderColor: LINE_SOFT }}>
-                  <p className="leading-none" style={{ color: APP.deep }}>
-                    <span className="block text-[11.5px] font-bold" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>à partir de</span>
-                    <span className="mt-1 block text-[2rem] font-black tabular-nums" style={{ letterSpacing: '-0.03em' }}>{prixApprofondie} €</span>
+                  <p style={{ color: APP.deep }}>
+                    <span className="block text-[11.5px] font-bold leading-none" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>à partir de</span>
+                    <span className="mt-1 block text-[2rem] font-black leading-none tabular-nums" style={{ letterSpacing: '-0.03em' }}>
+                      {paliersApprofondie[0]?.prix} €
+                    </span>
+                    <span className="mt-2 block text-[12px] font-black" style={{ color: NAVY }}>
+                      {paliersApprofondie.map((p) => `${p.heures} — ${p.prix} €`).join(' · ')}
+                    </span>
+                    <span className="mt-1 block text-[11.5px] font-normal" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+                      Selon l’accompagnement souhaité
+                    </span>
                   </p>
                   <Link
                     href={lienPaiement('/formules/programme-approfondi', specialite)}
@@ -1124,23 +1216,24 @@ function CtaFinal() {
 
 export function MedecineGeneralePageContent({
   specialite,
-  prixApprofondie,
+  paliersApprofondie = [],
 }: {
   specialite?: string;
-  prixApprofondie: string;
+  paliersApprofondie?: { heures: string; prix: string }[];
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
       <AncreTunnel actif={!!specialite} />
       <FilAriane />
       <Hero />
+      <BlocSession />
       <Introduction />
       <Voies />
       <Programme />
       <SeulOuAccompagne />
       <Plateforme />
       <Temoignages />
-      <Formules specialite={specialite} prixApprofondie={prixApprofondie} />
+      <Formules specialite={specialite} paliersApprofondie={paliersApprofondie} />
       <FaqSection />
       <CtaFinal />
     </div>

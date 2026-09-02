@@ -26,7 +26,7 @@ export const FAQ_MG: QuestionMg[] = [
     blocs: [
       { p: 'Parce qu’une préparation aux EVC ne consiste pas simplement à accumuler des cours, des fiches et des questions.' },
       { p: 'Major ECN vous apporte un cadre, une méthode, des supports ciblés, des entraînements adaptés à votre voie et un accompagnement humain pour vous aider à savoir quoi travailler, comment le travailler et comment progresser.' },
-      { p: 'Avec plus de 15 ans d’expérience dans la préparation aux concours médicaux et plus de 9 000 médecins accompagnés, Major ECN connaît les difficultés auxquelles sont confrontés les candidats : programme très vaste, manque de temps, activité professionnelle, vie familiale, difficulté à hiérarchiser les connaissances ou encore méthodologie de réponse.' },
+      { p: 'Présent depuis 2011 dans la préparation aux concours médicaux et fort de plus de 9 000 médecins accompagnés, Major ECN connaît les difficultés auxquelles sont confrontés les candidats : programme très vaste, manque de temps, activité professionnelle, vie familiale, difficulté à hiérarchiser les connaissances ou encore méthodologie de réponse.' },
       { p: 'Notre philosophie est simple :' },
       { chute: 'L’objectif n’est pas de tout faire. C’est de travailler ce qui vous fera réussir.' },
     ],
@@ -170,7 +170,7 @@ export const FAQ_MG: QuestionMg[] = [
   {
     q: 'Depuis combien de temps Major ECN prépare-t-il les médecins aux concours et aux EVC ?',
     blocs: [
-      { p: 'Major ECN dispose de plus de 15 ans d’expérience dans la préparation aux concours et épreuves médicales.' },
+      { p: 'Major ECN prépare les médecins aux concours et aux épreuves médicales depuis 2011.' },
       { p: 'Au fil des années, nous avons accompagné des candidats aux profils extrêmement différents : médecins en activité, candidats disposant de peu de temps, médecins éloignés de la pratique depuis plusieurs années, candidats préparant une nouvelle tentative ou encore médecins disposant déjà d’un excellent niveau.' },
       { p: 'Cette expérience nous a permis de faire évoluer les cours, les supports, les entraînements et la méthodologie afin de répondre aux exigences des épreuves et aux contraintes réelles des candidats.' },
     ],

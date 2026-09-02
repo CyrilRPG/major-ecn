@@ -41,14 +41,28 @@ export const metadata = {
   },
 };
 
-/** Le tarif d'entrée du Programme Approfondi dépend de la spécialité : celui
- *  affiché ici est bien celui de la médecine générale, jamais le minimum
- *  toutes spécialités confondues, sans quoi la page annoncerait un prix que
- *  le paiement ne pratique pas. */
-function prixApprofondiMedecineGenerale(): string {
-  const mg = APPROFONDI_SPECIALTIES.find((s) => s.key === 'mg');
-  const cents = Math.min(...(mg?.tiers ?? []).map((t) => t.amountCents));
+/** Volume horaire de chaque palier du Programme Approfondi en médecine
+ *  générale, du moins cher au plus cher. Le nombre de paliers varie d'une
+ *  spécialité à l'autre : un seul en chirurgie orthopédique, deux ici. */
+const HEURES_APPROFONDI_MG = ['55 h', '100 h'];
+
+/** Espace ordinaire comme séparateur de milliers — jamais l'espace fine
+ *  insécable d'Intl, qui provoque une erreur d'hydratation sur les vitrines. */
+function eurosFr(cents: number): string {
   return String(Math.round(cents / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+/** Les tarifs sont dérivés du catalogue Stripe et jamais saisis en dur : la
+ *  page ne peut donc pas annoncer un prix que le paiement ne pratique plus.
+ *  Ce sont bien ceux de la médecine générale, pas le minimum toutes
+ *  spécialités confondues. */
+function paliersApprofondiMedecineGenerale(): { heures: string; prix: string }[] {
+  const mg = APPROFONDI_SPECIALTIES.find((s) => s.key === 'mg');
+  return (mg?.tiers ?? [])
+    .map((t) => t.amountCents)
+    .sort((a, b) => a - b)
+    .map((cents, i) => ({ heures: HEURES_APPROFONDI_MG[i] ?? '', prix: eurosFr(cents) }))
+    .filter((p) => p.heures);
 }
 
 export default async function MedecineGeneralePage({
@@ -70,7 +84,10 @@ export default async function MedecineGeneralePage({
           faqSchema(FAQ_MG.map((f) => ({ q: f.q, a: reponseTexteMg(f) }))),
         ]}
       />
-      <MedecineGeneralePageContent specialite={specialite} prixApprofondie={prixApprofondiMedecineGenerale()} />
+      <MedecineGeneralePageContent
+        specialite={specialite}
+        paliersApprofondie={paliersApprofondiMedecineGenerale()}
+      />
     </>
   );
 }

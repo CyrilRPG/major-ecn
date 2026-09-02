@@ -150,7 +150,7 @@ export const FAQ_EVC_CATEGORIES: FaqEvcCategory[] = [
           },
           {
             "t": "p",
-            "text": "C'est notamment le cas du Dr Kaoula Farah. N'ayant pas la possibilité d'exercer comme médecin en France, elle avait travaillé pendant près de dix ans dans l'industrie pharmaceutique."
+            "text": "C'est notamment le cas du Dr Khaoula Farah. N'ayant pas la possibilité d'exercer comme médecin en France, elle avait travaillé pendant près de dix ans dans l'industrie pharmaceutique."
           },
           {
             "t": "p",
