@@ -142,7 +142,7 @@ function Hero() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.1} className="relative">
+          <Reveal delay={0.1}>
             <div className="overflow-hidden rounded-[1.5rem]" style={{ boxShadow: '0 60px 120px -70px rgba(15,31,77,0.75)' }}>
               <Image
                 src="/specialites/pediatrie/preparation-evc-pediatrie-major-ecn.webp"
@@ -155,10 +155,11 @@ function Hero() {
               />
             </div>
 
-            {/* Carte de réassurance posée sur la photo, comme sur la maquette. */}
+            {/* Carte de réassurance sous la photo : posée dessus, elle
+                masquait le médecin et l'enfant. */}
             <ul
-              className="mx-auto mt-6 w-full space-y-3.5 rounded-2xl bg-white px-6 py-6 sm:w-[min(26rem,94%)] lg:absolute lg:-right-2 lg:top-1/2 lg:mt-0 lg:w-60 lg:-translate-y-1/2 xl:right-4 xl:w-64"
-              style={{ border: `1px solid ${LINE}`, boxShadow: '0 34px 80px -46px rgba(15,31,77,0.65)' }}
+              className="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 rounded-2xl bg-white px-6 py-6 sm:grid-cols-2 lg:grid-cols-3"
+              style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -52px rgba(15,31,77,0.6)' }}
             >
               {HERO_CARTE.map((c) => (
                 <li key={c.fort} className="flex items-start gap-3">
@@ -373,7 +374,7 @@ function Programme() {
   return (
     <section id="programme" className="scroll-mt-24 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] xl:gap-14">
+        <div className="space-y-12">
           <div>
             <Reveal>
               <h2 className="text-[1.45rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
@@ -384,7 +385,7 @@ function Programme() {
               </p>
             </Reveal>
 
-            <div className="mt-8 grid grid-cols-1 items-center gap-9 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+            <div className="mt-8 grid grid-cols-1 items-center gap-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
               <Reveal delay={0.06}>
                 <ul className="space-y-3">
                   {PROGRAMME.map((p) => (
@@ -402,14 +403,14 @@ function Programme() {
                   width={1536}
                   height={1024}
                   loading="lazy"
-                  sizes="(max-width:1280px) 100vw, 34vw"
+                  sizes="(max-width:768px) 100vw, 46vw"
                   className="w-full"
                 />
               </Reveal>
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Reveal delay={0.08}>
               <div id="plateforme" className="scroll-mt-24 rounded-[1.25rem] px-7 py-7" style={{ background: '#FDF6F7', border: '1px solid rgba(192,17,46,0.14)' }}>
                 <h2 className="text-[13.5px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: RED }}>
