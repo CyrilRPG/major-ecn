@@ -61,6 +61,13 @@ const MANUAL_QCM_LINES = [
   { label: 'QROC Voies externes — DP QROC', montant: 67 },
   // 960 DP Gériatrie (8 QCM + 8 QROC × 60 cours MG bonus).
   { label: 'DP Gériatrie MG', montant: 300 },
+  // Pédiatrie MG — 7 fiches complémentaires mises au format Major ECN, avec
+  // leurs 38 séries (218 questions, 545 propositions) et 180 flashcards.
+  // Facturé au FORFAIT et non au tarif habituel (10 € la fiche, 5 € les QCM) :
+  // la ligne automatique « Médecine générale / Pédiatrie » plafonne déjà à
+  // 5 € de QCM et 3 € de flashcards depuis longtemps, ces sept items n'y
+  // ajoutent donc rien.
+  { label: 'Pédiatrie MG — 7 fiches complémentaires', montant: 40 },
 ];
 const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 
