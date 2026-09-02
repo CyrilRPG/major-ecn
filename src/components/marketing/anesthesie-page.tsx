@@ -248,14 +248,14 @@ const LAUREATS = [
     nom: 'Dr Amélie Lamure',
     tag: 'Anesthésie-Réanimation',
     titre: 'Lauréate des EVC',
-    citation: 'Une équipe présente, disponible et impliquée à chaque étape.',
+    citation: 'J’ai appris l’anesthésie dans mon pays, avec des protocoles différents de ceux utilisés en France. La préparation m’a permis de reprendre le programme, de mettre à jour mes connaissances selon les recommandations françaises et de travailler la méthodologie des EVC. Le jour de l’épreuve, je savais ce qu’on attendait de moi.',
   },
   {
     photo: '/specialites/anesthesie/dr-karim-khiareddine.jpg',
     nom: 'Dr Karim Khiareddine',
     tag: 'Anesthésie-Réanimation',
     titre: 'Lauréat des EVC 2025',
-    citation: 'La préparation m’a donné un rythme, une méthode et des repères.',
+    citation: 'Ce qui m’a le plus aidé, c’est le nombre de questions travaillées pendant les séances. À force, on développe des automatismes : on repère plus vite les pièges, on hésite moins et on gagne du temps. Le jour de l’épreuve, je n’ai pas eu l’impression de découvrir quelque chose de nouveau.',
   },
 ];
 
@@ -300,9 +300,9 @@ function Laureats() {
                     <p className="mt-2 text-[12px] font-black" style={{ color: NAVY_SOFT }}>{l.titre}</p>
                   </figcaption>
                 </div>
-                <blockquote className="mt-7 flex flex-1 items-center gap-4">
-                  <span aria-hidden className="-mt-2 select-none text-[42px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
-                  <span className="text-[14.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>{l.citation}</span>
+                <blockquote className="mt-6 flex flex-1 items-start gap-3.5">
+                  <span aria-hidden className="-mt-2 select-none text-[38px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
+                  <span className="text-[13.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>{l.citation}</span>
                 </blockquote>
               </figure>
             </Reveal>
