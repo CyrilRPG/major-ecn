@@ -6,6 +6,7 @@ import {
   Monitor, PenLine, Phone, Star, Users,
 } from 'lucide-react';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
+import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import {
   BORDER, Eyebrow, INK_SOFT, JAKARTA, MANROPE, NAVY, Reveal,
   SectionTitle,
@@ -13,25 +14,29 @@ import {
 
 /* ============================================================
    BLOC 7 — TROIS FORMULES, UN MÊME OBJECTIF : VOTRE RÉUSSITE
-   Palette alignée sur la page Tarifs :
-     Essentielle → navy (#14254E), Intensive → bordeaux (#8B0E22),
-     Approfondie → rouge Major (#C0112E, formule mise en avant).
+   Palette : la source unique du site (lib/formules-palette) —
+   Essentielle en vert, Intensive en rouge, Approfondie en bleu foncé.
    ============================================================ */
-const ESS = '#14254E';
-const ESS_DEEP = '#0F1B3D';
-const ESS_SOFT = '#EEF1F7';
-const RED = '#C0112E';
-const RED_DEEP = '#8B0E22';
-const RED_SOFT = '#FDE8EC';
-/* L'Approfondie porte le bleu de sa page /formules/programme-approfondi —
-   le violet introduisait une teinte qui n'existe nulle part ailleurs. */
-const PURPLE = '#C0112E';
-const PURPLE_DEEP = '#8B0E22';
-const PURPLE_SOFT = '#FDE8EC';
+const ESS = FORMULE_ESSENTIELLE.main;
+const ESS_DEEP = FORMULE_ESSENTIELLE.deep;
+const ESS_SOFT = FORMULE_ESSENTIELLE.soft;
+const RED = FORMULE_INTENSIVE.main;
+const RED_DEEP = FORMULE_INTENSIVE.deep;
+const RED_SOFT = FORMULE_INTENSIVE.soft;
+const APP = FORMULE_APPROFONDIE.main;
+const APP_DEEP = FORMULE_APPROFONDIE.deep;
+const APP_SOFT = FORMULE_APPROFONDIE.soft;
+const APP_LINE = FORMULE_APPROFONDIE.line;
 
-const ESS_GRADIENT = `linear-gradient(90deg, ${ESS_DEEP} 0%, ${ESS} 100%)`;
-const RED_GRADIENT = `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`;
-const PURPLE_GRADIENT = `linear-gradient(90deg, ${PURPLE_DEEP} 0%, ${PURPLE} 100%)`;
+const ESS_GRADIENT = FORMULE_ESSENTIELLE.grad;
+const RED_GRADIENT = FORMULE_INTENSIVE.grad;
+const APP_GRADIENT = FORMULE_APPROFONDIE.grad;
+
+/** Les couleurs des voies ne suivent pas celles des formules. */
+const VOIE_INTERNE = '#C0112E';
+const VOIE_INTERNE_LINE = 'rgba(192,17,46,0.25)';
+const VOIE_EXTERNE = '#14254E';
+const VOIE_EXTERNE_LINE = 'rgba(20,37,78,0.25)';
 
 const ESSENTIELLE_DEUX_VOIES = [
   'Fiches et supports de cours',
@@ -109,11 +114,11 @@ export function FormulesSection() {
             Choisissez le niveau d&rsquo;accompagnement qui correspond à vos besoins et à votre emploi du temps.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(192,17,46,0.3)', color: RED, background: 'white' }}>
+            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: VOIE_INTERNE_LINE, color: VOIE_INTERNE, background: 'white' }}>
               <ClipboardCheck className="h-4 w-4" /> Voie interne (QCM)
             </span>
             <span aria-hidden className="text-lg font-black" style={{ color: '#CBD2DE' }}>|</span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: 'rgba(192,17,46,0.3)', color: '#C0112E', background: 'white' }}>
+            <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-extrabold shadow-sm" style={{ borderColor: VOIE_EXTERNE_LINE, color: VOIE_EXTERNE, background: 'white' }}>
               <PenLine className="h-4 w-4" /> Voie externe (QROC)
             </span>
           </div>
@@ -124,7 +129,7 @@ export function FormulesSection() {
           <Reveal className="h-full">
             <article
               className="flex h-full flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_30px_70px_-45px_rgba(15,27,61,0.45)] transition-transform duration-300 hover:-translate-y-1"
-              style={{ borderColor: 'rgba(20,37,78,0.22)' }}
+              style={{ borderColor: FORMULE_ESSENTIELLE.line }}
             >
               <span aria-hidden className="block h-1.5 w-full" style={{ background: ESS_GRADIENT }} />
               <div className="flex flex-1 flex-col p-6">
@@ -153,22 +158,22 @@ export function FormulesSection() {
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(20,37,78,0.25)', background: '#F5F7FB' }}>
-                    <p className="text-[11px] font-black tracking-tight" style={{ color: ESS }}>Voie interne (QCM)</p>
+                  <div className="rounded-2xl border p-3.5" style={{ borderColor: VOIE_INTERNE_LINE, background: '#FFF7F8' }}>
+                    <p className="text-[11px] font-black tracking-tight" style={{ color: VOIE_INTERNE }}>Voie interne (QCM)</p>
                     <ul className="mt-2 space-y-2">
                       {['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'].map((x) => (
                         <li key={x} className="flex items-start gap-1.5 text-[11.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: ESS }} /> {x}
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: VOIE_INTERNE }} /> {x}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="rounded-2xl border p-3.5" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#F5F8FE' }}>
-                    <p className="text-[11px] font-black tracking-tight" style={{ color: '#C0112E' }}>Voie externe (QROC)</p>
+                  <div className="rounded-2xl border p-3.5" style={{ borderColor: VOIE_EXTERNE_LINE, background: '#F5F7FB' }}>
+                    <p className="text-[11px] font-black tracking-tight" style={{ color: VOIE_EXTERNE }}>Voie externe (QROC)</p>
                     <ul className="mt-2 space-y-2">
                       {['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'].map((x) => (
                         <li key={x} className="flex items-start gap-1.5 text-[11.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: '#C0112E' }} /> {x}
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: VOIE_EXTERNE }} /> {x}
                         </li>
                       ))}
                     </ul>
@@ -176,14 +181,14 @@ export function FormulesSection() {
                 </div>
 
                 <p className="mt-4 flex items-center gap-3 text-center text-[11.5px] font-black tracking-wide" style={{ color: ESS_DEEP }}>
-                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(20,37,78,0.25)' }} />
+                  <span aria-hidden className="h-px flex-1" style={{ background: FORMULE_ESSENTIELLE.line }} />
                   Dans les deux voies
-                  <span aria-hidden className="h-px flex-1" style={{ background: 'rgba(20,37,78,0.25)' }} />
+                  <span aria-hidden className="h-px flex-1" style={{ background: FORMULE_ESSENTIELLE.line }} />
                 </p>
                 <ul className="mt-3 grid flex-1 grid-cols-1 gap-y-2">
                   {ESSENTIELLE_DEUX_VOIES.map((x) => (
                     <li key={x} className="flex items-start gap-2 text-[12.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: ESS }} /> {x}
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: VOIE_INTERNE }} /> {x}
                     </li>
                   ))}
                 </ul>
@@ -258,21 +263,21 @@ export function FormulesSection() {
           {/* ---------- 3. APPROFONDIE (violet, mise en avant) ---------- */}
           <Reveal delay={0.14} className="h-full">
             <article
-              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(139,14,34,0.55)] transition-transform duration-300 hover:-translate-y-1"
-              style={{ borderColor: 'rgba(192,17,46,0.45)' }}
+              className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_44px_100px_-40px_rgba(15,27,61,0.55)] transition-transform duration-300 hover:-translate-y-1"
+              style={{ borderColor: 'rgba(20,37,78,0.45)' }}
             >
               <p
                 className="flex items-center justify-center gap-2 px-4 py-3 text-center text-[11px] font-black tracking-[0.08em] text-white"
-                style={{ background: PURPLE_GRADIENT }}
+                style={{ background: APP_GRADIENT }}
               >
                 <Star className="h-3.5 w-3.5" fill="currentColor" />
                 Recommandée
               </p>
               <div className="flex flex-1 flex-col p-6" style={{ background: 'linear-gradient(180deg, #FFF7F8 0%, #FFFFFF 30%)' }}>
                 <div className="flex items-start gap-3.5">
-                  <FormuleBadge n={3} gradient={PURPLE_GRADIENT} />
+                  <FormuleBadge n={3} gradient={APP_GRADIENT} />
                   <div>
-                    <p className="text-xl font-black tracking-tight" style={{ color: PURPLE_DEEP }}>Approfondie</p>
+                    <p className="text-xl font-black tracking-tight" style={{ color: APP_DEEP }}>Approfondie</p>
                     <p className="mt-1 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                       Je bénéficie de tout l&rsquo;Intensive + notre accompagnement le plus complet.
                     </p>
@@ -282,14 +287,14 @@ export function FormulesSection() {
                 <p className="mt-5 leading-none">
                   <span className="block text-[11px] font-black tracking-wide" style={{ color: INK_SOFT }}>À partir de</span>
                   <span className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-[2.8rem] font-black tracking-tight" style={{ color: PURPLE_DEEP }}>{APPROFONDI_MIN_EUROS_FR}&nbsp;€</span>
+                    <span className="text-[2.8rem] font-black tracking-tight" style={{ color: APP_DEEP }}>{APPROFONDI_MIN_EUROS_FR}&nbsp;€</span>
                     <span className="text-[12px] font-extrabold" style={{ color: INK_SOFT }}>TTC</span>
                   </span>
                 </p>
 
-                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: PURPLE_SOFT, border: '1px solid rgba(192,17,46,0.2)' }}>
-                  <p className="flex items-start gap-2.5 text-[12px] font-black leading-snug tracking-tight" style={{ color: PURPLE_DEEP }}>
-                    <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0" style={{ color: PURPLE }} />
+                <div className="mt-4 rounded-2xl px-4 py-4" style={{ background: APP_SOFT, border: `1px solid ${APP_LINE}` }}>
+                  <p className="flex items-start gap-2.5 text-[12px] font-black leading-snug tracking-tight" style={{ color: APP_DEEP }}>
+                    <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0" style={{ color: APP }} />
                     Tout le contenu des formules Essentielle + Intensive
                   </p>
                   <ul className="mt-3 space-y-2 pl-7">
@@ -298,7 +303,7 @@ export function FormulesSection() {
                       'accompagnement pédagogique renforcé',
                     ].map((x) => (
                       <li key={x} className="flex items-start gap-2 text-[12px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                        <span className="text-[13px] font-black leading-none" style={{ color: PURPLE }}>+</span>
+                        <span className="text-[13px] font-black leading-none" style={{ color: APP }}>+</span>
                         {x}
                       </li>
                     ))}
@@ -308,7 +313,7 @@ export function FormulesSection() {
                 <ul className="mt-5 flex-1 space-y-2.5">
                   {APPROFONDIE_ITEMS.map((x) => (
                     <li key={x} className="flex items-start gap-2.5 text-[12.5px] font-semibold leading-snug" style={{ color: NAVY, fontFamily: MANROPE }}>
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: PURPLE }} /> {x}
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: APP }} /> {x}
                     </li>
                   ))}
                 </ul>
@@ -316,7 +321,7 @@ export function FormulesSection() {
                 <Link
                   href="/formules/programme-approfondi"
                   className="group mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[13.5px] font-black tracking-tight text-white shadow-[0_18px_44px_-14px_rgba(139,14,34,0.7)] transition-transform hover:scale-[1.02]"
-                  style={{ background: PURPLE_GRADIENT }}
+                  style={{ background: APP_GRADIENT }}
                 >
                   Choisir Approfondie
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

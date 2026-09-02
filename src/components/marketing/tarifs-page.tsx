@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { Reveal } from './reveal';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
+import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 
 /**
  * Page Tarifs — reprise des maquettes templates/tarifs/BLOC 1 → 3.
@@ -20,10 +21,12 @@ const RED = '#C0112E';
 /* Couleurs propres à chaque formule — identiques à celles des pages
    /formules/essentielle, /formules/intensive et /formules/programme-approfondi
    pour que le parcours reste cohérent d'une page à l'autre. */
-const ESS = { main: '#14254E', deep: '#0F1B3D', soft: '#EEF1F7', line: 'rgba(20,37,78,0.22)', grad: 'linear-gradient(90deg, #0F1B3D 0%, #14254E 100%)', ombre: 'rgba(15,27,61,0.45)' };
-const INT = { main: '#8B0E22', deep: '#6B0F1E', soft: '#F7E9EC', line: 'rgba(139,14,34,0.22)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #8B0E22 100%)', ombre: 'rgba(107,15,30,0.45)' };
-const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
-const BLUE = APP.main;
+/** Palette des formules : source unique du site (vert / rouge / bleu foncé). */
+const ESS = FORMULE_ESSENTIELLE;
+const INT = FORMULE_INTENSIVE;
+const APP = FORMULE_APPROFONDIE;
+/** Accent du bloc témoignages, sans rapport avec les formules. */
+const BLUE = RED;
 const INK = '#1F2937';
 const INK_SOFT = '#5B6478';
 const INK_MUTED = '#8A93A6';

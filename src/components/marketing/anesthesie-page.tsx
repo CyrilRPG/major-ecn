@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Reveal } from './reveal';
+import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
 
 /**
  * Page spécialité — EVC Anesthésie-Réanimation.
@@ -201,9 +203,22 @@ function Laureats() {
 
           <Reveal delay={0.16}>
             <figure
-              className="flex h-full flex-col rounded-[1.25rem] bg-white p-7 sm:p-8"
+              className="flex h-full flex-col gap-6 rounded-[1.25rem] bg-white p-7 sm:flex-row sm:gap-7 sm:p-8"
               style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -58px rgba(15,31,77,0.55)' }}
             >
+              {/* Ratio fixe : laissé libre, la colonne s'étirait sur toute la
+                  hauteur de la carte et recadrait la photo en bandeau étroit. */}
+              <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl sm:aspect-[4/5] sm:w-44 sm:self-start">
+                <Image
+                  src="/specialites/anesthesie/dr-fouad-kobercy.jpg"
+                  alt="Dr Fouad Kobercy, lauréat des EVC d’anesthésie-réanimation"
+                  fill
+                  sizes="(max-width:640px) 100vw, 256px"
+                  className="object-cover"
+                />
+              </div>
+
+              <div className="flex min-w-0 flex-1 flex-col">
               <figcaption>
                 <p className="text-[19px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>Dr Fouad Kobercy</p>
                 <p className="mt-2 text-[13.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
@@ -242,6 +257,7 @@ function Laureats() {
                   « Major ECN m’a appris à disséquer l’énoncé, identifier les mots-clés, structurer mes réponses
                   et organiser mon temps. Quelques mois plus tard, j’étais 4e au classement. »
                 </blockquote>
+              </div>
               </div>
             </figure>
           </Reveal>
@@ -713,14 +729,18 @@ function Programme() {
    BLOC 6 — Trois formules
    ============================================================ */
 
-const ESS = { main: '#14254E', deep: '#0F1B3D', soft: '#EEF1F7', line: 'rgba(20,37,78,0.22)', grad: 'linear-gradient(90deg, #0F1B3D 0%, #14254E 100%)', ombre: 'rgba(15,27,61,0.45)' };
-/** Palette reprise telle quelle de la section Formules de l'accueil
-    (home-formules-section.tsx) : Essentielle en navy, Intensive et
-    Approfondie sur le même rouge de la charte. */
-const INT = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.22)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.45)' };
-const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
+/** Palette des formules : source unique du site (vert / rouge / bleu foncé). */
+const ESS = FORMULE_ESSENTIELLE;
+const INT = FORMULE_INTENSIVE;
+const APP = FORMULE_APPROFONDIE;
 
-type Pal = typeof ESS;
+/** Les couleurs des voies ne suivent pas celles des formules. */
+const VOIE_INTERNE = RED;
+const VOIE_INTERNE_LINE = 'rgba(192,17,46,0.22)';
+const VOIE_EXTERNE = NAVY;
+const VOIE_EXTERNE_LINE = 'rgba(15,31,77,0.22)';
+
+type Pal = PaletteFormule;
 
 const FORMULES: {
   n: number; nom: string; accroche: string; prefixe?: string; prix: string;
@@ -733,8 +753,8 @@ const FORMULES: {
     n: 1, nom: 'Essentielle', accroche: 'Je prépare les EVC principalement en autonomie.', prix: '495 €',
     encadre: { fort: 'La base complète', suite: 'de la préparation Major ECN.' },
     colonnes: [
-      { titre: 'Voie interne (QCM)', accent: INT.main, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'] },
-      { titre: 'Voie externe (QROC)', accent: ESS.main, items: ['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'] },
+      { titre: 'Voie interne (QCM)', accent: VOIE_INTERNE, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'] },
+      { titre: 'Voie externe (QROC)', accent: VOIE_EXTERNE, items: ['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'] },
     ],
     sousTitre: 'Dans les deux voies',
     items: [
@@ -797,9 +817,9 @@ function Formules() {
             Choisissez le niveau d’accompagnement qui correspond à vos besoins et à votre emploi du temps.
           </p>
           <p className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${INT.line}`, color: INT.main }}>Voie interne (QCM)</span>
+            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${VOIE_INTERNE_LINE}`, color: VOIE_INTERNE }}>Voie interne (QCM)</span>
             <span aria-hidden className="hidden h-4 w-px sm:block" style={{ background: LINE }} />
-            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${ESS.line}`, color: ESS.main }}>Voie externe (QROC)</span>
+            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${VOIE_EXTERNE_LINE}`, color: VOIE_EXTERNE }}>Voie externe (QROC)</span>
           </p>
         </Reveal>
 
@@ -942,7 +962,7 @@ function Formules() {
                 {['Visa', 'Mastercard', 'American Express', 'Apple Pay'].map((m) => (
                   <span key={m} className="rounded-md bg-white px-3 py-1.5 text-[11px] font-black" style={{ border: `1px solid ${LINE}`, color: NAVY }}>{m}</span>
                 ))}
-                <span className="rounded-md px-3 py-1.5 text-center text-[10.5px] font-black leading-tight" style={{ border: `1px solid ${INT.line}`, color: RED, background: '#FFF6F7' }}>
+                <span className="rounded-md px-3 py-1.5 text-center text-[10.5px] font-black leading-tight" style={{ border: `1px solid ${VOIE_INTERNE_LINE}`, color: RED, background: '#FFF6F7' }}>
                   4x<br /><span className="font-bold">sans frais</span>
                 </span>
               </p>
@@ -958,65 +978,171 @@ function Formules() {
    BLOC 7 — Questions fréquentes
    ============================================================ */
 
-const FAQ: { q: string; a: string; chute: string }[] = [
+/** Un paragraphe, une série d'encadrés titrés, une liste ou une ligne de
+    chiffres : les quatre formes que prennent les réponses de la FAQ. */
+type BlocFaq =
+  | { p: string }
+  | { encadres: { titre: string; texte: string; accent?: string }[] }
+  | { liste: string[] }
+  | { chiffres: { fort: string; suite: string }[] };
+
+const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
   {
     q: 'Le programme d’Anesthésie-Réanimation est immense. Comment savoir quoi travailler en priorité ?',
-    a: 'Major ECN vous apporte un cadre de travail structuré : cours et fiches, notions prioritaires, entraînements, cas cliniques, annales, révisions et suivi de progression.',
+    blocs: [
+      { p: 'C’est précisément l’un des enjeux de la préparation.' },
+      { p: 'Ventilation, hémodynamique, pharmacologie, états de choc, défaillances d’organes, péri-opératoire… En Anesthésie-Réanimation, il est facile de multiplier les ressources et de consacrer beaucoup de temps à des notions secondaires.' },
+      { p: 'Avec Major ECN, vous disposez d’un cadre de travail structuré : cours et fiches, notions prioritaires, entraînements, cas cliniques, annales, révisions et suivi de progression.' },
+      { p: 'L’objectif n’est pas de vous donner toujours plus de contenu.' },
+    ],
     chute: 'L’objectif est de vous aider à savoir quoi travailler, dans quel ordre et comment progresser jusqu’aux EVC.',
   },
   {
     q: 'J’ai déjà passé les EVC et j’ai échoué. Pourquoi recommencer avec Major ECN ?',
-    a: 'Major ECN vous aide à identifier ce qui vous a manqué (connaissances, méthode, entraînement, temps, erreurs…) et à construire votre nouvelle préparation autour de vos points faibles.',
+    blocs: [
+      { p: 'Parce que vous ne repartez pas de zéro.' },
+      { p: 'Vous avez déjà travaillé et acquis des connaissances. Il faut maintenant comprendre ce qui vous a empêché de réussir : manque de connaissances ? mauvaise priorisation ? difficultés méthodologiques ? erreurs répétées ? gestion du temps ? manque d’entraînement ? difficulté à structurer vos réponses ?' },
+      { p: 'Major ECN vous aide à identifier ce qui doit réellement changer dans votre préparation et à concentrer votre travail sur vos points faibles.' },
+      { p: 'Selon votre voie et votre formule, vous pourrez retravailler vos connaissances, votre méthodologie, vos erreurs, votre raisonnement clinique, votre gestion du temps et votre stratégie d’épreuve.' },
+      { p: 'Le parcours du Dr Fouad Kobercy l’illustre particulièrement bien : après un premier échec, il a notamment retravaillé sa méthodologie, les mots-clés, les PMZ, la structuration de ses réponses et la gestion du temps.' },
+      { p: 'À la session suivante : 4e au classement.' },
+    ],
     chute: 'Votre première préparation vous a apporté de l’expérience. La suivante doit vous permettre de travailler précisément ce qui vous a manqué.',
   },
   {
     q: 'Est-ce vraiment la même préparation pour la voie interne et la voie externe ?',
-    a: 'Non. Les deux voies ont des exigences différentes. La préparation est spécifique à chacune d’elles.',
-    chute: 'Deux voies. Deux formats d’épreuve. Deux préparations conçues pour leurs exigences.',
+    blocs: [
+      { p: 'Non. Et nous considérons qu’il est essentiel de préparer chaque voie selon les exigences de son épreuve.' },
+      {
+        encadres: [
+          { titre: 'Voie interne — QCM', accent: VOIE_INTERNE, texte: 'Vous travaillez notamment la précision, l’analyse des propositions, les pièges, la rapidité, la stratégie QCM et la gestion du temps.' },
+          { titre: 'Voie externe — QROC', accent: VOIE_EXTERNE, texte: 'Vous travaillez la construction et la structuration des réponses, les mots-clés attendus, les PMZ, la hiérarchisation des informations et la gestion du temps.' },
+        ],
+      },
+      { p: 'Les connaissances médicales peuvent se rejoindre. La manière de les restituer le jour des EVC est différente.' },
+    ],
+    chute: 'Deux voies. Deux formats d’épreuve. Deux préparations spécifiquement conçues pour leurs exigences.',
   },
   {
     q: 'Qu’est-ce qui différencie Major ECN d’une préparation classique aux EVC ?',
-    a: 'Un environnement complet + l’accompagnement de médecins enseignants + une méthode qui vous aide à savoir quoi travailler et comment progresser.',
+    blocs: [
+      { p: 'Major ECN ne repose pas sur un seul outil.' },
+      { p: 'Vous disposez d’un environnement réunissant cours et fiches, QCM ou QROC, cas cliniques, annales corrigées, flashcards, concours blancs, révisions et suivi de progression, auquel s’ajoute l’accompagnement de médecins enseignants selon la formule choisie.' },
+      { p: 'Mais la différence ne réside pas simplement dans la quantité de ressources proposées.' },
+      { p: 'Votre préparation doit vous aider à répondre continuellement à quatre questions :' },
+      {
+        liste: [
+          'Qu’est-ce que je dois travailler ?',
+          'Où sont mes lacunes ?',
+          'Pourquoi est-ce que je me trompe ?',
+          'Que dois-je revoir maintenant pour progresser ?',
+        ],
+      },
+    ],
     chute: 'Une préparation ne devrait pas simplement vous donner du contenu. Elle devrait vous aider à progresser.',
   },
   {
     q: 'Je travaille à l’hôpital et j’ai des gardes. Est-ce réellement compatible avec Major ECN ?',
-    a: 'La plateforme est accessible 24h/24 et 7j/7 et les replays sont disponibles pendant toute votre préparation.',
+    blocs: [
+      { p: 'Oui. La préparation est conçue pour s’intégrer à la vie professionnelle d’un médecin.' },
+      { p: 'La plateforme est accessible 24h/24 et 7j/7. Vous pouvez travailler vos cours, fiches, QCM ou QROC, cas cliniques, annales et flashcards en fonction de vos disponibilités.' },
+      { p: 'Vous manquez un cours en raison d’une garde ? Les séances sont disponibles en replay pendant votre période de préparation.' },
+      { p: 'Vous pouvez ainsi continuer à avancer même lorsque votre emploi du temps hospitalier varie d’une semaine à l’autre.' },
+    ],
     chute: 'Votre activité professionnelle ne doit pas vous obliger à renoncer à une préparation structurée.',
   },
   {
     q: 'Comment Major ECN m’aide-t-il à identifier mes lacunes ?',
-    a: 'Les entraînements, les corrections et le suivi de progression vous permettent d’identifier vos erreurs récurrentes et les connaissances à consolider.',
-    chute: 'Une erreur comprise et retravaillée devient un axe concret de progression.',
+    blocs: [
+      { p: 'Faire beaucoup de questions ne suffit pas. Il faut surtout comprendre pourquoi vous vous trompez.' },
+      { p: 'Les entraînements et leurs corrections vous permettent d’identifier progressivement les connaissances insuffisamment maîtrisées, les raisonnements fragiles et les erreurs qui reviennent.' },
+      { p: 'Le suivi de progression vous aide ensuite à visualiser votre avancement et les domaines nécessitant davantage de travail.' },
+      { p: 'L’objectif n’est donc pas d’enchaîner mécaniquement les questions.' },
+    ],
+    chute: 'Une erreur identifiée, comprise puis retravaillée devient un axe concret de progression.',
   },
   {
-    q: 'Est-ce que je serai réellement accompagné ou vais-je travailler seul sur une plateforme ?',
-    a: 'Selon la formule choisie, vous bénéficiez de cours en direct, de replays, de corrections et de réponses à vos questions par des médecins enseignants.',
-    chute: 'Vous disposez d’outils pour travailler en autonomie et d’un accompagnement humain lorsque vous en avez besoin.',
+    q: 'Est-ce que je serai réellement accompagné ou vais-je surtout travailler seul sur une plateforme ?',
+    blocs: [
+      { p: 'Major ECN associe outils numériques et accompagnement humain.' },
+      { p: 'Selon la formule choisie, vous bénéficiez de cours en direct avec des médecins enseignants, de replays, d’entraînements, de corrections et de réponses à vos questions.' },
+      { p: 'Une notion mal comprise, un raisonnement clinique qui reste flou ou une difficulté méthodologique ne doit pas rester sans réponse.' },
+    ],
+    chute: 'Vous disposez d’une plateforme pour travailler en autonomie, mais également d’un accompagnement lorsque vous en avez besoin.',
   },
   {
     q: 'Comment les cours sont-ils adaptés spécifiquement à l’Anesthésie-Réanimation ?',
-    a: 'Les enseignements sont construits par des médecins spécialistes pour relier les connaissances clés et développer le raisonnement face aux situations cliniques.',
+    blocs: [
+      { p: 'L’Anesthésie-Réanimation nécessite de relier de nombreux domaines : physiologie, pharmacologie, ventilation, hémodynamique, états de choc, défaillances d’organes et prise en charge péri-opératoire.' },
+      { p: 'L’objectif des enseignements n’est donc pas simplement de juxtaposer des chapitres.' },
+      { p: 'Les médecins enseignants vous aident à identifier les connaissances importantes et à développer les raisonnements nécessaires face aux situations cliniques rencontrées aux EVC.' },
+    ],
     chute: 'Comprendre. Prioriser. Décider. S’entraîner.',
   },
   {
     q: 'Les concours blancs apportent-ils vraiment quelque chose ?',
-    a: 'Oui. Ils vous préparent aux conditions réelles d’épreuve et permettent d’identifier vos points à consolider avant le jour J.',
-    chute: 'Le jour des EVC ne doit pas être la première fois où vous vous confrontez aux contraintes d’un examen.',
+    blocs: [
+      { p: 'Oui. Connaître son cours et réussir une épreuve sont deux compétences différentes.' },
+      { p: 'Les concours blancs permettent de travailler la gestion du temps, la concentration, la précision et la stratégie d’épreuve.' },
+      { p: 'Ils permettent également d’identifier, avant le jour J, les domaines qui nécessitent encore d’être consolidés.' },
+      { p: 'C’est aussi ce que souligne le Dr Karim Khiareddine, lauréat EVC Anesthésie-Réanimation 2025, qui explique que l’examen blanc lui a permis de mieux appréhender la gestion du temps, la concentration et le stress avant l’épreuve.' },
+    ],
+    chute: 'Le jour des EVC ne doit pas être la première fois où vous vous confrontez réellement aux contraintes d’un examen.',
   },
   {
     q: 'Je commence tardivement. Est-il encore possible de progresser ?',
-    a: 'Oui, mais la priorisation devient essentielle. Major ECN vous aide à concentrer votre temps sur ce qui est vraiment utile pour votre voie.',
-    chute: 'Lorsque le temps est compté, travailler plus efficacement devient essentiel.',
+    blocs: [
+      { p: 'Oui. Mais lorsque le temps disponible diminue, la capacité à prioriser devient encore plus importante.' },
+      { p: 'Vouloir reprendre uniformément l’intégralité du programme peut vous faire perdre un temps précieux.' },
+      { p: 'Il faut identifier les connaissances essentielles, vos principales lacunes et les entraînements les plus utiles pour votre voie.' },
+      { p: 'Major ECN vous apporte justement un environnement structuré permettant de concentrer votre travail là où il peut être le plus utile.' },
+    ],
+    chute: 'Lorsque le temps est compté, travailler davantage n’est pas toujours la solution. Travailler plus efficacement devient essentiel.',
   },
   {
     q: 'Quelle formule choisir : Essentielle, Intensive ou Approfondie ?',
-    a: 'Tout dépend du niveau d’accompagnement dont vous avez besoin et du temps que vous pouvez y consacrer.',
+    blocs: [
+      { p: 'Tout dépend du niveau d’accompagnement dont vous avez besoin.' },
+      {
+        encadres: [
+          { titre: 'Essentielle — 495 €', accent: ESS.main, texte: 'Pour préparer principalement les EVC en autonomie avec la plateforme complète Major ECN.' },
+          { titre: 'Intensive — 995 €', accent: INT.main, texte: 'La plateforme complète + 18 heures de cours et d’accompagnement, avec enseignements en direct, replays, méthodologie, entraînements, corrections et réponses aux questions.' },
+          { titre: 'Approfondie — à partir de 2 095 €', accent: APP.main, texte: 'La plateforme complète + à partir de 36 heures de cours et d’accompagnement, avec une reprise plus approfondie du programme, davantage de dossiers et cas cliniques, des corrections approfondies et un accompagnement pédagogique renforcé.' },
+        ],
+      },
+    ],
     chute: '18 heures pour intensifier votre préparation. À partir de 36 heures pour l’approfondir.',
   },
   {
     q: 'Pourquoi des candidats choisissent-ils Major ECN pour préparer les EVC ?',
-    a: 'Une préparation spécifique à votre voie, un environnement complet, des médecins enseignants et une méthode qui transforme votre travail en progression.',
+    blocs: [
+      { p: 'Parce qu’ils recherchent plus qu’une accumulation de cours et de questions.' },
+      {
+        chiffres: [
+          { fort: '+ de 15 ans', suite: 'd’expérience dans la préparation médicale' },
+          { fort: '+ de 9 000', suite: 'médecins accompagnés' },
+          { fort: '45', suite: 'spécialités' },
+        ],
+      },
+      {
+        encadres: [
+          { titre: 'Une préparation spécifique à votre voie', texte: 'QCM pour la voie interne • QROC pour la voie externe' },
+          { titre: 'Un environnement complet', texte: 'Cours • Fiches • QCM/QROC • Cas cliniques • Annales • Flashcards • Concours blancs' },
+          { titre: 'Des médecins enseignants', texte: 'Cours en direct • Replays • Questions • Corrections' },
+          { titre: 'Une préparation pour vous faire progresser', texte: 'Entraînement • Analyse des erreurs • Révisions • Suivi de progression' },
+        ],
+      },
+      { p: 'Et derrière les outils, il y a surtout une méthode :' },
+      {
+        liste: [
+          'Savoir quoi travailler.',
+          'Comprendre ses erreurs.',
+          'Corriger ses points faibles.',
+          'S’entraîner selon sa voie.',
+          'Être accompagné jusqu’aux EVC.',
+        ],
+      },
+    ],
     chute: 'Vous n’avez pas besoin d’accumuler davantage de ressources. Vous avez besoin d’une préparation qui transforme votre travail en progression.',
   },
 ];
@@ -1029,10 +1155,59 @@ const FAQ_STRIP = [
   { fort: 'Accompagnement', milieu: 'humain et méthodologique', suite: 'pour aller au bout' },
 ];
 
+function CorpsFaq({ blocs }: { blocs: BlocFaq[] }) {
+  return (
+    <div className="space-y-4">
+      {blocs.map((b, i) => {
+        if ('p' in b) {
+          return (
+            <p key={i} className="text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{b.p}</p>
+          );
+        }
+        if ('encadres' in b) {
+          return (
+            <div key={i} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {b.encadres.map((e) => (
+                <div key={e.titre} className="rounded-xl px-4 py-4" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
+                  <p className="text-[12px] font-black uppercase leading-snug tracking-[0.04em]" style={{ color: e.accent ?? NAVY }}>{e.titre}</p>
+                  <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{e.texte}</p>
+                </div>
+              ))}
+            </div>
+          );
+        }
+        if ('liste' in b) {
+          return (
+            <ul key={i} className="space-y-2">
+              {b.liste.map((x) => (
+                <li key={x} className="flex items-start gap-3.5">
+                  <Puce color={RED} className="mt-[9px]" />
+                  <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{x}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        return (
+          <div key={i} className="grid grid-cols-1 gap-4 border-y py-5 sm:grid-cols-3" style={{ borderColor: LINE_SOFT }}>
+            {b.chiffres.map((c) => (
+              <div key={c.fort}>
+                <p className="text-[17px] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.02em' }}>{c.fort}</p>
+                <p className="mt-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{c.suite}</p>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function FaqSection() {
+  const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
-      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <p className="inline-flex rounded-full px-5 py-2 text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ background: '#FDEDEF', color: RED }}>
             Questions fréquentes
@@ -1045,24 +1220,39 @@ function FaqSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-x-6">
-          {FAQ.map((f, i) => (
-            <Reveal key={f.q} delay={Math.min(i, 5) * 0.03}>
-              <div className="flex h-full gap-4 rounded-xl bg-white px-5 py-5 sm:px-6" style={{ border: `1px solid ${LINE}` }}>
-                <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-black tabular-nums text-white"
-                  style={{ background: RED }}
-                >
-                  {i + 1}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[14px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>{f.q}</p>
-                  <p className="mt-2.5 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{f.a}</p>
-                  <p className="mt-2.5 text-[13px] font-black leading-relaxed" style={{ color: RED }}>{f.chute}</p>
+        <div className="mt-12 space-y-3">
+          {FAQ.map((f, i) => {
+            const ouvert = open === i;
+            return (
+              <Reveal key={f.q} delay={Math.min(i, 4) * 0.03}>
+                <div className="overflow-hidden rounded-xl bg-white" style={{ border: `1px solid ${ouvert ? 'rgba(192,17,46,0.28)' : LINE}` }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(ouvert ? null : i)}
+                    aria-expanded={ouvert}
+                    className="flex w-full items-center gap-4 px-5 py-4 text-left sm:px-6"
+                  >
+                    <span
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-black tabular-nums"
+                      style={{ background: ouvert ? RED : PAPER, color: ouvert ? '#FFFFFF' : INK_MUTED, border: `1px solid ${ouvert ? RED : LINE}` }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="flex-1 text-[14.5px] font-black leading-snug tracking-tight" style={{ color: ouvert ? RED : NAVY }}>{f.q}</span>
+                    <span aria-hidden className="shrink-0 text-[15px] font-black" style={{ color: ouvert ? RED : INK_MUTED }}>{ouvert ? '−' : '+'}</span>
+                  </button>
+                  {ouvert && (
+                    <div className="px-5 pb-5 pl-16 sm:px-6 sm:pl-[4.5rem]">
+                      <CorpsFaq blocs={f.blocs} />
+                      <p className="mt-5 border-t pt-4 text-[13.5px] font-black leading-relaxed" style={{ borderColor: LINE_SOFT, color: RED }}>
+                        {f.chute}
+                      </p>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
 
         <Reveal delay={0.2} className="mt-12">

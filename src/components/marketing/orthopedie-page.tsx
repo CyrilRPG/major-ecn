@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
 
 /**
  * Page spécialité — EVC Chirurgie orthopédique & traumatologique.
@@ -627,14 +628,16 @@ function Laureats() {
    BLOC 6 — Trois formules
    ============================================================ */
 
-const ESS = { main: '#14254E', deep: '#0F1B3D', soft: '#EEF1F7', line: 'rgba(20,37,78,0.22)', grad: 'linear-gradient(90deg, #0F1B3D 0%, #14254E 100%)', ombre: 'rgba(15,27,61,0.45)' };
-/** Palette reprise telle quelle de la section Formules de l'accueil
-    (home-formules-section.tsx) : Essentielle en navy, Intensive et
-    Approfondie sur le même rouge de la charte. */
-const INT = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.22)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.45)' };
-const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
+/** Palette des formules : source unique du site (vert / rouge / bleu foncé). */
+const ESS = FORMULE_ESSENTIELLE;
+const INT = FORMULE_INTENSIVE;
+const APP = FORMULE_APPROFONDIE;
 
-type Pal = typeof ESS;
+/** Les couleurs des voies ne suivent pas celles des formules. */
+const VOIE_INTERNE = RED;
+const VOIE_INTERNE_LINE = 'rgba(192,17,46,0.22)';
+
+type Pal = PaletteFormule;
 
 const FORMULES: {
   n: number; nom: string; accroche: string; prefixe?: string; prix: string;
@@ -647,7 +650,7 @@ const FORMULES: {
     n: 1, nom: 'Essentielle', accroche: 'Je prépare les EVC principalement en autonomie.', prix: '495 €',
     encadre: { fort: 'La base complète', suite: 'de la préparation Major ECN.' },
     colonnes: [
-      { titre: 'Voie interne (QCM)', accent: INT.main, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges', 'Analyse des propositions et gestion du temps'] },
+      { titre: 'Voie interne (QCM)', accent: VOIE_INTERNE, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges', 'Analyse des propositions et gestion du temps'] },
     ],
     sousTitre: 'Dans la préparation',
     items: [
@@ -710,7 +713,7 @@ function Formules() {
             Choisissez le niveau d’accompagnement qui correspond à vos besoins et à votre emploi du temps.
           </p>
           <p className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${INT.line}`, color: INT.main }}>Voie interne (QCM)</span>
+            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${VOIE_INTERNE_LINE}`, color: VOIE_INTERNE }}>Voie interne (QCM)</span>
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-[13px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
             La chirurgie orthopédique n’est pas ouverte en voie externe pour la session 2026&nbsp;:
@@ -857,7 +860,7 @@ function Formules() {
                 {['Visa', 'Mastercard', 'American Express', 'Apple Pay'].map((m) => (
                   <span key={m} className="rounded-md bg-white px-3 py-1.5 text-[11px] font-black" style={{ border: `1px solid ${LINE}`, color: NAVY }}>{m}</span>
                 ))}
-                <span className="rounded-md px-3 py-1.5 text-center text-[10.5px] font-black leading-tight" style={{ border: `1px solid ${INT.line}`, color: RED, background: '#FFF6F7' }}>
+                <span className="rounded-md px-3 py-1.5 text-center text-[10.5px] font-black leading-tight" style={{ border: `1px solid ${VOIE_INTERNE_LINE}`, color: RED, background: '#FFF6F7' }}>
                   4x<br /><span className="font-bold">sans frais</span>
                 </span>
               </p>
