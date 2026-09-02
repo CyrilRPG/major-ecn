@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
+import { lienPaiement } from '@/lib/tunnel-inscription';
+import { AncreTunnel } from './ancre-tunnel';
 
 /**
  * Page spécialité — EVC Chirurgie orthopédique & traumatologique.
@@ -698,9 +700,9 @@ const TOUTES_FORMULES = [
   { fort: 'Accompagnement selon les modalités', suite: 'de la formule choisie' },
 ];
 
-function Formules() {
+function Formules({ specialite }: { specialite?: string }) {
   return (
-    <section id="formules" className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+    <section id="formules" className="scroll-mt-28 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <p className="inline-flex rounded-full px-5 py-2 text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ background: '#FDEDEF', color: RED }}>
@@ -806,11 +808,11 @@ function Formules() {
                   </ul>
 
                   <Link
-                    href={f.href}
+                    href={lienPaiement(f.href, specialite)}
                     className="mt-6 flex items-center justify-center rounded-xl px-5 py-3.5 text-[14px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
                     style={{ background: f.p.grad, boxShadow: `0 18px 42px -22px ${f.p.ombre}` }}
                   >
-                    {f.cta}
+                    Je choisis cette formule
                   </Link>
                 </div>
               </article>
@@ -1064,16 +1066,17 @@ function FaqSection() {
 
 /* ============================================================ */
 
-export function OrthopediePageContent() {
+export function OrthopediePageContent({ specialite }: { specialite?: string }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
+      <AncreTunnel actif={!!specialite} />
       <Hero />
       <BlocSession />
       <GagnezDuTemps />
       <Programme />
       <Plateforme />
       <Laureats />
-      <Formules />
+      <Formules specialite={specialite} />
       <FaqSection />
     </div>
   );

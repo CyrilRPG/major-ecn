@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { BarChart3, BookOpen, ChevronDown, Gift, LogIn, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
+import { DialogueSpecialite } from './dialogue-specialite';
 
 type NavItem =
   | { href: string; label: string }
@@ -240,13 +241,11 @@ export function MarketingHeader() {
               <LogIn className="h-4 w-4" />
               Se connecter
             </Link>
-            {/* Bouton principal bordeaux — S'inscrire */}
-            <Link
-              href="/inscription"
-              className="hidden items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-4 py-2.5 text-sm font-black uppercase tracking-tight text-white shadow-sm transition-transform hover:scale-[1.03] sm:inline-flex sm:px-5"
-            >
+            {/* Bouton principal bordeaux — entrée du tunnel d'inscription :
+                il ouvre le choix de la spécialité, pas une page. */}
+            <DialogueSpecialite className="hidden items-center gap-1.5 rounded-lg bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-4 py-2.5 text-sm font-black uppercase tracking-tight text-white shadow-sm transition-transform hover:scale-[1.03] sm:inline-flex sm:px-5">
               S&rsquo;inscrire
-            </Link>
+            </DialogueSpecialite>
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -301,13 +300,9 @@ export function MarketingHeader() {
               );
             })}
             {/* CTA du menu mobile : S'inscrire (principal) + Se connecter (secondaire) */}
-            <Link
-              href="/inscription"
-              onClick={() => setOpen(false)}
-              className="mt-3 flex items-center justify-center rounded-xl bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-4 py-3 text-sm font-black uppercase tracking-tight text-white shadow-sm"
-            >
+            <DialogueSpecialite className="mt-3 flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-(--color-primary) to-[#8B2A3A] px-4 py-3 text-sm font-black uppercase tracking-tight text-white shadow-sm">
               S&rsquo;inscrire
-            </Link>
+            </DialogueSpecialite>
             <Link
               href="/login"
               onClick={() => setOpen(false)}

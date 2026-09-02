@@ -46,6 +46,10 @@ type Props = {
   /** Offre Approfondi choisie (ex. 'mg-plus'). Quand fournie, la spécialité et le
    *  prix viennent de l'offre → on masque le sélecteur de spécialité interne. */
   approfondiVariant?: string;
+  /** Spécialité choisie en amont dans le tunnel d'inscription (pop-up →
+   *  page spécialité → formule). Présélectionne le champ ; le candidat reste
+   *  libre d'en changer ici. Ignorée si le libellé n'est pas inscriptible. */
+  initialSpecialty?: string;
   /** Notifie le parent de la spécialité sélectionnée (au montage puis à chaque
    *  changement), pour que le récapitulatif affiché à côté du formulaire décrive
    *  la spécialité réellement achetée et non un libellé figé. */
@@ -66,6 +70,7 @@ export function CheckoutButton({
   label = 'Procéder au paiement sécurisé',
   color = DEFAULT_COLOR,
   approfondiVariant,
+  initialSpecialty,
   onSpecialtyChange,
 }: Props) {
   // Parcours Approfondi : la spécialité est portée par l'offre choisie en amont
@@ -80,7 +85,9 @@ export function CheckoutButton({
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [specialty, setSpecialty] = useState<string>(SPECIALTIES[0]);
+  const [specialty, setSpecialty] = useState<string>(
+    initialSpecialty && SPECIALTIES.includes(initialSpecialty) ? initialSpecialty : SPECIALTIES[0],
+  );
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
   // Case unique : acceptation groupée des CGU + CGS + Conditions Particulières.

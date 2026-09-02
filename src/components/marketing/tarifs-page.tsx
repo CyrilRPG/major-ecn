@@ -6,6 +6,8 @@ import { Fragment, useState } from 'react';
 import { Reveal } from './reveal';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { lienPaiement } from '@/lib/tunnel-inscription';
+import { AncreTunnel } from './ancre-tunnel';
 
 /**
  * Page Tarifs — reprise des maquettes templates/tarifs/BLOC 1 → 3.
@@ -148,7 +150,7 @@ function Puce({ color }: { color: string }) {
   return <span aria-hidden className="mt-[10px] h-px w-3 shrink-0" style={{ background: color, opacity: 0.75 }} />;
 }
 
-function CarteFormule({ f }: { f: Formule }) {
+function CarteFormule({ f, specialite }: { f: Formule; specialite?: string }) {
   const misEnAvant = Boolean(f.recommandee);
   return (
     <article
@@ -239,11 +241,11 @@ function CarteFormule({ f }: { f: Formule }) {
         </div>
 
         <Link
-          href={f.href}
+          href={lienPaiement(f.href, specialite)}
           className="mt-7 flex items-center justify-center rounded-xl px-6 py-4 text-[15px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
           style={{ background: f.p.grad, boxShadow: `0 18px 42px -20px ${f.p.ombre}` }}
         >
-          {f.cta}
+          Je choisis cette formule
         </Link>
 
         <p className="mt-5 text-center text-[12.5px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
@@ -254,7 +256,7 @@ function CarteFormule({ f }: { f: Formule }) {
   );
 }
 
-function TarifsHero() {
+function TarifsHero({ specialite }: { specialite?: string }) {
   return (
     <section className="relative overflow-hidden" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       {/* Photographie de la maquette : ancrée en haut à droite et fondue dans
@@ -303,10 +305,10 @@ function TarifsHero() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:mt-14 lg:grid-cols-3 lg:gap-7">
+        <div id="formules" className="mt-12 grid scroll-mt-28 grid-cols-1 items-stretch gap-6 lg:mt-14 lg:grid-cols-3 lg:gap-7">
           {FORMULES.map((f, i) => (
             <Reveal key={f.nom} delay={i * 0.08} className="h-full">
-              <CarteFormule f={f} />
+              <CarteFormule f={f} specialite={specialite} />
             </Reveal>
           ))}
         </div>
@@ -842,7 +844,7 @@ const BANDEAU_FORMULES = [
   { nom: 'Approfondie', prefixe: 'à partir de', prix: `${APPROFONDI_MIN_EUROS_FR} €`, href: '/formules/programme-approfondi', p: APP, recommandee: true },
 ];
 
-function BandeauFinal() {
+function BandeauFinal({ specialite }: { specialite?: string }) {
   return (
     <section className="mt-16" style={{ fontFamily: FONT, background: `linear-gradient(100deg, ${'#0A1838'} 0%, ${NAVY} 55%, #16295C 100%)` }}>
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:py-12">
@@ -883,11 +885,11 @@ function BandeauFinal() {
                   {f.prix}
                 </p>
                 <Link
-                  href={f.href}
+                  href={lienPaiement(f.href, specialite)}
                   className="mt-4 flex items-center justify-center rounded-lg py-2.5 text-[13.5px] font-black tracking-tight text-white transition-transform hover:scale-[1.02]"
                   style={{ background: f.p.grad }}
                 >
-                  Choisir
+                  Je choisis cette formule
                 </Link>
               </div>
             </div>
@@ -900,10 +902,11 @@ function BandeauFinal() {
 
 /* ============================================================ */
 
-export function TarifsPageContent() {
+export function TarifsPageContent({ specialite }: { specialite?: string }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <TarifsHero />
+      <AncreTunnel actif={!!specialite} />
+      <TarifsHero specialite={specialite} />
       <ExcellenceSection />
       <div className="pb-4" style={{ background: '#FFFFFF' }}>
         <div className="pt-16">
@@ -912,7 +915,7 @@ export function TarifsPageContent() {
           <LaureatsSection />
         </div>
       </div>
-      <BandeauFinal />
+      <BandeauFinal specialite={specialite} />
     </div>
   );
 }

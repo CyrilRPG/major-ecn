@@ -1,4 +1,5 @@
 import { AnesthesiePageContent } from '@/components/marketing/anesthesie-page';
+import { lireSpecialite } from '@/lib/tunnel-inscription';
 
 /** Le layout racine applique le gabarit « %s · Major ECN » : le titre ne doit
     donc pas répéter la marque. Les balises og/twitter sont propres à la
@@ -37,6 +38,11 @@ export const metadata = {
   },
 };
 
-export default function AnesthesieReanimationPage() {
-  return <AnesthesiePageContent />;
+export default async function AnesthesieReanimationPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const specialite = lireSpecialite(await searchParams);
+  return <AnesthesiePageContent specialite={specialite} />;
 }

@@ -11,6 +11,7 @@ import {
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
 import { CheckoutButton } from './checkout-button';
+import { AncreTunnel } from './ancre-tunnel';
 import { ApprofondiPurchase } from './approfondi-purchase';
 import {
   AnimatedCounter, MeshGradient, NoiseTexture, SpotlightCard,
@@ -100,7 +101,7 @@ const CONFIGS: Record<Variant, {
 
 const SPECIALTIES = ['Médecine Générale', 'Pédiatrie', 'Cardiologie', 'Pneumologie', 'Neurologie', 'Gynécologie'];
 
-export function FormulePageContent({ variant }: { variant: Variant }) {
+export function FormulePageContent({ variant, specialite }: { variant: Variant; specialite?: string }) {
   const c = CONFIGS[variant];
 
   // Couleurs mesh par variant
@@ -313,7 +314,8 @@ export function FormulePageContent({ variant }: { variant: Variant }) {
 
       {/* CHOISIR CETTE FORMULE — checkout Stripe ou formulaire de rappel.
           PLACÉ JUSTE APRÈS « Pourquoi choisir » pour conversion maximale. */}
-      <PaymentSection variant={variant} c={c} />
+      <AncreTunnel actif={!!specialite} />
+      <PaymentSection variant={variant} c={c} specialite={specialite} />
 
       {/* SPECIALTIES */}
       <section className="bg-[#F8F9FC] py-14">
@@ -523,14 +525,19 @@ type PaymentCfg = {
   ctaSecondary?: string;
 };
 
-function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
+function PaymentSection({ variant, c, specialite }: { variant: Variant; c: PaymentCfg; specialite?: string }) {
+
+  // Spécialité arrivant du tunnel d'inscription (pop-up → page spécialité →
+  // formule). On ne retient que les libellés réellement inscriptibles : c'est
+  // la seule garantie que le formulaire saura la présélectionner.
+  const specialiteTunnel = specialite && ENROLLABLE_SPECIALTY_NAMES.includes(specialite) ? specialite : undefined;
 
   // Spécialité réellement sélectionnée dans le formulaire de paiement. Le
   // récapitulatif « Ce qui est inclus » doit décrire CETTE spécialité : afficher
   // un libellé figé (« Médecine Générale ») promettait un périmètre qui n'était
   // pas celui acheté. Valeur initiale = celle pré-sélectionnée par le
   // formulaire, pour éviter tout décalage au premier rendu.
-  const [checkoutSpecialty, setCheckoutSpecialty] = useState<string>(ENROLLABLE_SPECIALTY_NAMES[0]);
+  const [checkoutSpecialty, setCheckoutSpecialty] = useState<string>(specialiteTunnel ?? ENROLLABLE_SPECIALTY_NAMES[0]);
   const isApprofondi = variant === 'approfondi';
 
   // Palette par variant
@@ -547,7 +554,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
       : { deep: '#1B5E20', main: '#16793C' };
 
   return (
-    <section id="choisir-formule" className="relative overflow-hidden py-16 sm:py-20"
+    <section id="choisir-formule" className="relative scroll-mt-24 overflow-hidden py-16 sm:py-20"
       style={{
         background: `linear-gradient(135deg, ${palette.bgDeep} 0%, ${palette.bgMain} 60%, ${palette.bgDeep} 100%)`,
       }}>
@@ -700,6 +707,7 @@ function PaymentSection({ variant, c }: { variant: Variant; c: PaymentCfg }) {
                   formuleId={VARIANT_TO_FORMULE_ID[variant]}
                   label={`Payer ${c.price} € et créer mon compte`}
                   color={ctaColor}
+                  initialSpecialty={specialiteTunnel}
                   onSpecialtyChange={setCheckoutSpecialty}
                 />
               )}
