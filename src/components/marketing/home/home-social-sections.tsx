@@ -222,7 +222,7 @@ export function TemoignagesSection() {
                   </p>
                   <p className="text-[13px] font-extrabold" style={{ color: RED }}>Lauréate EVC</p>
                 </div>
-                <div className="relative min-h-44 overflow-hidden">
+                <div className="relative aspect-[5/4] overflow-hidden sm:aspect-auto sm:min-h-44">
                   <Image
                     src="/temoignages/dr-khaoula-farah.jpg"
                     alt="Dr Khaoula Farah, médecine générale — lauréate EVC"
