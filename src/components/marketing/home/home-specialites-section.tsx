@@ -176,7 +176,7 @@ export function HomeSpecialitesSection() {
             </div>
 
             <p className="mt-4 text-center text-[13px] leading-relaxed" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
-              La ventilation publiée couvre les spécialités ci-dessus&nbsp;; la voie interne en compte plus de quarante.{' '}
+              Les dix spécialités les plus dotées en voie interne. La voie interne en compte plus de quarante.{' '}
               <Link href="/specialites" className="font-bold underline underline-offset-2" style={{ color: NAVY }}>
                 Voir toutes les spécialités →
               </Link>

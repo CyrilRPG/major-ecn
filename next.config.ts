@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
       // renvoyait un 404, alors que la page était liée depuis /contact et
       // explorée par Google. Les trois offres sont présentées sur /tarifs.
       { source: "/formules", destination: "/tarifs", permanent: true },
+      // Ancienne URL des formules, toujours indexée et concurrente de /tarifs
+      // sur la requête « préparation EVC ». Elle n'a plus de fonction propre.
+      { source: "/formules-major-ecn-preparation-ecn/preparation-evc-pae-medecine", destination: "/tarifs", permanent: true },
+      { source: "/formules-major-ecn-preparation-ecn/preparation-evc-pae-medecine/:path*", destination: "/tarifs", permanent: true },
+      { source: "/formules-major-ecn-preparation-ecn", destination: "/tarifs", permanent: true },
       // Lien cassé signalé : ancienne URL de l'article « documents de candidature ».
       { source: "/evc-pae-documents-candidature", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
       { source: "/evc-pae-liste-documents", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },

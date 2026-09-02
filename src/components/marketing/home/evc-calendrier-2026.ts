@@ -59,10 +59,11 @@ export const EPREUVES_2026: EpreuveSpecialite[] = [
   { nom: 'Médecine générale', label: 'vendredi 15 janvier 2027', j: 15, m: 1, a: 2027, externe: 35, interne: 89, slug: 'medecine-generale', page: true },
 ];
 
-/** Ventilation publiée des postes de la VOIE INTERNE, du plus doté au moins
-    doté. Source : notre article « Voie interne ou voie externe : comment
-    choisir ». La voie interne compte plus de quarante spécialités ; seules
-    celles dont le chiffre a été publié figurent ici. */
+/** Les DIX spécialités les plus dotées en voie interne, par volume
+    décroissant. La liste se lit comme un classement : elle ne doit sauter
+    aucun échelon. La voie interne compte plus de quarante spécialités.
+    Sources : notre article « Voie interne ou voie externe : comment choisir »
+    et l'arrêté du 12 juin 2026. */
 export const POSTES_INTERNE: { nom: string; postes: number; slug: string; page?: boolean }[] = [
   { nom: 'Médecine interne polyvalente (MIPIC)', postes: 564, slug: 'medecine-interne' },
   { nom: 'Psychiatrie', postes: 450, slug: 'psychiatrie' },
@@ -71,7 +72,7 @@ export const POSTES_INTERNE: { nom: string; postes: number; slug: string; page?:
   { nom: 'Anesthésie-réanimation', postes: 201, slug: 'anesthesie-reanimation' },
   { nom: 'Médecine cardiovasculaire', postes: 146, slug: 'cardiologie-et-maladies-vasculaires' },
   { nom: 'Radiologie et imagerie médicale', postes: 116, slug: 'radiodiagnostic-et-imagerie-medicale' },
+  { nom: 'Chirurgie orthopédique et traumatologique', postes: 101, slug: 'chirurgie-orthopedique-et-traumatologie', page: true },
   { nom: 'Pédiatrie', postes: 91, slug: 'pediatrie' },
   { nom: 'Médecine générale', postes: 89, slug: 'medecine-generale', page: true },
-  { nom: 'Pneumologie', postes: 40, slug: 'pneumologie' },
 ];

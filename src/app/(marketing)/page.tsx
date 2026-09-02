@@ -17,8 +17,9 @@ import { getDbPublishedArticles } from '@/lib/data/blog-db';
 export const metadata = {
   alternates: { canonical: '/' },
   title: 'Préparation aux EVC 2026 — voie interne (QCM) et voie externe (QROC)',
+  // 155 caractères maximum : au-delà, Google tronque.
   description:
-    'Préparation aux Épreuves de Vérification des Connaissances (EVC) 2026 dans le cadre de la PAE : voie interne (QCM) et voie externe (QROC), postes ouverts et dates d’épreuve par spécialité, méthodologie, enseignants médecins spécialistes et suivi de progression. 9 000+ médecins accompagnés depuis 2011.',
+    'Préparation aux EVC 2026 (PAE) : voie interne en QCM, voie externe en QROC. Postes et dates par spécialité. 9 000 médecins accompagnés depuis 2011.',
 };
 
 /* Ordre des sections : celui des maquettes templates/homepage/BLOC 1→8,

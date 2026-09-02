@@ -105,8 +105,6 @@ function Hero() {
             </div>
 
             <p className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-              <span className="text-[15px] font-black tabular-nums" style={{ color: NAVY, fontFamily: FONT }}>4,8/5</span>
-              <span aria-hidden className="h-1 w-1 rounded-full" style={{ background: INK_MUTED }} />
               Plus de 15 ans d’expérience
               <span aria-hidden className="h-1 w-1 rounded-full" style={{ background: INK_MUTED }} />
               Plus de 9 000 médecins accompagnés
@@ -147,6 +145,81 @@ function Hero() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   BLOC SESSION — les faits chiffrés de la spécialité, juste sous
+   le hero. La chirurgie orthopédique n'est PAS ouverte en voie
+   externe pour 2026 : c'est l'information déterminante de la page.
+   ============================================================ */
+
+const ARTICLE_ORTHO = 'evc-chirurgie-orthopedique-2026';
+const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
+const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
+
+function BlocSession() {
+  return (
+    <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="grid grid-cols-1 gap-8 rounded-[1.25rem] px-7 py-8 sm:px-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center"
+            style={{ background: PAPER, border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+                Session 2026
+              </p>
+              <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Chirurgie orthopédique et traumatologique
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                <span className="font-black" style={{ color: NAVY }}>101 postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>Non ouverte en voie externe.</span>
+                <br />
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>vendredi 8 janvier 2027</span>,
+                Espace Jean Monnet, Rungis.
+              </p>
+              <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
+                <Link href={`/blog/${ARTICLE_CALENDRIER}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Calendrier complet par spécialité →
+                </Link>
+                <Link href={`/blog/${ARTICLE_RATIO}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Comprendre le ratio candidats/postes →
+                </Link>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>101</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: INK_MUTED, letterSpacing: '-0.03em' }}>0</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  poste ouvert
+                  <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
+                </p>
+              </div>
+              <div className="sm:col-span-2 rounded-2xl px-6 py-5" style={{ background: '#FDF2F4' }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  Votre épreuve est donc un <span className="font-black" style={{ color: NAVY }}>QCM de deux heures</span>,
+                  pas une épreuve rédactionnelle.{' '}
+                  <Link href={`/blog/${ARTICLE_ORTHO}`} className="font-black underline underline-offset-4" style={{ color: RED }}>
+                    Ce qu’il faut vraiment réviser →
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -571,10 +644,9 @@ const FORMULES: {
     n: 1, nom: 'Essentielle', accroche: 'Je prépare les EVC principalement en autonomie.', prix: '495 €',
     encadre: { fort: 'La base complète', suite: 'de la préparation Major ECN.' },
     colonnes: [
-      { titre: 'Voie interne (QCM)', accent: INT.main, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'] },
-      { titre: 'Voie externe (QROC)', accent: APP.main, items: ['Banque complète de QROC corrigés', 'Méthodologie QROC : mots-clés, structuration de la réponse et PMZ'] },
+      { titre: 'Voie interne (QCM)', accent: INT.main, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges', 'Analyse des propositions et gestion du temps'] },
     ],
-    sousTitre: 'Dans les deux voies',
+    sousTitre: 'Dans la préparation',
     items: [
       'Fiches et supports de cours', 'Cas cliniques et dossiers', 'Annales EVC corrigées', 'Flashcards',
       'Révisions régulières', 'Suivi de progression', 'Réponses à vos questions par email pendant votre préparation',
@@ -587,7 +659,7 @@ const FORMULES: {
     encadre: { fort: 'Tout le contenu de la formule Essentielle', suite: '+ 18 h de cours en direct, lives interactifs et replays' },
     items: [
       '18 h de cours en direct (lives interactifs)', 'Lives interactifs avec vos enseignants',
-      'Replays disponibles pendant toute la préparation', 'QCM supplémentaires expliqués', 'QROC expliqués',
+      'Replays disponibles pendant toute la préparation', 'QCM supplémentaires expliqués',
       'Corrections approfondies', 'Épreuves blanches inspirées des EVC',
       'Coaching : parcours du Major (médecine générale)', 'Suivi de progression',
     ],
@@ -603,7 +675,7 @@ const FORMULES: {
     items: [
       'Reprise approfondie des connaissances et thématiques de votre spécialité',
       'Nombreux dossiers et cas cliniques travaillés avec les enseignants',
-      'Entraînements intensifs QCM ou QROC selon votre voie',
+      'Entraînements intensifs QCM au format de l’épreuve',
       'Corrections et explications approfondies', 'Méthodologie avancée des EVC',
       'Interrogations et concours blancs', 'Identification et reprise des points faibles',
       'Accompagnement renforcé tout au long de votre préparation',
@@ -614,7 +686,7 @@ const FORMULES: {
 
 const TOUTES_FORMULES = [
   { fort: 'Plateforme complète', suite: 'Accessible pendant toute la période de préparation' },
-  { fort: 'Méthode adaptée', suite: 'À la voie interne (QCM) ou externe (QROC)' },
+  { fort: 'Méthode adaptée', suite: 'Au format QCM de la voie interne' },
   { fort: 'Encadrement par des médecins spécialistes', suite: 'qui connaissent les EVC et vos spécialités' },
   { fort: 'Paiement 100 % sécurisé', suite: 'en plusieurs fois sans frais' },
   { fort: 'Accompagnement selon les modalités', suite: 'de la formule choisie' },
@@ -635,9 +707,11 @@ function Formules() {
             Choisissez le niveau d’accompagnement qui correspond à vos besoins et à votre emploi du temps.
           </p>
           <p className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${INT.line}`, color: INT.main }}>Voie Interne (QCM)</span>
-            <span aria-hidden className="h-5 w-px" style={{ background: LINE }} />
-            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${APP.line}`, color: APP.main }}>Voie Externe (QROC)</span>
+            <span className="rounded-full bg-white px-5 py-2 text-[12.5px] font-black" style={{ border: `1px solid ${INT.line}`, color: INT.main }}>Voie interne (QCM)</span>
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-[13px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+            La chirurgie orthopédique n’est pas ouverte en voie externe pour la session 2026&nbsp;:
+            la préparation porte sur le format QCM.
           </p>
         </Reveal>
 
@@ -796,101 +870,124 @@ function Formules() {
    FAQ
    ============================================================ */
 
-const FAQ: { q: string; a: string[] }[] = [
+/** FAQ propre à la chirurgie orthopédique, en trois blocs : la spécialité
+    aux EVC 2026, la préparation, puis l'accompagnement. */
+const FAQ: { bloc?: string; q: string; a: string[]; lien?: { texte: string; slug: string } }[] = [
   {
-    q: 'Pourquoi choisir Major ECN pour préparer les EVC de chirurgie orthopédique et traumatologique ?',
+    bloc: 'La chirurgie orthopédique aux EVC 2026',
+    q: 'La chirurgie orthopédique est-elle ouverte en voie externe aux EVC 2026 ?',
     a: [
-      'Parce qu’une préparation EVC ne se résume pas à mettre une banque de QCM en ligne. Major ECN accompagne les candidats aux EVC depuis 2011 et a accompagné plus de 9 000 médecins. Cette expérience nous permet de construire une préparation structurée autour des connaissances à maîtriser, de l’entraînement, de la méthodologie et de la progression jusqu’au jour de l’épreuve.',
-      '15 ans d’expérience, ce sont aussi 15 ans à observer les difficultés qui reviennent chez les candidats et à faire évoluer notre pédagogie.',
+      'Non. Pour la session 2026, la voie externe est ouverte à treize spécialités médicales uniquement. Aucune spécialité chirurgicale n’y figure, y compris la chirurgie orthopédique et traumatologique.',
+      'La chirurgie orthopédique est en revanche ouverte en voie interne, avec 101 postes.',
+      'Concrètement, si vous visez la chirurgie orthopédique cette année, votre épreuve sera un QCM et non une épreuve rédactionnelle. C’est une différence de format déterminante, et elle doit orienter toute votre préparation dès maintenant.',
+      'Si vous exercez déjà en France depuis au moins deux ans, la voie interne vous est ouverte. Si ce n’est pas le cas, il faut examiner les autres possibilités : certaines spécialités médicales de la voie externe sont accessibles sans diplôme de spécialité obtenu dans le pays d’origine.',
+    ],
+    lien: { texte: 'EVC chirurgie orthopédique 2026 : que réviser vraiment', slug: ARTICLE_ORTHO },
+  },
+  {
+    q: 'Combien de postes sont ouverts en chirurgie orthopédique pour la session 2026 ?',
+    a: [
+      '101 postes en voie interne. Aucun en voie externe.',
+      'Ce chiffre place la chirurgie orthopédique dans la première moitié des spécialités de la voie interne en volume. Mais le nombre de postes ne dit pas tout : c’est le rapport entre le nombre de candidats inscrits et le nombre de places qui détermine la sélectivité réelle. Une spécialité très dotée peut attirer proportionnellement plus de candidats qu’une spécialité étroite.',
+      'Chiffres issus de l’arrêté du 12 juin 2026.',
+    ],
+    lien: { texte: 'Comprendre le ratio candidats/postes', slug: ARTICLE_RATIO },
+  },
+  {
+    q: 'Quand a lieu l’épreuve de chirurgie orthopédique ?',
+    a: [
+      'Le vendredi 8 janvier 2027, à l’Espace Jean Monnet de Rungis (Val-de-Marne), en présentiel uniquement.',
+      'C’est l’une des dernières épreuves de la session, qui s’étale du 10 novembre 2026 au 15 janvier 2027. Chaque spécialité a sa propre date. Deux mois séparent le premier candidat du dernier — ce qui signifie, pour un candidat en orthopédie, plusieurs semaines de préparation supplémentaires par rapport à ceux qui composent en novembre.',
+      'C’est un avantage réel, à condition de l’utiliser. La convocation est disponible au plus tôt un mois avant l’épreuve.',
+    ],
+    lien: { texte: 'Calendrier complet par spécialité', slug: ARTICLE_CALENDRIER },
+  },
+  {
+    q: 'Qui peut se présenter en voie interne ?',
+    a: [
+      'La voie interne s’adresse aux praticiens à diplôme étranger qui exercent déjà en France depuis au moins deux ans en équivalent temps plein.',
+      'Cette condition d’exercice préalable est le critère déterminant. Si vous ne la remplissez pas, la voie interne ne vous est pas ouverte, quelle que soit votre expérience acquise à l’étranger.',
+      'Une règle importante : une seule candidature est autorisée. Toute double inscription entraîne le rejet définitif des deux dossiers.',
+      'Les modalités relèvent du Centre national de gestion : reportez-vous toujours aux publications officielles du CNG pour la version en vigueur.',
     ],
   },
   {
-    q: 'Tous les QCM se valent-ils pour préparer les EVC ?',
+    q: 'Quel est le format de l’épreuve en voie interne ?',
     a: [
-      'Non. Accumuler des milliers de questions n’a d’intérêt que si elles permettent réellement de progresser.',
-      'Chez Major ECN, les QCM servent à tester les connaissances, identifier les erreurs récurrentes, travailler le raisonnement et acquérir les réflexes nécessaires à l’épreuve. Les corrections doivent permettre de comprendre pourquoi une réponse est juste ou fausse, et pas simplement afficher une correction.',
-      'Notre objectif n’est pas que vous fassiez le plus de QCM possible. Il est que chaque entraînement vous rende meilleur au suivant. La préparation distingue par ailleurs les exigences de la voie interne et de la voie externe.',
+      'Une épreuve unique de deux heures, entièrement composée de questions à choix multiples — questions à réponse unique et questions à réponses multiples.',
+      'Ce format piège beaucoup de praticiens expérimentés, et pour une raison précise : il n’évalue pas la pratique quotidienne. Il évalue votre capacité à répondre à des QCM calibrés sur les recommandations françaises en vigueur, dans un temps contraint, selon une logique de notation qui ne pardonne pas l’approximation.',
+      'Un chirurgien qui opère depuis quinze ans peut parfaitement échouer sur une question dont il maîtrise le sujet, simplement parce qu’il n’a pas travaillé la construction et la correction d’un QCM d’EVC. C’est précisément ce travail-là qui constitue le cœur de la préparation.',
     ],
   },
   {
-    q: 'Quelle est la différence entre une fiche Major ECN et un simple résumé de cours ?',
+    bloc: 'La préparation en chirurgie orthopédique',
+    q: 'En quoi une préparation en orthopédie diffère-t-elle d’une préparation généraliste aux EVC ?',
     a: [
-      'Une bonne fiche n’est pas le cours le plus court possible. C’est un support qui permet de hiérarchiser les connaissances et retrouver rapidement ce qui doit être maîtrisé.',
-      'Les fiches Major ECN s’intègrent dans un ensemble pédagogique : cours, entraînements, cas cliniques, annales, flashcards et révisions. Elles ne sont donc pas conçues comme des documents isolés mais comme des supports de travail utilisables tout au long de la préparation.',
-      'Vous devez passer moins de temps à chercher quoi apprendre et davantage de temps à apprendre réellement.',
+      'Parce que le programme, les raisonnements et les pièges ne sont pas les mêmes.',
+      'Une préparation en orthopédie doit couvrir la traumatologie, le membre supérieur, le membre inférieur, le rachis, les pathologies dégénératives et la biomécanique, ainsi que les situations spécifiques — infections ostéo-articulaires, tumeurs, orthopédie pédiatrique, classifications.',
+      'Elle doit aussi traiter ce que les supports généralistes laissent de côté : les classifications qui reviennent régulièrement, les indications chirurgicales, les complications à connaître, et l’anatomie fonctionnelle telle qu’elle est interrogée.',
+      'Chez Major ECN, les contenus sont construits spécialité par spécialité. Il ne s’agit pas d’une préparation générique dont on change le titre.',
     ],
   },
   {
-    q: 'Qui enseigne dans la préparation Major ECN ?',
+    q: 'Qui enseigne la chirurgie orthopédique dans la préparation ?',
     a: [
-      'Les cours sont assurés par des médecins spécialistes de leur discipline, notamment des praticiens hospitaliers, chefs de clinique-assistants et médecins en exercice.',
-      'Nous attachons autant d’importance à l’expertise médicale qu’à la capacité pédagogique : un excellent spécialiste doit aussi être capable d’identifier l’essentiel, d’expliquer un raisonnement et de répondre précisément aux difficultés rencontrées par les candidats.',
-      'L’objectif n’est pas d’assister à un cours magistral supplémentaire : c’est de comprendre ce qui vous fera progresser aux EVC.',
+      'Des praticiens hospitaliers, des chefs de clinique-assistants et des médecins spécialistes en exercice dans la discipline.',
+      'Cela change deux choses. D’abord, ils connaissent les notions qui posent régulièrement problème et savent où insister. Ensuite, et c’est souvent ce que les candidats remarquent en premier, ils savent jusqu’où approfondir.',
+      'C’est une question qui revient constamment pendant une préparation : « Ce point, faut-il le maîtriser en détail ou une connaissance générale suffit-elle ? » Un enseignant qui a suivi plusieurs promotions de candidats peut y répondre en une phrase. Seul, cette question coûte des heures et beaucoup d’incertitude.',
     ],
   },
   {
-    q: 'Vais-je réellement pouvoir poser mes questions pendant ma préparation ?',
+    q: 'Comment savoir ce qu’il faut réellement travailler et jusqu’où approfondir ?',
     a: [
-      'Oui. L’accompagnement humain fait partie de la méthode Major ECN.',
-      'Selon votre formule, vous pouvez échanger avec l’équipe et les enseignants, participer aux séances en direct et obtenir des réponses lorsque vous rencontrez une difficulté. La plateforme prévoit également un espace permettant de poser des questions à l’équipe pédagogique.',
-      'Vous ne devez pas rester plusieurs jours bloqué sur une correction, un raisonnement ou une notion que vous n’avez pas comprise.',
+      'C’est le problème central d’une préparation aux EVC : la matière est immense, le temps ne l’est pas.',
+      'Le travail de l’équipe pédagogique consiste à distinguer quatre niveaux : le socle indispensable, les notions prioritaires pour l’épreuve, les points qui font la différence entre bons candidats, et les connaissances secondaires — intéressantes médicalement, mais sur lesquelles il serait contre-productif de s’attarder.',
+      'Savoir ce qu’on peut laisser de côté est presque aussi important que savoir ce qu’on doit apprendre. C’est ce que vos enseignants Major ECN vous disent explicitement, cours après cours.',
     ],
   },
   {
-    q: 'Pourquoi Major ECN insiste-t-il autant sur la régularité ?',
+    q: 'Les annales suffisent-elles pour préparer les EVC d’orthopédie ?',
     a: [
-      'Parce qu’une préparation efficace se construit dans la durée.',
-      'Cours, QCM/QROC, cas cliniques, flashcards, interrogations, concours blancs et révisions permettent de réactiver régulièrement les connaissances plutôt que de tout reprendre dans l’urgence avant l’épreuve. La plateforme permet également de visualiser sa progression et d’identifier les notions à renforcer.',
-      'Travailler régulièrement, mesurer ses résultats, corriger ses erreurs, puis se réévaluer : c’est cette continuité qui transforme les connaissances en réflexes.',
+      'Non. Elles sont indispensables, mais elles constituent une base, pas une préparation.',
+      'Lorsqu’un sujet est connu et corrigé, tous les candidats sérieux en connaissent les réponses. La différence se fait donc sur autre chose : la capacité à mobiliser ses connaissances face à une question nouvelle.',
+      'C’est pourquoi la préparation associe les annales corrigées et commentées à des QCM, dossiers et cas cliniques inédits, construits autour des connaissances importantes et des thèmes susceptibles d’être évalués. La vraie question n’est pas « ai-je révisé les annales ? » mais « suis-je capable d’utiliser mes connaissances quand la question change ? ».',
     ],
   },
   {
-    q: 'Comment savoir si je travaille vraiment les bonnes choses ?',
+    bloc: 'L’accompagnement',
+    q: 'Que recouvre concrètement l’accompagnement humain ?',
     a: [
-      'C’est précisément l’un des problèmes que Major ECN cherche à résoudre.',
-      'La plateforme centralise les cours, fiches, QCM/QROC, cas cliniques, annales, flashcards, interrogations et outils de progression. Vos résultats permettent d’identifier les domaines qui nécessitent davantage de travail.',
-      'Une préparation structurée ne doit pas seulement vous donner du contenu. Elle doit vous aider à décider quoi travailler, dans quel ordre et pourquoi.',
+      'Quatre choses, au-delà des contenus.',
+      'Des cours en direct avec vos enseignants, disponibles ensuite en replay pendant toute la préparation — ce qui compte quand on a des gardes ou un décalage horaire.',
+      'Des réponses à vos questions, via le chat de la plateforme ou par email. Quand une correction vous semble ambiguë ou qu’un point vous bloque, obtenir une explication claire — et les références quand c’est utile — évite des heures de recherche.',
+      'Un suivi de votre progression, qui identifie vos points faibles et oriente la suite de votre travail plutôt que de vous laisser réviser au hasard.',
+      'Un accompagnement méthodologique : quoi travailler, dans quel ordre, à quel rythme.',
+      'L’idée est simple : vous restez celui qui apprend, mais vous n’avez plus à décider seul de tout.',
     ],
   },
   {
-    q: 'Major ECN est-il simplement une plateforme de QCM ?',
+    q: 'Que se passe-t-il si je prends du retard dans mes révisions ?',
     a: [
-      'Non. Les QCM ne sont qu’un outil parmi d’autres. Major ECN associe contenus pédagogiques, fiches, QCM/QROC, cas cliniques, annales corrigées, flashcards, concours blancs, suivi de progression, méthodologie et accompagnement humain.',
-      'Vous n’achetez pas simplement l’accès à une banque de questions. Vous intégrez un environnement de préparation.',
+      'Cela arrive, en particulier quand on prépare les EVC en exerçant à l’hôpital avec des gardes et une vie de famille.',
+      'L’important est de détecter le décrochage assez tôt. Le suivi d’activité sur la plateforme permet d’identifier une baisse significative de travail et d’alerter l’équipe pédagogique. Nous faisons alors le point avec vous : ce qui doit être rattrapé en priorité, ce qui peut être décalé, comment réorganiser votre planning en fonction du temps réellement disponible.',
+      'L’objectif n’est jamais de vous culpabiliser. Il est de vous remettre sur une trajectoire tenable.',
     ],
   },
   {
-    q: 'Pourquoi l’ancienneté d’une préparation aux EVC est-elle importante ?',
+    q: 'J’ai déjà échoué aux EVC. Qu’est-ce qui peut changer ?',
     a: [
-      'Parce que les EVC ont leurs exigences propres et qu’une préparation se perfectionne avec l’expérience.',
-      'Major ECN prépare les candidats depuis 2011 et indique avoir accompagné plus de 9 000 médecins dans de nombreuses spécialités.',
-      'Cette expérience permet d’identifier les difficultés qui reviennent, de faire évoluer les supports et d’organiser une préparation qui ne repose pas uniquement sur la quantité de contenu.',
-      'Une préparation EVC se construit aussi avec le recul des années.',
+      'Un premier échec ne préjuge pas du second. Mais il ne faut pas recommencer la même préparation à l’identique.',
+      'La première question à poser est : où les points ont-ils été perdus ? Les connaissances ? Certains items insuffisamment travaillés ? La méthodologie des QCM ? La gestion du temps ? Une mauvaise hiérarchisation des révisions ?',
+      'L’analyse de vos épreuves précédentes et de vos résultats aux entraînements permet d’identifier les axes sur lesquels votre préparation doit évoluer, puis de la reconstruire autour de ces difficultés. L’objectif n’est pas de travailler davantage, mais de travailler différemment.',
     ],
   },
   {
-    q: 'J’ai déjà beaucoup de cours, de livres et de ressources gratuites. Pourquoi rejoindre Major ECN ?',
+    q: 'Major ECN garantit-il la réussite aux EVC ?',
     a: [
-      'Parce que le problème d’un candidat n’est souvent plus d’avoir accès à davantage de contenu, mais de savoir quoi en faire.',
-      'Multiplier les PDF, groupes, vidéos et banques de questions peut finir par disperser le travail. Major ECN rassemble les ressources et les outils de progression dans un même environnement afin de réduire le temps passé à chercher et d’augmenter le temps consacré à apprendre, s’entraîner et corriger ses erreurs.',
-      'Plus de ressources ne signifie pas nécessairement une meilleure préparation. Plus de méthode, oui.',
-    ],
-  },
-  {
-    q: 'J’ai déjà échoué aux EVC. Qu’est-ce que Major ECN peut m’apporter de différent ?',
-    a: [
-      'Un nouvel échec ne se prévient pas nécessairement en recommençant exactement la même préparation avec davantage d’heures.',
-      'Il faut identifier ce qui a manqué : connaissances, hiérarchisation, méthodologie, vitesse, raisonnement, entraînement au format de l’épreuve ou régularité. Major ECN associe entraînements, corrections, suivi de progression et méthodologie pour transformer les erreurs en axes de travail.',
-      'Votre première préparation vous a donné de l’expérience. La suivante doit exploiter cette expérience pour corriger précisément vos points faibles.',
-    ],
-  },
-  {
-    q: 'Qu’est-ce qui distingue finalement Major ECN des autres préparations EVC ?',
-    a: [
-      'Ce n’est pas une fonctionnalité isolée. C’est l’ensemble.',
-      'Depuis 2011, Major ECN a développé une préparation qui associe l’expérience des EVC, des médecins enseignants spécialistes, des contenus structurés, des QCM/QROC et cas cliniques corrigés, des fiches, des annales, des entraînements réguliers, des outils de progression et un accompagnement humain.',
-      'Vous n’avez pas besoin d’accumuler davantage de ressources.',
-      'Vous avez besoin d’une préparation qui transforme votre travail en progression.',
+      'Non. Aucune préparation sérieuse ne peut garantir la réussite à des épreuves à nombre de postes limité.',
+      'Votre travail personnel restera déterminant : apprendre, réviser, s’entraîner, accepter de corriger ses erreurs, tenir la régularité jusqu’au jour J.',
+      'Ce que nous pouvons faire, c’est mettre à votre disposition tout ce qui rend ce travail plus efficace : les contenus construits pour l’orthopédie, les recommandations françaises actualisées, des enseignants spécialistes joignables, une méthodologie adaptée au format QCM, des entraînements et des concours blancs, un suivi de votre progression et un accompagnement quand vous rencontrez une difficulté.',
+      'Nous ne travaillons pas à votre place. Nous faisons en sorte que vous ne travailliez pas seul.',
     ],
   },
 ];
@@ -912,6 +1009,11 @@ function FaqSection() {
             const ouvert = open === i;
             return (
               <Reveal key={f.q} delay={Math.min(i, 4) * 0.03}>
+                {f.bloc && (
+                  <p className={'text-[11.5px] font-black uppercase tracking-[0.16em] ' + (i === 0 ? 'pb-3' : 'pb-3 pt-7')} style={{ color: RED }}>
+                    {f.bloc}
+                  </p>
+                )}
                 <div className="overflow-hidden rounded-xl bg-white" style={{ border: `1px solid ${ouvert ? 'rgba(192,17,46,0.28)' : LINE}` }}>
                   <button
                     type="button"
@@ -933,6 +1035,15 @@ function FaqSection() {
                       {f.a.map((p) => (
                         <p key={p} className="text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{p}</p>
                       ))}
+                      {f.lien && (
+                        <Link
+                          href={`/blog/${f.lien.slug}`}
+                          className="inline-block text-[13px] font-black underline underline-offset-4"
+                          style={{ color: RED }}
+                        >
+                          {f.lien.texte} →
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>
@@ -951,6 +1062,7 @@ export function OrthopediePageContent() {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
       <Hero />
+      <BlocSession />
       <GagnezDuTemps />
       <Programme />
       <Plateforme />

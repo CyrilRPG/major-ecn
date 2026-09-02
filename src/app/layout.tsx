@@ -29,18 +29,18 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr'),
-  title: { default: 'Major ECN — Préparez les EVC avec excellence', template: '%s · Major ECN' },
+  title: { default: 'Préparation aux EVC 2026 — voie interne (QCM) et voie externe (QROC)', template: '%s · Major ECN' },
   description:
-    "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
+    "Préparation aux EVC 2026 (PAE) : voie interne en QCM, voie externe en QROC. Postes et dates par spécialité. 9 000 médecins accompagnés.",
   icons: {
     icon: '/major-ecn-logo.png',
     apple: '/major-ecn-logo.png',
     shortcut: '/major-ecn-logo.png',
   },
   openGraph: {
-    title: 'Major ECN — Préparez les EVC avec excellence',
+    title: 'Préparation aux EVC 2026 — voie interne (QCM) et voie externe (QROC)',
     description:
-      "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
+      "Préparation aux EVC 2026 (PAE) : voie interne en QCM, voie externe en QROC. Postes et dates par spécialité. 9 000 médecins accompagnés.",
     images: [
       {
         url: '/major-ecn-logo.png',
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Major ECN — Préparez les EVC avec excellence',
+    title: 'Préparation aux EVC 2026 — voie interne (QCM) et voie externe (QROC)',
     description:
-      "La plateforme premium de préparation aux EVC pour les médecins à diplôme étranger souhaitant exercer en France.",
+      "Préparation aux EVC 2026 (PAE) : voie interne en QCM, voie externe en QROC. Postes et dates par spécialité. 9 000 médecins accompagnés.",
     images: ['/major-ecn-logo.png'],
   },
 };
