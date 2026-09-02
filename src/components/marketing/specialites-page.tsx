@@ -471,6 +471,7 @@ const PAGES_DEDIEES = new Set([
   'chirurgie-orthopedique-et-traumatologie',
   'anesthesie-reanimation',
   'cardiologie-et-maladies-vasculaires',
+  'pediatrie',
 ]);
 
 function SpecCard({ s }: { s: Speciality }) {
