@@ -472,6 +472,7 @@ const PAGES_DEDIEES = new Set([
   'anesthesie-reanimation',
   'cardiologie-et-maladies-vasculaires',
   'pediatrie',
+  'medecine-d-urgence',
 ]);
 
 function SpecCard({ s }: { s: Speciality }) {
