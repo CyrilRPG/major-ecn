@@ -28,6 +28,11 @@ const INK_MUTED = '#8A93A6';
 const LINE = '#E4E7EF';
 const LINE_SOFT = '#EFF1F6';
 const PAPER = '#FBFBFD';
+/** Fond du hero sombre — maquette BLOC 1. */
+const NAVY_DEEP = '#08122B';
+const WHITE_SOFT = 'rgba(255,255,255,0.78)';
+const WHITE_MUTED = 'rgba(255,255,255,0.56)';
+const WHITE_LINE = 'rgba(255,255,255,0.16)';
 const FONT = "'Plus Jakarta Sans', sans-serif";
 const FONT_BODY = "'Manrope', sans-serif";
 
@@ -53,29 +58,67 @@ const HERO_GARANTIES = [
 
 function Hero() {
   return (
-    <section style={{ fontFamily: FONT }}>
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-        <div className="flex flex-col justify-center px-4 py-12 sm:px-8 sm:py-14 lg:py-16 lg:pl-[max(1.5rem,calc((100vw-88rem)/2+2rem))] lg:pr-12" style={{ background: PAPER }}>
+    <section className="relative overflow-hidden" style={{ fontFamily: FONT, background: NAVY_DEEP }}>
+      {/* La photo occupe le bord droit ; un dégradé profond la ramène vers le
+          texte à gauche, comme sur la maquette BLOC 1. */}
+      <div aria-hidden className="absolute inset-0">
+        <div className="absolute inset-y-0 right-0 w-full lg:w-[66%]">
+          <Image
+            src="/specialites/anesthesie/hero-bloc.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[58%_center]"
+          />
+        </div>
+        <div
+          className="absolute inset-0 lg:hidden"
+          style={{ background: 'linear-gradient(180deg, rgba(8,18,43,0.94) 0%, rgba(8,18,43,0.86) 50%, rgba(8,18,43,0.96) 100%)' }}
+        />
+        <div
+          className="absolute inset-0 hidden lg:block"
+          style={{
+            background:
+              'linear-gradient(90deg, #08122B 0%, #08122B 28%, rgba(8,18,43,0.94) 40%, rgba(8,18,43,0.66) 53%, rgba(8,18,43,0.22) 68%, rgba(8,18,43,0.45) 100%)',
+          }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-40"
+          style={{ background: 'linear-gradient(180deg, rgba(8,18,43,0) 0%, rgba(8,18,43,0.85) 100%)' }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-[88rem] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-10">
           <Reveal>
-            <p className="inline-flex rounded-full px-4 py-1.5 text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ background: '#FDEDEF', color: RED }}>
+            <p
+              className="inline-flex rounded-full px-4 py-1.5 text-[11.5px] font-black uppercase tracking-[0.16em] text-white"
+              style={{ background: RED_DEEP }}
+            >
               EVC 2026
             </p>
-            <h1 className="mt-6 text-[2.2rem] font-black leading-[1.06] tracking-tight sm:text-[3rem]" style={{ color: NAVY, letterSpacing: '-0.03em' }}>
+
+            <h1
+              className="mt-6 text-[2.3rem] font-black leading-[1.02] tracking-tight text-white sm:text-[3.1rem] lg:text-[3.4rem]"
+              style={{ letterSpacing: '-0.035em' }}
+            >
               Préparation EVC
               <br />
-              <span style={{ color: RED }}>Anesthésie-Réanimation</span>
+              <span style={{ color: '#E8324A' }}>Anesthésie-Réanimation</span>
             </h1>
-            <p className="mt-6 max-w-lg text-[15px] leading-relaxed sm:text-[15.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+
+            <p className="mt-6 max-w-xl text-[15.5px] leading-relaxed sm:text-[17px]" style={{ color: WHITE_SOFT, fontFamily: FONT_BODY }}>
               Une préparation complète, adaptée à votre voie,
               <br className="hidden sm:block" />
               {' '}pour comprendre, s’entraîner et réussir les EVC.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-5 border-y py-6" style={{ borderColor: LINE }}>
+            <div className="mt-9 flex flex-wrap gap-x-10 gap-y-5 border-y py-6" style={{ borderColor: WHITE_LINE }}>
               {HERO_CHIFFRES.map((c) => (
                 <div key={c.fort}>
-                  <p className="text-[19px] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.02em' }}>{c.fort}</p>
-                  <p className="mt-2 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{c.suite}</p>
+                  <p className="text-[20px] font-black leading-none tabular-nums text-white" style={{ letterSpacing: '-0.02em' }}>{c.fort}</p>
+                  <p className="mt-2 text-[12.5px]" style={{ color: WHITE_MUTED, fontFamily: FONT_BODY }}>{c.suite}</p>
                 </div>
               ))}
             </div>
@@ -84,49 +127,44 @@ function Hero() {
               <Link
                 href="#formules"
                 className="inline-flex items-center justify-center rounded-lg px-7 py-3.5 text-[14.5px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
-                style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 40px -20px rgba(139,14,34,0.6)' }}
+                style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 22px 45px -20px rgba(192,17,46,0.75)' }}
               >
                 Découvrir les formules
               </Link>
               <Link
                 href="#programme"
                 className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
-                style={{ border: `1.5px solid ${RED}`, color: RED }}
+                style={{ color: RED }}
               >
                 Voir le programme
               </Link>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-5 rounded-xl px-6 py-5 sm:grid-cols-2 sm:divide-x" style={{ background: '#FFFFFF', border: `1px solid ${LINE}`, borderColor: LINE }}>
+            <div
+              className="mt-9 grid grid-cols-1 gap-5 rounded-xl px-6 py-5 sm:grid-cols-2 sm:divide-x"
+              style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid ${WHITE_LINE}`, borderColor: WHITE_LINE }}
+            >
               {HERO_GARANTIES.map((g, i) => (
-                <div key={g.fort} className={i > 0 ? 'sm:pl-6' : undefined} style={{ borderColor: LINE_SOFT }}>
-                  <p className="text-[13px] font-black" style={{ color: NAVY }}>{g.fort}</p>
-                  <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{g.suite}</p>
+                <div key={g.fort} className={i > 0 ? 'sm:pl-6' : undefined} style={{ borderColor: WHITE_LINE }}>
+                  <p className="text-[13px] font-black text-white">{g.fort}</p>
+                  <p className="mt-1 text-[12.5px]" style={{ color: WHITE_MUTED, fontFamily: FONT_BODY }}>{g.suite}</p>
                 </div>
               ))}
             </div>
           </Reveal>
-        </div>
 
-        <div className="relative min-h-[320px] lg:min-h-[660px]">
-          <Image
-            src="/specialites/anesthesie/hero-bloc.jpg"
-            alt="Médecin anesthésiste-réanimateur au bloc opératoire, devant les moniteurs de surveillance"
-            fill
-            priority
-            sizes="(max-width:1024px) 100vw, 54vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-x-5 bottom-6 sm:inset-x-10 sm:bottom-10 lg:right-16">
-            <p
-              className="rounded-xl px-6 py-5 text-[15px] leading-snug text-white sm:text-[17px]"
-              style={{ background: 'rgba(9,18,38,0.78)', backdropFilter: 'blur(6px)' }}
-            >
-              Une préparation complète, adaptée à votre voie,
-              <br />
-              <span className="font-black">pour comprendre, s’entraîner et réussir les EVC.</span>
-            </p>
-          </div>
+          <Reveal delay={0.12} className="hidden lg:block">
+            <Image
+              src="/homepage/hero-plateforme.png"
+              alt="Plateforme Major ECN — tableau de bord et session de QCM d’anesthésie sur ordinateur et mobile"
+              width={1504}
+              height={914}
+              priority
+              sizes="42vw"
+              className="w-full"
+              style={{ filter: 'drop-shadow(0 50px 90px rgba(0,0,0,0.55))' }}
+            />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -172,45 +210,45 @@ function Laureats() {
           <span aria-hidden className="mx-auto mt-5 block h-[2px] w-16" style={{ background: RED }} />
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.35fr)]">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,0.95fr)_minmax(0,1.6fr)]">
           {LAUREATS.map((l, i) => (
             <Reveal key={l.nom} delay={i * 0.08}>
               <figure
                 className="flex h-full flex-col rounded-[1.25rem] bg-white p-7 sm:p-8"
                 style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -58px rgba(15,31,77,0.55)' }}
               >
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-4">
                   <Image
                     src={l.photo}
                     alt={`${l.nom}, ${l.tag}`}
                     width={320}
                     height={320}
-                    className="h-20 w-20 shrink-0 rounded-full object-cover"
+                    className="h-16 w-16 shrink-0 rounded-full object-cover"
                   />
                   <figcaption className="min-w-0">
-                    <p className="text-[17px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{l.nom}</p>
-                    <p className="mt-2 inline-flex rounded-full px-3 py-1 text-[11px] font-black" style={{ border: `1px solid rgba(192,17,46,0.3)`, color: RED }}>
+                    <p className="text-[16px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{l.nom}</p>
+                    <p className="mt-2 inline-flex rounded-full px-2.5 py-1 text-[10.5px] font-black" style={{ border: `1px solid rgba(192,17,46,0.3)`, color: RED }}>
                       {l.tag}
                     </p>
-                    <p className="mt-2 text-[12.5px] font-black" style={{ color: NAVY_SOFT }}>{l.titre}</p>
+                    <p className="mt-2 text-[12px] font-black" style={{ color: NAVY_SOFT }}>{l.titre}</p>
                   </figcaption>
                 </div>
-                <span aria-hidden className="mt-6 block h-[2px] w-10" style={{ background: RED }} />
-                <blockquote className="mt-5 flex-1 text-[14.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
-                  « {l.citation} »
+                <blockquote className="mt-7 flex flex-1 items-center gap-4">
+                  <span aria-hidden className="-mt-2 select-none text-[42px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
+                  <span className="text-[14.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>{l.citation}</span>
                 </blockquote>
               </figure>
             </Reveal>
           ))}
 
-          <Reveal delay={0.16}>
+          <Reveal delay={0.16} className="lg:col-span-2 xl:col-span-1">
             <figure
               className="flex h-full flex-col gap-6 rounded-[1.25rem] bg-white p-7 sm:flex-row sm:gap-7 sm:p-8"
               style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -58px rgba(15,31,77,0.55)' }}
             >
               {/* Ratio fixe : laissé libre, la colonne s'étirait sur toute la
                   hauteur de la carte et recadrait la photo en bandeau étroit. */}
-              <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl sm:aspect-[4/5] sm:w-44 sm:self-start">
+              <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl sm:aspect-[4/5] sm:w-44 sm:self-start xl:w-48">
                 <Image
                   src="/specialites/anesthesie/dr-fouad-kobercy.jpg"
                   alt="Dr Fouad Kobercy, lauréat des EVC d’anesthésie-réanimation"
@@ -228,7 +266,7 @@ function Laureats() {
                 </p>
               </figcaption>
 
-              <div className="mt-7 grid grid-cols-1 gap-7 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
+              <div className="mt-6">
                 <ol className="relative">
                   {PARCOURS.map((p, i) => (
                     <li key={p.fort} className="relative flex gap-4 pb-6 last:pb-0">
@@ -255,9 +293,12 @@ function Laureats() {
                   ))}
                 </ol>
 
-                <blockquote className="border-l pl-6 text-[13.5px] leading-relaxed" style={{ borderColor: LINE, color: INK, fontFamily: FONT_BODY }}>
-                  « Major ECN m’a appris à disséquer l’énoncé, identifier les mots-clés, structurer mes réponses
-                  et organiser mon temps. Quelques mois plus tard, j’étais 4e au classement. »
+                <blockquote className="flex gap-4 border-t pt-5" style={{ borderColor: LINE }}>
+                  <span aria-hidden className="-mt-2 select-none text-[42px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
+                  <span className="text-[13.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                    Major ECN m’a appris à disséquer l’énoncé, identifier les mots-clés, structurer mes réponses
+                    et organiser mon temps. Quelques mois plus tard, j’étais 4e au classement.
+                  </span>
                 </blockquote>
               </div>
               </div>
@@ -372,7 +413,10 @@ function Plateforme() {
         </div>
 
         <Reveal delay={0.12} className="mt-12">
-          <div className="grid grid-cols-1 gap-8 border-t pt-9 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6" style={{ borderColor: LINE }}>
+          <div
+            className="grid grid-cols-1 gap-8 border-t pt-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,0.95fr)] xl:gap-7"
+            style={{ borderColor: LINE }}
+          >
             {PLATEFORME_DETAILS.map((d) => (
               <div key={d.titre}>
                 <p className="whitespace-pre-line text-[14.5px] font-black uppercase leading-tight tracking-[0.04em]" style={{ color: d.accent }}>{d.titre}</p>
@@ -388,31 +432,38 @@ function Plateforme() {
               </div>
             ))}
 
-            <div>
-              <p className="text-[14.5px] font-black uppercase leading-tight tracking-[0.04em]" style={{ color: NAVY }}>
-                Cours en direct
-                <br />
-                avec des médecins enseignants
-              </p>
-              <div className="mt-4 overflow-hidden rounded-xl" style={{ border: `1px solid ${LINE}` }}>
+            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-1">
+              <div
+                className="overflow-hidden rounded-[1.15rem]"
+                style={{ border: `1px solid ${LINE}`, boxShadow: '0 34px 80px -60px rgba(15,31,77,0.65)' }}
+              >
+                <p
+                  className="px-5 py-3.5 text-center text-[12.5px] font-black uppercase leading-snug tracking-[0.05em] text-white"
+                  style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
+                >
+                  Cours en direct
+                  <br />
+                  avec des médecins enseignants
+                </p>
                 <Image
                   src="/specialites/anesthesie/enseignant.jpg"
                   alt="Médecin enseignant Major ECN en service hospitalier"
                   width={1100}
                   height={858}
                   className="w-full"
-                  sizes="(max-width:1024px) 100vw, 24vw"
+                  sizes="(max-width:1280px) 60vw, 26vw"
                 />
               </div>
-              <ul className="mt-4 space-y-2">
-                {COURS_DIRECT.map((it) => (
-                  <li key={it} className="flex items-start gap-3" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                    <Puce color={RED} className="mt-[9px]" />
-                    <span className="text-[12.5px] leading-snug">{it}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
+
+            <ul className="space-y-3 sm:col-span-2 lg:col-span-1 xl:col-span-1">
+              {COURS_DIRECT.map((it) => (
+                <li key={it} className="flex items-start gap-3" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  <Puce color={RED} className="mt-[9px]" />
+                  <span className="text-[12.5px] leading-snug">{it}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </Reveal>
 
@@ -456,7 +507,7 @@ const AVEC = [
 function GagnezDuTemps() {
   return (
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
           <h2 className="text-[1.9rem] font-black leading-[1.12] tracking-tight sm:text-[2.6rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
             Gagnez du temps. Maximisez <span style={{ color: RED_DEEP }}>vos chances.</span>
@@ -468,7 +519,7 @@ function GagnezDuTemps() {
           </p>
         </Reveal>
 
-        <div className="relative mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-16">
+        <div className="relative mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12">
           <Reveal>
             <div className="h-full rounded-[1.25rem] px-7 py-8 sm:px-9" style={{ background: '#FDF6F7', border: '1px solid rgba(192,17,46,0.16)' }}>
               <p className="text-[15px] font-black uppercase leading-snug tracking-[0.03em]" style={{ color: RED_DEEP }}>
@@ -476,14 +527,24 @@ function GagnezDuTemps() {
                 <br />
                 c’est risquer de se disperser
               </p>
-              <ul className="mt-6">
-                {SANS.map((t) => (
-                  <li key={t} className="flex items-start gap-3.5 border-b py-3.5 first:pt-0 last:border-b-0 last:pb-0" style={{ borderColor: 'rgba(192,17,46,0.12)' }}>
-                    <Puce color={RED} />
-                    <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{t}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-6 grid grid-cols-1 items-center gap-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-7">
+                <ul>
+                  {SANS.map((t) => (
+                    <li key={t} className="flex items-start gap-3.5 border-b py-3.5 first:pt-0 last:border-b-0 last:pb-0" style={{ borderColor: 'rgba(192,17,46,0.12)' }}>
+                      <Puce color={RED} />
+                      <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Image
+                  src="/specialites/anesthesie/preparer-seul.webp"
+                  alt="Candidat submergé par des supports de révision éparpillés"
+                  width={760}
+                  height={725}
+                  sizes="(max-width:1280px) 60vw, 200px"
+                  className="mx-auto w-[min(240px,70%)] xl:w-[200px]"
+                />
+              </div>
             </div>
           </Reveal>
 
@@ -502,14 +563,24 @@ function GagnezDuTemps() {
                 <br />
                 vous avancez avec une méthode
               </p>
-              <ul className="mt-6">
-                {AVEC.map((t) => (
-                  <li key={t} className="flex items-start gap-3.5 border-b py-3.5 first:pt-0 last:border-b-0 last:pb-0" style={{ borderColor: 'rgba(22,121,60,0.14)' }}>
-                    <Puce color={GREEN} />
-                    <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{t}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-6 grid grid-cols-1 items-center gap-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-7">
+                <ul>
+                  {AVEC.map((t) => (
+                    <li key={t} className="flex items-start gap-3.5 border-b py-3.5 first:pt-0 last:border-b-0 last:pb-0" style={{ borderColor: 'rgba(22,121,60,0.14)' }}>
+                      <Puce color={GREEN} />
+                      <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Image
+                  src="/specialites/anesthesie/avec-major-ecn.webp"
+                  alt="Anesthésiste-réanimateur devant un poste de surveillance, préparation structurée"
+                  width={760}
+                  height={679}
+                  sizes="(max-width:1280px) 60vw, 200px"
+                  className="mx-auto w-[min(250px,72%)] xl:w-[210px]"
+                />
+              </div>
             </div>
           </Reveal>
         </div>
@@ -1206,12 +1277,12 @@ function CorpsFaq({ blocs }: { blocs: BlocFaq[] }) {
 }
 
 function FaqSection() {
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <p className="inline-flex rounded-full px-5 py-2 text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ background: '#FDEDEF', color: RED }}>
+          <p className="text-[12.5px] font-black uppercase tracking-[0.18em]" style={{ color: RED }}>
             Questions fréquentes
           </p>
           <h2 className="mt-5 text-[1.9rem] font-black leading-[1.12] tracking-tight sm:text-[2.4rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
@@ -1222,7 +1293,7 @@ function FaqSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 space-y-3">
+        <div className="mt-10 space-y-3">
           {FAQ.map((f, i) => {
             const ouvert = open === i;
             return (
@@ -1235,7 +1306,7 @@ function FaqSection() {
                     className="flex w-full items-center gap-4 px-5 py-4 text-left sm:px-6"
                   >
                     <span
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-black tabular-nums"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[12px] font-black tabular-nums"
                       style={{ background: ouvert ? RED : PAPER, color: ouvert ? '#FFFFFF' : INK_MUTED, border: `1px solid ${ouvert ? RED : LINE}` }}
                     >
                       {i + 1}
@@ -1243,14 +1314,16 @@ function FaqSection() {
                     <span className="flex-1 text-[14.5px] font-black leading-snug tracking-tight" style={{ color: ouvert ? RED : NAVY }}>{f.q}</span>
                     <span aria-hidden className="shrink-0 text-[15px] font-black" style={{ color: ouvert ? RED : INK_MUTED }}>{ouvert ? '−' : '+'}</span>
                   </button>
-                  {ouvert && (
-                    <div className="px-5 pb-5 pl-16 sm:px-6 sm:pl-[4.5rem]">
-                      <CorpsFaq blocs={f.blocs} />
-                      <p className="mt-5 border-t pt-4 text-[13.5px] font-black leading-relaxed" style={{ borderColor: LINE_SOFT, color: RED }}>
-                        {f.chute}
-                      </p>
+                  <div className={'grid transition-[grid-template-rows] duration-300 ease-out ' + (ouvert ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
+                    <div className="min-h-0 overflow-hidden">
+                      <div className="px-5 pb-5 pl-16 sm:px-6 sm:pl-[4.5rem]">
+                        <CorpsFaq blocs={f.blocs} />
+                        <p className="mt-5 border-t pt-4 text-[13.5px] font-black leading-relaxed" style={{ borderColor: LINE_SOFT, color: RED }}>
+                          {f.chute}
+                        </p>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </Reveal>
             );
