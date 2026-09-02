@@ -8,6 +8,7 @@ import {
   Star, Target, Users,
 } from 'lucide-react';
 import { GUIDE_FAQ, GUIDE_FEATURES, GUIDE_TESTIMONIALS } from '@/lib/data/guide-data';
+import { DrapeauOrigine } from './drapeau-origine';
 
 const FEATURE_ICONS: Record<string, typeof Target> = {
   target: Target,
@@ -72,7 +73,7 @@ export function GuideLandingContent() {
                     </div>
                   )}
                   <div>
-                    <p className="text-[13px] font-bold text-[#1A2233]">{t.name}</p>
+                    <p className="text-[13px] font-bold text-[#1A2233]">{t.name} <DrapeauOrigine nom={t.name} /></p>
                     <p className="text-[11px] text-[#9AA1AE]">{t.specialty}</p>
                     <p className="text-[11px] text-[#9AA1AE]">{t.year}</p>
                   </div>

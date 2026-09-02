@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { DrapeauOrigine } from './drapeau-origine';
 
 const BORDEAUX = '#6B1A2A';
 const BORDEAUX_DEEP = '#4D121E';
@@ -1464,7 +1465,6 @@ const TT_CARDS = [
     quote: 'Les cours sont complets, les QCM très proches de l’examen et les dossiers corrigés en profondeur. J’ai gagné en confiance et progressé tout au long de l’année.',
     name: 'Dr Sandrine Linda SA’A TALLA',
     country: 'Cameroun',
-    flag: '🇨🇲',
     year: 'Lauréat EVC',
     initials: 'SS',
   },
@@ -1475,8 +1475,7 @@ const TT_CARDS = [
     accent: '#6D28D9',
     quote: 'Les fiches étaient claires, les dossiers bien construits et plusieurs cas étudiés sont tombés le jour J. Je recommande vivement Major ECN.',
     name: 'Dr Samy KABAWEH',
-    country: 'Tunisie',
-    flag: '🇹🇳',
+    country: 'Syrie',
     year: 'Lauréat EVC',
     initials: 'SK',
   },
@@ -1488,7 +1487,6 @@ const TT_CARDS = [
     quote: 'La formation m’a permis de progresser en méthodologie, rapidité et confiance en moi. Un accompagnement précieux jusqu’aux EVC.',
     name: 'Dr Monica WAITZFELDER',
     country: 'Brésil',
-    flag: '🇧🇷',
     year: 'Lauréate EVC',
     initials: 'MW',
   },
@@ -1822,7 +1820,7 @@ export function TestimonialsTextSection() {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-extrabold leading-tight" style={{ color: TT_NAVY }}>{c.name}</p>
                       <p className="mt-0.5 flex items-center gap-1 text-xs" style={{ color: TT_INK_SOFT }}>
-                        <span aria-hidden>{c.flag}</span> {c.country}
+                        <DrapeauOrigine nom={c.name} /> {c.country}
                       </p>
                     </div>
                     <span className="rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ background: c.tint, color: c.accent }}>
@@ -1877,8 +1875,6 @@ const TV_CARDS = [
     spec: 'Radiodiagnostic & imagerie médicale',
     accent: TV_RED,
     name: "Dr Sami KABAWEH",
-    country: "",
-    flag: "",
     year: "Lauréat EVC",
     duration: '',
     quote: 'Une préparation qui m’a fait franchir un cap : méthode claire, fiches synthétiques et examens blancs proches du jour J.',
@@ -1890,8 +1886,6 @@ const TV_CARDS = [
     spec: 'Anesthésie réanimation',
     accent: TV_RED,
     name: "Dr Karim KHIAREDDINE",
-    country: "",
-    flag: "",
     year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Dans une spécialité exigeante, la méthodologie Major ECN m’a permis de structurer mes révisions et d’aborder le concours avec sérénité.',
@@ -1903,8 +1897,6 @@ const TV_CARDS = [
     spec: 'Endocrinologie & métabolisme',
     accent: TV_RED,
     name: "Dr Ely Cheikh SY",
-    country: "",
-    flag: "",
     year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Reprendre confiance après un échec — et réussir les EVC avec de brillants résultats grâce à un accompagnement structuré.',
@@ -1916,8 +1908,6 @@ const TV_CARDS = [
     spec: 'Gériatrie',
     accent: TV_RED,
     name: "Dr Ahmed SIFAOUI",
-    country: "",
-    flag: "",
     year: "Lauréat EVC 2025",
     duration: '',
     quote: 'Un accompagnement humain et exigeant, des supports clairs et un suivi qui fait toute la différence dans la durée.',
@@ -1929,8 +1919,6 @@ const TV_CARDS = [
     spec: 'Chirurgie viscérale & digestive',
     accent: TV_RED,
     name: "Dr Ahena HAROUN",
-    country: "",
-    flag: "",
     year: "Lauréate EVC 2024",
     duration: '',
     quote: 'Major ECN a structuré toute ma préparation : la méthode, les cas cliniques et les corrections détaillées font la différence.',
@@ -2004,7 +1992,7 @@ function VideoTestimonialCard({ card }: { card: TVCard }) {
         )}
       </div>
       <div className="flex-1 p-3">
-        <p className="text-[14px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{card.name}</p>
+        <p className="text-[14px] font-extrabold leading-tight" style={{ color: TV_NAVY }}>{card.name} <DrapeauOrigine nom={card.name} /></p>
         <p className="mt-0.5 text-[12px] font-bold" style={{ color: TV_RED }}>{card.spec}</p>
       </div>
     </article>
@@ -2244,7 +2232,7 @@ export function FeaturedTestimonialsSection() {
                     <FeaturedAvatar slug={t.slug} initials={t.initials} ext={t.photoExt} />
 
                     <div className="text-center">
-                      <p className="text-lg font-extrabold leading-tight" style={{ color: FT_NAVY }}>{t.name}</p>
+                      <p className="text-lg font-extrabold leading-tight" style={{ color: FT_NAVY }}>{t.name} <DrapeauOrigine nom={t.name} /></p>
                       <p className="mt-1 text-sm font-bold" style={{ color: FT_RED }}>{t.title}</p>
                       <span
                         className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
@@ -2288,7 +2276,7 @@ export function FeaturedTestimonialsSection() {
                     {/* Signature en bas */}
                     <div className="mt-6 flex items-center justify-between gap-3 border-t pt-5" style={{ borderColor: '#ECECEF' }}>
                       <p className="text-sm font-bold italic" style={{ color: FT_BURGUNDY }}>
-                        — {t.name}, lauréat·e des EVC {t.spec}
+                        — {t.name} <DrapeauOrigine nom={t.name} />, lauréat·e des EVC {t.spec}
                       </p>
                       <span
                         className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"

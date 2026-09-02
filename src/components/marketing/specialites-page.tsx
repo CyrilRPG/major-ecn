@@ -18,6 +18,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { DrapeauOrigine } from './drapeau-origine';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -801,7 +802,7 @@ function MultiSpecTestimonials() {
                   <Image src={t.photo} alt={`${t.nom}, ${t.spec}`} width={112} height={112}
                     className="h-12 w-12 shrink-0 rounded-full object-cover" />
                   <span className="min-w-0">
-                    <span className="block truncate text-[13.5px] font-black" style={{ color: NAVY }}>{t.nom}</span>
+                    <span className="flex items-center gap-1.5"><span className="truncate text-[13.5px] font-black" style={{ color: NAVY }}>{t.nom}</span><DrapeauOrigine nom={t.nom} /></span>
                     <span className="mt-1 inline-flex rounded-full px-2.5 py-0.5 text-[10.5px] font-bold" style={{ background: '#FDEDEF', color: RED }}>{t.titre}</span>
                     <span className="mt-1 block text-[12px] font-bold" style={{ color: RED }}>{t.spec}</span>
                   </span>

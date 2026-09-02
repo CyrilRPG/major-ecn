@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Algérie"><title>Algérie</title><rect width="320" height="480" fill="#006233"/><rect x="320" width="320" height="480" fill="#fff"/>
+  <mask id="mdz"><rect width="640" height="480" fill="#fff"/><circle cx="354" cy="240" r="92" fill="#000"/></mask>
+  <circle cx="320" cy="240" r="112" fill="#D21034" mask="url(#mdz)"/><polygon points="372.00,182.00 385.02,222.08 427.16,222.08 393.07,246.85 406.09,286.92 372.00,262.15 337.91,286.92 350.93,246.85 316.84,222.08 358.98,222.08" fill="#D21034"/></svg>

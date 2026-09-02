@@ -8,6 +8,7 @@ import {
   BORDER, GRAD_RED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
   RED_GRADIENT, Reveal,
 } from './home-ui';
+import { DrapeauOrigine } from '../drapeau-origine';
 
 /* ============================================================
    BLOC 2 — TÉMOIGNAGES VIDÉO
@@ -124,7 +125,9 @@ function TemoinCard({ t }: { t: Temoin }) {
 
       <div className="flex flex-1 flex-col p-4">
         <div>
-          <p className="text-[14.5px] font-black leading-tight" style={{ color: NAVY }}>{t.name}</p>
+          <p className="text-[14.5px] font-black leading-tight" style={{ color: NAVY }}>
+            {t.name} <DrapeauOrigine nom={t.name} />
+          </p>
           <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>{t.spec}</p>
           {t.voie && <p className="text-[12.5px] font-extrabold" style={{ color: RED }}>{t.voie}</p>}
           <p className="text-[12.5px] font-extrabold" style={{ color: RED_DEEP }}>{t.laureat}</p>
@@ -218,7 +221,7 @@ export function TemoignagesSection() {
                     &ldquo;Les supports et explications Major ECN me servent encore aujourd&rsquo;hui dans ma pratique hospitalière.&rdquo;
                   </blockquote>
                   <p className="mt-4 text-[14px] font-black" style={{ color: NAVY }}>
-                    Dr Khaoula Farah <span className="font-bold" style={{ color: INK_SOFT }}>– Médecine générale</span>
+                    Dr Khaoula Farah <DrapeauOrigine nom="Dr Khaoula Farah" /> <span className="font-bold" style={{ color: INK_SOFT }}>– Médecine générale</span>
                   </p>
                   <p className="text-[13px] font-extrabold" style={{ color: RED }}>Lauréate EVC</p>
                 </div>

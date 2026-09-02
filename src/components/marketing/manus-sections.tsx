@@ -11,6 +11,7 @@ import {
   ShieldCheck, Sparkles, Star, Target, TrendingUp, User, Users, Zap,
 } from 'lucide-react';
 import { FaqAccordion, FaqSidebar } from './faq-accordion';
+import { DrapeauOrigine } from './drapeau-origine';
 
 // Dégradés volontairement saturés et étendus pour des titres qui claquent.
 const TRI = 'bg-gradient-to-r from-[#6B1A2A] via-[#3B82F6] to-[#14B8A6] bg-clip-text text-transparent';
@@ -501,7 +502,7 @@ export function TemoignagesSection() {
             >
               <VideoThumb name={t.nom} duration={t.duration} small />
               <div className="p-4">
-                <p className="text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{t.nom}</p>
+                <p className="text-sm font-black text-[#2D2D2D]" style={{ fontFamily: JAKARTA }}>{t.nom} <DrapeauOrigine nom={t.nom} /></p>
                 <p className="text-xs text-[#7A7A7A]" style={{ fontFamily: MANROPE }}>{t.role}</p>
                 <p className="mt-2 text-xs italic leading-relaxed text-[#4A5568]" style={{ fontFamily: MANROPE }}>
                   « {t.citation} »
@@ -562,7 +563,7 @@ function VideoPlayer({
       {featured && (
         <div className="grid gap-6 bg-[#0F0F10] p-6 text-white sm:grid-cols-[1.4fr_1fr] sm:p-8 lg:p-10">
           <div>
-            <p className="text-xl font-black sm:text-2xl" style={{ fontFamily: JAKARTA }}>{name}</p>
+            <p className="text-xl font-black sm:text-2xl" style={{ fontFamily: JAKARTA }}>{name} <DrapeauOrigine nom={name} taille={11} /></p>
             <p className="text-sm font-medium" style={{ color: specColor, fontFamily: MANROPE }}>{role}</p>
             <div className="mt-3 flex items-center gap-1 text-[#F59E0B]">
               {Array.from({ length: 5 }).map((_, k) => (<Star key={k} className="h-4 w-4 fill-current" />))}

@@ -7,6 +7,7 @@ import { Reveal } from './reveal';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
+import { DrapeauOrigine } from './drapeau-origine';
 
 /**
  * Page spécialité — EVC Chirurgie orthopédique & traumatologique.
@@ -595,7 +596,7 @@ function Laureats() {
                 />
                 <div className="mt-5 flex flex-1 flex-col sm:mt-0">
                   <figcaption>
-                    <p className="text-[19px] font-black tracking-tight" style={{ color: RED_DEEP }}>{l.nom}</p>
+                    <p className="text-[19px] font-black tracking-tight" style={{ color: RED_DEEP }}>{l.nom} <DrapeauOrigine nom={l.nom} taille={11} /></p>
                     <p className="mt-1.5 text-[13.5px] font-black" style={{ color: NAVY }}>{l.titre}</p>
                     <p className="mt-0.5 text-[13px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{l.spec}</p>
                   </figcaption>

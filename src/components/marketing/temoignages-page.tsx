@@ -12,6 +12,7 @@ import {
   Play, Quote, ShieldCheck, Stethoscope, Trophy, Users,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { DrapeauOrigine } from './drapeau-origine';
 import { FEATURED_TESTIMONIES, type Featured } from '@/lib/data/featured-testimonies';
 
 const RED = '#C0112E';
@@ -129,7 +130,9 @@ function VideoCard({ v }: { v: RealVideo }) {
         )}
       </div>
       <div className="p-3">
-        <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>{v.name}</p>
+        <p className="text-[14px] font-extrabold leading-tight" style={{ color: NAVY }}>
+          {v.name} <DrapeauOrigine nom={v.name} />
+        </p>
         <p className="mt-0.5 text-[12px] font-bold" style={{ color: RED }}>{v.spec}</p>
       </div>
     </article>
@@ -302,7 +305,9 @@ function WrittenSection() {
                     <span className="break-words">{w.spec}</span>
                   </span>
                 </header>
-                <p className="mt-3 break-words text-[14px] font-extrabold leading-tight sm:text-[14.5px]" style={{ color: NAVY }}>{w.name}</p>
+                <p className="mt-3 break-words text-[14px] font-extrabold leading-tight sm:text-[14.5px]" style={{ color: NAVY }}>
+                  {w.name} <DrapeauOrigine nom={w.name} />
+                </p>
                 <p className="mt-0.5 text-[12px]" style={{ color: INK_SOFT }}>Lauréat des EVC</p>
                 <p className="mt-1 text-[12px]" style={{ color: '#F59E0B' }}>★★★★★</p>
                 <div className="mt-3 flex items-start gap-2">
@@ -364,7 +369,9 @@ function FeaturedCard({ t }: { t: Featured }) {
         <p className="mt-3 text-[10.5px] font-bold uppercase tracking-wider sm:mt-4" style={{ color: RED }}>
           Témoignage à la une
         </p>
-        <p className="mt-1 break-words text-[15px] font-extrabold sm:text-base" style={{ color: NAVY }}>{t.name}</p>
+        <p className="mt-1 break-words text-[15px] font-extrabold sm:text-base" style={{ color: NAVY }}>
+          {t.name} <DrapeauOrigine nom={t.name} />
+        </p>
         <span className="mt-2 inline-flex max-w-full items-center gap-1 break-words rounded-full px-2.5 py-0.5 text-[10.5px] font-bold leading-tight"
           style={{ background: 'white', color: RED, border: `1px solid #F3D9DD`, wordBreak: 'break-word' }}>
           <Trophy className="h-3 w-3 shrink-0" /> <span className="break-words">{t.spec}</span>

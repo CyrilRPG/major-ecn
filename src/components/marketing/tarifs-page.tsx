@@ -8,6 +8,7 @@ import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
+import { DrapeauOrigine } from './drapeau-origine';
 
 /**
  * Page Tarifs — reprise des maquettes templates/tarifs/BLOC 1 → 3.
@@ -810,7 +811,7 @@ function LaureatsSection() {
                   className="h-14 w-14 shrink-0 rounded-full object-cover"
                 />
                 <figcaption>
-                  <p className="text-[14px] font-black tracking-tight" style={{ color: BLUE }}>{l.nom}</p>
+                  <p className="text-[14px] font-black tracking-tight" style={{ color: BLUE }}>{l.nom} <DrapeauOrigine nom={l.nom} /></p>
                   <p className="mt-0.5 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{l.spec}</p>
                   <p className="text-[12.5px] font-bold" style={{ color: RED }}>{l.titre}</p>
                 </figcaption>

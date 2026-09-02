@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Tunisie"><title>Tunisie</title><rect width="640" height="480" fill="#E70013"/><circle cx="320" cy="240" r="145" fill="#fff"/>
+  <mask id="mtn"><rect width="640" height="480" fill="#fff"/><circle cx="352" cy="240" r="80" fill="#000"/></mask>
+  <circle cx="320" cy="240" r="100" fill="#E70013" mask="url(#mtn)"/><polygon points="352.00,188.00 363.67,223.93 401.45,223.93 370.89,246.14 382.56,282.07 352.00,259.86 321.44,282.07 333.11,246.14 302.55,223.93 340.33,223.93" fill="#E70013"/></svg>

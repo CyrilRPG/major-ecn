@@ -19,6 +19,7 @@ import {
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
+import { DrapeauOrigine } from './drapeau-origine';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
   essentielle: 'essentielle',
@@ -428,7 +429,7 @@ export function FormulePageContent({ variant, specialite }: { variant: Variant; 
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name}</p>
+                    <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name} <DrapeauOrigine nom={t.name} /></p>
                     <p className="text-xs" style={{ color: INK_SOFT }}>{t.spec}</p>
                     <p className="text-xs font-bold" style={{ color: c.color }}>{t.year}</p>
                     <div className="flex gap-0.5 mt-0.5">{[1,2,3,4,5].map(i => <Star key={i} className="h-2.5 w-2.5" style={{ color: '#F59E0B' }} fill="currentColor" />)}</div>
@@ -503,7 +504,7 @@ function SocialProofCard({ variant, accentLight }: { variant: Variant; accentLig
           </div>
           <p className="text-[14px] leading-relaxed text-white">{sp.quote}</p>
           <p className="mt-2 text-[12px] font-bold text-white">
-            {sp.name} · <span className="font-normal" style={{ color: accentLight }}>{sp.role}</span>
+            {sp.name} <DrapeauOrigine nom={sp.name} /> · <span className="font-normal" style={{ color: accentLight }}>{sp.role}</span>
           </p>
         </div>
       </div>

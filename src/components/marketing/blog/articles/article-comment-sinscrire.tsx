@@ -8,6 +8,7 @@ import { ArticleHeader, ArticleFinalCta, ARTICLE_FONT } from '../article-shell';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import type { BlogArticleMeta } from '@/lib/data/blog-articles';
 import { getRelatedArticles } from '@/lib/data/blog-articles';
+import { DrapeauOrigine } from '../../drapeau-origine';
 
 const INTRO_CARDS = [
   { Icon: ListChecks,    bg: '#FFE4E8', fg: '#C0001F', t: 'Conditions d\'inscription', d: 'Qui peut s\'inscrire aux EVC ? Liste A ou liste B : quelles différences et critères d\'éligibilité.' },
@@ -225,7 +226,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
                     className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-[#FFE4E8]"
                   />
                   <div className="min-w-0">
-                    <p className="text-[12px] font-bold leading-tight text-[#1A2233]">{t.name}</p>
+                    <p className="text-[12px] font-bold leading-tight text-[#1A2233]">{t.name} <DrapeauOrigine nom={t.name} /></p>
                     <p className="text-[10px] leading-tight text-[#9AA1AE]">{t.spec}</p>
                   </div>
                 </div>

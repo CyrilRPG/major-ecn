@@ -14,6 +14,7 @@ import {
   Users, Video, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { DrapeauOrigine } from './drapeau-origine';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -570,16 +571,16 @@ function ToolsSection() {
 /* ============ 7. TÉMOIGNAGES ============ */
 function MethodTestimonials() {
   const testis = [
-    { name: 'Dr Samy K.',  spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Samy K.', nomComplet: 'Dr Samy Kabaweh',  spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',      tagBg: '#FCEAEC', tagFg: RED,         Icon: Award,        iconBg: '#FCEAEC', iconFg: RED,
       photo: '/temoignages/drsamy.jpg',
       txt: "La méthodologie m'a permis de comprendre ce que le jury attend réellement. Mes réponses sont maintenant claires et structurées." },
-    { name: 'Dr Faten H.',  spec: 'Lauréate EVC Médecine Générale',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Faten H.', nomComplet: 'Dr Faten Hnania',  spec: 'Lauréate EVC Médecine Générale',       tag: 'Autorisation obtenue', tagBg: '#FCEAEC', tagFg: RED,         Icon: MessageCircle, iconBg: '#FCEAEC', iconFg: RED,
       photo: '/temoignages/drfaten.png',
       txt: "Les corrections détaillées m'ont fait gagner énormément de points. La méthode est claire et efficace." },
-    { name: 'Dr Leila B.',  spec: 'Lauréate EVC Médecine Générale', tag: 'Admise EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Leila B.', nomComplet: 'Dr Leila Bettaieb',  spec: 'Lauréate EVC Médecine Générale', tag: 'Admise EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Users,        iconBg: '#FCEAEC', iconFg: RED,
       photo: '/temoignages/dr-leila-bettaieb.jpg',
       txt: "Grâce à la méthode Major ECN, j'ai appris à prioriser et à gérer mon temps. Résultat : admission dès la première tentative !" },
-    { name: 'Dr Haykel A.', spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
+    { name: 'Dr Haykel A.', nomComplet: 'Dr Haykel Abdelbaki', spec: 'Lauréat EVC Radiologie',     tag: 'Admis EVC',     tagBg: '#FCEAEC', tagFg: RED,         Icon: Heart,        iconBg: '#FCEAEC', iconFg: RED,
       photo: '/temoignages/dr-haykel-abdelbaki.jpg',
       txt: "Les concours blancs sont très proches des épreuves réelles. Une préparation indispensable !" },
   ];
@@ -604,7 +605,7 @@ function MethodTestimonials() {
                     style={{ background: `linear-gradient(135deg, ${RED_DEEP}, ${RED})` }}
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name}</p>
+                    <p className="text-sm font-extrabold" style={{ color: NAVY }}>{t.name} <DrapeauOrigine nom={t.nomComplet} /></p>
                     <p className="text-[11px]" style={{ color: INK_SOFT }}>{t.spec}</p>
                     <span className="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
                       style={{ background: t.tagBg, color: t.tagFg }}>

@@ -7,6 +7,7 @@ import { Reveal } from './reveal';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
+import { DrapeauOrigine } from './drapeau-origine';
 
 /**
  * Page spécialité — EVC Anesthésie-Réanimation.
@@ -226,7 +227,7 @@ function Laureats() {
                     className="h-16 w-16 shrink-0 rounded-full object-cover"
                   />
                   <figcaption className="min-w-0">
-                    <p className="text-[16px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{l.nom}</p>
+                    <p className="text-[16px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{l.nom} <DrapeauOrigine nom={l.nom} /></p>
                     <p className="mt-2 inline-flex rounded-full px-2.5 py-1 text-[10.5px] font-black" style={{ border: `1px solid rgba(192,17,46,0.3)`, color: RED }}>
                       {l.tag}
                     </p>
@@ -260,7 +261,7 @@ function Laureats() {
 
               <div className="flex min-w-0 flex-1 flex-col">
               <figcaption>
-                <p className="text-[19px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>Dr Fouad Kobercy</p>
+                <p className="text-[19px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>Dr Fouad Kobercy <DrapeauOrigine nom="Dr Fouad Kobercy" taille={11} /></p>
                 <p className="mt-2 text-[13.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                   Lauréat des EVC — <span className="font-black" style={{ color: RED }}>4e au classement</span>
                 </p>
