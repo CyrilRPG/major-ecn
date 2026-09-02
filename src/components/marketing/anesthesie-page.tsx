@@ -49,7 +49,7 @@ function Puce({ color, className = 'mt-[10px]' }: { color: string; className?: s
 const HERO_CHIFFRES = [
   { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
   { fort: '+ 9 000', suite: 'médecins accompagnés' },
-  { fort: '46', suite: 'spécialités préparées' },
+  { fort: 'Toutes', suite: 'les spécialités préparées' },
 ];
 
 const HERO_GARANTIES = [
@@ -1304,7 +1304,7 @@ const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
         chiffres: [
           { fort: 'Depuis 2011', suite: 'dans la préparation médicale' },
           { fort: '+ de 9 000', suite: 'médecins accompagnés' },
-          { fort: '46', suite: 'spécialités préparées par Major ECN' },
+          { fort: 'Toutes', suite: 'les spécialités préparées par Major ECN' },
         ],
       },
       {
@@ -1333,7 +1333,7 @@ const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
 const FAQ_STRIP = [
   { fort: 'Depuis 2011', milieu: 'dans la préparation médicale' },
   { fort: '+ de 9 000', milieu: 'médecins accompagnés', suite: 'vers la réussite' },
-  { fort: '46 spécialités', milieu: 'préparées par Major ECN' },
+  { fort: 'Toutes les spécialités', milieu: 'préparées par Major ECN' },
   { fort: 'Plateforme sécurisée', milieu: 'Accessible 24h/24 et 7j/7' },
   { fort: 'Accompagnement', milieu: 'humain et méthodologique', suite: 'pour aller au bout' },
 ];

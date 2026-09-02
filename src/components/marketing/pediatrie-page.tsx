@@ -184,7 +184,7 @@ function Hero() {
 const REPERES = [
   { fort: 'Depuis 2011', suite: 'au service des médecins dans leur réussite' },
   { fort: '+ 9 000 médecins', suite: 'accompagnés au fil des années' },
-  { fort: '46 spécialités', suite: 'préparées par Major ECN' },
+  { fort: 'Toutes les spécialités', suite: 'préparées par Major ECN' },
   { fort: 'Une très grande expérience', suite: 'des EVC pour vous aider à structurer, cibler et optimiser votre préparation' },
 ];
 
