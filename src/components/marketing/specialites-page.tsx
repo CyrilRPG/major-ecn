@@ -466,7 +466,12 @@ const GRID_STRIP = [
 
 /** Spécialités disposant d'une page dédiée (les autres renvoient vers les
     tarifs ou le formulaire de contact). */
-const PAGES_DEDIEES = new Set(['medecine-generale', 'chirurgie-orthopedique-et-traumatologie', 'anesthesie-reanimation']);
+const PAGES_DEDIEES = new Set([
+  'medecine-generale',
+  'chirurgie-orthopedique-et-traumatologie',
+  'anesthesie-reanimation',
+  'cardiologie-et-maladies-vasculaires',
+]);
 
 function SpecCard({ s }: { s: Speciality }) {
   const aSaPage = PAGES_DEDIEES.has(s.slug);
