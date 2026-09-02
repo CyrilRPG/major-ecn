@@ -87,6 +87,7 @@ const HERO_CHIFFRES = [
   { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
   { fort: '+ 9 000', suite: 'médecins accompagnés' },
   { fort: 'Toutes', suite: 'les spécialités préparées' },
+  { fort: '+ 2 000', suite: 'QCM & QROC en cardiologie' },
 ];
 
 function Hero() {
@@ -166,7 +167,7 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="mt-9 flex flex-wrap gap-x-10 gap-y-5 border-t pt-6" style={{ borderColor: WHITE_LINE }}>
+          <div className="mt-9 grid grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 md:flex md:flex-wrap md:gap-x-10" style={{ borderColor: WHITE_LINE }}>
             {HERO_CHIFFRES.map((c) => (
               <div key={c.fort}>
                 <p className="text-[19px] font-black leading-none tabular-nums text-white" style={{ letterSpacing: '-0.02em' }}>{c.fort}</p>
@@ -288,9 +289,9 @@ function TempsPrecieux() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-6 sm:divide-x" style={{ borderColor: LINE }}>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6 md:divide-x" style={{ borderColor: LINE }}>
               {APPUIS.map((a, i) => (
-                <div key={a.titre} className={i > 0 ? 'sm:pl-6' : undefined} style={{ borderColor: LINE }}>
+                <div key={a.titre} className={i > 0 ? 'md:pl-6' : undefined} style={{ borderColor: LINE }}>
                   <p className="text-[13px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: RED }}>{a.titre}</p>
                   <p className="mt-3 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{a.texte}</p>
                 </div>
@@ -516,7 +517,7 @@ function Plateforme() {
               </p>
             </Reveal>
 
-            <div className="mt-7 grid grid-cols-1 items-center gap-8 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+            <div className="mt-7 grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
               <Reveal delay={0.06}>
                 <ul className="space-y-5">
                   {PLATEFORME.map((p) => (
@@ -609,8 +610,8 @@ function Temoignages() {
           </h2>
         </Reveal>
 
-        <div className="mt-11 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)_minmax(0,1fr)]">
-          <Reveal>
+        <div className="mt-11 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)_minmax(0,1fr)]">
+          <Reveal className="md:col-span-2 xl:col-span-1">
             <figure
               className="flex h-full flex-col gap-7 rounded-[1.25rem] bg-white p-7 sm:flex-row sm:p-8"
               style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.55)' }}
@@ -621,7 +622,7 @@ function Temoignages() {
                 width={500}
                 height={498}
                 loading="lazy"
-                className="h-32 w-32 shrink-0 self-center rounded-full object-cover sm:h-36 sm:w-36 sm:self-start"
+                className="h-32 w-32 shrink-0 self-center rounded-full object-cover sm:h-40 sm:w-40 sm:self-start"
               />
               <div className="flex min-w-0 flex-1 flex-col">
                 <blockquote className="flex gap-4">
@@ -944,10 +945,17 @@ function FaqSection({ prixApprofondie }: { prixApprofondie: string }) {
 
 const CTA_POINTS = ['Choisissez votre voie.', 'Choisissez votre niveau d’accompagnement.', 'Nous vous aidons à structurer la suite.'];
 
+const CTA_REPERES = [
+  { fort: '+ 9 000', suite: 'médecins accompagnés' },
+  { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
+  { fort: 'Toutes', suite: 'les spécialités préparées' },
+  { fort: 'Lauréats', suite: 'EVC accompagnés' },
+];
+
 function CtaFinal() {
   return (
     <section style={{ fontFamily: FONT, background: BORDEAUX }}>
-      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:px-8 lg:py-14">
+      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.9fr)_minmax(0,0.85fr)] lg:gap-10 lg:px-8 lg:py-14">
         <div>
           <p className="text-[1.3rem] font-black leading-tight tracking-tight text-white sm:text-[1.65rem]" style={{ letterSpacing: '-0.02em' }}>
             Votre préparation EVC Cardiologie commence ici.
@@ -977,6 +985,15 @@ function CtaFinal() {
             Voir les thématiques
           </Link>
         </div>
+
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-4 border-t pt-6 lg:grid-cols-1 lg:gap-y-3 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0" style={{ borderColor: WHITE_LINE }}>
+          {CTA_REPERES.map((r) => (
+            <li key={r.fort}>
+              <p className="text-[14px] font-black leading-none tabular-nums text-white">{r.fort}</p>
+              <p className="mt-1.5 text-[11.5px] leading-snug" style={{ color: WHITE_MUTED, fontFamily: FONT_BODY }}>{r.suite}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
