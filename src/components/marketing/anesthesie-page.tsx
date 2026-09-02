@@ -714,8 +714,11 @@ function Programme() {
    ============================================================ */
 
 const ESS = { main: '#14254E', deep: '#0F1B3D', soft: '#EEF1F7', line: 'rgba(20,37,78,0.22)', grad: 'linear-gradient(90deg, #0F1B3D 0%, #14254E 100%)', ombre: 'rgba(15,27,61,0.45)' };
-const INT = { main: '#8B0E22', deep: '#6B0F1E', soft: '#F7E9EC', line: 'rgba(139,14,34,0.22)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #8B0E22 100%)', ombre: 'rgba(107,15,30,0.45)' };
-const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #6B0F1E 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
+/** Palette reprise telle quelle de la section Formules de l'accueil
+    (home-formules-section.tsx) : Essentielle en navy, Intensive et
+    Approfondie sur le même rouge de la charte. */
+const INT = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.22)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.45)' };
+const APP = { main: '#C0112E', deep: '#8B0E22', soft: '#FDE8EC', line: 'rgba(192,17,46,0.28)', grad: 'linear-gradient(90deg, #8B0E22 0%, #C0112E 100%)', ombre: 'rgba(139,14,34,0.5)' };
 
 type Pal = typeof ESS;
 
