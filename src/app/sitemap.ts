@@ -35,6 +35,7 @@ const STATIC_ROUTES: {
   { path: '/specialites', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/specialites/medecine-generale', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/chirurgie-orthopedique-et-traumatologie', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/specialites/anesthesie-reanimation', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/temoignages', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
