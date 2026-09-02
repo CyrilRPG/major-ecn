@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ENROLLABLE_SPECIALTIES } from '@/lib/data/enrollable-colleges';
@@ -36,6 +37,11 @@ export function DialogueSpecialite({
   children: React.ReactNode;
 }) {
   const [ouvert, setOuvert] = useState(false);
+  /* Le dialogue est rendu dans <body> par un portail. Sans cela il reste
+     enfant de l'en-tête, dont le backdrop-filter fait office de bloc
+     conteneur pour les descendants en position fixed : « inset-0 » se
+     résolvait alors sur les 96 px de la barre de navigation, et le haut du
+     dialogue sortait de l'écran. */
   const router = useRouter();
   const boite = useRef<HTMLDivElement>(null);
 
@@ -66,7 +72,7 @@ export function DialogueSpecialite({
         {children}
       </button>
 
-      {ouvert && (
+      {ouvert && typeof document !== 'undefined' && createPortal(
         <div
           className="fixed inset-0 z-[100] flex items-end justify-center p-0 sm:items-center sm:p-6"
           style={{ background: 'rgba(9,18,38,0.55)', backdropFilter: 'blur(3px)' }}
@@ -132,7 +138,8 @@ export function DialogueSpecialite({
               , nous préparons l’ensemble des spécialités des EVC.
             </p>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
