@@ -133,7 +133,7 @@ export const FEATURED_TESTIMONIES: Featured[] = [
     spec: 'Anesthésie-Réanimation',
     role: 'Lauréate des EVC',
     photo: '/temoignages/dr-amelie-lamure.jpg',
-    quote: "Une équipe présente, disponible et impliquée à chaque étape.",
+    quote: "J’ai appris l’anesthésie dans mon pays, avec des protocoles différents de ceux utilisés en France. La préparation m’a permis de reprendre le programme, de mettre à jour mes connaissances selon les recommandations françaises et de travailler la méthodologie des EVC. Le jour de l’épreuve, je savais ce qu’on attendait de moi.",
     paragraphs: [
       "Quand j'ai commencé à préparer les EVC, je me suis vite rendu compte que la difficulté ne venait pas seulement du concours lui-même. Il fallait aussi réussir à tenir dans la durée, garder sa motivation, gérer les moments de doute et continuer à avancer malgré la fatigue et les contraintes du quotidien.",
       "Avant de rejoindre Major ECN, j'avais souvent l'impression d'être seule face à cette montagne. Je travaillais, je révisais, mais je me demandais constamment si j'étais dans la bonne direction, si je ne passais pas à côté de l'essentiel ou si ma façon de travailler était vraiment adaptée aux attentes des EVC.",

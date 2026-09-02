@@ -466,19 +466,20 @@ const GRID_STRIP = [
 
 /** Spécialités disposant d'une page dédiée (les autres renvoient vers les
     tarifs ou le formulaire de contact). */
-const PAGES_DEDIEES = new Set([
-  'medecine-generale',
-  'chirurgie-orthopedique-et-traumatologie',
-  'anesthesie-reanimation',
-  'cardiologie-et-maladies-vasculaires',
-  'pediatrie',
-  'medecine-d-urgence',
+const PAGES_DEDIEES = new Map<string, string>([
+  ['medecine-generale', '/specialites/medecine-generale'],
+  ['chirurgie-orthopedique-et-traumatologie', '/specialites/chirurgie-orthopedique-et-traumatologie'],
+  ['anesthesie-reanimation', '/specialites/anesthesie-reanimation'],
+  ['cardiologie-et-maladies-vasculaires', '/specialites/cardiologie-et-maladies-vasculaires'],
+  ['pediatrie', '/specialites/pediatrie'],
+  ['medecine-d-urgence', '/specialites/medecine-d-urgence'],
+  ['odontologie', '/specialites/odontologie-chirurgie-dentaire'],
 ]);
 
 function SpecCard({ s }: { s: Speciality }) {
   const aSaPage = PAGES_DEDIEES.has(s.slug);
   const enrollable = aSaPage || specialtyByName(s.name) != null;
-  const href = aSaPage ? `/specialites/${s.slug}` : enrollable ? '/tarifs' : '/contact';
+  const href = PAGES_DEDIEES.get(s.slug) ?? (enrollable ? '/tarifs' : '/contact');
   return (
     <Link href={href}
       className="group flex h-full flex-col rounded-[1.1rem] bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
@@ -512,8 +513,15 @@ function SpecialitesGrid() {
   }, [q, famille]);
 
   const cherche = normaliser(q.trim()).length >= 2 || famille !== 'Toutes';
-  const visibles = cherche || tout ? filtrees : filtrees.slice(0, SPEC_INITIAL_COUNT);
-  const restantes = SPECIALITIES.slice(SPEC_INITIAL_COUNT).map((s) => s.name);
+  const visibles = useMemo(() => {
+    if (cherche || tout) return filtrees;
+    const debut = filtrees.slice(0, SPEC_INITIAL_COUNT);
+    const dejaVues = new Set(debut.map((s) => s.slug));
+    const dediees = filtrees.filter((s) => PAGES_DEDIEES.has(s.slug) && !dejaVues.has(s.slug));
+    return [...debut, ...dediees];
+  }, [cherche, tout, filtrees]);
+  const montrees = new Set(visibles.map((s) => s.slug));
+  const restantes = SPECIALITIES.filter((s) => !montrees.has(s.slug)).map((s) => s.name);
 
   return (
     <section id="liste" className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: SOFT_BG }}>

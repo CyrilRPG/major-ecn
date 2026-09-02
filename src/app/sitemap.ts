@@ -39,6 +39,7 @@ const STATIC_ROUTES: {
   { path: '/specialites/cardiologie-et-maladies-vasculaires', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/pediatrie', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/medecine-d-urgence', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/specialites/odontologie-chirurgie-dentaire', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/temoignages', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
