@@ -8,11 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
 import { RichText } from './rich-text';
+import { ZoomableImage } from './image-zoom';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 
 type Question = {
   id: string;
   enonce: string;
+  /** Documents de l'énoncé (ECG, radiographie, cliché…). */
+  images?: string[] | null;
   items: (QcmItemView & { is_correct: boolean })[];
 };
 
@@ -101,6 +104,13 @@ export function QcmReviewer({
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichText html={q.enonce} />
         </h2>
+        {(q.images?.length ?? 0) > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {q.images!.map((src) => (
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
+            ))}
+          </div>
+        )}
         <p className="mt-2 text-xs text-(--color-ink-muted)">
           {isQuestionCorrect ? 'Question juste — tes coches correspondent.' : 'Tu avais cette question fausse — revois bien les justifications.'}
         </p>

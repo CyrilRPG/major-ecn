@@ -56,7 +56,7 @@ export default async function ReviewPage({
 
   const { data: questions, error: questionsError } = await admin
     .from('qcm_questions')
-    .select('id, enonce, order_index, qcm_items(id, lettre, enonce, is_correct, justification)')
+    .select('id, enonce, order_index, images, qcm_items(id, lettre, enonce, is_correct, justification, images)')
     .eq('serie_id', session.serie_id)
     .order('order_index');
   if (questionsError) throw questionsError;
@@ -74,6 +74,7 @@ export default async function ReviewPage({
     .map((q) => ({
       id: q.id,
       enonce: q.enonce,
+      images: (q.images ?? []) as string[],
       items: (q.qcm_items ?? [])
         .map((it) => ({
           id: it.id,
@@ -81,6 +82,7 @@ export default async function ReviewPage({
           enonce: it.enonce,
           justification: it.justification,
           is_correct: it.is_correct,
+          images: (it.images ?? []) as string[],
         }))
         .sort((a, b) => a.lettre.localeCompare(b.lettre)),
     }));

@@ -7,12 +7,15 @@ import {
   Award, ArrowRight, Check, CheckCircle2, Eraser, FileText, Loader2,
   Play, Trophy, X,
 } from 'lucide-react';
+import { ZoomableImage } from '@/components/qcm/image-zoom';
 import { saveInterrogationResult, saveSignature } from './actions';
 
 export type IQuestion = {
   id: string;
   enonce: string;
-  items: { id: string; lettre: string; enonce: string; is_correct: boolean }[];
+  /** Documents de l'énoncé (ECG, radiographie, cliché…). */
+  images?: string[] | null;
+  items: { id: string; lettre: string; enonce: string; is_correct: boolean; images?: string[] | null }[];
 };
 
 type Phase = 'intro' | 'quiz' | 'score' | 'sign' | 'done';
@@ -135,6 +138,13 @@ export function InterrogationSession({
         <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-4">
           <p className="text-[10px] font-semibold uppercase tracking-wider text-(--color-ink-muted)">Énoncé</p>
           <h2 className="mt-1 text-base font-semibold leading-snug text-(--color-ink) sm:text-lg">{q.enonce}</h2>
+          {(q.images?.length ?? 0) > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {q.images!.map((src) => (
+                <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
+              ))}
+            </div>
+          )}
         </div>
         <div className="space-y-2">
           {q.items.map((it) => {
@@ -150,7 +160,16 @@ export function InterrogationSession({
                   (selected ? 'bg-[#7C3AED] text-white' : 'bg-(--color-sand-100) text-(--color-ink-soft)')}>
                   {it.lettre}
                 </span>
-                <span className="flex-1 text-sm text-(--color-ink)">{it.enonce}</span>
+                <span className="flex-1 text-sm text-(--color-ink)">
+                  {it.enonce}
+                  {(it.images?.length ?? 0) > 0 && (
+                    <span className="mt-2 flex flex-wrap gap-2">
+                      {it.images!.map((src) => (
+                        <ZoomableImage key={src} src={src} className="h-32 w-32 sm:h-40 sm:w-40" sizes="160px" />
+                      ))}
+                    </span>
+                  )}
+                </span>
               </button>
             );
           })}

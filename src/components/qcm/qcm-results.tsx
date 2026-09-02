@@ -9,9 +9,12 @@ import { LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { RichText } from './rich-text';
+import { ZoomableImage } from './image-zoom';
 import { formatDuration } from '@/lib/utils';
 
-type FailedQuestion = { id: string; enonce: string };
+/** `images` : documents de l'énoncé (ECG, radiographie…). Sans eux, le rappel
+ *  d'une question ratée est illisible. */
+type FailedQuestion = { id: string; enonce: string; images?: string[] | null };
 type Historical = { label: string; pct: number };
 
 export function QcmResults({
@@ -204,6 +207,13 @@ export function QcmResults({
               {failed.map((q) => (
                 <li key={q.id} className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3 text-sm text-(--color-ink)">
                   <RichText html={q.enonce} />
+                  {(q.images?.length ?? 0) > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {q.images!.map((src) => (
+                        <ZoomableImage key={src} src={src} className="h-28 w-28 sm:h-36 sm:w-36" sizes="144px" />
+                      ))}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

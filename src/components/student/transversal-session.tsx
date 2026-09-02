@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
-import { RichTextZoom } from '@/components/qcm/image-zoom';
+import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
 import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
 import { createClient } from '@/lib/supabase/client';
@@ -27,7 +27,10 @@ export type TransversalQuestion = {
    *  et aux boutons Consolider / Renforcement de l'écran de fin. */
   matiere_id: string;
   cours_id: string;
-  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
+  /** Documents de l'énoncé (ECG, radiographie, cliché…). Sans eux, une question
+   *  du type « Vous faites réaliser l'ECG suivant » est intraitable. */
+  images?: string[] | null;
+  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images?: string[] | null }[];
   /** QROC (voie externe) : pas d'items → saisie libre + révéler la réponse +
    *  auto-évaluation Bon/Faux (comme les séances QROC). */
   format?: 'qcm' | 'qroc';
@@ -272,6 +275,13 @@ export function TransversalSession({
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichTextZoom><RichText html={q.enonce} /></RichTextZoom>
         </h2>
+        {(q.images?.length ?? 0) > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {q.images!.map((src) => (
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
+            ))}
+          </div>
+        )}
       </div>
 
       {isQroc ? (
@@ -763,6 +773,13 @@ function CorrectionsView({
               </details>
             )}
             <p className="text-sm font-semibold text-(--color-ink)"><RichText html={q.enonce} /></p>
+            {(q.images?.length ?? 0) > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {q.images!.map((src) => (
+                  <ZoomableImage key={src} src={src} className="h-40 w-40 sm:h-52 sm:w-52" sizes="208px" />
+                ))}
+              </div>
+            )}
             {q.format === 'qroc' ? (
               <div className="mt-3 rounded-lg border border-[#00695C]/30 bg-[#E0F2F1]/50 px-3 py-2 text-sm">
                 {q.reponse_attendue && (
@@ -804,6 +821,13 @@ function CorrectionsView({
                       <p className={cn(it.is_correct ? 'font-medium text-[#16793C]' : 'text-(--color-ink)')}>
                         <RichText html={it.enonce} />
                       </p>
+                      {(it.images?.length ?? 0) > 0 && (
+                        <div className="mt-1.5 flex flex-wrap gap-2">
+                          {it.images!.map((src) => (
+                            <ZoomableImage key={src} src={src} className="h-28 w-28 sm:h-36 sm:w-36" sizes="144px" />
+                          ))}
+                        </div>
+                      )}
                       {it.justification && (
                         <p className="mt-1 text-xs text-(--color-ink-soft)"><RichText html={it.justification} /></p>
                       )}

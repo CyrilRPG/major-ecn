@@ -54,13 +54,20 @@ export default async function ResultsPage({
 
   // Énoncés des questions ratées : lecture service-role (cf. commentaire ci-dessus).
   const failedIds = (attempts ?? []).filter((a) => !a.is_correct).map((a) => a.question_id);
+  // `images` : sans les documents de l'énoncé (ECG, radiographies), le rappel
+  // d'une question ratée est illisible — « Vous faites réaliser l'ECG suivant ».
   const { data: failedQuestions } = failedIds.length > 0
-    ? await admin.from('qcm_questions').select('id, enonce').in('id', failedIds)
-    : { data: [] as { id: string; enonce: string }[] };
-  const enonceById = new Map((failedQuestions ?? []).map((q) => [q.id, q.enonce]));
+    ? await admin.from('qcm_questions').select('id, enonce, images').in('id', failedIds)
+    : { data: [] as { id: string; enonce: string; images: string[] | null }[] };
+  const questionById = new Map((failedQuestions ?? []).map((q) => [q.id, q]));
 
   const totalSeconds = (attempts ?? []).reduce((sum, a) => sum + (a.time_spent_seconds ?? 0), 0);
-  const failed = failedIds.map((id) => ({ id, enonce: enonceById.get(id) ?? '' }));
+  const failed = failedIds.map((id) => ({
+    id,
+    enonce: questionById.get(id)?.enonce ?? '',
+    // La colonne est un jsonb : les types générés la voient comme `Json`.
+    images: (questionById.get(id)?.images as string[] | null) ?? [],
+  }));
 
   const { data: priorSessions } = await supabase
     .from('qcm_sessions')

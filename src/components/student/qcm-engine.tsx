@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AlertTriangle, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RichText } from '@/components/qcm/rich-text';
+import { ZoomableImage } from '@/components/qcm/image-zoom';
 import { cn } from '@/lib/utils';
 
 export type EngineQuestion = {
@@ -11,7 +12,10 @@ export type EngineQuestion = {
   enonce: string;
   cours_id: string;
   college: string;
-  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[];
+  /** Documents de l'énoncé (ECG, radiographie, cliché…) : indispensables aux
+   *  questions qui désignent une iconographie. */
+  images?: string[] | null;
+  items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images?: string[] | null }[];
 };
 
 export type EngineResult = {
@@ -100,6 +104,13 @@ export function QcmEngine({
         <p className="mt-3 text-sm font-medium leading-relaxed text-(--color-ink) sm:text-base">
           <RichText html={q.enonce} />
         </p>
+        {(q.images?.length ?? 0) > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {q.images!.map((src) => (
+              <ZoomableImage key={src} src={src} className="h-48 w-48 sm:h-64 sm:w-64" sizes="256px" />
+            ))}
+          </div>
+        )}
 
         {/* Items */}
         <div className="mt-5 space-y-2.5">
@@ -146,7 +157,16 @@ export function QcmEngine({
                 >
                   {st === 'ok-picked' || st === 'missed' ? <Check className="h-3.5 w-3.5" /> : it.lettre}
                 </span>
-                <span className="flex-1"><RichText html={it.enonce} /></span>
+                <span className="flex-1">
+                  <RichText html={it.enonce} />
+                  {(it.images?.length ?? 0) > 0 && (
+                    <span className="mt-2 flex flex-wrap gap-2">
+                      {it.images!.map((src) => (
+                        <ZoomableImage key={src} src={src} className="h-32 w-32 sm:h-40 sm:w-40" sizes="160px" />
+                      ))}
+                    </span>
+                  )}
+                </span>
                 {/* Sigle ⚠ rouge : erreurs de l'élève (coche fausse, réponse manquée) + énoncé faux. */}
                 {(st === 'bad-picked' || st === 'missed' || st === 'ok-unpicked') && (
                   <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#A91D2C]" aria-label="Attention" />

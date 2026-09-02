@@ -11,7 +11,9 @@ type QRow = {
   id: string;
   enonce: string;
   order_index: number;
-  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
+  /** Documents de l'énoncé (ECG, radiographie, cliché…). */
+  images: string[] | null;
+  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
   qcm_series: { cours_id: string };
 };
 type AttemptRow = { question_id: string; is_correct: boolean; attempted_at: string };
@@ -51,7 +53,7 @@ export default async function ConsolidationPage({ params }: { params: Promise<{ 
   const [{ data: allQRaw }, { data: attemptsRaw }] = await Promise.all([
     supabase
       .from('qcm_questions')
-      .select('id, enonce, order_index, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id)')
+      .select('id, enonce, order_index, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id)')
       .in('serie_id', serieIds)
       .order('order_index'),
     supabase
@@ -112,9 +114,10 @@ export default async function ConsolidationPage({ params }: { params: Promise<{ 
     enonce: q.enonce,
     cours_id: q.qcm_series.cours_id,
     college: matiereName,
+    images: q.images ?? [],
     items: [...(q.qcm_items ?? [])]
       .sort((a, b) => a.lettre.localeCompare(b.lettre))
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct })),
+      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] })),
   });
 
   return (

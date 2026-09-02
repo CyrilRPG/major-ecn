@@ -6,15 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && node scripts/verifier-images-qcm.mjs",
     "typecheck": "tsc --noEmit",
     "generate-pdfs": "python3 scripts/generate-pdfs.py",
     "create-admin": "tsx scripts/create-admin.ts",
     "upload-fiches": "tsx scripts/upload-fiches.ts",
-    "seed-fiches": "pnpm generate-pdfs && pnpm upload-fiches"
+    "seed-fiches": "pnpm generate-pdfs && pnpm upload-fiches",
+    "verifier:images-qcm": "node scripts/verifier-images-qcm.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@napi-rs/canvas": "^1.0.5",
     "@pdf-lib/fontkit": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.3.3",

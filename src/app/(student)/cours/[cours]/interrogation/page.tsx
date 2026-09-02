@@ -41,10 +41,10 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
   // Sélectionne N questions au hasard parmi les QCM du cours.
   const { data: questionsRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, qcm_items(id, lettre, enonce, is_correct), qcm_series!inner(cours_id)')
+    .select('id, enonce, images, qcm_items(id, lettre, enonce, is_correct, images), qcm_series!inner(cours_id)')
     .eq('qcm_series.cours_id', coursId)
     .limit(80);
-  type Row = { id: string; enonce: string; qcm_items: { id: string; lettre: string; enonce: string; is_correct: boolean }[] };
+  type Row = { id: string; enonce: string; images: string[] | null; qcm_items: { id: string; lettre: string; enonce: string; is_correct: boolean; images: string[] | null }[] };
   const allQ = ((questionsRaw ?? []) as unknown as Row[]).filter((q) => (q.qcm_items ?? []).length >= 3);
   // Shuffle Fisher-Yates simple
   const shuffled = [...allQ];
@@ -56,9 +56,10 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
   const questions: IQuestion[] = picked.map((q) => ({
     id: q.id,
     enonce: q.enonce,
+    images: q.images ?? [],
     items: [...(q.qcm_items ?? [])]
       .sort((a, b) => a.lettre.localeCompare(b.lettre))
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct })),
+      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct, images: it.images ?? [] })),
   }));
 
   // Si déjà signé, on saute directement vers le certificat.

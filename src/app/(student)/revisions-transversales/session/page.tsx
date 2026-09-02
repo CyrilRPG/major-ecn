@@ -22,7 +22,10 @@ type QRow = {
   reponse_attendue: string | null;
   correction_generale: string | null;
   commentaire_enseignant: string | null;
-  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean }[] | null;
+  /** Documents de l'énoncé (ECG, radio, cliché…) : sans eux la question est
+   *  souvent impossible à traiter (« Vous faites réaliser l'ECG suivant »). */
+  images: string[] | null;
+  qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
   qcm_series: {
     cours_id: string;
     /** Contexte clinique partagé du dossier progressif (l'« énoncé » du dossier). */
@@ -107,7 +110,7 @@ export default async function TransversalSessionPage({
 
   const { data: allQRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, qcm_items(id, lettre, enonce, justification, is_correct), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
     .in('serie_id', serieIds)
     .order('order_index');
 
@@ -197,8 +200,9 @@ export default async function TransversalSessionPage({
     reponse_attendue: q.reponse_attendue,
     correction_generale: q.correction_generale,
     commentaire_enseignant: q.commentaire_enseignant,
+    images: q.images ?? [],
     items: [...(q.qcm_items ?? [])]
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct }))
+      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),
   }));
 
