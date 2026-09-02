@@ -14,6 +14,7 @@ import { updateSession } from '@/lib/supabase/middleware';
 const CORS_PREFIXES = [
   '/api/mobile/',
   '/api/fiches/',
+  '/api/supports/',
   '/api/cours/',
   '/api/student/heartbeat',
   '/api/chat',

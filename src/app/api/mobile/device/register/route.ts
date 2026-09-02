@@ -18,9 +18,18 @@ const RegisterDeviceSchema = z.object({
  * appareil autorisé (même créneau unique que le web : profiles.active_session_id).
  * Toute session précédente (web ou mobile) est déconnectée :
  *  - le middleware web détecte le mismatch de cookie en ≤ 5 min ;
- *  - les refresh tokens des autres sessions sont révoqués immédiatement ;
  *  - l'ancienne app mobile reçoit DEVICE_REVOKED à sa prochaine requête.
  * Réponse : { device_id, license, server_time, access }.
+ *
+ * INCIDENT « déconnexion immédiate après connexion » : cette route appelait
+ * aussi `auth.admin.signOut(accessToken, 'others')` pour révoquer les refresh
+ * tokens des autres sessions. Le client mobile faisant tourner son jeton juste
+ * après `signInWithPassword` (autoRefreshToken), le jeton présenté ici ne
+ * désignait plus la session courante : GoTrue la classait parmi les « autres »
+ * et la révoquait. L'app se retrouvait déconnectée quelques secondes après
+ * avoir affiché l'accueil. Le créneau unique `active_session_id` suffit — c'est
+ * lui le verrou de référence, et il éjecte les autres appareils sans toucher à
+ * la session que l'on vient d'ouvrir.
  */
 export async function POST(req: Request) {
   const auth = await getBearerUser(req);
@@ -64,15 +73,7 @@ export async function POST(req: Request) {
     app_version: parsed.data.app_version ?? null,
   });
 
-  // 3) Révocation des refresh tokens des AUTRES sessions (web + ancien mobile).
-  //    Best-effort : le créneau unique reste le verrou de référence.
-  if (auth.accessToken) {
-    try {
-      await admin.auth.admin.signOut(auth.accessToken, 'others');
-    } catch { /* best-effort */ }
-  }
-
-  // 4) Licence hors ligne signée.
+  // 3) Licence hors ligne signée.
   const { license, accessEnd, expired } = await buildLicense(admin, auth.user.id, deviceId);
 
   return NextResponse.json({
