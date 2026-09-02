@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { logAudit } from '@/lib/audit/log';
 import { ExamSettingsSchema, ExamQuestionSchema, EXAM_STATUSES } from '@/lib/schemas/exam';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
@@ -368,12 +369,20 @@ export async function seedSpecialtyInterrogation(
   const coursIds = ((coursRows ?? []) as { id: string }[]).map((c) => c.id);
   if (coursIds.length === 0) return { ok: false, error: 'Aucun cours dans cette spécialité.' };
 
-  const { data: qRaw } = await a
+  /* `images` est indispensable : sans elle, une question du type « Voici la
+     radiographie de thorax : » arrive à l'élève sans son document et devient
+     impossible à traiter. La copie manuelle (snapshotFromContent) la reprenait
+     déjà ; le pré-remplissage automatique l'oubliait.
+     La lecture est paginée : PostgREST tronque en silence au-delà de 1 000
+     lignes, ce qui restreignait le tirage aux 1 000 premières questions. */
+  const qRaw = await fetchAllRows<Record<string, unknown>>((from: number, to: number) => a
     .from('qcm_questions')
-    .select('id, enonce, format, reponse_attendue, correction_generale, qcm_items(lettre, enonce, is_correct, justification), qcm_series!inner(cours_id, type, vignette)')
-    .in('qcm_series.cours_id', coursIds);
+    .select('id, enonce, format, reponse_attendue, correction_generale, images, qcm_items(lettre, enonce, is_correct, justification), qcm_series!inner(cours_id, type, vignette)')
+    .in('qcm_series.cours_id', coursIds)
+    .order('id')
+    .range(from, to));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const all = (qRaw ?? []) as any[];
+  const all = qRaw as any[];
 
   const qcmPool = all.filter((q) => q.format !== 'qroc' && (q.qcm_items ?? []).length >= 3 && q.qcm_series?.type === 'qcm');
   const qrocPool = all.filter((q) => q.format === 'qroc' && q.reponse_attendue);
@@ -396,6 +405,7 @@ export async function seedSpecialtyInterrogation(
       format: 'qcm',
       enonce: q.enonce,
       vignette: q.qcm_series?.vignette ?? null,
+      images: q.images ?? [],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       items: (q.qcm_items ?? []).map((it: any) => ({
         lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct, justification: it.justification ?? '',
@@ -409,6 +419,7 @@ export async function seedSpecialtyInterrogation(
       order_index: 100 + i,
       format: 'qroc',
       enonce: q.enonce,
+      images: q.images ?? [],
       reponse_attendue: q.reponse_attendue,
       correction_generale: q.correction_generale ?? null,
       college_id: matiereId,
