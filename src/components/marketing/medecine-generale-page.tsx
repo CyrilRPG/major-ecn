@@ -724,10 +724,21 @@ const LAUREATS = [
 ];
 
 const RESULTATS = [
-  { an: '2021', texte: 'Candidate accompagnée par Major ECN classée 2e aux EVC de médecine générale.' },
-  { an: '2022', texte: 'Aucune épreuve proposée par le CNG.' },
-  { an: '2023', texte: 'Candidate accompagnée par Major ECN classée 1re de sa session.' },
-  { an: '2024–2025', texte: 'Depuis l’évolution de la publication des résultats et l’absence de classement comparable, Major ECN dispose des notes communiquées par ses candidats. Plusieurs candidats accompagnés ont obtenu des notes avoisinant 17/20.' },
+  {
+    an: '2021',
+    titre: '2e au classement : Dr Imene DENECHE',
+    texte: 'Candidate accompagnée par Major ECN aux EVC de médecine générale.',
+  },
+  {
+    an: '2023',
+    titre: '1re au classement : Dr Imen CHIHI AYADI',
+    texte: 'Candidate accompagnée par Major ECN aux EVC de médecine générale.',
+  },
+  {
+    an: '2024–2025',
+    titre: 'Le classement n’est plus publié',
+    texte: 'Le CNG ne publiant plus de classement comparable, Major ECN dispose des notes communiquées individuellement par ses candidats. Plusieurs d’entre eux ont obtenu des notes avoisinant 17/20.',
+  },
 ];
 
 function Temoignages() {
@@ -795,10 +806,11 @@ function Temoignages() {
             <h2 className="text-[1.35rem] font-black leading-tight tracking-tight sm:text-[1.6rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
               Depuis 2011, <span style={{ color: RED_DEEP }}>des résultats au fil des sessions</span>
             </h2>
-            <div className="mt-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-7 grid grid-cols-1 gap-7 sm:grid-cols-3">
               {RESULTATS.map((r) => (
                 <div key={r.an} className="border-t pt-4" style={{ borderColor: LINE }}>
                   <p className="text-[15px] font-black tabular-nums" style={{ color: RED }}>{r.an}</p>
+                  <p className="mt-1.5 text-[13.5px] font-black leading-snug" style={{ color: NAVY }}>{r.titre}</p>
                   <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{r.texte}</p>
                 </div>
               ))}

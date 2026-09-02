@@ -47,9 +47,9 @@ function Puce({ color, className = 'mt-[10px]' }: { color: string; className?: s
    ============================================================ */
 
 const HERO_CHIFFRES = [
-  { fort: '+ de 15 ans', suite: 'd’expérience' },
+  { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
   { fort: '+ 9 000', suite: 'médecins accompagnés' },
-  { fort: '45', suite: 'spécialités' },
+  { fort: '46', suite: 'spécialités préparées' },
 ];
 
 const HERO_GARANTIES = [
@@ -70,7 +70,7 @@ function Hero() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[58%_center]"
+            className="object-cover object-[62%_center]"
           />
         </div>
         <div
@@ -91,7 +91,7 @@ function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-[88rem] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-10">
+        <div className="max-w-2xl">
           <Reveal>
             <p
               className="inline-flex rounded-full px-4 py-1.5 text-[11.5px] font-black uppercase tracking-[0.16em] text-white"
@@ -154,19 +154,85 @@ function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.12} className="hidden lg:block">
-            <Image
-              src="/homepage/hero-plateforme.png"
-              alt="Plateforme Major ECN — tableau de bord et session de QCM d’anesthésie sur ordinateur et mobile"
-              width={1504}
-              height={914}
-              priority
-              sizes="42vw"
-              className="w-full"
-              style={{ filter: 'drop-shadow(0 50px 90px rgba(0,0,0,0.55))' }}
-            />
-          </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   BLOC SESSION — les faits chiffrés de la spécialité, juste sous
+   le hero. L'anesthésie-réanimation est ouverte dans les deux
+   voies pour la session 2026 : les deux sont annoncées.
+   ============================================================ */
+
+const ARTICLE_AR = 'evc-anesthesie-reanimation-2026';
+const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
+const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
+
+function BlocSession() {
+  return (
+    <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="grid grid-cols-1 gap-8 rounded-[1.25rem] px-7 py-8 sm:px-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center"
+            style={{ background: PAPER, border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+                Session 2026
+              </p>
+              <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Anesthésie-réanimation
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                <span className="font-black" style={{ color: NAVY }}>201 postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>64 postes en voie externe.</span>
+                <br />
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>vendredi 13 novembre 2026</span>,
+                Espace Jean-Monnet, Rungis.
+              </p>
+              <p className="mt-3 text-[12.5px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+                Source : arrêté du 12 juin 2026.
+              </p>
+              <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
+                <Link href={`/blog/${ARTICLE_CALENDRIER}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Calendrier complet par spécialité →
+                </Link>
+                <Link href={`/blog/${ARTICLE_RATIO}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Comprendre le ratio candidats/postes →
+                </Link>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>201</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>64</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
+                </p>
+              </div>
+              <div className="sm:col-span-2 rounded-2xl px-6 py-5" style={{ background: '#FDF2F4' }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  Les deux voies sont ouvertes :{' '}
+                  <span className="font-black" style={{ color: NAVY }}>QCM en voie interne, QROC en voie externe.</span>{' '}
+                  <Link href={`/blog/${ARTICLE_AR}`} className="font-black underline underline-offset-4" style={{ color: RED }}>
+                    Ce qu’il faut vraiment réviser →
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -845,7 +911,7 @@ const FORMULES: {
       '18 h de cours en direct (lives interactifs)', 'Lives interactifs avec vos enseignants',
       'Replays disponibles pendant toute la préparation', 'QCM supplémentaires expliqués',
       'QROC expliqués', 'Corrections approfondies', 'Épreuves blanches inspirées des EVC',
-      'Coaching : parcours du Major (médecine générale)', 'Suivi de progression',
+      'Suivi de progression',
     ],
     cta: 'Choisir Intensive', href: '/formules/intensive', p: INT,
   },
@@ -1062,6 +1128,49 @@ type BlocFaq =
 
 const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
   {
+    q: 'Combien de postes sont ouverts en anesthésie-réanimation aux EVC 2026 ?',
+    blocs: [
+      { p: 'Pour la session 2026, 201 postes sont ouverts en voie interne et 64 en voie externe, soit 265 postes au total en anesthésie-réanimation.' },
+      { p: 'Ces chiffres figurent en annexe de l’arrêté du 12 juin 2026 portant ouverture des épreuves de vérification des connaissances.' },
+    ],
+    chute: 'L’anesthésie-réanimation fait partie des spécialités les mieux dotées de la session, aussi bien en voie interne qu’en voie externe.',
+  },
+  {
+    q: 'Quand a lieu l’épreuve d’anesthésie-réanimation ?',
+    blocs: [
+      { p: 'L’épreuve se déroule le vendredi 13 novembre 2026, à l’Espace Jean-Monnet de Rungis.' },
+      { p: 'C’est la deuxième épreuve du calendrier 2026-2027, qui s’étend du 10 novembre 2026 au 15 janvier 2027. Les deux voies passent le même jour : la voie interne de 10 h à 12 h, la voie externe de 10 h à 12 h puis de 15 h à 17 h.' },
+    ],
+    chute: 'Cette date précoce a une conséquence directe sur l’organisation des révisions : les candidats en anesthésie-réanimation disposent de moins de temps que ceux des spécialités programmées en décembre ou en janvier.',
+  },
+  {
+    q: 'Quel est le format de l’épreuve en anesthésie-réanimation ?',
+    blocs: [
+      { p: 'Le format dépend de votre voie.' },
+      {
+        encadres: [
+          { titre: 'Voie interne — QCM', accent: VOIE_INTERNE, texte: 'Un QCM de deux heures.' },
+          { titre: 'Voie externe — QROC', accent: VOIE_EXTERNE, texte: 'Deux épreuves écrites de deux heures chacune, au format QROC.' },
+        ],
+      },
+    ],
+    chute: 'Les connaissances médicales évaluées se recoupent largement. C’est la manière de les restituer qui diffère, et c’est pourquoi la préparation doit être adaptée à votre voie.',
+  },
+  {
+    q: 'Quand devais-je m’inscrire aux EVC 2026 ?',
+    blocs: [
+      { p: 'Les inscriptions à la session 2026 ont été ouvertes au printemps 2026 et sont closes depuis juillet.' },
+    ],
+    chute: 'Les convocations sont mises à disposition par le CNG au plus tôt un mois avant la date de l’épreuve. Une procédure de recours existe auprès du CNG pour les candidats dont le dossier a été rejeté.',
+  },
+  {
+    q: 'Combien de temps me reste-t-il pour préparer l’épreuve d’anesthésie-réanimation ?',
+    blocs: [
+      { p: 'L’épreuve ayant lieu le 13 novembre 2026, le temps de préparation disponible se compte désormais en semaines.' },
+    ],
+    chute: 'Lorsque le délai se réduit, la priorisation devient déterminante : il ne s’agit plus de reprendre l’intégralité du programme, mais d’identifier les domaines à consolider et de s’entraîner dans le format de l’épreuve.',
+  },
+  {
     q: 'Le programme d’Anesthésie-Réanimation est immense. Comment savoir quoi travailler en priorité ?',
     blocs: [
       { p: 'C’est précisément l’un des enjeux de la préparation.' },
@@ -1193,9 +1302,9 @@ const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
       { p: 'Parce qu’ils recherchent plus qu’une accumulation de cours et de questions.' },
       {
         chiffres: [
-          { fort: '+ de 15 ans', suite: 'd’expérience dans la préparation médicale' },
+          { fort: 'Depuis 2011', suite: 'dans la préparation médicale' },
           { fort: '+ de 9 000', suite: 'médecins accompagnés' },
-          { fort: '45', suite: 'spécialités' },
+          { fort: '46', suite: 'spécialités préparées par Major ECN' },
         ],
       },
       {
@@ -1222,9 +1331,9 @@ const FAQ: { q: string; blocs: BlocFaq[]; chute: string }[] = [
 ];
 
 const FAQ_STRIP = [
-  { fort: '+ de 15 ans', milieu: 'd’expérience', suite: 'dans la préparation médicale' },
+  { fort: 'Depuis 2011', milieu: 'dans la préparation médicale' },
   { fort: '+ de 9 000', milieu: 'médecins accompagnés', suite: 'vers la réussite' },
-  { fort: '45 spécialités', milieu: 'couvertes' },
+  { fort: '46 spécialités', milieu: 'préparées par Major ECN' },
   { fort: 'Plateforme sécurisée', milieu: 'Accessible 24h/24 et 7j/7' },
   { fort: 'Accompagnement', milieu: 'humain et méthodologique', suite: 'pour aller au bout' },
 ];
@@ -1361,6 +1470,7 @@ export function AnesthesiePageContent({ specialite }: { specialite?: string }) {
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
       <AncreTunnel actif={!!specialite} />
       <Hero />
+      <BlocSession />
       <Laureats />
       <Plateforme />
       <GagnezDuTemps />
