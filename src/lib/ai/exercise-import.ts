@@ -1,52 +1,17 @@
 import 'server-only';
 
-import { outputSchema } from './exercise-import-schema';
+import {
+  outputSchema, validate, type ImportVoie,
+  type ExerciseImportResult, type ImportedQuestion,
+} from './exercise-import-schema';
 
 export const EXERCISE_IMPORT_MODEL = 'gpt-5.6-terra';
 export const EXERCISE_IMPORT_MAX_FILE_BYTES = 25 * 1024 * 1024;
 const PRICE_MULTIPLIER = 5;
 
-export type ImportVoie = 'interne' | 'externe';
 export type ImportFormat = 'pdf' | 'docx' | 'txt';
 export type ImportMode = 'combined' | 'paired';
 export type ImportOffer = 'decouverte' | 'essentiel' | 'intensif' | 'approfondi';
-export type ImagePlacement = 'question' | 'item' | 'correction';
-
-export type ImportedImage = {
-  /** Référence de page dans le document source. L'image reste traçable même si
-   * le fournisseur ne peut pas extraire son binaire natif. */
-  source_page: number | null;
-  source_description: string;
-  placement: ImagePlacement;
-  /** Lettre de l'item illustré, `null` pour une image de question ou de
-   *  correction. En mode strict, le champ est toujours renvoyé (cf. IMAGE_SCHEMA). */
-  item_letter?: string | null;
-};
-
-export type ImportedItem = {
-  lettre: string;
-  enonce: string;
-  is_correct: boolean;
-  justification: string;
-  images: ImportedImage[];
-};
-
-export type ImportedQuestion = {
-  client_id: string;
-  source_pages: number[];
-  format: 'qcm' | 'qroc';
-  enonce: string;
-  images: ImportedImage[];
-  items: ImportedItem[];
-  reponse_attendue: string;
-  correction_generale: string;
-  warnings: string[];
-};
-
-export type ExerciseImportResult = {
-  questions: ImportedQuestion[];
-  warnings: string[];
-};
 
 type InputFile = { filename: string; mime: string; bytes: Uint8Array; role: 'combined' | 'subject' | 'answer' };
 
@@ -83,25 +48,6 @@ function responseText(payload: unknown): string {
   return (p.output ?? []).flatMap((o) => o.content ?? []).filter((c) => c.type === 'output_text').map((c) => c.text ?? '').join('');
 }
 
-function validate(result: ExerciseImportResult, voie: ImportVoie): ExerciseImportResult {
-  const wanted = voie === 'interne' ? 'qcm' : 'qroc';
-  const seen = new Set<string>();
-  result.questions.forEach((q, index) => {
-    if (q.format !== wanted) throw new Error(`La question ${index + 1} n'est pas au format ${wanted}.`);
-    q.client_id ||= crypto.randomUUID();
-    if (seen.has(q.client_id)) q.client_id = crypto.randomUUID();
-    seen.add(q.client_id);
-    if (!q.enonce.trim()) throw new Error(`L'énoncé ${index + 1} est vide.`);
-    if (q.format === 'qcm') {
-      if (q.items.length < 2 || q.items.length > 11 || !q.items.some((i) => i.is_correct)) throw new Error(`QCM invalide à la question ${index + 1}.`);
-      const letters = q.items.map((i) => i.lettre);
-      if (new Set(letters).size !== letters.length || letters.some((l) => !/^[A-K]$/.test(l))) throw new Error(`Lettres QCM invalides à la question ${index + 1}.`);
-    } else if (!q.reponse_attendue.trim()) {
-      q.warnings.push('Réponse attendue absente de la source.');
-    }
-  });
-  return result;
-}
 
 export async function extractExerciseImport(args: {
   voie: ImportVoie; mode: ImportMode; files: InputFile[];
@@ -124,13 +70,40 @@ export async function extractExerciseImport(args: {
       reasoning: { effort: 'medium' },
       input: [{ role: 'user', content }],
       text: { format: { type: 'json_schema', name: 'exercise_import', strict: true, schema: outputSchema } },
+      // Un sujet d'annales fait couramment plus de cent pages : sans budget
+      // explicite, la réponse était tronquée en silence.
+      max_output_tokens: 100_000,
     }),
   });
   if (!res.ok) throw new Error(`OpenAI ${res.status}: ${(await res.text()).slice(0, 300)}`);
-  const raw = responseText(await res.json());
+  const payload = await res.json();
+
+  // Réponse tronquée : sans ce contrôle, un document trop long renvoyait un
+  // JSON partiel ou vide, et l'échec se lisait « Aucun exercice exploitable »,
+  // ce qui désignait le document alors que la limite venait de l'appel.
+  const etat = (payload as { status?: string; incomplete_details?: { reason?: string } }).status;
+  if (etat === 'incomplete') {
+    const raison = (payload as { incomplete_details?: { reason?: string } }).incomplete_details?.reason ?? 'inconnue';
+    throw new Error(
+      raison === 'max_output_tokens'
+        ? 'Le document est trop long pour une seule analyse : la réponse a été tronquée. Découpez-le (par exemple un fichier par épreuve) et relancez.'
+        : `L'analyse s'est interrompue avant la fin (${raison}).`,
+    );
+  }
+
+  const raw = responseText(payload);
   let parsed: ExerciseImportResult;
   try { parsed = JSON.parse(raw) as ExerciseImportResult; } catch { throw new Error('La réponse IA ne respecte pas le JSON attendu.'); }
+  if (!Array.isArray(parsed.questions) || parsed.questions.length === 0) {
+    // Le modèle explique souvent son échec dans `warnings` : ne pas le perdre.
+    const dit = (parsed.warnings ?? []).filter(Boolean).slice(0, 3).join(' ');
+    throw new Error(`Aucun exercice n'a été trouvé dans le document.${dit ? ' Analyse : ' + dit : ''}`);
+  }
   return validate(parsed, args.voie);
 }
 
-export { outputSchema } from './exercise-import-schema';
+export {
+  outputSchema, validate, normaliserLettre,
+  type ImagePlacement, type ImportedImage, type ImportedItem, type ImportVoie,
+  type ImportedQuestion, type ExerciseImportResult,
+} from './exercise-import-schema';
