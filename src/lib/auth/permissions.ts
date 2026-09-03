@@ -96,11 +96,16 @@ function normalizeSpecialty(value: unknown): string {
 /**
  * Le Parcours du Major est un contenu propre à la Médecine générale.
  *
- * `paid_specialty` est la source prioritaire lorsqu'elle existe, puis
- * `specialty_wish`. Pour les anciens comptes sans ces métadonnées, on se
- * rabat sur les collèges attribués. Les comptes Gériatrie sont exclus de ce
- * repli, car leur bonus pédagogique ajoute techniquement des collèges MG sans
- * constituer une inscription à la spécialité Médecine générale.
+ * `paid_specialty` (spécialité réellement achetée) est la source prioritaire
+ * lorsqu'elle existe ; sinon ce sont les collèges attribués qui font foi. Les
+ * comptes Gériatrie sont exclus de ce repli, car leur bonus pédagogique ajoute
+ * techniquement des collèges MG sans constituer une inscription à la
+ * spécialité Médecine générale.
+ *
+ * `specialty_wish` (souhait saisi à l'inscription gratuite) ne compte que
+ * lorsqu'aucun collège n'est attribué : une cliente inscrite en Médecine
+ * d'urgence (`col-mir`) mais dont le souhait initial était « Médecine
+ * générale » voyait le Parcours du Major (03/09/2026).
  */
 export function hasMedecineGeneraleAccess(raw: unknown): boolean {
   if (!raw || typeof raw !== 'object') return false;
@@ -113,12 +118,13 @@ export function hasMedecineGeneraleAccess(raw: unknown): boolean {
   const paidSpecialty = normalizeSpecialty(scope.paid_specialty);
   if (paidSpecialty) return paidSpecialty === 'medecine generale';
 
-  const specialtyWish = normalizeSpecialty(scope.specialty_wish);
-  if (specialtyWish) return specialtyWish === 'medecine generale';
-
   const colleges = Array.isArray(scope.colleges)
     ? scope.colleges.filter((value): value is string => typeof value === 'string')
     : [];
+  if (colleges.length === 0) {
+    const specialtyWish = normalizeSpecialty(scope.specialty_wish);
+    return specialtyWish === 'medecine generale';
+  }
   const hasMgCollege = colleges.some(
     (college) => college === 'col-medecine-generale' || college.startsWith('col-mg-'),
   );
