@@ -431,7 +431,10 @@ function Preuves() {
   return (
     <section className="py-16 sm:py-20" style={{ fontFamily: FONT, background: PAPER }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Deux colonnes depuis l'ajout du second témoignage (03/09/2026) :
+            en trois colonnes, la quatrième carte se retrouvait seule sur une
+            ligne. Les deux témoignages se lisent maintenant côte à côte. */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Reveal>
             <div id="enseignants" className="flex h-full scroll-mt-24 flex-col rounded-[1.25rem] bg-white px-7 py-7" style={{ border: `1px solid ${LINE}` }}>
               <h2 className="text-[1.05rem] font-black uppercase leading-snug tracking-[0.04em]" style={{ color: NAVY }}>
@@ -515,7 +518,39 @@ function Preuves() {
 
               <figcaption className="mt-4 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
                 <p className="text-[13.5px] font-black" style={{ color: NAVY }}>Dr Ilanserane Gundugolanu Saranya</p>
-                <p className="mt-1 text-[12.5px] font-bold" style={{ color: RED }}>1<sup>re</sup> place — EVC Odontologie 2025</p>
+                <p className="mt-1 text-[12.5px] font-bold" style={{ color: RED }}>1<sup>re</sup> place — EVC Odontologie 2023</p>
+              </figcaption>
+            </figure>
+          </Reveal>
+
+          <Reveal delay={0.21}>
+            <figure className="flex h-full flex-col rounded-[1.25rem] bg-white px-7 py-7" style={{ border: `1px solid ${LINE}` }}>
+              <blockquote className="flex flex-1 gap-3.5">
+                <span aria-hidden className="-mt-2 select-none text-[38px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
+                <span className="text-[13.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  <span className="block font-black" style={{ color: NAVY }}>
+                    Quand j’en avais besoin, je savais que je pouvais être accompagné.
+                  </span>
+                  <span className="mt-2 block">
+                    J’ai eu une très bonne expérience avec Major ECN. Les cours étaient clairs et bien organisés, ce
+                    qui m’a permis d’avancer plus sereinement dans mes révisions.
+                  </span>
+                  <span className="mt-2 block">
+                    J’ai beaucoup apprécié la disponibilité de l’équipe et les conseils donnés au fur et à mesure de
+                    la préparation. Quand j’avais une question ou besoin d’être guidé, je savais que je pouvais
+                    compter sur l’équipe. Cela m’a vraiment aidé à garder le cap jusqu’aux épreuves.
+                  </span>
+                  <span className="mt-2 block">
+                    Je suis arrivé plus serein et mieux préparé le jour du concours, et c’est ce que je retiens
+                    surtout de cette expérience. Je garde un très bon souvenir de cette expérience et je recommande
+                    Major ECN sans hésitation.
+                  </span>
+                </span>
+              </blockquote>
+
+              <figcaption className="mt-6 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
+                <p className="text-[13.5px] font-black" style={{ color: NAVY }}>Dr Mohammed Nour NACHED</p>
+                <p className="mt-1 text-[12.5px] font-bold" style={{ color: RED }}>Lauréat EVC Odontologie 2025</p>
               </figcaption>
             </figure>
           </Reveal>

@@ -587,16 +587,35 @@ function Plateforme() {
    Témoignages
    ============================================================ */
 
-const AVIS = [
+/**
+ * Les deux lauréats de cardiologie, avec leur nom complet et leur photo.
+ *
+ * Les avis « Dr Sarah L. » et « Dr Julien R. » qui figuraient ici ont été
+ * retirés le 03/09/2026 : anonymes et génériques, ils affaiblissaient des
+ * témoignages authentiques en les faisant passer pour des remplissages.
+ */
+const TEMOIGNAGES = [
   {
-    texte: 'Grâce aux entraînements réguliers et aux corrections détaillées, j’ai pu identifier mes lacunes et progresser efficacement. L’accompagnement des enseignants est un vrai plus.',
-    nom: 'Dr Sarah L.',
-    role: 'EVC Cardiologie 2024',
+    photo: '/specialites/cardiologie/temoignage-laureat-evc-cardiologie.webp',
+    alt: 'Dr Wassim Handoumeh, lauréat des EVC de cardiologie 2025',
+    titre: 'Cela m’a fait gagner énormément de temps.',
+    paragraphes: [
+      'Major ECN m’a apporté un cadre et une direction. Les enseignants nous guidaient sur les thèmes à travailler, les notions importantes à maîtriser et les pièges à éviter. Je n’avais pas à construire seul toute ma préparation : j’avais simplement à suivre le rythme, travailler sérieusement et appliquer les conseils qui nous étaient donnés. Le jour du concours, je savais que j’avais fait tout ce qu’il fallait pour me donner les meilleures chances de réussir.',
+    ],
+    nom: 'Dr Wassim Handoumeh',
+    role: 'Lauréat EVC Cardiologie 2025',
   },
   {
-    texte: 'Le rythme hebdomadaire des cours, les supports ciblés et la dynamique de groupe m’ont aidé à rester motivé et à garder le cap jusqu’au jour J.',
-    nom: 'Dr Julien R.',
-    role: 'EVC Cardiologie 2025',
+    photo: '/specialites/cardiologie/temoignage-laureat-evc-cardiologie-koivogui.webp',
+    alt: 'Dr Koivogui Diarra, lauréat des EVC de médecine cardiovasculaire 2025',
+    titre: 'Préparer les EVC en cardiologie est un véritable défi. Être accompagné par Major ECN a fait toute la différence.',
+    paragraphes: [
+      'Avec Major ECN, j’ai bénéficié d’un accompagnement rigoureux et structuré, d’une véritable dynamique de groupe et d’un soutien constant tout au long de ma préparation.',
+      'Cet encadrement m’a permis d’avancer avec davantage de méthode et de confiance, et surtout d’aborder les épreuves beaucoup plus sereinement.',
+      'Aujourd’hui lauréat des EVC 2025 en médecine cardiovasculaire, je suis profondément reconnaissant envers toute l’équipe Major ECN pour son investissement et la qualité de sa préparation.',
+    ],
+    nom: 'Dr Koivogui Diarra',
+    role: 'Lauréat EVC 2025 — Médecine cardiovasculaire',
   },
 ];
 
@@ -610,58 +629,44 @@ function Temoignages() {
           </h2>
         </Reveal>
 
-        <div className="mt-11 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)_minmax(0,1fr)]">
-          <Reveal className="md:col-span-2 xl:col-span-1">
-            <figure
-              className="flex h-full flex-col gap-7 rounded-[1.25rem] bg-white p-7 sm:flex-row sm:p-8"
-              style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.55)' }}
-            >
-              <Image
-                src="/specialites/cardiologie/temoignage-laureat-evc-cardiologie.webp"
-                alt="Dr Wassim Handoumeh, lauréat des EVC de cardiologie 2025"
-                width={500}
-                height={498}
-                loading="lazy"
-                className="h-32 w-32 shrink-0 self-center rounded-full object-cover sm:h-40 sm:w-40 sm:self-start"
-              />
-              <div className="flex min-w-0 flex-1 flex-col">
-                <blockquote className="flex gap-4">
-                  <span aria-hidden className="-mt-3 select-none text-[46px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
-                  <div>
-                    <p
-                      className="text-[1.3rem] font-black leading-tight tracking-tight sm:text-[1.55rem]"
-                      style={{ color: NAVY, fontFamily: "'Fraunces', 'Plus Jakarta Sans', serif", letterSpacing: '-0.02em' }}
-                    >
-                      Cela m’a fait gagner énormément de temps.
-                    </p>
-                    <p className="mt-4 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                      Major ECN m’a apporté un cadre et une direction. Les enseignants nous guidaient sur les thèmes
-                      à travailler, les notions importantes à maîtriser et les pièges à éviter. Je n’avais pas à
-                      construire seul toute ma préparation : j’avais simplement à suivre le rythme, travailler
-                      sérieusement et appliquer les conseils qui nous étaient donnés. Le jour du concours, je savais
-                      que j’avais fait tout ce qu’il fallait pour me donner les meilleures chances de réussir.
-                    </p>
-                  </div>
-                </blockquote>
-                <figcaption className="mt-6 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
-                  <p className="text-[14px] font-black" style={{ color: RED }}>Dr Wassim Handoumeh</p>
-                  <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>Lauréat EVC Cardiologie 2025</p>
-                </figcaption>
-              </div>
-            </figure>
-          </Reveal>
-
-          {AVIS.map((a, i) => (
-            <Reveal key={a.nom} delay={(i + 1) * 0.07}>
-              <figure className="flex h-full flex-col rounded-[1.25rem] bg-white p-7" style={{ border: `1px solid ${LINE}` }}>
-                <blockquote className="flex flex-1 gap-3.5">
-                  <span aria-hidden className="-mt-2 select-none text-[38px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
-                  <span className="text-[13.5px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>{a.texte}</span>
-                </blockquote>
-                <figcaption className="mt-6 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
-                  <p className="text-[13.5px] font-black" style={{ color: NAVY }}>{a.nom}</p>
-                  <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{a.role}</p>
-                </figcaption>
+        <div className="mt-11 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {TEMOIGNAGES.map((t, i) => (
+            <Reveal key={t.nom} delay={i * 0.07}>
+              <figure
+                className="flex h-full flex-col gap-7 rounded-[1.25rem] bg-white p-7 sm:flex-row sm:p-8"
+                style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.55)' }}
+              >
+                <Image
+                  src={t.photo}
+                  alt={t.alt}
+                  width={500}
+                  height={500}
+                  loading="lazy"
+                  sizes="160px"
+                  className="h-32 w-32 shrink-0 self-center rounded-full object-cover sm:h-40 sm:w-40 sm:self-start"
+                />
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <blockquote className="flex flex-1 gap-4">
+                    <span aria-hidden className="-mt-3 select-none text-[46px] font-black leading-none" style={{ color: RED, fontFamily: FONT }}>“</span>
+                    <div>
+                      <p
+                        className="text-[1.15rem] font-black leading-tight tracking-tight sm:text-[1.3rem]"
+                        style={{ color: NAVY, fontFamily: "'Fraunces', 'Plus Jakarta Sans', serif", letterSpacing: '-0.02em' }}
+                      >
+                        {t.titre}
+                      </p>
+                      {t.paragraphes.map((texte) => (
+                        <p key={texte.slice(0, 40)} className="mt-4 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                          {texte}
+                        </p>
+                      ))}
+                    </div>
+                  </blockquote>
+                  <figcaption className="mt-6 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
+                    <p className="text-[14px] font-black" style={{ color: RED }}>{t.nom}</p>
+                    <p className="mt-1 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{t.role}</p>
+                  </figcaption>
+                </div>
               </figure>
             </Reveal>
           ))}
