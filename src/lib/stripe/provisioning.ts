@@ -21,7 +21,7 @@
 
 import { createClient as createSupabasePublicClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS, CONTRACT_COPY_EMAILS } from '@/lib/email/send';
 import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
@@ -501,7 +501,9 @@ export async function provisionStudentAccount(
       setupUrlPrefix: setupUrl.slice(0, 60) + '…',
       attachments: attachments.length,
     });
-    const sendResult = await sendEmail({ to: input.email, subject, html, text, attachments });
+    // Copie visible à la direction : ce mail vaut remise des documents
+    // contractuels, pour toutes les formules (pas seulement Approfondi).
+    const sendResult = await sendEmail({ to: input.email, cc: CONTRACT_COPY_EMAILS, subject, html, text, attachments });
     if (sendResult.ok) {
       emailVia = 'resend';
       log('email-sent-resend', { id: sendResult.id });

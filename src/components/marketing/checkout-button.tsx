@@ -90,12 +90,16 @@ export function CheckoutButton({
   );
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
-  // Case unique : acceptation groupée des CGU + CGS + Conditions Particulières.
-  // Les 3 documents intègrent en clair le consentement à l'exécution immédiate
+  // Deux cases, toutes deux obligatoires (demande de Cyril, 03/09/2026) :
+  //  - CGU + CGS ;
+  //  - Conditions Particulières.
+  // Les documents intègrent en clair le consentement à l'exécution immédiate
   // et la renonciation au délai de rétractation (art. L. 221-28, 1° CC) — voir
-  // notamment CGS §10.1 et Conditions Particulières §Observations. Cocher la
-  // case vaut donc acceptation simultanée de ces stipulations contractuelles.
-  const [acceptTerms, setAcceptTerms] = useState(false);
+  // notamment CGS §10.1 et Conditions Particulières §Observations. Les deux
+  // cases cochées valent acceptation de ces stipulations contractuelles.
+  const [acceptCguCgs, setAcceptCguCgs] = useState(false);
+  const [acceptCp, setAcceptCp] = useState(false);
+  const acceptTerms = acceptCguCgs && acceptCp;
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -231,8 +235,12 @@ export function CheckoutButton({
       setError('Merci de choisir votre voie de concours (interne ou externe).');
       return;
     }
-    if (!acceptTerms) {
-      setError('Vous devez accepter les CGU, les CGS et les Conditions Particulières pour continuer.');
+    if (!acceptCguCgs) {
+      setError('Vous devez accepter les CGU et les CGS pour continuer.');
+      return;
+    }
+    if (!acceptCp) {
+      setError('Vous devez accepter les Conditions Particulières pour continuer.');
       return;
     }
     if (TURNSTILE_ENABLED && !captchaToken) {
@@ -262,13 +270,13 @@ export function CheckoutButton({
           voie: needsVoie ? voie : '',
           installments,
           consents: {
-            // Une seule case côté UI ; côté serveur on stocke un flag par
-            // document (CGU/CGS/CP) + renonciation rétractation, tous sur
-            // la même valeur. La renonciation est intégrée dans les CGS et
-            // Conditions Particulières acceptées (CGS §10.1 et CP).
-            cgu: acceptTerms,
-            cgs: acceptTerms,
-            cp: acceptTerms,
+            // Deux cases côté UI (CGU + CGS, puis CP) ; côté serveur un flag
+            // par document + renonciation rétractation, cette dernière étant
+            // intégrée dans les CGS et Conditions Particulières acceptées
+            // (CGS §10.1 et CP).
+            cgu: acceptCguCgs,
+            cgs: acceptCguCgs,
+            cp: acceptCp,
             waiveRetractation: acceptTerms,
             timestamp: new Date().toISOString(),
           },
@@ -455,22 +463,32 @@ export function CheckoutButton({
         </p>
       </fieldset>
 
-      {/* Consentement — case unique. L'acceptation des CGS et des
-          Conditions Particulières emporte consentement à l'exécution
+      {/* Consentement — deux cases obligatoires. L'acceptation des CGS et
+          des Conditions Particulières emporte consentement à l'exécution
           immédiate (CGS §10.1, CP §Observations). */}
       <SectionLabel n={4} title="Confirmation" />
 
       <ConsentCheckbox
-        checked={acceptTerms}
-        onChange={setAcceptTerms}
+        checked={acceptCguCgs}
+        onChange={setAcceptCguCgs}
         accent={color.main}
         text={
           <>
             J&rsquo;accepte les{' '}
-            <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGU</Link>,
-            les{' '}
-            <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGS</Link>
+            <Link href="/cgu" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGU</Link>
             {' '}et les{' '}
+            <Link href="/cgs" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>CGS</Link>
+            {' '}de Major ECN.
+          </>
+        }
+      />
+      <ConsentCheckbox
+        checked={acceptCp}
+        onChange={setAcceptCp}
+        accent={color.main}
+        text={
+          <>
+            J&rsquo;accepte les{' '}
             <Link href="/conditions-particulieres" target="_blank" rel="noopener" className="font-semibold underline" style={{ color: color.main }}>Conditions Particulières</Link>
             {' '}de Major ECN.
           </>

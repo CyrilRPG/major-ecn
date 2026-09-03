@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { specialtyByName } from '@/lib/data/enrollable-colleges';
+import { PAGES_SPECIALITES as PAGES_DEDIEES } from '@/lib/data/pages-specialites';
 import {
   Activity, Apple, Baby, Bandage, Bone, Brain, BriefcaseMedical, Compass, Dna,
   Droplet, Ear, Eye, FlaskConical, Footprints, Gauge, Heart, HeartPulse,
@@ -466,23 +467,15 @@ const GRID_STRIP = [
 
 /** Spécialités disposant d'une page dédiée (les autres renvoient vers les
     tarifs ou le formulaire de contact). */
-const PAGES_DEDIEES = new Map<string, string>([
-  ['medecine-generale', '/specialites/medecine-generale'],
-  ['chirurgie-orthopedique-et-traumatologie', '/specialites/chirurgie-orthopedique-et-traumatologie'],
-  ['anesthesie-reanimation', '/specialites/anesthesie-reanimation'],
-  ['cardiologie-et-maladies-vasculaires', '/specialites/cardiologie-et-maladies-vasculaires'],
-  ['pediatrie', '/specialites/pediatrie'],
-  ['medecine-d-urgence', '/specialites/medecine-d-urgence'],
-  ['odontologie', '/specialites/odontologie-chirurgie-dentaire'],
-]);
-
 function SpecCard({ s }: { s: Speciality }) {
   const aSaPage = PAGES_DEDIEES.has(s.slug);
   const enrollable = aSaPage || specialtyByName(s.name) != null;
   const href = PAGES_DEDIEES.get(s.slug) ?? (enrollable ? '/tarifs' : '/contact');
   return (
-    <Link href={href}
-      className="group flex h-full flex-col rounded-[1.1rem] bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
+    // `id` : cible des liens « #slug » venus de l'accueil pour les spécialités
+    // sans page dédiée (cf. lib/data/pages-specialites).
+    <Link href={href} id={s.slug}
+      className="group flex h-full scroll-mt-28 flex-col rounded-[1.1rem] bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
       style={{ border: `1px solid ${BORDER}`, boxShadow: '0 24px 60px -58px rgba(15,31,77,0.55)' }}>
       <span aria-hidden className="block h-[3px] w-9 rounded-full" style={{ background: s.accent }} />
       <p className="mt-4 text-[15px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{s.name}</p>

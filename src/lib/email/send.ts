@@ -34,6 +34,12 @@ const ALWAYS_BCC = '';
  */
 export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr'];
 
+/** Adresses mises EN COPIE VISIBLE du mail de confirmation d'achat qui porte
+ *  les documents contractuels (CGU, CGS, Conditions Particulières), pour toute
+ *  inscription payante quelle que soit la formule. Demande de Cyril,
+ *  03/09/2026. */
+export const CONTRACT_COPY_EMAILS = ['abonan1@yahoo.fr'];
+
 export type EmailAttachment = {
   /** Nom de fichier affiché dans le mail (ex: "CGU.pdf"). */
   filename: string;
@@ -53,6 +59,8 @@ export type SendEmailInput = {
   text?: string;
   /** Optional reply-to header. */
   replyTo?: string;
+  /** Copie visible (Cc). */
+  cc?: string[];
   /** Pièces jointes à joindre via l'API Resend. */
   attachments?: EmailAttachment[];
 };
@@ -108,6 +116,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     body: JSON.stringify({
       from,
       to: Array.isArray(input.to) ? input.to : [input.to],
+      ...(input.cc && input.cc.length > 0 ? { cc: input.cc } : {}),
       ...(bcc.length > 0 ? { bcc } : {}),
       subject: input.subject,
       html: input.html,

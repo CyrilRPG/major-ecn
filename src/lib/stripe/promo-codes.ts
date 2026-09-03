@@ -376,6 +376,39 @@ async function buildProductLabelMap(stripe: Stripe): Promise<Map<string, string>
 }
 
 /**
+ * Ferme les codes à montant fixe en euros encore actifs (appelé par le cron).
+ *
+ * Depuis le 03/09/2026 un code est un pourcentage (cf. en-tête) : un code en
+ * euros encore ouvert reproduirait la remise multipliée par le nombre de
+ * mensualités. Ils sont fermés d'office, y compris ceux créés depuis le
+ * dashboard Stripe, et marqués dans leurs métadonnées. Un code en euros
+ * réactivé à la main serait refermé au passage suivant.
+ */
+export async function deactivateFixedAmountPromoCodes(
+  stripe: Stripe,
+): Promise<{ deactivated: string[]; errors: string[] }> {
+  const deactivated: string[] = [];
+  const errors: string[] = [];
+
+  const list = await stripe.promotionCodes.list({ active: true, limit: 100, expand: ['data.promotion.coupon'] });
+  for (const p of list.data) {
+    const coupon = couponOf(p);
+    if (!coupon || coupon.amount_off == null) continue;
+    try {
+      await stripe.promotionCodes.update(p.id, {
+        active: false,
+        metadata: { auto_activate: '0', deactivated_reason: 'montant fixe remplacé par un pourcentage (2026-09-03)' },
+      });
+      deactivated.push(p.code);
+    } catch (e) {
+      errors.push(`${p.code} : ${e instanceof Error ? e.message : 'erreur Stripe'}`);
+    }
+  }
+
+  return { deactivated, errors };
+}
+
+/**
  * Ouvre les codes dont la date de début est atteinte (appelé par le cron).
  *
  * Ne touche qu'aux codes portant `auto_activate = '1'` : ceux qu'un admin a

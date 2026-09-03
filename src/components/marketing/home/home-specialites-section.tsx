@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { CALENDRIER_ARTICLE, EPREUVES_2026, POSTES_INTERNE, VOIES_ARTICLE } from './evc-calendrier-2026';
+import { lienSpecialite } from '@/lib/data/pages-specialites';
 import {
   BORDER, INK_MUTED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
   RED_GRADIENT,
@@ -34,7 +35,10 @@ const externeLignes = [...EPREUVES_2026]
 
 const interneLignes = [...POSTES_INTERNE].sort((a, b) => b.postes - a.postes);
 
-const lien = (slug: string, page?: boolean) => (page ? `/specialites/${slug}` : '/specialites#liste');
+// Chaque ligne mène à la spécialité elle-même : sa page dédiée quand elle
+// existe, sinon sa carte dans l'annuaire. Avant, seules deux lignes avaient un
+// lien propre et toutes les autres tombaient en haut de l'annuaire.
+const lien = (slug: string) => lienSpecialite(slug);
 
 /** Ligne dense : nom, barre proportionnelle, chiffre. La barre rend
     l'écart entre spécialités lisible d'un coup d'œil. */
@@ -125,7 +129,7 @@ export function HomeSpecialitesSection() {
               {externeVedettes.map((s) => (
                 <Link
                   key={s.slug}
-                  href={lien(s.slug, s.page)}
+                  href={lien(s.slug)}
                   className="flex flex-col rounded-2xl bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
                   style={{ border: `1px solid ${BORDER}`, boxShadow: '0 24px 60px -58px rgba(15,27,61,0.55)' }}
                 >
@@ -155,7 +159,7 @@ export function HomeSpecialitesSection() {
                   nom={s.nom}
                   valeur={s.externe}
                   max={maxExterne}
-                  href={lien(s.slug, s.page)}
+                  href={lien(s.slug)}
                   couleur={RED}
                   date={s.label}
                 />
@@ -171,7 +175,7 @@ export function HomeSpecialitesSection() {
 
             <div className="mt-6 rounded-2xl bg-white px-2 py-1 sm:px-3" style={{ border: `1px solid ${BORDER}` }}>
               {interneLignes.map((s) => (
-                <Ligne key={s.slug} nom={s.nom} valeur={s.postes} max={maxInterne} href={lien(s.slug, s.page)} couleur={NAVY} />
+                <Ligne key={s.slug} nom={s.nom} valeur={s.postes} max={maxInterne} href={lien(s.slug)} couleur={NAVY} />
               ))}
             </div>
 

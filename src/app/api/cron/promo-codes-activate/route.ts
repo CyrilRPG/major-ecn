@@ -13,7 +13,7 @@
  */
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
-import { activateScheduledPromoCodes } from '@/lib/stripe/promo-codes';
+import { activateScheduledPromoCodes, deactivateFixedAmountPromoCodes } from '@/lib/stripe/promo-codes';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -26,14 +26,22 @@ export async function GET(req: Request) {
   }
 
   try {
-    const { activated, errors } = await activateScheduledPromoCodes(getStripe());
+    const stripe = getStripe();
+    const { activated, errors } = await activateScheduledPromoCodes(stripe);
     if (activated.length > 0) {
       console.log('[promo-codes-activate] codes ouverts :', activated.join(', '));
     }
+    // Les codes à montant fixe en euros n'ont plus cours (remise multipliée
+    // par le nombre de mensualités en 3×/4×) : fermés à chaque passage.
+    const fermes = await deactivateFixedAmountPromoCodes(stripe);
+    if (fermes.deactivated.length > 0) {
+      console.log('[promo-codes-activate] codes en euros fermés :', fermes.deactivated.join(', '));
+    }
+    errors.push(...fermes.errors);
     if (errors.length > 0) {
       console.error('[promo-codes-activate] erreurs :', errors.join(' | '));
     }
-    return NextResponse.json({ ok: true, activated, errors });
+    return NextResponse.json({ ok: true, activated, deactivated: fermes.deactivated, errors });
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Erreur';
     console.error('[promo-codes-activate]', e);

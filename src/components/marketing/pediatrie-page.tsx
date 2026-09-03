@@ -179,6 +179,80 @@ function Hero() {
 }
 
 /* ============================================================
+   Bloc session 2026 — les chiffres que la maquette ne donnait pas.
+   ============================================================ */
+
+const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
+const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
+
+function BlocSession() {
+  return (
+    <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="grid grid-cols-1 gap-8 rounded-[1.25rem] px-7 py-8 sm:px-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center"
+            style={{ background: PAPER, border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+                Session 2026
+              </p>
+              <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Pédiatrie
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                <span className="font-black" style={{ color: NAVY }}>91 postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>75 postes en voie externe.</span>
+                <br />
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>mercredi 9 décembre 2026</span>.
+              </p>
+              <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
+                <Link href={`/blog/${ARTICLE_CALENDRIER}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Calendrier complet par spécialité →
+                </Link>
+                <Link href={`/blog/${ARTICLE_RATIO}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Comprendre le ratio candidats/postes →
+                </Link>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>91</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>75</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
+                </p>
+              </div>
+              <div className="sm:col-span-2 rounded-2xl px-6 py-5" style={{ background: '#FDF2F4' }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  La pédiatrie est la spécialité où l’écart entre les deux voies est{' '}
+                  <span className="font-black" style={{ color: NAVY }}>le plus faible de toute la session</span> :
+                  91 postes contre 75, soit un rapport de 1,2. Ailleurs, la voie interne ouvre deux à
+                  trois fois plus de postes. Un candidat pédiatre a donc des perspectives comparables
+                  dans les deux voies, ce qui change sa décision.{' '}
+                  <Link href={`/blog/${ARTICLE_RATIO}`} className="font-black underline underline-offset-4" style={{ color: RED }}>
+                    Choisir sa voie en connaissance de cause →
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
    Bandeau de réassurance
    ============================================================ */
 
@@ -930,6 +1004,7 @@ export function PediatriePageContent({
       <AncreTunnel actif={!!specialite} />
       <FilAriane />
       <Hero />
+      <BlocSession />
       <Reperes />
       <GagnezDuTemps />
       <Offre />
