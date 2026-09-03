@@ -18,9 +18,53 @@ import { RotateCw, Home } from 'lucide-react';
 
 function isStaleBuildError(error: Error): boolean {
   const text = `${error.name} ${error.message}`;
-  return /ChunkLoadError|Loading chunk|dynamically imported module|Importing a module script failed|text\/html.*module script|Failed to fetch/i.test(
+  // Chaque navigateur formule autrement « le fichier JavaScript demandé
+  // n'existe plus » : Chrome (ChunkLoadError / Failed to fetch), Safari iOS
+  // (« Load failed », « Importing a module script failed »), Firefox
+  // (« NetworkError »), et le cas où le serveur renvoie la page HTML à la
+  // place du fichier (« Unexpected token '<' », « text/html … module script »).
+  return /ChunkLoadError|Loading chunk|Loading CSS chunk|dynamically imported module|Importing a module script failed|text\/html.*module script|Failed to fetch|Load failed|NetworkError|Unexpected token '<'|Cannot find module/i.test(
     text,
   );
+}
+
+/**
+ * Rechargement qui contourne le cache : un rechargement simple peut resservir
+ * la page HTML périmée (et donc les mêmes fichiers introuvables). On ajoute un
+ * paramètre de cache-busting, retiré ensuite par le navigateur au prochain
+ * clic — il n'apparaît dans aucun lien du site.
+ */
+function rechargerSansCache() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('_r', String(Date.now()));
+  window.location.replace(url.toString());
+}
+
+/**
+ * Journalise l'erreur côté serveur (route /api/client-errors). Jusqu'ici une
+ * erreur client n'apparaissait que dans la console du navigateur de l'élève :
+ * impossible de savoir, après coup, quelle page avait planté et pourquoi.
+ * Silencieux en cas d'échec : le rapport ne doit jamais aggraver la panne.
+ */
+function signalerErreur(error: Error & { digest?: string }, auto: boolean) {
+  try {
+    const corps = JSON.stringify({
+      name: error.name,
+      message: String(error.message ?? '').slice(0, 500),
+      stack: String(error.stack ?? '').slice(0, 2000),
+      digest: error.digest ?? null,
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+      autoReload: auto,
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/client-errors', new Blob([corps], { type: 'application/json' }));
+    } else {
+      void fetch('/api/client-errors', { method: 'POST', headers: { 'content-type': 'application/json' }, body: corps, keepalive: true });
+    }
+  } catch {
+    /* jamais bloquant */
+  }
 }
 
 export default function RouteError({
@@ -34,7 +78,8 @@ export default function RouteError({
 
   useEffect(() => {
     console.error('[error-boundary]', error);
-    if (isStaleBuildError(error)) {
+    const stale = isStaleBuildError(error);
+    if (stale) {
       // Un seul rechargement automatique par page : au-delà, l'erreur n'est
       // pas un simple cache périmé et on doit l'afficher.
       const key = `mecn-reload:${window.location.pathname}`;
@@ -46,10 +91,12 @@ export default function RouteError({
         /* stockage indisponible (navigation privée stricte) */
       }
       if (!already) {
-        window.location.reload();
+        signalerErreur(error, true);
+        rechargerSansCache();
         return;
       }
     }
+    signalerErreur(error, false);
     const timer = setTimeout(() => setShow(true), 0);
     return () => clearTimeout(timer);
   }, [error]);
@@ -83,7 +130,7 @@ export default function RouteError({
               }
               // Rechargement complet plutôt que reset() : récupère aussi la
               // dernière version du site quand le cache était périmé.
-              window.location.reload();
+              rechargerSansCache();
             }}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#C0001F] px-4 py-2.5 text-sm font-bold text-white hover:brightness-110"
           >

@@ -113,27 +113,25 @@ const nextConfig: NextConfig = {
   // puisse les lire en runtime (process.cwd()/data/medgen-annales).
   outputFileTracingIncludes: {
     '/api/medgen-annales/[id]/pdf': ['./data/medgen-annales/**/*'],
+    // Seule route qui lit `public/` sur disque (logo + tampon du certificat) :
+    // `public/**` est exclu du trace pour toutes les fonctions (voir plus bas).
+    '/api/certificate/[cours]': ['./public/major-ecn-logo.png', './public/tampon-pae-formation.png'],
     '/api/admin/campaign': ['./src/lib/email/campaigns/**/*'],
     '/api/cron/campaign-drip': ['./src/lib/email/campaigns/**/*'],
   },
-  // Le tracing de Vercel embarquait des assets STATIQUES lourds (vidéos
-  // témoignages, images formules, PDF d'annales racine) dans le bundle des
-  // fonctions serverless — ce qui faisait dépasser la limite de 300 Mo à la
-  // route `render-html` (~354 Mo = public/ + Annales/). Ces fichiers sont
-  // servis par le CDN, jamais lus par une fonction : on les exclut du trace.
+  // Le tracing de Vercel embarque les assets STATIQUES de `public/` dans le
+  // bundle de chaque fonction serverless. Une liste de sous-dossiers exclus
+  // suffisait jusqu'à ce que `public/prive-images` (135 Mo) s'y ajoute sans
+  // être exclu : la route `render-html` a atteint 252,67 Mo, au-dessus de la
+  // limite de 250 Mo, et les déploiements ont échoué (03/09/2026). Ces
+  // fichiers sont servis par le CDN, jamais lus par une fonction : on exclut
+  // TOUT `public/`, et seule la route des certificats réinclut ses deux images
+  // (`outputFileTracingIncludes` ci-dessus). Un nouveau dossier d'images ne
+  // pourra plus faire déborder une fonction.
   outputFileTracingExcludes: {
     '*': [
       'Annales/**',
-      'public/temoignages/**',
-      'public/formules/**',
-      'public/flashcards-decor/**',
-      'public/flashcards/**',
-      'public/Flashcards images/**',
-      'public/plateforme/**',
-      'public/team/**',
-      'public/blog/**',
-      'public/fonts/**',
-      'public/**/*.mp4',
+      'public/**',
     ],
   },
 };

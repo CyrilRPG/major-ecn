@@ -110,6 +110,20 @@ export async function ensureInstallmentPlanEnds(params: {
       quantity: it.quantity ?? 1,
     }));
 
+    // Remise saisie dans Checkout (code promo) : on la reporte EXPLICITEMENT
+    // sur la phase, pour que chaque mensualité soit réduite du même
+    // pourcentage (les codes sont en pourcentage depuis le 03/09/2026 ; un
+    // code en euros s'était vu imputé sur chacune des mensualités). Sans
+    // `discounts`, la réécriture des phases pourrait perdre ou dupliquer la
+    // remise selon les versions de l'API.
+    const discounts = (phase0.discounts ?? [])
+      .map((d) => {
+        const coupon = typeof d.coupon === 'string' ? d.coupon : d.coupon?.id;
+        const promo = typeof d.promotion_code === 'string' ? d.promotion_code : d.promotion_code?.id;
+        return promo ? { promotion_code: promo } : coupon ? { coupon } : null;
+      })
+      .filter((d): d is { promotion_code: string } | { coupon: string } => d !== null);
+
     // `duration` = N cycles mensuels à partir du début de la phase. Avec un
     // prix mensuel et `end_behavior: 'cancel'`, l'abonnement est prélevé
     // exactement N fois (1er prélèvement compris) puis annulé automatiquement.
@@ -120,6 +134,7 @@ export async function ensureInstallmentPlanEnds(params: {
           items,
           start_date: phase0.start_date,
           duration: { interval: 'month', interval_count: installments },
+          ...(discounts.length > 0 ? { discounts } : {}),
         },
       ],
     });
