@@ -49,8 +49,8 @@ export default async function AdminCodesPromoPage() {
       <header className="mb-6 border-b border-(--color-border) pb-5">
         <h1 className="text-xl font-black tracking-tight text-(--color-ink)">Codes de réduction</h1>
         <p className="mt-1 text-sm text-(--color-ink-soft)">
-          Créez des codes à montant libre, valables sur toutes les formations ou seulement
-          certaines. Le candidat les saisit dans « Ajouter un code promotionnel » sur la page de
+          Créez des codes en pourcentage du prix, valables sur toutes les formations ou
+          seulement certaines. La remise est la même que le candidat paie en 1, 3 ou 4 fois. Le candidat les saisit dans « Ajouter un code promotionnel » sur la page de
           paiement — la remise est appliquée par Stripe, et le nombre d’utilisations affiché ici
           vient de Stripe.
         </p>

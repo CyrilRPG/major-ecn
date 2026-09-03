@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, Check, Copy, Loader2, Plus, Power, PowerOff, Ticket } from 'lucide-react';
+import { Check, Copy, Loader2, Plus, Power, PowerOff, Ticket } from 'lucide-react';
 import {
   createPromoCodeAction,
   togglePromoCodeAction,
@@ -41,6 +41,17 @@ const STATUS_STYLE: Record<PromoCodeStatus, { label: string; className: string }
 
 const euros = (n: number) =>
   n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const pourcent = (n: number) =>
+  n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+/** Libellé de la remise d'un code : pourcentage pour les codes actuels, euros
+ *  pour les anciens codes à montant fixe (toujours listés, plus créés). */
+function remiseLabel(c: PromoCodeRow): string {
+  if (c.percentOff !== null) return `−${pourcent(c.percentOff)} %`;
+  if (c.amountEuros !== null) return `−${euros(c.amountEuros)} €`;
+  return 'remise illisible';
+}
 
 const day = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
@@ -132,7 +143,8 @@ export function PromoCodesManager({
    *  la création attend une confirmation explicite. */
   const [alsoCovered, setAlsoCovered] = useState<string[] | null>(null);
 
-  const amountEuros = Number(amount.replace(',', '.'));
+  const percentOff = Number(amount.replace(',', '.'));
+  const percentValide = Number.isFinite(percentOff) && percentOff > 0 && percentOff <= 100;
 
   /* ─────────────── Facettes disponibles ─────────────── */
 
@@ -194,30 +206,6 @@ export function PromoCodesManager({
     if (tier !== null && !next.some((o) => o.tier === tier)) setTier(null);
   }
 
-  /**
-   * Piège du paiement en plusieurs fois : Stripe applique une remise en euros à
-   * la PREMIÈRE facture. En 4×, une remise supérieure à la première mensualité
-   * est donc perdue pour la différence. On calcule la mensualité la plus faible
-   * du périmètre choisi et on prévient avant la création — c'est irrattrapable
-   * après, un coupon n'étant pas modifiable.
-   */
-  const installmentWarning = useMemo(() => {
-    if (!Number.isFinite(amountEuros) || amountEuros <= 0) return null;
-    const scope = allOffers ? offers : matched;
-    if (scope.length === 0) return null;
-    // 4× est le plus grand fractionnement proposé, donc la plus petite première
-    // mensualité : c'est l'offre la moins chère du périmètre qui contraint.
-    const worst = scope.reduce((min, o) => (o.amountEuros < min.amountEuros ? o : min), scope[0]);
-    const firstInstalment = worst.amountEuros / 4;
-    if (amountEuros <= firstInstalment) return null;
-    return (
-      `En paiement 4×, la première mensualité de « ${worst.label} » est de `
-      + `${euros(firstInstalment)} € : une remise de ${euros(amountEuros)} € s’y imputerait `
-      + `en partie seulement, et ${euros(amountEuros - firstInstalment)} € seraient perdus. `
-      + `Le code reste correct en paiement comptant.`
-    );
-  }, [amountEuros, allOffers, offers, matched]);
-
   function reset() {
     setCode('');
     setAmount('');
@@ -241,7 +229,7 @@ export function PromoCodesManager({
     setSaving(true);
     const r = await createPromoCodeAction({
       code,
-      amountEuros,
+      percentOff,
       startsAt,
       expiresAt,
       maxRedemptions: maxRedemptions.trim() ? Number(maxRedemptions) : null,
@@ -283,16 +271,17 @@ export function PromoCodesManager({
           </label>
 
           <label className="block">
-            <span className={labelClass}>Montant de la réduction (€)</span>
+            <span className={labelClass}>Réduction (% du prix)</span>
             <input
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               inputMode="decimal"
-              placeholder="150"
+              placeholder="10"
               className={inputClass}
             />
             <span className="mt-1 block text-[11px] text-(--color-ink-muted)">
-              Montant libre, déduit du prix affiché. Non modifiable après création.
+              Pourcentage retiré du prix total, que le candidat paie en 1, 3 ou 4 fois :
+              chaque mensualité est réduite d’autant. Non modifiable après création.
             </span>
           </label>
 
@@ -412,6 +401,11 @@ export function PromoCodesManager({
                     <span className="text-(--color-ink)">{o.label}</span>
                     <span className="shrink-0 font-semibold tabular-nums text-(--color-ink-soft)">
                       {euros(o.amountEuros)} €
+                      {percentValide && (
+                        <span className="text-(--color-ink)">
+                          {' '}→ {euros(o.amountEuros * (1 - percentOff / 100))} €
+                        </span>
+                      )}
                     </span>
                   </li>
                 ))}
@@ -427,12 +421,6 @@ export function PromoCodesManager({
           </p>
         </fieldset>
 
-        {installmentWarning && (
-          <p className="mt-3 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-            <AlertTriangle className="mt-px h-4 w-4 shrink-0" />
-            <span>{installmentWarning}</span>
-          </p>
-        )}
         {error && (
           <div className="mt-2">
             <p className="text-xs font-medium text-(--color-danger)">{error}</p>
@@ -493,7 +481,7 @@ export function PromoCodesManager({
                   <span className="font-mono text-sm font-black tracking-wide text-(--color-ink)">
                     {c.code}
                   </span>
-                  <span className="text-sm font-bold text-(--color-ink)">−{euros(c.amountEuros)} €</span>
+                  <span className="text-sm font-bold text-(--color-ink)">{remiseLabel(c)}</span>
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${style.className}`}>
                     {style.label}
                   </span>
@@ -545,8 +533,9 @@ export function PromoCodesManager({
         })}
         <p className="pt-1 text-[11px] text-(--color-ink-muted)">
           Un code ne se supprime pas — Stripe ne le permet pas, et l’historique des remises déjà
-          accordées doit rester lisible. Désactivez-le. Le montant n’est pas modifiable non plus :
-          pour le corriger, désactivez ce code et créez-en un nouveau.
+          accordées doit rester lisible. Désactivez-le. Le pourcentage n’est pas modifiable non
+          plus : pour le corriger, désactivez ce code et créez-en un nouveau. Les anciens codes
+          à montant fixe en euros restent listés mais ne sont plus proposés à la création.
         </p>
       </section>
     </div>

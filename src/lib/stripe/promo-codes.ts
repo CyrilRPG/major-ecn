@@ -1,6 +1,18 @@
 /**
  * Codes de réduction — création et lecture.
  *
+ * POURQUOI UN POURCENTAGE, ET PLUS UN MONTANT
+ * -------------------------------------------
+ * Jusqu'au 03/09/2026 un code portait un montant en euros (`amount_off`,
+ * `duration: 'once'`). Or le paiement en 3× / 4× est un abonnement Stripe
+ * borné à N mensualités : en production, la remise en euros a été imputée sur
+ * CHACUNE des trois mensualités d'une candidate, soit trois fois la réduction
+ * prévue. Un code est désormais un pourcentage du prix, avec
+ * `duration: 'forever'` : appliqué à chaque mensualité comme au paiement
+ * comptant, il retire toujours exactement X % du prix total, quel que soit le
+ * nombre de prélèvements. Les anciens codes en euros restent listés, mais on
+ * n'en crée plus.
+ *
  * OÙ VIVENT LES CODES
  * -------------------
  * Entièrement dans Stripe, pas dans Supabase. Le tunnel d'achat envoie déjà les
@@ -50,7 +62,11 @@ export type PromoCodeStatus = 'actif' | 'programme' | 'inactif' | 'expire' | 'ep
 export type PromoCodeRow = {
   id: string;
   code: string;
-  amountEuros: number;
+  /** Remise en pourcentage du prix (codes créés depuis le 03/09/2026). */
+  percentOff: number | null;
+  /** Remise en euros des anciens codes (montant fixe, `duration: once`).
+   *  `null` pour un code en pourcentage. */
+  amountEuros: number | null;
   active: boolean;
   status: PromoCodeStatus;
   /** Date de début (ISO) — notion Major ECN, portée par les métadonnées. */
@@ -65,7 +81,8 @@ export type PromoCodeRow = {
 
 export type PromoCodeInput = {
   code: string;
-  amountEuros: number;
+  /** Pourcentage du prix retiré, de 1 à 100 (deux décimales au plus). */
+  percentOff: number;
   /** 'YYYY-MM-DD' ou vide. */
   startsAt: string;
   /** 'YYYY-MM-DD' ou vide. */
@@ -80,7 +97,6 @@ export type PromoCodeInput = {
 };
 
 const CODE_RE = /^[A-Z0-9][A-Z0-9_-]{2,39}$/;
-const MAX_AMOUNT_EUROS = 5000;
 
 /** Fin de journée locale : une date de fin au 31/12 doit valoir jusqu'au 31/12
  *  au soir, pas jusqu'à minuit le matin même. */
@@ -111,14 +127,14 @@ export function validatePromoInput(input: PromoCodeInput): PromoValidation {
         + 'souligné (ex. RENTREE2026). Les espaces et accents ne sont pas acceptés.',
     };
   }
-  if (!Number.isFinite(input.amountEuros) || input.amountEuros <= 0) {
-    return { ok: false, error: 'Le montant de la réduction doit être supérieur à 0 €.' };
+  if (!Number.isFinite(input.percentOff) || input.percentOff <= 0) {
+    return { ok: false, error: 'Le pourcentage de réduction doit être supérieur à 0 %.' };
   }
-  if (input.amountEuros > MAX_AMOUNT_EUROS) {
-    return { ok: false, error: `Le montant de la réduction ne peut pas dépasser ${MAX_AMOUNT_EUROS} €.` };
+  if (input.percentOff > 100) {
+    return { ok: false, error: 'Le pourcentage de réduction ne peut pas dépasser 100 %.' };
   }
-  if (Math.round(input.amountEuros * 100) !== input.amountEuros * 100) {
-    return { ok: false, error: 'Le montant ne peut pas avoir plus de deux décimales.' };
+  if (Math.round(input.percentOff * 100) !== input.percentOff * 100) {
+    return { ok: false, error: 'Le pourcentage ne peut pas avoir plus de deux décimales.' };
   }
   if (input.startsAt && !isValidDay(input.startsAt)) {
     return { ok: false, error: 'Date de début invalide.' };
@@ -214,13 +230,14 @@ export async function createPromoCode(
 
   try {
     const coupon = await stripe.coupons.create({
-      name: `Code ${code}`,
-      amount_off: Math.round(input.amountEuros * 100),
-      currency: 'eur',
-      // `once` = la remise s'applique une fois. En paiement comptant elle porte
-      // sur la totalité ; en 3×/4× (mode subscription) elle s'impute sur la
-      // première mensualité — d'où l'avertissement affiché dans l'admin.
-      duration: 'once',
+      name: `Code ${code} (−${input.percentOff} %)`,
+      percent_off: input.percentOff,
+      // `forever` : la remise suit chaque facture de l'abonnement. En 3×/4×
+      // (mode subscription, borné à N mensualités par un schedule) chaque
+      // mensualité est réduite de X % — donc le total aussi, exactement comme
+      // en paiement comptant. Avec `once`, un montant en euros s'était retrouvé
+      // imputé sur chacune des trois mensualités d'une candidate (03/09/2026).
+      duration: 'forever',
       ...(productIds.length > 0 ? { applies_to: { products: productIds } } : {}),
       metadata: { source: PROMO_SOURCE, offers: input.offers.join(',') },
     });
@@ -327,7 +344,8 @@ export async function listPromoCodes(stripe: Stripe, limit = 100): Promise<Promo
     return {
       id: p.id,
       code: p.code,
-      amountEuros: (coupon?.amount_off ?? 0) / 100,
+      percentOff: coupon?.percent_off ?? null,
+      amountEuros: coupon?.amount_off != null ? coupon.amount_off / 100 : null,
       active: p.active,
       status: statusOf(p, startsAt),
       startsAt,
