@@ -6,6 +6,9 @@ import { ExerciseImportWizard, type ImportHistoryRow, type ImportCollege } from 
 
 export const metadata = { title: 'Import d’exercices' };
 export const dynamic = 'force-dynamic';
+// L'analyse vit dans /api/admin/import-exercices/analyse (300 s) ; ce délai
+// couvre la publication d'un import qui écrit beaucoup de questions.
+export const maxDuration = 300;
 
 export default async function AdminExerciseImportPage() {
   await requireAdmin();

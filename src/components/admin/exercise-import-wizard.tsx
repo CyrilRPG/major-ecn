@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, ImageIcon, Loader2, Send, UploadCloud, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { cancelExerciseImportAction, createExerciseImportAction, estimateExerciseImportAction, publishExerciseImportAction } from '@/app/admin/import-exercices/actions';
+import { cancelExerciseImportAction, estimateExerciseImportAction, prepareExerciseImportAction, publishExerciseImportAction } from '@/app/admin/import-exercices/actions';
+import { createClient } from '@/lib/supabase/client';
+import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 
 export type ImportCollege = { id: string; name: string; parentId: string | null; courses: { id: string; title: string }[] };
 export type ImportHistoryRow = {
@@ -19,6 +21,27 @@ const OFFERS = [
   ['essentiel', 'Formule Essentielle'], ['intensif', 'Formule Intensive'], ['approfondi', 'Programme Approfondi'], ['decouverte', 'Espace Découverte'],
 ] as const;
 const money = (cents: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+/** Doit rester égal à `EXERCISE_IMPORT_MAX_FILE_BYTES` côté serveur. */
+const MAX_FILE_BYTES = 25 * 1024 * 1024;
+const MO = (bytes: number) => `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+
+/**
+ * Message lisible pour n'importe quel échec.
+ *
+ * Une erreur non rattrapée dans un `useTransition` remonte à la frontière
+ * d'erreur de l'application et remplace la page par « Cette page n'a pas pu
+ * s'afficher » — c'est ainsi que l'import signalait ses pannes (03/09/2026).
+ * Tout appel réseau passe donc par ici, et l'admin voit un encadré rouge.
+ */
+function messageErreur(e: unknown): string {
+  if (e instanceof Error) {
+    if (/fetch|network|load failed/i.test(e.message)) {
+      return 'La connexion a été interrompue pendant l’envoi. Vérifiez votre réseau et réessayez.';
+    }
+    return e.message;
+  }
+  return 'Une erreur inattendue est survenue.';
+}
 
 export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCollege[]; history: ImportHistoryRow[] }) {
   const router = useRouter();
@@ -35,6 +58,7 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<ImportHistoryRow | null>(null);
   const [pending, start] = useTransition();
+  const [etape, setEtape] = useState<string | null>(null);
   const courses = useMemo(() => colleges.find((c) => c.id === collegeId)?.courses ?? [], [colleges, collegeId]);
   const ready = !!voie && !!collegeId && !!coursId && offers.length > 0 && !!subject && (mode === 'combined' || !!answer) && !!title.trim();
   const expected = voie === 'interne' ? 'QCM' : 'QROC';
@@ -42,19 +66,66 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
   const selectFiles = (nextSubject: File | null, nextAnswer: File | null) => {
     setSubject(nextSubject); setAnswer(nextAnswer); setEstimate(null); setError(null);
     const files = [nextSubject, nextAnswer].filter(Boolean) as File[];
+    const trop = files.find((f) => f.size > MAX_FILE_BYTES);
+    if (trop) { setError(`« ${trop.name} » pèse ${MO(trop.size)} : la limite est de ${MO(MAX_FILE_BYTES)} par document.`); return; }
     if (files.length) start(async () => {
-      const r = await estimateExerciseImportAction({ files: files.map((f) => ({ size: f.size })) });
-      if (r.ok) setEstimate(r.cents); else setError(r.error);
+      try {
+        const r = await estimateExerciseImportAction({ files: files.map((f) => ({ size: f.size })) });
+        if (r.ok) setEstimate(r.cents); else setError(r.error);
+      } catch (e) { setError(messageErreur(e)); }
     });
   };
+
+  /**
+   * Trois étapes, dans cet ordre : brouillon et URL signées, téléversement
+   * DIRECT vers le stockage (le fichier ne traverse plus de fonction serveur,
+   * qui le refuserait au-delà de 4,5 Mo), puis analyse par la route dédiée qui
+   * porte son propre délai maximal.
+   */
   const submit = () => {
     if (!ready || !voie || !subject) return;
     setError(null);
-    const fd = new FormData();
-    fd.set('voie', voie); fd.set('collegeId', collegeId); fd.set('coursId', coursId); fd.set('offers', offers.join(','));
-    fd.set('format', format); fd.set('sourceMode', mode); fd.set('title', title.trim()); fd.set('subject', subject);
-    if (answer) fd.set('answer', answer);
-    start(async () => { const r = await createExerciseImportAction(fd); if (!r.ok) setError(r.error); else router.refresh(); });
+    start(async () => {
+      try {
+        setEtape('Préparation…');
+        const prepared = await prepareExerciseImportAction({
+          voie, collegeId, coursId, offers, format, sourceMode: mode, title: title.trim(),
+          subject: { name: subject.name, size: subject.size },
+          answer: answer ? { name: answer.name, size: answer.size } : null,
+        });
+        if (!prepared.ok) { setError(prepared.error); return; }
+
+        setEtape('Envoi du document…');
+        const supabase = createClient();
+        const parRole: Record<string, File> = { subject, ...(answer ? { answer } : {}) };
+        for (const cible of prepared.uploads) {
+          const fichier = parRole[cible.role];
+          if (!fichier) continue;
+          const { error } = await supabase.storage.from('exercise-imports')
+            .uploadToSignedUrl(cible.path, cible.token, fichier, { contentType: fichier.type || undefined });
+          if (error) { setError(`Envoi de « ${fichier.name} » impossible : ${error.message}`); router.refresh(); return; }
+        }
+
+        setEtape('Analyse en cours…');
+        const res = await fetchAuthentifie('/api/admin/import-exercices/analyse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: prepared.id }),
+        });
+        const payload = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+        if (!res.ok || !payload?.ok) {
+          setError(payload?.error ?? `L’analyse a échoué (code ${res.status}). L’import est enregistré : réessayez depuis la liste.`);
+          router.refresh();
+          return;
+        }
+        setSubject(null); setAnswer(null); setTitle(''); setEstimate(null);
+        router.refresh();
+      } catch (e) {
+        setError(messageErreur(e));
+      } finally {
+        setEtape(null);
+      }
+    });
   };
   const toggleOffer = (offer: string) => setOffers((prev) => prev.includes(offer) ? prev.filter((x) => x !== offer) : [...prev, offer]);
 
@@ -82,11 +153,11 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
             <div className="mt-4"><label className="text-xs font-medium text-(--color-ink-soft)">Titre de la série</label><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex. Entraînement cardio — sujet 1" className="mt-1 h-10 w-full rounded-lg border border-(--color-border) bg-white px-3 text-sm outline-none focus:border-(--color-primary)" /></div>
           </fieldset>
           {error && <div role="alert" className="mt-5 flex gap-2 rounded-xl bg-[#FFF1F2] p-3 text-sm text-[#B4233C]"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{error}</div>}
-          <div className="mt-6 flex flex-col gap-3 border-t border-(--color-border) pt-5 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-(--color-ink-soft)">{voie ? <>Format attendu : <strong className="text-(--color-ink)">{expected}</strong></> : 'Choisissez la voie pour commencer.'}</p><Button type="button" onClick={submit} disabled={!ready || pending} className="min-w-48">{pending ? <Loader2 className="animate-spin" /> : <Send />} {pending ? 'Analyse en cours…' : 'Importer et analyser'}</Button></div>
+          <div className="mt-6 flex flex-col gap-3 border-t border-(--color-border) pt-5 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-(--color-ink-soft)">{voie ? <>Format attendu : <strong className="text-(--color-ink)">{expected}</strong></> : 'Choisissez la voie pour commencer.'}</p><Button type="button" onClick={submit} disabled={!ready || pending} className="min-w-48">{pending ? <Loader2 className="animate-spin" /> : <Send />} {pending ? (etape ?? 'Analyse en cours…') : 'Importer et analyser'}</Button></div>
         </div>
         <aside className="h-fit rounded-2xl border border-[#C9E6D5] bg-[#F3FBF6] p-5"><div className="flex items-center gap-2 text-sm font-semibold text-[#16793C]"><CircleDollarSign className="h-4 w-4" /> Estimation IA</div><p className="mt-2 text-3xl font-semibold tabular-nums text-[#124A2A]">{estimate == null ? '—' : money(estimate)}</p><p className="mt-2 text-xs leading-5 text-[#38624A]">Calculée avant l’analyse à partir de la taille et du type de document. Le montant affiché est conservé pour cet import.</p></aside>
       </section>
-      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); })} disabled={pending}>Publier</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
+      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}>Publier</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
       {selected && <PreviewDialog row={selected} onClose={() => setSelected(null)} />}
     </main>
   );
