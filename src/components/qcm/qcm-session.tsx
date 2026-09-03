@@ -19,6 +19,44 @@ import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
 import { VignetteEditorDialog } from '@/components/admin/content/vignette-editor-dialog';
 
+/**
+ * Enregistre une tentative EN ARRIÈRE-PLAN, sans jamais bloquer l'écran.
+ *
+ * L'identité passe par `getClaims()` → `getSession()`, que auth-js sérialise
+ * derrière un verrou `navigator.locks` partagé entre les onglets : un onglet
+ * figé peut le retenir indéfiniment, et l'appel ne rend jamais la main. Tant
+ * que la validation attendait cette étape avant d'afficher la correction, le
+ * bouton « Valider » restait sans effet (élève bloqué le 2026-09-02). La
+ * correction est donc affichée d'abord ; la persistance suit, et son échec
+ * éventuel ne coûte qu'une ligne de statistiques.
+ */
+function enregistrerTentative(tentative: Record<string, unknown>) {
+  void (async () => {
+    const supabase = createClient();
+    const user = await getVerifiedUser(supabase);
+    if (!user) return;
+    // `text_answer` ajouté par migration, absent des types générés.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await supabase.from('qcm_attempts').insert({ user_id: user.id, ...tentative } as any);
+  })().catch(() => undefined);
+}
+
+/**
+ * Clôture la session (score) en attendant au plus quelques secondes : la page
+ * de résultats ne doit jamais rester inaccessible à cause d'un appel qui traîne.
+ */
+async function cloturerSession(sessionId: string, scoreCorrect: number, scoreTotal: number) {
+  const supabase = createClient();
+  const maj = supabase
+    .from('qcm_sessions')
+    .update({ finished_at: new Date().toISOString(), score_correct: scoreCorrect, score_total: scoreTotal })
+    .eq('id', sessionId);
+  await Promise.race([
+    Promise.resolve(maj).catch(() => undefined),
+    new Promise<void>((resolve) => setTimeout(resolve, 4000)),
+  ]);
+}
+
 type Question = {
   id: string;
   enonce: string;
@@ -105,11 +143,7 @@ export function QcmSession({
     if (elapsed < totalSeconds) return;
     const finish = async () => {
       const correctCount = Object.values(questionCorrect).filter(Boolean).length;
-      const supabase = createClient();
-      await supabase
-        .from('qcm_sessions')
-        .update({ finished_at: new Date().toISOString(), score_correct: correctCount, score_total: total })
-        .eq('id', sessionId);
+      await cloturerSession(sessionId, correctCount, total);
       router.push(`/cours/${coursId}/resultats/${sessionId}`);
     };
     finish();
@@ -191,12 +225,13 @@ export function QcmSession({
     }
   };
 
-  const validate = async () => {
+  // La correction est calculée et affichée AVANT tout appel réseau : l'élève
+  // passe à la suite même si l'enregistrement traîne ou échoue
+  // (cf. `enregistrerTentative`).
+  const validate = () => {
     if (isValidated || !canValidate || submitting) return;
     setSubmitting(true);
 
-    const supabase = createClient();
-    const user = await getVerifiedUser(supabase);
     const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
 
     if (isQroc) {
@@ -207,18 +242,14 @@ export function QcmSession({
       setQrocOutcomes((prev) => ({ ...prev, [q.id]: isCorrect ? 'correct' : 'wrong' }));
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
-      if (user) {
-        // text_answer column added via migration, not in generated types
-        await supabase.from('qcm_attempts').insert({
-          user_id: user.id,
-          session_id: sessionId,
-          question_id: q.id,
-          selected_items: [],
-          is_correct: isCorrect,
-          time_spent_seconds: timeSpent,
-          text_answer: userAnswer,
-        } as any);
-      }
+      enregistrerTentative({
+        session_id: sessionId,
+        question_id: q.id,
+        selected_items: [],
+        is_correct: isCorrect,
+        time_spent_seconds: timeSpent,
+        text_answer: userAnswer,
+      });
     } else {
       // ─── QCM grading ───
       const gradeInput = q.items.map((it) => ({
@@ -232,16 +263,13 @@ export function QcmSession({
       setValidated((prev) => ({ ...prev, [q.id]: outcomes }));
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isQuestionCorrect }));
 
-      if (user) {
-        await supabase.from('qcm_attempts').insert({
-          user_id: user.id,
-          session_id: sessionId,
-          question_id: q.id,
-          selected_items: Array.from(sel),
-          is_correct: isQuestionCorrect,
-          time_spent_seconds: timeSpent,
-        });
-      }
+      enregistrerTentative({
+        session_id: sessionId,
+        question_id: q.id,
+        selected_items: Array.from(sel),
+        is_correct: isQuestionCorrect,
+        time_spent_seconds: timeSpent,
+      });
     }
 
     setSubmitting(false);
@@ -256,27 +284,22 @@ export function QcmSession({
     }, 320);
   };
 
-  const selfGradeSeance = async (grade: 'bon' | 'faux') => {
+  const selfGradeSeance = (grade: 'bon' | 'faux') => {
     if (submitting) return;
     setSubmitting(true);
     const isCorrect = grade === 'bon';
     setSeanceSelfGrade((prev) => ({ ...prev, [q.id]: grade }));
     setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
-    const supabase = createClient();
-    const user = await getVerifiedUser(supabase);
     const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
-    if (user) {
-      await supabase.from('qcm_attempts').insert({
-        user_id: user.id,
-        session_id: sessionId,
-        question_id: q.id,
-        selected_items: [],
-        is_correct: isCorrect,
-        time_spent_seconds: timeSpent,
-        text_answer: (qrocAnswers[q.id] ?? '').trim(),
-      } as any);
-    }
+    enregistrerTentative({
+      session_id: sessionId,
+      question_id: q.id,
+      selected_items: [],
+      is_correct: isCorrect,
+      time_spent_seconds: timeSpent,
+      text_answer: (qrocAnswers[q.id] ?? '').trim(),
+    });
     setSubmitting(false);
   };
 
@@ -286,11 +309,7 @@ export function QcmSession({
       return;
     }
     const correctCount = Object.values(questionCorrect).filter(Boolean).length;
-    const supabase = createClient();
-    await supabase
-      .from('qcm_sessions')
-      .update({ finished_at: new Date().toISOString(), score_correct: correctCount, score_total: total })
-      .eq('id', sessionId);
+    await cloturerSession(sessionId, correctCount, total);
     router.push(`/cours/${coursId}/resultats/${sessionId}`);
   };
 

@@ -326,7 +326,14 @@ export default async function StudentLayout({ children }: { children: React.Reac
     // PAR COMPTE (cf. lib/student/onboarding). Auparavant elles l'étaient par
     // navigateur, si bien qu'un élève ouvert en « se connecter en tant que »
     // héritait des fermetures de l'administrateur et ne voyait plus rien.
-    <div className="flex h-screen flex-col" data-onboarding-user={user.id}>
+    //
+    // `h-screen` (100vh) mesure le viewport « barres masquées » des navigateurs
+    // mobiles : quand la barre d'adresse est affichée, le bas du cadre
+    // (`overflow-hidden` dans AppShell) est repoussé hors de l'écran, et la fin
+    // de la zone défilante devient inatteignable — l'élève ne voyait plus le
+    // bouton « Valider » sous la dernière proposition d'un QCM (tablette,
+    // 2026-09-02). `100dvh` suit la hauteur réellement visible.
+    <div className="flex h-screen flex-col supports-[height:100dvh]:h-dvh" data-onboarding-user={user.id}>
       {isImpersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="min-h-0 flex-1">
         <AppShell

@@ -149,11 +149,23 @@ export function TransversalSession({
 
   // QROC : auto-évaluation Bon/Faux après révélation de la réponse. Enregistre
   // l'attempt (is_correct = self-grade) et met à jour le score / par-cours.
-  const selfEvalQroc = async (grade: 'bon' | 'faux') => {
+  const selfEvalQroc = (grade: 'bon' | 'faux') => {
     if (isValidated || submitting) return;
     setSubmitting(true);
     const isCorrect = grade === 'bon';
-    try {
+    if (isCorrect) setScore((s) => s + 1);
+    setPerCours((prev) => {
+      const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
+      return { ...prev, [q.cours_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
+    });
+    setPerMatiere((prev) => {
+      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
+      return { ...prev, [q.matiere_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
+    });
+    setSelfGrade(grade);
+    setSubmitting(false);
+    // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
+    void (async () => {
       const supabase = createClient();
       const user = await getVerifiedUser(supabase);
       if (user) {
@@ -167,40 +179,16 @@ export function TransversalSession({
           text_answer: qrocText.trim(),
         } as any);
       }
-    } catch { /* persistence non bloquante */ }
-    if (isCorrect) setScore((s) => s + 1);
-    setPerCours((prev) => {
-      const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.cours_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
-    setPerMatiere((prev) => {
-      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.matiere_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
-    setSelfGrade(grade);
-    setSubmitting(false);
+    })().catch(() => undefined);
   };
 
-  const validate = async () => {
+  const validate = () => {
     if (isValidated || sel.size === 0 || submitting) return;
     setSubmitting(true);
     const { perItem, isQuestionCorrect } = gradeQuestion(
       q.items.map((it) => ({ lettre: it.lettre, is_correct: it.is_correct, selected: sel.has(it.lettre) })),
     );
     const oc = q.items.map((it) => perItem[it.lettre]);
-    try {
-      const supabase = createClient();
-      const user = await getVerifiedUser(supabase);
-      if (user) {
-        await supabase.from('qcm_attempts').insert({
-          user_id: user.id,
-          question_id: q.id,
-          selected_items: Array.from(sel),
-          is_correct: isQuestionCorrect,
-          time_spent_seconds: null,
-        });
-      }
-    } catch { /* persistence non bloquante */ }
     if (isQuestionCorrect) setScore((s) => s + 1);
     setPerCours((prev) => {
       const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
@@ -212,6 +200,20 @@ export function TransversalSession({
     });
     setOutcomes(oc);
     setSubmitting(false);
+    // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
+    void (async () => {
+      const supabase = createClient();
+      const user = await getVerifiedUser(supabase);
+      if (user) {
+        await supabase.from('qcm_attempts').insert({
+          user_id: user.id,
+          question_id: q.id,
+          selected_items: Array.from(sel),
+          is_correct: isQuestionCorrect,
+          time_spent_seconds: null,
+        });
+      }
+    })().catch(() => undefined);
   };
 
   const next = () => {

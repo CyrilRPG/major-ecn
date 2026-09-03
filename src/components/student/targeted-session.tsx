@@ -77,11 +77,15 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
     });
   };
 
-  const selfEvalQroc = async (grade: 'bon' | 'faux') => {
+  const selfEvalQroc = (grade: 'bon' | 'faux') => {
     if (isValidated || submitting) return;
     setSubmitting(true);
     const isCorrect = grade === 'bon';
-    try {
+    if (isCorrect) setScore((s) => s + 1);
+    setSelfGrade(grade);
+    setSubmitting(false);
+    // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
+    void (async () => {
       const supabase = createClient();
       const user = await getVerifiedUser(supabase);
       if (user) {
@@ -95,20 +99,21 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
           text_answer: qrocText.trim(),
         } as any);
       }
-    } catch { /* practice mode — ignore persistence errors */ }
-    if (isCorrect) setScore((s) => s + 1);
-    setSelfGrade(grade);
-    setSubmitting(false);
+    })().catch(() => undefined);
   };
 
-  const validate = async () => {
+  const validate = () => {
     if (isValidated || sel.size === 0 || submitting) return;
     setSubmitting(true);
     const { perItem, isQuestionCorrect } = gradeQuestion(
       q.items.map((it) => ({ lettre: it.lettre, is_correct: it.is_correct, selected: sel.has(it.lettre) })),
     );
     const oc = q.items.map((it) => perItem[it.lettre]);
-    try {
+    if (isQuestionCorrect) setScore((s) => s + 1);
+    setOutcomes(oc);
+    setSubmitting(false);
+    // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
+    void (async () => {
       const supabase = createClient();
       const user = await getVerifiedUser(supabase);
       if (user) {
@@ -120,10 +125,7 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
           time_spent_seconds: null,
         });
       }
-    } catch { /* practice mode — ignore persistence errors */ }
-    if (isQuestionCorrect) setScore((s) => s + 1);
-    setOutcomes(oc);
-    setSubmitting(false);
+    })().catch(() => undefined);
   };
 
   const next = () => {
