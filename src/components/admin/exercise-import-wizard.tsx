@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, ImageIcon, Loader2, Send, UploadCloud, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, ImageIcon, Loader2, RotateCw, Send, UploadCloud, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { cancelExerciseImportAction, estimateExerciseImportAction, prepareExerciseImportAction, publishExerciseImportAction } from '@/app/admin/import-exercices/actions';
@@ -127,6 +127,28 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
       }
     });
   };
+  /**
+   * Relance l'analyse d'un import en échec. Le document est déjà dans le
+   * stockage : la route le relit, il n'y a rien à téléverser de nouveau.
+   */
+  const relancer = (id: string) => {
+    setError(null);
+    start(async () => {
+      try {
+        const res = await fetchAuthentifie('/api/admin/import-exercices/analyse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        const payload = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+        if (!res.ok || !payload?.ok) setError(payload?.error ?? `L’analyse a échoué (code ${res.status}).`);
+        router.refresh();
+      } catch (e) {
+        setError(messageErreur(e));
+      }
+    });
+  };
+
   const toggleOffer = (offer: string) => setOffers((prev) => prev.includes(offer) ? prev.filter((x) => x !== offer) : [...prev, offer]);
 
   return (
@@ -157,7 +179,7 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
         </div>
         <aside className="h-fit rounded-2xl border border-[#C9E6D5] bg-[#F3FBF6] p-5"><div className="flex items-center gap-2 text-sm font-semibold text-[#16793C]"><CircleDollarSign className="h-4 w-4" /> Estimation IA</div><p className="mt-2 text-3xl font-semibold tabular-nums text-[#124A2A]">{estimate == null ? '—' : money(estimate)}</p><p className="mt-2 text-xs leading-5 text-[#38624A]">Calculée avant l’analyse à partir de la taille et du type de document. Le montant affiché est conservé pour cet import.</p></aside>
       </section>
-      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}>Publier</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
+      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}>Publier</Button>}{row.status === 'failed' && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> Relancer</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
       {selected && <PreviewDialog row={selected} onClose={() => setSelected(null)} />}
     </main>
   );

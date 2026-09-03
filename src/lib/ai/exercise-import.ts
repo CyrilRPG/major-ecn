@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { outputSchema } from './exercise-import-schema';
+
 export const EXERCISE_IMPORT_MODEL = 'gpt-5.6-terra';
 export const EXERCISE_IMPORT_MAX_FILE_BYTES = 25 * 1024 * 1024;
 const PRICE_MULTIPLIER = 5;
@@ -16,7 +18,9 @@ export type ImportedImage = {
   source_page: number | null;
   source_description: string;
   placement: ImagePlacement;
-  item_letter?: string;
+  /** Lettre de l'item illustré, `null` pour une image de question ou de
+   *  correction. En mode strict, le champ est toujours renvoyé (cf. IMAGE_SCHEMA). */
+  item_letter?: string | null;
 };
 
 export type ImportedItem = {
@@ -72,26 +76,6 @@ RÈGLES NON NÉGOCIABLES:
 - Retourne seulement du JSON conforme au schéma demandé.`;
 }
 
-const outputSchema = {
-  type: 'object', additionalProperties: false,
-  required: ['questions', 'warnings'],
-  properties: {
-    warnings: { type: 'array', items: { type: 'string' } },
-    questions: {
-      type: 'array', items: {
-        type: 'object', additionalProperties: false,
-        required: ['client_id', 'source_pages', 'format', 'enonce', 'images', 'items', 'reponse_attendue', 'correction_generale', 'warnings'],
-        properties: {
-          client_id: { type: 'string' }, source_pages: { type: 'array', items: { type: 'integer' } },
-          format: { type: 'string', enum: ['qcm', 'qroc'] }, enonce: { type: 'string' },
-          reponse_attendue: { type: 'string' }, correction_generale: { type: 'string' }, warnings: { type: 'array', items: { type: 'string' } },
-          images: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['source_page', 'source_description', 'placement'], properties: { source_page: { type: ['integer', 'null'] }, source_description: { type: 'string' }, placement: { type: 'string', enum: ['question', 'item', 'correction'] }, item_letter: { type: 'string' } } } },
-          items: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['lettre', 'enonce', 'is_correct', 'justification', 'images'], properties: { lettre: { type: 'string' }, enonce: { type: 'string' }, is_correct: { type: 'boolean' }, justification: { type: 'string' }, images: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['source_page', 'source_description', 'placement'], properties: { source_page: { type: ['integer', 'null'] }, source_description: { type: 'string' }, placement: { type: 'string', enum: ['question', 'item', 'correction'] }, item_letter: { type: 'string' } } } } } } },
-        },
-      },
-    },
-  },
-} as const;
 
 function responseText(payload: unknown): string {
   const p = payload as { output_text?: string; output?: Array<{ content?: Array<{ type?: string; text?: string }> }> };
@@ -148,3 +132,5 @@ export async function extractExerciseImport(args: {
   try { parsed = JSON.parse(raw) as ExerciseImportResult; } catch { throw new Error('La réponse IA ne respecte pas le JSON attendu.'); }
   return validate(parsed, args.voie);
 }
+
+export { outputSchema } from './exercise-import-schema';
